@@ -1,13 +1,36 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.settingDictionaryController', ['$scope', 'platformWebApp.dialogService', function ($scope, dialogService) {
+.controller('platformWebApp.settingDictionaryController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', function ($scope, dialogService, bladeNavigationService, settings) {
+    var blade = $scope.blade;
+    var currentEntities;
 
-    $scope.dictValueValidator = function (value) {
-    	if ($scope.blade.currentEntity.valueType == 'ShortText') {
-            return _.all(currentEntities, function (item) { return angular.lowercase(item.value) !== angular.lowercase(value); });
-        } else {
-            return _.all(currentEntities, function (item) { return item.value !== value; });
+    blade.refresh = function () {
+        if (blade.isApiSave) {
+            settings.get({ id: blade.currentEntityId }, function (setting) {
+                setting.arrayValues = _.map(setting.arrayValues, function (x) { return { value: x }; });
+                blade.origEntity = angular.copy(setting.arrayValues);
+                initializeBlade(setting);
+            },
+            function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
         }
     }
+
+    function initializeBlade(data) {
+        blade.title = data.title;
+        blade.currentEntity = data;
+        currentEntities = blade.currentEntity.arrayValues;
+        blade.isLoading = false;
+    }
+
+    $scope.dictValueValidator = function (value) {
+        if (blade.currentEntity) {
+            if (blade.currentEntity.valueType == 'ShortText') {
+                return _.all(currentEntities, function (item) { return angular.lowercase(item.value) !== angular.lowercase(value); });
+            } else {
+                return _.all(currentEntities, function (item) { return item.value !== value; });
+            }
+        }
+        return false;
+    };
 
     $scope.add = function (form) {
         if (form.$valid) {
@@ -25,9 +48,10 @@
     $scope.selectItem = function (listItem) {
         $scope.selectedItem = listItem;
     };
-
-    $scope.blade.headIcon = 'fa fa-wrench';
-    $scope.blade.toolbarCommands = [
+    
+    blade.headIcon = 'fa fa-wrench';
+    blade.subtitle = 'Manage dictionary values';
+    blade.toolbarCommands = [
      {
          name: "Delete", icon: 'fa fa-trash-o',
          executeMethod: function () {
@@ -39,9 +63,52 @@
      }
     ];
 
-    $scope.checkAll = function (selected) {
+    if (blade.isApiSave) {
+        var formScope;
+        $scope.setForm = function (form) {
+            formScope = form;
+        }
+
+        function isDirty() {
+            return !angular.equals(currentEntities, blade.origEntity);
+        };
+
+        function saveChanges() {
+            blade.selectedAll = false;
+            blade.isLoading = true;
+            blade.currentEntity.arrayValues = _.pluck(blade.currentEntity.arrayValues, 'value');
+
+            settings.update(null, [blade.currentEntity], blade.refresh,
+                function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+        };
+
+        blade.toolbarCommands.splice(0, 0,
+        {
+            name: "Save",
+            icon: 'fa fa-save',
+            executeMethod: function () {
+                saveChanges();
+            },
+            canExecuteMethod: function () {
+                return isDirty() && formScope && formScope.$valid;
+            }
+        },
+        {
+            name: "Reset",
+            icon: 'fa fa-undo',
+            executeMethod: function () {
+                angular.copy(blade.origEntity, currentEntities);
+                blade.selectedAll = false;
+            },
+            canExecuteMethod: function () {
+                return isDirty();
+            }
+        });
+    }
+
+    $scope.checkAll = function () {
         angular.forEach(currentEntities, function (item) {
-            item._selected = selected;
+            item._selected = blade.selectedAll;
         });
     };
 
@@ -71,13 +138,13 @@
     }
 
     $scope.$watch('blade.parentBlade.currentEntities', function (data) {
-        var allEntities = _.flatten(_.map(data, _.values));
-        $scope.blade.currentEntity = _.findWhere(allEntities, { name: $scope.blade.currentEntityId });
-        currentEntities = $scope.blade.currentEntity.arrayValues;
+        if (data) {
+            var allEntities = _.flatten(_.map(data, _.values));
+            initializeBlade(_.findWhere(allEntities, { name: blade.currentEntityId }));
+        }
     });
 
     // on load
-    var currentEntities;
     resetNewValue();
-    $scope.blade.isLoading = false;
+    blade.refresh();
 }]);

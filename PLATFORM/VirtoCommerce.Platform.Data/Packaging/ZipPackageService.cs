@@ -16,12 +16,14 @@ namespace VirtoCommerce.Platform.Data.Packaging
         private const string _packageFileExtension = ".zip";
         private const string _packageFilePattern = "*" + _packageFileExtension;
 
+        private readonly IModuleCatalog _moduleCatalog;
         private readonly IModuleManifestProvider _manifestProvider;
         private readonly string _installedPackagesPath;
         private readonly string _sourcePackagesPath;
 
-        public ZipPackageService(IModuleManifestProvider manifestProvider, string installedPackagesPath, string sourcePackagesPath)
+        public ZipPackageService(IModuleCatalog moduleCatalog, IModuleManifestProvider manifestProvider, string installedPackagesPath, string sourcePackagesPath)
         {
+            _moduleCatalog = moduleCatalog;
             _manifestProvider = manifestProvider;
             _installedPackagesPath = installedPackagesPath;
             _sourcePackagesPath = sourcePackagesPath;
@@ -195,6 +197,20 @@ namespace VirtoCommerce.Platform.Data.Packaging
 
                 if (!dependentModules.Any())
                 {
+                    // Call Uninstall() for module instance
+                    if (_moduleCatalog != null)
+                    {
+                        var moduleInstance = _moduleCatalog.Modules
+                            .Where(m => m.ModuleName == packageId)
+                            .Select(m => m.ModuleInstance)
+                            .FirstOrDefault();
+
+                        if (moduleInstance != null)
+                        {
+                            moduleInstance.Uninstall();
+                        }
+                    }
+
                     // Delete files
                     var installedPackageFileName = GetPackageFileName(module.Id, module.Version);
                     var installedPackageFilePath = Path.Combine(_installedPackagesPath, installedPackageFileName);
@@ -354,6 +370,7 @@ namespace VirtoCommerce.Platform.Data.Packaging
                             {
                                 entryStream.CopyTo(fileStream);
                             }
+                            File.SetLastWriteTime(filePath, entry.LastWriteTime.LocalDateTime);
                             break;
                     }
                 }

@@ -1,5 +1,4 @@
-﻿using System.Drawing.Text;
-using MailChimp.MailingModule.Web.Controllers.Api;
+﻿using MailChimp.MailingModule.Web.Controllers.Api;
 using MailChimp.MailingModule.Web.Services;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.Platform.Core.Modularity;
@@ -7,11 +6,11 @@ using VirtoCommerce.Platform.Core.Settings;
 
 namespace MailChimp.MailingModule.Web
 {
-    public class Module : IModule
+    public class Module : ModuleBase
     {
-        private const string accessTokenPropertyName = "MailChimp.Mailing.Credentials.AccessToken";
-        private const string dataCenterPropertyName = "MailChimp.Mailing.Credentials.DataCenter";
-        private const string subscribersListIdPropertyName = "MailChimp.Mailing.SubscribersListId";
+        private const string _accessTokenPropertyName = "MailChimp.Mailing.Credentials.AccessToken";
+        private const string _dataCenterPropertyName = "MailChimp.Mailing.Credentials.DataCenter";
+        private const string _subscribersListIdPropertyName = "MailChimp.Mailing.SubscribersListId";
 
         private readonly IUnityContainer _container;
 
@@ -22,21 +21,17 @@ namespace MailChimp.MailingModule.Web
 
         #region IModule Members
 
-        public void SetupDatabase(SampleDataLevel sampleDataLevel)
-        {
-        }
-
-        public void Initialize()
+        public override void Initialize()
         {
             var settingsManager = _container.Resolve<ISettingsManager>();
-            
+
             var mailChimpCode = settingsManager.GetValue("MailChimp.Mailing.Code", string.Empty);
             var mailChimpDescription = settingsManager.GetValue("MailChimp.Mailing.Description", string.Empty);
             var mailChimpLogoUrl = settingsManager.GetValue("MailChimp.Mailing.LogoUrl", string.Empty);
 
 
-            var mailChimpMailing = new MailChimpMailingSettings(settingsManager, accessTokenPropertyName, dataCenterPropertyName, subscribersListIdPropertyName, mailChimpCode, mailChimpDescription, mailChimpLogoUrl);
-            
+            var mailChimpMailing = new MailChimpMailingSettings(settingsManager, _accessTokenPropertyName, _dataCenterPropertyName, _subscribersListIdPropertyName, mailChimpCode, mailChimpDescription, mailChimpLogoUrl);
+
             _container.RegisterType<MailChimpController>
                 (new InjectionConstructor(
                     mailChimpMailing));
@@ -44,10 +39,6 @@ namespace MailChimp.MailingModule.Web
             _container.RegisterType<MCAuthorizationController>
                 (new InjectionConstructor(
                     settingsManager));
-        }
-
-        public void PostInitialize()
-        {
         }
 
         #endregion

@@ -47,8 +47,8 @@
 	};
 
 	blade.openNotification = function (type) {
-		var objectId = angular.isUndefined($stateParams.objectId) ? 'Platform' : $stateParams.objectId;
-		var objectTypeId = angular.isUndefined($stateParams.objectTypeId) ? 'Platform': $stateParams.objectTypeId;
+		var objectId = (angular.isUndefined($stateParams.objectId) || $stateParams.objectId === null) ? 'Platform' : $stateParams.objectId;
+		var objectTypeId = (angular.isUndefined($stateParams.objectTypeId) || $stateParams.objectTypeId === null) ? 'Platform' : $stateParams.objectTypeId;
 		notifications.getTemplates({ type: type, objectId: objectId, objectTypeId: objectTypeId }, function (data) {
 			if (data.length > 0) {
 				blade.openList(type, objectId, objectTypeId);

@@ -1,14 +1,13 @@
-﻿using MeS.PaymentGatewaysModule.Web.Managers;
-using Microsoft.Practices.ServiceLocation;
+﻿using System;
+using MeS.PaymentGatewaysModule.Web.Managers;
 using Microsoft.Practices.Unity;
-using System;
 using VirtoCommerce.Domain.Payment.Services;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Settings;
 
 namespace MeS.PaymentGatewaysModule.Web
 {
-    public class Module : IModule
+    public class Module : ModuleBase
     {
         private readonly IUnityContainer _container;
 
@@ -19,30 +18,19 @@ namespace MeS.PaymentGatewaysModule.Web
 
         #region IModule Members
 
-        public void SetupDatabase(SampleDataLevel sampleDataLevel)
+        public override void Initialize()
         {
-        }
+            var settings = _container.Resolve<ISettingsManager>().GetModuleSettings("MeS.PaymentGateway");
 
-        public void Initialize()
-        {
-			var settings = _container.Resolve<ISettingsManager>().GetModuleSettings("MeS.PaymentGateway");
+            Func<MesPaymentMethod> meSPaymentMethodFactory = () => new MesPaymentMethod
+            {
+                Name = "Merchant e-solutions payment gateway",
+                Description = "Merchant e-solutions payment gateway integration",
+                LogoUrl = "http://www.ebs-next.com/images/partners/partners-merchsolutions.jpg",
+                Settings = settings
+            };
 
-			Func<MesPaymentMethod> meSPaymentMethodFactory = () =>
-			{
-				return new MesPaymentMethod()
-				{
-					Name = "Merchant e-solutions payment gateway",
-					Description = "Merchant e-solutions payment gateway integration",
-					LogoUrl = "http://www.ebs-next.com/images/partners/partners-merchsolutions.jpg",
-					Settings = settings
-				};
-			};
-
-			_container.Resolve<IPaymentMethodsService>().RegisterPaymentMethod(meSPaymentMethodFactory);
-        }
-
-        public void PostInitialize()
-        {
+            _container.Resolve<IPaymentMethodsService>().RegisterPaymentMethod(meSPaymentMethodFactory);
         }
 
         #endregion

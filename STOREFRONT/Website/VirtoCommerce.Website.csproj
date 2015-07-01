@@ -179,6 +179,7 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\Help\gettingstarted.html" />
     <Content Include="App_Data\Themes\_Default\assets\arrow_switch.png" />
     <Content Include="App_Data\Themes\_Default\assets\flags.png" />
     <Content Include="App_Data\Themes\_Global\assets\blank.gif" />

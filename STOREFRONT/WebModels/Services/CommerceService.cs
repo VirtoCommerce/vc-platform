@@ -783,8 +783,21 @@ namespace VirtoCommerce.Web.Models.Services
 
         public async Task<IEnumerable<Shop>> GetShopsAsync()
         {
+            var shops = new List<Shop>();
+
             var stores = await this._storeClient.GetStoresAsync();
-            return stores.Select(s => s.AsWebModel());
+
+            if (stores != null)
+            {
+                foreach (var store in stores)
+                {
+                    var acceptedPaymentMethods = await GetStorePaymentMethodsAsync(store.Id);
+
+                    shops.Add(store.AsWebModel(acceptedPaymentMethods));
+                }
+            }
+
+            return shops;
         }
 
         public async Task<Cart> SaveChangesAsync(Cart cart)

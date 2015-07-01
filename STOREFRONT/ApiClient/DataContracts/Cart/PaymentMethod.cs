@@ -12,8 +12,8 @@
 
         public int Priority { get; set; }
 
-        public PaymentMethodType Type { get; set; }
+        public string Type { get; set; }
 
-        public PaymentMethodGroupType Group { get; set; }
+        public string Group { get; set; }
     }
 }

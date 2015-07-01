@@ -34,7 +34,7 @@
 
 		$localStorage.notificationTestResolve = blade.params;
 
-		notifications.resolveNotification({ type: blade.notificationType }, blade.params, function (notification) {
+		notifications.resolveNotification({ type: blade.notificationType, objectId: blade.objectId, objectTypeId: blade.objectTypeId, language: blade.language }, blade.params, function (notification) {
 			blade.isLoading = false;
 
 			var newBlade = {

@@ -8,7 +8,7 @@ using VirtoCommerce.Platform.Core.Settings;
 
 namespace Klarna.PaymentGatewaysModule.Web
 {
-    public class Module : IModule
+    public class Module : ModuleBase
     {
         private readonly IUnityContainer _container;
 
@@ -19,30 +19,20 @@ namespace Klarna.PaymentGatewaysModule.Web
 
         #region IModule Members
 
-        public void SetupDatabase(SampleDataLevel sampleDataLevel)
+        public override void Initialize()
         {
-        }
+            var settingsManager = ServiceLocator.Current.GetInstance<ISettingsManager>();
 
-        public void Initialize()
-        {
-			var settingsManager = ServiceLocator.Current.GetInstance<ISettingsManager>();
+            Func<KlarnaPaymentMethod> klarnaPaymentMethodFactory = () => new KlarnaPaymentMethod
+            {
+                Name = "Klarna",
+                Description = "Klarna payment integration",
+                LogoUrl = "http://virtocommerce.com/Content/images/Blue-black.png",
+                Settings = settingsManager.GetModuleSettings("Klarna.PaymentGateway")
+            };
 
-			Func<KlarnaPaymentMethod> klarnaPaymentMethodFactory = () =>
-			{
-				return new KlarnaPaymentMethod()
-				{
-					Name = "Klarna",
-					Description = "Klarna payment integration",
-					LogoUrl = "http://virtocommerce.com/Content/images/Blue-black.png",
-					Settings = settingsManager.GetModuleSettings("Klarna.PaymentGateway")
-				};
-			};
-			var paymentMethodsService = _container.Resolve<IPaymentMethodsService>();
-			paymentMethodsService.RegisterPaymentMethod(klarnaPaymentMethodFactory);
-        }
-
-        public void PostInitialize()
-        {
+            var paymentMethodsService = _container.Resolve<IPaymentMethodsService>();
+            paymentMethodsService.RegisterPaymentMethod(klarnaPaymentMethodFactory);
         }
 
         #endregion
