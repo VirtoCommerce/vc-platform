@@ -217,6 +217,10 @@
     <Compile Include="Repositories\Migrations\201506191401420_AddNotificationAndNotificationTemplate.Designer.cs">
       <DependentUpon>201506191401420_AddNotificationAndNotificationTemplate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Repositories\Migrations\201506301244090_NotificationAddLanguagesAndObjectType.cs" />
+    <Compile Include="Repositories\Migrations\201506301244090_NotificationAddLanguagesAndObjectType.Designer.cs">
+      <DependentUpon>201506301244090_NotificationAddLanguagesAndObjectType.cs</DependentUpon>
+    </Compile>
     <Compile Include="Repositories\Migrations\Configuration.cs" />
     <Compile Include="Repositories\PlatformDatabaseInitializer.cs" />
     <Compile Include="Repositories\PlatformRepository.cs" />
@@ -283,6 +287,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Repositories\Migrations\201506191401420_AddNotificationAndNotificationTemplate.resx">
       <DependentUpon>201506191401420_AddNotificationAndNotificationTemplate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Repositories\Migrations\201506301244090_NotificationAddLanguagesAndObjectType.resx">
+      <DependentUpon>201506301244090_NotificationAddLanguagesAndObjectType.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Security\Identity\Migrations\201411101625303_InitialCreate.resx">
       <DependentUpon>201411101625303_InitialCreate.cs</DependentUpon>

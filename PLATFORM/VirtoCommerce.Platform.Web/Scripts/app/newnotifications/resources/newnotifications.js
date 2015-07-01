@@ -3,8 +3,10 @@
 
 	return $resource('api/notification/:id', { id: '@Id' }, {
 		getNotificationList: { method: 'GET', url: 'api/notification', isArray: true },
-		getTemplate: { method: 'GET', url: 'api/notification/template/:type/:objectId' },
+		getTemplate: { method: 'GET', url: 'api/notification/template/:type/:objectId/:objectTypeId/:language' },
+		getTemplates: { method: 'GET', url: 'api/notification/template/:type/:objectId/:objectTypeId', isArray: true },
 		updateTemplate: { method: 'POST', url: 'api/notification/template' },
+		deleteTemplate: { method: 'DELETE', url: 'api/notification/template/:id' },
 		prepareTestData: { method: 'GET', url: 'api/notification/template/:type/preparetestdata', isArray: true },
 		resolveNotification: { method: 'POST', url: 'api/notification/template/:type/resolvenotification' },
 		sendNotification: { method: 'POST', url: 'api/notification/template/:type/sendnotification' }

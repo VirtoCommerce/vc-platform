@@ -26,12 +26,12 @@ namespace VirtoCommerce.Platform.Data.Notification
 			}
 		}
 
-		public NotificationTemplate GetByNotification(string notificationTypeId, string objectId)
+		public NotificationTemplate GetByNotification(string notificationTypeId, string objectId, string objectTypeId, string language)
 		{
 			NotificationTemplate retVal = null;
 			using (var repository = _repositoryFactory())
 			{
-				var entity = repository.NotificationTemplates.FirstOrDefault(nt => nt.ObjectId.Equals(objectId) && nt.NotificationTypeId.Equals(notificationTypeId));
+				var entity = repository.NotificationTemplates.FirstOrDefault(nt => nt.ObjectId.Equals(objectId) && nt.NotificationTypeId.Equals(notificationTypeId) && nt.Language.Equals(language) && nt.ObjectTypeId.Equals(objectTypeId));
 				if (entity != null)
 				{
 					retVal = entity.ToCoreModel();
@@ -41,11 +41,30 @@ namespace VirtoCommerce.Platform.Data.Notification
 			return retVal;
 		}
 
+		public NotificationTemplate[] GetNotificationTemplatesByNotification(string notificationTypeId, string objectId, string objectTypeId)
+		{
+			List<NotificationTemplate> retVal = new List<NotificationTemplate>();
+
+			using(var repository = _repositoryFactory())
+			{
+				var entities = repository.NotificationTemplates.Where(nt => nt.NotificationTypeId.Equals(notificationTypeId) && nt.ObjectId.Equals(objectId) && nt.ObjectTypeId.Equals(objectTypeId));
+				if(entities.Any())
+				{
+					foreach(var entity in entities)
+					{
+						retVal.Add(entity.ToCoreModel());
+					}
+				}
+			}
+
+			return retVal.ToArray();
+		}
+
 		public NotificationTemplate Create(NotificationTemplate notificationTemplate)
 		{
 			using (var repository = _repositoryFactory())
 			{
-				var origEntity = repository.GetNotificationTemplateByNotification(notificationTemplate.NotificationTypeId, notificationTemplate.ObjectId);
+				var origEntity = repository.GetNotificationTemplateByNotification(notificationTemplate.NotificationTypeId, notificationTemplate.ObjectId, notificationTemplate.ObjectTypeId, notificationTemplate.Language);
 				if (origEntity == null)
 				{
 					origEntity = notificationTemplate.ToDataModel();
@@ -68,7 +87,7 @@ namespace VirtoCommerce.Platform.Data.Notification
 				foreach (var notificationTemplate in notificationTemplates)
 				{
 					var sourceEntity = notificationTemplate.ToDataModel();
-					var targetEntity = repository.GetNotificationTemplateByNotification(notificationTemplate.NotificationTypeId, notificationTemplate.ObjectId);
+					var targetEntity = repository.GetNotificationTemplateByNotification(notificationTemplate.NotificationTypeId, notificationTemplate.ObjectId, notificationTemplate.ObjectTypeId, notificationTemplate.Language);
 					if (targetEntity == null)
 					{
 						repository.Add(sourceEntity);
@@ -83,13 +102,13 @@ namespace VirtoCommerce.Platform.Data.Notification
 			}
 		}
 
-		public void Delete(string[] notificationIds)
+		public void Delete(string[] notificationTemplateIds)
 		{
 			using (var repository = _repositoryFactory())
 			{
-				foreach(var id in notificationIds)
+				foreach (var id in notificationTemplateIds)
 				{
-					var deletedEntity = repository.Notifications.FirstOrDefault(x => x.Id == id);
+					var deletedEntity = repository.NotificationTemplates.FirstOrDefault(x => x.Id == id);
 					if(deletedEntity != null)
 					{
 						repository.Remove(deletedEntity);

@@ -84,5 +84,23 @@ namespace VirtoCommerce.Platform.Data.Model
 		/// Date of success sent result
 		/// </summary>
 		public DateTime? SentDate { get; set; }
+
+		/// <summary>
+		/// Object id that initiate sending
+		/// </summary>
+		[StringLength(128)]
+		public string ObjectId { get; set; }
+
+		/// <summary>
+		/// Type of object that initiate sending
+		/// </summary>
+		[StringLength(128)]
+		public string ObjectTypeId { get; set; }
+
+		/// <summary>
+		/// Language of notification
+		/// </summary>
+		[StringLength(10)]
+		public string Language { get; set; }
 	}
 }

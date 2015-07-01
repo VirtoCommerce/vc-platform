@@ -22,6 +22,10 @@ namespace VirtoCommerce.Platform.Web.Model.Notification
 
 		public string ObjectId { get; set; }
 
+		public string ObjectTypeId { get; set; }
+
+		public string Language { get; set; }
+
 		public string Subject { get; set; }
 
 		public string Body { get; set; }

@@ -6,6 +6,7 @@ using AvaTaxCalcREST;
 using Microsoft.Practices.ObjectBuilder2;
 using VirtoCommerce.Domain.Cart.Events;
 using VirtoCommerce.Platform.Core.Common;
+using domainModel = VirtoCommerce.Domain.Commerce.Model;
 
 namespace AvaTax.TaxModule.Web.Observers
 {
@@ -75,18 +76,15 @@ namespace AvaTax.TaxModule.Web.Observers
                         foreach (TaxLine taxLine in getTaxResult.TaxLines ?? Enumerable.Empty<TaxLine>())
                         {
                             cart.Items.ToArray()[Int32.Parse(taxLine.LineNo)].TaxTotal = taxLine.Tax;
-                            //foreach (TaxDetail taxDetail in taxLine.TaxDetails ?? Enumerable.Empty<TaxDetail>())
-                            //{
-                            //    cart.Items.ToArray()[Int32.Parse(taxLine.LineNo)].TaxDetails = new[]
-                            //    {
-                            //        new VirtoCommerce.Domain.Commerce.Model.TaxDetail
-                            //        {
-                            //            Amount = taxDetail.Tax,
-                            //            Name = taxDetail.TaxName,
-                            //            Rate = taxDetail.Rate
-                            //        }
-                            //    };
-                            //}
+                            if (taxLine.TaxDetails != null && taxLine.TaxDetails.Any())
+                            {
+                                cart.Items.ToArray()[Int32.Parse(taxLine.LineNo)].TaxDetails = taxLine.TaxDetails.Select(taxDetail => new domainModel.TaxDetail
+                                {
+                                    Amount = taxDetail.Tax,
+                                    Name = taxDetail.TaxName,
+                                    Rate = taxDetail.Rate
+                                }).ToList();
+                            }
                         }
                     }
                 }

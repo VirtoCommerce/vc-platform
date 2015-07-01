@@ -55,8 +55,9 @@ namespace VirtoCommerce.Web.Controllers
         public ActionResult Global(string assetId)
         {
             var virtualPath = String.Format("~/App_Data/Themes/_Global/{0}", assetId);
+            var assetsVirtualPath = String.Format("~/App_Data/Themes/_Global/assets/{0}", assetId);
             var themeVirtualPath = String.Format("~/App_Data/Themes/{0}/assets/{1}", Context.Theme.Path, assetId);
-            return AssetResult(virtualPath, new[] { themeVirtualPath  }, assetId);
+            return AssetResult(virtualPath, new[] { assetsVirtualPath, themeVirtualPath }, assetId);
         }
 
         [OutputCache(CacheProfile = "AssetsCachingProfile")]

@@ -144,7 +144,7 @@ namespace VirtoCommerce.Platform.Data.Notification
 		{
 			if (notification != null)
 			{
-				var template = _notificationTemplateService.GetByNotification(notification.Type, notification.ObjectId);
+				var template = _notificationTemplateService.GetByNotification(notification.Type, notification.ObjectId, notification.ObjectTypeId, notification.Language);
 				if (template != null)
 				{
 					notification.NotificationTemplate = template;

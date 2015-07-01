@@ -6,7 +6,7 @@
 				<span>
           {{'Store' | t}}:
           <span class="current">
-						<img title="{{language_culture.native_name}}" alt="{{language_culture.native_name}}" class="flag flag-{{language_country_code}}" src="http://demo.virtocommerce.com/Content/themes/default/images/blank.gif" />
+						<img title="{{language_culture.native_name}}" alt="{{language_culture.native_name}}" class="flag flag-{{language_country_code}}" src="{{ 'blank.gif' | global_asset_url }}"/>
               {{shop.name}}, {{shop.currency}}
           </span>
 				</span>
@@ -22,7 +22,7 @@
                 {% assign store_language_culture = store_language | culture %}
                 <li {% if language == store_language %} class="selected" {% endif %}>
                   {% assign country_code = store_language | split: '-' | last | downcase %}
-                  <img alt="{{store_language_culture.native_name}}" class="flag flag-{{country_code}}" src="http://demo.virtocommerce.com/Content/themes/default/images/blank.gif" />
+                  <img alt="{{store_language_culture.native_name}}" class="flag flag-{{country_code}}" src="{{ 'blank.gif' | global_asset_url }}"/>
                     <a title="{{store_language_culture.native_name}}" href="{{store_language | link_to_switch_language}}">{{store_language_culture.native_name}}</a>
                   </li>
                 {% endfor %}

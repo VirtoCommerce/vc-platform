@@ -89,6 +89,10 @@ namespace VirtoCommerce.Platform.Core.Notification
 		/// </summary>
 		public DateTime? SentDate { get; set; }
 
+		public string ObjectTypeId { get; set; }
+
+		public string Language { get; set; }
+
 		public INotificationSendingGateway NotificationSendingGateway { get { return _notificationSendingGateway(); } }
 
 		public NotificationTemplate NotificationTemplate { get; set; }
