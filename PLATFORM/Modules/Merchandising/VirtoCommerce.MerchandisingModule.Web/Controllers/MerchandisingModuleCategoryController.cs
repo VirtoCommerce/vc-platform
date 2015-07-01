@@ -129,7 +129,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
                                GetAllCategories = string.IsNullOrEmpty(parentId)
                            };
             var result = this._searchService.Search(criteria);
-            var categories = result.Categories.Where(x => x.IsActive);
+            var categories = result.Categories.Where(x => x.IsActive ?? true);
             return this.Ok(
                 new webModel.ResponseCollection<webModel.Category>
                 {

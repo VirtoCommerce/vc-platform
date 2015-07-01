@@ -100,144 +100,163 @@ namespace VirtoCommerce.Web
             }
             else
             {
-                var currency = GetStoreCurrency(context, shop);
-                shop.Currency = currency;
-                ctx.Shop = shop;
-                ctx.Themes = await commerceService.GetThemesAsync(SiteContext.Current);
-
-                // if language is not set, set it to default shop language
-                if (String.IsNullOrEmpty(ctx.Language))
+                var isGettingStartedRequired = ConfigurationManager.AppSettings["GettingStartedRequired"];
+                if (isGettingStartedRequired != null)
                 {
-                    language = shop.DefaultLanguage;
-                    if (String.IsNullOrEmpty(language))
+                    bool redirectToGettingStartedPage = false;
+                    if (Boolean.TryParse(isGettingStartedRequired, out redirectToGettingStartedPage))
                     {
-                        throw new HttpException(404, "Store language not found");
-                    }
-
-                    CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo(language);
-                    ctx.Language = language;
-                }
-
-                if (!this.IsResourceFile()) // only load settings for resource files, no need for other contents
-                {
-                    // save info to the cookies
-                    context.Response.Cookies.Append(StoreCookie, shop.StoreId, new CookieOptions { Expires = DateTime.UtcNow.AddDays(30) });
-                    context.Response.Cookies.Append(LanguageCookie, ctx.Language, new CookieOptions { Expires = DateTime.UtcNow.AddDays(30) });
-                    context.Response.Cookies.Append(CurrencyCookie, shop.Currency, new CookieOptions { Expires = DateTime.UtcNow.AddDays(30) });
-
-                    if (context.Authentication.User != null && context.Authentication.User.Identity.IsAuthenticated)
-                    {
-                        ctx.Customer = await customerService.GetCustomerAsync(
-                            context.Authentication.User.Identity.Name, shop.StoreId);
-
-                        if (ctx.Customer == null)
+                        if (redirectToGettingStartedPage)
                         {
-                            context.Authentication.SignOut();
+                            using (var reader = new System.IO.StreamReader(HttpContext.Current.Server.MapPath("~/App_data/Help/gettingstarted.html")))
+                            {
+                                var content = reader.ReadToEndAsync().Result;
+                                HttpContext.Current.Response.Write(content);
+                            }
                         }
                         else
                         {
-                            ctx.CustomerId = ctx.Customer.Id;
-                        }
-                    }
+                            var currency = GetStoreCurrency(context, shop);
+                            shop.Currency = currency;
+                            ctx.Shop = shop;
+                            ctx.Themes = await commerceService.GetThemesAsync(SiteContext.Current);
 
-                    if (ctx.Customer == null)
-                    {
-                        var cookie = context.Request.Cookies[AnonymousCookie];
-
-                        if (string.IsNullOrEmpty(cookie))
-                        {
-                            cookie = Guid.NewGuid().ToString();
-
-                            var cookieOptions = new CookieOptions
+                            // if language is not set, set it to default shop language
+                            if (String.IsNullOrEmpty(ctx.Language))
                             {
-                                Expires = DateTime.UtcNow.AddDays(30)
-                            };
+                                language = shop.DefaultLanguage;
+                                if (String.IsNullOrEmpty(language))
+                                {
+                                    throw new HttpException(404, "Store language not found");
+                                }
 
-                            context.Response.Cookies.Append(AnonymousCookie, cookie, cookieOptions);
-                        }
-
-                        ctx.CustomerId = cookie;
-                    }
-
-                    // TODO: detect if shop exists, user has access
-                    // TODO: store anonymous customer id in cookie and update and merge cart once customer is logged in
-
-                    ctx.Linklists = await commerceService.GetListsAsync(SiteContext.Current);
-                    ctx.PageTitle = ctx.Shop.Name;
-                    ctx.Collections = await commerceService.GetCollectionsAsync(SiteContext.Current);
-                    ctx.Pages = new PageCollection();
-                    ctx.Forms = commerceService.GetForms();
-
-
-                    var cart = await commerceService.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
-                    if (cart == null)
-                    {
-                        var dtoCart = new ApiClient.DataContracts.Cart.ShoppingCart
-                        {
-                            CreatedBy = ctx.CustomerId,
-                            CreatedDate = DateTime.UtcNow,
-                            Currency = shop.Currency,
-                            CustomerId = ctx.CustomerId,
-                            CustomerName = ctx.Customer != null ? ctx.Customer.Name : null,
-                            LanguageCode = ctx.Language,
-                            Name = "default",
-                            StoreId = shop.StoreId
-                        };
-
-                        await commerceService.CreateCartAsync(dtoCart);
-                        cart = await commerceService.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
-                    }
-
-                    ctx.Cart = cart;
-
-                    if (context.Authentication.User.Identity.IsAuthenticated)
-                    {
-                        var anonymousCookie = context.Request.Cookies[AnonymousCookie];
-
-                        if (anonymousCookie != null)
-                        {
-                            var anonymousCart = await commerceService.GetCartAsync(ctx.StoreId, anonymousCookie);
-
-                            if (anonymousCart != null)
-                            {
-                                ctx.Cart = await commerceService.MergeCartsAsync(anonymousCart);
+                                CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo(language);
+                                ctx.Language = language;
                             }
+
+                            if (!this.IsResourceFile()) // only load settings for resource files, no need for other contents
+                            {
+                                // save info to the cookies
+                                context.Response.Cookies.Append(StoreCookie, shop.StoreId, new CookieOptions { Expires = DateTime.UtcNow.AddDays(30) });
+                                context.Response.Cookies.Append(LanguageCookie, ctx.Language, new CookieOptions { Expires = DateTime.UtcNow.AddDays(30) });
+                                context.Response.Cookies.Append(CurrencyCookie, shop.Currency, new CookieOptions { Expires = DateTime.UtcNow.AddDays(30) });
+
+                                if (context.Authentication.User != null && context.Authentication.User.Identity.IsAuthenticated)
+                                {
+                                    ctx.Customer = await customerService.GetCustomerAsync(
+                                        context.Authentication.User.Identity.Name, shop.StoreId);
+
+                                    if (ctx.Customer == null)
+                                    {
+                                        context.Authentication.SignOut();
+                                    }
+                                    else
+                                    {
+                                        ctx.CustomerId = ctx.Customer.Id;
+                                    }
+                                }
+
+                                if (ctx.Customer == null)
+                                {
+                                    var cookie = context.Request.Cookies[AnonymousCookie];
+
+                                    if (string.IsNullOrEmpty(cookie))
+                                    {
+                                        cookie = Guid.NewGuid().ToString();
+
+                                        var cookieOptions = new CookieOptions
+                                        {
+                                            Expires = DateTime.UtcNow.AddDays(30)
+                                        };
+
+                                        context.Response.Cookies.Append(AnonymousCookie, cookie, cookieOptions);
+                                    }
+
+                                    ctx.CustomerId = cookie;
+                                }
+
+                                // TODO: detect if shop exists, user has access
+                                // TODO: store anonymous customer id in cookie and update and merge cart once customer is logged in
+
+                                ctx.Linklists = await commerceService.GetListsAsync(SiteContext.Current);
+                                ctx.PageTitle = ctx.Shop.Name;
+                                ctx.Collections = await commerceService.GetCollectionsAsync(SiteContext.Current);
+                                ctx.Pages = new PageCollection();
+                                ctx.Forms = commerceService.GetForms();
+
+
+                                var cart = await commerceService.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
+                                if (cart == null)
+                                {
+                                    var dtoCart = new ApiClient.DataContracts.Cart.ShoppingCart
+                                    {
+                                        CreatedBy = ctx.CustomerId,
+                                        CreatedDate = DateTime.UtcNow,
+                                        Currency = shop.Currency,
+                                        CustomerId = ctx.CustomerId,
+                                        CustomerName = ctx.Customer != null ? ctx.Customer.Name : null,
+                                        LanguageCode = ctx.Language,
+                                        Name = "default",
+                                        StoreId = shop.StoreId
+                                    };
+
+                                    await commerceService.CreateCartAsync(dtoCart);
+                                    cart = await commerceService.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
+                                }
+
+                                ctx.Cart = cart;
+
+                                if (context.Authentication.User.Identity.IsAuthenticated)
+                                {
+                                    var anonymousCookie = context.Request.Cookies[AnonymousCookie];
+
+                                    if (anonymousCookie != null)
+                                    {
+                                        var anonymousCart = await commerceService.GetCartAsync(ctx.StoreId, anonymousCookie);
+
+                                        if (anonymousCart != null)
+                                        {
+                                            ctx.Cart = await commerceService.MergeCartsAsync(anonymousCart);
+                                        }
+                                    }
+
+                                    context.Response.Cookies.Delete(AnonymousCookie);
+                                }
+
+                                ctx.PriceLists = await commerceService.GetPriceListsAsync(ctx.Shop.Catalog, shop.Currency, new TagQuery());
+                                ctx.Theme = commerceService.GetTheme(SiteContext.Current, this.ResolveTheme(shop, context));
+
+                                // update theme files
+                                await commerceService.UpdateThemeCacheAsync(SiteContext.Current);
+
+                                ctx.Blogs = commerceService.GetBlogs(SiteContext.Current);
+                            }
+                            else
+                            {
+                                ctx.Theme = commerceService.GetTheme(SiteContext.Current, this.ResolveTheme(shop, context));
+                            }
+
+                            ctx.Settings = commerceService.GetSettings(
+                                ctx.Theme.ToString(),
+                                context.Request.Path.HasValue && context.Request.Path.Value.Contains(".scss") ? "''" : null);
+
+                            ctx.CountryOptionTags = commerceService.GetCountryTags();
+
+                            if (ctx.Shop.Currency.Equals("GBP", StringComparison.OrdinalIgnoreCase) || ctx.Shop.Currency.Equals("USD", StringComparison.OrdinalIgnoreCase))
+                            {
+                                ctx.Shop.MoneyFormat = commerceService.CurrencyDictionary[ctx.Shop.Currency] + "{{ amount }}";
+                            }
+                            else
+                            {
+                                ctx.Shop.MoneyFormat = "{{ amount }} " + commerceService.CurrencyDictionary[ctx.Shop.Currency];
+                            }
+
+                            context.Set("vc_sitecontext", ctx);
+
+                            await this.Next.Invoke(context);
                         }
-
-                        context.Response.Cookies.Delete(AnonymousCookie);
                     }
-
-                    ctx.PriceLists = await commerceService.GetPriceListsAsync(ctx.Shop.Catalog, shop.Currency, new TagQuery());
-                    ctx.Theme = commerceService.GetTheme(SiteContext.Current, this.ResolveTheme(shop, context));
-
-                    // update theme files
-                    await commerceService.UpdateThemeCacheAsync(SiteContext.Current);
-
-                    ctx.Blogs = commerceService.GetBlogs(SiteContext.Current);
                 }
-                else
-                {
-                    ctx.Theme = commerceService.GetTheme(SiteContext.Current, this.ResolveTheme(shop, context));
-                }
-
-                ctx.Settings = commerceService.GetSettings(
-                    ctx.Theme.ToString(),
-                    context.Request.Path.HasValue && context.Request.Path.Value.Contains(".scss") ? "''" : null);
-
-                ctx.CountryOptionTags = commerceService.GetCountryTags();
-
-                if (ctx.Shop.Currency.Equals("GBP", StringComparison.OrdinalIgnoreCase) || ctx.Shop.Currency.Equals("USD", StringComparison.OrdinalIgnoreCase))
-                {
-                    ctx.Shop.MoneyFormat = commerceService.CurrencyDictionary[ctx.Shop.Currency] + "{{ amount }}";
-                }
-                else
-                {
-                    ctx.Shop.MoneyFormat = "{{ amount }} " + commerceService.CurrencyDictionary[ctx.Shop.Currency];
-                }
-
-                context.Set("vc_sitecontext", ctx);
-
-                await this.Next.Invoke(context);
             }
         }
         #endregion

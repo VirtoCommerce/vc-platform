@@ -28,6 +28,9 @@ namespace VirtoCommerce.Web.Models
         public string Type { get; set; }
 
         [DataMember]
+        public string Group { get; set; }
+
+        [DataMember]
         public string CardNumber { get; set; }
 
         [DataMember]

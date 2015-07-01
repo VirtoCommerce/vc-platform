@@ -21,5 +21,10 @@ namespace VirtoCommerce.Platform.Core.Modularity
         /// This method is called after all modules have been initialized with Initialize().
         /// </summary>
         void PostInitialize();
+
+        /// <summary>
+        /// This method is called before uninstalling the module.
+        /// </summary>
+        void Uninstall();
     }
 }

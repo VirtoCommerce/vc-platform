@@ -2,7 +2,7 @@
     <div class="blade-inner">
         <div class="inner-block">
             <form name="detailForm" class="form">
-                <div class="form-group" ng-init="setForm(detailForm)">
+                <div ng-init="setForm(detailForm)">
                     <label class="form-label">SKU</label>
                     <div class="form-input">
                         <input ng-class="{'error': detailForm.code.$invalid && !detailForm.code.$pristine}" required class="form-control" ng-model="blade.item.code" name="code" placeholder="Enter item sku" ui-validate=" 'codeValidator($value)' " />
@@ -41,7 +41,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="column" ng-if="blade.item.productType==='Physical'">
+                        <div class="column" ng-if="blade.item.productType!=='Digital'">
                             <div class="form-group">
                                 <div class="form-control __checkbox">
                                     <label class="form-label">
@@ -54,7 +54,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group" ng-if="blade.item.productType==='Physical'">
+                <div class="form-group" ng-if="blade.item.productType!=='Digital'">
                     <div class="columns clearfix">
                         <div class="column">
                             <div class="form-group">
@@ -74,7 +74,7 @@
                         </div>
                         <div class="column">
                             <div class="form-group">
-                                <label class="form-label">Tax Type <a href="" ng-click="openCoreSettingsManagement()"><i class="form-ico fa fa-pencil"></i></a></label>
+                                <label class="form-label">Tax type <a href="" ng-click="openDictionarySettingManagement()" va-permission="platform:setting:manage"><i class="form-ico fa fa-pencil"></i></a></label>
                                 <div class="form-input">
                                     <ui-select ng-model="blade.item.taxType">
                                         <ui-select-match allow-clear="true" placeholder="Select...">{{$select.selected}}</ui-select-match>
@@ -138,7 +138,7 @@
                         </div>
                         <div class="column">
                             <div class="form-group">
-                                <label class="form-label">Tax Type <a href="" ng-click="openCoreSettingsManagement()"><i class="form-ico fa fa-pencil"></i></a></label>
+                                <label class="form-label">Tax type <a href="" ng-click="openDictionarySettingManagement()" va-permission="platform:setting:manage"><i class="form-ico fa fa-pencil"></i></a></label>
                                 <div class="form-input">
                                     <ui-select ng-model="blade.item.taxType">
                                         <ui-select-match allow-clear="true" placeholder="Select...">{{$select.selected}}</ui-select-match>

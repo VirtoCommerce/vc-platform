@@ -25,42 +25,44 @@
             <fieldset ng-if="blade.currentEntity.arrayValues.length > 0">
                 <legend>Current values</legend>
                 <div class="table-wrapper">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th class="table-col">
-                                    <label class="form-control __checkbox">
-                                        <input type="checkbox" ng-model="selectedAll" ng-change="checkAll(selectedAll)" />
-                                        <span class="check"></span>
-                                    </label>
-                                </th>
-                                <th class="table-col">Value</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="table-item" ng-repeat="data in blade.currentEntity.arrayValues" ng-class="{'__selected': data === selectedItem}" context-menu data-target="pd_menu_{{$index}}" ng-click='selectItem(data)'>
-                                <td class="table-col">
-                                    <label class="form-control __checkbox">
-                                        <input type="checkbox" ng-model="data._selected">
-                                        <span class="check"></span>
-                                    </label>
-                                </td>
-                                <td class="table-col">
-                                    <div class="form-input" ng-if="blade.currentEntity.valueType !== 'Number'">
-                                        <input required ng-model="data.value" type="text" />
-                                    </div>
-                                    <div class="form-input __number" ng-if="blade.currentEntity.valueType === 'Number'">
-                                        <input va-number required ng-model="data.value" step="1">
-                                    </div>
-                                    <ul role="menu" class="menu __context" id="pd_menu_{{$index}}">
-                                        <li class="menu-item" ng-click='delete($index)'>
-                                            <i class="menu-ico fa fa-trash-o"></i> Delete
-                                        </li>
-                                    </ul>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <form name="formScope" class="form">
+                        <table class="table" ng-init="setForm(formScope)">
+                            <thead>
+                                <tr>
+                                    <th class="table-col">
+                                        <label class="form-control __checkbox">
+                                            <input type="checkbox" ng-model="blade.selectedAll" ng-change="checkAll()" />
+                                            <span class="check"></span>
+                                        </label>
+                                    </th>
+                                    <th class="table-col">Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="table-item" ng-repeat="data in blade.currentEntity.arrayValues" ng-class="{'__selected': data === selectedItem}" context-menu data-target="pd_menu_{{$index}}" ng-click='selectItem(data)'>
+                                    <td class="table-col">
+                                        <label class="form-control __checkbox">
+                                            <input type="checkbox" ng-model="data._selected">
+                                            <span class="check"></span>
+                                        </label>
+                                    </td>
+                                    <td class="table-col">
+                                        <div class="form-input" ng-if="blade.currentEntity.valueType !== 'Number'">
+                                            <input required ng-model="data.value" type="text" />
+                                        </div>
+                                        <div class="form-input __number" ng-if="blade.currentEntity.valueType === 'Number'">
+                                            <input va-number required ng-model="data.value" step="1">
+                                        </div>
+                                        <ul role="menu" class="menu __context" id="pd_menu_{{$index}}">
+                                            <li class="menu-item" ng-click='delete($index)'>
+                                                <i class="menu-ico fa fa-trash-o"></i> Delete
+                                            </li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </form>
                 </div>
             </fieldset>
         </div>
