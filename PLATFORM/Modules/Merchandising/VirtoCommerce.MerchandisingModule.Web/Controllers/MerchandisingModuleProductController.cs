@@ -6,6 +6,9 @@ using System.Web.Http.Description;
 using System.Web.Http.ModelBinding;
 using VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.Domain.Catalog.Services;
+using VirtoCommerce.Domain.Commerce.Model;
+using VirtoCommerce.Domain.Commerce.Services;
+using VirtoCommerce.Domain.Inventory.Services;
 using VirtoCommerce.Domain.Search.Filters;
 using VirtoCommerce.Domain.Search.Model;
 using VirtoCommerce.Domain.Search.Services;
@@ -18,6 +21,7 @@ using VirtoCommerce.Platform.Core.Common;
 using coreModel = VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.MerchandisingModule.Web.Services;
 using VirtoCommerce.Platform.Core.Caching;
+using storeModel = VirtoCommerce.Domain.Store.Model;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 {
@@ -31,12 +35,13 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		private readonly IBlobUrlResolver _blobUrlResolver;
 		private readonly IBrowseFilterService _browseFilterService;
 		private readonly IItemBrowsingService _browseService;
-		private readonly CacheManager _cacheManager;
 		private readonly IPropertyService _propertyService;
+        private readonly IInventoryService _inventoryService;
+        private readonly ICommerceService _commerceService;
 
 		public MerchandisingModuleProductController(ICatalogSearchService searchService, ICategoryService categoryService,
-								 IStoreService storeService, IItemService itemService, IBlobUrlResolver blobUrlResolver,
-								 IBrowseFilterService browseFilterService, IItemBrowsingService browseService, CacheManager cacheManager, IPropertyService propertyService)
+								 IInventoryService inventoryService, IStoreService storeService, IItemService itemService, IBlobUrlResolver blobUrlResolver,
+								 IBrowseFilterService browseFilterService, IItemBrowsingService browseService, IPropertyService propertyService, ICommerceService commerceService)
 		{
 			_itemService = itemService;
 			_storeService = storeService;
@@ -45,22 +50,31 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 			_blobUrlResolver = blobUrlResolver;
 			_browseFilterService = browseFilterService;
 			_browseService = browseService;
-			_cacheManager = cacheManager;
 			_propertyService = propertyService;
+		    _commerceService = commerceService;
+		    _inventoryService = inventoryService;
 		}
 
 		#region Public Methods and Operators
 		/// GET: api/mp/products?ids=212&ids=2123&ids=434
+		/*
 		[HttpGet]
 		[ArrayInput(ParameterName = "ids")]
 		[ResponseType(typeof(CatalogItem[]))]
 		[ClientCache(Duration = 30)]
 		[Route("")]
-		public IHttpActionResult GetProductsByIds([FromUri] string[] ids, [FromUri] coreModel.ItemResponseGroup responseGroup = coreModel.ItemResponseGroup.ItemInfo)
+		public IHttpActionResult GetProductsByIds(string store, [FromUri] string[] ids, [FromUri] coreModel.ItemResponseGroup responseGroup = coreModel.ItemResponseGroup.ItemInfo)
 		{
-			var retVal = InnerGetProductsByIds(ids, responseGroup);
+            var fullLoadedStore = _storeService.GetById(store);
+            if (fullLoadedStore == null)
+            {
+                throw new NullReferenceException(store + " not found");
+            }
+
+			var retVal = InnerGetProductsByIds(fullLoadedStore, ids, responseGroup);
 			return Ok(retVal);
 		}
+         * */
 
 
 		[HttpGet]
@@ -69,7 +83,13 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		[Route("{product}")]
 		public IHttpActionResult GetProduct(string store, string product, [FromUri] coreModel.ItemResponseGroup responseGroup = coreModel.ItemResponseGroup.ItemLarge, string language = "en-us")
 		{
-			var products = InnerGetProductsByIds(new string[] { product }, responseGroup);
+            var fullLoadedStore = _storeService.GetById(store);
+            if (fullLoadedStore == null)
+            {
+                throw new NullReferenceException(store + " not found");
+            }
+
+			var products = InnerGetProductsByIds(fullLoadedStore, new [] { product }, responseGroup);
 			var retVal = products.FirstOrDefault();
 			if(retVal != null)
 			{
@@ -85,17 +105,23 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		[Route("")]
 		public IHttpActionResult GetProductByCode(string store, [FromUri] string code, [FromUri] coreModel.ItemResponseGroup responseGroup = coreModel.ItemResponseGroup.ItemLarge, string language = "en-us")
 		{
+            var fullLoadedStore = _storeService.GetById(store);
+            if (fullLoadedStore == null)
+            {
+                throw new NullReferenceException(store + " not found");
+            }
 
 			var searchCriteria = new SearchCriteria
 			{
 				ResponseGroup = ResponseGroup.WithProducts | ResponseGroup.WithVariations,
 				Code = code,
+                //CatalogId = fullLoadedStore.Catalog
 			};
 
 			var result = _searchService.Search(searchCriteria);
 			if (result.Products != null && result.Products.Any())
 			{
-				var products = InnerGetProductsByIds(new string[] { result.Products.First().Id }, responseGroup);
+				var products = InnerGetProductsByIds(fullLoadedStore, new [] { result.Products.First().Id }, responseGroup);
 				var retVal = products.FirstOrDefault();
 				if (retVal != null)
 				{
@@ -112,16 +138,23 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		[Route("")]
 		public IHttpActionResult GetProductByKeyword(string store, [FromUri] string keyword, [FromUri] coreModel.ItemResponseGroup responseGroup = coreModel.ItemResponseGroup.ItemLarge, string language = "en-us")
 		{
+            var fullLoadedStore = _storeService.GetById(store);
+            if (fullLoadedStore == null)
+            {
+                throw new NullReferenceException(store + " not found");
+            }
+
 			var searchCriteria = new SearchCriteria
 			{
 				ResponseGroup = ResponseGroup.WithProducts | ResponseGroup.WithVariations,
 				SeoKeyword = keyword,
+                //CatalogId = fullLoadedStore.Catalog
 			};
 
 			var result = _searchService.Search(searchCriteria);
 			if (result.Products != null && result.Products.Any())
 			{
-				var products = InnerGetProductsByIds(new string[] { result.Products.First().Id }, responseGroup);
+				var products = InnerGetProductsByIds(fullLoadedStore, new [] { result.Products.First().Id }, responseGroup);
 				var retVal = products.FirstOrDefault();
 				if (retVal != null)
 				{
@@ -162,6 +195,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 			{
 				throw new NullReferenceException(store + " not found");
 			}
+
 			var catalog = fullLoadedStore.Catalog;
 
 			string categoryId = null;
@@ -282,13 +316,20 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 			//Load ALL products 
 			var searchResults = _browseService.SearchItems(criteria, responseGroup);
 
-			return this.Ok(searchResults);
+            // populate inventory
+		    if ((responseGroup & ItemResponseGroup.ItemProperties) == ItemResponseGroup.ItemProperties)
+		    {
+                PopulateInventory(fullLoadedStore.FulfillmentCenter, searchResults.Items);
+		    }
+
+		    return this.Ok(searchResults);
 		}
 
-		private IEnumerable<CatalogItem> InnerGetProductsByIds(String[] ids, ItemResponseGroup responseGroup)
+        private IEnumerable<CatalogItem> InnerGetProductsByIds(storeModel.Store store, String[] ids, ItemResponseGroup responseGroup)
 		{
 			var retVal = new List<CatalogItem>();
-			var products = _itemService.GetByIds(ids, responseGroup);
+			var products = _itemService.GetByIds(ids, responseGroup);//.Where(p=>p.CatalogId == store.Catalog);
+
 			foreach (var product in products)
 			{
 				coreModel.Property[] properties = null;
@@ -296,6 +337,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 				{
 					properties = GetAllProductProperies(product);
 				}
+
 				if (product != null)
 				{
 					var webModelProduct = product.ToWebModel(_blobUrlResolver, properties);
@@ -307,8 +349,28 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 					retVal.Add(webModelProduct);
 				}
 			}
+
+            if ((responseGroup & ItemResponseGroup.Inventory) == ItemResponseGroup.Inventory)
+            {
+                this.PopulateInventory(store.FulfillmentCenter, retVal);
+            }
 			return retVal;
 		}
+
+	    private void PopulateInventory(FulfillmentCenter center, IEnumerable<CatalogItem> items)
+	    {
+	        if (center == null || items == null || !items.Any())
+	            return;
+
+            var inventories = _inventoryService.GetProductsInventoryInfos(items.Select(x=>x.Id).ToArray()).ToList();
+
+	        foreach (var catalogItem in items)
+	        {
+                var productInventory = inventories.FirstOrDefault(x => x.ProductId == catalogItem.Id && x.FulfillmentCenterId == center.Id);
+                if (productInventory != null)
+	                catalogItem.Inventory = productInventory.ToWebModel();
+	        }
+	    }
 
 		private coreModel.Property[] GetAllProductProperies(coreModel.CatalogProduct product)
 		{

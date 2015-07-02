@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace VirtoCommerce.Domain.Catalog.Model
 {
@@ -17,8 +13,9 @@ namespace VirtoCommerce.Domain.Catalog.Model
 		Variations = 1 << 5,
 		Seo = 1 << 6,
         Categories = 1 << 7,
+        Inventory = 1 << 8,
 		ItemSmall = ItemInfo | ItemAssets | ItemProperties,
         ItemMedium = ItemSmall | ItemAssociations | ItemEditorialReviews,
-        ItemLarge = ItemMedium | Variations | Seo | Categories
+        ItemLarge = ItemMedium | Variations | Seo | Categories | Inventory
 	}
 }

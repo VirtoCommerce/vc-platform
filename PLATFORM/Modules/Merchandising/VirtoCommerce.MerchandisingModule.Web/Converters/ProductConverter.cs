@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Core.Asset;
 using coreModel = VirtoCommerce.Domain.Catalog.Model;
+using coreInvModel = VirtoCommerce.Domain.Inventory.Model;
 using webModel = VirtoCommerce.MerchandisingModule.Web.Model;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Converters
@@ -11,8 +11,8 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
     public static class ProductConverter
     {
         #region Public Methods and Operators
-     
-        public static webModel.CatalogItem ToWebModel(this coreModel.CatalogProduct product, IBlobUrlResolver blobUrlResolver = null, coreModel.Property[] properties = null)
+
+        public static webModel.CatalogItem ToWebModel(this coreModel.CatalogProduct product, IBlobUrlResolver blobUrlResolver = null, coreModel.Property[] properties = null, coreInvModel.InventoryInfo inventory = null)
         {
             webModel.CatalogItem retVal = new webModel.Product();
 			if (product.MainProductId != null)
@@ -65,7 +65,6 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
             {
                 retVal.Associations = product.Associations.Select(x => x.ToWebModel()).ToArray();
             }
-
 			
 			if(product.PropertyValues != null)
 			{
@@ -98,6 +97,11 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
 					}
 				}
 			}
+
+            if (inventory != null)
+            {
+                retVal.Inventory = inventory.ToWebModel();
+            }
 
             return retVal;
         }
