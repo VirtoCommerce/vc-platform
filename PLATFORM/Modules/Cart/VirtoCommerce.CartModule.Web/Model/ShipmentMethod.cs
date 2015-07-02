@@ -16,6 +16,7 @@ namespace VirtoCommerce.CartModule.Web.Model
 		public string OptionName { get; set; }
 		public string OptionDescription { get; set; }
 		public string LogoUrl { get; set; }
+		public string TaxType { get; set; }
 		[JsonConverter(typeof(StringEnumConverter))]
 		public CurrencyCodes Currency { get; set; }
 		public decimal Price { get; set; }

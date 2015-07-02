@@ -24,7 +24,7 @@ namespace VirtoCommerce.Domain.Cart.Model
 		public decimal? Length { get; set; }
 		public decimal? Width { get; set; }
 
-
+		public string TaxType { get; set; }
 		public bool? TaxIncluded { get; set; }
 
 		public decimal ShippingPrice { get; set; }

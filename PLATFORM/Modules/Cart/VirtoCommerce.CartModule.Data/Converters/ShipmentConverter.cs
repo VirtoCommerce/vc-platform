@@ -77,7 +77,7 @@ namespace VirtoCommerce.CartModule.Data.Converters
 																		   x => x.TaxIncluded, x => x.Currency,
 																		   x => x.WeightUnit, x => x.WeightValue,
 																		   x => x.DimensionHeight, x => x.DimensionLength, x => x.DimensionUnit,
-																		   x => x.DimensionWidth);
+																		   x => x.DimensionWidth, x => x.TaxType);
 			target.InjectFrom(patchInjection, source);
 
 		

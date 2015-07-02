@@ -10,14 +10,26 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.CatalogModule.Data.Model
 {
-    public class Category : CategoryBase
-    {
+	public class Category : AuditableEntity
+	{
 		public Category()
 		{
+			Id = Guid.NewGuid().ToString("N");
+			Images = new NullCollection<Image>();
 			CategoryPropertyValues = new NullCollection<CategoryPropertyValue>();
 			OutgoingLinks = new NullCollection<CategoryRelation>();
 			IncommingLinks = new NullCollection<CategoryRelation>();
 		}
+
+		[Required]
+		[StringLength(64)]
+		[CustomValidation(typeof(Category), "ValidateCategoryCode", ErrorMessage = @"Code can't contain $+;=%{}[]|\/@ ~#!^*&()?:'<>, characters")]
+		public string Code { get; set; }
+
+		[Required]
+		public bool IsActive { get; set; }
+
+		public int Priority { get; set; }
 		[Required]
 		[StringLength(128)]
 		public string Name { get; set; }
@@ -26,17 +38,54 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 
 		public DateTime? EndDate { get; set; }
 
-        #region Navigation Properties
+		[StringLength(64)]
+		public string TaxType { get; set; }
+
+		#region Navigation Properties
+		[StringLength(128)]
+		[ForeignKey("Catalog")]
+		[Required]
+		public string CatalogId { get; set; }
+
+		public virtual CatalogBase Catalog { get; set; }
 
 		[StringLength(128)]
-        [ForeignKey("PropertySet")]
+		[ForeignKey("ParentCategory")]
+		public string ParentCategoryId { get; set; }
+
+		public virtual Category ParentCategory { get; set; }
+
+		public virtual ObservableCollection<Image> Images { get; set; }
+
+		[StringLength(128)]
+		[ForeignKey("PropertySet")]
 		public string PropertySetId { get; set; }
 
-        public virtual PropertySet PropertySet { get; set; }
+		public virtual PropertySet PropertySet { get; set; }
 		public virtual ObservableCollection<CategoryPropertyValue> CategoryPropertyValues { get; set; }
 		//It new navigation property for link replace to stupid CategoryLink (will be removed later)
 		public virtual ObservableCollection<CategoryRelation> OutgoingLinks { get; set; }
 		public virtual ObservableCollection<CategoryRelation> IncommingLinks { get; set; }
-	    #endregion
-    }
+
+		#endregion
+
+		public static ValidationResult ValidateCategoryCode(string value, ValidationContext context)
+		{
+			if (value == null || string.IsNullOrEmpty(value))
+			{
+				return new ValidationResult("Code can't be empty");
+			}
+
+			const string invalidCodeCharacters = @"$+;=%{}[]|\/@ ~#!^*&()?:'<>,";
+
+			if (value.IndexOfAny(invalidCodeCharacters.ToCharArray()) > -1)
+			{
+				return new ValidationResult((@"Code must be valid"));
+			}
+			else
+			{
+				return ValidationResult.Success;
+			}
+		}
+	}
 }

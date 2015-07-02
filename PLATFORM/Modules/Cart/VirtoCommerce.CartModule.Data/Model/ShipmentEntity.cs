@@ -46,6 +46,9 @@ namespace VirtoCommerce.CartModule.Data.Model
 		[Column(TypeName = "Money")]
 		public decimal TaxTotal { get; set; }
 
+		[StringLength(64)]
+		public string TaxType { get; set; }
+
 		public virtual ObservableCollection<AddressEntity> Addresses { get; set; }
 		public virtual ObservableCollection<LineItemEntity> Items { get; set; }
 		public virtual ObservableCollection<TaxDetailEntity> TaxDetails { get; set; }

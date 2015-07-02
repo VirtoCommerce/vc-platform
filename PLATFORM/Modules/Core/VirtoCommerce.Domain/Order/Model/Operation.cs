@@ -7,7 +7,7 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Domain.Order.Model
 {
-	public abstract class Operation : AuditableEntity, IOperation
+	public abstract class Operation : AuditableEntity, IOperation, ISupportCancellation
 	{
 		public string OperationType { 
 			get
@@ -20,13 +20,20 @@ namespace VirtoCommerce.Domain.Order.Model
 		public string Number { get; set; }
 		public bool IsApproved { get; set; }
 		public string Status { get; set; }
-		
-		
+
 		public string Comment { get; set; }
 		public CurrencyCodes Currency { get; set; }
 		public bool TaxIncluded { get; set;	}
 		public decimal Sum { get; set; }
 		public decimal Tax { get; set; }
+
+		#region ISupportCancelation Members
+
+		public bool IsCancelled { get; set; }
+		public DateTime? CancelledDate { get; set; }
+		public string CancelReason { get; set; }
+
+		#endregion
 
 		public ICollection<OperationProperty> Properties { get; set; }
 		public abstract IEnumerable<Operation> ChildrenOperations

@@ -57,6 +57,8 @@ namespace VirtoCommerce.CartModule.Web.Model
 		public decimal DiscountTotal { get; set; }
 		public decimal TaxTotal { get; set; }
 
+		public string TaxType { get; set; }
+
 		#region IHaveTaxDetalization Members
 		public ICollection<TaxDetail> TaxDetails { get; set; }
 		#endregion

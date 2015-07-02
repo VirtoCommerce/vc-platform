@@ -41,6 +41,8 @@ namespace VirtoCommerce.OrderModule.Data.Model
 		public decimal? Length { get; set; }
 		public decimal? Width { get; set; }
 
+		[StringLength(64)]
+		public string TaxType { get; set; }
 
 		public string CustomerOrderId { get; set; }
 		public virtual CustomerOrderEntity CustomerOrder { get; set; }

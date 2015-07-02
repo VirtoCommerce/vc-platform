@@ -12,6 +12,7 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         public bool Virtual { get; set; }
 
         public string Code { get; set; }
+		public string TaxType { get; set; }
 		public Catalog Catalog { get; set; }
         public string CatalogId { get; set; }
         public string Name { get; set; }

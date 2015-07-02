@@ -62,6 +62,15 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             MapEntity<dataModel.PropertySet>(modelBuilder, toTable: "PropertySet");
             MapEntity<dataModel.PropertySetProperty>(modelBuilder, toTable: "PropertySetProperty");
 
+
+			#region Category
+			modelBuilder.Entity<dataModel.Category>().HasKey(x => x.Id)
+					.Property(x => x.Id);
+			modelBuilder.Entity<dataModel.Category>().HasMany(c => c.Images).WithOptional(p => p.Category).HasForeignKey(x => x.CategoryId).WillCascadeOnDelete(true);
+			modelBuilder.Entity<dataModel.Category>().HasOptional(x=>x.ParentCategory).WithMany().HasForeignKey(x => x.ParentCategoryId).WillCascadeOnDelete(false);
+			modelBuilder.Entity<dataModel.Category>().ToTable("Category"); 
+			#endregion
+
 			modelBuilder.Entity<dataModel.Image>().ToTable("CatalogImage");
 			modelBuilder.Entity<dataModel.Asset>().ToTable("CatalogAsset");
 
@@ -74,7 +83,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 			modelBuilder.Entity<dataModel.Item>().HasOptional(m => m.Category).WithMany().WillCascadeOnDelete(false);
             modelBuilder.Entity<dataModel.Category>().HasOptional(m => m.PropertySet).WithMany().WillCascadeOnDelete(true);
             modelBuilder.Entity<dataModel.Catalog>().HasOptional(m => m.PropertySet).WithMany().WillCascadeOnDelete(true);
-			modelBuilder.Entity<dataModel.CategoryBase>().HasMany(c => c.Images).WithOptional(p => p.Category).HasForeignKey(x=>x.CategoryId).WillCascadeOnDelete(true);
+		
 
 
 
@@ -102,21 +111,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             });
             #endregion
 
-            #region Category TPT
-            modelBuilder.Entity<dataModel.CategoryBase>().Map(entity =>
-            {
-                entity.ToTable("CategoryBase");
-            });
-            modelBuilder.Entity<dataModel.Category>().Map(entity =>
-            {
-                entity.ToTable("Category");
-            });
-            //modelBuilder.Entity<dataModel.LinkedCategory>().Map(entity =>
-            //{
-            //	entity.ToTable("LinkedCategory");
-            //});
-            #endregion
-
+       
             #region Item TPH
             MapEntity<dataModel.Item>(modelBuilder, toTable: "Item");
             MapEntity<dataModel.Product>(modelBuilder, toTable: "Item", discriminatorValue: "Product");
@@ -185,9 +180,9 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 
 
         #region ICatalogRepository Members
-        public IQueryable<dataModel.CategoryBase> Categories
+        public IQueryable<dataModel.Category> Categories
         {
-            get { return GetAsQueryable<dataModel.CategoryBase>(); }
+            get { return GetAsQueryable<dataModel.Category>(); }
         }
 
         public IQueryable<dataModel.CatalogBase> Catalogs
@@ -272,8 +267,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 
             if (category.ParentCategoryId != null)
             {
-                var parentCategory = Categories.OfType<dataModel.Category>()
-                                    .FirstOrDefault(x => x.Id == category.ParentCategoryId);
+                var parentCategory = Categories.FirstOrDefault(x => x.Id == category.ParentCategoryId);
                 if (parentCategory != null)
                 {
                     retVal.Add(parentCategory);
@@ -285,8 +279,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 
         public dataModel.Category GetCategoryById(string categoryId)
         {
-            var result = Categories.OfType<dataModel.Category>()
-                .Include(x => x.CategoryPropertyValues)
+            var result = Categories.Include(x => x.CategoryPropertyValues)
                 .Include(x => x.OutgoingLinks)
                 .Include(x => x.IncommingLinks)
 				.Include(x=> x.Images)
@@ -374,8 +367,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             var propSet = PropertySets.FirstOrDefault(x => x.PropertySetProperties.Any(y => y.PropertyId == propId));
             if (propSet != null)
             {
-                var categoryId = Categories.OfType<dataModel.Category>()
-                                   .Where(x => x.PropertySetId == propSet.Id)
+                var categoryId = Categories.Where(x => x.PropertySetId == propSet.Id)
                                    .Select(x => x.Id).FirstOrDefault();
                 if (categoryId != null)
                 {

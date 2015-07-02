@@ -11,7 +11,6 @@
 			"Property.reduced.sql",
 			"PropertySet.sql",
 			"PropertySetProperty.reduced.sql",
-			"CategoryBase.sql", 
 			"Category.sql",
 			"LinkedCategory.sql",
 			"Item.reduced.sql",

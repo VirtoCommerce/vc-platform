@@ -14,7 +14,6 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 			"PropertyAttribute.sql",
 			"PropertySet.sql",
 			"PropertySetProperty.sql",
-			"CategoryBase.sql", 
 			"Category.sql",
 			"LinkedCategory.sql",
 			"Item.sql",

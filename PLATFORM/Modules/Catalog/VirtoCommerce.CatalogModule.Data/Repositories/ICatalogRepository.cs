@@ -11,7 +11,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 {
 	public interface ICatalogRepository : IRepository
 	{
-		IQueryable<foundation.CategoryBase> Categories { get; }
+		IQueryable<foundation.Category> Categories { get; }
 		IQueryable<foundation.CatalogBase> Catalogs { get; }
 		IQueryable<foundation.Item> Items { get; }
 		IQueryable<foundation.Property> Properties { get; }

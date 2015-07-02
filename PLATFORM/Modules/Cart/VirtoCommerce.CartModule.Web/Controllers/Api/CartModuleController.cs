@@ -123,7 +123,8 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 					OptionDescription = x.OptionDescription,
 					Price = x.Rate,
 					ShipmentMethodCode = x.ShippingMethod.Code,
-					LogoUrl = x.ShippingMethod.LogoUrl
+					LogoUrl = x.ShippingMethod.LogoUrl,
+					TaxType = x.ShippingMethod.TaxType
 				});
 			
 			return Ok(retVal);

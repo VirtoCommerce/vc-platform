@@ -5,11 +5,12 @@ using System.Web;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using VirtoCommerce.Domain.Commerce.Model;
+using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.OrderModule.Web.Model
 {
-	public class Operation : AuditableEntity
+	public class Operation : AuditableEntity, ISupportCancellation
 	{
 	
 		public string OperationType { get; set; }
@@ -29,10 +30,14 @@ namespace VirtoCommerce.OrderModule.Web.Model
 		public bool TaxIncluded { get; set; }
 		public decimal Sum { get; set; }
 		public decimal Tax { get; set; }
-		
+
+		#region ISupportCancelation Members
+
 		public bool IsCancelled { get; set; }
 		public DateTime? CancelledDate { get; set; }
 		public string CancelReason { get; set; }
+
+		#endregion
 
 		public string ParentOperationId { get; set; }
 

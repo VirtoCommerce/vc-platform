@@ -11,7 +11,7 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 		public CatalogBase()
 		{
 			Id = Guid.NewGuid().ToString("N");
-			CategoryBases = new NullCollection<CategoryBase>();
+			
 			IncommingLinks = new NullCollection<CategoryRelation>();
 		}
 
@@ -27,7 +27,6 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 		public string OwnerId { get; set; }
 
 		#region Navigation Properties
-		public virtual ObservableCollection<CategoryBase> CategoryBases { get; set; }
 		public virtual ObservableCollection<CategoryRelation> IncommingLinks{ get; set; }
 
 		#endregion

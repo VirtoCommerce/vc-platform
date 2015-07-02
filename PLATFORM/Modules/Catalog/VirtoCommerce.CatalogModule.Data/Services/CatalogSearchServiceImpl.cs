@@ -63,7 +63,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
             {
                 if (!String.IsNullOrEmpty(criteria.CatalogId))
                 {
-                    var query = repository.Categories.OfType<dataModel.Category>().Where(x => x.CatalogId == criteria.CatalogId);
+                    var query = repository.Categories.Where(x => x.CatalogId == criteria.CatalogId);
 
 					var dbCatalog =  repository.GetCatalogById(criteria.CatalogId);
 
@@ -79,7 +79,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 							var dbCategory = repository.GetCategoryById(criteria.CategoryId);
                             //Need return all linked categories also
 							var allLinkedPhysicalCategoriesIds = dbCategory.IncommingLinks.Select(x => x.SourceCategoryId).ToArray();
-					        query = repository.Categories.OfType<dataModel.Category>();
+					        query = repository.Categories;
 							if (allLinkedPhysicalCategoriesIds.Any())
 							{
 								if (criteria.HideDirectLinedCategories)
@@ -127,12 +127,12 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 																							  .Where(x=>x.TargetCategoryId == null)
 																							  .Select(x => x.SourceCategoryId);
                             //Search in all catalogs
-                            query = repository.Categories.OfType<dataModel.Category>();
+                            query = repository.Categories;
                             query = query.Where(x => (x.CatalogId == criteria.CatalogId && (x.ParentCategoryId == null || criteria.GetAllCategories)) || allLinkedCategoriesIds.Contains(x.Id));
                         }
                     }
 
-                    var categoryIds = query.OfType<dataModel.Category>().Select(x => x.Id).ToArray();
+                    var categoryIds = query.Select(x => x.Id).ToArray();
 
                     var categories = new ConcurrentBag<coreModel.Category>();
                     var parallelOptions = new ParallelOptions
