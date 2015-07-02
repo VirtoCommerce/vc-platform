@@ -16,7 +16,14 @@
 
     {% form 'customer_login' %}
 
-      <h1>{{ 'customer.login.title' | t }}</h1>
+      {% if impersonated_user_name != null %}
+        <h1>
+            {{ 'customer.login.title' | t }}<br />
+            <small>for {{ impersonated_user_name }}</small>
+        </h1>
+      {% else %}
+        <h1>{{ 'customer.login.title' | t }}</h1>
+      {% endif %}
 
       {% include 'form-errors-custom' %}
 
@@ -33,6 +40,10 @@
         </p>
 
       {% endif %}
+
+      {% if impersonated_user_id != null %}
+        <input id="impersonated_user_id" name="customer[impersonated_user_id]" type="hidden" value="{{ impersonated_user_id }}" />
+      {% endid %}
 
         <p>
           <input type="submit" class="btn" value="{{ 'customer.login.sign_in' | t }}">
