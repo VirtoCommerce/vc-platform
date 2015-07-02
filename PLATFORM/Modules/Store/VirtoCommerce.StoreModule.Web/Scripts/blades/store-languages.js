@@ -52,7 +52,7 @@
         $scope.bladeClose();
     };
 
-    blade.headIcon = 'fa fa-language';
+    blade.headIcon = 'fa-language';
 
     $scope.$watch('blade.parentBlade.currentEntity', initializeBlade);
 

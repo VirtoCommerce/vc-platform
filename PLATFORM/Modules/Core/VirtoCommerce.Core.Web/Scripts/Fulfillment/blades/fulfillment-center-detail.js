@@ -53,7 +53,7 @@
         }
     };
 
-    $scope.blade.headIcon = 'fa fa-wrench';
+    $scope.blade.headIcon = 'fa-wrench';
 
     $scope.blade.toolbarCommands = [
         {

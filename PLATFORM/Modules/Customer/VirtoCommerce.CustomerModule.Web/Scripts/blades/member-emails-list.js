@@ -54,7 +54,7 @@
         $scope.bladeClose();
     };
 
-    $scope.blade.headIcon = 'fa fa-user';
+    $scope.blade.headIcon = 'fa-user';
 
     $scope.blade.toolbarCommands = [
         {
