@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.customerModule')
-.controller('virtoCommerce.customerModule.memberDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.customerModule.contacts', 'virtoCommerce.customerModule.organizations', 'platformWebApp.dialogService', function ($scope, bladeNavigationService, contacts, organizations, dialogService) {
+.controller('virtoCommerce.customerModule.memberDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.customerModule.contacts', 'virtoCommerce.customerModule.organizations', 'platformWebApp.accounts', 'platformWebApp.dialogService', function ($scope, bladeNavigationService, contacts, organizations, accounts, dialogService) {
     $scope.blade.currentResource = $scope.blade.isOrganization ? organizations : contacts;
 
     $scope.blade.refresh = function (parentRefresh) {
@@ -11,6 +11,32 @@
                 if (parentRefresh) {
                     $scope.blade.parentBlade.refresh();
                 }
+
+                /// hiding some UI functionality until it's fully implemented. Need to release
+                //if (!$scope.blade.isOrganization && data.emails.length > 0) {
+                //    accounts.get({ id: data.emails[0] }, function (account) {
+                //        if (account.logins) {
+                //            $scope.blade.toolbarCommands.push(
+                //            {
+                //                name: "Login on behalf",
+                //                icon: 'fa fa-key',
+                //                executeMethod: function () {
+                //                    var newBlade = {
+                //                        id: 'memberDetailChild',
+                //                        currentEntityId: $scope.blade.currentEntityId,
+                //                        title: 'Login on behalf of ' + $scope.blade.currentEntity.fullName,
+                //                        controller: 'virtoCommerce.customerModule.loginOnBehalfListController',
+                //                        template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/loginOnBehalf-list.tpl.html'
+                //                    };
+                //                    bladeNavigationService.showBlade(newBlade, $scope.blade);
+                //                },
+                //                canExecuteMethod: function () { return true; },
+                //                permission: 'customer:loginOnBehalf'
+                //            });
+                //        }
+                //    },
+                //    function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+                //}
             },
             function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
         } else {
@@ -132,27 +158,6 @@
             permission: 'customer:manage'
         }
     ];
-
-    /// hidding some UI functionality until it's fully implemented. Need to release
-    //if (!$scope.blade.isOrganization) {
-    //    $scope.blade.toolbarCommands.push(
-    //    {
-    //        name: "Login on behalf",
-    //        icon: 'fa fa-key',
-    //        executeMethod: function () {
-    //            var newBlade = {
-    //                id: 'memberDetailChild',
-    //                currentEntityId: $scope.blade.currentEntityId,
-    //                title: 'Login on behalf of ' + $scope.blade.currentEntity.fullName,
-    //                controller: 'virtoCommerce.customerModule.loginOnBehalfListController',
-    //                template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/loginOnBehalf-list.tpl.html'
-    //            };
-    //            bladeNavigationService.showBlade(newBlade, $scope.blade);
-    //        },
-    //        canExecuteMethod: function () { return true; },
-    //        permission: 'customer:manage'
-    //    });
-    //}
 
     // datepicker
     $scope.datepickers = {
