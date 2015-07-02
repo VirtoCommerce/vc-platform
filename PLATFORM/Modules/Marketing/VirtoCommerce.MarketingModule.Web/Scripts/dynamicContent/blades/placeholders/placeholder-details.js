@@ -97,7 +97,7 @@
 		}
 	}
 
-	$scope.blade.headIcon = 'fa fa-location-arrow';
+	$scope.blade.headIcon = 'fa-location-arrow';
 
 	blade.initialize();
 }]);

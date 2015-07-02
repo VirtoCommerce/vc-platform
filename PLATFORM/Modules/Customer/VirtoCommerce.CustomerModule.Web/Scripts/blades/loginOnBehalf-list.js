@@ -30,7 +30,7 @@
         }
     }
 
-    $scope.blade.headIcon = 'fa fa-key';
+    $scope.blade.headIcon = 'fa-key';
 
     $scope.blade.refresh();
 }]);

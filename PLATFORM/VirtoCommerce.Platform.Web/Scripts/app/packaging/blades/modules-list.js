@@ -38,7 +38,7 @@
         });
     }
 
-    $scope.blade.headIcon = 'fa fa-cubes';
+    $scope.blade.headIcon = 'fa-cubes';
 
     $scope.blade.toolbarCommands = [
         {

@@ -111,7 +111,7 @@ function ($injector, $scope, settings, bladeNavigationService) {
         }
     }];
 
-    blade.headIcon = 'fa fa-wrench';
+    blade.headIcon = 'fa-wrench';
 
     $scope.$watch('blade.searchText', function (newVal) {
         if (newVal) {

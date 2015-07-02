@@ -17,7 +17,7 @@
         $scope.bladeClose();
     }
 
-    $scope.blade.headIcon = 'fa fa-archive';
+    $scope.blade.headIcon = 'fa-archive';
 
     $scope.blade.isLoading = false;
     $scope.blade.currentEntity = angular.copy($scope.blade.entity);

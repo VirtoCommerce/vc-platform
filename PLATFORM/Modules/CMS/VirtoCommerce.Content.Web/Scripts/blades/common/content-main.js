@@ -235,7 +235,7 @@
 		}
 	}
 
-	$scope.blade.headIcon = 'fa fa-code';
+	$scope.blade.headIcon = 'fa-code';
 
 	blade.initialize();
 }]);
