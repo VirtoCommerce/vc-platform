@@ -371,7 +371,7 @@
 				     },
 				     canExecuteMethod: function () { return true; }
 				 },
-                 /// hidding some UI functionality until it's fully implemented. Need to release
+                 /// hiding some UI functionality until it's fully implemented. Need to release
                  //{
                  //    name: "Copy",
                  //    icon: 'fa fa-files-o',
