@@ -33,6 +33,7 @@
         <group name="Customers">
             <permission id="customer:query" name="Browse customers" description="Permission to open customers menu and browse data."/>
             <permission id="customer:manage" name="Manage customers" description="Permission to manage customers information."/>
+            <permission id="customer:loginOnBehalf" name="Login on behalf of a customer" description="Permission to login on behalf of a customer to Storefront."/>
         </group>
     </permissions>
 </module>
