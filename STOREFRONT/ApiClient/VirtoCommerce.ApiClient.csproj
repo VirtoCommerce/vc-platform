@@ -104,6 +104,7 @@
     <Compile Include="DataContracts\Security\UserLoginInfo.cs" />
     <Compile Include="DataContracts\Stores\SyncAssetGroup.cs" />
     <Compile Include="DataContracts\Stores\SyncAsset.cs" />
+    <Compile Include="DataContracts\TaxDetail.cs" />
     <Compile Include="Extensions\InventoryClientExtension.cs" />
     <Compile Include="Extensions\ListClientExtensions.cs" />
     <Compile Include="Extensions\MarketingClientExtension.cs" />
