@@ -70,15 +70,15 @@ namespace VirtoCommerce.Web.Models
         public long InventoryQuantity { get; set; }
 
         [DataMember]
-        public string[] AllOptions { get; set; }
+        public string[] Options { get; set; }
 
         [DataMember]
         public string Option1
         {
             get
             {
-                if (this.AllOptions == null) return null;
-                return this.AllOptions.Length >= 1 ? this.AllOptions[0] : null;
+                if (this.Options == null) return null;
+                return this.Options.Length >= 1 ? this.Options[0] : null;
             }
         }
 
@@ -87,8 +87,8 @@ namespace VirtoCommerce.Web.Models
         {
             get
             {
-                if (this.AllOptions == null) return null;
-                return this.AllOptions.Length >= 2 ? this.AllOptions[1] : null;
+                if (this.Options == null) return null;
+                return this.Options.Length >= 2 ? this.Options[1] : null;
             }
         }
 
@@ -97,8 +97,8 @@ namespace VirtoCommerce.Web.Models
         {
             get
             {
-                if (this.AllOptions == null) return null;
-                return this.AllOptions.Length >= 3 ? this.AllOptions[2] : null;
+                if (this.Options == null) return null;
+                return this.Options.Length >= 3 ? this.Options[2] : null;
             }
         }
 

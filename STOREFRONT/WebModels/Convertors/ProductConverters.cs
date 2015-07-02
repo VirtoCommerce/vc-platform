@@ -115,6 +115,8 @@ namespace VirtoCommerce.Web.Convertors
 
             var variant = product.AsVariantWebModel(productPrice, options, productRewards, productInventory);
 
+            variant.Title = "Default Title";
+
             productModel.Variants.Add(variant);
 
             return productModel;
@@ -148,7 +150,7 @@ namespace VirtoCommerce.Web.Convertors
             variantModel.Image = variationImage != null ? variationImage.AsWebModel(variation.Name, variation.MainProductId) : null;
 
             PopulateInventory(ref variantModel, variation, inventory);
-            variantModel.AllOptions = GetOptionValues(options, variation.VariationProperties);
+            variantModel.Options = GetOptionValues(options, variation.VariationProperties);
 
             variantModel.NumericPrice = price != null ? (price.Sale.HasValue ? price.Sale.Value : price.List) : 0M;
             if (reward != null)
@@ -219,18 +221,32 @@ namespace VirtoCommerce.Web.Convertors
             return webReview;
         }
 
+        #region Option Methods
+
+        private static string DefaultOption = "Default Title";
         private static string[] GetOptions(IDictionary<string, object> itemProperties)
         {
             if (itemProperties == null || !itemProperties.Any())
             {
-                return null;
+                return new []{ "Title" };
             }
 
-            return itemProperties.Select(o => o.Key).ToArray();
+            var options = itemProperties.Select(o => o.Key).ToArray();
+            if (options == null || !options.Any())
+            {
+                options = new[] { "Title" };
+            }
+
+            return options;
         }
 
         private static string[] GetOptionValues(IEnumerable<string> options, IDictionary<string, object> itemProperties)
         {
+            if (options != null && options.Count() == 1 && options.ElementAt(0) == "Title")
+            {
+                return new[] { DefaultOption };
+            }
+
             if (itemProperties == null || !itemProperties.Any() || options == null)
             {
                 return null;
@@ -239,6 +255,7 @@ namespace VirtoCommerce.Web.Convertors
             var variationOptions = options.Select(option => itemProperties.ContainsKey(option) ? itemProperties[option].ToNullOrString() : null).ToList();
             return variationOptions.ToArray();
         }
+        #endregion
 
         private static UrlHelper GetUrlHelper()
         {
