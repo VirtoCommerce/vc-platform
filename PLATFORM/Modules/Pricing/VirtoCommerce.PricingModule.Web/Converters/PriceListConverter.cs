@@ -4,12 +4,13 @@ using Omu.ValueInjecter;
 using coreModel = VirtoCommerce.Domain.Pricing.Model;
 using coreCatalogModel = VirtoCommerce.Domain.Catalog.Model;
 using webModel = VirtoCommerce.PricingModule.Web.Model;
+using VirtoCommerce.Domain.Common;
 
 namespace VirtoCommerce.PricingModule.Web.Converters
 {
 	public static class PriceListConverter
 	{
-		public static webModel.Pricelist ToWebModel(this coreModel.Pricelist priceList, coreCatalogModel.CatalogProduct[] products = null, coreCatalogModel.Catalog[] catalogs = null)
+		public static webModel.Pricelist ToWebModel(this coreModel.Pricelist priceList, coreCatalogModel.CatalogProduct[] products = null, coreCatalogModel.Catalog[] catalogs = null, ConditionExpressionTree etalonEpressionTree = null)
 		{
 			var retVal = new webModel.Pricelist();
 			retVal.InjectFrom(priceList);
@@ -35,7 +36,7 @@ namespace VirtoCommerce.PricingModule.Web.Converters
 			}
 			if(priceList.Assignments != null)
 			{
-				retVal.Assignments = priceList.Assignments.Select(x => x.ToWebModel(catalogs)).ToList();
+				retVal.Assignments = priceList.Assignments.Select(x => x.ToWebModel(catalogs, etalonEpressionTree)).ToList();
 			}
 			return retVal;
 		}

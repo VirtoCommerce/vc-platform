@@ -54,7 +54,7 @@ namespace VirtoCommerce.PricingModule.Data.Converters
 				throw new ArgumentNullException("target");
 			var patchInjection = new PatchInjection<dataModel.PricelistAssignment>(x => x.Name, x => x.Description,
 																						 x => x.StartDate, x => x.EndDate, x => x.CatalogId,
-																						 x => x.PricelistId, x => x.Priority, x => x.ConditionExpression);
+																						 x => x.PricelistId, x => x.Priority, x => x.ConditionExpression, x=> x.PredicateVisualTreeSerialized);
 			target.InjectFrom(patchInjection, source);
 		}
 
