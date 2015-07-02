@@ -298,10 +298,12 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
         public dataModel.Item[] GetItemByIds(string[] itemIds, coreModel.ItemResponseGroup respGroup = coreModel.ItemResponseGroup.ItemLarge)
         {
             if (!itemIds.Any())
+            {
                 return new dataModel.Item[] { };
+            }
+
             //Used breaking query EF performance concept https://msdn.microsoft.com/en-us/data/hh949853.aspx#8
             var retVal = Items.Include(x => x.Catalog).Include(x => x.Category).Where(x => itemIds.Contains(x.Id)).ToArray();
-
 
             if ((respGroup & coreModel.ItemResponseGroup.Categories) == coreModel.ItemResponseGroup.Categories)
             {
