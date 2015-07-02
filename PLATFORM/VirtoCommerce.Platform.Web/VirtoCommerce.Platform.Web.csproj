@@ -327,6 +327,11 @@
     <Content Include="Content\angular-gridster.css" />
     <Content Include="Content\angular-multi-select.css" />
     <Content Include="Scripts\angular-gridster.js" />
+    <Content Include="Scripts\app\exportImport\blades\export-main.js" />
+    <Content Include="Scripts\app\exportImport\blades\export-main.tpl.html" />
+    <Content Include="Scripts\app\exportImport\blades\exportImport-main.js" />
+    <Content Include="Scripts\app\exportImport\blades\exportImport-main.tpl.html" />
+    <Content Include="Scripts\app\exportImport\exportImport.js" />
     <Content Include="Scripts\app\newnotifications\blades\notification-templates-list.tpl.html" />
     <Content Include="Scripts\app\newnotifications\blades\notification-templates-list.js" />
     <Content Include="Scripts\app\newnotifications\blades\notifications-edit-template.js" />

@@ -1,0 +1,18 @@
+﻿<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <ul class="list __items">
+                <li class="list-item" ng-mouseup="export()" ng-class="{'__selected': 'export' === selectedNodeId}">
+                    <i class="list-ico fa fa-upload"></i>
+                    <span class="list-t">Export</span>
+                    <span class="list-descr">Data will be saved out to a file so it can later be imported.</span>
+                </li>
+                <li class="list-item" ng-mouseup="import()" ng-class="{'__selected': 'import' === selectedNodeId}">
+                    <i class="list-ico fa fa-download"></i>
+                    <span class="list-t">Import</span>
+                    <span class="list-descr">Import data from an exported file.</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

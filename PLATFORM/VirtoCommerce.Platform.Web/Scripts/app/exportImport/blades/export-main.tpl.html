@@ -1,0 +1,53 @@
+﻿<div class="blade-static __bottom">
+    <button class="btn" ng-click="startExport()" ng-disabled="blade.notification">
+        <span>Start export</span>
+    </button>
+</div>
+<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div class="sub-t">Select data to export</div>
+            <div class="list __items" ng-if="!blade.notification">
+                <label class="list-item" ng-repeat="data in blade.currentEntities">
+                    <input type="checkbox" ng-model="data.isChecked">
+                    <span class="switch"></span>
+                    <span class="list-name">{{data.name}}</span>
+                    <span class="list-descr">{{data.description}}</span>
+                </label>
+            </div>
+            <div class="form">
+                <div class="block">
+                    <div>
+                        <div class="block" ng-if="blade.notification.created || blade.notification.finished">
+                            <p ng-if="blade.notification.created" ng-class="{'no-data': blade.notification.created}" class="text">Start — <i class="fa fa-clock-o"></i> {{blade.notification.created | date : 'mediumTime'}}</p>
+                            <p ng-if="blade.notification.finished" ng-class="{'no-data': blade.notification.finished}" class="text">End — <i class="fa fa-clock-o"></i> {{blade.notification.finished | date : 'mediumTime'}}</p>
+                        </div>
+                        <div class="block" ng-if="blade.notification.totalCount || blade.notification.processedCount || blade.notification.errorCount">
+                            <ul class="list __info">
+                                <li class="list-item">
+                                    <div class="list-t">Total count</div>
+                                    <div class="list-descr">{{blade.notification.totalCount}}</div>
+                                </li>
+                                <li class="list-item">
+                                    <div class="list-t">Processed count</div>
+                                    <div class="list-descr">{{blade.notification.processedCount}}</div>
+                                </li>
+                                <li class="list-item">
+                                    <div class="list-t">Error count</div>
+                                    <div class="list-descr">{{blade.notification.errorCount}}</div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div ng-if="blade.notification.errorCount > 0">
+                            <span class="sub-t">Errors</span>
+                            <div class="log">
+                                <p ng-repeat="error in blade.notification.errors track by $index" class="error">{{error}}</p>
+                            </div>
+                        </div>
+                        <p class="text" ng-if="blade.notification.downloadUrl">Download Url: <a href="{{blade.notification.downloadUrl}}" target="_blank">{{blade.notification.downloadUrl}}</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
