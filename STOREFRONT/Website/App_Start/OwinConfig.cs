@@ -450,12 +450,7 @@ namespace VirtoCommerce.Web
                     continue;
                 }
 
-                var constraintsRegEx = string.Format("^({0})$", Constants.LanguageRegex);
-
-                if (Regex.IsMatch(
-                    languageCandidate,
-                    constraintsRegEx,
-                    RegexOptions.CultureInvariant | RegexOptions.IgnoreCase /*| RegexOptions.Compiled*/))
+                if (Constants.LanguageRegex.IsMatch(languageCandidate))
                 {
                     return languageCandidate.ToLowerInvariant();
                 }

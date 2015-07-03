@@ -10,6 +10,7 @@ namespace VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine.FileSystems
     public class ThemeFileSystem : IFileSystem
     {
         private readonly IViewLocator _locator;
+        private static Regex _templateRegex = new Regex(@"[a-zA-Z0-9]+$", RegexOptions.Compiled);
 
         public ThemeFileSystem(IViewLocator locator)
         {
@@ -22,7 +23,7 @@ namespace VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine.FileSystems
         {
             var templatePath = (string)context[templateName];
 
-            if (templatePath == null || !Regex.IsMatch(templatePath, @"[a-zA-Z0-9]+$"))
+            if (templatePath == null || !_templateRegex.IsMatch(templatePath))
             {
                 throw new FileSystemException("Error - Illegal template name '{0}'", templatePath);
             }

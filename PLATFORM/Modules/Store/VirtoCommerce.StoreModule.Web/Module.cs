@@ -1,6 +1,8 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.Domain.Store.Services;
+using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Infrastructure;
@@ -48,6 +50,23 @@ namespace VirtoCommerce.StoreModule.Web
             _container.RegisterType<IStoreService, StoreServiceImpl>();
         }
 
+        public override void PostInitialize()
+        {
+            var settingsManager = _container.Resolve<ISettingsManager>();
+            var cacheManager = _container.Resolve<CacheManager>();
+
+            var isCachingEnabled = settingsManager.GetValue("Stores.Caching.Enabled", true);
+
+            if (isCachingEnabled)
+            {
+                var cacheSettings = new[]
+                                    {
+                                        new CacheSettings("Virto.Core.Stores", TimeSpan.FromSeconds(settingsManager.GetValue("Stores.Caching.StoreTimeout", 30)))
+                                    };
+
+                cacheManager.AddCacheSettings(cacheSettings);
+            }
+        }
         #endregion
     }
 }

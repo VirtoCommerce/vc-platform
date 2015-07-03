@@ -40,7 +40,6 @@ namespace VirtoCommerce.Web.Models.Services
         private readonly SecurityClient _securityClient;
         private readonly StoreClient _storeClient;
         private readonly PriceClient _priceClient;
-        private readonly InventoryClient _inventoryClient;
         private readonly ListClient _listClient;
         private readonly ThemeClient _themeClient;
         private readonly PageClient _pageClient;
@@ -64,7 +63,6 @@ namespace VirtoCommerce.Web.Models.Services
             this._securityClient = ClientContext.Clients.CreateSecurityClient();
             this._priceClient = ClientContext.Clients.CreatePriceClient();
             this._marketingClient = ClientContext.Clients.CreateMarketingClient();
-            this._inventoryClient = ClientContext.Clients.CreateInventoryClient();
             this._themeClient = ClientContext.Clients.CreateThemeClient();
             this._pageClient = ClientContext.Clients.CreatePageClient();
             this._reviewsClient = ClientContext.Clients.CreateReviewsClient();
@@ -603,9 +601,7 @@ namespace VirtoCommerce.Web.Models.Services
 
             var rewards = await _marketingClient.GetPromotionRewardsAsync(promoContext);
 
-            var inventories = await this.GetItemsInventoriesAsync(variationIds);
-
-            return product.AsWebModel(prices, rewards, inventories);
+            return product.AsWebModel(prices, rewards);
         }
 
         public async Task<Product> GetProductByKeywordAsync(SiteContext context, string keyword, ItemResponseGroups responseGroup = ItemResponseGroups.ItemLarge)
@@ -653,20 +649,7 @@ namespace VirtoCommerce.Web.Models.Services
             };
 
             var rewards = await _marketingClient.GetPromotionRewardsAsync(promoContext);
-
-            var inventories = await this.GetItemsInventoriesAsync(variationIds);
-
-            return product.AsWebModel(prices, rewards, inventories);
-        }
-
-        public async Task<IEnumerable<InventoryInfo>> GetItemsInventoriesAsync(string[] itemIds)
-        {
-            if (itemIds == null)
-            {
-                return null;
-            }
-
-            return await _inventoryClient.GetItemsInventories(itemIds);
+            return product.AsWebModel(prices, rewards);
         }
 
         public async Task<IEnumerable<ApiClient.DataContracts.Marketing.PromotionReward>>
@@ -860,9 +843,7 @@ namespace VirtoCommerce.Web.Models.Services
 
             var rewards = await _marketingClient.GetPromotionRewardsAsync(promoContext);
 
-            var inventories = await this.GetItemsInventoriesAsync(allIds);
-
-            var result = new SearchResults<T>(response.Items.Select(i => i.AsWebModel(prices, rewards, inventories, parentCollection)).OfType<T>()) { TotalCount = response.TotalCount };
+            var result = new SearchResults<T>(response.Items.Select(i => i.AsWebModel(prices, rewards, parentCollection)).OfType<T>()) { TotalCount = response.TotalCount };
 
             if (response.Facets != null && response.Facets.Any())
                 result.Facets = response.Facets.Select(x => x.AsWebModel()).ToArray();

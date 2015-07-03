@@ -79,7 +79,8 @@
     <Compile Include="DataContracts\Cart\CartItem.cs" />
     <Compile Include="DataContracts\CustomerService\Address.cs" />
     <Compile Include="DataContracts\CustomerService\CustomerSearchResult.cs" />
-    <Compile Include="DataContracts\InventoryInfo.cs" />
+    <Compile Include="DataContracts\Inventory.cs" />
+    <Compile Include="DataContracts\InventoryStatus.cs" />
     <Compile Include="DataContracts\Lists\Link.cs" />
     <Compile Include="DataContracts\Lists\LinkList.cs" />
     <Compile Include="DataContracts\Marketing\ProductPromoEntry.cs" />
@@ -105,11 +106,9 @@
     <Compile Include="DataContracts\Stores\SyncAssetGroup.cs" />
     <Compile Include="DataContracts\Stores\SyncAsset.cs" />
     <Compile Include="DataContracts\TaxDetail.cs" />
-    <Compile Include="Extensions\InventoryClientExtension.cs" />
     <Compile Include="Extensions\ListClientExtensions.cs" />
     <Compile Include="Extensions\MarketingClientExtension.cs" />
     <Compile Include="Extensions\PageClientExtensions.cs" />
-    <Compile Include="InventoryClient.cs" />
     <Compile Include="MarketingClient.cs" />
     <Compile Include="PriceClient.cs" />
     <Compile Include="CustomerServiceClient.cs" />
