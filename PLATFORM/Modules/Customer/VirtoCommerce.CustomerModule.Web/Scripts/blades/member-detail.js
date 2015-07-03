@@ -12,31 +12,30 @@
                     $scope.blade.parentBlade.refresh();
                 }
 
-                /// hiding some UI functionality until it's fully implemented. Need to release
-                //if (!$scope.blade.isOrganization && data.emails.length > 0) {
-                //    accounts.get({ id: data.emails[0] }, function (account) {
-                //        if (account.logins) {
-                //            $scope.blade.toolbarCommands.push(
-                //            {
-                //                name: "Login on behalf",
-                //                icon: 'fa fa-key',
-                //                executeMethod: function () {
-                //                    var newBlade = {
-                //                        id: 'memberDetailChild',
-                //                        currentEntityId: $scope.blade.currentEntityId,
-                //                        title: 'Login on behalf of ' + $scope.blade.currentEntity.fullName,
-                //                        controller: 'virtoCommerce.customerModule.loginOnBehalfListController',
-                //                        template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/loginOnBehalf-list.tpl.html'
-                //                    };
-                //                    bladeNavigationService.showBlade(newBlade, $scope.blade);
-                //                },
-                //                canExecuteMethod: function () { return true; },
-                //                permission: 'customer:loginOnBehalf'
-                //            });
-                //        }
-                //    },
-                //    function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
-                //}
+                if (!$scope.blade.isOrganization && data.emails.length > 0) {
+                    accounts.get({ id: data.emails[0] }, function (account) {
+                        if (account.logins) {
+                            $scope.blade.toolbarCommands.push(
+                            {
+                                name: "Login on behalf",
+                                icon: 'fa fa-key',
+                                executeMethod: function () {
+                                    var newBlade = {
+                                        id: 'memberDetailChild',
+                                        currentEntityId: $scope.blade.currentEntityId,
+                                        title: 'Login on behalf of ' + $scope.blade.currentEntity.fullName,
+                                        controller: 'virtoCommerce.customerModule.loginOnBehalfListController',
+                                        template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/loginOnBehalf-list.tpl.html'
+                                    };
+                                    bladeNavigationService.showBlade(newBlade, $scope.blade);
+                                },
+                                canExecuteMethod: function () { return true; },
+                                permission: 'customer:loginOnBehalf'
+                            });
+                        }
+                    },
+                    function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+                }
             },
             function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
         } else {
