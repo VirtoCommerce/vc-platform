@@ -1,4 +1,7 @@
-﻿namespace VirtoCommerce.Web.Models.Routing
+﻿using System.Text.RegularExpressions;
+using System;
+
+namespace VirtoCommerce.Web.Models.Routing
 {
     public static class Constants
     {
@@ -25,7 +28,7 @@
         /// <summary>
         ///     The language regex
         /// </summary>
-        public const string LanguageRegex = "[a-z]{2}(-[A-Z]{2})?";
+        public static Regex LanguageRegex = new Regex("^([a-z]{2}(-[A-Z]{2})?)$", RegexOptions.Compiled);
 
         /// <summary>
         ///     The store route key

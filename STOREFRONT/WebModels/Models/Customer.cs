@@ -74,7 +74,24 @@ namespace VirtoCommerce.Web.Models
         public string LastOrder { get; set; }
 
         [DataMember]
-        public string Name { get; set; }
+        public string Name
+        {
+            get
+            {
+                string name = null;
+
+                if (!String.IsNullOrEmpty(FirstName))
+                {
+                    name = FirstName.Trim();
+                }
+                if (!String.IsNullOrEmpty(LastName))
+                {
+                    name += " " + LastName.Trim();
+                }
+
+                return name;
+            }
+        }
 
         [DataMember]
         public ItemCollection<CustomerOrder> Orders

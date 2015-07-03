@@ -5,8 +5,10 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VirtoCommerce.CoreModule.Data.Repositories;
 using VirtoCommerce.Domain.Commerce.Services;
 using VirtoCommerce.Domain.Shipping.Services;
+using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Settings;
+using VirtoCommerce.Platform.Data.Caching;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.Platform.Data.Settings;
@@ -107,7 +109,8 @@ namespace VirtoCommerce.StoreModule.Test
 			};
 
 			var shippingService = new ShippingServiceImpl();
-			var storeService = new StoreServiceImpl(repositoryFactory, GetCommerceService(), null, null,  null);
+            var cacheManager = new CacheManager(new InMemoryCachingProvider(), null);
+            var storeService = new StoreServiceImpl(repositoryFactory, cacheManager, GetCommerceService(), null, null, null);
 			var controller = new StoreModuleController(storeService, null, null);
 			return controller;
 		}

@@ -34,9 +34,28 @@ namespace VirtoCommerce.Web.Controllers
         // GET: /Account/Login
         [HttpGet]
         [AllowAnonymous]
-        //[Route("login")]
-        public ActionResult Login(string returnUrl)
+        //[RequireHttps]
+        public async Task<ActionResult> Login(string returnUrl, string uid)
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                AuthenticationManager.SignOut();
+            }
+
+            if (!String.IsNullOrEmpty(uid))
+            {
+                var impersonatedUser = await SecurityService.GetUserByIdAsync(uid);
+                if (impersonatedUser != null && !String.IsNullOrEmpty(impersonatedUser.Email))
+                {
+                    var impersonatedCustomer = await CustomerService.GetCustomerAsync(impersonatedUser.Email, Context.StoreId);
+                    if (impersonatedCustomer != null)
+                    {
+                        Context.Set("impersonated_user_name", impersonatedCustomer.Name);
+                        Context.Set("impersonated_user_id", uid);
+                    }
+                }
+            }
+
             return View("customers/login");
         }
 
@@ -44,7 +63,7 @@ namespace VirtoCommerce.Web.Controllers
         // POST: /Account/Login
         [HttpPost]
         [AllowAnonymous]
-        //[Route("login")]
+        //[RequireHttps]
         public async Task<ActionResult> Login(LoginFormModel formModel, string returnUrl)
         {
             var form = Service.GetForm(SiteContext.Current, formModel.Id);
@@ -57,24 +76,66 @@ namespace VirtoCommerce.Web.Controllers
                 {
                     form.PostedSuccessfully = true;
 
-                    var loginResult = await SecurityService.PasswordSingInAsync(
-                        formModel.Email, formModel.Password, false);
-
-                    switch (loginResult)
+                    if (!String.IsNullOrEmpty(formModel.ImpersonatedUserId))
                     {
-                        case SignInStatus.Success:
-                            var identity = SecurityService.CreateClaimsIdentity(formModel.Email);
-                            AuthenticationManager.SignIn(identity);
-                            return RedirectToLocal(returnUrl);
-                        case SignInStatus.LockedOut:
-                            return View("lockedout");
-                        case SignInStatus.RequiresVerification:
-                            return RedirectToAction("SendCode", "Account");
-                        case SignInStatus.Failure:
-                        default:
-                            form.Errors = new SubmitFormErrors("form", "Login attempt fails.");
-                            form.PostedSuccessfully = false;
-                            return View("customers/login");
+                        var csrUser = await SecurityService.GetUserByNameAsync(formModel.Email);
+                        if (csrUser == null)
+                        {
+                            Context.ErrorMessage = "CSR user was not found.";
+                            return View("error");
+                        }
+
+                        //if (!csrUser.Permissions.Contains("customer:loginOnBehalf", StringComparer.OrdinalIgnoreCase))
+                        //{
+                        //    return View("error");
+                        //}
+
+                        //var csrCustomer = await CustomerService.GetCustomerAsync(formModel.Email, Context.StoreId);
+                        //if (csrCustomer == null)
+                        //{
+                        //    return View("error");
+                        //}
+
+                        var user = await SecurityService.GetUserByIdAsync(formModel.ImpersonatedUserId);
+                        if (user == null)
+                        {
+                            Context.ErrorMessage = "User was not found.";
+                            return View("error");
+                        }
+
+                        var customer = await CustomerService.GetCustomerAsync(user.Email, Context.StoreId);
+                        if (customer == null)
+                        {
+                            Context.ErrorMessage = "User has no account.";
+                            return View("error");
+                        }
+
+                        var customerIdentity = SecurityService.CreateClaimsIdentity(user.Email);
+                        AuthenticationManager.SignIn(SecurityService.CreateClaimsIdentity(user.Email));
+
+                        return RedirectToLocal(returnUrl);
+                    }
+                    else
+                    {
+                        var loginResult = await SecurityService.PasswordSingInAsync(
+                            formModel.Email, formModel.Password, false);
+
+                        switch (loginResult)
+                        {
+                            case SignInStatus.Success:
+                                var identity = SecurityService.CreateClaimsIdentity(formModel.Email);
+                                AuthenticationManager.SignIn(identity);
+                                return RedirectToLocal(returnUrl);
+                            case SignInStatus.LockedOut:
+                                return View("lockedout");
+                            case SignInStatus.RequiresVerification:
+                                return RedirectToAction("SendCode", "Account");
+                            case SignInStatus.Failure:
+                            default:
+                                form.Errors = new SubmitFormErrors("form", "Login attempt fails.");
+                                form.PostedSuccessfully = false;
+                                return View("customers/login");
+                        }
                     }
                 }
                 else

@@ -42,5 +42,7 @@ namespace VirtoCommerce.ApiClient.DataContracts.Security
         public string UserType { get; set; }
 
         public string Password { get; set; }
+
+        public string[] Permissions { get; set; }
     }
 }
