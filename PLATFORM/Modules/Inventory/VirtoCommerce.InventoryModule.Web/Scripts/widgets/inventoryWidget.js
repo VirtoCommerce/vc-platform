@@ -1,8 +1,8 @@
 ﻿angular.module('virtoCommerce.inventoryModule')
 .controller('virtoCommerce.inventoryModule.inventoryWidgetController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.inventoryModule.inventories', function ($scope, bladeNavigationService, inventories) {
-    var blade = $scope.widget.blade;
+    var blade = $scope.blade;
 
-    $scope.widget.refresh = function () {
+    function refresh () {
         $scope.currentInventory = '...';
         return inventories.query({ id: blade.itemId }, function (results) {
             $scope.currentInventory = _.reduce(results, function (memo, x) { return memo + x.inStockQuantity; }, 0);
@@ -15,7 +15,7 @@
         var newBlade = {
             id: "inventoryFulfillmentcentersListBlade",
             itemId: blade.itemId,
-            parentWidget: $scope.widget,
+            parentWidgetRefresh: refresh,
             title: blade.title,
             subtitle: 'Select Fulfillment center to edit inventory',
             controller: 'virtoCommerce.inventoryModule.inventoryFulfillmentcentersListController',
@@ -30,5 +30,5 @@
         }
     });
 
-    $scope.widget.refresh();
+    refresh();
 }]);
