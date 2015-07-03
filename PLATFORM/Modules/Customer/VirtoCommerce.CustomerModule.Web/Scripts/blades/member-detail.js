@@ -1,43 +1,91 @@
 ﻿angular.module('virtoCommerce.customerModule')
 .controller('virtoCommerce.customerModule.memberDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.customerModule.contacts', 'virtoCommerce.customerModule.organizations', 'platformWebApp.accounts', 'platformWebApp.dialogService', function ($scope, bladeNavigationService, contacts, organizations, accounts, dialogService) {
-    $scope.blade.currentResource = $scope.blade.isOrganization ? organizations : contacts;
+    var blade = $scope.blade;
+    blade.currentResource = blade.isOrganization ? organizations : contacts;
+    var userStateCommand, customerAccount;
 
-    $scope.blade.refresh = function (parentRefresh) {
-        if ($scope.blade.currentEntityId) {
-            $scope.blade.isLoading = true;
+    blade.refresh = function (parentRefresh) {
+        if (blade.currentEntityId) {
+            blade.isLoading = true;
 
-            $scope.blade.currentResource.get({ _id: $scope.blade.currentEntityId }, function (data) {
+            blade.currentResource.get({ _id: blade.currentEntityId }, function (data) {
                 initializeBlade(data);
                 if (parentRefresh) {
-                    $scope.blade.parentBlade.refresh();
+                    blade.parentBlade.refresh();
                 }
 
-                if (!$scope.blade.isOrganization && data.emails.length > 0) {
+                if (!blade.isOrganization && data.emails.length > 0) {
                     accounts.get({ id: data.emails[0] }, function (account) {
                         if (account.logins) {
-                            $scope.blade.toolbarCommands.push(
-                            {
-                                name: "Login on behalf",
-                                icon: 'fa fa-key',
-                                executeMethod: function () {
-                                    var newBlade = {
-                                        id: 'memberDetailChild',
-                                        currentEntityId: $scope.blade.currentEntityId,
-                                        title: 'Login on behalf of ' + $scope.blade.currentEntity.fullName,
-                                        controller: 'virtoCommerce.customerModule.loginOnBehalfListController',
-                                        template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/loginOnBehalf-list.tpl.html'
-                                    };
-                                    bladeNavigationService.showBlade(newBlade, $scope.blade);
-                                },
-                                canExecuteMethod: function () { return true; },
-                                permission: 'customer:loginOnBehalf'
-                            });
+                            var needToAddToolbarCommands = !customerAccount;
+                            customerAccount = account;
+                            data.userState = account.userState;
+                            initializeBlade(data);
+
+                            if (needToAddToolbarCommands) {
+                                blade.toolbarCommands.push(
+                                   {
+                                       name: "Login on behalf",
+                                       icon: 'fa fa-key',
+                                       executeMethod: function () {
+                                           var newBlade = {
+                                               id: 'memberDetailChild',
+                                               currentEntityId: blade.currentEntityId,
+                                               title: 'Login on behalf of ' + blade.currentEntity.fullName,
+                                               controller: 'virtoCommerce.customerModule.loginOnBehalfListController',
+                                               template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/loginOnBehalf-list.tpl.html'
+                                           };
+                                           bladeNavigationService.showBlade(newBlade, blade);
+                                       },
+                                       canExecuteMethod: function () { return true; },
+                                       permission: 'customer:loginOnBehalf'
+                                   },
+                                   userStateCommand = {
+                                       updateName: function () {
+                                           return this.name = (blade.currentEntity && blade.currentEntity.userState === 'Approved') ? 'Reject user' : 'Approve user';
+                                       },
+                                       icon: 'fa fa-dot-circle-o',
+                                       executeMethod: function () {
+                                           if (blade.currentEntity.userState === 'Approved') {
+                                               blade.currentEntity.userState = 'Rejected';
+                                           } else {
+                                               blade.currentEntity.userState = 'Approved';
+                                           }
+                                           this.updateName();
+                                       },
+                                       canExecuteMethod: function () {
+                                           return true;
+                                       },
+                                       permission: 'platform:security:manage'
+                                   },
+                                   {
+                                       name: "Change password",
+                                       icon: 'fa fa-refresh',
+                                       executeMethod: function () {
+                                           var newBlade = {
+                                               id: 'accountDetailChild',
+                                               currentEntityId: account.userName,
+                                               title: blade.title,
+                                               subtitle: "Change user's password",
+                                               controller: 'platformWebApp.accountChangePasswordController',
+                                               template: 'Scripts/common/security/blades/account-changePassword.tpl.html'
+                                           };
+                                           bladeNavigationService.showBlade(newBlade, blade);
+                                       },
+                                       canExecuteMethod: function () {
+                                           return true;
+                                       },
+                                       permission: 'platform:security:manage'
+                                   });
+                            }
+
+                            userStateCommand.updateName();
                         }
                     },
-                    function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+                    function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
                 }
             },
-            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+            function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
         } else {
             var newEntity = {
                 properties: [],
@@ -46,12 +94,12 @@
                 emails: []
             };
 
-            if ($scope.blade.isOrganization) {
-                newEntity.parentId = $scope.blade.parentBlade.currentEntity.id;
+            if (blade.isOrganization) {
+                newEntity.parentId = blade.parentBlade.currentEntity.id;
             } else {
                 newEntity.organizations = [];
-                if ($scope.blade.parentBlade.currentEntity.id) {
-                    newEntity.organizations.push($scope.blade.parentBlade.currentEntity.id);
+                if (blade.parentBlade.currentEntity.id) {
+                    newEntity.organizations.push(blade.parentBlade.currentEntity.id);
                 }
             }
 
@@ -61,41 +109,48 @@
 
     function initializeBlade(data) {
         // temporal workaround
-        if (!$scope.blade.isOrganization && data.organizations.length > 0) {
+        if (!blade.isOrganization && data.organizations.length > 0) {
             data.organization = data.organizations[0];
         }
 
-        $scope.blade.currentEntity = angular.copy(data);
-        $scope.blade.origEntity = data;
-        $scope.blade.isLoading = false;
+        blade.currentEntity = angular.copy(data);
+        blade.origEntity = data;
+        blade.isLoading = false;
     };
 
     function isDirty() {
-        return !angular.equals($scope.blade.currentEntity, $scope.blade.origEntity);
+        return !angular.equals(blade.currentEntity, blade.origEntity);
     };
 
     $scope.saveChanges = function () {
-        $scope.blade.isLoading = true;
+        blade.isLoading = true;
 
         // temporal workaround
-        if (!$scope.blade.isOrganization) {
-            $scope.blade.currentEntity.organizations = $scope.blade.currentEntity.organization ? [$scope.blade.currentEntity.organization] : [];
+        if (!blade.isOrganization) {
+            blade.currentEntity.organizations = blade.currentEntity.organization ? [blade.currentEntity.organization] : [];
         }
 
-        if ($scope.blade.currentEntityId) {
-            $scope.blade.currentResource.update({}, $scope.blade.currentEntity, function (data) {
-                $scope.blade.refresh(true);
+        if (blade.currentEntityId) {
+            if (customerAccount && customerAccount.userState !== blade.currentEntity.userState) {
+                customerAccount.userState = blade.currentEntity.userState;
+                customerAccount.$update(null, function () { }, function (error) {
+                    bladeNavigationService.setError('Error ' + error.status, $scope.blade);
+                });
+            }
+
+            blade.currentResource.update({}, blade.currentEntity, function (data) {
+                blade.refresh(true);
             }, function (error) {
-                bladeNavigationService.setError('Error ' + error.status, $scope.blade);
+                bladeNavigationService.setError('Error ' + error.status, blade);
             });
         } else {
-            $scope.blade.currentResource.save({}, $scope.blade.currentEntity, function (data) {
-                $scope.blade.title = data.displayName;
-                $scope.blade.currentEntityId = data.id;
+            blade.currentResource.save({}, blade.currentEntity, function (data) {
+                blade.title = data.displayName;
+                blade.currentEntityId = data.id;
                 initializeBlade(data);
-                $scope.blade.parentBlade.refresh();
+                blade.parentBlade.refresh();
             }, function (error) {
-                bladeNavigationService.setError('Error ' + error.status, $scope.blade);
+                bladeNavigationService.setError('Error ' + error.status, blade);
             });
         }
     };
@@ -104,7 +159,7 @@
         $scope.formScope = form;
     }
 
-    $scope.blade.onClose = function (closeCallback) {
+    blade.onClose = function (closeCallback) {
         closeChildrenBlades();
         if (isDirty()) {
             var dialog = {
@@ -126,14 +181,14 @@
     };
 
     function closeChildrenBlades() {
-        angular.forEach($scope.blade.childrenBlades.slice(), function (child) {
+        angular.forEach(blade.childrenBlades.slice(), function (child) {
             bladeNavigationService.closeBlade(child);
         });
     }
 
-    $scope.blade.headIcon = $scope.blade.isOrganization ? 'fa fa-university' : 'fa fa-user';
+    blade.headIcon = blade.isOrganization ? 'fa fa-university' : 'fa fa-user';
 
-    $scope.blade.toolbarCommands = [
+    blade.toolbarCommands = [
         {
             name: "Save",
             icon: 'fa fa-save',
@@ -149,7 +204,10 @@
             name: "Reset",
             icon: 'fa fa-undo',
             executeMethod: function () {
-                angular.copy($scope.blade.origEntity, $scope.blade.currentEntity);
+                angular.copy(blade.origEntity, blade.currentEntity);
+                if (userStateCommand) {
+                    userStateCommand.updateName();
+                }
             },
             canExecuteMethod: function () {
                 return isDirty();
@@ -169,7 +227,7 @@
     };
 
     $scope.clear = function () {
-        $scope.blade.currentEntity.birthDate = null;
+        blade.currentEntity.birthDate = null;
     };
     $scope.today = new Date();
 
@@ -189,9 +247,9 @@
     $scope.format = $scope.formats[0];
 
     // other on load
-    if (!$scope.blade.isOrganization) {
+    if (!blade.isOrganization) {
         $scope.organizations = organizations.query();
     }
 
-    $scope.blade.refresh(false);
+    blade.refresh(false);
 }]);
