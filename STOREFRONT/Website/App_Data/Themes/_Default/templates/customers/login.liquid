@@ -43,7 +43,7 @@
 
       {% if impersonated_user_id != null %}
         <input id="impersonated_user_id" name="customer[impersonated_user_id]" type="hidden" value="{{ impersonated_user_id }}" />
-      {% endid %}
+      {% endif %}
 
         <p>
           <input type="submit" class="btn" value="{{ 'customer.login.sign_in' | t }}">
