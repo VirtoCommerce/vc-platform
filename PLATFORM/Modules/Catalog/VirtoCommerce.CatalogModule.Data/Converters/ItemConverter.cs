@@ -102,7 +102,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			#endregion
 
 			//TaxType category inheritance
-			if(retVal.TaxType == null)
+			if(retVal.TaxType == null && category != null)
 			{
 				retVal.TaxType = category.TaxType;
 			}
