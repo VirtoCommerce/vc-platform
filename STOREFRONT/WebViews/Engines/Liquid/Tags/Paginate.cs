@@ -113,7 +113,7 @@ namespace VirtoCommerce.Web.Views.Engines.Liquid.Tags
 
                 this._attributes = new Dictionary<string, string>(Template.NamingConvention.StringComparer);
 
-                R.Scan(markup, DotLiquid.Liquid.TagAttributes, (key, value) => this._attributes[key] = value);
+                R.Scan(markup, TagAttributesRegex, (key, value) => this._attributes[key] = value);
             }
             else
             {

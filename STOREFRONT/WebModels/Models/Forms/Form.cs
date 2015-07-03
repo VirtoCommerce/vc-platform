@@ -15,7 +15,7 @@ namespace VirtoCommerce.Web.Models.Tags
     public class Form : Block
     {
         #region Static Fields
-        private static readonly Regex Syntax = new Regex(string.Format(@"^({0})\s*,?\s*({1}*)\s*", Liquid.QuotedFragment, Liquid.VariableSignature));
+        private static readonly Regex Syntax = new Regex(string.Format(@"^({0})\s*,?\s*({1}*)\s*", Liquid.QuotedFragment, Liquid.VariableSignature), RegexOptions.Compiled);
         #endregion
 
         #region Fields
