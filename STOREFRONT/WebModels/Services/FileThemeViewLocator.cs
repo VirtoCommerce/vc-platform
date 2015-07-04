@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using Omu.ValueInjecter;
 using VirtoCommerce.Web.Views.Engines.Liquid;
+using VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine.Util;
 
 namespace VirtoCommerce.Web.Services
 {
@@ -37,44 +38,24 @@ namespace VirtoCommerce.Web.Services
 
         private ViewLocationResult FindView(IEnumerable<string> locations, string viewName, string fileNameFormat = "{0}", bool throwException = false)
         {
-            var allFiles = this.LoadThemeFiles();
             var checkedLocations = new List<string>();
             var viewFound = false;
 
-            ViewLocationResult foundView = null;
-            foreach (var fullPath in
-                locations.Select(
-                    viewLocation => this.RemoveBaseDirectory(Path.Combine(this.ThemeDirectory, viewLocation, string.Format(fileNameFormat, viewName)))))
+            var viewNameWithExtension = string.Format(fileNameFormat, viewName);
+
+            FileViewLocationResult foundView = null;
+
+            foreach (var fullPath in locations.Select(viewLocation => Combine(this._baseDirectoryPath, this.ThemeDirectory, viewLocation, viewNameWithExtension)))
             {
-                foundView = allFiles.SingleOrDefault(x => x.Name.Equals(fullPath, StringComparison.OrdinalIgnoreCase));
-                if (foundView != null)
+                var file = VirtualPathProviderHelper.GetFile(fullPath);
+                if (file != null)
                 {
+                    foundView = new FileViewLocationResult(file, file.VirtualPath);
                     viewFound = true;
                     break;
                 }
 
-                checkedLocations.Add(Path.Combine(this._baseDirectoryPath, fullPath));
-            }
-
-            // use more flex method
-            if (!viewFound)
-            {
-                var tempViewName = string.Format(fileNameFormat, viewName);
-                if (tempViewName.StartsWith("*"))
-                {
-                    tempViewName = viewName.RemovePrefix("*");
-                    foreach (var location in locations)
-                    {
-                        var tempLocation = this.RemoveBaseDirectory(
-                            Path.Combine(this.ThemeDirectory, location));
-                        foundView = allFiles.SingleOrDefault(x => x.Name.EndsWith(tempViewName, StringComparison.OrdinalIgnoreCase) && x.Name.StartsWith(tempLocation, StringComparison.OrdinalIgnoreCase));
-                        if (foundView != null)
-                        {
-                            viewFound = true;
-                            break;
-                        }                       
-                    }
-                }
+                checkedLocations.Add(fullPath);
             }
 
             // now search in global location
@@ -83,36 +64,17 @@ namespace VirtoCommerce.Web.Services
             {
                 foreach (var fullPath in
                     locations.Select(
-                        viewLocation => this.RemoveBaseDirectory(Path.Combine("_global", viewLocation, string.Format(fileNameFormat, viewName)))))
+                        viewLocation => Combine(this._baseDirectoryPath, "_global", viewLocation, viewNameWithExtension)))
                 {
-                    foundView = allFiles.SingleOrDefault(x => x.Name.Equals(fullPath, StringComparison.OrdinalIgnoreCase));
-                    if (foundView != null)
+                    var file = VirtualPathProviderHelper.GetFile(fullPath);
+                    if (file != null)
                     {
+                        foundView = new FileViewLocationResult(file, file.VirtualPath);
                         viewFound = true;
                         break;
                     }
 
                     checkedLocations.Add(Path.Combine(this._baseDirectoryPath, fullPath));
-                }
-            }
-
-            // use more flex method to search for asteric
-            if (!viewFound)
-            {
-                var tempViewName = string.Format(fileNameFormat, viewName);
-                if (tempViewName.StartsWith("*"))
-                {
-                    tempViewName = viewName.RemovePrefix("*");
-                    foreach (var location in locations)
-                    {
-                        var tempLocation = this.RemoveBaseDirectory(Path.Combine("_global", location));
-                        foundView = allFiles.SingleOrDefault(x => x.Name.EndsWith(tempViewName, StringComparison.OrdinalIgnoreCase) && x.Name.StartsWith(tempLocation, StringComparison.OrdinalIgnoreCase));
-                        if (foundView != null)
-                        {
-                            viewFound = true;
-                            break;
-                        }
-                    }
                 }
             }
 
@@ -122,15 +84,13 @@ namespace VirtoCommerce.Web.Services
             }
 
             // since file is stale, make sure to refresh cache contents
+
             if (foundView != null && foundView.IsStale())
             {
-                if (foundView is FileViewLocationResult)
+                lock (this._Lock)
                 {
-                    lock (this._Lock)
-                    {
-                        if (!((FileViewLocationResult)foundView).Reload()) // file was deleted
-                            return null;
-                    }
+                    if (!foundView.Reload()) // file was deleted
+                        return null;
                 }
             }
 
@@ -175,45 +135,12 @@ namespace VirtoCommerce.Web.Services
         /// </summary>
         public void UpdateCache()
         {
-            this.LoadThemeFiles(true);
+            //this.LoadThemeFiles(true);
         }
 
-        private ViewLocationResult[] LoadThemeFiles(bool reload = false)
+        private string Combine(params string[] paths)
         {
-            var contextKey = "vc-cms-files-" + this.ThemeDirectory;
-            var value = !reload ? HttpRuntime.Cache.Get(contextKey) : null;
-
-            if (value != null)
-            {
-                return value as ViewLocationResult[];
-            }
-
-            IEnumerable<ViewLocationResult> themeFiles = null;
-            lock (this._Lock)
-            {
-                // check again, since it might have updated since last lock
-                value = !reload ? HttpRuntime.Cache.Get(contextKey) : null;
-                if (value != null)
-                {
-                    return value as ViewLocationResult[];
-                }
-
-                var directory = new DirectoryInfo(this.BaseDirectory);
-                var allFiles = new List<FileInfo>(directory.GetFiles("*.*", SearchOption.AllDirectories));
-
-                themeFiles = allFiles.Select(
-                    x =>
-                        new FileViewLocationResult(x, this.RemoveBaseDirectory(x.FullName)));
-
-                HttpRuntime.Cache.Insert(contextKey, themeFiles.ToArray());
-            }
-
-            return themeFiles.ToArray();
-        }
-
-        private string RemoveBaseDirectory(string path)
-        {
-            return path.Replace(this.BaseDirectory, string.Empty).Replace("\\", "/").TrimStart('/');
+            return Path.Combine(paths).Replace("\\", "/").TrimStart('/');
         }
 
         protected virtual string BaseDirectory
@@ -228,8 +155,8 @@ namespace VirtoCommerce.Web.Services
         {
             get
             {
-                var fileSystemMainPath = Path.Combine(this._baseDirectoryPath, SiteContext.Current.Theme.Path);
-                return fileSystemMainPath;
+                //var fileSystemMainPath = Path.Combine(this._baseDirectoryPath, SiteContext.Current.Theme.Path);
+                return SiteContext.Current.Theme.Path;
             }
         }
     }

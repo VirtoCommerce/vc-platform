@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -70,7 +71,7 @@ namespace VirtoCommerce.Web.Models.Services
             _themesCacheStoragePath = ConfigurationManager.AppSettings["ThemeCacheFolder"];
             _pagesCacheStoragePath = ConfigurationManager.AppSettings["PageCacheFolder"];
 
-            this._viewLocator = new FileThemeViewLocator(HostingEnvironment.MapPath(_themesCacheStoragePath));
+            this._viewLocator = new FileThemeViewLocator(_themesCacheStoragePath);
 
             this._cartHelper = new CartHelper(this);
         }
@@ -714,7 +715,7 @@ namespace VirtoCommerce.Web.Models.Services
                     .ToDictionary(x => x.Key, y => this.GetTypedValue(y.Value));
             }
 
-            HttpRuntime.Cache.Insert(contextKey, parameters, new CacheDependency(new[] { settingsResource.Location }));
+            HttpRuntime.Cache.Insert(contextKey, parameters, HostingEnvironment.VirtualPathProvider.GetCacheDependency(settingsResource.Location, new[] { settingsResource.Location }, DateTime.UtcNow));
 
             return new Settings(parameters, defaultValue);
         }
@@ -740,7 +741,7 @@ namespace VirtoCommerce.Web.Models.Services
 
             if (loadDefault)
             {
-                localeResource = this._viewLocator.LocateResource("*default.json");
+                localeResource = this._viewLocator.LocateResource("en.default.json"); // TODO: remove hard coding
             }
             else
             {
@@ -754,13 +755,19 @@ namespace VirtoCommerce.Web.Models.Services
 
             if (localeResource == null)
             {
+                // need to cache value so we don't keep requesting over and over
+                var path = HostingEnvironment.MapPath(_themesCacheStoragePath);
+                var allDirectories = Directory.GetDirectories(path, "*", SearchOption.AllDirectories);
+ 
+                HttpRuntime.Cache.Insert(contextKey, new object(), new CacheDependency(allDirectories));
+ 
                 return null;
             }
 
             var fileContents = localeResource.Contents.Invoke().ReadToEnd();
 
             var contents = JsonConvert.DeserializeObject<dynamic>(fileContents);
-            HttpRuntime.Cache.Insert(contextKey, contents, new CacheDependency(new[] { localeResource.Location }));
+            HttpRuntime.Cache.Insert(contextKey, contents, HostingEnvironment.VirtualPathProvider.GetCacheDependency(localeResource.Location, new[] { localeResource.Location }, DateTime.UtcNow));
             return contents;
         }
 

@@ -393,8 +393,7 @@ namespace VirtoCommerce.Web.Models.Routing.Routes
                 routeValue = routeValue.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries).Last();
                 var keyword = routeValue;
                 // this.GetKeyword(routeValue, type, language); Sasha: routevalue here is already a keyword
-
-                var client = ClientContext.Clients.CreateBrowseClient();
+                //var client = ClientContext.Clients.CreateBrowseClient();
 
                 if (keyword != null)
                 {

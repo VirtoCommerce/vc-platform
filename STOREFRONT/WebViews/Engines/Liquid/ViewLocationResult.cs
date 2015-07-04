@@ -26,11 +26,10 @@ namespace VirtoCommerce.Web.Views.Engines.Liquid
         /// <param name="name">The name of the view.</param>
         /// <param name="extension">The file extension of the located view.</param>
         /// <param name="contents">A <see cref="TextReader"/> that can be used to read the contents of the located view.</param>
-        public ViewLocationResult(string location, string name, string extension, Func<TextReader> contents)
+        public ViewLocationResult(string location, string name, Func<TextReader> contents)
         {
-            this.Location = location;
-            this.Name = name;
-            this.Extension = extension;
+            this.Location = location !=null ? location.ToLower() : null;
+            this.Name = name != null ? name.ToLower() : null;
             this.Contents = contents;
         }
 
@@ -45,7 +44,7 @@ namespace VirtoCommerce.Web.Views.Engines.Liquid
         /// </summary>
         /// <value>A <see cref="string"/> containing the extension of the view that was located.</value>
         /// <remarks>The extension should not contain a leading dot.</remarks>
-        public string Extension { get; protected set; }
+        //public string Extension { get; protected set; }
 
         /// <summary>
         /// Gets the location of where the view was found.
