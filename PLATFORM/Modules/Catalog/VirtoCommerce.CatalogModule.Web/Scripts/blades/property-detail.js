@@ -53,7 +53,7 @@
                 newBlade.subtitle = 'Change to what it applies';
                 newBlade.controller = 'virtoCommerce.catalogModule.propertyTypeController';
                 newBlade.template = 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/property-type.tpl.html';
-                newBlade.availablePropertyTypes = b.catalogId ? ['Catalog', 'Category', 'Product', 'Variation'] : ['Category', 'Product', 'Variation'];
+                newBlade.availablePropertyTypes = b.catalogId ? ['Product', 'Variation', 'Category', 'Catalog'] : ['Product', 'Variation', 'Category'];
                 break;
             case 'dict':
                 newBlade.title = b.origEntity.name ? b.origEntity.name : b.currentEntity.name + ' dictionary';

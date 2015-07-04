@@ -6,7 +6,7 @@
                     <legend>New value</legend>
                     <div class="form-group">
                         <div class="form-input">
-                            <input ng-class="{'error' : pdForm.dictValue.$invalid && !pdForm.dictValue.$pristine}" required ng-model="newValue.value" ui-validate=" 'dictValueValidator($value)' " name="dictValue" focus-on="" type="text" placeholder="Please enter value" />
+                            <input ng-class="{'error' : pdForm.dictValue.$invalid && !pdForm.dictValue.$pristine}" required ng-model="newValue.value" ui-validate=" 'dictValueValidator($value)' " name="dictValue" focus-on="" placeholder="Enter value" />
                         </div>
                         <div class="form-error" ng-if="pdForm.dictValue.$dirty && pdForm.dictValue.$invalid">
                             <span ng-if="pdForm.dictValue.$error.required">Required</span>
@@ -22,8 +22,14 @@
                     <legend>{{selectedItem ? 'Edit values' : 'New values'}}</legend>
                     <div class="form-group">
                         <div class="form-input __langs" ng-repeat="data in newValue.values">
-                            <span class="flag flag-{{data.languageCode.substr(3).toLowerCase()}}"></span>
-                            <input ng-model="data.value" class="form-control" ng-required="$first" />
+                            <ng-form name="valuesForm">
+                                <span class="flag flag-{{data.languageCode.substr(3).toLowerCase()}}"></span>
+                                <input ng-model="data.value" class="form-control" ng-required="$first" ui-validate=" 'dictValueValidator($value, data)' " name="mValue" placeholder="Enter value" />
+                                <div class="form-error" ng-if="valuesForm.mValue.$dirty && valuesForm.mValue.$invalid">
+                                    <span ng-if="valuesForm.mValue.$error.required">Required</span>
+                                    <span ng-if="valuesForm.mValue.$error.validator">Duplicate key found</span>
+                                </div>
+                            </ng-form>
                         </div>
                     </div>
                     <div class="form-group">

@@ -18,12 +18,7 @@
 
     function saveChanges() {
         $scope.blade.isLoading = true;
-        var entriesCopy = $scope.blade.parentBlade.currentEntities.slice();
-
-        if (angular.isDefined($scope.currentEntity.id)) {
-            entriesCopy = _.reject(entriesCopy, function (ent) { return ent.id === $scope.currentEntity.id; });
-        }
-
+        var entriesCopy = _.filter($scope.blade.parentBlade.currentEntities, function (ent) { return !angular.equals(ent, $scope.blade.origEntity); });
         entriesCopy.push($scope.currentEntity);
 
         items.update({ id: $scope.blade.parentBlade.currentEntityId, reviews: entriesCopy }, function () {
