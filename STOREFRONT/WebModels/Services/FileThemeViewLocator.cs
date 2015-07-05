@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
-using Omu.ValueInjecter;
+using System.Web.Caching;
+using System.Web.Hosting;
 using VirtoCommerce.Web.Views.Engines.Liquid;
 using VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine.Util;
 
@@ -12,20 +13,31 @@ namespace VirtoCommerce.Web.Services
     public class FileThemeViewLocator : IViewLocator
     {
         private readonly string _baseDirectoryPath;
-        private readonly object _Lock = new object();
+        private VirtualPathProvider _vpp;
 
         public FileThemeViewLocator(string baseDirectoryPath)
         {
             this._baseDirectoryPath = baseDirectoryPath;
 
-            this.ViewLocations = new[]
-                                              {
-                                                  "layout",
-                                                  "templates",
-                                                  "snippets",
-                                                  "assets"
-                                              };
+            this.ViewLocations = new[] { "layout", "templates", "snippets", "assets" };
+
+            ViewLocationCache = new FileViewLocationCache();
         }
+
+        protected VirtualPathProvider VirtualPathProvider
+        {
+            get
+            {
+                if (_vpp == null)
+                {
+                    _vpp = HostingEnvironment.VirtualPathProvider;
+                }
+                return _vpp;
+            }
+            set { _vpp = value; }
+        }
+
+        public FileViewLocationCache ViewLocationCache { get; set; }
 
         public IEnumerable<string> ViewLocations;
         public string FileNameFormat
@@ -40,10 +52,15 @@ namespace VirtoCommerce.Web.Services
         {
             var checkedLocations = new List<string>();
             var viewFound = false;
+            var context = new HttpContextWrapper(HttpContext.Current);
 
             var viewNameWithExtension = string.Format(fileNameFormat, viewName);
 
-            FileViewLocationResult foundView = null;
+            ViewLocationResult foundView = null;
+
+            // check cache first
+            foundView = ViewLocationCache.GetViewLocation(context, viewNameWithExtension) as ViewLocationResult;
+            if (foundView != null) return foundView;
 
             foreach (var fullPath in locations.Select(viewLocation => Combine(this._baseDirectoryPath, this.ThemeDirectory, viewLocation, viewNameWithExtension)))
             {
@@ -78,13 +95,13 @@ namespace VirtoCommerce.Web.Services
                 }
             }
 
-            if (!viewFound && throwException)
+            if (foundView == null /*!viewFound && throwException*/)
             {
-                return new ViewLocationResult(checkedLocations.ToArray());
+                foundView = new ViewLocationResult(checkedLocations.ToArray());
             }
 
             // since file is stale, make sure to refresh cache contents
-
+            /*
             if (foundView != null && foundView.IsStale())
             {
                 lock (this._Lock)
@@ -93,6 +110,9 @@ namespace VirtoCommerce.Web.Services
                         return null;
                 }
             }
+             * */
+
+            ViewLocationCache.InsertViewLocation(context, viewNameWithExtension, foundView);
 
             return foundView;
         }
@@ -102,24 +122,19 @@ namespace VirtoCommerce.Web.Services
         public ViewLocationResult LocateView(string viewName)
         {
             var foundView = this.FindView(this.ViewLocations, viewName, this.FileNameFormat, true);
-            if (foundView != null)
-                return foundView;
-
-            return null;
+            return foundView;
         }
 
         public ViewLocationResult LocatePartialView(string viewName)
         {
             var foundView = this.FindView(this.ViewLocations, viewName, this.FileNameFormat, true);
-            if (foundView != null)
-                return foundView;
-
-            return null;
+            return foundView;
         }
 
         public ViewLocationResult LocateResource(string resourceName)
         {
-            return this.LocateResource(resourceName, null);
+            var foundView = this.LocateResource(resourceName, null);
+            return foundView;
         }
 
         #endregion
@@ -135,7 +150,6 @@ namespace VirtoCommerce.Web.Services
         /// </summary>
         public void UpdateCache()
         {
-            //this.LoadThemeFiles(true);
         }
 
         private string Combine(params string[] paths)
@@ -159,5 +173,53 @@ namespace VirtoCommerce.Web.Services
                 return SiteContext.Current.Theme.Path;
             }
         }
+    }
+
+    public class FileViewLocationCache
+    {
+        private static readonly TimeSpan _defaultTimeSpan = new TimeSpan(0, 15, 0);
+
+        public FileViewLocationCache()
+            : this(_defaultTimeSpan)
+        {
+        }
+
+        public FileViewLocationCache(TimeSpan timeSpan)
+        {
+            TimeSpan = timeSpan;
+        }
+
+        public TimeSpan TimeSpan { get; private set; }
+
+        #region IViewLocationCache Members
+
+        public object GetViewLocation(HttpContextBase httpContext, string key)
+        {
+            if (httpContext == null)
+            {
+                throw new ArgumentNullException("httpContext");
+            }
+            return httpContext.Cache[key];
+        }
+
+        public void InsertViewLocation(HttpContextBase httpContext, string key, object view)
+        {
+            if (httpContext == null)
+            {
+                throw new ArgumentNullException("httpContext");
+            }
+
+            CacheDependency dependency = null;
+            if (view is FileViewLocationResult)
+            {
+                var virtualPath = (view as FileViewLocationResult).Location;
+                var virtualPathDependencies = new List<string> { virtualPath };
+                dependency = HostingEnvironment.VirtualPathProvider.GetCacheDependency(virtualPath, virtualPathDependencies, DateTime.UtcNow);
+            }
+
+            httpContext.Cache.Insert(key, view, dependency, Cache.NoAbsoluteExpiration, TimeSpan);
+        }
+
+        #endregion
     }
 }

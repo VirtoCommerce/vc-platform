@@ -11,9 +11,9 @@ namespace VirtoCommerce.Web.Views.Engines.Liquid
 
         public FileViewLocationResult(VirtualFile file, string name) : base(file.VirtualPath, name, () => new StreamReader(VirtualPathProviderHelper.Open(file)))
         {
-            _fileHash = VirtualPathProviderHelper.GetFileHash(file.VirtualPath);
+            //_fileHash = VirtualPathProviderHelper.GetFileHash(file.VirtualPath);
             //this._lastModifiedUtc = file.LastWriteTimeUtc;
-        }
+         }
 
         #region Overrides of ViewLocationResult
 

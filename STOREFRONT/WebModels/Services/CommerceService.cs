@@ -737,7 +737,7 @@ namespace VirtoCommerce.Web.Models.Services
                 return null;
             }
 
-            ViewLocationResult localeResource = null;
+            ViewLocationResult localeResource;
 
             if (loadDefault)
             {
@@ -753,7 +753,7 @@ namespace VirtoCommerce.Web.Models.Services
                                      (String.Format("{0}.json", culture.TwoLetterISOLanguageName)));
             }
 
-            if (localeResource == null)
+            if (localeResource == null || localeResource.SearchedLocations != null)
             {
                 // need to cache value so we don't keep requesting over and over
                 var path = HostingEnvironment.MapPath(_themesCacheStoragePath);
