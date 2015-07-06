@@ -135,11 +135,36 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 		}
 
 		[HttpGet]
-		[ResponseType(typeof(Notification[]))]
+		[ResponseType(typeof(webModels.SearchNotificationsResult))]
 		[Route("journal/{objectId}/{objectTypeId}")]
-		public IHttpActionResult GetNotificationJournal(string objectId, string objectTypeId)
+		public IHttpActionResult GetNotificationJournal(string objectId, string objectTypeId, int start, int count)
 		{
-			return Ok(new Notification[] { });
+			var result = _notificationManager.SearchNotifications(new SearchNotificationCriteria() { ObjectId = objectId, ObjectTypeId = objectTypeId, Skip = start, Take = count });
+
+			var retVal = new webModels.SearchNotificationsResult();
+			retVal.Notifications = result.Notifications.Select(nt => nt.ToWebModel()).ToArray();
+			retVal.TotalCount = result.TotalCount;
+
+			return Ok(retVal);
+		}
+
+		[HttpGet]
+		[ResponseType(typeof(webModels.Notification))]
+		[Route("notification/{id}")]
+		public IHttpActionResult GetNotification(string id)
+		{
+			var retVal = _notificationManager.GetNotificationById(id);
+
+			return Ok(retVal.ToWebModel());
+		}
+
+		[HttpPost]
+		[Route("stopnotifications")]
+		public IHttpActionResult StopSendingNotifications(string[] ids)
+		{
+			_notificationManager.StopSendingNotifications(ids);
+
+			return Ok();
 		}
 	}
 }

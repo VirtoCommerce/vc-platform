@@ -6,11 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Platform.Core.Notification;
+using VirtoCommerce.Platform.Data.Infrastructure;
 
 namespace VirtoCommerce.Platform.Data.Notification
 {
 	[CLSCompliant(false)]
-	[LiquidType("Login", "FirstName", "LastName")]
 	public class RegistrationEmailNotification : EmailNotification
 	{
 		public RegistrationEmailNotification(Func<IEmailNotificationSendingGateway> emailNotificationSendingGateway) : base(emailNotificationSendingGateway)
@@ -21,19 +21,19 @@ namespace VirtoCommerce.Platform.Data.Notification
 		/// <summary>
 		/// User login
 		/// </summary>
-		[Description("User login")]
+		[NotificationParameter("User login")]
 		public string Login { get; set; }
 
 		/// <summary>
 		/// User firstname
 		/// </summary>
-		[Description("User firstname")]
+		[NotificationParameter("User firstname")]
 		public string FirstName { get; set; }
 
 		/// <summary>
 		/// User lastname
 		/// </summary>
-		[Description("User lastname")]
+		[NotificationParameter("User lastname")]
 		public string LastName { get; set; }
 	}
 }

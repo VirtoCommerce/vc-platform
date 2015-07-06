@@ -11,6 +11,8 @@ using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
+using VirtoCommerce.Platform.Core.Notification;
+using VirtoCommerce.OrderModule.Data.Notification;
 
 namespace VirtoCommerce.OrderModule.Web
 {
@@ -54,6 +56,8 @@ namespace VirtoCommerce.OrderModule.Web
             _container.RegisterType<IObserver<OrderChangeEvent>, CalculateTotalsObserver>("CalculateTotalsObserver");
             //Adjust inventory activity
             _container.RegisterType<IObserver<OrderChangeEvent>, AdjustInventoryObserver>("AdjustInventoryObserver");
+			//Create order observer. Send notification
+			_container.RegisterType<IObserver<OrderChangeEvent>, CreateOrderObserver>("CreateOrderObserver");
 
             _container.RegisterType<IOrderRepository>(new InjectionFactory(c => new OrderRepositoryImpl("VirtoCommerce", new AuditableInterceptor(), new EntityPrimaryKeyGeneratorInterceptor())));
             //_container.RegisterInstance<IInventoryService>(new Mock<IInventoryService>().Object);
@@ -61,6 +65,21 @@ namespace VirtoCommerce.OrderModule.Web
 
             _container.RegisterType<ICustomerOrderService, CustomerOrderServiceImpl>();
             _container.RegisterType<ICustomerOrderSearchService, CustomerOrderSearchServiceImpl>();
+
+			var notificationManager = _container.Resolve<INotificationManager>();
+			var emailSendingGateway = _container.Resolve<IEmailNotificationSendingGateway>();
+			notificationManager.RegisterNotificationType(() => new OrderCreateEmailNotification(() => emailSendingGateway)
+				{
+					DisplayName = "Create order notification",
+					Description = "This notification sends by email to client when he create order",
+					NotificationTemplate = new NotificationTemplate
+					{
+						Body = @"You has created order. Your order number is - {{ ordernumber }}",
+						Subject = @"Your order was created",
+						NotificationTypeId = "OrderCreateEmailNotification",
+						Language = "en-US"
+					}
+				});
         }
 
         public override void PostInitialize()

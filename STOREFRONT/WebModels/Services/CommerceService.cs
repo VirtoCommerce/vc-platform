@@ -378,7 +378,8 @@ namespace VirtoCommerce.Web.Models.Services
                     {
                         Handle = shippingMethod.ShipmentMethodCode,
                         Price = shippingMethod.Price,
-                        Title = shippingMethod.Name
+                        Title = shippingMethod.Name,
+                        TaxType = shippingMethod.TaxType
                     });
                 }
             }

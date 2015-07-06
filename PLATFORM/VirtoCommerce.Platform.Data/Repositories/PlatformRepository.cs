@@ -110,16 +110,16 @@ namespace VirtoCommerce.Platform.Data.Repositories
 			modelBuilder.Entity<NotificationTemplateEntity>().ToTable("PlatformNotificationTemplate").HasKey(x => x.Id);
 			modelBuilder.Entity<NotificationTemplateEntity>()
 				.Property(x => x.NotificationTypeId)
-				.HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("ix_template_unique", 1) { IsUnique = true }));
+				.HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformNotificationTemplate_NotificationTypeId_ObjectTypeId_ObjectId_Language", 1) { IsUnique = true }));
 			modelBuilder.Entity<NotificationTemplateEntity>()
 				.Property(x => x.ObjectId)
-				.HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("ix_template_unique", 2) { IsUnique = true }));
+				.HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformNotificationTemplate_NotificationTypeId_ObjectTypeId_ObjectId_Language", 2) { IsUnique = true }));
 			modelBuilder.Entity<NotificationTemplateEntity>()
 				.Property(x => x.ObjectTypeId)
-				.HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("ix_template_unique", 3) { IsUnique = true }));
+				.HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformNotificationTemplate_NotificationTypeId_ObjectTypeId_ObjectId_Language", 3) { IsUnique = true }));
 			modelBuilder.Entity<NotificationTemplateEntity>()
 				.Property(x => x.Language)
-				.HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("ix_template_unique", 4) { IsUnique = true }));
+				.HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformNotificationTemplate_NotificationTypeId_ObjectTypeId_ObjectId_Language", 4) { IsUnique = true }));
 
 			base.OnModelCreating(modelBuilder);
 		}

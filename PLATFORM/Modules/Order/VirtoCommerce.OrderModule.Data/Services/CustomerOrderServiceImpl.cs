@@ -69,9 +69,9 @@ namespace VirtoCommerce.OrderModule.Data.Services
 
 		public virtual CustomerOrder Create(CustomerOrder order)
 		{
-			_eventPublisher.Publish(new OrderChangeEvent(EntryState.Added, null, order));
-	
 			EnsureThatAllOperationsHasNumber(order);
+
+			_eventPublisher.Publish(new OrderChangeEvent(EntryState.Added, null, order));
 
 			//TODO: for approved sipments need decrease inventory
 
