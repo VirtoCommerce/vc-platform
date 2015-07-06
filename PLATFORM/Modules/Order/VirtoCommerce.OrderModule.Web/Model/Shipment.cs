@@ -28,6 +28,8 @@ namespace VirtoCommerce.OrderModule.Web.Model
 		public decimal? Length { get; set; }
 		public decimal? Width { get; set; }
 
+		public string TaxType { get; set; }
+
 		public ICollection<LineItem> Items { get; set; }
 		public ICollection<PaymentIn> InPayments { get; set; }
 		public Address DeliveryAddress { get; set; }

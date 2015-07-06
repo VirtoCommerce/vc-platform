@@ -14,6 +14,7 @@ namespace VirtoCommerce.StoreModule.Web.Model
 		public string LogoUrl { get; set; }
 		public bool IsActive { get; set; }
 		public int Priority { get; set; }
+		public string TaxType { get; set; }
 
 		public ICollection<Setting> Settings { get; set; }
 	}

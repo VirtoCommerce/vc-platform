@@ -28,7 +28,7 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 		[Required]
 		public string CategoryId { get; set; }
 
-		public virtual CategoryBase Category { get; set; }
+		public virtual Category Category { get; set; }
 
 		[Required]
 		public string CatalogId { get; set; }

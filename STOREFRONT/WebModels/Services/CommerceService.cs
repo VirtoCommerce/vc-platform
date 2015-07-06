@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -40,7 +41,6 @@ namespace VirtoCommerce.Web.Models.Services
         private readonly SecurityClient _securityClient;
         private readonly StoreClient _storeClient;
         private readonly PriceClient _priceClient;
-        private readonly InventoryClient _inventoryClient;
         private readonly ListClient _listClient;
         private readonly ThemeClient _themeClient;
         private readonly PageClient _pageClient;
@@ -64,7 +64,6 @@ namespace VirtoCommerce.Web.Models.Services
             this._securityClient = ClientContext.Clients.CreateSecurityClient();
             this._priceClient = ClientContext.Clients.CreatePriceClient();
             this._marketingClient = ClientContext.Clients.CreateMarketingClient();
-            this._inventoryClient = ClientContext.Clients.CreateInventoryClient();
             this._themeClient = ClientContext.Clients.CreateThemeClient();
             this._pageClient = ClientContext.Clients.CreatePageClient();
             this._reviewsClient = ClientContext.Clients.CreateReviewsClient();
@@ -72,7 +71,7 @@ namespace VirtoCommerce.Web.Models.Services
             _themesCacheStoragePath = ConfigurationManager.AppSettings["ThemeCacheFolder"];
             _pagesCacheStoragePath = ConfigurationManager.AppSettings["PageCacheFolder"];
 
-            this._viewLocator = new FileThemeViewLocator(HostingEnvironment.MapPath(_themesCacheStoragePath));
+            this._viewLocator = new FileThemeViewLocator(_themesCacheStoragePath);
 
             this._cartHelper = new CartHelper(this);
         }
@@ -379,7 +378,8 @@ namespace VirtoCommerce.Web.Models.Services
                     {
                         Handle = shippingMethod.ShipmentMethodCode,
                         Price = shippingMethod.Price,
-                        Title = shippingMethod.Name
+                        Title = shippingMethod.Name,
+                        TaxType = shippingMethod.TaxType
                     });
                 }
             }
@@ -603,9 +603,7 @@ namespace VirtoCommerce.Web.Models.Services
 
             var rewards = await _marketingClient.GetPromotionRewardsAsync(promoContext);
 
-            var inventories = await this.GetItemsInventoriesAsync(variationIds);
-
-            return product.AsWebModel(prices, rewards, inventories);
+            return product.AsWebModel(prices, rewards);
         }
 
         public async Task<Product> GetProductByKeywordAsync(SiteContext context, string keyword, ItemResponseGroups responseGroup = ItemResponseGroups.ItemLarge)
@@ -653,20 +651,7 @@ namespace VirtoCommerce.Web.Models.Services
             };
 
             var rewards = await _marketingClient.GetPromotionRewardsAsync(promoContext);
-
-            var inventories = await this.GetItemsInventoriesAsync(variationIds);
-
-            return product.AsWebModel(prices, rewards, inventories);
-        }
-
-        public async Task<IEnumerable<InventoryInfo>> GetItemsInventoriesAsync(string[] itemIds)
-        {
-            if (itemIds == null)
-            {
-                return null;
-            }
-
-            return await _inventoryClient.GetItemsInventories(itemIds);
+            return product.AsWebModel(prices, rewards);
         }
 
         public async Task<IEnumerable<ApiClient.DataContracts.Marketing.PromotionReward>>
@@ -711,7 +696,7 @@ namespace VirtoCommerce.Web.Models.Services
             if (settingsResource == null || settingsResource.Contents == null)
                 return null;
 
-            var fileContents = settingsResource.Contents.Invoke().ReadToEnd();
+            var fileContents = settingsResource.Contents;
             var obj = JsonConvert.DeserializeObject<dynamic>(fileContents);
 
             // now get settings for current theme and add it as a settings parameter
@@ -731,7 +716,7 @@ namespace VirtoCommerce.Web.Models.Services
                     .ToDictionary(x => x.Key, y => this.GetTypedValue(y.Value));
             }
 
-            HttpRuntime.Cache.Insert(contextKey, parameters, new CacheDependency(new[] { settingsResource.Location }));
+            HttpRuntime.Cache.Insert(contextKey, parameters, HostingEnvironment.VirtualPathProvider.GetCacheDependency(settingsResource.Location, new[] { settingsResource.Location }, DateTime.UtcNow));
 
             return new Settings(parameters, defaultValue);
         }
@@ -753,11 +738,11 @@ namespace VirtoCommerce.Web.Models.Services
                 return null;
             }
 
-            ViewLocationResult localeResource = null;
+            ViewLocationResult localeResource;
 
             if (loadDefault)
             {
-                localeResource = this._viewLocator.LocateResource("*default.json");
+                localeResource = this._viewLocator.LocateResource("en.default.json"); // TODO: remove hard coding
             }
             else
             {
@@ -769,15 +754,21 @@ namespace VirtoCommerce.Web.Models.Services
                                      (String.Format("{0}.json", culture.TwoLetterISOLanguageName)));
             }
 
-            if (localeResource == null)
+            if (localeResource == null || localeResource.SearchedLocations != null)
             {
+                // need to cache value so we don't keep requesting over and over
+                var path = HostingEnvironment.MapPath(_themesCacheStoragePath);
+                var allDirectories = Directory.GetDirectories(path, "*", SearchOption.AllDirectories);
+ 
+                HttpRuntime.Cache.Insert(contextKey, new object(), new CacheDependency(allDirectories));
+ 
                 return null;
             }
 
-            var fileContents = localeResource.Contents.Invoke().ReadToEnd();
+            var fileContents = localeResource.Contents;
 
             var contents = JsonConvert.DeserializeObject<dynamic>(fileContents);
-            HttpRuntime.Cache.Insert(contextKey, contents, new CacheDependency(new[] { localeResource.Location }));
+            HttpRuntime.Cache.Insert(contextKey, contents, HostingEnvironment.VirtualPathProvider.GetCacheDependency(localeResource.Location, new[] { localeResource.Location }, DateTime.UtcNow));
             return contents;
         }
 
@@ -860,9 +851,7 @@ namespace VirtoCommerce.Web.Models.Services
 
             var rewards = await _marketingClient.GetPromotionRewardsAsync(promoContext);
 
-            var inventories = await this.GetItemsInventoriesAsync(allIds);
-
-            var result = new SearchResults<T>(response.Items.Select(i => i.AsWebModel(prices, rewards, inventories, parentCollection)).OfType<T>()) { TotalCount = response.TotalCount };
+            var result = new SearchResults<T>(response.Items.Select(i => i.AsWebModel(prices, rewards, parentCollection)).OfType<T>()) { TotalCount = response.TotalCount };
 
             if (response.Facets != null && response.Facets.Any())
                 result.Facets = response.Facets.Select(x => x.AsWebModel()).ToArray();
@@ -900,8 +889,8 @@ namespace VirtoCommerce.Web.Models.Services
             var store = context.StoreId;
             var theme = context.Theme.Name;
             var themePath = String.Format("{0}\\{1}", _themesCacheStoragePath, context.Theme.Path);
-            var themeStorageClient = new FileStorageCacheService(HostingEnvironment.MapPath(themePath));
-            var pagesStorageClient = new FileStorageCacheService(HostingEnvironment.MapPath(String.Format("~/App_Data/Pages/{0}", store)));
+            var themeStorageClient = FileStorageCacheService.Create(HostingEnvironment.MapPath(themePath));
+            var pagesStorageClient = FileStorageCacheService.Create(HostingEnvironment.MapPath(String.Format("~/App_Data/Pages/{0}", store)));
 
             // get last updated for both pages or theme files
             var themeLastUpdated = themeStorageClient.GetLatestUpdate();

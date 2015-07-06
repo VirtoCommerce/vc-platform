@@ -1,4 +1,7 @@
-﻿namespace AvaTaxCalcREST
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+
+namespace AvaTaxCalcREST
 {
     using System;
 
@@ -11,6 +14,7 @@
 
         public TaxDetail[] TaxDetails { get; set; }
 
+        [JsonConverter(typeof(StringEnumConverter))]
         public SeverityLevel ResultCode { get; set; }
 
         public Message[] Messages { get; set; }

@@ -217,7 +217,7 @@
     $scope.formats = ['shortDate', 'dd-MMMM-yyyy', 'yyyy/MM/dd'];
     $scope.format = $scope.formats[0];
 
-    $scope.blade.headIcon = 'fa fa-paperclip';
+    $scope.blade.headIcon = 'fa-paperclip';
 
     // Dynamic ExpressionBlock
     function extendElementBlock(expressionBlock) {

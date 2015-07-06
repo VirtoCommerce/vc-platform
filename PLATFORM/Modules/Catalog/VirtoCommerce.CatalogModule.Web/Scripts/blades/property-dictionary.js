@@ -4,8 +4,18 @@
     var pb = $scope.blade.parentBlade;
     $scope.pb = pb;
 
-    $scope.dictValueValidator = function (value) {
-        return _.all(dictionaryValues, function (item) { return item.value !== value; });
+    $scope.dictValueValidator = function (value, editEntity) {
+        if (pb.currentEntity.multilanguage) {
+            var testEntity = angular.copy(editEntity);
+            testEntity.value = value;
+            return _.all(dictionaryValues, function (item) {
+                return item.value !== value || item.languageCode !== testEntity.languageCode || ($scope.selectedItem && _.some($scope.selectedItem.values, function (x) {
+                    return angular.equals(x, testEntity);
+                }));
+            });
+        } else {
+            return _.all(dictionaryValues, function (item) { return item.value !== value; });
+        }
     }
 
     $scope.cancel = function () {
@@ -152,24 +162,25 @@
         dialogService.showConfirmationDialog(dialog);
     }
 
-    function initializeDictionaryValues(data) {
-        if (pb.currentEntity.multilanguage) {
-            _.each(data, function (x) {
-                if (!x.alias) {
-                    x.alias = x.value;
-                }
-            });
-        }
-        dictionaryValues = data;
-        $scope.dictionaryValues = data;
-        $scope.groupedValues = _.map(_.groupBy(data, 'alias'), function (values, key) {
+    function initializeDictionaryValues() {
+        dictionaryValues = pb.currentEntity.dictionaryValues;
+        _.each(dictionaryValues, function (x) {
+            if (!x.alias) {
+                x.alias = x.value;
+            }
+        });
+
+        $scope.dictionaryValues = dictionaryValues;
+        $scope.groupedValues = _.map(_.groupBy(dictionaryValues, 'alias'), function (values, key) {
             return { alias: key, values: values };
         });
+
+        resetNewValue(pb.currentEntity.catalog.defaultLanguage.languageCode);
     }
 
     $scope.$watch('blade.parentBlade.currentEntity.dictionaryValues', initializeDictionaryValues);
+    $scope.$watch('blade.parentBlade.currentEntity.multilanguage', initializeDictionaryValues);
 
     // on load
-    resetNewValue(pb.currentEntity.catalog.defaultLanguage.languageCode);
     $scope.blade.isLoading = false;
 }]);

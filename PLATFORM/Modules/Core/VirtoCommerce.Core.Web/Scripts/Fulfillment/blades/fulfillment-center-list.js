@@ -57,7 +57,7 @@ function ($scope, fulfillments, bladeNavigationService) {
             });
     }
 
-    $scope.blade.headIcon = 'fa fa-wrench';
+    $scope.blade.headIcon = 'fa-wrench';
     $scope.blade.toolbarCommands = [
       {
           name: "Refresh", icon: 'fa fa-refresh',

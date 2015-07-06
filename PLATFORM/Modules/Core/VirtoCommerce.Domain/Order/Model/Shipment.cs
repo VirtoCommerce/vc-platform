@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using VirtoCommerce.Domain.Commerce.Model;
 
 namespace VirtoCommerce.Domain.Order.Model
 {
-	public class Shipment : Operation, IStockOutOperation, IHaveTaxDetalization
+	public class Shipment : Operation, IStockOutOperation, IHaveTaxDetalization, ISupportCancellation
 	{
 		public string OrganizationId { get; set; }
 		public string FulfillmentCenterId { get; set; }
@@ -25,6 +26,7 @@ namespace VirtoCommerce.Domain.Order.Model
 		public decimal? Length { get; set; }
 		public decimal? Width { get; set; }
 
+		public string TaxType { get; set; }
 
 		public Address DeliveryAddress { get; set; }
 		public decimal DiscountAmount
@@ -35,6 +37,8 @@ namespace VirtoCommerce.Domain.Order.Model
 			}
 		}
 		public Discount Discount { get; set; }
+
+		
 
 		public override IEnumerable<Operation> ChildrenOperations
 		{

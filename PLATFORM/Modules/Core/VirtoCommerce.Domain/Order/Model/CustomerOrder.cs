@@ -13,10 +13,6 @@ namespace VirtoCommerce.Domain.Order.Model
 		public string OrganizationId { get; set; }
 		public string EmployeeId { get; set; }
 
-		public bool IsCancelled { get; set; }
-		public DateTime? CancelledDate { get; set; }
-		public string CancelReason { get; set; }
-
 		public ICollection<Address> Addresses { get; set; }
 		public ICollection<PaymentIn> InPayments { get; set; }
 

@@ -86,6 +86,8 @@ namespace AvaTax.TaxModule.Web.Observers
                                 }).ToList();
                             }
                         }
+
+
                     }
                 }
             }

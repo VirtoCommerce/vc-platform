@@ -36,12 +36,8 @@ namespace VirtoCommerce.Web.Models.Routing.Constraints
             object parameterValue;
             values.TryGetValue(parameterName, out parameterValue);
             var parameterValueString = Convert.ToString(parameterValue, CultureInfo.InvariantCulture);
-            var constraintsRegEx = string.Format("^({0})$", Constants.LanguageRegex);
-            if (
-                !Regex.IsMatch(
-                    parameterValueString,
-                    constraintsRegEx,
-                    RegexOptions.CultureInvariant | RegexOptions.IgnoreCase | RegexOptions.Compiled))
+
+            if (!Constants.LanguageRegex.IsMatch(parameterValueString))
             {
                 return false;
             }

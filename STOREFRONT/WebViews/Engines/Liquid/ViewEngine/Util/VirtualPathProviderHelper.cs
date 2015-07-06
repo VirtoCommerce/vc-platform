@@ -19,6 +19,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE. */
 
 #region
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -30,50 +31,37 @@ namespace VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine.Util
 {
     public static class VirtualPathProviderHelper
     {
-        //public static Func<string, Action, string> LoadAndMonitor = DefaultLoadAndMonitor;
-
-        //public static string DefaultLoadAndMonitor(string virtualPath, Action changed)
-        //{
-        //    Monitor(virtualPath, changed);
-
-        //    return Load(virtualPath);
-        //}
-
-        //public static void Monitor(string virtualPath, Action changed)
-        //{
-        //    try
-        //    {
-        //        HostingEnvironment.Cache.Add(
-        //            Guid.NewGuid().ToString("n"),
-        //            string.Empty,
-        //            HostingEnvironment.VirtualPathProvider.GetCacheDependency(
-        //                virtualPath,
-        //                new[] {virtualPath},
-        //                DateTime.UtcNow),
-        //            Cache.NoAbsoluteExpiration,
-        //            Cache.NoSlidingExpiration,
-        //            CacheItemPriority.High,
-        //            (_, __, reason) => changed());
-        //    }
-        //    catch
-        //    {
-        //        // silent failing on Monitor is expected
-        //    }
-        //}
-
         #region Public Methods and Operators
-        public static IEnumerable<string> ListFiles(string virtualPath)
+        public static IEnumerable<VirtualFile> ListFiles(string virtualPath)
         {
             if (!HostingEnvironment.VirtualPathProvider.DirectoryExists(virtualPath))
             {
                 return null;
             }
 
-            var files =
-                HostingEnvironment.VirtualPathProvider.GetDirectory(virtualPath)
-                    .Files.OfType<VirtualFile>()
-                    .Select(f => f.Name);
+            var dir = HostingEnvironment.VirtualPathProvider.GetDirectory(virtualPath);
+
+            var files = LoadRecursive(dir.Children);
+            
             return files;
+        }
+
+        private static IEnumerable<VirtualFile> LoadRecursive(IEnumerable children)
+        {
+            var allFiles = new List<VirtualFile>();
+            var directories = children.OfType<VirtualDirectory>();
+            foreach (var virtualDirectory in directories)
+            {
+                allFiles.AddRange(LoadRecursive(virtualDirectory.Children));
+            }
+
+            var files = children.OfType<VirtualFile>();
+
+            if (files.Any())
+            {
+                allFiles.AddRange(files);
+            }
+            return allFiles;
         }
 
         public static string Load(string virtualPath)
@@ -98,8 +86,17 @@ namespace VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine.Util
             }
         }
 
-        public static Stream Open(string path)
+        public static Stream Open(VirtualFile virtualFile)
         {
+            using (var fs = virtualFile.Open())
+            {
+                var stream = new MemoryStream();
+                fs.CopyTo(stream);
+                stream.Position = 0;
+                return stream;
+            }
+
+            /*
             using (var fs = File.OpenRead(path))
             {
                 var stream = new MemoryStream();
@@ -107,6 +104,22 @@ namespace VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine.Util
                 stream.Position = 0;
                 return stream;
             }
+             * */
+        }
+
+        public static bool FileExists(string path)
+        {
+            return HostingEnvironment.VirtualPathProvider.FileExists(path.Replace("/", "\\"));
+        }
+
+        public static VirtualFile GetFile(string virtualPath)
+        {
+            return HostingEnvironment.VirtualPathProvider.FileExists(virtualPath) ? HostingEnvironment.VirtualPathProvider.GetFile(virtualPath) : null;
+        }
+
+        public static string GetFileHash(string virtualPath)
+        {
+            return HostingEnvironment.VirtualPathProvider.GetFileHash(virtualPath, new [] { virtualPath });
         }
         #endregion
     }

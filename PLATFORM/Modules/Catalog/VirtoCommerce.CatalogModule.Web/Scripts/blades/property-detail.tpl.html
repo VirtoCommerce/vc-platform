@@ -17,57 +17,55 @@
                 </div>
             </form>
 
+            <div class="form">
+                <div class="form-control __checkbox">
+                    <label class="form-label">
+                        <input type="checkbox" ng-model="blade.currentEntity.required">
+                        <span class="check"></span>
+                        <span class="name">Required</span>
+                    </label>
+                </div>
+                <div class="form-control __checkbox">
+                    <label class="form-label">
+                        <input type="checkbox" ng-model="blade.currentEntity.dictionary">
+                        <span class="check"></span>
+                        <span class="name">Dictionary</span>
+                    </label>
+                </div>
+                <div class="form-control __checkbox">
+                    <label class="form-label">
+                        <input type="checkbox" ng-model="blade.currentEntity.multivalue">
+                        <span class="check"></span>
+                        <span class="name">Multivalue</span>
+                    </label>
+                </div>
+                <div class="form-control __checkbox">
+                    <label class="form-label">
+                        <input type="checkbox" ng-model="blade.currentEntity.multilanguage">
+                        <span class="check"></span>
+                        <span class="name">Multi language</span>
+                    </label>
+                </div>
+            </div>
+
             <ul class="list __items">
-                <li class="list-item" ng-class="{'__selected': currentChild === 'attr'}" ng-click='openChild("attr")'>
-                    <span class="list-t">Attributes</span>
-                    <span class="list-descr">Manage property attributes</span>
+                <li class="list-item" ng-class="{'__selected': currentChild === 'appliesto'}" ng-click='openChild("appliesto")'>
+                    <span class="list-t">Applies to</span>
+                    <span class="list-descr">{{blade.currentEntity.type}}</span>
                 </li>
                 <li class="list-item" ng-class="{'__selected': currentChild === 'valType'}" ng-click='openChild("valType")'>
                     <span class="list-t">Value Type</span>
                     <span class="list-descr">{{blade.currentEntity.valueType}}</span>
                 </li>
-                <li class="list-item" ng-class="{'__selected': currentChild === 'appliesto'}" ng-click='openChild("appliesto")'>
-                    <span class="list-t">Applies to</span>
-                    <span class="list-descr">{{blade.currentEntity.type}}</span>
-                </li>
                 <li class="list-item" ng-class="{'__selected': currentChild === 'dict', '__disabled': !blade.currentEntity.dictionary }" ng-click='openChild("dict")'>
                     <span class="list-t">Dictionary</span>
                     <span class="list-descr">Manage dictionary</span>
                 </li>
+                <li class="list-item" ng-class="{'__selected': currentChild === 'attr'}" ng-click='openChild("attr")'>
+                    <span class="list-t">Attributes</span>
+                    <span class="list-descr">Manage property attributes</span>
+                </li>
             </ul>
-
-            <div class="form">
-                <div class="form-group">
-                    <div class="form-control __checkbox">
-                        <label class="form-label">
-                            <input type="checkbox" ng-model="blade.currentEntity.required">
-                            <span class="check"></span>
-                            <span class="name">Required</span>
-                        </label>
-                    </div>
-                    <div class="form-control __checkbox">
-                        <label class="form-label">
-                            <input type="checkbox" ng-model="blade.currentEntity.dictionary">
-                            <span class="check"></span>
-                            <span class="name">Dictionary</span>
-                        </label>
-                    </div>
-                    <div class="form-control __checkbox">
-                        <label class="form-label">
-                            <input type="checkbox" ng-model="blade.currentEntity.multivalue">
-                            <span class="check"></span>
-                            <span class="name">Multivalue</span>
-                        </label>
-                    </div>
-                    <div class="form-control __checkbox">
-                        <label class="form-label">
-                            <input type="checkbox" ng-model="blade.currentEntity.multilanguage">
-                            <span class="check"></span>
-                            <span class="name">Multi language</span>
-                        </label>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>

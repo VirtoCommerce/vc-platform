@@ -144,7 +144,7 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
             var catalogs = _catalogService.GetCatalogsList().ToArray();
             if (result != null)
             {
-                retVal = Ok(result.ToWebModel(products, catalogs));
+                retVal = Ok(result.ToWebModel(products, catalogs, _extensionManager.ConditionExpressionTree));
             }
             return retVal;
         }

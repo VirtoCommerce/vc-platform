@@ -5,11 +5,12 @@ using System.Web;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using VirtoCommerce.Domain.Commerce.Model;
+using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.OrderModule.Web.Model
 {
-	public class LineItem : AuditableEntity, IHaveTaxDetalization
+	public class LineItem : AuditableEntity, IHaveTaxDetalization, ISupportCancellation
 	{
 		/// <summary>
 		/// Price with tax and without dicount
@@ -57,6 +58,15 @@ namespace VirtoCommerce.OrderModule.Web.Model
 		public decimal? Height { get; set; }
 		public decimal? Length { get; set; }
 		public decimal? Width { get; set; }
+
+		public string TaxType { get; set; }
+		#region ISupportCancelation Members
+
+		public bool IsCancelled { get; set; }
+		public DateTime? CancelledDate { get; set; }
+		public string CancelReason { get; set; }
+
+		#endregion
 
 		public Discount Discount { get; set; }
 		public ICollection<TaxDetail> TaxDetails { get; set; }

@@ -115,6 +115,10 @@
     <Compile Include="Migrations\201506300702305_AssetAndImagesCascadeDeletion.Designer.cs">
       <DependentUpon>201506300702305_AssetAndImagesCascadeDeletion.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201507021035491_TaxTypeToCategory.cs" />
+    <Compile Include="Migrations\201507021035491_TaxTypeToCategory.Designer.cs">
+      <DependentUpon>201507021035491_TaxTypeToCategory.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Asset.cs" />
     <Compile Include="Model\Association.cs" />
@@ -124,7 +128,6 @@
     <Compile Include="Model\CatalogLanguage.cs" />
     <Compile Include="Model\CatalogPropertyValue.cs" />
     <Compile Include="Model\Category.cs" />
-    <Compile Include="Model\CategoryBase.cs" />
     <Compile Include="Model\CategoryItemRelation.cs" />
     <Compile Include="Model\CategoryRelation.cs" />
     <Compile Include="Model\CategoryPropertyValue.cs" />
@@ -208,6 +211,9 @@
     <EmbeddedResource Include="Migrations\201506300702305_AssetAndImagesCascadeDeletion.resx">
       <DependentUpon>201506300702305_AssetAndImagesCascadeDeletion.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507021035491_TaxTypeToCategory.resx">
+      <DependentUpon>201507021035491_TaxTypeToCategory.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Repositories\Sql\Association.sql" />
   </ItemGroup>
   <ItemGroup>
@@ -224,9 +230,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Repositories\Sql\Category.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Repositories\Sql\CategoryBase.sql" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Repositories\Sql\EditorialReview.reduced.sql" />

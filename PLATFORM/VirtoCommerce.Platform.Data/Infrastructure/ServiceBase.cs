@@ -9,7 +9,6 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
 {
 	public abstract class ServiceBase
 	{
-
 		protected void LoadObjectSettings(ISettingsManager settingManager, object obj)
 		{
 			var haveSettingsObjects = obj.GetFlatListObjectsWithInterface<IHaveSettings>();

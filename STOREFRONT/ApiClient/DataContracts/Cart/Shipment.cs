@@ -1,52 +1,53 @@
-﻿#region
-
-using System.Collections.Generic;
-
-#endregion
+﻿using System.Collections.Generic;
 
 namespace VirtoCommerce.ApiClient.DataContracts.Cart
 {
-
-    #region
-
-    #endregion
-
     public class Shipment
     {
-        #region Public Properties
-
-        public string Currency { get; set; }
-
-        public Dimension Dimension { get; set; }
-
-        public decimal DiscountTotal { get; set; }
-
-        public ICollection<Discount> Discounts { get; set; }
-
         public string Id { get; set; }
-
-        public decimal ItemSubtotal { get; set; }
-
-        public Address RecipientAddress { get; set; }
 
         public string ShipmentMethodCode { get; set; }
 
-        public decimal ShippingPrice { get; set; }
+        public string FulfilmentCenterId { get; set; }
 
-        public decimal Subtotal { get; set; }
+        public Address DeliveryAddress { get; set; }
 
-        public bool? TaxIncluded { get; set; }
-
-        public decimal TaxTotal { get; set; }
-
-        public decimal Total { get; set; }
+        public string Currency { get; set; }
 
         public decimal? VolumetricWeight { get; set; }
 
-        public string WarehouseLocation { get; set; }
+        public string WeightUnit { get; set; }
 
-        public Weight Weight { get; set; }
+        public decimal? Weight { get; set; }
 
-        #endregion
+        public string MeasureUnit { get; set; }
+
+        public decimal? Height { get; set; }
+
+        public decimal? Length { get; set; }
+
+        public decimal? Width { get; set; }
+
+        public bool TaxIncluded { get; set; }
+
+        public decimal ShippingPrice { get; set; }
+
+        public decimal Total { get; set; }
+
+        public decimal DiscountTotal { get; set; }
+
+        public decimal TaxTotal { get; set; }
+
+        public decimal ItemSubtotal { get; set; }
+
+        public decimal Subtotal { get; set; }
+
+        public ICollection<Discount> Discounts { get; set; }
+
+        public ICollection<CartItem> Items { get; set; }
+
+        public string TaxType { get; set; }
+
+        public ICollection<TaxDetail> TaxDetails { get; set; }
     }
 }

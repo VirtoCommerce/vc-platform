@@ -43,6 +43,8 @@ namespace VirtoCommerce.CartModule.Web.Model
 
 		public ICollection<LineItem> Items { get; set; }
 
+		public string TaxType { get; set; }
+
 		#region IHaveTaxDetalization Members
 		public ICollection<TaxDetail> TaxDetails { get; set; }
 		#endregion

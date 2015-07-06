@@ -46,8 +46,6 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			retVal.Links = dbItem.CategoryLinks.Select(x => x.ToCoreModel()).ToList();
 			#endregion
 
-		
-
 			#region Images
 			if (dbItem.Images != null)
 			{
@@ -67,7 +65,6 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			}
 			#endregion
 
-		
 
 			#region Variations
 			retVal.Variations = new List<coreModel.CatalogProduct>();
@@ -104,9 +101,19 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			}
 			#endregion
 
+			//TaxType category inheritance
+			if(retVal.TaxType == null && category != null)
+			{
+				retVal.TaxType = category.TaxType;
+			}
 			#region Variation property, assets, review inheritance
 			if (dbItem.Parent != null)
 			{
+				//TaxType from main product inheritance
+				if(dbItem.TaxType == null && dbItem.Parent.TaxType != null)
+				{
+					retVal.TaxType = dbItem.Parent.TaxType;
+				}
 				var allProductPropertyNames = dbItem.Parent.ItemPropertyValues.Select(x => x.Name).Distinct().ToArray();
 				//Property inheritance
 				if (allProductPropertyNames != null)

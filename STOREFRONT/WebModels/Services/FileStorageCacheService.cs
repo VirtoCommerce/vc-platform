@@ -2,6 +2,8 @@
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Web;
+using System.Web.Hosting;
 using VirtoCommerce.Web.Models.Storage;
 
 namespace VirtoCommerce.Web.Services
@@ -10,28 +12,82 @@ namespace VirtoCommerce.Web.Services
     {
         private readonly string _baseFolder;
 
-        public FileStorageCacheService(string baseFolder)
+        private DateTime? _lastUpdated;
+
+        private FileMonitoringService _monitor;
+        private static readonly object _LockObject = new object();
+
+        public static FileStorageCacheService Create(string baseFolder)
         {
-            this._baseFolder = baseFolder;
+            var cacheKey = "filestorage-" + baseFolder;
+            var fileStorage = HttpContext.Current.Cache[cacheKey] as FileStorageCacheService;
+
+            if (fileStorage != null) return fileStorage;
+            lock (_LockObject)
+            {
+                fileStorage = HttpContext.Current.Cache[cacheKey] as FileStorageCacheService;
+                if (fileStorage == null)
+                {
+                    fileStorage = new FileStorageCacheService(baseFolder);
+                    HttpRuntime.Cache.Insert(cacheKey, fileStorage, null);
+                }
+            }
+
+            return fileStorage;
+            //return new FileStorageCacheService(baseFolder);
         }
 
-        public DateTime? GetLatestUpdate()
+        private FileStorageCacheService(string baseFolder)
         {
-            var directory = new DirectoryInfo(this.BaseDirectory);
+            this._baseFolder = baseFolder;
+
+
+            var directory = new DirectoryInfo(baseFolder);
 
             if (!directory.Exists)
             {
                 directory.Create();
+                _lastUpdated = null;
             }
+            
+            _monitor = new FileMonitoringService(baseFolder);
+            _monitor.Changed += FileChanged;
+        }
+
+        void FileChanged(object sender, string e)
+        {
+            _lastUpdated = DateTime.Now;
+        }
+
+        public DateTime? GetLatestUpdate()
+        {
+            if (_lastUpdated.HasValue) return _lastUpdated;
+
+            var directory = new DirectoryInfo(BaseDirectory);
 
             var latest =
                 directory.GetFiles("*.*", SearchOption.AllDirectories)
                     .OrderByDescending(f => f.LastWriteTimeUtc)
                     .FirstOrDefault();
 
-            //if (latest == null) return DateTime.MinValue;
+            _lastUpdated = latest != null ? (DateTime?)latest.LastWriteTimeUtc : null;
+            return _lastUpdated;
+            /*
+            var directory = new DirectoryInfo(BaseDirectory);
+
+            if (!directory.Exists)
+            {
+                directory.Create();
+                return null;
+            }
+
+            var latest =
+    directory.GetFiles("*.*", SearchOption.AllDirectories)
+        .OrderByDescending(f => f.LastWriteTimeUtc)
+        .FirstOrDefault();
 
             return latest != null ? (DateTime?)latest.LastWriteTimeUtc : null;
+             * */
         }
 
         public bool ApplyUpdates(FileAsset[] items)

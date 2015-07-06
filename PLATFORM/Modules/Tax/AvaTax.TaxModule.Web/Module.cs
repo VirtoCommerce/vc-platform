@@ -2,6 +2,10 @@
 using AvaTax.TaxModule.Web.Controller;
 using AvaTax.TaxModule.Web.Observers;
 using AvaTax.TaxModule.Web.Services;
+//using Microsoft.Practices.EnterpriseLibrary.SemanticLogging;
+//using Microsoft.Practices.EnterpriseLibrary.SemanticLogging.Sinks;
+//using System.Diagnostics.Tracing;
+//using AvaTax.TaxModule.Web.Logging;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.Domain.Cart.Events;
 using VirtoCommerce.Domain.Order.Events;
@@ -29,6 +33,22 @@ namespace AvaTax.TaxModule.Web
         
         public override void Initialize()
         {
+            //var eventListener = new ObservableEventListener();
+
+            //eventListener.EnableEvents(
+            //    VirtoCommerceEventSource.Log,
+            //    EventLevel.LogAlways,
+            //    Keywords.All);
+
+            //eventListener.EnableEvents(
+            //    TaxEventSource.Log,
+            //    EventLevel.LogAlways,
+            //    Keywords.All);
+
+            //eventListener.LogToRollingFlatFile("AvaTax.log", 10000, "hh", RollFileExistsBehavior.Increment, RollInterval.Day);
+
+            //VirtoCommerceEventSource.Log.Startup();
+
             var settingsManager = _container.Resolve<ISettingsManager>();
             
             var avalaraTax = new AvaTaxSettings(_usernamePropertyName, _passwordPropertyName, _serviceUrlPropertyName, _companyCodePropertyName, _isEnabledPropertyName, settingsManager);
@@ -44,6 +64,9 @@ namespace AvaTax.TaxModule.Web
 
             //Subscribe to order changes. Calculate taxes   
             _container.RegisterType<IObserver<OrderChangeEvent>, CalculateOrderTaxesObserver>("CalculateOrderTaxesObserver");
+
+            //Subscribe to order changes. Calculate taxes   
+            _container.RegisterType<IObserver<OrderChangeEvent>, CancelOrderTaxesObserver>("CancelOrderTaxesObserver");
         }
         
         #endregion

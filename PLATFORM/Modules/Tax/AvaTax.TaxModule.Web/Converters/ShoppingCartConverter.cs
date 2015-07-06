@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Web;
 using AvaTaxCalcREST;
+using Microsoft.Practices.ObjectBuilder2;
 using AddressType = VirtoCommerce.Domain.Cart.Model.AddressType;
 
 namespace AvaTax.TaxModule.Web.Converters
@@ -91,9 +92,27 @@ namespace AvaTax.TaxModule.Web.Converters
                         OriginCode = destinationAddressIndex, //TODO set origin address (fulfillment?)
                         DestinationCode = destinationAddressIndex,
                         Description = li.Value.Name,
-                        TaxCode = li.Value.Product != null ? li.Value.Product.TaxType : null
+                        TaxCode = li.Value.TaxType
                     }
-                    ).ToArray();
+                    ).ToList();
+
+                //Add shipments as lines
+                if (cart.Shipments != null && cart.Shipments.Any())
+                {
+                    cart.Shipments.Select((x, i) => new { Value = x, Index = i }).ForEach(li =>
+                    getTaxRequest.Lines.Add(new Line
+                    {
+                        LineNo = li.Index.ToString(CultureInfo.InvariantCulture),
+                        ItemCode = li.Value.ShipmentMethodCode,
+                        Qty = 1,
+                        Amount = li.Value.ShippingPrice,
+                        OriginCode = destinationAddressIndex, //TODO set origin address (fulfillment?)
+                        DestinationCode = destinationAddressIndex,
+                        Description = li.Value.ShipmentMethodCode,
+                        TaxCode = li.Value.TaxType
+                    })
+                    );
+                }
                 return getTaxRequest;
             }
 

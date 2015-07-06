@@ -7,6 +7,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model
     {
         #region Public Properties
 		public string ManufacturerPartNumber { get; set; }
+
 		/// <summary>
 		/// Global Trade Item Number (GTIN). These identifiers include UPC (in North America), EAN (in Europe), JAN (in Japan), and ISBN (for books).
 		/// </summary>
@@ -26,9 +27,13 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model
 
         [Required]
         public string Id { get; set; }
-		public Image PrimaryImage { get; set; }
+		
+        public Image PrimaryImage { get; set; }
+
         public Image[] Images { get; set; }
-		public Asset[] Assets { get; set; }
+		
+        public Asset[] Assets { get; set; }
+        
         public string MainProductId { get; set; }
 
         public bool? TrackInventory { get; set; }
@@ -38,6 +43,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model
         public bool? IsActive { get; set; }
 
 		public int? MaxQuantity { get; set; }
+
 		public int? MinQuantity { get; set; }
 
         public string Name { get; set; }
@@ -49,6 +55,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model
 		public PropertyDictionary VariationProperties { get; set; }
 
         public double Rating { get; set; }
+
         public int ReviewsTotal { get; set; }
 
         public SeoKeyword[] Seo { get; set; }
@@ -63,31 +70,40 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model
 		public string ProductType { get; set; }
 
 		public string WeightUnit { get; set; }
-		public decimal? Weight { get; set; }
+		
+        public decimal? Weight { get; set; }
 
 		public string MeasureUnit { get; set; }
-		public decimal? Height { get; set; }
-		public decimal? Length { get; set; }
+		
+        public decimal? Height { get; set; }
+		
+        public decimal? Length { get; set; }
+
 		public decimal? Width { get; set; }
 
 		public bool? EnableReview { get; set; }
 
-		/// <summary>
+        public Inventory Inventory { get; set; }
+
+        /// <summary>
 		/// re-downloads limit
 		/// </summary>
 		public int? MaxNumberOfDownload { get; set; }
-		public DateTime? DownloadExpiration { get; set; }
-		/// <summary>
+		
+        public DateTime? DownloadExpiration { get; set; }
+		
+        /// <summary>
 		/// DownloadType: {Standard Product, Software, Music}
 		/// </summary>
 		public string DownloadType { get; set; }
+
 		public bool? HasUserAgreement { get; set; }
 
 		public string ShippingType { get; set; }
+
 		public string TaxType { get; set; }
 
 		public string Vendor { get; set; }
-
         #endregion
     }
 }

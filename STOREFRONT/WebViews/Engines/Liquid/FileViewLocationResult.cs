@@ -1,38 +1,28 @@
 ﻿using System;
 using System.IO;
+using System.Web.Hosting;
 using VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine.Util;
 
 namespace VirtoCommerce.Web.Views.Engines.Liquid
 {
     public class FileViewLocationResult : ViewLocationResult
     {
-        private readonly DateTime _lastModifiedUtc;
-
-        public FileViewLocationResult(FileInfo file, string name) : base(file.FullName, name, file.Extension, () => new StreamReader(VirtualPathProviderHelper.Open(file.FullName)))
+        public FileViewLocationResult(VirtualFile file, string name) : base(file.VirtualPath, name, () => new StreamReader(VirtualPathProviderHelper.Open(file)))
         {
-            this._lastModifiedUtc = file.LastWriteTimeUtc;
-        }
+            //_fileHash = VirtualPathProviderHelper.GetFileHash(file.VirtualPath);
+            //this._lastModifiedUtc = file.LastWriteTimeUtc;
+         }
 
         #region Overrides of ViewLocationResult
 
-        /// <summary>
-        /// Gets a value indicating whether the current item is stale
-        /// </summary>
-        /// <returns>True if stale, false otherwise</returns>
-        public override bool IsStale()
-        {
-            if (!File.Exists(this.Location))
-                return false;
-
-            return File.GetLastWriteTimeUtc(this.Location) > _lastModifiedUtc;
-        }
-
         public virtual bool Reload()
         {
-            if (!File.Exists(this.Location))
+            if (!VirtualPathProviderHelper.FileExists(this.Location))
                 return false;
 
-            this.Contents = () => new StreamReader(VirtualPathProviderHelper.Open(new FileInfo(this.Location).FullName));
+            var file = VirtualPathProviderHelper.GetFile(this.Location);
+
+            this.ContentsReader = () => new StreamReader(VirtualPathProviderHelper.Open(file));
 
             return true;
         }

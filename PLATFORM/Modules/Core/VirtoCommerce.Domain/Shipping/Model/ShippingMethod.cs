@@ -27,6 +27,7 @@ namespace VirtoCommerce.Domain.Shipping.Model
 		public string LogoUrl { get; set; }
 		public bool IsActive { get; set; }
 		public int Priority { get; set; }
+		public string TaxType { get; set; }
 
 
 		#region IHaveSettings Members

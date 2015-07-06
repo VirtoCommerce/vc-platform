@@ -3,7 +3,7 @@
 	var blade = $scope.blade;
 	blade.isLoading = false;
 	blade.title = 'Importing store';
-	$scope.blade.headIcon = 'fa fa-file-archive-o';
+	$scope.blade.headIcon = 'fa-file-archive-o';
 
 	$scope.$on("new-notification-event", function (event, notification) {
 		if (blade.notification && notification.id == blade.notification.id) {

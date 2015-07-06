@@ -189,7 +189,7 @@
         }
     };
 
-    $scope.blade.headIcon = 'fa fa-archive';
+    $scope.blade.headIcon = 'fa-archive';
 
     // Codemirror configuration
     $scope.editorOptions = {

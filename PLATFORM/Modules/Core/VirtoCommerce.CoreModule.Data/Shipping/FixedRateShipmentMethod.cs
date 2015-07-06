@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,7 +26,7 @@ namespace VirtoCommerce.CoreModule.Data.Shipping
 		{
 			get
 			{
-				var retVal = Settings.Where(x => x.Name == "Rate").Select(x => Convert.ToDecimal(x.Value)).FirstOrDefault();
+                var retVal = Settings.Where(x => x.Name == "Rate").Select(x => Decimal.Parse(x.Value, CultureInfo.InvariantCulture)).FirstOrDefault();
 				return retVal;
 			}
 		}

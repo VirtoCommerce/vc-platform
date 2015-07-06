@@ -25,6 +25,9 @@ namespace VirtoCommerce.StoreModule.Data.Model
 		[StringLength(2048)]
 		public string LogoUrl { get; set; }
 
+		[StringLength(64)]
+		public string TaxType { get; set; }
+
 		public bool IsActive { get; set; }
 
 

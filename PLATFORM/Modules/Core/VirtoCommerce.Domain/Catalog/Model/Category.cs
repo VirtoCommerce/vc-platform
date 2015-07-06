@@ -15,7 +15,7 @@ namespace VirtoCommerce.Domain.Catalog.Model
 
 		public string ParentId { get; set; }
 	    public string Code { get; set; }
-
+		public string TaxType { get; set; }
 		public string Name { get; set; }
 		public string Path	{  get;  set; }
 		public bool Virtual { get; set; }

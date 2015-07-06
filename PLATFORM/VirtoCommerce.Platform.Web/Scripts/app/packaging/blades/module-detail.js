@@ -101,7 +101,7 @@
         dialogService.showConfirmationDialog(dialog);
     }
 
-    $scope.blade.headIcon = 'fa fa-cubes';
+    $scope.blade.headIcon = 'fa-cubes';
 
     // on load
     blade.refresh();

@@ -35,7 +35,7 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 		public virtual Item CatalogItem { get; set; }
 
 		public string CategoryId { get; set; }
-		public virtual CategoryBase Category { get; set; }
+		public virtual Category Category { get; set; }
 		#endregion
 
 	}

@@ -30,7 +30,7 @@ namespace VirtoCommerce.Web
 
             var filters = new[] { typeof(ModelFilters), typeof(TranslationFilter) };
             var themesPath = ConfigurationManager.AppSettings["ThemeCacheFolder"];
-            var viewLocator = new FileThemeViewLocator(HostingEnvironment.MapPath(themesPath));
+            var viewLocator = new FileThemeViewLocator(themesPath);
             engines.Add(new DotLiquidViewEngine(new DotLiquidFileSystemFactory(viewLocator), viewLocator, filters));
         }
         #endregion

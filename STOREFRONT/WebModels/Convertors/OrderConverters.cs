@@ -226,6 +226,7 @@ namespace VirtoCommerce.Web.Convertors
                           RequiresShipping = false,
                           Sku = null,
                           TaxAmount = lineItem.Tax,
+                          TaxType = lineItem.TaxType,
                           Title = lineItem.Name,
                           Url = null,
                           Variant = null,

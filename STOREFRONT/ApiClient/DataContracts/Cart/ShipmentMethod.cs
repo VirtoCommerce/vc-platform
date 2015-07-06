@@ -31,6 +31,8 @@ namespace VirtoCommerce.ApiClient.DataContracts.Cart
 
         public string OptionDescription { get; set; }
 
+        public string TaxType { get; set; }
+
         #endregion
     }
 }

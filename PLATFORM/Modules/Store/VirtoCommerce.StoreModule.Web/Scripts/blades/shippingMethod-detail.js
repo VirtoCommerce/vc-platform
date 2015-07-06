@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.storeModule')
-.controller('virtoCommerce.storeModule.shippingMethodDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function ($scope, bladeNavigationService, dialogService) {
+.controller('virtoCommerce.storeModule.shippingMethodDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.settings', function ($scope, bladeNavigationService, dialogService, settings) {
 
     function initializeBlade(data) {
         $scope.blade.currentEntityId = data.id;
@@ -27,8 +27,22 @@
         $scope.formScope = form;
     }
 
-    $scope.blade.headIcon = 'fa fa-archive';
+    $scope.openDictionarySettingManagement = function () {
+        var newBlade = {
+            id: 'settingDetailChild',
+            isApiSave: true,
+            currentEntityId: 'VirtoCommerce.Core.General.TaxTypes',
+            title: 'Tax types',
+            controller: 'platformWebApp.settingDictionaryController',
+            template: 'Scripts/app/settings/blades/setting-dictionary.tpl.html'
+        };
+        bladeNavigationService.showBlade(newBlade, $scope.blade);
+    };
+
+    $scope.taxTypes = settings.getValues({ id: 'VirtoCommerce.Core.General.TaxTypes' });
+
+    $scope.blade.headIcon = 'fa-archive';
     $scope.blade.toolbarCustomTemplates = ['Scripts/common/templates/toolbar-isActive.tpl.html'];
-    
+
     initializeBlade($scope.blade.origEntity);
 }]);

@@ -80,6 +80,10 @@
     <Compile Include="Migrations\201506231439430_TaxDetail.Designer.cs">
       <DependentUpon>201506231439430_TaxDetail.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201507021234268_TaxTypeToCart.cs" />
+    <Compile Include="Migrations\201507021234268_TaxTypeToCart.Designer.cs">
+      <DependentUpon>201507021234268_TaxTypeToCart.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\AddressEntity.cs" />
     <Compile Include="Model\CustomerOrderEntity.cs" />
@@ -132,6 +136,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201506231439430_TaxDetail.resx">
       <DependentUpon>201506231439430_TaxDetail.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507021234268_TaxTypeToCart.resx">
+      <DependentUpon>201507021234268_TaxTypeToCart.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Repositories\Sql\OrderSampleData.sql" />
   </ItemGroup>

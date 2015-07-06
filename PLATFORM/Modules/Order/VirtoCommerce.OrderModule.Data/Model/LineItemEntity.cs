@@ -66,6 +66,14 @@ namespace VirtoCommerce.OrderModule.Data.Model
 		public decimal? Length { get; set; }
 		public decimal? Width { get; set; }
 
+		[StringLength(64)]
+		public string TaxType { get; set; }
+
+		public bool IsCancelled { get; set; }
+		public DateTime? CancelledDate { get; set; }
+		[StringLength(2048)]
+		public string CancelReason { get; set; }
+
 		public virtual ObservableCollection<DiscountEntity> Discounts { get; set; }
 
 		public virtual ObservableCollection<TaxDetailEntity> TaxDetails { get; set; }

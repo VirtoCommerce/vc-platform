@@ -111,7 +111,7 @@
         }
     };
 
-    $scope.blade.headIcon = 'fa fa-usd';
+    $scope.blade.headIcon = 'fa-usd';
 
     // datepicker
     $scope.datepickers = {

@@ -49,9 +49,6 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 		[StringLength(128)]
 		public string PackageType { get; set; }
 
-		[StringLength(128)]
-		public string TaxCategory { get; set; }
-
 		[StringLength(64)]
 		[Required]
 		[Index(IsUnique = true)] 

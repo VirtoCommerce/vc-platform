@@ -189,6 +189,7 @@
     <Compile Include="Models\SeoKeyword.cs" />
     <Compile Include="Services\CommerceService.cs" />
     <Compile Include="Services\CustomerService.cs" />
+    <Compile Include="Services\FileMonitoringService.cs" />
     <Compile Include="Services\FileStorageCacheService.cs" />
     <Compile Include="Services\FileThemeViewLocator.cs" />
     <Compile Include="Services\PagesService.cs" />

@@ -215,7 +215,7 @@
 		}
 	];
 
-	$scope.blade.headIcon = 'fa fa-inbox';
+	$scope.blade.headIcon = 'fa-inbox';
 
 	blade.initializeBlade();
 }]);

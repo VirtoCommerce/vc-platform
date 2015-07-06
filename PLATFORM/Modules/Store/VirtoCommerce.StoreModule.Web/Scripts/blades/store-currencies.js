@@ -62,7 +62,7 @@
         $scope.bladeClose();
     };
 
-    blade.headIcon = 'fa fa-money';
+    blade.headIcon = 'fa-money';
 
     $scope.$watch('blade.parentBlade.currentEntity', initializeBlade);
 

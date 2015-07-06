@@ -1,12 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace VirtoCommerce.ApiClient.DataContracts
 {
-    public class InventoryInfo
+    public class Inventory
     {
         public string FulfillmentCenterId { get; set; }
-
-        public string ProductId { get; set; }
 
         public long InStockQuantity { get; set; }
 
@@ -29,12 +31,5 @@ namespace VirtoCommerce.ApiClient.DataContracts
         public DateTime? BackorderAvailabilityDate { get; set; }
 
         public InventoryStatus Status { get; set; }
-    }
-
-    public enum InventoryStatus
-    {
-        Disabled = 0,
-        Enabled = 1,
-        Ignored
     }
 }

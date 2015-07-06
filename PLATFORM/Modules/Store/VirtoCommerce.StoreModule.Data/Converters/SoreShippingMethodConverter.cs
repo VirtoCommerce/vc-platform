@@ -39,7 +39,7 @@ namespace VirtoCommerce.StoreModule.Data.Converters
 				throw new ArgumentNullException("target");
 			var patchInjectionPolicy = new PatchInjection<dataModel.StoreShippingMethod>(x => x.LogoUrl, x => x.Name,
 																		   x => x.Description, x => x.Priority,
-																		   x => x.IsActive);
+																		   x => x.IsActive, x => x.TaxType);
 			target.InjectFrom(patchInjectionPolicy, source);
 		}
 

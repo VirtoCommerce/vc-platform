@@ -35,6 +35,7 @@ namespace VirtoCommerce.Domain.Cart.Model
 
 		public bool IsReccuring { get; set; }
 
+		public string TaxType { get; set; }
 		public bool TaxIncluded { get; set; }
 
 		public decimal? VolumetricWeight { get; set; }

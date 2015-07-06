@@ -49,7 +49,7 @@
         $scope.selectedItem = listItem;
     };
     
-    blade.headIcon = 'fa fa-wrench';
+    blade.headIcon = 'fa-wrench';
     blade.subtitle = 'Manage dictionary values';
     blade.toolbarCommands = [
      {

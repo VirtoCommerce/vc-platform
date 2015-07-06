@@ -9,7 +9,7 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Domain.Order.Model
 {
-	public class LineItem : AuditableEntity, IPosition, IHaveTaxDetalization
+	public class LineItem : AuditableEntity, IPosition, IHaveTaxDetalization, ISupportCancellation
 	{
 		public CurrencyCodes Currency { get; set; }
 		/// <summary>
@@ -28,6 +28,11 @@ namespace VirtoCommerce.Domain.Order.Model
 		/// Tax sum
 		/// </summary>
 		public decimal Tax { get; set; }
+
+		/// <summary>
+		/// Tax category or type
+		/// </summary>
+		public string TaxType { get; set; }
 
 		/// <summary>
 		/// Reserve quantity
@@ -58,6 +63,13 @@ namespace VirtoCommerce.Domain.Order.Model
 		public decimal? Length { get; set; }
 		public decimal? Width { get; set; }
 
+		#region ISupportCancelation Members
+
+		public bool IsCancelled { get; set; }
+		public DateTime? CancelledDate { get; set; }
+		public string CancelReason { get; set; }
+
+		#endregion
 
 		public Discount Discount { get; set; }
 		public ICollection<TaxDetail> TaxDetails { get; set; }

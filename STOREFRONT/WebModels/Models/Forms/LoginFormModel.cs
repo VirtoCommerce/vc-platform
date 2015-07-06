@@ -66,6 +66,18 @@ namespace VirtoCommerce.Web.Models.FormModels
             }
         }
 
+        public string ImpersonatedUserId
+        {
+            get
+            {
+                return GetValue("impersonated_user_id");
+            }
+            set
+            {
+                SetValue("impersonated_user_id", value);
+            }
+        }
+
         public string GetValue(string key)
         {
             return this.Customer.ContainsKey(key) ? this.Customer[key] : null;

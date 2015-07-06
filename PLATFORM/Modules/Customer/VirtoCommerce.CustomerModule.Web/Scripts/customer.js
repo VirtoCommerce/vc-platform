@@ -84,7 +84,7 @@ angular.module(moduleName, [])
           controller: 'virtoCommerce.customerModule.memberPhonesWidgetController',
           template: 'Modules/$(VirtoCommerce.Customer)/Scripts/widgets/memberPhonesWidget.tpl.html'
       }, 'organizationDetail1');
-      /// hidding some UI functionality until it's fully implemented. Need to release
+      /// hiding some UI functionality until it's fully implemented. Need to release
       //widgetService.registerWidget({
       //    controller:'virtoCommerce.customerModule.memberPropertyWidgetController',
       //    template: 'Modules/$(VirtoCommerce.Customer)/Scripts/widgets/memberPropertyWidget.tpl.html'

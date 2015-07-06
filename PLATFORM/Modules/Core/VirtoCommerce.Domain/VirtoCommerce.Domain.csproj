@@ -176,6 +176,7 @@
     <Compile Include="Order\Model\IStockInOperation.cs" />
     <Compile Include="Order\Model\IStockOperation.cs" />
     <Compile Include="Order\Model\IStockOutOperation.cs" />
+    <Compile Include="Order\Model\ISupportCancellation.cs" />
     <Compile Include="Order\Model\LineItem.cs" />
     <Compile Include="Order\Model\OperationProperty.cs" />
     <Compile Include="Order\Model\PropertyValueType.cs" />
