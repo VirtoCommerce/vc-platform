@@ -125,6 +125,12 @@
     <Compile Include="Common\TrackingEntry.cs" />
     <Compile Include="Common\TreeExtension.cs" />
     <Compile Include="Common\ValueObject.cs" />
+    <Compile Include="DynamicProperties\DynamicProperty.cs" />
+    <Compile Include="DynamicProperties\DynamicPropertyName.cs" />
+    <Compile Include="DynamicProperties\DynamicPropertyValue.cs" />
+    <Compile Include="DynamicProperties\DynamicPropertyValueType.cs" />
+    <Compile Include="DynamicProperties\IDynamicPropertyService.cs" />
+    <Compile Include="DynamicProperties\IHasDynamicProperties.cs" />
     <Compile Include="Modularity\ManifestDependency.cs" />
     <Compile Include="Modularity\ModuleBase.cs" />
     <Compile Include="Modularity\AssemblyResolver.cs" />
