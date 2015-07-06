@@ -87,7 +87,7 @@ namespace VirtoCommerce.Platform.Core.Common
 			return retVal;
 		}
 
-		public static T[] GetFlatObjectsListWithInterface<T>(this object obj)
+		public static T[] GetFlatListObjectsWithInterface<T>(this object obj)
 		{
 			var retVal = new List<T>();
 
@@ -103,7 +103,7 @@ namespace VirtoCommerce.Platform.Core.Common
 			var objects = properties.Where(x => x.PropertyType.GetInterface(typeof(T).Name) != null)
 									.Select(x =>(T)x.GetValue(obj)).ToList();
 
-			retVal.AddRange(objects.SelectMany(x => x.GetFlatObjectsListWithInterface<T>()));
+			retVal.AddRange(objects.SelectMany(x => x.GetFlatListObjectsWithInterface<T>()));
 
 			var collections = properties.Select(x => x.GetValue(obj, null))
 										.Where(x => x is IEnumerable && !(x is String))
@@ -115,7 +115,7 @@ namespace VirtoCommerce.Platform.Core.Common
 				{
 					if (collectionObject is T)
 					{
-						retVal.AddRange(collectionObject.GetFlatObjectsListWithInterface<T>());
+						retVal.AddRange(collectionObject.GetFlatListObjectsWithInterface<T>());
 					}
 				}
 			}

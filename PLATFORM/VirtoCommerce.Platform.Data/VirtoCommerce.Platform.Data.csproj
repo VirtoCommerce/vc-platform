@@ -148,10 +148,6 @@
     <Compile Include="Common\ConventionInjections\IgnorePropertiesInjection.cs" />
     <Compile Include="Common\ConventionInjections\PatchInjection.cs" />
     <Compile Include="Common\ExceptionExtensions.cs" />
-    <Compile Include="DynamicProperties\Converters\DynamicPropertyConverter.cs" />
-    <Compile Include="DynamicProperties\Converters\DynamicPropertyNameConverter.cs" />
-    <Compile Include="DynamicProperties\Converters\DynamicPropertyValueConverter.cs" />
-    <Compile Include="DynamicProperties\DynamicPropertyService.cs" />
     <Compile Include="Infrastructure\BasicUnitOfWork.cs" />
     <Compile Include="Infrastructure\DbMigrationContext.cs" />
     <Compile Include="Infrastructure\DbMigrationsConfigurationBase.cs" />
@@ -177,9 +173,6 @@
     <Compile Include="Model\AccountState.cs" />
     <Compile Include="Model\ApiAccountEntity.cs" />
     <Compile Include="Model\ApiAccountType.cs" />
-    <Compile Include="Model\DynamicPropertyEntity.cs" />
-    <Compile Include="Model\DynamicPropertyNameEntity.cs" />
-    <Compile Include="Model\DynamicPropertyValueEntity.cs" />
     <Compile Include="Model\NotificationEntity.cs" />
     <Compile Include="Model\NotificationTemplateEntity.cs" />
     <Compile Include="Model\OperationLogEntity.cs" />
@@ -231,10 +224,6 @@
     <Compile Include="Repositories\Migrations\201507011404374_AddUniqueIndexForNotificationTemplate.cs" />
     <Compile Include="Repositories\Migrations\201507011404374_AddUniqueIndexForNotificationTemplate.Designer.cs">
       <DependentUpon>201507011404374_AddUniqueIndexForNotificationTemplate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Repositories\Migrations\201507061651371_DynamicProperties.cs" />
-    <Compile Include="Repositories\Migrations\201507061651371_DynamicProperties.Designer.cs">
-      <DependentUpon>201507061651371_DynamicProperties.cs</DependentUpon>
     </Compile>
     <Compile Include="Repositories\Migrations\Configuration.cs" />
     <Compile Include="Repositories\PlatformDatabaseInitializer.cs" />
@@ -308,9 +297,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Repositories\Migrations\201507011404374_AddUniqueIndexForNotificationTemplate.resx">
       <DependentUpon>201507011404374_AddUniqueIndexForNotificationTemplate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Repositories\Migrations\201507061651371_DynamicProperties.resx">
-      <DependentUpon>201507061651371_DynamicProperties.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Security\Identity\Migrations\201411101625303_InitialCreate.resx">
       <DependentUpon>201411101625303_InitialCreate.cs</DependentUpon>
