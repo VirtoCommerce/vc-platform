@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using AvaTaxCalcREST;
+using Microsoft.Practices.ObjectBuilder2;
 using AddressType = VirtoCommerce.Domain.Order.Model.AddressType;
 
 namespace AvaTax.TaxModule.Web.Converters
@@ -46,7 +47,7 @@ namespace AvaTax.TaxModule.Web.Converters
                 // getTaxRequest.TaxOverride.TaxAmount = "0";
 
                 // Optional Request Parameters
-                getTaxRequest.PurchaseOrderNo = order.Id;
+                getTaxRequest.PurchaseOrderNo = order.Number;
                 //getTaxRequest.ReferenceCode = "ref123456";
                 //getTaxRequest.PosLaneCode = "09";
                 //getTaxRequest.CurrencyCode = order.Currency.ToString();
@@ -82,15 +83,33 @@ namespace AvaTax.TaxModule.Web.Converters
                     new Line
                     {
                         LineNo = li.Index.ToString(CultureInfo.InvariantCulture),
-                        ItemCode = li.Value.Product.Code,
+                        ItemCode = li.Value.ProductId,
                         Qty = li.Value.Quantity,
                         Amount = li.Value.Price,
                         OriginCode = destinationAddressIndex, //TODO set origin address (fulfillment?)
                         DestinationCode = destinationAddressIndex,
                         Description = li.Value.Name,
-                        TaxCode = li.Value.Product != null ? li.Value.Product.TaxType : null
+                        TaxCode = li.Value.TaxType
                     }
-                    ).ToArray();
+                    ).ToList();
+
+                //Add shipments as lines
+                if (order.Shipments != null && order.Shipments.Any())
+                {
+                    order.Shipments.Select((x, i) => new { Value = x, Index = i }).ForEach(li =>
+                    getTaxRequest.Lines.Add(new Line
+                    {
+                        LineNo = li.Index.ToString(CultureInfo.InvariantCulture),
+                        ItemCode = li.Value.ShipmentMethodCode,
+                        Qty = 1,
+                        Amount = li.Value.Sum,
+                        OriginCode = destinationAddressIndex, //TODO set origin address (fulfillment?)
+                        DestinationCode = destinationAddressIndex,
+                        Description = li.Value.ShipmentMethodCode,
+                        TaxCode = li.Value.TaxType
+                    })
+                    );
+                }
 
                 return getTaxRequest;
             }

@@ -14,5 +14,8 @@ namespace VirtoCommerce.Web.Models
 
         [DataMember]
         public string Title { get; set; }
+
+        [DataMember]
+        public string TaxType { get; set; }
     }
 }

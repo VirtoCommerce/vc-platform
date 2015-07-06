@@ -8,6 +8,7 @@ using AvaTaxCalcREST;
 using VirtoCommerce.Domain.Cart.Model;
 using VirtoCommerce.Domain.Order.Model;
 using CartAddressType = VirtoCommerce.Domain.Cart.Model.AddressType;
+using domainModel = VirtoCommerce.Domain.Commerce.Model;
 
 namespace AvaTax.TaxModule.Web.Controller
 {
@@ -43,9 +44,15 @@ namespace AvaTax.TaxModule.Web.Controller
                     foreach (TaxLine taxLine in getTaxResult.TaxLines ?? Enumerable.Empty<TaxLine>())
                     {
                         order.Items.ToArray()[Int32.Parse(taxLine.LineNo)].Tax = taxLine.Tax;
-                        //foreach (TaxDetail taxDetail in taxLine.TaxDetails ?? Enumerable.Empty<TaxDetail>())
-                        //{
-                        //}
+                        if (taxLine.TaxDetails != null && taxLine.TaxDetails.Any())
+                        {
+                            order.Items.ToArray()[Int32.Parse(taxLine.LineNo)].TaxDetails = taxLine.TaxDetails.Select(taxDetail => new domainModel.TaxDetail
+                            {
+                                Amount = taxDetail.Tax,
+                                Name = taxDetail.TaxName,
+                                Rate = taxDetail.Rate
+                            }).ToList();
+                        }
                     }
                     order.Tax = getTaxResult.TotalTax;
                 }
@@ -99,17 +106,21 @@ namespace AvaTax.TaxModule.Web.Controller
                     var error = string.Join(Environment.NewLine, getTaxResult.Messages.Select(m => m.Details));
                     return BadRequest(error);
                 }
-                else
+
+                foreach (TaxLine taxLine in getTaxResult.TaxLines ?? Enumerable.Empty<TaxLine>())
                 {
-                    foreach (TaxLine taxLine in getTaxResult.TaxLines ?? Enumerable.Empty<TaxLine>())
+                    cart.Items.ToArray()[Int32.Parse(taxLine.LineNo)].TaxTotal = taxLine.Tax;
+                    if (taxLine.TaxDetails != null && taxLine.TaxDetails.Any())
                     {
-                        cart.Items.ToArray()[Int32.Parse(taxLine.LineNo)].TaxTotal = taxLine.Tax;
-                        //foreach (TaxDetail taxDetail in taxLine.TaxDetails ?? Enumerable.Empty<TaxDetail>())
-                        //{
-                        //}
+                        cart.Items.ToArray()[Int32.Parse(taxLine.LineNo)].TaxDetails = taxLine.TaxDetails.Select(taxDetail => new domainModel.TaxDetail
+                        {
+                            Amount = taxDetail.Tax,
+                            Name = taxDetail.TaxName,
+                            Rate = taxDetail.Rate
+                        }).ToList();
                     }
-                    cart.TaxTotal = getTaxResult.TotalTax;
                 }
+                cart.TaxTotal = getTaxResult.TotalTax;
             }
             else
             {

@@ -168,7 +168,8 @@ namespace VirtoCommerce.Web.Convertors
                     {
                         Handle = shipment.ShipmentMethodCode,
                         Price = shipment.ShippingPrice,
-                        Title = shipment.ShipmentMethodCode
+                        Title = shipment.ShipmentMethodCode,
+                        TaxType = shipment.TaxType
                     };
                 }
 
@@ -252,7 +253,8 @@ namespace VirtoCommerce.Web.Convertors
                 {
                     Currency = checkoutModel.Currency,
                     ShipmentMethodCode = checkoutModel.ShippingMethod.Handle,
-                    ShippingPrice = checkoutModel.ShippingMethod.Price
+                    ShippingPrice = checkoutModel.ShippingMethod.Price,
+                    TaxType = checkoutModel.ShippingMethod.TaxType
                 });
             }
 
