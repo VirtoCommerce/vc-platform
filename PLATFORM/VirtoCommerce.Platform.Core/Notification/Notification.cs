@@ -14,12 +14,14 @@ namespace VirtoCommerce.Platform.Core.Notification
 		public Notification()
 		{
 			Type = this.GetType().Name;
+			MaxAttemptCount = 10;
 		}
 
 		public Notification(Func<INotificationSendingGateway> notificationSendingGateway)
 		{
 			_notificationSendingGateway = notificationSendingGateway;
 			Type = this.GetType().Name;
+			MaxAttemptCount = 10;
 		}
 
 		public string DisplayName { get; set; }
@@ -73,6 +75,8 @@ namespace VirtoCommerce.Platform.Core.Notification
 		/// Last fail attempt error message
 		/// </summary>
 		public string LastFailAttemptMessage { get; set; }
+
+		public string SendingGateway { get; set; }
 
 		/// <summary>
 		/// Date of last fail attempt

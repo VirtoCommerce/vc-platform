@@ -37,6 +37,7 @@ using VirtoCommerce.Platform.Data.Settings;
 using VirtoCommerce.Platform.Web;
 using VirtoCommerce.Platform.Web.Controllers.Api;
 using WebGrease.Extensions;
+using VirtoCommerce.Platform.Web.BackgroundJobs;
 
 [assembly: OwinStartup(typeof(Startup))]
 
@@ -114,6 +115,9 @@ namespace VirtoCommerce.Platform.Web
             };
 
             OwinConfig.Configure(app, container, connectionStringName, authenticationOptions);
+
+			var jobScheduler = container.Resolve<SendNotificationsJobsSheduler>();
+			jobScheduler.SheduleJobs();
 
             var postInitializeModules = moduleCatalog.CompleteListWithDependencies(moduleCatalog.Modules)
                 .Where(m => m.ModuleInstance != null)
@@ -231,6 +235,21 @@ namespace VirtoCommerce.Platform.Web
 									Description = "Your SendGrid account password"
 								}
 							}
+						},
+
+						new ModuleSettingsGroup
+						{
+							Name = "Platform|Notifications|SendingJob",
+							Settings = new []
+							{
+								new ModuleSetting
+								{
+									Name = "VirtoCommerce.Platform.Notifications.SendingJob.TakeCount",
+									ValueType = ModuleSetting.TypeInteger,
+									Title = "Job Take Count",
+									Description = "Take count for sending job"
+								}
+							}
 						}
                     }
                 }
@@ -270,8 +289,8 @@ namespace VirtoCommerce.Platform.Web
                     Description = "This notification sends by email to client when he finish registration",
                     NotificationTemplate = new NotificationTemplate
                     {
-                        Body = @"<p> Dear {{ context.first_name }} {{ context.last_name }}, you has registered on our site</p> <p> Your e-mail  - {{ context.login }} </p>",
-                        Subject = @"<p> Thanks for registration {{ context.first_name }} {{ context.last_name }}!!! </p>",
+                        Body = @"<p> Dear {{ firstname }} {{ lastname }}, you has registered on our site</p> <p> Your e-mail  - {{ login }} </p>",
+                        Subject = @"Thanks for registration {{ firstname }} {{ lastname }}!!!",
                         NotificationTypeId = "RegistrationEmailNotification",
                         Language = "en-US"
                     }

@@ -68,7 +68,6 @@ namespace VirtoCommerce.Platform.Data.Notification
 				if (origEntity == null)
 				{
 					origEntity = notificationTemplate.ToDataModel();
-					origEntity.Id = Guid.NewGuid().ToString("N");
 					repository.Add(origEntity);
 					CommitChanges(repository);
 				}

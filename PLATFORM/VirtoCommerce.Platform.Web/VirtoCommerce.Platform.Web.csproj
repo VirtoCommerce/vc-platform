@@ -277,6 +277,8 @@
     <Compile Include="App_Start\OwinConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="BackgroundJobs\SendNotificationsJobs.cs" />
+    <Compile Include="BackgroundJobs\SendNotificationsJobsSheduler.cs" />
     <Compile Include="Bootstraper.cs" />
     <Compile Include="Controllers\Api\AssetsController.cs" />
     <Compile Include="Controllers\Api\FrontendSecurityController.cs" />
@@ -304,6 +306,7 @@
     <Compile Include="Model\Notification\Notification.cs" />
     <Compile Include="Model\Notification\NotificationParameter.cs" />
     <Compile Include="Model\Notification\NotificationTemplate.cs" />
+    <Compile Include="Model\Notification\SearchNotificationsResult.cs" />
     <Compile Include="Model\Packaging\ModuleDescriptor.cs" />
     <Compile Include="Model\Packaging\ModuleIdentity.cs" />
     <Compile Include="Model\Packaging\ModuleWorkerJob.cs" />
@@ -327,6 +330,8 @@
     <Content Include="Content\angular-gridster.css" />
     <Content Include="Content\angular-multi-select.css" />
     <Content Include="Scripts\angular-gridster.js" />
+    <Content Include="Scripts\app\newnotifications\blades\notification-journal-details.js" />
+    <Content Include="Scripts\app\newnotifications\blades\notification-journal-details.tpl.html" />
     <Content Include="Scripts\app\newnotifications\blades\notification-templates-list.tpl.html" />
     <Content Include="Scripts\app\newnotifications\blades\notification-templates-list.js" />
     <Content Include="Scripts\app\newnotifications\blades\notifications-edit-template.js" />
