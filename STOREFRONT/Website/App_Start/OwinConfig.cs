@@ -61,6 +61,9 @@ namespace VirtoCommerce.Web
 
         protected virtual string AnonymousCookie { get { return "vcf.AnonymousId"; } }
 
+        private static CustomerService _customerServce = new CustomerService();
+        private static CommerceService _commerceServce = new CommerceService();
+
         #region Constructors and Destructors
         public SiteContextDataOwinMiddleware(OwinMiddleware next)
             : base(next)
@@ -71,8 +74,8 @@ namespace VirtoCommerce.Web
         #region Public Methods and Operators
         public override async Task Invoke(IOwinContext context)
         {
-            var customerService = new CustomerService();
-            var commerceService = new CommerceService();
+            var customerService = _customerServce;
+            var commerceService = _commerceServce;
             var ctx = SiteContext.Current;
 
             ctx.LoginProviders = GetExternalLoginProviders(context).ToArray();

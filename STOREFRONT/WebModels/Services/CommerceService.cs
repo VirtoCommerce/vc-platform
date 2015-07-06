@@ -695,7 +695,7 @@ namespace VirtoCommerce.Web.Models.Services
             if (settingsResource == null || settingsResource.Contents == null)
                 return null;
 
-            var fileContents = settingsResource.Contents.Invoke().ReadToEnd();
+            var fileContents = settingsResource.Contents;
             var obj = JsonConvert.DeserializeObject<dynamic>(fileContents);
 
             // now get settings for current theme and add it as a settings parameter
@@ -764,7 +764,7 @@ namespace VirtoCommerce.Web.Models.Services
                 return null;
             }
 
-            var fileContents = localeResource.Contents.Invoke().ReadToEnd();
+            var fileContents = localeResource.Contents;
 
             var contents = JsonConvert.DeserializeObject<dynamic>(fileContents);
             HttpRuntime.Cache.Insert(contextKey, contents, HostingEnvironment.VirtualPathProvider.GetCacheDependency(localeResource.Location, new[] { localeResource.Location }, DateTime.UtcNow));

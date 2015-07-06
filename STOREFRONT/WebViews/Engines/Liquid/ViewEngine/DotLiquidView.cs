@@ -63,7 +63,7 @@ namespace VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine
             if (path.Contents == null)
                 return null;
 
-            var contents = path.Contents.Invoke().ReadToEnd();
+            var contents = path.Contents;
             var template = Template.Parse(contents);
 
             //HttpRuntime.Cache.Insert(contextKey, template, new CacheDependency(new[] { path.Location}));

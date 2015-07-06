@@ -33,7 +33,7 @@ namespace VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine.FileSystems
             if (foundView.Contents == null)
                 return String.Format("not found {0}", templateName);
 
-            return foundView.Contents.Invoke().ReadToEnd();
+            return foundView.Contents;
         }
 
         #endregion

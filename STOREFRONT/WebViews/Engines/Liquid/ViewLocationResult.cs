@@ -6,6 +6,7 @@ namespace VirtoCommerce.Web.Views.Engines.Liquid
 {
     public class ViewLocationResult
     {
+        private string _contents;
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewLocationResult"/> class.
         /// </summary>
@@ -24,20 +25,32 @@ namespace VirtoCommerce.Web.Views.Engines.Liquid
         /// </summary>
         /// <param name="location">The location of where the view was found.</param>
         /// <param name="name">The name of the view.</param>
-        /// <param name="extension">The file extension of the located view.</param>
         /// <param name="contents">A <see cref="TextReader"/> that can be used to read the contents of the located view.</param>
         public ViewLocationResult(string location, string name, Func<TextReader> contents)
         {
             this.Location = location !=null ? location.ToLower() : null;
             this.Name = name != null ? name.ToLower() : null;
-            this.Contents = contents;
+            this.ContentsReader = contents;
         }
 
         /// <summary>
         /// Gets a function that produces a reader for retrieving the contents of the view.
         /// </summary>
         /// <value>A <see cref="Func{T}"/> instance that can be used to produce a reader for retrieving the contents of the view.</value>
-        public Func<TextReader> Contents { get; protected set; }
+        protected Func<TextReader> ContentsReader { get; set; }
+
+        public string Contents
+        {
+            get
+            {
+                if (_contents == null || this.IsStale())
+                {
+                    _contents = ContentsReader.Invoke().ReadToEnd();
+                }
+
+                return _contents;
+            }
+        }
 
         /// <summary>
         /// Gets the extension of the view that was located.
