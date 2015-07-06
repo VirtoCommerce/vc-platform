@@ -52,13 +52,15 @@ namespace VirtoCommerce.Web.Convertors
 
             var keywords = product.Seo != null ? product.Seo.Select(k => k.AsWebModel()) : null;
 
-            var primaryImage = product.PrimaryImage ?? product.Images.FirstOrDefault();
+            var primaryImage = product.PrimaryImage ?? (product.Images != null ? product.Images.FirstOrDefault() : null);
 
             productModel.Description = description != null ? description.Content : null;
             productModel.Handle = product.Code;
             productModel.Id = product.Id;
-            productModel.Images = new ItemCollection<Image>(product.Images.Select(i => i.AsWebModel(product.Name, product.Id)));
-            productModel.FeaturedImage = primaryImage.AsWebModel(primaryImage.Name, product.Id);
+            productModel.Images = product.Images != null ?
+                new ItemCollection<Image>(product.Images.Select(i => i.AsWebModel(product.Name, product.Id))) : null;
+            productModel.FeaturedImage = primaryImage != null ?
+                primaryImage.AsWebModel(primaryImage.Name, product.Id) : null;
             productModel.Keywords = keywords;
             productModel.Metafields = new MetaFieldNamespacesCollection(new[] { fieldsCollection });
             productModel.Options = options;
@@ -121,7 +123,7 @@ namespace VirtoCommerce.Web.Convertors
         {
             var variantModel = new Variant();
 
-            var variationImage = variation.PrimaryImage ?? variation.Images.FirstOrDefault();
+            var variationImage = variation.PrimaryImage ?? (variation.Images != null ? variation.Images.FirstOrDefault() : null);
 
             string variantlUrlParameter = null;// HttpContext.Current.Request.QueryString["variant"];
             string pathTemplate;
