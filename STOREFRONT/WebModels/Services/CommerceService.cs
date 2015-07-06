@@ -888,8 +888,8 @@ namespace VirtoCommerce.Web.Models.Services
             var store = context.StoreId;
             var theme = context.Theme.Name;
             var themePath = String.Format("{0}\\{1}", _themesCacheStoragePath, context.Theme.Path);
-            var themeStorageClient = new FileStorageCacheService(HostingEnvironment.MapPath(themePath));
-            var pagesStorageClient = new FileStorageCacheService(HostingEnvironment.MapPath(String.Format("~/App_Data/Pages/{0}", store)));
+            var themeStorageClient = FileStorageCacheService.Create(HostingEnvironment.MapPath(themePath));
+            var pagesStorageClient = FileStorageCacheService.Create(HostingEnvironment.MapPath(String.Format("~/App_Data/Pages/{0}", store)));
 
             // get last updated for both pages or theme files
             var themeLastUpdated = themeStorageClient.GetLatestUpdate();
