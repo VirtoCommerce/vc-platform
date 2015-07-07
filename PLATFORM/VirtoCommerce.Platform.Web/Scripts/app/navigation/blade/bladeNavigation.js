@@ -109,6 +109,18 @@ angular.module('platformWebApp')
                 });
             };
 
+            scope.toolsPerLineCount = 4;
+            scope.bladeToolbarStyle = {};
+            scope.showMoreTools = function () {
+                scope.isExtraToolbarOpen = !scope.isExtraToolbarOpen;
+                if (scope.isExtraToolbarOpen) {
+                    scope.bladeToolbarStyle = { height: '100px' };
+                } else {
+                    scope.bladeToolbarStyle = { height: '50px' };
+                    scope.bladeToolbarStyle = {};
+                }
+            };
+
             scope.$watch('blade.toolbarCommands', function (toolbarCommands) {
                 scope.resolvedToolbarCommands = toolbarService.resolve(toolbarCommands, scope.blade.controller, false);
             });
