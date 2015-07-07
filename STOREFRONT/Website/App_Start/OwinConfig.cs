@@ -62,7 +62,7 @@ namespace VirtoCommerce.Web
         protected virtual string AnonymousCookie { get { return "vcf.AnonymousId"; } }
 
         private static CustomerService _customerServce = new CustomerService();
-        private static CommerceService _commerceServce = new CommerceService();
+        private static CommerceService _commerceServce = CommerceService.Create();
 
         #region Constructors and Destructors
         public SiteContextDataOwinMiddleware(OwinMiddleware next)
