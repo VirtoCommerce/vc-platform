@@ -68,6 +68,8 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			var newValue = source.ToString();
             if (newValue != null)
 				SetPropertyValue(target, (coreModel.PropertyValueType)target.ValueType, newValue);
+            if (source.Alias != null)
+                target.Alias = source.Alias;
             if (source.KeyValue != null)
                 target.KeyValue = source.KeyValue;
         }
