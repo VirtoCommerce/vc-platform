@@ -130,7 +130,7 @@ namespace VirtoCommerce.Web.Models.Filters
             return input == null ? null : AssetUrl(GetImageUrl(input));
         }
 
-        public static string LinkTo(string input, string link, string title)
+        public static string LinkTo(string input, string link, string title = "")
         {
             if (String.IsNullOrEmpty(link))
             {
