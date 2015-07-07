@@ -8,7 +8,6 @@ using VirtoCommerce.Platform.Data.Infrastructure;
 
 namespace VirtoCommerce.OrderModule.Data.Notification
 {
-	[CLSCompliant(false)]
 	public class OrderCreateEmailNotification : EmailNotification
 	{
 		public OrderCreateEmailNotification(Func<IEmailNotificationSendingGateway> gateway): base(gateway)
