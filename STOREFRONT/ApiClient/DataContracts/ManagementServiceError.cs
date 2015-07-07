@@ -44,6 +44,12 @@ namespace VirtoCommerce.ApiClient.DataContracts
         [DataMember(Order = 1)]
         public string Message { get; set; }
 
+        [DataMember]
+        public string ExceptionType { get; set; }
+
+        [DataMember]
+        public ManagementServiceError InnerException { get; set; }
+
         #endregion
     }
 }

@@ -19,7 +19,7 @@ namespace VirtoCommerce.Web.Models.Filters
         #region Public Methods and Operators
         public static string T(string input, params object[] variables)
         {
-            var service = new CommerceService();
+            var service = CommerceService.Create();
             var context = SiteContext.Current;
             var locs = service.GetLocale(context);
             var defaultLocs = service.GetLocale(context, true);

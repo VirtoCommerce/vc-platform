@@ -57,7 +57,8 @@ namespace VirtoCommerce.Platform.Data.Notification
 
 			using (var repository = _repositoryFactory())
 			{
-				repository.Add(notification.ToDataModel());
+				var addedNotification = notification.ToDataModel();
+				repository.Add(addedNotification);
 				repository.UnitOfWork.Commit();
 			}
 		}
@@ -142,15 +143,60 @@ namespace VirtoCommerce.Platform.Data.Notification
 			using (var repository = _repositoryFactory())
 			{
 				retVal.Notifications = new List<Core.Notification.Notification>();
-				var notifications = repository.Notifications.Take(criteria.Take).Skip(criteria.Skip);
-				foreach (var notification in notifications)
+				if (!criteria.IsActive)
 				{
-					retVal.Notifications.Add(GetNotificationCoreModel(notification));
+					var notifications = repository.Notifications.Where(n => n.ObjectId == criteria.ObjectId && n.ObjectTypeId == criteria.ObjectTypeId).OrderBy(n => n.CreatedDate).Skip(criteria.Skip).Take(criteria.Take);
+					foreach (var notification in notifications)
+					{
+						retVal.Notifications.Add(GetNotificationCoreModel(notification));
+					}
+					retVal.TotalCount = repository.Notifications.Count(n => n.ObjectId == criteria.ObjectId && n.ObjectTypeId == criteria.ObjectTypeId);
 				}
-				retVal.TotalCount = notifications.Count();
+				else
+				{
+					var notifications = repository.Notifications.Where(n => n.IsActive && !n.IsSuccessSend && !n.SentDate.HasValue && (!n.StartSendingDate.HasValue || (n.StartSendingDate.HasValue && n.StartSendingDate.Value < DateTime.UtcNow))).OrderBy(n => n.CreatedBy).Take(criteria.Take);
+					foreach(var notification in notifications)
+					{
+						retVal.Notifications.Add(GetNotificationCoreModel(notification));
+					}
+				}
 			}
 
 			return retVal;
+		}
+
+		public Core.Notification.Notification GetNotification(string id)
+		{
+			Core.Notification.Notification retVal = null;
+
+			using(var repository = _repositoryFactory())
+			{
+				var notification = repository.Notifications.FirstOrDefault(n => n.Id == id);
+				if(notification != null)
+				{
+					retVal = GetNotificationCoreModel(notification);
+				}
+			}
+
+			return retVal;
+		}
+
+		public void StopSendingNotifications(string[] ids)
+		{
+			using(var repository = _repositoryFactory())
+			{
+				foreach(var id in ids)
+				{
+					var entity = repository.Notifications.FirstOrDefault(n => n.Id == id);
+					if(entity != null)
+					{
+						entity.IsActive = false;
+						repository.Update(entity);
+					}
+				}
+
+				repository.UnitOfWork.Commit();
+			}
 		}
 
 		private void SetNotificationTemplate(Core.Notification.Notification notification)

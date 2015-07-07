@@ -168,6 +168,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Infrastructure\Interceptors\TypeInterceptor.cs" />
+    <Compile Include="Infrastructure\NotificationParameterAttribute.cs" />
     <Compile Include="Infrastructure\ParrentAttribute.cs" />
     <Compile Include="Infrastructure\ServiceBase.cs" />
     <Compile Include="Infrastructure\SetupDatabaseInitializer.cs" />
@@ -226,6 +227,10 @@
     <Compile Include="Repositories\Migrations\201507011404374_AddUniqueIndexForNotificationTemplate.cs" />
     <Compile Include="Repositories\Migrations\201507011404374_AddUniqueIndexForNotificationTemplate.Designer.cs">
       <DependentUpon>201507011404374_AddUniqueIndexForNotificationTemplate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Repositories\Migrations\201507061326367_RenameNotificationTemplateIndex.cs" />
+    <Compile Include="Repositories\Migrations\201507061326367_RenameNotificationTemplateIndex.Designer.cs">
+      <DependentUpon>201507061326367_RenameNotificationTemplateIndex.cs</DependentUpon>
     </Compile>
     <Compile Include="Repositories\Migrations\Configuration.cs" />
     <Compile Include="Repositories\PlatformDatabaseInitializer.cs" />
@@ -299,6 +304,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Repositories\Migrations\201507011404374_AddUniqueIndexForNotificationTemplate.resx">
       <DependentUpon>201507011404374_AddUniqueIndexForNotificationTemplate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Repositories\Migrations\201507061326367_RenameNotificationTemplateIndex.resx">
+      <DependentUpon>201507061326367_RenameNotificationTemplateIndex.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Security\Identity\Migrations\201411101625303_InitialCreate.resx">
       <DependentUpon>201411101625303_InitialCreate.cs</DependentUpon>

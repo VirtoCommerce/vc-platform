@@ -309,7 +309,15 @@ namespace VirtoCommerce.ApiClient
                     errorCode = managementServiceError.Code;
                     errorMessage = managementServiceError.Message + " " + managementServiceError.ExceptionMessage;
                     errorDetails = managementServiceError.Details;
-                    stackTrace = managementServiceError.StackTrace;
+
+                    if (!String.IsNullOrEmpty(managementServiceError.StackTrace))
+                    {
+                        stackTrace = managementServiceError.StackTrace;
+                    }
+                    else if (managementServiceError.InnerException != null)
+                    {
+                        stackTrace = managementServiceError.InnerException.StackTrace;
+                    }
                 }
                 else
                 {
@@ -317,7 +325,12 @@ namespace VirtoCommerce.ApiClient
                 }
 
                 var managementException = new ManagementClientException(response.StatusCode, errorCode, errorMessage, errorDetails);
-                managementException.Data.Add("ManagementStackTrace", stackTrace);
+                if (managementServiceError != null)
+                {
+                    var innerException = new Exception(stackTrace);
+
+                    managementException = new ManagementClientException(response.StatusCode, errorCode, errorMessage, errorDetails, innerException);
+                }
 
                 throw managementException;
             }

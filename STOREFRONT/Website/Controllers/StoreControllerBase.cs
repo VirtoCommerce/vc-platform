@@ -46,7 +46,7 @@ namespace VirtoCommerce.Web.Controllers
         {
             get
             {
-                return this._service ?? (this._service = new CommerceService());
+                return this._service ?? (this._service = CommerceService.Create());
             }
         }
         #endregion

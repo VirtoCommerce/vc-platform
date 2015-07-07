@@ -142,7 +142,7 @@ namespace VirtoCommerce.Web.Models
                 }
             }
 
-            var service = new CommerceService();
+            var service = CommerceService.Create();
             var context = SiteContext.Current;
 
             var sortProperty = String.Empty;

@@ -1,5 +1,6 @@
 ﻿#region
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
@@ -280,8 +281,77 @@ namespace VirtoCommerce.Web.Models.Routing.Routes
             var isLanguageNeeded = this.IsLanguageNeeded(store, values[Constants.Language] as string);
             var isStoreNeeded = this.IsStoreNeeded(store);
 
+            var excludedRouteValuesNames = new List<string>();
+
+            if(!isStoreNeeded)
+                excludedRouteValuesNames.Add(Constants.Store);
+
+            if(!isLanguageNeeded)
+                excludedRouteValuesNames.Add(Constants.Language);
+
             if (!isStoreNeeded || !isLanguageNeeded)
             {
+                /*
+                var modifiedUrl = this.Url;
+
+                //If for request store URL is used do not show it in path
+                if (!isStoreNeeded)
+                {
+                    modifiedUrl = modifiedUrl.Replace(string.Format("/{{{0}}}", Constants.Store), string.Empty);
+                    values.Remove(Constants.Store);
+                }
+                else
+                {
+                    this.EncodeVirtualPath(values, SeoUrlKeywordTypes.Store);
+                }
+
+                if (!isLanguageNeeded)
+                {
+                    modifiedUrl = modifiedUrl.Replace(string.Format("{{{0}}}", Constants.Language), string.Empty);
+                    values.Remove(Constants.Language);
+                }
+
+                //The route URL cannot start with a '/' or '~' character and it cannot contain a '?' character.
+                if (modifiedUrl.StartsWith("/") || modifiedUrl.StartsWith("~"))
+                {
+                    modifiedUrl = modifiedUrl.Substring(1, modifiedUrl.Length - 1);
+                }
+
+                var excludedRouteData = new RouteData(this, this.RouteHandler);
+                var retVal = base.GetVirtualPath(requestContext, values);
+
+                return retVal;
+                */
+
+                /*
+                // create new route data and include only non-excluded values
+                var excludedRouteData = new RouteData(this, this.RouteHandler);
+
+                // add route values
+                requestContext.RouteData.Values
+                    .Where(pair => !excludedRouteValuesNames.Contains(pair.Key, StringComparer.OrdinalIgnoreCase))
+                    .ToList()
+                    .ForEach(pair => excludedRouteData.Values.Add(pair.Key, pair.Value));
+
+                // add data tokens
+                requestContext.RouteData.DataTokens
+                    .ToList()
+                    .ForEach(pair => excludedRouteData.DataTokens.Add(pair.Key, pair.Value));
+
+                // intermediary request context
+                var currentContext = new RequestContext(new HttpContextWrapper(HttpContext.Current), excludedRouteData);
+
+                // create new URL route values and include only none-excluded values
+                var excludedRouteValues = new RouteValueDictionary(
+                    values
+                        .Where(v => !excludedRouteValuesNames.Contains(v.Key, StringComparer.OrdinalIgnoreCase))
+                        .ToDictionary(pair => pair.Key, pair => pair.Value)
+                    );
+
+                var result = base.GetVirtualPath(currentContext, excludedRouteValues);
+                return result;
+                 * */
+
                 //Need to be in lock to make sure other thread does not change originalUrl in this block
                 lock (this.thisLock)
                 {
@@ -332,9 +402,9 @@ namespace VirtoCommerce.Web.Models.Routing.Routes
         #endregion
 
         #region Methods
-        protected virtual void EncodeVirtualPath(RouteValueDictionary values, SeoUrlKeywordTypes type)
+        protected virtual void EncodeVirtualPath(RouteValueDictionary values, SeoUrlKeywordType type)
         {
-            var routeValueKey = type.ToString().ToLower();
+            var routeValueKey = type.ToString();
             var language = values.ContainsKey(Constants.Language)
                 ? values[Constants.Language] as string
                 : Thread.CurrentThread.CurrentUICulture.Name;
@@ -386,7 +456,7 @@ namespace VirtoCommerce.Web.Models.Routing.Routes
                                routeDirection));
         }
 
-        private string EncodeRouteValue(string routeValue, SeoUrlKeywordTypes type, string language = null)
+        private string EncodeRouteValue(string routeValue, SeoUrlKeywordType type, string language = null)
         {
             if (!string.IsNullOrEmpty(routeValue))
             {
@@ -397,25 +467,25 @@ namespace VirtoCommerce.Web.Models.Routing.Routes
 
                 if (keyword != null)
                 {
-                    switch (type)
+                    if (type.Equals(SeoUrlKeywordTypes.Store) || type.Equals(SeoUrlKeywordTypes.Category))
                     {
-                        case SeoUrlKeywordTypes.Store:
-                        case SeoUrlKeywordTypes.Item:
-                            return routeValue;
-                        case SeoUrlKeywordTypes.Category:
-                            /*
-                            var category =
-                                Task.Run(
-                                    () =>
-                                        client.GetCategoryAsync(routeValue))
-                                    .Result.AsWebModel();
-                            if (category != null)
-                            {
-                                return string.Join("/", category.BuildOutline(language).Select(x => x.Value));
-                            }
-                             * */
+                        return routeValue;
+                    }
+                    else if (type.Equals(SeoUrlKeywordTypes.Store))
+                    {
+                        /*
+                        var category =
+                            Task.Run(
+                                () =>
+                                    client.GetCategoryAsync(routeValue))
+                                .Result.AsWebModel();
+                        if (category != null)
+                        {
+                            return string.Join("/", category.BuildOutline(language).Select(x => x.Value));
+                        }
+                         * */
 
-                            return routeValue; // routevalue for category is outline
+                        return routeValue; // routevalue for category is outline                        
                     }
                 }
             }

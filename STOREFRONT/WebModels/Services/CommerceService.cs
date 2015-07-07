@@ -38,38 +38,54 @@ namespace VirtoCommerce.Web.Models.Services
         private readonly CartClient _cartClient;
         private readonly CartHelper _cartHelper;
         private readonly OrderClient _orderClient;
-        private readonly SecurityClient _securityClient;
         private readonly StoreClient _storeClient;
         private readonly PriceClient _priceClient;
         private readonly ListClient _listClient;
         private readonly ThemeClient _themeClient;
-        private readonly PageClient _pageClient;
         private readonly IViewLocator _viewLocator;
         private readonly ReviewsClient _reviewsClient;
         private readonly string _themesCacheStoragePath;
-        private readonly string _pagesCacheStoragePath;
         private readonly MarketingClient _marketingClient;
 
         private static readonly object _LockObject = new object();
         #endregion
 
         #region Constructors and Destructors
-        public CommerceService()
+
+        public static CommerceService Create()
+        {
+            var cacheKey = "commerceservice";
+            var commerceService = HttpContext.Current.Cache[cacheKey] as CommerceService;
+
+            if (commerceService != null) return commerceService;
+            lock (_LockObject)
+            {
+                commerceService = HttpContext.Current.Cache[cacheKey] as CommerceService;
+                if (commerceService == null)
+                {
+                    commerceService = new CommerceService();
+                    HttpRuntime.Cache.Insert(cacheKey, commerceService, null);
+                }
+            }
+
+            return commerceService;
+        }
+
+        private CommerceService()
         {
             this._listClient = ClientContext.Clients.CreateListClient();
             this._browseClient = ClientContext.Clients.CreateBrowseClient();
             this._storeClient = ClientContext.Clients.CreateStoreClient();
             this._cartClient = ClientContext.Clients.CreateCartClient();
             this._orderClient = ClientContext.Clients.CreateOrderClient();
-            this._securityClient = ClientContext.Clients.CreateSecurityClient();
+            ClientContext.Clients.CreateSecurityClient();
             this._priceClient = ClientContext.Clients.CreatePriceClient();
             this._marketingClient = ClientContext.Clients.CreateMarketingClient();
             this._themeClient = ClientContext.Clients.CreateThemeClient();
-            this._pageClient = ClientContext.Clients.CreatePageClient();
+            ClientContext.Clients.CreatePageClient();
             this._reviewsClient = ClientContext.Clients.CreateReviewsClient();
 
             _themesCacheStoragePath = ConfigurationManager.AppSettings["ThemeCacheFolder"];
-            _pagesCacheStoragePath = ConfigurationManager.AppSettings["PageCacheFolder"];
 
             this._viewLocator = new FileThemeViewLocator(_themesCacheStoragePath);
 

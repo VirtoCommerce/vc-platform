@@ -150,8 +150,10 @@
     <Content Include="Scripts\widgets\seoWidget.tpl.html" />
     <Content Include="Scripts\widgets\storeCurrenciesWidget.js" />
     <Content Include="Scripts\widgets\storeCurrenciesWidget.tpl.html" />
-    <Content Include="Scripts\widgets\storeNotificationWidget.js" />
-    <Content Include="Scripts\widgets\storeNotificationWidget.tpl.html" />
+    <Content Include="Scripts\widgets\storeNotificationsLogWidget.js" />
+    <Content Include="Scripts\widgets\storeNotificationsLogWidget.tpl.html" />
+    <Content Include="Scripts\widgets\storeNotificationsWidget.js" />
+    <Content Include="Scripts\widgets\storeNotificationsWidget.tpl.html" />
     <Content Include="Scripts\widgets\storePaymentsWidget.js" />
     <Content Include="Scripts\widgets\storeSettingsWidget.js" />
     <Content Include="Scripts\widgets\storeAdvancedWidget.js" />

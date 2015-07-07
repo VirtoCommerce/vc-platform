@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using VirtoCommerce.Platform.Core.Notification;
 using SendGrid;
 using System.Web;
+using Exceptions;
 
 namespace VirtoCommerce.Platform.Data.Notification
 {
@@ -36,12 +37,21 @@ namespace VirtoCommerce.Platform.Data.Notification
 			var transportWeb = new Web(credentials);
 			try
 			{
-				Task.Run(() => transportWeb.DeliverAsync(mail));
+				transportWeb.DeliverAsync(mail).Wait();
 				retVal.IsSuccess = true;
 			}
 			catch (Exception ex)
 			{
 				retVal.ErrorMessage = ex.Message;
+
+				if (ex.InnerException is InvalidApiRequestException)
+				{
+					var apiEx = ex.InnerException as InvalidApiRequestException;
+					if(apiEx.Errors != null && apiEx.Errors.Length > 0)
+					{
+						retVal.ErrorMessage = string.Join(" ", apiEx.Errors);
+					}
+				}
 			}
 
 			return retVal;

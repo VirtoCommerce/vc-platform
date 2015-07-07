@@ -1,5 +1,4 @@
 ﻿<div class="blade-static __expanded">
-	<va-breadcrumb ng-model="blade.breadcrumbs"></va-breadcrumb>
 	<div class="form-group">
 		<div class="form-input __search">
 			<input placeholder="Search keyword..." ng-model="filter.searchKeyword" ui-keyup="{'enter':'blade.refresh()'}">
@@ -10,44 +9,47 @@
 <div class="blade-content __large-wide">
 	<div class="blade-inner">
 		<div class="inner-block">
-			<div class="table-wrapper" ng-if="items.length > 0">
-				<table class="table">
+			<div class="table-wrapper" ng-if="blade.currentEntities.length > 0">
+				<table class="table" style="margin-bottom:70px;">
 					<thead>
 						<tr>
 							<th class="table-col __product-control">
 								<label class="form-control __checkbox">
-									<input type="checkbox" ng-model="selectedAll" ng-change="checkAll(selectedAll)" />
+									<input type="checkbox" ng-model="blade.selectedAll" ng-change="blade.checkAll(blade.selectedAll)" />
 									<span class="check"></span>
 								</label>
 							</th>
-							<th class="table-col __product-img">Status</th>
-							<th class="table-col __product-name">DisplayName</th>
-							<th class="table-col __product-name">Name</th>
-							<th class="table-col __product-code">SKU</th>
+							<th class="table-col">Display Name</th>
+							<th class="table-col">Recipient</th>
+							<th class="table-col">Sent Date</th>
+							<th class="table-col">Channel</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr class="table-item" ng-repeat="data in items track by data.id" ng-class="{'__selected': data.id === selectedItem.id}">
+						<tr class="table-item" ng-repeat="data in blade.currentEntities track by data.id" ng-class="{'__selected': data.id === blade.selectedItemId}">
 							<td class="table-col">
-								<label class="form-control __checkbox" ng-if="showCheck(data)">
-									<input type="checkbox" ng-model="data.selected" ng-change="checkOne(data)">
+								<label class="form-control __checkbox">
+									<input type="checkbox" ng-model="data.selected" ng-change="blade.selectedAll = false;">
 									<span class="check"></span>
 								</label>
 							</td>
-							<td class="table-col" ng-click='selectItem($event, data)'>
+							<td class="table-col" ng-click='blade.openNotification(data)'>
+								<span class="table-t">{{data.displayName}}</span>
+								<span class="table-status" ng-if="!data.isActive && !data.isSuccessSend" style="background:red">Error</span>
+								<span class="table-status" ng-if="data.isActive && !data.isSuccessSend" style="max-width:60px;">Processing</span>
+								<span class="table-status __active" ng-if="(!data.isActive && data.isSuccessSend) || (data.isActive && data.isSuccessSend)">Success</span>
+							</td>
+							<td class="table-col" ng-click='blade.openNotification(data)'>
+								{{data.recipient}}
+							</td>
+							<td class="table-col __date" ng-click='blade.openNotification(data)'>
+								{{data.sendingDate}}
+							</td>
+							<td class="table-col" ng-click='blade.openNotification(data)'>
 								<div class="product-img">
-									<div class="image" ng-style="{'background-image': 'url(' + data.imageUrl + ')' }" ng-if="data.type!=='category' && data.imageUrl"></div>
-									<i class="table-ico fa" ng-class="data.type == 'category' ? ' fa-folder' : ' fa-image'" ng-if="!data.imageUrl"></i>
+									<i class="table-ico fa fa-envelope" ng-if="data.isEmail"></i>
+									<i class="table-ico fa fa-mobile" ng-if="data.isSms"></i>
 								</div>
-							</td>
-							<td class="table-col __product-name" ng-click='selectItem($event, data)'>
-								<i class="table-ico fa fa-link" ng-if="hasLinks(data)" title="This category is linked"></i>
-								<div class="table-t">{{data.name}}</div>
-								<span class="table-status" ng-if="data.type==='category' && !data.isActive">Inactive</span>
-								<div class="table-descr">{{data.productType}}</div>
-							</td>
-							<td class="table-col __product-code" ng-click='selectItem($event, data)'>
-								{{data.type!=='category'?data.code:''}}
 							</td>
 						</tr>
 					</tbody>
@@ -59,4 +61,4 @@
 		</div>
 	</div>
 </div>
-<!--<div class="blade-static __bottom" ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems" ng-include="'pagerTemplate.html'"></div>-->
+<div class="blade-static __bottom" ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems" ng-include="'pagerTemplate.html'"></div>

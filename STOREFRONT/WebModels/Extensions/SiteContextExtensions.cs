@@ -67,7 +67,7 @@ namespace VirtoCommerce.Web.Extensions
             language = langInfo != null ? langInfo.Name : language;
 
             //Filter keywords with valid language
-            keywords = keywords.Where(x => x.Language.TryGetCultureInfo() != null).ToArray();
+            keywords = keywords.Where(x => x.Language.TryGetCultureInfo() != null);
 
             if (keywords.Any())
             {
