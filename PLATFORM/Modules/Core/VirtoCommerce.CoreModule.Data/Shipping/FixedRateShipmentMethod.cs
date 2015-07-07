@@ -26,7 +26,12 @@ namespace VirtoCommerce.CoreModule.Data.Shipping
 		{
 			get
 			{
-                var retVal = Settings.Where(x => x.Name == "Rate").Select(x => Decimal.Parse(x.Value, CultureInfo.InvariantCulture)).FirstOrDefault();
+				decimal retVal = 0;
+                var settingRate = Settings.Where(x => x.Name == "Rate").FirstOrDefault();
+				if(settingRate != null  )
+				{
+					retVal = Decimal.Parse(settingRate.Value, CultureInfo.InvariantCulture);
+				}
 				return retVal;
 			}
 		}

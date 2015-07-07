@@ -5,7 +5,7 @@ using System.Web.Http.Description;
 using Hangfire;
 using VirtoCommerce.CatalogModule.Web.BackgroundJobs;
 using VirtoCommerce.CatalogModule.Web.Model;
-using VirtoCommerce.CatalogModule.Web.Model.Notifications;
+using VirtoCommerce.CatalogModule.Web.Model.EventNotifications;
 using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Platform.Core.Asset;
 using VirtoCommerce.Platform.Core.Caching;

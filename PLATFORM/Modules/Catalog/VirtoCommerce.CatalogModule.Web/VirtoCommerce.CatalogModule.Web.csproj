@@ -141,9 +141,9 @@
     <Compile Include="Model\CsvImportConfiguration.cs" />
     <Compile Include="Model\ListEntryLink.cs" />
     <Compile Include="Model\CsvImportMappingItem.cs" />
-    <Compile Include="Model\Notifications\ExportNotification.cs" />
-    <Compile Include="Model\Notifications\ImportNotification.cs" />
-    <Compile Include="Model\Notifications\JobNotificationBase.cs" />
+    <Compile Include="Model\EventNotifications\ExportNotification.cs" />
+    <Compile Include="Model\EventNotifications\ImportNotification.cs" />
+    <Compile Include="Model\EventNotifications\JobNotificationBase.cs" />
     <Compile Include="Model\ProgressStatus.cs" />
     <Compile Include="Model\ProductAssociation.cs" />
     <Compile Include="Model\PropertyDictionaryValue.cs" />

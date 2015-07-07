@@ -279,6 +279,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Bootstraper.cs" />
     <Compile Include="Controllers\Api\AssetsController.cs" />
+    <Compile Include="Controllers\Api\PlatformExportImportController.cs" />
     <Compile Include="Controllers\Api\FrontendSecurityController.cs" />
     <Compile Include="Controllers\Api\JobsController.cs" />
     <Compile Include="Controllers\Api\ModulesController.cs" />
@@ -300,6 +301,8 @@
     <Compile Include="Hangfire\UnityBootstrapperConfigurationExtensions.cs" />
     <Compile Include="Hangfire\UnityJobActivator.cs" />
     <Compile Include="Model\Asset\BlobInfo.cs" />
+    <Compile Include="Model\ExportImport\NotificationEvent\ExportImportNotificationEvent.cs" />
+    <Compile Include="Model\ExportImport\PlatformExportRequest.cs" />
     <Compile Include="Model\Jobs\Job.cs" />
     <Compile Include="Model\Notification\Notification.cs" />
     <Compile Include="Model\Notification\NotificationParameter.cs" />

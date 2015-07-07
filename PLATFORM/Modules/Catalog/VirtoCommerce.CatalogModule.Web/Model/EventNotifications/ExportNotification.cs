@@ -5,7 +5,7 @@ using System.Web;
 using Newtonsoft.Json;
 using VirtoCommerce.Platform.Core.Notification;
 
-namespace VirtoCommerce.CatalogModule.Web.Model.Notifications
+namespace VirtoCommerce.CatalogModule.Web.Model.EventNotifications
 {
 	public class ExportNotification : JobNotificationBase
 	{

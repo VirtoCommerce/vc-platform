@@ -12,7 +12,7 @@ using System.IO;
 using CsvHelper;
 using System.Text;
 using System.Reflection;
-using VirtoCommerce.CatalogModule.Web.Model.Notifications;
+using VirtoCommerce.CatalogModule.Web.Model.EventNotifications;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
 using CsvHelper.Configuration;
 using VirtoCommerce.Domain.Pricing.Model;

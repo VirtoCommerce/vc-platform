@@ -18,7 +18,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model
         [Required]
         public string CatalogId { get; set; }
 
-        public string[] Categories { get; set; }
+        public string CategoryId { get; set; }
 
         [Required]
         public string Code { get; set; }
@@ -104,6 +104,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model
 		public string TaxType { get; set; }
 
 		public string Vendor { get; set; }
+
         #endregion
     }
 }

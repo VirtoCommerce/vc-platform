@@ -193,11 +193,6 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			retVal.CatalogId = product.CatalogId;
 			retVal.CategoryId = product.CategoryId;
 
-			if(product.MainProduct != null)
-			{
-				retVal.Parent = product.MainProduct.ToDataModel();
-			}
-
 			#region ItemPropertyValues
 			if (product.PropertyValues != null)
 			{
@@ -320,9 +315,10 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			if (!dbSource.ItemPropertyValues.IsNullCollection())
 			{
 				//Need skip inherited properties without overridden value
-				if (dbSource.Parent != null)
+				if (source.MainProduct != null)
 				{
-					var parentPropValues = dbSource.Parent.ItemPropertyValues.ToLookup(x => x.Name + "-" + x.ToString());
+					var dbParent = source.MainProduct.ToDataModel();
+					var parentPropValues = dbParent.ItemPropertyValues.ToLookup(x => x.Name + "-" + x.ToString());
 					var variationPropValues = dbSource.ItemPropertyValues.ToLookup(x => x.Name + "-" + x.ToString());
 					dbSource.ItemPropertyValues = new ObservableCollection<dataModel.ItemPropertyValue>(variationPropValues.Where(x => !parentPropValues.Contains(x.Key)).SelectMany(x => x));
 				}

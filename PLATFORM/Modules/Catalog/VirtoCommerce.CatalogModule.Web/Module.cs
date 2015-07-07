@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Data.Entity;
+using System.IO;
+using System.Linq;
+using System.Threading;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.CatalogModule.Data.Model;
 using VirtoCommerce.CatalogModule.Data.Repositories;
 using VirtoCommerce.CatalogModule.Data.Services;
 using VirtoCommerce.Domain.Catalog.Services;
+using VirtoCommerce.Platform.Core.ImportExport;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
@@ -12,7 +16,7 @@ using VirtoCommerce.Platform.Data.Repositories;
 
 namespace VirtoCommerce.CatalogModule.Web
 {
-    public class Module : ModuleBase
+	public class Module : ModuleBase, ISupportExportModule
     {
         private const string _connectionStringName = "VirtoCommerce";
         private readonly IUnityContainer _container;
@@ -74,5 +78,31 @@ namespace VirtoCommerce.CatalogModule.Web
         }
 
         #endregion
-    }
+
+		#region ISupportExport Members
+
+		public void DoExport(System.IO.Stream outStream, Action<ExportImportProgressInfo> progressCallback)
+		{
+			var exportedTypes = new string[] { "categories", "products", "images", "assets", "seo", "reviews" };
+			var progressInfo = new ExportImportProgressInfo
+			{
+				TotalCount = exportedTypes.Count()
+			};
+
+			using (var streamWriter = new StreamWriter(outStream))
+			{
+				foreach (var exportedType in exportedTypes)
+				{
+					progressInfo.Status = exportedType;
+					progressInfo.ProcessedCount++;
+					progressCallback(progressInfo);
+					Thread.Sleep(1000);
+					streamWriter.Write("Hello Catalog module - " + exportedType);
+				}
+			}
+
+		}
+
+		#endregion
+	}
 }

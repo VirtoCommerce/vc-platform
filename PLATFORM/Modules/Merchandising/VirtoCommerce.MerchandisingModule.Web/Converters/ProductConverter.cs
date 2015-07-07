@@ -51,11 +51,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
 													     .ToArray();
             }
 
-            if (product.Links != null)
-            {
-                retVal.Categories = product.Links.Select(x => x.CategoryId).ToArray();
-            }
-
+            
             if (product.SeoInfos != null)
             {
                 retVal.Seo = product.SeoInfos.Select(x => x.ToWebModel()).ToArray();

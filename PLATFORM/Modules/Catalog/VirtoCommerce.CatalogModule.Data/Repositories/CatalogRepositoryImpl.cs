@@ -303,7 +303,8 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             }
 
             //Used breaking query EF performance concept https://msdn.microsoft.com/en-us/data/hh949853.aspx#8
-            var retVal = Items.Include(x => x.Catalog).Include(x => x.Category).Where(x => itemIds.Contains(x.Id)).ToArray();
+            var retVal = Items.Include(x => x.Catalog).Include(x => x.Category).Include(x=>x.Images).Where(x => itemIds.Contains(x.Id)).ToArray();
+
 
             if ((respGroup & coreModel.ItemResponseGroup.Categories) == coreModel.ItemResponseGroup.Categories)
             {
@@ -316,7 +317,6 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             if ((respGroup & coreModel.ItemResponseGroup.ItemAssets) == coreModel.ItemResponseGroup.ItemAssets)
             {
                 var assets = Assets.Where(x => itemIds.Contains(x.ItemId)).ToArray();
-				var images = Images.Where(x => itemIds.Contains(x.ItemId)).ToArray();
             }
             if ((respGroup & coreModel.ItemResponseGroup.ItemEditorialReviews) == coreModel.ItemResponseGroup.ItemEditorialReviews)
             {

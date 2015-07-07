@@ -20,13 +20,16 @@ using VirtoCommerce.Platform.Core.Asset;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.ChangeLog;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.ImportExport;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Notification;
+using VirtoCommerce.Platform.Core.Packaging;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Asset;
 using VirtoCommerce.Platform.Data.Caching;
 using VirtoCommerce.Platform.Data.ChangeLog;
+using VirtoCommerce.Platform.Data.ExportImport;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Platform.Data.Notification;
 using VirtoCommerce.Platform.Data.Packaging;
@@ -330,7 +333,7 @@ namespace VirtoCommerce.Platform.Web
             var packagesPath = HostingEnvironment.MapPath("~/App_Data/InstalledPackages");
 
             var packageService = new ZipPackageService(moduleCatalog, manifestProvider, packagesPath, sourcePath);
-
+			container.RegisterInstance<IPackageService>(packageService);
             container.RegisterType<ModulesController>(new InjectionConstructor(packageService, sourcePath));
 
             #endregion
@@ -359,6 +362,10 @@ namespace VirtoCommerce.Platform.Web
             container.RegisterType<IAuthenticationManager>(new InjectionFactory(c => HttpContext.Current.GetOwinContext().Authentication));
 
             #endregion
+
+			#region ExportImport
+			container.RegisterType<IPlatformExportImportManager, PlatformExportImportManager>();
+			#endregion
         }
 
         private static string MakeRelativePath(string rootPath, string fullPath)
