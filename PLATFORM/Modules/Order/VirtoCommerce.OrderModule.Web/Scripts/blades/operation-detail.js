@@ -69,7 +69,6 @@
 			    $scope.openFulfillmentCentersList = function () {
 			        var newBlade = {
 			            id: 'fulfillmentCenterList',
-			            parentWidget: $scope.blade,
 			            controller: 'virtoCommerce.coreModule.fulfillment.fulfillmentListController',
 			            template: 'Modules/$(VirtoCommerce.Core)/Scripts/fulfillment/blades/fulfillment-center-list.tpl.html'
 			        };
