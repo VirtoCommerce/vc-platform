@@ -1,6 +1,6 @@
 ﻿<div class="blade" ng-repeat="blade in blades">
     <div class="blade-wrapper" va-blade='blade'>
-        <header class="blade-head">
+        <header class="blade-head" ng-class="{'__expanded': isExtraToolbarOpen}">
             <div class="blade-status" ng-class="{'__error': blade.error}">
                 <div class="status-message" ng-if="blade.error">{{blade.error}}</div>
                 <div class="progress-bar" ng-class="{'__loaded': !blade.isLoading}" ng-show="blade.isLoading"></div>
@@ -36,9 +36,23 @@
                 <p class="blade-t_head" ng-if="blade.title" ng-bind="blade.title"></p>
                 <p class="blade-t_subhead" ng-if="blade.subtitle" ng-bind="blade.subtitle"></p>
             </div>
-            <div class="blade-toolbar">
+            <div class="blade-toolbar" ng-style="bladeToolbarStyle">
                 <ul class="menu __inline">
-                    <li class="menu-item" ng-class="{'__disabled': !toolbarCommand.canExecuteMethod(blade)}" ng-click='toolbarCommand.executeMethod(blade)' ng-repeat="toolbarCommand in resolvedToolbarCommands" ng-disabled="!toolbarCommand.canExecuteMethod(blade)" va-permission="{{toolbarCommand.permission}}">
+                    <li class="menu-item" ng-class="{'__disabled': !toolbarCommand.canExecuteMethod(blade)}" ng-click='toolbarCommand.executeMethod(blade)' ng-repeat="toolbarCommand in resolvedToolbarCommands | limitTo:toolsPerLineCount" ng-disabled="!toolbarCommand.canExecuteMethod(blade)" va-permission="{{toolbarCommand.permission}}">
+                        <button class="menu-btn">
+                            <i class="menu-ico" ng-class="toolbarCommand.icon"></i>
+                            {{toolbarCommand.name}}
+                        </button>
+                    </li>
+                    <li class="menu-item __more" ng-if="resolvedToolbarCommands.length >toolsPerLineCount" ng-click="showMoreTools()">
+                        <a class="menu-btn">
+                            <i class="menu-ico fa fa-ellipsis-h"></i>
+                            More
+                        </a>
+                    </li>
+                </ul>
+                <ul class="menu __inline __more" ng-if="resolvedToolbarCommands.length >toolsPerLineCount">
+                    <li class="menu-item" ng-class="{'__disabled': !toolbarCommand.canExecuteMethod(blade)}" ng-click='toolbarCommand.executeMethod(blade)' ng-repeat="toolbarCommand in resolvedToolbarCommands.slice(toolsPerLineCount)" ng-disabled="!toolbarCommand.canExecuteMethod(blade)" va-permission="{{toolbarCommand.permission}}">
                         <button class="menu-btn">
                             <i class="menu-ico" ng-class="toolbarCommand.icon"></i>
                             {{toolbarCommand.name}}

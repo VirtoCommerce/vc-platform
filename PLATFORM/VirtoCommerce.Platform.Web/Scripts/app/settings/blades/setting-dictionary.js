@@ -3,9 +3,13 @@
     var blade = $scope.blade;
     var currentEntities;
 
-    blade.refresh = function () {
+    blade.refresh = function (parentRefresh) {
         if (blade.isApiSave) {
             settings.get({ id: blade.currentEntityId }, function (setting) {
+                if (parentRefresh && blade.parentRefresh) {
+                    blade.parentRefresh(setting.arrayValues);
+                }
+
                 setting.arrayValues = _.map(setting.arrayValues, function (x) { return { value: x }; });
                 blade.origEntity = angular.copy(setting.arrayValues);
                 initializeBlade(setting);
@@ -48,7 +52,7 @@
     $scope.selectItem = function (listItem) {
         $scope.selectedItem = listItem;
     };
-    
+
     blade.headIcon = 'fa-wrench';
     blade.subtitle = 'Manage dictionary values';
     blade.toolbarCommands = [

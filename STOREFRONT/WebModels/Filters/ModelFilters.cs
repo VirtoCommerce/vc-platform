@@ -130,6 +130,18 @@ namespace VirtoCommerce.Web.Models.Filters
             return input == null ? null : AssetUrl(GetImageUrl(input));
         }
 
+        public static string LinkTo(string input, string link, string title)
+        {
+            if (String.IsNullOrEmpty(link))
+            {
+                link = "~";
+            }
+
+            string url = VirtualPathUtility.ToAbsolute(link);
+
+            return String.Format("<a href=\"{0}\" title=\"{1}\">{2}</a>", url, title, input);
+        }
+
         public static string LinkToSwitchLanguage(Context context, object input)
         {
             var url = VirtualPathUtility.ToAbsolute(String.Format("~/{0}", input));

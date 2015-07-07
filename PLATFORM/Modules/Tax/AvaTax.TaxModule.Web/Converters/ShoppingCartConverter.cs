@@ -85,7 +85,7 @@ namespace AvaTax.TaxModule.Web.Converters
                 getTaxRequest.Lines = cart.Items.Select((x, i) => new { Value = x, Index = i }).Select(li =>
                     new Line
                     {
-                        LineNo = li.Index.ToString(CultureInfo.InvariantCulture),
+                        LineNo = li.Value.Id,
                         ItemCode = li.Value.ProductId,
                         Qty = li.Value.Quantity,
                         Amount = li.Value.PlacedPrice,
@@ -102,7 +102,7 @@ namespace AvaTax.TaxModule.Web.Converters
                     cart.Shipments.Select((x, i) => new { Value = x, Index = i }).ForEach(li =>
                     getTaxRequest.Lines.Add(new Line
                     {
-                        LineNo = li.Index.ToString(CultureInfo.InvariantCulture),
+                        LineNo = li.Value.Id,
                         ItemCode = li.Value.ShipmentMethodCode,
                         Qty = 1,
                         Amount = li.Value.ShippingPrice,
