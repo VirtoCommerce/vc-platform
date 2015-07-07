@@ -54,8 +54,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Converters\SorePaymentMethodConverter.cs" />
-    <Compile Include="Converters\SoreShippingMethodConverter.cs" />
+    <Compile Include="Converters\StorePaymentMethodConverter.cs" />
+    <Compile Include="Converters\StoreShippingMethodConverter.cs" />
     <Compile Include="Converters\StoreConverter.cs" />
     <Compile Include="Migrations\201504301210161_Initial.cs" />
     <Compile Include="Migrations\201504301210161_Initial.Designer.cs">
