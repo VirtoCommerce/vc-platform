@@ -83,6 +83,12 @@
     <Compile Include="Asset\IBlobStorageProvider.cs" />
     <Compile Include="Asset\UploadStreamInfo.cs" />
     <Compile Include="Common\SerializationExtension.cs" />
+    <Compile Include="DynamicProperties\DynamicProperty.cs" />
+    <Compile Include="DynamicProperties\DynamicPropertyName.cs" />
+    <Compile Include="DynamicProperties\DynamicPropertyValue.cs" />
+    <Compile Include="DynamicProperties\DynamicPropertyValueType.cs" />
+    <Compile Include="DynamicProperties\IDynamicPropertyService.cs" />
+    <Compile Include="DynamicProperties\IHasDynamicProperties.cs" />
     <Compile Include="ImportExport\ExportImportProgressInfo.cs" />
     <Compile Include="ImportExport\IPlatformExportImportManager.cs" />
     <Compile Include="ImportExport\ISupportExportModule.cs" />

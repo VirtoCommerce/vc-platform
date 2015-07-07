@@ -148,6 +148,10 @@
     <Compile Include="Common\ConventionInjections\IgnorePropertiesInjection.cs" />
     <Compile Include="Common\ConventionInjections\PatchInjection.cs" />
     <Compile Include="Common\ExceptionExtensions.cs" />
+    <Compile Include="DynamicProperties\Converters\DynamicPropertyConverter.cs" />
+    <Compile Include="DynamicProperties\Converters\DynamicPropertyNameConverter.cs" />
+    <Compile Include="DynamicProperties\Converters\DynamicPropertyValueConverter.cs" />
+    <Compile Include="DynamicProperties\DynamicPropertyService.cs" />
     <Compile Include="ExportImport\PlatformExportImportManager.cs" />
     <Compile Include="ExportImport\PlatformExportManifest.cs" />
     <Compile Include="Infrastructure\BasicUnitOfWork.cs" />
@@ -176,6 +180,9 @@
     <Compile Include="Model\AccountState.cs" />
     <Compile Include="Model\ApiAccountEntity.cs" />
     <Compile Include="Model\ApiAccountType.cs" />
+    <Compile Include="Model\DynamicPropertyEntity.cs" />
+    <Compile Include="Model\DynamicPropertyNameEntity.cs" />
+    <Compile Include="Model\DynamicPropertyValueEntity.cs" />
     <Compile Include="Model\NotificationEntity.cs" />
     <Compile Include="Model\NotificationTemplateEntity.cs" />
     <Compile Include="Model\OperationLogEntity.cs" />
@@ -231,6 +238,10 @@
     <Compile Include="Repositories\Migrations\201507061326367_RenameNotificationTemplateIndex.cs" />
     <Compile Include="Repositories\Migrations\201507061326367_RenameNotificationTemplateIndex.Designer.cs">
       <DependentUpon>201507061326367_RenameNotificationTemplateIndex.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Repositories\Migrations\201507061651371_DynamicProperties.cs" />
+    <Compile Include="Repositories\Migrations\201507061651371_DynamicProperties.Designer.cs">
+      <DependentUpon>201507061651371_DynamicProperties.cs</DependentUpon>
     </Compile>
     <Compile Include="Repositories\Migrations\Configuration.cs" />
     <Compile Include="Repositories\PlatformDatabaseInitializer.cs" />
