@@ -13,9 +13,6 @@ namespace VirtoCommerce.Platform.Data.Model
         public const string TypeBoolean = "Boolean";
         public const string TypeDateTime = "DateTime";
 
-        [StringLength(512)]
-        public string SearchKey { get; set; }
-
         [StringLength(256)]
         public string ObjectType { get; set; }
 

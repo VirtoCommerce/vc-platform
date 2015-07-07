@@ -64,10 +64,6 @@ namespace VirtoCommerce.Platform.Data.Repositories
                 .HasForeignKey(x => x.PropertyId);
 
             modelBuilder.Entity<DynamicPropertyEntity>()
-                .Property(x => x.SearchKey)
-                .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformDynamicProperty_SearchKey") { IsUnique = true }));
-
-            modelBuilder.Entity<DynamicPropertyEntity>()
                 .Property(x => x.ObjectType)
                 .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformDynamicProperty_ObjectType_Name", 1) { IsUnique = true }));
             modelBuilder.Entity<DynamicPropertyEntity>()
@@ -83,10 +79,6 @@ namespace VirtoCommerce.Platform.Data.Repositories
             modelBuilder.Entity<DynamicPropertyNameEntity>()
                 .Property(x => x.Name)
                 .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformDynamicPropertyName_PropertyId_Locale_Name", 3) { IsUnique = true }));
-
-            modelBuilder.Entity<DynamicPropertyValueEntity>()
-                .Property(x => x.SearchKey)
-                .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformDynamicPropertyValue_SearchKey")));
 
             #endregion
 

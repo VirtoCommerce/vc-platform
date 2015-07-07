@@ -13,7 +13,7 @@ namespace VirtoCommerce.Platform.Data.Repositories.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201507061651371_DynamicProperties"; }
+            get { return "201507071605101_DynamicProperties"; }
         }
         
         string IMigrationMetadata.Source

@@ -35,7 +35,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
             return result;
         }
 
-        public DynamicProperty[] GetTypeProperties(string objectType)
+        public DynamicProperty[] GetProperties(string objectType)
         {
             if (objectType == null)
                 throw new ArgumentNullException("objectType");
@@ -56,9 +56,32 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
             return result.ToArray();
         }
 
-        public void SaveTypeProperties(DynamicProperty[] properties)
+        public void SaveProperties(DynamicProperty[] properties)
         {
-            SaveProperties(properties, true, false);
+            if (properties == null)
+                throw new ArgumentNullException("properties");
+
+            SaveProperties(properties, true);
+        }
+
+        public void DeleteProperties(string[] propertyIds)
+        {
+            if (propertyIds == null)
+                throw new ArgumentNullException("propertyIds");
+
+            using (var repository = _repositoryFactory())
+            {
+                var properties = repository.DynamicProperties
+                    .Where(p => propertyIds.Contains(p.Id))
+                    .ToList();
+
+                foreach (var property in properties)
+                {
+                    repository.Remove(property);
+                }
+
+                repository.UnitOfWork.Commit();
+            }
         }
 
         public DynamicProperty[] GetObjectProperties(string objectType, string objectId)
@@ -78,11 +101,9 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
                     .OrderBy(p => p.Name)
                     .ToList();
 
-                var valueKeys = properties.Select(p => string.Join("-", p.ObjectType, p.Name, objectId)).Distinct().ToArray();
-
                 // This request will automatically fill values for loaded properties
-                repository.DynamicPropertyValues
-                    .Where(v => valueKeys.Contains(v.SearchKey))
+                var values = repository.DynamicPropertyValues
+                    .Where(v => v.ObjectType == objectType && v.ObjectId == objectId)
                     .ToList();
 
                 result.AddRange(properties.Select(p => p.ToModel(objectId)));
@@ -93,51 +114,54 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
 
         public void SaveObjectProperties(DynamicProperty[] properties)
         {
-            SaveProperties(properties, false, true);
+            SaveProperties(properties, false);
         }
 
-        private void SaveProperties(DynamicProperty[] properties, bool saveLocalizedNames, bool saveObjectValues)
+        private void SaveProperties(DynamicProperty[] properties, bool updateProperty)
         {
             if (properties != null && properties.Any())
             {
-                var propertyKeys = properties.Select(p => string.Join("-", p.ObjectType, p.Name)).Distinct().ToArray();
-                var valueKeys = properties.Select(p => string.Join("-", p.ObjectType, p.Name, saveObjectValues ? p.ObjectId : null)).Distinct().ToArray();
-
                 using (var repository = _repositoryFactory())
                 using (var changeTracker = new ObservableChangeTracker())
                 {
-                    var existingProperties = repository.DynamicProperties
-                        .Include(p => p.Names)
-                        .Where(p => propertyKeys.Contains(p.SearchKey))
-                        .ToList();
+                    var newProperties = properties.Where(p => string.IsNullOrEmpty(p.Id));
+                    var newEntities = newProperties.Select(p => p.ToEntity(true));
 
-                    // Properties must be created before saving object values
-                    if (saveObjectValues)
+                    foreach (var entity in newEntities)
                     {
-                        propertyKeys = existingProperties.Select(p => string.Join("-", p.ObjectType, p.Name)).ToArray();
-                        properties = properties.Where(p => propertyKeys.Contains(p.ObjectType + "-" + p.Name)).ToArray();
+                        repository.Add(entity);
                     }
 
-                    if (existingProperties.Any() || !saveObjectValues)
+                    var propertyIds = properties.Where(p => !string.IsNullOrEmpty(p.Id)).Select(p => p.Id).ToArray();
+
+                    var existingProperties = repository.DynamicProperties
+                        .Include(p => p.Names)
+                        .Where(p => propertyIds.Contains(p.Id))
+                        .ToList();
+
+                    if (existingProperties.Any())
                     {
+                        propertyIds = existingProperties.Select(p => p.Id).ToArray();
+                        properties = properties.Where(p => propertyIds.Contains(p.Id)).ToArray();
+
                         // This request will automatically fill values for loaded properties
-                        repository.DynamicPropertyValues
-                            .Where(v => valueKeys.Contains(v.SearchKey))
+                        var existingValues = repository.DynamicPropertyValues
+                            .Where(v => propertyIds.Contains(v.PropertyId))
                             .ToList();
 
                         changeTracker.AddAction = x => repository.Add(x);
                         // Need for real remove object from nested collection (because EF default remove references only)
                         changeTracker.RemoveAction = x => repository.Remove(x);
 
-                        var source = new { Properties = new ObservableCollection<DynamicPropertyEntity>(ToEntities(properties, saveLocalizedNames, saveObjectValues)) };
+                        var source = new { Properties = new ObservableCollection<DynamicPropertyEntity>(ToEntities(properties, updateProperty)) };
                         var target = new { Properties = new ObservableCollection<DynamicPropertyEntity>(existingProperties) };
 
                         changeTracker.Attach(target);
-                        var propertyComparer = AnonymousComparer.Create((DynamicPropertyEntity p) => string.Join("-", p.ObjectType, p.Name));
+                        var propertyComparer = AnonymousComparer.Create((DynamicPropertyEntity p) => p.Id);
                         source.Properties.Patch(target.Properties, propertyComparer, (sourceProperty, targetProperty) => sourceProperty.Patch(targetProperty));
-
-                        repository.UnitOfWork.Commit();
                     }
+
+                    repository.UnitOfWork.Commit();
                 }
             }
         }
@@ -166,14 +190,14 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
 
         #endregion
 
-        private static List<DynamicPropertyEntity> ToEntities(IEnumerable<DynamicProperty> properties, bool saveLocalizedNames, bool saveObjectValues)
+        private static List<DynamicPropertyEntity> ToEntities(IEnumerable<DynamicProperty> properties, bool updateProperty)
         {
             var result = new List<DynamicPropertyEntity>();
 
             foreach (var property in properties)
             {
-                var entity = result.FirstOrDefault(p => p.Name == property.Name && p.ObjectType == property.ObjectType);
-                var newEntity = property.ToEntity(saveLocalizedNames, saveObjectValues);
+                var newEntity = property.ToEntity(updateProperty);
+                var entity = result.FirstOrDefault(p => p.Id == property.Id);
 
                 if (entity == null)
                 {

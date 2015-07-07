@@ -12,9 +12,6 @@ namespace VirtoCommerce.Platform.Data.Model
             Values = new NullCollection<DynamicPropertyValueEntity>();
         }
 
-        [StringLength(384)]
-        public string SearchKey { get; set; }
-
         [StringLength(256)]
         public string ObjectType { get; set; }
 
@@ -26,7 +23,6 @@ namespace VirtoCommerce.Platform.Data.Model
         public string ValueType { get; set; }
 
         public bool IsArray { get; set; }
-        public bool IsLocaleDependent { get; set; }
 
         public virtual ObservableCollection<DynamicPropertyNameEntity> Names { get; set; }
         public virtual ObservableCollection<DynamicPropertyValueEntity> Values { get; set; }

@@ -29,7 +29,6 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
         {
             var result = new DynamicPropertyValueEntity
             {
-                SearchKey = string.Join("-", property.ObjectType, property.Name, property.ObjectId),
                 ObjectType = property.ObjectType,
                 ObjectId = property.ObjectId,
                 ValueType = property.ValueType.ToString(),
