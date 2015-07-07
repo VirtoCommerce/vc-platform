@@ -10,6 +10,8 @@
 
 if ((typeof Shopify) === 'undefined') { Shopify = {}; }
 
+var baseUrl = $("base").attr("href");
+
 /*============================================================================
   API Helper Functions
 ==============================================================================*/
@@ -89,7 +91,7 @@ Shopify.onCartUpdate = function(cart) {
 Shopify.updateCartNote = function(note, callback) {
   var params = {
     type: 'POST',
-    url: '/cart/update.js',
+    url: baseUrl + '/cart/update.js',
     data: 'note=' + attributeToString(note),
     dataType: 'json',
     success: function(cart) {
@@ -123,7 +125,7 @@ Shopify.addItem = function(variant_id, quantity, callback) {
   var quantity = quantity || 1;
   var params = {
     type: 'POST',
-    url: '/cart/add.js',
+    url: baseUrl + '/cart/add.js',
     data: 'quantity=' + quantity + '&id=' + variant_id,
     dataType: 'json',
     success: function(line_item) {
@@ -149,7 +151,7 @@ Shopify.addItem = function(variant_id, quantity, callback) {
 Shopify.addItemFromForm = function(form, callback, errorCallback) {
   var params = {
     type: 'POST',
-    url: '/cart/add.js',
+    url: baseUrl + '/cart/add.js',
     data: jQuery(form).serialize(),
     dataType: 'json',
     success: function(line_item) {
@@ -174,7 +176,7 @@ Shopify.addItemFromForm = function(form, callback, errorCallback) {
 
 // Get from cart.js returns the cart in JSON
 Shopify.getCart = function(callback) {
-  jQuery.getJSON('/cart.js', function (cart, textStatus) {
+  jQuery.getJSON(baseUrl + '/cart.js', function (cart, textStatus) {
     if ((typeof callback) === 'function') {
       callback(cart);
     }
@@ -200,7 +202,7 @@ Shopify.getProduct = function(handle, callback) {
 Shopify.changeItem = function(variant_id, quantity, callback) {
   var params = {
     type: 'POST',
-    url: '/cart/change.js',
+    url: baseUrl + '/cart/change.js',
     data:  'quantity='+quantity+'&id='+variant_id,
     dataType: 'json',
     success: function(cart) {
@@ -367,7 +369,7 @@ var ajaxifyShopify = (function(module, $) {
     $addToCart.addClass('flip-front').wrap('<div class="flip"></div>');
 
     // Write a (hidden) Checkout button, a loader, and the extra view cart button
-    var checkoutBtn = $('<a href="/cart" class="flip-back" style="background-color: #C00; color: #fff;" id="flip-checkout">' + {{ 'cart.general.checkout' | t | json }} + '</a>').addClass($btnClass),
+    var checkoutBtn = $('<a href="' + baseUrl + 'cart" class="flip-back" style="background-color: #C00; color: #fff;" id="flip-checkout">' + {{ 'cart.general.checkout' | t | json }} + '</a>').addClass($btnClass),
         flipLoader = $('<span class="ajaxifyCart-loader"></span>'),
         flipExtra = $('<div class="flip-extra">' + {{ 'cart.general.or' | t | json }} + ' <a href="#" class="flip-cart">' + {{ 'cart.general.view_cart' | t | json }} + ' (<span></span>)</a></div>');
 
@@ -823,7 +825,7 @@ var ajaxifyShopify = (function(module, $) {
   };
 
   cartTemplate = function (cart) {
-    $cartContainer.load('/cart form[action="/cart"]', function() {
+    $cartContainer.load(baseUrl + '/cart form[action="cart"]', function() {
 
       // With new elements we need to relink the adjust cart functions
       adjustCart();

@@ -50,6 +50,8 @@ namespace VirtoCommerce.Web.Models
 
         public string[] Currencies { get; set; }
 
+        public string SimplifiedUrl { get; set; }
+
         public MetaFieldNamespacesCollection Metafields { get; set; }
 
         public Checkout Checkout { get; set; }
