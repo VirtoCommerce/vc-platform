@@ -336,41 +336,50 @@
                         return $scope.selectedItem || isItemsChecked();
                     }
                 },
-    			  {
-    			      name: "Import",
-    			      icon: 'fa fa-download',
-    			      executeMethod: function () {
-    			          var newBlade = {
-    			              id: 'catalogImport',
-    			              title: 'Catalog import',
-    			              catalog: blade.catalog,
-    			              subtitle: 'Choose data format & start import',
-    			              controller: 'virtoCommerce.catalogModule.importerListController',
-    			              template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/import/importers-list.tpl.html'
-    			          };
-    			          bladeNavigationService.showBlade(newBlade, $scope.blade);
-    			      },
-    			      canExecuteMethod: function () { return true; },
-    			      permission: 'catalog:items:manage'
-    			  },
-				 {
-				     name: "Export",
-				     icon: 'fa fa-upload',
-				     executeMethod: function () {
-				         var newBlade = {
-				             id: 'catalogExport',
-				             title: 'Data export',
-				             catalog: blade.catalog,
-				             subtitle: 'Choose data format & start export',
-				             controller: 'virtoCommerce.catalogModule.exporterListController',
-				             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/export/exporter-list.tpl.html',
-				             selectedProducts: _.filter($scope.items, function (x) { return x.type == 'product' && x.selected == true; }),
-				             selectedCategories: _.filter($scope.items, function (x) { return x.type == 'category' && x.selected == true; })
-				         };
-				         bladeNavigationService.showBlade(newBlade, $scope.blade);
-				     },
-				     canExecuteMethod: function () { return true; }
-				 },
+                {
+                    name: "Delete",
+                    icon: 'fa fa-trash-o',
+                    executeMethod: function () {
+                        deleteChecked();
+                    },
+                    canExecuteMethod: isItemsChecked,
+                    permission: 'catalog:items:manage'
+                },
+    			{
+    			    name: "Import",
+    			    icon: 'fa fa-download',
+    			    executeMethod: function () {
+    			        var newBlade = {
+    			            id: 'catalogImport',
+    			            title: 'Catalog import',
+    			            catalog: blade.catalog,
+    			            subtitle: 'Choose data format & start import',
+    			            controller: 'virtoCommerce.catalogModule.importerListController',
+    			            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/import/importers-list.tpl.html'
+    			        };
+    			        bladeNavigationService.showBlade(newBlade, $scope.blade);
+    			    },
+    			    canExecuteMethod: function () { return true; },
+    			    permission: 'catalog:items:manage'
+    			},
+				{
+				    name: "Export",
+				    icon: 'fa fa-upload',
+				    executeMethod: function () {
+				        var newBlade = {
+				            id: 'catalogExport',
+				            title: 'Data export',
+				            catalog: blade.catalog,
+				            subtitle: 'Choose data format & start export',
+				            controller: 'virtoCommerce.catalogModule.exporterListController',
+				            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/export/exporter-list.tpl.html',
+				            selectedProducts: _.filter($scope.items, function (x) { return x.type == 'product' && x.selected == true; }),
+				            selectedCategories: _.filter($scope.items, function (x) { return x.type == 'category' && x.selected == true; })
+				        };
+				        bladeNavigationService.showBlade(newBlade, $scope.blade);
+				    },
+				    canExecuteMethod: function () { return true; }
+				}
                  /// hiding some UI functionality until it's fully implemented. Need to release
                  //{
                  //    name: "Copy",
@@ -402,15 +411,7 @@
                  //    },
                  //    permission: 'catalog:items:manage'
                  //},
-                {
-                    name: "Delete",
-                    icon: 'fa fa-trash-o',
-                    executeMethod: function () {
-                        deleteChecked();
-                    },
-                    canExecuteMethod: isItemsChecked,
-                    permission: 'catalog:items:manage'
-                }
+
                 //{
                 //    name: "Advanced search", icon: 'fa fa-search',
                 //    executeMethod: function () {

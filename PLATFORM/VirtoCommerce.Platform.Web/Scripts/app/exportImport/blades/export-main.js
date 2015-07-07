@@ -1,22 +1,15 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.exportImport.exportMainController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.catalogModule.export', 'platformWebApp.notifications', function ($scope, bladeNavigationService, exportResourse, notifications) {
+.controller('platformWebApp.exportImport.exportMainController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.exportImport.resource', function ($scope, bladeNavigationService, exportImportResourse) {
     var blade = $scope.blade;
     blade.headIcon = 'fa-upload';
     blade.title = 'Data export';
 
     function initializeBlade() {
-        //exportResourse.getExporters({ id: blade.currentEntityId }, function (data) {
-
-        blade.currentEntities = [{ name: 'data 1', description: 'some data exporter description' },
-            { name: 'data 1' },
-            { name: 'data 1', description: 'some data exporter description' },
-            { name: 'data 1', description: 'some data exporter description' },
-            { name: 'data 1' },
-            { name: 'data 1', description: 'some data exporter description' }
-        ];
-        blade.isLoading = false;
-        //},
-        //   function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+        exportImportResourse.getExportersList(function (data) {
+            blade.currentEntities = data;
+            blade.isLoading = false;
+        },
+        function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
     };
 
     //$scope.setForm = function (form) {
@@ -29,9 +22,14 @@
         }
     });
 
+    $scope.canStartProcess = function () {
+        return blade.currentEntities && _.some(blade.currentEntities, function (x) { return x.isChecked; });
+    }
+
     $scope.startExport = function () {
-        exportResourse.run({
-            categoryIds: _.map(blade.selectedCategories, function (x) { return x.id })
+        var selection = _.where(blade.currentEntities, { isChecked: true });
+        exportImportResourse.runExport({
+            modules: _.pluck(selection, 'id')
         },
         function (data) { blade.notification = data; },
         function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });

@@ -31,6 +31,7 @@ namespace VirtoCommerce.Web.Convertors
                            Description = store.Description,
                            Currency = store.DefaultCurrency,
                            Url = store.Url ?? String.Format("~/{0}/{1}", store.DefaultLanguage, store.Id).ToAbsoluteUrl(),
+                           SimplifiedUrl = "~/".ToAbsoluteUrl().Trim('/'),
                            SecureUrl = store.SecureUrl,
                            DefaultUrl = store.SecureUrl ?? store.Url,
                            CustomerAccountsEnabled = true,

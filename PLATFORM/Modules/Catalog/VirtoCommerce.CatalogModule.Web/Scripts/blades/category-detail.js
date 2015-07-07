@@ -99,6 +99,7 @@
             isApiSave: true,
             currentEntityId: 'VirtoCommerce.Core.General.TaxTypes',
             title: 'Tax types',
+            parentRefresh: function(data) { $scope.taxTypes = data; },
             controller: 'platformWebApp.settingDictionaryController',
             template: 'Scripts/app/settings/blades/setting-dictionary.tpl.html'
         };
