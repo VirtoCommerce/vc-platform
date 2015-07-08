@@ -23,8 +23,8 @@ namespace AvaTax.TaxModule.Web.Converters
                     CustomerCode = order.CustomerId,
                     DocDate =
                         order.CreatedDate == DateTime.MinValue
-                            ? DateTime.UtcNow.ToShortDateString()
-                            : order.CreatedDate.ToShortDateString(),
+                            ? DateTime.UtcNow.ToString("yyyy-MM-dd")
+                            : order.CreatedDate.ToString("yyyy-MM-dd"),
                     CompanyCode = companyCode,
                     Client = "VirtoCommerce,2.x,VirtoCommerce",
                     DocCode = order.Number,
