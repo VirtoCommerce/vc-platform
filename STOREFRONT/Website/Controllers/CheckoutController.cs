@@ -438,9 +438,14 @@ namespace VirtoCommerce.Web.Controllers
             {
                 checkout.ShippingMethod = shippingMethods.FirstOrDefault(sm => sm.Handle == id);
 
+                await Service.UpdateCheckoutAsync(checkout);
+
+                checkout = await Service.GetCheckoutAsync();
+
                 var culture = GetCultureInfoByCurrencyCode(SiteContext.Current.Shop.Currency);
 
                 checkout.StringifiedShippingPrice = checkout.ShippingPrice.ToString("C", culture);
+                checkout.StringifiedTaxPrice = checkout.TaxPrice.ToString("C", culture);
                 checkout.StringifiedTotalPrice = checkout.TotalPrice.ToString("C", culture);
             }
 

@@ -170,6 +170,9 @@ namespace VirtoCommerce.Web.Models
         public string StringifiedShippingPrice { get; set; }
 
         [DataMember]
+        public string StringifiedTaxPrice { get; set; }
+
+        [DataMember]
         public string StringifiedTotalPrice { get; set; }
 
         [DataMember]
