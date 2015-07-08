@@ -56,8 +56,8 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		}
 
 		#region Public Methods and Operators
-		/// GET: api/mp/products?ids=212&ids=2123&ids=434
-		/*
+
+		// GET: api/mp/products?ids=212&ids=2123&ids=434
 		[HttpGet]
 		[ArrayInput(ParameterName = "ids")]
 		[ResponseType(typeof(CatalogItem[]))]
@@ -74,8 +74,6 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 			var retVal = InnerGetProductsByIds(fullLoadedStore, ids, responseGroup);
 			return Ok(retVal);
 		}
-         * */
-
 
 		[HttpGet]
 		[ResponseType(typeof(CatalogItem))]
