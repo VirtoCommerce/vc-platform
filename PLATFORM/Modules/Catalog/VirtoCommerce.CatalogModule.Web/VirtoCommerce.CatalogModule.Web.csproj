@@ -40,7 +40,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CsvHelper">
+    <Reference Include="CsvHelper, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\CsvHelper.2.13.0.0\lib\net40-client\CsvHelper.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -109,8 +110,6 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BackgroundJobs\CsvCatalogImportJob.cs" />
-    <Compile Include="BackgroundJobs\CsvCatalogExportJob.cs" />
     <Compile Include="Binders\ListEntrySearchCriteriaBinder.cs" />
     <Compile Include="Controllers\Api\CatalogModuleCatalogsController.cs" />
     <Compile Include="Controllers\Api\CatalogModuleCategoriesController.cs" />
@@ -134,16 +133,18 @@
     <Compile Include="Converters\PropertyDictionaryValueConverter.cs" />
     <Compile Include="Converters\PropertyValueConverter.cs" />
     <Compile Include="Converters\SearchConverter.cs" />
+    <Compile Include="ExportImport\CsvCatalogExporter.cs" />
+    <Compile Include="ExportImport\CsvCatalogImporter.cs" />
     <Compile Include="Model\Catalog.cs" />
     <Compile Include="Model\CategoryLink.cs" />
     <Compile Include="Model\CsvExportInfo.cs" />
     <Compile Include="Model\EditorialReview.cs" />
     <Compile Include="Model\CsvImportConfiguration.cs" />
-    <Compile Include="Model\ListEntryLink.cs" />
-    <Compile Include="Model\CsvImportMappingItem.cs" />
     <Compile Include="Model\EventNotifications\ExportNotification.cs" />
     <Compile Include="Model\EventNotifications\ImportNotification.cs" />
     <Compile Include="Model\EventNotifications\JobNotificationBase.cs" />
+    <Compile Include="Model\ListEntryLink.cs" />
+    <Compile Include="Model\CsvImportMappingItem.cs" />
     <Compile Include="Model\ProgressStatus.cs" />
     <Compile Include="Model\ProductAssociation.cs" />
     <Compile Include="Model\PropertyDictionaryValue.cs" />

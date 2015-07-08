@@ -20,7 +20,7 @@ using VirtoCommerce.Platform.Core.Asset;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.ChangeLog;
 using VirtoCommerce.Platform.Core.Common;
-using VirtoCommerce.Platform.Core.ImportExport;
+using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Notification;
 using VirtoCommerce.Platform.Core.Packaging;

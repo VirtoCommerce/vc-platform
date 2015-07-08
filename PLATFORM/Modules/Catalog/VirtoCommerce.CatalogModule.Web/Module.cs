@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Data.Entity;
-using System.IO;
 using System.Linq;
-using System.Threading;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.CatalogModule.Data.Model;
 using VirtoCommerce.CatalogModule.Data.Repositories;
 using VirtoCommerce.CatalogModule.Data.Services;
+using VirtoCommerce.CatalogModule.Web.ExportImport;
 using VirtoCommerce.Domain.Catalog.Services;
-using VirtoCommerce.Platform.Core.ImportExport;
+using VirtoCommerce.Domain.Commerce.Services;
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Platform.Data.Repositories;
@@ -83,24 +85,18 @@ namespace VirtoCommerce.CatalogModule.Web
 
 		public void DoExport(System.IO.Stream outStream, Action<ExportImportProgressInfo> progressCallback)
 		{
-			var exportedTypes = new string[] { "categories", "products", "images", "assets", "seo", "reviews" };
-			var progressInfo = new ExportImportProgressInfo
-			{
-				TotalCount = exportedTypes.Count()
-			};
+			var settingManager = _container.Resolve<ISettingsManager>();
+			var commerceService = _container.Resolve<ICommerceService>();
+			var curencySetting = settingManager.GetSettingByName("VirtoCommerce.Core.General.Currencies");
+			var defaultCurrency = EnumUtility.SafeParse<CurrencyCodes>(curencySetting.DefaultValue, CurrencyCodes.USD);
 
-			using (var streamWriter = new StreamWriter(outStream))
+			var exportJob = _container.Resolve<CsvCatalogExporter>();
+			var catalogService = _container.Resolve<ICatalogService>();
+			foreach(var catalog in catalogService.GetCatalogsList())
 			{
-				foreach (var exportedType in exportedTypes)
-				{
-					progressInfo.Status = exportedType;
-					progressInfo.ProcessedCount++;
-					progressCallback(progressInfo);
-					Thread.Sleep(1000);
-					streamWriter.Write("Hello Catalog module - " + exportedType);
-				}
+				exportJob.DoExport(outStream, catalog.Id, null, null, null, commerceService.GetAllFulfillmentCenters().First().Id, defaultCurrency, catalog.DefaultLanguage.LanguageCode, progressCallback);
 			}
-
+		
 		}
 
 		#endregion

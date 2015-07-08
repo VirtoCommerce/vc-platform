@@ -5,12 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Platform.Core.Packaging;
 
-namespace VirtoCommerce.Platform.Data.ExportImport
+namespace VirtoCommerce.Platform.Core.ExportImport
 {
 	public class PlatformExportManifest
 	{
 		public string PlatformVersion { get; set; }
 		public string SystemInfo { get; set; }
+		public DateTime Created { get; set; }
 		public string Author { get; set; }
 		public string CheckSum { get; set; }
 

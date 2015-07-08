@@ -246,9 +246,9 @@ namespace VirtoCommerce.Platform.Data.Packaging
         {
             var errors = new List<string>();
 
-            var platformVersion = GetPlatformVersion();
+			var platformVersion = PlatformVersion.CurrentVersion;
 
-            if (!IsCompatibleVersion(platformVersion, package.PlatformVersion))
+            if (!SemanticVersion.Parse(package.PlatformVersion).IsCompatibleWith(PlatformVersion.CurrentVersion))
             {
                 errors.Add(string.Format(CultureInfo.CurrentCulture, "Required platform version: '{0}'.", package.PlatformVersion));
             }
@@ -283,7 +283,7 @@ namespace VirtoCommerce.Platform.Data.Packaging
 
                     if (installedModule != null)
                     {
-                        isMissing = !IsCompatibleVersion(installedModule.Version, dependency.Version);
+						isMissing = !SemanticVersion.Parse(dependency.Version).IsCompatibleWith(SemanticVersion.Parse(installedModule.Version));
                     }
 
                     if (isMissing)
@@ -296,27 +296,7 @@ namespace VirtoCommerce.Platform.Data.Packaging
             return result;
         }
 
-        private static bool IsCompatibleVersion(string version, string requiredVersion)
-        {
-            // TODO: support version ranges
-
-            var isCompatible = string.IsNullOrWhiteSpace(requiredVersion);
-
-            if (!isCompatible)
-            {
-                SemanticVersion semanticVersion;
-                SemanticVersion requiredSemanticVersion;
-
-                if (SemanticVersion.TryParse(version, out semanticVersion) && SemanticVersion.TryParse(requiredVersion, out requiredSemanticVersion))
-                {
-                    var comparisonResult = SemanticVersion.Compare(semanticVersion, requiredSemanticVersion);
-                    isCompatible = comparisonResult >= 0;
-                }
-            }
-
-            return isCompatible;
-        }
-
+		
         private static void Report(IProgress<ProgressMessage> progress, ProgressMessageLevel level, string format, params object[] args)
         {
             if (progress != null)
@@ -436,7 +416,7 @@ namespace VirtoCommerce.Platform.Data.Packaging
             }
         }
 
-        private static ModuleDescriptor ConvertToModuleDescriptor(ModuleManifest manifest, List<string> installedPackages = null)
+        private  ModuleDescriptor ConvertToModuleDescriptor(ModuleManifest manifest, List<string> installedPackages = null)
         {
             ModuleDescriptor result = null;
 
@@ -474,6 +454,8 @@ namespace VirtoCommerce.Platform.Data.Packaging
                     var packageFileName = GetPackageFileName(manifest.Id, manifest.Version);
                     result.IsRemovable = installedPackages.Contains(packageFileName, StringComparer.OrdinalIgnoreCase);
                 }
+
+				result.ModuleInfo = _moduleCatalog.Modules.First(x => x.ModuleName == result.Id);
             }
 
             return result;

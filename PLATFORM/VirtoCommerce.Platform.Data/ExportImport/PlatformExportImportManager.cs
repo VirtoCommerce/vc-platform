@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Platform.Core.Common;
-using VirtoCommerce.Platform.Core.ImportExport;
+using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Packaging;
 
@@ -14,84 +14,83 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 {
 	public class PlatformExportImportManager : IPlatformExportImportManager
 	{
-		 private readonly IModuleCatalog _moduleCatalog;
-		 private readonly IPackageService _packageService;
+		 private readonly Uri _manifestPartUri;
 
-		 public PlatformExportImportManager(IModuleCatalog moduleCatalog, IPackageService packageService)
+		 public PlatformExportImportManager()
 		 {
-			 _moduleCatalog = moduleCatalog;
-			 _packageService = packageService;
+			 _manifestPartUri = PackUriHelper.CreatePartUri(new Uri("Manifest.xml", UriKind.Relative));
 		 }
 		
 		#region IPlatformExportImportManager Members
 
-		public ModuleDescriptor[] GetSupportedExportModules()
+		public PlatformExportManifest ReadPlatformExportManifest(Stream stream)
 		{
-			return InnerGetModulesWithInterface(typeof(ISupportExportModule));
+			PlatformExportManifest retVal = null;
+			using (var package = ZipPackage.Open(stream, FileMode.Open))
+			{
+				var manifestPart = package.GetPart(_manifestPartUri);
+				using (var streamReader = new StreamReader(manifestPart.GetStream()))
+				{
+					retVal = streamReader.ReadToEnd().DeserializeXML<PlatformExportManifest>();
+				}
+			}
+			return retVal;
 		}
 
-		public ModuleDescriptor[] GetSupportedImportModules()
+		public void Export(Stream outStream, ModuleDescriptor[] modules, SemanticVersion platformVersion, Action<ExportImportProgressInfo> progressCallback)
 		{
-			return InnerGetModulesWithInterface(typeof(ISupportImportModule));
-		}
-
-		public Stream Export(string[] moduleIds, string platformVersion, Action<ExportImportProgressInfo> progressCallback)
-		{
-			if(moduleIds == null)
+			if (modules == null)
 			{
 				throw new ArgumentNullException("moduleIds");
 			}
-			var memoryStream = new MemoryStream();
 			var progressInfo = new ExportImportProgressInfo
 			{
-				Status = "Start exporting",
-				TotalCount = moduleIds.Count(),
+				Description = "Start exporting",
+				TotalCount = modules.Count(),
 				ProcessedCount = 0
 			};
 			progressCallback(progressInfo);
 
-			using (var package = ZipPackage.Open(memoryStream, FileMode.Create))
+			using (var package = ZipPackage.Open(outStream, FileMode.Create))
 			{
 				var exportModulesInfo = new List<ExportModuleInfo>();
-				foreach (var module in _moduleCatalog.Modules.Where(x => moduleIds.Contains(x.ModuleName)))
+				foreach (var module in modules)
 				{
-					var moduleDescriptor = _packageService.GetModules().First(x => module.ModuleName == x.Id);
 					//Create part for module
-					var modulePartUri = PackUriHelper.CreatePartUri(new Uri(module.ModuleName, UriKind.Relative));
+					var modulePartUri = PackUriHelper.CreatePartUri(new Uri(module.Id, UriKind.Relative));
 					var modulePart = package.CreatePart(modulePartUri, System.Net.Mime.MediaTypeNames.Application.Octet);
 
-				   progressInfo.Status =  String.Format("{0}: export started.", moduleDescriptor.Id);
+					progressInfo.Description = String.Format("{0}: export started.", module.Id);
 				   progressCallback(progressInfo);
 
 					Action<ExportImportProgressInfo> modulePorgressCallback = (x) =>
 						{
-							progressInfo.Status = String.Format("{0}: {1} ({2} of {3} processed)", moduleDescriptor.Id, x.Status, x.TotalCount, x.ProcessedCount);
+							progressInfo.Description = String.Format("{0}: {1} ({2} of {3} processed)", module.Id, x.Description, x.TotalCount, x.ProcessedCount);
 							progressCallback(progressInfo);
 						};
 
-					((ISupportExportModule)module.ModuleInstance).DoExport(modulePart.GetStream(), modulePorgressCallback);
+					((ISupportExportModule)module.ModuleInfo.ModuleInstance).DoExport(modulePart.GetStream(), modulePorgressCallback);
 
 					//Register in manifest
 					var moduleManifestPart = new ExportModuleInfo
 					{
-						ModuleId = moduleDescriptor.Id,
-						ModuleVersion = moduleDescriptor.Version,
+						ModuleId = module.Id,
+						ModuleVersion = module.Version,
 						PartUri = modulePartUri.ToString()
 					};
 					exportModulesInfo.Add(moduleManifestPart);
 
-					progressInfo.Status = String.Format("{0}: export finished.", moduleDescriptor.Id);
+					progressInfo.Description = String.Format("{0}: export finished.", module.Id);
 					progressInfo.ProcessedCount++;
 					progressCallback(progressInfo);
 				}
 
 				//Write system information about exported modules
-				var partUriManifest = PackUriHelper.CreatePartUri(new Uri("Manifest.xml", UriKind.Relative));
-				var manifestPart = package.CreatePart(partUriManifest, System.Net.Mime.MediaTypeNames.Text.Xml);
+				var manifestPart = package.CreatePart(_manifestPartUri, System.Net.Mime.MediaTypeNames.Text.Xml);
 				var manifest = new PlatformExportManifest
 				{
 					Author = CurrentPrincipal.GetCurrentUserName(),
-					PlatformVersion = platformVersion,
+					PlatformVersion = platformVersion.ToString(),
 				};
 				manifest.Modules = exportModulesInfo.ToArray();
 				//After all modules exported need write export manifest part
@@ -100,25 +99,15 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 					streamWriter.Write(manifest.SerializeXML());
 				}
 			}
-
-			memoryStream.Seek(0, SeekOrigin.Begin);
-			return memoryStream;
 		}
 
-		public void Import(Stream stream, Func<ExportImportProgressInfo> progressCallback)
+		public void Import(Stream stream, ModuleDescriptor[] modules, SemanticVersion platformVersion, Func<ExportImportProgressInfo> progressCallback)
 		{
 			throw new NotImplementedException();
 		}
 
 		#endregion
 
-		private ModuleDescriptor[] InnerGetModulesWithInterface(Type interfaceType)
-		{
-			var moduleNames = _moduleCatalog.Modules.Where(x => x.ModuleInstance != null)
-												.Where(x => x.ModuleInstance.GetType().GetInterfaces().Contains(interfaceType))
-												.Select(x => x.ModuleName).ToArray();
-			var retVal = _packageService.GetModules().Where(x => moduleNames.Contains(x.Id)).ToList();
-			return retVal.ToArray();
-		}
+	
 	}
 }

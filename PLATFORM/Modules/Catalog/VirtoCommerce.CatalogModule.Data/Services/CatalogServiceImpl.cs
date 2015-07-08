@@ -97,7 +97,8 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 			{
 				foreach(var catalogBase in repository.Catalogs)
 				{
-					retVal.Add(catalogBase.ToCoreModel());
+					var catalog = GetById(catalogBase.Id);
+					retVal.Add(catalog);
 				}
 			}
 			return retVal;

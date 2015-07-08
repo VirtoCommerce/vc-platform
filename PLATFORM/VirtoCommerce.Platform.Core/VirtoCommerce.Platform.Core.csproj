@@ -82,10 +82,12 @@
     <Compile Include="Asset\IBlobUrlResolver.cs" />
     <Compile Include="Asset\IBlobStorageProvider.cs" />
     <Compile Include="Asset\UploadStreamInfo.cs" />
+    <Compile Include="Common\PlatformVersion.cs" />
+    <Compile Include="Common\SemanticVersion.cs" />
     <Compile Include="Common\SerializationExtension.cs" />
-    <Compile Include="ImportExport\ExportImportProgressInfo.cs" />
-    <Compile Include="ImportExport\IPlatformExportImportManager.cs" />
-    <Compile Include="ImportExport\ISupportExportModule.cs" />
+    <Compile Include="ExportImport\ExportImportProgressInfo.cs" />
+    <Compile Include="ExportImport\IPlatformExportImportManager.cs" />
+    <Compile Include="ExportImport\ISupportExportModule.cs" />
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Caching\CacheGroups.cs" />
     <Compile Include="Caching\Cachekey.cs" />
@@ -129,7 +131,8 @@
     <Compile Include="Common\TrackingEntry.cs" />
     <Compile Include="Common\TreeExtension.cs" />
     <Compile Include="Common\ValueObject.cs" />
-    <Compile Include="ImportExport\ISupportImportModule.cs" />
+    <Compile Include="ExportImport\ISupportImportModule.cs" />
+    <Compile Include="ExportImport\PlatformExportManifest.cs" />
     <Compile Include="Modularity\ManifestDependency.cs" />
     <Compile Include="Modularity\ModuleBase.cs" />
     <Compile Include="Modularity\AssemblyResolver.cs" />
