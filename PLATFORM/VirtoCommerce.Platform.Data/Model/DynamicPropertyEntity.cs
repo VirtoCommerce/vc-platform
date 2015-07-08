@@ -8,14 +8,15 @@ namespace VirtoCommerce.Platform.Data.Model
     {
         public DynamicPropertyEntity()
         {
-            Names = new NullCollection<DynamicPropertyNameEntity>();
-            Values = new NullCollection<DynamicPropertyValueEntity>();
+            DisplayNames = new NullCollection<DynamicPropertyNameEntity>();
+            DictionaryItems = new NullCollection<DynamicPropertyDictionaryItemEntity>();
+            ObjectValues = new NullCollection<DynamicPropertyObjectValueEntity>();
         }
 
         [StringLength(256)]
         public string ObjectType { get; set; }
 
-        [StringLength(128)]
+        [StringLength(256)]
         public string Name { get; set; }
 
         [Required]
@@ -23,8 +24,10 @@ namespace VirtoCommerce.Platform.Data.Model
         public string ValueType { get; set; }
 
         public bool IsArray { get; set; }
+        public bool IsDictionary { get; set; }
 
-        public virtual ObservableCollection<DynamicPropertyNameEntity> Names { get; set; }
-        public virtual ObservableCollection<DynamicPropertyValueEntity> Values { get; set; }
+        public virtual ObservableCollection<DynamicPropertyNameEntity> DisplayNames { get; set; }
+        public virtual ObservableCollection<DynamicPropertyDictionaryItemEntity> DictionaryItems { get; set; }
+        public virtual ObservableCollection<DynamicPropertyObjectValueEntity> ObjectValues { get; set; }
     }
 }

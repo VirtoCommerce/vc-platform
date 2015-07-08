@@ -4,7 +4,7 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Data.Model
 {
-    public class DynamicPropertyValueEntity : AuditableEntity
+    public class DynamicPropertyObjectValueEntity : AuditableEntity
     {
         public const string TypeShortText = "ShortText";
         public const string TypeLongText = "LongText";
@@ -37,6 +37,9 @@ namespace VirtoCommerce.Platform.Data.Model
         public string PropertyId { get; set; }
         public virtual DynamicPropertyEntity Property { get; set; }
 
+        public string DictionaryItemId { get; set; }
+        public virtual DynamicPropertyDictionaryItemEntity DictionaryItem { get; set; }
+
 
         public object RawValue()
         {
@@ -61,6 +64,9 @@ namespace VirtoCommerce.Platform.Data.Model
 
         public string ToString(IFormatProvider formatProvider)
         {
+            if (DictionaryItemId != null)
+                return DictionaryItemId;
+
             switch (ValueType)
             {
                 case TypeBoolean:

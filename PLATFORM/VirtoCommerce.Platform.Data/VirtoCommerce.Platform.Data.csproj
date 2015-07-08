@@ -149,8 +149,10 @@
     <Compile Include="Common\ConventionInjections\PatchInjection.cs" />
     <Compile Include="Common\ExceptionExtensions.cs" />
     <Compile Include="DynamicProperties\Converters\DynamicPropertyConverter.cs" />
+    <Compile Include="DynamicProperties\Converters\DynamicPropertyDictionaryItemConverter.cs" />
+    <Compile Include="DynamicProperties\Converters\DynamicPropertyDictionaryValueConverter.cs" />
     <Compile Include="DynamicProperties\Converters\DynamicPropertyNameConverter.cs" />
-    <Compile Include="DynamicProperties\Converters\DynamicPropertyValueConverter.cs" />
+    <Compile Include="DynamicProperties\Converters\DynamicPropertyObjectValueConverter.cs" />
     <Compile Include="DynamicProperties\DynamicPropertyService.cs" />
     <Compile Include="ExportImport\PlatformExportImportManager.cs" />
     <Compile Include="ExportImport\PlatformExportManifest.cs" />
@@ -180,9 +182,11 @@
     <Compile Include="Model\AccountState.cs" />
     <Compile Include="Model\ApiAccountEntity.cs" />
     <Compile Include="Model\ApiAccountType.cs" />
+    <Compile Include="Model\DynamicPropertyDictionaryItemEntity.cs" />
     <Compile Include="Model\DynamicPropertyEntity.cs" />
+    <Compile Include="Model\DynamicPropertyDictionaryValueEntity.cs" />
     <Compile Include="Model\DynamicPropertyNameEntity.cs" />
-    <Compile Include="Model\DynamicPropertyValueEntity.cs" />
+    <Compile Include="Model\DynamicPropertyObjectValueEntity.cs" />
     <Compile Include="Model\NotificationEntity.cs" />
     <Compile Include="Model\NotificationTemplateEntity.cs" />
     <Compile Include="Model\OperationLogEntity.cs" />
@@ -239,9 +243,9 @@
     <Compile Include="Repositories\Migrations\201507061326367_RenameNotificationTemplateIndex.Designer.cs">
       <DependentUpon>201507061326367_RenameNotificationTemplateIndex.cs</DependentUpon>
     </Compile>
-    <Compile Include="Repositories\Migrations\201507071605101_DynamicProperties.cs" />
-    <Compile Include="Repositories\Migrations\201507071605101_DynamicProperties.Designer.cs">
-      <DependentUpon>201507071605101_DynamicProperties.cs</DependentUpon>
+    <Compile Include="Repositories\Migrations\201507081435592_DynamicProperties.cs" />
+    <Compile Include="Repositories\Migrations\201507081435592_DynamicProperties.Designer.cs">
+      <DependentUpon>201507081435592_DynamicProperties.cs</DependentUpon>
     </Compile>
     <Compile Include="Repositories\Migrations\Configuration.cs" />
     <Compile Include="Repositories\PlatformDatabaseInitializer.cs" />
@@ -319,8 +323,8 @@
     <EmbeddedResource Include="Repositories\Migrations\201507061326367_RenameNotificationTemplateIndex.resx">
       <DependentUpon>201507061326367_RenameNotificationTemplateIndex.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Repositories\Migrations\201507071605101_DynamicProperties.resx">
-      <DependentUpon>201507071605101_DynamicProperties.cs</DependentUpon>
+    <EmbeddedResource Include="Repositories\Migrations\201507081435592_DynamicProperties.resx">
+      <DependentUpon>201507081435592_DynamicProperties.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Security\Identity\Migrations\201411101625303_InitialCreate.resx">
       <DependentUpon>201411101625303_InitialCreate.cs</DependentUpon>

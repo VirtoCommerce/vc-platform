@@ -6,9 +6,12 @@
         public string Name { get; set; }
         public string ObjectType { get; set; }
         public string ObjectId { get; set; }
-        public bool IsArray { get; set; }
+        public bool? IsArray { get; set; }
+        public bool? IsDictionary { get; set; }
         public DynamicPropertyValueType ValueType { get; set; }
-        public DynamicPropertyValue[] Values { get; set; }
-        public DynamicPropertyName[] LocalizedNames { get; set; }
+
+        public DynamicPropertyName[] DisplayNames { get; set; }
+        public DynamicPropertyDictionaryItem[] DictionaryItems { get; set; }
+        public DynamicPropertyObjectValue[] ObjectValues { get; set; }
     }
 }

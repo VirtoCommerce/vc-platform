@@ -45,7 +45,8 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
             using (var repository = _repositoryFactory())
             {
                 var properties = repository.DynamicProperties
-                    .Include(p => p.Names)
+                    .Include(p => p.DisplayNames)
+                    .Include(p => p.DictionaryItems.Select(i => i.DictionaryValues))
                     .Where(p => p.ObjectType == objectType)
                     .OrderBy(p => p.Name)
                     .ToList();
@@ -96,7 +97,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
             using (var repository = _repositoryFactory())
             {
                 var properties = repository.DynamicProperties
-                    .Include(p => p.Names)
+                    .Include(p => p.DisplayNames)
                     .Where(p => p.ObjectType == objectType)
                     .OrderBy(p => p.Name)
                     .ToList();
@@ -132,10 +133,11 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
                         repository.Add(entity);
                     }
 
-                    var propertyIds = properties.Where(p => !string.IsNullOrEmpty(p.Id)).Select(p => p.Id).ToArray();
+                    var propertyIds = properties.Where(p => !string.IsNullOrEmpty(p.Id)).Select(p => p.Id).Distinct().ToArray();
 
                     var existingProperties = repository.DynamicProperties
-                        .Include(p => p.Names)
+                        .Include(p => p.DisplayNames)
+                        .Include(p => p.DictionaryItems.Select(i => i.DictionaryValues))
                         .Where(p => propertyIds.Contains(p.Id))
                         .ToList();
 
@@ -205,9 +207,9 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
                 }
                 else
                 {
-                    foreach (var value in newEntity.Values)
+                    foreach (var value in newEntity.ObjectValues)
                     {
-                        entity.Values.Add(value);
+                        entity.ObjectValues.Add(value);
                     }
                 }
             }

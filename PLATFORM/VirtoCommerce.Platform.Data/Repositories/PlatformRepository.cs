@@ -51,17 +51,33 @@ namespace VirtoCommerce.Platform.Data.Repositories
 
             modelBuilder.Entity<DynamicPropertyEntity>("PlatformDynamicProperty", "Id");
             modelBuilder.Entity<DynamicPropertyNameEntity>("PlatformDynamicPropertyName", "Id");
-            modelBuilder.Entity<DynamicPropertyValueEntity>("PlatformDynamicPropertyValue", "Id");
+            modelBuilder.Entity<DynamicPropertyDictionaryItemEntity>("PlatformDynamicPropertyDictionaryItem", "Id");
+            modelBuilder.Entity<DynamicPropertyDictionaryValueEntity>("PlatformDynamicPropertyDictionaryValue", "Id");
+            modelBuilder.Entity<DynamicPropertyObjectValueEntity>("PlatformDynamicPropertyObjectValue", "Id");
 
             modelBuilder.Entity<DynamicPropertyNameEntity>()
                 .HasRequired(x => x.Property)
-                .WithMany(x => x.Names)
+                .WithMany(x => x.DisplayNames)
                 .HasForeignKey(x => x.PropertyId);
 
-            modelBuilder.Entity<DynamicPropertyValueEntity>()
+            modelBuilder.Entity<DynamicPropertyDictionaryItemEntity>()
                 .HasRequired(x => x.Property)
-                .WithMany(x => x.Values)
+                .WithMany(x => x.DictionaryItems)
                 .HasForeignKey(x => x.PropertyId);
+
+            modelBuilder.Entity<DynamicPropertyDictionaryValueEntity>()
+                .HasRequired(x => x.DictionaryItem)
+                .WithMany(x => x.DictionaryValues)
+                .HasForeignKey(x => x.DictionaryItemId);
+
+            modelBuilder.Entity<DynamicPropertyObjectValueEntity>()
+                .HasRequired(x => x.Property)
+                .WithMany(x => x.ObjectValues)
+                .HasForeignKey(x => x.PropertyId);
+            modelBuilder.Entity<DynamicPropertyObjectValueEntity>()
+                .HasOptional(x => x.DictionaryItem)
+                .WithMany(x => x.ObjectValues)
+                .HasForeignKey(x => x.DictionaryItemId);
 
             modelBuilder.Entity<DynamicPropertyEntity>()
                 .Property(x => x.ObjectType)
@@ -79,6 +95,23 @@ namespace VirtoCommerce.Platform.Data.Repositories
             modelBuilder.Entity<DynamicPropertyNameEntity>()
                 .Property(x => x.Name)
                 .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformDynamicPropertyName_PropertyId_Locale_Name", 3) { IsUnique = true }));
+
+            modelBuilder.Entity<DynamicPropertyDictionaryItemEntity>()
+                .Property(x => x.PropertyId)
+                .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformDynamicPropertyDictionaryItem_PropertyId_Name", 1) { IsUnique = true }));
+            modelBuilder.Entity<DynamicPropertyDictionaryItemEntity>()
+                .Property(x => x.Name)
+                .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformDynamicPropertyDictionaryItem_PropertyId_Name", 2) { IsUnique = true }));
+
+            modelBuilder.Entity<DynamicPropertyDictionaryValueEntity>()
+                .Property(x => x.DictionaryItemId)
+                .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformDynamicPropertyDictionaryValue_DictionaryItemId_Locale_Value", 1) { IsUnique = true }));
+            modelBuilder.Entity<DynamicPropertyDictionaryValueEntity>()
+                .Property(x => x.Locale)
+                .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformDynamicPropertyDictionaryValue_DictionaryItemId_Locale_Value", 2) { IsUnique = true }));
+            modelBuilder.Entity<DynamicPropertyDictionaryValueEntity>()
+                .Property(x => x.Value)
+                .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformDynamicPropertyDictionaryValue_DictionaryItemId_Locale_Value", 3) { IsUnique = true }));
 
             #endregion
 
@@ -165,7 +198,7 @@ namespace VirtoCommerce.Platform.Data.Repositories
         public IQueryable<SettingEntity> Settings { get { return GetAsQueryable<SettingEntity>(); } }
 
         public IQueryable<DynamicPropertyEntity> DynamicProperties { get { return GetAsQueryable<DynamicPropertyEntity>(); } }
-        public IQueryable<DynamicPropertyValueEntity> DynamicPropertyValues { get { return GetAsQueryable<DynamicPropertyValueEntity>(); } }
+        public IQueryable<DynamicPropertyObjectValueEntity> DynamicPropertyValues { get { return GetAsQueryable<DynamicPropertyObjectValueEntity>(); } }
 
         public IQueryable<AccountEntity> Accounts { get { return GetAsQueryable<AccountEntity>(); } }
         public IQueryable<ApiAccountEntity> ApiAccounts { get { return GetAsQueryable<ApiAccountEntity>(); } }

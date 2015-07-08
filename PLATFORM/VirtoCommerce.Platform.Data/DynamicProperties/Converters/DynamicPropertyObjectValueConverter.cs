@@ -7,35 +7,41 @@ using VirtoCommerce.Platform.Data.Model;
 
 namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
 {
-    public static class DynamicPropertyValueConverter
+    public static class DynamicPropertyObjectValueConverter
     {
-        public static DynamicPropertyValueEntity[] ToEntity(this DynamicPropertyValue value, DynamicProperty property)
+        public static DynamicPropertyObjectValueEntity[] ToEntity(this DynamicPropertyObjectValue model, DynamicProperty property)
         {
-            var result = new List<DynamicPropertyValueEntity>();
+            var result = new List<DynamicPropertyObjectValueEntity>();
 
-            if (value.ArrayValues != null)
+            if (model.DictionaryItemId != null)
             {
-                result.AddRange(value.ArrayValues.Select(v => v.ToEntity(property, value.Locale)));
+                var entity = ToEntity(null, property, null);
+                entity.DictionaryItemId = model.DictionaryItemId;
+                result.Add(entity);
             }
-            else if (value.Value != null)
+            else if (model.ArrayValues != null)
             {
-                result.Add(value.Value.ToEntity(property, value.Locale));
+                result.AddRange(model.ArrayValues.Select(v => v.ToEntity(property, model.Locale)));
+            }
+            else if (model.Value != null)
+            {
+                result.Add(model.Value.ToEntity(property, model.Locale));
             }
 
             return result.ToArray();
         }
 
-        public static DynamicPropertyValueEntity ToEntity(this string value, DynamicProperty property, string locale)
+        public static DynamicPropertyObjectValueEntity ToEntity(this string value, DynamicProperty model, string locale)
         {
-            var result = new DynamicPropertyValueEntity
+            var result = new DynamicPropertyObjectValueEntity
             {
-                ObjectType = property.ObjectType,
-                ObjectId = property.ObjectId,
-                ValueType = property.ValueType.ToString(),
+                ObjectType = model.ObjectType,
+                ObjectId = model.ObjectId,
+                ValueType = model.ValueType.ToString(),
                 Locale = locale,
             };
 
-            switch (property.ValueType)
+            switch (model.ValueType)
             {
                 case DynamicPropertyValueType.Boolean:
                     result.BooleanValue = Convert.ToBoolean(value);

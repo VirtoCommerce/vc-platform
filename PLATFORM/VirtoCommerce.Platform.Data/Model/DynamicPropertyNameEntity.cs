@@ -8,7 +8,7 @@ namespace VirtoCommerce.Platform.Data.Model
         [StringLength(64)]
         public string Locale { get; set; }
 
-        [StringLength(128)]
+        [StringLength(256)]
         public string Name { get; set; }
 
         public string PropertyId { get; set; }
