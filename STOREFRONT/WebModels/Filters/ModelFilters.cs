@@ -134,7 +134,7 @@ namespace VirtoCommerce.Web.Models.Filters
         {
             if (String.IsNullOrEmpty(link))
             {
-                link = "~";
+                link = "~/";
             }
 
             string url = VirtualPathUtility.ToAbsolute(link);
