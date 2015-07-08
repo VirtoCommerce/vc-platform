@@ -17,7 +17,7 @@ namespace VirtoCommerce.Web.Controllers
                 var firstApprovedPayment = customerOrder.InPayments.FirstOrDefault(p => p.IsApproved);
                 if (firstApprovedPayment != null)
                 {
-                    var catalogItems = await Service.GetCatalogItemsByIdsAsync(new[] { pid }, "ItemAssets");
+                    var catalogItems = await Service.GetCatalogItemsByIdsAsync(new[] { pid }, Context.StoreId, "ItemAssets");
                     if (catalogItems != null && catalogItems.Any())
                     {
                         var asset = catalogItems.First().Assets.FirstOrDefault(a => a.Name == file);

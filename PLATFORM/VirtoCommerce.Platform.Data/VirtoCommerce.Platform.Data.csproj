@@ -155,7 +155,6 @@
     <Compile Include="DynamicProperties\Converters\DynamicPropertyObjectValueConverter.cs" />
     <Compile Include="DynamicProperties\DynamicPropertyService.cs" />
     <Compile Include="ExportImport\PlatformExportImportManager.cs" />
-    <Compile Include="ExportImport\PlatformExportManifest.cs" />
     <Compile Include="Infrastructure\BasicUnitOfWork.cs" />
     <Compile Include="Infrastructure\DbMigrationContext.cs" />
     <Compile Include="Infrastructure\DbMigrationsConfigurationBase.cs" />
@@ -207,7 +206,6 @@
     <Compile Include="Notification\NotificationTemplateServiceImpl.cs" />
     <Compile Include="Notification\RegistrationEmailNotification.cs" />
     <Compile Include="Notification\RegistrationSmsNotification.cs" />
-    <Compile Include="Packaging\SemanticVersion.cs" />
     <Compile Include="Packaging\ZipPackageService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\IPlatformRepository.cs" />

@@ -14,7 +14,7 @@ namespace VirtoCommerce.Platform.Web.Model.ExportImport.NotificationEvent
 		public ExportImportProgressNotificationEvent(string creator)
 			: base(creator)
 		{
-
+			Errors = new List<string>();
 		}
 		[JsonProperty("finished")]
 		public DateTime? Finished { get; set; }

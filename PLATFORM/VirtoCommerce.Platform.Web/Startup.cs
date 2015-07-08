@@ -21,7 +21,7 @@ using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.ChangeLog;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
-using VirtoCommerce.Platform.Core.ImportExport;
+using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Notification;
 using VirtoCommerce.Platform.Core.Packaging;
@@ -121,8 +121,8 @@ namespace VirtoCommerce.Platform.Web
 
             OwinConfig.Configure(app, container, connectionStringName, authenticationOptions);
 
-            var jobScheduler = container.Resolve<SendNotificationsJobsSheduler>();
-            jobScheduler.SheduleJobs();
+			var jobScheduler = container.Resolve<SendNotificationsJobsSheduler>();
+			jobScheduler.SheduleJobs();
 
             var postInitializeModules = moduleCatalog.CompleteListWithDependencies(moduleCatalog.Modules)
                 .Where(m => m.ModuleInstance != null)
@@ -205,21 +205,6 @@ namespace VirtoCommerce.Platform.Web
                 {
                     Settings = new[]
                     {
-                        new ModuleSettingsGroup
-                        {
-                            Name = "Platform|Test",
-                            Settings = new[]
-                            {
-                                new ModuleSetting
-                                {
-                                    Name = "VirtoCommerce.Platform.Test.TestString",
-                                    ValueType = ModuleSetting.TypeString,
-                                    Title = "Test String",
-                                    Description = "Test String Description",
-                                }
-                            }
-                        },
-
 						new ModuleSettingsGroup
 						{
 							Name = "Platform|Notifications|SendGrid",
@@ -360,7 +345,7 @@ namespace VirtoCommerce.Platform.Web
             var packagesPath = HostingEnvironment.MapPath("~/App_Data/InstalledPackages");
 
             var packageService = new ZipPackageService(moduleCatalog, manifestProvider, packagesPath, sourcePath);
-            container.RegisterInstance<IPackageService>(packageService);
+			container.RegisterInstance<IPackageService>(packageService);
             container.RegisterType<ModulesController>(new InjectionConstructor(packageService, sourcePath));
 
             #endregion
@@ -390,9 +375,9 @@ namespace VirtoCommerce.Platform.Web
 
             #endregion
 
-            #region ExportImport
-            container.RegisterType<IPlatformExportImportManager, PlatformExportImportManager>();
-            #endregion
+			#region ExportImport
+			container.RegisterType<IPlatformExportImportManager, PlatformExportImportManager>();
+			#endregion
         }
 
         private static string MakeRelativePath(string rootPath, string fullPath)

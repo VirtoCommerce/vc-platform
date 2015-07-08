@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using VirtoCommerce.Platform.Core.Modularity;
 
 namespace VirtoCommerce.Platform.Core.Packaging
 {
     public class ModuleDescriptor : ModuleIdentity
     {
+		public ModuleInfo ModuleInfo { get; set; }
         public string PlatformVersion { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }

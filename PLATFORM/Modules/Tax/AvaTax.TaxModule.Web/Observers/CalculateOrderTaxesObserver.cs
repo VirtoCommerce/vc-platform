@@ -5,20 +5,24 @@ using AvaTax.TaxModule.Web.Converters;
 //using Common.Logging;
 using AvaTax.TaxModule.Web.Services;
 using AvaTaxCalcREST;
-using Microsoft.Practices.ObjectBuilder2;
+using VirtoCommerce.Domain.Customer.Model;
+using VirtoCommerce.Domain.Customer.Services;
 using VirtoCommerce.Domain.Order.Events;
 using VirtoCommerce.Platform.Core.Common;
 using domainModel = VirtoCommerce.Domain.Commerce.Model;
+using Microsoft.Practices.ObjectBuilder2;
 
 namespace AvaTax.TaxModule.Web.Observers
 {
     public class CalculateOrderTaxesObserver : IObserver<OrderChangeEvent>
 	{
         private readonly ITaxSettings _taxSettings;
+        private readonly IContactService _customerSearchService;
 
-        public CalculateOrderTaxesObserver(ITaxSettings taxSettings)
+        public CalculateOrderTaxesObserver(ITaxSettings taxSettings, IContactService customerSearchService)
         {
             _taxSettings = taxSettings;
+            _customerSearchService = customerSearchService;
         }
 
 		#region IObserver<CustomerOrder> Members
@@ -63,7 +67,12 @@ namespace AvaTax.TaxModule.Web.Observers
 		                    _taxSettings.ServiceUrl);
 		                var isCommit = order.InPayments != null && order.InPayments.Any()
 		                    && order.InPayments.All(pi => pi.IsApproved);
-		                var request = order.ToAvaTaxRequest(_taxSettings.CompanyCode, isCommit);
+
+                        Contact contact = null;
+                        if (order.CustomerId != null)
+                            contact = _customerSearchService.GetById(order.CustomerId);
+
+		                var request = order.ToAvaTaxRequest(_taxSettings.CompanyCode, contact, isCommit);
 		                if (request != null)
 		                {
                             //slab.DocCode = request.DocCode;
@@ -101,7 +110,7 @@ namespace AvaTax.TaxModule.Web.Observers
 		                            }
 		                            else
 		                            {
-		                                var shipment = order.Shipments.FirstOrDefault(s => s.Id.Equals(taxLine.LineNo));
+                                        var shipment = order.Shipments.FirstOrDefault(s => s.Id != null ? s.Id.Equals(taxLine.LineNo) : s.ShipmentMethodCode.Equals(taxLine.LineNo));
 		                                if (shipment != null)
 		                                {
 		                                    shipment.Tax = taxLine.Tax;

@@ -185,10 +185,10 @@ namespace VirtoCommerce.ApiClient
             };
             return
                 await GetAsync<ProductSearchResult>(
-                    CreateRequestUri(RelativePaths.Products, query.GetQueryString(parameters))).ConfigureAwait(false);
+                    CreateRequestUri(RelativePaths.ProductsSearch, query.GetQueryString(parameters))).ConfigureAwait(false);
         }
 
-        public virtual async Task<IEnumerable<CatalogItem>> GetCatalogItemsByIdsAsync(IEnumerable<string> catalogItemsIds, string responseGroup)
+        public virtual async Task<IEnumerable<CatalogItem>> GetCatalogItemsByIdsAsync(IEnumerable<string> catalogItemsIds, string storeId, string responseGroup)
         {
             var ids = new List<string>();
             foreach (var catalogItemId in catalogItemsIds)
@@ -197,6 +197,7 @@ namespace VirtoCommerce.ApiClient
             }
 
             var queryString = string.Join("&", ids);
+            queryString += "&store=" + storeId;
             queryString += "&responseGroup=" + responseGroup;
 
             return await GetAsync<IEnumerable<CatalogItem>>(CreateRequestUri(RelativePaths.Products, queryString)).ConfigureAwait(false);
@@ -215,6 +216,8 @@ namespace VirtoCommerce.ApiClient
             public const string Product = "mp/products/{0}";
 
             public const string Products = "mp/products";
+
+            public const string ProductsSearch = "mp/products/search";
 
             #endregion
         }

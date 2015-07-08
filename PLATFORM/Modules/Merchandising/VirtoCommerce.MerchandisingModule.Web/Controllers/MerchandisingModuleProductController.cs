@@ -56,8 +56,8 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		}
 
 		#region Public Methods and Operators
-		/// GET: api/mp/products?ids=212&ids=2123&ids=434
-		/*
+
+		// GET: api/mp/products?ids=212&ids=2123&ids=434
 		[HttpGet]
 		[ArrayInput(ParameterName = "ids")]
 		[ResponseType(typeof(CatalogItem[]))]
@@ -74,8 +74,6 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 			var retVal = InnerGetProductsByIds(fullLoadedStore, ids, responseGroup);
 			return Ok(retVal);
 		}
-         * */
-
 
 		[HttpGet]
 		[ResponseType(typeof(CatalogItem))]
@@ -179,7 +177,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		[HttpGet]
 		[ArrayInput(ParameterName = "priceLists")]
 		[ClientCache(Duration = 30)]
-		[Route("")]
+		[Route("Search")]
 		[ResponseType(typeof(ProductSearchResult))]
 		public IHttpActionResult Search(string store, string[] priceLists, [ModelBinder(typeof(SearchParametersBinder))] SearchParameters parameters,
 										[FromUri] coreModel.ItemResponseGroup responseGroup = coreModel.ItemResponseGroup.ItemMedium,

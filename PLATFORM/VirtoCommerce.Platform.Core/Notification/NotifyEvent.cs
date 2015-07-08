@@ -13,6 +13,7 @@ namespace VirtoCommerce.Platform.Core.Notification
             Id = Guid.NewGuid().ToString();
             Creator = creator;
             ExtendedData = new Dictionary<string, string>();
+			NotifyType = this.GetType().Name;
         }
         [JsonProperty("id")]
         public string Id { get; set; }

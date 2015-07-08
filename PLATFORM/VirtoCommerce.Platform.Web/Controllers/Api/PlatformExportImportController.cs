@@ -4,10 +4,10 @@ using System.Linq;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
-using VirtoCommerce.Platform.Core.ImportExport;
+using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Packaging;
-using webModel = VirtoCommerce.Platform.Web.Model.Packaging;
+using webModel = VirtoCommerce.Platform.Web.Model.ExportImport;
 using VirtoCommerce.Platform.Web.Converters.Packaging;
 using VirtoCommerce.Platform.Core.Notification;
 using VirtoCommerce.Platform.Web.Model.ExportImport;
@@ -17,35 +17,67 @@ using VirtoCommerce.Platform.Core.Asset;
 using System.Reflection;
 using Hangfire;
 using Omu.ValueInjecter;
+using VirtoCommerce.Platform.Data.Common;
+using System.IO;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
-	[RoutePrefix("api")]
+	[RoutePrefix("api/platform")]
 	public class PlatformExportImportController : ApiController
 	{
 		private readonly IPlatformExportImportManager _platformExportManager;
 		private readonly INotifier _eventNotifier;
 		private readonly IBlobStorageProvider _blobStorageProvider;
 		private readonly IBlobUrlResolver _blobUrlResolver;
-		public PlatformExportImportController(IPlatformExportImportManager platformExportManager, INotifier eventNotifier, IBlobStorageProvider blobStorageProvider, IBlobUrlResolver blobUrlResolver)
+		private readonly IPackageService _packageService;
+
+		public PlatformExportImportController(IPlatformExportImportManager platformExportManager, INotifier eventNotifier, IBlobStorageProvider blobStorageProvider, IBlobUrlResolver blobUrlResolver, IPackageService packageService)
 		{
 			_platformExportManager = platformExportManager;
 			_eventNotifier = eventNotifier;
 			_blobStorageProvider = blobStorageProvider;
 			_blobUrlResolver = blobUrlResolver;
+			_packageService = packageService;
 		}
 
 		 [HttpGet]
-		 [ResponseType(typeof(webModel.ModuleDescriptor[]))]
-		 [Route("{exportImportAction}/modules")]
-		 public IHttpActionResult GetModulesForAction(string exportImportAction)
+		 [ResponseType(typeof(VirtoCommerce.Platform.Web.Model.Packaging.ModuleDescriptor[]))]
+		 [Route("export/modules")]
+		 public IHttpActionResult GetAllowExportModules()
 		 {
-			 if(exportImportAction == "export")
-			 {
-				 return Ok(_platformExportManager.GetSupportedExportModules());
-			 }
+			 return Ok(InnerGetModulesWithInterface(typeof(ISupportExportModule)).Select(x => x.ToWebModel()).ToArray());
+		 }
 
-			 return Ok(_platformExportManager.GetSupportedImportModules());
+		 [HttpGet]
+		 [ResponseType(typeof(webModel.ImportInfo))]
+		 [Route("import/info")]
+		 public IHttpActionResult GetImportInformation([FromUri]string fileUrl)
+		 {
+			 var retVal = new webModel.ImportInfo();
+			 using (var stream = _blobStorageProvider.OpenReadOnly(fileUrl))
+			 {
+				 retVal.ExportManifest = _platformExportManager.ReadPlatformExportManifest(stream);
+				 //First check platform compatibility
+				 if (!SemanticVersion.Parse(retVal.ExportManifest.PlatformVersion).IsCompatibleWith(PlatformVersion.CurrentVersion))
+				 {
+					 throw new InvalidDataException("Imported platform version " + retVal.ExportManifest.PlatformVersion + " not compatible with current " + PlatformVersion.CurrentVersion.ToString());
+				 }
+				 foreach (var exportModuleInfo in retVal.ExportManifest.Modules)
+				 {
+					 var installedModule = _packageService.GetModules().FirstOrDefault(x => exportModuleInfo.ModuleId == x.Id);
+					 if (installedModule != null)
+					 {
+						 var moduleDescriptor = installedModule.ToWebModel();
+						 retVal.Modules.Add(moduleDescriptor);
+						 //Check compatibility
+						 if (!SemanticVersion.Parse(moduleDescriptor.Version).IsCompatibleWith(SemanticVersion.Parse(installedModule.Version)))
+						 {
+							 moduleDescriptor.ValidationErrors.Add("Imported module version " + moduleDescriptor.Version + " not compatible with installed " + installedModule.Version);
+						 }
+					 }
+				 }
+			 }
+			 return Ok(retVal);
 		 }
 
 		 [HttpPost]
@@ -61,13 +93,29 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 			 _eventNotifier.Upsert(notification);
 			 var now = DateTime.UtcNow;
 
-			 var assembly = Assembly.GetExecutingAssembly();
-			 var platformVersion = String.Format("{0}.{1}", assembly.GetInformationalVersion(), assembly.GetFileVersion());
 
-			 BackgroundJob.Enqueue(() => PlatformExportBackground(exportRequest, platformVersion, notification));
+			 BackgroundJob.Enqueue(() => PlatformExportBackground(exportRequest, PlatformVersion.CurrentVersion.ToString(), notification));
 
 			 return Ok(notification);
 		 }
+
+		 [HttpPost]
+		 [ResponseType(typeof(NotifyEvent))]
+		 [Route("import")]
+		 public IHttpActionResult ProcessImport(PlatformImportRequest importRequest)
+		 {
+			 var notification = new ExportImportProgressNotificationEvent(CurrentPrincipal.GetCurrentUserName())
+			 {
+				 Title = "Platform import task",
+				 Description = "starting import...."
+			 };
+			 _eventNotifier.Upsert(notification);
+			 var now = DateTime.UtcNow;
+
+
+			 return Ok(notification);
+		 }
+
 
 
 		 public void PlatformExportBackground(PlatformExportRequest exportRequest, string platformVersion, ExportImportProgressNotificationEvent notifyEvent)
@@ -75,28 +123,49 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 			 Action<ExportImportProgressInfo> progressCallback = (x) =>
 			 {
 				 notifyEvent.InjectFrom(x);
-				 notifyEvent.Description = x.Status;
 				 _eventNotifier.Upsert(notifyEvent);
 			 };
 
 			 var now = DateTime.UtcNow;
-			 using (var stream = _platformExportManager.Export(exportRequest.Modules, platformVersion, progressCallback))
+			 try
 			 {
-				 //Upload result csv to blob storage
-				 var uploadInfo = new UploadStreamInfo
+				 var exportedModules = InnerGetModulesWithInterface(typeof(ISupportExportModule)).Where(x => exportRequest.Modules.Contains(x.Id)).ToArray();
+				 using (var stream = new MemoryStream())
 				 {
-					 FileName = "Platform-" + now.ToString("yyMMddhh") + "-export.zip",
-					 FileByteStream = stream,
-					 FolderName = "tmp"
-				 };
-				 var blobKey = _blobStorageProvider.Upload(uploadInfo);
-				 //Get a download url
-				 notifyEvent.DownloadUrl = _blobUrlResolver.GetAbsoluteUrl(blobKey);
-				 notifyEvent.Description = "Export finished";
+					 _platformExportManager.Export(stream, exportedModules, SemanticVersion.Parse(platformVersion), progressCallback);
+					 stream.Seek(0, SeekOrigin.Begin);
+					 //Upload result  to blob storage
+					 var uploadInfo = new UploadStreamInfo
+					 {
+						 FileName = "Platform-" + now.ToString("yyMMddhh") + "-export.zip",
+						 FileByteStream = stream,
+						 FolderName = "tmp"
+					 };
+					 var blobKey = _blobStorageProvider.Upload(uploadInfo);
+					 //Get a download url
+					 notifyEvent.DownloadUrl = _blobUrlResolver.GetAbsoluteUrl(blobKey);
+					 notifyEvent.Description = "Export finished";
+				 }
+			 }
+			 catch(Exception ex)
+			 {
+				 notifyEvent.Description = "Export failed";
+				 notifyEvent.Errors.Add(ex.ExpandExceptionMessage()); 
+			 }
+			 finally
+			 {
 				 notifyEvent.Finished = DateTime.UtcNow;
 				 _eventNotifier.Upsert(notifyEvent);
 			 }
 
+		 }
+
+		 private ModuleDescriptor[] InnerGetModulesWithInterface(Type interfaceType)
+		 {
+			 var retVal = _packageService.GetModules().Where(x => x.ModuleInfo.ModuleInstance != null)
+										 .Where(x => x.ModuleInfo.ModuleInstance.GetType().GetInterfaces().Contains(interfaceType))
+										 .ToArray();
+			 return retVal;
 		 }
 	}
 }

@@ -72,6 +72,8 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
                 target.Alias = source.Alias;
             if (source.KeyValue != null)
                 target.KeyValue = source.KeyValue;
+			if (source.Alias != null)
+				target.Alias = source.Alias;
         }
 
 		private static void SetPropertyValue(dataModel.PropertyValueBase retVal, coreModel.PropertyValueType type, string value)

@@ -40,30 +40,34 @@ namespace AvaTax.TaxModule.Web.Observers
 		#endregion
 		private void CancelCustomerOrderTaxes(OrderChangeEvent context)
 		{
-			var order = context.ModifiedOrder;
-            if (order.Status == "Cancelled")
-            
-            if (_taxSettings.IsEnabled && !string.IsNullOrEmpty(_taxSettings.Username) && !string.IsNullOrEmpty(_taxSettings.Password)
-                && !string.IsNullOrEmpty(_taxSettings.ServiceUrl)
-                && !string.IsNullOrEmpty(_taxSettings.CompanyCode))
-            {
-                var taxSvc = new JsonTaxSvc(_taxSettings.Username, _taxSettings.Password, _taxSettings.ServiceUrl);
+            if (context.ModifiedOrder.Status != "Cancelled")
+		    {
+		        return;
+		    }
+
+            var order = context.ModifiedOrder;
+
+		    if (_taxSettings.IsEnabled && !string.IsNullOrEmpty(_taxSettings.Username) && !string.IsNullOrEmpty(_taxSettings.Password)
+		        && !string.IsNullOrEmpty(_taxSettings.ServiceUrl)
+		        && !string.IsNullOrEmpty(_taxSettings.CompanyCode))
+		    {
+		        var taxSvc = new JsonTaxSvc(_taxSettings.Username, _taxSettings.Password, _taxSettings.ServiceUrl);
                 
-                var request = order.ToAvaTaxCancelRequest(_taxSettings.CompanyCode, CancelCode.DocVoided);
-                if (request != null)
-                {
-                    var getTaxResult = taxSvc.CancelTax(request);
-                    if (!getTaxResult.ResultCode.Equals(SeverityLevel.Success))
-                    {
-                        var error = string.Join(Environment.NewLine, getTaxResult.Messages.Select(m => m.Summary));
-                        OnError(new Exception(error));
-                    }
-                }
-            }
-            else
-            {
-                OnError(new Exception("AvaTax credentials not provided"));
-            }
+		        var request = order.ToAvaTaxCancelRequest(_taxSettings.CompanyCode, CancelCode.DocDeleted);
+		        if (request != null)
+		        {
+		            var getTaxResult = taxSvc.CancelTax(request);
+		            if (!getTaxResult.ResultCode.Equals(SeverityLevel.Success))
+		            {
+		                var error = string.Join(Environment.NewLine, getTaxResult.Messages.Select(m => m.Summary));
+		                OnError(new Exception(error));
+		            }
+		        }
+		    }
+		    else
+		    {
+		        OnError(new Exception("AvaTax credentials not provided or tax calculation disabled"));
+		    }
 		}
 
 		

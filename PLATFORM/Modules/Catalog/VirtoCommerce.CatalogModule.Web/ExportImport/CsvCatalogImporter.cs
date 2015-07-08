@@ -24,11 +24,12 @@ using VirtoCommerce.Domain.Commerce.Services;
 using System.Threading.Tasks;
 using VirtoCommerce.Domain.Commerce.Model;
 using VirtoCommerce.Domain.Catalog.Model;
+using VirtoCommerce.Platform.Core.ExportImport;
 
 
-namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
+namespace VirtoCommerce.CatalogModule.Web.ExportImport
 {
-	public class CsvCatalogImportJob
+	public class CsvCatalogImporter
 	{
 		private readonly char[] _categoryDelimiters = new char[] { '/', '|', '\\', '>' };
 		private readonly ICatalogService _catalogService;
@@ -36,7 +37,6 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 		private readonly IItemService _productService;
 		private readonly INotifier _notifier;
 		private readonly CacheManager _cacheManager;
-		private readonly IBlobStorageProvider _blobStorageProvider;
 		private readonly ISkuGenerator _skuGenerator;
 		private readonly IPricingService _pricingService;
 		private readonly IInventoryService _inventoryService;
@@ -45,12 +45,8 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 		private readonly ICatalogSearchService _searchService;
 		private object _lockObject = new object();
 
-		internal CsvCatalogImportJob()
-		{
-
-		}
-		public CsvCatalogImportJob(ICatalogService catalogService, ICategoryService categoryService, IItemService productService,
-								INotifier notifier, CacheManager cacheManager, IBlobStorageProvider blobProvider, ISkuGenerator skuGenerator,
+		public CsvCatalogImporter(ICatalogService catalogService, ICategoryService categoryService, IItemService productService,
+								INotifier notifier, CacheManager cacheManager, ISkuGenerator skuGenerator,
 								IPricingService pricingService, IInventoryService inventoryService, ICommerceService commerceService,
 								IPropertyService propertyService, ICatalogSearchService searchService)
 		{
@@ -59,7 +55,6 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 			_productService = productService;
 			_notifier = notifier;
 			_cacheManager = cacheManager;
-			_blobStorageProvider = blobProvider;
 			_skuGenerator = skuGenerator;
 			_pricingService = pricingService;
 			_inventoryService = inventoryService;
@@ -68,77 +63,65 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 			_searchService = searchService;
 		}
 
-		public virtual void DoImport(webModel.CsvImportConfiguration configuration, ImportNotification notification)
+		public virtual void DoImport(Stream inputStream, webModel.CsvImportConfiguration configuration, Action<ExportImportProgressInfo> progressCallback)
 		{
 			var csvProducts = new List<coreModel.CatalogProduct>();
 			var catalog = _catalogService.GetById(configuration.CatalogId);
-			try
+			var progressInfo = new ExportImportProgressInfo
 			{
-				using (var reader = new CsvReader(new StreamReader(_blobStorageProvider.OpenReadOnly(configuration.FileUrl))))
+				Description = "Configuration..."
+			};
+			progressCallback(progressInfo);
+
+
+			using (var reader = new CsvReader(new StreamReader(inputStream)))
+			{
+				reader.Configuration.Delimiter = configuration.Delimiter;
+				var initialized = false;
+				while (reader.Read())
 				{
-
-					reader.Configuration.Delimiter = configuration.Delimiter;
-					var initialized = false;
-					while (reader.Read())
+					if (!initialized)
 					{
-						if (!initialized)
-						{
-							//Notification
-							notification.Description = "Configuration...";
-							_notifier.Upsert(notification);
+						//set import configuration based on mapping info
+						var productMap = new ProductMap(reader.FieldHeaders, configuration, catalog);
+						reader.Configuration.RegisterClassMap(productMap);
+						initialized = true;
 
-							//set import configuration based on mapping info
-							var productMap = new ProductMap(reader.FieldHeaders, configuration, catalog);
-							reader.Configuration.RegisterClassMap(productMap);
-							initialized = true;
+						//Notification
+						progressInfo.Description = "Reading products from csv...";
+						progressCallback(progressInfo);
+					}
 
-							//Notification
-							notification.Description = "Reading products from csv...";
-							_notifier.Upsert(notification);
-						}
-
-						try
+					try
+					{
+						var csvProduct = reader.GetRecord<coreModel.CatalogProduct>();
+						csvProducts.Add(csvProduct);
+					}
+					catch (Exception ex)
+					{
+						var error = ex.Message;
+						if (ex.Data.Contains("CsvHelper"))
 						{
-							var csvProduct = reader.GetRecord<coreModel.CatalogProduct>();
-							csvProducts.Add(csvProduct);
+							error += ex.Data["CsvHelper"];
 						}
-						catch(Exception ex)
-						{
-							var error = ex.Message;
-							if(ex.Data.Contains("CsvHelper"))
-							{
-								error +=  ex.Data["CsvHelper"];
-							}
-							notification.ErrorCount++;
-							notification.Errors.Add(error);
-						}
+						progressInfo.ErrorCount++;
+						progressInfo.Errors.Add(error);
 					}
 				}
+			}
 
-				SaveCategoryTree(catalog, csvProducts, notification);
-				SaveProducts(catalog, csvProducts, notification);
-			}
-			catch (Exception ex)
-			{
-				notification.Description = "Export error";
-				notification.ErrorCount++;
-				notification.Errors.Add(ex.ToString());
-			}
-			finally
-			{
-				notification.Finished = DateTime.UtcNow;
-				notification.Description = "Import finished" + (notification.Errors.Any() ? " with errors" : " successfully");
-				_notifier.Upsert(notification);
-			}
+			SaveCategoryTree(catalog, csvProducts, progressInfo, progressCallback);
+			SaveProducts(catalog, csvProducts, progressInfo, progressCallback);
+
 		}
-	
-		private void SaveCategoryTree(coreModel.Catalog catalog, IEnumerable<coreModel.CatalogProduct> csvProducts, ImportNotification notification)
+
+		private void SaveCategoryTree(coreModel.Catalog catalog, IEnumerable<coreModel.CatalogProduct> csvProducts, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback)
 		{
 			var categories = new List<coreModel.Category>();
-			notification.ProcessedCount = 0;
+			progressInfo.ProcessedCount = 0;
 			var cachedCategoryMap = new Dictionary<string, Category>();
-	
-			foreach (var csvProduct in csvProducts.Where(x=>x.Category != null && !String.IsNullOrEmpty(x.Category.Path)))
+
+			foreach (var csvProduct in csvProducts.Where(x => x.Category != null && !String.IsNullOrEmpty(x.Category.Path)))
 			{
 				var outline = "";
 				var productCategoryNames = csvProduct.Category.Path.Split(_categoryDelimiters);
@@ -147,7 +130,7 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 				{
 					outline += "\\" + categoryName;
 					Category category;
-					if(!cachedCategoryMap.TryGetValue(outline, out category))
+					if (!cachedCategoryMap.TryGetValue(outline, out category))
 					{
 						var searchCriteria = new SearchCriteria
 						{
@@ -157,13 +140,13 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 						};
 						category = _searchService.Search(searchCriteria).Categories.FirstOrDefault(x => x.Name == categoryName);
 					}
-		
+
 					if (category == null)
 					{
 						category = _categoryService.Create(new coreModel.Category() { Name = categoryName, Code = categoryName.GenerateSlug(), CatalogId = catalog.Id, ParentId = parentCategoryId });
 						//Raise notification each notifyCategorySizeLimit category
-						notification.Description = string.Format("Creating categories: {0} created", ++notification.ProcessedCount);
-						_notifier.Upsert(notification);
+						progressInfo.Description = string.Format("Creating categories: {0} created", ++progressInfo.ProcessedCount);
+						progressCallback(progressInfo);
 					}
 					csvProduct.CategoryId = category.Id;
 					csvProduct.Category = category;
@@ -175,22 +158,22 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 		}
 
 
-		private void SaveProducts(coreModel.Catalog catalog, IEnumerable<coreModel.CatalogProduct> csvProducts, ImportNotification notification)
+		private void SaveProducts(coreModel.Catalog catalog, IEnumerable<coreModel.CatalogProduct> csvProducts, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback)
 		{
 			int counter = 0;
 			var notifyProductSizeLimit = 10;
-			notification.TotalCount = csvProducts.Count();
+			progressInfo.TotalCount = csvProducts.Count();
 
 			var defaultFulfilmentCenter = _commerceService.GetAllFulfillmentCenters().FirstOrDefault();
-			var options = new ParallelOptions() 
+			var options = new ParallelOptions()
 			{
-				 MaxDegreeOfParallelism = 10
+				MaxDegreeOfParallelism = 10
 			};
 
 			DetectParents(csvProducts);
-			
+
 			//First need create main products, second will be created variations
-			foreach(var group in new IEnumerable<coreModel.CatalogProduct>[] { csvProducts.Where(x=>x.MainProduct == null), csvProducts.Where(x=>x.MainProduct != null) })
+			foreach (var group in new IEnumerable<coreModel.CatalogProduct>[] { csvProducts.Where(x => x.MainProduct == null), csvProducts.Where(x => x.MainProduct != null) })
 			{
 				Parallel.ForEach(group, options, csvProduct =>
 				{
@@ -202,9 +185,9 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 					{
 						lock (_lockObject)
 						{
-							notification.ErrorCount++;
-							notification.Errors.Add(ex.ToString());
-							_notifier.Upsert(notification);
+							progressInfo.ErrorCount++;
+							progressInfo.Errors.Add(ex.ToString());
+							progressCallback(progressInfo);
 						}
 					}
 					finally
@@ -213,23 +196,21 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 						{
 							//Raise notification each notifyProductSizeLimit category
 							counter++;
-							notification.ProcessedCount = counter;
-							notification.Description = string.Format("Creating products: {0} of {1} created", notification.ProcessedCount, notification.TotalCount);
+							progressInfo.ProcessedCount = counter;
+							progressInfo.Description = string.Format("Creating products: {0} of {1} created", progressInfo.ProcessedCount, progressInfo.TotalCount);
 							if (counter % notifyProductSizeLimit == 0)
 							{
-								_notifier.Upsert(notification);
+								progressCallback(progressInfo);
 							}
 						}
 					}
 				});
 			};
-
-
 		}
 
 		private void DetectParents(IEnumerable<coreModel.CatalogProduct> csvProducts)
 		{
-			foreach(var csvProduct in csvProducts)
+			foreach (var csvProduct in csvProducts)
 			{
 				//Try to set parent relations
 				//By id or code reference
@@ -256,7 +237,7 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 				alreadyExistProduct = result.Products.FirstOrDefault();
 				csvProduct.Id = alreadyExistProduct != null ? alreadyExistProduct.Id : csvProduct.Id;
 			}
-			else if(!csvProduct.IsTransient())
+			else if (!csvProduct.IsTransient())
 			{
 				//If id specified need check that product really exist 
 				alreadyExistProduct = _productService.GetById(csvProduct.Id, ItemResponseGroup.ItemInfo);
@@ -270,12 +251,12 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 				csvProduct.Code = _skuGenerator.GenerateSku(csvProduct);
 			}
 			//Set a parent relations
-			if(csvProduct.MainProductId == null && csvProduct.MainProduct != null)
+			if (csvProduct.MainProductId == null && csvProduct.MainProduct != null)
 			{
 				csvProduct.MainProductId = csvProduct.MainProduct.Id;
 			}
 			var properties = !String.IsNullOrEmpty(csvProduct.CategoryId) ? _propertyService.GetCategoryProperties(csvProduct.CategoryId) : _propertyService.GetCatalogProperties(csvProduct.CatalogId);
-		
+
 			if (csvProduct.PropertyValues != null)
 			{
 				//Try to fill properties meta information for values
@@ -373,7 +354,7 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 				//Map ParentSku -> main product
 				Map(x => x.MainProductId).ConvertUsing(x =>
 				{
-					var parentSku =  GetCsvField("ParentSku", x, importConfiguration);
+					var parentSku = GetCsvField("ParentSku", x, importConfiguration);
 					return !String.IsNullOrEmpty(parentSku) ? parentSku : null;
 				});
 
@@ -429,9 +410,9 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 					{
 						seoUrl = new string[] { seoUrl, seoDescription, seoTitle }.Where(y => !String.IsNullOrEmpty(y)).FirstOrDefault();
 						seoUrl = seoUrl.Substring(0, Math.Min(seoUrl.Length, 240));
-						seoInfos.Add(new SeoInfo { LanguageCode = defaultLanguge, SemanticUrl = seoUrl.GenerateSlug(), MetaDescription = seoDescription, PageTitle = seoTitle});
+						seoInfos.Add(new SeoInfo { LanguageCode = defaultLanguge, SemanticUrl = seoUrl.GenerateSlug(), MetaDescription = seoDescription, PageTitle = seoTitle });
 					}
-					return seoInfos; 
+					return seoInfos;
 				});
 
 				//Map Prices

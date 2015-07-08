@@ -50,24 +50,9 @@ namespace VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine
         #region Public Methods and Operators
         public static Template GetTemplateFromFile(ViewLocationResult path)
         {
-            var contextKey = "vc-cms-file-" + path.Location;
-            /*
-            var value = HttpRuntime.Cache.Get(contextKey);
-
-            if (value != null)
-            {
-                return value as Template;
-            }
-             * */
-
-            if (path.Contents == null)
-                return null;
-
+            // can't cache anything here since template depends on current context
             var contents = path.Contents;
             var template = Template.Parse(contents);
-
-            //HttpRuntime.Cache.Insert(contextKey, template, new CacheDependency(new[] { path.Location}));
-
             return template;
         }
 

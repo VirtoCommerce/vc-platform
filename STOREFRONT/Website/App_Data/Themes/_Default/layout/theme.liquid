@@ -70,7 +70,7 @@
                         ga('send', 'pageview');
                     </script>
                 {% endif %}
-                <base href="{{ shop.simplified_url }}"></base>
+                <base href="{{ shop.simplified_url }}" />
         </head>
 
   <body id="{{ page_title | handle }}" class="{% if customer %}customer-logged-in {% endif %}template-{{ template | replace: '.', ' ' | truncatewords: 1, '' | handle }}" >

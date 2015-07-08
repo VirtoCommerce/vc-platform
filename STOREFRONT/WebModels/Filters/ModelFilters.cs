@@ -87,6 +87,11 @@ namespace VirtoCommerce.Web.Models.Filters
             return val.ToString("C", culture.NumberFormat);
         }
 
+        public static decimal Times(int input, decimal count)
+        {
+            return input * count;
+        }
+
         public static string AssetUrl(string input)
         {
             if (input == null)
@@ -130,16 +135,14 @@ namespace VirtoCommerce.Web.Models.Filters
             return input == null ? null : AssetUrl(GetImageUrl(input));
         }
 
-        public static string LinkTo(string input, string link, string title)
+        public static string LinkTo(string input, string link, string title = "")
         {
             if (String.IsNullOrEmpty(link))
             {
-                link = "~";
+                link = VirtualPathUtility.ToAbsolute("~/");
             }
 
-            string url = VirtualPathUtility.ToAbsolute(link);
-
-            return String.Format("<a href=\"{0}\" title=\"{1}\">{2}</a>", url, title, input);
+            return String.Format("<a href=\"{0}\" title=\"{1}\">{2}</a>", link, title, input);
         }
 
         public static string LinkToSwitchLanguage(Context context, object input)

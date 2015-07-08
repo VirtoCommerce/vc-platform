@@ -25,6 +25,11 @@ namespace VirtoCommerce.Platform.Data.Notification
 
         public void Upsert(NotifyEvent notify)
         {
+			if (notify == null)
+			{
+				throw new ArgumentNullException("notify");
+			}
+
             var alreadyExistNotify = _innerList.FirstOrDefault(x => x.Id == notify.Id);
 
             if (alreadyExistNotify != null)

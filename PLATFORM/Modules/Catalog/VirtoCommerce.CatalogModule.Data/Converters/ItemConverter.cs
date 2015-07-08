@@ -189,9 +189,9 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			retVal.AvailabilityRule = (int)coreModel.AvailabilityRule.Always;
 			retVal.MinQuantity = 1;
 			retVal.MaxQuantity = 0;
-		 
+
 			retVal.CatalogId = product.CatalogId;
-			retVal.CategoryId = product.CategoryId;
+			retVal.CategoryId = String.IsNullOrEmpty(product.CategoryId) ? null : product.CategoryId;
 
 			#region ItemPropertyValues
 			if (product.PropertyValues != null)
@@ -277,10 +277,6 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 				throw new ArgumentNullException("target");
 
 			//TODO: temporary solution because partial update replaced not nullable properties in db entity
-			if (source.Name != null)
-				target.Name = source.Name;
-			if (source.Code != null)
-				target.Code = source.Code;
 			if (source.IsBuyable != null)
 				target.IsBuyable = source.IsBuyable.Value;
 			if (source.IsActive != null)
@@ -292,12 +288,12 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			if (source.MaxQuantity != null)
 				target.MaxQuantity = source.MaxQuantity.Value;
 
-			var patchInjectionPolicy = new PatchInjection<dataModel.Item>(x => x.CategoryId, x => x.Name, x => x.Code, x => x.IsBuyable, x => x.IsActive, x => x.TrackInventory, x => x.ManufacturerPartNumber, x => x.Gtin, x => x.ProductType,
+			var patchInjectionPolicy = new PatchInjection<dataModel.Item>(x => x.CategoryId, x => x.Name, x => x.Code, x => x.ManufacturerPartNumber, x => x.Gtin, x => x.ProductType,
 																		  x => x.WeightUnit, x => x.Weight, x => x.MeasureUnit, x => x.Height, x => x.Length, x => x.Width, x => x.EnableReview, x => x.MaxNumberOfDownload,
 																		  x => x.DownloadExpiration, x => x.DownloadType, x => x.HasUserAgreement, x => x.ShippingType, x => x.TaxType, x => x.Vendor);
-			target.InjectFrom(patchInjectionPolicy, source);
-
 			var dbSource = source.ToDataModel();
+			target.InjectFrom(patchInjectionPolicy, dbSource);
+
 			#region Assets
 			if (!dbSource.Assets.IsNullCollection())
 			{

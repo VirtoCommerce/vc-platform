@@ -205,11 +205,13 @@
                 beforeSend: function () {
                     var spinnerTag = '{{ 'assets/loader_spinner.gif' | shopify_asset_url | img_tag }}';
                     $(".price-list li:eq(1) small").html(spinnerTag);
+                    $(".price-list li:eq(2) small").html(spinnerTag);
                     $(".price-list li:eq(3) small").html(spinnerTag);
                 },
                 success: function (jsonResponse) {
                     if (jsonResponse) {
                         $(".price-list li:eq(1) small").text(jsonResponse.stringified_shipping_price);
+                        $(".price-list li:eq(2) small").text(jsonResponse.stringified_tax_price);
                         $(".price-list li:eq(3) small").text(jsonResponse.stringified_total_price);
                     }
                 }
@@ -224,7 +226,7 @@
         <nav class="navbar navbar-default navbar-fixed-top" style="background-color: {{ settings.color_primary }};">
             <div class="container">
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="/" style="color: {{ settings.color_header_text }}; font-size: 30px; font-weight: 600;">{{ shop.name }}</a>
+                    <a class="navbar-brand" href="{{ shop.url }}" style="color: {{ settings.color_header_text }}; font-size: 30px; font-weight: 600;">{{ shop.name }}</a>
                 </div>
                 {% if checkout.guest_login != true %}
                     <ul class="nav navbar-nav navbar-right">

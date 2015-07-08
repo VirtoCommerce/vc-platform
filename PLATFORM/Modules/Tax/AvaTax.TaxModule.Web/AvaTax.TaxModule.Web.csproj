@@ -120,6 +120,7 @@
     <Compile Include="AvaTaxClasses\TaxSvc.cs" />
     <Compile Include="AvaTaxClasses\ValidateResult.cs" />
     <Compile Include="Controller\AvaTaxController.cs" />
+    <Compile Include="Converters\CustomerAddressConverter.cs" />
     <Compile Include="Converters\CustomerOrderCancelConverter.cs" />
     <Compile Include="Converters\ShoppingCartConverter.cs" />
     <Compile Include="Converters\CustomerOrderConverter.cs" />

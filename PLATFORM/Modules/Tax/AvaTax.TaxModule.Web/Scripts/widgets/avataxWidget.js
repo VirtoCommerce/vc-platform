@@ -13,7 +13,7 @@
         ping.query(function () {
             $scope.background = "LightGreen";
             $scope.blade.isLoading = false;
-            $scope.message = "Tested successfully!";
+            $scope.message = "Connected successfully!";
             bladeNavigationService.setError('', $scope.blade);
         }, function (error) {
             bladeNavigationService.setError('Error: ' + error.data.message.substring(0, 40) + '...', $scope.blade);

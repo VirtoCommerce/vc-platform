@@ -1,25 +1,25 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
+using CsvHelper;
 using Hangfire;
-using VirtoCommerce.CatalogModule.Web.BackgroundJobs;
+using Omu.ValueInjecter;
+using VirtoCommerce.CatalogModule.Web.ExportImport;
 using VirtoCommerce.CatalogModule.Web.Model;
 using VirtoCommerce.CatalogModule.Web.Model.EventNotifications;
 using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Platform.Core.Asset;
-using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Notification;
-using System.Linq;
-using CsvHelper;
-using System.IO;
-using coreModel = VirtoCommerce.Domain.Catalog.Model;
-using System.Collections.Generic;
-using VirtoCommerce.Domain.Pricing.Services;
-using VirtoCommerce.Domain.Inventory.Services;
-using VirtoCommerce.Domain.Commerce.Services;
 using VirtoCommerce.Platform.Core.Settings;
+using VirtoCommerce.Platform.Data.Common;
+using coreModel = VirtoCommerce.Domain.Catalog.Model;
+
 namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 {
 	[RoutePrefix("api/catalog")]
@@ -29,14 +29,19 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 		private readonly INotifier _notifier;
 		private readonly ISettingsManager _settingsManager;
 		private readonly IBlobStorageProvider _blobStorageProvider;
+		private readonly CsvCatalogExporter _csvExporter;
+		private readonly CsvCatalogImporter _csvImporter;
+		private readonly IBlobUrlResolver _blobUrlResolver;
 
-		public CatalogModuleExportImportController(ICatalogService catalogService, INotifier notifier, ISettingsManager settingsManager, IBlobStorageProvider blobStorageProvider)
+		public CatalogModuleExportImportController(ICatalogService catalogService, INotifier notifier, ISettingsManager settingsManager, IBlobStorageProvider blobStorageProvider, IBlobUrlResolver blobUrlResolver, CsvCatalogExporter csvExporter, CsvCatalogImporter csvImporter)
 		{
 			_catalogService = catalogService;
 			_notifier = notifier;
 			_settingsManager = settingsManager;
 			_blobStorageProvider = blobStorageProvider;
-
+			_csvExporter = csvExporter;
+			_csvImporter = csvImporter;
+			_blobUrlResolver = blobUrlResolver;
 		}
 
 		/// <summary>
@@ -57,18 +62,8 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 			};
 			_notifier.Upsert(notification);
 
-			var catalog = _catalogService.GetById(exportInfo.CatalogId);
-			if (catalog == null)
-			{
-				throw new NullReferenceException("catalog");
-			}
-			var curencySetting = _settingsManager.GetSettingByName("VirtoCommerce.Core.General.Currencies");
-			var defaultCurrency = EnumUtility.SafeParse<CurrencyCodes>(curencySetting.DefaultValue, CurrencyCodes.USD);
-
-			var exportJob = new CsvCatalogExportJob();
-			BackgroundJob.Enqueue(() => exportJob.DoExport(exportInfo.CatalogId, exportInfo.CategoryIds, exportInfo.ProductIds,
-														   exportInfo.PriceListId, exportInfo.FulfilmentCenterId, exportInfo.Currency ?? defaultCurrency,
-														   catalog.DefaultLanguage.LanguageCode, notification));
+		
+			BackgroundJob.Enqueue(() => BackgroundExport(exportInfo, notification));
 
 			return Ok(notification);
 
@@ -164,11 +159,9 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 			};
 			_notifier.Upsert(notification);
 
-			var importJob = new CsvCatalogImportJob();
-			BackgroundJob.Enqueue(() => importJob.DoImport(importConfiguration, notification));
+			BackgroundJob.Enqueue(() => BackgroundImport(importConfiguration, notification));
 
 			return Ok(notification);
-
 		}
 
 
@@ -191,7 +184,84 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 
 			//return StatusCode(HttpStatusCode.NoContent);
 		}
+		public void BackgroundImport(CsvImportConfiguration importConfiguration, ImportNotification notifyEvent)
+		{
+			 Action<ExportImportProgressInfo> progressCallback = (x) =>
+			 {
+				 notifyEvent.InjectFrom(x);
+				 _notifier.Upsert(notifyEvent);
+			 };
 
+			using (var stream = _blobStorageProvider.OpenReadOnly(importConfiguration.FileUrl))
+			{
+				try
+				{
+					_csvImporter.DoImport(stream, importConfiguration, progressCallback);
+				}
+				catch(Exception ex)
+				{
+					notifyEvent.Description = "Export error";
+					notifyEvent.ErrorCount++;
+					notifyEvent.Errors.Add(ex.ToString());
+				}
+				finally
+				{
+					notifyEvent.Finished = DateTime.UtcNow;
+					notifyEvent.Description = "Import finished" + (notifyEvent.Errors.Any() ? " with errors" : " successfully");
+					_notifier.Upsert(notifyEvent);
+				}
+			}
+		}
+
+		public void BackgroundExport(CsvExportInfo exportInfo, ExportNotification notifyEvent)
+		{
+			var curencySetting = _settingsManager.GetSettingByName("VirtoCommerce.Core.General.Currencies");
+			var defaultCurrency = EnumUtility.SafeParse<CurrencyCodes>(curencySetting.DefaultValue, CurrencyCodes.USD);
+			
+			var catalog = _catalogService.GetById(exportInfo.CatalogId);
+			if (catalog == null)
+			{
+				throw new NullReferenceException("catalog");
+			}
+			
+			 Action<ExportImportProgressInfo> progressCallback = (x) =>
+			 {
+				 notifyEvent.InjectFrom(x);
+				 _notifier.Upsert(notifyEvent);
+			 };
+
+			 using (var stream = new MemoryStream())
+			 {
+				 try
+				 {
+					 _csvExporter.DoExport(stream, exportInfo.CatalogId, exportInfo.CategoryIds, exportInfo.ProductIds, exportInfo.PriceListId, exportInfo.FulfilmentCenterId, exportInfo.Currency ?? defaultCurrency, catalog.DefaultLanguage.LanguageCode, progressCallback);
+					 
+					 stream.Position = 0;
+					 //Upload result csv to blob storage
+					 var uploadInfo = new UploadStreamInfo
+					 {
+						 FileName = "Catalog-" + catalog.Name + "-export.csv",
+						 FileByteStream = stream,
+						 FolderName = "temp"
+					 };
+					 var blobKey = _blobStorageProvider.Upload(uploadInfo);
+					 //Get a download url
+					 notifyEvent.DownloadUrl = _blobUrlResolver.GetAbsoluteUrl(blobKey);
+					 notifyEvent.Description = "Export finished";
+				 }
+				 catch (Exception ex)
+				 {
+					 notifyEvent.Description = "Export failed";
+					 notifyEvent.Errors.Add(ex.ExpandExceptionMessage());
+				 }
+				 finally
+				 {
+					 notifyEvent.Finished = DateTime.UtcNow;
+					 _notifier.Upsert(notifyEvent);
+				 }
+			 }
+			
+		}
 
 	}
 }
