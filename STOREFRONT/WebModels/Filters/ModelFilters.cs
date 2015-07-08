@@ -87,6 +87,11 @@ namespace VirtoCommerce.Web.Models.Filters
             return val.ToString("C", culture.NumberFormat);
         }
 
+        public static decimal Times(int input, decimal count)
+        {
+            return input * count;
+        }
+
         public static string AssetUrl(string input)
         {
             if (input == null)
