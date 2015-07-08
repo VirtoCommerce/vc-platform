@@ -101,7 +101,7 @@ namespace AvaTax.TaxModule.Web.Observers
                             }
                             else
                             {
-                                var shipment = cart.Shipments.FirstOrDefault(s => s.Id.Equals(taxLine.LineNo));
+                                var shipment = cart.Shipments.FirstOrDefault(s => s.Id != null ? s.Id.Equals(taxLine.LineNo) : s.ShipmentMethodCode.Equals(taxLine.LineNo));
                                 if (shipment != null)
                                 {
                                     shipment.TaxTotal = taxLine.Tax;

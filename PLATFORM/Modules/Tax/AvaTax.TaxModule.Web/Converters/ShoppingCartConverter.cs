@@ -112,7 +112,7 @@ namespace AvaTax.TaxModule.Web.Converters
                     cart.Shipments.ForEach(sh =>
                     getTaxRequest.Lines.Add(new Line
                     {
-                        LineNo = sh.Id,
+                        LineNo = sh.Id ?? sh.ShipmentMethodCode,
                         ItemCode = sh.ShipmentMethodCode,
                         Qty = 1,
                         Amount = sh.ShippingPrice,
