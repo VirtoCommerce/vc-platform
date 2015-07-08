@@ -32,7 +32,7 @@ namespace AvaTax.TaxModule.Web.Controller
                 && !string.IsNullOrEmpty(_taxSettings.CompanyCode) && _taxSettings.IsEnabled)
             {
                 var taxSvc = new JsonTaxSvc(_taxSettings.Username, _taxSettings.Password, _taxSettings.ServiceUrl);
-                var request = order.ToAvaTaxRequest(_taxSettings.CompanyCode);
+                var request = order.ToAvaTaxRequest(_taxSettings.CompanyCode, null);
                 var getTaxResult = taxSvc.GetTax(request);
                 if (!getTaxResult.ResultCode.Equals(SeverityLevel.Success))
                 {
@@ -99,7 +99,7 @@ namespace AvaTax.TaxModule.Web.Controller
                 && !string.IsNullOrEmpty(_taxSettings.CompanyCode) && _taxSettings.IsEnabled)
             {
                 var taxSvc = new JsonTaxSvc(_taxSettings.Username, _taxSettings.Password, _taxSettings.ServiceUrl);
-                var request = cart.ToAvaTaxRequest(_taxSettings.CompanyCode);
+                var request = cart.ToAvaTaxRequest(_taxSettings.CompanyCode, null);
                 var getTaxResult = taxSvc.GetTax(request);
                 if (!getTaxResult.ResultCode.Equals(SeverityLevel.Success))
                 {
@@ -150,6 +150,30 @@ namespace AvaTax.TaxModule.Web.Controller
                 return Ok(cancelTaxResult);
             }
             
+            return BadRequest();
+        }
+
+        [HttpPost]
+        [ResponseType(typeof(bool))]
+        [Route("validate")]
+        public IHttpActionResult ValidateAddress(VirtoCommerce.Domain.Customer.Model.Address address)
+        {
+            if (!string.IsNullOrEmpty(_taxSettings.Username) && !string.IsNullOrEmpty(_taxSettings.Password)
+                && !string.IsNullOrEmpty(_taxSettings.ServiceUrl)
+                && !string.IsNullOrEmpty(_taxSettings.CompanyCode) && _taxSettings.IsEnabled)
+            {
+                var addressSvc = new JsonAddressSvc(_taxSettings.Username, _taxSettings.Password, _taxSettings.ServiceUrl);
+                var request = address.ToValidateAddressRequest(_taxSettings.CompanyCode);
+                var validateAddressResult = addressSvc.Validate(request);
+                if (!validateAddressResult.ResultCode.Equals(SeverityLevel.Success))
+                {
+                    var error = string.Join(Environment.NewLine, validateAddressResult.Messages.Select(m => m.Summary));
+                    return BadRequest(error);
+                }
+
+                return Ok(validateAddressResult);
+            }
+
             return BadRequest();
         }
     }
