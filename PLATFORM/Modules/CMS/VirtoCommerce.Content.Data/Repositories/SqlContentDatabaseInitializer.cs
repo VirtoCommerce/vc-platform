@@ -10,7 +10,7 @@ using VirtoCommerce.Platform.Data.Infrastructure;
 
 namespace VirtoCommerce.Content.Data
 {
-	public class SqlContentDatabaseInitializer : SetupDatabaseInitializer<DatabaseContentRepositoryImpl, VirtoCommerce.Content.Data.Migrations.Configuration>
+	public class SqlContentDatabaseInitializer : SetupDatabaseInitializer<DatabaseContentRepositoryImpl, Migrations.Configuration>
 	{
 		private readonly string _themePath;
 
@@ -29,8 +29,8 @@ namespace VirtoCommerce.Content.Data
 			base.Seed(repository);
 
 			CreateDefaultMenuLinkLists(repository, "SampleStore");
-			CreateDefaultMenuLinkLists(repository, "AppleStore");
-			CreateDefaultMenuLinkLists(repository, "SonyStore");
+            CreateAppleMenuLinkLists(repository, "AppleStore");
+            CreateSonyMenuLinkLists(repository, "SonyStore");
 
 			CreateDefaultPages(repository, "AppleStore");
 			CreateDefaultPages(repository, "SampleStore");
@@ -41,181 +41,159 @@ namespace VirtoCommerce.Content.Data
 			CreateDefaultTheme(repository, "SonyStore");
 		}
 
-		private void CreateDefaultMenuLinkLists(DatabaseContentRepositoryImpl repository, string storeId)
+        #region Footer Menu
+        private void CreateFooterMenu(DatabaseContentRepositoryImpl repository, string storeId)
+	    {
+            var footerList = new MenuLinkList
+            {
+                Id = Guid.NewGuid().ToString(),
+                Language = "en-US",
+                Name = "footer",
+                StoreId = storeId,
+                CreatedDate = DateTime.UtcNow,
+                CreatedBy = "initialize"
+            };
+
+            footerList.MenuLinks = new Collection<MenuLink>();
+
+            footerList.MenuLinks.Add(new MenuLink
+            {
+                Id = Guid.NewGuid().ToString(),
+                IsActive = true,
+                MenuLinkListId = footerList.Id,
+                Priority = 30,
+                Title = "About Us",
+                Url = "~/pages/about_us",
+                CreatedDate = DateTime.UtcNow,
+                CreatedBy = "initialize"
+            });
+
+            footerList.MenuLinks.Add(new MenuLink
+            {
+                Id = Guid.NewGuid().ToString(),
+                IsActive = true,
+                MenuLinkListId = footerList.Id,
+                Priority = 20,
+                Title = "Search",
+                Url = "~/search",
+                CreatedDate = DateTime.UtcNow,
+                CreatedBy = "initialize"
+            });
+
+            footerList.MenuLinks.Add(new MenuLink
+            {
+                Id = Guid.NewGuid().ToString(),
+                IsActive = true,
+                MenuLinkListId = footerList.Id,
+                Priority = 10,
+                Title = "Terms & Conditions",
+                Url = "#",
+                CreatedDate = DateTime.UtcNow,
+                CreatedBy = "initialize"
+            });
+
+            footerList.MenuLinks.Add(new MenuLink
+            {
+                Id = Guid.NewGuid().ToString(),
+                IsActive = true,
+                MenuLinkListId = footerList.Id,
+                Priority = 0,
+                Title = "Contact Us",
+                Url = "#",
+                CreatedDate = DateTime.UtcNow,
+                CreatedBy = "initialize"
+            });
+
+            repository.Add(footerList);
+	    }
+        #endregion
+
+        private void CreateDefaultMenuLinkLists(DatabaseContentRepositoryImpl repository, string storeId)
 		{
-			var footerList = new MenuLinkList
-			{
-				Id = Guid.NewGuid().ToString(),
-				Language = "en-US",
-				Name = "footer",
-				StoreId = storeId,
-				CreatedDate = DateTime.UtcNow,
-				CreatedBy = "initialize"
-			};
+            // Create footer menu
+		    CreateFooterMenu(repository, storeId);
 
-			footerList.MenuLinks = new Collection<MenuLink>();
+			var mainMenuList = NewMenu("en-US", "main-menu", storeId);
 
-			footerList.MenuLinks.Add(new MenuLink
-			{
-				Id = Guid.NewGuid().ToString(),
-				IsActive = true,
-				MenuLinkListId = footerList.Id,
-				Priority = 30,
-				Title = "About Us",
-				Url = "~/pages/about_us",
-				CreatedDate = DateTime.UtcNow,
-				CreatedBy = "initialize"
-			});
-
-			footerList.MenuLinks.Add(new MenuLink
-			{
-				Id = Guid.NewGuid().ToString(),
-				IsActive = true,
-				MenuLinkListId = footerList.Id,
-				Priority = 20,
-				Title = "Search",
-				Url = "~/search",
-				CreatedDate = DateTime.UtcNow,
-				CreatedBy = "initialize"
-			});
-
-			footerList.MenuLinks.Add(new MenuLink
-			{
-				Id = Guid.NewGuid().ToString(),
-				IsActive = true,
-				MenuLinkListId = footerList.Id,
-				Priority = 10,
-				Title = "Terms & Conditions",
-				Url = "#",
-				CreatedDate = DateTime.UtcNow,
-				CreatedBy = "initialize"
-			});
-
-			footerList.MenuLinks.Add(new MenuLink
-			{
-				Id = Guid.NewGuid().ToString(),
-				IsActive = true,
-				MenuLinkListId = footerList.Id,
-				Priority = 0,
-				Title = "Contact Us",
-				Url = "#",
-				CreatedDate = DateTime.UtcNow,
-				CreatedBy = "initialize"
-			});
-
-			repository.Add(footerList);
-
-			var mainMenuList = new MenuLinkList
-			{
-				Id = Guid.NewGuid().ToString(),
-				Language = "en-US",
-				Name = "main-menu",
-				StoreId = storeId,
-				CreatedDate = DateTime.UtcNow,
-				CreatedBy = "initialize"
-			};
-
-			mainMenuList.MenuLinks = new Collection<MenuLink>();
-			mainMenuList.MenuLinks.Add(new MenuLink
-			{
-				Id = Guid.NewGuid().ToString(),
-				IsActive = true,
-				MenuLinkListId = mainMenuList.Id,
-				Priority = 30,
-				Title = "Audio & MP3",
-				Url = "~/collections/audio-mp3",
-				CreatedDate = DateTime.UtcNow,
-				CreatedBy = "initialize"
-			});
-
-			mainMenuList.MenuLinks.Add(new MenuLink
-			{
-				Id = Guid.NewGuid().ToString(),
-				IsActive = true,
-				MenuLinkListId = mainMenuList.Id,
-				Priority = 20,
-				Title = "TV & Video",
-				Url = "~/collections/tv-video",
-				CreatedDate = DateTime.UtcNow,
-				CreatedBy = "initialize"
-			});
-
-			mainMenuList.MenuLinks.Add(new MenuLink
-			{
-				Id = Guid.NewGuid().ToString(),
-				IsActive = true,
-				MenuLinkListId = mainMenuList.Id,
-				Priority = 10,
-				Title = "Cameras",
-				Url = "~/collections/cameras",
-				CreatedDate = DateTime.UtcNow,
-				CreatedBy = "initialize"
-			});
-
-			mainMenuList.MenuLinks.Add(new MenuLink
-			{
-				Id = Guid.NewGuid().ToString(),
-				IsActive = true,
-				MenuLinkListId = mainMenuList.Id,
-				Priority = 0,
-				Title = "Computers & Tablets",
-				Url = "~/collections/computers-tablets",
-				CreatedDate = DateTime.UtcNow,
-				CreatedBy = "initialize"
-			});
-
-			mainMenuList.MenuLinks.Add(new MenuLink
-			{
-				Id = Guid.NewGuid().ToString(),
-				IsActive = true,
-				MenuLinkListId = mainMenuList.Id,
-				Priority = 0,
-				Title = "Accessories",
-				Url = "~/collections/accessories",
-				CreatedDate = DateTime.UtcNow,
-				CreatedBy = "initialize"
-			});
+            mainMenuList.MenuLinks.Add(NewLink(mainMenuList.Id, "Audio & MP3", "~/samplestore/vendorvirtual-audio-mp3", 30));
+            mainMenuList.MenuLinks.Add(NewLink(mainMenuList.Id, "TV & Video", "~/samplestore/vendorvirtual-tv-video", 20));
+            mainMenuList.MenuLinks.Add(NewLink(mainMenuList.Id, "Cameras", "~/samplestore/vendorvirtual-cameras", 10));
+            mainMenuList.MenuLinks.Add(NewLink(mainMenuList.Id, "Computers & Tablets", "~/samplestore/vendorvirtual-computers-tablets", 5));
+            mainMenuList.MenuLinks.Add(NewLink(mainMenuList.Id, "Accessories", "~/samplestore/vendorvirtual-accessories", 0));
 
 			repository.Add(mainMenuList);
 
-			var audioMP3List = new MenuLinkList
-			{
-				Id = Guid.NewGuid().ToString(),
-				Language = "en-US",
-				Name = "Audio & MP3",
-				StoreId = storeId,
-				CreatedDate = DateTime.UtcNow,
-				CreatedBy = "initialize"
-			};
+			var audioMp3List = NewMenu("en-US", "Audio & MP3", storeId);
+            audioMp3List.MenuLinks.Add(NewLink(audioMp3List.Id, "Apple iPod", "~/samplestore/vendorvirtual-audio-mp3?tags=brand_apple", 0));
+            audioMp3List.MenuLinks.Add(NewLink(audioMp3List.Id, "Sony Walkman", "~/samplestore/vendorvirtual-audio-mp3?tags=brand_sony", 0));
 
-			audioMP3List.MenuLinks.Add(new MenuLink
-			{
-				Id = Guid.NewGuid().ToString(),
-				IsActive = true,
-				MenuLinkListId = audioMP3List.Id,
-				Priority = 0,
-				Title = "Apple iPod",
-				Url = "~/collections/audio-mp3?tags=brand_Apple",
-				CreatedDate = DateTime.UtcNow,
-				CreatedBy = "initialize"
-			});
-
-			audioMP3List.MenuLinks.Add(new MenuLink
-			{
-				Id = Guid.NewGuid().ToString(),
-				IsActive = true,
-				MenuLinkListId = audioMP3List.Id,
-				Priority = 0,
-				Title = "Sony Walkman",
-                Url = "~/collections/audio-mp3?tags=brand_Sony",
-				CreatedDate = DateTime.UtcNow,
-				CreatedBy = "initialize"
-			});
-
-			repository.Add(audioMP3List);
-
+			repository.Add(audioMp3List);
 			repository.UnitOfWork.Commit();
 		}
+
+        private void CreateSonyMenuLinkLists(DatabaseContentRepositoryImpl repository, string storeId)
+        {
+            // Create footer menu
+            CreateFooterMenu(repository, storeId);
+
+            var mainMenuList = NewMenu("en-US", "main-menu", storeId);
+
+            mainMenuList.MenuLinks.Add(NewLink(mainMenuList.Id, "Walkmans", "~/sonystore/sony-audio-mp3", 30));
+            mainMenuList.MenuLinks.Add(NewLink(mainMenuList.Id, "TV & Video", "~/sonystore/sony-tv-video", 20));
+            mainMenuList.MenuLinks.Add(NewLink(mainMenuList.Id, "Cameras", "~/sonystore/sony-cameras", 10));
+            mainMenuList.MenuLinks.Add(NewLink(mainMenuList.Id, "Computers & Tablets", "~/sonystore/sony-computers-tablets", 5));
+            mainMenuList.MenuLinks.Add(NewLink(mainMenuList.Id, "Accessories", "~/sonystore/sony-accessories", 0));
+
+            repository.Add(mainMenuList);
+            repository.UnitOfWork.Commit();
+        }
+
+        private void CreateAppleMenuLinkLists(DatabaseContentRepositoryImpl repository, string storeId)
+        {
+            // Create footer menu
+            CreateFooterMenu(repository, storeId);
+
+            var mainMenuList = NewMenu("en-US", "main-menu", storeId);
+
+            mainMenuList.MenuLinks.Add(NewLink(mainMenuList.Id, "iPods", "~/applestore/apple-audio-mp3", 30));
+            mainMenuList.MenuLinks.Add(NewLink(mainMenuList.Id, "Computers & Tablets", "~/applestore/apple-computers-tablets", 5));
+            mainMenuList.MenuLinks.Add(NewLink(mainMenuList.Id, "Accessories", "~/applestore/apple-accessories", 0));           
+
+            repository.Add(mainMenuList);
+            repository.UnitOfWork.Commit();
+        }
+
+        private MenuLinkList NewMenu(string language, string name, string store)
+        {
+            var mainMenuList = new MenuLinkList
+            {
+                Id = Guid.NewGuid().ToString(),
+                Language = language,
+                Name = name,
+                StoreId = store,
+                CreatedDate = DateTime.UtcNow,
+                CreatedBy = "initialize"
+            };
+
+            return mainMenuList;
+        }
+
+	    private MenuLink NewLink(string listId, string title, string url, int priority)
+	    {
+	        var link = new MenuLink
+	                   {
+	                       Id = Guid.NewGuid().ToString(),
+	                       IsActive = true,
+                           MenuLinkListId = listId,
+	                       Priority = priority,
+	                       Title = title,
+	                       Url = url,
+	                       CreatedDate = DateTime.UtcNow,
+	                       CreatedBy = "initialize"
+	                   };
+
+	        return link;
+	    }
 
 		public void CreateDefaultPages(DatabaseContentRepositoryImpl repository, string storeId)
 		{

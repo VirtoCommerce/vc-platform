@@ -25,7 +25,7 @@ using VirtoCommerce.Web.Views.Engines.Liquid;
 using VirtoCommerce.ApiClient.DataContracts.Cart;
 using VirtoCommerce.ApiClient.DataContracts.Marketing;
 using VirtoCommerce.ApiClient.DataContracts.Contents;
-using System.Collections.Specialized;
+using data = VirtoCommerce.ApiClient.DataContracts;
 
 #endregion
 
@@ -54,13 +54,14 @@ namespace VirtoCommerce.Web.Models.Services
 
         public static CommerceService Create()
         {
-            var cacheKey = "commerceservice";
+            const string cacheKey = "commerceservice";
             var commerceService = HttpContext.Current.Cache[cacheKey] as CommerceService;
 
             if (commerceService != null) return commerceService;
             lock (_LockObject)
             {
                 commerceService = HttpContext.Current.Cache[cacheKey] as CommerceService;
+                
                 if (commerceService == null)
                 {
                     commerceService = new CommerceService();
@@ -78,17 +79,13 @@ namespace VirtoCommerce.Web.Models.Services
             this._storeClient = ClientContext.Clients.CreateStoreClient();
             this._cartClient = ClientContext.Clients.CreateCartClient();
             this._orderClient = ClientContext.Clients.CreateOrderClient();
-            ClientContext.Clients.CreateSecurityClient();
             this._priceClient = ClientContext.Clients.CreatePriceClient();
             this._marketingClient = ClientContext.Clients.CreateMarketingClient();
             this._themeClient = ClientContext.Clients.CreateThemeClient();
-            ClientContext.Clients.CreatePageClient();
             this._reviewsClient = ClientContext.Clients.CreateReviewsClient();
 
             _themesCacheStoragePath = ConfigurationManager.AppSettings["ThemeCacheFolder"];
-
             this._viewLocator = new FileThemeViewLocator(_themesCacheStoragePath);
-
             this._cartHelper = new CartHelper(this);
         }
         #endregion
@@ -452,9 +449,9 @@ namespace VirtoCommerce.Web.Models.Services
             await _cartClient.UpdateCurrentCartAsync(cart);
         }
 
-        public async Task<VirtoCommerce.ApiClient.DataContracts.Orders.CustomerOrder> CreateOrderAsync()
+        public async Task<data.Orders.CustomerOrder> CreateOrderAsync()
         {
-            VirtoCommerce.ApiClient.DataContracts.Orders.CustomerOrder order = null;
+            data.Orders.CustomerOrder order = null;
 
             var cart = await _cartClient.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
 
@@ -467,7 +464,7 @@ namespace VirtoCommerce.Web.Models.Services
             return order;
         }
 
-        public async Task<ProcessPaymentResult> ProcessPaymentAsync(string orderId, string paymentMethodId, ApiClient.DataContracts.BankCardInfo cardInfo)
+        public async Task<ProcessPaymentResult> ProcessPaymentAsync(string orderId, string paymentMethodId, data.BankCardInfo cardInfo)
         {
             return await _orderClient.ProcessPayment(orderId, paymentMethodId, cardInfo);
         }
@@ -639,13 +636,6 @@ namespace VirtoCommerce.Web.Models.Services
             var prices = await this.GetProductPricesAsync(context.PriceLists, variationIds);
 
             var price = prices.FirstOrDefault(p => p.ProductId == product.Id);
-            //if (product.Variations != null)
-            //{
-            //    foreach (var variation in product.Variations)
-            //    {
-            //        price = prices.FirstOrDefault(p => p.ProductId == variation.Id);
-            //    }
-            //}
 
             var promoContext = new PromotionEvaluationContext
             {
@@ -670,8 +660,8 @@ namespace VirtoCommerce.Web.Models.Services
             return product.AsWebModel(prices, rewards);
         }
 
-        public async Task<IEnumerable<ApiClient.DataContracts.Marketing.PromotionReward>>
-            GetPromoRewardsAsync(ApiClient.DataContracts.Marketing.PromotionEvaluationContext context)
+        public async Task<IEnumerable<PromotionReward>>
+            GetPromoRewardsAsync(PromotionEvaluationContext context)
         {
             return await _marketingClient.GetPromotionRewardsAsync(context);
         }
