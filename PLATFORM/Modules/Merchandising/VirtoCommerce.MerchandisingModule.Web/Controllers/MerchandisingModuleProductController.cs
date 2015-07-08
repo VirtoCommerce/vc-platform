@@ -177,7 +177,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		[HttpGet]
 		[ArrayInput(ParameterName = "priceLists")]
 		[ClientCache(Duration = 30)]
-		[Route("")]
+		[Route("Search")]
 		[ResponseType(typeof(ProductSearchResult))]
 		public IHttpActionResult Search(string store, string[] priceLists, [ModelBinder(typeof(SearchParametersBinder))] SearchParameters parameters,
 										[FromUri] coreModel.ItemResponseGroup responseGroup = coreModel.ItemResponseGroup.ItemMedium,

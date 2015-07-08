@@ -283,7 +283,7 @@ namespace VirtoCommerce.Web.Controllers
                                     if (paymentResult.PaymentMethodType == ApiClient.DataContracts.PaymentMethodType.Standard)
                                     {
                                         var productsIds = dtoOrder.Items.Select(i => i.ProductId);
-                                        var catalogItems = await Service.GetCatalogItemsByIdsAsync(productsIds, "ItemAssets");
+                                        var catalogItems = await Service.GetCatalogItemsByIdsAsync(productsIds, Context.StoreId, "ItemAssets");
 
                                         var nonShippingProducts = catalogItems.Where(ci => ci.ProductType == "Digital");
                                         if (nonShippingProducts.Count() > 0)
@@ -377,7 +377,7 @@ namespace VirtoCommerce.Web.Controllers
                     if (order != null)
                     {
                         var productsIds = order.Items.Select(i => i.ProductId);
-                        var catalogItems = await Service.GetCatalogItemsByIdsAsync(productsIds, "ItemAssets");
+                        var catalogItems = await Service.GetCatalogItemsByIdsAsync(productsIds, Context.StoreId, "ItemAssets");
 
                         var nonShippingProducts = catalogItems.Where(ci => ci.ProductType == "Digital");
                         if (nonShippingProducts.Count() > 0)

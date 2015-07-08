@@ -676,9 +676,9 @@ namespace VirtoCommerce.Web.Models.Services
             return await _marketingClient.GetPromotionRewardsAsync(context);
         }
 
-        public async Task<IEnumerable<CatalogItem>> GetCatalogItemsByIdsAsync(IEnumerable<string> catalogItemsIds, string responseGroup)
+        public async Task<IEnumerable<CatalogItem>> GetCatalogItemsByIdsAsync(IEnumerable<string> catalogItemsIds, string storeId, string responseGroup)
         {
-            return await _browseClient.GetCatalogItemsByIdsAsync(catalogItemsIds, responseGroup);
+            return await _browseClient.GetCatalogItemsByIdsAsync(catalogItemsIds, storeId, responseGroup);
         }
 
         public async Task<IEnumerable<ApiClient.DataContracts.Price>> GetProductPricesAsync(string[] priceLists, string[] productIds)
