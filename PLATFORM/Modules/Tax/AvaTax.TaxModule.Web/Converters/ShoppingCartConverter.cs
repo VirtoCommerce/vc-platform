@@ -22,7 +22,7 @@ namespace AvaTax.TaxModule.Web.Converters
                 var getTaxRequest = new GetTaxRequest
                 {
                     CustomerCode = cart.CustomerId,
-                    DocDate = cart.CreatedDate.ToShortDateString(),
+                    DocDate = cart.CreatedDate.ToString("yyyy-MM-dd"),
                     CompanyCode = companyCode,
                     Client = "VirtoCommerce,2.x,VirtoCommerce",
                     DocCode = cart.Id,
