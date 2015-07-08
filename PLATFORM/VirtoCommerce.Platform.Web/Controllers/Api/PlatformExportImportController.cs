@@ -123,7 +123,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 			 Action<ExportImportProgressInfo> progressCallback = (x) =>
 			 {
 				 notifyEvent.InjectFrom(x);
-				 notifyEvent.Description = x.Description;
 				 _eventNotifier.Upsert(notifyEvent);
 			 };
 
