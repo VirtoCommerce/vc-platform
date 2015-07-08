@@ -1,4 +1,7 @@
-﻿namespace AvaTaxCalcREST
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+
+namespace AvaTaxCalcREST
 {
     using System;
 
@@ -40,6 +43,7 @@
 
         //public string PostNet { get; set; } // Output for ValidateAddress only
 
+        // [JsonConverter(typeof(StringEnumConverter))]
         //public AddressType? AddressType { get; set; } // Output for ValidateAddress only
 
         public decimal? Latitude { get; set; } // Input for GetTax only

@@ -3,22 +3,24 @@ using System.Linq;
 using AvaTax.TaxModule.Web.Converters;
 using AvaTax.TaxModule.Web.Services;
 using AvaTaxCalcREST;
-using Microsoft.Practices.ObjectBuilder2;
 using VirtoCommerce.Domain.Cart.Events;
+using VirtoCommerce.Domain.Customer.Model;
+using VirtoCommerce.Domain.Customer.Services;
 using VirtoCommerce.Platform.Core.Common;
 using domainModel = VirtoCommerce.Domain.Commerce.Model;
+using Microsoft.Practices.ObjectBuilder2;
 
 namespace AvaTax.TaxModule.Web.Observers
 {
     public class CalculateCartTaxesObserver : IObserver<CartChangeEvent>
 	{
         private readonly ITaxSettings _taxSettings;
-        //private readonly ICatalogSearchService _catalogSearchService;
+        private readonly IContactService _customerSearchService;
 
-        public CalculateCartTaxesObserver(ITaxSettings taxSettings)
+        public CalculateCartTaxesObserver(ITaxSettings taxSettings, IContactService customerSearchService)
         {
             _taxSettings = taxSettings;
-            //_catalogSearchService = catalogService;
+            _customerSearchService = customerSearchService;
         }
 
 		#region IObserver<ShoppingCart> Members
@@ -42,6 +44,7 @@ namespace AvaTax.TaxModule.Web.Observers
 		private void CalculateCustomerOrderTaxes(CartChangeEvent context)
 		{
 			var cart = context.ModifiedCart;
+
 		    if (cart.Items.Any())
 		    {
 		        cart.Items.ForEach(x => {
@@ -53,9 +56,12 @@ namespace AvaTax.TaxModule.Web.Observers
 		    if (_taxSettings.IsEnabled && !string.IsNullOrEmpty(_taxSettings.Username) && !string.IsNullOrEmpty(_taxSettings.Password)
                 && !string.IsNullOrEmpty(_taxSettings.ServiceUrl)
                 && !string.IsNullOrEmpty(_taxSettings.CompanyCode))
-            {
-                var taxSvc = new JsonTaxSvc(_taxSettings.Username, _taxSettings.Password, _taxSettings.ServiceUrl);
-                var request = cart.ToAvaTaxRequest(_taxSettings.CompanyCode);
+		    {
+		        Contact contact = null;
+                if (cart.CustomerId != null)
+		            contact = _customerSearchService.GetById(cart.CustomerId);
+
+                var request = cart.ToAvaTaxRequest(_taxSettings.CompanyCode, contact);
                 if (request != null)
                 {
                     //var store = _storeService.GetById(cart.StoreId);
@@ -65,6 +71,9 @@ namespace AvaTax.TaxModule.Web.Observers
                     //    request.Addresses.AddDistinct(new Address { AddressCode = "origin", Country = store.Country, Region = store.Region });
                     //    request.Lines.ForEach(l => l.OriginCode = "origin");
                     //}
+
+                    var taxSvc = new JsonTaxSvc(_taxSettings.Username, _taxSettings.Password, _taxSettings.ServiceUrl);
+
                     var getTaxResult = taxSvc.GetTax(request);
                     if (!getTaxResult.ResultCode.Equals(SeverityLevel.Success))
                     {
