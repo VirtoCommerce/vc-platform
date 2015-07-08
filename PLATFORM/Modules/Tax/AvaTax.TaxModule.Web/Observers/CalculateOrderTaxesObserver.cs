@@ -82,18 +82,40 @@ namespace AvaTax.TaxModule.Web.Observers
 		                    }
 		                    else
 		                    {
-		                        foreach (TaxLine taxLine in getTaxResult.TaxLines ?? Enumerable.Empty<TaxLine>())
+		                        foreach (var taxLine in getTaxResult.TaxLines ?? Enumerable.Empty<TaxLine>())
 		                        {
-		                            order.Items.ToArray()[Int32.Parse(taxLine.LineNo)].Tax = taxLine.Tax;
-		                            if (taxLine.TaxDetails != null && taxLine.TaxDetails.Any())
+		                            var lineItem = order.Items.FirstOrDefault(x => x.Id == taxLine.LineNo);
+		                            if (lineItem != null)
 		                            {
-		                                order.Items.ToArray()[Int32.Parse(taxLine.LineNo)].TaxDetails =
-		                                    taxLine.TaxDetails.Select(taxDetail => new domainModel.TaxDetail
+		                                lineItem.Tax = taxLine.Tax;
+		                                if (taxLine.TaxDetails != null && taxLine.TaxDetails.Any())
+		                                {
+		                                    lineItem.TaxDetails =
+		                                        taxLine.TaxDetails.Select(taxDetail => new domainModel.TaxDetail
+		                                        {
+		                                            Amount = taxDetail.Tax,
+		                                            Name = taxDetail.TaxName,
+		                                            Rate = taxDetail.Rate
+		                                        }).ToList();
+		                                }
+		                            }
+		                            else
+		                            {
+		                                var shipment = order.Shipments.FirstOrDefault(s => s.Id.Equals(taxLine.LineNo));
+		                                if (shipment != null)
+		                                {
+		                                    shipment.Tax = taxLine.Tax;
+		                                    if (taxLine.TaxDetails != null && taxLine.TaxDetails.Any())
 		                                    {
-		                                        Amount = taxDetail.Tax,
-		                                        Name = taxDetail.TaxName,
-		                                        Rate = taxDetail.Rate
-		                                    }).ToList();
+		                                        shipment.TaxDetails =
+		                                            taxLine.TaxDetails.Select(taxDetail => new domainModel.TaxDetail
+		                                            {
+		                                                Amount = taxDetail.Tax,
+		                                                Name = taxDetail.TaxName,
+		                                                Rate = taxDetail.Rate
+		                                            }).ToList();
+		                                    }
+		                                }
 		                            }
 		                        }
 		                        order.Tax = getTaxResult.TotalTax;

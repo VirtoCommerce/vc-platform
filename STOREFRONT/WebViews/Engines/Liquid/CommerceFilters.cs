@@ -104,10 +104,10 @@ namespace VirtoCommerce.Web.Views.Engines.Liquid
             return String.Format(EffectiveCulture(currencyCode), "{0:c}", amount);
         }
 
-        public static string LinkTo(string input, string link)
-        {
-            return String.Format("<a title=\"A link to {0}\" href=\"{1}\">{0}</a>", input, link);
-        }
+        //public static string LinkTo(string input, string link)
+        //{
+        //    return String.Format("<a title=\"A link to {0}\" href=\"{1}\">{0}</a>", input, link);
+        //}
 
         //public static string Money(object input)
         //{

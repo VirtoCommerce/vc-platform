@@ -70,6 +70,7 @@
                         ga('send', 'pageview');
                     </script>
                 {% endif %}
+                <base href="{{ shop.simplified_url }}"></base>
         </head>
 
   <body id="{{ page_title | handle }}" class="{% if customer %}customer-logged-in {% endif %}template-{{ template | replace: '.', ' ' | truncatewords: 1, '' | handle }}" >
@@ -86,11 +87,11 @@
               <div class="h1 header-logo" itemscope itemtype="http://schema.org/Organization">
                 {% endif %}
                 {% if settings.logo_use_image %}
-                <a href="/" itemprop="url">
+                <a href="{{ shop.simplified_url }}" itemprop="url">
                   <img src="{{ 'logo.png' | asset_url }}" alt="{{ shop.name }}" itemprop="logo">
               </a>
                 {% else %}
-                <a href="/" itemprop="url">{{ shop.name }}</a>
+                <a href="{{ shop.simplified_url }}" itemprop="url">{{ shop.name }}</a>
                 {% endif %}
                 {% if template == 'index' %}
               </h1>
@@ -109,7 +110,7 @@
             {% if shop.customer_accounts_enabled %}
             <span class="site-header--meta-links medium-down--hide">
               {% if customer %}
-              {% capture first_name %}<a href="/account">{{ customer.first_name }}</a>{% endcapture %}
+              {% capture first_name %}<a href="{{ shop.simplified_url }}/account">{{ customer.first_name }}</a>{% endcapture %}
               {{ 'layout.customer.logged_in_as_html' | t: first_name: first_name }} &middot; {{ 'layout.customer.log_out' | t | customer_logout_link }}
               {% else %}
               {{ 'layout.customer.sign_in' | t | customer_login_link }}
@@ -127,7 +128,7 @@
 
             {% include 'search-bar' %}
 
-            <a href="/cart" class="header-cart-btn cart-toggle">
+            <a href="{{ shop.simplified_url }}/cart" class="header-cart-btn cart-toggle">
               <span class="icon icon-cart"></span>
               {{ 'layout.cart.cart' | t }} <span id="cartCount" {% if cart.item_count == 0 %}class="hidden-count"{% endif %}>{{ cart.item_count }}</span>
             </a>
@@ -149,7 +150,7 @@
         <a class="menu-toggle mobileNavBar-link">{{ 'layout.navigation.mobile_menu' | t }}</a>
       </div>
       <div class="display-table-cell">
-        <a href="/cart" class="cart-toggle mobileNavBar-link">
+        <a href="{{ shop.simplified_url }}/cart" class="cart-toggle mobileNavBar-link">
           <span class="icon icon-cart"></span>
           {{ 'layout.cart.cart' | t }}
         </a>

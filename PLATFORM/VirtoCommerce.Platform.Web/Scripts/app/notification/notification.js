@@ -89,6 +89,7 @@
         	title: data.title,
         	priority: 2,
         	permission: '',
+        	children: [],
         	action: notificationTemplate.action,
         	template: notificationTemplate.template,
         	notify: data

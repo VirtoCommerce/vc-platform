@@ -36,7 +36,7 @@
                 if (newValue.length != scope.currentEntity.values.length || difference(newValue, scope.currentEntity.values).length > 0) {
                     //Prevent reflect changing when use null value for empty initial values
                     if (!(scope.currentEntity.values.length == 0 && newValue[0].value == null)) {
-                        if (scope.currentEntity.multilanguage && !scope.currentEntity.multivalue) {
+                        if (scope.currentEntity.dictionary && scope.currentEntity.multilanguage && !scope.currentEntity.multivalue) {
                             scope.currentEntity.values = _.where(scope.context.allDictionaryValues, { alias: newValue[0].alias });
                         } else {
                             scope.currentEntity.values = newValue;

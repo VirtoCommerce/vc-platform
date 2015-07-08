@@ -17,6 +17,15 @@
         $scope.bladeClose();
     }
 
+    $scope.openFulfillmentCentersList = function () {
+        var newBlade = {
+            id: 'fulfillmentCenterList',
+            controller: 'virtoCommerce.coreModule.fulfillment.fulfillmentListController',
+            template: 'Modules/$(VirtoCommerce.Core)/Scripts/fulfillment/blades/fulfillment-center-list.tpl.html'
+        };
+        bladeNavigationService.showBlade(newBlade, $scope.blade);
+    }
+
     $scope.blade.headIcon = 'fa-archive';
 
     $scope.blade.isLoading = false;

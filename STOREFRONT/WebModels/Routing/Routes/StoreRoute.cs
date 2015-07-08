@@ -289,69 +289,9 @@ namespace VirtoCommerce.Web.Models.Routing.Routes
             if(!isLanguageNeeded)
                 excludedRouteValuesNames.Add(Constants.Language);
 
-            if (!isStoreNeeded || !isLanguageNeeded)
+            if (excludedRouteValuesNames.Any())
             {
                 /*
-                var modifiedUrl = this.Url;
-
-                //If for request store URL is used do not show it in path
-                if (!isStoreNeeded)
-                {
-                    modifiedUrl = modifiedUrl.Replace(string.Format("/{{{0}}}", Constants.Store), string.Empty);
-                    values.Remove(Constants.Store);
-                }
-                else
-                {
-                    this.EncodeVirtualPath(values, SeoUrlKeywordTypes.Store);
-                }
-
-                if (!isLanguageNeeded)
-                {
-                    modifiedUrl = modifiedUrl.Replace(string.Format("{{{0}}}", Constants.Language), string.Empty);
-                    values.Remove(Constants.Language);
-                }
-
-                //The route URL cannot start with a '/' or '~' character and it cannot contain a '?' character.
-                if (modifiedUrl.StartsWith("/") || modifiedUrl.StartsWith("~"))
-                {
-                    modifiedUrl = modifiedUrl.Substring(1, modifiedUrl.Length - 1);
-                }
-
-                var excludedRouteData = new RouteData(this, this.RouteHandler);
-                var retVal = base.GetVirtualPath(requestContext, values);
-
-                return retVal;
-                */
-
-                /*
-                // create new route data and include only non-excluded values
-                var excludedRouteData = new RouteData(this, this.RouteHandler);
-
-                // add route values
-                requestContext.RouteData.Values
-                    .Where(pair => !excludedRouteValuesNames.Contains(pair.Key, StringComparer.OrdinalIgnoreCase))
-                    .ToList()
-                    .ForEach(pair => excludedRouteData.Values.Add(pair.Key, pair.Value));
-
-                // add data tokens
-                requestContext.RouteData.DataTokens
-                    .ToList()
-                    .ForEach(pair => excludedRouteData.DataTokens.Add(pair.Key, pair.Value));
-
-                // intermediary request context
-                var currentContext = new RequestContext(new HttpContextWrapper(HttpContext.Current), excludedRouteData);
-
-                // create new URL route values and include only none-excluded values
-                var excludedRouteValues = new RouteValueDictionary(
-                    values
-                        .Where(v => !excludedRouteValuesNames.Contains(v.Key, StringComparer.OrdinalIgnoreCase))
-                        .ToDictionary(pair => pair.Key, pair => pair.Value)
-                    );
-
-                var result = base.GetVirtualPath(currentContext, excludedRouteValues);
-                return result;
-                 * */
-
                 //Need to be in lock to make sure other thread does not change originalUrl in this block
                 lock (this.thisLock)
                 {
@@ -394,6 +334,27 @@ namespace VirtoCommerce.Web.Models.Routing.Routes
 
                     return retVal;
                 }
+                 * */
+
+                this.EncodeVirtualPath(values, SeoUrlKeywordTypes.Store);
+
+                var excludedRouteValues = new RouteValueDictionary(values.ToDictionary(pair => pair.Key, pair => pair.Value));
+
+                var token = "!VIRTOTOKENREMOVE!";
+                excludedRouteValuesNames.ForEach(x => excludedRouteValues[x] = token);
+
+                var vpd = base.GetVirtualPath(requestContext, excludedRouteValues);
+
+                if (vpd != null)
+                {
+                    var path = vpd.VirtualPath;
+                    path = path.Replace(token, String.Empty);
+                    path = path.Replace("//", "/");
+                    path = path.TrimStart("/");
+                    vpd.VirtualPath = path;
+                }
+
+                return vpd;
             }
 
             this.EncodeVirtualPath(values, SeoUrlKeywordTypes.Store);

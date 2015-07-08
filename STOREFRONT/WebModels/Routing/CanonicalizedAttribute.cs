@@ -97,6 +97,7 @@ namespace VirtoCommerce.Web.Models.Routing
 
                         if (routePath != null && !string.IsNullOrEmpty(routePath.VirtualPath))
                         {
+                            //var virtualPath = routePath.VirtualPath.StartsWith("/") ? virtualPath : String.Concat("/"+virtu);
                             var absoluteRoutePath = HttpUtility.UrlDecode(string.Concat(baseUri, context.Request.ApplicationPath, context.Request.ApplicationPath != "/" ? "/" : "", routePath.VirtualPath));
 
                             if (!string.IsNullOrEmpty(absoluteRoutePath) && !absoluteRoutePath.Equals(path, StringComparison.InvariantCultureIgnoreCase))

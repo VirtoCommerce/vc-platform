@@ -77,7 +77,7 @@ namespace VirtoCommerce.Web.Convertors
             // specify SEO based url
             var urlHelper = GetUrlHelper();
             var url = String.Empty;
-            if (urlHelper != null && productModel.Keywords != null && productModel.Keywords.Any())
+            if (urlHelper != null && collection != null && productModel.Keywords != null && productModel.Keywords.Any())
             {
                 var keyword = productModel.Keywords.SeoKeyword(Thread.CurrentThread.CurrentUICulture.Name);
                 if (keyword != null)
@@ -88,7 +88,7 @@ namespace VirtoCommerce.Web.Convertors
                 }
             }
 
-            if (String.IsNullOrEmpty(url) && urlHelper != null)
+            if (String.IsNullOrEmpty(url) && urlHelper != null && collection != null)
             {
                 url = urlHelper.ItemUrl(productModel.Handle, collection == null ? "" : collection.Outline);
                 if (!String.IsNullOrEmpty(url))

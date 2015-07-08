@@ -7,7 +7,7 @@
 {% endcomment %}
   <script id="cartTemplate" type="text/template">
   {% raw %}
-    <form action="/cart" method="post" novalidate>
+    <form action="{{ shop.simplified_url }}/cart" method="post" novalidate>
       <div class="ajaxifyCart--products">
         {{#items}}
         <div class="ajaxifyCart--product">
@@ -38,7 +38,7 @@
                   </div>
                   <div class="grid-item one-third text-right">
                     <p>
-                      <small><a href="/cart/change?id={{id}}&amp;quantity=0" class="ajaxifyCart--remove" data-id="{{id}}">Remove</a></small>
+                      <small><a href="{{ shop.simplified_url }}/cart/change?id={{id}}&amp;quantity=0" class="ajaxifyCart--remove" data-id="{{id}}">Remove</a></small>
                     </p>
                   </div>
                 </div>

@@ -46,7 +46,8 @@ namespace VirtoCommerce.Web.Models.Routing
                         {
                             { "controller", "Product" },
                             { "action", "ProductByKeywordAsync" },
-                            //{ Constants.Language, UrlParameter.Optional }
+                            { Constants.Language, "" },
+                            { Constants.Store, "" }
 
                         },
                         new RouteValueDictionary
