@@ -825,7 +825,7 @@ var ajaxifyShopify = (function(module, $) {
   };
 
   cartTemplate = function (cart) {
-    $cartContainer.load('/cart form[action="' + baseUrl + '/cart"]', function() {
+    $cartContainer.load(baseUrl + '/cart form[action="' + baseUrl + '/cart"]', function() {
 
       // With new elements we need to relink the adjust cart functions
       adjustCart();
