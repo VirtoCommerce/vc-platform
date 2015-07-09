@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
+using VirtoCommerce.ApiClient.DataContracts.Cart;
 
 namespace VirtoCommerce.ApiClient.DataContracts.Stores
 {
@@ -38,6 +39,8 @@ namespace VirtoCommerce.ApiClient.DataContracts.Stores
         public string SecureUrl { get; set; }
 
         public SeoKeyword[] Seo { get; set; }
+
+        public PaymentMethod[] PaymentMethods { get; set; }
 
         public IDictionary<string, object> Settings
         {

@@ -605,7 +605,7 @@ namespace VirtoCommerce.Web.Controllers
 
                 if (orderModel.FinancialStatus == "Pending")
                 {
-                    orderModel.PaymentMethods = await Service.GetStorePaymentMethodsAsync(Context.StoreId);
+                    orderModel.PaymentMethods = Context.Shop.PaymentMethods;
                 }
 
                 this.Context.Order = orderModel;
@@ -623,7 +623,7 @@ namespace VirtoCommerce.Web.Controllers
 
             if (form != null)
             {
-                var paymentMethods = await Service.GetStorePaymentMethodsAsync(Context.StoreId);
+                var paymentMethods = Context.Shop.PaymentMethods;
 
                 if (paymentMethods != null)
                 {

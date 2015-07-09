@@ -419,24 +419,6 @@ namespace VirtoCommerce.Web.Models.Services
             return paymentMethodModels;
         }
 
-        public async Task<ICollection<PaymentMethod>> GetStorePaymentMethodsAsync(string storeId)
-        {
-            ICollection<PaymentMethod> paymentMethodModels = null;
-
-            var paymentMethods = await _cartClient.GetStorePaymentMethods(storeId);
-
-            if (paymentMethods != null)
-            {
-                paymentMethodModels = new List<PaymentMethod>();
-                foreach (var paymentMethod in paymentMethods)
-                {
-                    paymentMethodModels.Add(paymentMethod.AsWebModel());
-                }
-            }
-
-            return paymentMethodModels;
-        }
-
         public async Task UpdateCheckoutAsync(Checkout checkout)
         {
             var cart = await _cartClient.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
@@ -786,12 +768,7 @@ namespace VirtoCommerce.Web.Models.Services
 
             if (stores != null)
             {
-                foreach (var store in stores)
-                {
-                    var acceptedPaymentMethods = await GetStorePaymentMethodsAsync(store.Id);
-
-                    shops.Add(store.AsWebModel(acceptedPaymentMethods));
-                }
+                shops.AddRange(stores.Select(store => store.AsWebModel()));
             }
 
             return shops;
@@ -904,7 +881,7 @@ namespace VirtoCommerce.Web.Models.Services
 
             var response = await this._storeClient.GetStoreAssetsAsync(store, theme, themeLastUpdated, pagesLastUpdated);
 
-            if (response.Any())
+            if (response.Any() && response.SelectMany(group => group.Assets).Any())
             {
                 lock (_LockObject)
                 {
