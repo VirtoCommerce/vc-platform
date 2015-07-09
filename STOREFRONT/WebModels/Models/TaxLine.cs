@@ -7,13 +7,19 @@ namespace VirtoCommerce.Web.Models
     public class TaxLine : Drop
     {
         [DataMember]
-        public int Percentage { get; set; }
+        public decimal RatePercentage
+        {
+            get
+            {
+                return Rate * 100;
+            }
+        }
 
         [DataMember]
         public decimal Price { get; set; }
 
         [DataMember]
-        public double Rate { get; set; }
+        public decimal Rate { get; set; }
 
         [DataMember]
         public string Title { get; set; }

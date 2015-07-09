@@ -124,17 +124,19 @@ namespace VirtoCommerce.Web.Convertors
                     ret.LineItems.Add(lineItem.AsWebModel());
                 }
 
-                var lineItemsTax = customerOrder.Items.Sum(i => i.Tax);
-                if (lineItemsTax > 0)
+                var taxableLineItems = customerOrder.Items;//.Where(i => i.TaxIncluded);
+                if (taxableLineItems.Count() > 0)
                 {
                     if (ret.TaxLines == null)
                     {
                         ret.TaxLines = new List<TaxLine>();
                     }
+
                     ret.TaxLines.Add(new TaxLine
                     {
-                        Price = lineItemsTax,
-                        Title = "Line items tax"
+                        Price = taxableLineItems.Sum(li => li.Tax),
+                        Rate = taxableLineItems.Where(i => i.TaxDetails != null).Sum(i => i.TaxDetails.Sum(td => td.Rate)),
+                        Title = "Line items"
                     });
                 }
             }
@@ -149,15 +151,25 @@ namespace VirtoCommerce.Web.Convertors
                     ret.ShippingMethods.Add(shipment.AsWebModel());
                     ret.ShippingPrice += shipment.Sum;
                 }
+
+                var taxableShipments = customerOrder.Shipments;//.Where(s => s.TaxIncluded);
+                if (taxableShipments.Count() > 0)
+                {
+                    if (ret.TaxLines == null)
+                    {
+                        ret.TaxLines = new List<TaxLine>();
+                    }
+
+                    ret.TaxLines.Add(new TaxLine
+                    {
+                        Price = taxableShipments.Sum(s => s.Tax),
+                        Rate = taxableShipments.Where(s => s.TaxDetails != null).Sum(i => i.TaxDetails.Sum(td => td.Rate)),
+                        Title = "Shipping"
+                    });
+                }
             }
 
             ret.SubtotalPrice = ret.LineItems.Sum(li => li.Quantity * li.Price);
-
-            if (customerOrder.TaxIncluded)
-            {
-                ret.TaxLines.Add(new TaxLine { Price = customerOrder.Tax });
-                ret.TaxPrice = ret.TaxLines.Sum(tl => tl.Price);
-            }
 
             ret.TotalPrice = customerOrder.Sum;
 

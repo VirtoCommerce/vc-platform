@@ -19,6 +19,7 @@ namespace VirtoCommerce.ApiClient.DataContracts.Orders
         public string OrganizationId { get; set; }
         public List<Shipment> Shipments { get; set; }
         public string StoreId { get; set; }
+        public ICollection<TaxDetail> TaxDetails { get; set; }
 
         #endregion
     }

@@ -16,6 +16,9 @@ namespace VirtoCommerce.Web.Models
         public string Title { get; set; }
 
         [DataMember]
+        public decimal TaxTotal { get; set; }
+
+        [DataMember]
         public string TaxType { get; set; }
     }
 }

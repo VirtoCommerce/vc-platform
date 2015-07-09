@@ -4,6 +4,9 @@
             <h2>Order summary</h2>
         </div>
         <div class="box-content">
+            <div class="alert alert-info">
+                Shipping, tax and total prices can update while checkout process.
+            </div>
             <ul class="product-list">
                 {% for line_item in checkout.line_items %}
                     <li>
