@@ -35,7 +35,16 @@ namespace VirtoCommerce.Web.Models.Helpers
             var lineItem = product.AsLineItem();
 
             var cart = this.ShoppingCart;
-            cart.Items.Add(lineItem);
+
+            var existingItem = cart.Items.FirstOrDefault(i => i.Sku == lineItem.Sku);
+            if (existingItem != null)
+            {
+                existingItem.Quantity += lineItem.Quantity;
+            }
+            else
+            {
+                cart.Items.Add(lineItem);
+            }
 
             await this._commerceService.SaveChangesAsync(cart);
 
