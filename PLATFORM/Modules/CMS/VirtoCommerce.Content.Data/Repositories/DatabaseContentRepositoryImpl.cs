@@ -105,7 +105,9 @@ namespace VirtoCommerce.Content.Data.Repositories
 
 			if (criteria != null && criteria.LastUpdateDate.HasValue)
 			{
-			    query = query.Where(i => (i.ModifiedDate.HasValue && criteria.LastUpdateDate.Value < i.ModifiedDate.Value) || (criteria.LastUpdateDate.Value < i.CreatedDate));
+                var compareDate = criteria.LastUpdateDate.Value;
+                query = query.Where(i => (i.ModifiedDate.HasValue && 
+                    compareDate < i.ModifiedDate.Value) || (compareDate < i.CreatedDate));
 			}
 
 		    return Task.FromResult(query.AsEnumerable());
@@ -122,7 +124,8 @@ namespace VirtoCommerce.Content.Data.Repositories
 
 			if (criteria != null && criteria.LastUpdateDate.HasValue)
 			{
-				query = query.Where(i => (i.ModifiedDate.HasValue && criteria.LastUpdateDate.Value < i.ModifiedDate.Value) || (criteria.LastUpdateDate.Value < i.CreatedDate));
+			    var compareDate = criteria.LastUpdateDate.Value;
+                query = query.Where(i => (i.ModifiedDate.HasValue && compareDate < i.ModifiedDate.Value) || (compareDate < i.CreatedDate));
 			}
 
 			return query.AsEnumerable();

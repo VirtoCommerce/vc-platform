@@ -56,7 +56,7 @@ namespace VirtoCommerce.Web.Services
 
         void FileChanged(object sender, string e)
         {
-            _lastUpdated = DateTime.Now;
+            _lastUpdated = DateTime.UtcNow;
         }
 
         public DateTime? GetLatestUpdate()
@@ -134,6 +134,11 @@ namespace VirtoCommerce.Web.Services
 
             // preserve the date
             File.SetLastWriteTimeUtc(fullPath, item.Updated);
+
+            if (_lastUpdated.HasValue && item.Updated > _lastUpdated)
+            {
+                _lastUpdated = item.Updated;
+            }
 
             return true;
         }

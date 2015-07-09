@@ -4,20 +4,16 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Hosting;
 using VirtoCommerce.Content.Data.Converters;
 using VirtoCommerce.Content.Data.Models;
 using VirtoCommerce.Content.Data.Repositories;
 using VirtoCommerce.Content.Data.Utility;
-using VirtoCommerce.Platform.Core.Asset;
 
 namespace VirtoCommerce.Content.Data.Services
 {
 	public class ThemeServiceImpl : IThemeService
 	{
-		private readonly object _lockObject = new object();
 		private readonly IContentRepository _repository;
-		private readonly string _tempPath;
 
 		public ThemeServiceImpl(IContentRepository repository)
 		{
@@ -33,7 +29,6 @@ namespace VirtoCommerce.Content.Data.Services
 				throw new ArgumentNullException("repository");
 
 			_repository = repository;
-			_tempPath = HostingEnvironment.MapPath("~/App_Data/Uploads/");
 		}
 
 		public Task<IEnumerable<Theme>> GetThemes(string storeId)
@@ -95,7 +90,6 @@ namespace VirtoCommerce.Content.Data.Services
 			}
 		}
 
-
 		public async Task UploadTheme(string storeId, string themeName, System.IO.Compression.ZipArchive archive)
 		{
 			foreach (ZipArchiveEntry entry in archive.Entries)
@@ -126,7 +120,7 @@ namespace VirtoCommerce.Content.Data.Services
 
 			var themesPath = GetThemePath(storeId, string.Empty);
 			var themes = await _repository.GetThemes(themesPath);
-			if (themes.Count() == 0 || !string.IsNullOrEmpty(themePath))
+			if (!themes.Any() || !string.IsNullOrEmpty(themePath))
 			{
 				var files = Directory.GetFiles(themePath, "*.*", SearchOption.AllDirectories);
 
@@ -152,11 +146,6 @@ namespace VirtoCommerce.Content.Data.Services
 			}
 
 			return retVal;
-		}
-
-		private string GetStorePath(string storeId)
-		{
-			return string.Format("{0}/", storeId);
 		}
 
 		private string GetThemePath(string storeId, string themeName)

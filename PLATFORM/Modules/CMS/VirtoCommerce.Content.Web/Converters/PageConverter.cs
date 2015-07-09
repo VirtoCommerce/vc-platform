@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using VirtoCommerce.Content.Data.Converters;
 using webModels = VirtoCommerce.Content.Web.Models;
 using coreModels = VirtoCommerce.Content.Data.Models;
 using VirtoCommerce.Platform.Core.Common;
@@ -60,7 +61,7 @@ namespace VirtoCommerce.Content.Web.Converters
 				}
 			}
 			retVal.Language = page.Language;
-			retVal.ModifiedDate = page.Updated;
+			retVal.ModifiedDate = page.Updated.RemoveMilliseconds();
 			retVal.Id = page.Id;
 			retVal.ContentType = page.ContentType;
 
