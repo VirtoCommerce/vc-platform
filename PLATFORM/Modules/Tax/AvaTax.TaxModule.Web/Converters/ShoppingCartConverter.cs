@@ -53,7 +53,6 @@ namespace AvaTax.TaxModule.Web.Converters
                 //getTaxRequest.ReferenceCode = "ref123456";
                 //getTaxRequest.PosLaneCode = "09";
                 getTaxRequest.CurrencyCode = cart.Currency.ToString();
-                getTaxRequest.CustomerCode = cart.CustomerId;
 
                 //add customer tax exemption code to cart if exists
                 if (contact != null && contact.Properties != null && contact.Properties.Any(x => x.Name == "Tax exempt"))
@@ -119,7 +118,7 @@ namespace AvaTax.TaxModule.Web.Converters
                         OriginCode = destinationAddressIndex, //TODO set origin address (fulfillment?)
                         DestinationCode = destinationAddressIndex,
                         Description = sh.ShipmentMethodCode,
-                        TaxCode = sh.TaxType
+                        TaxCode = sh.TaxType ?? "FR"
                     })
                     );
                 }
