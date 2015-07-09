@@ -11,7 +11,7 @@ using System.Reflection;
 [assembly: AssemblyCompany("VirtoCommerce")]
 [assembly: AssemblyProduct("Virto Commerce 2.2")]
 [assembly: AssemblyCopyright("Copyright © VirtoCommerce 2011-2015")]
-[assembly: AssemblyFileVersion("2.2.325.0")]
+[assembly: AssemblyFileVersion("2.2.326.0")]
 [assembly: AssemblyVersion("2.2.0.0")]
 [assembly: AssemblyInformationalVersion("2.2")]
 
