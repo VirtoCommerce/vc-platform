@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Linq.Expressions;
 using AvaTaxCalcREST;
 using Microsoft.Practices.ObjectBuilder2;
 using VirtoCommerce.Domain.Customer.Model;
@@ -14,7 +15,7 @@ namespace AvaTax.TaxModule.Web.Converters
     {
         public static GetTaxRequest ToAvaTaxAdjustmentRequest(this VirtoCommerce.Domain.Order.Model.CustomerOrder modifiedOrder, string companyCode, Contact contact, VirtoCommerce.Domain.Order.Model.CustomerOrder originalOrder, bool commit = false)
         {
-            if (modifiedOrder.Addresses != null && modifiedOrder.Addresses.Any() && modifiedOrder.Items != null && modifiedOrder.Items.Any())
+            if (modifiedOrder.Addresses != null && modifiedOrder.Addresses.Any() && originalOrder.Items != null && originalOrder.Items.Any())
             {
                 // Document Level Elements
                 // Required Request Parameters
@@ -40,7 +41,7 @@ namespace AvaTax.TaxModule.Web.Converters
 
                 getTaxRequest.TaxOverride = new TaxOverrideDef();
                 getTaxRequest.TaxOverride.TaxOverrideType = "TaxDate";
-                getTaxRequest.TaxOverride.Reason = "Adjustment for addd or return";
+                getTaxRequest.TaxOverride.Reason = "Adjustment for return";
                 getTaxRequest.TaxOverride.TaxDate = originalOrder.CreatedDate == DateTime.MinValue
                             ? DateTime.UtcNow.ToString("yyyy-MM-dd")
                             : originalOrder.CreatedDate.ToString("yyyy-MM-dd");
@@ -86,13 +87,13 @@ namespace AvaTax.TaxModule.Web.Converters
                 // Line Data
                 // Required Parameters
 
-                getTaxRequest.Lines = modifiedOrder.Items.Where(i => i.Quantity < (originalOrder.Items.Single(oi => oi.Id.Equals(i.Id)).Quantity)).Select(li =>
+                getTaxRequest.Lines = originalOrder.Items.Where(i => !modifiedOrder.Items.Any(mli => mli.Id.Equals(i.Id)) || i.Quantity > (modifiedOrder.Items.Single(oi => oi.Id.Equals(i.Id)).Quantity)).Select(li =>
                     new Line
                     {
                         LineNo = li.Id,
                         ItemCode = li.ProductId,
-                        Qty = Math.Abs(originalOrder.Items.Single(oi => oi.Id.Equals(li.Id)).Quantity - li.Quantity),
-                        Amount = -(originalOrder.Items.Single(oi => oi.Id.Equals(li.Id)).Price * originalOrder.Items.Single(oi => oi.Id.Equals(li.Id)).Quantity  - li.Price * li.Quantity),
+                        Qty = modifiedOrder.Items.Any(mli => mli.Id.Equals(li.Id)) ? Math.Abs(li.Quantity - modifiedOrder.Items.Single(oi => oi.Id.Equals(li.Id)).Quantity) : li.Quantity,
+                        Amount = modifiedOrder.Items.Any(mli => mli.Id.Equals(li.Id)) ? -(li.Price * li.Quantity - modifiedOrder.Items.Single(oi => oi.Id.Equals(li.Id)).Price * modifiedOrder.Items.Single(mli => mli.Id.Equals(li.Id)).Quantity) : -li.Price * li.Quantity,
                         OriginCode = destinationAddressIndex, //TODO set origin address (fulfillment?)
                         DestinationCode = destinationAddressIndex,
                         Description = li.Name,
