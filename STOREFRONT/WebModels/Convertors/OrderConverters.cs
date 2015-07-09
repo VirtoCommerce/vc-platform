@@ -149,7 +149,6 @@ namespace VirtoCommerce.Web.Convertors
                 foreach (var shipment in customerOrder.Shipments)
                 {
                     ret.ShippingMethods.Add(shipment.AsWebModel());
-                    ret.ShippingPrice += shipment.Sum;
                 }
 
                 var taxableShipments = customerOrder.Shipments;//.Where(s => s.TaxIncluded);
@@ -168,10 +167,6 @@ namespace VirtoCommerce.Web.Convertors
                     });
                 }
             }
-
-            ret.SubtotalPrice = ret.LineItems.Sum(li => li.Quantity * li.Price);
-
-            ret.TotalPrice = customerOrder.Sum;
 
             return ret;
         }
