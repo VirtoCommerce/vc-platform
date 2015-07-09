@@ -46,12 +46,31 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
             {
                 var properties = repository.DynamicProperties
                     .Include(p => p.DisplayNames)
-                    .Include(p => p.DictionaryItems.Select(i => i.DictionaryValues))
                     .Where(p => p.ObjectType == objectType)
                     .OrderBy(p => p.Name)
                     .ToList();
 
                 result.AddRange(properties.Select(p => p.ToModel(null)));
+            }
+
+            return result.ToArray();
+        }
+
+        public DynamicPropertyDictionaryItem[] GetDictionaryItems(string propertyId)
+        {
+            if (propertyId == null)
+                throw new ArgumentNullException("propertyId");
+
+            var result = new List<DynamicPropertyDictionaryItem>();
+
+            using (var repository = _repositoryFactory())
+            {
+                var property = repository.DynamicProperties
+                    .Include(p => p.DictionaryItems.Select(i => i.DictionaryValues))
+                    .FirstOrDefault(p => p.IsDictionary && p.Id == propertyId);
+
+                if (property != null)
+                    result.AddRange(property.DictionaryItems.OrderBy(i => i.Name).Select(i => i.ToModel()));
             }
 
             return result.ToArray();
@@ -85,7 +104,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
             }
         }
 
-        public DynamicProperty[] GetObjectProperties(string objectType, string objectId)
+        public DynamicProperty[] GetObjectValues(string objectType, string objectId)
         {
             if (objectType == null)
                 throw new ArgumentNullException("objectType");
@@ -113,10 +132,35 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
             return result.ToArray();
         }
 
-        public void SaveObjectProperties(DynamicProperty[] properties)
+        public void SaveObjectValues(DynamicProperty[] properties)
         {
             SaveProperties(properties, false);
         }
+
+        public void DeleteObjectValues(string objectType, string objectId)
+        {
+            if (objectType == null)
+                throw new ArgumentNullException("objectType");
+            if (objectId == null)
+                throw new ArgumentNullException("objectId");
+
+            using (var repository = _repositoryFactory())
+            {
+                var values = repository.DynamicPropertyValues
+                    .Where(v => v.ObjectType == objectType && v.ObjectId == objectId)
+                    .ToList();
+
+                foreach (var value in values)
+                {
+                    repository.Remove(value);
+                }
+
+                repository.UnitOfWork.Commit();
+            }
+        }
+
+        #endregion
+
 
         private void SaveProperties(DynamicProperty[] properties, bool updateProperty)
         {
@@ -167,30 +211,6 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
                 }
             }
         }
-
-        public void DeleteObjectValues(string objectType, string objectId)
-        {
-            if (objectType == null)
-                throw new ArgumentNullException("objectType");
-            if (objectId == null)
-                throw new ArgumentNullException("objectId");
-
-            using (var repository = _repositoryFactory())
-            {
-                var values = repository.DynamicPropertyValues
-                    .Where(v => v.ObjectType == objectType && v.ObjectId == objectId)
-                    .ToList();
-
-                foreach (var value in values)
-                {
-                    repository.Remove(value);
-                }
-
-                repository.UnitOfWork.Commit();
-            }
-        }
-
-        #endregion
 
         private static List<DynamicPropertyEntity> ToEntities(IEnumerable<DynamicProperty> properties, bool updateProperty)
         {

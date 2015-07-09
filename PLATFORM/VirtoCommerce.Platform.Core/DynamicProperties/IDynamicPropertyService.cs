@@ -4,12 +4,12 @@
     {
         string[] GetObjectTypes();
         DynamicProperty[] GetProperties(string objectType);
+        DynamicPropertyDictionaryItem[] GetDictionaryItems(string propertyId);
         void SaveProperties(DynamicProperty[] properties);
         void DeleteProperties(string[] propertyIds);
-        //void DeleteProperties(string objectType);
 
-        DynamicProperty[] GetObjectProperties(string objectType, string objectId);
-        void SaveObjectProperties(DynamicProperty[] properties);
+        DynamicProperty[] GetObjectValues(string objectType, string objectId);
+        void SaveObjectValues(DynamicProperty[] properties);
         void DeleteObjectValues(string objectType, string objectId);
     }
 }

@@ -17,8 +17,6 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
             var result = new DynamicProperty();
             result.InjectFrom(entity);
 
-            result.IsArray = entity.IsArray;
-            result.IsDictionary = entity.IsDictionary;
             result.ValueType = EnumUtility.SafeParse(entity.ValueType, DynamicPropertyValueType.Undefined);
             result.ObjectId = objectId;
 
@@ -77,11 +75,8 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
                 if (model.Name != null)
                     result.Name = model.Name;
 
-                if (model.IsArray != null)
-                    result.IsArray = model.IsArray.Value;
-
-                if (model.IsDictionary != null)
-                    result.IsDictionary = model.IsDictionary.Value;
+                result.IsArray = model.IsArray;
+                result.IsDictionary = model.IsDictionary;
 
                 if (model.ValueType != DynamicPropertyValueType.Undefined)
                     result.ValueType = model.ValueType.ToString();

@@ -281,6 +281,7 @@
     <Compile Include="BackgroundJobs\SendNotificationsJobsSheduler.cs" />
     <Compile Include="Bootstraper.cs" />
     <Compile Include="Controllers\Api\AssetsController.cs" />
+    <Compile Include="Controllers\Api\DynamicPropertiesController.cs" />
     <Compile Include="Controllers\Api\PlatformExportImportController.cs" />
     <Compile Include="Controllers\Api\FrontendSecurityController.cs" />
     <Compile Include="Controllers\Api\JobsController.cs" />
@@ -290,6 +291,11 @@
     <Compile Include="Controllers\Api\SecurityController.cs" />
     <Compile Include="Controllers\Api\SettingController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Converters\DynamicProperties\ObjectValueValueConverter.cs" />
+    <Compile Include="Converters\DynamicProperties\DictionaryValueConverter.cs" />
+    <Compile Include="Converters\DynamicProperties\DictionaryItemConverter.cs" />
+    <Compile Include="Converters\DynamicProperties\DisplayNameConverter.cs" />
+    <Compile Include="Converters\DynamicProperties\PropertyConverter.cs" />
     <Compile Include="Converters\Notification\NotificationConverter.cs" />
     <Compile Include="Converters\Packaging\ModuleDescriptorConverter.cs" />
     <Compile Include="Converters\Packaging\ProgressMessageConverter.cs" />
@@ -303,6 +309,12 @@
     <Compile Include="Hangfire\UnityBootstrapperConfigurationExtensions.cs" />
     <Compile Include="Hangfire\UnityJobActivator.cs" />
     <Compile Include="Model\Asset\BlobInfo.cs" />
+    <Compile Include="Model\DynamicProperties\DictionaryItem.cs" />
+    <Compile Include="Model\DynamicProperties\DictionaryValue.cs" />
+    <Compile Include="Model\DynamicProperties\DisplayName.cs" />
+    <Compile Include="Model\DynamicProperties\ObjectValue.cs" />
+    <Compile Include="Model\DynamicProperties\Property.cs" />
+    <Compile Include="Model\DynamicProperties\PropertyValueType.cs" />
     <Compile Include="Model\ExportImport\ImportInfo.cs" />
     <Compile Include="Model\ExportImport\NotificationEvent\ExportImportNotificationEvent.cs" />
     <Compile Include="Model\ExportImport\PlatformExportRequest.cs" />

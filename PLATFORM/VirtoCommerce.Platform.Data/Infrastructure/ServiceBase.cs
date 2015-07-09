@@ -27,7 +27,7 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
 
                 if (entity != null && !entity.IsTransient())
                 {
-                    var storedProperties = service.GetObjectProperties(GetObjectTypeName(entity), entity.Id);
+                    var storedProperties = service.GetObjectValues(GetObjectTypeName(entity), entity.Id);
 
                     // Replace in-memory properties with stored in database
                     if (objectWithDynamicProperties.DynamicProperties != null)
@@ -73,7 +73,7 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
                         }
                     }
 
-                    service.SaveObjectProperties(result.ToArray());
+                    service.SaveObjectValues(result.ToArray());
                 }
             }
         }
