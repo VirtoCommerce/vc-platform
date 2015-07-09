@@ -44,14 +44,6 @@ namespace AvaTax.TaxModule.Web.Observers
 		private void CalculateCustomerOrderTaxes(CartChangeEvent context)
 		{
 			var cart = context.ModifiedCart;
-
-		    if (cart.Items.Any())
-		    {
-		        cart.Items.ForEach(x => {
-		            x.TaxTotal = 0;
-                    x.TaxDetails = null;
-		        });
-		    }
             
 		    if (_taxSettings.IsEnabled && !string.IsNullOrEmpty(_taxSettings.Username) && !string.IsNullOrEmpty(_taxSettings.Password)
                 && !string.IsNullOrEmpty(_taxSettings.ServiceUrl)
@@ -77,11 +69,32 @@ namespace AvaTax.TaxModule.Web.Observers
                     var getTaxResult = taxSvc.GetTax(request);
                     if (!getTaxResult.ResultCode.Equals(SeverityLevel.Success))
                     {
+                        //if tax calculation failed create exception with provided error info
                         var error = string.Join(Environment.NewLine, getTaxResult.Messages.Select(m => m.Summary));
                         OnError(new Exception(error));
                     }
                     else
                     {
+                        //reset all cart items taxes
+                        if (cart.Items.Any())
+                        {
+                            cart.Items.ForEach(x =>
+                            {
+                                x.TaxTotal = 0;
+                                x.TaxDetails = null;
+                            });
+                        }
+
+                        //reset all cart shipments taxes
+                        if (cart.Shipments.Any())
+                        {
+                            cart.Shipments.ForEach(x =>
+                            {
+                                x.TaxTotal = 0;
+                                x.TaxDetails = null;
+                            });
+                        }
+
                         foreach (TaxLine taxLine in getTaxResult.TaxLines ?? Enumerable.Empty<TaxLine>())
                         {
                             var lineItem = cart.Items.FirstOrDefault(x => x.Id == taxLine.LineNo);

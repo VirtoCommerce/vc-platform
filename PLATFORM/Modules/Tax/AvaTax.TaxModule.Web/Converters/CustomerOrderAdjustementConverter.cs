@@ -10,27 +10,24 @@ using AddressType = VirtoCommerce.Domain.Order.Model.AddressType;
 
 namespace AvaTax.TaxModule.Web.Converters
 {
-    public static class CustomerOrderConverter
+    public static class CustomerOrderAdjustmentConverter
     {
-        public static GetTaxRequest ToAvaTaxRequest(this VirtoCommerce.Domain.Order.Model.CustomerOrder order, string companyCode, Contact contact, bool commit = false)
+        public static GetTaxRequest ToAvaTaxAdjustmentRequest(this VirtoCommerce.Domain.Order.Model.CustomerOrder modifiedOrder, string companyCode, Contact contact, VirtoCommerce.Domain.Order.Model.CustomerOrder originalOrder, bool commit = false)
         {
-            if (order.Addresses != null && order.Addresses.Any() && order.Items != null && order.Items.Any())
+            if (modifiedOrder.Addresses != null && modifiedOrder.Addresses.Any() && modifiedOrder.Items != null && modifiedOrder.Items.Any())
             {
                 // Document Level Elements
                 // Required Request Parameters
                 var getTaxRequest = new GetTaxRequest
                 {
-                    CustomerCode = order.CustomerId,
-                    DocDate =
-                        order.CreatedDate == DateTime.MinValue
-                            ? DateTime.UtcNow.ToString("yyyy-MM-dd")
-                            : order.CreatedDate.ToString("yyyy-MM-dd"),
+                    CustomerCode = modifiedOrder.CustomerId,
+                    DocDate = DateTime.UtcNow.ToString("yyyy-MM-dd"),
                     CompanyCode = companyCode,
                     Client = "VirtoCommerce,2.x,VirtoCommerce",
-                    DocCode = order.Number,
+                    DocCode = string.Format("{0}.{1}", originalOrder.Number, DateTime.UtcNow.ToString("yy-MM-dd-hh-mm")),
                     DetailLevel = DetailLevel.Tax,
                     Commit = commit,
-                    DocType = DocType.SalesInvoice
+                    DocType = DocType.ReturnInvoice
                 };
 
                 // Best Practice Request Parameters
@@ -38,19 +35,22 @@ namespace AvaTax.TaxModule.Web.Converters
                 // Situational Request Parameters
                 // getTaxRequest.CustomerUsageType = "G";
                 // getTaxRequest.ExemptionNo = "12345";
-                // getTaxRequest.BusinessIdentificationNo = "234243";
+                // getTaxRequest.BusinessIdentificationNo = "234243"; //for VAT tax calculations
                 // getTaxRequest.Discount = 50;
-                // getTaxRequest.TaxOverride = new TaxOverrideDef();
-                // getTaxRequest.TaxOverride.TaxOverrideType = "TaxDate";
-                // getTaxRequest.TaxOverride.Reason = "Adjustment for return";
-                // getTaxRequest.TaxOverride.TaxDate = "2013-07-01";
-                // getTaxRequest.TaxOverride.TaxAmount = "0";
+
+                getTaxRequest.TaxOverride = new TaxOverrideDef();
+                getTaxRequest.TaxOverride.TaxOverrideType = "TaxDate";
+                getTaxRequest.TaxOverride.Reason = "Adjustment for addd or return";
+                getTaxRequest.TaxOverride.TaxDate = originalOrder.CreatedDate == DateTime.MinValue
+                            ? DateTime.UtcNow.ToString("yyyy-MM-dd")
+                            : originalOrder.CreatedDate.ToString("yyyy-MM-dd");
+                getTaxRequest.TaxOverride.TaxAmount = "0";
 
                 // Optional Request Parameters
                 //getTaxRequest.PurchaseOrderNo = order.Number;
-                //getTaxRequest.ReferenceCode = "ref123456";
+                getTaxRequest.ReferenceCode = originalOrder.Number;
                 //getTaxRequest.PosLaneCode = "09";
-                getTaxRequest.CurrencyCode = order.Currency.ToString();
+                getTaxRequest.CurrencyCode = modifiedOrder.Currency.ToString();
 
                 //add customer tax exemption code to cart if exists
                 if (contact != null && contact.Properties != null && contact.Properties.Any(x => x.Name == "Tax exempt"))
@@ -64,7 +64,7 @@ namespace AvaTax.TaxModule.Web.Converters
                 // Address Data
                 var addresses = new List<Address>();
 
-                foreach (var address in order.Addresses.Select((x, i) => new { Value = x, Index = i }))
+                foreach (var address in modifiedOrder.Addresses.Select((x, i) => new { Value = x, Index = i }))
                 {
                     addresses.Add(new Address
                     {
@@ -86,13 +86,13 @@ namespace AvaTax.TaxModule.Web.Converters
                 // Line Data
                 // Required Parameters
 
-                getTaxRequest.Lines = order.Items.Select(li =>
+                getTaxRequest.Lines = modifiedOrder.Items.Where(i => i.Quantity < (originalOrder.Items.Single(oi => oi.Id.Equals(i.Id)).Quantity)).Select(li =>
                     new Line
                     {
                         LineNo = li.Id,
                         ItemCode = li.ProductId,
-                        Qty = li.Quantity,
-                        Amount = li.Price * li.Quantity,
+                        Qty = Math.Abs(originalOrder.Items.Single(oi => oi.Id.Equals(li.Id)).Quantity - li.Quantity),
+                        Amount = -(originalOrder.Items.Single(oi => oi.Id.Equals(li.Id)).Price * originalOrder.Items.Single(oi => oi.Id.Equals(li.Id)).Quantity  - li.Price * li.Quantity),
                         OriginCode = destinationAddressIndex, //TODO set origin address (fulfillment?)
                         DestinationCode = destinationAddressIndex,
                         Description = li.Name,
@@ -100,24 +100,6 @@ namespace AvaTax.TaxModule.Web.Converters
                     }
                     ).ToList();
                 
-                //Add shipments as lines
-                if (order.Shipments != null && order.Shipments.Any())
-                {
-                    order.Shipments.ForEach(sh =>
-                    getTaxRequest.Lines.Add(new Line
-                    {
-                        LineNo = sh.Id ?? sh.ShipmentMethodCode,
-                        ItemCode = sh.ShipmentMethodCode,
-                        Qty = 1,
-                        Amount = sh.Sum,
-                        OriginCode = destinationAddressIndex, //TODO set origin address (fulfillment?)
-                        DestinationCode = destinationAddressIndex,
-                        Description = sh.ShipmentMethodCode,
-                        TaxCode = sh.TaxType ?? "FR"
-                    })
-                    );
-                }
-
                 return getTaxRequest;
             }
             return null;

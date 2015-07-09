@@ -46,16 +46,12 @@ namespace AvaTax.TaxModule.Web.Observers
 		{
             //SlabInvoker<TaxEventSource.TaxRequestContext>.Execute(slab =>
             //    {
+                    if (context.ModifiedOrder.Status == "Cancelled")
+                    {
+                        return;
+                    }
+
 		            var order = context.ModifiedOrder;
-
-		            if (order.Items.Any())
-		                order.Items.ForEach(x =>
-		                {
-		                    x.Tax = 0;
-		                    x.TaxDetails = null;
-		                });
-
-		            order.Tax = 0;
 
 		            if (_taxSettings.IsEnabled && !string.IsNullOrEmpty(_taxSettings.Username)
 		                && !string.IsNullOrEmpty(_taxSettings.Password)
@@ -65,7 +61,9 @@ namespace AvaTax.TaxModule.Web.Observers
 		                var taxSvc = new JsonTaxSvc(_taxSettings.Username,
 		                    _taxSettings.Password,
 		                    _taxSettings.ServiceUrl);
-		                var isCommit = order.InPayments != null && order.InPayments.Any()
+		                
+                        //if all payments completed commit tax document in avalara
+                        var isCommit = order.InPayments != null && order.InPayments.Any()
 		                    && order.InPayments.All(pi => pi.IsApproved);
 
                         Contact contact = null;
@@ -85,12 +83,30 @@ namespace AvaTax.TaxModule.Web.Observers
                             
 		                    if (!getTaxResult.ResultCode.Equals(SeverityLevel.Success))
 		                    {
-		                        var error = string.Join(Environment.NewLine,
-		                            getTaxResult.Messages.Select(m => m.Summary));
+                                //if tax calculation failed create exception with provided error info
+		                        var error = string.Join(Environment.NewLine, getTaxResult.Messages.Select(m => m.Summary));
 		                        OnError(new Exception(error));
 		                    }
 		                    else
 		                    {
+                                //reset items taxes
+                                if (order.Items.Any())
+                                    order.Items.ForEach(x =>
+                                    {
+                                        x.Tax = 0;
+                                        x.TaxDetails = null;
+                                    });
+
+                                //reset order shipments taxes
+                                if (order.Shipments.Any())
+                                    order.Shipments.ForEach(x =>
+                                    {
+                                        x.Tax = 0;
+                                        x.TaxDetails = null;
+                                    });
+
+                                order.Tax = 0;
+
 		                        foreach (var taxLine in getTaxResult.TaxLines ?? Enumerable.Empty<TaxLine>())
 		                        {
 		                            var lineItem = order.Items.FirstOrDefault(x => x.Id == taxLine.LineNo);
@@ -127,6 +143,7 @@ namespace AvaTax.TaxModule.Web.Observers
 		                                }
 		                            }
 		                        }
+
 		                        order.Tax = getTaxResult.TotalTax;
 		                    }
 		                }

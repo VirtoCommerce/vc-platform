@@ -67,6 +67,9 @@ namespace AvaTax.TaxModule.Web
 
             //Subscribe to order changes. Calculate taxes   
             _container.RegisterType<IObserver<OrderChangeEvent>, CancelOrderTaxesObserver>("CancelOrderTaxesObserver");
+
+            //Subscribe to order changes. Adjust taxes   
+            _container.RegisterType<IObserver<OrderChangeEvent>, CalculateTaxAdjustmentObserver>("CalculateTaxAdjustmentObserver");
         }
         
         #endregion
