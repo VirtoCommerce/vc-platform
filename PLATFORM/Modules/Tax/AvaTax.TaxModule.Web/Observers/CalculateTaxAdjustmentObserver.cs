@@ -55,8 +55,9 @@ namespace AvaTax.TaxModule.Web.Observers
 
             //do nothing if order Items quantities did not changed
             if (
-                modifiedOrder.Items.All(
-                    li => li.Quantity.Equals(originalOrder.Items.Single(oli => oli.Id.Equals(li.Id)).Quantity)))
+                originalOrder.Items.All(
+                    li => modifiedOrder.Items.Any(oli => oli.Id.Equals(li.Id)) && 
+                        modifiedOrder.Items.Single(oli => li.Id.Equals(oli.Id)).Quantity.Equals(li.Quantity)))
                 return;
 
             //otherwise make partial return/add request
@@ -99,13 +100,16 @@ namespace AvaTax.TaxModule.Web.Observers
                                 lineItem.Tax += taxLine.Tax;
                                 if (taxLine.TaxDetails != null && taxLine.TaxDetails.Any())
                                 {
-                                    lineItem.TaxDetails =
+                                    
+                                    var taxLines =
                                         taxLine.TaxDetails.Select(taxDetail => new domainModel.TaxDetail
                                         {
                                             Amount = taxDetail.Tax,
                                             Name = taxDetail.TaxName,
                                             Rate = taxDetail.Rate
                                         }).ToList();
+
+                                    lineItem.TaxDetails = lineItem.TaxDetails == null ? taxLines : lineItem.TaxDetails.AddRange(taxLines);
                                 }
                             }
                         }
