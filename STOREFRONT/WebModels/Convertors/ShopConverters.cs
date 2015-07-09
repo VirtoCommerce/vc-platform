@@ -15,12 +15,19 @@ namespace VirtoCommerce.Web.Convertors
     public static class ShopConverters
     {
         #region Public Methods and Operators
-        public static Shop AsWebModel(this Store store, ICollection<PaymentMethod> acceptedPaymentMethods)
+        public static Shop AsWebModel(this Store store)
         {
             string[] paymentTypeIds = null;
-            if (acceptedPaymentMethods != null)
+
+            ICollection<PaymentMethod> paymentMethodModels = null;
+            if (store.PaymentMethods != null)
             {
-                paymentTypeIds = GetPaymentMethodLogoIds(acceptedPaymentMethods);
+                paymentMethodModels = store.PaymentMethods.OrderBy(pm => pm.Priority).Select(paymentMethod => paymentMethod.AsWebModel()).ToList();
+            }
+
+            if (paymentMethodModels != null)
+            {
+                paymentTypeIds = GetPaymentMethodLogoIds(paymentMethodModels);
             }
 
             var shop = new Shop
@@ -41,6 +48,7 @@ namespace VirtoCommerce.Web.Convertors
                            DefaultLanguage = store.DefaultLanguage,
                            State = store.StoreState,
                            Catalog = store.Catalog,
+                           PaymentMethods = paymentMethodModels,
                            Languages = store.Languages,
                            Currencies = store.Currencies
                        };
@@ -66,7 +74,7 @@ namespace VirtoCommerce.Web.Convertors
             return ret;
         }
 
-        private static string[] GetPaymentMethodLogoIds(ICollection<PaymentMethod> paymentMethods)
+        private static string[] GetPaymentMethodLogoIds(IEnumerable<PaymentMethod> paymentMethods)
         {
             var logoIds = new List<string>();
 

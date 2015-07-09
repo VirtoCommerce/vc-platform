@@ -45,6 +45,22 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
 				retVal.Seo = store.SeoInfos.Select(x => x.ToWebModel()).ToArray();
 			}
 
+		    if (store.PaymentMethods != null)
+		    {
+                var paymentMethods = store.PaymentMethods.Where(p => p.IsActive).Select(p => new PaymentMethod
+                {
+                    GatewayCode = p.Code,
+                    Name = p.Description,
+                    IconUrl = p.LogoUrl,
+                    Type = p.PaymentMethodType.ToString(),
+                    Group = p.PaymentMethodGroupType.ToString(),
+                    Description = p.Description,
+                    Priority = p.Priority
+                }).ToArray();
+
+		        retVal.PaymentMethods = paymentMethods;
+		    }
+
 			return retVal;
 		}
 	}

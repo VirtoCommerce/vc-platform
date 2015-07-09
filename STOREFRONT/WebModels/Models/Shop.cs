@@ -28,6 +28,8 @@ namespace VirtoCommerce.Web.Models
 
         public string[] EnabledPaymentTypes { get; set; }
 
+        public IEnumerable<PaymentMethod> PaymentMethods { get; set; }
+
         public IEnumerable<SeoKeyword> Keywords { get; set; }
 
         public string[] Languages { get; set; }

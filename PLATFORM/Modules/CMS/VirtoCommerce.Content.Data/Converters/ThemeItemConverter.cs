@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using VirtoCommerce.Content.Data.Models;
 
 namespace VirtoCommerce.Content.Data.Converters
@@ -13,7 +14,7 @@ namespace VirtoCommerce.Content.Data.Converters
 
 		public static ThemeAsset AsThemeAsset(this ContentItem item)
 		{
-            var retVal = new ThemeAsset { Id = item.Path, ByteContent = item.ByteContent, ContentType = item.ContentType, Updated = item.ModifiedDate.HasValue ? item.ModifiedDate.Value : item.CreatedDate };
+            var retVal = new ThemeAsset { Id = item.Path, ByteContent = item.ByteContent, ContentType = item.ContentType, Updated = item.ModifiedDate.HasValue ? RemoveMilliseconds(item.ModifiedDate.Value) : RemoveMilliseconds(item.CreatedDate) };
 
 		    return retVal;
 		}
@@ -24,5 +25,16 @@ namespace VirtoCommerce.Content.Data.Converters
 
 		    return retVal;
 		}
+
+	    public static DateTime RemoveMilliseconds(this DateTime dateTime)
+	    {
+	        if (dateTime.Millisecond > 0)
+	        {
+	            dateTime = dateTime.AddSeconds(1);
+	            dateTime = dateTime.AddMilliseconds(-dateTime.Millisecond);
+	        }
+
+	        return dateTime;
+	    }
 	}
 }

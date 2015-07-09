@@ -11,10 +11,10 @@ using coreModel = VirtoCommerce.Domain.Store.Model;
 
 namespace VirtoCommerce.StoreModule.Data.Repositories
 {
-	public class SqlStoreSampleDatabaseInitializer : SetupDatabaseInitializer<StoreRepositoryImpl, VirtoCommerce.StoreModule.Data.Migrations.Configuration>
+	public class SqlStoreSampleDatabaseInitializer : SetupDatabaseInitializer<StoreRepositoryImpl, Migrations.Configuration>
 	{
 		private readonly bool _reduced;
-		private ISettingsManager _settingManager;
+		private readonly ISettingsManager _settingManager;
 
 		public SqlStoreSampleDatabaseInitializer(ISettingsManager settingManager, bool reduced = false)
 		{
@@ -74,8 +74,8 @@ namespace VirtoCommerce.StoreModule.Data.Repositories
 			store.Catalog = "VendorVirtual";
 
 
-			store.Email = "Vendor Store <vendor-store@virtocommerce.com>";
-			store.AdminEmail = "Vendor Store Admin <vendor-store-admin@virtocommerce.com>";
+			store.Email = "vendor-store@virtocommerce.com";
+			store.AdminEmail = "vendor-store-admin@virtocommerce.com";
 			store.DisplayOutOfStock = true;
 			store.FulfillmentCenterId = "vendor-fulfillment";
 			store.ReturnsFulfillmentCenterId = "vendor-fulfillment";

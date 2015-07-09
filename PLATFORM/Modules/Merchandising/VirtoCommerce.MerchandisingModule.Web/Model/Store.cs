@@ -35,6 +35,8 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model
 
         public string State { get; set; }
 
+        public PaymentMethod[] PaymentMethods { get; set; }
+
         #endregion
     }
 }

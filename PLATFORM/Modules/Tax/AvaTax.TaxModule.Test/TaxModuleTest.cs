@@ -35,30 +35,7 @@ namespace AvaTax.TaxModule.Test
         {
             _controller = GetTaxController();
         }
-
-        [Fact]
-        //[Trait("Category", "CI")]
-        public void GetOrderTaxTotals()
-        {
-            var testOrder = GetTestOrder("order18");
-            var result = _controller.Total(testOrder) as OkNegotiatedContentResult<CustomerOrder>;
-            Assert.NotNull(result);
-            Assert.NotNull(result.Content);
-            Assert.NotEqual(result.Content.Tax, 0);
-        }
-
-
-        [Fact]
-        //[Trait("Category", "CI")]
-        public void GetCartTaxTotals()
-        {
-            var testCart = GetTestCart("cart1");
-            var result = _controller.CartTotal(testCart) as OkNegotiatedContentResult<ShoppingCart>;
-            Assert.NotNull(result);
-            Assert.NotNull(result.Content);
-            Assert.NotEqual(result.Content.TaxTotal, 0);
-        }
-
+        
         private static CustomerOrder GetTestOrder(string id)
         {
             var order = new CustomerOrder

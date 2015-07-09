@@ -205,11 +205,13 @@
                 beforeSend: function () {
                     var spinnerTag = '{{ 'assets/loader_spinner.gif' | shopify_asset_url | img_tag }}';
                     $(".price-list li:eq(1) small").html(spinnerTag);
+                    $(".price-list li:eq(2) small").html(spinnerTag);
                     $(".price-list li:eq(3) small").html(spinnerTag);
                 },
                 success: function (jsonResponse) {
                     if (jsonResponse) {
                         $(".price-list li:eq(1) small").text(jsonResponse.stringified_shipping_price);
+                        $(".price-list li:eq(2) small").text(jsonResponse.stringified_tax_price);
                         $(".price-list li:eq(3) small").text(jsonResponse.stringified_total_price);
                     }
                 }
