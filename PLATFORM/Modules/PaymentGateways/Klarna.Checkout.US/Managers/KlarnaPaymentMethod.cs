@@ -1,5 +1,4 @@
-﻿using Klarna.Api;
-using Klarna.Checkout;
+﻿using Klarna.Checkout;
 using Klarna.Rest;
 using Klarna.Rest.Checkout;
 using Klarna.Rest.Models;
@@ -10,24 +9,22 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Web;
+using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Domain.Payment.Model;
 
-namespace Klarna.PaymentGatewaysModule.Web.Managers
+namespace Klarna.Checkout.US.Managers
 {
-	public class KlarnaPaymentMethod : VirtoCommerce.Domain.Payment.Model.PaymentMethod
+	public class KlarnaCheckoutUSPaymentMethod : VirtoCommerce.Domain.Payment.Model.PaymentMethod
 	{
-		private const string _euroTestBaseUrl = "https://checkout.testdrive.klarna.com/checkout/orders";
 		private const string _americaTestBaseUrl = "https://checkout-na.playground.klarna.com/checkout/orders";
 		private const string _americaApiTestBaseUrl = "https://api-na.playground.klarna.com/checkout/orders";
 		private const string _unitedKingdomTestBaseUrl = "https://checkout.playground.klarna.com/checkout/orders";
 		private const string _unitedKingdomApiTestBaseUrl = "https://api.playground.klarna.com/checkout/orders";
-		private const string _euroLiveBaseUrl = "https://checkout.klarna.com/checkout/orders";
 		private const string _americaLiveBaseUrl = "https://checkout-na.klarna.com/checkout/orders";
 		private const string _americaLiveApiBaseUrl = "https://api-na.klarna.com/checkout/orders";
 		private const string _unitedKingdomBaseUrl = "https://checkout.klarna.com/checkout/orders";
 		private const string _unitedKingdomApiBaseUrl = "https://api.klarna.com/checkout/orders";
-		private const string _contentType = "application/vnd.klarna.checkout.aggregated-order-v2+json";
 
 		private const string _klarnaModeStoreSetting = "Klarna.Mode";
 		private const string _klarnaAppKeyStoreSetting = "Klarna.AppKey";
@@ -36,8 +33,8 @@ namespace Klarna.PaymentGatewaysModule.Web.Managers
 		private const string _klarnaCheckoutUrl = "Klarna.CheckoutUrl";
 		private const string _klarnaConfirmationUrl = "Klarna.ConfirmationUrl";
 
-		public KlarnaPaymentMethod()
-			: base("Klarna")
+		public KlarnaCheckoutUSPaymentMethod()
+			: base("KlarnaCheckoutUS")
 		{
 		}
 
@@ -132,14 +129,7 @@ namespace Klarna.PaymentGatewaysModule.Web.Managers
 
 				if (localization != null)
 				{
-					if(localization.CountryName == "US" || localization.CountryName == "GB")
-					{
-						retVal = NewCreateKlarnaOrder(localization, context);
-					}
-					else
-					{
-						retVal = OldCreateKlarnaOrder(localization, context);
-					}
+					retVal = NewCreateKlarnaOrder(localization, context);
 				}
 				else
 				{
@@ -156,14 +146,7 @@ namespace Klarna.PaymentGatewaysModule.Web.Managers
 
 			var localization = GetLocalization(context.Order.Currency.ToString(), null);
 
-			if (localization.CountryName == "US" || localization.CountryName == "GB")
-			{
-				retVal = NewRegisterKlarnaOrder(context);
-			}
-			else
-			{
-				retVal = OldRegisterKlarnaOrder(context);
-			}
+			retVal = NewRegisterKlarnaOrder(context);
 
 			return retVal;
 		}
@@ -184,64 +167,6 @@ namespace Klarna.PaymentGatewaysModule.Web.Managers
 					retVal.OuterId = outerId;
 				}
 			}
-
-			return retVal;
-		}
-
-		private ProcessPaymentResult OldCreateKlarnaOrder(KlarnaLocalization localization, ProcessPaymentEvaluationContext context)
-		{
-			var retVal = new ProcessPaymentResult();
-
-			var cartItems = CreateKlarnaCartItems(context.Order);
-
-			//Create cart
-			var cart = new Dictionary<string, object> { { "items", cartItems } };
-			var data = new Dictionary<string, object>
-					{
-						{ "cart", cart }
-					};
-
-			//Create klarna order "http://example.com" context.Store.Url
-			var connector = Connector.Create(AppSecret);
-			Order order = null;
-			var merchant = new Dictionary<string, object>
-					{
-						{ "id", AppKey },
-						{ "terms_uri", string.Format("{0}/{1}", context.Store.Url, TermsUrl) },
-						{ "checkout_uri", string.Format("{0}/{1}", context.Store.Url, CheckoutUrl) },
-						{ "confirmation_uri", string.Format("{0}/{1}?sid=123&orderId={2}&", context.Store.Url, ConfirmationUrl, context.Order.Id) + "klarna_order={checkout.order.uri}" },
-						{ "push_uri", string.Format("{0}/{1}?sid=123&orderId={2}&", context.Store.Url, "admin/api/paymentcallback", context.Order.Id) + "klarna_order={checkout.order.uri}" },
-						{ "back_to_store_uri", context.Store.Url }
-					};
-
-			var layout = new Dictionary<string, object>
-					{
-						{ "layout", "desktop" }
-					};
-
-			data.Add("purchase_country", localization.CountryName);
-			data.Add("purchase_currency", localization.Currency);
-			data.Add("locale", localization.Locale);
-			data.Add("merchant", merchant);
-			data.Add("gui", layout);
-
-			order =
-				new Order(connector)
-				{
-					BaseUri = new Uri(GetCheckoutBaseUrl(localization.Currency)),
-					ContentType = _contentType
-				};
-			order.Create(data);
-			order.Fetch();
-
-			//Gets snippet
-			var gui = order.GetValue("gui") as JObject;
-			var html = gui["snippet"].Value<string>();
-
-			retVal.IsSuccess = true;
-			retVal.NewPaymentStatus = PaymentStatus.Pending;
-			retVal.HtmlForm = html;
-			retVal.OuterId = order.GetValue("id") as string;
 
 			return retVal;
 		}
@@ -293,60 +218,6 @@ namespace Klarna.PaymentGatewaysModule.Web.Managers
 			return retVal;
 		}
 
-		private PostProcessPaymentResult OldRegisterKlarnaOrder(PostProcessPaymentEvaluationContext context)
-		{
-			var retVal = new PostProcessPaymentResult();
-
-			Uri resourceUri = new Uri(string.Format("{0}/{1}", _euroTestBaseUrl, context.OuterId));
-
-			var connector = Connector.Create(AppSecret);
-
-			Order order = new Order(connector, resourceUri)
-			{
-				ContentType = _contentType
-			};
-
-			order.Fetch();
-			var status = order.GetValue("status") as string;
-
-			if (status == "checkout_complete")
-			{
-				var data = new Dictionary<string, object> { { "status", "created" } };
-				order.Update(data);
-				order.Fetch();
-				status = order.GetValue("status") as string;
-			}
-
-			if (status == "created")
-			{
-				var reservation = order.GetValue("reservation") as string;
-
-				if (!string.IsNullOrEmpty(reservation))
-				{
-					Configuration configuration = new Configuration(Country.Code.SE, Language.Code.SV, Currency.Code.SEK, Encoding.Sweden)
-					{
-						Eid = Convert.ToInt32(AppKey),
-						Secret = AppSecret,
-						IsLiveMode = false
-					};
-
-					Api.Api api = new Api.Api(configuration);
-
-					var response = api.Activate(reservation);
-
-					order.Fetch();
-
-					var klarnaCart = order.GetValue("cart") as JObject;
-				}
-			}
-
-			retVal.IsSuccess = status == "created";
-			retVal.NewPaymentStatus = retVal.IsSuccess ? PaymentStatus.Paid : PaymentStatus.Pending;
-			retVal.OrderId = context.Order.Id;
-
-			return retVal;
-		}
-
 		private PostProcessPaymentResult NewRegisterKlarnaOrder(PostProcessPaymentEvaluationContext context)
 		{
 			var retVal = new PostProcessPaymentResult();
@@ -382,63 +253,6 @@ namespace Klarna.PaymentGatewaysModule.Web.Managers
 			return retVal;
 		}
 
-		private List<Dictionary<string, object>> CreateKlarnaCartItems(CustomerOrder order)
-		{
-			var cartItems = new List<Dictionary<string, object>>();
-			foreach (var lineItem in order.Items)
-			{
-				var addedItem = new Dictionary<string, object>();
-
-				addedItem.Add("type", "physical");
-
-				if (!string.IsNullOrEmpty(lineItem.Name))
-				{
-					addedItem.Add("name", lineItem.Name);
-				}
-				if (lineItem.Quantity > 0)
-				{
-					addedItem.Add("quantity", lineItem.Quantity);
-				}
-				if (lineItem.Price > 0)
-				{
-					addedItem.Add("unit_price", (int)((lineItem.Price + lineItem.Tax / lineItem.Quantity) * 100));
-					//addedItem.Add("total_price_excluding_tax", (int)(lineItem.Price * lineItem.Quantity * 100));
-				}
-
-				if (lineItem.Tax > 0)
-				{
-					//addedItem.Add("total_price_including_tax", (int)((lineItem.Price * lineItem.Quantity + lineItem.Tax) * 100));
-					//addedItem.Add("total_tax_amount", (int)(lineItem.Tax * 100));
-					addedItem.Add("tax_rate", (int)(lineItem.TaxDetails.Sum(td => td.Rate) * 10000));
-				}
-
-				addedItem.Add("discount_rate", 0);
-				addedItem.Add("reference", lineItem.ProductId);
-
-				cartItems.Add(addedItem);
-			}
-
-			if (order.Shipments != null && order.Shipments.Any(s => s.Sum > 0))
-			{
-				foreach(var shipment in order.Shipments.Where(s => s.Sum > 0))
-				{
-					var addedItem = new Dictionary<string, object>();
-
-					addedItem.Add("type", "shipping_fee");
-					addedItem.Add("reference", "SHIPPING");
-					addedItem.Add("name", "Shipping Fee");
-					addedItem.Add("quantity", 1);
-					addedItem.Add("unit_price", (int)(shipment.Sum * 100));
-
-					addedItem.Add("tax_rate", 0);
-
-					cartItems.Add(addedItem);
-				}
-			}
-
-			return cartItems;
-		}
-
 		private List<OrderLine> GetOrderLineItems(CustomerOrder order)
 		{
 			List<OrderLine> retVal = new List<OrderLine>();
@@ -452,10 +266,15 @@ namespace Klarna.PaymentGatewaysModule.Web.Managers
 					Name = lineItem.Name,
 					Quantity = lineItem.Quantity,
 					UnitPrice = (int)(lineItem.Price * 100),
-					TaxRate = null,
-					TotalTaxAmount = null,
 					TotalAmount = (int)(lineItem.Price * 100) * lineItem.Quantity
 				};
+
+				if (lineItem.Tax > 0)
+				{
+					orderLine.TaxRate = (int)((lineItem.Price + lineItem.Tax * lineItem.Quantity) * 100);
+					orderLine.TotalAmount = orderLine.TotalAmount + (int)(lineItem.Tax * lineItem.Quantity * 100);
+					orderLine.TotalTaxAmount = (int)(lineItem.Tax * lineItem.Quantity *100);
+				}
 
 				retVal.Add(orderLine);
 			}
@@ -471,10 +290,15 @@ namespace Klarna.PaymentGatewaysModule.Web.Managers
 						Quantity = 1,
 						Name = "Shipping Fee",
 						UnitPrice = (int)(shipment.Sum * 100),
-						TaxRate = null,
-						TotalTaxAmount = null,
-						TotalAmount = (int)(int)(shipment.Sum * 100)
+						TotalAmount = (int)(shipment.Sum * 100)
 					};
+
+					if(shipment.Tax > 0)
+					{
+						orderLine.TaxRate = (int)((shipment.Sum + shipment.Tax) * 100);
+						orderLine.TotalAmount = orderLine.TotalAmount + (int)(shipment.Tax * 100);
+						orderLine.TotalTaxAmount = (int)(shipment.Tax * 100);
+					}
 
 					retVal.Add(orderLine);
 				}
@@ -495,11 +319,6 @@ namespace Klarna.PaymentGatewaysModule.Web.Managers
 		{
 			var retVal = new List<KlarnaLocalization>();
 
-			retVal.Add(new KlarnaLocalization { CountryName = "SE", Currency = "SEK", Locale = "sv-se", FullCountryName = "Sweden" });
-			retVal.Add(new KlarnaLocalization { CountryName = "FI", Currency = "EUR", Locale = "fi-fi", FullCountryName = "Finland" });
-			retVal.Add(new KlarnaLocalization { CountryName = "NO", Currency = "NOK", Locale = "nb-no", FullCountryName = "Norway" });
-			retVal.Add(new KlarnaLocalization { CountryName = "DE", Currency = "EUR", Locale = "de-de", FullCountryName = "Germany" });
-			retVal.Add(new KlarnaLocalization { CountryName = "AT", Currency = "EUR", Locale = "de-at", FullCountryName = "Austria" });
 			retVal.Add(new KlarnaLocalization { CountryName = "US", Currency = "USD", Locale = "en-us", FullCountryName = "United States" });
 			retVal.Add(new KlarnaLocalization { CountryName = "GB", Currency = "GBP", Locale = "en-gb", FullCountryName = "United Kingdom" });
 
@@ -510,12 +329,10 @@ namespace Klarna.PaymentGatewaysModule.Web.Managers
 		{
 			switch (currency)
 			{
-				case "USD":
-					return Mode.ToLower() == "test" ? _americaTestBaseUrl : _americaLiveBaseUrl;
 				case "GBP":
 					return Mode.ToLower() == "test" ? _unitedKingdomTestBaseUrl : _unitedKingdomBaseUrl;
 				default:
-					return Mode.ToLower() == "test" ? _euroTestBaseUrl : _euroLiveBaseUrl;
+					return Mode.ToLower() == "test" ? _americaTestBaseUrl : _americaLiveBaseUrl;
 			}
 		}
 
@@ -523,29 +340,25 @@ namespace Klarna.PaymentGatewaysModule.Web.Managers
 		{
 			switch (currency)
 			{
-				case "USD":
-					return Mode.ToLower() == "test" ? _americaApiTestBaseUrl : _americaLiveApiBaseUrl;
 				case "GBP":
 					return Mode.ToLower() == "test" ? _unitedKingdomApiTestBaseUrl : _unitedKingdomApiBaseUrl;
 				default:
-					return Mode.ToLower() == "test" ? _euroTestBaseUrl : _euroLiveBaseUrl;
+					return Mode.ToLower() == "test" ? _americaApiTestBaseUrl : _americaLiveApiBaseUrl;
 			}
 		}
 
 
 		private KlarnaLocalization GetLocalization(string currency, string country)
 		{
-			return new KlarnaLocalization { CountryName = "SE", Currency = "SEK", Locale = "sv-se", FullCountryName = "Sweden" };
-
-			//var localizations = GetLocalizations();
-			//if (!string.IsNullOrEmpty(country))
-			//{
-			//	return localizations.FirstOrDefault(l => l.Currency == currency && l.FullCountryName == country);
-			//}
-			//else
-			//{
-			//	return localizations.FirstOrDefault(l => l.Currency == currency);
-			//}
+			var localizations = GetLocalizations();
+			if (!string.IsNullOrEmpty(country))
+			{
+				return localizations.FirstOrDefault(l => l.Currency == currency && l.FullCountryName == country);
+			}
+			else
+			{
+				return localizations.FirstOrDefault(l => l.Currency == currency);
+			}
 		}
 	}
 }

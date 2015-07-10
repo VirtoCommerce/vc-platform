@@ -13,7 +13,7 @@ namespace VirtoCommerce.Platform.Data.Notification
 	[CLSCompliant(false)]
 	public class RegistrationEmailNotification : EmailNotification
 	{
-		public RegistrationEmailNotification(Func<IEmailNotificationSendingGateway> emailNotificationSendingGateway) : base(emailNotificationSendingGateway)
+		public RegistrationEmailNotification(IEmailNotificationSendingGateway emailNotificationSendingGateway) : base(emailNotificationSendingGateway)
 		{
 
 		}

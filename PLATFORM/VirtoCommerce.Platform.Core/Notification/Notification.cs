@@ -9,25 +9,17 @@ namespace VirtoCommerce.Platform.Core.Notification
 {
 	public abstract class Notification : AuditableEntity
 	{
-		private readonly Func<INotificationSendingGateway> _notificationSendingGateway;
+		private readonly INotificationSendingGateway _notificationSendingGateway;
 
-		public Notification()
-		{
-			Type = this.GetType().Name;
-			MaxAttemptCount = 10;
-		}
-
-		public Notification(Func<INotificationSendingGateway> notificationSendingGateway)
+		public Notification(INotificationSendingGateway notificationSendingGateway)
 		{
 			_notificationSendingGateway = notificationSendingGateway;
-			Type = this.GetType().Name;
 			MaxAttemptCount = 10;
+			Type = GetType().Name;
 		}
 
 		public string DisplayName { get; set; }
 		public string Description { get; set; }
-
-		public string Type { get; set; }
 
 		/// <summary>
 		/// Must be made sending
@@ -38,6 +30,8 @@ namespace VirtoCommerce.Platform.Core.Notification
 		/// Notification was successfully sent
 		/// </summary>
 		public bool IsSuccessSend { get; set; }
+
+		public string Type { get; set; }
 
 		public string ObjectId { get; set; }
 
@@ -97,11 +91,11 @@ namespace VirtoCommerce.Platform.Core.Notification
 
 		public string Language { get; set; }
 
-		public INotificationSendingGateway NotificationSendingGateway { get { return _notificationSendingGateway(); } }
+		public INotificationSendingGateway NotificationSendingGateway { get { return _notificationSendingGateway; } }
 
 		public NotificationTemplate NotificationTemplate { get; set; }
 
-		public SendNotificationResult SendNotification()
+		public virtual SendNotificationResult SendNotification()
 		{
 			var result = NotificationSendingGateway.SendNotification(this);
 

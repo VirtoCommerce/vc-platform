@@ -8,7 +8,7 @@ namespace VirtoCommerce.Platform.Core.Notification
 {
 	public abstract class EmailNotification : Notification
 	{
-		public EmailNotification(Func<IEmailNotificationSendingGateway> gateway) : base(gateway)
+		public EmailNotification(IEmailNotificationSendingGateway gateway) : base(gateway)
 		{
 		}
 	}

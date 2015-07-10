@@ -131,13 +131,17 @@
     <Compile Include="Model\OperationProperty.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\OrderNotificationResource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>OrderNotificationResource.resx</DependentUpon>
+    </Compile>
     <Content Include="Scripts\blades\operation-comment.js" />
     <Content Include="Scripts\blades\operation-comment.tpl.html" />
     <Content Include="Scripts\dialogs\cancelOperation-dialog.tpl.html" />
     <Content Include="Scripts\widgets\customerOrder-address-widget.js" />
     <Content Include="Scripts\widgets\customerOrder-address-widget.tpl.html" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Content Include="module.manifest" />
     <Content Include="Scripts\blades\customerOrder-list.js" />
@@ -208,6 +212,13 @@
     <None Include="web.Release.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\OrderNotificationResource.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>OrderNotificationResource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

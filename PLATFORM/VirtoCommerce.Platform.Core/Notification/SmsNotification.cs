@@ -8,7 +8,7 @@ namespace VirtoCommerce.Platform.Core.Notification
 {
 	public class SmsNotification : Notification
 	{
-		public SmsNotification(Func<ISmsNotificationSendingGateway> gateway) : base(gateway)
+		public SmsNotification(ISmsNotificationSendingGateway gateway) : base(gateway)
 		{
 
 		}

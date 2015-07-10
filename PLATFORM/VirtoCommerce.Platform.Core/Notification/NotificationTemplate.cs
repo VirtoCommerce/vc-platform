@@ -20,11 +20,6 @@ namespace VirtoCommerce.Platform.Core.Notification
 		public string NotificationTypeId { get; set; }
 
 		/// <summary>
-		/// Display name of template
-		/// </summary>
-		public string DisplayName { get; set; }
-
-		/// <summary>
 		/// Subject of notification
 		/// </summary>
 		public string Subject { get; set; }

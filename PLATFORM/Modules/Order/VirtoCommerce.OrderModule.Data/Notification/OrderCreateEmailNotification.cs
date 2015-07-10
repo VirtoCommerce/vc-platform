@@ -10,7 +10,7 @@ namespace VirtoCommerce.OrderModule.Data.Notification
 {
 	public class OrderCreateEmailNotification : EmailNotification
 	{
-		public OrderCreateEmailNotification(Func<IEmailNotificationSendingGateway> gateway): base(gateway)
+		public OrderCreateEmailNotification(IEmailNotificationSendingGateway gateway): base(gateway)
 		{
 		}
 

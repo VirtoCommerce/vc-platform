@@ -182,7 +182,6 @@
     <Compile Include="Modularity\Exceptions\ModuleTypeLoadingException.cs" />
     <Compile Include="Modularity\SampleDataLevel.cs" />
     <Compile Include="Notification\EmailNotification.cs" />
-    <Compile Include="Notification\GetNotificationCriteria.cs" />
     <Compile Include="Notification\IEmailNotificationSendingGateway.cs" />
     <Compile Include="Notification\INotificationManager.cs" />
     <Compile Include="Notification\INotificationSendingGateway.cs" />

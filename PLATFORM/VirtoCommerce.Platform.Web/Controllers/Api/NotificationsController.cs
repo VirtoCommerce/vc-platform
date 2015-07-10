@@ -44,8 +44,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 		public IHttpActionResult GetNotificationTemplate(string type, string objectId, string objectTypeId, string language)
 		{
 			NotificationTemplate retVal = new NotificationTemplate();
-			var criteria = new GetNotificationCriteria() { Type = type, ObjectId = objectId, ObjectTypeId = objectTypeId, Language = language };
-			var notification = _notificationManager.GetNewNotification(criteria);
+			var notification = _notificationManager.GetNewNotification(type, objectId, objectTypeId, language);
 			if (notification != null)
 			{
 				retVal = notification.NotificationTemplate;
@@ -93,8 +92,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 		[Route("template/{type}/preparetestdata")]
 		public IHttpActionResult PrepareTest(string type)
 		{
-			var criteria = new GetNotificationCriteria() { Type = type };
-			var notification = _notificationManager.GetNewNotification(criteria);
+			var notification = _notificationManager.GetNewNotification(type);
 			var retVal = _notificationTemplateResolver.ResolveNotificationParameters(notification);
 
 			return Ok(retVal.Select(s => s.ToWebModel()).ToArray());
@@ -105,8 +103,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 		[Route("template/{type}/{objectId}/{objectTypeId}/{language}/resolvenotification")]
 		public IHttpActionResult ResolveNotification([FromBody]List<KeyValuePair<string, string>> parameters, string type, string objectId, string objectTypeId, string language)
 		{
-			var criteria = new GetNotificationCriteria() { Type = type, ObjectId = objectId, ObjectTypeId = objectTypeId, Language = language };
-			var notification = _notificationManager.GetNewNotification(criteria);
+			var notification = _notificationManager.GetNewNotification(type, objectId, objectTypeId, language);
 			foreach (var param in parameters)
 			{
 				var property = notification.GetType().GetProperty(param.Key);
@@ -122,8 +119,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 		[Route("template/{type}/{objectId}/{objectTypeId}/{language}/sendnotification")]
 		public IHttpActionResult SendNotification([FromBody]List<KeyValuePair<string, string>> parameters, string type, string objectId, string objectTypeId, string language)
 		{
-			var criteria = new GetNotificationCriteria() { Type = type, ObjectId = objectId, ObjectTypeId = objectTypeId, Language = language };
-			var notification = _notificationManager.GetNewNotification(criteria);
+			var notification = _notificationManager.GetNewNotification(type, objectId, objectTypeId, language);
 			foreach (var param in parameters)
 			{
 				var property = notification.GetType().GetProperty(param.Key);

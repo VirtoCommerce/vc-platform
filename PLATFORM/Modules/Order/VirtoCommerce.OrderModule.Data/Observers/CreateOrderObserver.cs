@@ -44,8 +44,7 @@ namespace VirtoCommerce.OrderModule.Data.Observers
 
 		private void SendCreateOrderNotification(OrderChangeEvent value)
 		{
-			var criteria = new GetNotificationCriteria() { Type = "OrderCreateEmailNotification", ObjectId = value.ModifiedOrder.StoreId, ObjectTypeId = "Store", Language = "en-US" };
-			var notification = (OrderCreateEmailNotification)(_notificationManager.GetNewNotification(criteria));
+			var notification = _notificationManager.GetNewNotification<OrderCreateEmailNotification>(value.ModifiedOrder.StoreId, "Store", "en-US");
 			notification.OrderNumber = value.ModifiedOrder.Number;
 			var store = _storeService.GetById(value.ModifiedOrder.StoreId);
 

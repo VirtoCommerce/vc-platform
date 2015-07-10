@@ -23,12 +23,6 @@ namespace VirtoCommerce.Platform.Data.Model
 		public string NotificationTypeId { get; set; }
 
 		/// <summary>
-		/// Display name of template
-		/// </summary>
-		[StringLength(64)]
-		public string DisplayName { get; set; }
-
-		/// <summary>
 		/// Subject of notification
 		/// </summary>
 		public string Subject { get; set; }
