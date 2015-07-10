@@ -23,7 +23,7 @@ angular.module(moduleName, [
           icon: 'fa fa-check-square-o',
           index: 2,
           executeMethod: function (blade) {
-              avataxModuleResources.validate({ address: blade.currentEntity }, function (result) {
+              avataxModuleResources.validate(blade.currentEntity, function (result) {
                   var dialog = {
                       id: "avaTaxNotification",
                       title: "Message",
