@@ -1,15 +1,22 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.CustomerModule.Data.Repositories;
 using VirtoCommerce.CustomerModule.Data.Services;
+using VirtoCommerce.CustomerModule.Web.ExportImport;
+using VirtoCommerce.Domain.Customer.Model;
 using VirtoCommerce.Domain.Customer.Services;
+using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 
 namespace VirtoCommerce.CustomerModule.Web
 {
-    public class Module : ModuleBase
+    public class Module : ModuleBase, ISupportExportModule
     {
         private readonly IUnityContainer _container;
 
@@ -52,5 +59,28 @@ namespace VirtoCommerce.CustomerModule.Web
         }
 
         #endregion
+
+        #region ISupportExportModule Members
+
+        public void DoExport(System.IO.Stream outStream, Action<ExportImportProgressInfo> progressCallback)
+        {
+            var exportJob = _container.Resolve<CustomerExportImport>();
+            var customerSearchService = _container.Resolve<ICustomerSearchService>();
+            var contactService = _container.Resolve<IContactService>();
+            var organizationService = _container.Resolve<IOrganizationService>();
+            var responce = customerSearchService.Search(new SearchCriteria());
+
+            
+            var backupObject = new BackupObject
+            {
+                Contacts = responce.Contacts.Select(x => x.Id).Select(contactService.GetById).ToArray(),
+                Organizations = responce.Organizations.Select(x => x.Id).Select(organizationService.GetById).ToArray()
+            };
+            exportJob.DoExport(outStream, backupObject, progressCallback);
+        }
+
+        #endregion
+
     }
+
 }
