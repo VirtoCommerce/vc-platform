@@ -1,8 +1,8 @@
 ﻿angular.module('virtoCommerce.avataxModule')
-    .factory('virtoCommerce.avataxModule.ping', [
-        '$resource', function($resource) {
-            return $resource('api/tax/avatax/ping', {
-                query: { isArray: false }
-            });
-        }
-    ]);
+    .factory('virtoCommerce.avataxModule.resources', ['$resource', function ($resource) {
+
+        return $resource(null, null, {
+            ping: { url: 'api/tax/avatax/ping' },
+            validate: { method: 'POST', url: 'api/tax/avatax/address' }
+        });
+    }]);
