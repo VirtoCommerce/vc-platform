@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
+using System.Web.Http;
 using AvaTax.TaxModule.Web.Converters;
+using AvaTax.TaxModule.Web.Logging;
 using AvaTax.TaxModule.Web.Services;
 using AvaTaxCalcREST;
 using VirtoCommerce.Domain.Order.Events;
@@ -44,27 +46,35 @@ namespace AvaTax.TaxModule.Web.Observers
 
             var order = context.ModifiedOrder;
 
-		    if (_taxSettings.IsEnabled && !string.IsNullOrEmpty(_taxSettings.Username) && !string.IsNullOrEmpty(_taxSettings.Password)
-		        && !string.IsNullOrEmpty(_taxSettings.ServiceUrl)
-		        && !string.IsNullOrEmpty(_taxSettings.CompanyCode))
-		    {
-		        var request = order.ToAvaTaxCancelRequest(_taxSettings.CompanyCode, CancelCode.DocDeleted);
-		        if (request != null)
-		        {
-                    var taxSvc = new JsonTaxSvc(_taxSettings.Username, _taxSettings.Password, _taxSettings.ServiceUrl);
-		            var getTaxResult = taxSvc.CancelTax(request);
-
-		            if (!getTaxResult.ResultCode.Equals(SeverityLevel.Success))
+            SlabInvoker<VirtoCommerceEventSource.TaxRequestContext>.Execute(slab =>
+                {
+		            if (_taxSettings.IsEnabled && !string.IsNullOrEmpty(_taxSettings.Username) && !string.IsNullOrEmpty(_taxSettings.Password)
+		                && !string.IsNullOrEmpty(_taxSettings.ServiceUrl)
+		                && !string.IsNullOrEmpty(_taxSettings.CompanyCode))
 		            {
-		                var error = string.Join(Environment.NewLine, getTaxResult.Messages.Select(m => m.Summary));
-		                throw new Exception(error);
+		                var request = order.ToAvaTaxCancelRequest(_taxSettings.CompanyCode, CancelCode.DocDeleted);
+		                if (request != null)
+		                {
+                            slab.docCode = request.DocCode;
+                            slab.docType = request.DocType.ToString();
+
+                            var taxSvc = new JsonTaxSvc(_taxSettings.Username, _taxSettings.Password, _taxSettings.ServiceUrl);
+		                    var getTaxResult = taxSvc.CancelTax(request);
+
+		                    if (!getTaxResult.ResultCode.Equals(SeverityLevel.Success))
+		                    {
+		                        var error = string.Join(Environment.NewLine, getTaxResult.Messages.Select(m => m.Summary));
+		                        throw new Exception(error);
+		                    }
+		                }
 		            }
-		        }
-		    }
-		    else
-		    {
-		        throw new Exception("AvaTax credentials not provided or tax calculation disabled");
-		    }
+		            else
+		            {
+		                throw new Exception("AvaTax credentials not provided or tax calculation disabled");
+		            }
+                })
+                .OnError(VirtoCommerceEventSource.Log, VirtoCommerceEventSource.EventCodes.TaxCalculationError)
+                .OnSuccess(VirtoCommerceEventSource.Log, VirtoCommerceEventSource.EventCodes.GetTaxRequestTime);
 		}
 	}
 }

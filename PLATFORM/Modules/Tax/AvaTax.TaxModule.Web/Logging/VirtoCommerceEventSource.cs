@@ -33,7 +33,6 @@ namespace AvaTax.TaxModule.Web.Logging
 
         public class EventCodes
         {
-            public const int TaskFailure = 1;
             public const int Startup = 2;
             public const int ApplicationError = 1001;
             public const int GetTaxRequestData = 2001;
@@ -43,13 +42,7 @@ namespace AvaTax.TaxModule.Web.Logging
 
         private static readonly VirtoCommerceEventSource _log = new VirtoCommerceEventSource();
         public static VirtoCommerceEventSource Log { get { return _log; } }
-
-        [Event(EventCodes.TaskFailure, Message = "Task Failure: {0}, task: {1}", Level = EventLevel.Critical, Keywords = Keywords.Diagnostic)]
-        public void TaskFailure(string message, string taskName)
-        {
-            this.WriteEvent(EventCodes.TaskFailure, message, taskName);
-        }
-
+        
         [Event(EventCodes.Startup, Message = "Starting up.", Keywords = Keywords.Diagnostic, Level = EventLevel.Informational)]
         public void Startup()
         {
@@ -68,10 +61,10 @@ namespace AvaTax.TaxModule.Web.Logging
             this.WriteEvent(EventCodes.GetTaxRequestData, docCode, docType, customerCode, amount);
         }
 
-        [Event(EventCodes.TaxCalculationError, Message = "{0} - {1}. Error message: {3}", Level = EventLevel.Error, Keywords = Keywords.Diagnostic)]
-        public void TaxCalculationError(string docCode, string docType, double amount, string message)
+        [Event(EventCodes.TaxCalculationError, Message = "{0} - {1}. Error message: {2}", Level = EventLevel.Error, Keywords = Keywords.Diagnostic)]
+        public void TaxCalculationError(string docCode, string docType, string error)
         {
-            this.WriteEvent(EventCodes.TaxCalculationError, docCode, docType, amount, message);
+            this.WriteEvent(EventCodes.TaxCalculationError, docCode, docType, error);
         }
 
         [Event(EventCodes.GetTaxRequestTime, Message = "{0} - {1}. AvaTax Get tax executed successfully. Duration {4} ms.", Level = EventLevel.Informational, Keywords = Keywords.Diagnostic)]

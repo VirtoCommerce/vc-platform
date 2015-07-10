@@ -44,15 +44,23 @@ namespace AvaTax.TaxModule.Web.Observers
 		#endregion
 		private void CalculateCustomerOrderTaxes(OrderChangeEvent context)
 		{
+            if (context.ModifiedOrder.Status == "Cancelled")
+            {
+                return;
+            }
+
+            var order = context.ModifiedOrder;
+            var originalOrder = context.OrigOrder;
+
+            //do nothing if order Items quantities did not changed
+            if (
+                originalOrder.Items.Any(
+                    li => !order.Items.Any(oli => oli.Id.Equals(li.Id)) ||
+                        order.Items.Single(oli => li.Id.Equals(oli.Id)).Quantity < li.Quantity))
+                return;
+
             SlabInvoker<VirtoCommerceEventSource.TaxRequestContext>.Execute(slab =>
                 {
-                    if (context.ModifiedOrder.Status == "Cancelled")
-                    {
-                        return;
-                    }
-
-		            var order = context.ModifiedOrder;
-
 		            if (_taxSettings.IsEnabled && !string.IsNullOrEmpty(_taxSettings.Username)
 		                && !string.IsNullOrEmpty(_taxSettings.Password)
 		                && !string.IsNullOrEmpty(_taxSettings.ServiceUrl)
