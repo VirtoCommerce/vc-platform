@@ -150,7 +150,6 @@
     <Content Include="Scripts\blades\customerOrder-detail.tpl.html" />
     <Content Include="Scripts\blades\operation-items.js" />
     <Content Include="Scripts\blades\operation-items.tpl.html" />
-    <Content Include="Scripts\blades\operation-detail-toolbar.tpl.html" />
     <Content Include="Scripts\blades\payment-detail.tpl.html" />
     <Content Include="Scripts\blades\shipment-detail.tpl.html" />
     <Content Include="Scripts\order.js" />

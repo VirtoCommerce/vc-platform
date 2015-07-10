@@ -62,7 +62,6 @@
     }
 
     $scope.blade.headIcon = 'fa-lock';
-    $scope.blade.toolbarCustomTemplates = ['Scripts/common/security/blades/account-detail-toolbar.tpl.html'];
 
     var userStateCommand = {
         updateName: function () {
