@@ -26,7 +26,7 @@ angular.module(moduleName, [
               avataxModuleResources.validate(blade.currentEntity, function (result) {
                   var dialog = {
                       id: "avaTaxNotification",
-                      title: "Message",
+                      title: "Address valid",
                       message: "Address validation passed."
                   };
                   dialogService.showNotificationDialog(dialog);
@@ -35,7 +35,7 @@ angular.module(moduleName, [
                       var dialog = {
                           id: "avaTaxNotification",
                           title: "Validation error",
-                          message: error.data.exceptionMessage
+                          message: error.data.message
                       };
                       dialogService.showNotificationDialog(dialog);
                   });
