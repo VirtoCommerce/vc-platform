@@ -13,6 +13,7 @@ namespace AvaTax.TaxModule.Web.Logging
             public string docType { get; set; }
             public string customerCode { get; set; }
             public double amount { get; set; }
+            public bool isCommit { get; set; }
         }
 
         #endregion
@@ -35,9 +36,9 @@ namespace AvaTax.TaxModule.Web.Logging
         {
             public const int Startup = 2;
             public const int ApplicationError = 1001;
-            public const int GetTaxRequestData = 2001;
             public const int TaxCalculationError = 2100;
             public const int GetTaxRequestTime = 2000;
+            public const int GetSalesInvoiceRequestTime = 2001;
         }
 
         private static readonly VirtoCommerceEventSource _log = new VirtoCommerceEventSource();
@@ -54,25 +55,23 @@ namespace AvaTax.TaxModule.Web.Logging
         {
             this.WriteEvent(EventCodes.ApplicationError, error);
         }
-
-        [Event(EventCodes.GetTaxRequestData, Message = "DocCode - {0}, DocType - {1}, CustomerCode - {2}, Total - {3}", Level = EventLevel.Informational, Keywords = Keywords.Diagnostic)]
-        public void GetTaxRequestData(string docCode, string docType, string customerCode, double amount)
-        {
-            this.WriteEvent(EventCodes.GetTaxRequestData, docCode, docType, customerCode, amount);
-        }
-
+        
         [Event(EventCodes.TaxCalculationError, Message = "{0} - {1}. Error message: {2}", Level = EventLevel.Error, Keywords = Keywords.Diagnostic)]
         public void TaxCalculationError(string docCode, string docType, string error)
         {
             this.WriteEvent(EventCodes.TaxCalculationError, docCode, docType, error);
         }
 
-        [Event(EventCodes.GetTaxRequestTime, Message = "{0} - {1}. AvaTax Get tax executed successfully. Duration {4} ms.", Level = EventLevel.Informational, Keywords = Keywords.Diagnostic)]
+        [Event(EventCodes.GetTaxRequestTime, Message = "{0} - {1}. Duration {4} ms. AvaTax tax request executed successfully.", Level = EventLevel.Informational, Keywords = Keywords.Diagnostic)]
         public void GetTaxRequestTime(string docCode, string docType, string startTime, string endTime, double duration)
         {
             this.WriteEvent(EventCodes.GetTaxRequestTime, docCode, docType, startTime, endTime, duration);
         }
 
-        
+        [Event(EventCodes.GetSalesInvoiceRequestTime, Message = "{0} - {1}. Commit - {5}. Duration {4} ms. AvaTax tax request executed successfully.", Level = EventLevel.Informational, Keywords = Keywords.Diagnostic)]
+        public void GetSalesInvoiceRequestTime(string docCode, string docType, bool isCommit, string startTime, string endTime, double duration)
+        {
+            this.WriteEvent(EventCodes.GetSalesInvoiceRequestTime, docCode, docType, startTime, endTime, duration, isCommit);
+        }
     }
 }

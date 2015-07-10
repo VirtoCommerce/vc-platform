@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Linq;
 using AvaTax.TaxModule.Web.Converters;
-//using AvaTax.TaxModule.Web.Logging;
-//using Common.Logging;
 using AvaTax.TaxModule.Web.Logging;
 using AvaTax.TaxModule.Web.Services;
 using AvaTaxCalcREST;

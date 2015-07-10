@@ -2,7 +2,6 @@
 using System.Linq;
 using AvaTax.TaxModule.Web.Converters;
 using AvaTax.TaxModule.Web.Logging;
-//using Common.Logging;
 using AvaTax.TaxModule.Web.Services;
 using AvaTaxCalcREST;
 using VirtoCommerce.Domain.Customer.Model;
@@ -81,6 +80,7 @@ namespace AvaTax.TaxModule.Web.Observers
                             slab.docType = request.DocType.ToString();
                             slab.customerCode = request.CustomerCode;
                             slab.amount = (double) order.Sum;
+		                    slab.isCommit = isCommit;
 
                             var taxSvc = new JsonTaxSvc(_taxSettings.Username, _taxSettings.Password, _taxSettings.ServiceUrl);
 		                    var getTaxResult = taxSvc.GetTax(request);
@@ -160,7 +160,7 @@ namespace AvaTax.TaxModule.Web.Observers
 		            }
                 })
                 .OnError(VirtoCommerceEventSource.Log, VirtoCommerceEventSource.EventCodes.TaxCalculationError)
-                .OnSuccess(VirtoCommerceEventSource.Log, VirtoCommerceEventSource.EventCodes.GetTaxRequestTime);
+                .OnSuccess(VirtoCommerceEventSource.Log, VirtoCommerceEventSource.EventCodes.GetSalesInvoiceRequestTime);
 		}
 	}
 }
