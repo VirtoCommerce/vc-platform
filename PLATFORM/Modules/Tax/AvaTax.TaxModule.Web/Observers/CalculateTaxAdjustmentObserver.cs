@@ -67,10 +67,6 @@ namespace AvaTax.TaxModule.Web.Observers
                 && !string.IsNullOrEmpty(_taxSettings.ServiceUrl)
                 && !string.IsNullOrEmpty(_taxSettings.CompanyCode))
             {
-                var taxSvc = new JsonTaxSvc(_taxSettings.Username,
-                    _taxSettings.Password,
-                    _taxSettings.ServiceUrl);
-
                 //if all payments completed commit tax document in avalara
                 var isCommit = modifiedOrder.InPayments != null && modifiedOrder.InPayments.Any()
                     && modifiedOrder.InPayments.All(pi => pi.IsApproved);
@@ -82,27 +78,27 @@ namespace AvaTax.TaxModule.Web.Observers
                 var request = modifiedOrder.ToAvaTaxAdjustmentRequest(_taxSettings.CompanyCode, contact, originalOrder, isCommit);
                 if (request != null)
                 {
+                    var taxSvc = new JsonTaxSvc(_taxSettings.Username, _taxSettings.Password, _taxSettings.ServiceUrl);
                     var getTaxResult = taxSvc.GetTax(request);
 
                     if (!getTaxResult.ResultCode.Equals(SeverityLevel.Success))
                     {
                         var error = string.Join(Environment.NewLine,
                             getTaxResult.Messages.Select(m => m.Summary));
-                        OnError(new Exception(error));
+                        throw new Exception(error);
                     }
-                    else
-                    {
+                    
                         foreach (var taxLine in getTaxResult.TaxLines ?? Enumerable.Empty<TaxLine>())
                         {
                             var lineItem = modifiedOrder.Items.FirstOrDefault(x => x.Id == taxLine.LineNo);
                             if (lineItem != null)
                             {
                                 lineItem.Tax += taxLine.Tax;
-                                if (taxLine.TaxDetails != null && taxLine.TaxDetails.Any())
+                                if (taxLine.TaxDetails != null && taxLine.TaxDetails.Any(td => !string.IsNullOrEmpty(td.TaxName)))
                                 {
                                     
                                     var taxLines =
-                                        taxLine.TaxDetails.Select(taxDetail => new domainModel.TaxDetail
+                                        taxLine.TaxDetails.Where(td => !string.IsNullOrEmpty(td.TaxName)).Select(taxDetail => new domainModel.TaxDetail
                                         {
                                             Amount = taxDetail.Tax,
                                             Name = taxDetail.TaxName,
@@ -115,12 +111,11 @@ namespace AvaTax.TaxModule.Web.Observers
                         }
 
                         modifiedOrder.Tax = 0;
-                    }
                 }
             }
             else
             {
-                OnError(new Exception("AvaTax credentials not provided"));
+               throw new Exception("AvaTax credentials not provided or tax calculation disabled");
             }
         }
     }

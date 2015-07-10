@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using AvaTax.TaxModule.Web.Converters;
-//using AvaTax.TaxModule.Web.Logging;
+using AvaTax.TaxModule.Web.Logging;
 //using Common.Logging;
 using AvaTax.TaxModule.Web.Services;
 using AvaTaxCalcREST;
@@ -44,8 +44,8 @@ namespace AvaTax.TaxModule.Web.Observers
 		#endregion
 		private void CalculateCustomerOrderTaxes(OrderChangeEvent context)
 		{
-            //SlabInvoker<TaxEventSource.TaxRequestContext>.Execute(slab =>
-            //    {
+            SlabInvoker<VirtoCommerceEventSource.TaxRequestContext>.Execute(slab =>
+                {
                     if (context.ModifiedOrder.Status == "Cancelled")
                     {
                         return;
@@ -58,10 +58,6 @@ namespace AvaTax.TaxModule.Web.Observers
 		                && !string.IsNullOrEmpty(_taxSettings.ServiceUrl)
 		                && !string.IsNullOrEmpty(_taxSettings.CompanyCode))
 		            {
-		                var taxSvc = new JsonTaxSvc(_taxSettings.Username,
-		                    _taxSettings.Password,
-		                    _taxSettings.ServiceUrl);
-		                
                         //if all payments completed commit tax document in avalara
                         var isCommit = order.InPayments != null && order.InPayments.Any()
 		                    && order.InPayments.All(pi => pi.IsApproved);
@@ -73,22 +69,21 @@ namespace AvaTax.TaxModule.Web.Observers
 		                var request = order.ToAvaTaxRequest(_taxSettings.CompanyCode, contact, isCommit);
 		                if (request != null)
 		                {
-                            //slab.DocCode = request.DocCode;
-                            //slab.CustomerCode = request.CustomerCode;
-                            //slab.Amount = order.Sum;
+                            slab.docCode = request.DocCode;
+                            slab.docType = request.DocType.ToString();
+                            slab.customerCode = request.CustomerCode;
+                            slab.amount = (double) order.Sum;
 
-                            //TaxEventSource.Log.Write(TaxEventSource.EventCodes.LogRequestData, slab);
-
+                            var taxSvc = new JsonTaxSvc(_taxSettings.Username, _taxSettings.Password, _taxSettings.ServiceUrl);
 		                    var getTaxResult = taxSvc.GetTax(request);
                             
 		                    if (!getTaxResult.ResultCode.Equals(SeverityLevel.Success))
 		                    {
                                 //if tax calculation failed create exception with provided error info
 		                        var error = string.Join(Environment.NewLine, getTaxResult.Messages.Select(m => m.Summary));
-		                        OnError(new Exception(error));
+		                        throw new Exception(error);
 		                    }
-		                    else
-		                    {
+		                    
                                 //reset items taxes
                                 if (order.Items.Any())
                                     order.Items.ForEach(x =>
@@ -113,10 +108,10 @@ namespace AvaTax.TaxModule.Web.Observers
 		                            if (lineItem != null)
 		                            {
 		                                lineItem.Tax = taxLine.Tax;
-		                                if (taxLine.TaxDetails != null && taxLine.TaxDetails.Any())
+                                        if (taxLine.TaxDetails != null && taxLine.TaxDetails.Any(td => !string.IsNullOrEmpty(td.TaxName)))
 		                                {
 		                                    lineItem.TaxDetails =
-		                                        taxLine.TaxDetails.Select(taxDetail => new domainModel.TaxDetail
+		                                        taxLine.TaxDetails.Where(td => !string.IsNullOrEmpty(td.TaxName)).Select(taxDetail => new domainModel.TaxDetail
 		                                        {
 		                                            Amount = taxDetail.Tax,
 		                                            Name = taxDetail.TaxName,
@@ -130,10 +125,10 @@ namespace AvaTax.TaxModule.Web.Observers
 		                                if (shipment != null)
 		                                {
 		                                    shipment.Tax = taxLine.Tax;
-		                                    if (taxLine.TaxDetails != null && taxLine.TaxDetails.Any())
+                                            if (taxLine.TaxDetails != null && taxLine.TaxDetails.Any(td => !string.IsNullOrEmpty(td.TaxName)))
 		                                    {
 		                                        shipment.TaxDetails =
-		                                            taxLine.TaxDetails.Select(taxDetail => new domainModel.TaxDetail
+		                                            taxLine.TaxDetails.Where(td => !string.IsNullOrEmpty(td.TaxName)).Select(taxDetail => new domainModel.TaxDetail
 		                                            {
 		                                                Amount = taxDetail.Tax,
 		                                                Name = taxDetail.TaxName,
@@ -142,19 +137,22 @@ namespace AvaTax.TaxModule.Web.Observers
 		                                    }
 		                                }
 		                            }
-		                        }
 
 		                        order.Tax = getTaxResult.TotalTax;
 		                    }
 		                }
+		                else
+		                {
+                            throw new Exception("Failed to create get tax request");
+		                }
 		            }
 		            else
 		            {
-		                OnError(new Exception("AvaTax credentials not provided"));
+                        throw new Exception("Failed to create get tax request");
 		            }
-                //})
-                //.OnError(VirtoCommerceEventSource.Log, VirtoCommerceEventSource.EventCodes.ApplicationError)
-                //.OnSuccess(VirtoCommerceEventSource.Log, VirtoCommerceEventSource.EventCodes.Startup);
+                })
+                .OnError(VirtoCommerceEventSource.Log, VirtoCommerceEventSource.EventCodes.TaxCalculationError)
+                .OnSuccess(VirtoCommerceEventSource.Log, VirtoCommerceEventSource.EventCodes.GetTaxRequestTime);
 		}
 	}
 }

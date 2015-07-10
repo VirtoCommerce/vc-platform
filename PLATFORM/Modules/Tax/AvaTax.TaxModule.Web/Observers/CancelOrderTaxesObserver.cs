@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Linq;
-using System.Net.NetworkInformation;
-using System.Web.Http.Results;
 using AvaTax.TaxModule.Web.Converters;
 using AvaTax.TaxModule.Web.Services;
 using AvaTaxCalcREST;
-using Microsoft.Practices.ObjectBuilder2;
 using VirtoCommerce.Domain.Order.Events;
 using VirtoCommerce.Platform.Core.Common;
 using domainModel = VirtoCommerce.Domain.Commerce.Model;
@@ -51,25 +48,23 @@ namespace AvaTax.TaxModule.Web.Observers
 		        && !string.IsNullOrEmpty(_taxSettings.ServiceUrl)
 		        && !string.IsNullOrEmpty(_taxSettings.CompanyCode))
 		    {
-		        var taxSvc = new JsonTaxSvc(_taxSettings.Username, _taxSettings.Password, _taxSettings.ServiceUrl);
-                
 		        var request = order.ToAvaTaxCancelRequest(_taxSettings.CompanyCode, CancelCode.DocDeleted);
 		        if (request != null)
 		        {
+                    var taxSvc = new JsonTaxSvc(_taxSettings.Username, _taxSettings.Password, _taxSettings.ServiceUrl);
 		            var getTaxResult = taxSvc.CancelTax(request);
+
 		            if (!getTaxResult.ResultCode.Equals(SeverityLevel.Success))
 		            {
 		                var error = string.Join(Environment.NewLine, getTaxResult.Messages.Select(m => m.Summary));
-		                OnError(new Exception(error));
+		                throw new Exception(error);
 		            }
 		        }
 		    }
 		    else
 		    {
-		        OnError(new Exception("AvaTax credentials not provided or tax calculation disabled"));
+		        throw new Exception("AvaTax credentials not provided or tax calculation disabled");
 		    }
 		}
-
-		
 	}
 }
