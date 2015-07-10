@@ -1,6 +1,6 @@
 ﻿angular.module('platformWebApp')
 .controller('platformWebApp.confirmDialogController', ['$scope', '$modalInstance', 'dialog', function ($scope, $modalInstance, dialog) {
-	angular.extend($scope, dialog);
+    angular.extend($scope, dialog);
 
     $scope.yes = function () {
         $modalInstance.close(true);
@@ -31,7 +31,7 @@
         return found;
     }
 
-    dialogService.showDialog = function(dialog, templateUrl, controller) {
+    dialogService.showDialog = function (dialog, templateUrl, controller) {
         var dlg = findDialog(dialog.id);
 
         if (angular.isUndefined(dlg)) {
@@ -39,10 +39,10 @@
 
             dlg.instance = $modal.open({
                 templateUrl: templateUrl,
-                controller:  controller, 
+                controller: controller,
                 resolve: {
                     dialog: function () {
-                    	return dialog;
+                        return dialog;
                     }
                 }
             });
@@ -51,7 +51,8 @@
             {
                 var idx = dialogService.dialogs.indexOf(dlg);
                 dialogService.dialogs.splice(idx, 1);
-                dlg.callback(result);
+                if (dlg.callback)
+                    dlg.callback(result);
             }, function (reason) //dismiss
             {
                 var idx = dialogService.dialogs.indexOf(dlg);
