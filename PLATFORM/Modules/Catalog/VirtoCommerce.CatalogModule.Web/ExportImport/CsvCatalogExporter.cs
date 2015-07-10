@@ -57,7 +57,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 
 
 				//Load all products to export
-				var products = LoadProducts(catalogId, exportedCategories, exportedProducts);
+				var products = LoadProducts(catalogId, exportedCategories, exportedProducts).ToArray();
 
 				//Notification
 				prodgressInfo.Description = "loading prices...";
@@ -81,17 +81,17 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 				prodgressInfo.Description = "loading inventory information...";
 				progressCallback(prodgressInfo);
 
-				var allProductInventories = _inventoryService.GetProductsInventoryInfos(allProductIds);
+				var allProductInventories = _inventoryService.GetProductsInventoryInfos(allProductIds).ToArray();
 				foreach (var product in products)
 				{
 					product.Inventories = allProductInventories.Where(x => x.ProductId == product.Id)
-						.Where(x => fulfilmentCenterId == null ? true : x.FulfillmentCenterId == fulfilmentCenterId).ToList();
+						.Where(x => fulfilmentCenterId == null || x.FulfillmentCenterId == fulfilmentCenterId).ToList();
 				}
 
 				prodgressInfo.TotalCount = products.Count();
 				//populate export configuration
-				Dictionary<string, Func<CatalogProduct, string>> exportConfiguration = new Dictionary<string, Func<CatalogProduct, string>>();
-				PopulateProductExportConfiguration(exportConfiguration, products);
+				var exportConfiguration = new Dictionary<string, Func<CatalogProduct, string>>();
+				PopulateProductExportConfiguration(exportConfiguration, products, languageCode);
 
 				//Write header
 				foreach (var cfgItem in exportConfiguration)
@@ -100,7 +100,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 				}
 				csvWriter.NextRecord();
 
-				var notifyProductSizeLimit = 50;
+				const int notifyProductSizeLimit = 50;
 				var counter = 0;
 				//Write products
 				foreach (var product in products)
@@ -190,7 +190,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 		}
 
 
-		private void PopulateProductExportConfiguration(Dictionary<string, Func<CatalogProduct, string>> configuration, IEnumerable<CatalogProduct> products)
+		private void PopulateProductExportConfiguration(Dictionary<string, Func<CatalogProduct, string>> configuration, IEnumerable<CatalogProduct> products, string languageCode)
 		{
 
 			configuration.Add("Sku", (product) =>
@@ -236,7 +236,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 			{
 				if (product.Images != null)
 				{
-					var image = product.Images.Skip(1).FirstOrDefault();
+                    var image = product.Images.Skip(1).FirstOrDefault(x => x.LanguageCode == languageCode);
 					if (image != null)
 					{
 						return _blobUrlResolver.GetAbsoluteUrl(image.Url);
@@ -249,7 +249,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 			{
 				if (product.Reviews != null)
 				{
-					var review = product.Reviews.FirstOrDefault();
+                    var review = product.Reviews.FirstOrDefault(x => x.LanguageCode == languageCode);
 					if (review != null)
 					{
 						return review.Content ?? String.Empty;
@@ -262,7 +262,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 			{
 				if (product.SeoInfos != null)
 				{
-					var seoInfo = product.SeoInfos.FirstOrDefault();
+                    var seoInfo = product.SeoInfos.FirstOrDefault(x => x.LanguageCode == languageCode);
 					if (seoInfo != null)
 					{
 						return seoInfo.SemanticUrl ?? String.Empty;
@@ -274,7 +274,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 			{
 				if (product.SeoInfos != null)
 				{
-					var seoInfo = product.SeoInfos.FirstOrDefault();
+                    var seoInfo = product.SeoInfos.FirstOrDefault(x => x.LanguageCode == languageCode);
 					if (seoInfo != null)
 					{
 						return seoInfo.PageTitle ?? String.Empty;
@@ -286,7 +286,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 			{
 				if (product.SeoInfos != null)
 				{
-					var seoInfo = product.SeoInfos.FirstOrDefault();
+                    var seoInfo = product.SeoInfos.FirstOrDefault(x => x.LanguageCode == languageCode);
 					if (seoInfo != null)
 					{
 						return seoInfo.MetaDescription ?? String.Empty;

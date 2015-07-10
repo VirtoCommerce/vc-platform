@@ -3,11 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Packaging;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.ExportImport;
-using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Packaging;
 
 namespace VirtoCommerce.Platform.Data.ExportImport
@@ -61,7 +58,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 					var modulePart = package.CreatePart(modulePartUri, System.Net.Mime.MediaTypeNames.Application.Octet);
 
 					progressInfo.Description = String.Format("{0}: export started.", module.Id);
-				   progressCallback(progressInfo);
+				    progressCallback(progressInfo);
 
 					Action<ExportImportProgressInfo> modulePorgressCallback = (x) =>
 						{
@@ -89,11 +86,11 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 				var manifestPart = package.CreatePart(_manifestPartUri, System.Net.Mime.MediaTypeNames.Text.Xml);
 				var manifest = new PlatformExportManifest
 				{
-					Author = CurrentPrincipal.GetCurrentUserName(),
-					PlatformVersion = platformVersion.ToString(),
+				    Author = CurrentPrincipal.GetCurrentUserName(),
+				    PlatformVersion = platformVersion.ToString(),
+				    Modules = exportModulesInfo.ToArray(),
 				};
-				manifest.Modules = exportModulesInfo.ToArray();
-				//After all modules exported need write export manifest part
+			    //After all modules exported need write export manifest part
 				using (var streamWriter = new StreamWriter(manifestPart.GetStream()))
 				{
 					streamWriter.Write(manifest.SerializeXML());
