@@ -144,6 +144,7 @@
     <Compile Include="Converters\OrganizationConverter.cs" />
     <Compile Include="Converters\PropertyConverter.cs" />
     <Compile Include="Converters\SearchCriteriaConverter.cs" />
+    <Compile Include="ExportImport\CustomerExportImport.cs" />
     <Compile Include="Model\Address.cs" />
     <Compile Include="Model\Contact.cs" />
     <Compile Include="Model\Member.cs" />

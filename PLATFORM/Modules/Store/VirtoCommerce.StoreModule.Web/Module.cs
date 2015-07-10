@@ -72,17 +72,15 @@ namespace VirtoCommerce.StoreModule.Web
         }
         #endregion
 
-        #region ISupportExport Members
+        #region ISupportExportModule Members
 
         public void DoExport(System.IO.Stream outStream, Action<ExportImportProgressInfo> progressCallback)
         {
             var exportJob = _container.Resolve<StoreExportImport>();
             var storeService = _container.Resolve<IStoreService>();
-            var stores = storeService.GetStoreList();
-            foreach (var store in stores)
-            {
-                exportJob.DoExport(outStream, store.Id, progressCallback);
-            }
+
+            var backupObject = new BackupObject { Stores = storeService.GetStoreList().Where(x=>x.Name=="Test").ToArray()};
+            exportJob.DoExport(outStream, backupObject, progressCallback);
         }
 
         #endregion
