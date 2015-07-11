@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using VirtoCommerce.Platform.Core.DynamicProperties;
@@ -11,59 +10,51 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
     {
         public static DynamicPropertyObjectValueEntity[] ToEntity(this DynamicPropertyObjectValue model, DynamicProperty property)
         {
-            var result = new List<DynamicPropertyObjectValueEntity>();
-
-            if (model.DictionaryItemId != null)
-            {
-                var entity = ToEntity(null, property, null);
-                entity.DictionaryItemId = model.DictionaryItemId;
-                result.Add(entity);
-            }
-            else if (model.ArrayValues != null)
-            {
-                result.AddRange(model.ArrayValues.Select(v => v.ToEntity(property, model.Locale)));
-            }
-            else if (model.Value != null)
-            {
-                result.Add(model.Value.ToEntity(property, model.Locale));
-            }
-
-            return result.ToArray();
+            var result = model.Values.Select(v => v.ToEntity(property, model.ObjectId, model.Locale)).ToArray();
+            return result;
         }
 
-        public static DynamicPropertyObjectValueEntity ToEntity(this string value, DynamicProperty model, string locale)
+        public static DynamicPropertyObjectValueEntity ToEntity(this string value, DynamicProperty property, string objectId, string locale)
         {
             var result = new DynamicPropertyObjectValueEntity
             {
-                ObjectType = model.ObjectType,
-                ObjectId = model.ObjectId,
-                ValueType = model.ValueType.ToString(),
+                PropertyId = property.Id,
+                ObjectType = property.ObjectType,
+                ObjectId = objectId,
+                ValueType = property.ValueType.ToString(),
                 Locale = locale,
             };
 
-            switch (model.ValueType)
+            if (property.IsDictionary)
             {
-                case DynamicPropertyValueType.Boolean:
-                    result.BooleanValue = Convert.ToBoolean(value);
-                    break;
-                case DynamicPropertyValueType.DateTime:
-                    result.DateTimeValue = Convert.ToDateTime(value, CultureInfo.InvariantCulture);
-                    break;
-                case DynamicPropertyValueType.Decimal:
-                    result.DecimalValue = Convert.ToDecimal(value, CultureInfo.InvariantCulture);
-                    break;
-                case DynamicPropertyValueType.Integer:
-                    result.IntegerValue = Convert.ToInt32(value, CultureInfo.InvariantCulture);
-                    break;
-                case DynamicPropertyValueType.LongText:
-                    result.LongTextValue = value;
-                    break;
-                case DynamicPropertyValueType.SecureString:
-                    result.ShortTextValue = value;
-                    break;
-                default:
-                    result.ShortTextValue = value;
-                    break;
+                result.DictionaryItemId = value;
+            }
+            else
+            {
+                switch (property.ValueType)
+                {
+                    case DynamicPropertyValueType.Boolean:
+                        result.BooleanValue = Convert.ToBoolean(value);
+                        break;
+                    case DynamicPropertyValueType.DateTime:
+                        result.DateTimeValue = Convert.ToDateTime(value, CultureInfo.InvariantCulture);
+                        break;
+                    case DynamicPropertyValueType.Decimal:
+                        result.DecimalValue = Convert.ToDecimal(value, CultureInfo.InvariantCulture);
+                        break;
+                    case DynamicPropertyValueType.Integer:
+                        result.IntegerValue = Convert.ToInt32(value, CultureInfo.InvariantCulture);
+                        break;
+                    case DynamicPropertyValueType.LongText:
+                        result.LongTextValue = value;
+                        break;
+                    case DynamicPropertyValueType.SecureString:
+                        result.ShortTextValue = value;
+                        break;
+                    default:
+                        result.ShortTextValue = value;
+                        break;
+                }
             }
 
             return result;

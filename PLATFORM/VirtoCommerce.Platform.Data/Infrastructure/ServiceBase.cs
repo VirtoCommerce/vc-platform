@@ -8,8 +8,8 @@ using VirtoCommerce.Platform.Data.Common;
 
 namespace VirtoCommerce.Platform.Data.Infrastructure
 {
-	public abstract class ServiceBase
-	{
+    public abstract class ServiceBase
+    {
         protected string GetObjectTypeName(object obj)
         {
             return obj.GetType().FullName;
@@ -30,21 +30,21 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
                     var storedProperties = service.GetObjectValues(GetObjectTypeName(entity), entity.Id);
 
                     // Replace in-memory properties with stored in database
-                    if (objectWithDynamicProperties.DynamicProperties != null)
+                    if (objectWithDynamicProperties.DynamicPropertyValues != null)
                     {
-                        var result = new List<DynamicProperty>();
+                        var result = new List<DynamicPropertyObjectValue>();
 
-                        foreach (var property in objectWithDynamicProperties.DynamicProperties)
+                        foreach (var value in objectWithDynamicProperties.DynamicPropertyValues)
                         {
-                            var storedProperty = storedProperties.FirstOrDefault(x => x.Name == property.Name);
-                            result.Add(storedProperty ?? property);
+                            var storedProperty = storedProperties.FirstOrDefault(v => v.Property.Name == value.Property.Name);
+                            result.Add(storedProperty ?? value);
                         }
 
-                        objectWithDynamicProperties.DynamicProperties = result;
+                        objectWithDynamicProperties.DynamicPropertyValues = result;
                     }
                     else
                     {
-                        objectWithDynamicProperties.DynamicProperties = storedProperties;
+                        objectWithDynamicProperties.DynamicPropertyValues = storedProperties;
                     }
                 }
             }
@@ -61,15 +61,15 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
                 if (entity != null && !entity.IsTransient())
                 {
                     var objectType = GetObjectTypeName(entity);
-                    var result = new List<DynamicProperty>();
+                    var result = new List<DynamicPropertyObjectValue>();
 
-                    if (objectWithDynamicProperties.DynamicProperties != null)
+                    if (objectWithDynamicProperties.DynamicPropertyValues != null)
                     {
-                        foreach (var property in objectWithDynamicProperties.DynamicProperties)
+                        foreach (var value in objectWithDynamicProperties.DynamicPropertyValues)
                         {
-                            property.ObjectType = objectType;
-                            property.ObjectId = entity.Id;
-                            result.Add(property);
+                            value.Property.ObjectType = objectType;
+                            value.ObjectId = entity.Id;
+                            result.Add(value);
                         }
                     }
 
@@ -97,106 +97,106 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
 
         #region Settings
 
-		protected void LoadObjectSettings(ISettingsManager settingManager, object obj)
-		{
+        protected void LoadObjectSettings(ISettingsManager settingManager, object obj)
+        {
             var haveSettingsObjects = obj.GetFlatObjectsListWithInterface<IHaveSettings>();
 
-			foreach (var haveSettingsObject in haveSettingsObjects)
-			{
-				var entity = haveSettingsObject as Entity;
+            foreach (var haveSettingsObject in haveSettingsObjects)
+            {
+                var entity = haveSettingsObject as Entity;
 
-				if (entity != null && !entity.IsTransient())
-				{
-					var storedSettings = settingManager.GetObjectSettings(entity.GetType().Name, entity.Id);
+                if (entity != null && !entity.IsTransient())
+                {
+                    var storedSettings = settingManager.GetObjectSettings(entity.GetType().Name, entity.Id);
 
                     // Replace in-memory settings with stored in database
-					if (haveSettingsObject.Settings != null)
-					{
-						var resultSettings = new List<SettingEntry>();
+                    if (haveSettingsObject.Settings != null)
+                    {
+                        var resultSettings = new List<SettingEntry>();
 
-						foreach (var setting in haveSettingsObject.Settings)
-						{
-							var storedSetting = storedSettings.FirstOrDefault(x => x.Name == setting.Name);
+                        foreach (var setting in haveSettingsObject.Settings)
+                        {
+                            var storedSetting = storedSettings.FirstOrDefault(x => x.Name == setting.Name);
                             resultSettings.Add(storedSetting ?? setting);
-						}
+                        }
 
-						haveSettingsObject.Settings = resultSettings;
-					}
-					else
-					{
-						haveSettingsObject.Settings = storedSettings;
-					}
-				}
-			}
-		}
+                        haveSettingsObject.Settings = resultSettings;
+                    }
+                    else
+                    {
+                        haveSettingsObject.Settings = storedSettings;
+                    }
+                }
+            }
+        }
 
-		protected void SaveObjectSettings(ISettingsManager settingManager, object obj)
-		{
+        protected void SaveObjectSettings(ISettingsManager settingManager, object obj)
+        {
             var haveSettingsObjects = obj.GetFlatObjectsListWithInterface<IHaveSettings>();
 
-			foreach (var haveSettingsObject in haveSettingsObjects)
-			{
-				var entity = haveSettingsObject as Entity;
+            foreach (var haveSettingsObject in haveSettingsObjects)
+            {
+                var entity = haveSettingsObject as Entity;
 
-				if (entity != null && !entity.IsTransient())
-				{
+                if (entity != null && !entity.IsTransient())
+                {
                     var objectType = entity.GetType().Name;
-					var settings = new List<SettingEntry>();
+                    var settings = new List<SettingEntry>();
 
-					if (haveSettingsObject.Settings != null)
-					{
-						//Save settings
-						foreach (var setting in haveSettingsObject.Settings)
-						{
-							setting.ObjectId = entity.Id;
+                    if (haveSettingsObject.Settings != null)
+                    {
+                        //Save settings
+                        foreach (var setting in haveSettingsObject.Settings)
+                        {
+                            setting.ObjectId = entity.Id;
                             setting.ObjectType = objectType;
-							settings.Add(setting);
-						}
-					}
+                            settings.Add(setting);
+                        }
+                    }
 
-					settingManager.SaveSettings(settings.ToArray());
-				}
-			}
-		}
+                    settingManager.SaveSettings(settings.ToArray());
+                }
+            }
+        }
 
-		protected void RemoveObjectSettings(ISettingsManager settingManager, object obj)
-		{
+        protected void RemoveObjectSettings(ISettingsManager settingManager, object obj)
+        {
             var haveSettingsObjects = obj.GetFlatObjectsListWithInterface<IHaveSettings>();
 
-			foreach (var haveSettingsObject in haveSettingsObjects)
-			{
-				var entity = haveSettingsObject as Entity;
+            foreach (var haveSettingsObject in haveSettingsObjects)
+            {
+                var entity = haveSettingsObject as Entity;
 
-				if (entity != null && !entity.IsTransient())
-				{
-					settingManager.RemoveObjectSettings(entity.GetType().Name, entity.Id);
-				}
-			}
-		}
+                if (entity != null && !entity.IsTransient())
+                {
+                    settingManager.RemoveObjectSettings(entity.GetType().Name, entity.Id);
+                }
+            }
+        }
 
         #endregion
-	
-		protected virtual void CommitChanges(IRepository repository)
-		{
-			try
-			{
-				repository.UnitOfWork.Commit();
-			}
-			catch (Exception ex)
-			{
-				ex.ThrowFaultException();
-			}
-		}
 
-		protected virtual ObservableChangeTracker GetChangeTracker(IRepository repository)
-		{
-			var retVal = new ObservableChangeTracker
-			{
+        protected virtual void CommitChanges(IRepository repository)
+        {
+            try
+            {
+                repository.UnitOfWork.Commit();
+            }
+            catch (Exception ex)
+            {
+                ex.ThrowFaultException();
+            }
+        }
+
+        protected virtual ObservableChangeTracker GetChangeTracker(IRepository repository)
+        {
+            var retVal = new ObservableChangeTracker
+            {
                 RemoveAction = x => repository.Remove(x),
                 AddAction = x => repository.Add(x)
-			};
+            };
 
-			return retVal;
-		}
-	}
+            return retVal;
+        }
+    }
 }

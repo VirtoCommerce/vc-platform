@@ -4,6 +4,6 @@ namespace VirtoCommerce.Platform.Core.DynamicProperties
 {
     public interface IHasDynamicProperties
     {
-        ICollection<DynamicProperty> DynamicProperties { get; set; }
+        ICollection<DynamicPropertyObjectValue> DynamicPropertyValues { get; set; }
     }
 }

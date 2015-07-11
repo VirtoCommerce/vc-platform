@@ -9,7 +9,8 @@ namespace VirtoCommerce.Platform.Data.Repositories
         IQueryable<SettingEntity> Settings { get; }
 
         IQueryable<DynamicPropertyEntity> DynamicProperties { get; }
-        IQueryable<DynamicPropertyObjectValueEntity> DynamicPropertyValues { get; }
+        IQueryable<DynamicPropertyDictionaryItemEntity> DynamicPropertyDictionaryItems { get; }
+        IQueryable<DynamicPropertyObjectValueEntity> DynamicPropertyObjectValues { get; }
 
         IQueryable<AccountEntity> Accounts { get; }
         IQueryable<ApiAccountEntity> ApiAccounts { get; }

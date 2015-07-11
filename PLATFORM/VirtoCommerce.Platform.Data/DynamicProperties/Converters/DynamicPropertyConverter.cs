@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
@@ -12,52 +11,39 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
 {
     public static class DynamicPropertyConverter
     {
-        public static DynamicProperty ToModel(this DynamicPropertyEntity entity, string objectId)
+        public static DynamicPropertyObjectValue[] ToModel(this DynamicPropertyEntity entity, string objectId)
         {
-            var result = new DynamicProperty();
-            result.InjectFrom(entity);
-
-            result.ValueType = EnumUtility.SafeParse(entity.ValueType, DynamicPropertyValueType.Undefined);
-            result.ObjectId = objectId;
-
-            result.DisplayNames = entity.DisplayNames.Select(n => n.ToModel()).ToArray();
-
-            result.DictionaryItems = entity.DictionaryItems.Select(i => i.ToModel()).ToArray();
-
-            var objectValues = new List<DynamicPropertyObjectValue>();
+            var property = entity.ToModel();
 
             var groups = entity.ObjectValues
                 .Where(v => v.ObjectId == objectId)
                 .GroupBy(v => v.Locale)
                 .ToArray();
 
-            foreach (var group in groups)
-            {
-                var stringValues = group.Select(v => v.ToString(CultureInfo.InvariantCulture)).ToArray();
-                var objectValue = new DynamicPropertyObjectValue { Locale = group.Key };
-
-                if (entity.IsDictionary)
-                {
-                    objectValue.DictionaryItemId = stringValues.FirstOrDefault();
-                }
-                else if (entity.IsArray)
-                {
-                    objectValue.ArrayValues = stringValues;
-                }
-                else
-                {
-                    objectValue.Value = stringValues.FirstOrDefault();
-                }
-
-                objectValues.Add(objectValue);
-            }
-
-            result.ObjectValues = objectValues.ToArray();
+            var result = (from @group in groups
+                          select new DynamicPropertyObjectValue
+                          {
+                              Property = property,
+                              ObjectId = objectId,
+                              Locale = @group.Key,
+                              Values = @group.Select(v => v.ToString(CultureInfo.InvariantCulture)).ToArray(),
+                          }).ToArray();
 
             return result;
         }
 
-        public static DynamicPropertyEntity ToEntity(this DynamicProperty model, bool updateProperty)
+        public static DynamicProperty ToModel(this DynamicPropertyEntity entity)
+        {
+            var result = new DynamicProperty();
+            result.InjectFrom(entity);
+
+            result.ValueType = EnumUtility.SafeParse(entity.ValueType, DynamicPropertyValueType.Undefined);
+            result.DisplayNames = entity.DisplayNames.Select(n => n.ToModel()).ToArray();
+
+            return result;
+        }
+
+        public static DynamicPropertyEntity ToEntity(this DynamicProperty model)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -67,34 +53,20 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
             if (!string.IsNullOrEmpty(model.Id))
                 result.Id = model.Id;
 
-            if (updateProperty)
-            {
-                if (model.ObjectType != null)
-                    result.ObjectType = model.ObjectType;
+            if (model.ObjectType != null)
+                result.ObjectType = model.ObjectType;
 
-                if (model.Name != null)
-                    result.Name = model.Name;
+            if (model.Name != null)
+                result.Name = model.Name;
 
-                result.IsArray = model.IsArray;
-                result.IsDictionary = model.IsDictionary;
+            result.IsArray = model.IsArray;
+            result.IsDictionary = model.IsDictionary;
 
-                if (model.ValueType != DynamicPropertyValueType.Undefined)
-                    result.ValueType = model.ValueType.ToString();
+            if (model.ValueType != DynamicPropertyValueType.Undefined)
+                result.ValueType = model.ValueType.ToString();
 
-                if (model.DisplayNames != null)
-                    result.DisplayNames = new ObservableCollection<DynamicPropertyNameEntity>(model.DisplayNames.Select(n => n.ToEntity()));
-
-                if (model.DictionaryItems != null)
-                {
-                    result.DictionaryItems = new ObservableCollection<DynamicPropertyDictionaryItemEntity>(model.DictionaryItems.Select(i => i.ToEntity()));
-                }
-            }
-
-            if (model.ObjectValues != null
-                && (updateProperty && string.IsNullOrEmpty(model.ObjectId) || !updateProperty && !string.IsNullOrEmpty(model.ObjectId)))
-            {
-                result.ObjectValues = new ObservableCollection<DynamicPropertyObjectValueEntity>(model.ObjectValues.SelectMany(v => v.ToEntity(model)));
-            }
+            if (model.DisplayNames != null)
+                result.DisplayNames = new ObservableCollection<DynamicPropertyNameEntity>(model.DisplayNames.Select(n => n.ToEntity()));
 
             return result;
         }
@@ -113,18 +85,6 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
             {
                 var comparer = AnonymousComparer.Create((DynamicPropertyNameEntity n) => string.Join("-", n.Locale, n.Name));
                 source.DisplayNames.Patch(target.DisplayNames, comparer, (sourceItem, targetItem) => { });
-            }
-
-            if (!source.ObjectValues.IsNullCollection())
-            {
-                var comparer = AnonymousComparer.Create((DynamicPropertyObjectValueEntity v) => string.Join("-", v.Locale, v.ToString(CultureInfo.InvariantCulture)));
-                source.ObjectValues.Patch(target.ObjectValues, comparer, (sourceItem, targetItem) => { });
-
-                foreach (var objectValue in target.ObjectValues)
-                {
-                    objectValue.ObjectType = target.ObjectType;
-                    objectValue.ValueType = target.ValueType;
-                }
             }
         }
     }

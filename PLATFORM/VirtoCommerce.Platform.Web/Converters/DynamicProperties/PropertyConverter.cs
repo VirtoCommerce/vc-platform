@@ -19,16 +19,6 @@ namespace VirtoCommerce.Platform.Web.Converters.DynamicProperties
                 result.DisplayNames = model.DisplayNames.Select(x => x.ToWebModel()).ToArray();
             }
 
-            if (model.DictionaryItems != null)
-            {
-                result.DictionaryItems = model.DictionaryItems.Select(x => x.ToWebModel()).ToArray();
-            }
-
-            if (model.ObjectValues != null)
-            {
-                result.ObjectValues = model.ObjectValues.Select(x => x.ToWebModel()).ToArray();
-            }
-
             return result;
         }
 
@@ -41,16 +31,6 @@ namespace VirtoCommerce.Platform.Web.Converters.DynamicProperties
             if (model.DisplayNames != null)
             {
                 result.DisplayNames = model.DisplayNames.Select(x => x.ToCoreModel()).ToArray();
-            }
-
-            if (model.DictionaryItems != null)
-            {
-                result.DictionaryItems = model.DictionaryItems.Select(x => x.ToCoreModel()).ToArray();
-            }
-
-            if (model.ObjectValues != null)
-            {
-                result.ObjectValues = model.ObjectValues.Select(x => x.ToCoreModel()).ToArray();
             }
 
             return result;

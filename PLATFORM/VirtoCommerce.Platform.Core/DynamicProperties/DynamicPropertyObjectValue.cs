@@ -2,9 +2,9 @@
 {
     public class DynamicPropertyObjectValue
     {
-        public string DictionaryItemId { get; set; }
+        public DynamicProperty Property { get; set; }
+        public string ObjectId { get; set; }
         public string Locale { get; set; }
-        public string Value { get; set; }
-        public string[] ArrayValues { get; set; }
+        public string[] Values { get; set; }
     }
 }
