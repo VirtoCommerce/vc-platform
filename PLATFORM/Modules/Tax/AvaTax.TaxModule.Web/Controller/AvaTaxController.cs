@@ -37,7 +37,7 @@ namespace AvaTax.TaxModule.Web.Controller
                 var taxSvc = new JsonTaxSvc(_taxSettings.Username, _taxSettings.Password, _taxSettings.ServiceUrl);
                 var retVal = taxSvc.Ping();
                 if (retVal.ResultCode.Equals(SeverityLevel.Success))
-                    return Ok(new[] {retVal});
+                    return Ok(retVal);
 
                 return BadRequest(string.Join(", ", retVal.Messages.Select(m => m.Summary)));
             }
@@ -66,7 +66,7 @@ namespace AvaTax.TaxModule.Web.Controller
                 return Ok(validateAddressResult);
             }
 
-            return BadRequest();
+            return BadRequest("AvaTax credentials not provided");
         }
     }
 }

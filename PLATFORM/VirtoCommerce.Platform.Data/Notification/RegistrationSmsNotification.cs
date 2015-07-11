@@ -9,7 +9,7 @@ namespace VirtoCommerce.Platform.Data.Notification
 {
 	public class RegistrationSmsNotification : SmsNotification
 	{
-		public RegistrationSmsNotification(Func<ISmsNotificationSendingGateway> smsNotificationSendingGateway) : base(smsNotificationSendingGateway)
+		public RegistrationSmsNotification(ISmsNotificationSendingGateway smsNotificationSendingGateway) : base(smsNotificationSendingGateway)
 		{
 
 		}

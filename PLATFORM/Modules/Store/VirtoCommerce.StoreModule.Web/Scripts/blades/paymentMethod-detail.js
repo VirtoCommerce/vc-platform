@@ -28,7 +28,6 @@
     }
 
     $scope.blade.headIcon = 'fa-archive';
-    $scope.blade.toolbarCustomTemplates = ['Scripts/common/templates/toolbar-isActive.tpl.html'];
     
     initializeBlade($scope.blade.origEntity);
 }]);

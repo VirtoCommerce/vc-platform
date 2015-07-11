@@ -1,6 +1,7 @@
 ﻿angular.module('platformWebApp')
 .controller('platformWebApp.notificationTemplatesListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.newnotifications', function ($scope, bladeNavigationService, dialogService, notifications) {
 	var blade = $scope.blade;
+	blade.selectedLanguage = null;
 
 	blade.initialize = function () {
 		blade.isLoading = true;
@@ -11,6 +12,8 @@
 	}
 
 	blade.openTemplate = function (template) {
+		blade.selectedLanguage = template.language;
+
 		var newBlade = {
 			id: 'editTemplate',
 			title: 'Edit notification template',
@@ -31,7 +34,7 @@
 	blade.createTemplate = function (template) {
 		var newBlade = {
 			id: 'editTemplate',
-			title: 'Edit notification template',
+			title: 'Create notification template',
 			notificationType: blade.notificationType,
 			objectId: blade.objectId,
 			objectTypeId: blade.objectTypeId,

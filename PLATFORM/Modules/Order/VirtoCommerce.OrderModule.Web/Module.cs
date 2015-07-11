@@ -13,6 +13,7 @@ using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Platform.Core.Notification;
 using VirtoCommerce.OrderModule.Data.Notification;
+using VirtoCommerce.OrderModule.Web.Resources;
 
 namespace VirtoCommerce.OrderModule.Web
 {
@@ -65,21 +66,6 @@ namespace VirtoCommerce.OrderModule.Web
 
             _container.RegisterType<ICustomerOrderService, CustomerOrderServiceImpl>();
             _container.RegisterType<ICustomerOrderSearchService, CustomerOrderSearchServiceImpl>();
-
-			var notificationManager = _container.Resolve<INotificationManager>();
-			var emailSendingGateway = _container.Resolve<IEmailNotificationSendingGateway>();
-			notificationManager.RegisterNotificationType(() => new OrderCreateEmailNotification(() => emailSendingGateway)
-				{
-					DisplayName = "Create order notification",
-					Description = "This notification sends by email to client when he create order",
-					NotificationTemplate = new NotificationTemplate
-					{
-						Body = @"You has created order. Your order number is - {{ ordernumber }}",
-						Subject = @"Your order was created",
-						NotificationTypeId = "OrderCreateEmailNotification",
-						Language = "en-US"
-					}
-				});
         }
 
         public override void PostInitialize()
@@ -90,6 +76,20 @@ namespace VirtoCommerce.OrderModule.Web
 				new CacheSettings("Statistic", TimeSpan.FromHours(1))
 			};
             cacheManager.AddCacheSettings(cacheSettings);
+
+			var notificationManager = _container.Resolve<INotificationManager>();
+
+			notificationManager.RegisterNotificationType(() => new OrderCreateEmailNotification(_container.Resolve<IEmailNotificationSendingGateway>())
+			{
+				DisplayName = "Create order notification",
+				Description = "This notification sends by email to client when he create order",
+				NotificationTemplate = new NotificationTemplate
+				{
+					Body = OrderNotificationResource.CreateOrderNotificationBody,
+					Subject = OrderNotificationResource.CreateOrderNotificationSubject,
+					Language = "en-US"
+				}
+			});
         }
 
         #endregion

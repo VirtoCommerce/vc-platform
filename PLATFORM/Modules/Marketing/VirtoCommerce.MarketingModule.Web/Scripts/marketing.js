@@ -46,16 +46,7 @@ angular.module(moduleName, [])
       //    canExecuteMethod: function () { return true; },
       //    index: 0
       //}, 'virtoCommerce.marketingModule.itemsDynamicContentListController');
-
-      //toolbarService.register({
-      //    template: 'Modules/$(VirtoCommerce.Store)/Scripts/blades/toolbar-isActive.tpl.html',
-      //    index: 1
-      //}, 'virtoCommerce.marketingModule.itemsDynamicContentListController', true);
-      //toolbarService.register({
-      //    template: 'Modules/$(VirtoCommerce.Orders)/Scripts/blades/operation-detail-toolbar.tpl.html',
-      //    index: 0
-      //}, 'virtoCommerce.marketingModule.promotionDetailController', true);
-
+      
       //Register module in main menu
       var menuItem = {
           path: 'browse/marketing',

@@ -9,18 +9,23 @@ using VirtoCommerce.Platform.Core.Notification;
 using SendGrid;
 using System.Web;
 using Exceptions;
+using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.Platform.Data.Notification
 {
 	public class DefaultEmailNotificationSendingGateway : IEmailNotificationSendingGateway
 	{
-		private readonly string _sendGridUserName;
-		private readonly string _sendGridPassword;
+		private readonly ISettingsManager _settingsManager;
 
-		public DefaultEmailNotificationSendingGateway(string userName, string password)
+		private const string sendGridUserNameSettingName = "VirtoCommerce.Platform.Notifications.SendGrid.UserName";
+		private const string sendGridPasswordSettingName = "VirtoCommerce.Platform.Notifications.SendGrid.Secret";
+
+		public DefaultEmailNotificationSendingGateway(ISettingsManager settingsManager)
 		{
-			_sendGridUserName = userName;
-			_sendGridPassword = password;
+			if (settingsManager == null)
+				throw new ArgumentNullException("settingsManager");
+
+			_settingsManager = settingsManager;
 		}
 
 		public SendNotificationResult SendNotification(Core.Notification.Notification notification)
@@ -33,7 +38,10 @@ namespace VirtoCommerce.Platform.Data.Notification
 			mail.Subject = notification.Subject;
 			mail.Html = notification.Body;
 
-			var credentials = new NetworkCredential(_sendGridUserName, _sendGridPassword);
+			var userName = _settingsManager.GetSettingByName(sendGridUserNameSettingName).Value;
+			var password = _settingsManager.GetSettingByName(sendGridPasswordSettingName).Value;
+
+			var credentials = new NetworkCredential(userName, password);
 			var transportWeb = new Web(credentials);
 			try
 			{
@@ -47,7 +55,7 @@ namespace VirtoCommerce.Platform.Data.Notification
 				if (ex.InnerException is InvalidApiRequestException)
 				{
 					var apiEx = ex.InnerException as InvalidApiRequestException;
-					if(apiEx.Errors != null && apiEx.Errors.Length > 0)
+					if (apiEx.Errors != null && apiEx.Errors.Length > 0)
 					{
 						retVal.ErrorMessage = string.Join(" ", apiEx.Errors);
 					}

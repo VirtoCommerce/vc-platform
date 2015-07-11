@@ -111,7 +111,6 @@
 
     function initializeToolbar() {
         if (!$scope.blade.isNew) {
-            $scope.blade.toolbarCustomTemplates = ['Modules/$(VirtoCommerce.Marketing)/Scripts/promotion/blades/promotion-detail-toolbar.tpl.html'];
             $scope.blade.toolbarCommands = [
                 {
                     name: "Save",

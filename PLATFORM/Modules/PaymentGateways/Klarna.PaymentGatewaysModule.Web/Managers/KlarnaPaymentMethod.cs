@@ -401,11 +401,18 @@ namespace Klarna.PaymentGatewaysModule.Web.Managers
 				}
 				if (lineItem.Price > 0)
 				{
-					addedItem.Add("unit_price", (int)(lineItem.Price * 100));
+					addedItem.Add("unit_price", (int)((lineItem.Price + lineItem.Tax / lineItem.Quantity) * 100));
+					//addedItem.Add("total_price_excluding_tax", (int)(lineItem.Price * lineItem.Quantity * 100));
+				}
+
+				if (lineItem.Tax > 0)
+				{
+					//addedItem.Add("total_price_including_tax", (int)((lineItem.Price * lineItem.Quantity + lineItem.Tax) * 100));
+					//addedItem.Add("total_tax_amount", (int)(lineItem.Tax * 100));
+					addedItem.Add("tax_rate", (int)(lineItem.TaxDetails.Sum(td => td.Rate) * 10000));
 				}
 
 				addedItem.Add("discount_rate", 0);
-				addedItem.Add("tax_rate", 0);
 				addedItem.Add("reference", lineItem.ProductId);
 
 				cartItems.Add(addedItem);

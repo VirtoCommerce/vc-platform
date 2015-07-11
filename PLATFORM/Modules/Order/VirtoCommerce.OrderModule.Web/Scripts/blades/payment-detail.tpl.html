@@ -5,6 +5,15 @@
                 <div class="status" ng-bind="blade.currentEntity.status"></div>
                 <div class="reason" ng-bind="blade.currentEntity.cancelReason" ng-if="blade.currentEntity.isCancelled"></div>
             </div>
+            <div class="form-group">
+                <label class="form-label">Approved</label>
+                <div class="form-input">
+                    <label class="form-label __switch">
+                        <input type="checkbox" ng-model="blade.currentEntity.isApproved" />
+                        <span class="switch"></span>
+                    </label>
+                </div>
+            </div>
             <div class="form columns clearfix">
                 <div class="column">
                     <div class="form-group">

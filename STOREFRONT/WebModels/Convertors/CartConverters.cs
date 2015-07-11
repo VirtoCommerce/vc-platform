@@ -124,11 +124,23 @@ namespace VirtoCommerce.Web.Convertors
                     checkoutModel.LineItems.Add(item.AsWebModel());
                 }
 
-                checkoutModel.TaxLines.Add(new TaxLine
+                var taxableItems = cart.Items;//.Where(i => i.TaxIncluded);
+                if (taxableItems.Count() > 0)
                 {
-                    Title = "Line items taxes",
-                    Price = cart.Items.Sum(i => i.TaxTotal)
-                });
+                    var lineItemsTax = new TaxLine
+                    {
+                        Title = "Line items",
+                        Price = taxableItems.Sum(i => i.TaxTotal),
+                        Rate = taxableItems.Where(i => i.TaxDetails != null).Sum(i => i.TaxDetails.Sum(td => td.Rate))
+                    };
+
+                    if (checkoutModel.TaxLines == null)
+                    {
+                        checkoutModel.TaxLines = new List<TaxLine>();
+                    }
+
+                    checkoutModel.TaxLines.Add(lineItemsTax);
+                }
             }
 
             checkoutModel.Name = cart.Name;
@@ -150,12 +162,6 @@ namespace VirtoCommerce.Web.Convertors
                         Code = payment.PaymentGatewayCode
                     };
                 }
-
-                checkoutModel.TaxLines.Add(new TaxLine
-                {
-                    Title = "Payments taxes",
-                    Price = 0
-                });
             }
 
             if (cart.Shipments != null)
@@ -169,15 +175,28 @@ namespace VirtoCommerce.Web.Convertors
                         Handle = shipment.ShipmentMethodCode,
                         Price = shipment.ShippingPrice,
                         Title = shipment.ShipmentMethodCode,
+                        TaxTotal = shipment.TaxTotal,
                         TaxType = shipment.TaxType
                     };
                 }
 
-                checkoutModel.TaxLines.Add(new TaxLine
+                var taxableShipments = cart.Shipments;//.Where(s => s.TaxIncluded);
+                if (taxableShipments.Count() > 0)
                 {
-                    Title = "Shipping taxes",
-                    Price = cart.Shipments.Sum(s => s.TaxTotal)
-                });
+                    var shippingTax = new TaxLine
+                    {
+                        Title = "Shipping",
+                        Price = cart.Shipments.Sum(s => s.TaxTotal),
+                        Rate = taxableShipments.Where(s => s.TaxDetails != null).Sum(i => i.TaxDetails.Sum(td => td.Rate))
+                    };
+
+                    if (checkoutModel.TaxLines == null)
+                    {
+                        checkoutModel.TaxLines = new List<TaxLine>();
+                    }
+
+                    checkoutModel.TaxLines.Add(shippingTax);
+                }
             }
 
             // Transactions

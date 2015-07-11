@@ -42,6 +42,7 @@ using VirtoCommerce.Platform.Data.Settings;
 using VirtoCommerce.Platform.Web;
 using VirtoCommerce.Platform.Web.BackgroundJobs;
 using VirtoCommerce.Platform.Web.Controllers.Api;
+using VirtoCommerce.Platform.Web.Resources;
 using WebGrease.Extensions;
 
 [assembly: OwinStartup(typeof(Startup))]
@@ -124,6 +125,19 @@ namespace VirtoCommerce.Platform.Web
 			var jobScheduler = container.Resolve<SendNotificationsJobsSheduler>();
 			jobScheduler.SheduleJobs();
 
+			var notificationManager = container.Resolve<INotificationManager>();
+			notificationManager.RegisterNotificationType(() => new RegistrationEmailNotification(container.Resolve<IEmailNotificationSendingGateway>())
+			{
+				DisplayName = "Registration notification",
+				Description = "This notification sends by email to client when he finish registration",
+				NotificationTemplate = new NotificationTemplate
+				{
+					Body = PlatformNotificationResource.RegistrationNotificationBody,
+					Subject = PlatformNotificationResource.RegistrationNotificationSubject,
+					Language = "en-US"
+				}
+			});
+
             var postInitializeModules = moduleCatalog.CompleteListWithDependencies(moduleCatalog.Modules)
                 .Where(m => m.ModuleInstance != null)
                 .ToArray();
@@ -199,12 +213,12 @@ namespace VirtoCommerce.Platform.Web
 
             #region Settings
 
-            var platformSettings = new[]
-            {
-                new ModuleManifest
-                {
-                    Settings = new[]
-                    {
+			var platformSettings = new[]
+			{
+				new ModuleManifest
+				{
+					Settings = new[]
+					{
 						new ModuleSettingsGroup
 						{
 							Name = "Platform|Notifications|SendGrid",
@@ -266,32 +280,15 @@ namespace VirtoCommerce.Platform.Web
             var notificationTemplateService = new NotificationTemplateServiceImpl(platformRepositoryFactory);
             var notificationManager = new NotificationManager(resolver, platformRepositoryFactory, notificationTemplateService);
 
-            Func<IEmailNotificationSendingGateway> emailNotificationSendingGatewayFactory =
-                () => new DefaultEmailNotificationSendingGateway(settingsManager.GetSettingByName("VirtoCommerce.Platform.Notifications.SendGrid.UserName").Value,
-                                                                 settingsManager.GetSettingByName("VirtoCommerce.Platform.Notifications.SendGrid.Secret").Value);
+            var emailNotificationSendingGateway = new DefaultEmailNotificationSendingGateway(settingsManager);
 
             var defaultSmsNotificationSendingGateway = new DefaultSmsNotificationSendingGateway();
 
             container.RegisterInstance<INotificationTemplateService>(notificationTemplateService);
             container.RegisterInstance<INotificationManager>(notificationManager);
             container.RegisterInstance<INotificationTemplateResolver>(resolver);
-            container.RegisterInstance<IEmailNotificationSendingGateway>(emailNotificationSendingGatewayFactory());
+			container.RegisterInstance<IEmailNotificationSendingGateway>(emailNotificationSendingGateway);
             container.RegisterInstance<ISmsNotificationSendingGateway>(defaultSmsNotificationSendingGateway);
-
-            notificationManager.RegisterNotificationType(
-                () => new RegistrationEmailNotification(emailNotificationSendingGatewayFactory)
-                {
-                    DisplayName = "Registration notification",
-                    Description = "This notification sends by email to client when he finish registration",
-                    NotificationTemplate = new NotificationTemplate
-                    {
-                        Body = @"<p> Dear {{ firstname }} {{ lastname }}, you has registered on our site</p> <p> Your e-mail  - {{ login }} </p>",
-                        Subject = @"Thanks for registration {{ firstname }} {{ lastname }}!!!",
-                        NotificationTypeId = "RegistrationEmailNotification",
-                        Language = "en-US"
-                    }
-                }
-            );
 
             //notificationManager.RegisterNotificationType(
             //	() => new RegistrationSmsNotification(defaultSmsNotificationSendingGateway)

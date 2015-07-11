@@ -21,39 +21,35 @@
 					</table>
 				</div>
 
-				<fieldset>
-					<legend>Display name</legend>
-				</fieldset>
-				<div class="form-group" style="margin-top:-16px;">
-					<div class="form-input">
-						<input placeholder="Enter display name" required ng-model="blade.currentEntity.displayName" class="form-control" focus-on="" />
+				<div class="form columns clearfix">
+					<div class="column">
+						<fieldset ng-if="blade.isNew">
+							<legend>Language</legend>
+						</fieldset>
+						<div class=" form-group" ng-if="blade.isNew" style="margin-top:-16px;">
+							<div class="form-input">
+								<ui-select ng-model="blade.currentEntity.language">
+									<ui-select-match placeholder="Select...">{{$select.selected}}</ui-select-match>
+									<ui-select-choices repeat="x in blade.languages">
+										<span class="flag flag-{{blade.getFlag(x)}}"></span>
+										<span ng-bind-html="x"></span>
+									</ui-select-choices>
+								</ui-select>
+							</div>
+						</div>
 					</div>
+					<div class="column"></div>
 				</div>
 
-				<fieldset style="margin-top:20px;" ng-if="!blade.isNew">
-					<legend>Language: <span class="flag flag-{{blade.getFlag(blade.currentEntity.language)}}"></span> {{ blade.currentEntity.language }}</legend>
-				</fieldset>
 				<fieldset style="margin-top:20px;" ng-if="blade.isNew">
-					<legend>Language</legend>
+					<legend>Subject</legend>
 				</fieldset>
-				<div class="form-group" ng-if="blade.isNew" style="margin-top:-16px;">
-					<div class="form-input">
-						<ui-select ng-model="blade.currentEntity.language">
-							<ui-select-match placeholder="Select...">{{$select.selected}}</ui-select-match>
-							<ui-select-choices repeat="x in blade.languages">
-								<span class="flag flag-{{blade.getFlag(x)}}"></span>
-								<span ng-bind-html="x"></span>
-							</ui-select-choices>
-						</ui-select>
-					</div>
-				</div>
-
-				<fieldset style="margin-top:20px;">
+				<fieldset ng-if="!blade.isNew">
 					<legend>Subject</legend>
 				</fieldset>
 				<div class="form-group" style="margin-top:-15px;">
 					<div class="form-input">
-						<ui-codemirror required ng-model="blade.currentEntity.subject" ui-codemirror-opts="editorOptions"></ui-codemirror>
+						<ui-codemirror ng-model="blade.currentEntity.subject" ui-codemirror-opts="editorOptions"></ui-codemirror>
 					</div>
 				</div>
 

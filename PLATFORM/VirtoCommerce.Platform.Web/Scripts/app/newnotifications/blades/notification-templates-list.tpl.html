@@ -6,18 +6,22 @@
 					<thead>
 						<tr>
 							<th class="table-col __product-img"></th>
-							<th class="table-col">Name</th>
+							<th class="table-col">Subject</th>
+							<th class="table-col">Body</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr class="table-item" ng-repeat="data in blade.currentEntities" ng-click="blade.openTemplate(data)">
+						<tr class="table-item" ng-repeat="data in blade.currentEntities" ng-click="blade.openTemplate(data)" ng-class="{ '__selected': blade.selectedLanguage === data.language }">
 							<td class="table-col">
 								<div class="product-img">
 									<i class="table-ico flag flag-{{blade.getFlag(data.language)}}"></i>
 								</div>
 							</td>
 							<td class="table-col">
-								{{data.displayName}}
+								{{data.subject.substring(0,10)}}{{data.subject.length > 10 ? '...' : ''}}
+							</td>
+							<td class="table-col">
+								{{data.body.substring(0,10)}}{{data.body.length > 10 ? '...' : ''}}
 							</td>
 						</tr>
 					</tbody>

@@ -72,6 +72,9 @@ namespace VirtoCommerce.Web.Models
         public string Excerpt { get; set; }
 
         [DataMember]
+        public string TaxType { get; set; }
+
+        [DataMember]
         public Image FeaturedImage { get; set; }
 
         [DataMember]

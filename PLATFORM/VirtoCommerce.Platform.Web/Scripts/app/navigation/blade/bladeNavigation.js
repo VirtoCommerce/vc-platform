@@ -1,10 +1,9 @@
 angular.module('platformWebApp')
 .factory('platformWebApp.toolbarService', function () {
     var toolbarCommandsMap = [];
-    var toolbarCustomContentsMap = [];
     return {
-        register: function (toolbarItem, toolbarController, isCustomContent) {
-            var map = isCustomContent ? toolbarCustomContentsMap : toolbarCommandsMap;
+        register: function (toolbarItem, toolbarController) {
+            var map = toolbarCommandsMap;
             if (!map[toolbarController]) {
                 map[toolbarController] = [];
             }
@@ -14,17 +13,13 @@ angular.module('platformWebApp')
                 return a.index > b.index;
             });
         },
-        resolve: function (bladeCommands, toolbarController, isCustomContent) {
-            var map = isCustomContent ? toolbarCustomContentsMap : toolbarCommandsMap;
-            var externalCommands = map[toolbarController];
+        resolve: function (bladeCommands, toolbarController) {
+            var externalCommands = toolbarCommandsMap[toolbarController];
             if (externalCommands) {
                 bladeCommands = angular.copy(bladeCommands || []);
 
                 _.each(externalCommands, function (newCommand) {
-                    if (isCustomContent)
-                        bladeCommands.splice(newCommand.index, 0, newCommand.template);
-                    else
-                        bladeCommands.splice(newCommand.index, 0, newCommand);
+                    bladeCommands.splice(newCommand.index, 0, newCommand);
                 });
             }
 
@@ -42,7 +37,7 @@ angular.module('platformWebApp')
         }
     }
 }])
-.directive('vaBlade', ['$compile', 'platformWebApp.bladeNavigationService', 'platformWebApp.toolbarService', '$timeout', function ($compile, bladeNavigationService, toolbarService, $timeout) {
+.directive('vaBlade', ['$compile', 'platformWebApp.bladeNavigationService', 'platformWebApp.toolbarService', '$timeout', '$document', function ($compile, bladeNavigationService, toolbarService, $timeout, $document) {
     return {
         terminal: true,
         priority: 100,
@@ -84,6 +79,8 @@ angular.module('platformWebApp')
                 $(contentblock).animate({ width: (parseInt(window.innerWidth - leftMenu.width()) + 'px') }, 100);
                 $(contentblock).find('.inner-block').animate({ width: parseInt(window.innerWidth - leftMenu.width() - 40) + 'px' }, 100);
                 $('.cnt').animate({ scrollLeft: offset + 'px' }, 250);
+
+                setVisibleToolsLimit();
             };
 
             scope.bladeRestore = function () {
@@ -98,6 +95,8 @@ angular.module('platformWebApp')
                 $(contentblock).animate({ width: blockWidth }, 100);
                 $(contentblock).find('.inner-block').animate({ width: blockWidth - 40 }, 100);
                 $('.cnt').animate({ scrollLeft: offset + 'px' }, 250);
+
+                setVisibleToolsLimit();
             };
 
             scope.bladeClose = function (onAfterClose) {
@@ -109,24 +108,44 @@ angular.module('platformWebApp')
                 });
             };
 
-            scope.toolsPerLineCount = 4;
-            scope.bladeToolbarStyle = {};
-            scope.showMoreTools = function () {
-                scope.isExtraToolbarOpen = !scope.isExtraToolbarOpen;
-                if (scope.isExtraToolbarOpen) {
-                    scope.bladeToolbarStyle = { height: '100px' };
-                } else {
-                    scope.bladeToolbarStyle = { height: '50px' };
-                    scope.bladeToolbarStyle = {};
-                }
-            };
-
             scope.$watch('blade.toolbarCommands', function (toolbarCommands) {
-                scope.resolvedToolbarCommands = toolbarService.resolve(toolbarCommands, scope.blade.controller, false);
+                scope.resolvedToolbarCommands = toolbarService.resolve(toolbarCommands, scope.blade.controller);
+
+                setVisibleToolsLimit();
             });
-            scope.$watch('blade.toolbarCustomTemplates', function (toolbarCustomTemplates) {
-                scope.resolvedToolbarCustomTemplates = toolbarService.resolve(toolbarCustomTemplates, scope.blade.controller, true);
-            });
+
+            var toolbar = blade.find(".blade-toolbar .menu.__inline");
+
+            function setVisibleToolsLimit() {
+                scope.toolsPerLineCount = scope.resolvedToolbarCommands ? scope.resolvedToolbarCommands.length : 1;
+
+                $timeout(function () {
+                    if (toolbar.height() > 55 && scope.toolsPerLineCount > 1) {
+                        var maxToolbarWidth = toolbar.width() - 46; // the 'more' button is 46px wide
+                        //console.log(toolbar.width() + 'maxToolbarWidth: ' + maxToolbarWidth);
+                        var toolsWidth = 0;
+                        var lis = toolbar.find("li");
+                        var i = 0;
+                        while (maxToolbarWidth > toolsWidth && lis.length > i) {
+                            toolsWidth += lis[i].clientWidth;
+                            i++;
+                        }
+                        scope.toolsPerLineCount = i - 1;
+                    }
+                }, 220);
+            }
+
+            function handleClickEvent() {
+                setVisibleToolsLimit();
+                $document.unbind('click', handleClickEvent);
+            }
+
+            scope.showMoreTools = function (event) {
+                scope.toolsPerLineCount = scope.resolvedToolbarCommands.length;
+
+                event.stopPropagation();
+                $document.bind('click', handleClickEvent);
+            };
         }
     };
 }])

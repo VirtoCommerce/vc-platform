@@ -12,8 +12,10 @@ namespace VirtoCommerce.Platform.Core.Notification
 		void SheduleSendNotification(Notification notification);
 		Notification GetNotificationById(string id);
 		void StopSendingNotifications(string[] ids);
-		T GetNewNotification<T>(GetNotificationCriteria criteria) where T : Core.Notification.Notification;
-		Core.Notification.Notification GetNewNotification(GetNotificationCriteria criteria);
+
+		Core.Notification.Notification GetNewNotification(string type);
+		T GetNewNotification<T>(string objectId, string objectTypeId, string language) where T : Core.Notification.Notification;
+		Core.Notification.Notification GetNewNotification(string type, string objectId, string objectTypeId, string language);
 		void UpdateNotification(Notification notifications);
 		void DeleteNotification(string id);
 		SearchNotificationsResult SearchNotifications(SearchNotificationCriteria criteria);
