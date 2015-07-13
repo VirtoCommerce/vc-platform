@@ -17,6 +17,7 @@ namespace VirtoCommerce.Platform.Data.Repositories.Migrations
                         ValueType = c.String(nullable: false, maxLength: 64),
                         IsArray = c.Boolean(nullable: false),
                         IsDictionary = c.Boolean(nullable: false),
+                        IsMultilingual = c.Boolean(nullable: false),
                         CreatedDate = c.DateTime(nullable: false),
                         ModifiedDate = c.DateTime(),
                         CreatedBy = c.String(maxLength: 64),
@@ -42,13 +43,13 @@ namespace VirtoCommerce.Platform.Data.Repositories.Migrations
                 .Index(t => new { t.PropertyId, t.Name }, unique: true, name: "IX_PlatformDynamicPropertyDictionaryItem_PropertyId_Name");
             
             CreateTable(
-                "dbo.PlatformDynamicPropertyDictionaryValue",
+                "dbo.PlatformDynamicPropertyDictionaryItemName",
                 c => new
                     {
                         Id = c.String(nullable: false, maxLength: 64),
                         DictionaryItemId = c.String(nullable: false, maxLength: 64),
                         Locale = c.String(maxLength: 64),
-                        Value = c.String(maxLength: 512),
+                        Name = c.String(maxLength: 512),
                         CreatedDate = c.DateTime(nullable: false),
                         ModifiedDate = c.DateTime(),
                         CreatedBy = c.String(maxLength: 64),
@@ -56,7 +57,7 @@ namespace VirtoCommerce.Platform.Data.Repositories.Migrations
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.PlatformDynamicPropertyDictionaryItem", t => t.DictionaryItemId, cascadeDelete: true)
-                .Index(t => new { t.DictionaryItemId, t.Locale, t.Value }, unique: true, name: "IX_PlatformDynamicPropertyDictionaryValue_DictionaryItemId_Locale_Value");
+                .Index(t => new { t.DictionaryItemId, t.Locale, t.Name }, unique: true, name: "IX_PlatformDynamicPropertyDictionaryItemName_DictionaryItemId_Locale_Name");
             
             CreateTable(
                 "dbo.PlatformDynamicPropertyObjectValue",
@@ -91,9 +92,9 @@ namespace VirtoCommerce.Platform.Data.Repositories.Migrations
                 c => new
                     {
                         Id = c.String(nullable: false, maxLength: 64),
+                        PropertyId = c.String(nullable: false, maxLength: 64),
                         Locale = c.String(maxLength: 64),
                         Name = c.String(maxLength: 256),
-                        PropertyId = c.String(nullable: false, maxLength: 64),
                         CreatedDate = c.DateTime(nullable: false),
                         ModifiedDate = c.DateTime(),
                         CreatedBy = c.String(maxLength: 64),
@@ -111,16 +112,16 @@ namespace VirtoCommerce.Platform.Data.Repositories.Migrations
             DropForeignKey("dbo.PlatformDynamicPropertyDictionaryItem", "PropertyId", "dbo.PlatformDynamicProperty");
             DropForeignKey("dbo.PlatformDynamicPropertyObjectValue", "PropertyId", "dbo.PlatformDynamicProperty");
             DropForeignKey("dbo.PlatformDynamicPropertyObjectValue", "DictionaryItemId", "dbo.PlatformDynamicPropertyDictionaryItem");
-            DropForeignKey("dbo.PlatformDynamicPropertyDictionaryValue", "DictionaryItemId", "dbo.PlatformDynamicPropertyDictionaryItem");
+            DropForeignKey("dbo.PlatformDynamicPropertyDictionaryItemName", "DictionaryItemId", "dbo.PlatformDynamicPropertyDictionaryItem");
             DropIndex("dbo.PlatformDynamicPropertyName", "IX_PlatformDynamicPropertyName_PropertyId_Locale_Name");
             DropIndex("dbo.PlatformDynamicPropertyObjectValue", new[] { "DictionaryItemId" });
             DropIndex("dbo.PlatformDynamicPropertyObjectValue", new[] { "PropertyId" });
-            DropIndex("dbo.PlatformDynamicPropertyDictionaryValue", "IX_PlatformDynamicPropertyDictionaryValue_DictionaryItemId_Locale_Value");
+            DropIndex("dbo.PlatformDynamicPropertyDictionaryItemName", "IX_PlatformDynamicPropertyDictionaryItemName_DictionaryItemId_Locale_Name");
             DropIndex("dbo.PlatformDynamicPropertyDictionaryItem", "IX_PlatformDynamicPropertyDictionaryItem_PropertyId_Name");
             DropIndex("dbo.PlatformDynamicProperty", "IX_PlatformDynamicProperty_ObjectType_Name");
             DropTable("dbo.PlatformDynamicPropertyName");
             DropTable("dbo.PlatformDynamicPropertyObjectValue");
-            DropTable("dbo.PlatformDynamicPropertyDictionaryValue");
+            DropTable("dbo.PlatformDynamicPropertyDictionaryItemName");
             DropTable("dbo.PlatformDynamicPropertyDictionaryItem");
             DropTable("dbo.PlatformDynamicProperty");
         }

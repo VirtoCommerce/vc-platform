@@ -1,8 +1,8 @@
 ﻿namespace VirtoCommerce.Platform.Core.DynamicProperties
 {
-    public class DynamicPropertyDictionaryValue
+    public class DynamicPropertyDictionaryItemName
     {
         public string Locale { get; set; }
-        public string Value { get; set; }
+        public string Name { get; set; }
     }
 }

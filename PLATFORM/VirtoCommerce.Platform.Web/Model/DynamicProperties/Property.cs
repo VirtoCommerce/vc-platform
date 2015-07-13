@@ -10,10 +10,11 @@ namespace VirtoCommerce.Platform.Web.Model.DynamicProperties
         public string ObjectType { get; set; }
         public bool IsArray { get; set; }
         public bool IsDictionary { get; set; }
+        public bool IsMultilingual { get; set; }
 
         [JsonConverter(typeof(StringEnumConverter))]
         public PropertyValueType ValueType { get; set; }
 
-        public DisplayName[] DisplayNames { get; set; }
+        public PropertyName[] DisplayNames { get; set; }
     }
 }

@@ -6,19 +6,19 @@ namespace VirtoCommerce.Platform.Web.Converters.DynamicProperties
 {
     public static class ObjectValueValueConverter
     {
-        public static ObjectValue ToWebModel(this DynamicPropertyObjectValue model)
+        public static ObjectValue ToWebModel(this DynamicPropertyObjectValue coreModel)
         {
             var result = new ObjectValue();
-            result.InjectFrom(model);
-            result.Property = model.Property.ToWebModel();
+            result.InjectFrom(coreModel);
+            result.Property = coreModel.Property.ToWebModel();
             return result;
         }
 
-        public static DynamicPropertyObjectValue ToCoreModel(this ObjectValue model)
+        public static DynamicPropertyObjectValue ToCoreModel(this ObjectValue webModel)
         {
             var result = new DynamicPropertyObjectValue();
-            result.InjectFrom(model);
-            result.Property = model.Property.ToCoreModel();
+            result.InjectFrom(webModel);
+            result.Property = webModel.Property.ToCoreModel();
             return result;
         }
     }

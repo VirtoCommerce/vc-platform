@@ -52,7 +52,7 @@ namespace VirtoCommerce.Platform.Data.Repositories
             modelBuilder.Entity<DynamicPropertyEntity>("PlatformDynamicProperty", "Id");
             modelBuilder.Entity<DynamicPropertyNameEntity>("PlatformDynamicPropertyName", "Id");
             modelBuilder.Entity<DynamicPropertyDictionaryItemEntity>("PlatformDynamicPropertyDictionaryItem", "Id");
-            modelBuilder.Entity<DynamicPropertyDictionaryValueEntity>("PlatformDynamicPropertyDictionaryValue", "Id");
+            modelBuilder.Entity<DynamicPropertyDictionaryItemNameEntity>("PlatformDynamicPropertyDictionaryItemName", "Id");
             modelBuilder.Entity<DynamicPropertyObjectValueEntity>("PlatformDynamicPropertyObjectValue", "Id");
 
             modelBuilder.Entity<DynamicPropertyNameEntity>()
@@ -65,9 +65,9 @@ namespace VirtoCommerce.Platform.Data.Repositories
                 .WithMany(x => x.DictionaryItems)
                 .HasForeignKey(x => x.PropertyId);
 
-            modelBuilder.Entity<DynamicPropertyDictionaryValueEntity>()
+            modelBuilder.Entity<DynamicPropertyDictionaryItemNameEntity>()
                 .HasRequired(x => x.DictionaryItem)
-                .WithMany(x => x.DictionaryValues)
+                .WithMany(x => x.DisplayNames)
                 .HasForeignKey(x => x.DictionaryItemId);
 
             modelBuilder.Entity<DynamicPropertyObjectValueEntity>()
@@ -103,15 +103,15 @@ namespace VirtoCommerce.Platform.Data.Repositories
                 .Property(x => x.Name)
                 .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformDynamicPropertyDictionaryItem_PropertyId_Name", 2) { IsUnique = true }));
 
-            modelBuilder.Entity<DynamicPropertyDictionaryValueEntity>()
+            modelBuilder.Entity<DynamicPropertyDictionaryItemNameEntity>()
                 .Property(x => x.DictionaryItemId)
-                .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformDynamicPropertyDictionaryValue_DictionaryItemId_Locale_Value", 1) { IsUnique = true }));
-            modelBuilder.Entity<DynamicPropertyDictionaryValueEntity>()
+                .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformDynamicPropertyDictionaryItemName_DictionaryItemId_Locale_Name", 1) { IsUnique = true }));
+            modelBuilder.Entity<DynamicPropertyDictionaryItemNameEntity>()
                 .Property(x => x.Locale)
-                .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformDynamicPropertyDictionaryValue_DictionaryItemId_Locale_Value", 2) { IsUnique = true }));
-            modelBuilder.Entity<DynamicPropertyDictionaryValueEntity>()
-                .Property(x => x.Value)
-                .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformDynamicPropertyDictionaryValue_DictionaryItemId_Locale_Value", 3) { IsUnique = true }));
+                .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformDynamicPropertyDictionaryItemName_DictionaryItemId_Locale_Name", 2) { IsUnique = true }));
+            modelBuilder.Entity<DynamicPropertyDictionaryItemNameEntity>()
+                .Property(x => x.Name)
+                .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformDynamicPropertyDictionaryItemName_DictionaryItemId_Locale_Name", 3) { IsUnique = true }));
 
             #endregion
 

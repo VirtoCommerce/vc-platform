@@ -4,6 +4,6 @@
     {
         public string Id { get; set; }
         public string Name { get; set; }
-        public DictionaryValue[] DictionaryValues { get; set; }
+        public DictionaryItemName[] DisplayNames { get; set; }
     }
 }

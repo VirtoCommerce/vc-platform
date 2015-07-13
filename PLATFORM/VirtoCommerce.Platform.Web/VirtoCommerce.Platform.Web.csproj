@@ -292,9 +292,9 @@
     <Compile Include="Controllers\Api\SettingController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Converters\DynamicProperties\ObjectValueValueConverter.cs" />
-    <Compile Include="Converters\DynamicProperties\DictionaryValueConverter.cs" />
+    <Compile Include="Converters\DynamicProperties\DictionaryItemNameConverter.cs" />
     <Compile Include="Converters\DynamicProperties\DictionaryItemConverter.cs" />
-    <Compile Include="Converters\DynamicProperties\DisplayNameConverter.cs" />
+    <Compile Include="Converters\DynamicProperties\PropertyNameConverter.cs" />
     <Compile Include="Converters\DynamicProperties\PropertyConverter.cs" />
     <Compile Include="Converters\Notification\NotificationConverter.cs" />
     <Compile Include="Converters\Packaging\ModuleDescriptorConverter.cs" />
@@ -310,8 +310,8 @@
     <Compile Include="Hangfire\UnityJobActivator.cs" />
     <Compile Include="Model\Asset\BlobInfo.cs" />
     <Compile Include="Model\DynamicProperties\DictionaryItem.cs" />
-    <Compile Include="Model\DynamicProperties\DictionaryValue.cs" />
-    <Compile Include="Model\DynamicProperties\DisplayName.cs" />
+    <Compile Include="Model\DynamicProperties\DictionaryItemName.cs" />
+    <Compile Include="Model\DynamicProperties\PropertyName.cs" />
     <Compile Include="Model\DynamicProperties\ObjectValue.cs" />
     <Compile Include="Model\DynamicProperties\Property.cs" />
     <Compile Include="Model\DynamicProperties\PropertyValueType.cs" />

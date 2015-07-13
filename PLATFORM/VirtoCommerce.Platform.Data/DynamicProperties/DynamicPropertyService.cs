@@ -132,7 +132,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
             using (var repository = _repositoryFactory())
             {
                 var items = repository.DynamicPropertyDictionaryItems
-                    .Include(i => i.DictionaryValues)
+                    .Include(i => i.DisplayNames)
                     .Where(i => i.PropertyId == propertyId)
                     .ToList();
 
@@ -152,38 +152,43 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
             using (var repository = _repositoryFactory())
             using (var changeTracker = new ObservableChangeTracker())
             {
-                var newItems = items.Where(i => string.IsNullOrEmpty(i.Id));
-                var newEntities = newItems.Select(i => i.ToEntity(propertyId));
+                var property = repository.DynamicProperties.FirstOrDefault(p => p.Id == propertyId);
 
-                foreach (var entity in newEntities)
+                if (property != null)
                 {
-                    repository.Add(entity);
+                    var newItems = items.Where(i => string.IsNullOrEmpty(i.Id));
+                    var newEntities = newItems.Select(i => i.ToEntity(property));
+
+                    foreach (var entity in newEntities)
+                    {
+                        repository.Add(entity);
+                    }
+
+                    var itemIds = items.Where(i => !string.IsNullOrEmpty(i.Id)).Select(i => i.Id).Distinct().ToArray();
+
+                    var existingItems = repository.DynamicPropertyDictionaryItems
+                        .Include(i => i.DisplayNames)
+                        .Where(i => itemIds.Contains(i.Id))
+                        .ToList();
+
+                    if (existingItems.Any())
+                    {
+                        itemIds = existingItems.Select(p => p.Id).ToArray();
+                        items = items.Where(i => itemIds.Contains(i.Id)).ToArray();
+
+                        var source = new { Items = new ObservableCollection<DynamicPropertyDictionaryItemEntity>(items.Select(i => i.ToEntity(property))) };
+                        var target = new { Items = new ObservableCollection<DynamicPropertyDictionaryItemEntity>(existingItems) };
+
+                        changeTracker.AddAction = x => repository.Add(x);
+                        changeTracker.RemoveAction = x => repository.Remove(x);
+                        changeTracker.Attach(target);
+
+                        var itemComparer = AnonymousComparer.Create((DynamicPropertyDictionaryItemEntity i) => i.Id);
+                        source.Items.Patch(target.Items, itemComparer, (sourceItem, targetItem) => sourceItem.Patch(targetItem));
+                    }
+
+                    repository.UnitOfWork.Commit();
                 }
-
-                var itemIds = items.Where(i => !string.IsNullOrEmpty(i.Id)).Select(i => i.Id).Distinct().ToArray();
-
-                var existingItems = repository.DynamicPropertyDictionaryItems
-                    .Include(i => i.DictionaryValues)
-                    .Where(i => itemIds.Contains(i.Id))
-                    .ToList();
-
-                if (existingItems.Any())
-                {
-                    itemIds = existingItems.Select(p => p.Id).ToArray();
-                    items = items.Where(i => itemIds.Contains(i.Id)).ToArray();
-
-                    var source = new { Items = new ObservableCollection<DynamicPropertyDictionaryItemEntity>(items.Select(i => i.ToEntity(propertyId))) };
-                    var target = new { Items = new ObservableCollection<DynamicPropertyDictionaryItemEntity>(existingItems) };
-
-                    changeTracker.AddAction = x => repository.Add(x);
-                    changeTracker.RemoveAction = x => repository.Remove(x);
-                    changeTracker.Attach(target);
-
-                    var itemComparer = AnonymousComparer.Create((DynamicPropertyDictionaryItemEntity i) => i.Id);
-                    source.Items.Patch(target.Items, itemComparer, (sourceItem, targetItem) => sourceItem.Patch(targetItem));
-                }
-
-                repository.UnitOfWork.Commit();
             }
         }
 

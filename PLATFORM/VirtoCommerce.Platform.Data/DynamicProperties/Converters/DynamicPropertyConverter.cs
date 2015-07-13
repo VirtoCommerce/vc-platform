@@ -38,7 +38,9 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
             result.InjectFrom(entity);
 
             result.ValueType = EnumUtility.SafeParse(entity.ValueType, DynamicPropertyValueType.Undefined);
-            result.DisplayNames = entity.DisplayNames.Select(n => n.ToModel()).ToArray();
+
+            if (entity.IsMultilingual)
+                result.DisplayNames = entity.DisplayNames.Select(n => n.ToModel()).ToArray();
 
             return result;
         }
@@ -61,11 +63,12 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
 
             result.IsArray = model.IsArray;
             result.IsDictionary = model.IsDictionary;
+            result.IsMultilingual = model.IsMultilingual;
 
             if (model.ValueType != DynamicPropertyValueType.Undefined)
                 result.ValueType = model.ValueType.ToString();
 
-            if (model.DisplayNames != null)
+            if (model.IsMultilingual && model.DisplayNames != null)
                 result.DisplayNames = new ObservableCollection<DynamicPropertyNameEntity>(model.DisplayNames.Select(n => n.ToEntity()));
 
             return result;
@@ -81,7 +84,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
                 target.Name = source.Name;
             }
 
-            if (!source.DisplayNames.IsNullCollection())
+            if (target.IsMultilingual && !source.DisplayNames.IsNullCollection())
             {
                 var comparer = AnonymousComparer.Create((DynamicPropertyNameEntity n) => string.Join("-", n.Locale, n.Name));
                 source.DisplayNames.Patch(target.DisplayNames, comparer, (sourceItem, targetItem) => { });

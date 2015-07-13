@@ -9,7 +9,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
 {
     public static class DynamicPropertyDictionaryItemConverter
     {
-        public static DynamicPropertyDictionaryItemEntity ToEntity(this DynamicPropertyDictionaryItem model, string propertyId)
+        public static DynamicPropertyDictionaryItemEntity ToEntity(this DynamicPropertyDictionaryItem model, DynamicPropertyEntity property)
         {
             var result = new DynamicPropertyDictionaryItemEntity();
 
@@ -19,11 +19,11 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
             if (!string.IsNullOrEmpty(model.Name))
                 result.Name = model.Name;
 
-            if (!string.IsNullOrEmpty(propertyId))
-                result.PropertyId = propertyId;
+            if (!string.IsNullOrEmpty(property.Id))
+                result.PropertyId = property.Id;
 
-            if (model.DictionaryValues != null)
-                result.DictionaryValues = new ObservableCollection<DynamicPropertyDictionaryValueEntity>(model.DictionaryValues.Select(v => v.ToEntity()));
+            if (property.IsMultilingual && model.DisplayNames != null)
+                result.DisplayNames = new ObservableCollection<DynamicPropertyDictionaryItemNameEntity>(model.DisplayNames.Select(v => v.ToEntity()));
 
             return result;
         }
@@ -34,7 +34,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
             {
                 Id = entity.Id,
                 Name = entity.Name,
-                DictionaryValues = entity.DictionaryValues.Select(v => v.ToModel()).ToArray(),
+                DisplayNames = entity.DisplayNames.Select(v => v.ToModel()).ToArray(),
             };
 
             return result;
@@ -50,10 +50,10 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
                 target.Name = source.Name;
             }
 
-            if (!source.DictionaryValues.IsNullCollection())
+            if (target.Property.IsMultilingual && !source.DisplayNames.IsNullCollection())
             {
-                var comparer = AnonymousComparer.Create((DynamicPropertyDictionaryValueEntity v) => string.Join("-", v.Locale, v.Value));
-                source.DictionaryValues.Patch(target.DictionaryValues, comparer, (sourceItem, targetItem) => { });
+                var comparer = AnonymousComparer.Create((DynamicPropertyDictionaryItemNameEntity v) => string.Join("-", v.Locale, v.Name));
+                source.DisplayNames.Patch(target.DisplayNames, comparer, (sourceItem, targetItem) => { });
             }
         }
     }

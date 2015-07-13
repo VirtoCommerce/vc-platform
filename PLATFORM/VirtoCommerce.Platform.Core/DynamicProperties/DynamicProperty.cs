@@ -8,6 +8,7 @@
         public bool IsArray { get; set; }
         public bool IsDictionary { get; set; }
         public bool IsRequired { get; set; }
+        public bool IsMultilingual { get; set; }
         public DynamicPropertyValueType ValueType { get; set; }
         public DynamicPropertyName[] DisplayNames { get; set; }
     }

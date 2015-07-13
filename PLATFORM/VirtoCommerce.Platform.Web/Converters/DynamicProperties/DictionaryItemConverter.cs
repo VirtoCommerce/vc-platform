@@ -7,27 +7,27 @@ namespace VirtoCommerce.Platform.Web.Converters.DynamicProperties
 {
     public static class DictionaryItemConverter
     {
-        public static DictionaryItem ToWebModel(this DynamicPropertyDictionaryItem model)
+        public static DictionaryItem ToWebModel(this DynamicPropertyDictionaryItem coreModel)
         {
             var result = new DictionaryItem();
-            result.InjectFrom(model);
+            result.InjectFrom(coreModel);
 
-            if (model.DictionaryValues != null)
+            if (coreModel.DisplayNames != null)
             {
-                result.DictionaryValues = model.DictionaryValues.Select(x => x.ToWebModel()).ToArray();
+                result.DisplayNames = coreModel.DisplayNames.Select(x => x.ToWebModel()).ToArray();
             }
 
             return result;
         }
 
-        public static DynamicPropertyDictionaryItem ToCoreModel(this  DictionaryItem model)
+        public static DynamicPropertyDictionaryItem ToCoreModel(this DictionaryItem webModel)
         {
             var result = new DynamicPropertyDictionaryItem();
-            result.InjectFrom(model);
+            result.InjectFrom(webModel);
 
-            if (model.DictionaryValues != null)
+            if (webModel.DisplayNames != null)
             {
-                result.DictionaryValues = model.DictionaryValues.Select(x => x.ToCoreModel()).ToArray();
+                result.DisplayNames = webModel.DisplayNames.Select(x => x.ToCoreModel()).ToArray();
             }
 
             return result;

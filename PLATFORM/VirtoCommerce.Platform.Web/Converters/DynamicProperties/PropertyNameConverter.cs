@@ -4,19 +4,19 @@ using VirtoCommerce.Platform.Web.Model.DynamicProperties;
 
 namespace VirtoCommerce.Platform.Web.Converters.DynamicProperties
 {
-    public static class DisplayNameConverter
+    public static class PropertyNameConverter
     {
-        public static DisplayName ToWebModel(this DynamicPropertyName model)
+        public static PropertyName ToWebModel(this DynamicPropertyName coreModel)
         {
-            var result = new DisplayName();
-            result.InjectFrom(model);
+            var result = new PropertyName();
+            result.InjectFrom(coreModel);
             return result;
         }
 
-        public static DynamicPropertyName ToCoreModel(this  DisplayName model)
+        public static DynamicPropertyName ToCoreModel(this PropertyName webModel)
         {
             var result = new DynamicPropertyName();
-            result.InjectFrom(model);
+            result.InjectFrom(webModel);
             return result;
         }
     }

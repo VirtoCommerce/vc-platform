@@ -8,29 +8,29 @@ namespace VirtoCommerce.Platform.Web.Converters.DynamicProperties
 {
     public static class PropertyConverter
     {
-        public static Property ToWebModel(this DynamicProperty model)
+        public static Property ToWebModel(this DynamicProperty coreModel)
         {
             var result = new Property();
-            result.InjectFrom(model);
-            result.ValueType = EnumUtility.SafeParse(model.ValueType.ToString(), PropertyValueType.Undefined);
+            result.InjectFrom(coreModel);
+            result.ValueType = EnumUtility.SafeParse(coreModel.ValueType.ToString(), PropertyValueType.Undefined);
 
-            if (model.DisplayNames != null)
+            if (coreModel.IsMultilingual && coreModel.DisplayNames != null)
             {
-                result.DisplayNames = model.DisplayNames.Select(x => x.ToWebModel()).ToArray();
+                result.DisplayNames = coreModel.DisplayNames.Select(x => x.ToWebModel()).ToArray();
             }
 
             return result;
         }
 
-        public static DynamicProperty ToCoreModel(this Property model)
+        public static DynamicProperty ToCoreModel(this Property webModel)
         {
             var result = new DynamicProperty();
-            result.InjectFrom(model);
-            result.ValueType = EnumUtility.SafeParse(model.ValueType.ToString(), DynamicPropertyValueType.Undefined);
+            result.InjectFrom(webModel);
+            result.ValueType = EnumUtility.SafeParse(webModel.ValueType.ToString(), DynamicPropertyValueType.Undefined);
 
-            if (model.DisplayNames != null)
+            if (webModel.IsMultilingual && webModel.DisplayNames != null)
             {
-                result.DisplayNames = model.DisplayNames.Select(x => x.ToCoreModel()).ToArray();
+                result.DisplayNames = webModel.DisplayNames.Select(x => x.ToCoreModel()).ToArray();
             }
 
             return result;

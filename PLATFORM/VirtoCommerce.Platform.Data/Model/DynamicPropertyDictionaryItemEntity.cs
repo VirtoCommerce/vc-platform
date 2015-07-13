@@ -8,7 +8,7 @@ namespace VirtoCommerce.Platform.Data.Model
     {
         public DynamicPropertyDictionaryItemEntity()
         {
-            DictionaryValues = new NullCollection<DynamicPropertyDictionaryValueEntity>();
+            DisplayNames = new NullCollection<DynamicPropertyDictionaryItemNameEntity>();
             ObjectValues = new NullCollection<DynamicPropertyObjectValueEntity>();
         }
 
@@ -18,7 +18,7 @@ namespace VirtoCommerce.Platform.Data.Model
         [StringLength(512)]
         public string Name { get; set; }
 
-        public virtual ObservableCollection<DynamicPropertyDictionaryValueEntity> DictionaryValues { get; set; }
+        public virtual ObservableCollection<DynamicPropertyDictionaryItemNameEntity> DisplayNames { get; set; }
         public virtual ObservableCollection<DynamicPropertyObjectValueEntity> ObjectValues { get; set; }
     }
 }
