@@ -29,6 +29,7 @@ namespace VirtoCommerce.Web.Convertors
                                RequiresShipping = String.IsNullOrEmpty(product.Type) ||
                                     !String.IsNullOrEmpty(product.Type) && product.Type.Equals("Physical", StringComparison.OrdinalIgnoreCase),
                                Quantity = 1,
+                               Sku = variant.Sku,
                                Url = product.Url,
                                Title = product.Title,
                                Image = product.FeaturedImage.Src,
