@@ -36,7 +36,7 @@
             modules: _.pluck(selection, 'id')
         },
         function (data) { blade.notification = data; },
-        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); $scope.blade.isLoading = false; });
+        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
     }
 
 
