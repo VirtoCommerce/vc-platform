@@ -64,6 +64,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
             result.IsArray = model.IsArray;
             result.IsDictionary = model.IsDictionary;
             result.IsMultilingual = model.IsMultilingual;
+            result.IsRequired = model.IsRequired;
 
             if (model.ValueType != DynamicPropertyValueType.Undefined)
                 result.ValueType = model.ValueType.ToString();

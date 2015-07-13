@@ -18,6 +18,7 @@ namespace VirtoCommerce.Platform.Data.Repositories.Migrations
                         IsArray = c.Boolean(nullable: false),
                         IsDictionary = c.Boolean(nullable: false),
                         IsMultilingual = c.Boolean(nullable: false),
+                        IsRequired = c.Boolean(nullable: false),
                         CreatedDate = c.DateTime(nullable: false),
                         ModifiedDate = c.DateTime(),
                         CreatedBy = c.String(maxLength: 64),

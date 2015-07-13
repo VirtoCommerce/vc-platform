@@ -11,6 +11,7 @@ namespace VirtoCommerce.Platform.Web.Model.DynamicProperties
         public bool IsArray { get; set; }
         public bool IsDictionary { get; set; }
         public bool IsMultilingual { get; set; }
+        public bool IsRequired { get; set; }
 
         [JsonConverter(typeof(StringEnumConverter))]
         public PropertyValueType ValueType { get; set; }

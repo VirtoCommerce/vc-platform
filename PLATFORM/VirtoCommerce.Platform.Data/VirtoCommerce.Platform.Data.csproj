@@ -247,9 +247,9 @@
     <Compile Include="Repositories\Migrations\201507101444412_RemoveDisplayNameTemplate.Designer.cs">
       <DependentUpon>201507101444412_RemoveDisplayNameTemplate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Repositories\Migrations\201507131030312_DynamicProperties.cs" />
-    <Compile Include="Repositories\Migrations\201507131030312_DynamicProperties.Designer.cs">
-      <DependentUpon>201507131030312_DynamicProperties.cs</DependentUpon>
+    <Compile Include="Repositories\Migrations\201507131402088_DynamicProperties.cs" />
+    <Compile Include="Repositories\Migrations\201507131402088_DynamicProperties.Designer.cs">
+      <DependentUpon>201507131402088_DynamicProperties.cs</DependentUpon>
     </Compile>
     <Compile Include="Repositories\Migrations\Configuration.cs" />
     <Compile Include="Repositories\PlatformDatabaseInitializer.cs" />
@@ -330,8 +330,8 @@
     <EmbeddedResource Include="Repositories\Migrations\201507101444412_RemoveDisplayNameTemplate.resx">
       <DependentUpon>201507101444412_RemoveDisplayNameTemplate.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Repositories\Migrations\201507131030312_DynamicProperties.resx">
-      <DependentUpon>201507131030312_DynamicProperties.cs</DependentUpon>
+    <EmbeddedResource Include="Repositories\Migrations\201507131402088_DynamicProperties.resx">
+      <DependentUpon>201507131402088_DynamicProperties.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Security\Identity\Migrations\201411101625303_InitialCreate.resx">
       <DependentUpon>201411101625303_InitialCreate.cs</DependentUpon>
