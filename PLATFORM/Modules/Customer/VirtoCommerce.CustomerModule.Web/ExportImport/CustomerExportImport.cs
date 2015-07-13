@@ -33,7 +33,7 @@ namespace VirtoCommerce.CustomerModule.Web.ExportImport
             var prodgressInfo = new ExportImportProgressInfo { Description = "loading data..." };
             progressCallback(prodgressInfo);
 
-            var responce = _customerSearchService.Search(new SearchCriteria());
+            var responce = _customerSearchService.Search(new SearchCriteria { Count = int.MaxValue });
             var backupObject = new BackupObject
             {
                 Contacts = responce.Contacts.Select(x => x.Id).Select(_contactService.GetById).ToArray(),
