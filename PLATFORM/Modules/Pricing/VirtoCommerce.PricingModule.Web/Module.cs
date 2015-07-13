@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data.Entity;
-using System.Linq;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.Domain.Pricing.Services;
 using VirtoCommerce.Platform.Core.ExportImport;
@@ -63,10 +62,7 @@ namespace VirtoCommerce.PricingModule.Web
         public void DoExport(System.IO.Stream outStream, Action<ExportImportProgressInfo> progressCallback)
         {
             var exportJob = _container.Resolve<PricingExportImport>();
-            var pricingService = _container.Resolve<IPricingService>();
-
-            var backupObject = new BackupObject { Pricelists = pricingService.GetPriceLists().ToArray() };
-            exportJob.DoExport(outStream, backupObject, progressCallback);
+            exportJob.DoExport(outStream, progressCallback);
         }
 
         #endregion
