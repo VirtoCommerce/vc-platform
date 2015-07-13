@@ -15,5 +15,9 @@
         DynamicPropertyObjectValue[] GetObjectValues(string objectType, string objectId);
         void SaveObjectValues(DynamicPropertyObjectValue[] values);
         void DeleteObjectValues(string objectType, string objectId);
+
+        void LoadDynamicPropertyValues(IHasDynamicProperties owner);
+        void SaveDynamicPropertyValues(IHasDynamicProperties owner);
+        void DeleteDynamicPropertyValues(IHasDynamicProperties owner);
     }
 }

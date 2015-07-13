@@ -30,7 +30,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
             var result = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(a => a.GetTypes())
                 .Where(t => t.GetInterface(typeName) != null)
-                .Select(t => t.FullName)
+                .Select(GetTypeName)
                 .ToArray();
 
             return result;
@@ -305,6 +305,89 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
             }
         }
 
+
+        public void LoadDynamicPropertyValues(IHasDynamicProperties owner)
+        {
+            var objectsWithDynamicProperties = owner.GetFlatObjectsListWithInterface<IHasDynamicProperties>();
+
+            foreach (var objectWithDynamicProperties in objectsWithDynamicProperties)
+            {
+                if (objectWithDynamicProperties.Id != null)
+                {
+                    var storedValues = GetObjectValues(GetObjectTypeName(objectWithDynamicProperties), objectWithDynamicProperties.Id);
+
+                    // Replace in-memory properties with stored in database
+                    if (objectWithDynamicProperties.DynamicPropertyValues != null)
+                    {
+                        var result = new List<DynamicPropertyObjectValue>();
+
+                        foreach (var value in objectWithDynamicProperties.DynamicPropertyValues)
+                        {
+                            var storedProperty = storedValues.FirstOrDefault(v => v.Property.Name == value.Property.Name);
+                            result.Add(storedProperty ?? value);
+                        }
+
+                        objectWithDynamicProperties.DynamicPropertyValues = result;
+                    }
+                    else
+                    {
+                        objectWithDynamicProperties.DynamicPropertyValues = storedValues;
+                    }
+                }
+            }
+        }
+
+        public void SaveDynamicPropertyValues(IHasDynamicProperties owner)
+        {
+            var objectsWithDynamicProperties = owner.GetFlatObjectsListWithInterface<IHasDynamicProperties>();
+
+            foreach (var objectWithDynamicProperties in objectsWithDynamicProperties)
+            {
+                if (objectWithDynamicProperties.Id != null)
+                {
+                    var result = new List<DynamicPropertyObjectValue>();
+
+                    if (objectWithDynamicProperties.DynamicPropertyValues != null)
+                    {
+                        var objectType = GetObjectTypeName(objectWithDynamicProperties);
+
+                        foreach (var value in objectWithDynamicProperties.DynamicPropertyValues)
+                        {
+                            value.Property.ObjectType = objectType;
+                            value.ObjectId = objectWithDynamicProperties.Id;
+                            result.Add(value);
+                        }
+                    }
+
+                    SaveObjectValues(result.ToArray());
+                }
+            }
+        }
+
+        public void DeleteDynamicPropertyValues(IHasDynamicProperties owner)
+        {
+            var objectsWithDynamicProperties = owner.GetFlatObjectsListWithInterface<IHasDynamicProperties>();
+
+            foreach (var objectWithDynamicProperties in objectsWithDynamicProperties)
+            {
+                if (objectWithDynamicProperties.Id != null)
+                {
+                    DeleteObjectValues(GetObjectTypeName(objectWithDynamicProperties), objectWithDynamicProperties.Id);
+                }
+            }
+        }
+
         #endregion
+
+
+        private static string GetObjectTypeName(object obj)
+        {
+            return GetTypeName(obj.GetType());
+        }
+
+        private static string GetTypeName(Type type)
+        {
+            return type.FullName;
+        }
     }
 }

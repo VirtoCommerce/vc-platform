@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using VirtoCommerce.Platform.Core.Common;
-using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Common;
 
@@ -10,91 +9,6 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
 {
     public abstract class ServiceBase
     {
-        protected string GetObjectTypeName(object obj)
-        {
-            return obj.GetType().FullName;
-        }
-
-        #region Dynamic Properties
-
-        protected void LoadDynamicProperties(IDynamicPropertyService service, object obj)
-        {
-            var objectsWithDynamicProperties = obj.GetFlatObjectsListWithInterface<IHasDynamicProperties>();
-
-            foreach (var objectWithDynamicProperties in objectsWithDynamicProperties)
-            {
-                var entity = objectWithDynamicProperties as Entity;
-
-                if (entity != null && !entity.IsTransient())
-                {
-                    var storedProperties = service.GetObjectValues(GetObjectTypeName(entity), entity.Id);
-
-                    // Replace in-memory properties with stored in database
-                    if (objectWithDynamicProperties.DynamicPropertyValues != null)
-                    {
-                        var result = new List<DynamicPropertyObjectValue>();
-
-                        foreach (var value in objectWithDynamicProperties.DynamicPropertyValues)
-                        {
-                            var storedProperty = storedProperties.FirstOrDefault(v => v.Property.Name == value.Property.Name);
-                            result.Add(storedProperty ?? value);
-                        }
-
-                        objectWithDynamicProperties.DynamicPropertyValues = result;
-                    }
-                    else
-                    {
-                        objectWithDynamicProperties.DynamicPropertyValues = storedProperties;
-                    }
-                }
-            }
-        }
-
-        protected void SaveDynamicProperties(IDynamicPropertyService service, object obj)
-        {
-            var objectsWithDynamicProperties = obj.GetFlatObjectsListWithInterface<IHasDynamicProperties>();
-
-            foreach (var objectWithDynamicProperties in objectsWithDynamicProperties)
-            {
-                var entity = objectWithDynamicProperties as Entity;
-
-                if (entity != null && !entity.IsTransient())
-                {
-                    var objectType = GetObjectTypeName(entity);
-                    var result = new List<DynamicPropertyObjectValue>();
-
-                    if (objectWithDynamicProperties.DynamicPropertyValues != null)
-                    {
-                        foreach (var value in objectWithDynamicProperties.DynamicPropertyValues)
-                        {
-                            value.Property.ObjectType = objectType;
-                            value.ObjectId = entity.Id;
-                            result.Add(value);
-                        }
-                    }
-
-                    service.SaveObjectValues(result.ToArray());
-                }
-            }
-        }
-
-        protected void RemoveDynamicProperties(IDynamicPropertyService service, object obj)
-        {
-            var objectsWithDynamicProperties = obj.GetFlatObjectsListWithInterface<IHasDynamicProperties>();
-
-            foreach (var haveSettingsObject in objectsWithDynamicProperties)
-            {
-                var entity = haveSettingsObject as Entity;
-
-                if (entity != null && !entity.IsTransient())
-                {
-                    service.DeleteObjectValues(GetObjectTypeName(entity), entity.Id);
-                }
-            }
-        }
-
-        #endregion
-
         #region Settings
 
         protected void LoadObjectSettings(ISettingsManager settingManager, object obj)
