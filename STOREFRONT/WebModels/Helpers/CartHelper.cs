@@ -36,7 +36,7 @@ namespace VirtoCommerce.Web.Models.Helpers
 
             var cart = this.ShoppingCart;
 
-            var existingItem = cart.Items.FirstOrDefault(i => i.Sku == lineItem.Sku);
+            var existingItem = cart.Items.FirstOrDefault(i => i.ProductId == lineItem.ProductId);
             if (existingItem != null)
             {
                 existingItem.Quantity += lineItem.Quantity;
