@@ -17,7 +17,7 @@
                 }
             }
         };
-        openDetailsBlade(newBlade, node);
+        openDetailsBlade(newBlade);
     };
 
     function openDetailsBlade(node) {

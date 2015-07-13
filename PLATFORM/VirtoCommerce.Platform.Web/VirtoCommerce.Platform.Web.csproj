@@ -352,6 +352,14 @@
     <Content Include="Content\angular-gridster.css" />
     <Content Include="Content\angular-multi-select.css" />
     <Content Include="Scripts\angular-gridster.js" />
+    <Content Include="Scripts\app\dynamicProperties\blades\dynamicProperty-detail.js" />
+    <Content Include="Scripts\app\dynamicProperties\blades\dynamicProperty-detail.tpl.html" />
+    <Content Include="Scripts\app\dynamicProperties\blades\dynamicObject-list.js" />
+    <Content Include="Scripts\app\dynamicProperties\blades\dynamicProperty-list.js" />
+    <Content Include="Scripts\app\dynamicProperties\blades\dynamicObject-list.tpl.html" />
+    <Content Include="Scripts\app\dynamicProperties\blades\dynamicProperty-list.tpl.html" />
+    <Content Include="Scripts\app\dynamicProperties\dynamicProperties.js" />
+    <Content Include="Scripts\app\dynamicProperties\resources\dynamicPropertiesApi.js" />
     <Content Include="Scripts\app\exportImport\blades\export-main.js" />
     <Content Include="Scripts\app\exportImport\blades\export-main.tpl.html" />
     <Content Include="Scripts\app\exportImport\blades\exportImport-main.js" />
@@ -1445,6 +1453,7 @@
   <ItemGroup>
     <Folder Include="App_Data\Modules\" />
     <Folder Include="Filters\" />
+    <Folder Include="Scripts\app\dynamicProperties\directives\" />
     <Folder Include="Views\Notifications\" />
   </ItemGroup>
   <ItemGroup>
