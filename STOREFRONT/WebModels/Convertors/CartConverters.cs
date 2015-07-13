@@ -300,7 +300,7 @@ namespace VirtoCommerce.Web.Convertors
             var ret = new LineItem
                       {
                           Id = item.Id,
-                          Handle = item.ProductId,
+                          Handle = item.ProductCode,
                           ProductId = item.ProductId,
                           Title = item.Name,
                           Price = item.PlacedPrice,
