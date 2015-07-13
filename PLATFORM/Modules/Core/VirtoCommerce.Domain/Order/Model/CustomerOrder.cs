@@ -1,65 +1,70 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using VirtoCommerce.Domain.Commerce.Model;
+using VirtoCommerce.Platform.Core.DynamicProperties;
 
 namespace VirtoCommerce.Domain.Order.Model
 {
-	public class CustomerOrder : Operation, IHaveTaxDetalization
-	{
-		public string CustomerId { get; set; }
-		public string ChannelId { get; set; }
-		public string StoreId { get; set; }
-		public string OrganizationId { get; set; }
-		public string EmployeeId { get; set; }
+    public class CustomerOrder : Operation, IHaveTaxDetalization, IHasDynamicProperties
+    {
+        public string CustomerId { get; set; }
+        public string ChannelId { get; set; }
+        public string StoreId { get; set; }
+        public string OrganizationId { get; set; }
+        public string EmployeeId { get; set; }
 
-		public ICollection<Address> Addresses { get; set; }
-		public ICollection<PaymentIn> InPayments { get; set; }
+        public ICollection<Address> Addresses { get; set; }
+        public ICollection<PaymentIn> InPayments { get; set; }
 
-		public ICollection<LineItem> Items { get; set; }
-		public ICollection<Shipment> Shipments { get; set; }
+        public ICollection<LineItem> Items { get; set; }
+        public ICollection<Shipment> Shipments { get; set; }
 
-		public Discount Discount { get; set; }
+        public Discount Discount { get; set; }
 
-		public decimal DiscountAmount
-		{
-			get
-			{
-				return Discount != null ? Discount.DiscountAmount : 0;
-			}
-		}
+        public decimal DiscountAmount
+        {
+            get
+            {
+                return Discount != null ? Discount.DiscountAmount : 0;
+            }
+        }
 
-		public override IEnumerable<Operation> ChildrenOperations
-		{
-			get
-			{
-				var retVal = new List<Operation>();
+        public override IEnumerable<Operation> ChildrenOperations
+        {
+            get
+            {
+                var retVal = new List<Operation>();
 
-				if (InPayments != null)
-				{
-					foreach (var inPayment in InPayments)
-					{
-						inPayment.ParentOperationId = this.Id;
-						retVal.Add(inPayment);
-					}
-				}
+                if (InPayments != null)
+                {
+                    foreach (var inPayment in InPayments)
+                    {
+                        inPayment.ParentOperationId = Id;
+                        retVal.Add(inPayment);
+                    }
+                }
 
-				if (Shipments != null)
-				{
-					foreach (var shipment in Shipments)
-					{
-						shipment.ParentOperationId = this.Id;
-						retVal.Add(shipment);
-					}
-				}
-				return retVal;
-			}
-		}
+                if (Shipments != null)
+                {
+                    foreach (var shipment in Shipments)
+                    {
+                        shipment.ParentOperationId = Id;
+                        retVal.Add(shipment);
+                    }
+                }
+                return retVal;
+            }
+        }
 
-		#region ITaxDetailSupport Members
+        #region IHasDynamicProperties Members
 
-		public ICollection<TaxDetail> TaxDetails { get; set; }
+        public ICollection<DynamicPropertyObjectValue> DynamicPropertyValues { get; set; }
 
-		#endregion
-	}
+        #endregion
+
+        #region ITaxDetailSupport Members
+
+        public ICollection<TaxDetail> TaxDetails { get; set; }
+
+        #endregion
+    }
 }
