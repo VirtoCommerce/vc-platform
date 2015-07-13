@@ -27,11 +27,12 @@ namespace AvaTax.TaxModule.Web.Converters
                             : order.CreatedDate.ToString("yyyy-MM-dd"),
                     CompanyCode = companyCode,
                     Client = "VirtoCommerce,2.x,VirtoCommerce",
-                    DocCode = order.Number,
                     DetailLevel = DetailLevel.Tax,
                     Commit = commit,
                     DocType = DocType.SalesInvoice
                 };
+
+                getTaxRequest.DocCode = string.Format("{0}_{1}", order.Number, getTaxRequest.DocDate);
 
                 // Best Practice Request Parameters
 

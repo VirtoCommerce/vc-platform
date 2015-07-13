@@ -16,7 +16,7 @@
     <owner>Virto Commerce</owner>
   </owners>
   <projectUrl>http://virtocommerce.com/</projectUrl>
-  <iconUrl>http://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
+  <iconUrl>http://www.magentocommerce.com/magento-connect/media/catalog/product/cache/9/image/468x300/9df78eab33525d08d6e5fb8d27136e95/m/e/mes_gateway_7c9b81f4662864c94ffbb56b2b9d64ef_app_1.png</iconUrl>
   <releaseNotes>First version.</releaseNotes>
   <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
   <tags>mes payment gateway</tags>
