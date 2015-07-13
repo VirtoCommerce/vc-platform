@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<module>
+  <id>Shipstation.Fulfillment</id>
+  <version>1.0.0</version>
+  <platformVersion>2.0.0</platformVersion>
+  <dependencies>
+    <dependency id="VirtoCommerce.Core" version="1.0.0" />
+  </dependencies>
+
+  <title>Shipstation fulfillment</title>
+  <description>APIs and UI for Shipstation integration</description>
+  <authors>
+    <author>Virto Commerce</author>
+  </authors>
+  <owners>
+    <owner>Virto Commerce</owner>
+  </owners>
+  <projectUrl>http://virtocommerce.com/</projectUrl>
+  <iconUrl>http://cdn.blog.cpcstrategy.com/wp-content/uploads/2013/10/ecommerce-fulfillment-shipstation.png</iconUrl>
+  <releaseNotes>First version.</releaseNotes>
+  <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
+  <tags>shipstation fulfillment</tags>
+
+  <assemblyFile>Shipstation.FulfillmentModule.Web.dll</assemblyFile>
+  <moduleType>Shipstation.FulfillmentModule.Web.Module, Shipstation.FulfillmentModule.Web</moduleType>
+  <!--<styles>
+		<directory virtualPath="$/Content/css" searchPattern="*.css" searchSubdirectories="true" />
+	</styles>
+  <scripts>
+    <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
+  </scripts>-->
+
+  <settings>
+    <group name="Fulfillment|Shipstation|Credentials">
+      <setting>
+        <name>Shipstation.Fulfillment.Credentials.Username</name>
+        <valueType>string</valueType>
+        <title>Shipstation username</title>
+        <description>Username provided by Shipstation during registration process</description>
+      </setting>
+      <setting>
+        <name>Shipstation.Fulfillment.Credentials.Password</name>
+        <valueType>string</valueType>
+        <title>Shipstation account password</title>
+        <description>Account password provided by Shipstation during registration process</description>
+      </setting>
+      <setting>
+        <name>Shipstation.Fulfillment.Credentials.ServiceUrl</name>
+        <valueType>string</valueType>
+        <title>Link to Shipstation API service</title>
+        <description>Link to Shipstation API service</description>
+      </setting>
+    </group>
+    <group name="Shipstation|Fulfillment|Shipstation Description">
+      <setting>
+        <name>Shipstation.Fulfillment.Description</name>
+        <valueType>string</valueType>
+        <defaultValue>Shipstation public site description</defaultValue>
+        <title>Description</title>
+        <description>Description of Shipstation for public site</description>
+      </setting>
+      <setting>
+        <name>Shipstation.Tax.LogoUrl</name>
+        <valueType>string</valueType>
+        <defaultValue>http://cdn.blog.cpcstrategy.com/wp-content/uploads/2013/10/ecommerce-fulfillment-shipstation.png</defaultValue>
+        <title>Logo url</title>
+        <description>Shipstation logo url</description>
+      </setting>
+    </group>
+  </settings>
+  <permissions>
+    <group name="Fulfillment">
+      <permission id="tax:manage" name="Manage fulfillment settings" description="Permission to manage shipstation fulfillment."/>
+    </group>
+  </permissions>
+</module>
