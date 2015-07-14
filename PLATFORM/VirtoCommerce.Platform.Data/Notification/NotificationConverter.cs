@@ -45,7 +45,7 @@ namespace VirtoCommerce.Platform.Data.Notification
 			if (target == null)
 				throw new ArgumentNullException("target");
 
-			var patchInjection = new PatchInjection<NotificationTemplateEntity>(x => x.DisplayName, x => x.Subject, x => x.Body, x => x.IsDefault);
+			var patchInjection = new PatchInjection<NotificationTemplateEntity>(x => x.Subject, x => x.Body, x => x.IsDefault);
 			target.InjectFrom(patchInjection, source);
 		}
 	}

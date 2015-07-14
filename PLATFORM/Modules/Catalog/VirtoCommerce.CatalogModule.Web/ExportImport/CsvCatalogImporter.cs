@@ -63,7 +63,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 			_searchService = searchService;
 		}
 
-		public virtual void DoImport(Stream inputStream, CsvProductMappingConfiguration configuration, Action<ExportImportProgressInfo> progressCallback)
+		public void DoImport(Stream inputStream, CsvProductMappingConfiguration configuration, Action<ExportImportProgressInfo> progressCallback)
 		{
 			var csvProducts = new List<CsvProduct>();
 			var catalog = _catalogService.GetById(configuration.CatalogId);

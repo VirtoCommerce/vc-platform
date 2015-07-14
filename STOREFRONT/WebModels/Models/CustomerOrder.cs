@@ -1,9 +1,9 @@
 ﻿#region
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using DotLiquid;
-
 #endregion
 
 namespace VirtoCommerce.Web.Models
@@ -103,19 +103,43 @@ namespace VirtoCommerce.Web.Models
         public IEnumerable<PaymentMethod> PaymentMethods { get; set; }
 
         [DataMember]
-        public decimal ShippingPrice { get; set; }
+        public decimal ShippingPrice
+        {
+            get
+            {
+                return ShippingMethods != null ? ShippingMethods.Sum(sm => sm.Price) : 0M;
+            }
+        }
 
         [DataMember]
-        public decimal SubtotalPrice { get; set; }
+        public decimal SubtotalPrice
+        {
+            get
+            {
+                return LineItems != null ? LineItems.Sum(li => li.LinePrice) : 0M;
+            }
+        }
 
         [DataMember]
         public ICollection<TaxLine> TaxLines { get; set; }
 
         [DataMember]
-        public decimal TaxPrice { get; set; }
+        public decimal TaxPrice
+        {
+            get
+            {
+                return TaxLines != null ? TaxLines.Sum(tl => tl.Price) : 0M;
+            }
+        }
 
         [DataMember]
-        public decimal TotalPrice { get; set; }
+        public decimal TotalPrice
+        {
+            get
+            {
+                return SubtotalPrice + TaxPrice + ShippingPrice;
+            }
+        }
         #endregion
     }
 }

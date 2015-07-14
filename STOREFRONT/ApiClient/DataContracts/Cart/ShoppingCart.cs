@@ -66,7 +66,7 @@ namespace VirtoCommerce.ApiClient.DataContracts.Cart
 
         public decimal SubTotal { get; set; }
 
-        public bool? TaxIncluded { get; set; }
+        public bool TaxIncluded { get; set; }
 
         public decimal TaxTotal { get; set; }
 
@@ -75,6 +75,8 @@ namespace VirtoCommerce.ApiClient.DataContracts.Cart
         public decimal? VolumetricWeight { get; set; }
 
         public Weight Weight { get; set; }
+
+        public ICollection<TaxDetail> TaxDetails { get; set; }
 
         #endregion
     }

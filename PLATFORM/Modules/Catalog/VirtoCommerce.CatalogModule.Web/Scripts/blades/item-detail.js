@@ -81,7 +81,6 @@
     }
 
     blade.headIcon = blade.productType === 'Digital' ? 'fa fa-file-archive-o' : 'fa fa-truck';
-    blade.toolbarCustomTemplates = ["Modules/$(VirtoCommerce.Catalog)/Scripts/blades/item-detail-toolbar.tpl.html"];
 
     blade.toolbarCommands = [
 	 {

@@ -228,7 +228,6 @@
 
 
 			    // actions on load
-			    $scope.blade.toolbarCustomTemplates = ['Modules/$(VirtoCommerce.Orders)/Scripts/blades/operation-detail-toolbar.tpl.html'];
 			    $scope.blade.refresh($scope.blade.isNew);
 
 			}])

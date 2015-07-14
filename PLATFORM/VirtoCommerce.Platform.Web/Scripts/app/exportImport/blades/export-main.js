@@ -19,6 +19,9 @@
     $scope.$on("new-notification-event", function (event, notification) {
         if (blade.notification && notification.id == blade.notification.id) {
             angular.copy(notification, blade.notification);
+            if (notification.finished) {
+                blade.isLoading = false;
+            }
         }
     });
 
@@ -27,6 +30,7 @@
     }
 
     $scope.startExport = function () {
+        blade.isLoading = true;
         var selection = _.where(blade.currentEntities, { isChecked: true });
         exportImportResourse.runExport({
             modules: _.pluck(selection, 'id')

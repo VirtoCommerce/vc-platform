@@ -29,9 +29,11 @@ namespace VirtoCommerce.Web.Convertors
                                RequiresShipping = String.IsNullOrEmpty(product.Type) ||
                                     !String.IsNullOrEmpty(product.Type) && product.Type.Equals("Physical", StringComparison.OrdinalIgnoreCase),
                                Quantity = 1,
+                               Sku = variant.Sku,
                                Url = product.Url,
                                Title = product.Title,
-                               Image = product.FeaturedImage.Src
+                               Image = product.FeaturedImage.Src,
+                               TaxType = product.TaxType
                            };
 
             return lineItem;
@@ -70,7 +72,7 @@ namespace VirtoCommerce.Web.Convertors
             productModel.Type = product.ProductType;
             productModel.Url = string.Format(pathTemplate, product.Code);
             productModel.Vendor = fieldsCollection.ContainsKey("brand") ? fieldsCollection["brand"] as string : null;
-
+            productModel.TaxType = product.TaxType;
             // form url
             // "/products/code" or "/en-us/store/collection/outline" 
 

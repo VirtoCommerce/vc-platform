@@ -6,7 +6,15 @@
         <div class="inner-block">
             <form class="form" name="formScope">
                 <fieldset ng-init="setForm(formScope)">
-
+                    <div ng-if="!blade.isNew">
+                        <label class="form-label">Is active</label>
+                        <div class="form-input">
+                            <label class="form-label __switch">
+                                <input type="checkbox" ng-model="blade.currentEntity.isActive" />
+                                <span class="switch"></span>
+                            </label>
+                        </div>
+                    </div>
                     <div class="form-group">
                         <label class="form-label">Promotion name</label>
                         <div class="form-input">

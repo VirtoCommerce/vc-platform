@@ -156,6 +156,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paypal.ExpressCheckout", "M
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paypal.DirectPayments", "Modules\PaymentGateways\Paypal.DirectPayments\Paypal.DirectPayments.csproj", "{A52BE0AD-5076-445C-BE57-CC82E1A8921D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Klarna.Checkout.US", "Modules\PaymentGateways\Klarna.Checkout.US\Klarna.Checkout.US.csproj", "{98F12F7E-2F53-478C-952F-C644B4B64B9A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Fulfillment", "Fulfillment", "{A6DE4FD5-1EE7-496F-AD21-B5EAA9BBDB30}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shipstation.FulfillmentModule.Web", "Modules\Fulfillment\Shipstation.FulfillmentModule.Web\Shipstation.FulfillmentModule.Web.csproj", "{26391BBC-04EC-4D0F-8F5A-80186BAAA409}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -370,6 +376,14 @@ Global
 		{A52BE0AD-5076-445C-BE57-CC82E1A8921D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A52BE0AD-5076-445C-BE57-CC82E1A8921D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A52BE0AD-5076-445C-BE57-CC82E1A8921D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98F12F7E-2F53-478C-952F-C644B4B64B9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98F12F7E-2F53-478C-952F-C644B4B64B9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98F12F7E-2F53-478C-952F-C644B4B64B9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98F12F7E-2F53-478C-952F-C644B4B64B9A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26391BBC-04EC-4D0F-8F5A-80186BAAA409}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26391BBC-04EC-4D0F-8F5A-80186BAAA409}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26391BBC-04EC-4D0F-8F5A-80186BAAA409}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26391BBC-04EC-4D0F-8F5A-80186BAAA409}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -444,5 +458,8 @@ Global
 		{06AF7027-C874-4732-A8B9-109E838A9704} = {4E79CE95-D200-41C9-B191-324B741494BE}
 		{B50902A2-2646-4786-BF1E-555DB3DD5CC2} = {4E79CE95-D200-41C9-B191-324B741494BE}
 		{A52BE0AD-5076-445C-BE57-CC82E1A8921D} = {4E79CE95-D200-41C9-B191-324B741494BE}
+		{98F12F7E-2F53-478C-952F-C644B4B64B9A} = {4E79CE95-D200-41C9-B191-324B741494BE}
+		{A6DE4FD5-1EE7-496F-AD21-B5EAA9BBDB30} = {A4C0D164-BF77-4B57-8970-B5459B100AC3}
+		{26391BBC-04EC-4D0F-8F5A-80186BAAA409} = {A6DE4FD5-1EE7-496F-AD21-B5EAA9BBDB30}
 	EndGlobalSection
 EndGlobal

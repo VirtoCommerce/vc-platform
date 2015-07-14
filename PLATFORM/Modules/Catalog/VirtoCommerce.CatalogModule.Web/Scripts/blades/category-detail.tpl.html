@@ -4,6 +4,15 @@
             <form name="detailForm" class="form">
                 <fieldset ng-init="setForm(detailForm);">
                     <div>
+                        <label class="form-label">Is active</label>
+                        <div class="form-input">
+                            <label class="form-label __switch">
+                                <input type="checkbox" ng-model="blade.currentEntity.isActive" />
+                                <span class="switch"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label class="form-label">Name</label>
                         <div class="form-input">
                             <input focus-on="" required class="form-control" ng-model="blade.currentEntity.name" placeholder="Enter category name" />

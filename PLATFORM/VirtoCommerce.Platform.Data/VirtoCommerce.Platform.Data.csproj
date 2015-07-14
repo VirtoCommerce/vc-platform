@@ -82,8 +82,9 @@
     <Reference Include="Microsoft.WindowsAzure.Configuration">
       <HintPath>..\packages\Microsoft.WindowsAzure.ConfigurationManager.2.0.3\lib\net40\Microsoft.WindowsAzure.Configuration.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.Storage">
-      <HintPath>..\packages\WindowsAzure.Storage.3.0.1.0\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
+    <Reference Include="Microsoft.WindowsAzure.Storage, Version=3.0.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\WindowsAzure.Storage.3.0.2.0\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -148,6 +149,7 @@
     <Compile Include="Common\ConventionInjections\IgnorePropertiesInjection.cs" />
     <Compile Include="Common\ConventionInjections\PatchInjection.cs" />
     <Compile Include="Common\ExceptionExtensions.cs" />
+    <Compile Include="ExportImport\JsonExportImport.cs" />
     <Compile Include="ExportImport\PlatformExportImportManager.cs" />
     <Compile Include="Infrastructure\BasicUnitOfWork.cs" />
     <Compile Include="Infrastructure\DbMigrationContext.cs" />
@@ -230,6 +232,10 @@
     <Compile Include="Repositories\Migrations\201507061326367_RenameNotificationTemplateIndex.Designer.cs">
       <DependentUpon>201507061326367_RenameNotificationTemplateIndex.cs</DependentUpon>
     </Compile>
+    <Compile Include="Repositories\Migrations\201507101444412_RemoveDisplayNameTemplate.cs" />
+    <Compile Include="Repositories\Migrations\201507101444412_RemoveDisplayNameTemplate.Designer.cs">
+      <DependentUpon>201507101444412_RemoveDisplayNameTemplate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Repositories\Migrations\Configuration.cs" />
     <Compile Include="Repositories\PlatformDatabaseInitializer.cs" />
     <Compile Include="Repositories\PlatformRepository.cs" />
@@ -305,6 +311,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Repositories\Migrations\201507061326367_RenameNotificationTemplateIndex.resx">
       <DependentUpon>201507061326367_RenameNotificationTemplateIndex.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Repositories\Migrations\201507101444412_RemoveDisplayNameTemplate.resx">
+      <DependentUpon>201507101444412_RemoveDisplayNameTemplate.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Security\Identity\Migrations\201411101625303_InitialCreate.resx">
       <DependentUpon>201411101625303_InitialCreate.cs</DependentUpon>

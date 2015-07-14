@@ -1,7 +1,7 @@
 ﻿angular.module('platformWebApp')
 .controller('platformWebApp.notificationsListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.newnotifications', function ($scope, bladeNavigationService, notifications) {
-	$scope.selectedEntityId = null;
 	var blade = $scope.blade;
+	blade.selectedType = null;
 
 	blade.initialize = function () {
 		blade.isLoading = true;
@@ -31,7 +31,7 @@
 	blade.editTemplate = function (type) {
 		var newBlade = {
 			id: 'editTemplate',
-			title: 'Edit notification template',
+			title: 'Create notification template',
 			notificationType: type,
 			objectId: blade.objectId,
 			objectTypeId: blade.objectTypeId,
@@ -47,6 +47,7 @@
 	};
 
 	blade.openNotification = function (type) {
+		blade.selectedType = type;
 		notifications.getTemplates({ type: type, objectId: blade.objectId, objectTypeId: blade.objectTypeId }, function (data) {
 			if (data.length > 0) {
 				blade.openList(type);

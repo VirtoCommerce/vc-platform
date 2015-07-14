@@ -2,17 +2,19 @@
 using System.Data.Entity;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.Domain.Pricing.Services;
+using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.PricingModule.Data.Repositories;
 using VirtoCommerce.PricingModule.Data.Services;
+using VirtoCommerce.PricingModule.Web.ExportImport;
 using dataModel = VirtoCommerce.PricingModule.Data.Model;
 
 namespace VirtoCommerce.PricingModule.Web
 {
-    public class Module : ModuleBase
+    public class Module : ModuleBase, ISupportExportModule
     {
         private readonly IUnityContainer _container;
 
@@ -54,5 +56,16 @@ namespace VirtoCommerce.PricingModule.Web
         }
 
         #endregion
+
+        #region ISupportExport Members
+
+        public void DoExport(System.IO.Stream outStream, Action<ExportImportProgressInfo> progressCallback)
+        {
+            var exportJob = _container.Resolve<PricingExportImport>();
+            exportJob.DoExport(outStream, progressCallback);
+        }
+
+        #endregion
+
     }
 }

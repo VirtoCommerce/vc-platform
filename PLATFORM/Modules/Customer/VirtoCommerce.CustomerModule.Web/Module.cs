@@ -1,15 +1,18 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.CustomerModule.Data.Repositories;
 using VirtoCommerce.CustomerModule.Data.Services;
+using VirtoCommerce.CustomerModule.Web.ExportImport;
 using VirtoCommerce.Domain.Customer.Services;
+using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 
 namespace VirtoCommerce.CustomerModule.Web
 {
-    public class Module : ModuleBase
+    public class Module : ModuleBase, ISupportExportModule
     {
         private readonly IUnityContainer _container;
 
@@ -52,5 +55,17 @@ namespace VirtoCommerce.CustomerModule.Web
         }
 
         #endregion
+
+        #region ISupportExportModule Members
+
+        public void DoExport(System.IO.Stream outStream, Action<ExportImportProgressInfo> progressCallback)
+        {
+            var exportJob = _container.Resolve<CustomerExportImport>();
+            exportJob.DoExport(outStream, progressCallback);
+        }
+
+        #endregion
+
     }
+
 }

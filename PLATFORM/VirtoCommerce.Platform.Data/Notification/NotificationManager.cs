@@ -28,8 +28,7 @@ namespace VirtoCommerce.Platform.Data.Notification
 
 		public void RegisterNotificationType(Func<Core.Notification.Notification> notification)
 		{
-			var criteria = new GetNotificationCriteria() { Type = notification().Type };
-			var notificationType = GetNewNotification(criteria);
+			var notificationType = GetNewNotification(notification().GetType().Name);
 
 			if (notificationType == null)
 			{
@@ -65,7 +64,7 @@ namespace VirtoCommerce.Platform.Data.Notification
 
 		private void ResolveTemplate(Core.Notification.Notification notification)
 		{
-			SetNotificationTemplate(notification);
+			GetNewNotification(notification.GetType().Name, notification.ObjectId, notification.ObjectTypeId, notification.Language);
 			_resolver.ResolveTemplate(notification);
 		}
 
@@ -84,34 +83,46 @@ namespace VirtoCommerce.Platform.Data.Notification
 			return retVal;
 		}
 
-		public Core.Notification.Notification GetNewNotification(GetNotificationCriteria criteria)
+		public Core.Notification.Notification GetNewNotification(string type)
+		{
+			return GetNewNotification(type, null, null, null);
+		}
+
+		public Core.Notification.Notification GetNewNotification(string type, string objectId, string objectTypeId, string language)
 		{
 			var notifications = GetNotifications();
-			var retVal = notifications.FirstOrDefault(x => x.Type == criteria.Type);
+			var retVal = notifications.FirstOrDefault(x => x.GetType().Name == type);
 			if (retVal != null)
 			{
-				retVal.ObjectId = criteria.ObjectId;
-				retVal.ObjectTypeId = criteria.ObjectTypeId;
-				retVal.Language = criteria.Language;
-				SetNotificationTemplate(retVal);
+				retVal.ObjectId = objectId;
+				retVal.ObjectTypeId = objectTypeId;
+				retVal.Language = language;
+				if (retVal != null)
+				{
+					var template = _notificationTemplateService.GetByNotification(type, objectId, objectTypeId, language);
+					if (template != null)
+					{
+						retVal.NotificationTemplate = template;
+					}
+					else if (retVal.NotificationTemplate == null)
+					{
+						retVal.NotificationTemplate = new NotificationTemplate();
+					}
+				}
+
+				if (retVal.NotificationTemplate != null && string.IsNullOrEmpty(retVal.NotificationTemplate.NotificationTypeId))
+				{
+					retVal.NotificationTemplate.NotificationTypeId = type;
+				}
 			}
 
 			return retVal;
 		}
 
-		public T GetNewNotification<T>(GetNotificationCriteria criteria) where T : Core.Notification.Notification
+		public T GetNewNotification<T>(string objectId, string objectTypeId, string language) where T : Core.Notification.Notification
 		{
 			var notifications = GetNotifications();
-			var retVal = (T)notifications.FirstOrDefault(x => x.GetType().Name == typeof(T).Name);
-			if (retVal != null)
-			{
-				retVal.ObjectId = criteria.ObjectId;
-				retVal.ObjectTypeId = criteria.ObjectTypeId;
-				retVal.Language = criteria.Language;
-				SetNotificationTemplate(retVal);
-			}
-
-			return retVal;
+			return GetNewNotification(typeof(T).Name, objectId, objectTypeId, language) as T;
 		}
 
 		public void UpdateNotification(Core.Notification.Notification notification)
@@ -199,21 +210,9 @@ namespace VirtoCommerce.Platform.Data.Notification
 			}
 		}
 
-		private void SetNotificationTemplate(Core.Notification.Notification notification)
-		{
-			if (notification != null)
-			{
-				var template = _notificationTemplateService.GetByNotification(notification.Type, notification.ObjectId, notification.ObjectTypeId, notification.Language);
-				if (template != null)
-				{
-					notification.NotificationTemplate = template;
-				}
-			}
-		}
-
 		private Core.Notification.Notification GetNotificationCoreModel(NotificationEntity entity)
 		{
-			var retVal = GetNewNotification(new GetNotificationCriteria { Type = entity.Type });
+			var retVal = GetNewNotification(entity.Type);
 			retVal.InjectFrom(entity);
 
 			return retVal;

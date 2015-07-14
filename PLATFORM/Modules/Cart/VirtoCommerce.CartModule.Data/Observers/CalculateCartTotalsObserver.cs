@@ -112,6 +112,8 @@ namespace VirtoCommerce.CartModule.Data.Observers
 					shipment.ItemSubtotal += item.PlacedPrice * item.Quantity;
 				}
 			}
+		    if (shipment.TaxTotal > 0)
+		        shipment.TaxIncluded = true;
 
 			shipment.Subtotal = shipment.ShippingPrice + shipment.TaxTotal;
 			shipment.Total = shipment.Subtotal - shipment.DiscountTotal;

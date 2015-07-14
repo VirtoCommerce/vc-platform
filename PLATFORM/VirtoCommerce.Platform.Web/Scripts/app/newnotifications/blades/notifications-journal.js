@@ -73,5 +73,5 @@
 		}
 	];
 
-	blade.initialize();
+	//blade.initialize();
 }]);

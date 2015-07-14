@@ -1,19 +1,18 @@
 ﻿angular.module('virtoCommerce.coreModule.common')
 .controller('virtoCommerce.coreModule.common.coreAddressDetailController', ['$scope', 'virtoCommerce.coreModule.common.countries', 'platformWebApp.dialogService', function ($scope, countries, dialogService) {
-	$scope.addressTypes = ['Billing', 'Shipping', 'BillingAndShipping'];
+    $scope.addressTypes = ['Billing', 'Shipping', 'BillingAndShipping'];
     function initializeBlade() {
-    	
-    	if ($scope.blade.currentEntity.isNew)
-    	{
-    		$scope.blade.currentEntity.addressType =  $scope.addressTypes[1];
-    	}
-     
-    	$scope.blade.origEntity = angular.copy($scope.blade.currentEntity);
+
+        if ($scope.blade.currentEntity.isNew) {
+            $scope.blade.currentEntity.addressType = $scope.addressTypes[1];
+        }
+
+        $scope.blade.origEntity = angular.copy($scope.blade.currentEntity);
         $scope.blade.isLoading = false;
     };
 
     function isDirty() {
-    	return !angular.equals($scope.blade.currentEntity, $scope.blade.origEntity);
+        return !angular.equals($scope.blade.currentEntity, $scope.blade.origEntity);
     };
 
     $scope.setForm = function (form) {
@@ -29,10 +28,10 @@
     }
 
     $scope.saveChanges = function () {
-    	if ($scope.blade.confirmChangesFn) {
-    		$scope.blade.confirmChangesFn($scope.blade.currentEntity);
-    	};
-    	angular.copy($scope.blade.currentEntity, $scope.blade.origEntity);
+        if ($scope.blade.confirmChangesFn) {
+            $scope.blade.confirmChangesFn($scope.blade.currentEntity);
+        };
+        angular.copy($scope.blade.currentEntity, $scope.blade.origEntity);
         $scope.bladeClose();
     };
 
@@ -44,7 +43,7 @@
                 message: "The Address has been modified. Do you want to save changes?",
                 callback: function (needSave) {
                     if (needSave) {
-                    	$scope.saveChanges();
+                        $scope.saveChanges();
                     }
                     closeCallback();
                 }
@@ -62,12 +61,12 @@
             title: "Delete confirmation",
             message: "Are you sure you want to delete this Address?",
             callback: function (remove) {
-            	if (remove) {
-            		if ($scope.blade.deleteFn) {
-            			$scope.blade.deleteFn($scope.blade.currentEntity);
-            		};
-            		$scope.bladeClose();
-            	}
+                if (remove) {
+                    if ($scope.blade.deleteFn) {
+                        $scope.blade.deleteFn($scope.blade.currentEntity);
+                    };
+                    $scope.bladeClose();
+                }
             }
         }
         dialogService.showConfirmationDialog(dialog);
@@ -97,8 +96,9 @@
     ];
 
     $scope.$watch('blade.currentEntity.countryCode', function (countryCode) {
-        if (countryCode) {
-            $scope.blade.currentEntity.countryName = _.findWhere($scope.countries, { code: countryCode }).name;
+        var country;
+        if (countryCode && (country = _.findWhere($scope.countries, { code: countryCode }))) {
+            $scope.blade.currentEntity.countryName = country.name;
         }
     });
 

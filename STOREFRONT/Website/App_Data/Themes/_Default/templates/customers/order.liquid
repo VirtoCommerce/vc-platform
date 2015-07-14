@@ -63,7 +63,7 @@
           <td>{{ line_item.sku }}</td>
           <td>{{ line_item.price | money }}</td>
           <td class="text-center">{{ line_item.quantity }}</td>
-          <td class="text-right">{{ line_item.quantity | times: line_item.price | money }}</td>
+          <td class="text-right">{{ line_item.line_price | money }}</td>
         </tr>
         {% endfor %}
       </tbody>
@@ -89,7 +89,7 @@
 
         {% for tax_line in order.tax_lines %}
           <tr>
-            <td colspan="4">{{ 'customer.order.tax' | t }} ({{ tax_line.title }} {{ tax_line.rate | times: 100 }}%):</td>
+            <td colspan="4">{{ 'customer.order.tax' | t }} ({{ tax_line.title }} {{ tax_line.rate_percentage }}%):</td>
             <td class="text-right">{{ tax_line.price | money }}</td>
           </tr>
         {% endfor %}
