@@ -38,12 +38,10 @@ namespace AvaTax.TaxModule.Web.Observers
 		#endregion
 		private void CancelCustomerOrderTaxes(OrderChangeEvent context)
 		{
-            if (context.ModifiedOrder.Status != "Cancelled")
+            if (!context.ModifiedOrder.IsCancelled)
 		    {
 		        return;
 		    }
-
-            var order = context.ModifiedOrder;
 
             SlabInvoker<VirtoCommerceEventSource.TaxRequestContext>.Execute(slab =>
                 {
@@ -51,6 +49,7 @@ namespace AvaTax.TaxModule.Web.Observers
 		                && !string.IsNullOrEmpty(_taxSettings.ServiceUrl)
 		                && !string.IsNullOrEmpty(_taxSettings.CompanyCode))
 		            {
+                        var order = context.ModifiedOrder;
 		                var request = order.ToAvaTaxCancelRequest(_taxSettings.CompanyCode, CancelCode.DocDeleted);
 		                if (request != null)
 		                {

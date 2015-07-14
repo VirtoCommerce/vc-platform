@@ -16,7 +16,7 @@
     <owner>Virto Commerce</owner>
   </owners>
   <projectUrl>http://virtocommerce.com/</projectUrl>
-  <iconUrl>http://cdn.blog.cpcstrategy.com/wp-content/uploads/2013/10/ecommerce-fulfillment-shipstation.png</iconUrl>
+  <iconUrl>https://app.shipstation.com/images/logo.png</iconUrl>
   <releaseNotes>First version.</releaseNotes>
   <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
   <tags>shipstation fulfillment</tags>
@@ -51,26 +51,10 @@
         <description>Link to Shipstation API service</description>
       </setting>
     </group>
-    <group name="Shipstation|Fulfillment|Shipstation Description">
-      <setting>
-        <name>Shipstation.Fulfillment.Description</name>
-        <valueType>string</valueType>
-        <defaultValue>Shipstation public site description</defaultValue>
-        <title>Description</title>
-        <description>Description of Shipstation for public site</description>
-      </setting>
-      <setting>
-        <name>Shipstation.Tax.LogoUrl</name>
-        <valueType>string</valueType>
-        <defaultValue>http://cdn.blog.cpcstrategy.com/wp-content/uploads/2013/10/ecommerce-fulfillment-shipstation.png</defaultValue>
-        <title>Logo url</title>
-        <description>Shipstation logo url</description>
-      </setting>
-    </group>
   </settings>
   <permissions>
     <group name="Fulfillment">
-      <permission id="tax:manage" name="Manage fulfillment settings" description="Permission to manage shipstation fulfillment."/>
+      <permission id="fulfillment:manage" name="Manage fulfillment settings" description="Permission to manage shipstation fulfillment."/>
     </group>
   </permissions>
 </module>
