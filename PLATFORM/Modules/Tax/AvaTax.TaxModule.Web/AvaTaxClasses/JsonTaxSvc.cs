@@ -52,6 +52,13 @@ namespace AvaTaxCalcREST
             }
             catch (WebException ex)
             {
+                if (ex.Response == null)
+                {
+                    result.ResultCode = SeverityLevel.Error;
+                    result.Messages = new[] { new Message { Severity = SeverityLevel.Error, Summary = ex.Message } };
+                    return result;
+                }
+
                 using (var response = ex.Response)
                 {
                     using (var data = response.GetResponseStream())
@@ -91,7 +98,14 @@ namespace AvaTaxCalcREST
             }
             catch (WebException ex)
             {
-                using (WebResponse response = ex.Response)
+                if (ex.Response == null)
+                {
+                    result.ResultCode = SeverityLevel.Error;
+                    result.Messages = new[] { new Message { Severity = SeverityLevel.Error, Summary = ex.Message } };
+                    return result;
+                }
+
+                using (var response = ex.Response)
                 {
                     using (var data = response.GetResponseStream())
                     {
@@ -144,6 +158,13 @@ namespace AvaTaxCalcREST
             }
             catch (WebException ex)
             {
+                if (ex.Response == null)
+                {
+                    cancelResponse.ResultCode = SeverityLevel.Error;
+                    cancelResponse.Messages = new[] { new Message { Severity = SeverityLevel.Error, Summary = ex.Message } };
+                    return cancelResponse;
+                }
+
                 using (WebResponse response = ex.Response)
                 {
                     using (var data = response.GetResponseStream())

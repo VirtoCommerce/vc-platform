@@ -35,9 +35,14 @@ namespace AvaTax.TaxModule.Web.Logging
         public class EventCodes
         {
             public const int Startup = 2;
+            public const int Ping = 3;
+            public const int ValidateAddress = 4;
+
             public const int ApplicationError = 1001;
             public const int TaxCalculationError = 1000;
-            public const int TaxPingError = 11001;
+            public const int TaxPingError = 1002;
+            public const int AddressValidationError = 1003;
+
             public const int GetTaxRequestTime = 2000;
             public const int GetSalesInvoiceRequestTime = 2001;
         }
@@ -49,6 +54,18 @@ namespace AvaTax.TaxModule.Web.Logging
         public void Startup()
         {
             this.WriteEvent(EventCodes.Startup);
+        }
+
+        [Event(EventCodes.Ping, Message = "Test connection passed. Duration {2} ms.", Keywords = Keywords.Diagnostic, Level = EventLevel.Informational)]
+        public void Ping(string startTime, string endTime, double duration)
+        {
+            this.WriteEvent(EventCodes.Ping, startTime, endTime, duration);
+        }
+
+        [Event(EventCodes.ValidateAddress, Message = "Address validated successfully. Duration {2} ms.", Keywords = Keywords.Diagnostic, Level = EventLevel.Informational)]
+        public void ValidateAddress(string startTime, string endTime, double duration)
+        {
+            this.WriteEvent(EventCodes.ValidateAddress, startTime, endTime, duration);
         }
 
         [Event(EventCodes.ApplicationError, Message = "Application Failure: {0}", Level = EventLevel.Critical, Keywords = Keywords.Diagnostic)]
@@ -63,10 +80,16 @@ namespace AvaTax.TaxModule.Web.Logging
             this.WriteEvent(EventCodes.TaxCalculationError, docCode, docType, error);
         }
 
-        [Event(EventCodes.TaxPingError, Message = "{0} - {1}. Error message: {2}", Level = EventLevel.Error, Keywords = Keywords.Diagnostic)]
+        [Event(EventCodes.TaxPingError, Message = "AvaTax ping failed. Error message: {0}", Level = EventLevel.Error, Keywords = Keywords.Diagnostic)]
         public void TaxPingError(string error)
         {
             this.WriteEvent(EventCodes.TaxPingError, error);
+        }
+
+        [Event(EventCodes.AddressValidationError, Message = "Address validation failed. Error message: {0}", Level = EventLevel.Error, Keywords = Keywords.Diagnostic)]
+        public void AddressValidationError(string error)
+        {
+            this.WriteEvent(EventCodes.AddressValidationError, error);
         }
 
         [Event(EventCodes.GetTaxRequestTime, Message = "{0} - {1}. Duration {4} ms. AvaTax tax request executed successfully.", Level = EventLevel.Informational, Keywords = Keywords.Diagnostic)]
