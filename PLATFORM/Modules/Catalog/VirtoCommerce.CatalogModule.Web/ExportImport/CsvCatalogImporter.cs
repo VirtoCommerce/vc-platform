@@ -66,7 +66,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 		public void DoImport(Stream inputStream, CsvProductMappingConfiguration configuration, Action<ExportImportProgressInfo> progressCallback)
 		{
 			var csvProducts = new List<CsvProduct>();
-			var catalog = _catalogService.GetById(configuration.CatalogId);
+		
 
 			var progressInfo = new ExportImportProgressInfo
 			{
@@ -100,9 +100,20 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 					}
 				}
 			}
+			var catalogProductGroups = csvProducts.GroupBy(x=> configuration.CatalogId);
+			//If catalog not specified directly need use stored value
+			if(configuration.CatalogId == null)
+			{
+				catalogProductGroups = csvProducts.GroupBy(x => x.CatalogId);
+			}
 
-			SaveCategoryTree(catalog, csvProducts, progressInfo, progressCallback);
-			SaveProducts(catalog, csvProducts, progressInfo, progressCallback);
+			foreach (var group in catalogProductGroups)
+			{
+				var catalog = _catalogService.GetById(group.Key);
+
+				SaveCategoryTree(catalog, csvProducts, progressInfo, progressCallback);
+				SaveProducts(configuration, catalog, csvProducts, progressInfo, progressCallback);
+			}
 
 		}
 
@@ -149,7 +160,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 		}
 
 
-		private void SaveProducts(coreModel.Catalog catalog, IEnumerable<CsvProduct> csvProducts, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback)
+		private void SaveProducts(CsvProductMappingConfiguration configuration, coreModel.Catalog catalog, IEnumerable<CsvProduct> csvProducts, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback)
 		{
 			int counter = 0;
 			var notifyProductSizeLimit = 10;
@@ -170,7 +181,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 				{
 					try
 					{
-						SaveProduct(catalog, defaultFulfilmentCenter, csvProduct);
+						SaveProduct(configuration, catalog, defaultFulfilmentCenter, csvProduct);
 					}
 					catch (Exception ex)
 					{
@@ -211,7 +222,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 			}
 		}
 
-		private void SaveProduct(coreModel.Catalog catalog, FulfillmentCenter defaultFulfillmentCenter, CsvProduct csvProduct)
+		private void SaveProduct(CsvProductMappingConfiguration configuration, coreModel.Catalog catalog, FulfillmentCenter defaultFulfillmentCenter, CsvProduct csvProduct)
 		{
 			var defaultLanguge = catalog.DefaultLanguage != null ? catalog.DefaultLanguage.LanguageCode : "EN-US";
 
@@ -287,25 +298,30 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 			}
 
 			//Create price in default price list
-			if (csvProduct.ListPrice != null || csvProduct.SalePrice != null)
+			if ((configuration.Mode & CsvExportImportMode.Price) == CsvExportImportMode.Price)
 			{
-				csvProduct.Price.ProductId = csvProduct.Id;
+				if (csvProduct.ListPrice != null || csvProduct.SalePrice != null)
+				{
+					csvProduct.Price.ProductId = csvProduct.Id;
 
-				if (csvProduct.Price.IsTransient() || _pricingService.GetPriceById(csvProduct.Price.Id) == null)
-				{
-					_pricingService.CreatePrice(csvProduct.Price);
-				}
-				else
-				{
-					_pricingService.UpdatePrices(new Price[] { csvProduct.Price });
+					if (csvProduct.Price.IsTransient() || _pricingService.GetPriceById(csvProduct.Price.Id) == null)
+					{
+						_pricingService.CreatePrice(csvProduct.Price);
+					}
+					else
+					{
+						_pricingService.UpdatePrices(new Price[] { csvProduct.Price });
+					}
 				}
 			}
 
 			//Create inventory
-
-			csvProduct.Inventory.ProductId = csvProduct.Id;
-			csvProduct.Inventory.FulfillmentCenterId = csvProduct.Inventory.FulfillmentCenterId ?? defaultFulfillmentCenter.Id;
-			_inventoryService.UpsertInventory(csvProduct.Inventory);
+			if ((configuration.Mode & CsvExportImportMode.Inventory) == CsvExportImportMode.Inventory)
+			{
+				csvProduct.Inventory.ProductId = csvProduct.Id;
+				csvProduct.Inventory.FulfillmentCenterId = csvProduct.Inventory.FulfillmentCenterId ?? defaultFulfillmentCenter.Id;
+				_inventoryService.UpsertInventory(csvProduct.Inventory);
+			}
 
 		}
 

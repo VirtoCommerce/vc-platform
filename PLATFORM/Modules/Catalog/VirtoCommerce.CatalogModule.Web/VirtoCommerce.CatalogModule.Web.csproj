@@ -135,6 +135,7 @@
     <Compile Include="Converters\SearchConverter.cs" />
     <Compile Include="ExportImport\CsvCatalogExporter.cs" />
     <Compile Include="ExportImport\CsvCatalogImporter.cs" />
+    <Compile Include="ExportImport\CsvExportImportMode.cs" />
     <Compile Include="ExportImport\CsvProduct.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -142,7 +143,7 @@
     <Compile Include="ExportImport\CsvProductMap.cs" />
     <Compile Include="Model\Catalog.cs" />
     <Compile Include="Model\CategoryLink.cs" />
-    <Compile Include="Model\CsvExportInfo.cs" />
+    <Compile Include="ExportImport\CsvExportInfo.cs" />
     <Compile Include="ExportImport\CsvProductMappingConfiguration.cs">
       <SubType>Code</SubType>
     </Compile>

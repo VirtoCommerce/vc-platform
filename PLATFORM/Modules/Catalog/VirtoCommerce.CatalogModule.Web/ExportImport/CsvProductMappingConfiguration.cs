@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using VirtoCommerce.CatalogModule.Web.ExportImport;
 using VirtoCommerce.Platform.Core.Common;
 
@@ -14,6 +16,8 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 			PropertyMaps = new List<CsvProductPropertyMap>();
 		}
 
+		[JsonConverter(typeof(StringEnumConverter))]
+		public CsvExportImportMode Mode { get; set; }
 		public string ETag { get; set; }
 		public string FileUrl { get; set; }
 		public string CatalogId { get; set; }

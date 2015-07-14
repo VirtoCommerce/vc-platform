@@ -98,7 +98,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 			}
 			set
 			{
-				Price.Sale = Convert.ToDecimal(value, CultureInfo.InvariantCulture);
+				Price.Sale = String.IsNullOrEmpty(value) ? 0 : Convert.ToDecimal(value, CultureInfo.InvariantCulture);
 			}
 		}
 		

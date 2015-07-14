@@ -8,6 +8,7 @@ using System.Text;
 using CsvHelper;
 using VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.Domain.Catalog.Services;
+using VirtoCommerce.Domain.Inventory.Model;
 using VirtoCommerce.Domain.Inventory.Services;
 using VirtoCommerce.Domain.Pricing.Model;
 using VirtoCommerce.Domain.Pricing.Services;
@@ -38,7 +39,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 			_blobUrlResolver = blobUrlResolver;
 		}
 
-		public void DoExport(Stream outStream, string catalogId, string[] exportedCategories, string[] exportedProducts, string pricelistId, string fulfilmentCenterId, CurrencyCodes currency, string languageCode, Action<ExportImportProgressInfo> progressCallback)
+		public void DoExport(Stream outStream, CsvProductMappingConfiguration configuration, CsvExportInfo exportInfo, Action<ExportImportProgressInfo> progressCallback)
 		{
 			var prodgressInfo = new ExportImportProgressInfo
 			{
@@ -54,29 +55,36 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 				progressCallback(prodgressInfo);
 
 				//Load all products to export
-				var products = LoadProducts(catalogId, exportedCategories, exportedProducts);
+				var products = LoadProducts(exportInfo.CatalogId, exportInfo.CategoryIds, exportInfo.ProductIds);
 				var allProductIds = products.Select(x => x.Id).ToArray();
 
 				//Load prices for products
-				prodgressInfo.Description = "loading prices...";
-				progressCallback(prodgressInfo);
-
-				var priceEvalContext = new PriceEvaluationContext
+				var allProductPrices = new List<Price>();
+				if ((configuration.Mode & CsvExportImportMode.Price) == CsvExportImportMode.Price)
 				{
-					ProductIds = allProductIds,
-					PricelistIds = pricelistId == null ? null : new string[] { pricelistId },
-					Currency = currency
-				};
-				var allProductPrices = _pricingService.EvaluateProductPrices(priceEvalContext).ToArray();
+					prodgressInfo.Description = "loading prices...";
+					progressCallback(prodgressInfo);
+
+					var priceEvalContext = new PriceEvaluationContext
+					{
+						ProductIds = allProductIds,
+						PricelistIds = exportInfo.PriceListId == null ? null : new string[] { exportInfo.PriceListId },
+						Currency = exportInfo.Currency
+					};
+					allProductPrices = _pricingService.EvaluateProductPrices(priceEvalContext).ToList();
+				}
 
 				//Load inventories
-				prodgressInfo.Description = "loading inventory information...";
-				progressCallback(prodgressInfo);
+				var allProductInventories = new List<InventoryInfo>();
+				if ((configuration.Mode & CsvExportImportMode.Inventory) == CsvExportImportMode.Inventory)
+				{
+					prodgressInfo.Description = "loading inventory information...";
+					progressCallback(prodgressInfo);
 
-				var allProductInventories = _inventoryService.GetProductsInventoryInfos(allProductIds).Where(x => fulfilmentCenterId == null ? true : x.FulfillmentCenterId == fulfilmentCenterId).ToArray();
+					allProductInventories = _inventoryService.GetProductsInventoryInfos(allProductIds).Where(x => exportInfo.FulfilmentCenterId == null ? true : x.FulfillmentCenterId == exportInfo.FulfilmentCenterId).ToList();
+				}
 
 				//Export configuration
-				var configuration = CsvProductMappingConfiguration.GetDefaultConfiguration();
 				configuration.PropertyCsvColumns = products.SelectMany(x => x.PropertyValues).Select(x => x.PropertyName).Distinct().ToArray();
 
 				csvWriter.Configuration.Delimiter = configuration.Delimiter;

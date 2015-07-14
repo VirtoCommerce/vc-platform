@@ -83,6 +83,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 		public IHttpActionResult GetMappingConfiguration([FromUri]string fileUrl, [FromUri]string delimiter = ";")
 		{
 			var retVal = CsvProductMappingConfiguration.GetDefaultConfiguration();
+			retVal.Mode = CsvExportImportMode.All;
 
 			retVal.Delimiter = delimiter;
 			retVal.FileUrl = fileUrl;
@@ -177,7 +178,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 		{
 			var curencySetting = _settingsManager.GetSettingByName("VirtoCommerce.Core.General.Currencies");
 			var defaultCurrency = EnumUtility.SafeParse<CurrencyCodes>(curencySetting.DefaultValue, CurrencyCodes.USD);
-			
+			exportInfo.Currency = exportInfo.Currency ?? defaultCurrency;
 			var catalog = _catalogService.GetById(exportInfo.CatalogId);
 			if (catalog == null)
 			{
@@ -194,7 +195,9 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 			 {
 				 try
 				 {
-					 _csvExporter.DoExport(stream, exportInfo.CatalogId, exportInfo.CategoryIds, exportInfo.ProductIds, exportInfo.PriceListId, exportInfo.FulfilmentCenterId, exportInfo.Currency ?? defaultCurrency, catalog.DefaultLanguage.LanguageCode, progressCallback);
+					 var configuration = CsvProductMappingConfiguration.GetDefaultConfiguration();
+					 configuration.Mode = CsvExportImportMode.All;
+					 _csvExporter.DoExport(stream, configuration, exportInfo, progressCallback);
 					 
 					 stream.Position = 0;
 					 //Upload result csv to blob storage

@@ -119,7 +119,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 				foreach (var module in modules)
 				{
 					var moduleInfo = manifest.Modules.First(x => x.ModuleId == module.Id);
-					var modulePart = package.GetPart(new Uri(moduleInfo.PartUri));
+					var modulePart = package.GetPart(new Uri(moduleInfo.PartUri, UriKind.Relative));
 					using (var modulePartStream = modulePart.GetStream())
 					{
 						Action<ExportImportProgressInfo> modulePorgressCallback = (x) =>
