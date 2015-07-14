@@ -360,7 +360,9 @@
     <Content Include="Scripts\app\dynamicProperties\blades\dynamicProperty-list.tpl.html" />
     <Content Include="Scripts\app\dynamicProperties\dynamicProperties.js" />
     <Content Include="Scripts\app\dynamicProperties\resources\dynamicPropertiesApi.js" />
+    <Content Include="Scripts\app\exportImport\blades\import-main.js" />
     <Content Include="Scripts\app\exportImport\blades\export-main.js" />
+    <Content Include="Scripts\app\exportImport\blades\import-main.tpl.html" />
     <Content Include="Scripts\app\exportImport\blades\export-main.tpl.html" />
     <Content Include="Scripts\app\exportImport\blades\exportImport-main.js" />
     <Content Include="Scripts\app\exportImport\blades\exportImport-main.tpl.html" />

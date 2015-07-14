@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using VirtoCommerce.Domain.Pricing.Model;
 using VirtoCommerce.Domain.Pricing.Services;
 using VirtoCommerce.Platform.Core.ExportImport;
@@ -22,10 +23,12 @@ namespace VirtoCommerce.PricingModule.Web.ExportImport
             _pricingService = pricingService;
         }
 
-        public void DoExport(Stream backupStream, BackupObject backupObject, Action<ExportImportProgressInfo> progressCallback)
+        public void DoExport(Stream backupStream, Action<ExportImportProgressInfo> progressCallback)
         {
             var prodgressInfo = new ExportImportProgressInfo { Description = "loading data..." };
             progressCallback(prodgressInfo);
+
+            var backupObject = new BackupObject { Pricelists = _pricingService.GetPriceLists().ToArray() };
 
             Save(backupStream, backupObject, progressCallback, prodgressInfo);
         }

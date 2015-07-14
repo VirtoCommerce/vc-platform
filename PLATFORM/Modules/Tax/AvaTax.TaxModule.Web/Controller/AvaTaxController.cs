@@ -5,8 +5,6 @@ using System.Web.Http.Description;
 using AvaTax.TaxModule.Web.Converters;
 using AvaTax.TaxModule.Web.Services;
 using AvaTaxCalcREST;
-using VirtoCommerce.Domain.Cart.Model;
-using VirtoCommerce.Domain.Order.Model;
 using CartAddressType = VirtoCommerce.Domain.Cart.Model.AddressType;
 using domainModel = VirtoCommerce.Domain.Commerce.Model;
 

@@ -7,7 +7,9 @@ using VirtoCommerce.Domain.Order.Services;
 using VirtoCommerce.OrderModule.Data.Observers;
 using VirtoCommerce.OrderModule.Data.Repositories;
 using VirtoCommerce.OrderModule.Data.Services;
+using VirtoCommerce.OrderModule.Web.ExportImport;
 using VirtoCommerce.Platform.Core.Caching;
+using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
@@ -17,7 +19,7 @@ using VirtoCommerce.OrderModule.Web.Resources;
 
 namespace VirtoCommerce.OrderModule.Web
 {
-    public class Module : ModuleBase
+    public class Module : ModuleBase, ISupportExportModule
     {
         private const string _connectionStringName = "VirtoCommerce";
         private readonly IUnityContainer _container;
@@ -93,5 +95,16 @@ namespace VirtoCommerce.OrderModule.Web
         }
 
         #endregion
+
+        #region ISupportExportModule Members
+
+        public void DoExport(System.IO.Stream outStream, Action<ExportImportProgressInfo> progressCallback)
+        {
+            var exportJob = _container.Resolve<OrderExportImport>();
+            exportJob.DoExport(outStream, progressCallback);
+        }
+
+        #endregion
+
     }
 }

@@ -16,7 +16,7 @@
         <owner>Virto Commerce</owner>
     </owners>
     <projectUrl>http://virtocommerce.com/</projectUrl>
-    <iconUrl>http://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
+    <iconUrl>https://upload.wikimedia.org/wikipedia/commons/d/d0/Klarna-Logo.png</iconUrl>
     <releaseNotes>First version.</releaseNotes>
     <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
     <tags>klarna payment gateway</tags>

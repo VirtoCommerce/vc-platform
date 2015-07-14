@@ -14,6 +14,11 @@
     $scope.import = function () {
         $scope.selectedNodeId = 'import';
 
+        var newBlade = {
+            controller: 'platformWebApp.exportImport.importMainController',
+            template: 'Scripts/app/exportImport/blades/import-main.tpl.html'
+        };
+        bladeNavigationService.showBlade(newBlade, $scope.blade);
     };
 
     $scope.blade.headIcon = 'fa-database';
