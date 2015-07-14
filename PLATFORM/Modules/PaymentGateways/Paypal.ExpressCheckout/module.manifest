@@ -16,7 +16,7 @@
 				<owner>Virto Commerce</owner>
 		</owners>
 		<projectUrl>http://virtocommerce.com/</projectUrl>
-		<iconUrl>http://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
+		<iconUrl>http://virtotest.blob.core.windows.net/catalog/pp258.png</iconUrl>
 		<releaseNotes>First version.</releaseNotes>
 		<copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
 		<tags>paypal bank cards payment gateway</tags>
@@ -72,6 +72,17 @@
 								<defaultValue>checkout/externalpaymentcallback</defaultValue>
 								<title>Redirect relative path</title>
 								<description>Relative path for paypal payment from paypal site to frontend</description>
+						</setting>
+						<setting>
+							<name>Paypal.ExpressCheckout.PaymentActionType</name>
+							<valueType>string</valueType>
+							<allowedValues>
+								<value>Authorization (with future capture)</value>
+								<value>Sale</value>
+							</allowedValues>
+							<defaultValue>Sale</defaultValue>
+							<title>Payment action type</title>
+							<description>Action type of payment</description>
 						</setting>
 				</group>
 		</settings>

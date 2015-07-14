@@ -17,15 +17,12 @@ namespace Paypal.DirectPayments.Managers
         private const string _paypalApiPasswordStoreSetting = "Paypal.DirectPayments.APIPassword";
         private const string _paypalApiSignatureStoreSetting = "Paypal.DirectPayments.APISignature";
         private const string _paypalPaymentRedirectRelativePathStoreSetting = "Paypal.DirectPayments.PaymentRedirectRelativePath";
+		private const string _paypalPaymentActionTypeStoreSetting = "Paypal.ExpressCheckout.PaypalPaymentActionType";
 
-        //private const string _paypalModeConfigSettingName = "mode";
-        //private const string _paypalUsernameConfigSettingName = "account1.apiUsername";
-        //private const string _paypalPasswordConfigSettingName = "account1.apiPassword";
-        //private const string _paypalSignatureConfigSettingName = "account1.apiSignature";
-
-        //private const string _sandboxPaypalBaseUrlFormat = "https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&useraction=commit&token={0}";
-        //private const string _livePaypalBaseUrlFormat = "https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&useraction=commit&token={0}";
-
+		private const string _paypalModeConfigSettingName = "mode";
+		private const string _paypalUsernameConfigSettingName = "account1.apiUsername";
+		private const string _paypalPasswordConfigSettingName = "account1.apiPassword";
+		private const string _paypalSignatureConfigSettingName = "account1.apiSignature";
 
         public PaypalDirectPaymentsPaymentMethod()
             : base("Paypal.DirectPayments")
@@ -96,14 +93,12 @@ namespace Paypal.DirectPayments.Managers
 
             var doDirectPaymentRequest = GetDoDirectPaymentRequest(context);
 
-
-
-            //send request
             var service = GetService();
             var response = service.DoDirectPayment(doDirectPaymentRequest);
 
             string error;
             bool success = CheckResponse(response, out error);
+
 
             if (success)
             {
@@ -123,6 +118,21 @@ namespace Paypal.DirectPayments.Managers
         {
             throw new NotImplementedException();
         }
+
+		public override VoidProcessPaymentResult VoidProcessPayment(VoidProcessPaymentEvaluationContext context)
+		{
+			throw new NotImplementedException();
+		}
+
+		public override CaptureProcessPaymentResult CaptureProcessPayment(CaptureProcessPaymentEvaluationContext context)
+		{
+			throw new NotImplementedException();
+		}
+
+		public override RefundProcessPaymentResult RefundProcessPayment(RefundProcessPaymentEvaluationContext context)
+		{
+			throw new NotImplementedException();
+		}
 
         public override ValidatePostProcessRequestResult ValidatePostProcessRequest(NameValueCollection queryString)
         {
@@ -327,5 +337,5 @@ namespace Paypal.DirectPayments.Managers
         }
 
         #endregion
-    }
+	}
 }

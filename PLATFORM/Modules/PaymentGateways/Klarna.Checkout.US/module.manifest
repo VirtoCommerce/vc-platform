@@ -7,8 +7,8 @@
         <dependency id="VirtoCommerce.Core" version="1.0.0" />
     </dependencies>
 
-    <title>Klarna Checkout US</title>
-    <description>APIs and UI for klarna payment gateway</description>
+    <title>Klarna Checkout US/UK payment gateway</title>
+    <description>APIs and UI for Klarna Checkout US/UK payment gateway</description>
     <authors>
         <author>Virto Commerce</author>
     </authors>
@@ -16,7 +16,7 @@
         <owner>Virto Commerce</owner>
     </owners>
     <projectUrl>http://virtocommerce.com/</projectUrl>
-    <iconUrl>http://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
+    <iconUrl>http://virtotest.blob.core.windows.net/catalog/klarna_170_170.png</iconUrl>
     <releaseNotes>First version.</releaseNotes>
     <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
     <tags>klarna payment gateway</tags>

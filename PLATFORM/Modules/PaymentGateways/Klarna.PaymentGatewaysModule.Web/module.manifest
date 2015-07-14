@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <module>
-    <id>Klarna.PaymentGateway</id>
+    <id>Klarna.Checkout.Euro</id>
     <version>1.0.0</version>
     <platformVersion>2.0.0</platformVersion>
     <dependencies>
         <dependency id="VirtoCommerce.Core" version="1.0.0" />
     </dependencies>
 
-    <title>Klarna Payment Gateway</title>
-    <description>APIs and UI for klarna payment gateway</description>
+    <title>Klarna Checkout europe payment gateway</title>
+    <description>APIs and UI for Klarna Checkout europe payment gateway</description>
     <authors>
         <author>Virto Commerce</author>
     </authors>
@@ -16,13 +16,13 @@
         <owner>Virto Commerce</owner>
     </owners>
     <projectUrl>http://virtocommerce.com/</projectUrl>
-    <iconUrl>http://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
+    <iconUrl>http://virtotest.blob.core.windows.net/catalog/klarna_170_170.png</iconUrl>
     <releaseNotes>First version.</releaseNotes>
     <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
-    <tags>klarna payment gateway</tags>
+    <tags>klarna checkout europe payment</tags>
 
-    <assemblyFile>Klarna.PaymentGatewaysModule.Web.dll</assemblyFile>
-    <moduleType>Klarna.PaymentGatewaysModule.Web.Module, Klarna.PaymentGatewaysModule.Web</moduleType>
+    <assemblyFile>Klarna.Checkout.Euro.dll</assemblyFile>
+    <moduleType>Klarna.Checkout.Euro.Module, Klarna.Checkout.Euro</moduleType>
     <!--<styles>
 		<directory virtualPath="$/Content/css" searchPattern="*.css" searchSubdirectories="true" />
 	</styles>-->
@@ -75,6 +75,17 @@
 							<defaultValue>checkout/externalpaymentcallback</defaultValue>
 							<title>Confirmation Url</title>
 							<description>Klarna Confirmation Url</description>
+						</setting>
+						<setting>
+							<name>Klarna.PaymentActionType</name>
+							<valueType>string</valueType>
+							<allowedValues>
+								<value>Authorization (with future capture)</value>
+								<value>Sale</value>
+							</allowedValues>
+							<defaultValue>Sale</defaultValue>
+							<title>Payment action type</title>
+							<description>Action type of payment</description>
 						</setting>
         </group>
     </settings>

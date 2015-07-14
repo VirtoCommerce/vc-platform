@@ -15,20 +15,21 @@ namespace Paypal.ExpressCheckout.Managers
 {
 	public class PaypalExpressCheckoutPaymentMethod : VirtoCommerce.Domain.Payment.Model.PaymentMethod
 	{
-		private static string PaypalAPIModeStoreSetting = "Paypal.ExpressCheckout.Mode";
-		private static string PaypalPaymentModeStoreSetting = "Paypal.ExpressCheckout.PaymentMode";
-		private static string PaypalAPIUserNameStoreSetting = "Paypal.ExpressCheckout.APIUsername";
-		private static string PaypalAPIPasswordStoreSetting = "Paypal.ExpressCheckout.APIPassword";
-		private static string PaypalAPISignatureStoreSetting = "Paypal.ExpressCheckout.APISignature";
-		private static string PaypalPaymentRedirectRelativePathStoreSetting = "Paypal.ExpressCheckout.PaymentRedirectRelativePath";
+		private const string _paypalAPIModeStoreSetting = "Paypal.ExpressCheckout.Mode";
+		private const string _paypalPaymentModeStoreSetting = "Paypal.ExpressCheckout.PaymentMode";
+		private const string _paypalAPIUserNameStoreSetting = "Paypal.ExpressCheckout.APIUsername";
+		private const string _paypalAPIPasswordStoreSetting = "Paypal.ExpressCheckout.APIPassword";
+		private const string _paypalAPISignatureStoreSetting = "Paypal.ExpressCheckout.APISignature";
+		private const string _paypalPaymentRedirectRelativePathStoreSetting = "Paypal.ExpressCheckout.PaymentRedirectRelativePath";
+		private const string _paypalPaymentActionTypeStoreSetting = "Paypal.ExpressCheckout.PaypalPaymentActionType";
 
-		private static string PaypalModeConfigSettingName = "mode";
-		private static string PaypalUsernameConfigSettingName = "account1.apiUsername";
-		private static string PaypalPasswordConfigSettingName = "account1.apiPassword";
-		private static string PaypalSignatureConfigSettingName = "account1.apiSignature";
+		private const string PaypalModeConfigSettingName = "mode";
+		private const string PaypalUsernameConfigSettingName = "account1.apiUsername";
+		private const string PaypalPasswordConfigSettingName = "account1.apiPassword";
+		private const string PaypalSignatureConfigSettingName = "account1.apiSignature";
 
-		private static string SandboxPaypalBaseUrlFormat = "https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&useraction=commit&token={0}";
-		private static string LivePaypalBaseUrlFormat = "https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&useraction=commit&token={0}";
+		private const string SandboxPaypalBaseUrlFormat = "https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&useraction=commit&token={0}";
+		private const string LivePaypalBaseUrlFormat = "https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&useraction=commit&token={0}";
 
 
 		public PaypalExpressCheckoutPaymentMethod()
@@ -40,7 +41,7 @@ namespace Paypal.ExpressCheckout.Managers
 		{
 			get
 			{
-				var retVal = GetSetting(PaypalAPIModeStoreSetting);
+				var retVal = GetSetting(_paypalAPIModeStoreSetting);
 				return retVal;
 			}
 		}
@@ -49,7 +50,7 @@ namespace Paypal.ExpressCheckout.Managers
 		{
 			get
 			{
-				var retVal = GetSetting(PaypalAPIUserNameStoreSetting);
+				var retVal = GetSetting(_paypalAPIUserNameStoreSetting);
 				return retVal;
 			}
 		}
@@ -58,7 +59,7 @@ namespace Paypal.ExpressCheckout.Managers
 		{
 			get
 			{
-				var retVal = GetSetting(PaypalAPIPasswordStoreSetting);
+				var retVal = GetSetting(_paypalAPIPasswordStoreSetting);
 				return retVal;
 			}
 		}
@@ -67,7 +68,7 @@ namespace Paypal.ExpressCheckout.Managers
 		{
 			get
 			{
-				var retVal = GetSetting(PaypalAPISignatureStoreSetting);
+				var retVal = GetSetting(_paypalAPISignatureStoreSetting);
 				return retVal;
 			}
 		}
@@ -76,8 +77,17 @@ namespace Paypal.ExpressCheckout.Managers
 		{
 			get
 			{
-				var retVal = GetSetting(PaypalPaymentRedirectRelativePathStoreSetting);
+				var retVal = GetSetting(_paypalPaymentRedirectRelativePathStoreSetting);
 				return retVal;
+			}
+		}
+
+		private PaymentActionCodeType PaypalPaymentActionType
+		{
+			get
+			{
+				var settingValue = GetSetting(_paypalPaymentActionTypeStoreSetting);
+				return GetPaymentActionType(settingValue);
 			}
 		}
 
@@ -98,11 +108,11 @@ namespace Paypal.ExpressCheckout.Managers
 			if (!(context.Store != null && !string.IsNullOrEmpty(context.Store.Url)))
 				throw new NullReferenceException("no store with this id");
 
-			var config = GetConfigMap(context.Store);
+			var config = GetConfigMap();
 
 			var url = context.Store.Url;
 
-			var request = CreatePaypalRequest(context.Order, context.Store, context.Payment);
+			var request = GetSetExpressCheckoutRequest(context.Order, context.Store, context.Payment);
 
 			var service = new PayPalAPIInterfaceServiceService(config);
 
@@ -130,7 +140,7 @@ namespace Paypal.ExpressCheckout.Managers
 		{
 			var retVal = new PostProcessPaymentResult();
 
-			if (context == null && context.Payment == null)
+			if (context == null || context.Payment == null)
 				throw new ArgumentNullException("paymentEvaluationContext");
 
 			if (context.Order == null)
@@ -138,10 +148,10 @@ namespace Paypal.ExpressCheckout.Managers
 
 			retVal.OrderId = context.Order.Id;
 
-			if (!(context.Store != null && !string.IsNullOrEmpty(context.Store.Url)))
+			if (!(context.Store != null || !string.IsNullOrEmpty(context.Store.Url)))
 				throw new NullReferenceException("no store with this id");
 
-			var config = GetConfigMap(context.Store);
+			var config = GetConfigMap();
 
 			var service = new PayPalAPIInterfaceServiceService(config);
 
@@ -167,16 +177,121 @@ namespace Paypal.ExpressCheckout.Managers
 				if (status.Equals("PaymentActionCompleted"))
 				{
 					retVal.IsSuccess = true;
-					retVal.NewPaymentStatus = PaymentStatus.Paid;
+					retVal.OuterId = response.GetExpressCheckoutDetailsResponseDetails.PaymentDetails[0].TransactionId;
+					if(PaypalPaymentActionType == PaymentActionCodeType.AUTHORIZATION)
+					{
+						retVal.NewPaymentStatus = PaymentStatus.Authorized;
+					}
+					else if (PaypalPaymentActionType == PaymentActionCodeType.SALE)
+					{
+						retVal.NewPaymentStatus = PaymentStatus.Paid;
+					}
+				}
+				else
+				{
+					retVal.ErrorMessage = "Payment process not successfully ends";
 				}
 			}
 			catch (System.Exception ex)
 			{
-				retVal.Error = ex.Message;
+				retVal.ErrorMessage = ex.Message;
 				retVal.NewPaymentStatus = PaymentStatus.Pending;
 			}
 
 			return retVal;
+		}
+		public override VoidProcessPaymentResult VoidProcessPayment(VoidProcessPaymentEvaluationContext context)
+		{
+			if (context == null || context.Payment == null)
+				throw new ArgumentNullException("paymentEvaluationContext");
+
+			VoidProcessPaymentResult retVal = new VoidProcessPaymentResult();
+
+			if(!context.Payment.IsApproved)
+			{
+				try
+				{
+					var config = GetConfigMap();
+					var service = new PayPalAPIInterfaceServiceService(config);
+					var doVoidResponse = service.DoVoid(new DoVoidReq { DoVoidRequest = new DoVoidRequestType { AuthorizationID = context.Payment.OuterId, Note = "Cancel payment" } });
+
+					CheckResponse(doVoidResponse);
+
+					if(context.Payment.OuterId == doVoidResponse.AuthorizationID)
+					{
+						retVal.NewPaymentStatus = PaymentStatus.Voided;
+						retVal.IsSuccess = true;
+					}
+				}
+				catch(Exception ex)
+				{
+					retVal.ErrorMessage = ex.Message;
+					retVal.NewPaymentStatus = PaymentStatus.Pending;
+				}
+			}
+
+			return retVal;
+		}
+
+		public override CaptureProcessPaymentResult CaptureProcessPayment(CaptureProcessPaymentEvaluationContext context)
+		{
+			if (context == null || context.Payment == null)
+				throw new ArgumentNullException("paymentEvaluationContext");
+
+			CaptureProcessPaymentResult retVal = new CaptureProcessPaymentResult();
+
+			if(!context.Payment.IsApproved)
+			{
+				try
+				{
+					var config = GetConfigMap();
+					var service = new PayPalAPIInterfaceServiceService(config);
+					DoCaptureReq doCaptureRequest = GetDoCaptureRequest(context.Payment);
+
+					var doCaptureResponse = service.DoCapture(doCaptureRequest);
+
+					CheckResponse(doCaptureResponse);
+
+					if(doCaptureResponse.DoCaptureResponseDetails.PaymentInfo.PaymentStatus == PaymentStatusCodeType.COMPLETED)
+					{
+						retVal.NewPaymentStatus = PaymentStatus.Paid;
+						retVal.IsSuccess = true;
+					}
+				}
+				catch(Exception ex)
+				{
+					retVal.ErrorMessage = ex.Message;
+					retVal.NewPaymentStatus = PaymentStatus.Pending;
+				}
+			}
+
+			return retVal;
+		}
+
+		public override RefundProcessPaymentResult RefundProcessPayment(RefundProcessPaymentEvaluationContext context)
+		{
+			if (context == null || context.Payment == null)
+				throw new ArgumentNullException("paymentEvaluationContext");
+
+			RefundProcessPaymentResult retVal = new RefundProcessPaymentResult();
+
+			if(context.Payment.IsApproved)
+			{
+				try
+				{
+					var config = GetConfigMap();
+					var service = new PayPalAPIInterfaceServiceService(config);
+					RefundTransactionReq refundTransctionRequest = GetRefundTransactionRequest(context.Payment);
+					service.RefundTransaction(refundTransctionRequest);
+				}
+				catch(Exception ex)
+				{
+					retVal.ErrorMessage = ex.Message;
+					retVal.NewPaymentStatus = PaymentStatus.Pending;
+				}
+			}
+
+			return new RefundProcessPaymentResult { ErrorMessage = "Not implemented yet" };
 		}
 
 		public override ValidatePostProcessRequestResult ValidatePostProcessRequest(NameValueCollection queryString)
@@ -201,6 +316,130 @@ namespace Paypal.ExpressCheckout.Managers
 
 		#region Private methods
 
+		private SetExpressCheckoutReq GetSetExpressCheckoutRequest(CustomerOrder order, Store store, PaymentIn payment)
+		{
+			var retVal = new SetExpressCheckoutReq();
+
+			var request = new SetExpressCheckoutRequestType();
+
+			var ecDetails = new SetExpressCheckoutRequestDetailsType
+			{
+				CallbackTimeout = "3",
+				ReturnURL = string.Format("{0}/{1}?cancel=false&orderId={2}", store.Url, PaypalPaymentRedirectRelativePath, order.Id),
+				CancelURL = string.Format("{0}/{1}?cancel=true&orderId={2}", store.Url, PaypalPaymentRedirectRelativePath, order.Id)
+			};
+
+			if (_paypalPaymentModeStoreSetting.Equals("BankCard"))
+			{
+				ecDetails.SolutionType = SolutionTypeType.SOLE;
+				ecDetails.LandingPage = LandingPageType.BILLING;
+			}
+			else
+			{
+				ecDetails.SolutionType = SolutionTypeType.MARK;
+				ecDetails.LandingPage = LandingPageType.LOGIN;
+			}
+
+			var billingAddress = order.Addresses.FirstOrDefault(s => s.AddressType == VirtoCommerce.Domain.Order.Model.AddressType.Billing);
+
+			if (billingAddress != null)
+				ecDetails.BuyerEmail = billingAddress.Email;
+			else
+				billingAddress = order.Addresses.FirstOrDefault();
+
+			if (billingAddress != null && !string.IsNullOrEmpty(billingAddress.Email))
+				ecDetails.BuyerEmail = billingAddress.Email;
+
+			ecDetails.PaymentDetails.Add(GetPaypalPaymentDetail(order.Currency.ToString(), PaypalPaymentActionType, payment));
+
+			request.SetExpressCheckoutRequestDetails = ecDetails;
+
+			retVal.SetExpressCheckoutRequest = request;
+
+			return retVal;
+		}
+
+		private DoCaptureReq GetDoCaptureRequest(PaymentIn payment)
+		{
+			var retVal = new DoCaptureReq();
+
+			retVal.DoCaptureRequest = new DoCaptureRequestType();
+			retVal.DoCaptureRequest.Amount = new BasicAmountType(GetPaypalCurrency(payment.Currency.ToString()), FormatMoney(payment.Sum));
+			retVal.DoCaptureRequest.AuthorizationID = payment.OuterId;
+			retVal.DoCaptureRequest.CompleteType = CompleteCodeType.COMPLETE;
+
+			return retVal;
+		}
+
+		private DoExpressCheckoutPaymentReq GetDoExpressCheckoutPaymentRequest(GetExpressCheckoutDetailsResponseType response, string paymentId)
+		{
+			return new DoExpressCheckoutPaymentReq
+			{
+				DoExpressCheckoutPaymentRequest = new DoExpressCheckoutPaymentRequestType
+				{
+					DoExpressCheckoutPaymentRequestDetails = new DoExpressCheckoutPaymentRequestDetailsType
+					{
+						Token = paymentId,
+						PayerID = response.GetExpressCheckoutDetailsResponseDetails.PayerInfo.PayerID,
+						PaymentDetails = response.GetExpressCheckoutDetailsResponseDetails.PaymentDetails
+					}
+				}
+			};
+		}
+
+		
+		private GetExpressCheckoutDetailsReq GetGetExpressCheckoutDetailsRequest(string paymentId)
+		{
+			return new GetExpressCheckoutDetailsReq
+			{
+				GetExpressCheckoutDetailsRequest = new GetExpressCheckoutDetailsRequestType
+				{
+					Token = paymentId
+				}
+			};
+		}
+
+		private RefundTransactionReq GetRefundTransactionRequest(PaymentIn payment)
+		{
+			var retVal = new RefundTransactionReq();
+
+			retVal.RefundTransactionRequest = new RefundTransactionRequestType();
+			retVal.RefundTransactionRequest.TransactionID = payment.OuterId;
+			//retVal.RefundTransactionRequest.Amount
+
+			return retVal;
+		}
+
+		private PaymentDetailsType GetPaypalPaymentDetail(string currency, PaymentActionCodeType paymentAction, PaymentIn payment)
+		{
+			var paymentDetails = new PaymentDetailsType { PaymentAction = paymentAction };
+			paymentDetails.OrderTotal = new BasicAmountType(GetPaypalCurrency(currency), FormatMoney(payment.Sum));
+
+			return paymentDetails;
+		}
+
+		private Dictionary<string, string> GetConfigMap()
+		{
+			var retVal = new Dictionary<string, string>();
+
+			retVal.Add(PaypalModeConfigSettingName, Mode);
+			retVal.Add(PaypalUsernameConfigSettingName, APIUsername);
+			retVal.Add(PaypalPasswordConfigSettingName, APIPassword);
+			retVal.Add(PaypalSignatureConfigSettingName, APISignature);
+
+			return retVal;
+		}
+
+		private CurrencyCodeType GetPaypalCurrency(string currency)
+		{
+			return (CurrencyCodeType)Enum.Parse(typeof(CurrencyCodeType), currency);
+		}
+
+		private PaymentActionCodeType GetPaymentActionType(string actionType)
+		{
+			return (PaymentActionCodeType)Enum.Parse(typeof(PaymentActionCodeType), actionType);
+		}
+
 		private string GetBaseUrl(string mode)
 		{
 			var retVal = string.Empty;
@@ -222,111 +461,25 @@ namespace Paypal.ExpressCheckout.Managers
 			return amount.ToString("F2", new CultureInfo("en-US"));
 		}
 
-		private PaymentDetailsType GetPaypalPaymentDetail(CurrencyCodeType currency, PaymentActionCodeType paymentAction, PaymentIn payment)
-		{
-			var paymentDetails = new PaymentDetailsType { PaymentAction = paymentAction };
-			paymentDetails.OrderTotal = new BasicAmountType(currency, FormatMoney(payment.Sum));
-
-			return paymentDetails;
-		}
-
-		private Dictionary<string, string> GetConfigMap(Store store)
-		{
-			var retVal = new Dictionary<string, string>();
-
-			retVal.Add(PaypalModeConfigSettingName, Mode);
-			retVal.Add(PaypalUsernameConfigSettingName, APIUsername);
-			retVal.Add(PaypalPasswordConfigSettingName, APIPassword);
-			retVal.Add(PaypalSignatureConfigSettingName, APISignature);
-
-			return retVal;
-		}
-
-		private SetExpressCheckoutReq CreatePaypalRequest(CustomerOrder order, Store store, PaymentIn payment)
-		{
-			var retVal = new SetExpressCheckoutReq();
-
-			var request = new SetExpressCheckoutRequestType();
-
-			var ecDetails = new SetExpressCheckoutRequestDetailsType
-			{
-				CallbackTimeout = "3",
-				ReturnURL = string.Format("{0}/{1}?cancel=false&orderId={2}", store.Url, PaypalPaymentRedirectRelativePath, order.Id),
-				CancelURL = string.Format("{0}/{1}?cancel=true&orderId={2}", store.Url, PaypalPaymentRedirectRelativePath, order.Id)
-			};
-
-			if (PaypalPaymentModeStoreSetting.Equals("BankCard"))
-			{
-				ecDetails.SolutionType = SolutionTypeType.SOLE;
-				ecDetails.LandingPage = LandingPageType.BILLING;
-			}
-			else
-			{
-				ecDetails.SolutionType = SolutionTypeType.MARK;
-				ecDetails.LandingPage = LandingPageType.LOGIN;
-			}
-
-			var currency = (CurrencyCodeType)Enum.Parse(typeof(CurrencyCodeType), order.Currency.ToString());
-
-			var billingAddress = order.Addresses.FirstOrDefault(s => s.AddressType == VirtoCommerce.Domain.Order.Model.AddressType.Billing);
-
-			if (billingAddress != null)
-				ecDetails.BuyerEmail = billingAddress.Email;
-			else
-				billingAddress = order.Addresses.FirstOrDefault();
-
-			if (billingAddress != null && !string.IsNullOrEmpty(billingAddress.Email))
-				ecDetails.BuyerEmail = billingAddress.Email;
-
-			ecDetails.PaymentDetails.Add(GetPaypalPaymentDetail(currency, PaymentActionCodeType.SALE, payment));
-
-			request.SetExpressCheckoutRequestDetails = ecDetails;
-
-			retVal.SetExpressCheckoutRequest = request;
-
-			return retVal;
-		}
-
-		private GetExpressCheckoutDetailsReq GetGetExpressCheckoutDetailsRequest(string paymentId)
-		{
-			return new GetExpressCheckoutDetailsReq
-			{
-				GetExpressCheckoutDetailsRequest = new GetExpressCheckoutDetailsRequestType
-				{
-					Token = paymentId
-				}
-			};
-		}
-
-		private DoExpressCheckoutPaymentReq GetDoExpressCheckoutPaymentRequest(GetExpressCheckoutDetailsResponseType response, string paymentId)
-		{
-			return new DoExpressCheckoutPaymentReq
-			{
-				DoExpressCheckoutPaymentRequest = new DoExpressCheckoutPaymentRequestType
-				{
-					DoExpressCheckoutPaymentRequestDetails = new DoExpressCheckoutPaymentRequestDetailsType
-					{
-						Token = paymentId,
-						PayerID = response.GetExpressCheckoutDetailsResponseDetails.PayerInfo.PayerID,
-						PaymentDetails = response.GetExpressCheckoutDetailsResponseDetails.PaymentDetails
-					}
-				}
-			};
-		}
-
 		private bool CheckResponse(AbstractResponseType response)
 		{
 			if (response != null)
 			{
-				if (response.Ack.Equals(AckCodeType.FAILURE) || (response.Errors != null && response.Errors.Count > 0))
+				if (response.Errors != null && response.Errors.Count > 0)
 				{
 					StringBuilder sb = new StringBuilder();
 					foreach (var error in response.Errors)
 					{
-						sb.AppendLine(error.LongMessage);
+						sb.Append("LongMessage: ").Append(error.LongMessage).Append(Environment.NewLine);
+						sb.Append("ShortMessage: ").Append(error.ShortMessage).Append(Environment.NewLine);
+						sb.Append("ErrorCode: ").Append(error.ErrorCode).Append(Environment.NewLine);
 					}
 
 					throw new NullReferenceException(sb.ToString());
+				}
+				else if(!(response.Ack == AckCodeType.SUCCESS) && !(response.Ack == AckCodeType.SUCCESSWITHWARNING))
+				{
+					throw new NullReferenceException("Paypal error without detail info");
 				}
 			}
 			else
