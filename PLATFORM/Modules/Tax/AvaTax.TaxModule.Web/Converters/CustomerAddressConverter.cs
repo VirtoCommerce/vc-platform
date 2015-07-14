@@ -13,8 +13,7 @@ namespace AvaTax.TaxModule.Web.Converters
                 Line1 = address.Line1,
                 Line2 = address.Line2,
                 Region = address.RegionName,
-                PostalCode = address.PostalCode,
-
+                PostalCode = address.PostalCode
             };
 
             return retVal;

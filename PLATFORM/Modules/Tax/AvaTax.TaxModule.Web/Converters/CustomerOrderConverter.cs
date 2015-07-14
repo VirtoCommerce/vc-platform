@@ -32,7 +32,7 @@ namespace AvaTax.TaxModule.Web.Converters
                     DocType = DocType.SalesInvoice
                 };
 
-                getTaxRequest.DocCode = string.Format("{0}_{1}", order.Number, getTaxRequest.DocDate);
+                getTaxRequest.DocCode = order.Number;
 
                 // Best Practice Request Parameters
 
