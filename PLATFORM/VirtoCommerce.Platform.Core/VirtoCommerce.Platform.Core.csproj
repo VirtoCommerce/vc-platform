@@ -85,6 +85,7 @@
     <Compile Include="Common\PlatformVersion.cs" />
     <Compile Include="Common\SemanticVersion.cs" />
     <Compile Include="Common\SerializationExtension.cs" />
+    <Compile Include="DynamicProperties\DynamicPropertiesExtensions.cs" />
     <Compile Include="DynamicProperties\DynamicProperty.cs" />
     <Compile Include="DynamicProperties\DynamicPropertyDictionaryItem.cs" />
     <Compile Include="DynamicProperties\DynamicPropertyName.cs" />

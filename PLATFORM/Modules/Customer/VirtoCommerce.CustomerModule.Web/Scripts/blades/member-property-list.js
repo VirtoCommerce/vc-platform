@@ -127,7 +127,7 @@
 
 
     $scope.blade.isLoading = false;
-    $scope.$watch('blade.parentBlade.currentEntity.properties', function (currentEntities) {
+    $scope.$watch('blade.parentBlade.currentEntity.dynamicPropertyValues', function (currentEntities) {
         initializeBlade(currentEntities);
     });
 }]);

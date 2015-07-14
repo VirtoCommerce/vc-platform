@@ -88,7 +88,7 @@
             function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
         } else {
             var newEntity = {
-                properties: [],
+                dynamicPropertyValues: [],
                 addresses: [],
                 phones: [],
                 emails: []

@@ -27,9 +27,14 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
                               ObjectId = objectId,
                               Locale = @group.Key,
                               Values = @group.Select(v => v.ToString(CultureInfo.InvariantCulture)).ToArray(),
-                          }).ToArray();
+                          }).ToList();
 
-            return result;
+            if (!result.Any())
+            {
+                result.Add(new DynamicPropertyObjectValue { Property = property });
+            }
+
+            return result.ToArray();
         }
 
         public static DynamicProperty ToModel(this DynamicPropertyEntity entity)
@@ -79,6 +84,9 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
         {
             if (target == null)
                 throw new ArgumentNullException("target");
+
+            target.IsRequired = source.IsRequired;
+            target.IsArray = source.IsArray;
 
             if (!string.IsNullOrEmpty(source.Name))
             {

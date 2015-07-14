@@ -1,11 +1,11 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Net;
+using System.Runtime.Remoting;
 using System.Web.Http;
 using System.Web.Http.Description;
 using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.Security;
-using VirtoCommerce.Platform.Web.Converters.DynamicProperties;
-using VirtoCommerce.Platform.Web.Model.DynamicProperties;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
@@ -39,13 +39,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [ResponseType(typeof(Property[]))]
+        [ResponseType(typeof(DynamicProperty[]))]
         [Route("types/{typeName}/properties")]
         public IHttpActionResult GetProperties(string typeName)
         {
             var properties = _service.GetProperties(typeName);
-            var result = properties.Select(p => p.ToWebModel()).ToArray();
-            return Ok(result);
+            return Ok(properties);
         }
 
         /// <summary>
@@ -55,10 +54,14 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [ResponseType(typeof(void))]
         [Route("types/{typeName}/properties")]
-        public IHttpActionResult SaveProperties(string typeName, Property[] properties)
+        public IHttpActionResult SaveProperties(string typeName, DynamicProperty[] properties)
         {
-            var coreProperties = properties.Select(p => p.ToCoreModel(typeName)).ToArray();
-            _service.SaveProperties(coreProperties);
+            foreach (var property in properties.Where(property => string.IsNullOrEmpty(property.ObjectType)))
+            {
+                property.ObjectType = typeName;
+            }
+
+            _service.SaveProperties(properties);
             return StatusCode(HttpStatusCode.NoContent);
         }
 
@@ -81,13 +84,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [ResponseType(typeof(DictionaryItem[]))]
+        [ResponseType(typeof(DynamicPropertyDictionaryItem[]))]
         [Route("types/{typeName}/properties/{propertyId}/dictionaryitems")]
         public IHttpActionResult GetDictionaryItems(string typeName, string propertyId)
         {
             var items = _service.GetDictionaryItems(propertyId);
-            var result = items.Select(p => p.ToWebModel()).ToArray();
-            return Ok(result);
+            return Ok(items);
         }
 
         /// <summary>
@@ -97,10 +99,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [ResponseType(typeof(void))]
         [Route("types/{typeName}/properties/{propertyId}/dictionaryitems")]
-        public IHttpActionResult SaveDictionaryItems(string typeName, string propertyId, DictionaryItem[] items)
+        public IHttpActionResult SaveDictionaryItems(string typeName, string propertyId, DynamicPropertyDictionaryItem[] items)
         {
-            var coreItems = items.Select(i => i.ToCoreModel()).ToArray();
-            _service.SaveDictionaryItems(propertyId, coreItems);
+            _service.SaveDictionaryItems(propertyId, items);
             return StatusCode(HttpStatusCode.NoContent);
         }
 
@@ -123,13 +124,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [ResponseType(typeof(ObjectValue[]))]
+        [ResponseType(typeof(DynamicPropertyObjectValue[]))]
         [Route("types/{typeName}/objects/{objectId}/values")]
         public IHttpActionResult GetObjectValues(string typeName, string objectId)
         {
             var values = _service.GetObjectValues(typeName, objectId);
-            var result = values.Select(p => p.ToWebModel()).ToArray();
-            return Ok(result);
+            return Ok(values);
         }
     }
 }

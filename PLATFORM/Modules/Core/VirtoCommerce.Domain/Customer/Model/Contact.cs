@@ -17,7 +17,6 @@ namespace VirtoCommerce.Domain.Customer.Model
         public string Salutation { get; set; }
 
         public ICollection<string> Organizations { get; set; }
-        public ICollection<Property> Properties { get; set; }
         public ICollection<Address> Addresses { get; set; }
         public ICollection<string> Phones { get; set; }
         public ICollection<string> Emails { get; set; }

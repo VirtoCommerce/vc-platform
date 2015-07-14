@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Linq.Expressions;
 using AvaTaxCalcREST;
-using Microsoft.Practices.ObjectBuilder2;
 using VirtoCommerce.Domain.Customer.Model;
+using VirtoCommerce.Platform.Core.DynamicProperties;
 using Address = AvaTaxCalcREST.Address;
 using AddressType = VirtoCommerce.Domain.Order.Model.AddressType;
 
@@ -54,11 +53,7 @@ namespace AvaTax.TaxModule.Web.Converters
                 getTaxRequest.CurrencyCode = modifiedOrder.Currency.ToString();
 
                 //add customer tax exemption code to cart if exists
-                if (contact != null && contact.Properties != null && contact.Properties.Any(x => x.Name == "Tax exempt"))
-                {
-                    var taxExemptNo = contact.Properties.Single(x => x.Name == "Tax exempt");
-                    getTaxRequest.ExemptionNo = taxExemptNo.Value.ToString();
-                }
+                getTaxRequest.ExemptionNo = contact.GetDynamicPropertyValue("Tax exempt");
 
                 string destinationAddressIndex = "0";
 
@@ -100,7 +95,7 @@ namespace AvaTax.TaxModule.Web.Converters
                         TaxCode = li.TaxType
                     }
                     ).ToList();
-                
+
                 return getTaxRequest;
             }
             return null;

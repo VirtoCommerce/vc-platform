@@ -9,6 +9,5 @@
         Decimal,
         DateTime,
         Boolean,
-        SecureString
     }
 }

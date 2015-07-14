@@ -56,15 +56,17 @@
     <Compile Include="Converters\ContactConverter.cs" />
     <Compile Include="Converters\NoteConverter.cs" />
     <Compile Include="Converters\OrganizationConverter.cs" />
-    <Compile Include="Converters\PropertyConverter.cs" />
     <Compile Include="Migrations\201505050914307_Initial.cs" />
     <Compile Include="Migrations\201505050914307_Initial.Designer.cs">
       <DependentUpon>201505050914307_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201507141452418_RemoveContactPropertyValue.cs" />
+    <Compile Include="Migrations\201507141452418_RemoveContactPropertyValue.Designer.cs">
+      <DependentUpon>201507141452418_RemoveContactPropertyValue.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Address.cs" />
     <Compile Include="Model\Contact.cs" />
-    <Compile Include="Model\ContactPropertyValue.cs" />
     <Compile Include="Model\Email.cs" />
     <Compile Include="Model\Member.cs" />
     <Compile Include="Model\MemberRelation.cs" />
@@ -100,6 +102,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201505050914307_Initial.resx">
       <DependentUpon>201505050914307_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507141452418_RemoveContactPropertyValue.resx">
+      <DependentUpon>201507141452418_RemoveContactPropertyValue.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

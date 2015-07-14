@@ -6,6 +6,7 @@ using VirtoCommerce.CustomerModule.Data.Repositories;
 using VirtoCommerce.CustomerModule.Data.Services;
 using VirtoCommerce.CustomerModule.Web.Controllers.Api;
 using VirtoCommerce.CustomerModule.Web.Model;
+using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Data.DynamicProperties;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Platform.Data.Repositories;
@@ -86,7 +87,7 @@ namespace VirtoCommerce.CustomerModule.Test
                 Notes = new webModel.Note[] { new webModel.Note { Title = "1111", Body = "dfsdfs sdf sdf sdf sd" } },
                 Emails = new[] { "uuu@mail.ru", "ssss@mail.ru" },
                 Phones = new[] { "2322232", "32323232" },
-                Properties = new webModel.Property[] { new webModel.Property { Name = "testProp", Value = "sss", ValueType = coreModel.PropertyValueType.ShortText } }.ToList(),
+                DynamicPropertyValues = new[] { new DynamicPropertyObjectValue { Property = new DynamicProperty { Name = "testProp", ValueType = DynamicPropertyValueType.ShortText }, Values = new[] { "sss" } } }.ToList(),
                 DefaultLanguage = "ru"
             };
             var result = controller.CreateContact(contact) as OkNegotiatedContentResult<webModel.Contact>;
@@ -102,7 +103,7 @@ namespace VirtoCommerce.CustomerModule.Test
 
             contact.FullName = "diff name";
             contact.Emails.Remove(contact.Emails.FirstOrDefault());
-            contact.Properties.Add(new webModel.Property { Name = "setting2", Value = "1223", ValueType = coreModel.PropertyValueType.Integer });
+            contact.DynamicPropertyValues.Add(new DynamicPropertyObjectValue { Property = new DynamicProperty { Name = "setting2", ValueType = DynamicPropertyValueType.Integer }, Values = new[] { "1223" } });
 
             controller.UpdateContact(contact);
 

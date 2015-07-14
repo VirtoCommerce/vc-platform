@@ -1,4 +1,7 @@
-﻿namespace VirtoCommerce.Platform.Core.DynamicProperties
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+
+namespace VirtoCommerce.Platform.Core.DynamicProperties
 {
     public class DynamicProperty
     {
@@ -10,7 +13,9 @@
         public bool IsMultilingual { get; set; }
         public bool IsRequired { get; set; }
 
+        [JsonConverter(typeof(StringEnumConverter))]
         public DynamicPropertyValueType ValueType { get; set; }
+
         public DynamicPropertyName[] DisplayNames { get; set; }
     }
 }

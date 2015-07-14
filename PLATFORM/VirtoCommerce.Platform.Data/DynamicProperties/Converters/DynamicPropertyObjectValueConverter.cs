@@ -48,9 +48,6 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
                     case DynamicPropertyValueType.LongText:
                         result.LongTextValue = value;
                         break;
-                    case DynamicPropertyValueType.SecureString:
-                        result.ShortTextValue = value;
-                        break;
                     default:
                         result.ShortTextValue = value;
                         break;
