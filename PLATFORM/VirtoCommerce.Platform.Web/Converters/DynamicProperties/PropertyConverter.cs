@@ -22,11 +22,14 @@ namespace VirtoCommerce.Platform.Web.Converters.DynamicProperties
             return result;
         }
 
-        public static DynamicProperty ToCoreModel(this Property webModel)
+        public static DynamicProperty ToCoreModel(this Property webModel, string objectType)
         {
             var result = new DynamicProperty();
             result.InjectFrom(webModel);
             result.ValueType = EnumUtility.SafeParse(webModel.ValueType.ToString(), DynamicPropertyValueType.Undefined);
+
+            if (string.IsNullOrEmpty(result.ObjectType))
+                result.ObjectType = objectType;
 
             if (webModel.IsMultilingual && webModel.DisplayNames != null)
             {

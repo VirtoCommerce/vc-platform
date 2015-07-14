@@ -13,13 +13,5 @@ namespace VirtoCommerce.Platform.Web.Converters.DynamicProperties
             result.Property = coreModel.Property.ToWebModel();
             return result;
         }
-
-        public static DynamicPropertyObjectValue ToCoreModel(this ObjectValue webModel)
-        {
-            var result = new DynamicPropertyObjectValue();
-            result.InjectFrom(webModel);
-            result.Property = webModel.Property.ToCoreModel();
-            return result;
-        }
     }
 }

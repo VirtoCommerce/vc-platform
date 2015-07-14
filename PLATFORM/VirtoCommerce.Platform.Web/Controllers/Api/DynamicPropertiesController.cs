@@ -57,7 +57,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Route("types/{typeName}/properties")]
         public IHttpActionResult SaveProperties(string typeName, Property[] properties)
         {
-            var coreProperties = properties.Select(p => p.ToCoreModel()).ToArray();
+            var coreProperties = properties.Select(p => p.ToCoreModel(typeName)).ToArray();
             _service.SaveProperties(coreProperties);
             return StatusCode(HttpStatusCode.NoContent);
         }
