@@ -10,7 +10,7 @@
         }, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
     };
 
-    blade.selectNode = function (node) {
+    $scope.selectNode = function (node) {
         $scope.selectedNodeId = node.id;
 
         var newBlade = {

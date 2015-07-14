@@ -2,7 +2,6 @@
 .controller('platformWebApp.dynamicPropertyDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.settings', 'platformWebApp.dynamicProperties.api', function ($scope, bladeNavigationService, dialogService, settings, dynamicPropertiesApi) {
     var blade = $scope.blade;
     blade.headIcon = 'fa-plus-square-o';
-    var promise = settings.getValues({ id: 'VirtoCommerce.Core.General.Languages' }).$promise;
 
     function refresh() {
         if (blade.isNew) {
@@ -13,32 +12,73 @@
     }
 
     function initializeBlade(data) {
-        promise.then(function (promiseData) {
-            promiseData.sort();
+        if (data.isMultilingual || blade.isNew) {
+            settings.getValues({ id: 'VirtoCommerce.Core.General.Languages' }, function (promiseData) {
+                promiseData.sort();
 
-            // add missing languages
-            _.each(promiseData, function (x) {
-                if (_.all(data.displayNames, function (dn) { return dn.locale.toLowerCase() !== x.toLowerCase(); })) {
-                    data.displayNames.push({ locale: x });
-                }
-            });
+                // add missing languages
+                _.each(promiseData, function (x) {
+                    if (_.all(data.displayNames, function (dn) { return dn.locale.toLowerCase() !== x.toLowerCase(); })) {
+                        data.displayNames.push({ locale: x });
+                    }
+                });
 
-            blade.origEntity = data;
-            blade.currentEntity = angular.copy(data);
-            blade.isLoading = false;
-        });
+                initializeBlade2(data);
+            },
+            function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+        } else {
+            initializeBlade2(data);
+        }
+    }
+
+    function initializeBlade2(data) {
+        blade.origEntity = data;
+        blade.currentEntity = angular.copy(data);
+        blade.isLoading = false;
+    }
+
+    $scope.dictFlagValidator = function (value) {
+        return !value || blade.currentEntity.valueType === 'ShortText';
     };
+
+    $scope.openChild = function (childType) {
+        var newBlade = {
+            id: "propertyChild",
+            currentEntity: blade.currentEntity
+        };
+
+        switch (childType) {
+            case 'valType':
+                newBlade.title = 'Dynamic property value type';
+                newBlade.subtitle = 'Change value type';
+                newBlade.controller = 'platformWebApp.propertyValueTypeController';
+                newBlade.template = 'Scripts/app/dynamicProperties/blades/property-valueType.tpl.html';
+                break;
+            case 'dict':
+                newBlade.title = 'Dictionary values';
+                newBlade.subtitle = 'Manage dictionary values';
+                newBlade.controller = 'platformWebApp.propertyDictionaryController';
+                newBlade.template = 'Scripts/app/dynamicProperties/blades/property-dictionary.tpl.html';
+                break;
+        }
+        bladeNavigationService.showBlade(newBlade, blade);
+        $scope.currentChild = childType;
+    }
+
+    $scope.setForm = function (form) {
+        $scope.formScope = form;
+    }
 
     function isDirty() {
         return !angular.equals(blade.currentEntity, blade.origEntity);
     };
 
-    $scope.cancelChanges = function () {
-        $scope.bladeClose();
-    }
-
     $scope.saveChanges = function () {
-        blade.currentEntity.displayNames = _.filter(blade.currentEntity.displayNames, function (x) { return x.name; });
+        if (blade.currentEntity.isMultilingual) {
+            blade.currentEntity.displayNames = _.filter(blade.currentEntity.displayNames, function (x) { return x.name; });
+        } else {
+            blade.currentEntity.displayNames = undefined;
+        }
 
         blade.confirmChangesFn(blade.currentEntity);
         $scope.bladeClose();
@@ -61,33 +101,33 @@
 
     if (!blade.isNew) {
         blade.toolbarCommands = [
-            {
-                name: "Save", icon: 'fa fa-save',
-                executeMethod: function () {
-                    $scope.saveChanges();
-                },
-                canExecuteMethod: function () {
-                    return isDirty() && $scope.formScope && $scope.formScope.$valid;
-                }
+        {
+            name: "Save", icon: 'fa fa-save',
+            executeMethod: function () {
+                $scope.saveChanges();
             },
-            {
-                name: "Reset", icon: 'fa fa-undo',
-                executeMethod: function () {
-                    angular.copy(blade.origEntity, blade.currentEntity);
-                },
-                canExecuteMethod: function () {
-                    return isDirty();
-                }
-            },
-            {
-                name: "Delete", icon: 'fa fa-trash-o',
-                executeMethod: function () {
-                    deleteEntry();
-                },
-                canExecuteMethod: function () {
-                    return !isDirty() && !blade.isNew;
-                }
+            canExecuteMethod: function () {
+                return isDirty() && $scope.formScope && $scope.formScope.$valid;
             }
+        },
+        {
+            name: "Reset", icon: 'fa fa-undo',
+            executeMethod: function () {
+                angular.copy(blade.origEntity, blade.currentEntity);
+            },
+            canExecuteMethod: function () {
+                return isDirty();
+            }
+        },
+        {
+            name: "Delete", icon: 'fa fa-trash-o',
+            executeMethod: function () {
+                deleteEntry();
+            },
+            canExecuteMethod: function () {
+                return !isDirty() && !blade.isNew;
+            }
+        }
         ];
     }
 
