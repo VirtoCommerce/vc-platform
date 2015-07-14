@@ -112,11 +112,40 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 			 _eventNotifier.Upsert(notification);
 			 var now = DateTime.UtcNow;
 
+			 BackgroundJob.Enqueue(() => PlatformImportBackground(importRequest, notification));
 
 			 return Ok(notification);
 		 }
 
+		 public void PlatformImportBackground(PlatformImportRequest importRequest, ExportImportProgressNotificationEvent notifyEvent)
+		 {
+			 Action<ExportImportProgressInfo> progressCallback = (x) =>
+			 {
+				 notifyEvent.InjectFrom(x);
+				 _eventNotifier.Upsert(notifyEvent);
+			 };
 
+			 var now = DateTime.UtcNow;
+			 try
+			 {
+				 var importedModules = InnerGetModulesWithInterface(typeof(ISupportImportModule)).Where(x => importRequest.Modules.Contains(x.Id)).ToArray();
+				 using (var stream = _blobStorageProvider.OpenReadOnly(importRequest.FileUrl))
+				 {
+					 _platformExportManager.Import(stream, importedModules, progressCallback);
+				 }
+			 }
+			 catch (Exception ex)
+			 {
+				 notifyEvent.Description = "Import failed";
+				 notifyEvent.Errors.Add(ex.ExpandExceptionMessage());
+			 }
+			 finally
+			 {
+				 notifyEvent.Finished = DateTime.UtcNow;
+				 _eventNotifier.Upsert(notifyEvent);
+			 }
+
+		 }
 
 		 public void PlatformExportBackground(PlatformExportRequest exportRequest, string platformVersion, ExportImportProgressNotificationEvent notifyEvent)
 		 {

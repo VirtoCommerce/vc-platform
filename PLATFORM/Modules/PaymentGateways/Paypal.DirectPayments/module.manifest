@@ -62,6 +62,17 @@
 								<title>Redirect relative path</title>
 								<description>relative path for paypal payment from paypal site to frontend</description>
 						</setting>
+						<setting>
+							<name>Paypal.DirectPayments.PaymentActionType</name>
+							<valueType>string</valueType>
+							<allowedValues>
+								<value>Authorization (with future capture)</value>
+								<value>Sale</value>
+							</allowedValues>
+							<defaultValue>Sale</defaultValue>
+							<title>Payment action type</title>
+							<description>Action type of payment</description>
+						</setting>
 				</group>
 		</settings>
 </module>

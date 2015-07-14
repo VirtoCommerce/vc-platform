@@ -104,9 +104,18 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 				{
 					retVal = paymentMethod.PostProcessPayment(context);
 
-					if (retVal != null && retVal.NewPaymentStatus == PaymentStatus.Paid)
+					if (retVal != null && retVal.IsSuccess)
 					{
-						payment.IsApproved = true;
+						if (!payment.OuterId.Equals(retVal.OuterId))
+						{
+							payment.OuterId = retVal.OuterId;
+						}
+
+						if (retVal.NewPaymentStatus == PaymentStatus.Paid)
+						{
+							payment.IsApproved = true;
+						}
+
 						_customerOrderService.Update(new CustomerOrder[] { order });
 					}
 				}
@@ -123,9 +132,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 				return Ok(retVal);
 			}
 
-			return Ok(new PostProcessPaymentResult { Error = "cancel payment" });
+			return Ok(new PostProcessPaymentResult { ErrorMessage = "cancel payment" });
 		}
-
-
 	}
 }

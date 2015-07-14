@@ -29,7 +29,7 @@ using VirtoCommerce.Platform.Core.ExportImport;
 
 namespace VirtoCommerce.CatalogModule.Web.ExportImport
 {
-	public class CsvCatalogImporter
+	public sealed class CsvCatalogImporter
 	{
 		private readonly char[] _categoryDelimiters = new char[] { '/', '|', '\\', '>' };
 		private readonly ICatalogService _catalogService;
@@ -63,13 +63,14 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 			_searchService = searchService;
 		}
 
-		public virtual void DoImport(Stream inputStream, webModel.CsvImportConfiguration configuration, Action<ExportImportProgressInfo> progressCallback)
+		public void DoImport(Stream inputStream, CsvProductMappingConfiguration configuration, Action<ExportImportProgressInfo> progressCallback)
 		{
-			var csvProducts = new List<coreModel.CatalogProduct>();
-			var catalog = _catalogService.GetById(configuration.CatalogId);
+			var csvProducts = new List<CsvProduct>();
+		
+
 			var progressInfo = new ExportImportProgressInfo
 			{
-				Description = "Configuration..."
+				Description = "Reading products from csv..."
 			};
 			progressCallback(progressInfo);
 
@@ -77,24 +78,13 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 			using (var reader = new CsvReader(new StreamReader(inputStream)))
 			{
 				reader.Configuration.Delimiter = configuration.Delimiter;
-				var initialized = false;
+				reader.Configuration.RegisterClassMap(new CsvProductMap(configuration));
+
 				while (reader.Read())
 				{
-					if (!initialized)
-					{
-						//set import configuration based on mapping info
-						var productMap = new ProductMap(reader.FieldHeaders, configuration, catalog);
-						reader.Configuration.RegisterClassMap(productMap);
-						initialized = true;
-
-						//Notification
-						progressInfo.Description = "Reading products from csv...";
-						progressCallback(progressInfo);
-					}
-
 					try
 					{
-						var csvProduct = reader.GetRecord<coreModel.CatalogProduct>();
+						var csvProduct = reader.GetRecord<CsvProduct>();
 						csvProducts.Add(csvProduct);
 					}
 					catch (Exception ex)
@@ -106,16 +96,28 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 						}
 						progressInfo.ErrorCount++;
 						progressInfo.Errors.Add(error);
+						progressCallback(progressInfo);
 					}
 				}
 			}
+			var catalogProductGroups = csvProducts.GroupBy(x=> configuration.CatalogId);
+			//If catalog not specified directly need use stored value
+			if(configuration.CatalogId == null)
+			{
+				catalogProductGroups = csvProducts.GroupBy(x => x.CatalogId);
+			}
 
-			SaveCategoryTree(catalog, csvProducts, progressInfo, progressCallback);
-			SaveProducts(catalog, csvProducts, progressInfo, progressCallback);
+			foreach (var group in catalogProductGroups)
+			{
+				var catalog = _catalogService.GetById(group.Key);
+
+				SaveCategoryTree(catalog, csvProducts, progressInfo, progressCallback);
+				SaveProducts(configuration, catalog, csvProducts, progressInfo, progressCallback);
+			}
 
 		}
 
-		private void SaveCategoryTree(coreModel.Catalog catalog, IEnumerable<coreModel.CatalogProduct> csvProducts, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback)
+		private void SaveCategoryTree(coreModel.Catalog catalog, IEnumerable<CsvProduct> csvProducts, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback)
 		{
 			var categories = new List<coreModel.Category>();
 			progressInfo.ProcessedCount = 0;
@@ -158,7 +160,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 		}
 
 
-		private void SaveProducts(coreModel.Catalog catalog, IEnumerable<coreModel.CatalogProduct> csvProducts, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback)
+		private void SaveProducts(CsvProductMappingConfiguration configuration, coreModel.Catalog catalog, IEnumerable<CsvProduct> csvProducts, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback)
 		{
 			int counter = 0;
 			var notifyProductSizeLimit = 10;
@@ -173,13 +175,13 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 			DetectParents(csvProducts);
 
 			//First need create main products, second will be created variations
-			foreach (var group in new IEnumerable<coreModel.CatalogProduct>[] { csvProducts.Where(x => x.MainProduct == null), csvProducts.Where(x => x.MainProduct != null) })
+			foreach (var group in new IEnumerable<CsvProduct>[] { csvProducts.Where(x => x.MainProduct == null), csvProducts.Where(x => x.MainProduct != null) })
 			{
 				Parallel.ForEach(group, options, csvProduct =>
 				{
 					try
 					{
-						SaveProduct(catalog, defaultFulfilmentCenter, csvProduct);
+						SaveProduct(configuration, catalog, defaultFulfilmentCenter, csvProduct);
 					}
 					catch (Exception ex)
 					{
@@ -198,7 +200,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 							counter++;
 							progressInfo.ProcessedCount = counter;
 							progressInfo.Description = string.Format("Creating products: {0} of {1} created", progressInfo.ProcessedCount, progressInfo.TotalCount);
-							if (counter % notifyProductSizeLimit == 0)
+							if (counter % notifyProductSizeLimit == 0 || counter == progressInfo.TotalCount)
 							{
 								progressCallback(progressInfo);
 							}
@@ -208,7 +210,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 			};
 		}
 
-		private void DetectParents(IEnumerable<coreModel.CatalogProduct> csvProducts)
+		private void DetectParents(IEnumerable<CsvProduct> csvProducts)
 		{
 			foreach (var csvProduct in csvProducts)
 			{
@@ -220,8 +222,10 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 			}
 		}
 
-		private void SaveProduct(coreModel.Catalog catalog, FulfillmentCenter defaultFulfillmentCenter, coreModel.CatalogProduct csvProduct)
+		private void SaveProduct(CsvProductMappingConfiguration configuration, coreModel.Catalog catalog, FulfillmentCenter defaultFulfillmentCenter, CsvProduct csvProduct)
 		{
+			var defaultLanguge = catalog.DefaultLanguage != null ? catalog.DefaultLanguage.LanguageCode : "EN-US";
+
 			coreModel.CatalogProduct alreadyExistProduct = null;
 			//For new product try to find them by code
 			if (csvProduct.IsTransient() && !String.IsNullOrEmpty(csvProduct.Code))
@@ -255,6 +259,10 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 			{
 				csvProduct.MainProductId = csvProduct.MainProduct.Id;
 			}
+			csvProduct.EditorialReview.LanguageCode = defaultLanguge;
+			csvProduct.SeoInfo.LanguageCode =  defaultLanguge;
+			csvProduct.SeoInfo.SemanticUrl = String.IsNullOrEmpty(csvProduct.SeoInfo.SemanticUrl) ? csvProduct.Code : csvProduct.SeoInfo.SemanticUrl;
+
 			var properties = !String.IsNullOrEmpty(csvProduct.CategoryId) ? _propertyService.GetCategoryProperties(csvProduct.CategoryId) : _propertyService.GetCatalogProperties(csvProduct.CatalogId);
 
 			if (csvProduct.PropertyValues != null)
@@ -290,198 +298,32 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 			}
 
 			//Create price in default price list
-			if (csvProduct.Prices != null && csvProduct.Prices.Any())
+			if ((configuration.Mode & CsvExportImportMode.Price) == CsvExportImportMode.Price)
 			{
-				var price = csvProduct.Prices.First();
-				price.ProductId = csvProduct.Id;
+				if (csvProduct.ListPrice != null || csvProduct.SalePrice != null)
+				{
+					csvProduct.Price.ProductId = csvProduct.Id;
 
-				if (price.IsTransient() || _pricingService.GetPriceById(price.Id) == null)
-				{
-					_pricingService.CreatePrice(price);
-				}
-				else
-				{
-					_pricingService.UpdatePrices(new Price[] { price });
+					if (csvProduct.Price.IsTransient() || _pricingService.GetPriceById(csvProduct.Price.Id) == null)
+					{
+						_pricingService.CreatePrice(csvProduct.Price);
+					}
+					else
+					{
+						_pricingService.UpdatePrices(new Price[] { csvProduct.Price });
+					}
 				}
 			}
 
 			//Create inventory
-			if (csvProduct.Inventories != null && csvProduct.Inventories.Any())
+			if ((configuration.Mode & CsvExportImportMode.Inventory) == CsvExportImportMode.Inventory)
 			{
-				var inventory = csvProduct.Inventories.First();
-				inventory.ProductId = csvProduct.Id;
-				inventory.FulfillmentCenterId = inventory.FulfillmentCenterId ?? defaultFulfillmentCenter.Id;
-				_inventoryService.UpsertInventory(csvProduct.Inventories.First());
+				csvProduct.Inventory.ProductId = csvProduct.Id;
+				csvProduct.Inventory.FulfillmentCenterId = csvProduct.Inventory.FulfillmentCenterId ?? defaultFulfillmentCenter.Id;
+				_inventoryService.UpsertInventory(csvProduct.Inventory);
 			}
+
 		}
-
-		public sealed class ProductMap : CsvClassMap<coreModel.CatalogProduct>
-		{
-			public ProductMap(string[] allColumns, webModel.CsvImportConfiguration importConfiguration, coreModel.Catalog catalog)
-			{
-
-				var defaultLanguge = catalog.DefaultLanguage != null ? catalog.DefaultLanguage.LanguageCode : "EN-US";
-				//Dynamical map scalar product fields use by manual mapping information
-				foreach (var mappingConfigurationItem in importConfiguration.MappingItems.Where(x => x.CsvColumnName != null || x.CustomValue != null))
-				{
-					var propertyInfo = typeof(coreModel.CatalogProduct).GetProperty(mappingConfigurationItem.EntityColumnName);
-					if (propertyInfo != null)
-					{
-						var newMap = new CsvPropertyMap(propertyInfo);
-						newMap.TypeConverterOption(CultureInfo.InvariantCulture);
-						newMap.TypeConverterOption(NumberStyles.Any);
-						newMap.TypeConverterOption(true, "yes", "false");
-						//Map fields if mapping specified
-						if (mappingConfigurationItem.CsvColumnName != null)
-						{
-							newMap.Name(mappingConfigurationItem.CsvColumnName);
-						}
-						//And default values if it specified
-						if (mappingConfigurationItem.CustomValue != null)
-						{
-							newMap.Default(mappingConfigurationItem.CustomValue);
-						}
-						PropertyMaps.Add(newMap);
-					}
-				}
-
-				//Map Sku -> Code
-				Map(x => x.Code).ConvertUsing(x =>
-				{
-					return GetCsvField("Sku", x, importConfiguration);
-				});
-
-				//Map ParentSku -> main product
-				Map(x => x.MainProductId).ConvertUsing(x =>
-				{
-					var parentSku = GetCsvField("ParentSku", x, importConfiguration);
-					return !String.IsNullOrEmpty(parentSku) ? parentSku : null;
-				});
-
-				//Map assets (images)
-				Map(x => x.Images).ConvertUsing(x =>
-					{
-						var retVal = new List<coreModel.Image>();
-						var primaryImageUrl = GetCsvField("PrimaryImage", x, importConfiguration);
-						var altImageUrl = GetCsvField("AltImage", x, importConfiguration);
-						if (!String.IsNullOrEmpty(primaryImageUrl))
-						{
-							retVal.Add(new coreModel.Image
-							{
-								Url = primaryImageUrl
-							});
-						}
-
-						if (!String.IsNullOrEmpty(altImageUrl))
-						{
-							retVal.Add(new coreModel.Image
-							{
-								Url = altImageUrl
-							});
-						}
-
-						return retVal;
-					});
-
-				//Map category
-				Map(x => x.Category).ConvertUsing(x => new coreModel.Category { Path = GetCsvField("Category", x, importConfiguration) });
-
-				//Map Reviews
-				Map(x => x.Reviews).ConvertUsing(x =>
-				{
-					var reviews = new List<coreModel.EditorialReview>();
-					var content = GetCsvField("Review", x, importConfiguration);
-					if (!String.IsNullOrEmpty(content))
-					{
-						reviews.Add(new coreModel.EditorialReview { Content = content, LanguageCode = defaultLanguge });
-					}
-					return reviews;
-
-				});
-
-				//Map Seo
-				Map(x => x.SeoInfos).ConvertUsing(x =>
-				{
-					var seoInfos = new List<SeoInfo>();
-					var seoUrl = GetCsvField("SeoUrl", x, importConfiguration);
-					var seoDescription = GetCsvField("SeoDescription", x, importConfiguration);
-					var seoTitle = GetCsvField("SeoTitle", x, importConfiguration);
-					if (!String.IsNullOrEmpty(seoUrl) || !String.IsNullOrEmpty(seoTitle) || !String.IsNullOrEmpty(seoDescription))
-					{
-						seoUrl = new string[] { seoUrl, seoDescription, seoTitle }.Where(y => !String.IsNullOrEmpty(y)).FirstOrDefault();
-						seoUrl = seoUrl.Substring(0, Math.Min(seoUrl.Length, 240));
-						seoInfos.Add(new SeoInfo { LanguageCode = defaultLanguge, SemanticUrl = seoUrl.GenerateSlug(), MetaDescription = seoDescription, PageTitle = seoTitle });
-					}
-					return seoInfos;
-				});
-
-				//Map Prices
-				Map(x => x.Prices).ConvertUsing(x =>
-				{
-					var prices = new List<Price>();
-					var priceId = GetCsvField("PriceId", x, importConfiguration);
-					var listPrice = GetCsvField("Price", x, importConfiguration);
-					var salePrice = GetCsvField("SalePrice", x, importConfiguration);
-					var currency = GetCsvField("Currency", x, importConfiguration);
-
-					if (!String.IsNullOrEmpty(listPrice) && !String.IsNullOrEmpty(currency))
-					{
-						prices.Add(new Price
-						{
-							Id = priceId,
-							List = Convert.ToDecimal(listPrice, CultureInfo.InvariantCulture),
-							Sale = salePrice != null ? (decimal?)Convert.ToDecimal(listPrice, CultureInfo.InvariantCulture) : null,
-							Currency = EnumUtility.SafeParse<CurrencyCodes>(currency, CurrencyCodes.USD)
-						});
-					}
-					return prices;
-				});
-
-				//Map inventories
-				Map(x => x.Inventories).ConvertUsing(x =>
-				{
-					var inventories = new List<InventoryInfo>();
-					var quantity = GetCsvField("Quantity", x, importConfiguration);
-					var allowBackorder = GetCsvField("AllowBackorder", x, importConfiguration);
-					var fulfilmentCenterId = GetCsvField("FulfilmentCenterId", x, importConfiguration);
-
-					if (!String.IsNullOrEmpty(quantity))
-					{
-						inventories.Add(new InventoryInfo
-						{
-							FulfillmentCenterId = fulfilmentCenterId,
-							AllowBackorder = allowBackorder.TryParse(false),
-							InStockQuantity = (long)quantity.TryParse(0.0m)
-						});
-					}
-					return inventories;
-				});
-
-				//Map properties
-				if (importConfiguration.PropertyCsvColumns != null && importConfiguration.PropertyCsvColumns.Any())
-				{
-					Map(x => x.PropertyValues).ConvertUsing(x => importConfiguration.PropertyCsvColumns.Select(column => new coreModel.PropertyValue { PropertyName = column, Value = x.GetField<string>(column) }).ToList());
-				}
-			}
-
-			private static string GetCsvField(string name, ICsvReaderRow row, webModel.CsvImportConfiguration configuration)
-			{
-				var mapping = configuration.MappingItems.First(y => y.EntityColumnName == name);
-				if (mapping == null)
-				{
-					throw new NullReferenceException("mapping");
-				}
-
-				var retVal = mapping.CustomValue;
-				if (mapping.CsvColumnName != null)
-				{
-					retVal = row.GetField<string>(mapping.CsvColumnName);
-				}
-				return retVal;
-			}
-		}
-
-
 
 	}
 }
