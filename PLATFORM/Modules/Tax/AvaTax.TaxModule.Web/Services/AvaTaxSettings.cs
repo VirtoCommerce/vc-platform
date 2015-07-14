@@ -11,16 +11,18 @@ namespace AvaTax.TaxModule.Web.Services
             private readonly string _serviceUrlPropertyName;
             private readonly string _companyCodePropertyName;
             private readonly string _isEnabledPropertyName;
+            private readonly string _isValidateAddressPropertyName;
 
             private readonly ISettingsManager _settingsManager;
 
-            public AvaTaxSettings(string usernamePropertyName, string passwordPropertyName, string serviceUrlPropertyName, string companyCodePropertyName, string isEnabledPropertyName, ISettingsManager settingsManager)
+            public AvaTaxSettings(string usernamePropertyName, string passwordPropertyName, string serviceUrlPropertyName, string companyCodePropertyName, string isEnabledPropertyName, string isValidateAddressPropertyName, ISettingsManager settingsManager)
             {
                 _usernamePropertyName = usernamePropertyName;
                 _passwordPropertyName = passwordPropertyName;
                 _serviceUrlPropertyName = serviceUrlPropertyName;
                 _companyCodePropertyName = companyCodePropertyName;
                 _isEnabledPropertyName = isEnabledPropertyName;
+                _isValidateAddressPropertyName = isValidateAddressPropertyName;
                 _settingsManager = settingsManager;
             }
 
@@ -66,6 +68,15 @@ namespace AvaTax.TaxModule.Web.Services
                 get
                 {
                     var retVal = _settingsManager.GetValue(_isEnabledPropertyName, true);
+                    return retVal;
+                }
+            }
+
+            public bool IsValidateAddress
+            {
+                get
+                {
+                    var retVal = _settingsManager.GetValue(_isValidateAddressPropertyName, true);
                     return retVal;
                 }
             }

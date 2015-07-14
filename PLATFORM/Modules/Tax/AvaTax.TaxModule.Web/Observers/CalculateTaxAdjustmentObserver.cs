@@ -44,7 +44,7 @@ namespace AvaTax.TaxModule.Web.Observers
         private void CalculatePartialReturnTaxes(OrderChangeEvent context)
         {
             //do nothing if order cancelled (should work another observer)
-            if (context.ModifiedOrder.Status == "Cancelled")
+            if (context.ModifiedOrder.IsCancelled)
             {
                 return;
             }

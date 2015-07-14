@@ -46,12 +46,11 @@ namespace AvaTax.TaxModule.Web.Observers
 		{
             SlabInvoker<VirtoCommerceEventSource.TaxRequestContext>.Execute(slab =>
                 {
-			        var cart = context.ModifiedCart;
-            
 		            if (_taxSettings.IsEnabled && !string.IsNullOrEmpty(_taxSettings.Username) && !string.IsNullOrEmpty(_taxSettings.Password)
                         && !string.IsNullOrEmpty(_taxSettings.ServiceUrl)
                         && !string.IsNullOrEmpty(_taxSettings.CompanyCode))
 		            {
+                        var cart = context.ModifiedCart;
 		                Contact contact = null;
                         if (cart.CustomerId != null)
 		                    contact = _customerSearchService.GetById(cart.CustomerId);

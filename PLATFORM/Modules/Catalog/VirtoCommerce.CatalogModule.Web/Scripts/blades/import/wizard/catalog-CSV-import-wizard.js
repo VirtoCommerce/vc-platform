@@ -76,7 +76,7 @@
     $scope.startImport = function () {
         $localStorage.lastKnownImportData = {
             eTag: blade.importConfiguration.eTag,
-            mappingItems: blade.importConfiguration.mappingItems,
+            propertyMaps: blade.importConfiguration.propertyMaps,
             propertyCsvColumns: blade.importConfiguration.propertyCsvColumns
         };
 

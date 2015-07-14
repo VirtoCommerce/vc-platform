@@ -2,11 +2,11 @@
 using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Description;
+using System.Web.Http.Results;
 using AvaTax.TaxModule.Web.Converters;
+using AvaTax.TaxModule.Web.Logging;
 using AvaTax.TaxModule.Web.Services;
 using AvaTaxCalcREST;
-using VirtoCommerce.Domain.Cart.Model;
-using VirtoCommerce.Domain.Order.Model;
 using CartAddressType = VirtoCommerce.Domain.Cart.Model.AddressType;
 using domainModel = VirtoCommerce.Domain.Commerce.Model;
 
@@ -21,52 +21,95 @@ namespace AvaTax.TaxModule.Web.Controller
         {
             _taxSettings = taxSettings;
         }
-        
+
         [HttpGet]
         [ResponseType(typeof(void))]
         [Route("ping")]
         public IHttpActionResult TestConnection()
         {
-            if (!string.IsNullOrEmpty(_taxSettings.Username) && !string.IsNullOrEmpty(_taxSettings.Password)
-                && !string.IsNullOrEmpty(_taxSettings.ServiceUrl)
-                && !string.IsNullOrEmpty(_taxSettings.CompanyCode))
+            IHttpActionResult retVal = BadRequest();
+            SlabInvoker<VirtoCommerceEventSource.TaxRequestContext>.Execute(slab =>
             {
-                if (!_taxSettings.IsEnabled)
-                    return BadRequest("Tax calculation disabled, enable before testing connection");
+                if (!string.IsNullOrEmpty(_taxSettings.Username) && !string.IsNullOrEmpty(_taxSettings.Password)
+                    && !string.IsNullOrEmpty(_taxSettings.ServiceUrl)
+                    && !string.IsNullOrEmpty(_taxSettings.CompanyCode))
+                {
+                    if (!_taxSettings.IsEnabled)
+                    {
+                        retVal = BadRequest("Tax calculation disabled, enable before testing connection");
+                        throw new Exception((retVal as BadRequestErrorMessageResult).Message);
+                    }
 
-                var taxSvc = new JsonTaxSvc(_taxSettings.Username, _taxSettings.Password, _taxSettings.ServiceUrl);
-                var retVal = taxSvc.Ping();
-                if (retVal.ResultCode.Equals(SeverityLevel.Success))
-                    return Ok(retVal);
+                    var taxSvc = new JsonTaxSvc(_taxSettings.Username, _taxSettings.Password, _taxSettings.ServiceUrl);
+                    var result = taxSvc.Ping();
+                    if (!result.ResultCode.Equals(SeverityLevel.Success))
+                    {
+                        retVal =
+                            BadRequest(string.Join(Environment.NewLine,
+                                result.Messages.Where(ms => ms.Severity == SeverityLevel.Error).Select(
+                            m => m.Summary + string.Format(" [{0} - {1}] ", m.RefersTo, m.Details == null ? string.Empty : string.Join(", ", m.Details)))));
+                        throw new Exception((retVal as BadRequestErrorMessageResult).Message);
+                    }
 
-                return BadRequest(string.Join(", ", retVal.Messages.Select(m => m.Summary)));
-            }
-            
-            return BadRequest("AvaTax credentials not provided");
+                    retVal = Ok(result);
+                }
+                else
+                {
+                    retVal = BadRequest("AvaTax credentials not provided");
+                    throw new Exception((retVal as BadRequestErrorMessageResult).Message);
+                }
+            })
+                .OnError(VirtoCommerceEventSource.Log, VirtoCommerceEventSource.EventCodes.TaxPingError)
+                .OnSuccess(VirtoCommerceEventSource.Log, VirtoCommerceEventSource.EventCodes.Ping);
+
+            return retVal;
         }
-        
+
         [HttpPost]
         [ResponseType(typeof(bool))]
         [Route("address")]
         public IHttpActionResult ValidateAddress(VirtoCommerce.Domain.Customer.Model.Address address)
         {
-            if (!string.IsNullOrEmpty(_taxSettings.Username) && !string.IsNullOrEmpty(_taxSettings.Password)
-                && !string.IsNullOrEmpty(_taxSettings.ServiceUrl)
-                && !string.IsNullOrEmpty(_taxSettings.CompanyCode) && _taxSettings.IsEnabled)
+            IHttpActionResult retVal = BadRequest();
+            SlabInvoker<VirtoCommerceEventSource.TaxRequestContext>.Execute(slab =>
             {
-                var addressSvc = new JsonAddressSvc(_taxSettings.Username, _taxSettings.Password, _taxSettings.ServiceUrl);
-                var request = address.ToValidateAddressRequest(_taxSettings.CompanyCode);
-                var validateAddressResult = addressSvc.Validate(request);
-                if (!validateAddressResult.ResultCode.Equals(SeverityLevel.Success))
+                if (!_taxSettings.IsValidateAddress)
                 {
-                    var error = string.Join(Environment.NewLine, validateAddressResult.Messages.Select(m => m.Summary));
-                    return BadRequest(error);
+                    retVal = BadRequest("AvaTax address validation disabled");
+                    throw new Exception((retVal as BadRequestErrorMessageResult).Message);
                 }
 
-                return Ok(validateAddressResult);
-            }
+                if (!string.IsNullOrEmpty(_taxSettings.Username) && !string.IsNullOrEmpty(_taxSettings.Password)
+                    && !string.IsNullOrEmpty(_taxSettings.ServiceUrl)
+                    && !string.IsNullOrEmpty(_taxSettings.CompanyCode))
+                {
+                    var addressSvc = new JsonAddressSvc(_taxSettings.Username, _taxSettings.Password, _taxSettings.ServiceUrl);
+                    
+                    var request = address.ToValidateAddressRequest(_taxSettings.CompanyCode);
+                    
+                    var validateAddressResult = addressSvc.Validate(request);
+                    if (!validateAddressResult.ResultCode.Equals(SeverityLevel.Success))
+                    {
+                        var error = string.Join(Environment.NewLine,
+                            validateAddressResult.Messages.Where(ms => ms.Severity == SeverityLevel.Error).Select(
+                            m => m.Summary + string.Format(" [{0} - {1}] ", m.RefersTo, m.Details == null ? string.Empty : string.Join(", ", m.Details))));
+                        retVal = BadRequest(error);
+                        throw new Exception((retVal as BadRequestErrorMessageResult).Message);
+                    }
 
-            return BadRequest("AvaTax credentials not provided");
+                    retVal = Ok(validateAddressResult);
+                }
+
+                if (!(retVal is OkNegotiatedContentResult<ValidateResult>))
+                {
+                    retVal = BadRequest("AvaTax credentials not provided");
+                    throw new Exception((retVal as BadRequestErrorMessageResult).Message);
+                }
+            })
+                .OnError(VirtoCommerceEventSource.Log, VirtoCommerceEventSource.EventCodes.AddressValidationError)
+                .OnSuccess(VirtoCommerceEventSource.Log, VirtoCommerceEventSource.EventCodes.ValidateAddress);
+
+            return retVal;
         }
     }
 }

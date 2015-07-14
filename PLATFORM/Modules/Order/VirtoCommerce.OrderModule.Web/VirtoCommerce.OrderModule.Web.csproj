@@ -117,6 +117,7 @@
     <Compile Include="Converters\OperationPropertyConverter.cs" />
     <Compile Include="Converters\SearchResultConverter.cs" />
     <Compile Include="Converters\ShipmentConverter.cs" />
+    <Compile Include="ExportImport\OrderExportImport.cs" />
     <Compile Include="Model\Address.cs" />
     <Compile Include="Model\Coupon.cs" />
     <Compile Include="Model\CustomerOrder.cs" />
