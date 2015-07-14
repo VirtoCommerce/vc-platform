@@ -21,7 +21,7 @@ namespace Paypal.ExpressCheckout.Managers
 		private const string _paypalAPIPasswordStoreSetting = "Paypal.ExpressCheckout.APIPassword";
 		private const string _paypalAPISignatureStoreSetting = "Paypal.ExpressCheckout.APISignature";
 		private const string _paypalPaymentRedirectRelativePathStoreSetting = "Paypal.ExpressCheckout.PaymentRedirectRelativePath";
-		private const string _paypalPaymentActionTypeStoreSetting = "Paypal.ExpressCheckout.PaypalPaymentActionType";
+		private const string _paypalPaymentActionTypeStoreSetting = "Paypal.ExpressCheckout.PaymentActionType";
 
 		private const string PaypalModeConfigSettingName = "mode";
 		private const string PaypalUsernameConfigSettingName = "account1.apiUsername";

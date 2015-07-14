@@ -77,10 +77,10 @@
 							<name>Paypal.ExpressCheckout.PaymentActionType</name>
 							<valueType>string</valueType>
 							<allowedValues>
-								<value>Authorization (with future capture)</value>
-								<value>Sale</value>
+								<value>AUTHORIZATION</value>
+								<value>SALE</value>
 							</allowedValues>
-							<defaultValue>Sale</defaultValue>
+							<defaultValue>SALE</defaultValue>
 							<title>Payment action type</title>
 							<description>Action type of payment</description>
 						</setting>
