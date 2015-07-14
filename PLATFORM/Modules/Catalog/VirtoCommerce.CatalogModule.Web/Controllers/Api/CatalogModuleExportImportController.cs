@@ -77,66 +77,26 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 		/// <param name="importerType"></param>
 		/// <param name="delimiter"></param>
 		/// <returns></returns>
-		[ResponseType(typeof(CsvImportConfiguration))]
+		[ResponseType(typeof(CsvProductMappingConfiguration))]
 		[HttpGet]
 		[Route("import/mappingconfiguration")]
 		public IHttpActionResult GetMappingConfiguration([FromUri]string fileUrl, [FromUri]string delimiter = ";")
 		{
-			var retVal = new CsvImportConfiguration
-				{
-					Delimiter = delimiter,
-					FileUrl = fileUrl
-				};
-			var mappingItems = new List<CsvImportMappingItem>();
+			var retVal = CsvProductMappingConfiguration.GetDefaultConfiguration();
 
-			mappingItems.AddRange(ReflectionUtility.GetPropertyNames<coreModel.CatalogProduct>(x => x.Name, x => x.Category).Select(x => new CsvImportMappingItem { EntityColumnName = x, IsRequired = true }));
-
-			mappingItems.AddRange(new string[] {"Sku", "ParentSku", "Review", "PrimaryImage", "AltImage", "SeoUrl", "SeoDescription", "SeoTitle", 
-												"PriceId", "Price", "SalePrice", "Currency", "AllowBackorder", "Quantity", "FulfilmentCenterId" }
-								   .Select(x => new CsvImportMappingItem { EntityColumnName = x, IsRequired = false }));
-
-			mappingItems.AddRange(ReflectionUtility.GetPropertyNames<coreModel.CatalogProduct>(x => x.Id, x => x.MainProductId, x => x.CategoryId, x => x.IsActive, x => x.IsBuyable, x => x.TrackInventory,
-																							  x => x.ManufacturerPartNumber, x => x.Gtin, x => x.MeasureUnit, x => x.WeightUnit, x => x.Weight,
-																							  x => x.Height, x => x.Length, x => x.Width, x => x.TaxType, x => x.ProductType, x => x.ShippingType,
-																							  x => x.Vendor, x => x.DownloadType, x => x.DownloadExpiration, x => x.HasUserAgreement).Select(x => new CsvImportMappingItem { EntityColumnName = x, IsRequired = false }));
-
-
-
-			retVal.MappingItems = mappingItems.ToArray();
-
+			retVal.Delimiter = delimiter;
+			retVal.FileUrl = fileUrl;
 
 			//Read csv headers and try to auto map fields by name
 			using (var reader = new CsvReader(new StreamReader(_blobStorageProvider.OpenReadOnly(fileUrl))))
 			{
 				reader.Configuration.Delimiter = delimiter;
-				while (reader.Read())
+				if(reader.Read())
 				{
-					var csvColumns = reader.FieldHeaders;
-					retVal.CsvColumns = csvColumns;
-					//default columns mapping
-					if (csvColumns.Any())
-					{
-						foreach (var mappingItem in retVal.MappingItems)
-						{
-							var entityColumnName = mappingItem.EntityColumnName;
-							var betterMatchCsvColumn = csvColumns.Select(x => new { csvColumn = x, distance = x.ComputeLevenshteinDistance(entityColumnName) })
-																 .Where(x => x.distance < 2)
-																 .OrderBy(x => x.distance)
-																 .Select(x => x.csvColumn)
-																 .FirstOrDefault();
-							if (betterMatchCsvColumn != null)
-							{
-								mappingItem.CsvColumnName = betterMatchCsvColumn;
-								mappingItem.CustomValue = null;
-							}
-						}
-					}
+					retVal.AutoMap(reader.FieldHeaders);
 				}
 			}
-			//All not mapped properties may be a product property
-			retVal.PropertyCsvColumns = retVal.CsvColumns.Except(retVal.MappingItems.Where(x => x.CsvColumnName != null).Select(x => x.CsvColumnName)).ToArray();
-			//Generate ETag for identifying csv format
-			retVal.ETag = string.Join(";", retVal.CsvColumns).GetMD5Hash();
+
 			return Ok(retVal);
 		}
 
@@ -150,7 +110,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 		[ResponseType(typeof(ExportNotification))]
 		[HttpPost]
 		[Route("import")]
-		public IHttpActionResult DoImport(CsvImportConfiguration importConfiguration)
+		public IHttpActionResult DoImport(CsvProductMappingConfiguration importConfiguration)
 		{
 			var notification = new ImportNotification(CurrentPrincipal.GetCurrentUserName())
 			{
@@ -184,7 +144,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 
 			//return StatusCode(HttpStatusCode.NoContent);
 		}
-		public void BackgroundImport(CsvImportConfiguration importConfiguration, ImportNotification notifyEvent)
+		public void BackgroundImport(CsvProductMappingConfiguration importConfiguration, ImportNotification notifyEvent)
 		{
 			 Action<ExportImportProgressInfo> progressCallback = (x) =>
 			 {

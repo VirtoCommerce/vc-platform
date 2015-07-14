@@ -45,7 +45,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 			}
 			var progressInfo = new ExportImportProgressInfo
 			{
-				Description = "Start exporting",
+				Description = "Start platform export...",
 				TotalCount = modules.Count(),
 				ProcessedCount = 0
 			};
@@ -60,7 +60,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 					var modulePartUri = PackUriHelper.CreatePartUri(new Uri(module.Id, UriKind.Relative));
 					var modulePart = package.CreatePart(modulePartUri, System.Net.Mime.MediaTypeNames.Application.Octet);
 
-					progressInfo.Description = String.Format("{0}: export started.", module.Id);
+				   progressInfo.Description = String.Format("{0}: export started.", module.Id);
 				   progressCallback(progressInfo);
 
 					Action<ExportImportProgressInfo> modulePorgressCallback = (x) =>
@@ -101,9 +101,49 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 			}
 		}
 
-		public void Import(Stream stream, ModuleDescriptor[] modules, SemanticVersion platformVersion, Func<ExportImportProgressInfo> progressCallback)
+		public void Import(Stream stream, ModuleDescriptor[] modules, Action<ExportImportProgressInfo> progressCallback)
 		{
-			throw new NotImplementedException();
+			var manifest = ReadPlatformExportManifest(stream);
+			if(manifest == null)
+			{
+				throw new NullReferenceException("manifest");
+			}
+
+			var progressInfo = new ExportImportProgressInfo
+			{
+				Description = "Start platform import...",
+				TotalCount = modules.Count(),
+				ProcessedCount = 0
+			};
+			progressCallback(progressInfo);
+
+			using (var package = ZipPackage.Open(stream, FileMode.Open))
+			{
+				foreach (var module in modules)
+				{
+					var moduleInfo = manifest.Modules.First(x => x.ModuleId == module.Id);
+					var modulePart = package.GetPart(new Uri(moduleInfo.PartUri));
+					using (var modulePartStream = modulePart.GetStream())
+					{
+						Action<ExportImportProgressInfo> modulePorgressCallback = (x) =>
+						{
+							progressInfo.Description = String.Format("{0}: {1} ({2} of {3} processed)", module.Id, x.Description, x.TotalCount, x.ProcessedCount);
+							//FOrmation error and add new
+							if (x.Errors.Any())
+							{
+								progressInfo.Errors = progressInfo.Errors.Concat(x.Errors).GroupBy(y => y).Select(y => y.Key + (y.Count() > 1 ? String.Format(" ({0})", y.Count()) : "")).ToList();
+							}
+							progressCallback(progressInfo);
+							
+						};
+						((ISupportImportModule)module.ModuleInfo.ModuleInstance).DoImport(modulePartStream, modulePorgressCallback);
+
+						progressInfo.Description = String.Format("{0}: import finished.", module.Id);
+						progressInfo.ProcessedCount++;
+						progressCallback(progressInfo);
+					}
+				}
+			}
 		}
 
 		#endregion

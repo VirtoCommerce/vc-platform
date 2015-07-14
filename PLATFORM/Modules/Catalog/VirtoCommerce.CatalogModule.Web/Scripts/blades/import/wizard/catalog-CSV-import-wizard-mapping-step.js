@@ -4,7 +4,7 @@
 	
 
 	//Need automatically tracking 
-	angular.forEach($scope.blade.importConfiguration.mappingItems, function (x) {
+	angular.forEach($scope.blade.importConfiguration.propertyMaps, function (x) {
 		$scope.$watch(function ($scope) { return x.csvColumnName }, function (newValue, oldValue) {
 			if (oldValue != newValue) {
 				if (newValue) {

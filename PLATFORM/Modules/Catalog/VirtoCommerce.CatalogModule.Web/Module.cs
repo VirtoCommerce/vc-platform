@@ -18,7 +18,7 @@ using VirtoCommerce.Platform.Data.Repositories;
 
 namespace VirtoCommerce.CatalogModule.Web
 {
-	public class Module : ModuleBase, ISupportExportModule
+	public class Module : ModuleBase, ISupportExportModule, ISupportImportModule
     {
         private const string _connectionStringName = "VirtoCommerce";
         private readonly IUnityContainer _container;
@@ -97,6 +97,15 @@ namespace VirtoCommerce.CatalogModule.Web
 				exportJob.DoExport(outStream, catalog.Id, null, null, null, commerceService.GetAllFulfillmentCenters().First().Id, defaultCurrency, catalog.DefaultLanguage.LanguageCode, progressCallback);
 			}
 		
+		}
+
+		#endregion
+
+		#region ISupportImportModule Members
+
+		public void DoImport(System.IO.Stream inputStream, Action<ExportImportProgressInfo> progressCallback)
+		{
+			throw new NotImplementedException();
 		}
 
 		#endregion
