@@ -109,12 +109,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// DELETE: api/platform/dynamic/types/{typeName}/properties/{propertyId}/dictionaryitems/{itemId}
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
+        [HttpDelete]
         [ResponseType(typeof(void))]
-        [Route("types/{typeName}/properties/{propertyId}/dictionaryitems/{itemId}")]
-        public IHttpActionResult DeleteDictionaryItem(string typeName, string propertyId, string itemId)
+        [Route("types/{typeName}/properties/{propertyId}/dictionaryitems")]
+        public IHttpActionResult DeleteDictionaryItem(string typeName, string propertyId, [FromUri] string[] ids)
         {
-            _service.DeleteDictionaryItems(new[] { itemId });
+            _service.DeleteDictionaryItems(ids);
             return StatusCode(HttpStatusCode.NoContent);
         }
 
