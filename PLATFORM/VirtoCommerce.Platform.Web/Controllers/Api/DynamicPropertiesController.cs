@@ -106,7 +106,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
-        /// DELETE: api/platform/dynamic/types/{typeName}/properties/{propertyId}/dictionaryitems/{itemId}
+        /// DELETE: api/platform/dynamic/types/{typeName}/properties/{propertyId}/dictionaryitems
         /// </summary>
         /// <returns></returns>
         [HttpDelete]
