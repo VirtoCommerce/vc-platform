@@ -65,6 +65,10 @@ angular.module(moduleName, [
           template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/storeSettingsWidget.tpl.html'
       }, 'storeDetail');
       widgetService.registerWidget({
+          controller: 'platformWebApp.dynamicPropertyWidgetController',
+          template: 'Scripts/app/dynamicProperties/widgets/dynamicPropertyWidget.tpl.html'
+      }, 'storeDetail');
+      widgetService.registerWidget({
           controller: 'virtoCommerce.storeModule.storePaymentsWidgetController',
           template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/storePaymentsWidget.tpl.html'
       }, 'storeDetail');
@@ -73,12 +77,12 @@ angular.module(moduleName, [
           template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/storeShippingWidget.tpl.html'
       }, 'storeDetail');
       widgetService.registerWidget({
-      	  controller: 'virtoCommerce.storeModule.storeNotificationsWidgetController',
-		  template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/storeNotificationsWidget.tpl.html'
+          controller: 'virtoCommerce.storeModule.storeNotificationsWidgetController',
+          template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/storeNotificationsWidget.tpl.html'
       }, 'storeDetail');
       widgetService.registerWidget({
-      	  controller: 'virtoCommerce.storeModule.storeNotificationsLogWidgetController',
-      	  template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/storeNotificationsLogWidget.tpl.html'
+          controller: 'virtoCommerce.storeModule.storeNotificationsLogWidgetController',
+          template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/storeNotificationsLogWidget.tpl.html'
       }, 'storeDetail');
 
       var resetCommand = {

@@ -108,8 +108,6 @@
     <Content Include="Scripts\blades\organization-detail.tpl.html" />
     <Content Include="Scripts\blades\member-list.js" />
     <Content Include="Scripts\blades\member-list.tpl.html" />
-    <Content Include="Scripts\blades\member-property-list.js" />
-    <Content Include="Scripts\blades\member-property-list.tpl.html" />
     <Content Include="Scripts\blades\member-detail.js" />
     <Content Include="Scripts\blades\customer-detail.tpl.html" />
     <Content Include="Scripts\blades\member-phones-list.js" />
@@ -130,8 +128,6 @@
     <Content Include="Scripts\widgets\memberPhonesWidget.tpl.html" />
     <Content Include="Scripts\widgets\memberEmailsWidget.tpl.html" />
     <Content Include="Scripts\widgets\memberAddressesWidget.tpl.html" />
-    <Content Include="Scripts\widgets\memberPropertyWidget.js" />
-    <Content Include="Scripts\widgets\memberPropertyWidget.tpl.html" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>

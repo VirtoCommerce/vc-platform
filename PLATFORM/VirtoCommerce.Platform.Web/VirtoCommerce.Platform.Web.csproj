@@ -347,12 +347,18 @@
     <Content Include="Scripts\app\dynamicProperties\blades\dynamicProperty-list.js" />
     <Content Include="Scripts\app\dynamicProperties\blades\dynamicObject-list.tpl.html" />
     <Content Include="Scripts\app\dynamicProperties\blades\dynamicProperty-list.tpl.html" />
+    <Content Include="Scripts\app\dynamicProperties\blades\propertyValue-list.js" />
+    <Content Include="Scripts\app\dynamicProperties\blades\propertyValue-list.tpl.html" />
     <Content Include="Scripts\app\dynamicProperties\blades\property-dictionary.js" />
     <Content Include="Scripts\app\dynamicProperties\blades\property-dictionary.tpl.html" />
     <Content Include="Scripts\app\dynamicProperties\blades\property-valueType.js" />
     <Content Include="Scripts\app\dynamicProperties\blades\property-valueType.tpl.html" />
+    <Content Include="Scripts\app\dynamicProperties\directives\dynamicProperty.js" />
+    <Content Include="Scripts\app\dynamicProperties\directives\dynamicProperty.tpl.html" />
     <Content Include="Scripts\app\dynamicProperties\dynamicProperties.js" />
     <Content Include="Scripts\app\dynamicProperties\resources\dynamicPropertiesApi.js" />
+    <Content Include="Scripts\app\dynamicProperties\widgets\dynamicPropertyWidget.js" />
+    <Content Include="Scripts\app\dynamicProperties\widgets\dynamicPropertyWidget.tpl.html" />
     <Content Include="Scripts\app\exportImport\blades\import-main.js" />
     <Content Include="Scripts\app\exportImport\blades\export-main.js" />
     <Content Include="Scripts\app\exportImport\blades\import-main.tpl.html" />
@@ -1448,7 +1454,6 @@
   <ItemGroup>
     <Folder Include="App_Data\Modules\" />
     <Folder Include="Filters\" />
-    <Folder Include="Scripts\app\dynamicProperties\directives\" />
     <Folder Include="Views\Notifications\" />
   </ItemGroup>
   <ItemGroup>
