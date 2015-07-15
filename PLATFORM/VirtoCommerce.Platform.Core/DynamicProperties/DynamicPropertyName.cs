@@ -4,5 +4,14 @@
     {
         public string Locale { get; set; }
         public string Name { get; set; }
+
+        public DynamicPropertyName Clone()
+        {
+            return new DynamicPropertyName
+            {
+                Locale = Locale,
+                Name = Name,
+            };
+        }
     }
 }

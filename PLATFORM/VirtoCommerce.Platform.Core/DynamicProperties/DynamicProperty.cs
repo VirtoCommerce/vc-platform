@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System.Linq;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Platform.Core.DynamicProperties
@@ -17,5 +18,21 @@ namespace VirtoCommerce.Platform.Core.DynamicProperties
         public DynamicPropertyValueType ValueType { get; set; }
 
         public DynamicPropertyName[] DisplayNames { get; set; }
+
+        public DynamicProperty Clone()
+        {
+            return new DynamicProperty
+            {
+                Id = Id,
+                Name = Name,
+                ObjectType = ObjectType,
+                IsArray = IsArray,
+                IsDictionary = IsDictionary,
+                IsMultilingual = IsMultilingual,
+                IsRequired = IsRequired,
+                ValueType = ValueType,
+                DisplayNames = DisplayNames == null ? null : DisplayNames.Select(n => n.Clone()).ToArray(),
+            };
+        }
     }
 }
