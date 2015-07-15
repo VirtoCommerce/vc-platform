@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using VirtoCommerce.Platform.Core.DynamicProperties;
@@ -13,10 +15,34 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
             return entity.DictionaryItem != null ? entity.DictionaryItem.ToModel() : entity.RawValue();
         }
 
-        public static DynamicPropertyObjectValueEntity[] ToEntity(this DynamicPropertyObjectValue model, DynamicProperty property)
+        public static DynamicPropertyObjectValueEntity[] ToEntity(this IEnumerable<DynamicPropertyObjectValue> models, List<DynamicProperty> properties)
         {
-            var result = (model.Values ?? new object[0]).Select(v => v.ToEntity(property, model.ObjectId, model.Locale)).ToArray();
-            return result;
+            var result = new List<DynamicPropertyObjectValueEntity>();
+
+            var propertyGroups = models.GroupBy(v => v.Property.Id).ToList();
+
+            foreach (var propertyGroup in propertyGroups)
+            {
+                var propertyValues = new List<DynamicPropertyObjectValueEntity>();
+
+                var property = properties.First(p => p.Id == propertyGroup.Key);
+
+                foreach (var model in propertyGroup)
+                {
+                    var entities = (model.Values ?? new object[0]).Select(v => v.ToEntity(property, model.ObjectId, model.Locale)).ToList();
+                    propertyValues.AddRange(entities);
+                }
+
+                // Keep only one value for each locale if property is not array
+                if (!property.IsArray)
+                {
+                    propertyValues = propertyValues.GroupBy(v => new { v.ObjectId, v.Locale }).Select(g => g.Last()).ToList();
+                }
+
+                result.AddRange(propertyValues);
+            }
+
+            return result.ToArray();
         }
 
         public static DynamicPropertyObjectValueEntity ToEntity(this object value, DynamicProperty property, string objectId, string locale)

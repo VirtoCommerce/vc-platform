@@ -275,7 +275,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
 
                 var properties = existingProperties.Select(p => p.ToModel()).ToList();
 
-                var source = new { Items = new ObservableCollection<DynamicPropertyObjectValueEntity>(values.SelectMany(v => v.ToEntity(properties.First(p => p.Id == v.Property.Id)))) };
+                var source = new { Items = new ObservableCollection<DynamicPropertyObjectValueEntity>(values.ToEntity(properties)) };
                 var target = new { Items = new ObservableCollection<DynamicPropertyObjectValueEntity>(existingValues) };
 
                 changeTracker.AddAction = x => repository.Add(x);
