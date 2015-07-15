@@ -1,41 +1,35 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
+using VirtoCommerce.Platform.Data.Common.ConventionInjections;
 using VirtoCommerce.Platform.Data.Model;
 
 namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
 {
     public static class DynamicPropertyDictionaryItemConverter
     {
-        public static DynamicPropertyDictionaryItemEntity ToEntity(this DynamicPropertyDictionaryItem model, DynamicPropertyEntity property)
+        public static DynamicPropertyDictionaryItem ToModel(this DynamicPropertyDictionaryItemEntity entity)
         {
-            var result = new DynamicPropertyDictionaryItemEntity();
+            var result = new DynamicPropertyDictionaryItem();
+            result.InjectFrom(entity);
 
-            if (!string.IsNullOrEmpty(model.Id))
-                result.Id = model.Id;
-
-            if (!string.IsNullOrEmpty(model.Name))
-                result.Name = model.Name;
-
-            if (!string.IsNullOrEmpty(property.Id))
-                result.PropertyId = property.Id;
-
-            if (property.IsMultilingual && model.DisplayNames != null)
-                result.DisplayNames = new ObservableCollection<DynamicPropertyDictionaryItemNameEntity>(model.DisplayNames.Select(v => v.ToEntity()));
+            result.DisplayNames = entity.DisplayNames.Select(v => v.ToModel()).ToArray();
 
             return result;
         }
 
-        public static DynamicPropertyDictionaryItem ToModel(this DynamicPropertyDictionaryItemEntity entity)
+        public static DynamicPropertyDictionaryItemEntity ToEntity(this DynamicPropertyDictionaryItem model, DynamicPropertyEntity property)
         {
-            var result = new DynamicPropertyDictionaryItem
-            {
-                Id = entity.Id,
-                Name = entity.Name,
-                DisplayNames = entity.DisplayNames.Select(v => v.ToModel()).ToArray(),
-            };
+            var result = new DynamicPropertyDictionaryItemEntity();
+            result.InjectFrom(model);
+
+            result.PropertyId = property.Id;
+
+            if (property.IsMultilingual && model.DisplayNames != null)
+                result.DisplayNames = new ObservableCollection<DynamicPropertyDictionaryItemNameEntity>(model.DisplayNames.Select(v => v.ToEntity()));
 
             return result;
         }
@@ -45,10 +39,8 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
             if (target == null)
                 throw new ArgumentNullException("target");
 
-            if (!string.IsNullOrEmpty(source.Name))
-            {
-                target.Name = source.Name;
-            }
+            var patchInjectionPolicy = new PatchInjection<DynamicPropertyDictionaryItemEntity>(x => x.Name);
+            target.InjectFrom(patchInjectionPolicy, source);
 
             if (target.Property.IsMultilingual && !source.DisplayNames.IsNullCollection())
             {
