@@ -53,7 +53,7 @@ namespace AvaTax.TaxModule.Web.Converters
                 getTaxRequest.CurrencyCode = modifiedOrder.Currency.ToString();
 
                 //add customer tax exemption code to cart if exists
-                getTaxRequest.ExemptionNo = contact.GetDynamicPropertyValue("Tax exempt");
+                getTaxRequest.ExemptionNo = contact.GetDynamicPropertyValue("Tax exempt", string.Empty);
 
                 string destinationAddressIndex = "0";
 

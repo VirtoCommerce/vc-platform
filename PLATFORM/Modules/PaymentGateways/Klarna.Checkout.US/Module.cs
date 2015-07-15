@@ -25,10 +25,10 @@ namespace Klarna.Checkout.US
 
 			Func<KlarnaCheckoutUSPaymentMethod> klarnaPaymentMethodFactory = () => new KlarnaCheckoutUSPaymentMethod
             {
-                Name = "Klarna",
-                Description = "Klarna payment integration",
+                Name = "Klarna Checkout US/UK",
+				Description = "Klarna Checkout euro payment integration",
                 LogoUrl = "http://virtocommerce.com/Content/images/Blue-black.png",
-                Settings = settingsManager.GetModuleSettings("Klarna.PaymentGateway")
+				Settings = settingsManager.GetModuleSettings("Klarna.Checkout.US")
             };
 
             var paymentMethodsService = _container.Resolve<IPaymentMethodsService>();

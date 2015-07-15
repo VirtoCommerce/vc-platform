@@ -33,7 +33,7 @@ namespace AvaTax.TaxModule.Web.Converters
                     DocType = DocType.SalesInvoice
                 };
 
-                getTaxRequest.DocCode = string.Format("{0}_{1}", order.Number, getTaxRequest.DocDate);
+                getTaxRequest.DocCode = order.Number;
 
                 // Best Practice Request Parameters
 
@@ -55,7 +55,7 @@ namespace AvaTax.TaxModule.Web.Converters
                 getTaxRequest.CurrencyCode = order.Currency.ToString();
 
                 //add customer tax exemption code to cart if exists
-                getTaxRequest.ExemptionNo = contact.GetDynamicPropertyValue("Tax exempt");
+                getTaxRequest.ExemptionNo = contact.GetDynamicPropertyValue("Tax exempt", string.Empty);
 
                 string destinationAddressIndex = "0";
 

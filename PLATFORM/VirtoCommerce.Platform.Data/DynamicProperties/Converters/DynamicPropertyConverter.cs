@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Linq;
 using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
+using VirtoCommerce.Platform.Data.Common.ConventionInjections;
 using VirtoCommerce.Platform.Data.Model;
 
 namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
@@ -26,7 +26,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
                               Property = property,
                               ObjectId = objectId,
                               Locale = @group.Key,
-                              Values = @group.Select(v => v.ToString(CultureInfo.InvariantCulture)).ToArray(),
+                              Values = @group.Select(v => v.RawValue()).ToArray(),
                           }).ToList();
 
             if (!result.Any())
@@ -56,20 +56,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
                 throw new ArgumentNullException("model");
 
             var result = new DynamicPropertyEntity();
-
-            if (!string.IsNullOrEmpty(model.Id))
-                result.Id = model.Id;
-
-            if (model.ObjectType != null)
-                result.ObjectType = model.ObjectType;
-
-            if (model.Name != null)
-                result.Name = model.Name;
-
-            result.IsArray = model.IsArray;
-            result.IsDictionary = model.IsDictionary;
-            result.IsMultilingual = model.IsMultilingual;
-            result.IsRequired = model.IsRequired;
+            result.InjectFrom(model);
 
             if (model.ValueType != DynamicPropertyValueType.Undefined)
                 result.ValueType = model.ValueType.ToString();
@@ -85,13 +72,8 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
             if (target == null)
                 throw new ArgumentNullException("target");
 
-            target.IsRequired = source.IsRequired;
-            target.IsArray = source.IsArray;
-
-            if (!string.IsNullOrEmpty(source.Name))
-            {
-                target.Name = source.Name;
-            }
+            var patchInjectionPolicy = new PatchInjection<DynamicPropertyEntity>(x => x.Name, x => x.IsRequired, x => x.IsArray);
+            target.InjectFrom(patchInjectionPolicy, source);
 
             if (target.IsMultilingual && !source.DisplayNames.IsNullCollection())
             {

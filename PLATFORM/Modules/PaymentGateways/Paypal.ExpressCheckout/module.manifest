@@ -73,6 +73,17 @@
 								<title>Redirect relative path</title>
 								<description>Relative path for paypal payment from paypal site to frontend</description>
 						</setting>
+						<setting>
+							<name>Paypal.ExpressCheckout.PaymentActionType</name>
+							<valueType>string</valueType>
+							<allowedValues>
+								<value>AUTHORIZATION</value>
+								<value>SALE</value>
+							</allowedValues>
+							<defaultValue>SALE</defaultValue>
+							<title>Payment action type</title>
+							<description>Action type of payment</description>
+						</setting>
 				</group>
 		</settings>
 </module>

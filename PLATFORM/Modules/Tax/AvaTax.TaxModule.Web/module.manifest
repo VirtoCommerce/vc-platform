@@ -16,7 +16,7 @@
     <owner>Virto Commerce</owner>
   </owners>
   <projectUrl>http://virtocommerce.com/</projectUrl>
-  <iconUrl>http://www.avalara.com/assets/img/logo-tagline-extend-FF6600-@2x.png</iconUrl>
+  <iconUrl>https://pbs.twimg.com/profile_images/459770288868032512/Bu135OKW_400x400.png</iconUrl>
   <releaseNotes>First version.</releaseNotes>
   <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
   <tags>avalara tax</tags>
@@ -57,35 +57,28 @@
         <description>Link to Avalara API service</description>
       </setting>
     </group>
-    <group name="Taxes|Avalara|General">
+    <group name="Taxes|Avalara|General settings">
       <setting>
         <name>Avalara.Tax.IsEnabled</name>
         <valueType>boolean</valueType>
         <defaultValue>True</defaultValue>
-        <title>Is Enabled</title>
+        <title>Calculate taxes</title>
         <description>Enable or disable tax calculation</description>
       </setting>
     </group>
-    <group name="Taxes|Avalara|Avalara Description">
+    <group name="Taxes|Avalara|Address validation">
       <setting>
-        <name>Avalara.Tax.Description</name>
-        <valueType>string</valueType>
-        <defaultValue>Avalara public site description</defaultValue>
-        <title>Description</title>
-        <description>Description of Avalara for public site</description>
-      </setting>
-      <setting>
-        <name>Avalara.Tax.LogoUrl</name>
-        <valueType>string</valueType>
-        <defaultValue>http://www.avalara.com/assets/img/logo-tagline-extend-FF6600-@2x.png</defaultValue>
-        <title>Logo url</title>
-        <description>Avalara logo url</description>
+        <name>Avalara.Tax.IsValidateAddress</name>
+        <valueType>boolean</valueType>
+        <defaultValue>True</defaultValue>
+        <title>Validate address</title>
+        <description>Enable or disable address validation</description>
       </setting>
     </group>
   </settings>
   <permissions>
     <group name="Tax">
-      <permission id="tax:manage" name="Manage tax settings" description="Permission to manage avalara tax."/>
+      <permission id="tax:manage" name="Manage tax settings" description="Permission to manage avalara tax settings."/>
     </group>
   </permissions>
 </module>

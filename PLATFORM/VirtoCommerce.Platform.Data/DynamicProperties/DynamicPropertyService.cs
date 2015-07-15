@@ -23,17 +23,22 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
 
         #region IDynamicPropertyService Members
 
-        public string[] GetObjectTypes()
+        public string[] GetAvailableObjectTypeNames()
         {
             var typeName = typeof(IHasDynamicProperties).Name;
 
             var result = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(a => a.GetTypes())
                 .Where(t => t.GetInterface(typeName) != null)
-                .Select(GetTypeName)
+                .Select(GetObjectTypeName)
                 .ToArray();
 
             return result;
+        }
+
+        public string GetObjectTypeName(Type type)
+        {
+            return type.FullName;
         }
 
 
@@ -380,14 +385,9 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
         #endregion
 
 
-        private static string GetObjectTypeName(object obj)
+        private string GetObjectTypeName(object obj)
         {
-            return GetTypeName(obj.GetType());
-        }
-
-        private static string GetTypeName(Type type)
-        {
-            return type.FullName;
+            return GetObjectTypeName(obj.GetType());
         }
     }
 }

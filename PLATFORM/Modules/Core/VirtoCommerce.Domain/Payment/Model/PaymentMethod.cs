@@ -64,6 +64,22 @@ namespace VirtoCommerce.Domain.Payment.Model
 		public abstract PostProcessPaymentResult PostProcessPayment(PostProcessPaymentEvaluationContext context);
 
 		/// <summary>
+		/// Voids the payment
+		/// </summary>
+		/// <param name="context"></param>
+		/// <returns>Result of voiding payment in external payment system</returns>
+		public abstract VoidProcessPaymentResult VoidProcessPayment(VoidProcessPaymentEvaluationContext context);
+
+		/// <summary>
+		/// Capture authorized payment
+		/// </summary>
+		/// <param name="context"></param>
+		/// <returns>Result of capturing payment in external system</returns>
+		public abstract CaptureProcessPaymentResult CaptureProcessPayment(CaptureProcessPaymentEvaluationContext context);
+
+		public abstract RefundProcessPaymentResult RefundProcessPayment(RefundProcessPaymentEvaluationContext context);
+
+		/// <summary>
 		/// Method that validate parameters in querystring of request to push url
 		/// </summary>
 		/// <param name="queryString">Query string of payment push request (external payment system or frontend)</param>

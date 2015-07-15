@@ -1,8 +1,11 @@
-﻿namespace VirtoCommerce.Platform.Core.DynamicProperties
+﻿using System;
+
+namespace VirtoCommerce.Platform.Core.DynamicProperties
 {
     public interface IDynamicPropertyService
     {
-        string[] GetObjectTypes();
+        string[] GetAvailableObjectTypeNames();
+        string GetObjectTypeName(Type type);
 
         DynamicProperty[] GetProperties(string objectType);
         void SaveProperties(DynamicProperty[] properties);

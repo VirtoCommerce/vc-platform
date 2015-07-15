@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using Omu.ValueInjecter;
-using VirtoCommerce.Platform.Core.DynamicProperties;
 using coreModel = VirtoCommerce.Domain.Customer.Model;
 using webModel = VirtoCommerce.CustomerModule.Web.Model;
 

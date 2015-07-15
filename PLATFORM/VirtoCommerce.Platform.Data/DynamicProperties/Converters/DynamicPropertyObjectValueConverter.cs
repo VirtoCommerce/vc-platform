@@ -10,11 +10,11 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
     {
         public static DynamicPropertyObjectValueEntity[] ToEntity(this DynamicPropertyObjectValue model, DynamicProperty property)
         {
-            var result = (model.Values ?? new string[0]).Select(v => v.ToEntity(property, model.ObjectId, model.Locale)).ToArray();
+            var result = (model.Values ?? new object[0]).Select(v => v.ToEntity(property, model.ObjectId, model.Locale)).ToArray();
             return result;
         }
 
-        public static DynamicPropertyObjectValueEntity ToEntity(this string value, DynamicProperty property, string objectId, string locale)
+        public static DynamicPropertyObjectValueEntity ToEntity(this object value, DynamicProperty property, string objectId, string locale)
         {
             var result = new DynamicPropertyObjectValueEntity
             {
@@ -27,7 +27,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
 
             if (property.IsDictionary)
             {
-                result.DictionaryItemId = value;
+                result.DictionaryItemId = (string)value;
             }
             else
             {
@@ -46,10 +46,10 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
                         result.IntegerValue = Convert.ToInt32(value, CultureInfo.InvariantCulture);
                         break;
                     case DynamicPropertyValueType.LongText:
-                        result.LongTextValue = value;
+                        result.LongTextValue = (string)value;
                         break;
                     default:
-                        result.ShortTextValue = value;
+                        result.ShortTextValue = (string)value;
                         break;
                 }
             }

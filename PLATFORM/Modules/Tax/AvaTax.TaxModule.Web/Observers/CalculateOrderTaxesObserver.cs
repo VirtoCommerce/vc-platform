@@ -43,7 +43,7 @@ namespace AvaTax.TaxModule.Web.Observers
 		#endregion
 		private void CalculateCustomerOrderTaxes(OrderChangeEvent context)
 		{
-            if (context.ModifiedOrder.Status == "Cancelled")
+            if (context.ModifiedOrder.IsCancelled)
             {
                 return;
             }

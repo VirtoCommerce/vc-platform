@@ -299,6 +299,7 @@ namespace AvaTax.TaxModule.Test
             const string _serviceUrlPropertyName = "Avalara.Tax.Credentials.ServiceUrl";
             const string _companyCodePropertyName = "Avalara.Tax.Credentials.CompanyCode";
             const string _isEnabledPropertyName = "Avalara.Tax.IsEnabled";
+            const string _isValidateAddressPropertyName = "Avalara.Tax.IsValidateAddress";
 
             var settings = new List<SettingEntry>
             {
@@ -336,8 +337,9 @@ namespace AvaTax.TaxModule.Test
             settingsManager.Setup(manager => manager.GetValue(_serviceUrlPropertyName, string.Empty)).Returns(() => settings.First(x => x.Name == _serviceUrlPropertyName).Value);
             settingsManager.Setup(manager => manager.GetValue(_companyCodePropertyName, string.Empty)).Returns(() => settings.First(x => x.Name == _companyCodePropertyName).Value);
             settingsManager.Setup(manager => manager.GetValue(_isEnabledPropertyName, true)).Returns(() => true);
+            settingsManager.Setup(manager => manager.GetValue(_isValidateAddressPropertyName, true)).Returns(() => true);
             
-            var avalaraTax = new AvaTaxSettings(_usernamePropertyName, _passwordPropertyName, _serviceUrlPropertyName, _companyCodePropertyName, _isEnabledPropertyName, settingsManager.Object);
+            var avalaraTax = new AvaTaxSettings(_usernamePropertyName, _passwordPropertyName, _serviceUrlPropertyName, _companyCodePropertyName, _isEnabledPropertyName, _isValidateAddressPropertyName, settingsManager.Object);
 
             var controller = new AvaTaxController(avalaraTax);
             return controller;
