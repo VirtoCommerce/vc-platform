@@ -15,6 +15,10 @@ namespace VirtoCommerce.Platform.Core.DynamicProperties
                     .SelectMany(v => v.Values)
                     .FirstOrDefault();
 
+                var dictionaryItem = value as DynamicPropertyDictionaryItem;
+                if (dictionaryItem != null)
+                    value = dictionaryItem.Name;
+
                 if (value != null)
                     result = (T)value;
             }

@@ -8,6 +8,11 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
 {
     public static class DynamicPropertyObjectValueConverter
     {
+        public static object ToModel(this DynamicPropertyObjectValueEntity entity)
+        {
+            return entity.DictionaryItem != null ? entity.DictionaryItem.ToModel() : entity.RawValue();
+        }
+
         public static DynamicPropertyObjectValueEntity[] ToEntity(this DynamicPropertyObjectValue model, DynamicProperty property)
         {
             var result = (model.Values ?? new object[0]).Select(v => v.ToEntity(property, model.ObjectId, model.Locale)).ToArray();
@@ -27,7 +32,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
 
             if (property.IsDictionary)
             {
-                result.DictionaryItemId = (string)value;
+                result.DictionaryItemId = ((DynamicPropertyDictionaryItem)value).Id;
             }
             else
             {

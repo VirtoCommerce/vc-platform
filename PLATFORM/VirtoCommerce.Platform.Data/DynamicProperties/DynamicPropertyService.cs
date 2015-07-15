@@ -236,6 +236,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
 
                 // This request will automatically fill values for loaded properties
                 var values = repository.DynamicPropertyObjectValues
+                    .Include(v => v.DictionaryItem)
                     .Where(v => v.ObjectType == objectType && v.ObjectId == objectId)
                     .ToList();
 

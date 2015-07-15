@@ -11,6 +11,8 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
 {
     public static class DynamicPropertyConverter
     {
+        private static readonly object[] _emptyValues = new object[0];
+
         public static DynamicPropertyObjectValue[] ToModel(this DynamicPropertyEntity entity, string objectId)
         {
             var property = entity.ToModel();
@@ -26,12 +28,12 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
                               Property = property,
                               ObjectId = objectId,
                               Locale = @group.Key,
-                              Values = @group.Select(v => v.RawValue()).ToArray(),
+                              Values = @group.Select(v => v.ToModel()).ToArray(),
                           }).ToList();
 
             if (!result.Any())
             {
-                result.Add(new DynamicPropertyObjectValue { Property = property });
+                result.Add(new DynamicPropertyObjectValue { Property = property, ObjectId = objectId, Values = _emptyValues });
             }
 
             return result.ToArray();
