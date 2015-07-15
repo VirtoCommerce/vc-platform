@@ -28,6 +28,7 @@
     };
 
     $scope.cancelChanges = function () {
+        angular.copy(blade.origEntity, blade.currentEntities);
         $scope.bladeClose();
     }
 
@@ -90,12 +91,12 @@
         };
         bladeNavigationService.showBlade(newBlade, blade);
     };
-    
+
     var formScope;
     $scope.setForm = function (form) {
         formScope = form;
     }
-    
+
     blade.toolbarCommands = [
         {
             name: "Reset", icon: 'fa fa-undo',

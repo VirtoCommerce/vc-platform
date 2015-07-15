@@ -21,19 +21,23 @@
                       placeholder="Please enter long text"></textarea>
         </div>
     </script>
-    
-    <!--integer-->
-    <script type="text/ng-template" id="dDecimal.html">
-        <div class="form-input">
-            <input ng-disabled="currentEntity.isReadOnly"
-                   ng-required="currentEntity.required && !currentEntity.isReadOnly"
+
+    <script type="text/ng-template" id="dInteger.html">
+        <div class="form-input __number">
+            <input va-number step="1"
+                   ng-required="currentEntity.property.isRequired"
                    ng-model="context.currentPropValues[0].value"
-                   ng-pattern="/^\d+$/"
-                   ng-class="{'error': context.currentEntity.valueType.$error.pattern}"
-                   name="{{currentEntity.valueType}}"
-                   placeholder="Please enter number"
-                   type="text">
+                   placeholder="Enter integer number" />
         </div>
+    </script>
+
+    <script type="text/ng-template" id="dDecimal.html">
+        <div class="form-input __number">
+            <input va-number step="0.01"
+                   ng-required="currentEntity.property.isRequired"
+                   ng-model="context.currentPropValues[0].value"
+                   placeholder="Enter decimal number" />            
+        </div>    
     </script>
 
     <script type="text/ng-template" id="dDateTime.html">
@@ -213,7 +217,7 @@
         </span>
         <a ng-if="currentEntity.multivalue && !currentEntity.isReadOnly" ng-click="currentEntity.values.push({value:''})" style="cursor:pointer;">add value</a>
     </script>-->
-    
+
     <!--<div class="form-input" ng-if="prop.valueType === 'ShortText'">
         <input ng-model="prop.value" required class="form-control" placeholder="Enter value" />
     </div>

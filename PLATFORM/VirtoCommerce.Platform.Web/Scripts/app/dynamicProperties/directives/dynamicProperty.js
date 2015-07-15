@@ -21,7 +21,6 @@
                 if (newValue != oldValue) {
                     scope.context.currentPropValues = [];
                     angular.forEach(scope.context.langValuesMap, function (langGroup, locale) {
-
                         angular.forEach(langGroup.currentPropValues, function (propValue) {
                             propValue.locale = locale;
                             scope.context.currentPropValues.push(propValue);
@@ -32,14 +31,10 @@
 
             scope.$watch('context.currentPropValues', function (newValue) {
                 //reflect only real changes
-                if (newValue.length != scope.currentEntity.values.length || difference(newValue, scope.currentEntity.values).length > 0) {
+                if (newValue.length != scope.currentEntity.values.length || difference(newValue).length > 0) {
                     //Prevent reflect changing when use null value for empty initial values
                     if (!(scope.currentEntity.values.length == 0 && newValue[0].value == null)) {
-                        if (property.isDictionary && property.isMultilingual && !property.isArray) {
-                            scope.currentEntity.values = _.where(scope.context.allDictionaryValues, { alias: newValue[0].alias });
-                        } else {
-                            scope.currentEntity.values = newValue;
-                        }
+                        scope.currentEntity.values = _.pluck(newValue, 'value');
                         ngModelController.$setViewValue(scope.currentEntity);
                     }
                 }
@@ -50,57 +45,47 @@
                 scope.currentEntity = ngModelController.$modelValue;
                 property = scope.currentEntity.property;
 
-                scope.context.currentPropValues = angular.copy(scope.currentEntity.values);
-                if (needAddEmptyValue(scope.context.currentPropValues)) {
-                    scope.context.currentPropValues.push({ value: null });
-                }
-
+                scope.context.currentPropValues = _.map(scope.currentEntity.values, function (x) { return { value: x } });
+                addEmptyValueIfNeeded();
+                
                 if (property.isDictionary) {
                     loadDictionaryValues();
                 }
                 if (property.isMultilingual) {
-                    initLanguagesValuesMap();
+                    //initLanguagesValuesMap();
                 }
 
                 chageValueTemplate();
             };
 
-            var difference = function (one, two) {
-                var containsEquals = function (obj, target) {
-                    if (obj == null) return false;
-                    return _.any(obj, function (value) {
-                        return value.value == target.value;
-                    });
-                };
-                return _.filter(one, function (value) { return !containsEquals(two, value); });
+            var difference = function (one) {
+                return _.filter(one, function (value) { return _.all(scope.currentEntity.values, function (x) { return x !== value.value; }); });
             }
 
-            function needAddEmptyValue(values) {
-                return !property.isArray && !property.isDictionary && values.length == 0;
+            //need add empty value for single value type
+            function addEmptyValueIfNeeded() {
+                if (!property.isArray && !property.isDictionary && scope.context.currentPropValues.length == 0) {
+                    scope.context.currentPropValues.push({});
+                }
             }
 
             function initLanguagesValuesMap() {
                 //Group values by language 
                 angular.forEach(property.catalog.languages, function (language) {
-                    //Currently select values
-                    var currentPropValues = _.where(scope.context.currentPropValues, { locale: language.locale });
-                    //need add empty value for single  value type
-                    if (needAddEmptyValue(currentPropValues)) {
-                        currentPropValues.push({ value: null, locale: language.locale });
-                    }
+                    addEmptyValueIfNeeded();
+                    
                     //All possible dict values
                     var allValues = _.where(scope.context.allDictionaryValues, { locale: language.locale });
 
                     var langValuesGroup = {
                         allValues: allValues,
-                        currentPropValues: currentPropValues
+                        currentPropValues: scope.context.currentPropValues
                     };
                     scope.context.langValuesMap[language.locale] = langValuesGroup;
                 });
             }
 
             function loadDictionaryValues() {
-                var selectedValues = scope.currentEntity.values;
                 dictionaryItemsApi.query({ id: property.objectType, propertyId: property.id }, function (result) {
                     //blade.origEntity = data;
                     //blade.currentEntities = angular.copy(data);
@@ -111,7 +96,7 @@
                     angular.forEach(result, function (dictValue) {
                         //Need select already selected values.
                         //Dictionary values are of same type like standard values
-                        dictValue.selected = angular.isDefined(_.find(selectedValues, function (value) { return value.valueId == dictValue.valueId; }));
+                        dictValue.selected = _.any(scope.currentEntity.values, function (x) { return x.name == dictValue.name; });
                         scope.context.allDictionaryValues.push(dictValue);
                         if (dictValue.selected) {
                             //add selected value
@@ -120,7 +105,7 @@
                     });
 
                     if (property.isMultilingual) {
-                        initLanguagesValuesMap();
+                        // initLanguagesValuesMap();
                     }
                 }, function (error) { });
             };
@@ -174,7 +159,7 @@
             };
 
             scope.clear = function () {
-                scope.currentEntity.values = [];
+                // scope.currentEntity.values = [];
             };
             scope.today = new Date();
 
