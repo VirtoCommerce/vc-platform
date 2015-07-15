@@ -27,7 +27,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
                 ObjectType = property.ObjectType,
                 ObjectId = objectId,
                 ValueType = property.ValueType.ToString(),
-                Locale = locale,
+                Locale = property.IsMultilingual ? locale : null,
             };
 
             if (property.IsDictionary)
