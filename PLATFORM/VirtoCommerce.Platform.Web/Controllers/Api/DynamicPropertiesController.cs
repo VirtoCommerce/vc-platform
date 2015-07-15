@@ -29,7 +29,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Route("types")]
         public IHttpActionResult GetObjectTypes()
         {
-            var types = _service.GetObjectTypes();
+            var types = _service.GetAvailableObjectTypeNames();
             return Ok(types);
         }
 
