@@ -44,6 +44,9 @@ namespace VirtoCommerce.StoreModule.Web.ExportImport
 
         public void DoImport(Stream backupStream, Action<ExportImportProgressInfo> progressCallback)
         {
+            var sync = new Object();
+            var storesForUpdate = new List<Store>();
+
             var prodgressInfo = new ExportImportProgressInfo { Description = "loading data..." };
             progressCallback(prodgressInfo);
 
@@ -57,6 +60,8 @@ namespace VirtoCommerce.StoreModule.Web.ExportImport
                 }
                 else
                 {
+                    //Catalog stay as is
+
                     //SeoInfos
                     UpdateSeoInfos(originalStore.SeoInfos, store.SeoInfos);
 
@@ -69,13 +74,18 @@ namespace VirtoCommerce.StoreModule.Web.ExportImport
                     //Settings
                     UpdateSettings(originalStore.Settings, store.Settings);
 
-                    //Catalog stay as is
-
                     //Fullfilments ??
 
                     originalStore.InjectFrom(store);
-                    _storeService.Update(new[] { originalStore });
+                    lock (sync)
+                    {
+                        storesForUpdate.Add(originalStore);
+                    }
                 }
+            }
+            if (storesForUpdate.Any())
+            {
+                _storeService.Update(storesForUpdate.ToArray());
             }
         }
 
@@ -93,8 +103,8 @@ namespace VirtoCommerce.StoreModule.Web.ExportImport
 
         private void UpdateShipmentMethods(ICollection<ShippingMethod> originalMethods, ICollection<ShippingMethod> importedMethods)
         {
-            var itemForRemove = new List<ShippingMethod>();
             var sync = new Object();
+            var itemForRemove = new List<ShippingMethod>();
 
             Parallel.ForEach(importedMethods, importedMethod =>
             {
@@ -132,8 +142,9 @@ namespace VirtoCommerce.StoreModule.Web.ExportImport
 
         private void UpdatePaymentMethods(ICollection<PaymentMethod> originalMethods, ICollection<PaymentMethod> importedMethods)
         {
-            var itemForRemove = new List<PaymentMethod>();
             var sync = new Object();
+            var itemForRemove = new List<PaymentMethod>();
+
             Parallel.ForEach(importedMethods, importedMethod =>
             {
                 var originalMethod = originalMethods.FirstOrDefault(x => x.Code == importedMethod.Code);

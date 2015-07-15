@@ -40,13 +40,17 @@ namespace VirtoCommerce.PricingModule.Web.ExportImport
 
         public void DoImport(Stream backupStream, Action<ExportImportProgressInfo> progressCallback)
         {
+            var sync = new Object();
+            var pricelistsForUpdate = new List<Pricelist>();
+
             var prodgressInfo = new ExportImportProgressInfo { Description = "loading data..." };
             progressCallback(prodgressInfo);
 
             var backupObject = backupStream.JsonDeserializationObject<BackupObject>(progressCallback, prodgressInfo);
+
             foreach (var importedPricelist in backupObject.Pricelists)
             {
-                var originalPricelist = _pricingService.GetPricelistById(importedPricelist.Id);
+                var originalPricelist = _pricingService.GetPricelistById(importedPricelist.Id);//todo maybe by name?
                 if (originalPricelist == null)
                 {
                     _pricingService.CreatePricelist(importedPricelist); //todo maybe ids could conflict with existing items
@@ -57,8 +61,16 @@ namespace VirtoCommerce.PricingModule.Web.ExportImport
                     UpdatePriceAssignments(originalPricelist.Assignments, importedPricelist.Assignments);
 
                     originalPricelist.InjectFrom(importedPricelist);
-                    _pricingService.UpdatePricelists(new[] { originalPricelist });
+                    lock (sync) 
+                    {
+                        pricelistsForUpdate.Add(originalPricelist);
+                    }
                 }
+            }
+
+            if (pricelistsForUpdate.Any())
+            {
+                _pricingService.UpdatePricelists(pricelistsForUpdate.ToArray());
             }
         }
 
