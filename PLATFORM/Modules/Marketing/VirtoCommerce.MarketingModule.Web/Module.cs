@@ -1,15 +1,18 @@
-﻿using Microsoft.Practices.Unity;
+﻿using System;
+using Microsoft.Practices.Unity;
 using VirtoCommerce.Domain.Marketing.Services;
 using VirtoCommerce.MarketingModule.Data.Repositories;
 using VirtoCommerce.MarketingModule.Data.Services;
+using VirtoCommerce.MarketingModule.Web.ExportImport;
 using VirtoCommerce.MarketingModule.Web.Model;
+using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 
 namespace VirtoCommerce.MarketingModule.Web
 {
-    public class Module : ModuleBase
+    public class Module : ModuleBase, ISupportExportModule
     {
         private readonly IUnityContainer _container;
 
@@ -47,6 +50,16 @@ namespace VirtoCommerce.MarketingModule.Web
         {
             var promotionExtensionManager = _container.Resolve<IMarketingExtensionManager>();
             EnsureRootFoldersExist(new[] { MarketingConstants.ContentPlacesRootFolderId, MarketingConstants.CotentItemRootFolderId });
+        }
+
+        #endregion
+
+        #region ISupportExportModule Members
+
+        public void DoExport(System.IO.Stream outStream, Action<ExportImportProgressInfo> progressCallback)
+        {
+            var exportJob = _container.Resolve<MarketingExportImport>();
+            exportJob.DoExport(outStream, progressCallback);
         }
 
         #endregion

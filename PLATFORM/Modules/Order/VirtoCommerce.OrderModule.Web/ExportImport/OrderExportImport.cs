@@ -16,7 +16,7 @@ namespace VirtoCommerce.OrderModule.Web.ExportImport
     }
 
 
-    public sealed class OrderExportImport : JsonExportImport
+    public sealed class OrderExportImport
     {
         private readonly ICustomerOrderSearchService _customerOrderSearchService;
         private readonly ICustomerOrderService _customerOrderService;
@@ -42,7 +42,7 @@ namespace VirtoCommerce.OrderModule.Web.ExportImport
                 Orders = orderIds.Select(id => _customerOrderService.GetById(id, filter)).ToArray(),
             };
 
-            Save(backupStream, backupObject, progressCallback, prodgressInfo);
+            backupStream.JsonSerializationObject(backupObject, progressCallback, prodgressInfo);
         }
 
     }

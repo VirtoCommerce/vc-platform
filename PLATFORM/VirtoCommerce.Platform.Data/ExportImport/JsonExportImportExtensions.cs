@@ -8,9 +8,9 @@ using VirtoCommerce.Platform.Core.ExportImport;
 
 namespace VirtoCommerce.Platform.Data.ExportImport
 {
-    public abstract class JsonExportImport
+    public static class JsonExportImportExtensions
     {
-        private JsonSerializer GetSerializer()
+        private static JsonSerializer GetSerializer()
         {
             var serializer = new JsonSerializer
             {
@@ -23,9 +23,8 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             return serializer;
         }
 
-        public void Save(Stream backupStream, object obj, Action<ExportImportProgressInfo> progressCallback, ExportImportProgressInfo prodgressInfo)
+        public static void JsonSerializationObject(this Stream backupStream, object obj, Action<ExportImportProgressInfo> progressCallback, ExportImportProgressInfo prodgressInfo)
         {
-
             var serializer = GetSerializer();
 
             using (var streamWriter = new StreamWriter(backupStream, Encoding.UTF8, 1024, true) { AutoFlush = true })
@@ -38,13 +37,13 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                 {
                     serializer.Serialize(writer, obj);
                 }
-                
+
                 prodgressInfo.Description = "Done";
                 progressCallback(prodgressInfo);
             }
         }
 
-        public T Load<T>(Stream backupStream, Action<ExportImportProgressInfo> progressCallback, ExportImportProgressInfo prodgressInfo)
+        public static T JsonDeserializationObject<T>(this Stream backupStream, Action<ExportImportProgressInfo> progressCallback, ExportImportProgressInfo prodgressInfo)
         {
             var serializer = GetSerializer();
             using (var streamReader = new StreamReader(backupStream, Encoding.UTF8))
@@ -52,7 +51,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                 //Notification
                 prodgressInfo.Description = "Read data ...";
                 progressCallback(prodgressInfo);
-                
+
                 using (JsonReader reader = new JsonTextReader(streamReader))
                 {
                     prodgressInfo.Description = "Transform data ...";

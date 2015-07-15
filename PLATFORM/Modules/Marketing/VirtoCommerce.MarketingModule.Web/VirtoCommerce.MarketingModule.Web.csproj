@@ -121,6 +121,7 @@
     <Compile Include="Converters\PropertyConverter.cs" />
     <Compile Include="Converters\PromotionConverter.cs" />
     <Compile Include="Converters\ContentItemConverter.cs" />
+    <Compile Include="ExportImport\MarketingExportImport.cs" />
     <Compile Include="Model\MarketingConstants.cs" />
     <Compile Include="Model\DynamicContentFolder.cs" />
     <Compile Include="Model\DynamicContentItem.cs" />

@@ -14,7 +14,7 @@ namespace VirtoCommerce.PricingModule.Web.ExportImport
         public ICollection<Pricelist> Pricelists { get; set; }
     }
 
-    public sealed class PricingExportImport : JsonExportImport
+    public sealed class PricingExportImport
     {
         private readonly IPricingService _pricingService;
 
@@ -30,7 +30,7 @@ namespace VirtoCommerce.PricingModule.Web.ExportImport
 
             var backupObject = new BackupObject { Pricelists = _pricingService.GetPriceLists().ToArray() };
 
-            Save(backupStream, backupObject, progressCallback, prodgressInfo);
+            backupStream.JsonSerializationObject(backupObject, progressCallback, prodgressInfo);
         }
 
         public void DoImport(Stream backupStream, string storeId, Action<ExportImportProgressInfo> progressCallback)
