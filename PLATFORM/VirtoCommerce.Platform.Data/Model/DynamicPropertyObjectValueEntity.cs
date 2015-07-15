@@ -43,6 +43,9 @@ namespace VirtoCommerce.Platform.Data.Model
 
         public object RawValue()
         {
+            if (DictionaryItemId != null)
+                return DictionaryItemId;
+
             switch (ValueType)
             {
                 case TypeBoolean:

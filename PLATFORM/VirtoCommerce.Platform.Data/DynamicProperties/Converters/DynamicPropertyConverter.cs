@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Linq;
 using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Core.Common;
@@ -27,7 +26,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
                               Property = property,
                               ObjectId = objectId,
                               Locale = @group.Key,
-                              Values = @group.Select(v => v.ToString(CultureInfo.InvariantCulture)).ToArray(),
+                              Values = @group.Select(v => v.RawValue()).ToArray(),
                           }).ToList();
 
             if (!result.Any())
