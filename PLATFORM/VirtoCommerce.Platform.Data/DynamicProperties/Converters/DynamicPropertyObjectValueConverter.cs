@@ -10,7 +10,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
     {
         public static DynamicPropertyObjectValueEntity[] ToEntity(this DynamicPropertyObjectValue model, DynamicProperty property)
         {
-            var result = model.Values.Select(v => v.ToEntity(property, model.ObjectId, model.Locale)).ToArray();
+            var result = (model.Values ?? new string[0]).Select(v => v.ToEntity(property, model.ObjectId, model.Locale)).ToArray();
             return result;
         }
 
