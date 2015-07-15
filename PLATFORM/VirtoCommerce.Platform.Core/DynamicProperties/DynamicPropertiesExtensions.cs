@@ -11,7 +11,7 @@ namespace VirtoCommerce.Platform.Core.DynamicProperties
             if (owner != null && owner.DynamicPropertyValues != null)
             {
                 result = owner.DynamicPropertyValues
-                    .Where(v => v.Property != null && v.Property.Name == "Tax exempt" && v.Values != null)
+                    .Where(v => v.Property != null && v.Property.Name == name && v.Values != null)
                     .SelectMany(v => v.Values)
                     .FirstOrDefault();
             }
