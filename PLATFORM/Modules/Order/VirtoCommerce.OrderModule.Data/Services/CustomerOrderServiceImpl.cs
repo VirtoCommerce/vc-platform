@@ -73,9 +73,9 @@ namespace VirtoCommerce.OrderModule.Data.Services
 
 			_eventPublisher.Publish(new OrderChangeEvent(EntryState.Added, null, order));
 
-			//TODO: for approved sipments need decrease inventory
-
 			var orderEntity = order.ToDataModel();
+			
+
 			CustomerOrder retVal = null;
 			using (var repository = _repositoryFactory())
 			{
@@ -103,8 +103,6 @@ namespace VirtoCommerce.OrderModule.Data.Services
 
 		public void Update(CustomerOrder[] orders)
 		{
-
-			//Need a call business logic for changes and persist changes
 			using (var repository = _repositoryFactory())
 			{
 				foreach (var order in orders)
@@ -123,7 +121,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
 						throw new NullReferenceException("targetOrderEntity");
 					}
 
-					using (var changeTracker = GetChangeTracker(repository, targetOrderEntity))
+					using (var changeTracker = GetChangeTracker(repository))
 					{
 						changeTracker.Attach(targetOrderEntity);
 						sourceOrderEntity.Patch(targetOrderEntity);
@@ -139,54 +137,6 @@ namespace VirtoCommerce.OrderModule.Data.Services
 			throw new NotImplementedException();
 		}
 		#endregion
-
-
-		private ObservableChangeTracker GetChangeTracker(IRepository repository, CustomerOrderEntity customerOrderEntity)
-		{
-			var retVal = new ObservableChangeTracker
-			{
-				RemoveAction = (x) =>
-				{
-					repository.Remove(x);
-				},
-				AddAction = (x) =>
-				{
-					var address = x as AddressEntity;
-					var shipment = x as ShipmentEntity;
-					var lineItem = x as LineItemEntity;
-
-					if (address != null)
-					{
-						address.CustomerOrder = customerOrderEntity;
-					}
-					if (shipment != null)
-					{
-						foreach (var shipmentItem in shipment.Items)
-						{
-							var orderLineItem = customerOrderEntity.Items.FirstOrDefault(item => item.Id == shipmentItem.Id);
-							if (orderLineItem != null)
-							{
-								orderLineItem.Shipment = shipment;
-							}
-							else
-							{
-								shipmentItem.CustomerOrder = customerOrderEntity;
-							}
-						}
-						shipment.Items = new NullCollection<LineItemEntity>();
-					}
-					if (lineItem != null)
-					{
-						lineItem.CustomerOrder = customerOrderEntity;
-						lineItem.CustomerOrderId = customerOrderEntity.Id;
-					}
-					repository.Add(x);
-				}
-			};
-
-			return retVal;
-		}
-	
 
 		private void EnsureThatAllOperationsHasNumber(CustomerOrder order)
 		{

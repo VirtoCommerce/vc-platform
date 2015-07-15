@@ -11,15 +11,16 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.OrderModule.Data.Model
 {
-	public class ShipmentEntity : OperationEntity, IStockOutOperation
+	public class ShipmentEntity : OperationEntity
 	{
 		public ShipmentEntity()
 		{
-			Items = new NullCollection<LineItemEntity>();
+			Items = new NullCollection<ShipmentItemEntity>();
 			InPayments = new NullCollection<PaymentInEntity>();
 			Discounts = new NullCollection<DiscountEntity>();
 			Addresses = new NullCollection<AddressEntity>();
 			TaxDetails = new NullCollection<TaxDetailEntity>();
+			Packages = new NullCollection<ShipmentPackageEntity>();
 		}
 		
 		[StringLength(64)]
@@ -30,6 +31,8 @@ namespace VirtoCommerce.OrderModule.Data.Model
 		public string EmployeeId { get; set; }
 		[StringLength(64)]
 		public string ShipmentMethodCode { get; set; }
+		[StringLength(64)]
+		public string ShipmentMethodOption { get; set; }
 
 		public decimal? VolumetricWeight { get; set; }
 		[StringLength(32)]
@@ -47,20 +50,14 @@ namespace VirtoCommerce.OrderModule.Data.Model
 		public string CustomerOrderId { get; set; }
 		public virtual CustomerOrderEntity CustomerOrder { get; set; }
 
-		public virtual ObservableCollection<LineItemEntity> Items { get; set; }
+		public virtual ObservableCollection<ShipmentItemEntity> Items { get; set; }
+		public virtual ObservableCollection<ShipmentPackageEntity> Packages { get; set; }
 		public virtual ObservableCollection<PaymentInEntity> InPayments { get; set; }
 		public virtual ObservableCollection<AddressEntity> Addresses { get; set; }
 
 		public virtual ObservableCollection<DiscountEntity> Discounts { get; set; }
 		public virtual ObservableCollection<TaxDetailEntity> TaxDetails { get; set; }
 
-		#region IStockOperation Members
-		[NotMapped]
-		IEnumerable<IPosition> IStockOperation.Positions
-		{
-			get { return Items; }
-		}
 
-		#endregion
 	}
 }

@@ -10,7 +10,7 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.OrderModule.Data.Model
 {
-	public class PaymentInEntity : OperationEntity, IFinanceInOperation
+	public class PaymentInEntity : OperationEntity
 	{
 		public PaymentInEntity()
 		{

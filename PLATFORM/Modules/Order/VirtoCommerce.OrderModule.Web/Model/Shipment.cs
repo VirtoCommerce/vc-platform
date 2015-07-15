@@ -15,10 +15,10 @@ namespace VirtoCommerce.OrderModule.Web.Model
 		public string FulfillmentCenter { get; set; }
 		public string FulfillmentCenterId { get; set; }
 		public string ShipmentMethodCode { get; set; }
+		public string ShipmentMethodOption { get; set; }
 		public string Employee { get; set; }
 		public string EmployeeId { get; set; }
 		public decimal DiscountAmount { get; set; }
-
 
 		public string WeightUnit { get; set; }
 		public decimal? Weight { get; set; }
@@ -30,7 +30,8 @@ namespace VirtoCommerce.OrderModule.Web.Model
 
 		public string TaxType { get; set; }
 
-		public ICollection<LineItem> Items { get; set; }
+		public ICollection<ShipmentItem> Items { get; set; }
+		public ICollection<ShipmentPackage> Packages { get; set; }
 		public ICollection<PaymentIn> InPayments { get; set; }
 		public Address DeliveryAddress { get; set; }
 		public Discount Discount { get; set; }

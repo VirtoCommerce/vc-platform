@@ -33,6 +33,9 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 			if(shipment.Items != null)
 				retVal.Items = shipment.Items.Select(x => x.ToWebModel()).ToList();
 
+			if (shipment.Packages != null)
+				retVal.Packages = shipment.Packages.Select(x => x.ToWebModel()).ToList();
+
 			if (shipment.Discount != null)
 			{
 				retVal.Discount = shipment.Discount.ToWebModel();
@@ -59,6 +62,9 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 				retVal.Discount = shipment.Discount.ToCoreModel();
 			if (shipment.Items != null)
 				retVal.Items = shipment.Items.Select(x => x.ToCoreModel()).ToList();
+			if (shipment.Packages != null)
+				retVal.Packages = shipment.Packages.Select(x => x.ToCoreModel()).ToList();
+
 			retVal.TaxDetails = shipment.TaxDetails;
 			return retVal;
 		}

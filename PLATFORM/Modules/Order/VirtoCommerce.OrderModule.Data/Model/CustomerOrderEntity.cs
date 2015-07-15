@@ -10,7 +10,7 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.OrderModule.Data.Model
 {
-	public class CustomerOrderEntity : OperationEntity, IOperation
+	public class CustomerOrderEntity : OperationEntity
 	{
 		public CustomerOrderEntity()
 		{

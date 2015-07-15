@@ -55,7 +55,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			return retVal;
 		}
 
-		public static PaymentInEntity ToDataModel(this PaymentIn paymentIn)
+		public static PaymentInEntity ToDataModel(this PaymentIn paymentIn, CustomerOrderEntity orderEntity)
 		{
 			if (paymentIn == null)
 				throw new ArgumentNullException("paymentIn");
