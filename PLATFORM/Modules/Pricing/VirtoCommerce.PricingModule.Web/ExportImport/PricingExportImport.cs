@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.Practices.ObjectBuilder2;
+using Omu.ValueInjecter;
 using VirtoCommerce.Domain.Pricing.Model;
 using VirtoCommerce.Domain.Pricing.Services;
 using VirtoCommerce.Platform.Core.ExportImport;
@@ -28,17 +31,63 @@ namespace VirtoCommerce.PricingModule.Web.ExportImport
             var prodgressInfo = new ExportImportProgressInfo { Description = "loading data..." };
             progressCallback(prodgressInfo);
 
-            var backupObject = new BackupObject { Pricelists = _pricingService.GetPriceLists().ToArray() };
+            var pricelistIds = _pricingService.GetPriceLists().AsParallel().Select(x => x.Id).ToArray();
+
+            var backupObject = new BackupObject { Pricelists = pricelistIds.AsParallel().Select(x=>_pricingService.GetPricelistById(x)).ToArray() };
 
             backupStream.JsonSerializationObject(backupObject, progressCallback, prodgressInfo);
         }
 
-        public void DoImport(Stream backupStream, string storeId, Action<ExportImportProgressInfo> progressCallback)
+        public void DoImport(Stream backupStream, Action<ExportImportProgressInfo> progressCallback)
         {
             var prodgressInfo = new ExportImportProgressInfo { Description = "loading data..." };
             progressCallback(prodgressInfo);
 
-            //var backupObject = Load<BackupObject>(backupStream, progressCallback, prodgressInfo);
+            var backupObject = backupStream.JsonDeserializationObject<BackupObject>(progressCallback, prodgressInfo);
+            foreach (var importedPricelist in backupObject.Pricelists)
+            {
+                var originalPricelist = _pricingService.GetPricelistById(importedPricelist.Id);
+                if (originalPricelist == null)
+                {
+                    _pricingService.CreatePricelist(importedPricelist); //todo maybe ids could conflict with existing items
+                }
+                else
+                {
+                    UpdatePrices(originalPricelist.Prices, importedPricelist.Prices);
+                    UpdatePriceAssignments(originalPricelist.Assignments, importedPricelist.Assignments);
+
+                    originalPricelist.InjectFrom(importedPricelist);
+                    _pricingService.UpdatePricelists(new[] { originalPricelist });
+                }
+            }
+        }
+
+        private void UpdatePrices(ICollection<Price> originalPrices, ICollection<Price> importedPrices)
+        {
+            importedPrices.ForEach((x) => { x.PricelistId = null; });
+
+            Parallel.ForEach(importedPrices, importedPrice =>
+            {
+                var originalPrice = originalPrices.FirstOrDefault(x => x.ProductId == importedPrice.ProductId);
+                if (originalPrice != null)
+                {
+                    importedPrice.Id = originalPrice.Id;
+                }
+            });
+        }
+
+        private void UpdatePriceAssignments(ICollection<PricelistAssignment> originalPrices, ICollection<PricelistAssignment> importedPrices)
+        {
+            importedPrices.ForEach((x) => { x.PricelistId = null; });
+
+            Parallel.ForEach(importedPrices, importedPrice =>
+            {
+                var originalPrice = originalPrices.FirstOrDefault(x => x.CatalogId == importedPrice.CatalogId);
+                if (originalPrice != null)
+                {
+                    importedPrice.Id = originalPrice.Id;
+                }
+            });
         }
 
     }

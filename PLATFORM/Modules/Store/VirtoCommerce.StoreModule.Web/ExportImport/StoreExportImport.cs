@@ -2,12 +2,17 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Practices.ObjectBuilder2;
 using Omu.ValueInjecter;
-using VirtoCommerce.Domain.Store.Model;
+using VirtoCommerce.Domain.Commerce.Model;
 using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.Platform.Core.ExportImport;
+using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.ExportImport;
+using PaymentMethod = VirtoCommerce.Domain.Payment.Model.PaymentMethod;
+using ShippingMethod = VirtoCommerce.Domain.Shipping.Model.ShippingMethod;
+using Store = VirtoCommerce.Domain.Store.Model.Store;
 
 namespace VirtoCommerce.StoreModule.Web.ExportImport
 {
@@ -52,10 +57,114 @@ namespace VirtoCommerce.StoreModule.Web.ExportImport
                 }
                 else
                 {
+                    //SeoInfos
+                    UpdateSeoInfos(originalStore.SeoInfos, store.SeoInfos);
+
+                    //ShippingMethods
+                    UpdateShipmentMethods(originalStore.ShippingMethods, store.ShippingMethods);
+
+                    //PaymentMethods
+                    UpdatePaymentMethods(originalStore.PaymentMethods, store.PaymentMethods);
+
+                    //Settings
+                    UpdateSettings(originalStore.Settings, store.Settings);
+
+                    //Catalog stay as is
+
+                    //Fullfilments ??
+
                     originalStore.InjectFrom(store);
                     _storeService.Update(new[] { originalStore });
                 }
             }
+        }
+
+        private void UpdateSeoInfos(ICollection<SeoInfo> originalSeoInfos, ICollection<SeoInfo> importedSeoInfos)
+        {
+            Parallel.ForEach(importedSeoInfos, importedSeoInfo =>
+            {
+                var originalSeoInfo = originalSeoInfos.FirstOrDefault(x => x.LanguageCode == importedSeoInfo.LanguageCode);
+                if (originalSeoInfo != null)
+                {
+                    importedSeoInfo.Id = originalSeoInfo.Id;
+                }
+            });
+        }
+
+        private void UpdateShipmentMethods(ICollection<ShippingMethod> originalMethods, ICollection<ShippingMethod> importedMethods)
+        {
+            var itemForRemove = new List<ShippingMethod>();
+            var sync = new Object();
+
+            Parallel.ForEach(importedMethods, importedMethod =>
+            {
+                var originalMethod = originalMethods.FirstOrDefault(x => x.Code == importedMethod.Code);
+                if (originalMethod != null)
+                {
+                    importedMethod.Id = originalMethod.Id;
+                    UpdateSettings(originalMethod.Settings, importedMethod.Settings);
+                }
+                else
+                {
+                    //Method is not exists in original platform
+                    lock (sync)
+                    {
+                        itemForRemove.Add(importedMethod);
+                    }
+                }
+            });
+
+            foreach (var item in itemForRemove)
+            {
+                importedMethods.Remove(item);
+            }
+
+            foreach (var originalMethod in originalMethods)
+            {
+                var importedMethod = importedMethods.FirstOrDefault(x => x.Code == originalMethod.Code);
+                if (importedMethod == null)
+                {
+                    originalMethod.IsActive = false;
+                    importedMethods.Add(originalMethod);
+                }
+            }
+        }
+
+        private void UpdatePaymentMethods(ICollection<PaymentMethod> originalMethods, ICollection<PaymentMethod> importedMethods)
+        {
+            var itemForRemove = new List<PaymentMethod>();
+            var sync = new Object();
+            Parallel.ForEach(importedMethods, importedMethod =>
+            {
+                var originalMethod = originalMethods.FirstOrDefault(x => x.Code == importedMethod.Code);
+                if (originalMethod != null)
+                {
+                    importedMethod.Id = originalMethod.Id;
+                    UpdateSettings(originalMethod.Settings, importedMethod.Settings);
+                }
+                else
+                {
+                    //Method is not exists in original platform
+                    lock (sync)
+                    {
+                        itemForRemove.Add(importedMethod);
+                    }
+                }
+            });
+
+            foreach (var item in itemForRemove)
+            {
+                importedMethods.Remove(item);
+            }
+        }
+
+        private void UpdateSettings(ICollection<SettingEntry> originalSettings, ICollection<SettingEntry> importedSettings)
+        {
+            Parallel.ForEach(importedSettings, importedSetting =>
+            {
+                var originalSetting = originalSettings.FirstOrDefault(x => x.Name == importedSetting.Name);
+                importedSetting.ObjectId = originalSetting != null ? originalSetting.ObjectId : null;
+            });
         }
 
     }
