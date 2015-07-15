@@ -196,6 +196,9 @@
     <Compile Include="Order\Services\IShipmentService.cs" />
     <Compile Include="Order\Events\OrderChangeEvent.cs" />
     <Compile Include="Payment\Model\BankCardInfo.cs" />
+    <Compile Include="Payment\Model\CaptureProcessPaymentEvaluationContext.cs" />
+    <Compile Include="Payment\Model\CaptureProcessPaymentResult.cs" />
+    <Compile Include="Payment\Model\IProcessResult.cs" />
     <Compile Include="Payment\Model\PaymentMethodGroupType.cs" />
     <Compile Include="Payment\Model\PostProcessPaymentEvaluationContext.cs" />
     <Compile Include="Payment\Model\PaymentMethod.cs" />
@@ -203,7 +206,11 @@
     <Compile Include="Payment\Model\PostProcessPaymentResult.cs" />
     <Compile Include="Payment\Model\ProcessPaymentEvaluationContext.cs" />
     <Compile Include="Payment\Model\ProcessPaymentResult.cs" />
+    <Compile Include="Payment\Model\RefundProcessPaymentEvaluationContext.cs" />
+    <Compile Include="Payment\Model\RefundProcessPaymentResult.cs" />
     <Compile Include="Payment\Model\ValidatePostProcessRequestResult.cs" />
+    <Compile Include="Payment\Model\VoidProcessPaymentEvaluationContext.cs" />
+    <Compile Include="Payment\Model\VoidProcessPaymentResult.cs" />
     <Compile Include="Payment\Services\IPaymentService.cs" />
     <Compile Include="Payment\Services\PaymentServiceImpl.cs" />
     <Compile Include="Payment\Model\PaymentMethodType.cs" />

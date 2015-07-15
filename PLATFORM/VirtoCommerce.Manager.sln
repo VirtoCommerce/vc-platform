@@ -56,7 +56,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.OrderModule.W
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PaymentGateways", "PaymentGateways", "{4E79CE95-D200-41C9-B191-324B741494BE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Klarna.PaymentGatewaysModule.Web", "Modules\PaymentGateways\Klarna.PaymentGatewaysModule.Web\Klarna.PaymentGatewaysModule.Web.csproj", "{F212ED2F-6E93-4931-A8DF-7A128D5DD96B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Klarna.Checkout.Euro", "Modules\PaymentGateways\Klarna.PaymentGatewaysModule.Web\Klarna.Checkout.Euro.csproj", "{F212ED2F-6E93-4931-A8DF-7A128D5DD96B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeS.PaymentGatewaysModule.Web", "Modules\PaymentGateways\MeS.PaymentGatewaysModule.Web\MeS.PaymentGatewaysModule.Web.csproj", "{E8E2B720-4C70-4714-B1F8-591EB4DA4BA9}"
 EndProject

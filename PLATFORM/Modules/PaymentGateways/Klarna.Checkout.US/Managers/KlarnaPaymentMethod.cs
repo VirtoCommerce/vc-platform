@@ -360,5 +360,20 @@ namespace Klarna.Checkout.US.Managers
 				return localizations.FirstOrDefault(l => l.Currency == currency);
 			}
 		}
+
+		public override VoidProcessPaymentResult VoidProcessPayment(VoidProcessPaymentEvaluationContext context)
+		{
+			throw new NotImplementedException();
+		}
+
+		public override CaptureProcessPaymentResult CaptureProcessPayment(CaptureProcessPaymentEvaluationContext context)
+		{
+			throw new NotImplementedException();
+		}
+
+		public override RefundProcessPaymentResult RefundProcessPayment(RefundProcessPaymentEvaluationContext context)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

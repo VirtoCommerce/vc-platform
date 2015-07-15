@@ -27,12 +27,12 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="table-item" ng-repeat="mappingItem in blade.importConfiguration.mappingItems">
+                            <tr class="table-item" ng-repeat="mappingItem in blade.importConfiguration.propertyMaps">
                                 <td class="table-col __product-name">
                                     <span>{{mappingItem.entityColumnName}}</span>
                                 </td>
                                 <td class="table-col">
-                                        <ui-select ng-required="!mappingItem.customValue && mappingItem.isRequired" ng-model="mappingItem.csvColumnName">
+                                    <ui-select ng-required="!mappingItem.customValue && mappingItem.isRequired" ng-model="mappingItem.csvColumnName">
                                         <ui-select-match allow-clear="true" placeholder="Select ...">{{$select.selected}}</ui-select-match>
                                         <ui-select-choices repeat="x as x in blade.importConfiguration.csvColumns | filter: $select.search ">
                                             <span ng-bind-html="x | highlight: $select.search"></span>
@@ -41,10 +41,10 @@
                                 </td>
                                 <td class="table-col __product-name">
                                     <div class="form-input">
-                                            <input ng-required="!mappingItem.csvColumnName && mappingItem.isRequired" ng-model="mappingItem.customValue" placeholder="Default value...">
+                                        <input ng-required="!mappingItem.csvColumnName && mappingItem.isRequired" ng-model="mappingItem.customValue" placeholder="Default value...">
                                     </div>
                                 </td>
-                              </tr>
+                            </tr>
                         </tbody>
                     </table>
                 </div>

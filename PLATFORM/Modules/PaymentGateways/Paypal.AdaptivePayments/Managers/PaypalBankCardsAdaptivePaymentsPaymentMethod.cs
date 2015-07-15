@@ -178,11 +178,11 @@ namespace Paypal.AdaptivePayments.Managers
 					{
 						sb.AppendLine(error.message);
 					}
-					retVal.Error = sb.ToString();
+					retVal.ErrorMessage = sb.ToString();
 				}
 				else
 				{
-					retVal.Error = "payment canceled";
+					retVal.ErrorMessage = "payment canceled";
 				}
 
 				retVal.NewPaymentStatus = PaymentStatus.Voided;
@@ -260,6 +260,21 @@ namespace Paypal.AdaptivePayments.Managers
 			}
 
 			return retVal;
+		}
+
+		public override VoidProcessPaymentResult VoidProcessPayment(VoidProcessPaymentEvaluationContext context)
+		{
+			throw new NotImplementedException();
+		}
+
+		public override CaptureProcessPaymentResult CaptureProcessPayment(CaptureProcessPaymentEvaluationContext context)
+		{
+			throw new NotImplementedException();
+		}
+
+		public override RefundProcessPaymentResult RefundProcessPayment(RefundProcessPaymentEvaluationContext context)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

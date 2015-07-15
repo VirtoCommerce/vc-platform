@@ -1,9 +1,9 @@
 ﻿using System;
 using VirtoCommerce.Platform.Core.Common;
 
-namespace VirtoCommerce.CatalogModule.Web.Model
+namespace VirtoCommerce.CatalogModule.Web.ExportImport
 {
-    public class CsvImportMappingItem : ValueObject<CsvImportMappingItem>
+    public class CsvProductPropertyMap : ValueObject<CsvProductPropertyMap>
     {
         public string EntityColumnName { get; set; }
         public string CsvColumnName { get; set; }

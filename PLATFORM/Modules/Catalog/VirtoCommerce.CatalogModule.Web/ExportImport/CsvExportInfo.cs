@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using VirtoCommerce.Platform.Core.Common;
 
-namespace VirtoCommerce.CatalogModule.Web.Model
+namespace VirtoCommerce.CatalogModule.Web.ExportImport
 {
 	public class CsvExportInfo
 	{
