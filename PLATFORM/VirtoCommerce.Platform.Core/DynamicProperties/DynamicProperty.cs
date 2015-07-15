@@ -24,6 +24,10 @@ namespace VirtoCommerce.Platform.Core.DynamicProperties
             return new DynamicProperty
             {
                 Id = Id,
+                CreatedDate = CreatedDate,
+                ModifiedDate = ModifiedDate,
+                CreatedBy = CreatedBy,
+                ModifiedBy = ModifiedBy,
                 Name = Name,
                 ObjectType = ObjectType,
                 IsArray = IsArray,
