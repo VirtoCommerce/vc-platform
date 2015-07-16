@@ -28,14 +28,10 @@ namespace VirtoCommerce.StoreModule.Web.ExportImport
     public sealed class StoreExportImport
     {
         private readonly IStoreService _storeService;
-        private readonly IPaymentMethodsService _paymentMethodsService;
-        private readonly IShippingService _shippingService;
 
-        public StoreExportImport(IStoreService storeService, IPaymentMethodsService paymentMethodsService, IShippingService shippingService)
+        public StoreExportImport(IStoreService storeService)
         {
             _storeService = storeService;
-            _paymentMethodsService = paymentMethodsService;
-            _shippingService = shippingService;
         }
 
         public void DoExport(Stream backupStream, Action<ExportImportProgressInfo> progressCallback)
@@ -43,7 +39,7 @@ namespace VirtoCommerce.StoreModule.Web.ExportImport
             var prodgressInfo = new ExportImportProgressInfo { Description = "loading data..." };
             progressCallback(prodgressInfo);
 
-            var backupObject = new BackupObject { Stores = _storeService.GetStoreList().Where(x => x.Name == "Test").ToArray() };
+            var backupObject = new BackupObject { Stores = _storeService.GetStoreList().ToArray() };
             backupObject.Stores.ForEach(x => x.PaymentMethods = x.PaymentMethods.Where(s => s.IsActive).ToList());
             backupObject.Stores.ForEach(x => x.ShippingMethods = x.ShippingMethods.Where(s => s.IsActive).ToList());
 
