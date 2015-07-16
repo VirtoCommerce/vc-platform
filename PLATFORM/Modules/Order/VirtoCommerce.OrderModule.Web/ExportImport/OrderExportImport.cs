@@ -5,6 +5,7 @@ using System.Linq;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Domain.Order.Services;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Data.ExportImport;
 
@@ -42,7 +43,7 @@ namespace VirtoCommerce.OrderModule.Web.ExportImport
                 Orders = orderIds.Select(id => _customerOrderService.GetById(id, filter)).ToArray(),
             };
 
-            backupStream.JsonSerializationObject(backupObject, progressCallback, prodgressInfo);
+            backupObject.SerializeJson(backupStream);
         }
 
     }
