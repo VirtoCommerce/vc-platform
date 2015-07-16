@@ -2,19 +2,32 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.Practices.ObjectBuilder2;
-using Omu.ValueInjecter;
 using VirtoCommerce.Domain.Pricing.Model;
 using VirtoCommerce.Domain.Pricing.Services;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.ExportImport;
-using VirtoCommerce.Platform.Data.ExportImport;
 
 namespace VirtoCommerce.PricingModule.Web.ExportImport
 {
     public sealed class BackupObject
     {
         public ICollection<Pricelist> Pricelists { get; set; }
+        public ICollection<PricelistAssignment> Assignments { get; set; }
+    }
+
+    public class ExportImport
+    {
+        static public void Update<T>(ICollection<string> originalIds, ICollection<T> importedCollection, Action<string[]> deleteDelegate, Action<T[]> updateDelegate, Action<T> createDelegate) where T : Entity
+        {
+            var toAdd = importedCollection.Where(x => !originalIds.Contains(x.Id)).ToArray();
+            var toUpdate = importedCollection.Where(x => originalIds.Contains(x.Id)).ToArray();
+            var toRemove = originalIds.Where(x => importedCollection.All(s => s.Id != x)).ToArray();
+
+            if (toRemove.Any()) deleteDelegate(toRemove);
+            if (toUpdate.Any()) updateDelegate(toUpdate);
+            toAdd.ForEach(createDelegate);
+        }
     }
 
     public sealed class PricingExportImport
@@ -31,75 +44,54 @@ namespace VirtoCommerce.PricingModule.Web.ExportImport
             var prodgressInfo = new ExportImportProgressInfo { Description = "loading data..." };
             progressCallback(prodgressInfo);
 
-            var pricelistIds = _pricingService.GetPriceLists().AsParallel().Select(x => x.Id).ToArray();
+            var pricelists = _pricingService.GetPriceLists().ToArray();
+            pricelists.ForEach(x=>x.Assignments.Clear());
 
-            var backupObject = new BackupObject { Pricelists = pricelistIds.AsParallel().Select(x=>_pricingService.GetPricelistById(x)).ToArray() };
+            var backupObject = new BackupObject
+            {
+                Pricelists = pricelists,
+                Assignments = _pricingService.GetPriceListAssignments().ToArray(),
+            };
 
-            backupStream.JsonSerializationObject(backupObject, progressCallback, prodgressInfo);
+            backupObject.SerializeJson(backupStream);
         }
 
         public void DoImport(Stream backupStream, Action<ExportImportProgressInfo> progressCallback)
         {
-            var sync = new Object();
-            var pricelistsForUpdate = new List<Pricelist>();
-
             var prodgressInfo = new ExportImportProgressInfo { Description = "loading data..." };
             progressCallback(prodgressInfo);
 
-            var backupObject = backupStream.JsonDeserializationObject<BackupObject>(progressCallback, prodgressInfo);
-
-            foreach (var importedPricelist in backupObject.Pricelists)
-            {
-                var originalPricelist = _pricingService.GetPricelistById(importedPricelist.Id);//todo maybe by name?
-                if (originalPricelist == null)
-                {
-                    _pricingService.CreatePricelist(importedPricelist); //todo maybe ids could conflict with existing items
-                }
-                else
-                {
-                    UpdatePrices(originalPricelist.Prices, importedPricelist.Prices);
-                    UpdatePriceAssignments(originalPricelist.Assignments, importedPricelist.Assignments);
-
-                    originalPricelist.InjectFrom(importedPricelist);
-                    lock (sync) 
-                    {
-                        pricelistsForUpdate.Add(originalPricelist);
-                    }
-                }
-            }
-
-            if (pricelistsForUpdate.Any())
-            {
-                _pricingService.UpdatePricelists(pricelistsForUpdate.ToArray());
-            }
+            var backupObject = backupStream.DeserializeJson<BackupObject>();
+            
+            var originalIds = _pricingService.GetPriceLists().Select(x => x.Id).ToArray();
+            //ExportImport.Update(originalIds, backupObject.Pricelists, _pricingService.DeletePricelists, _pricingService.UpdatePricelists,
+            //    pricelist => _pricingService.CreatePricelist(pricelist));
+            UpdatePriceList(originalIds, backupObject.Pricelists);
+            
+            originalIds = _pricingService.GetPriceLists().Select(x => x.Id).ToArray();
+            UpdateAssignments(originalIds, backupObject.Assignments);
         }
 
-        private void UpdatePrices(ICollection<Price> originalPrices, ICollection<Price> importedPrices)
+        private void UpdatePriceList(ICollection<string> originalIds, ICollection<Pricelist> importedPricelist)
         {
-            importedPrices.ForEach((x) => { x.PricelistId = null; });
+            var toAdd = importedPricelist.Where(x => !originalIds.Contains(x.Id)).ToArray();
+            var toUpdate = importedPricelist.Where(x => originalIds.Contains(x.Id)).ToArray();
+            var toRemove = originalIds.Where(x => importedPricelist.All(s => s.Id != x)).ToArray();
 
-            Parallel.ForEach(importedPrices, importedPrice =>
-            {
-                var originalPrice = originalPrices.FirstOrDefault(x => x.ProductId == importedPrice.ProductId);
-                if (originalPrice != null)
-                {
-                    importedPrice.Id = originalPrice.Id;
-                }
-            });
+            if(toRemove.Any()) _pricingService.DeletePricelists(toRemove);
+            if(toUpdate.Any()) _pricingService.UpdatePricelists(toUpdate);
+            toAdd.ForEach(x => _pricingService.CreatePricelist(x));
         }
 
-        private void UpdatePriceAssignments(ICollection<PricelistAssignment> originalPrices, ICollection<PricelistAssignment> importedPrices)
+        private void UpdateAssignments(ICollection<string> originalIds, ICollection<PricelistAssignment> importedAssignments)
         {
-            importedPrices.ForEach((x) => { x.PricelistId = null; });
+            var toAdd = importedAssignments.Where(x => !originalIds.Contains(x.Id)).ToArray();
+            var toUpdate = importedAssignments.Where(x => originalIds.Contains(x.Id)).ToArray();
+            var toRemove = originalIds.Where(x => importedAssignments.All(s => s.Id != x)).ToArray();
 
-            Parallel.ForEach(importedPrices, importedPrice =>
-            {
-                var originalPrice = originalPrices.FirstOrDefault(x => x.CatalogId == importedPrice.CatalogId);
-                if (originalPrice != null)
-                {
-                    importedPrice.Id = originalPrice.Id;
-                }
-            });
+            if (toRemove.Any()) _pricingService.DeletePricelistsAssignments(toRemove);
+            if (toUpdate.Any()) _pricingService.UpdatePricelistAssignments(toUpdate);
+            toAdd.ForEach(x => _pricingService.CreatePriceListAssignment(x));
         }
 
     }

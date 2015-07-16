@@ -149,7 +149,6 @@
     <Compile Include="Common\ConventionInjections\IgnorePropertiesInjection.cs" />
     <Compile Include="Common\ConventionInjections\PatchInjection.cs" />
     <Compile Include="Common\ExceptionExtensions.cs" />
-    <Compile Include="ExportImport\JsonExportImportExtensions.cs" />
     <Compile Include="ExportImport\PlatformExportImportManager.cs" />
     <Compile Include="Infrastructure\BasicUnitOfWork.cs" />
     <Compile Include="Infrastructure\DbMigrationContext.cs" />

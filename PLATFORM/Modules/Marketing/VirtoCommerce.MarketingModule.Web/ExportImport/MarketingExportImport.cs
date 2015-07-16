@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using VirtoCommerce.Domain.Marketing.Model;
 using VirtoCommerce.Domain.Marketing.Services;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Data.ExportImport;
 
@@ -43,7 +44,7 @@ namespace VirtoCommerce.MarketingModule.Web.ExportImport
                 Coupons = responce.Coupons.Select(x => x.Id).Select(_promotionService.GetCouponById).ToArray()
             };
 
-            backupStream.JsonSerializationObject(backupObject, progressCallback, prodgressInfo);
+            backupObject.SerializeJson(backupStream);
         }
     }
 }

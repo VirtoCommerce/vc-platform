@@ -88,7 +88,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 
 
 			var patchInjectionPolicy = new PatchInjection<LineItemEntity>(x => x.BasePrice, x => x.Price,
-																		  x => x.Quantity, x => x.DiscountAmount, x => x.Tax, x => x.ShipmentId, x => x.Height, x => x.Length,
+																		  x => x.Quantity, x => x.DiscountAmount, x => x.Tax,  x => x.Height, x => x.Length,
 																		 x => x.Width, x => x.MeasureUnit, x => x.WeightUnit, x => x.Weight, x => x.TaxType, x => x.IsCancelled, x => x.CancelledDate, x => x.CancelReason);
 			target.InjectFrom(patchInjectionPolicy, source);
 

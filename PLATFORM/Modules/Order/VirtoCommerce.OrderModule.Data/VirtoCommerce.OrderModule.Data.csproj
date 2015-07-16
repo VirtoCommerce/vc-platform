@@ -63,6 +63,8 @@
     <Compile Include="Converters\OperationPropertyConverter.cs" />
     <Compile Include="Converters\PaymentInConverter.cs" />
     <Compile Include="Converters\ShipmentConverter.cs" />
+    <Compile Include="Converters\ShipmentItemConverter.cs" />
+    <Compile Include="Converters\ShipmentPackageConverter.cs" />
     <Compile Include="Converters\TaxDetailConverter.cs" />
     <Compile Include="Migrations\201504300638236_Initial.cs" />
     <Compile Include="Migrations\201504300638236_Initial.Designer.cs">
@@ -88,6 +90,14 @@
     <Compile Include="Migrations\201507151421184_AddPaymentStatusAndDates.Designer.cs">
       <DependentUpon>201507151421184_AddPaymentStatusAndDates.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201507151429233_ShipmentItem.cs" />
+    <Compile Include="Migrations\201507151429233_ShipmentItem.Designer.cs">
+      <DependentUpon>201507151429233_ShipmentItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201507161000360_NamesFields.cs" />
+    <Compile Include="Migrations\201507161000360_NamesFields.Designer.cs">
+      <DependentUpon>201507161000360_NamesFields.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\AddressEntity.cs" />
     <Compile Include="Model\CustomerOrderEntity.cs" />
@@ -97,6 +107,8 @@
     <Compile Include="Model\OperationPropertyEntity.cs" />
     <Compile Include="Model\PaymentInEntity.cs" />
     <Compile Include="Model\ShipmentEntity.cs" />
+    <Compile Include="Model\ShipmentPackageEntity.cs" />
+    <Compile Include="Model\ShipmentItemEntity.cs" />
     <Compile Include="Model\TaxDetailEntity.cs" />
     <Compile Include="Notification\OrderCreateEmailNotification.cs" />
     <Compile Include="Observers\CancelPaymentObserver.cs" />
@@ -147,6 +159,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201507151421184_AddPaymentStatusAndDates.resx">
       <DependentUpon>201507151421184_AddPaymentStatusAndDates.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507151429233_ShipmentItem.resx">
+      <DependentUpon>201507151429233_ShipmentItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507161000360_NamesFields.resx">
+      <DependentUpon>201507161000360_NamesFields.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Repositories\Sql\OrderSampleData.sql" />
   </ItemGroup>

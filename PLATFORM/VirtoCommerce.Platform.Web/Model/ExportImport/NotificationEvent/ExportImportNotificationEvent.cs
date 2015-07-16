@@ -23,7 +23,13 @@ namespace VirtoCommerce.Platform.Web.Model.ExportImport.NotificationEvent
 		[JsonProperty("processedCount")]
 		public long ProcessedCount { get; set; }
 		[JsonProperty("errorCount")]
-		public long ErrorCount { get; set; }
+		public long ErrorCount
+		{
+			get
+			{
+				return Errors != null ? Errors.Count() : 0;
+			}
+		}
 		[JsonProperty("errors")]
 		public ICollection<string> Errors { get; set; }
 		[JsonProperty("downloadUrl")]

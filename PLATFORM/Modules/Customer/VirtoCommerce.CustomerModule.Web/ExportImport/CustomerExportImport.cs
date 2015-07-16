@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using VirtoCommerce.Domain.Customer.Model;
 using VirtoCommerce.Domain.Customer.Services;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Data.ExportImport;
 
@@ -40,7 +41,7 @@ namespace VirtoCommerce.CustomerModule.Web.ExportImport
                 Organizations = responce.Organizations.Select(x => x.Id).Select(_organizationService.GetById).ToArray()
             };
 
-            backupStream.JsonSerializationObject(backupObject, progressCallback, prodgressInfo);
+            backupObject.SerializeJson(backupStream);
         }
 
         public void DoImport(Stream backupStream, Action<ExportImportProgressInfo> progressCallback)
@@ -48,7 +49,7 @@ namespace VirtoCommerce.CustomerModule.Web.ExportImport
             var prodgressInfo = new ExportImportProgressInfo { Description = "loading data..." };
             progressCallback(prodgressInfo);
 
-            var backupObject = backupStream.JsonDeserializationObject<BackupObject>(progressCallback, prodgressInfo);
+            var backupObject = backupStream.DeserializeJson<BackupObject>();
             //foreach (var contact in contacts)
             //{
             //    var originalContact = _contactService.GetById(contact.Id);

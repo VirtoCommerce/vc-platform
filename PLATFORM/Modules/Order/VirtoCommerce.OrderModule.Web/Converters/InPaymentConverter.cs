@@ -19,9 +19,6 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 			retVal.InjectFrom(payment);
 			retVal.Currency = payment.Currency;
 
-			retVal.Organization = retVal.OrganizationId;
-			retVal.Customer = retVal.CustomerId;
-
 			if (payment.Properties != null)
 				retVal.Properties = payment.Properties.Select(x => x.ToWebModel()).ToList();
 

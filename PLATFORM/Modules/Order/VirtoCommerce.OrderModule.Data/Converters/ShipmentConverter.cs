@@ -44,35 +44,35 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			{
 				retVal.InPayments = entity.InPayments.Select(x => x.ToCoreModel()).ToList();
 			}
-
+			if (entity.Packages != null)
+			{
+				retVal.Packages = entity.Packages.Select(x => x.ToCoreModel()).ToList();
+			}
 			retVal.TaxDetails = entity.TaxDetails.Select(x => x.ToCoreModel()).ToList();
 			return retVal;
 		}
 
 		public static Shipment ToCoreModel(this cartCoreModel.Shipment shipment)
 		{
-
 			var retVal = new Shipment();
 			retVal.InjectFrom(shipment);
 			retVal.Currency = shipment.Currency;
 			retVal.Sum = shipment.ShippingPrice;
 			retVal.Tax = shipment.TaxTotal;
 
-		
-		
 			if(shipment.DeliveryAddress != null)
 			{
 				retVal.DeliveryAddress = shipment.DeliveryAddress.ToCoreModel();
 			}
 			if(shipment.Items != null)
 			{
-				retVal.Items = shipment.Items.Select(x => x.ToCoreModel()).ToList();
+				retVal.Items = shipment.Items.Select(x => x.ToCoreShipmentItemModel()).ToList();
 			}
 			retVal.TaxDetails = shipment.TaxDetails;
 			return retVal;
 		}
 
-		public static ShipmentEntity ToDataModel(this Shipment shipment)
+		public static ShipmentEntity ToDataModel(this Shipment shipment, CustomerOrderEntity orderEntity)
 		{
 			if (shipment == null)
 				throw new ArgumentNullException("shipment");
@@ -95,7 +95,11 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			}
 			if(shipment.Items != null)
 			{
-				retVal.Items = new ObservableCollection<LineItemEntity>(shipment.Items.Select(x=>x.ToDataModel()));
+				retVal.Items = new ObservableCollection<ShipmentItemEntity>(shipment.Items.Select(x=>x.ToDataModel(orderEntity)));
+			}
+			if (shipment.Packages != null)
+			{
+				retVal.Packages = new ObservableCollection<ShipmentPackageEntity>(shipment.Packages.Select(x => x.ToDataModel(orderEntity)));
 			}
 			if (shipment.TaxDetails != null)
 			{
@@ -136,6 +140,10 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			if (!source.Addresses.IsNullCollection())
 			{
 				source.Addresses.Patch(target.Addresses, new AddressComparer(), (sourceAddress, targetAddress) => sourceAddress.Patch(targetAddress));
+			}
+			if (!source.Packages.IsNullCollection())
+			{
+				source.Packages.Patch(target.Packages, (sourcePackage, targetPackage) => sourcePackage.Patch(targetPackage));
 			}
 			if (!source.TaxDetails.IsNullCollection())
 			{

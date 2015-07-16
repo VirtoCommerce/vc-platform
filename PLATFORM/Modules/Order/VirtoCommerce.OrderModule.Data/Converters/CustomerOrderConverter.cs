@@ -123,11 +123,11 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			}
 			if(order.Shipments != null)
 			{
-				retVal.Shipments = new ObservableCollection<ShipmentEntity>(order.Shipments.Select(x=>x.ToDataModel()));
+				retVal.Shipments = new ObservableCollection<ShipmentEntity>(order.Shipments.Select(x => x.ToDataModel(retVal)));
 			}
 			if(order.InPayments != null)
 			{
-				retVal.InPayments = new ObservableCollection<PaymentInEntity>(order.InPayments.Select(x => x.ToDataModel()));
+				retVal.InPayments = new ObservableCollection<PaymentInEntity>(order.InPayments.Select(x => x.ToDataModel(retVal)));
 			}
 			if(order.Discount != null)
 			{

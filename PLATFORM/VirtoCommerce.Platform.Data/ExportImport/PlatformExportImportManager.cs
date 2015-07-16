@@ -11,13 +11,13 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 {
 	public class PlatformExportImportManager : IPlatformExportImportManager
 	{
-		 private readonly Uri _manifestPartUri;
+		private readonly Uri _manifestPartUri;
 
-		 public PlatformExportImportManager()
-		 {
-			 _manifestPartUri = PackUriHelper.CreatePartUri(new Uri("Manifest.xml", UriKind.Relative));
-		 }
-		
+		public PlatformExportImportManager()
+		{
+			_manifestPartUri = PackUriHelper.CreatePartUri(new Uri("Manifest.xml", UriKind.Relative));
+		}
+
 		#region IPlatformExportImportManager Members
 
 		public PlatformExportManifest ReadPlatformExportManifest(Stream stream)
@@ -58,7 +58,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 					var modulePart = package.CreatePart(modulePartUri, System.Net.Mime.MediaTypeNames.Application.Octet);
 
 					progressInfo.Description = String.Format("{0}: export started.", module.Id);
-				   progressCallback(progressInfo);
+					progressCallback(progressInfo);
 
 					Action<ExportImportProgressInfo> modulePorgressCallback = (x) =>
 						{
@@ -88,7 +88,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 				{
 					Author = CurrentPrincipal.GetCurrentUserName(),
 					PlatformVersion = platformVersion.ToString(),
-				    Modules = exportModulesInfo.ToArray(),
+					Modules = exportModulesInfo.ToArray(),
 				};
 				//After all modules exported need write export manifest part
 				using (var streamWriter = new StreamWriter(manifestPart.GetStream()))
@@ -101,7 +101,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 		public void Import(Stream stream, ModuleDescriptor[] modules, Action<ExportImportProgressInfo> progressCallback)
 		{
 			var manifest = ReadPlatformExportManifest(stream);
-			if(manifest == null)
+			if (manifest == null)
 			{
 				throw new NullReferenceException("manifest");
 			}
@@ -127,11 +127,11 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 							progressInfo.Description = String.Format("{0}: {1} ({2} of {3} processed)", module.Id, x.Description, x.TotalCount, x.ProcessedCount);
 							//FOrmation error and add new
 							if (x.Errors.Any())
-		{
+							{
 								progressInfo.Errors = progressInfo.Errors.Concat(x.Errors).GroupBy(y => y).Select(y => y.Key + (y.Count() > 1 ? String.Format(" ({0})", y.Count()) : "")).ToList();
 							}
 							progressCallback(progressInfo);
-							
+
 						};
 						((ISupportImportModule)module.ModuleInfo.ModuleInstance).DoImport(modulePartStream, modulePorgressCallback);
 
@@ -145,6 +145,6 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 
 		#endregion
 
-	
+
 	}
 }

@@ -14,7 +14,10 @@ namespace VirtoCommerce.Domain.Order.Model
 		public string GatewayCode { get; set; }
 
 		public string OrganizationId { get; set; }
+		public string OrganizationName { get; set; }
+
 		public string CustomerId { get; set; }
+		public string CustomerName { get; set; }
 
 		public DateTime? IncomingDate { get; set; }
 		public string OuterId { get; set; }

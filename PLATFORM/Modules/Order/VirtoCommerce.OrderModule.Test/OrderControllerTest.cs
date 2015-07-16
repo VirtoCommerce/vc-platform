@@ -95,11 +95,17 @@ namespace VirtoCommerce.OrderModule.Test
 			};
 
 			var shipment = partialChangeOrder.Shipments.FirstOrDefault();
-			shipment.Items = new List<webModel.LineItem>();
+			shipment.Items = new List<webModel.ShipmentItem>();
 			foreach (var item in testOrder.Items)
 			{
+				var shipmentItem = new webModel.ShipmentItem
+				{
+					LineItemId = item.Id,
+					Quantity = item.Quantity,
+				
+				};
 				item.Id = null;
-				shipment.Items.Add(item);
+				shipment.Items.Add(shipmentItem);
 			}
 			shipment.IsApproved = true;
 
@@ -178,7 +184,7 @@ namespace VirtoCommerce.OrderModule.Test
 				Currency = testOrder.Currency,
 				DeliveryAddress = testOrder.Addresses.FirstOrDefault(),
 				IsApproved = true,
-				Items = testOrder.Items
+			
 			};
 			testOrder.IsApproved = true;
 
@@ -312,8 +318,13 @@ namespace VirtoCommerce.OrderModule.Test
 					{
 						Code = "ssss"
 					}
-				}
+				},
+
 			};
+
+			shipment.Items = new List<webModel.ShipmentItem>();
+			shipment.Items.AddRange(order.Items.Select(x=> new webModel.ShipmentItem { Quantity = x.Quantity, LineItem = x }));
+			
 			order.Shipments = new List<webModel.Shipment>();
 			order.Shipments.Add(shipment);
 

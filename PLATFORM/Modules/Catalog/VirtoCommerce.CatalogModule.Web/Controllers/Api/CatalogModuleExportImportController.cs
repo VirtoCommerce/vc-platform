@@ -83,10 +83,8 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 		public IHttpActionResult GetMappingConfiguration([FromUri]string fileUrl, [FromUri]string delimiter = ";")
 		{
 			var retVal = CsvProductMappingConfiguration.GetDefaultConfiguration();
-			retVal.Mode = CsvExportImportMode.All;
 
 			retVal.Delimiter = delimiter;
-			retVal.FileUrl = fileUrl;
 
 			//Read csv headers and try to auto map fields by name
 			using (var reader = new CsvReader(new StreamReader(_blobStorageProvider.OpenReadOnly(fileUrl))))
@@ -108,10 +106,10 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 		/// <param name="id"></param>
 		/// <param name="filePath"></param>
 		/// <returns></returns>
-		[ResponseType(typeof(ExportNotification))]
+		[ResponseType(typeof(ImportNotification))]
 		[HttpPost]
 		[Route("import")]
-		public IHttpActionResult DoImport(CsvProductMappingConfiguration importConfiguration)
+		public IHttpActionResult DoImport(CsvImportInfo importInfo)
 		{
 			var notification = new ImportNotification(CurrentPrincipal.GetCurrentUserName())
 			{
@@ -120,7 +118,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 			};
 			_notifier.Upsert(notification);
 
-			BackgroundJob.Enqueue(() => BackgroundImport(importConfiguration, notification));
+			BackgroundJob.Enqueue(() => BackgroundImport(importInfo, notification));
 
 			return Ok(notification);
 		}
@@ -145,7 +143,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 
 			//return StatusCode(HttpStatusCode.NoContent);
 		}
-		public void BackgroundImport(CsvProductMappingConfiguration importConfiguration, ImportNotification notifyEvent)
+		public void BackgroundImport(CsvImportInfo importInfo, ImportNotification notifyEvent)
 		{
 			 Action<ExportImportProgressInfo> progressCallback = (x) =>
 			 {
@@ -153,11 +151,11 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 				 _notifier.Upsert(notifyEvent);
 			 };
 
-			using (var stream = _blobStorageProvider.OpenReadOnly(importConfiguration.FileUrl))
+			 using (var stream = _blobStorageProvider.OpenReadOnly(importInfo.FileUrl))
 			{
 				try
 				{
-					_csvImporter.DoImport(stream, importConfiguration, progressCallback);
+					_csvImporter.DoImport(stream, importInfo, progressCallback);
 				}
 				catch(Exception ex)
 				{
@@ -195,9 +193,8 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 			 {
 				 try
 				 {
-					 var configuration = CsvProductMappingConfiguration.GetDefaultConfiguration();
-					 configuration.Mode = CsvExportImportMode.All;
-					 _csvExporter.DoExport(stream, configuration, exportInfo, progressCallback);
+					 exportInfo.Configuration = CsvProductMappingConfiguration.GetDefaultConfiguration();
+					 _csvExporter.DoExport(stream, exportInfo, progressCallback);
 					 
 					 stream.Position = 0;
 					 //Upload result csv to blob storage

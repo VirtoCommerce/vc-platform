@@ -16,12 +16,6 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 		
 			retVal.InjectFrom(customerOrder);
 
-			//TODO: resolve id to names
-			retVal.Customer = retVal.CustomerId;
-			retVal.StoreId = retVal.StoreId;
-			retVal.OrganizationId = retVal.OrganizationId;
-			retVal.EmployeeId = retVal.EmployeeId;
-
 			if (customerOrder.Discount != null)
 			{
 				retVal.Discount = customerOrder.Discount.ToWebModel();
