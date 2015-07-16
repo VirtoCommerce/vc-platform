@@ -25,10 +25,19 @@ namespace VirtoCommerce.OrderModule.Data.Model
 		
 		[StringLength(64)]
 		public string OrganizationId { get; set; }
+		[StringLength(255)]
+		public string OrganizationName { get; set; }
+
 		[StringLength(64)]
 		public string FulfillmentCenterId { get; set; }
+		[StringLength(255)]
+		public string FulfillmentCenterName { get; set; }
+
 		[StringLength(64)]
 		public string EmployeeId { get; set; }
+		[StringLength(255)]
+		public string EmployeeName { get; set; }
+
 		[StringLength(64)]
 		public string ShipmentMethodCode { get; set; }
 		[StringLength(64)]

@@ -25,16 +25,26 @@ namespace VirtoCommerce.OrderModule.Data.Model
 		[Required]
 		[StringLength(64)]
 		public string CustomerId { get; set; }
+		[StringLength(255)]
+		public string CustomerName { get; set; }
+
 		[Required]
 		[StringLength(64)]
 		public string StoreId { get; set; }
-		
+		[StringLength(255)]
+		public string StoreName { get; set; }
+
 		[StringLength(64)]
 		public string ChannelId { get; set; }
 		[StringLength(64)]
 		public string OrganizationId { get; set; }
+		[StringLength(255)]
+		public string OrganizationName { get; set; }
+
 		[StringLength(64)]
 		public string EmployeeId { get; set; }
+		[StringLength(255)]
+		public string EmployeeName { get; set; }
 
 
 		public virtual ObservableCollection<TaxDetailEntity> TaxDetails { get; set; }

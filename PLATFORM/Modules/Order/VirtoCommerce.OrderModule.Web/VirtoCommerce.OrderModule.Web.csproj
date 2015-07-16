@@ -141,6 +141,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>OrderNotificationResource.resx</DependentUpon>
     </Compile>
+    <Content Include="Scripts\blades\shipment-items.tpl.html" />
+    <Content Include="Scripts\blades\shipment-items.js" />
     <Content Include="Scripts\blades\operation-comment.js" />
     <Content Include="Scripts\blades\operation-comment.tpl.html" />
     <Content Include="Scripts\dialogs\cancelOperation-dialog.tpl.html" />
@@ -153,8 +155,8 @@
     <Content Include="Scripts\blades\customerOrder-list.tpl.html" />
     <Content Include="Scripts\blades\operation-detail.js" />
     <Content Include="Scripts\blades\customerOrder-detail.tpl.html" />
-    <Content Include="Scripts\blades\operation-items.js" />
-    <Content Include="Scripts\blades\operation-items.tpl.html" />
+    <Content Include="Scripts\blades\customerOrder-items.js" />
+    <Content Include="Scripts\blades\customerOrder-items.tpl.html" />
     <Content Include="Scripts\blades\payment-detail.tpl.html" />
     <Content Include="Scripts\blades\shipment-detail.tpl.html" />
     <Content Include="Scripts\order.js" />
@@ -190,8 +192,10 @@
     <Content Include="Scripts\services\calculateTotals.js" />
     <Content Include="Scripts\widgets\dashboard\statistics-templates.html" />
     <Content Include="Scripts\widgets\dashboard\statistics-widget.js" />
-    <Content Include="Scripts\widgets\operation-items-widget.tpl.html" />
-    <Content Include="Scripts\widgets\operation-items-widget.js" />
+    <Content Include="Scripts\widgets\shipment-items-widget.js" />
+    <Content Include="Scripts\widgets\shipment-items-widget.tpl.html" />
+    <Content Include="Scripts\widgets\customerOrder-items-widget.tpl.html" />
+    <Content Include="Scripts\widgets\customerOrder-items-widget.js" />
     <Content Include="Scripts\widgets\shipment-address-widget.js" />
     <Content Include="Scripts\widgets\shipment-address-widget.tpl.html" />
     <Content Include="Scripts\widgets\shipment-totals-widget.js" />

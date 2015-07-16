@@ -10,13 +10,13 @@ namespace VirtoCommerce.OrderModule.Web.Model
 {
 	public class Shipment : Operation, IHaveTaxDetalization
 	{
-		public string Organization { get; set; }
+		public string OrganizationName { get; set; }
 		public string OrganizationId { get; set; }
-		public string FulfillmentCenter { get; set; }
+		public string FulfillmentCenterName { get; set; }
 		public string FulfillmentCenterId { get; set; }
 		public string ShipmentMethodCode { get; set; }
 		public string ShipmentMethodOption { get; set; }
-		public string Employee { get; set; }
+		public string EmployeeName { get; set; }
 		public string EmployeeId { get; set; }
 		public decimal DiscountAmount { get; set; }
 

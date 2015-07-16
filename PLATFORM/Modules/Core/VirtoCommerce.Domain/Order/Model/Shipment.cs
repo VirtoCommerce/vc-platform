@@ -8,8 +8,14 @@ namespace VirtoCommerce.Domain.Order.Model
 	public class Shipment : Operation, IStockOutOperation, IHaveTaxDetalization, ISupportCancellation
 	{
 		public string OrganizationId { get; set; }
+		public string OrganizationName { get; set; }
+
 		public string FulfillmentCenterId { get; set; }
+		public string FulfillmentCenterName { get; set; }
+
 		public string EmployeeId { get; set; }
+		public string EmployeeName { get; set; }
+
 		public string ShipmentMethodCode { get; set; }
 		public string ShipmentMethodOption { get; set; }
 

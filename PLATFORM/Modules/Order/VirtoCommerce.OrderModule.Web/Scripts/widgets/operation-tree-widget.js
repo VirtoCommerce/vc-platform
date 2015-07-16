@@ -21,6 +21,7 @@
 					customerOrder: $scope.widget.blade.customerOrder,
 					currentEntity: operation,
 					isClosingDisabled: false,
+					disableOpenAnimation: true,
 					controller: 'virtoCommerce.orderModule.operationDetailController',
 					template: 'Modules/$(VirtoCommerce.Orders)/Scripts/blades/shipment-detail.tpl.html'
 				};
@@ -32,6 +33,7 @@
 					subtitle: 'Edit order details and related documents',
 					customerOrder: $scope.widget.blade.customerOrder,
 					currentEntity: operation,
+					disableOpenAnimation: true,
 					controller: 'virtoCommerce.orderModule.operationDetailController',
 					template: 'Modules/$(VirtoCommerce.Orders)/Scripts/blades/customerOrder-detail.tpl.html'
 				};
@@ -43,6 +45,7 @@
 					subtitle: 'Edit payment details and related documents',
 					customerOrder: $scope.widget.blade.customerOrder,
 					currentEntity: operation,
+					disableOpenAnimation: true,
 					controller: 'virtoCommerce.orderModule.operationDetailController',
 					template: 'Modules/$(VirtoCommerce.Orders)/Scripts/blades/payment-detail.tpl.html'
 				};

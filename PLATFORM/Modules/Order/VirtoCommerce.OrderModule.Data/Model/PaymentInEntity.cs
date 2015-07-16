@@ -18,9 +18,14 @@ namespace VirtoCommerce.OrderModule.Data.Model
 		}
 		[StringLength(64)]
 		public string OrganizationId { get; set; }
+		[StringLength(255)]
+		public string OrganizationName { get; set; }
+
 		[Required]
 		[StringLength(64)]
 		public string CustomerId { get; set; }
+		[StringLength(255)]
+		public string CustomerName { get; set; }
 
 		public DateTime? IncomingDate { get; set; }
 		[StringLength(128)]

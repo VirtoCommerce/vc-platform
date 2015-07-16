@@ -15,12 +15,6 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 			var retVal = new webModel.Shipment();
 			retVal.InjectFrom(shipment);
 
-			retVal.Organization = retVal.OrganizationId;
-			retVal.FulfillmentCenter = retVal.FulfillmentCenterId;
-			retVal.Employee = retVal.EmployeeId;
-
-
-
 			if (shipment.Properties != null)
 				retVal.Properties = shipment.Properties.Select(x => x.ToWebModel()).ToList();
 

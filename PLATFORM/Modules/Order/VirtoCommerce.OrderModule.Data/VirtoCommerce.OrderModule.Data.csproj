@@ -90,6 +90,10 @@
     <Compile Include="Migrations\201507151429233_ShipmentItem.Designer.cs">
       <DependentUpon>201507151429233_ShipmentItem.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201507161000360_NamesFields.cs" />
+    <Compile Include="Migrations\201507161000360_NamesFields.Designer.cs">
+      <DependentUpon>201507161000360_NamesFields.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\AddressEntity.cs" />
     <Compile Include="Model\CustomerOrderEntity.cs" />
@@ -150,6 +154,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201507151429233_ShipmentItem.resx">
       <DependentUpon>201507151429233_ShipmentItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507161000360_NamesFields.resx">
+      <DependentUpon>201507161000360_NamesFields.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Repositories\Sql\OrderSampleData.sql" />
   </ItemGroup>
