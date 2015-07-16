@@ -63,12 +63,41 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 									   .HasForeignKey(x => x.CustomerOrderId).WillCascadeOnDelete(true);
 									   
 
-			modelBuilder.Entity<LineItemEntity>().HasOptional(x => x.Shipment)
+			modelBuilder.Entity<LineItemEntity>().ToTable("OrderLineItem");
+			#endregion
+
+			#region ShipmentItemEntity
+				modelBuilder.Entity<ShipmentItemEntity>().HasKey(x => x.Id)
+					.Property(x => x.Id);
+
+
+			modelBuilder.Entity<ShipmentItemEntity>().HasRequired(x => x.LineItem)
+									   .WithMany()
+									   .HasForeignKey(x => x.LineItemId).WillCascadeOnDelete(true);
+
+			modelBuilder.Entity<ShipmentItemEntity>().HasRequired(x => x.Shipment)
 									   .WithMany(x => x.Items)
 									   .HasForeignKey(x => x.ShipmentId).WillCascadeOnDelete(true);
-									   
 
-			modelBuilder.Entity<LineItemEntity>().ToTable("OrderLineItem");
+			modelBuilder.Entity<ShipmentItemEntity>().HasOptional(x => x.ShipmentPackage)
+									   .WithMany(x=>x.Items)
+									   .HasForeignKey(x => x.ShipmentPackageId).WillCascadeOnDelete(true);
+
+
+			modelBuilder.Entity<ShipmentItemEntity>().ToTable("OrderShipmentItem");
+			#endregion
+
+			#region ShipmentPackageEntity
+			modelBuilder.Entity<ShipmentPackageEntity>().HasKey(x => x.Id)
+				.Property(x => x.Id);
+
+
+			modelBuilder.Entity<ShipmentPackageEntity>().HasRequired(x => x.Shipment)
+									   .WithMany(x=>x.Packages)
+									   .HasForeignKey(x => x.ShipmentId).WillCascadeOnDelete(true);
+
+
+			modelBuilder.Entity<ShipmentPackageEntity>().ToTable("OrderShipmentPackage");
 			#endregion
 
 			#region Shipment
@@ -210,6 +239,7 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 			{
 				query = query.Include(x => x.Shipments.Select(y => y.Discounts))
 							 .Include(x => x.Shipments.Select(y => y.Items))
+							 .Include(x => x.Shipments.Select(y => y.Packages.Select(z => z.Items)))
 							 .Include(x => x.Shipments.Select(y => y.Addresses))
 							 .Include(x => x.Shipments.Select(y => y.Properties))
 							 .Include(x => x.Shipments.Select(y => y.TaxDetails));

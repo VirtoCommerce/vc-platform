@@ -9,7 +9,7 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Domain.Order.Model
 {
-	public class LineItem : AuditableEntity, IPosition, IHaveTaxDetalization, ISupportCancellation
+	public class LineItem : AuditableEntity, IPosition, IHaveTaxDetalization, ISupportCancellation, IHaveDimension
 	{
 		public CurrencyCodes Currency { get; set; }
 		/// <summary>
@@ -55,13 +55,15 @@ namespace VirtoCommerce.Domain.Order.Model
 		public string ShippingMethodCode { get; set; }
 		public string FulfillmentLocationCode { get; set; }
 
+		#region IHaveDimension Members
 		public string WeightUnit { get; set; }
 		public decimal? Weight { get; set; }
 
 		public string MeasureUnit { get; set; }
 		public decimal? Height { get; set; }
 		public decimal? Length { get; set; }
-		public decimal? Width { get; set; }
+		public decimal? Width { get; set; } 
+		#endregion
 
 		#region ISupportCancelation Members
 

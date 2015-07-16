@@ -1,0 +1,81 @@
+﻿<div class="blade-static">
+    <div class="form-group">
+        <p class="form-count">Count: <span class="count">{{pageSettings.totalItems}}</span></p>
+    </div>
+</div>
+<div class="blade-content __large-wide">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <form name="orderForm" novalidate></form>
+            <div class="table-wrapper">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="table-col __product-control">
+                                <label class="form-control __checkbox">
+                                    <input type="checkbox" ng-model="blade.selectedAll" ng-change="checkAll(blade.selectedAll)" />
+                                    <span class="check"></span>
+                                </label>
+                            </th>
+                            <th class="table-col __proudct-img">Item</th>
+                            <th class="table-col">Qty</th>
+                            <th class="table-col">Price</th>
+                            <th class="table-col">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="table-item" ng-repeat-start="data in blade.currentEntity.items" ng-class="{'__selected': data.id === selectedNodeId}" context-menu data-target="col_menu_{{data.id}}" ng-click='selectItem(data)'>
+                            <td class="table-col">
+                                <label class="form-control __checkbox">
+                                    <input type="checkbox" ng-model="data.selected">
+                                    <span class="check"></span>
+                                </label>
+                            </td>
+                            <td class="table-col">
+                                <div class="product-img">
+                                    <div class="image" style="background-image: url({{data.lineItem.imageUrl}})" ng-if="data.lineItem.imageUrl" ng-click="openItemDetail(data)"></div>
+                                    <i class="table-ico fa fa-image" ng-if="!data.lineItem.imageUrl" />
+                                </div>
+                                <ul role="menu" class="menu __context" id="col_menu_{{data.id}}">
+                                    <li class="menu-item" ng-click='edit(data)'>
+                                        <i class="menu-ico fa fa-edit"></i> Manage
+                                    </li>
+                                    <li class="menu-item" ng-click='delete()'>
+                                        <i class="menu-ico fa fa-trash-o"></i> Delete
+                                    </li>
+                                </ul>
+                            </td>
+                            <td class="table-col">
+                                <div class="__mini __number">
+                                    {{data.quantity}}
+                                </div>
+                            </td>
+                            <td class="table-col">
+                                <div class="form-input __mini">
+                                    {{data.lineItem.price}}
+                                </div>
+                            </td>
+                            <td class="table-col __total">
+                                <span>{{data._total | number:2 }}</span>
+                            </td>
+                        </tr>
+                        <tr ng-repeat-end class="table-item" ng-class="{'__selected': data.id === selectedNodeId}" context-menu data-target="col_menu_{{data.id}}" ng-click='selectItem(data)'>
+                            <td class="table-head" colspan="9" ng-click="openItemDetail(data)">
+                                {{data.lineItem.name}}
+                                <ul role="menu" class="menu __context" id="col_menu_{{data.id}}">
+                                    <li class="menu-item" ng-click='edit(data)'>
+                                        <i class="menu-ico fa fa-edit"></i> Manage
+                                    </li>
+                                    <li class="menu-item" ng-click='delete()'>
+                                        <i class="menu-ico fa fa-trash-o"></i> Delete
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <ng-include src="'pagerTemplate.html'"></ng-include>
+            </div>
+        </div>
+    </div>
+</div>

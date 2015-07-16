@@ -11,7 +11,7 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.OrderModule.Data.Model
 {
-	public class LineItemEntity : AuditableEntity, IPosition
+	public class LineItemEntity : AuditableEntity
 	{
 		public LineItemEntity()
 		{
@@ -37,7 +37,7 @@ namespace VirtoCommerce.OrderModule.Data.Model
 		[Required]
 		[StringLength(64)]
 		public string CatalogId { get; set; }
-		[Required]
+	
 		[StringLength(64)]
 		public string CategoryId { get; set; }
 		[Required]
@@ -80,9 +80,5 @@ namespace VirtoCommerce.OrderModule.Data.Model
 
 		public virtual CustomerOrderEntity CustomerOrder { get; set; }
 		public string CustomerOrderId { get; set; }
-
-		public virtual ShipmentEntity Shipment { get; set; }
-		public string ShipmentId { get; set; }
-
 	}
 }

@@ -44,11 +44,16 @@ angular.module(moduleName, ['virtoCommerce.catalogModule', 'virtoCommerce.pricin
 
       //Register widgets
       var operationItemsWidget = {
-          controller: 'virtoCommerce.orderModule.operationItemsWidgetController',
-          template: 'Modules/$(VirtoCommerce.Orders)/Scripts/widgets/operation-items-widget.tpl.html',
+      	controller: 'virtoCommerce.orderModule.customerOrderItemsWidgetController',
+          template: 'Modules/$(VirtoCommerce.Orders)/Scripts/widgets/customerOrder-items-widget.tpl.html',
       };
       widgetService.registerWidget(operationItemsWidget, 'customerOrderDetailWidgets');
-      widgetService.registerWidget(operationItemsWidget, 'shipmentDetailWidgets');
+
+      var shipmentItemsWidget = {
+      	controller: 'virtoCommerce.orderModule.shipmentItemsWidgetController',
+      	template: 'Modules/$(VirtoCommerce.Orders)/Scripts/widgets/shipment-items-widget.tpl.html',
+      };
+      widgetService.registerWidget(shipmentItemsWidget, 'shipmentDetailWidgets');
 
 
       var customerOrderAddressWidget = {

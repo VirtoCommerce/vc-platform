@@ -41,7 +41,7 @@ namespace VirtoCommerce.StoreModule.Data.Repositories
 			modelBuilder.Entity<StorePaymentMethod>().HasRequired(x => x.Store)
 							   .WithMany(x => x.PaymentMethods)
 							   .HasForeignKey(x => x.StoreId).WillCascadeOnDelete(true);
-		
+
 
 			base.OnModelCreating(modelBuilder);
 		}
@@ -57,29 +57,6 @@ namespace VirtoCommerce.StoreModule.Data.Repositories
 			return retVal.FirstOrDefault();
 		}
 
-        public IEnumerable<Store> GetStoresByIds(string[] ids)
-        {
-            if (!ids.Any())
-            {
-                return new Store[] { };
-            }
-
-            var retVal = Stores.Where(x => ids.Contains(x.Id)).Include(x => x.Languages)
-                                                         .Include(x => x.Currencies)
-                                                         .Include(x => x.PaymentMethods)
-                                                         .Include(x => x.ShippingMethods);
-            return retVal;
-        }
-
-        public IEnumerable<Store> GetAllStores()
-        {
-            var retVal = Stores.Include(x => x.Languages)
-                                                         .Include(x => x.Currencies)
-                                                         .Include(x => x.PaymentMethods)
-                                                         .Include(x => x.ShippingMethods);
-            return retVal;
-        }
-
 		public IQueryable<Store> Stores
 		{
 			get { return GetAsQueryable<Store>(); }
@@ -87,7 +64,7 @@ namespace VirtoCommerce.StoreModule.Data.Repositories
 
 		#endregion
 
-		
+
 	}
 
 }

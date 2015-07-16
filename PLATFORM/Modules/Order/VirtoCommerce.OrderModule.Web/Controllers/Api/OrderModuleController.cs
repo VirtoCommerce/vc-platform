@@ -162,9 +162,12 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
                 };
                 retVal.Number = _operationNumberGenerator.GenerateNumber(retVal);
 
-                //distribute not shipped items
-                var shippedItems = order.Shipments.SelectMany(x => x.Items).ToArray();
-                retVal.Items = order.Items.Where(x => !shippedItems.Any(y => y.Id == x.Id)).ToList();
+                //Detect not whole shipped items
+				//TODO: LineItem partial shipping
+				var shippedLineItemIds = order.Shipments.SelectMany(x => x.Items).Select(x=>x.LineItemId);
+
+				retVal.Items = order.Items.Where(x => !shippedLineItemIds.Contains(x.Id))
+							  .Select(x => new coreModel.ShipmentItem(x)).ToList();
                 return Ok(retVal.ToWebModel());
             }
 

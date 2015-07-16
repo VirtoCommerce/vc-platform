@@ -8,10 +8,14 @@ namespace VirtoCommerce.Domain.Order.Model
 	public class CustomerOrder : Operation, IHaveTaxDetalization
 	{
 		public string CustomerId { get; set; }
+		public string CustomerName { get; set; }
 		public string ChannelId { get; set; }
 		public string StoreId { get; set; }
+		public string StoreName { get; set; }
 		public string OrganizationId { get; set; }
+		public string OrganizationName { get; set; }
 		public string EmployeeId { get; set; }
+		public string EmployeeeName { get; set; }
 
 		public ICollection<Address> Addresses { get; set; }
 		public ICollection<PaymentIn> InPayments { get; set; }

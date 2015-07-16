@@ -55,20 +55,6 @@ namespace VirtoCommerce.StoreModule.Web
 
         public override void PostInitialize()
         {
-            var settingsManager = _container.Resolve<ISettingsManager>();
-            var cacheManager = _container.Resolve<CacheManager>();
-
-            var isCachingEnabled = settingsManager.GetValue("Stores.Caching.Enabled", true);
-
-            if (isCachingEnabled)
-            {
-                var cacheSettings = new[]
-                                    {
-                                        new CacheSettings("Virto.Core.Stores", TimeSpan.FromSeconds(settingsManager.GetValue("Stores.Caching.StoreTimeout", 30)))
-                                    };
-
-                cacheManager.AddCacheSettings(cacheSettings);
-            }
         }
         #endregion
 

@@ -135,7 +135,7 @@
     <Compile Include="Converters\SearchConverter.cs" />
     <Compile Include="ExportImport\CsvCatalogExporter.cs" />
     <Compile Include="ExportImport\CsvCatalogImporter.cs" />
-    <Compile Include="ExportImport\CsvExportImportMode.cs" />
+    <Compile Include="ExportImport\CsvImportInfo.cs" />
     <Compile Include="ExportImport\CsvProduct.cs">
       <SubType>Code</SubType>
     </Compile>

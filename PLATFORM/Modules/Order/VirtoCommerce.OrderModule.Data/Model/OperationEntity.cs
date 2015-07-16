@@ -12,7 +12,7 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.OrderModule.Data.Model
 {
-	public abstract class OperationEntity : AuditableEntity, IOperation
+	public abstract class OperationEntity : AuditableEntity
 	{
 		public OperationEntity()
 		{
@@ -42,23 +42,7 @@ namespace VirtoCommerce.OrderModule.Data.Model
 		[StringLength(2048)]
 		public string CancelReason { get; set; }
 
-		#region IOperation Members
-
-		[NotMapped]
-		CurrencyCodes IOperation.Currency
-		{
-			get
-			{
-				return (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), Currency);
-			}
-			set
-			{
-				Currency = value.ToString();
-			}
-		}
-
-		#endregion
-
+	
 		#region Navigation property
 
 		public virtual ObservableCollection<OperationPropertyEntity> Properties { get; set; }

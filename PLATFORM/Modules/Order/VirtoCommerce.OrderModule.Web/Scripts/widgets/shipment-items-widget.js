@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.orderModule')
-.controller('virtoCommerce.orderModule.operationItemsWidgetController', ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
+.controller('virtoCommerce.orderModule.shipmentItemsWidgetController', ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
 	$scope.blade = $scope.widget.blade;
 	$scope.operation = {};
 
@@ -9,13 +9,13 @@
 
 	$scope.openItemsBlade = function () {
 		var newBlade = {
-			id: 'operationItems',
+			id: 'shipmentItems',
 			title: $scope.blade.title + ' line items',
-			subtitle: 'Edit line items',
+			subtitle: 'Edit shipment items',
 			currentEntity: $scope.blade.currentEntity,
 			isClosingDisabled: false,
-			controller: 'virtoCommerce.orderModule.operationItemsController',
-			template: 'Modules/$(VirtoCommerce.Orders)/Scripts/blades/operation-items.tpl.html'
+			controller: 'virtoCommerce.orderModule.shipmentItemsController',
+			template: 'Modules/$(VirtoCommerce.Orders)/Scripts/blades/shipment-items.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, $scope.blade);
 	};

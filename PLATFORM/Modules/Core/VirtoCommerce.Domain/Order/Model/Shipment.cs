@@ -8,14 +8,25 @@ namespace VirtoCommerce.Domain.Order.Model
 	public class Shipment : Operation, IStockOutOperation, IHaveTaxDetalization, ISupportCancellation
 	{
 		public string OrganizationId { get; set; }
+		public string OrganizationName { get; set; }
+
 		public string FulfillmentCenterId { get; set; }
+		public string FulfillmentCenterName { get; set; }
+
 		public string EmployeeId { get; set; }
+		public string EmployeeName { get; set; }
+
 		public string ShipmentMethodCode { get; set; }
+		public string ShipmentMethodOption { get; set; }
 
 		public string CustomerOrderId { get; set; }
 		public CustomerOrder CustomerOrder { get; set; }
 
-		public ICollection<LineItem> Items { get; set; }
+		#region IStockOperation members
+		public ICollection<ShipmentItem> Items { get; set; } 
+		#endregion
+		public ICollection<ShipmentPackage> Packages { get; set; }
+
 		public ICollection<PaymentIn> InPayments { get; set; }
 
 		public string WeightUnit { get; set; }

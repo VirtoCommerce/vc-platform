@@ -109,8 +109,7 @@ namespace VirtoCommerce.StoreModule.Test
 			};
 
 			var shippingService = new ShippingServiceImpl();
-            var cacheManager = new CacheManager(new InMemoryCachingProvider(), null);
-            var storeService = new StoreServiceImpl(repositoryFactory, cacheManager, GetCommerceService(), null, null, null);
+            var storeService = new StoreServiceImpl(repositoryFactory, GetCommerceService(), null, null, null);
 			var controller = new StoreModuleController(storeService, null, null);
 			return controller;
 		}
