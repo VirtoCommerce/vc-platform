@@ -13,6 +13,7 @@
 
     function initializeBlade(data) {
         if (data.isMultilingual || blade.isNew) {
+            // load all languages and generate missing value wrappers
             settings.getValues({ id: 'VirtoCommerce.Core.General.Languages' }, function (promiseData) {
                 promiseData.sort();
 
@@ -37,8 +38,12 @@
         blade.isLoading = false;
     }
 
-    $scope.dictFlagValidator = function (value) {
-        return !value || blade.currentEntity.valueType === 'ShortText';
+    $scope.arrayFlagValidator = function (value) {
+        return !value || blade.currentEntity.valueType === 'ShortText' || blade.currentEntity.valueType === 'Integer' || blade.currentEntity.valueType === 'Decimal';
+    };
+
+    $scope.multilingualFlagValidator = function (value) {
+        return !value || blade.currentEntity.valueType === 'ShortText' || blade.currentEntity.valueType === 'LongText';
     };
 
     $scope.openChild = function (childType) {

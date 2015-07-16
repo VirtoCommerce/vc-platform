@@ -32,11 +32,18 @@
             scope.$watch('context.currentPropValues', function (newValue) {
                 //reflect only real changes
                 if (newValue.length != scope.currentEntity.values.length || difference(newValue).length > 0) {
-                    //Prevent reflect changing when use null value for empty initial values
-                    if (!(scope.currentEntity.values.length == 0 && newValue[0].value == null)) {
-                        scope.currentEntity.values = _.pluck(newValue, 'value');
-                        ngModelController.$setViewValue(scope.currentEntity);
+                    if (property.isMultilingual) {
+                        scope.currentEntity.values = angular.copy(newValue);
+                    } else {
+                        //Prevent reflect changing when use null value for empty initial values
+                        if (!(scope.currentEntity.values.length == 0 && newValue[0].value == null)) {
+                            scope.currentEntity.values = _.pluck(newValue, 'value');
+                            if (property.valueType === 'DateTime') { // fix for nice displaying on repeated blade open without saving.
+                                scope.currentEntity.values = _.map(scope.currentEntity.values, function (x) { return x.toISOString(); });
+                            }
+                        }
                     }
+                    ngModelController.$setViewValue(scope.currentEntity);
                 }
             }, true);
 
@@ -45,9 +52,14 @@
                 scope.currentEntity = ngModelController.$modelValue;
                 property = scope.currentEntity.property;
 
-                scope.context.currentPropValues = _.map(scope.currentEntity.values, function (x) { return { value: x } });
+                if (property.isMultilingual) {
+                    scope.context.currentPropValues = angular.copy(scope.currentEntity.values);
+                } else {
+                    scope.context.currentPropValues = _.map(scope.currentEntity.values, function (x) { return { value: x } });
+                }
+
                 addEmptyValueIfNeeded();
-                
+
                 if (property.isDictionary) {
                     loadDictionaryValues();
                 }
@@ -73,7 +85,7 @@
                 //Group values by language 
                 angular.forEach(property.catalog.languages, function (language) {
                     addEmptyValueIfNeeded();
-                    
+
                     //All possible dict values
                     var allValues = _.where(scope.context.allDictionaryValues, { locale: language.locale });
 
@@ -148,35 +160,13 @@
                 });
             };
 
-            /* Datepicker */
-            scope.datepickers = {
-                DateTime: false
-            }
-
-            scope.showWeeks = true;
-            scope.toggleWeeks = function () {
-                scope.showWeeks = !scope.showWeeks;
-            };
-
-            scope.clear = function () {
-                // scope.currentEntity.values = [];
-            };
-            scope.today = new Date();
-
+            // datepicker
+            scope.datepickers = {}
             scope.open = function ($event, which) {
                 $event.preventDefault();
                 $event.stopPropagation();
-
                 scope.datepickers[which] = true;
             };
-
-            scope.dateOptions = {
-                formatYear: 'yyyy',
-            };
-
-            scope.formats = ['shortDate', 'dd-MMMM-yyyy', 'yyyy/MM/dd'];
-            scope.format = scope.formats[0];
-
 
             linker(function (clone) {
                 element.append(clone);

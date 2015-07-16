@@ -1,39 +1,106 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.propertyValueListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function ($scope, bladeNavigationService, dialogService) {
+.controller('platformWebApp.propertyValueListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.settings', function ($scope, bladeNavigationService, dialogService, settings) {
     var blade = $scope.blade;
     blade.headIcon = 'fa-plus-square-o';
 
     function initializeBlade(dynPropertyValues) {
-        var properties = _.pluck(dynPropertyValues, 'property');
+        blade.data = dynPropertyValues;
+        //var properties = _.pluck(dynPropertyValues, 'property');
 
         //var selectedProps = _.where(properties, { valueType: 'Decimal' });
         //_.forEach(selectedProps, function (prop) {
         //    prop.value = parseFloat(prop.value);
         //});
 
-        var selectedProps = _.where(properties, { valueType: 'Boolean' });
-        _.forEach(selectedProps, function (prop) {
-            if (angular.isFunction(prop.value.toLowerCase)) {
-                prop.value = prop.value.toLowerCase() === 'true';
-            }
-        });
+        var selectedProps = _.filter(dynPropertyValues, function (x) { return x.property.isMultilingual; });
+        if (selectedProps.length > 0) {
+            var groupedByProperty = _.groupBy(selectedProps, function (x) { return x.property.id; });
+            //$scope.groupedValues = _.map(groupedByProperty, function (values, key) {
+            //    return { alias: key, values: values };
+            //});
 
-        blade.currentEntities = angular.copy(dynPropertyValues);
-        blade.origEntity = dynPropertyValues;
+            // load all languages and generate missing value wrappers
+            settings.getValues({ id: 'VirtoCommerce.Core.General.Languages' }, function (promiseData) {
+                promiseData.sort();
+
+                var initializationValues = _.filter(dynPropertyValues, function (x) { return !x.property.isMultilingual; });
+                // generating multiple inputs inside single directive
+                _.each(groupedByProperty, function (values) {
+                    var localizedValues = [];
+
+                    _.each(values, function (value) {
+                        if (value.locale) {
+                            localizedValues.push({ values: _.map(value.values, function (x) { return { value: x } }), locale: value.locale });
+                        }
+                    });
+
+                    _.each(promiseData, function (x) {
+                        if (_.all(localizedValues, function (val) { return val.locale !== x; })) {
+                            localizedValues.push({ values: [], locale: x });
+                        }
+                    });
+
+                    initializationValues.push({
+                        property: values[0].property,
+                        values: localizedValues
+                    });
+                });
+                //// generating multiple inputs and directives
+                //_.each(groupedByProperty, function (values) {
+                //    _.each(values, function (value) {
+                //        if (value.locale) {
+                //            initializationValues.push(value);
+                //        } else {
+                //            _.each(promiseData, function (x) {
+                //                initializationValues.push({
+                //                    property: value.property,
+                //                    locale: x,
+                //                    values: []
+                //                });
+                //            });
+                //        }
+                //    });
+                //});
+
+                initializeBlade2(initializationValues);
+            },
+            function (error) {
+                bladeNavigationService.setError('Error ' + error.status, blade);
+            });
+        } else {
+            initializeBlade2(dynPropertyValues);
+        }
+    };
+
+    function initializeBlade2(data) {
+        blade.currentEntities = angular.copy(data);
+        blade.origEntity = data;
         blade.isLoading = false;
     };
 
     function isDirty() {
         return !angular.equals(blade.currentEntities, blade.origEntity);
-    };
+    }
 
     $scope.cancelChanges = function () {
         angular.copy(blade.origEntity, blade.currentEntities);
         $scope.bladeClose();
-    }
+    };
 
     $scope.saveChanges = function () {
-        angular.copy(blade.currentEntities, blade.origEntity);
+        var valuesToSave = _.filter(blade.currentEntities, function (x) { return !x.property.isMultilingual; });;
+        var selectedProps = _.filter(blade.currentEntities, function (x) { return x.property.isMultilingual; });
+        _.each(selectedProps, function (prop) {
+            _.each(prop.values, function (value) {
+                if (value.values.length > 0 && value.values[0].value) {
+                    valuesToSave.push({ property: prop.property, locale: value.locale, values: _.pluck(value.values, 'value') });
+                }
+            });
+        });
+
+        blade.currentEntities = valuesToSave;
+        angular.copy(valuesToSave, blade.origEntity);
+        angular.copy(valuesToSave, blade.data);
         $scope.bladeClose();
     };
 
@@ -108,22 +175,6 @@
             }
         }
     ];
-
-    // datepicker
-    $scope.datepickers = {
-        str: false
-    }
-
-    $scope.open = function ($event, which) {
-        $event.preventDefault();
-        $event.stopPropagation();
-
-        $scope.datepickers[which] = true;
-    };
-
-    $scope.dateOptions = {
-        'year-format': "'yyyy'",
-    };
 
 
     $scope.$watch('blade.parentBlade.currentEntity.dynamicPropertyValues', initializeBlade);

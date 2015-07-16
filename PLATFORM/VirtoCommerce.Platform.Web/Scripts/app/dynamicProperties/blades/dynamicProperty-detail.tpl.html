@@ -19,21 +19,23 @@
                     </div>
                     <div class="form-control __checkbox">
                         <label class="form-label">
-                            <input type="checkbox" ng-model="blade.currentEntity.isArray">
+                            <input type="checkbox" ng-model="blade.currentEntity.isArray" ui-validate=" 'arrayFlagValidator($value)' " ui-validate-watch=" 'blade.currentEntity.valueType' " name="arrayFlag">
                             <span class="check"></span>
                             <span class="name">Multivalue</span>
                         </label>
                     </div>
+                    <div class="error" ng-if="formScope.arrayFlag.$invalid">Multivalue property can have only ShortText, Integer or Decimal value type.</div>
                     <div class="form-control __checkbox" ng-class="{'__disabled': !blade.isNew}">
                         <label class="form-label">
-                            <input type="checkbox" ng-model="blade.currentEntity.isMultilingual">
+                            <input type="checkbox" ng-model="blade.currentEntity.isMultilingual" ui-validate=" 'multilingualFlagValidator($value)' " ui-validate-watch=" 'blade.currentEntity.valueType' " name="multilingualFlag">
                             <span class="check"></span>
                             <span class="name">Multi language</span>
                         </label>
                     </div>
+                    <div class="error" ng-if="formScope.multilingualFlag.$invalid">Only text values can be multilingual.</div>
                     <div class="form-control __checkbox" ng-class="{'__disabled': !blade.isNew}">
                         <label class="form-label">
-                            <input type="checkbox" ng-model="blade.currentEntity.isDictionary" ui-validate=" 'dictFlagValidator($value)' " ui-validate-watch=" 'blade.currentEntity.valueType' " name="dictFlag">
+                            <input type="checkbox" ng-model="blade.currentEntity.isDictionary" ui-validate="!$value || blade.currentEntity.valueType === 'ShortText'" ui-validate-watch=" 'blade.currentEntity.valueType' " name="dictFlag">
                             <span class="check"></span>
                             <span class="name">Dictionary</span>
                         </label>
