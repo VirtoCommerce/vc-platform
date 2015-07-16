@@ -99,35 +99,13 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 					OuterId = paymentOuterId
 				};
 
-				PostProcessPaymentResult retVal;
-				if (!payment.IsApproved)
+				var retVal = paymentMethod.PostProcessPayment(context);
+
+				if (retVal != null )
 				{
-					retVal = paymentMethod.PostProcessPayment(context);
-
-					if (retVal != null && retVal.IsSuccess)
-					{
-						if (!payment.OuterId.Equals(retVal.OuterId))
-						{
-							payment.OuterId = retVal.OuterId;
-						}
-
-						if (retVal.NewPaymentStatus == PaymentStatus.Paid)
-						{
-							payment.IsApproved = true;
-						}
-
-						_customerOrderService.Update(new CustomerOrder[] { order });
-					}
+					_customerOrderService.Update(new CustomerOrder[] { order });
 				}
-				else
-				{
-					retVal = new PostProcessPaymentResult
-					{
-						IsSuccess = true,
-						NewPaymentStatus = PaymentStatus.Paid,
-						OrderId = orderId
-					};
-				}
+
 
 				return Ok(retVal);
 			}

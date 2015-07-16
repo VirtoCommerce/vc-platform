@@ -29,6 +29,11 @@ namespace VirtoCommerce.OrderModule.Data.Model
 		public string Purpose { get; set; }
 		[StringLength(64)]
 		public string GatewayCode { get; set; }
+
+		public DateTime? AuthorizedDate { get; set; }
+		public DateTime? CapturedDate { get; set; }
+		public DateTime? VoidedDate { get; set; }
+
 		public virtual ObservableCollection<AddressEntity> Addresses { get; set; }
 
 		public string CustomerOrderId { get; set; }

@@ -17,13 +17,13 @@ namespace Klarna.Checkout.Euro.Managers
 		private const string _euroLiveBaseUrl = "https://checkout.klarna.com/checkout/orders";
 		private const string _contentType = "application/vnd.klarna.checkout.aggregated-order-v2+json";
 
-		private const string _klarnaModeStoreSetting = "Klarna.Mode";
-		private const string _klarnaAppKeyStoreSetting = "Klarna.AppKey";
-		private const string _klarnaAppSecretStoreSetting = "Klarna.SecretKey";
-		private const string _klarnaTermsUrl = "Klarna.TermsUrl";
-		private const string _klarnaCheckoutUrl = "Klarna.CheckoutUrl";
-		private const string _klarnaConfirmationUrl = "Klarna.ConfirmationUrl";
-		private const string _klarnaPaymentActionType = "Klarna.PaymentActionType";
+		private const string _klarnaModeStoreSetting = "Klarna.Checkout.Euro.Mode";
+		private const string _klarnaAppKeyStoreSetting = "Klarna.Checkout.Euro.AppKey";
+		private const string _klarnaAppSecretStoreSetting = "Klarna.Checkout.Euro.SecretKey";
+		private const string _klarnaTermsUrl = "Klarna.Checkout.Euro.TermsUrl";
+		private const string _klarnaCheckoutUrl = "Klarna.Checkout.Euro.CheckoutUrl";
+		private const string _klarnaConfirmationUrl = "Klarna.Checkout.Euro.ConfirmationUrl";
+		private const string _klarnaPaymentActionType = "Klarna.Checkout.Euro.PaymentActionType";
 
 		private const string _klarnaSalePaymentActionType = "Sale";
 
@@ -185,14 +185,15 @@ namespace Klarna.Checkout.Euro.Managers
 					Api.Api api = new Api.Api(configuration);
 					var response = api.Activate(reservation);
 
-					retVal.OuterId = response.InvoiceNumber;
+					retVal.NewPaymentStatus = context.Payment.PaymentStatus = PaymentStatus.Paid;
+					context.Payment.CapturedDate = DateTime.UtcNow;
+					context.Payment.IsApproved = true;
 					retVal.IsSuccess = true;
-					retVal.NewPaymentStatus = PaymentStatus.Paid;
+					retVal.OuterId = context.Payment.OuterId = response.InvoiceNumber;
 				}
 				catch(Exception ex)
 				{
 					retVal.ErrorMessage = ex.Message;
-					retVal.NewPaymentStatus = PaymentStatus.Pending;
 				}
 			}
 			else
@@ -237,8 +238,10 @@ namespace Klarna.Checkout.Euro.Managers
 						var result = api.CancelReservation(reservation);
 						if (result)
 						{
-							retVal.IsSuccess = result;
-							retVal.NewPaymentStatus = PaymentStatus.Voided;
+							retVal.NewPaymentStatus = context.Payment.PaymentStatus = PaymentStatus.Voided;
+							context.Payment.VoidedDate = context.Payment.CancelledDate = DateTime.UtcNow;
+							context.Payment.IsCancelled = true;
+							retVal.IsSuccess = true;
 						}
 						else
 						{
@@ -397,15 +400,23 @@ namespace Klarna.Checkout.Euro.Managers
 			if (status == "created" && IsSale())
 			{
 				var result = CaptureProcessPayment(new CaptureProcessPaymentEvaluationContext { Payment = context.Payment });
-				retVal.OuterId = result.OuterId;
-				retVal.IsSuccess = result.IsSuccess;
-				retVal.NewPaymentStatus = result.IsSuccess ? PaymentStatus.Paid : PaymentStatus.Pending;
+
+				retVal.NewPaymentStatus = context.Payment.PaymentStatus = PaymentStatus.Paid;
+				context.Payment.OuterId = retVal.OuterId;
+				context.Payment.IsApproved = true;
+				context.Payment.CapturedDate = DateTime.UtcNow;
+				retVal.IsSuccess = true;
+			}
+			else if (status == "created")
+			{
+				retVal.NewPaymentStatus = context.Payment.PaymentStatus = PaymentStatus.Authorized;
+				context.Payment.OuterId = retVal.OuterId = context.OuterId;
+				context.Payment.AuthorizedDate = DateTime.UtcNow;
+				retVal.IsSuccess = true;
 			}
 			else
 			{
-				retVal.OuterId = context.OuterId;
-				retVal.IsSuccess = status == "created";
-				retVal.NewPaymentStatus = retVal.IsSuccess ? PaymentStatus.Authorized : PaymentStatus.Pending;
+				retVal.ErrorMessage = "order not created";
 			}
 
 			retVal.OrderId = context.Order.Id;

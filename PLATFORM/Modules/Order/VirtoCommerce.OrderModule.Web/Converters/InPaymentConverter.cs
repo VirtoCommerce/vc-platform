@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Omu.ValueInjecter;
 using coreModel = VirtoCommerce.Domain.Order.Model;
 using webModel = VirtoCommerce.OrderModule.Web.Model;
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Domain.Payment.Model;
 
 namespace VirtoCommerce.OrderModule.Web.Converters
 {
@@ -32,6 +34,7 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 		{
 			var retVal = new coreModel.PaymentIn();
 			retVal.InjectFrom(payment);
+			retVal.PaymentStatus = EnumUtility.SafeParse<PaymentStatus>(payment.Status, PaymentStatus.Custom);
 
 			if (payment.Properties != null)
 				retVal.Properties = payment.Properties.Select(x => x.ToCoreModel()).ToList();

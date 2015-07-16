@@ -70,9 +70,14 @@
         <isArray>true</isArray>
         <arrayValues>
           <value>New</value>
-          <value>WaitForPaid</value>
+          <value>Pending</value>
+          <value>Authorized</value>
           <value>Paid</value>
-          <value>PartiallyPaid</value>
+					<value>PartiallyRefunded</value>
+					<value>Refunded</value>
+					<value>Voided</value>
+					<value>Custom</value>
+					<value>Cancelled</value>
         </arrayValues>
       </setting>
     </group>

@@ -103,28 +103,31 @@ namespace Paypal.ExpressCheckout.Managers
 
 		public override ProcessPaymentResult ProcessPayment(ProcessPaymentEvaluationContext context)
 		{
+			if (context.Order == null)
+				throw new ArgumentNullException("context.Order is null");
+			if (context.Payment == null)
+				throw new ArgumentNullException("context.Payment is null");
+			if (context.Store == null)
+				throw new ArgumentNullException("context.Store is null");
+			if (string.IsNullOrEmpty(context.Store.Url))
+				throw new NullReferenceException("url of store not set");
+
 			var retVal = new ProcessPaymentResult();
 
-			if (!(context.Store != null && !string.IsNullOrEmpty(context.Store.Url)))
-				throw new NullReferenceException("no store with this id");
-
 			var config = GetConfigMap();
-
 			var url = context.Store.Url;
-
 			var request = GetSetExpressCheckoutRequest(context.Order, context.Store, context.Payment);
-
 			var service = new PayPalAPIInterfaceServiceService(config);
 
-		    try
+			try
 			{
 				var setEcResponse = service.SetExpressCheckout(request);
 
 				CheckResponse(setEcResponse);
 
 				retVal.IsSuccess = true;
-				retVal.NewPaymentStatus = PaymentStatus.Pending;
-				retVal.OuterId = setEcResponse.Token;
+				retVal.NewPaymentStatus = context.Payment.PaymentStatus = PaymentStatus.Pending;
+				retVal.OuterId = context.Payment.OuterId = setEcResponse.Token;
 				var redirectBaseUrl = GetBaseUrl(Mode);
 				retVal.RedirectUrl = string.Format(redirectBaseUrl, retVal.OuterId);
 			}
@@ -138,18 +141,18 @@ namespace Paypal.ExpressCheckout.Managers
 
 		public override PostProcessPaymentResult PostProcessPayment(PostProcessPaymentEvaluationContext context)
 		{
+			if (context.Order == null)
+				throw new ArgumentNullException("context.Order is null");
+			if (context.Payment == null)
+				throw new ArgumentNullException("context.Payment is null");
+			if (context.Store == null)
+				throw new ArgumentNullException("context.Store is null");
+			if (string.IsNullOrEmpty(context.Store.Url))
+				throw new NullReferenceException("url of store not set");
+
 			var retVal = new PostProcessPaymentResult();
 
-			if (context == null || context.Payment == null)
-				throw new ArgumentNullException("paymentEvaluationContext");
-
-			if (context.Order == null)
-				throw new NullReferenceException("no order with this id");
-
 			retVal.OrderId = context.Order.Id;
-
-			if (!(context.Store != null || !string.IsNullOrEmpty(context.Store.Url)))
-				throw new NullReferenceException("no store with this id");
 
 			var config = GetConfigMap();
 
@@ -180,11 +183,16 @@ namespace Paypal.ExpressCheckout.Managers
 					retVal.OuterId = response.GetExpressCheckoutDetailsResponseDetails.PaymentDetails[0].TransactionId;
 					if(PaypalPaymentActionType == PaymentActionCodeType.AUTHORIZATION)
 					{
-						retVal.NewPaymentStatus = PaymentStatus.Authorized;
+						retVal.NewPaymentStatus = context.Payment.PaymentStatus = PaymentStatus.Authorized;
+						context.Payment.OuterId = retVal.OuterId;
+						context.Payment.AuthorizedDate = DateTime.UtcNow;
 					}
 					else if (PaypalPaymentActionType == PaymentActionCodeType.SALE)
 					{
-						retVal.NewPaymentStatus = PaymentStatus.Paid;
+						retVal.NewPaymentStatus = context.Payment.PaymentStatus = PaymentStatus.Paid;
+						context.Payment.OuterId = retVal.OuterId;
+						context.Payment.IsApproved = true;
+						context.Payment.CapturedDate = DateTime.UtcNow;
 					}
 				}
 				else
@@ -195,19 +203,19 @@ namespace Paypal.ExpressCheckout.Managers
 			catch (System.Exception ex)
 			{
 				retVal.ErrorMessage = ex.Message;
-				retVal.NewPaymentStatus = PaymentStatus.Pending;
 			}
 
 			return retVal;
 		}
+
 		public override VoidProcessPaymentResult VoidProcessPayment(VoidProcessPaymentEvaluationContext context)
 		{
-			if (context == null || context.Payment == null)
-				throw new ArgumentNullException("paymentEvaluationContext");
+			if (context.Payment == null)
+				throw new ArgumentNullException("context.Payment is null");
 
 			VoidProcessPaymentResult retVal = new VoidProcessPaymentResult();
 
-			if(!context.Payment.IsApproved)
+			if(!context.Payment.IsApproved && context.Payment.PaymentStatus == PaymentStatus.Authorized)
 			{
 				try
 				{
@@ -219,14 +227,15 @@ namespace Paypal.ExpressCheckout.Managers
 
 					if(context.Payment.OuterId == doVoidResponse.AuthorizationID)
 					{
-						retVal.NewPaymentStatus = PaymentStatus.Voided;
+						retVal.NewPaymentStatus = context.Payment.PaymentStatus = PaymentStatus.Voided;
+						context.Payment.VoidedDate = context.Payment.CancelledDate = DateTime.UtcNow;
+						context.Payment.IsCancelled = true;
 						retVal.IsSuccess = true;
 					}
 				}
 				catch(Exception ex)
 				{
 					retVal.ErrorMessage = ex.Message;
-					retVal.NewPaymentStatus = PaymentStatus.Pending;
 				}
 			}
 
@@ -240,7 +249,7 @@ namespace Paypal.ExpressCheckout.Managers
 
 			CaptureProcessPaymentResult retVal = new CaptureProcessPaymentResult();
 
-			if(!context.Payment.IsApproved)
+			if (!context.Payment.IsApproved && context.Payment.PaymentStatus == PaymentStatus.Authorized)
 			{
 				try
 				{
@@ -254,14 +263,15 @@ namespace Paypal.ExpressCheckout.Managers
 
 					if(doCaptureResponse.DoCaptureResponseDetails.PaymentInfo.PaymentStatus == PaymentStatusCodeType.COMPLETED)
 					{
-						retVal.NewPaymentStatus = PaymentStatus.Paid;
+						retVal.NewPaymentStatus = context.Payment.PaymentStatus = PaymentStatus.Paid;
+						context.Payment.CapturedDate = DateTime.UtcNow;
+						context.Payment.IsApproved = true;
 						retVal.IsSuccess = true;
 					}
 				}
 				catch(Exception ex)
 				{
 					retVal.ErrorMessage = ex.Message;
-					retVal.NewPaymentStatus = PaymentStatus.Pending;
 				}
 			}
 
@@ -287,7 +297,6 @@ namespace Paypal.ExpressCheckout.Managers
 				catch(Exception ex)
 				{
 					retVal.ErrorMessage = ex.Message;
-					retVal.NewPaymentStatus = PaymentStatus.Pending;
 				}
 			}
 
@@ -381,7 +390,8 @@ namespace Paypal.ExpressCheckout.Managers
 					{
 						Token = paymentId,
 						PayerID = response.GetExpressCheckoutDetailsResponseDetails.PayerInfo.PayerID,
-						PaymentDetails = response.GetExpressCheckoutDetailsResponseDetails.PaymentDetails
+						PaymentDetails = response.GetExpressCheckoutDetailsResponseDetails.PaymentDetails,
+						PaymentAction = PaypalPaymentActionType
 					}
 				}
 			};
