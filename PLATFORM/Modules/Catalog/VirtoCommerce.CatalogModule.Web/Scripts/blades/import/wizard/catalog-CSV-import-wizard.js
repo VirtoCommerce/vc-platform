@@ -80,8 +80,8 @@
             propertyCsvColumns: blade.importConfiguration.propertyCsvColumns
         };
 
-        blade.importConfiguration.catalogId = blade.catalog.id;
-        importResource.run(blade.importConfiguration, function (notification) {
+        var exportInfo = { configuration: blade.importConfiguration, fileUrl: $scope.blade.csvFileUrl, catalogId: blade.catalog.id };
+        importResource.run( exportInfo , function (notification) {
             var newBlade = {
                 id: "importProgress",
                 catalog: blade.catalog,

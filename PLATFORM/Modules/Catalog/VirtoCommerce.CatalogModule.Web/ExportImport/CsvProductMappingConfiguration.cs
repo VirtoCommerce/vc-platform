@@ -16,11 +16,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 			PropertyMaps = new List<CsvProductPropertyMap>();
 		}
 
-		[JsonConverter(typeof(StringEnumConverter))]
-		public CsvExportImportMode Mode { get; set; }
 		public string ETag { get; set; }
-		public string FileUrl { get; set; }
-		public string CatalogId { get; set; }
 		public string Delimiter { get; set; }
 		public string[] CsvColumns { get; set; }
 		public ICollection<CsvProductPropertyMap> PropertyMaps { get; set; }
@@ -32,7 +28,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 			retVal.Delimiter = ";";
 
 			var requiredFields = ReflectionUtility.GetPropertyNames<CsvProduct>(x => x.Name);
-			var optionalFields = ReflectionUtility.GetPropertyNames<CsvProduct>(x => x.Id, x => x.Sku, x => x.CategoryPath, x => x.CategoryId, x=> x.CatalogId, x => x.MainProductId, x=>x.PrimaryImage, x=>x.AltImage, x => x.SeoUrl, x => x.SeoTitle,
+			var optionalFields = ReflectionUtility.GetPropertyNames<CsvProduct>(x => x.Id, x => x.Sku, x => x.CategoryPath, x => x.CategoryId, x => x.MainProductId, x=>x.PrimaryImage, x=>x.AltImage, x => x.SeoUrl, x => x.SeoTitle,
 																				x => x.SeoDescription, x => x.Review, x => x.IsActive, x => x.IsBuyable, x => x.TrackInventory, 
 																				x => x.PriceId, x => x.SalePrice, x => x.ListPrice, x => x.Currency,
 																				x => x.ManufacturerPartNumber, x => x.Gtin, x => x.MeasureUnit, x => x.WeightUnit, x => x.Weight,

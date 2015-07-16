@@ -136,7 +136,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 			 }
 			 catch (Exception ex)
 			 {
-				 notifyEvent.Description = "Import failed";
 				 notifyEvent.Errors.Add(ex.ExpandExceptionMessage());
 			 }
 			 finally
@@ -178,7 +177,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 			 }
 			 catch(Exception ex)
 			 {
-				 notifyEvent.Description = "Export failed";
 				 notifyEvent.Errors.Add(ex.ExpandExceptionMessage()); 
 			 }
 			 finally

@@ -63,10 +63,10 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 			_searchService = searchService;
 		}
 
-		public void DoImport(Stream inputStream, CsvProductMappingConfiguration configuration, Action<ExportImportProgressInfo> progressCallback)
+		public void DoImport(Stream inputStream, CsvImportInfo importInfo, Action<ExportImportProgressInfo> progressCallback)
 		{
 			var csvProducts = new List<CsvProduct>();
-		
+
 
 			var progressInfo = new ExportImportProgressInfo
 			{
@@ -77,8 +77,8 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 
 			using (var reader = new CsvReader(new StreamReader(inputStream)))
 			{
-				reader.Configuration.Delimiter = configuration.Delimiter;
-				reader.Configuration.RegisterClassMap(new CsvProductMap(configuration));
+				reader.Configuration.Delimiter = importInfo.Configuration.Delimiter;
+				reader.Configuration.RegisterClassMap(new CsvProductMap(importInfo.Configuration));
 
 				while (reader.Read())
 				{
@@ -94,27 +94,17 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 						{
 							error += ex.Data["CsvHelper"];
 						}
-						progressInfo.ErrorCount++;
 						progressInfo.Errors.Add(error);
 						progressCallback(progressInfo);
 					}
 				}
 			}
-			var catalogProductGroups = csvProducts.GroupBy(x=> configuration.CatalogId);
-			//If catalog not specified directly need use stored value
-			if(configuration.CatalogId == null)
-			{
-				catalogProductGroups = csvProducts.GroupBy(x => x.CatalogId);
-			}
 
-			foreach (var group in catalogProductGroups)
-			{
-				var catalog = _catalogService.GetById(group.Key);
 
-				SaveCategoryTree(catalog, csvProducts, progressInfo, progressCallback);
-				SaveProducts(configuration, catalog, csvProducts, progressInfo, progressCallback);
-			}
+			var catalog = _catalogService.GetById(importInfo.CatalogId);
 
+			SaveCategoryTree(catalog, csvProducts, progressInfo, progressCallback);
+			SaveProducts(catalog, csvProducts, progressInfo, progressCallback);
 		}
 
 		private void SaveCategoryTree(coreModel.Catalog catalog, IEnumerable<CsvProduct> csvProducts, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback)
@@ -160,7 +150,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 		}
 
 
-		private void SaveProducts(CsvProductMappingConfiguration configuration, coreModel.Catalog catalog, IEnumerable<CsvProduct> csvProducts, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback)
+		private void SaveProducts(coreModel.Catalog catalog, IEnumerable<CsvProduct> csvProducts, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback)
 		{
 			int counter = 0;
 			var notifyProductSizeLimit = 10;
@@ -181,13 +171,12 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 				{
 					try
 					{
-						SaveProduct(configuration, catalog, defaultFulfilmentCenter, csvProduct);
+						SaveProduct(catalog, defaultFulfilmentCenter, csvProduct);
 					}
 					catch (Exception ex)
 					{
 						lock (_lockObject)
 						{
-							progressInfo.ErrorCount++;
 							progressInfo.Errors.Add(ex.ToString());
 							progressCallback(progressInfo);
 						}
@@ -222,7 +211,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 			}
 		}
 
-		private void SaveProduct(CsvProductMappingConfiguration configuration, coreModel.Catalog catalog, FulfillmentCenter defaultFulfillmentCenter, CsvProduct csvProduct)
+		private void SaveProduct(coreModel.Catalog catalog, FulfillmentCenter defaultFulfillmentCenter, CsvProduct csvProduct)
 		{
 			var defaultLanguge = catalog.DefaultLanguage != null ? catalog.DefaultLanguage.LanguageCode : "EN-US";
 
@@ -260,7 +249,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 				csvProduct.MainProductId = csvProduct.MainProduct.Id;
 			}
 			csvProduct.EditorialReview.LanguageCode = defaultLanguge;
-			csvProduct.SeoInfo.LanguageCode =  defaultLanguge;
+			csvProduct.SeoInfo.LanguageCode = defaultLanguge;
 			csvProduct.SeoInfo.SemanticUrl = String.IsNullOrEmpty(csvProduct.SeoInfo.SemanticUrl) ? csvProduct.Code : csvProduct.SeoInfo.SemanticUrl;
 
 			var properties = !String.IsNullOrEmpty(csvProduct.CategoryId) ? _propertyService.GetCategoryProperties(csvProduct.CategoryId) : _propertyService.GetCatalogProperties(csvProduct.CatalogId);
@@ -298,31 +287,25 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 			}
 
 			//Create price in default price list
-			if ((configuration.Mode & CsvExportImportMode.Price) == CsvExportImportMode.Price)
-			{
-				if (csvProduct.ListPrice != null || csvProduct.SalePrice != null)
-				{
-					csvProduct.Price.ProductId = csvProduct.Id;
 
-					if (csvProduct.Price.IsTransient() || _pricingService.GetPriceById(csvProduct.Price.Id) == null)
-					{
-						_pricingService.CreatePrice(csvProduct.Price);
-					}
-					else
-					{
-						_pricingService.UpdatePrices(new Price[] { csvProduct.Price });
-					}
+			if (csvProduct.ListPrice != null || csvProduct.SalePrice != null)
+			{
+				csvProduct.Price.ProductId = csvProduct.Id;
+
+				if (csvProduct.Price.IsTransient() || _pricingService.GetPriceById(csvProduct.Price.Id) == null)
+				{
+					_pricingService.CreatePrice(csvProduct.Price);
+				}
+				else
+				{
+					_pricingService.UpdatePrices(new Price[] { csvProduct.Price });
 				}
 			}
 
 			//Create inventory
-			if ((configuration.Mode & CsvExportImportMode.Inventory) == CsvExportImportMode.Inventory)
-			{
-				csvProduct.Inventory.ProductId = csvProduct.Id;
-				csvProduct.Inventory.FulfillmentCenterId = csvProduct.Inventory.FulfillmentCenterId ?? defaultFulfillmentCenter.Id;
-				_inventoryService.UpsertInventory(csvProduct.Inventory);
-			}
-
+			csvProduct.Inventory.ProductId = csvProduct.Id;
+			csvProduct.Inventory.FulfillmentCenterId = csvProduct.Inventory.FulfillmentCenterId ?? defaultFulfillmentCenter.Id;
+			_inventoryService.UpsertInventory(csvProduct.Inventory);
 		}
 
 	}
