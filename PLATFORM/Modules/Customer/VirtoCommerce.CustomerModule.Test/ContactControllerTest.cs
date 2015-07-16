@@ -129,18 +129,17 @@ namespace VirtoCommerce.CustomerModule.Test
             contact = result.Content;
         }
 
-
-
         [TestMethod]
-        public void DeleteStore()
+        public void DeleteContact()
         {
             var controller = GetContactController();
             controller.DeleteContacts(new[] { "testContact" });
             var result = controller.GetContactById("testStore") as OkNegotiatedContentResult<webModel.Contact>;
 
             Assert.IsNull(result);
-
         }
+
+
         private static CustomerModuleController GetContactController()
         {
             Func<IPlatformRepository> platformRepositoryFactory = () => new PlatformRepository("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor());
@@ -148,10 +147,9 @@ namespace VirtoCommerce.CustomerModule.Test
 
             var dynamicPropertyService = new DynamicPropertyService(platformRepositoryFactory);
             var contactService = new ContactServiceImpl(customerRepositoryFactory, dynamicPropertyService);
-            var orgService = new OrganizationServiceImpl(customerRepositoryFactory);
+            var orgService = new OrganizationServiceImpl(customerRepositoryFactory, dynamicPropertyService);
             var searchService = new CustomerSearchServiceImpl(customerRepositoryFactory);
             return new CustomerModuleController(contactService, orgService, searchService);
         }
-
     }
 }

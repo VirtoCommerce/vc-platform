@@ -29,7 +29,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
 
             var result = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(a => a.GetTypes())
-                .Where(t => t.GetInterface(typeName) != null)
+                .Where(t => t.IsClass && t.IsPublic && !t.IsAbstract && t.GetInterface(typeName) != null)
                 .Select(GetObjectTypeName)
                 .ToArray();
 
