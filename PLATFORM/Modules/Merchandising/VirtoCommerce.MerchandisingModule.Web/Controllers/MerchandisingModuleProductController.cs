@@ -38,10 +38,12 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		private readonly IPropertyService _propertyService;
         private readonly IInventoryService _inventoryService;
         private readonly ICommerceService _commerceService;
+		private readonly CacheManager _cacheManager;
 
 		public MerchandisingModuleProductController(ICatalogSearchService searchService, ICategoryService categoryService,
 								 IInventoryService inventoryService, IStoreService storeService, IItemService itemService, IBlobUrlResolver blobUrlResolver,
-								 IBrowseFilterService browseFilterService, IItemBrowsingService browseService, IPropertyService propertyService, ICommerceService commerceService)
+								 IBrowseFilterService browseFilterService, IItemBrowsingService browseService, IPropertyService propertyService, ICommerceService commerceService,
+								 CacheManager cacheManager)
 		{
 			_itemService = itemService;
 			_storeService = storeService;
@@ -53,6 +55,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 			_propertyService = propertyService;
 		    _commerceService = commerceService;
 		    _inventoryService = inventoryService;
+			_cacheManager = cacheManager;
 		}
 
 		#region Public Methods and Operators
@@ -65,7 +68,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		[Route("")]
 		public IHttpActionResult GetProductsByIds(string store, [FromUri] string[] ids, [FromUri] coreModel.ItemResponseGroup responseGroup = coreModel.ItemResponseGroup.ItemInfo)
 		{
-            var fullLoadedStore = _storeService.GetById(store);
+			var fullLoadedStore = GetStoreById(store);
             if (fullLoadedStore == null)
             {
                 throw new NullReferenceException(store + " not found");
@@ -81,7 +84,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		[Route("{product}")]
 		public IHttpActionResult GetProduct(string store, string product, [FromUri] coreModel.ItemResponseGroup responseGroup = coreModel.ItemResponseGroup.ItemLarge, string language = "en-us")
 		{
-            var fullLoadedStore = _storeService.GetById(store);
+			var fullLoadedStore = GetStoreById(store);
             if (fullLoadedStore == null)
             {
                 throw new NullReferenceException(store + " not found");
@@ -103,7 +106,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		[Route("")]
 		public IHttpActionResult GetProductByCode(string store, [FromUri] string code, [FromUri] coreModel.ItemResponseGroup responseGroup = coreModel.ItemResponseGroup.ItemLarge, string language = "en-us")
 		{
-            var fullLoadedStore = _storeService.GetById(store);
+			var fullLoadedStore = GetStoreById(store);
             if (fullLoadedStore == null)
             {
                 throw new NullReferenceException(store + " not found");
@@ -136,7 +139,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		[Route("")]
 		public IHttpActionResult GetProductByKeyword(string store, [FromUri] string keyword, [FromUri] coreModel.ItemResponseGroup responseGroup = coreModel.ItemResponseGroup.ItemLarge, string language = "en-us")
 		{
-            var fullLoadedStore = _storeService.GetById(store);
+			var fullLoadedStore = GetStoreById(store);
             if (fullLoadedStore == null)
             {
                 throw new NullReferenceException(store + " not found");
@@ -188,7 +191,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
                               { "StoreId", store },
                           };
 
-			var fullLoadedStore = _storeService.GetById(store);
+			var fullLoadedStore = GetStoreById(store);
 			if (fullLoadedStore == null)
 			{
 				throw new NullReferenceException(store + " not found");
@@ -321,6 +324,13 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		    }
 
 		    return this.Ok(searchResults);
+		}
+
+		private storeModel.Store GetStoreById(string storeId)
+		{
+			var cacheKey = CacheKey.Create("MP", "GetStoreById", storeId);
+			var retVal = _cacheManager.Get(cacheKey, () => _storeService.GetById(storeId));
+			return retVal;
 		}
 
         private IEnumerable<CatalogItem> InnerGetProductsByIds(storeModel.Store store, String[] ids, ItemResponseGroup responseGroup)

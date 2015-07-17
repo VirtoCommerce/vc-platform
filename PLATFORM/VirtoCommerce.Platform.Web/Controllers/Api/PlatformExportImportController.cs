@@ -83,7 +83,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 		 [HttpPost]
 		 [ResponseType(typeof(NotifyEvent))]
 		 [Route("export")]
-		 public IHttpActionResult ProcessExport(PlatformExportRequest exportRequest)
+		 public IHttpActionResult ProcessExport(PlatformExportImportRequest exportRequest)
 		 {
 			 var notification = new ExportImportProgressNotificationEvent(CurrentPrincipal.GetCurrentUserName())
 			 {
@@ -102,7 +102,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 		 [HttpPost]
 		 [ResponseType(typeof(NotifyEvent))]
 		 [Route("import")]
-		 public IHttpActionResult ProcessImport(PlatformImportRequest importRequest)
+		 public IHttpActionResult ProcessImport(PlatformExportImportRequest importRequest)
 		 {
 			 var notification = new ExportImportProgressNotificationEvent(CurrentPrincipal.GetCurrentUserName())
 			 {
@@ -117,7 +117,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 			 return Ok(notification);
 		 }
 
-		 public void PlatformImportBackground(PlatformImportRequest importRequest, ExportImportProgressNotificationEvent notifyEvent)
+		 public void PlatformImportBackground(PlatformExportImportRequest importRequest, ExportImportProgressNotificationEvent notifyEvent)
 		 {
 			 Action<ExportImportProgressInfo> progressCallback = (x) =>
 			 {
@@ -131,7 +131,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 				 var importedModules = InnerGetModulesWithInterface(typeof(ISupportImportModule)).Where(x => importRequest.Modules.Contains(x.Id)).ToArray();
 				 using (var stream = _blobStorageProvider.OpenReadOnly(importRequest.FileUrl))
 				 {
-					 _platformExportManager.Import(stream, importedModules, progressCallback);
+					 var options = new PlatformExportImportOptions
+					 {
+						 Modules = importedModules,
+						 PlatformSecurity = importRequest.PlatformSecurity,
+						 PlatformSettings = importRequest.PlatformSettings,
+					 };
+					 _platformExportManager.Import(stream, options, progressCallback);
 				 }
 			 }
 			 catch (Exception ex)
@@ -146,7 +152,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
 		 }
 
-		 public void PlatformExportBackground(PlatformExportRequest exportRequest, string platformVersion, ExportImportProgressNotificationEvent notifyEvent)
+		 public void PlatformExportBackground(PlatformExportImportRequest exportRequest, string platformVersion, ExportImportProgressNotificationEvent notifyEvent)
 		 {
 			 Action<ExportImportProgressInfo> progressCallback = (x) =>
 			 {
@@ -160,7 +166,15 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 				 var exportedModules = InnerGetModulesWithInterface(typeof(ISupportExportModule)).Where(x => exportRequest.Modules.Contains(x.Id)).ToArray();
 				 using (var stream = new MemoryStream())
 				 {
-					 _platformExportManager.Export(stream, exportedModules, SemanticVersion.Parse(platformVersion), progressCallback);
+					 var options = new PlatformExportImportOptions
+					 {
+						 Modules = exportedModules,
+						 PlatformSecurity = exportRequest.PlatformSecurity,
+						 PlatformSettings = exportRequest.PlatformSettings,
+						 PlatformVersion = SemanticVersion.Parse(platformVersion)
+					 };
+
+					 _platformExportManager.Export(stream, options, progressCallback);
 					 stream.Seek(0, SeekOrigin.Begin);
 					 //Upload result  to blob storage
 					 var uploadInfo = new UploadStreamInfo

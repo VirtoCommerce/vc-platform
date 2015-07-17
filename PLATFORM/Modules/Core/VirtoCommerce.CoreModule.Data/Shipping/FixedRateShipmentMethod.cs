@@ -28,7 +28,7 @@ namespace VirtoCommerce.CoreModule.Data.Shipping
 			{
 				decimal retVal = 0;
                 var settingRate = Settings.Where(x => x.Name == "Rate").FirstOrDefault();
-				if(settingRate != null  )
+				if(settingRate != null)
 				{
 					retVal = Decimal.Parse(settingRate.Value, CultureInfo.InvariantCulture);
 				}
