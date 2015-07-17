@@ -36,6 +36,16 @@ namespace VirtoCommerce.OrderModule.Data.Services
 					query = query.Where(x => x.StoreId == criteria.StoreId);
 				}
 
+                if (criteria.StartDate != null)
+                {
+                    query = query.Where(x => x.CreatedDate >= criteria.StartDate);
+                }
+
+                if (criteria.EndDate != null)
+                {
+                    query = query.Where(x => x.CreatedDate <= criteria.EndDate);
+                }
+
 				if ((criteria.ResponseGroup & ResponseGroup.WithDiscounts) == ResponseGroup.WithDiscounts)
 				{
 					query = query.Include(x => x.Discounts);
