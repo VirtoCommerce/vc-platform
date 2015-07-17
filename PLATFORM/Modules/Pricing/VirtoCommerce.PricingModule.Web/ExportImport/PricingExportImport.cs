@@ -18,15 +18,24 @@ namespace VirtoCommerce.PricingModule.Web.ExportImport
 
     public class ExportImport
     {
-        static public void Update<T>(ICollection<string> originalIds, ICollection<T> importedCollection, Action<string[]> deleteDelegate, Action<T[]> updateDelegate, Action<T> createDelegate) where T : Entity
+        static public void Update<T>(ICollection<string> originalIds, ICollection<T> importedCollection, Action<string[]> deleteDelegate, Action<T[]> updateDelegate, Func<T, T> createDelegate) where T : Entity
         {
             var toAdd = importedCollection.Where(x => !originalIds.Contains(x.Id)).ToArray();
             var toUpdate = importedCollection.Where(x => originalIds.Contains(x.Id)).ToArray();
             var toRemove = originalIds.Where(x => importedCollection.All(s => s.Id != x)).ToArray();
 
-            if (toRemove.Any()) deleteDelegate(toRemove);
-            if (toUpdate.Any()) updateDelegate(toUpdate);
-            toAdd.ForEach(createDelegate);
+            if (toRemove.Any())
+            {
+                deleteDelegate(toRemove);
+            }
+            if (toUpdate.Any())
+            {
+                updateDelegate(toUpdate);
+            }
+            foreach (var item in toAdd)
+            {
+                createDelegate(item);
+            }
         }
     }
 
@@ -44,13 +53,10 @@ namespace VirtoCommerce.PricingModule.Web.ExportImport
             var prodgressInfo = new ExportImportProgressInfo { Description = "loading data..." };
             progressCallback(prodgressInfo);
 
-            var pricelists = _pricingService.GetPriceLists().ToArray();
-            pricelists.ForEach(x=>x.Assignments.Clear());
-
+            var pricelistIds = _pricingService.GetPriceLists().AsParallel().Select(x => x.Id).ToArray();
             var backupObject = new BackupObject
             {
-                Pricelists = pricelists,
-                Assignments = _pricingService.GetPriceListAssignments().ToArray(),
+                Pricelists = pricelistIds.AsParallel().Select(x => _pricingService.GetPricelistById(x)).ToArray()
             };
 
             backupObject.SerializeJson(backupStream);
@@ -62,37 +68,20 @@ namespace VirtoCommerce.PricingModule.Web.ExportImport
             progressCallback(prodgressInfo);
 
             var backupObject = backupStream.DeserializeJson<BackupObject>();
-            
+
+            var assignments = backupObject.Pricelists.SelectMany(x => x.Assignments).ToArray();
+            backupObject.Pricelists.ForEach(x=>x.Assignments =null);
+
             var originalIds = _pricingService.GetPriceLists().Select(x => x.Id).ToArray();
-            //ExportImport.Update(originalIds, backupObject.Pricelists, _pricingService.DeletePricelists, _pricingService.UpdatePricelists,
-            //    pricelist => _pricingService.CreatePricelist(pricelist));
-            UpdatePriceList(originalIds, backupObject.Pricelists);
-            
-            originalIds = _pricingService.GetPriceLists().Select(x => x.Id).ToArray();
-            UpdateAssignments(originalIds, backupObject.Assignments);
+            ExportImport.Update(originalIds, backupObject.Pricelists,
+                _pricingService.DeletePricelists, _pricingService.UpdatePricelists, _pricingService.CreatePricelist);
+
+            originalIds = _pricingService.GetPriceListAssignments().Select(x => x.Id).ToArray();
+            ExportImport.Update(originalIds, assignments,
+                _pricingService.DeletePricelistsAssignments, _pricingService.UpdatePricelistAssignments, _pricingService.CreatePriceListAssignment);
+
         }
 
-        private void UpdatePriceList(ICollection<string> originalIds, ICollection<Pricelist> importedPricelist)
-        {
-            var toAdd = importedPricelist.Where(x => !originalIds.Contains(x.Id)).ToArray();
-            var toUpdate = importedPricelist.Where(x => originalIds.Contains(x.Id)).ToArray();
-            var toRemove = originalIds.Where(x => importedPricelist.All(s => s.Id != x)).ToArray();
-
-            if(toRemove.Any()) _pricingService.DeletePricelists(toRemove);
-            if(toUpdate.Any()) _pricingService.UpdatePricelists(toUpdate);
-            toAdd.ForEach(x => _pricingService.CreatePricelist(x));
-        }
-
-        private void UpdateAssignments(ICollection<string> originalIds, ICollection<PricelistAssignment> importedAssignments)
-        {
-            var toAdd = importedAssignments.Where(x => !originalIds.Contains(x.Id)).ToArray();
-            var toUpdate = importedAssignments.Where(x => originalIds.Contains(x.Id)).ToArray();
-            var toRemove = originalIds.Where(x => importedAssignments.All(s => s.Id != x)).ToArray();
-
-            if (toRemove.Any()) _pricingService.DeletePricelistsAssignments(toRemove);
-            if (toUpdate.Any()) _pricingService.UpdatePricelistAssignments(toUpdate);
-            toAdd.ForEach(x => _pricingService.CreatePriceListAssignment(x));
-        }
 
     }
 }

@@ -321,6 +321,12 @@ namespace VirtoCommerce.Web.Controllers
 
                                         return View("thanks_page");
                                     }
+                                    if (paymentResult.PaymentMethodType == ApiClient.DataContracts.PaymentMethodType.Unknown)
+                                    {
+                                        Context.Order = dtoOrder.AsWebModel();
+
+                                        return View("thanks_page");
+                                    }
                                 }
                                 else
                                 {
