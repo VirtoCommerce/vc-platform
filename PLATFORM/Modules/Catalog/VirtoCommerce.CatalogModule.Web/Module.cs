@@ -88,27 +88,7 @@ namespace VirtoCommerce.CatalogModule.Web
 
 		public void DoExport(System.IO.Stream outStream, Action<ExportImportProgressInfo> progressCallback)
 		{
-			var settingManager = _container.Resolve<ISettingsManager>();
-			var commerceService = _container.Resolve<ICommerceService>();
-			var curencySetting = settingManager.GetSettingByName("VirtoCommerce.Core.General.Currencies");
-			var defaultCurrency = EnumUtility.SafeParse<CurrencyCodes>(curencySetting.DefaultValue, CurrencyCodes.USD);
-
-			var exportJob = _container.Resolve<CsvCatalogExporter>();
-			var catalogService = _container.Resolve<ICatalogService>();
-			var configuration = CsvProductMappingConfiguration.GetDefaultConfiguration();
-			configuration.Mode = CsvExportImportMode.Catalog;
-
-			foreach(var catalog in catalogService.GetCatalogsList())
-			{
-				var exportInfo = new CsvExportInfo
-				{
-					CatalogId = catalog.Id,
-					Currency = defaultCurrency,
-					FulfilmentCenterId = commerceService.GetAllFulfillmentCenters().First().Id
-				};
-				exportJob.DoExport(outStream, configuration, exportInfo, progressCallback);
-			}
-		
+			throw new NotImplementedException();
 		}
 
 		#endregion
@@ -117,20 +97,7 @@ namespace VirtoCommerce.CatalogModule.Web
 
 		public void DoImport(System.IO.Stream inputStream, Action<ExportImportProgressInfo> progressCallback)
 		{
-			var configuration = CsvProductMappingConfiguration.GetDefaultConfiguration();
-			configuration.Mode = CsvExportImportMode.Catalog;
-			var importer = _container.Resolve<CsvCatalogImporter>();
-			//Read csv headers and try to auto map fields by name
-			using (var reader = new CsvReader(new StreamReader(inputStream, Encoding.UTF8, true, 1024, true)))
-			{
-				reader.Configuration.Delimiter = configuration.Delimiter;
-				if (reader.Read())
-				{
-					configuration.AutoMap(reader.FieldHeaders);
-				}
-			}
-
-			importer.DoImport(inputStream, configuration, progressCallback);
+			throw new NotImplementedException();
 
 		}
 

@@ -13,9 +13,5 @@ namespace VirtoCommerce.StoreModule.Data.Repositories
 	{
 		IQueryable<Store> Stores { get; }
 		foundation.Store GetStoreById(string id);
-
-        IEnumerable<foundation.Store> GetStoresByIds(string[] ids);
-
-        IEnumerable<foundation.Store> GetAllStores();
 	}
 }

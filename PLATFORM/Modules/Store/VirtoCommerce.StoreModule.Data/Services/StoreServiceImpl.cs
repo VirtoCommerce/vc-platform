@@ -1,21 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using VirtoCommerce.Platform.Core.Caching;
-using VirtoCommerce.Platform.Core.DynamicProperties;
-using foundationModel = VirtoCommerce.StoreModule.Data.Model;
-using coreModel = VirtoCommerce.Domain.Store.Model;
-using VirtoCommerce.Domain.Store.Services;
-using VirtoCommerce.StoreModule.Data.Repositories;
-using VirtoCommerce.StoreModule.Data.Converters;
-using VirtoCommerce.Platform.Data.Infrastructure;
-using VirtoCommerce.Domain.Commerce.Services;
-using VirtoCommerce.Platform.Core.Settings;
-using VirtoCommerce.Platform.Core.Common;
-using VirtoCommerce.Domain.Shipping.Services;
-using VirtoCommerce.Domain.Payment.Services;
 using System.Collections.ObjectModel;
+using System.Linq;
 using VirtoCommerce.Domain.Commerce.Model;
+using VirtoCommerce.Domain.Commerce.Services;
+using VirtoCommerce.Domain.Payment.Services;
+using VirtoCommerce.Domain.Shipping.Services;
+using VirtoCommerce.Domain.Store.Services;
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.DynamicProperties;
+using VirtoCommerce.Platform.Core.Settings;
+using VirtoCommerce.Platform.Data.Infrastructure;
+using VirtoCommerce.StoreModule.Data.Converters;
+using VirtoCommerce.StoreModule.Data.Repositories;
+using coreModel = VirtoCommerce.Domain.Store.Model;
 
 namespace VirtoCommerce.StoreModule.Data.Services
 {
@@ -27,32 +25,49 @@ namespace VirtoCommerce.StoreModule.Data.Services
         private readonly IDynamicPropertyService _dynamicPropertyService;
         private readonly IShippingService _shippingService;
         private readonly IPaymentMethodsService _paymentService;
-        private readonly CacheManager _cacheManager;
-        private readonly CacheKey _storesCacheKey;
 
-        public StoreServiceImpl(Func<IStoreRepository> repositoryFactory, CacheManager cacheManager, ICommerceService commerceService, ISettingsManager settingManager, IDynamicPropertyService dynamicPropertyService, IShippingService shippingService, IPaymentMethodsService paymentService)
+        public StoreServiceImpl(Func<IStoreRepository> repositoryFactory, ICommerceService commerceService, ISettingsManager settingManager, IDynamicPropertyService dynamicPropertyService, IShippingService shippingService, IPaymentMethodsService paymentService)
         {
-            _cacheManager = cacheManager;
             _repositoryFactory = repositoryFactory;
             _commerceService = commerceService;
             _settingManager = settingManager;
             _dynamicPropertyService = dynamicPropertyService;
             _shippingService = shippingService;
             _paymentService = paymentService;
-            _storesCacheKey = CacheKey.Create("Virto.Core.Stores");
         }
 
         #region IStoreService Members
 
         public coreModel.Store GetById(string id)
         {
-            var stores = GetStoreList();
-            return stores.FirstOrDefault(s => s.Id.Equals(id, StringComparison.OrdinalIgnoreCase));
+            coreModel.Store retVal = null;
+
+            using (var repository = _repositoryFactory())
+            {
+                var entity = repository.GetStoreById(id);
+
+                if (entity != null)
+                {
+                    //Load original typed shipping method and populate it  personalized information from db
+                    retVal = entity.ToCoreModel(_shippingService.GetAllShippingMethods(), _paymentService.GetAllPaymentMethods());
+
+                    var fulfillmentCenters = _commerceService.GetAllFulfillmentCenters().ToList();
+                    retVal.ReturnsFulfillmentCenter = fulfillmentCenters.FirstOrDefault(x => x.Id == entity.ReturnsFulfillmentCenterId);
+                    retVal.FulfillmentCenter = fulfillmentCenters.FirstOrDefault(x => x.Id == entity.FulfillmentCenterId);
+                    retVal.SeoInfos = _commerceService.GetObjectsSeo(new[] { id }).ToList();
+
+                    LoadObjectSettings(_settingManager, retVal);
+                    _dynamicPropertyService.LoadDynamicPropertyValues(retVal);
+                }
+            }
+
+            return retVal;
         }
 
         public coreModel.Store Create(coreModel.Store store)
         {
             var dbStore = store.ToDataModel();
+
             using (var repository = _repositoryFactory())
             {
                 repository.Add(dbStore);
@@ -74,9 +89,6 @@ namespace VirtoCommerce.StoreModule.Data.Services
             SaveObjectSettings(_settingManager, store);
             _dynamicPropertyService.SaveDynamicPropertyValues(store);
 
-            // clean up cache
-            _cacheManager.Remove(_storesCacheKey);
-
             var retVal = GetById(store.Id);
             return retVal;
         }
@@ -90,6 +102,7 @@ namespace VirtoCommerce.StoreModule.Data.Services
                 {
                     var sourceEntity = store.ToDataModel();
                     var targetEntity = repository.GetStoreById(store.Id);
+
                     if (targetEntity == null)
                     {
                         throw new NullReferenceException("targetEntity");
@@ -109,16 +122,15 @@ namespace VirtoCommerce.StoreModule.Data.Services
                             seoInfo.ObjectId = store.Id;
                             seoInfo.ObjectType = typeof(coreModel.Store).Name;
                         }
+
                         var seoInfos = new ObservableCollection<SeoInfo>(_commerceService.GetObjectsSeo(new[] { store.Id }));
                         seoInfos.ObserveCollection(x => _commerceService.UpsertSeo(x), x => _commerceService.DeleteSeo(new[] { x.Id }));
                         store.SeoInfos.Patch(seoInfos, (source, target) => _commerceService.UpsertSeo(source));
                     }
                 }
+
                 CommitChanges(repository);
             }
-
-            // clean up cache
-            _cacheManager.Remove(_storesCacheKey);
         }
 
         public void Delete(string[] ids)
@@ -134,47 +146,26 @@ namespace VirtoCommerce.StoreModule.Data.Services
                     var entity = repository.GetStoreById(id);
                     repository.Remove(entity);
                 }
+
                 CommitChanges(repository);
             }
-
-            // clean up cache
-            _cacheManager.Remove(_storesCacheKey);
         }
 
         public IEnumerable<coreModel.Store> GetStoreList()
         {
-            var stores = _cacheManager.Get(_storesCacheKey, LoadStores);
-            return stores;
-        }
-        #endregion
+            var retVal = new List<coreModel.Store>();
 
-        #region private methods
-        private coreModel.Store[] LoadStores()
-        {
-            var stores = new List<coreModel.Store>();
             using (var repository = _repositoryFactory())
             {
-                var entities = repository.GetAllStores().ToList();
-                if (entities.Any())
+                foreach (var storeId in repository.Stores.Select(x => x.Id).ToArray())
                 {
-                    var fulfillmentCenters = _commerceService.GetAllFulfillmentCenters().ToList();
-                    var seo = _commerceService.GetObjectsSeo(entities.Select(x => x.Id).ToArray()).ToList();
-
-                    foreach (var entity in entities)
-                    {
-                        var store = entity.ToCoreModel(_shippingService.GetAllShippingMethods(), _paymentService.GetAllPaymentMethods());
-                        store.ReturnsFulfillmentCenter = fulfillmentCenters.FirstOrDefault(x => x.Id == entity.ReturnsFulfillmentCenterId);
-                        store.FulfillmentCenter = fulfillmentCenters.FirstOrDefault(x => x.Id == entity.FulfillmentCenterId);
-                        store.SeoInfos = seo.Where(x => x.ObjectId == entity.Id).ToList();
-                        LoadObjectSettings(_settingManager, store);
-                        _dynamicPropertyService.LoadDynamicPropertyValues(store);
-                        stores.Add(store);
-                    }
+                    var store = GetById(storeId);
+                    retVal.Add(store);
                 }
             }
-
-            return stores.ToArray();
+            return retVal;
         }
+
         #endregion
     }
 }

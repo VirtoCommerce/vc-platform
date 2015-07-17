@@ -15,7 +15,7 @@ using VirtoCommerce.StoreModule.Web.ExportImport;
 
 namespace VirtoCommerce.StoreModule.Web
 {
-    public class Module : ModuleBase, ISupportExportModule
+    public class Module : ModuleBase, ISupportExportModule, ISupportImportModule
     {
         private readonly IUnityContainer _container;
 
@@ -55,20 +55,6 @@ namespace VirtoCommerce.StoreModule.Web
 
         public override void PostInitialize()
         {
-            var settingsManager = _container.Resolve<ISettingsManager>();
-            var cacheManager = _container.Resolve<CacheManager>();
-
-            var isCachingEnabled = settingsManager.GetValue("Stores.Caching.Enabled", true);
-
-            if (isCachingEnabled)
-            {
-                var cacheSettings = new[]
-                                    {
-                                        new CacheSettings("Virto.Core.Stores", TimeSpan.FromSeconds(settingsManager.GetValue("Stores.Caching.StoreTimeout", 30)))
-                                    };
-
-                cacheManager.AddCacheSettings(cacheSettings);
-            }
         }
         #endregion
 
@@ -78,6 +64,17 @@ namespace VirtoCommerce.StoreModule.Web
         {
             var exportJob = _container.Resolve<StoreExportImport>();
             exportJob.DoExport(outStream, progressCallback);
+        }
+
+        #endregion
+
+        #region ISupportImportModule Members
+
+        public void DoImport(System.IO.Stream inputStream, Action<ExportImportProgressInfo> progressCallback)
+        {
+            var exportJob = _container.Resolve<StoreExportImport>();
+            exportJob.DoImport(inputStream, progressCallback);
+
         }
 
         #endregion

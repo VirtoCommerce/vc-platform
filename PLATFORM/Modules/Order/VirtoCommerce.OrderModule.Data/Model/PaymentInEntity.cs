@@ -10,7 +10,7 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.OrderModule.Data.Model
 {
-	public class PaymentInEntity : OperationEntity, IFinanceInOperation
+	public class PaymentInEntity : OperationEntity
 	{
 		public PaymentInEntity()
 		{
@@ -18,9 +18,14 @@ namespace VirtoCommerce.OrderModule.Data.Model
 		}
 		[StringLength(64)]
 		public string OrganizationId { get; set; }
+		[StringLength(255)]
+		public string OrganizationName { get; set; }
+
 		[Required]
 		[StringLength(64)]
 		public string CustomerId { get; set; }
+		[StringLength(255)]
+		public string CustomerName { get; set; }
 
 		public DateTime? IncomingDate { get; set; }
 		[StringLength(128)]

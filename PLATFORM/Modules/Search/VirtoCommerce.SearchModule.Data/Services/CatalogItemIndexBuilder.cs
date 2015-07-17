@@ -112,6 +112,8 @@ namespace VirtoCommerce.SearchModule.Data.Services
         protected virtual void IndexItem(ref ResultDocument doc, string productId)
         {
             var item = _itemService.GetById(productId, ItemResponseGroup.ItemProperties | ItemResponseGroup.Categories);
+            if(item == null)
+                return;
 
             doc.Add(new DocumentField("__key", item.Id.ToLower(), new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
             //doc.Add(new DocumentField("__loc", "en-us", new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));

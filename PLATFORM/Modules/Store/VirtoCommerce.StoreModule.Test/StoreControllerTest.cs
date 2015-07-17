@@ -4,9 +4,7 @@ using System.Web.Http.Results;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VirtoCommerce.CoreModule.Data.Repositories;
 using VirtoCommerce.Domain.Commerce.Services;
-using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
-using VirtoCommerce.Platform.Data.Caching;
 using VirtoCommerce.Platform.Data.DynamicProperties;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Platform.Data.Repositories;
@@ -25,6 +23,7 @@ namespace VirtoCommerce.StoreModule.Test
         {
             var controller = GetStoreController();
             var result = controller.GetStores() as OkNegotiatedContentResult<Store[]>;
+            Assert.IsNotNull(result);
             Assert.IsNotNull(result.Content);
         }
 
@@ -105,8 +104,7 @@ namespace VirtoCommerce.StoreModule.Test
             Func<IStoreRepository> repositoryFactory = () => new StoreRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor());
 
             var dynamicPropertyService = new DynamicPropertyService(platformRepositoryFactory);
-            var cacheManager = new CacheManager(new InMemoryCachingProvider(), null);
-            var storeService = new StoreServiceImpl(repositoryFactory, cacheManager, GetCommerceService(), null, dynamicPropertyService, null, null);
+            var storeService = new StoreServiceImpl(repositoryFactory, GetCommerceService(), null, dynamicPropertyService, null, null);
 
             var controller = new StoreModuleController(storeService, null, null);
             return controller;

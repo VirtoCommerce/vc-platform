@@ -155,7 +155,6 @@
     <Compile Include="DynamicProperties\Converters\DynamicPropertyNameConverter.cs" />
     <Compile Include="DynamicProperties\Converters\DynamicPropertyObjectValueConverter.cs" />
     <Compile Include="DynamicProperties\DynamicPropertyService.cs" />
-    <Compile Include="ExportImport\JsonExportImport.cs" />
     <Compile Include="ExportImport\PlatformExportImportManager.cs" />
     <Compile Include="Infrastructure\BasicUnitOfWork.cs" />
     <Compile Include="Infrastructure\DbMigrationContext.cs" />

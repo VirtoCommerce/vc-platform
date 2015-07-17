@@ -5,6 +5,7 @@ using System.Linq;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Domain.Order.Services;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Data.ExportImport;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.OrderModule.Web.ExportImport
     }
 
 
-    public sealed class OrderExportImport : JsonExportImport
+    public sealed class OrderExportImport
     {
         private readonly ICustomerOrderSearchService _customerOrderSearchService;
         private readonly ICustomerOrderService _customerOrderService;
@@ -42,7 +43,7 @@ namespace VirtoCommerce.OrderModule.Web.ExportImport
                 Orders = orderIds.Select(id => _customerOrderService.GetById(id, filter)).ToArray(),
             };
 
-            Save(backupStream, backupObject, progressCallback, prodgressInfo);
+            backupObject.SerializeJson(backupStream);
         }
 
     }

@@ -15,12 +15,6 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 			var retVal = new webModel.Shipment();
 			retVal.InjectFrom(shipment);
 
-			retVal.Organization = retVal.OrganizationId;
-			retVal.FulfillmentCenter = retVal.FulfillmentCenterId;
-			retVal.Employee = retVal.EmployeeId;
-
-
-
 			if (shipment.Properties != null)
 				retVal.Properties = shipment.Properties.Select(x => x.ToWebModel()).ToList();
 
@@ -32,6 +26,9 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 
 			if(shipment.Items != null)
 				retVal.Items = shipment.Items.Select(x => x.ToWebModel()).ToList();
+
+			if (shipment.Packages != null)
+				retVal.Packages = shipment.Packages.Select(x => x.ToWebModel()).ToList();
 
 			if (shipment.Discount != null)
 			{
@@ -59,6 +56,9 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 				retVal.Discount = shipment.Discount.ToCoreModel();
 			if (shipment.Items != null)
 				retVal.Items = shipment.Items.Select(x => x.ToCoreModel()).ToList();
+			if (shipment.Packages != null)
+				retVal.Packages = shipment.Packages.Select(x => x.ToCoreModel()).ToList();
+
 			retVal.TaxDetails = shipment.TaxDetails;
 			return retVal;
 		}

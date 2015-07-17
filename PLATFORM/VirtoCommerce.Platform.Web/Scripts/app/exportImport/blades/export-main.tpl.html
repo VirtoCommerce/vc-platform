@@ -6,7 +6,7 @@
 <div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
-            <div class="sub-t">Select data to export</div>
+            <div class="sub-t" ng-if="!blade.notification">Select data to export</div>
             <div class="list __items" ng-if="!blade.notification">
                 <label class="list-item" ng-repeat="data in blade.currentEntities">
                     <input type="checkbox" ng-model="data.isChecked">
@@ -18,6 +18,7 @@
             <div class="form">
                 <div class="block">
                     <div>
+                        <p class="text">{{blade.notification.description}}</p>
                         <div class="block" ng-if="blade.notification.created || blade.notification.finished">
                             <p ng-if="blade.notification.created" ng-class="{'no-data': blade.notification.created}" class="text">Start — <i class="fa fa-clock-o"></i> {{blade.notification.created | date : 'mediumTime'}}</p>
                             <p ng-if="blade.notification.finished" ng-class="{'no-data': blade.notification.finished}" class="text">End — <i class="fa fa-clock-o"></i> {{blade.notification.finished | date : 'mediumTime'}}</p>

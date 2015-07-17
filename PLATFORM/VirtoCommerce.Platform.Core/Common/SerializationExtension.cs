@@ -2,9 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using VirtoCommerce.Platform.Core.ExportImport;
 
 namespace VirtoCommerce.Platform.Core.Common
 {
@@ -36,7 +40,7 @@ namespace VirtoCommerce.Platform.Core.Common
 		/// Extension method to string which attempts to deserialize XML with the same name as the source string.
 		/// </summary>
 		/// <typeparam name="T">The type which to be deserialized to.</typeparam>
-		/// <param name="XML">The source string</param>
+		/// <param name="xml">The source string</param>
 		/// <returns>The deserialized object, or null if unsuccessful.</returns>
 		public static T DeserializeXML<T>(this string xml) where T : class, new()
 		{
@@ -52,5 +56,51 @@ namespace VirtoCommerce.Platform.Core.Common
 				
 			}
 		}
+
+        private static JsonSerializer GetSerializer()
+        {
+            var serializer = new JsonSerializer
+            {
+                TypeNameHandling = TypeNameHandling.Auto,
+                TypeNameAssemblyFormat = FormatterAssemblyStyle.Full,
+                NullValueHandling = NullValueHandling.Ignore,
+                Formatting = Formatting.Indented
+            };
+            serializer.Converters.Add(new JavaScriptDateTimeConverter());
+            return serializer;
+        }
+
+        public static void SerializeJson<T>(this T source, Stream backupStream) where T : class, new()
+        {
+            if (backupStream == null)
+            {
+                throw new ArgumentNullException("backupStream");
+            }
+
+            var serializer = GetSerializer();
+
+            using (var streamWriter = new StreamWriter(backupStream, Encoding.UTF8, 1024, true) { AutoFlush = true })
+            {
+                using (JsonWriter writer = new JsonTextWriter(streamWriter))
+                {
+                    serializer.Serialize(writer, source);
+                }
+            }
+        }
+
+        public static T DeserializeJson<T>(this Stream backupStream) where T : class, new()
+        {
+            var serializer = GetSerializer();
+
+            using (var streamReader = new StreamReader(backupStream, Encoding.UTF8))
+            {
+                using (JsonReader reader = new JsonTextReader(streamReader))
+                {
+                    var result = serializer.Deserialize<T>(reader);
+                    return result;
+                }
+            }
+        }
+
 	}
 }

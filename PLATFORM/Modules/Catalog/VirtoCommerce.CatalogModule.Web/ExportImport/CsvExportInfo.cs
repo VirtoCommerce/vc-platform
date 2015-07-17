@@ -14,6 +14,8 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 		public string PriceListId { get; set; }
 		public string FulfilmentCenterId { get; set; }
 		public CurrencyCodes? Currency { get; set; }
+
+		public CsvProductMappingConfiguration Configuration { get; set; }
 	}
 
 }
