@@ -14,27 +14,11 @@
             scope.context = {};
             scope.context.currentPropValues = [];
             scope.context.allDictionaryValues = [];
-            scope.context.langValuesMap = {};
-
-
-            scope.$watch('context.langValuesMap', function (newValue, oldValue) {
-                if (newValue != oldValue) {
-                    scope.context.currentPropValues = [];
-                    angular.forEach(scope.context.langValuesMap, function (langGroup, locale) {
-                        angular.forEach(langGroup.currentPropValues, function (propValue) {
-                            propValue.locale = locale;
-                            scope.context.currentPropValues.push(propValue);
-                        });
-                    });
-                }
-            }, true);
 
             scope.$watch('context.currentPropValues', function (newValue) {
                 //reflect only real changes
                 if (newValue.length != scope.currentEntity.values.length || difference(newValue).length > 0) {
-                    if (property.isMultilingual) {
-                        scope.currentEntity.values = angular.copy(newValue);
-                    } else if (property.isDictionary) {
+                    if (property.isMultilingual || property.isDictionary) {
                         scope.currentEntity.values = angular.copy(newValue);
                     } else {
                         //Prevent reflect changing when use null value for empty initial values
@@ -66,10 +50,6 @@
                     loadDictionaryValues();
                 }
 
-                //if (property.isMultilingual) {
-                //    initLanguagesValuesMap();
-                //}
-
                 chageValueTemplate();
             };
 
@@ -82,22 +62,6 @@
                 if (!property.isArray && !property.isDictionary && scope.context.currentPropValues.length == 0) {
                     scope.context.currentPropValues.push({});
                 }
-            }
-
-            function initLanguagesValuesMap() {
-                //Group values by language 
-                angular.forEach(property.catalog.languages, function (language) {
-                    addEmptyValueIfNeeded();
-
-                    //All possible dict values
-                    var allValues = _.where(scope.context.allDictionaryValues, { locale: language.locale });
-
-                    var langValuesGroup = {
-                        allValues: allValues,
-                        currentPropValues: scope.context.currentPropValues
-                    };
-                    scope.context.langValuesMap[language.locale] = langValuesGroup;
-                });
             }
 
             function loadDictionaryValues() {

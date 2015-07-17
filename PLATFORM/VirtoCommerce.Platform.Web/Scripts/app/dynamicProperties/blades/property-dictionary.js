@@ -74,6 +74,7 @@
                         angular.extend(foundValue, value);
                     }
                 });
+                newValue.id = $scope.selectedItem.id;
                 newValue.name = $scope.selectedItem.name;
             }
 

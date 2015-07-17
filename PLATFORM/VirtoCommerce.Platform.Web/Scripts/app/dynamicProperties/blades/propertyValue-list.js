@@ -12,7 +12,7 @@
         //    prop.value = parseFloat(prop.value);
         //});
 
-        var selectedProps = _.filter(dynPropertyValues, function (x) { return x.property.isMultilingual; });
+        var selectedProps = _.filter(dynPropertyValues, function (x) { return x.property.isMultilingual && !x.property.isDictionary; });
         if (selectedProps.length > 0) {
             var groupedByProperty = _.groupBy(selectedProps, function (x) { return x.property.id; });
             //$scope.groupedValues = _.map(groupedByProperty, function (values, key) {
@@ -23,7 +23,7 @@
             settings.getValues({ id: 'VirtoCommerce.Core.General.Languages' }, function (promiseData) {
                 promiseData.sort();
 
-                var initializationValues = _.filter(dynPropertyValues, function (x) { return !x.property.isMultilingual; });
+                var initializationValues = _.filter(dynPropertyValues, function (x) { return !x.property.isMultilingual || x.property.isDictionary; });
                 // generating multiple inputs inside single directive
                 _.each(groupedByProperty, function (values) {
                     var localizedValues = [];
@@ -45,22 +45,6 @@
                         values: localizedValues
                     });
                 });
-                //// generating multiple inputs and directives
-                //_.each(groupedByProperty, function (values) {
-                //    _.each(values, function (value) {
-                //        if (value.locale) {
-                //            initializationValues.push(value);
-                //        } else {
-                //            _.each(promiseData, function (x) {
-                //                initializationValues.push({
-                //                    property: value.property,
-                //                    locale: x,
-                //                    values: []
-                //                });
-                //            });
-                //        }
-                //    });
-                //});
 
                 initializeBlade2(initializationValues);
             },
@@ -91,11 +75,17 @@
         var valuesToSave = _.filter(blade.currentEntities, function (x) { return !x.property.isMultilingual; });;
         var selectedProps = _.filter(blade.currentEntities, function (x) { return x.property.isMultilingual; });
         _.each(selectedProps, function (prop) {
-            _.each(prop.values, function (value) {
-                if (value.values.length > 0 && value.values[0].value) {
-                    valuesToSave.push({ property: prop.property, locale: value.locale, values: _.pluck(value.values, 'value') });
+            if (prop.property.isDictionary) {
+                if (prop.values.length > 0 && prop.values[0].value) {
+                    valuesToSave.push(prop);
                 }
-            });
+            } else {
+                _.each(prop.values, function (value) {
+                    if (value.values.length > 0 && value.values[0].value) {
+                        valuesToSave.push({ property: prop.property, locale: value.locale, values: _.pluck(value.values, 'value') });
+                    }
+                });
+            }
         });
 
         angular.copy(valuesToSave, blade.data);
