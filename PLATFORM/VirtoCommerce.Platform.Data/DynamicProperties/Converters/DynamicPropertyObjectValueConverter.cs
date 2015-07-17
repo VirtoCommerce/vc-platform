@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Newtonsoft.Json.Linq;
 using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Data.Model;
 
@@ -58,7 +58,19 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
 
             if (property.IsDictionary)
             {
-                result.DictionaryItemId = ((DynamicPropertyDictionaryItem)value).Id;
+                var item = value as DynamicPropertyDictionaryItem;
+
+                if (item == null)
+                {
+                    var jObject = value as JObject;
+                    if (jObject != null)
+                    {
+                        item = jObject.ToObject<DynamicPropertyDictionaryItem>();
+                    }
+                }
+
+                if (item != null)
+                    result.DictionaryItemId = item.Id;
             }
             else
             {
