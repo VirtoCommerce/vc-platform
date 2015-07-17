@@ -304,8 +304,7 @@
     <Compile Include="Model\Asset\BlobInfo.cs" />
     <Compile Include="Model\ExportImport\ImportInfo.cs" />
     <Compile Include="Model\ExportImport\NotificationEvent\ExportImportNotificationEvent.cs" />
-    <Compile Include="Model\ExportImport\PlatformExportRequest.cs" />
-    <Compile Include="Model\ExportImport\PlatformImportRequest.cs" />
+    <Compile Include="Model\ExportImport\PlatformExportImportRequest.cs" />
     <Compile Include="Model\Jobs\Job.cs" />
     <Compile Include="Model\Notification\Notification.cs" />
     <Compile Include="Model\Notification\NotificationParameter.cs" />

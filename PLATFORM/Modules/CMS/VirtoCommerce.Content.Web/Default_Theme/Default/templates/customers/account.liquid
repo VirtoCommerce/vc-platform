@@ -9,8 +9,8 @@
   <div class="grid-item two-thirds medium-down--one-whole">
     <h4>{{ 'customer.orders.title' | t }}</h4>
 
+    {% paginate customer.orders by 5 %}
     {% if customer.orders.size != 0 %}
-
       <table class="full">
         <thead>
           <tr>
@@ -33,12 +33,13 @@
           {% endfor %}
         </tbody>
       </table>
-
+      {% if paginate.pages > 1 %}
+        {% include 'pagination-custom' %}
+      {% endif %}
     {% else %}
-
       <p>{{ 'customer.orders.none' | t }}</p>
-
     {% endif %}
+    {% endpaginate %}
   </div>
 
   <div class="grid-item one-third medium-down--one-whole">
@@ -78,7 +79,7 @@
 
     {% endif %}
 
-    <p><a href="/account/addresses">{{ 'customer.account.view_addresses' | t }} ({{ customer.addresses_count }})</a></p>
+    <p><a href="{{ shop.simplified_url }}/account/addresses">{{ 'customer.account.view_addresses' | t }} ({{ customer.addresses_count }})</a></p>
   </div>
 
 </div>

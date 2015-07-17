@@ -9,7 +9,7 @@
     },
     "404": {
       "title": "404 Page Not Found",
-      "subtext_html": "The page you requested does not exist. Click <a href=\"/collections/all\">here</a> to continue shopping."
+      "subtext_html": "The page you requested does not exist. Click <a href=\"collections/all\">here</a> to continue shopping."
     },
     "breadcrumbs": {
       "home": "Home",
@@ -64,7 +64,7 @@
       "update": "Update cart",
       "checkout": "Checkout",
       "empty": "Your cart is currently empty.",
-      "continue_browsing_html": "Continue browsing <a href=\"/collections/all\">here</a>.",
+      "continue_browsing_html": "Continue browsing <a href=\"collections/all\">here</a>.",
       "or": "or",
       "view_cart": "View Cart",
       "close_cart": "Close Cart"
@@ -215,7 +215,7 @@
     "featured_collections": {
       "heading": "Shop For",
       "more_categories": "More categories",
-      "no_collections_html": "You don't have any collections to show here. <a href=\"/admin/themes/\">Add some featured collections</a> in your theme settings.",
+      "no_collections_html": "You don't have any collections to show here. <a href=\"admin/themes/\">Add some featured collections</a> in your theme settings.",
       "collection_image": "Collection Image",
       "example_collection": "Example Collection"
     },

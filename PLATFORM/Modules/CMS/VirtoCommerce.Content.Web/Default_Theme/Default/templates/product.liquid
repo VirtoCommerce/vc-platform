@@ -71,7 +71,7 @@
 
       <link itemprop="availability" href="http://schema.org/{% if product.available %}InStock{% else %}OutOfStock{% endif %}">
 
-      <form action="/cart/add" method="post" enctype="multipart/form-data" id="addToCartForm">
+      <form action="{{ shop.simplified_url }}/cart/add" method="post" enctype="multipart/form-data" id="addToCartForm">
         <select name="id" id="productSelect" class="product-variants">
           {% for variant in product.variants %}
             {% if variant.available %}

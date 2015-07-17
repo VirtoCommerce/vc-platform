@@ -15,6 +15,17 @@ namespace VirtoCommerce.Platform.Core.ExportImport
 		public string Author { get; set; }
 		public string CheckSum { get; set; }
 
+		/// <summary>
+		/// Part for platform accounts and acl
+		/// </summary>
+		public string SecurityPartUri { get; set; }
+		/// <summary>
+		/// Part for platform settings
+		/// </summary>
+		public string PlatformSettingsPartUri { get; set; }
+		/// <summary>
+		/// Modules parts information 
+		/// </summary>
 		public ExportModuleInfo[] Modules { get; set; }
 	}
 

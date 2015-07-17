@@ -10,6 +10,8 @@ using Omu.ValueInjecter;
 using coreModel = VirtoCommerce.Domain.Cart.Model;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Common.ConventionInjections;
+using VirtoCommerce.Domain.Payment.Model;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.OrderModule.Data.Converters
 {
@@ -23,6 +25,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			var retVal = new PaymentIn();
 			retVal.InjectFrom(entity);
 			retVal.Currency = (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), entity.Currency);
+			retVal.PaymentStatus = EnumUtility.SafeParse<PaymentStatus>(entity.Status, PaymentStatus.Custom);
 
 			if (entity.Properties != null)
 			{
@@ -46,6 +49,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			retVal.Currency = payment.Currency;
 			retVal.GatewayCode = payment.PaymentGatewayCode;
 			retVal.Sum = payment.Amount;
+			retVal.PaymentStatus = PaymentStatus.New;
 
 			if(payment.BillingAddress != null)
 			{
@@ -64,6 +68,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			retVal.InjectFrom(paymentIn);
 
 			retVal.Currency = paymentIn.Currency.ToString();
+			retVal.Status = paymentIn.PaymentStatus.ToString();
 
 			if (paymentIn.Properties != null)
 			{
@@ -88,7 +93,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 
 			source.Patch((OperationEntity)target);
 
-			var patchInjectionPolicy = new PatchInjection<PaymentInEntity>(x => x.CustomerId, x => x.OrganizationId, x => x.GatewayCode, x => x.Purpose, x => x.OuterId);
+			var patchInjectionPolicy = new PatchInjection<PaymentInEntity>(x => x.CustomerId, x => x.OrganizationId, x => x.GatewayCode, x => x.Purpose, x => x.OuterId, x => x.Status, x => x.AuthorizedDate, x => x.CapturedDate, x => x.VoidedDate, x => x.IsCancelled, x => x.CancelledDate, x => x.CancelReason);
 			target.InjectFrom(patchInjectionPolicy, source);
 
 			if (!source.Addresses.IsNullCollection())

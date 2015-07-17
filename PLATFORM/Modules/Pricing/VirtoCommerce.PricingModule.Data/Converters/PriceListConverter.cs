@@ -50,7 +50,10 @@ namespace VirtoCommerce.PricingModule.Data.Converters
 			{
 				retVal.Prices = new ObservableCollection<dataModel.Price>(priceList.Prices.Select(x=>x.ToDataModel()));
 			}
-
+			if(priceList.Assignments != null)
+			{
+				retVal.Assignments = new ObservableCollection<dataModel.PricelistAssignment>(priceList.Assignments.Select(x => x.ToDataModel()));
+			}
 			return retVal;
 		}
 
@@ -71,7 +74,10 @@ namespace VirtoCommerce.PricingModule.Data.Converters
 			{
 				source.Prices.Patch(target.Prices, (sourcePrice, targetPrice) => sourcePrice.Patch(targetPrice));
 			}
-		
+			if (!source.Assignments.IsNullCollection())
+			{
+				source.Assignments.Patch(target.Assignments, (sourceAssignment, targetAssignment) => sourceAssignment.Patch(targetAssignment));
+			}
 		} 
 
 
