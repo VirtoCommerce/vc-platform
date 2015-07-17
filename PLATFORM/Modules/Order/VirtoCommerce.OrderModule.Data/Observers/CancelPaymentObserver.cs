@@ -6,16 +6,18 @@ using System.Threading.Tasks;
 using VirtoCommerce.Domain.Order.Events;
 using VirtoCommerce.Domain.Payment.Model;
 using VirtoCommerce.Domain.Payment.Services;
+using VirtoCommerce.Domain.Store.Services;
 
 namespace VirtoCommerce.OrderModule.Data.Observers
 {
 	public class CancelPaymentObserver : IObserver<OrderChangeEvent>
 	{
 		private readonly IPaymentMethodsService _paymentMethodService;
+		private readonly IStoreService _storeService;
 
-		public CancelPaymentObserver(IPaymentMethodsService paymentMethodService)
+		public CancelPaymentObserver(IStoreService storeService)
 		{
-			_paymentMethodService = paymentMethodService;
+			_storeService = storeService;
 		}
 
 		public void OnCompleted()
@@ -44,7 +46,8 @@ namespace VirtoCommerce.OrderModule.Data.Observers
 						var op = value.OrigOrder.InPayments.FirstOrDefault(p => p.Id == payment.Id);
 						if (op != null && op.PaymentStatus != PaymentStatus.Cancelled && op.PaymentStatus != PaymentStatus.Voided && op.PaymentStatus != PaymentStatus.Refunded)
 						{
-							var method = _paymentMethodService.GetAllPaymentMethods().FirstOrDefault(p => p.Code == op.GatewayCode);
+							var store = _storeService.GetById(value.ModifiedOrder.StoreId);
+							var method = store.PaymentMethods.FirstOrDefault(p => p.Code == op.GatewayCode);
 							if(method != null)
 							{
 								if(op.PaymentStatus == PaymentStatus.Authorized)

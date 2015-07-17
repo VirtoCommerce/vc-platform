@@ -213,7 +213,7 @@ namespace Klarna.Checkout.Euro.Managers
 
 			var retVal = new VoidProcessPaymentResult();
 
-			if (!context.Payment.IsApproved && !context.Payment.IsCancelled)
+			if (!context.Payment.IsApproved && (context.Payment.PaymentStatus == PaymentStatus.Authorized || context.Payment.PaymentStatus == PaymentStatus.Cancelled))
 			{
 				Uri resourceUri = new Uri(string.Format("{0}/{1}", _euroTestBaseUrl, context.Payment.OuterId));
 				var connector = Connector.Create(AppSecret);
@@ -277,7 +277,7 @@ namespace Klarna.Checkout.Euro.Managers
 
 			var retVal = new RefundProcessPaymentResult();
 
-			if (context.Payment.IsApproved && !context.Payment.IsCancelled)
+			if (context.Payment.IsApproved && (context.Payment.PaymentStatus == PaymentStatus.Paid || context.Payment.PaymentStatus == PaymentStatus.Cancelled))
 			{
 				Configuration configuration = new Configuration(Country.Code.SE, Language.Code.SV, Currency.Code.SEK, Encoding.Sweden)
 				{
@@ -366,9 +366,9 @@ namespace Klarna.Checkout.Euro.Managers
 			var html = gui["snippet"].Value<string>();
 
 			retVal.IsSuccess = true;
-			retVal.NewPaymentStatus = PaymentStatus.Pending;
+			retVal.NewPaymentStatus = context.Payment.PaymentStatus = PaymentStatus.Pending;
 			retVal.HtmlForm = html;
-			retVal.OuterId = order.GetValue("id") as string;
+			retVal.OuterId = context.Payment.OuterId = order.GetValue("id") as string;
 
 			return retVal;
 		}

@@ -249,7 +249,7 @@ namespace Paypal.ExpressCheckout.Managers
 
 			CaptureProcessPaymentResult retVal = new CaptureProcessPaymentResult();
 
-			if (!context.Payment.IsApproved && context.Payment.PaymentStatus == PaymentStatus.Authorized)
+			if (!context.Payment.IsApproved && (context.Payment.PaymentStatus == PaymentStatus.Authorized || context.Payment.PaymentStatus == PaymentStatus.Cancelled))
 			{
 				try
 				{
@@ -285,7 +285,7 @@ namespace Paypal.ExpressCheckout.Managers
 
 			RefundProcessPaymentResult retVal = new RefundProcessPaymentResult();
 
-			if(context.Payment.IsApproved)
+			if (context.Payment.IsApproved && (context.Payment.PaymentStatus == PaymentStatus.Paid || context.Payment.PaymentStatus == PaymentStatus.Cancelled))
 			{
 				try
 				{

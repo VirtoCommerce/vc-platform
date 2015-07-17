@@ -111,12 +111,9 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
             };
 
             var result = paymentMethod.ProcessPayment(context);
-            if (result.NewPaymentStatus == PaymentStatus.Pending || result.NewPaymentStatus == PaymentStatus.Paid)
-            {
-                payment.OuterId = result.OuterId;
-				payment.IsApproved = result.NewPaymentStatus == PaymentStatus.Paid;
-                _customerOrderService.Update(new coreModel.CustomerOrder[] { order });
-            }
+
+            _customerOrderService.Update(new coreModel.CustomerOrder[] { order });
+
             var retVal = new webModel.ProcessPaymentResult();
             retVal.InjectFrom(result);
             retVal.PaymentMethodType = paymentMethod.PaymentMethodType;

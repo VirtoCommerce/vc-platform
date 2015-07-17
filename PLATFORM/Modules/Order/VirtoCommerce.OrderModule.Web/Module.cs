@@ -61,6 +61,8 @@ namespace VirtoCommerce.OrderModule.Web
             _container.RegisterType<IObserver<OrderChangeEvent>, AdjustInventoryObserver>("AdjustInventoryObserver");
 			//Create order observer. Send notification
 			_container.RegisterType<IObserver<OrderChangeEvent>, CreateOrderObserver>("CreateOrderObserver");
+			//Cancel payment observer. Payment method cancel operations
+			_container.RegisterType<IObserver<OrderChangeEvent>, CancelPaymentObserver>("CancelPaymentObserver");
 
             _container.RegisterType<IOrderRepository>(new InjectionFactory(c => new OrderRepositoryImpl("VirtoCommerce", new AuditableInterceptor(), new EntityPrimaryKeyGeneratorInterceptor())));
             //_container.RegisterInstance<IInventoryService>(new Mock<IInventoryService>().Object);

@@ -3,7 +3,7 @@ namespace VirtoCommerce.OrderModule.Data.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class AddPaymentStatusAndDates : DbMigration
+    public partial class AddDatesStatusChanges : DbMigration
     {
         public override void Up()
         {

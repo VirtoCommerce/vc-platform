@@ -7,13 +7,13 @@ namespace VirtoCommerce.OrderModule.Data.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.1-30610")]
-    public sealed partial class AddPaymentStatusAndDates : IMigrationMetadata
+    public sealed partial class AddDatesStatusChanges : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(AddPaymentStatusAndDates));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(AddDatesStatusChanges));
         
         string IMigrationMetadata.Id
         {
-            get { return "201507151421184_AddPaymentStatusAndDates"; }
+            get { return "201507170854444_AddDatesStatusChanges"; }
         }
         
         string IMigrationMetadata.Source
