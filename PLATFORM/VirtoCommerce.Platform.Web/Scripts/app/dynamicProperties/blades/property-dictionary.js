@@ -91,7 +91,7 @@
     $scope.add = function (form) {
         if (form.$valid) {
             if ($scope.newValue.displayNames) {
-                $scope.newValue.displayNames = _.filter($scope.newValue.displayNames, function (x) { return x.value; });
+                $scope.newValue.displayNames = _.filter($scope.newValue.displayNames, function (x) { return x.name; });
 
                 if ($scope.selectedItem) { // editing existing value
                     angular.copy($scope.newValue, $scope.selectedItem);
