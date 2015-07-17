@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VirtoCommerce.Domain.Payment.Model;
 
 namespace VirtoCommerce.Domain.Order.Model
 {
@@ -21,6 +22,11 @@ namespace VirtoCommerce.Domain.Order.Model
 		public DateTime? IncomingDate { get; set; }
 		public string OuterId { get; set; }
 		public Address BillingAddress { get; set; }
+
+		public PaymentStatus PaymentStatus { get; set; }
+		public DateTime? AuthorizedDate { get; set; }
+		public DateTime? CapturedDate { get; set; }
+		public DateTime? VoidedDate { get; set; }
 
 		public override IEnumerable<Operation> ChildrenOperations
 		{

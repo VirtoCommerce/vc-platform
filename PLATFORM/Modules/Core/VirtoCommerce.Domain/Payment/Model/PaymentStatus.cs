@@ -12,6 +12,10 @@ namespace VirtoCommerce.Domain.Payment.Model
 	public enum PaymentStatus
 	{
 		/// <summary>
+		/// New
+		/// </summary>
+		New,
+		/// <summary>
 		/// Pending
 		/// </summary>
 		Pending,
@@ -34,6 +38,14 @@ namespace VirtoCommerce.Domain.Payment.Model
 		/// <summary>
 		/// Voided
 		/// </summary>
-		Voided
+		Voided,
+		/// <summary>
+		/// Custom
+		/// </summary>
+		Custom,
+		/// <summary>
+		/// Cancelled
+		/// </summary>
+		Cancelled
 	}
 }
