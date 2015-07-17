@@ -10,6 +10,7 @@ using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
 using moduleModel = VirtoCommerce.Domain.Catalog.Model;
 using webModel = VirtoCommerce.MerchandisingModule.Web.Model;
+using storeModel = VirtoCommerce.Domain.Store.Model;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 {
@@ -53,7 +54,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         [Route("")]
 		public IHttpActionResult GetCategoryByCode(string store, [FromUri] string code, string language = "en-us")
 		{
-			var catalog = _storeService.GetById(store).Catalog;
+			var catalog = GetStoreById(store).Catalog;
 			var searchCriteria = new SearchCriteria
 			{
 				ResponseGroup = ResponseGroup.WithCategories,
@@ -81,7 +82,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         [Route("")]
 		public IHttpActionResult GetCategoryByKeyword(string store, [FromUri] string keyword, string language = "en-us")
 		{
-			var catalog = _storeService.GetById(store).Catalog;
+			var catalog = GetStoreById(store).Catalog;
 			var searchCriteria = new SearchCriteria
 			{
 				ResponseGroup = ResponseGroup.WithCategories,
@@ -99,6 +100,13 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 				}
 			}
 			return NotFound();
+		}
+
+		private storeModel.Store GetStoreById(string storeId)
+		{
+			var cacheKey = CacheKey.Create("MP", "GetStoreById", storeId);
+			var retVal = _cacheManager.Get(cacheKey, () => _storeService.GetById(storeId));
+			return retVal;
 		}
 
         /// <summary>

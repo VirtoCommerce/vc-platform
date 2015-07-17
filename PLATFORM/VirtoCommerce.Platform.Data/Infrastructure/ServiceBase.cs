@@ -31,6 +31,7 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
 							}
 							else
 							{
+								setting.Value = setting.DefaultValue;
 								resultSettings.Add(setting);
 							}
 						}

@@ -9,7 +9,7 @@
     },
     "404": {
       "title": "404 Seite nicht gefunden",
-      "subtext_html": "Die von Ihnen angeforderte Seite existiert nicht. Klicken Sie <a href=\"/collections/all\">hier</a>, um den Einkauf fortzusetzen."
+      "subtext_html": "Die von Ihnen angeforderte Seite existiert nicht. Klicken Sie <a href=\"collections/all\">hier</a>, um den Einkauf fortzusetzen."
     },
     "breadcrumbs": {
       "home": "Startseite",
@@ -64,7 +64,7 @@
       "update": "Einkaufswagen aktualisieren",
       "checkout": "Zur Kasse",
       "empty": "Ihr Einkaufswagen ist im Moment leer.",
-      "continue_browsing_html": "Mit der Suche <a href=\"/collections/all\">hier</a> fortfahren.",
+      "continue_browsing_html": "Mit der Suche <a href=\"collections/all\">hier</a> fortfahren.",
       "or": "oder",
       "view_cart": "Einkaufswagen ansehen",
       "close_cart": "Einkaufswagen schließen"
@@ -215,7 +215,7 @@
     "featured_collections": {
       "heading": "Suchen nach",
       "more_categories": "Weitere Kategorien",
-      "no_collections_html": "Sie haben keine Zusammenstellungen, die Sie hier anzeigen können. <a href=\"/admin/themes/\">Fügen Sie ein paar ausgewählte Zusammenstellungen</a> in Ihren Theme-Einstellungen hinzu.",
+      "no_collections_html": "Sie haben keine Zusammenstellungen, die Sie hier anzeigen können. <a href=\"admin/themes/\">Fügen Sie ein paar ausgewählte Zusammenstellungen</a> in Ihren Theme-Einstellungen hinzu.",
       "collection_image": "Bild der Zusammenstellung",
       "example_collection": "Beispielzusammenstellung"
     },

@@ -97,9 +97,31 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Default_Theme\Default\assets\arrow-left.svg" />
+    <Content Include="Default_Theme\Default\assets\arrow-right.svg" />
+    <Content Include="Default_Theme\Default\assets\arrow.svg" />
     <Content Include="Default_Theme\Default\assets\arrow_switch.png" />
+    <Content Include="Default_Theme\Default\assets\cart.svg" />
+    <Content Include="Default_Theme\Default\assets\collection-view-grid.svg" />
+    <Content Include="Default_Theme\Default\assets\collection-view-list.svg" />
+    <Content Include="Default_Theme\Default\assets\favicon.png" />
     <Content Include="Default_Theme\Default\assets\flags.png" />
+    <Content Include="Default_Theme\Default\assets\hamburger.svg" />
+    <Content Include="Default_Theme\Default\assets\handlebars.min.js" />
+    <Content Include="Default_Theme\Default\assets\icons.svg" />
+    <Content Include="Default_Theme\Default\assets\jquery.flexslider.min.js" />
+    <Content Include="Default_Theme\Default\assets\jquery.zoom.min.js" />
+    <Content Include="Default_Theme\Default\assets\logo.png" />
+    <Content Include="Default_Theme\Default\assets\modernizr.min.js" />
+    <Content Include="Default_Theme\Default\assets\remove.svg" />
+    <Content Include="Default_Theme\Default\assets\respond-proxy.html" />
+    <Content Include="Default_Theme\Default\assets\respond.min.js" />
+    <Content Include="Default_Theme\Default\assets\slide_1.jpg" />
+    <Content Include="Default_Theme\Default\assets\slide_2.jpg" />
     <Content Include="module.manifest" />
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Default_Theme\Default\assets\ajaxify.js.liquid" />
     <Content Include="Default_Theme\Default\assets\ajaxify.scss.liquid" />
     <Content Include="Default_Theme\Default\assets\checkout.css.liquid" />
@@ -156,13 +178,6 @@
     <Content Include="Default_Theme\Default\templates\cart.liquid" />
     <Content Include="Default_Theme\Default\templates\collection.liquid" />
     <Content Include="Default_Theme\Default\templates\collection.list.liquid" />
-    <Content Include="Default_Theme\Default\templates\customers\account.liquid" />
-    <Content Include="Default_Theme\Default\templates\customers\activate_account.liquid" />
-    <Content Include="Default_Theme\Default\templates\customers\addresses.liquid" />
-    <Content Include="Default_Theme\Default\templates\customers\login.liquid" />
-    <Content Include="Default_Theme\Default\templates\customers\order.liquid" />
-    <Content Include="Default_Theme\Default\templates\customers\register.liquid" />
-    <Content Include="Default_Theme\Default\templates\customers\reset_password.liquid" />
     <Content Include="Default_Theme\Default\templates\gift_card.liquid" />
     <Content Include="Default_Theme\Default\templates\index.liquid" />
     <Content Include="Default_Theme\Default\templates\list-collections.liquid" />
@@ -170,9 +185,13 @@
     <Content Include="Default_Theme\Default\templates\page.liquid" />
     <Content Include="Default_Theme\Default\templates\product.liquid" />
     <Content Include="Default_Theme\Default\templates\search.liquid" />
-    <Content Include="packages.config">
-      <SubType>Designer</SubType>
-    </Content>
+    <Content Include="Default_Theme\Default\templates\customers\account.liquid" />
+    <Content Include="Default_Theme\Default\templates\customers\activate_account.liquid" />
+    <Content Include="Default_Theme\Default\templates\customers\addresses.liquid" />
+    <Content Include="Default_Theme\Default\templates\customers\login.liquid" />
+    <Content Include="Default_Theme\Default\templates\customers\order.liquid" />
+    <Content Include="Default_Theme\Default\templates\customers\register.liquid" />
+    <Content Include="Default_Theme\Default\templates\customers\reset_password.liquid" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -183,25 +202,6 @@
   <ItemGroup>
     <Content Include="Content\css\pages.css" />
     <Content Include="Content\css\themes.css" />
-    <Content Include="Default_Theme\Default\assets\arrow-left.svg" />
-    <Content Include="Default_Theme\Default\assets\arrow-right.svg" />
-    <Content Include="Default_Theme\Default\assets\arrow.svg" />
-    <Content Include="Default_Theme\Default\assets\cart.svg" />
-    <Content Include="Default_Theme\Default\assets\collection-view-grid.svg" />
-    <Content Include="Default_Theme\Default\assets\collection-view-list.svg" />
-    <Content Include="Default_Theme\Default\assets\favicon.png" />
-    <Content Include="Default_Theme\Default\assets\hamburger.svg" />
-    <Content Include="Default_Theme\Default\assets\handlebars.min.js" />
-    <Content Include="Default_Theme\Default\assets\icons.svg" />
-    <Content Include="Default_Theme\Default\assets\jquery.flexslider.min.js" />
-    <Content Include="Default_Theme\Default\assets\jquery.zoom.min.js" />
-    <Content Include="Default_Theme\Default\assets\logo.png" />
-    <Content Include="Default_Theme\Default\assets\modernizr.min.js" />
-    <Content Include="Default_Theme\Default\assets\remove.svg" />
-    <Content Include="Default_Theme\Default\assets\respond-proxy.html" />
-    <Content Include="Default_Theme\Default\assets\respond.min.js" />
-    <Content Include="Default_Theme\Default\assets\slide_1.jpg" />
-    <Content Include="Default_Theme\Default\assets\slide_2.jpg" />
     <Content Include="Scripts\blades\common\content-main.js" />
     <Content Include="Scripts\blades\common\content-main.tpl.html" />
     <Content Include="Scripts\blades\themes\add-theme.js" />

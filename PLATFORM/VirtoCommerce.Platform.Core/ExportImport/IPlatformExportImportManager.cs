@@ -13,7 +13,7 @@ namespace VirtoCommerce.Platform.Core.ExportImport
 	public interface IPlatformExportImportManager
 	{
 		PlatformExportManifest ReadPlatformExportManifest(Stream stream);
-		void Export(Stream outStream, ModuleDescriptor[] modules, SemanticVersion platformVersion, Action<ExportImportProgressInfo> progressCallback);
-		void Import(Stream inputStream, ModuleDescriptor[] modules, Action<ExportImportProgressInfo> progressCallback);
+		void Export(Stream outStream, PlatformExportImportOptions exportOptions, Action<ExportImportProgressInfo> progressCallback);
+		void Import(Stream inputStream, PlatformExportImportOptions importOptions, Action<ExportImportProgressInfo> progressCallback);
 	}
 }

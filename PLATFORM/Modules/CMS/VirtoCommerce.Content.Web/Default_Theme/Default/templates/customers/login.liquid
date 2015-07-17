@@ -4,19 +4,26 @@
 
   <div class="grid-item large--one-third push--large--one-third text-center">
 
+    <div class="note form-success" id="resetSuccess" style="display:none;">
+      We've sent you an email with a link to update your password.
+    </div>
+
     {% form 'external_login' %}
         {% for login_provider in login_providers %}
             <input name="context[authentication_type]" type="submit" class="btn" value="{{ login_provider.authentication_type }}" title="{{ login_provider.caption }}" />
         {% endfor %}
     {% endform %}
 
-    <div class="note form-success" id="resetSuccess" style="display:none;">
-      We've sent you an email with a link to update your password.
-    </div>
-
     {% form 'customer_login' %}
 
-      <h1>{{ 'customer.login.title' | t }}</h1>
+      {% if impersonated_user_name != null %}
+        <h1>
+            {{ 'customer.login.title' | t }}<br />
+            <small>for {{ impersonated_user_name }}</small>
+        </h1>
+      {% else %}
+        <h1>{{ 'customer.login.title' | t }}</h1>
+      {% endif %}
 
       {% include 'form-errors-custom' %}
 
@@ -32,6 +39,10 @@
           <a href="#" onclick="showRecoverPasswordForm();return false;">{{ 'customer.login.forgot_password' | t }}</a>
         </p>
 
+      {% endif %}
+
+      {% if impersonated_user_id != null %}
+        <input id="impersonated_user_id" name="customer[impersonated_user_id]" type="hidden" value="{{ impersonated_user_id }}" />
       {% endif %}
 
         <p>
