@@ -42,7 +42,7 @@ namespace VirtoCommerce.PricingModule.Data.Repositories
 			modelBuilder.Entity<Pricelist>().ToTable("Pricelist");
 
 			modelBuilder.Entity<PricelistAssignment>().HasKey(x => x.Id).Property(x => x.Id);
-			modelBuilder.Entity<PricelistAssignment>().HasRequired(x => x.Pricelist).WithMany().HasForeignKey(x => x.PricelistId);
+			modelBuilder.Entity<PricelistAssignment>().HasRequired(x => x.Pricelist).WithMany(x=>x.Assignments).HasForeignKey(x => x.PricelistId);
 			modelBuilder.Entity<PricelistAssignment>().ToTable("PricelistAssignment");
 
 			base.OnModelCreating(modelBuilder);

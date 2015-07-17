@@ -292,11 +292,6 @@ namespace VirtoCommerce.PricingModule.Data.Services
 
                     changeTracker.Attach(targetEntity);
                     sourceEntity.Patch(targetEntity);
-
-                    if (priceList.Assignments != null)
-                    {
-                        UpdatePricelistAssignments(priceList.Assignments.ToArray());
-                    }
                 }
 
                 CommitChanges(repository);

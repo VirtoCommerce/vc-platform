@@ -10,7 +10,8 @@ namespace VirtoCommerce.PricingModule.Data.Model
 	{
 		public Pricelist()
 		{
-			Prices = new ObservableCollection<Price>();
+			Prices = new NullCollection<Price>();
+			Assignments = new NullCollection<PricelistAssignment>();
 		}
 
 		[Required]
@@ -28,6 +29,7 @@ namespace VirtoCommerce.PricingModule.Data.Model
 		#region Navigation Properties
 
 		public virtual ObservableCollection<Price> Prices { get; set; }
+		public virtual ObservableCollection<PricelistAssignment> Assignments { get; set; }
 	
 		#endregion
 	}
