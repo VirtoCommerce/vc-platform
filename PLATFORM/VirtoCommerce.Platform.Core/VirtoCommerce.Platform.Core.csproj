@@ -132,6 +132,7 @@
     <Compile Include="Common\TreeExtension.cs" />
     <Compile Include="Common\ValueObject.cs" />
     <Compile Include="ExportImport\ISupportImportModule.cs" />
+    <Compile Include="ExportImport\PlatformExportImportOptions.cs" />
     <Compile Include="ExportImport\PlatformExportManifest.cs" />
     <Compile Include="Modularity\ManifestDependency.cs" />
     <Compile Include="Modularity\ModuleBase.cs" />
