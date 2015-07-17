@@ -22,7 +22,7 @@
                         <div class="form-input __langs" ng-repeat="data in newValue.displayNames">
                             <ng-form name="valuesForm">
                                 <span class="flag flag-{{data.locale.substr(3).toLowerCase()}}"></span>
-                                <input ng-model="data.value" class="form-control" ui-validate=" 'dictValueValidator($value, data)' " name="mValue" placeholder="Enter value" />
+                                <input ng-model="data.name" class="form-control" ui-validate=" 'dictValueValidator($value, data)' " name="mValue" placeholder="Enter value" />
                                 <div class="form-error" ng-if="valuesForm.mValue.$dirty && valuesForm.mValue.$invalid">
                                     <span ng-if="valuesForm.mValue.$error.required">Required</span>
                                     <span ng-if="valuesForm.mValue.$error.validator">Duplicate name found</span>
@@ -76,7 +76,7 @@
                                     <td class="table-col" ng-if="blade.currentEntity.isMultilingual">
                                         <div ng-repeat="data in data.displayNames | orderBy:'locale'" style="margin:5px 0;">
                                             <span class="flag flag-{{data.locale.substr(3, 2).toLowerCase()}}"></span>
-                                            {{data.value}}
+                                            {{data.name}}
                                         </div>
                                     </td>
                                 </tr>
