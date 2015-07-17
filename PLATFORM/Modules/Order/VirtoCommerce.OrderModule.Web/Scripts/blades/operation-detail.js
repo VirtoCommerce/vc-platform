@@ -179,7 +179,7 @@
 					                if (reason) {
 					                    $scope.blade.currentEntity.cancelReason = reason;
 					                    $scope.blade.currentEntity.isCancelled = true;
-					                    $scope.blade.currentEntity.status = 'cancelled';
+					                    $scope.blade.currentEntity.status = 'Cancelled';
 					                    saveChanges();
 					                }
 					            }

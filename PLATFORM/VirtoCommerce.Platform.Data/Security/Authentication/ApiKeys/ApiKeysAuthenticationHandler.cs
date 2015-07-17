@@ -1,4 +1,4 @@
-﻿using VirtoCommerce.Platform.Data.Model;
+﻿using VirtoCommerce.Platform.Core.Security;
 
 namespace VirtoCommerce.Platform.Data.Security.Authentication.ApiKeys
 {

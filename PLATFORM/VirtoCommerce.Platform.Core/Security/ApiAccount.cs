@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace VirtoCommerce.Platform.Web.Model.Security
+namespace VirtoCommerce.Platform.Core.Security
 {
     public class ApiAccount
     {

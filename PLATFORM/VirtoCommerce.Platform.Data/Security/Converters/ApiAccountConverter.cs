@@ -1,42 +1,40 @@
 ﻿using System;
 using Omu.ValueInjecter;
+using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Common.ConventionInjections;
 using dataModel = VirtoCommerce.Platform.Data.Model;
-using webModel = VirtoCommerce.Platform.Web.Model.Security;
 
-namespace VirtoCommerce.Platform.Web.Converters.Security
+namespace VirtoCommerce.Platform.Data.Security.Converters
 {
     public static class ApiAccountConverter
     {
-
-        public static dataModel.ApiAccountEntity ToFoundation(this webModel.ApiAccount account)
+        public static ApiAccount ToCoreModel(this dataModel.ApiAccountEntity entity)
         {
-            var result = new dataModel.ApiAccountEntity();
-            result.InjectFrom(account);
+            var result = new ApiAccount();
+            result.InjectFrom(entity);
 
-            if (account.Id != null)
-            {
-                result.Id = account.Id;
-            }
-
-            if (account.IsActive != null)
-            {
-                result.IsActive = account.IsActive.Value;
-            }
-
-            result.ApiAccountType = (dataModel.ApiAccountType)account.ApiAccountType;
+            result.ApiAccountType = entity.ApiAccountType;
+            result.IsActive = entity.IsActive;
 
             return result;
         }
 
-        public static webModel.ApiAccount ToWebModel(this dataModel.ApiAccountEntity account)
+        public static dataModel.ApiAccountEntity ToEntity(this ApiAccount model)
         {
-            var result = new webModel.ApiAccount();
-            result.InjectFrom(account);
+            var result = new dataModel.ApiAccountEntity();
+            result.InjectFrom(model);
 
-            result.Id = account.Id;
-            result.ApiAccountType = (webModel.ApiAccountType)account.ApiAccountType;
-            result.IsActive = account.IsActive;
+            if (model.Id != null)
+            {
+                result.Id = model.Id;
+            }
+
+            if (model.IsActive != null)
+            {
+                result.IsActive = model.IsActive.Value;
+            }
+
+            result.ApiAccountType = model.ApiAccountType;
 
             return result;
         }
@@ -54,7 +52,5 @@ namespace VirtoCommerce.Platform.Web.Converters.Security
             var patchInjection = new PatchInjection<dataModel.ApiAccountEntity>(x => x.Name, x => x.ApiAccountType, x => x.IsActive, x => x.SecretKey, x => x.AppId);
             target.InjectFrom(patchInjection, source);
         }
-
-
     }
 }

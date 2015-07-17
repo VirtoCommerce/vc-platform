@@ -33,19 +33,19 @@
     <settings>
         <group name="Payment methods|Klarna|Credentials">
             <setting>
-                <name>Klarna.AppKey</name>
+                <name>Klarna.Checkout.Euro.AppKey</name>
                 <valueType>integer</valueType>
                 <title>Application key</title>
                 <description>Klarna application key from credentials</description>
             </setting>
             <setting>
-                <name>Klarna.SecretKey</name>
+                <name>Klarna.Checkout.Euro.SecretKey</name>
                 <valueType>string</valueType>
                 <title>Secret key</title>
                 <description>Klarna secret key from credentials</description>
             </setting>
 						<setting>
-								<name>Klarna.Mode</name>
+								<name>Klarna.Checkout.Euro.Mode</name>
 								<valueType>string</valueType>
 								<defaultValue>test</defaultValue>
 								<allowedValues>
@@ -56,31 +56,31 @@
 								<description>Mode of klarna payment gateway (test or real)</description>
 						</setting>
 						<setting>
-							<name>Klarna.TermsUrl</name>
+							<name>Klarna.Checkout.Euro.TermsUrl</name>
 							<valueType>string</valueType>
 							<defaultValue>checkout/terms</defaultValue>
 							<title>Terms Url</title>
 							<description>Klarna Terms Url</description>
 						</setting>
 						<setting>
-							<name>Klarna.CheckoutUrl</name>
+							<name>Klarna.Checkout.Euro.CheckoutUrl</name>
 							<valueType>string</valueType>
 							<defaultValue>checkout/step1</defaultValue>
 							<title>Checkout Url</title>
 							<description>Klarna Checkout Url</description>
 						</setting>
 						<setting>
-							<name>Klarna.ConfirmationUrl</name>
+							<name>Klarna.Checkout.Euro.ConfirmationUrl</name>
 							<valueType>string</valueType>
 							<defaultValue>checkout/externalpaymentcallback</defaultValue>
 							<title>Confirmation Url</title>
 							<description>Klarna Confirmation Url</description>
 						</setting>
 						<setting>
-							<name>Klarna.PaymentActionType</name>
+							<name>Klarna.Checkout.Euro.PaymentActionType</name>
 							<valueType>string</valueType>
 							<allowedValues>
-								<value>Authorization (with future capture)</value>
+								<value>Authorization/Capture</value>
 								<value>Sale</value>
 							</allowedValues>
 							<defaultValue>Sale</defaultValue>

@@ -1,37 +1,24 @@
-﻿using Hangfire;
-using Microsoft.AspNet.Identity;
-using Microsoft.Owin.Security;
-using Omu.ValueInjecter;
-using System;
-using System.Linq;
+﻿using System;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
-using VirtoCommerce.Platform.Data.Model;
-using VirtoCommerce.Platform.Data.Repositories;
+using Hangfire;
+using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Security;
 using VirtoCommerce.Platform.Data.Security.Identity;
-using VirtoCommerce.Platform.Web.Model.Security;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
     [RoutePrefix("api/security/frontend")]
     public class FrontendSecurityController : ApiController
     {
-        private readonly Func<IPlatformRepository> _platformRepository;
+        private readonly SecurityService _securityService;
         private readonly Func<ApplicationSignInManager> _signInManagerFactory;
-        private readonly Func<ApplicationUserManager> _userManagerFactory;
-        private readonly IApiAccountProvider _apiAccountProvider;
 
-        public FrontendSecurityController(
-            Func<IPlatformRepository> platformRepository, Func<ApplicationSignInManager> signInManagerFactory,
-            Func<ApplicationUserManager> userManagerFactory, Func<IAuthenticationManager> authManagerFactory,
-            IApiAccountProvider apiAccountProvider)
+        public FrontendSecurityController(SecurityService securityService, Func<ApplicationSignInManager> signInManagerFactory)
         {
-            _platformRepository = platformRepository;
+            _securityService = securityService;
             _signInManagerFactory = signInManagerFactory;
-            _userManagerFactory = userManagerFactory;
-            _apiAccountProvider = apiAccountProvider;
         }
 
         private ApplicationSignInManager _signInManager;
@@ -40,15 +27,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             get
             {
                 return _signInManager ?? (_signInManager = _signInManagerFactory());
-            }
-        }
-
-        private ApplicationUserManager _userManager;
-        private ApplicationUserManager UserManager
-        {
-            get
-            {
-                return _userManager ?? (_userManager = _userManagerFactory());
             }
         }
 
@@ -63,7 +41,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 return BadRequest();
             }
 
-            var user = await UserManager.FindByIdAsync(userId);
+            var user = await _securityService.FindByIdAsync(userId);
 
             return Ok(user);
         }
@@ -79,7 +57,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 return BadRequest();
             }
 
-            var user = await UserManager.FindByNameAsync(userName);
+            var user = await _securityService.FindByNameAsync(userName);
 
             return Ok(user);
         }
@@ -95,9 +73,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 return BadRequest();
             }
 
-            var loginInfo = new UserLoginInfo(loginProvider, providerKey);
-
-            var user = await UserManager.FindAsync(loginInfo);
+            var user = await _securityService.FindByLoginAsync(loginProvider, providerKey);
 
             return Ok(user);
         }
@@ -124,61 +100,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Route("user")]
         public async Task<IHttpActionResult> Register(ApplicationUserExtended user)
         {
-            if (user == null)
-            {
+            var result = await _securityService.Register(user);
+
+            if (result == null)
                 return BadRequest();
-            }
-
-            var dbUser = new ApplicationUser();
-            dbUser.InjectFrom(user);
-
-            foreach (var login in user.Logins)
-            {
-                var userLogin = dbUser.Logins.FirstOrDefault(l => l.LoginProvider == login.LoginProvider);
-                if (userLogin != null)
-                {
-                    userLogin.ProviderKey = login.ProviderKey;
-                }
-                else
-                {
-                    dbUser.Logins.Add(new Microsoft.AspNet.Identity.EntityFramework.IdentityUserLogin
-                    {
-                        LoginProvider = login.LoginProvider,
-                        ProviderKey = login.ProviderKey,
-                        UserId = dbUser.Id
-                    });
-                }
-            }
-
-            IdentityResult result = null;
-
-            if (string.IsNullOrEmpty(user.Password))
-            {
-                result = await UserManager.CreateAsync(dbUser);
-            }
-            else
-            {
-                result = await UserManager.CreateAsync(dbUser, user.Password);
-            }
-
-            if (result.Succeeded)
-            {
-                using (var repository = _platformRepository())
-                {
-                    var account = new AccountEntity
-                    {
-                        Id = user.Id,
-                        UserName = user.UserName,
-                        MemberId = user.MemberId,
-                        AccountState = AccountState.Approved,
-                        RegisterType = (RegisterType)user.UserType,
-                        StoreId = user.StoreId,
-                    };
-
-                    repository.Add(account);
-                    repository.UnitOfWork.Commit();
-                }
-            }
 
             return Ok(result);
         }
@@ -194,7 +119,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 return BadRequest();
             }
 
-            string token = await UserManager.GeneratePasswordResetTokenAsync(userId);
+            string token = await _securityService.GeneratePasswordResetTokenAsync(userId);
 
             var uriBuilder = new UriBuilder(callbackUrl);
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
@@ -222,7 +147,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 return BadRequest();
             }
 
-            var result = await UserManager.ResetPasswordAsync(userId, token, newPassword);
+            var result = await _securityService.ResetPasswordAsync(userId, token, newPassword);
 
             return Ok(result);
         }
@@ -230,7 +155,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         public void SendEmail(string userId, string subject, string message)
         {
-            UserManager.SendEmail(userId, subject, message);
+            // TODO: Use notifications
         }
     }
 }

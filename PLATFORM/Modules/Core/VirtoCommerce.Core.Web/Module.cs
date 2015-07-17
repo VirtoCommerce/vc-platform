@@ -9,6 +9,7 @@ using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
+using VirtoCommerce.CoreModule.Data.Payment;
 
 
 namespace VirtoCommerce.CoreModule.Web
@@ -76,6 +77,7 @@ namespace VirtoCommerce.CoreModule.Web
         {
             var settingManager = _container.Resolve<ISettingsManager>();
             var shippingService = _container.Resolve<IShippingService>();
+			var paymentService = _container.Resolve<IPaymentMethodsService>();
 
             shippingService.RegisterShippingMethod(() => new FixedRateShippingMethod(new SettingEntry[] { new SettingEntry { Name = "Rate", ValueType = SettingValueType.Decimal, DefaultValue = "0" } })
                 {
@@ -84,6 +86,14 @@ namespace VirtoCommerce.CoreModule.Web
                     LogoUrl = "http://somelogo.com/logo.png"
 
                 });
+
+			paymentService.RegisterPaymentMethod(() => new DefaultManualPaymentMethod()
+				{
+					IsActive = true,
+					Name = "Manual test payment method",
+					Description = "Manual test, don't use on production",
+					LogoUrl = "http://virtocommerce.com/Content/images/logo.jpg",
+				});
         }
 
         #endregion

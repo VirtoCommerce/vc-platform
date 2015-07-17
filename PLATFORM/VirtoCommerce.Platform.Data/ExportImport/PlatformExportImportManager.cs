@@ -6,15 +6,18 @@ using System.Linq;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Packaging;
+using VirtoCommerce.Platform.Data.Security.Identity;
 
 namespace VirtoCommerce.Platform.Data.ExportImport
 {
 	public class PlatformExportImportManager : IPlatformExportImportManager
 	{
 		private readonly Uri _manifestPartUri;
+		private readonly Func<ApplicationUserManager> _userManagerFactory;
 
-		public PlatformExportImportManager()
+		public PlatformExportImportManager(Func<ApplicationUserManager> userManagerFactory)
 		{
+			_userManagerFactory = userManagerFactory;
 			_manifestPartUri = PackUriHelper.CreatePartUri(new Uri("Manifest.xml", UriKind.Relative));
 		}
 
@@ -34,16 +37,16 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 			return retVal;
 		}
 
-		public void Export(Stream outStream, ModuleDescriptor[] modules, SemanticVersion platformVersion, Action<ExportImportProgressInfo> progressCallback)
+		public void Export(Stream outStream, PlatformExportImportOptions exportOptions, Action<ExportImportProgressInfo> progressCallback)
 		{
-			if (modules == null)
+			if (exportOptions == null)
 			{
-				throw new ArgumentNullException("moduleIds");
+				throw new ArgumentNullException("exportOptions");
 			}
 			var progressInfo = new ExportImportProgressInfo
 			{
 				Description = "Start platform export...",
-				TotalCount = modules.Count(),
+				TotalCount = exportOptions.Modules.Count(),
 				ProcessedCount = 0
 			};
 			progressCallback(progressInfo);
@@ -51,7 +54,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 			using (var package = ZipPackage.Open(outStream, FileMode.Create))
 			{
 				var exportModulesInfo = new List<ExportModuleInfo>();
-				foreach (var module in modules)
+				foreach (var module in exportOptions.Modules)
 				{
 					//Create part for module
 					var modulePartUri = PackUriHelper.CreatePartUri(new Uri(module.Id, UriKind.Relative));
@@ -87,7 +90,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 				var manifest = new PlatformExportManifest
 				{
 					Author = CurrentPrincipal.GetCurrentUserName(),
-					PlatformVersion = platformVersion.ToString(),
+					PlatformVersion = exportOptions.PlatformVersion.ToString(),
 					Modules = exportModulesInfo.ToArray(),
 				};
 				//After all modules exported need write export manifest part
@@ -98,7 +101,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 			}
 		}
 
-		public void Import(Stream stream, ModuleDescriptor[] modules, Action<ExportImportProgressInfo> progressCallback)
+		public void Import(Stream stream, PlatformExportImportOptions exportOptions, Action<ExportImportProgressInfo> progressCallback)
 		{
 			var manifest = ReadPlatformExportManifest(stream);
 			if (manifest == null)
@@ -109,14 +112,14 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 			var progressInfo = new ExportImportProgressInfo
 			{
 				Description = "Start platform import...",
-				TotalCount = modules.Count(),
+				TotalCount = exportOptions.Modules.Count(),
 				ProcessedCount = 0
 			};
 			progressCallback(progressInfo);
 
 			using (var package = ZipPackage.Open(stream, FileMode.Open))
 			{
-				foreach (var module in modules)
+				foreach (var module in exportOptions.Modules)
 				{
 					var moduleInfo = manifest.Modules.First(x => x.ModuleId == module.Id);
 					var modulePart = package.GetPart(new Uri(moduleInfo.PartUri, UriKind.Relative));

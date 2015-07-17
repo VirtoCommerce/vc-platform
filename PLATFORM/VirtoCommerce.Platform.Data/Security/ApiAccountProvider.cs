@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using VirtoCommerce.Platform.Core.Caching;
+using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Model;
 using VirtoCommerce.Platform.Data.Repositories;
 

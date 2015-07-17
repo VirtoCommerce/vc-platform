@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -9,56 +7,30 @@ using System.Web.Http.Description;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
-using Omu.ValueInjecter;
-using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
-using VirtoCommerce.Platform.Data.Model;
-using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.Platform.Data.Security;
 using VirtoCommerce.Platform.Data.Security.Identity;
-using VirtoCommerce.Platform.Web.Converters.Security;
 using VirtoCommerce.Platform.Web.Model.Security;
-using coreModel = VirtoCommerce.Platform.Data.Model;
-using webModel = VirtoCommerce.Platform.Web.Model.Security;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
     [RoutePrefix("api/security")]
     public class SecurityController : ApiController
     {
-        private readonly Func<IPlatformRepository> _platformRepository;
         private readonly Func<IAuthenticationManager> _authenticationManagerFactory;
         private readonly Func<ApplicationSignInManager> _signInManagerFactory;
-        private readonly Func<ApplicationUserManager> _userManagerFactory;
-        private readonly IApiAccountProvider _apiAccountProvider;
         private readonly IPermissionService _permissionService;
         private readonly IRoleManagementService _roleService;
+        private readonly SecurityService _securityService;
 
-        public SecurityController(Func<IPlatformRepository> platformRepository, Func<ApplicationSignInManager> signInManagerFactory,
-                                  Func<ApplicationUserManager> userManagerFactory, Func<IAuthenticationManager> authManagerFactory,
-                                  IApiAccountProvider apiAccountProvider,
-            IPermissionService permissionService, IRoleManagementService roleService)
+        public SecurityController(Func<ApplicationSignInManager> signInManagerFactory, Func<IAuthenticationManager> authManagerFactory,
+            IPermissionService permissionService, IRoleManagementService roleService, SecurityService securityService)
         {
-            _platformRepository = platformRepository;
             _signInManagerFactory = signInManagerFactory;
-            _userManagerFactory = userManagerFactory;
             _authenticationManagerFactory = authManagerFactory;
-            _apiAccountProvider = apiAccountProvider;
             _permissionService = permissionService;
             _roleService = roleService;
-        }
-
-        private ApplicationUserManager _userManager;
-        private ApplicationUserManager UserManager
-        {
-            get
-            {
-                if (_userManager == null)
-                {
-                    _userManager = _userManagerFactory();
-                }
-                return _userManager;
-            }
+            _securityService = securityService;
         }
 
         #region Internal Web admin actions
@@ -70,18 +42,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             if (await _signInManagerFactory().PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, true) == SignInStatus.Success)
             {
-                return Ok(await GetUserExtended(model.UserName, UserDetails.Full));
+                return Ok(await _securityService.GetUserExtended(model.UserName, UserDetails.Full));
             }
 
             return StatusCode(HttpStatusCode.Unauthorized);
-        }
-
-        [HttpGet]
-        [Route("usersession")]
-        [ResponseType(typeof(ApplicationUserExtended))]
-        public async Task<IHttpActionResult> GetCurrentUserSession()
-        {
-            return Ok(await GetUserExtended(User.Identity.Name, UserDetails.Full));
         }
 
         [HttpPost]
@@ -90,6 +54,14 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             _authenticationManagerFactory().SignOut();
             return Ok(new { status = true });
+        }
+
+        [HttpGet]
+        [Route("usersession")]
+        [ResponseType(typeof(ApplicationUserExtended))]
+        public async Task<IHttpActionResult> GetCurrentUserSession()
+        {
+            return Ok(await _securityService.GetUserExtended(User.Identity.Name, UserDetails.Full));
         }
 
         [HttpGet]
@@ -165,7 +137,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Route("usersession/{userName}")]
         public async Task<ApplicationUserExtended> GetUserSession(string userName)
         {
-            return await GetUserExtended(userName, UserDetails.Full);
+            return await _securityService.GetUserExtended(userName, UserDetails.Full);
         }
 
         #region Methods needed to integrate identity security with external user store that will call api methods
@@ -174,23 +146,23 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         [Route("users/id/{userId}")]
         [HttpGet]
-        public async Task<ApplicationUser> FindByIdAsync(string userId)
+        public async Task<ApplicationUserExtended> FindByIdAsync(string userId)
         {
-            return await UserManager.FindByIdAsync(userId);
+            return await _securityService.FindByIdAsync(userId);
         }
 
         [Route("users/name/{userName}")]
         [HttpGet]
-        public async Task<ApplicationUser> FindByNameAsync(string userName)
+        public async Task<ApplicationUserExtended> FindByNameAsync(string userName)
         {
-            return await UserManager.FindByNameAsync(userName);
+            return await _securityService.FindByNameAsync(userName);
         }
 
         [Route("users/email/{email}")]
         [HttpGet]
-        public async Task<ApplicationUser> FindByEmailAsync(string email)
+        public async Task<ApplicationUserExtended> FindByEmailAsync(string email)
         {
-            return await UserManager.FindByEmailAsync(email);
+            return await _securityService.FindByEmailAsync(email);
         }
 
         #endregion
@@ -203,10 +175,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [ResponseType(typeof(ApiAccount))]
         [Route("apiaccounts/new")]
         [CheckPermission(Permission = PredefinedPermissions.SecurityManage)]
-        public IHttpActionResult GenerateNewApiAccount(webModel.ApiAccountType type)
+        public IHttpActionResult GenerateNewApiAccount(ApiAccountType type)
         {
-            var apiAccount = _apiAccountProvider.GenerateApiCredentials((coreModel.ApiAccountType)type);
-            var result = apiAccount.ToWebModel();
+            var result = _securityService.GenerateNewApiAccount(type);
             result.IsActive = null;
             return Ok(result);
         }
@@ -223,7 +194,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.SecurityQuery)]
         public async Task<IHttpActionResult> GetUserByName(string name)
         {
-            var retVal = await GetUserExtended(name, UserDetails.Full);
+            var retVal = await _securityService.GetUserExtended(name, UserDetails.Full);
             return Ok(retVal);
         }
 
@@ -239,13 +210,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.SecurityQuery)]
         public async Task<IHttpActionResult> ChangePassword(string name, [FromBody] ChangePasswordInfo changePassword)
         {
-            var user = await UserManager.FindByNameAsync(name);
-            if (user == null)
-            {
+            var result = await _securityService.ChangePassword(name, changePassword.OldPassword, changePassword.NewPassword);
+
+            if (result == null)
                 return NotFound();
-            }
-            var retVal = await UserManager.ChangePasswordAsync(user.Id, changePassword.OldPassword, changePassword.NewPassword);
-            return Ok(retVal);
+
+            return Ok(result);
         }
 
         /// <summary>
@@ -259,33 +229,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.SecurityQuery)]
         public async Task<IHttpActionResult> SearchUsersAsync([FromUri] UserSearchRequest request)
         {
-            request = request ?? new UserSearchRequest();
-            var result = new UserSearchResponse();
-
-            var query = UserManager.Users;
-
-            if (request.Keyword != null)
-            {
-                query = query.Where(u => u.UserName.Contains(request.Keyword));
-            }
-
-            result.TotalCount = query.Count();
-
-            var users = query.OrderBy(x => x.UserName)
-                             .Skip(request.SkipCount)
-                             .Take(request.TakeCount)
-                             .ToArray();
-
-            var extendedUsers = new List<ApplicationUserExtended>();
-
-            foreach (var user in users)
-            {
-                var extendedUser = await GetUserExtended(user.UserName, UserDetails.Reduced);
-                extendedUsers.Add(extendedUser);
-            }
-
-            result.Users = extendedUsers.ToArray();
-
+            var result = await _securityService.SearchUsersAsync(request);
             return Ok(result);
         }
 
@@ -299,27 +243,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.SecurityManage)]
         public async Task<IHttpActionResult> DeleteAsync([FromUri] string[] names)
         {
-            foreach (var name in names)
-            {
-                var dbUser = await UserManager.FindByNameAsync(name);
-                if (dbUser == null)
-                {
-                    return NotFound();
-                }
-
-                await UserManager.DeleteAsync(dbUser);
-
-                using (var repository = _platformRepository())
-                {
-                    var account = repository.GetAccountByName(name, UserDetails.Reduced);
-                    if (account != null)
-                    {
-                        repository.Remove(account);
-                        repository.UnitOfWork.Commit();
-                    }
-                }
-            }
-
+            await _securityService.DeleteAsync(names);
             return Ok();
         }
 
@@ -333,67 +257,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.SecurityManage)]
         public async Task<IHttpActionResult> UpdateAsync(ApplicationUserExtended user)
         {
-            var dbUser = await UserManager.FindByIdAsync(user.Id);
+            var error = await _securityService.UpdateAsync(user);
 
-            dbUser.InjectFrom(user);
+            if (error != null)
+                return BadRequest(error);
 
-            foreach (var login in user.Logins)
-            {
-                var userLogin = dbUser.Logins.FirstOrDefault(l => l.LoginProvider == login.LoginProvider);
-                if (userLogin != null)
-                {
-                    userLogin.ProviderKey = login.ProviderKey;
-                }
-                else
-                {
-                    dbUser.Logins.Add(new Microsoft.AspNet.Identity.EntityFramework.IdentityUserLogin
-                    {
-                        LoginProvider = login.LoginProvider,
-                        ProviderKey = login.ProviderKey,
-                        UserId = dbUser.Id
-                    });
-                }
-            }
-
-            var result = await UserManager.UpdateAsync(dbUser);
-
-            if (result.Succeeded)
-            {
-                using (var repository = _platformRepository())
-                {
-                    var acount = repository.GetAccountByName(user.UserName, UserDetails.Full);
-                    if (acount == null)
-                    {
-                        return BadRequest("Acount not found");
-                    }
-                    acount.RegisterType = (RegisterType)user.UserType;
-                    acount.AccountState = (AccountState)user.UserState;
-                    acount.MemberId = user.MemberId;
-                    acount.StoreId = user.StoreId;
-
-                    if (user.ApiAcounts != null)
-                    {
-                        var source = new ObservableCollection<ApiAccountEntity>(user.ApiAcounts.Select(x => x.ToFoundation()));
-                        var inventoryComparer = AnonymousComparer.Create((ApiAccountEntity x) => x.Id);
-                        acount.ApiAccounts.ObserveCollection(x => repository.Add(x), x => repository.Remove(x));
-                        source.Patch(acount.ApiAccounts, inventoryComparer, (sourceAccount, targetAccount) => sourceAccount.Patch(targetAccount));
-                    }
-
-                    if (user.Roles != null)
-                    {
-                        var sourceCollection = new ObservableCollection<RoleAssignmentEntity>(user.Roles.Select(r => new RoleAssignmentEntity { RoleId = r.Id }));
-                        var comparer = AnonymousComparer.Create((RoleAssignmentEntity x) => x.RoleId);
-                        acount.RoleAssignments.ObserveCollection(ra => repository.Add(ra), ra => repository.Remove(ra));
-                        sourceCollection.Patch(acount.RoleAssignments, comparer, (source, target) => source.Patch(target));
-                    }
-
-                    repository.UnitOfWork.Commit();
-                }
-
-                return Ok();
-            }
-
-            return BadRequest(String.Join(" ", result.Errors));
+            return Ok();
         }
 
         /// <summary>
@@ -406,105 +275,14 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.SecurityManage)]
         public async Task<IHttpActionResult> CreateAsync(ApplicationUserExtended user)
         {
-            var dbUser = new ApplicationUser();
+            var error = await _securityService.CreateAsync(user);
 
-            dbUser.InjectFrom(user);
+            if (error != null)
+                return BadRequest(error);
 
-            IdentityResult result;
-            if (!string.IsNullOrEmpty(user.Password))
-            {
-                result = await UserManager.CreateAsync(dbUser, user.Password);
-            }
-            else
-            {
-                result = await UserManager.CreateAsync(dbUser);
-            }
-
-            if (result.Succeeded)
-            {
-                using (var repository = _platformRepository())
-                {
-                    var account = new AccountEntity()
-                    {
-                        Id = user.Id,
-                        UserName = user.UserName,
-                        MemberId = user.MemberId,
-                        AccountState = AccountState.Approved,
-                        RegisterType = (RegisterType)user.UserType,
-                        StoreId = user.StoreId
-                    };
-
-                    if (user.Roles != null)
-                    {
-                        foreach (var role in user.Roles)
-                        {
-                            account.RoleAssignments.Add(new RoleAssignmentEntity { RoleId = role.Id, AccountId = account.Id });
-                        }
-                    }
-
-                    repository.Add(account);
-                    repository.UnitOfWork.Commit();
-                }
-
-                return Ok();
-            }
-            else
-            {
-                return BadRequest(String.Join(" ", result.Errors));
-            }
+            return Ok();
         }
         #endregion
-
-        #endregion
-
-        #region Helpers
-
-        private async Task<ApplicationUserExtended> GetUserExtended(string userName, UserDetails detailsLevel)
-        {
-            var applicationUser = await UserManager.FindByNameAsync(userName);
-            return GetUserExtended(applicationUser, detailsLevel);
-        }
-
-        private ApplicationUserExtended GetUserExtended(ApplicationUser applicationUser, UserDetails detailsLevel)
-        {
-            ApplicationUserExtended result = null;
-
-            if (applicationUser != null)
-            {
-                result = new ApplicationUserExtended();
-                result.InjectFrom(applicationUser);
-
-                using (var repository = _platformRepository())
-                {
-                    var user = repository.GetAccountByName(applicationUser.UserName, detailsLevel);
-
-                    if (user != null)
-                    {
-                        result.InjectFrom(user);
-
-                        result.UserState = (UserState)user.AccountState;
-                        result.UserType = (UserType)user.RegisterType;
-
-                        if (detailsLevel == UserDetails.Full)
-                        {
-                            var roles = user.RoleAssignments.Select(x => x.Role).ToArray();
-                            result.Roles = roles.Select(r => r.ToCoreModel(false)).ToArray();
-
-                            var permissionIds = roles
-                                    .SelectMany(x => x.RolePermissions)
-                                    .Select(x => x.PermissionId)
-                                    .Distinct()
-                                    .ToArray();
-
-                            result.Permissions = permissionIds;
-                            result.ApiAcounts = user.ApiAccounts.Select(x => x.ToWebModel()).ToList();
-                        }
-                    }
-                }
-            }
-
-            return result;
-        }
 
         #endregion
     }

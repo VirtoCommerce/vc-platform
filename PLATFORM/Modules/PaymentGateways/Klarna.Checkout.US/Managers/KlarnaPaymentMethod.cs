@@ -26,12 +26,12 @@ namespace Klarna.Checkout.US.Managers
 		private const string _unitedKingdomBaseUrl = "https://checkout.klarna.com/checkout/orders";
 		private const string _unitedKingdomApiBaseUrl = "https://api.klarna.com/checkout/orders";
 
-		private const string _klarnaModeStoreSetting = "Klarna.Mode";
-		private const string _klarnaAppKeyStoreSetting = "Klarna.AppKey";
-		private const string _klarnaAppSecretStoreSetting = "Klarna.SecretKey";
-		private const string _klarnaTermsUrl = "Klarna.TermsUrl";
-		private const string _klarnaCheckoutUrl = "Klarna.CheckoutUrl";
-		private const string _klarnaConfirmationUrl = "Klarna.ConfirmationUrl";
+		private const string _klarnaModeStoreSetting = "Klarna.Checkout.US.Mode";
+		private const string _klarnaAppKeyStoreSetting = "Klarna.Checkout.US.AppKey";
+		private const string _klarnaAppSecretStoreSetting = "Klarna.Checkout.US.SecretKey";
+		private const string _klarnaTermsUrl = "Klarn.Checkout.US.TermsUrl";
+		private const string _klarnaCheckoutUrl = "Klarna.Checkout.US.CheckoutUrl";
+		private const string _klarnaConfirmationUrl = "Klarna.Checkout.US.ConfirmationUrl";
 
 		public KlarnaCheckoutUSPaymentMethod()
 			: base("KlarnaCheckoutUS")
