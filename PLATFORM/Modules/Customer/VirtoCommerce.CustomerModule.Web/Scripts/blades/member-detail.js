@@ -16,7 +16,7 @@
 
                 if (!blade.isOrganization && data.emails.length > 0) {
                     accounts.get({ id: data.emails[0] }, function (account) {
-                        if (account.logins) {
+                        if (account.userName) {
                             var needToAddToolbarCommands = !customerAccount;
                             customerAccount = account;
                             data.userState = account.userState;

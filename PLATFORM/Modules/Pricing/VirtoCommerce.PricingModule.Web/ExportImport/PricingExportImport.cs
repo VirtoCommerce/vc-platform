@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Microsoft.Practices.ObjectBuilder2;
 using VirtoCommerce.Domain.Pricing.Model;
 using VirtoCommerce.Domain.Pricing.Services;
 using VirtoCommerce.Platform.Core.Common;
@@ -29,12 +28,7 @@ namespace VirtoCommerce.PricingModule.Web.ExportImport
             var prodgressInfo = new ExportImportProgressInfo { Description = "loading data..." };
             progressCallback(prodgressInfo);
 
-            var backupObject = new BackupObject
-            {
-                Pricelists = _pricingService.GetPriceLists().Select(x => x.Id).AsParallel().WithDegreeOfParallelism(4)
-                                .Select(x => _pricingService.GetPricelistById(x)).ToArray()
-            };
-
+            var backupObject = GetBackupObject();
             backupObject.SerializeJson(backupStream);
         }
 
@@ -44,12 +38,16 @@ namespace VirtoCommerce.PricingModule.Web.ExportImport
             progressCallback(prodgressInfo);
 
             var backupObject = backupStream.DeserializeJson<BackupObject>();
-            var originalPricelists = _pricingService.GetPriceLists().Select(x => x.Id).AsParallel().WithDegreeOfParallelism(4)
-                .Select(x => _pricingService.GetPricelistById(x)).ToArray();
+            var originalObject = GetBackupObject();
 
+            UpdatePricelist(originalObject.Pricelists, backupObject.Pricelists);
+        }
+
+        private void UpdatePricelist(ICollection<Pricelist> original, ICollection<Pricelist> backup)
+        {
             var toUpdate = new List<Pricelist>();
 
-            backupObject.Pricelists.CompareTo(originalPricelists, AnonymousComparer.Create((Pricelist x) => x.Id), (state, x, y) =>
+            backup.CompareTo(original, EqualityComparer<Pricelist>.Default, (state, x, y) =>
             {
                 switch (state)
                 {
@@ -62,6 +60,14 @@ namespace VirtoCommerce.PricingModule.Web.ExportImport
                 }
             });
             _pricingService.UpdatePricelists(toUpdate.ToArray());
+        }
+
+        private BackupObject GetBackupObject()
+        {
+            return new BackupObject
+            {
+                Pricelists = _pricingService.GetPriceLists().Select(x => x.Id).Select(x => _pricingService.GetPricelistById(x)).ToArray()
+            };
         }
 
     }

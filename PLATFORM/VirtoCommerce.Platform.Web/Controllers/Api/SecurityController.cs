@@ -8,7 +8,6 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using VirtoCommerce.Platform.Core.Security;
-using VirtoCommerce.Platform.Data.Security;
 using VirtoCommerce.Platform.Data.Security.Identity;
 using VirtoCommerce.Platform.Web.Model.Security;
 
@@ -21,10 +20,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly Func<ApplicationSignInManager> _signInManagerFactory;
         private readonly IPermissionService _permissionService;
         private readonly IRoleManagementService _roleService;
-        private readonly SecurityService _securityService;
+        private readonly ISecurityService _securityService;
 
         public SecurityController(Func<ApplicationSignInManager> signInManagerFactory, Func<IAuthenticationManager> authManagerFactory,
-            IPermissionService permissionService, IRoleManagementService roleService, SecurityService securityService)
+            IPermissionService permissionService, IRoleManagementService roleService, ISecurityService securityService)
         {
             _signInManagerFactory = signInManagerFactory;
             _authenticationManagerFactory = authManagerFactory;
@@ -42,7 +41,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             if (await _signInManagerFactory().PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, true) == SignInStatus.Success)
             {
-                return Ok(await _securityService.GetUserExtended(model.UserName, UserDetails.Full));
+                return Ok(await _securityService.FindByNameAsync(model.UserName, UserDetails.Full));
             }
 
             return StatusCode(HttpStatusCode.Unauthorized);
@@ -61,7 +60,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [ResponseType(typeof(ApplicationUserExtended))]
         public async Task<IHttpActionResult> GetCurrentUserSession()
         {
-            return Ok(await _securityService.GetUserExtended(User.Identity.Name, UserDetails.Full));
+            return Ok(await _securityService.FindByNameAsync(User.Identity.Name, UserDetails.Full));
         }
 
         [HttpGet]
@@ -137,7 +136,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Route("usersession/{userName}")]
         public async Task<ApplicationUserExtended> GetUserSession(string userName)
         {
-            return await _securityService.GetUserExtended(userName, UserDetails.Full);
+            return await _securityService.FindByNameAsync(userName, UserDetails.Full);
         }
 
         #region Methods needed to integrate identity security with external user store that will call api methods
@@ -148,21 +147,21 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpGet]
         public async Task<ApplicationUserExtended> FindByIdAsync(string userId)
         {
-            return await _securityService.FindByIdAsync(userId);
+            return await _securityService.FindByIdAsync(userId, UserDetails.Reduced);
         }
 
         [Route("users/name/{userName}")]
         [HttpGet]
         public async Task<ApplicationUserExtended> FindByNameAsync(string userName)
         {
-            return await _securityService.FindByNameAsync(userName);
+            return await _securityService.FindByNameAsync(userName, UserDetails.Reduced);
         }
 
         [Route("users/email/{email}")]
         [HttpGet]
         public async Task<ApplicationUserExtended> FindByEmailAsync(string email)
         {
-            return await _securityService.FindByEmailAsync(email);
+            return await _securityService.FindByEmailAsync(email, UserDetails.Reduced);
         }
 
         #endregion
@@ -194,7 +193,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.SecurityQuery)]
         public async Task<IHttpActionResult> GetUserByName(string name)
         {
-            var retVal = await _securityService.GetUserExtended(name, UserDetails.Full);
+            var retVal = await _securityService.FindByNameAsync(name, UserDetails.Full);
             return Ok(retVal);
         }
 
@@ -210,7 +209,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.SecurityQuery)]
         public async Task<IHttpActionResult> ChangePassword(string name, [FromBody] ChangePasswordInfo changePassword)
         {
-            var result = await _securityService.ChangePassword(name, changePassword.OldPassword, changePassword.NewPassword);
+            var result = await _securityService.ChangePasswordAsync(name, changePassword.OldPassword, changePassword.NewPassword);
 
             if (result == null)
                 return NotFound();

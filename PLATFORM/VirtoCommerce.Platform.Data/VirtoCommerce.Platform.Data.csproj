@@ -264,6 +264,7 @@
     <Compile Include="Security\Authentication\Hmac\HmacAuthenticationOptions.cs" />
     <Compile Include="Security\Authentication\Hmac\HmacUtility.cs" />
     <Compile Include="Security\Converters\ApiAccountConverter.cs" />
+    <Compile Include="Security\Converters\IdentityResultConverter.cs" />
     <Compile Include="Security\Identity\ApplicationClaimsIdentityProvider.cs" />
     <Compile Include="Security\Identity\ApplicationSignInManager.cs" />
     <Compile Include="Security\Identity\ApplicationUser.cs" />

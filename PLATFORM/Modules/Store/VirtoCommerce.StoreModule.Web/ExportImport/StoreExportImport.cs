@@ -29,8 +29,7 @@ namespace VirtoCommerce.StoreModule.Web.ExportImport
             var prodgressInfo = new ExportImportProgressInfo { Description = "loading data..." };
             progressCallback(prodgressInfo);
 
-            var backupObject = new BackupObject { Stores = _storeService.GetStoreList().ToArray() };
-            
+            var backupObject = GetBackupObject();
             //Remove from backup non active methods
             backupObject.Stores.ForEach(x => x.PaymentMethods = x.PaymentMethods.Where(s => s.IsActive).ToList());
             backupObject.Stores.ForEach(x => x.ShippingMethods = x.ShippingMethods.Where(s => s.IsActive).ToList());
@@ -44,12 +43,16 @@ namespace VirtoCommerce.StoreModule.Web.ExportImport
             progressCallback(prodgressInfo);
 
             var backupObject = backupStream.DeserializeJson<BackupObject>();
-            var originalStores = _storeService.GetStoreList().Select(x => x.Id).AsParallel().WithDegreeOfParallelism(4)
-                .Select(x => _storeService.GetById(x)).ToArray();
+            var originalObject = GetBackupObject();
 
+            UpdateStores(originalObject.Stores, backupObject.Stores);
+        }
+
+        private void UpdateStores(ICollection<Store> original, ICollection<Store> backup)
+        {
             var toUpdate = new List<Store>();
 
-            backupObject.Stores.CompareTo(originalStores, AnonymousComparer.Create((Store x) => x.Id), (state, x, y) =>
+            backup.CompareTo(original, EqualityComparer<Store>.Default, (state, x, y) =>
             {
                 switch (state)
                 {
@@ -64,14 +67,13 @@ namespace VirtoCommerce.StoreModule.Web.ExportImport
             _storeService.Update(toUpdate.ToArray());
         }
 
-        //private void UpdateSettings(ICollection<SettingEntry> originalSettings, ICollection<SettingEntry> importedSettings)
-        //{
-        //    Parallel.ForEach(importedSettings, importedSetting =>
-        //    {
-        //        var originalSetting = originalSettings.FirstOrDefault(x => x.Name == importedSetting.Name);
-        //        importedSetting.ObjectId = originalSetting != null ? originalSetting.ObjectId : null;
-        //    });
-        //}
+        private BackupObject GetBackupObject()
+        {
+            return new BackupObject
+            {
+                Stores = _storeService.GetStoreList().Select(x => x.Id).Select(x => _storeService.GetById(x)).ToArray()
+            };
+        }
 
     }
 }

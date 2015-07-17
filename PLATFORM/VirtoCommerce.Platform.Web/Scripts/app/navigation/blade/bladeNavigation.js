@@ -112,7 +112,7 @@ angular.module('platformWebApp')
                 scope.resolvedToolbarCommands = toolbarService.resolve(toolbarCommands, scope.blade.controller);
 
                 setVisibleToolsLimit();
-            });
+            }, true);
 
             var toolbar = blade.find(".blade-toolbar .menu.__inline");
 
