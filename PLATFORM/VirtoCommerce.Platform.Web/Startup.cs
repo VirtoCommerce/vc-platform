@@ -120,21 +120,21 @@ namespace VirtoCommerce.Platform.Web
 
             OwinConfig.Configure(app, container, connectionStringName, authenticationOptions);
 
-			var jobScheduler = container.Resolve<SendNotificationsJobsSheduler>();
-			jobScheduler.SheduleJobs();
+            var jobScheduler = container.Resolve<SendNotificationsJobsSheduler>();
+            jobScheduler.SheduleJobs();
 
-			var notificationManager = container.Resolve<INotificationManager>();
-			notificationManager.RegisterNotificationType(() => new RegistrationEmailNotification(container.Resolve<IEmailNotificationSendingGateway>())
-			{
-				DisplayName = "Registration notification",
-				Description = "This notification sends by email to client when he finish registration",
-				NotificationTemplate = new NotificationTemplate
-				{
-					Body = PlatformNotificationResource.RegistrationNotificationBody,
-					Subject = PlatformNotificationResource.RegistrationNotificationSubject,
-					Language = "en-US"
-				}
-			});
+            var notificationManager = container.Resolve<INotificationManager>();
+            notificationManager.RegisterNotificationType(() => new RegistrationEmailNotification(container.Resolve<IEmailNotificationSendingGateway>())
+            {
+                DisplayName = "Registration notification",
+                Description = "This notification sends by email to client when he finish registration",
+                NotificationTemplate = new NotificationTemplate
+                {
+                    Body = PlatformNotificationResource.RegistrationNotificationBody,
+                    Subject = PlatformNotificationResource.RegistrationNotificationSubject,
+                    Language = "en-US"
+                }
+            });
 
             var postInitializeModules = moduleCatalog.CompleteListWithDependencies(moduleCatalog.Modules)
                 .Where(m => m.ModuleInstance != null)
@@ -211,7 +211,7 @@ namespace VirtoCommerce.Platform.Web
 
             #region Settings
 
-			var platformSettings = new[]
+            var platformSettings = new[]
 			{
 				new ModuleManifest
 				{
@@ -277,9 +277,9 @@ namespace VirtoCommerce.Platform.Web
             var defaultSmsNotificationSendingGateway = new DefaultSmsNotificationSendingGateway();
 
             container.RegisterInstance<INotificationTemplateService>(notificationTemplateService);
-			container.RegisterInstance<INotificationManager>(notificationManager);
+            container.RegisterInstance<INotificationManager>(notificationManager);
             container.RegisterInstance<INotificationTemplateResolver>(resolver);
-			container.RegisterInstance<IEmailNotificationSendingGateway>(emailNotificationSendingGateway);
+            container.RegisterInstance<IEmailNotificationSendingGateway>(emailNotificationSendingGateway);
             container.RegisterInstance<ISmsNotificationSendingGateway>(defaultSmsNotificationSendingGateway);
 
             //notificationManager.RegisterNotificationType(
@@ -334,7 +334,7 @@ namespace VirtoCommerce.Platform.Web
             var packagesPath = HostingEnvironment.MapPath("~/App_Data/InstalledPackages");
 
             var packageService = new ZipPackageService(moduleCatalog, manifestProvider, packagesPath, sourcePath);
-			container.RegisterInstance<IPackageService>(packageService);
+            container.RegisterInstance<IPackageService>(packageService);
             container.RegisterType<ModulesController>(new InjectionConstructor(packageService, sourcePath));
 
             #endregion
@@ -362,11 +362,13 @@ namespace VirtoCommerce.Platform.Web
             container.RegisterType<ApplicationUserManager>(new InjectionFactory(c => HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>()));
             container.RegisterType<IAuthenticationManager>(new InjectionFactory(c => HttpContext.Current.GetOwinContext().Authentication));
 
+            container.RegisterType<ISecurityService, SecurityService>();
+
             #endregion
 
-			#region ExportImport
-			container.RegisterType<IPlatformExportImportManager, PlatformExportImportManager>();
-			#endregion
+            #region ExportImport
+            container.RegisterType<IPlatformExportImportManager, PlatformExportImportManager>();
+            #endregion
         }
 
         private static string MakeRelativePath(string rootPath, string fullPath)

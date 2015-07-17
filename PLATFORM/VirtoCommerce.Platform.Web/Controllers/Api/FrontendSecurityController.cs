@@ -4,7 +4,6 @@ using System.Web;
 using System.Web.Http;
 using Hangfire;
 using VirtoCommerce.Platform.Core.Security;
-using VirtoCommerce.Platform.Data.Security;
 using VirtoCommerce.Platform.Data.Security.Identity;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
@@ -12,10 +11,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     [RoutePrefix("api/security/frontend")]
     public class FrontendSecurityController : ApiController
     {
-        private readonly SecurityService _securityService;
+        private readonly ISecurityService _securityService;
         private readonly Func<ApplicationSignInManager> _signInManagerFactory;
 
-        public FrontendSecurityController(SecurityService securityService, Func<ApplicationSignInManager> signInManagerFactory)
+        public FrontendSecurityController(ISecurityService securityService, Func<ApplicationSignInManager> signInManagerFactory)
         {
             _securityService = securityService;
             _signInManagerFactory = signInManagerFactory;
@@ -41,7 +40,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 return BadRequest();
             }
 
-            var user = await _securityService.FindByIdAsync(userId);
+            var user = await _securityService.FindByIdAsync(userId, UserDetails.Reduced);
 
             return Ok(user);
         }
@@ -57,7 +56,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 return BadRequest();
             }
 
-            var user = await _securityService.FindByNameAsync(userName);
+            var user = await _securityService.FindByNameAsync(userName, UserDetails.Reduced);
 
             return Ok(user);
         }
@@ -73,7 +72,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 return BadRequest();
             }
 
-            var user = await _securityService.FindByLoginAsync(loginProvider, providerKey);
+            var user = await _securityService.FindByLoginAsync(loginProvider, providerKey, UserDetails.Reduced);
 
             return Ok(user);
         }
@@ -100,7 +99,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Route("user")]
         public async Task<IHttpActionResult> Register(ApplicationUserExtended user)
         {
-            var result = await _securityService.Register(user);
+            var result = await _securityService.RegisterAsync(user);
 
             if (result == null)
                 return BadRequest();
