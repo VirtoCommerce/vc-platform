@@ -19,7 +19,7 @@ using VirtoCommerce.OrderModule.Web.Resources;
 
 namespace VirtoCommerce.OrderModule.Web
 {
-    public class Module : ModuleBase, ISupportExportModule
+    public class Module : ModuleBase, ISupportExportModule, ISupportImportModule
     {
         private const string _connectionStringName = "VirtoCommerce";
         private readonly IUnityContainer _container;
@@ -108,5 +108,14 @@ namespace VirtoCommerce.OrderModule.Web
 
         #endregion
 
+        #region ISupportImportModule Members
+
+        public void DoImport(System.IO.Stream inputStream, Action<ExportImportProgressInfo> progressCallback)
+        {
+            var exportJob = _container.Resolve<OrderExportImport>();
+            exportJob.DoImport(inputStream, progressCallback);
+        }
+
+        #endregion
     }
 }

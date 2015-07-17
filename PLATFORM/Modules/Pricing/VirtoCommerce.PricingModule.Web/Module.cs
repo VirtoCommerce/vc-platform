@@ -57,7 +57,7 @@ namespace VirtoCommerce.PricingModule.Web
 
         #endregion
 
-        #region ISupportExport Members
+        #region ISupportExportModule Members
 
         public void DoExport(System.IO.Stream outStream, Action<ExportImportProgressInfo> progressCallback)
         {

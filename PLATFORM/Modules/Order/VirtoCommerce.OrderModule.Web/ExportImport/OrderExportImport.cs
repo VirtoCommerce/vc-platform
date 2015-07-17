@@ -2,18 +2,16 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Microsoft.Practices.Unity;
 using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Domain.Order.Services;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.ExportImport;
-using VirtoCommerce.Platform.Data.ExportImport;
 
 namespace VirtoCommerce.OrderModule.Web.ExportImport
 {
     public sealed class BackupObject
     {
-        public ICollection<Operation> Orders { get; set; }
+        public ICollection<CustomerOrder> CustomerOrders { get; set; }
     }
 
 
@@ -33,17 +31,51 @@ namespace VirtoCommerce.OrderModule.Web.ExportImport
             var prodgressInfo = new ExportImportProgressInfo { Description = "loading data..." };
             progressCallback(prodgressInfo);
 
-            var responce = _customerOrderSearchService.Search(new SearchCriteria{Count = int.MaxValue});
+            var backupObject = GetBackupObject(); 
+            backupObject.SerializeJson(backupStream);
+        }
+
+        public void DoImport(Stream backupStream, Action<ExportImportProgressInfo> progressCallback)
+        {
+            var prodgressInfo = new ExportImportProgressInfo { Description = "loading data..." };
+            progressCallback(prodgressInfo);
+
+            var backupObject = backupStream.DeserializeJson<BackupObject>();
+            var originalObject = GetBackupObject();
+
+            UpdateStores(originalObject.CustomerOrders, backupObject.CustomerOrders);
+        }
+
+        private void UpdateStores(ICollection<CustomerOrder> original, ICollection<CustomerOrder> backup)
+        {
+            var toUpdate = new List<CustomerOrder>();
+
+            backup.CompareTo(original, EqualityComparer<Operation>.Default, (state, x, y) =>
+            {
+                switch (state)
+                {
+                    case EntryState.Modified:
+                        toUpdate.Add(x);
+                        break;
+                    case EntryState.Added:
+                        _customerOrderService.Create(x);
+                        break;
+                }
+            });
+            _customerOrderService.Update(toUpdate.ToArray());
+        }
+
+        private BackupObject GetBackupObject()
+        {
+            var responce = _customerOrderSearchService.Search(new SearchCriteria { Count = int.MaxValue });
             var orderIds = responce.CustomerOrders.Select(x => x.Id);
             const CustomerOrderResponseGroup filter = CustomerOrderResponseGroup.WithAddresses | CustomerOrderResponseGroup.WithItems
                 | CustomerOrderResponseGroup.WithShipments | CustomerOrderResponseGroup.WithInPayments;
-            
-            var backupObject = new BackupObject
-            {
-                Orders = orderIds.Select(id => _customerOrderService.GetById(id, filter)).ToArray(),
-            };
 
-            backupObject.SerializeJson(backupStream);
+            return new BackupObject
+            {
+                CustomerOrders = orderIds.Select(id => _customerOrderService.GetById(id, filter)).ToArray(),
+            };
         }
 
     }

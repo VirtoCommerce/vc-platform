@@ -12,7 +12,7 @@ using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 
 namespace VirtoCommerce.CustomerModule.Web
 {
-    public class Module : ModuleBase, ISupportExportModule
+    public class Module : ModuleBase, ISupportExportModule, ISupportImportModule
     {
         private readonly IUnityContainer _container;
 
@@ -66,6 +66,15 @@ namespace VirtoCommerce.CustomerModule.Web
 
         #endregion
 
+        #region ISupportImportModule Members
+
+        public void DoImport(System.IO.Stream inputStream, Action<ExportImportProgressInfo> progressCallback)
+        {
+            var exportJob = _container.Resolve<CustomerExportImport>();
+            exportJob.DoImport(inputStream, progressCallback);
+        }
+
+        #endregion
     }
 
 }
