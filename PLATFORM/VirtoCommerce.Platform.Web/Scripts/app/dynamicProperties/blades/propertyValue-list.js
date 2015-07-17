@@ -98,9 +98,8 @@
             });
         });
 
-        blade.currentEntities = valuesToSave;
-        angular.copy(valuesToSave, blade.origEntity);
         angular.copy(valuesToSave, blade.data);
+        angular.copy(blade.origEntity, blade.currentEntities);
         $scope.bladeClose();
     };
 

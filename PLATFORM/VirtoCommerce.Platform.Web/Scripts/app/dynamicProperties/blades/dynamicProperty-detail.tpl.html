@@ -35,7 +35,7 @@
                     <div class="error" ng-if="formScope.multilingualFlag.$invalid">Only text values can be multilingual.</div>
                     <div class="form-control __checkbox" ng-class="{'__disabled': !blade.isNew}">
                         <label class="form-label">
-                            <input type="checkbox" ng-model="blade.currentEntity.isDictionary" ui-validate="!$value || blade.currentEntity.valueType === 'ShortText'" ui-validate-watch=" 'blade.currentEntity.valueType' " name="dictFlag">
+                            <input type="checkbox" ng-model="blade.currentEntity.isDictionary" ui-validate=" '!$value || blade.currentEntity.valueType === \'ShortText\'' " ui-validate-watch=" 'blade.currentEntity.valueType' " name="dictFlag">
                             <span class="check"></span>
                             <span class="name">Dictionary</span>
                         </label>

@@ -107,16 +107,6 @@
         </div>
     </script>
 
-    <!--<script type="text/ng-template" id="dShortText-multilang.html">
-        <div class="form-group" ng-repeat="(language, langValuesGroup) in context.langValuesMap">
-            <div class="form-input __langs">
-                <span class="flag flag-{{language.substr(3).toLowerCase()}}"></span>
-                <input ng-required="currentEntity.property.isRequired"
-                       ng-model="langValuesGroup.currentPropValues[0].value"
-                       placeholder="Enter value">
-            </div>
-        </div>
-    </script>-->
     <script type="text/ng-template" id="dShortText-multilang.html">
         <div class="form-group" ng-repeat="propValue in context.currentPropValues">
             <div class="form-input __langs">
@@ -127,7 +117,6 @@
             </div>
         </div>
     </script>
-
     <script type="text/ng-template" id="dLongText-multilang.html">
         <div class="form-group" ng-repeat="propValue in context.currentPropValues">
             <div class="form-input __langs">
@@ -141,10 +130,10 @@
 
 
     <script type="text/ng-template" id="dShortText-multivalue-multilang.html">
-        <div class="form-group" ng-repeat="(language, langValuesGroup) in context.langValuesMap">
+        <div class="form-group" ng-repeat="propValue in context.currentPropValues">
             <div class="form-input __langs">
-                <span class="flag flag-{{language.substr(3).toLowerCase()}}"></span>
-                <tags-input ng-model="langValuesGroup.currentPropValues"
+                <span class="flag flag-{{propValue.locale.substr(3).toLowerCase()}}"></span>
+                <tags-input ng-model="propValue.values"
                             min-tags="{{currentEntity.property.isRequired ? 1 : undefined}}"
                             add-on-blur="false"
                             display-property="value"
@@ -185,49 +174,4 @@
             </div>
         </div>
     </script>
-
-
-    <!--<script type="text/ng-template" id="numberPropType.html">
-        <input ng-if="!currentEntity.multivalue"
-               class="form-control"
-               ng-model="currentEntity.values[0].value"
-               type="number"
-               placeholder="enter number"
-               ng-required="currentEntity.property.isRequired" />
-
-        <tags-input ng-if="currentEntity.multivalue"
-                    ng-model="currentEntity.values"
-                    allowed-tags-pattern="^[-]?[0-9]+[\.]?[0-9]*$"
-                    min-length="1"
-                    add-on-blur="false"
-                    display-property="value"
-                    placeholder="enter number">
-
-        </tags-input>
-    </script>
-        <script type="text/ng-template" id="longTextPropType.html">
-        <span ng-repeat="val in currentEntity.values track by $index">
-            <textarea ng-if="currentEntity.multivalue || $index == 0"
-                      class="form-control"
-                      ng-model="val.value"
-                      ng-required="currentEntity.property.isRequired" />
-            <a ng-if="currentEntity.multivalue && $index > 0" ng-click="currentEntity.values.splice(currentEntity.values.indexOf(val.value),1)">remove</a>
-        </span>
-        <a ng-if="currentEntity.multivalue" ng-click="currentEntity.values.push({value:''})" style="cursor:pointer;">add value</a>
-    </script>-->
-    <!--<div class="form-input" ng-if="prop.valueType === 'ShortText'">
-            <input ng-model="prop.value" required class="form-control" placeholder="Enter value" />
-        </div>
-
-    <div class="form-input" ng-if="prop.valueType === 'Decimal'">
-        <input money ng-model="prop.value" placeholder="Enter number">
-    </div>
-
-    <div class="form-input __calendar" ng-if="prop.valueType === 'DateTime'">
-        <input placeholder="Choose date" ng-model="prop.value" datepicker-popup="shortDate" is-open="datepickers.str" datepicker-options="dateOptions" close-text="Close" />
-        <button class="btn" type="button" ng-click="open($event,'str')">
-            <i class="btn-ico fa fa-calendar"></i>
-        </button>
-    </div>-->
-
 </div>

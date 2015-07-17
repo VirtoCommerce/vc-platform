@@ -34,6 +34,8 @@
                 if (newValue.length != scope.currentEntity.values.length || difference(newValue).length > 0) {
                     if (property.isMultilingual) {
                         scope.currentEntity.values = angular.copy(newValue);
+                    } else if (property.isDictionary) {
+                        scope.currentEntity.values = angular.copy(newValue);
                     } else {
                         //Prevent reflect changing when use null value for empty initial values
                         if (!(scope.currentEntity.values.length == 0 && newValue[0].value == null)) {
@@ -63,9 +65,10 @@
                 if (property.isDictionary) {
                     loadDictionaryValues();
                 }
-                if (property.isMultilingual) {
-                    //initLanguagesValuesMap();
-                }
+
+                //if (property.isMultilingual) {
+                //    initLanguagesValuesMap();
+                //}
 
                 chageValueTemplate();
             };
@@ -106,6 +109,7 @@
                     scope.context.currentPropValues = [];
 
                     angular.forEach(result, function (dictValue) {
+                        dictValue.value = dictValue.name;
                         //Need select already selected values.
                         //Dictionary values are of same type like standard values
                         dictValue.selected = _.any(scope.currentEntity.values, function (x) { return x.name == dictValue.name; });
@@ -120,7 +124,7 @@
                         // initLanguagesValuesMap();
                     }
                 }, function (error) { });
-            };
+            }
 
             function getTemplateName() {
                 var result = 'd' + property.valueType;
@@ -136,7 +140,7 @@
                 }
                 result += '.html';
                 return result;
-            };
+            }
 
             function chageValueTemplate() {
                 var templateName = getTemplateName();
@@ -158,7 +162,7 @@
                     var newScope = scope.$new();
                     $compile(result)(newScope);
                 });
-            };
+            }
 
             // datepicker
             scope.datepickers = {}
