@@ -1,4 +1,5 @@
 ﻿using System;
+using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Model;
 
 namespace VirtoCommerce.Platform.Data.Security.Authentication.Hmac

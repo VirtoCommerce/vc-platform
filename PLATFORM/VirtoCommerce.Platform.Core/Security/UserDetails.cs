@@ -1,4 +1,4 @@
-﻿namespace VirtoCommerce.Platform.Data.Model
+﻿namespace VirtoCommerce.Platform.Core.Security
 {
     public enum UserDetails
     {

@@ -293,7 +293,6 @@
     <Compile Include="Converters\Notification\NotificationConverter.cs" />
     <Compile Include="Converters\Packaging\ModuleDescriptorConverter.cs" />
     <Compile Include="Converters\Packaging\ProgressMessageConverter.cs" />
-    <Compile Include="Converters\Security\ApiAccountConverter.cs" />
     <Compile Include="Converters\Settings\ModuleDescriptorConverter.cs" />
     <Compile Include="Converters\Settings\SettingConverter.cs" />
     <Compile Include="Global.asax.cs">
@@ -316,15 +315,8 @@
     <Compile Include="Model\Packaging\ModuleIdentity.cs" />
     <Compile Include="Model\Packaging\ModuleWorkerJob.cs" />
     <Compile Include="Model\Packaging\ProgressMessage.cs" />
-    <Compile Include="Model\Security\ApiAccount.cs" />
-    <Compile Include="Model\Security\ApiAccountType.cs" />
-    <Compile Include="Model\Security\ApplicationUserExtended.cs" />
     <Compile Include="Model\Security\ChangePasswordInfo.cs" />
     <Compile Include="Model\Security\UserLogin.cs" />
-    <Compile Include="Model\Security\UserSearchRequest.cs" />
-    <Compile Include="Model\Security\UserSearchResponse.cs" />
-    <Compile Include="Model\Security\UserState.cs" />
-    <Compile Include="Model\Security\UserType.cs" />
     <Compile Include="Model\Settings\ModuleDescriptor.cs" />
     <Compile Include="Model\Settings\Setting.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

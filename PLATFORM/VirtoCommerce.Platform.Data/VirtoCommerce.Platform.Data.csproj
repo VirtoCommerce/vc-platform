@@ -175,7 +175,6 @@
     <Compile Include="Model\AccountEntity.cs" />
     <Compile Include="Model\AccountState.cs" />
     <Compile Include="Model\ApiAccountEntity.cs" />
-    <Compile Include="Model\ApiAccountType.cs" />
     <Compile Include="Model\NotificationEntity.cs" />
     <Compile Include="Model\NotificationTemplateEntity.cs" />
     <Compile Include="Model\OperationLogEntity.cs" />
@@ -186,7 +185,6 @@
     <Compile Include="Model\RolePermissionEntity.cs" />
     <Compile Include="Model\SettingEntity.cs" />
     <Compile Include="Model\SettingValueEntity.cs" />
-    <Compile Include="Model\UserDetails.cs" />
     <Compile Include="Notification\DefaultEmailNotificationSendingGateway.cs" />
     <Compile Include="Notification\DefaultSmsNotificationSendingGateway.cs" />
     <Compile Include="Notification\InMemoryNotifierImpl.cs" />
@@ -250,6 +248,7 @@
     <Compile Include="Security\Authentication\Hmac\HmacAuthenticationMiddleware.cs" />
     <Compile Include="Security\Authentication\Hmac\HmacAuthenticationOptions.cs" />
     <Compile Include="Security\Authentication\Hmac\HmacUtility.cs" />
+    <Compile Include="Security\Converters\ApiAccountConverter.cs" />
     <Compile Include="Security\Identity\ApplicationClaimsIdentityProvider.cs" />
     <Compile Include="Security\Identity\ApplicationSignInManager.cs" />
     <Compile Include="Security\Identity\ApplicationUser.cs" />
@@ -267,6 +266,7 @@
     <Compile Include="Security\PermissionService.cs" />
     <Compile Include="Security\RoleManagementService.cs" />
     <Compile Include="Security\SecurityConverters.cs" />
+    <Compile Include="Security\SecurityService.cs" />
     <Compile Include="Settings\Converters\ModuleConverter.cs" />
     <Compile Include="Settings\Converters\SettingConverter.cs" />
     <Compile Include="Settings\Converters\SettingValueConverter.cs" />

@@ -210,6 +210,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Security\ApiAccount.cs" />
+    <Compile Include="Security\ApiAccountType.cs" />
+    <Compile Include="Security\ApplicationUserExtended.cs" />
     <Compile Include="Security\CheckPermissionAttribute.cs" />
     <Compile Include="Security\IPermissionService.cs" />
     <Compile Include="Security\IRoleManagementService.cs" />
@@ -218,6 +221,12 @@
     <Compile Include="Security\Role.cs" />
     <Compile Include="Security\RoleSearchRequest.cs" />
     <Compile Include="Security\RoleSearchResponse.cs" />
+    <Compile Include="Security\UserDetails.cs" />
+    <Compile Include="Security\ApplicationUserLogin.cs" />
+    <Compile Include="Security\UserSearchRequest.cs" />
+    <Compile Include="Security\UserSearchResponse.cs" />
+    <Compile Include="Security\UserState.cs" />
+    <Compile Include="Security\UserType.cs" />
     <Compile Include="Settings\IHaveSettings.cs" />
     <Compile Include="Settings\ISettingsManager.cs" />
     <Compile Include="Settings\ModuleDescriptor.cs" />

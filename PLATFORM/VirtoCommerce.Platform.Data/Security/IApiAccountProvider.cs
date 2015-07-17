@@ -1,4 +1,5 @@
-﻿using VirtoCommerce.Platform.Data.Model;
+﻿using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Data.Model;
 
 namespace VirtoCommerce.Platform.Data.Security
 {

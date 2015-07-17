@@ -1,4 +1,4 @@
-﻿namespace VirtoCommerce.Platform.Web.Model.Security
+﻿namespace VirtoCommerce.Platform.Core.Security
 {
     public enum UserState
     {
