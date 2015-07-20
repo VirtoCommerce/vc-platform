@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Web.Http.Description;
+using System.Web.UI.WebControls;
 using Shipstation.FulfillmentModule.Web.Converters;
+using Shipstation.FulfillmentModule.Web.Models.Notice;
 using Shipstation.FulfillmentModule.Web.Models.Order;
 using Shipstation.FulfillmentModule.Web.Services;
 using System.Web.Http;
 using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Domain.Order.Services;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace Shipstation.FulfillmentModule.Web.Controllers
 {
@@ -39,7 +42,8 @@ namespace Shipstation.FulfillmentModule.Web.Controllers
                 var searchCriteria = new SearchCriteria
                 {
                     StartDate = DateTime.Parse(start_date, new CultureInfo("en-US")),
-                    EndDate = DateTime.Parse(end_date, new CultureInfo("en-US"))
+                    EndDate = DateTime.Parse(end_date, new CultureInfo("en-US")),
+                    ResponseGroup = ResponseGroup.Full
                 };
                 var searchResult = _orderSearchService.Search(searchCriteria);
 
@@ -58,20 +62,19 @@ namespace Shipstation.FulfillmentModule.Web.Controllers
 
                 return Ok();
             }
-
-            if (action == "shipnotify")
-            {
-                return Ok();
-            }
-
+            
             return BadRequest();
         }
 
         [HttpPost]
         [Route("orders")]
-        public IHttpActionResult UpdateOrders(string action)
+        public IHttpActionResult UpdateOrders(string action, string order_number, string carrier, string service, string tracking_number, ShipNotice shipnotice)
         {
-            return Ok();
+            var order = _orderService.GetById(shipnotice.OrderNumber, CustomerOrderResponseGroup.Full);
+            if (order != null)
+                return Ok(shipnotice);
+
+            return BadRequest("Order not found");
         }
     }
 }
