@@ -133,6 +133,7 @@
     <Compile Include="Converters\PropertyDictionaryValueConverter.cs" />
     <Compile Include="Converters\PropertyValueConverter.cs" />
     <Compile Include="Converters\SearchConverter.cs" />
+    <Compile Include="ExportImport\CatalogExportImport.cs" />
     <Compile Include="ExportImport\CsvCatalogExporter.cs" />
     <Compile Include="ExportImport\CsvCatalogImporter.cs" />
     <Compile Include="ExportImport\CsvImportInfo.cs" />
