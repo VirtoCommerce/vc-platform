@@ -43,7 +43,10 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
             progressCallback(prodgressInfo);
 
             var backupObject = GetBackupObject();
-            backupObject.Catalogs.ForEach(x=>x.DefaultLanguage.Catalog=null);
+            backupObject.Catalogs.ForEach(x => x.DefaultLanguage.Catalog = null);
+            backupObject.Catalogs.ForEach(x => x.Languages.ForEach(l => l.Catalog = null));
+            backupObject.Products.ForEach(x => x.Catalog.DefaultLanguage.Catalog = null);
+            backupObject.Products.ForEach(x => x.Catalog.Languages.ForEach(l => l.Catalog = null));
             backupObject.SerializeJson(backupStream);
         }
 
@@ -146,7 +149,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
             {
                 Catalogs = respounce.Catalogs.Select(x => _catalogService.GetById(x.Id)).ToArray(),
                 Categories = respounce.Categories.Select(x => _categoryService.GetById(x.Id)).ToArray(),
-                Products = null,//respounce.Products.Select(x => _itemService.GetById(x.Id, ItemResponseGroup.ItemMedium | ItemResponseGroup.Variations | ItemResponseGroup.Seo)).ToArray(),
+                Products = respounce.Products.Select(x => _itemService.GetById(x.Id, ItemResponseGroup.ItemMedium | ItemResponseGroup.Variations | ItemResponseGroup.Seo)).ToArray(),
                 Properties = respounce.PropertyValues.Select(x => _propertyService.GetById(x.Id)).ToArray(),
             };
         }
