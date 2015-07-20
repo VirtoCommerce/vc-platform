@@ -98,8 +98,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\ShipstationController.cs" />
+    <Compile Include="Converters\ShipNoticeConverter.cs" />
     <Compile Include="Converters\CustomerOrderConverter.cs" />
     <Compile Include="Helpers\OrderXsdSchema.cs" />
+    <Compile Include="Models\Notice\ShipNotice.cs" />
     <Compile Include="Models\Order\ShipstationOrder.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
