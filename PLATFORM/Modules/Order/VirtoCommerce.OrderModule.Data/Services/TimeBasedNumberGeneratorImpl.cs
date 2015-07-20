@@ -15,13 +15,13 @@ namespace VirtoCommerce.OrderModule.Data.Services
         //********These settings could be saved in database:
 
         //Prefix_Date_Seq
-        public const string IdTemplate = "{0}{1}-{2}";
+        public const string IdTemplate = "{0}{1}{2}";
         //How many sequence items will be stored in-memory
         public const int SequenceReservationRange = 100;
         //Constant length of counter. Trailing zeros are added to left.
-        public const int CounterLength = 5;
+        public const int CounterLength = 3;
 
-        public const string DateFormat = "yyMMdd";
+        public const string DateFormat = "yyMMddHHmm";
 
         //***********************************************
 
@@ -34,11 +34,12 @@ namespace VirtoCommerce.OrderModule.Data.Services
 
 		public string GenerateNumber(Domain.Order.Model.Operation operation)
 		{
-            //var now = DateTime.UtcNow;
+            var now = DateTime.UtcNow;
             //var retVal = operation.GetType().Name.Substring(0, 2).ToUpper() + now.DayOfYear.ToString("000") + now.TimeOfDay.Minutes.ToString("00");
             //return retVal;
+
             var objectType = operation.GetType().Name.Substring(0, 2).ToUpper();
-		    const int startNumber = 0;
+            var startNumber = 1;
 		    const int increment = 1;
 
             lock (SequenceLock)

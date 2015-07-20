@@ -2,6 +2,7 @@
 using Shipstation.FulfillmentModule.Web.Services;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Settings;
+
 namespace Shipstation.FulfillmentModule.Web
 {
     public class Module: ModuleBase
