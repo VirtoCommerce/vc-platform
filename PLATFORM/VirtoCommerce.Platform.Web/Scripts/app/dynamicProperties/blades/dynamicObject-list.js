@@ -24,7 +24,9 @@
 
         bladeNavigationService.showBlade(newBlade, blade);
     }
-    
+
     blade.headIcon = 'fa-plus-square-o';
-    blade.refresh();
+    blade.title = 'Dynamic object types',
+    blade.subtitle = 'Pick object type to manage dynamic properties',
+blade.refresh();
 }]);
