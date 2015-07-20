@@ -76,9 +76,7 @@
         var selectedProps = _.filter(blade.currentEntities, function (x) { return x.property.isMultilingual; });
         _.each(selectedProps, function (prop) {
             if (prop.property.isDictionary) {
-                if (prop.values.length > 0 && prop.values[0].value) {
-                    valuesToSave.push(prop);
-                }
+                valuesToSave.push(prop);
             } else {
                 _.each(prop.values, function (value) {
                     if (value.values.length > 0 && value.values[0].value) {
