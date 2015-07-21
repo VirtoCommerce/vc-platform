@@ -3,7 +3,7 @@ using Microsoft.Practices.ObjectBuilder2;
 using Shipstation.FulfillmentModule.Web.Models.Order;
 using System;
 using System.Linq;
-using VirtoCommerce.Domain.Customer.Model;
+using AddressType = VirtoCommerce.Domain.Order.Model.AddressType;
 
 namespace Shipstation.FulfillmentModule.Web.Converters
 {
@@ -18,8 +18,14 @@ namespace Shipstation.FulfillmentModule.Web.Converters
                     OrderNumber = order.Number,
                     OrderID = order.Id,
                     OrderStatus = order.Status,
-                    OrderDate = String.Format("{0:MM'/'dd'/'yyyy  HH:mm:ss tt}", order.CreatedDate),
-                    LastModified = String.Format("{0:MM'/'dd'/'yyyy  HH:mm:ss tt}", order.ModifiedDate),
+                    OrderDate = String.Format("{0:MM'/'dd'/'yyyy HH:mm}", order.CreatedDate),
+                    LastModified = String.Format("{0:MM'/'dd'/'yyyy HH:mm}", order.ModifiedDate),
+                    OrderTotal = (float) order.Sum,
+                    ShippingAmount = (float) order.Shipments.Sum(sh => sh.Sum),
+                    TaxAmount = (float) order.Tax,
+                    ShippingMethod = order.Shipments.First().ShipmentMethodCode,
+                    ShippingAmountSpecified = true,
+                    PaymentMethod = order.InPayments.First().GatewayCode
                 };
                 var items = new List<OrdersOrderItem>();
                 order.Shipments.Where(s => s.Items != null && s.Items.Any()).ForEach(sh =>
@@ -35,7 +41,7 @@ namespace Shipstation.FulfillmentModule.Web.Converters
                             Quantity = (sbyte)shi.Quantity,
                             UnitPrice = (float)order.Items.Single(i => i.ProductId == shi.ProductId).Price,
                             Weight = (float)(order.Items.Single(i => i.ProductId == shi.ProductId).Weight ?? 0),
-                            WeightSpecified = order.Items.Single(i => i.ProductId == shi.ProductId).Weight == null,
+                            WeightSpecified = order.Items.Single(i => i.ProductId == shi.ProductId).Weight != null,
                             WeightUnits = order.Items.Single(i => i.ProductId == shi.ProductId).WeightUnit,
 
                         };
@@ -44,35 +50,52 @@ namespace Shipstation.FulfillmentModule.Web.Converters
                     });
 
                     retVal.Items = items.ToArray();
+                });
 
+                var customer = new OrdersOrderCustomer
+                {
+                    CustomerCode = order.CustomerId
+                };
+
+                var billAddress =
+                    order.Addresses.FirstOrDefault(
+                        a => a.AddressType == AddressType.Billing || a.AddressType == AddressType.BillingAndShipping);
+
+                if (billAddress != null)
+                {
                     var billTo = new OrdersOrderCustomerBillTo
                     {
-                        Company = sh.DeliveryAddress.Organization,
-                        Name = sh.DeliveryAddress.FirstName + sh.DeliveryAddress.LastName,
-                        Phone = sh.DeliveryAddress.Phone
+                        Company = billAddress.Organization,
+                        Name = billAddress.FirstName + " " + billAddress.LastName,
+                        Phone = billAddress.Phone
                     };
+
+                    customer.BillTo = billTo;
+                }
+
+                var shipAddress =
+                    order.Addresses.FirstOrDefault(
+                        a => a.AddressType == AddressType.Shipping || a.AddressType == AddressType.BillingAndShipping);
+
+                if (shipAddress != null)
+                {
 
                     var shipTo = new OrdersOrderCustomerShipTo
                     {
-                        Company = sh.DeliveryAddress.Organization,
-                        Name = sh.DeliveryAddress.FirstName + sh.DeliveryAddress.LastName,
-                        Phone = sh.DeliveryAddress.Phone,
-                        Address1 = sh.DeliveryAddress.Line1,
-                        City = sh.DeliveryAddress.City,
-                        PostalCode = sh.DeliveryAddress.PostalCode,
-                        Country = sh.DeliveryAddress.CountryCode,
-                        State = sh.DeliveryAddress.RegionName
+                        Company = shipAddress.Organization,
+                        Name = shipAddress.FirstName + " " + shipAddress.LastName,
+                        Phone = shipAddress.Phone,
+                        Address1 = shipAddress.Line1,
+                        City = shipAddress.City,
+                        PostalCode = shipAddress.PostalCode,
+                        Country = shipAddress.CountryCode,
+                        State = shipAddress.RegionId ?? shipAddress.RegionName
                     };
 
-                    var customer = new OrdersOrderCustomer
-                    {
-                        CustomerCode = order.CustomerId,
-                        BillTo = billTo,
-                        ShipTo = shipTo
-                    };
+                    customer.ShipTo = shipTo;
+                }
 
-                    retVal.Customer = customer;
-                });
+                retVal.Customer = customer;
 
                 return retVal;
             }
