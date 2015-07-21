@@ -83,6 +83,12 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			if (cart.Shipments != null)
 			{
 				retVal.Shipments = cart.Shipments.Select(x => x.ToCoreModel()).ToList();
+				//Redistribute order line items to shipment if cart shipment items empty 
+				var shipment = retVal.Shipments.FirstOrDefault();
+				if(shipment != null && (shipment.Items == null || !shipment.Items.Any()))
+				{
+					shipment.Items = cart.Items.Select(x => x.ToCoreShipmentItemModel()).ToList();
+				}
 			}
 			if (cart.Payments != null)
 			{
