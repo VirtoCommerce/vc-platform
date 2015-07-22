@@ -3,7 +3,7 @@ using VirtoCommerce.Platform.Core.DynamicProperties;
 
 namespace VirtoCommerce.CustomerModule.Web.Model
 {
-    public class Organization : Member
+	public class Organization : Member
     {
         public Organization()
             : base("Organization")
@@ -21,6 +21,5 @@ namespace VirtoCommerce.CustomerModule.Web.Model
         public string OwnerId { get; set; }
         public string ParentId { get; set; }
 
-        public ICollection<DynamicPropertyObjectValue> DynamicPropertyValues { get; set; }
     }
 }

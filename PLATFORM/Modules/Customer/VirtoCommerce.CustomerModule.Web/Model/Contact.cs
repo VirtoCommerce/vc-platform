@@ -26,6 +26,7 @@ namespace VirtoCommerce.CustomerModule.Web.Model
         public string Salutation { get; set; }
 
         public ICollection<string> Organizations { get; set; }
-        public ICollection<DynamicPropertyObjectValue> DynamicPropertyValues { get; set; }
-    }
+
+	
+	}
 }

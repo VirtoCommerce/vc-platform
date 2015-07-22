@@ -224,6 +224,46 @@ namespace VirtoCommerce.Platform.Data.Repositories
 			return query.FirstOrDefault(a => a.UserName == userName);
 		}
 
+		public DynamicPropertyDictionaryItemEntity[] GetDynamicPropertyDictionaryItems(string propertyId)
+		{
+			var retVal = DynamicPropertyDictionaryItems.Include(i => i.DisplayNames)
+													   .Where(i => i.PropertyId == propertyId)
+													   .ToArray();
+
+			return retVal;
+		}
+
+
+		public DynamicPropertyEntity[] GetObjectDynamicProperties(string objectType, string objectId)
+		{
+			var retVal = DynamicProperties.Where(x => x.ObjectType == objectType)
+										  .OrderBy(x => x.Name)
+										  .ToArray();
+			var propertyIds = retVal.Select(x => x.Id).ToArray();
+			var proprValues = DynamicPropertyObjectValues.Include(x => x.DictionaryItem)
+														 .Where(x => propertyIds.Contains(x.PropertyId) && x.ObjectId == objectId).ToArray();
+		
+			return retVal;
+		}
+
+		public DynamicPropertyEntity[] GetDynamicPropertiesByIds(string[] ids)
+		{
+			var retVal = DynamicProperties.Include(x => x.DisplayNames)
+										  .Where(x => ids.Contains(x.Id))
+										  .OrderBy(x => x.Name)
+										  .ToArray();
+			return retVal;
+		}
+
+		public DynamicPropertyEntity[] GetDynamicPropertiesForType(string objectType)
+		{
+			var retVal = DynamicProperties.Include(p => p.DisplayNames)
+										  .Where(p => p.ObjectType == objectType)
+										  .OrderBy(p => p.Name)
+										  .ToArray();
+			return retVal;
+		}
+
 		#endregion
 
 		public NotificationTemplateEntity GetNotificationTemplateByNotification(string notificationTypeId, string objectId, string objectTypeId, string language)

@@ -2,9 +2,11 @@
 .controller('platformWebApp.dynamicPropertyListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dynamicProperties.api', function ($scope, bladeNavigationService, dynamicPropertiesApi) {
     var blade = $scope.blade;
     blade.headIcon = 'fa-plus-square-o';
+    blade.title = blade.objectType;
+    blade.subtitle = 'Manage dynamic properties';
 
     blade.refresh = function () {
-        dynamicPropertiesApi.query({ id: blade.currentEntityId }, function (results) {
+        dynamicPropertiesApi.query({ id: blade.objectType }, function (results) {
             blade.currentEntities = results;
             blade.isLoading = false;
         }, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
@@ -25,7 +27,7 @@
                 //if (idx >= 0) {
                 //    blade.currentEntities.splice(idx, 1);
                 //}
-                dynamicPropertiesApi.delete({ id: blade.currentEntityId, propertyId: node.id },
+                dynamicPropertiesApi.delete({ id: blade.objectType, propertyId: node.id },
                     blade.refresh,
                     function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
             }
@@ -34,7 +36,7 @@
     }
 
     $scope.saveChanges = function () {
-        dynamicPropertiesApi.save({ id: blade.currentEntityId }, blade.currentEntities,
+        dynamicPropertiesApi.save({ id: blade.objectType }, blade.currentEntities,
             blade.refresh,
             function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
     };
@@ -62,7 +64,7 @@
        //    }
        //},
        {
-           name: "Add", icon: 'fa fa-plus',
+           name: "Add new property", icon: 'fa fa-plus',
            executeMethod: function () {
                $scope.selectedNodeId = undefined;
                var newBlade = {

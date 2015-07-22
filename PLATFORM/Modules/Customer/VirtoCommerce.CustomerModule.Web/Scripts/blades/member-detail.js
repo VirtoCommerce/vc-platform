@@ -116,7 +116,6 @@
         if (!blade.isOrganization && data.organizations.length > 0) {
             data.organization = data.organizations[0];
         }
-
         blade.currentEntity = angular.copy(data);
         blade.origEntity = data;
         blade.isLoading = false;

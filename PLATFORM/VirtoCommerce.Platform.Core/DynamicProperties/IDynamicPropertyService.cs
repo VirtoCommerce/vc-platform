@@ -15,10 +15,6 @@ namespace VirtoCommerce.Platform.Core.DynamicProperties
         void SaveDictionaryItems(string propertyId, DynamicPropertyDictionaryItem[] items);
         void DeleteDictionaryItems(string[] itemIds);
 
-        DynamicPropertyObjectValue[] GetObjectValues(string objectType, string objectId);
-        void SaveObjectValues(DynamicPropertyObjectValue[] values);
-        void DeleteObjectValues(string objectType, string objectId);
-
         void LoadDynamicPropertyValues(IHasDynamicProperties owner);
         void SaveDynamicPropertyValues(IHasDynamicProperties owner);
         void DeleteDynamicPropertyValues(IHasDynamicProperties owner);

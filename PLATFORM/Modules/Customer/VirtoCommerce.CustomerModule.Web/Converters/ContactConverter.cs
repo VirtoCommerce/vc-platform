@@ -16,8 +16,8 @@ namespace VirtoCommerce.CustomerModule.Web.Converters
                 retVal.Phones = contact.Phones;
             if (contact.Emails != null)
                 retVal.Emails = contact.Emails;
-            if (contact.DynamicPropertyValues != null)
-                retVal.DynamicPropertyValues = contact.DynamicPropertyValues.Select(v => v.Clone()).ToList();
+			if (contact.DynamicProperties != null)
+				retVal.DynamicProperties = contact.DynamicProperties;
             if (contact.Notes != null)
                 retVal.Notes = contact.Notes.Select(x => x.ToWebModel()).ToList();
             if (contact.Addresses != null)
@@ -38,8 +38,8 @@ namespace VirtoCommerce.CustomerModule.Web.Converters
                 retVal.Phones = contact.Phones;
             if (contact.Emails != null)
                 retVal.Emails = contact.Emails;
-            if (contact.DynamicPropertyValues != null)
-                retVal.DynamicPropertyValues = contact.DynamicPropertyValues.Select(v => v.Clone()).ToList();
+			if (contact.DynamicProperties != null)
+				retVal.DynamicProperties = contact.DynamicProperties;
             if (contact.Notes != null)
                 retVal.Notes = contact.Notes.Select(x => x.ToCoreModel()).ToList();
             if (contact.Addresses != null)

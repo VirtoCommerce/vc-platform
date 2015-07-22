@@ -119,17 +119,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
 
-        /// <summary>
-        /// GET: api/platform/dynamic/types/{typeName}/objects/{objectId}/values
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet]
-        [ResponseType(typeof(DynamicPropertyObjectValue[]))]
-        [Route("types/{typeName}/objects/{objectId}/values")]
-        public IHttpActionResult GetObjectValues(string typeName, string objectId)
-        {
-            var values = _service.GetObjectValues(typeName, objectId);
-            return Ok(values);
-        }
+     
     }
 }

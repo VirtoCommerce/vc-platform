@@ -1,10 +1,10 @@
 ﻿angular.module('platformWebApp')
 .controller('platformWebApp.dynamicPropertyWidgetController', ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
-    $scope.openBlade = function () {
+	$scope.blade = $scope.widget.blade;
+	$scope.openBlade = function () {
         var blade = {
-            id: "dynamicPropertiesList",
-            title: $scope.blade.title,
-            subtitle: 'Properties management',
+        	id: "dynamicPropertiesList",
+        	currentEntity: $scope.blade.currentEntity,
             controller: 'platformWebApp.propertyValueListController',
             template: 'Scripts/app/dynamicProperties/blades/propertyValue-list.tpl.html'
         };
@@ -12,8 +12,12 @@
         bladeNavigationService.showBlade(blade, $scope.blade);
     };
 
-    $scope.$watch('blade.currentEntity.dynamicPropertyValues', function (values) {
-        var groupedByProperty = _.groupBy(values, function (x) { return x.property.id; });
-        $scope.dynamicPropertyCount = _.keys(groupedByProperty).length;
-    });
+
+	$scope.$watch('widget.blade.currentEntity', function (entity) {
+		if (angular.isDefined(entity)) {
+			var groupedByProperty = _.groupBy(entity.dynamicProperties, function (x) { return x.id; });
+			$scope.dynamicPropertyCount = _.keys(groupedByProperty).length;
+		}
+	});
+
 }]);

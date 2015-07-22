@@ -4,23 +4,20 @@ namespace VirtoCommerce.Platform.Core.DynamicProperties
 {
     public static class DynamicPropertiesExtensions
     {
-        public static T GetDynamicPropertyValue<T>(this IHasDynamicProperties owner, string name, T defaultValue)
+        public static T GetDynamicPropertyValue<T>(this IHasDynamicProperties owner, string propertyName, T defaultValue)
         {
             var result = defaultValue;
 
-            if (owner != null && owner.DynamicPropertyValues != null)
+            if (owner != null && owner.DynamicProperties != null)
             {
-                var value = owner.DynamicPropertyValues
-                    .Where(v => v.Property != null && v.Property.Name == name && v.Values != null)
-                    .SelectMany(v => v.Values)
-                    .FirstOrDefault();
+                var propValue = owner.DynamicProperties.Where(v => v.Name == propertyName && v.Values != null)
+													   .SelectMany(v => v.Values)
+													   .FirstOrDefault();
 
-                var dictionaryItem = value as DynamicPropertyDictionaryItem;
-                if (dictionaryItem != null)
-                    value = dictionaryItem.Name;
-
-                if (value != null)
-                    result = (T)value;
+				if(propValue != null)
+				{
+					result = (T)propValue.Value;
+				}
             }
 
             return result;

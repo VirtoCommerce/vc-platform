@@ -2,6 +2,9 @@
 .controller('platformWebApp.propertyDictionaryController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', 'platformWebApp.dynamicProperties.dictionaryItemsApi', function ($scope, dialogService, bladeNavigationService, settings, dictionaryItemsApi) {
     var blade = $scope.blade;
     blade.headIcon = 'fa-plus-square-o';
+    blade.title = 'Dictionary values';
+    blade.subtitle = 'Manage dictionary values';
+
     var availableLanguages;
 
     function refresh() {

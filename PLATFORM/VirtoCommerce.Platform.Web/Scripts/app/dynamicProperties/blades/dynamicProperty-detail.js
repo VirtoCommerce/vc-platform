@@ -2,42 +2,30 @@
 .controller('platformWebApp.dynamicPropertyDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.settings', 'platformWebApp.dynamicProperties.api', function ($scope, bladeNavigationService, dialogService, settings, dynamicPropertiesApi) {
     var blade = $scope.blade;
     blade.headIcon = 'fa-plus-square-o';
+    $scope.languages = [];
 
-    function refresh() {
-        if (blade.isNew) {
-            initializeBlade({ valueType: 'ShortText', displayNames: [] });
-        } else {
-            initializeBlade(blade.origEntity);
-        }
-    }
+    blade.refresh = function () {
+    	blade.origEntity = blade.isNew ? { valueType: 'ShortText', displayNames: [] } : blade.origEntity;
+    	blade.currentEntity = angular.copy(blade.origEntity);
+    	blade.isLoading = false;
 
-    function initializeBlade(data) {
-        if (data.isMultilingual || blade.isNew) {
-            // load all languages and generate missing value wrappers
-            settings.getValues({ id: 'VirtoCommerce.Core.General.Languages' }, function (promiseData) {
-                promiseData.sort();
+    	//Actualize display names correspond to system languages
+    	settings.getValues({ id: 'VirtoCommerce.Core.General.Languages' }, function (languages) {
+    		$scope.languages = languages;
+    		blade.currentEntity.displayNames = _.map(languages, function (x) {
+    			var retVal = { locale: x };
+    			var existName = _.find(blade.currentEntity.displayNames, function (y) { return y.locale.toLowerCase() == x.toLowerCase() });
+    			if (angular.isDefined(existName)) {
+    				retVal = existName;
+    			}
+    			return retVal;
+    		});
 
-                // add missing languages
-                _.each(promiseData, function (x) {
-                    if (_.all(data.displayNames, function (dn) { return dn.locale.toLowerCase() !== x.toLowerCase(); })) {
-                        data.displayNames.push({ locale: x });
-                    }
-                });
+    
+    	});
+    };
 
-                initializeBlade2(data);
-            },
-            function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
-        } else {
-            initializeBlade2(data);
-        }
-    }
-
-    function initializeBlade2(data) {
-        blade.origEntity = data;
-        blade.currentEntity = angular.copy(data);
-        blade.isLoading = false;
-    }
-
+ 
     $scope.arrayFlagValidator = function (value) {
         return !value || blade.currentEntity.valueType === 'ShortText' || blade.currentEntity.valueType === 'Integer' || blade.currentEntity.valueType === 'Decimal';
     };
@@ -54,14 +42,10 @@
 
         switch (childType) {
             case 'valType':
-                newBlade.title = 'Dynamic property value type';
-                newBlade.subtitle = 'Change value type';
                 newBlade.controller = 'platformWebApp.propertyValueTypeController';
                 newBlade.template = 'Scripts/app/dynamicProperties/blades/property-valueType.tpl.html';
                 break;
             case 'dict':
-                newBlade.title = 'Dictionary values';
-                newBlade.subtitle = 'Manage dictionary values';
                 newBlade.controller = 'platformWebApp.propertyDictionaryController';
                 newBlade.template = 'Scripts/app/dynamicProperties/blades/property-dictionary.tpl.html';
                 break;
@@ -79,12 +63,7 @@
     };
 
     $scope.saveChanges = function () {
-        if (blade.currentEntity.isMultilingual) {
-            blade.currentEntity.displayNames = _.filter(blade.currentEntity.displayNames, function (x) { return x.name; });
-        } else {
-            blade.currentEntity.displayNames = undefined;
-        }
-
+    
         blade.confirmChangesFn(blade.currentEntity);
         $scope.bladeClose();
     };
@@ -137,5 +116,5 @@
     }
 
     // on load: 
-    refresh();
+    blade.refresh();
 }]);

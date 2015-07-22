@@ -33,8 +33,8 @@ namespace VirtoCommerce.StoreModule.Web.Converters
             if (store.FulfillmentCenter != null)
                 retVal.FulfillmentCenter = store.FulfillmentCenter.ToWebModel();
 
-            if (store.DynamicPropertyValues != null)
-                retVal.DynamicPropertyValues = store.DynamicPropertyValues.Select(v => v.Clone()).ToList();
+			if (store.DynamicProperties != null)
+				retVal.DynamicProperties = store.DynamicProperties;
 
             return retVal;
         }
@@ -83,8 +83,8 @@ namespace VirtoCommerce.StoreModule.Web.Converters
             if (store.FulfillmentCenter != null)
                 retVal.FulfillmentCenter = store.FulfillmentCenter.ToCoreModel();
 
-            if (store.DynamicPropertyValues != null)
-                retVal.DynamicPropertyValues = store.DynamicPropertyValues.Select(v => v.Clone()).ToList();
+			if (store.DynamicProperties != null)
+				retVal.DynamicProperties = store.DynamicProperties;
 
             return retVal;
         }

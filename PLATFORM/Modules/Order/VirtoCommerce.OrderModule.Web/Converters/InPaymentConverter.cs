@@ -24,6 +24,9 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 
 			retVal.ChildrenOperations = payment.ChildrenOperations.Select(x => x.ToWebModel()).ToList();
 
+			if (payment.DynamicProperties != null)
+				retVal.DynamicProperties = payment.DynamicProperties;
+
 			return retVal;
 		}
 
@@ -37,6 +40,12 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 				retVal.Properties = payment.Properties.Select(x => x.ToCoreModel()).ToList();
 
 			retVal.Currency = payment.Currency;
+
+
+			if (payment.DynamicProperties != null)
+				retVal.DynamicProperties = payment.DynamicProperties;
+
+
 			return retVal;
 		}
 

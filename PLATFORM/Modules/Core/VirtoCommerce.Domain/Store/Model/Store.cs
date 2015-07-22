@@ -44,8 +44,8 @@ namespace VirtoCommerce.Domain.Store.Model
         #endregion
 
         #region IHasDynamicProperties Members
-
-        public ICollection<DynamicPropertyObjectValue> DynamicPropertyValues { get; set; }
+		public string ObjectType { get; set; }
+		public ICollection<DynamicObjectProperty> DynamicProperties { get; set; }
 
         #endregion
     }

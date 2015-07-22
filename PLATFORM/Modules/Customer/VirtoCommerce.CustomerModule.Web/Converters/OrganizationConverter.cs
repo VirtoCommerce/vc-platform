@@ -20,8 +20,8 @@ namespace VirtoCommerce.CustomerModule.Web.Converters
                 retVal.Notes = organization.Notes.Select(x => x.ToWebModel()).ToList();
             if (organization.Addresses != null)
                 retVal.Addresses = organization.Addresses.Select(x => x.ToWebModel()).ToList();
-            if (organization.DynamicPropertyValues != null)
-                retVal.DynamicPropertyValues = organization.DynamicPropertyValues.Select(v => v.Clone()).ToList();
+			if (organization.DynamicProperties != null)
+				retVal.DynamicProperties = organization.DynamicProperties;
 
             return retVal;
         }
@@ -40,8 +40,8 @@ namespace VirtoCommerce.CustomerModule.Web.Converters
                 retVal.Notes = organization.Notes.Select(x => x.ToCoreModel()).ToList();
             if (organization.Addresses != null)
                 retVal.Addresses = organization.Addresses.Select(x => x.ToCoreModel()).ToList();
-            if (organization.DynamicPropertyValues != null)
-                retVal.DynamicPropertyValues = organization.DynamicPropertyValues.Select(v => v.Clone()).ToList();
+			if (organization.DynamicProperties != null)
+				retVal.DynamicProperties = organization.DynamicProperties;
 
             return retVal;
         }

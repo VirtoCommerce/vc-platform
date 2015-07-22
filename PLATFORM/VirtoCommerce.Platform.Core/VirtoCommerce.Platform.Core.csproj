@@ -90,6 +90,7 @@
     <Compile Include="DynamicProperties\DynamicPropertyDictionaryItem.cs" />
     <Compile Include="DynamicProperties\DynamicPropertyName.cs" />
     <Compile Include="DynamicProperties\DynamicPropertyDictionaryItemName.cs" />
+    <Compile Include="DynamicProperties\DynamicObjectProperty.cs" />
     <Compile Include="DynamicProperties\DynamicPropertyObjectValue.cs" />
     <Compile Include="DynamicProperties\DynamicPropertyValueType.cs" />
     <Compile Include="DynamicProperties\IDynamicPropertyService.cs" />

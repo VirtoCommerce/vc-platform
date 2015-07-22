@@ -37,8 +37,8 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 			retVal.ChildrenOperations = customerOrder.ChildrenOperations.Select(x => x.ToWebModel()).ToList();
 			retVal.TaxDetails = customerOrder.TaxDetails;
 
-            if (customerOrder.DynamicPropertyValues != null)
-                retVal.DynamicPropertyValues = customerOrder.DynamicPropertyValues.Select(v => v.Clone()).ToList();
+            if (customerOrder.DynamicProperties != null)
+                retVal.DynamicProperties = customerOrder.DynamicProperties;
 
 			return retVal;
 		}
@@ -64,8 +64,8 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 				retVal.Discount = customerOrder.Discount.ToCoreModel();
 			retVal.TaxDetails = customerOrder.TaxDetails;
 
-            if (customerOrder.DynamicPropertyValues != null)
-                retVal.DynamicPropertyValues = customerOrder.DynamicPropertyValues.Select(v => v.Clone()).ToList();
+            if (customerOrder.DynamicProperties != null)
+                retVal.DynamicProperties = customerOrder.DynamicProperties;
 
 			return retVal;
 		}

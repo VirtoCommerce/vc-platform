@@ -13,30 +13,16 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
     {
         private static readonly object[] _emptyValues = new object[0];
 
-        public static DynamicPropertyObjectValue[] ToModel(this DynamicPropertyEntity entity, string objectId)
+		public static DynamicObjectProperty ToDynamicObjectProperty(this DynamicPropertyEntity entity, string objectId)
         {
-            var property = entity.ToModel();
-
-            var groups = entity.ObjectValues
-                .Where(v => v.ObjectId == objectId)
-                .GroupBy(v => v.Locale)
-                .ToArray();
-
-            var result = (from @group in groups
-                          select new DynamicPropertyObjectValue
-                          {
-                              Property = property,
-                              ObjectId = objectId,
-                              Locale = @group.Key,
-                              Values = @group.Select(v => v.ToModel()).ToArray(),
-                          }).ToList();
-
-            if (!result.Any())
-            {
-                result.Add(new DynamicPropertyObjectValue { Property = property, ObjectId = objectId, Values = _emptyValues });
-            }
-
-            return result.ToArray();
+			var retVal = new DynamicObjectProperty();
+			var property = entity.ToModel();
+			retVal.InjectFrom(entity);
+			retVal.ObjectId = objectId;
+			retVal.ValueType = EnumUtility.SafeParse(entity.ValueType, DynamicPropertyValueType.Undefined);
+			retVal.DisplayNames = entity.DisplayNames.Select(x => x.ToModel()).ToArray();
+			retVal.Values = entity.ObjectValues.Select(x => x.ToModel()).ToArray();
+			return retVal;
         }
 
         public static DynamicProperty ToModel(this DynamicPropertyEntity entity)
@@ -46,8 +32,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
 
             result.ValueType = EnumUtility.SafeParse(entity.ValueType, DynamicPropertyValueType.Undefined);
 
-            if (entity.IsMultilingual)
-                result.DisplayNames = entity.DisplayNames.Select(n => n.ToModel()).ToArray();
+            result.DisplayNames = entity.DisplayNames.Select(n => n.ToModel()).ToArray();
 
             return result;
         }
@@ -63,11 +48,22 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
             if (model.ValueType != DynamicPropertyValueType.Undefined)
                 result.ValueType = model.ValueType.ToString();
 
-            if (model.IsMultilingual && model.DisplayNames != null)
+            if (model.DisplayNames != null)
                 result.DisplayNames = new ObservableCollection<DynamicPropertyNameEntity>(model.DisplayNames.Select(n => n.ToEntity()));
 
             return result;
         }
+
+		public static DynamicPropertyEntity ToEntity(this DynamicObjectProperty model)
+		{
+			if (model == null)
+				throw new ArgumentNullException("model");
+
+			var result = ((DynamicProperty)model).ToEntity();
+			result.ObjectValues = new ObservableCollection<DynamicPropertyObjectValueEntity>(model.Values.Select(x => x.ToEntity(model)));
+		
+			return result;
+		}
 
         public static void Patch(this DynamicPropertyEntity source, DynamicPropertyEntity target)
         {
@@ -77,11 +73,16 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
             var patchInjectionPolicy = new PatchInjection<DynamicPropertyEntity>(x => x.Name, x => x.IsRequired, x => x.IsArray);
             target.InjectFrom(patchInjectionPolicy, source);
 
-            if (target.IsMultilingual && !source.DisplayNames.IsNullCollection())
+            if (!source.DisplayNames.IsNullCollection())
             {
-                var comparer = AnonymousComparer.Create((DynamicPropertyNameEntity n) => string.Join("-", n.Locale, n.Name));
+                var comparer = AnonymousComparer.Create((DynamicPropertyNameEntity x) => string.Join("-", x.Locale, x.Name));
                 source.DisplayNames.Patch(target.DisplayNames, comparer, (sourceItem, targetItem) => { });
             }
+
+			if(!source.ObjectValues.IsNullCollection())
+			{
+				source.ObjectValues.Patch(target.ObjectValues, (sourceValue, targetValue) => sourceValue.Patch(targetValue));
+			}
         }
     }
 }

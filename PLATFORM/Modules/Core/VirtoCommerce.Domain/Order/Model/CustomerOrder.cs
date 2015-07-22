@@ -4,7 +4,7 @@ using VirtoCommerce.Platform.Core.DynamicProperties;
 
 namespace VirtoCommerce.Domain.Order.Model
 {
-    public class CustomerOrder : Operation, IHaveTaxDetalization, IHasDynamicProperties
+    public class CustomerOrder : Operation, IHaveTaxDetalization
 	{
 		public string CustomerId { get; set; }
 		public string CustomerName { get; set; }
@@ -59,12 +59,7 @@ namespace VirtoCommerce.Domain.Order.Model
 			}
 		}
 
-        #region IHasDynamicProperties Members
-
-        public ICollection<DynamicPropertyObjectValue> DynamicPropertyValues { get; set; }
-
-        #endregion
-
+   
 		#region ITaxDetailSupport Members
 
 		public ICollection<TaxDetail> TaxDetails { get; set; }

@@ -87,9 +87,9 @@
     <script type="text/ng-template" id="dShortText-dictionary.html">
         <div class="form-input">
             <ui-select ng-model="context.currentPropValues[0]">
-                <ui-select-match placeholder="Select value">{{$select.selected.value}}</ui-select-match>
-                <ui-select-choices repeat="propValue in context.allDictionaryValues | filter: {value: $select.search}">
-                    <span ng-bind-html="propValue.value | highlight: $select.search"></span>
+                <ui-select-match placeholder="Select value">{{$select.selected.name}}</ui-select-match>
+                <ui-select-choices repeat="propValue in context.allDictionaryValues | filter: {name: $select.search}">
+                    <span ng-bind-html="propValue.name | highlight: $select.search"></span>
                 </ui-select-choices>
             </ui-select>
         </div>
@@ -100,8 +100,8 @@
         <div class="form-input">
             <ui-select multiple ng-model="context.currentPropValues">
                 <ui-select-match placeholder="Select value">{{$item.value}}</ui-select-match>
-                <ui-select-choices repeat="propValue in context.allDictionaryValues | filter: {value: $select.search}">
-                    <span ng-bind-html="propValue.value | highlight: $select.search"></span>
+                <ui-select-choices repeat="propValue in context.allDictionaryValues | filter: {name: $select.search}">
+                    <span ng-bind-html="propValue.name | highlight: $select.search"></span>
                 </ui-select-choices>
             </ui-select>
         </div>
@@ -112,7 +112,7 @@
             <div class="form-input __langs">
                 <span class="flag flag-{{propValue.locale.substr(3).toLowerCase()}}"></span>
                 <input ng-required="currentEntity.property.isRequired"
-                       ng-model="propValue.values[0].value"
+                       ng-model="propValue.value"
                        placeholder="Enter value">
             </div>
         </div>
@@ -147,9 +147,9 @@
         <div class="form-group">
             <div class="form-input">
                 <ui-select ng-model="context.currentPropValues[0]">
-                    <ui-select-match placeholder="Select value">{{$select.selected.value}}</ui-select-match>
-                    <ui-select-choices repeat="propValue in context.allDictionaryValues | filter: {value: $select.search}">
-                        <span ng-bind-html="propValue.value | highlight: $select.search"></span>
+                    <ui-select-match placeholder="Select value">{{$select.selected.name}}</ui-select-match>
+                    <ui-select-choices repeat="propValue in context.allDictionaryValues | filter: {name: $select.search}">
+                        <span ng-bind-html="propValue.name | highlight: $select.search"></span>
                     </ui-select-choices>
                 </ui-select>
             </div>
@@ -163,9 +163,9 @@
     <script type="text/ng-template" id="dShortText-dictionary-multivalue-multilang.html">
         <div class="form-input">
             <ui-select multiple ng-model="context.currentPropValues">
-                <ui-select-match placeholder="Select value">{{$item.value}}</ui-select-match>
-                <ui-select-choices repeat="propValue in context.allDictionaryValues | filter: {value: $select.search}">
-                    <span ng-bind-html="propValue.value | highlight: $select.search"></span>
+                <ui-select-match placeholder="Select value">{{$item.name}}</ui-select-match>
+                <ui-select-choices repeat="propValue in context.allDictionaryValues | filter: {name: $select.search}">
+                    <span ng-bind-html="propValue.name | highlight: $select.search"></span>
                 </ui-select-choices>
             </ui-select>
         </div>

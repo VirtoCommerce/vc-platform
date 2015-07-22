@@ -26,5 +26,9 @@ namespace VirtoCommerce.Platform.Data.Repositories
 
 		AccountEntity GetAccountByName(string userName, UserDetails detailsLevel);
 		NotificationTemplateEntity GetNotificationTemplateByNotification(string notificationTypeId, string objectId, string objectTypeId, string language);
+		DynamicPropertyDictionaryItemEntity[] GetDynamicPropertyDictionaryItems(string propertyId);
+		DynamicPropertyEntity[] GetDynamicPropertiesByIds(string[] ids);
+		DynamicPropertyEntity[] GetDynamicPropertiesForType(string objectType);
+		DynamicPropertyEntity[] GetObjectDynamicProperties(string objectType, string objectId);
 	}
 }

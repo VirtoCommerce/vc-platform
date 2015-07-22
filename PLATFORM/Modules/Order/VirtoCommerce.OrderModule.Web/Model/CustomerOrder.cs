@@ -27,6 +27,6 @@ namespace VirtoCommerce.OrderModule.Web.Model
 		public ICollection<TaxDetail> TaxDetails { get; set; }
 		#endregion
 
-        public ICollection<DynamicPropertyObjectValue> DynamicPropertyValues { get; set; }
+       
 	}
 }

@@ -28,7 +28,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
 
             result.PropertyId = property.Id;
 
-            if (property.IsMultilingual && model.DisplayNames != null)
+            if (model.DisplayNames != null)
                 result.DisplayNames = new ObservableCollection<DynamicPropertyDictionaryItemNameEntity>(model.DisplayNames.Select(v => v.ToEntity()));
 
             return result;
@@ -42,7 +42,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
             var patchInjectionPolicy = new PatchInjection<DynamicPropertyDictionaryItemEntity>(x => x.Name);
             target.InjectFrom(patchInjectionPolicy, source);
 
-            if (target.Property.IsMultilingual && !source.DisplayNames.IsNullCollection())
+            if (!source.DisplayNames.IsNullCollection())
             {
                 var comparer = AnonymousComparer.Create((DynamicPropertyDictionaryItemNameEntity v) => string.Join("-", v.Locale, v.Name));
                 source.DisplayNames.Patch(target.DisplayNames, comparer, (sourceItem, targetItem) => { });

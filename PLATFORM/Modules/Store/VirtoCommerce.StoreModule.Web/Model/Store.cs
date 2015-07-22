@@ -8,7 +8,7 @@ using coreModel = VirtoCommerce.Domain.Store.Model;
 
 namespace VirtoCommerce.StoreModule.Web.Model
 {
-    public class Store : AuditableEntity
+	public class Store : AuditableEntity
     {
         public string Name { get; set; }
         public string Description { get; set; }
@@ -38,6 +38,9 @@ namespace VirtoCommerce.StoreModule.Web.Model
         public ICollection<PaymentMethod> PaymentMethods { get; set; }
         public ICollection<ShippingMethod> ShippingMethods { get; set; }
         public ICollection<SeoInfo> SeoInfos { get; set; }
-        public ICollection<DynamicPropertyObjectValue> DynamicPropertyValues { get; set; }
+
+		public string ObjectType { get; set; }
+		public ICollection<DynamicObjectProperty> DynamicProperties { get; set; }
+
     }
 }
