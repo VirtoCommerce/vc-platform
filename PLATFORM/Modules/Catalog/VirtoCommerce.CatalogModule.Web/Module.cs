@@ -1,20 +1,14 @@
 ﻿using System;
 using System.Data.Entity;
 using System.IO;
-using System.Linq;
-using System.Text;
-using CsvHelper;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.CatalogModule.Data.Model;
 using VirtoCommerce.CatalogModule.Data.Repositories;
 using VirtoCommerce.CatalogModule.Data.Services;
 using VirtoCommerce.CatalogModule.Web.ExportImport;
 using VirtoCommerce.Domain.Catalog.Services;
-using VirtoCommerce.Domain.Commerce.Services;
-using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Modularity;
-using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Platform.Data.Repositories;
@@ -86,20 +80,21 @@ namespace VirtoCommerce.CatalogModule.Web
 
 		#region ISupportExport Members
 
-		public void DoExport(System.IO.Stream outStream, Action<ExportImportProgressInfo> progressCallback)
+		public void DoExport(Stream outStream, Action<ExportImportProgressInfo> progressCallback)
 		{
-			throw new NotImplementedException();
-		}
+            var exportJob = _container.Resolve<CatalogExportImport>();
+            exportJob.DoExport(outStream, progressCallback);
+        }
 
 		#endregion
 
 		#region ISupportImportModule Members
 
-		public void DoImport(System.IO.Stream inputStream, Action<ExportImportProgressInfo> progressCallback)
+		public void DoImport(Stream inputStream, Action<ExportImportProgressInfo> progressCallback)
 		{
-			throw new NotImplementedException();
-
-		}
+            var exportJob = _container.Resolve<CatalogExportImport>();
+            exportJob.DoImport(inputStream, progressCallback);
+        }
 
 		#endregion
 	}

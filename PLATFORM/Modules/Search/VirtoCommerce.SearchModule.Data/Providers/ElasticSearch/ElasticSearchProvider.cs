@@ -8,7 +8,6 @@ using PlainElastic.Net.IndexSettings;
 using PlainElastic.Net.Mappings;
 using PlainElastic.Net.Queries;
 using PlainElastic.Net.Serialization;
-using VirtoCommerce.Domain.Search;
 using VirtoCommerce.Domain.Search.Filters;
 using VirtoCommerce.Domain.Search.Model;
 using VirtoCommerce.Domain.Search.Services;
@@ -347,20 +346,7 @@ namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
                 // Get mapping info
                 if (Client.IndexExists(new IndexExistsCommand(scope)))
                 {
-                    try
-                    {
-                        mapping = Client.GetMapping(new GetMappingCommand(scope, documentType));
-                    }
-                    catch (OperationException ex)
-                    {
-                        if (ex.HttpStatusCode != 404 || !ex.Message.Contains("TypeMissingException"))
-                        {
-                            throw;
-                        }
-                    }
-
-                    if (mapping != null)
-                        _mappings.Add(core, mapping);
+                    mapping = GetMappingFromServer(scope, documentType, core);
                 }
             }
             else
@@ -398,7 +384,7 @@ namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
                 }
                 else
                 {
-                    if (String.IsNullOrEmpty(mapping) || !mapping.Contains(String.Format("\"{0}\"", key)))
+                    if (String.IsNullOrEmpty(mapping) || !mapping.Contains(String.Format("\"{0}\"", field.Name)))
                     {
                         var type = field.Value != null ? field.Value.GetType() : null;
                         var propertyMap = new CustomPropertyMap<ESDocument>(field.Name, type)
@@ -456,6 +442,8 @@ namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
                 var result = Client.PutMapping(new PutMappingCommand(scope, documentType), mappingNew);
                 if (!result.acknowledged && result.error != null)
                     throw new IndexBuildException(result.error);
+
+                GetMappingFromServer(scope, documentType, core);
             }
 
             _pendingDocuments[core].Add(localDocument);
@@ -465,6 +453,28 @@ namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
             {
                 Commit(scope);
             }
+        }
+
+        private string GetMappingFromServer(string scope, string documentType, string core)
+        {
+            string mapping = null;
+
+            try
+            {
+                mapping = Client.GetMapping(new GetMappingCommand(scope, documentType));
+            }
+            catch (OperationException ex)
+            {
+                if (ex.HttpStatusCode != 404 || !ex.Message.Contains("TypeMissingException"))
+                {
+                    throw;
+                }
+            }
+
+            if (mapping != null)
+                _mappings[core] = mapping;
+
+            return mapping;
         }
 
         public virtual int Remove(string scope, string documentType, string key, string value)
@@ -553,7 +563,7 @@ namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
             {
                 var v = value as RangeFilterValue;
                 var returnVal = v.Displays.Where(d => d.Language.Equals(locale, StringComparison.OrdinalIgnoreCase)).Select(d => d.Value);
-                
+
                 if (!returnVal.Any())
                 {
                     try

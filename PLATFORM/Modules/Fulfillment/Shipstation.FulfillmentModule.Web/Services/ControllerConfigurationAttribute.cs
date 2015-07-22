@@ -10,7 +10,7 @@ namespace Shipstation.FulfillmentModule.Web.Services
                                HttpControllerDescriptor controllerDescriptor)
         {
             var xmlFormater = new XmlMediaTypeFormatter { UseXmlSerializer = true };
-
+            
             controllerSettings.Formatters.Clear();
             controllerSettings.Formatters.Add(xmlFormater);
         }

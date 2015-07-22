@@ -57,29 +57,7 @@ namespace VirtoCommerce.Platform.Data.Security
 
             if (user != null)
             {
-                var dbUser = new ApplicationUser();
-                dbUser.InjectFrom(user);
-
-                if (user.Logins != null)
-                {
-                    foreach (var login in user.Logins)
-                    {
-                        var userLogin = dbUser.Logins.FirstOrDefault(l => l.LoginProvider == login.LoginProvider);
-                        if (userLogin != null)
-                        {
-                            userLogin.ProviderKey = login.ProviderKey;
-                        }
-                        else
-                        {
-                            dbUser.Logins.Add(new Microsoft.AspNet.Identity.EntityFramework.IdentityUserLogin
-                            {
-                                LoginProvider = login.LoginProvider,
-                                ProviderKey = login.ProviderKey,
-                                UserId = dbUser.Id
-                            });
-                        }
-                    }
-                }
+                var dbUser = user.ToDataModel();
 
                 if (string.IsNullOrEmpty(user.Password))
                 {
@@ -115,8 +93,7 @@ namespace VirtoCommerce.Platform.Data.Security
 
         public async Task<string> CreateAsync(ApplicationUserExtended user)
         {
-            var dbUser = new ApplicationUser();
-            dbUser.InjectFrom(user);
+            var dbUser = user.ToDataModel();
 
             IdentityResult result;
             if (!string.IsNullOrEmpty(user.Password))
