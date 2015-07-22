@@ -25,7 +25,9 @@
     };
 
     $scope.saveChanges = function () {
-    	angular.copy(blade.currentEntity.dynamicProperties, blade.origEntity.dynamicProperties);
+    	if (isDirty()) {
+    		angular.copy(blade.currentEntity.dynamicProperties, blade.origEntity.dynamicProperties);
+    	}
     	$scope.bladeClose();
     };
 
