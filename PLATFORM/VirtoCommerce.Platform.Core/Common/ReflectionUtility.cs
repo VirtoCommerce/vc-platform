@@ -103,7 +103,7 @@ namespace VirtoCommerce.Platform.Core.Common
 			var objects = properties.Where(x => x.PropertyType.GetInterface(typeof(T).Name) != null)
 									.Select(x =>(T)x.GetValue(obj)).ToList();
 
-			retVal.AddRange(objects.SelectMany(x => x.GetFlatObjectsListWithInterface<T>()));
+			retVal.AddRange(objects.Where(x=> x != null).SelectMany(x => x.GetFlatObjectsListWithInterface<T>()));
 
 			var collections = properties.Select(x => x.GetValue(obj, null))
 										.Where(x => x is IEnumerable && !(x is String))
