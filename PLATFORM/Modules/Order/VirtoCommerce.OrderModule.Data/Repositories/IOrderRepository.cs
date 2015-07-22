@@ -16,6 +16,6 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 		IQueryable<PaymentInEntity> InPayments { get; }
 
 		CustomerOrderEntity GetCustomerOrderById(string id, CustomerOrderResponseGroup responseGroup);
-	
+        CustomerOrderEntity GetCustomerOrderByNumber(string orderNumber, CustomerOrderResponseGroup responseGroup);
 	}
 }
