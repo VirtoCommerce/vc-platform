@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using PlainElastic.Net;
 using PlainElastic.Net.IndexSettings;
 using PlainElastic.Net.Mappings;
@@ -441,13 +439,7 @@ namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
                 var mapBuilder = new MapBuilder<ESDocument>();
                 var mappingNew = mapBuilder.RootObject(documentType, d => d.Properties(p => properties)).Build();
 
-                // Make mapping request compatible with Elasticsearch newer than 1.1.1
-                var obj = (JObject)JsonConvert.DeserializeObject(mappingNew);
-                var doc = obj.GetValue(documentType).Value<JObject>();
-                doc.Remove("type");
-                var correctMapping = JsonConvert.SerializeObject(doc);
-
-                var result = Client.PutMapping(new PutMappingCommand(scope, documentType), correctMapping);
+                var result = Client.PutMapping(new PutMappingCommand(scope, documentType), mappingNew);
                 if (!result.acknowledged && result.error != null)
                     throw new IndexBuildException(result.error);
 
