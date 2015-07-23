@@ -17,7 +17,7 @@
 
         var newBlade = {
             subtitle: 'Manage property',
-            origEntity: node,
+            currentEntity: node,
             confirmChangesFn: function (entry) {
                 angular.copy(entry, node);
                 $scope.saveChanges();
@@ -44,7 +44,6 @@
     function openDetailsBlade(node) {
         var newBlade = {
             id: "dynamicPropertyDetail",
-            title: blade.title,
             controller: 'platformWebApp.dynamicPropertyDetailController',
             template: 'Scripts/app/dynamicProperties/blades/dynamicProperty-detail.tpl.html'
         };

@@ -114,7 +114,6 @@
                             scope.context.currentPropValues.push(dictValue);
                         }
                     });
-
                     return result;
                 });
 

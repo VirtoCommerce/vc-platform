@@ -2,16 +2,14 @@
 .controller('platformWebApp.dynamicPropertyDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.settings', 'platformWebApp.dynamicProperties.api', function ($scope, bladeNavigationService, dialogService, settings, dynamicPropertiesApi) {
     var blade = $scope.blade;
     blade.headIcon = 'fa-plus-square-o';
+    blade.title = 'Manage property';
     $scope.languages = [];
 
     blade.refresh = function () {
-    	blade.origEntity = blade.isNew ? { valueType: 'ShortText', displayNames: [] } : blade.origEntity;
-    	blade.currentEntity = angular.copy(blade.origEntity);
-    	blade.isLoading = false;
-
     	//Actualize display names correspond to system languages
     	settings.getValues({ id: 'VirtoCommerce.Core.General.Languages' }, function (languages) {
     		$scope.languages = languages;
+    		blade.currentEntity = blade.isNew ? { valueType: 'ShortText', displayNames: [] } : blade.currentEntity;
     		blade.currentEntity.displayNames = _.map(languages, function (x) {
     			var retVal = { locale: x };
     			var existName = _.find(blade.currentEntity.displayNames, function (y) { return y.locale.toLowerCase() == x.toLowerCase() });
@@ -20,8 +18,9 @@
     			}
     			return retVal;
     		});
-
-    
+    		blade.origEntity = blade.currentEntity;
+    		blade.currentEntity = angular.copy(blade.origEntity);
+    		blade.isLoading = false;
     	});
     };
 

@@ -57,6 +57,7 @@
 
     <script type="text/ng-template" id="dShortText-multivalue.html">
         <tags-input ng-model="context.currentPropValues"
+                    min-length="1"
                     min-tags="{{currentEntity.property.isRequired ? 1 : undefined}}"
                     add-on-blur="false"
                     display-property="value"
@@ -99,7 +100,7 @@
     <script type="text/ng-template" id="dShortText-dictionary-multivalue.html">
         <div class="form-input">
             <ui-select multiple ng-model="context.currentPropValues">
-                <ui-select-match placeholder="Select value">{{$item.value}}</ui-select-match>
+                <ui-select-match placeholder="Select value">{{$item.name}}</ui-select-match>
                 <ui-select-choices repeat="propValue in context.allDictionaryValues | filter: {name: $select.search}">
                     <span ng-bind-html="propValue.name | highlight: $select.search"></span>
                 </ui-select-choices>
