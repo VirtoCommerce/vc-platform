@@ -44,12 +44,6 @@
         <title>Shipstation account password</title>
         <description>Account password provided by Shipstation during registration process</description>
       </setting>
-      <setting>
-        <name>Shipstation.Fulfillment.Credentials.ServiceUrl</name>
-        <valueType>string</valueType>
-        <title>Link to Shipstation API service</title>
-        <description>Link to Shipstation API service</description>
-      </setting>
     </group>
   </settings>
   <permissions>
