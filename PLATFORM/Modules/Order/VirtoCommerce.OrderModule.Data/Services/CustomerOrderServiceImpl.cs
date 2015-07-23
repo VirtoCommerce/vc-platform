@@ -48,24 +48,56 @@ namespace VirtoCommerce.OrderModule.Data.Services
 				if (orderEntity != null)
 				{
 					retVal = orderEntity.ToCoreModel();
-				}
-				if((respGroup & CustomerOrderResponseGroup.WithProducts) == CustomerOrderResponseGroup.WithProducts)
-				{
-					var productIds = retVal.Items.Select(x => x.ProductId).ToArray();
-					var products = _productService.GetByIds(productIds, Domain.Catalog.Model.ItemResponseGroup.ItemInfo);
-					foreach(var lineItem in retVal.Items)
-					{
-						var product = products.FirstOrDefault(x => x.Id == lineItem.ProductId);
-						if(product != null)
-						{
-							lineItem.Product = product;
-						}
-					}
+
+                    if ((respGroup & CustomerOrderResponseGroup.WithProducts) == CustomerOrderResponseGroup.WithProducts)
+                    {
+                        var productIds = retVal.Items.Select(x => x.ProductId).ToArray();
+                        var products = _productService.GetByIds(productIds, Domain.Catalog.Model.ItemResponseGroup.ItemInfo);
+                        foreach (var lineItem in retVal.Items)
+                        {
+                            var product = products.FirstOrDefault(x => x.Id == lineItem.ProductId);
+                            if (product != null)
+                            {
+                                lineItem.Product = product;
+                            }
+                        }
+                    }
 				}
 			}
+
 			_eventPublisher.Publish(new OrderChangeEvent(EntryState.Unchanged, null, retVal));
 			return retVal;
 		}
+
+        public virtual CustomerOrder GetByOrderNumber(string orderNumber, CustomerOrderResponseGroup respGroup = CustomerOrderResponseGroup.Full)
+        {
+            CustomerOrder retVal = null;
+            using (var repository = _repositoryFactory())
+            {
+                var orderEntity = repository.GetCustomerOrderByNumber(orderNumber, respGroup);
+                if (orderEntity != null)
+                {
+                    retVal = orderEntity.ToCoreModel();
+
+                    if ((respGroup & CustomerOrderResponseGroup.WithProducts) == CustomerOrderResponseGroup.WithProducts)
+                    {
+                        var productIds = retVal.Items.Select(x => x.ProductId).ToArray();
+                        var products = _productService.GetByIds(productIds, Domain.Catalog.Model.ItemResponseGroup.ItemInfo);
+                        foreach (var lineItem in retVal.Items)
+                        {
+                            var product = products.FirstOrDefault(x => x.Id == lineItem.ProductId);
+                            if (product != null)
+                            {
+                                lineItem.Product = product;
+                            }
+                        }
+                    }
+                }
+            }
+
+            _eventPublisher.Publish(new OrderChangeEvent(EntryState.Unchanged, null, retVal));
+            return retVal;
+        }
 
 		public virtual CustomerOrder Create(CustomerOrder order)
 		{
