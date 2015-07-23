@@ -243,6 +243,11 @@
     <Compile Include="Security\Authentication\ApiKeys\ApiKeysAuthenticationHandler.cs" />
     <Compile Include="Security\Authentication\ApiKeys\ApiKeysAuthenticationMiddleware.cs" />
     <Compile Include="Security\Authentication\ApiKeys\ApiKeysAuthenticationOptions.cs" />
+    <Compile Include="Security\Authentication\Basic\Filters\BasicAuthenticationAttribute.cs" />
+    <Compile Include="Security\Authentication\Basic\Filters\HttpAuthenticationChallengeContextExtensions.cs" />
+    <Compile Include="Security\Authentication\Basic\Filters\IdentityBasicAuthenticationAttribute.cs" />
+    <Compile Include="Security\Authentication\Basic\Results\AddChallengeOnUnauthorizedResult.cs" />
+    <Compile Include="Security\Authentication\Basic\Results\AuthenticationFailureResult.cs" />
     <Compile Include="Security\Authentication\Hmac\HmacAuthenticationExtensions.cs" />
     <Compile Include="Security\Authentication\Hmac\HmacAuthenticationHandler.cs" />
     <Compile Include="Security\Authentication\Hmac\HmacAuthenticationMiddleware.cs" />

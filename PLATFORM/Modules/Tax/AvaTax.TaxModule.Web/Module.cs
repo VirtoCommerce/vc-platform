@@ -10,7 +10,6 @@ using AvaTax.TaxModule.Web.Logging;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.Domain.Cart.Events;
 using VirtoCommerce.Domain.Order.Events;
-using VirtoCommerce.Platform.Core.Asset;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Settings;
