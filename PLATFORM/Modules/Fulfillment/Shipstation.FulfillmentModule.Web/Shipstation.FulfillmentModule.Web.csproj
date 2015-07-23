@@ -94,13 +94,16 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="web.config" />
+    <Content Include="web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\ShipstationController.cs" />
     <Compile Include="Converters\ShipNoticeConverter.cs" />
     <Compile Include="Converters\CustomerOrderConverter.cs" />
-    <Compile Include="Helpers\OrderXsdSchema.cs" />
+    <Compile Include="Filters\BasicAuthenticationAttribute.cs" />
+    <Compile Include="Filters\BasicAuthenticationIdentity.cs" />
     <Compile Include="Models\Notice\ShipNotice.cs" />
     <Compile Include="Models\Order\ShipstationOrder.cs" />
     <Compile Include="Module.cs" />

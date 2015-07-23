@@ -247,6 +247,38 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 			return query.FirstOrDefault();
 		}
 
+        public CustomerOrderEntity GetCustomerOrderByNumber(string orderNumber, CustomerOrderResponseGroup responseGroup)
+        {
+            var query = CustomerOrders.Where(x => x.Number == orderNumber)
+                                      .Include(x => x.Discounts)
+                                      .Include(x => x.Properties)
+                                      .Include(x => x.TaxDetails);
+
+            if ((responseGroup & CustomerOrderResponseGroup.WithAddresses) == CustomerOrderResponseGroup.WithAddresses)
+            {
+                query = query.Include(x => x.Addresses);
+            }
+            if ((responseGroup & CustomerOrderResponseGroup.WithInPayments) == CustomerOrderResponseGroup.WithInPayments)
+            {
+                query = query.Include(x => x.InPayments.Select(y => y.Addresses))
+                             .Include(x => x.InPayments.Select(y => y.Properties));
+            }
+            if ((responseGroup & CustomerOrderResponseGroup.WithItems) == CustomerOrderResponseGroup.WithItems)
+            {
+                query = query.Include(x => x.Items.Select(y => y.Discounts)).Include(x => x.Items.Select(y => y.TaxDetails));
+            }
+            if ((responseGroup & CustomerOrderResponseGroup.WithShipments) == CustomerOrderResponseGroup.WithShipments)
+            {
+                query = query.Include(x => x.Shipments.Select(y => y.Discounts))
+                             .Include(x => x.Shipments.Select(y => y.Items))
+                             .Include(x => x.Shipments.Select(y => y.Packages.Select(z => z.Items)))
+                             .Include(x => x.Shipments.Select(y => y.Addresses))
+                             .Include(x => x.Shipments.Select(y => y.Properties))
+                             .Include(x => x.Shipments.Select(y => y.TaxDetails));
+            }
+            return query.FirstOrDefault();
+        }
+
 		public ShipmentEntity GetShipmentById(string id, CustomerOrderResponseGroup responseGroup)
 		{
 			throw new NotImplementedException();
