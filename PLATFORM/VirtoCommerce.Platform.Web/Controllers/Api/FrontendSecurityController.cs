@@ -97,9 +97,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         // POST: /api/security/frontend/user
         [HttpPost]
         [Route("user")]
-        public async Task<IHttpActionResult> Register(ApplicationUserExtended user)
+        public async Task<IHttpActionResult> Create(ApplicationUserExtended user)
         {
-            var result = await _securityService.RegisterAsync(user);
+            var result = await _securityService.CreateAsync(user);
 
             if (result == null)
                 return BadRequest();

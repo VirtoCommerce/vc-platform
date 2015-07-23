@@ -256,12 +256,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.SecurityManage)]
         public async Task<IHttpActionResult> UpdateAsync(ApplicationUserExtended user)
         {
-            var error = await _securityService.UpdateAsync(user);
-
-            if (error != null)
-                return BadRequest(error);
-
-            return Ok();
+            var result = await _securityService.UpdateAsync(user);
+            return ProcessSecurityResult(result);
         }
 
         /// <summary>
@@ -274,15 +270,28 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.SecurityManage)]
         public async Task<IHttpActionResult> CreateAsync(ApplicationUserExtended user)
         {
-            var error = await _securityService.CreateAsync(user);
-
-            if (error != null)
-                return BadRequest(error);
-
-            return Ok();
+            var result = await _securityService.CreateAsync(user);
+            return ProcessSecurityResult(result);
         }
+
         #endregion
 
         #endregion
+
+
+        private IHttpActionResult ProcessSecurityResult(SecurityResult result)
+        {
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                if (!result.Succeeded)
+                    return BadRequest(result.Errors != null ? string.Join(" ", result.Errors) : "Unknown error.");
+                else
+                    return Ok();
+            }
+        }
     }
 }
