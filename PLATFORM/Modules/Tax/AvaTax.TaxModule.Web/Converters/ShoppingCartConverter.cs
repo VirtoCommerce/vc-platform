@@ -29,7 +29,8 @@ namespace AvaTax.TaxModule.Web.Converters
                     DocCode = cart.Id,
                     DetailLevel = DetailLevel.Tax,
                     Commit = false,
-                    DocType = DocType.SalesOrder
+                    DocType = DocType.SalesOrder,
+                    CurrencyCode = cart.Currency.ToString()
                 };
 
                 // Document Level Elements
@@ -53,7 +54,6 @@ namespace AvaTax.TaxModule.Web.Converters
                 //getTaxRequest.PurchaseOrderNo = order.Id;
                 //getTaxRequest.ReferenceCode = "ref123456";
                 //getTaxRequest.PosLaneCode = "09";
-                getTaxRequest.CurrencyCode = cart.Currency.ToString();
 
                 //add customer tax exemption code to cart if exists
                 getTaxRequest.ExemptionNo = contact.GetDynamicPropertyValue("Tax exempt", string.Empty);

@@ -30,10 +30,10 @@ namespace AvaTax.TaxModule.Web.Converters
                     Client = "VirtoCommerce,2.x,VirtoCommerce",
                     DetailLevel = DetailLevel.Tax,
                     Commit = commit,
-                    DocType = DocType.SalesInvoice
+                    DocType = DocType.SalesInvoice,
+                    DocCode = order.Number,
+                    CurrencyCode = order.Currency.ToString()
                 };
-
-                getTaxRequest.DocCode = order.Number;
 
                 // Best Practice Request Parameters
 
@@ -52,7 +52,6 @@ namespace AvaTax.TaxModule.Web.Converters
                 //getTaxRequest.PurchaseOrderNo = order.Number;
                 //getTaxRequest.ReferenceCode = "ref123456";
                 //getTaxRequest.PosLaneCode = "09";
-                getTaxRequest.CurrencyCode = order.Currency.ToString();
 
                 //add customer tax exemption code to cart if exists
                 getTaxRequest.ExemptionNo = contact.GetDynamicPropertyValue("Tax exempt", string.Empty);

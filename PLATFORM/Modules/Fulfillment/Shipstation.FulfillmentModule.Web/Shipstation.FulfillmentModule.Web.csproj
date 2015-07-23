@@ -102,8 +102,6 @@
     <Compile Include="Controllers\ShipstationController.cs" />
     <Compile Include="Converters\ShipNoticeConverter.cs" />
     <Compile Include="Converters\CustomerOrderConverter.cs" />
-    <Compile Include="Filters\BasicAuthenticationAttribute.cs" />
-    <Compile Include="Filters\BasicAuthenticationIdentity.cs" />
     <Compile Include="Models\Notice\ShipNotice.cs" />
     <Compile Include="Models\Order\ShipstationOrder.cs" />
     <Compile Include="Module.cs" />
@@ -116,6 +114,10 @@
     <ProjectReference Include="..\..\..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj">
       <Project>{f7c9313b-522e-4619-abc9-8c7d4600d6b5}</Project>
       <Name>VirtoCommerce.Platform.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\VirtoCommerce.Platform.Data\VirtoCommerce.Platform.Data.csproj">
+      <Project>{39afd233-b2f7-4178-817d-0a339c57525d}</Project>
+      <Name>VirtoCommerce.Platform.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Core\VirtoCommerce.Domain\VirtoCommerce.Domain.csproj">
       <Project>{67c58a78-ddea-4fa3-a969-1cab582918e4}</Project>

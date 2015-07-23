@@ -58,14 +58,6 @@ namespace AvaTax.TaxModule.Web.Observers
                         var request = cart.ToAvaTaxRequest(_taxSettings.CompanyCode, contact);
                         if (request != null)
                         {
-                            //var store = _storeService.GetById(cart.StoreId);
-                    
-                            //if (store != null)
-                            //{
-                            //    request.Addresses.AddDistinct(new Address { AddressCode = "origin", Country = store.Country, Region = store.Region });
-                            //    request.Lines.ForEach(l => l.OriginCode = "origin");
-                            //}
-
                             slab.docCode = request.DocCode;
                             slab.customerCode = request.CustomerCode;
                             slab.docType = request.DocType.ToString();
@@ -102,7 +94,7 @@ namespace AvaTax.TaxModule.Web.Observers
                                     });
                                 }
 
-                                foreach (TaxLine taxLine in getTaxResult.TaxLines ?? Enumerable.Empty<TaxLine>())
+                                foreach (var taxLine in getTaxResult.TaxLines ?? Enumerable.Empty<TaxLine>())
                                 {
                                     var lineItem = cart.Items.FirstOrDefault(x => x.Id == taxLine.LineNo);
                                     if (lineItem != null)

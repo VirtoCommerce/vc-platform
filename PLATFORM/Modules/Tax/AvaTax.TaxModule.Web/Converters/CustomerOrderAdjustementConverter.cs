@@ -27,7 +27,16 @@ namespace AvaTax.TaxModule.Web.Converters
                     DocCode = string.Format("{0}.{1}", originalOrder.Number, DateTime.UtcNow.ToString("yy-MM-dd-hh-mm")),
                     DetailLevel = DetailLevel.Tax,
                     Commit = commit,
-                    DocType = DocType.ReturnInvoice
+                    DocType = DocType.ReturnInvoice,
+                    TaxOverride = new TaxOverrideDef
+                    {
+                        TaxOverrideType = "TaxDate",
+                        Reason = "Adjustment for return",
+                        TaxDate = originalOrder.CreatedDate == DateTime.MinValue
+                            ? DateTime.UtcNow.ToString("yyyy-MM-dd")
+                            : originalOrder.CreatedDate.ToString("yyyy-MM-dd"),
+                        TaxAmount = "0"
+                    }
                 };
 
                 // Best Practice Request Parameters
@@ -37,14 +46,6 @@ namespace AvaTax.TaxModule.Web.Converters
                 // getTaxRequest.ExemptionNo = "12345";
                 // getTaxRequest.BusinessIdentificationNo = "234243"; //for VAT tax calculations
                 // getTaxRequest.Discount = 50;
-
-                getTaxRequest.TaxOverride = new TaxOverrideDef();
-                getTaxRequest.TaxOverride.TaxOverrideType = "TaxDate";
-                getTaxRequest.TaxOverride.Reason = "Adjustment for return";
-                getTaxRequest.TaxOverride.TaxDate = originalOrder.CreatedDate == DateTime.MinValue
-                            ? DateTime.UtcNow.ToString("yyyy-MM-dd")
-                            : originalOrder.CreatedDate.ToString("yyyy-MM-dd");
-                getTaxRequest.TaxOverride.TaxAmount = "0";
 
                 // Optional Request Parameters
                 //getTaxRequest.PurchaseOrderNo = order.Number;
