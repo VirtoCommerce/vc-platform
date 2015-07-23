@@ -16,7 +16,7 @@ Commerce Manager Demo: http://demo.virtocommerce.com/admin
 Cloud Private Demo
 -----------
 
-Use the button below to deploy Virto Commerce in your private Microsoft Cloud subscription, <a href="http://docs.virtocommerce.com/display/vc2devguide/Deploy+from+GitHub+to+Microsoft+Cloud+Azure">read more</a>.
+Setup your own private Microsoft Cloud environment and evaluate the latest version of Virto Commerce, <a href="http://docs.virtocommerce.com/display/vc2devguide/Deploy+from+GitHub+to+Microsoft+Cloud+Azure">read more</a>.
 
 <a href="https://azuredeploy.net/" target="_blank">
   <img alt="Deploy to Azure" src="http://azuredeploy.net/deploybutton.png"/>
