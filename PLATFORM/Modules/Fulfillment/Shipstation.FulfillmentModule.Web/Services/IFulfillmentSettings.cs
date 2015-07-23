@@ -5,6 +5,5 @@ namespace Shipstation.FulfillmentModule.Web.Services
     {
         string Username { get; }
         string Password { get; }
-        string ServiceUrl { get; }
     }
 }

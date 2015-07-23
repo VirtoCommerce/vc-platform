@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using VirtoCommerce.Domain.Marketing.Model;
 using VirtoCommerce.Domain.Marketing.Services;
 using VirtoCommerce.Platform.Core.Common;
@@ -50,12 +51,11 @@ namespace VirtoCommerce.MarketingModule.Web.ExportImport
             var originalObject = GetBackupObject();
 
             UpdateContentFolders(originalObject.ContentFolders, backupObject.ContentFolders);
-            UpdateCoupons(originalObject.Coupons, backupObject.Coupons);
-            
-            UpdateContentItems(originalObject.ContentItems, backupObject.ContentItems);
             UpdateContentPlaces(originalObject.ContentPlaces, backupObject.ContentPlaces);
+            UpdateContentItems(originalObject.ContentItems, backupObject.ContentItems);
             UpdateContentPublications(originalObject.ContentPublications, backupObject.ContentPublications);
 
+            ////UpdateCoupons(originalObject.Coupons, backupObject.Coupons);
             UpdatePromotions(originalObject.Promotions, backupObject.Promotions);
         }
 
@@ -169,16 +169,35 @@ namespace VirtoCommerce.MarketingModule.Web.ExportImport
 
         private BackupObject GetBackupObject()
         {
-            var responce = _marketingSearchService.SearchResources(new MarketingSearchCriteria { Count = int.MaxValue });
-            return new BackupObject
+            var responce = _marketingSearchService.SearchResources(new MarketingSearchCriteria { Count = int.MaxValue, ResponseGroup = SearchResponseGroup.Full});
+
+            var backupObject = new BackupObject
             {
-                Promotions = responce.Promotions,
+                Promotions = responce.Promotions.Select(x => _promotionService.GetPromotionById(x.Id)).ToArray(),
                 Coupons =responce.Coupons,
                 ContentPlaces =responce.ContentPlaces,
                 ContentItems =responce.ContentItems,
-                ContentPublications = responce.ContentPublications,
+                ContentPublications = responce.ContentPublications.Select(x => _dynamicContentService.GetPublicationById(x.Id)).ToArray(),
                 ContentFolders =  responce.ContentFolders
             };
+
+            ContentComplete(responce.ContentFolders.Select(x => x.Id).ToArray(), backupObject);
+                return backupObject;
+        }
+
+        private void ContentComplete(IEnumerable<string> folderIds, BackupObject backupObject)
+        {
+            const SearchResponseGroup responseGroup = SearchResponseGroup.WithFolders | SearchResponseGroup.WithContentItems
+                | SearchResponseGroup.WithContentPlaces;
+            foreach (var folderId in folderIds)
+            {
+                var responce =
+                    _marketingSearchService.SearchResources(new MarketingSearchCriteria { FolderId = folderId, Count = int.MaxValue, ResponseGroup = responseGroup });
+                backupObject.ContentFolders.AddRange(responce.ContentFolders);
+                backupObject.ContentItems.AddRange(responce.ContentItems);
+                backupObject.ContentPlaces.AddRange(responce.ContentPlaces);
+                ContentComplete(responce.ContentFolders.Select(x => x.Id).ToArray(), backupObject);
+            }
         }
 
 
