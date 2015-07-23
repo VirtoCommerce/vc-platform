@@ -14,7 +14,6 @@ namespace VirtoCommerce.OrderModule.Web.ExportImport
         public ICollection<CustomerOrder> CustomerOrders { get; set; }
     }
 
-
     public sealed class OrderExportImport
     {
         private readonly ICustomerOrderSearchService _customerOrderSearchService;
@@ -43,10 +42,10 @@ namespace VirtoCommerce.OrderModule.Web.ExportImport
             var backupObject = backupStream.DeserializeJson<BackupObject>();
             var originalObject = GetBackupObject();
 
-            UpdateStores(originalObject.CustomerOrders, backupObject.CustomerOrders);
+            UpdateOrders(originalObject.CustomerOrders, backupObject.CustomerOrders);
         }
 
-        private void UpdateStores(ICollection<CustomerOrder> original, ICollection<CustomerOrder> backup)
+        private void UpdateOrders(ICollection<CustomerOrder> original, ICollection<CustomerOrder> backup)
         {
             var toUpdate = new List<CustomerOrder>();
 

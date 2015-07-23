@@ -74,9 +74,14 @@ namespace VirtoCommerce.OrderModule.Data.Services
 				{
 					query = query.Include(x => x.Shipments);
 
-					if ((criteria.ResponseGroup & ResponseGroup.WithDiscounts) == ResponseGroup.WithDiscounts)
+				    if ((criteria.ResponseGroup & ResponseGroup.WithItems) == ResponseGroup.WithItems)
+				    {
+				        query = query.Include(x => x.Shipments.Select(y => y.Items));
+				    }
+
+				    if ((criteria.ResponseGroup & ResponseGroup.WithDiscounts) == ResponseGroup.WithDiscounts)
 					{
-						query = query.Include(x => x.Items.Select(y => y.Discounts));
+						query = query.Include(x => x.Shipments.Select(y => y.Discounts));
 					}
 
 					if ((criteria.ResponseGroup & ResponseGroup.WithAddresses) == ResponseGroup.WithAddresses)

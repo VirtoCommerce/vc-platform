@@ -74,7 +74,6 @@ namespace VirtoCommerce.StoreModule.Web
         {
             var exportJob = _container.Resolve<StoreExportImport>();
             exportJob.DoImport(inputStream, progressCallback);
-
         }
 
         #endregion

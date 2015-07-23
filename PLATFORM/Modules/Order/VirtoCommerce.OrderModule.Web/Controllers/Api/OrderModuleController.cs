@@ -163,6 +163,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 				//TODO: LineItem partial shipping
 				var shippedLineItemIds = order.Shipments.SelectMany(x => x.Items).Select(x=>x.LineItemId);
 
+                //TODO Add check for digital products (don't add to shipment)
 				retVal.Items = order.Items.Where(x => !shippedLineItemIds.Contains(x.Id))
 							  .Select(x => new coreModel.ShipmentItem(x)).ToList();
                 return Ok(retVal.ToWebModel());
@@ -173,7 +174,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 
         // GET:  api/order/customerOrders/{id}/payments/new
         [HttpGet]
-        [ResponseType(typeof(webModel.Shipment))]
+        [ResponseType(typeof(webModel.PaymentIn))]
         [Route("{id}/payments/new")]
         public IHttpActionResult GetNewPayment(string id)
         {
