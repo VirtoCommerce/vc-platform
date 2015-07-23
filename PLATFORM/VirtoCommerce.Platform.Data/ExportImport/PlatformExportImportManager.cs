@@ -58,7 +58,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 				{
 					//Create part for module
 					var modulePartUri = PackUriHelper.CreatePartUri(new Uri(module.Id, UriKind.Relative));
-					var modulePart = package.CreatePart(modulePartUri, System.Net.Mime.MediaTypeNames.Application.Octet);
+					var modulePart = package.CreatePart(modulePartUri, System.Net.Mime.MediaTypeNames.Application.Octet, CompressionOption.Normal);
 
 					progressInfo.Description = String.Format("{0}: export started.", module.Id);
 					progressCallback(progressInfo);

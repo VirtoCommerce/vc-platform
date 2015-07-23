@@ -43,27 +43,33 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
             progressCallback(prodgressInfo);
 
             var backupObject = GetBackupObject();
-            backupObject.Catalogs.ForEach(x => x.DefaultLanguage.Catalog = null);
-            backupObject.Catalogs.ForEach(x => x.Languages.ForEach(l => l.Catalog = null));
-            backupObject.Products.ForEach(x => x.Catalog.DefaultLanguage.Catalog = null);
-            backupObject.Products.ForEach(x => x.Catalog.Languages.ForEach(l => l.Catalog = null));
+         
             backupObject.SerializeJson(backupStream);
         }
 
-        public void DoImport(Stream backupStream, Action<ExportImportProgressInfo> progressCallback)
-        {
-            var prodgressInfo = new ExportImportProgressInfo { Description = "loading data..." };
-            progressCallback(prodgressInfo);
+		public void DoImport(Stream backupStream, Action<ExportImportProgressInfo> progressCallback)
+		{
+			var prodgressInfo = new ExportImportProgressInfo { Description = "loading data..." };
+			progressCallback(prodgressInfo);
 
-            var backupObject = backupStream.DeserializeJson<BackupObject>();
-            var originalObject = GetBackupObject();
+			var backupObject = backupStream.DeserializeJson<BackupObject>();
+			var originalObject = GetBackupObject();
 
-            UpdateCatalogs(originalObject.Catalogs, backupObject.Catalogs);
-            UpdateCategories(originalObject.Categories, backupObject.Categories);
-            UpdateProperties(originalObject.Properties, backupObject.Properties);
-            UpdateCatalogProducts(originalObject.Products, backupObject.Products);
-        }
+			UpdateCatalogs(originalObject.Catalogs, backupObject.Catalogs);
 
+			//Categories should be sorted right way (because it have a hierarchy structure and links to virtual categories)
+			backupObject.Categories = backupObject.Categories.Where(x => x.Links == null || !x.Links.Any())
+															.OrderBy(x => x.Parents != null ? x.Parents.Count() : 0)
+															.Concat(backupObject.Categories.Where(x => x.Links != null && x.Links.Any()))
+															.ToList();
+			UpdateCategories(originalObject.Categories, backupObject.Categories);
+			UpdateProperties(originalObject.Properties, backupObject.Properties);
+			UpdateCatalogProducts(originalObject.Products, backupObject.Products);
+
+
+		}
+
+	
         private void UpdateCatalogs(ICollection<Catalog> original, ICollection<Catalog> backup)
         {
             var toUpdate = new List<Catalog>();
@@ -142,16 +148,21 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 
         private BackupObject GetBackupObject()
         {
-            const ResponseGroup respounceGroup = ResponseGroup.WithProducts | ResponseGroup.WithCatalogs | ResponseGroup.WithCategories
-                | ResponseGroup.WithProperties | ResponseGroup.WithVariations;
-            var respounce = _catalogSearchService.Search(new SearchCriteria { Count = int.MaxValue, GetAllCategories = true, Start = 0, ResponseGroup = respounceGroup });
-            return new BackupObject
+            const ResponseGroup responseGroup = ResponseGroup.Full;
+            var searchResponse = _catalogSearchService.Search(new SearchCriteria { Count = int.MaxValue, GetAllCategories = true, Start = 0, ResponseGroup = responseGroup });
+            var retVal = new BackupObject
             {
-                Catalogs = respounce.Catalogs.Select(x => _catalogService.GetById(x.Id)).ToArray(),
-                Categories = respounce.Categories.Select(x => _categoryService.GetById(x.Id)).ToArray(),
-                Products = respounce.Products.Select(x => _itemService.GetById(x.Id, ItemResponseGroup.ItemMedium | ItemResponseGroup.Variations | ItemResponseGroup.Seo)).ToArray(),
-                Properties = respounce.PropertyValues.Select(x => _propertyService.GetById(x.Id)).ToArray(),
+                Catalogs = searchResponse.Catalogs.Select(x => _catalogService.GetById(x.Id)).ToArray(),
+                Categories = searchResponse.Categories.Select(x => _categoryService.GetById(x.Id)).ToArray(),
+                Products = searchResponse.Products.Select(x => _itemService.GetById(x.Id, ItemResponseGroup.ItemMedium | ItemResponseGroup.Variations | ItemResponseGroup.Seo)).ToArray(),
             };
+
+			var catalogsPropertiesIds = retVal.Catalogs.SelectMany(x => _propertyService.GetCatalogProperties(x.Id)).Select(x=>x.Id).ToArray();
+			var categoriesPropertiesIds = retVal.Categories.SelectMany(x => _propertyService.GetCategoryProperties(x.Id)).Select(x => x.Id).ToArray();
+			retVal.Properties = catalogsPropertiesIds.Concat(categoriesPropertiesIds).Distinct().Select(x => _propertyService.GetById(x)).ToArray();
+
+			return retVal;
+
         }
 
     

@@ -9,6 +9,7 @@ namespace VirtoCommerce.Domain.Catalog.Model
         WithCategories = 2,
         WithProperties = 4,
         WithCatalogs = 8,
-		WithVariations = 16
+		WithVariations = 16,
+		Full = WithProducts | WithCategories | WithProperties | WithCatalogs | WithVariations
     }
 }
