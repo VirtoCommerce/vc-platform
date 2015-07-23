@@ -149,6 +149,12 @@
     <Compile Include="Common\ConventionInjections\IgnorePropertiesInjection.cs" />
     <Compile Include="Common\ConventionInjections\PatchInjection.cs" />
     <Compile Include="Common\ExceptionExtensions.cs" />
+    <Compile Include="DynamicProperties\Converters\DynamicPropertyConverter.cs" />
+    <Compile Include="DynamicProperties\Converters\DynamicPropertyDictionaryItemConverter.cs" />
+    <Compile Include="DynamicProperties\Converters\DynamicPropertyDictionaryItemNameConverter.cs" />
+    <Compile Include="DynamicProperties\Converters\DynamicPropertyNameConverter.cs" />
+    <Compile Include="DynamicProperties\Converters\DynamicPropertyObjectValueConverter.cs" />
+    <Compile Include="DynamicProperties\DynamicPropertyService.cs" />
     <Compile Include="ExportImport\PlatformExportImportManager.cs" />
     <Compile Include="Infrastructure\BasicUnitOfWork.cs" />
     <Compile Include="Infrastructure\DbMigrationContext.cs" />
@@ -175,6 +181,11 @@
     <Compile Include="Model\AccountEntity.cs" />
     <Compile Include="Model\AccountState.cs" />
     <Compile Include="Model\ApiAccountEntity.cs" />
+    <Compile Include="Model\DynamicPropertyDictionaryItemEntity.cs" />
+    <Compile Include="Model\DynamicPropertyEntity.cs" />
+    <Compile Include="Model\DynamicPropertyDictionaryItemNameEntity.cs" />
+    <Compile Include="Model\DynamicPropertyNameEntity.cs" />
+    <Compile Include="Model\DynamicPropertyObjectValueEntity.cs" />
     <Compile Include="Model\NotificationEntity.cs" />
     <Compile Include="Model\NotificationTemplateEntity.cs" />
     <Compile Include="Model\OperationLogEntity.cs" />
@@ -233,6 +244,10 @@
     <Compile Include="Repositories\Migrations\201507101444412_RemoveDisplayNameTemplate.Designer.cs">
       <DependentUpon>201507101444412_RemoveDisplayNameTemplate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Repositories\Migrations\201507131402088_DynamicProperties.cs" />
+    <Compile Include="Repositories\Migrations\201507131402088_DynamicProperties.Designer.cs">
+      <DependentUpon>201507131402088_DynamicProperties.cs</DependentUpon>
+    </Compile>
     <Compile Include="Repositories\Migrations\Configuration.cs" />
     <Compile Include="Repositories\PlatformDatabaseInitializer.cs" />
     <Compile Include="Repositories\PlatformRepository.cs" />
@@ -243,6 +258,11 @@
     <Compile Include="Security\Authentication\ApiKeys\ApiKeysAuthenticationHandler.cs" />
     <Compile Include="Security\Authentication\ApiKeys\ApiKeysAuthenticationMiddleware.cs" />
     <Compile Include="Security\Authentication\ApiKeys\ApiKeysAuthenticationOptions.cs" />
+    <Compile Include="Security\Authentication\Basic\Filters\BasicAuthenticationAttribute.cs" />
+    <Compile Include="Security\Authentication\Basic\Filters\HttpAuthenticationChallengeContextExtensions.cs" />
+    <Compile Include="Security\Authentication\Basic\Filters\IdentityBasicAuthenticationAttribute.cs" />
+    <Compile Include="Security\Authentication\Basic\Results\AddChallengeOnUnauthorizedResult.cs" />
+    <Compile Include="Security\Authentication\Basic\Results\AuthenticationFailureResult.cs" />
     <Compile Include="Security\Authentication\Hmac\HmacAuthenticationExtensions.cs" />
     <Compile Include="Security\Authentication\Hmac\HmacAuthenticationHandler.cs" />
     <Compile Include="Security\Authentication\Hmac\HmacAuthenticationMiddleware.cs" />
@@ -315,6 +335,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Repositories\Migrations\201507101444412_RemoveDisplayNameTemplate.resx">
       <DependentUpon>201507101444412_RemoveDisplayNameTemplate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Repositories\Migrations\201507131402088_DynamicProperties.resx">
+      <DependentUpon>201507131402088_DynamicProperties.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Security\Identity\Migrations\201411101625303_InitialCreate.resx">
       <DependentUpon>201411101625303_InitialCreate.cs</DependentUpon>

@@ -10,163 +10,273 @@ using VirtoCommerce.Platform.Data.Model;
 
 namespace VirtoCommerce.Platform.Data.Repositories
 {
-    public class PlatformRepository : EFRepositoryBase, IPlatformRepository
-    {
-        public PlatformRepository()
-        {
-            Database.SetInitializer<PlatformRepository>(null);
-            Configuration.LazyLoadingEnabled = false;
-        }
+	public class PlatformRepository : EFRepositoryBase, IPlatformRepository
+	{
+		public PlatformRepository()
+		{
+			Database.SetInitializer<PlatformRepository>(null);
+			Configuration.LazyLoadingEnabled = false;
+		}
 
-        public PlatformRepository(string nameOrConnectionString, params IInterceptor[] interceptors)
-            : base(nameOrConnectionString, null, interceptors)
-        {
-            Database.SetInitializer<PlatformRepository>(null);
-            Configuration.LazyLoadingEnabled = false;
-        }
+		public PlatformRepository(string nameOrConnectionString, params IInterceptor[] interceptors)
+			: base(nameOrConnectionString, null, interceptors)
+		{
+			Database.SetInitializer<PlatformRepository>(null);
+			Configuration.LazyLoadingEnabled = false;
+		}
 
 
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {
-            modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+		protected override void OnModelCreating(DbModelBuilder modelBuilder)
+		{
+			modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
 
-            #region Change logging
-            modelBuilder.Entity<OperationLogEntity>().HasKey(x => x.Id)
-                        .Property(x => x.Id);
-            modelBuilder.Entity<OperationLogEntity>().ToTable("PlatformOperationLog");
-            #endregion
+			#region Change logging
+			modelBuilder.Entity<OperationLogEntity>().HasKey(x => x.Id)
+						.Property(x => x.Id);
+			modelBuilder.Entity<OperationLogEntity>().ToTable("PlatformOperationLog");
+			#endregion
 
-            #region Settings
-            modelBuilder.Entity<SettingEntity>("PlatformSetting", "Id");
-            modelBuilder.Entity<SettingValueEntity>("PlatformSettingValue", "Id");
-            //modelBuilder.Entity<SettingEntity>().HasKey(x => x.Id)
-            //				.Property(x => x.Id);
-            //modelBuilder.Entity<SettingEntity>().ToTable("PlatformSetting");
-            //modelBuilder.Entity<SettingValueEntity>().HasKey(x => x.Id)
-            //				.Property(x => x.Id);
-            //modelBuilder.Entity<SettingValueEntity>().ToTable("PlatformSettingValue");
+			#region Settings
 
-            modelBuilder.Entity<SettingValueEntity>()
-                .HasRequired(x => x.Setting)
-                .WithMany(x => x.SettingValues)
-                .HasForeignKey(x => x.SettingId);
+			modelBuilder.Entity<SettingEntity>("PlatformSetting", "Id");
+			modelBuilder.Entity<SettingValueEntity>("PlatformSettingValue", "Id");
+
+			modelBuilder.Entity<SettingValueEntity>()
+				.HasRequired(x => x.Setting)
+				.WithMany(x => x.SettingValues)
+				.HasForeignKey(x => x.SettingId);
 
             #endregion
 
-            #region Security
+            #region Dynamic Properties
 
-            // Tables
-            modelBuilder.Entity<AccountEntity>("PlatformAccount", "Id");
-            modelBuilder.Entity<ApiAccountEntity>("PlatformApiAccount", "Id");
-            modelBuilder.Entity<RoleEntity>("PlatformRole", "Id");
-            modelBuilder.Entity<PermissionEntity>("PlatformPermission", "Id");
-            modelBuilder.Entity<RoleAssignmentEntity>("PlatformRoleAssignment", "Id");
-            modelBuilder.Entity<RolePermissionEntity>("PlatformRolePermission", "Id");
+            modelBuilder.Entity<DynamicPropertyEntity>("PlatformDynamicProperty", "Id");
+            modelBuilder.Entity<DynamicPropertyNameEntity>("PlatformDynamicPropertyName", "Id");
+            modelBuilder.Entity<DynamicPropertyDictionaryItemEntity>("PlatformDynamicPropertyDictionaryItem", "Id");
+            modelBuilder.Entity<DynamicPropertyDictionaryItemNameEntity>("PlatformDynamicPropertyDictionaryItemName", "Id");
+            modelBuilder.Entity<DynamicPropertyObjectValueEntity>("PlatformDynamicPropertyObjectValue", "Id");
 
-            // Properties
-            modelBuilder.Entity<AccountEntity>().Property(x => x.StoreId).HasMaxLength(128);
-            modelBuilder.Entity<AccountEntity>().Property(x => x.MemberId).HasMaxLength(64);
-            modelBuilder.Entity<AccountEntity>().Property(x => x.UserName).IsRequired().HasMaxLength(128);
+            modelBuilder.Entity<DynamicPropertyNameEntity>()
+                .HasRequired(x => x.Property)
+                .WithMany(x => x.DisplayNames)
+                .HasForeignKey(x => x.PropertyId);
 
-            modelBuilder.Entity<ApiAccountEntity>().Property(x => x.Name).HasMaxLength(128);
-            modelBuilder.Entity<ApiAccountEntity>().Property(x => x.AppId).IsRequired().HasMaxLength(128)
-                .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_AppId") { IsUnique = true }));
+            modelBuilder.Entity<DynamicPropertyDictionaryItemEntity>()
+                .HasRequired(x => x.Property)
+                .WithMany(x => x.DictionaryItems)
+                .HasForeignKey(x => x.PropertyId);
 
-            modelBuilder.Entity<RoleEntity>().Property(x => x.Name).IsRequired().HasMaxLength(128);
+            modelBuilder.Entity<DynamicPropertyDictionaryItemNameEntity>()
+                .HasRequired(x => x.DictionaryItem)
+                .WithMany(x => x.DisplayNames)
+                .HasForeignKey(x => x.DictionaryItemId);
 
-            modelBuilder.Entity<PermissionEntity>().Property(x => x.Name).IsRequired().HasMaxLength(256);
+            modelBuilder.Entity<DynamicPropertyObjectValueEntity>()
+                .HasRequired(x => x.Property)
+                .WithMany(x => x.ObjectValues)
+                .HasForeignKey(x => x.PropertyId);
+            modelBuilder.Entity<DynamicPropertyObjectValueEntity>()
+                .HasOptional(x => x.DictionaryItem)
+                .WithMany(x => x.ObjectValues)
+                .HasForeignKey(x => x.DictionaryItemId);
 
-            modelBuilder.Entity<RoleAssignmentEntity>().Property(x => x.OrganizationId).HasMaxLength(64);
+            modelBuilder.Entity<DynamicPropertyEntity>()
+                .Property(x => x.ObjectType)
+                .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformDynamicProperty_ObjectType_Name", 1) { IsUnique = true }));
+            modelBuilder.Entity<DynamicPropertyEntity>()
+                .Property(x => x.Name)
+                .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformDynamicProperty_ObjectType_Name", 2) { IsUnique = true }));
 
-            // Relations
-            modelBuilder.Entity<ApiAccountEntity>()
-                .HasRequired(x => x.Account)
-                .WithMany(x => x.ApiAccounts)
-                .HasForeignKey(x => x.AccountId);
+            modelBuilder.Entity<DynamicPropertyNameEntity>()
+                .Property(x => x.PropertyId)
+                .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformDynamicPropertyName_PropertyId_Locale_Name", 1) { IsUnique = true }));
+            modelBuilder.Entity<DynamicPropertyNameEntity>()
+                .Property(x => x.Locale)
+                .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformDynamicPropertyName_PropertyId_Locale_Name", 2) { IsUnique = true }));
+            modelBuilder.Entity<DynamicPropertyNameEntity>()
+                .Property(x => x.Name)
+                .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformDynamicPropertyName_PropertyId_Locale_Name", 3) { IsUnique = true }));
 
-            modelBuilder.Entity<RoleAssignmentEntity>()
-                .HasRequired(x => x.Account)
-                .WithMany(x => x.RoleAssignments)
-                .HasForeignKey(x => x.AccountId);
+            modelBuilder.Entity<DynamicPropertyDictionaryItemEntity>()
+                .Property(x => x.PropertyId)
+                .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformDynamicPropertyDictionaryItem_PropertyId_Name", 1) { IsUnique = true }));
+            modelBuilder.Entity<DynamicPropertyDictionaryItemEntity>()
+                .Property(x => x.Name)
+                .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformDynamicPropertyDictionaryItem_PropertyId_Name", 2) { IsUnique = true }));
 
-            modelBuilder.Entity<RoleAssignmentEntity>()
-                .HasRequired(x => x.Role)
-                .WithMany(x => x.RoleAssignments)
-                .HasForeignKey(x => x.RoleId);
+            modelBuilder.Entity<DynamicPropertyDictionaryItemNameEntity>()
+                .Property(x => x.DictionaryItemId)
+                .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformDynamicPropertyDictionaryItemName_DictionaryItemId_Locale_Name", 1) { IsUnique = true }));
+            modelBuilder.Entity<DynamicPropertyDictionaryItemNameEntity>()
+                .Property(x => x.Locale)
+                .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformDynamicPropertyDictionaryItemName_DictionaryItemId_Locale_Name", 2) { IsUnique = true }));
+            modelBuilder.Entity<DynamicPropertyDictionaryItemNameEntity>()
+                .Property(x => x.Name)
+                .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformDynamicPropertyDictionaryItemName_DictionaryItemId_Locale_Name", 3) { IsUnique = true }));
 
-            modelBuilder.Entity<RolePermissionEntity>()
-                .HasRequired(x => x.Permission)
-                .WithMany(x => x.RolePermissions)
-                .HasForeignKey(x => x.PermissionId);
+			#endregion
 
-            modelBuilder.Entity<RolePermissionEntity>()
-                .HasRequired(x => x.Role)
-                .WithMany(x => x.RolePermissions)
-                .HasForeignKey(x => x.RoleId);
+			#region Security
+
+			// Tables
+			modelBuilder.Entity<AccountEntity>("PlatformAccount", "Id");
+			modelBuilder.Entity<ApiAccountEntity>("PlatformApiAccount", "Id");
+			modelBuilder.Entity<RoleEntity>("PlatformRole", "Id");
+			modelBuilder.Entity<PermissionEntity>("PlatformPermission", "Id");
+			modelBuilder.Entity<RoleAssignmentEntity>("PlatformRoleAssignment", "Id");
+			modelBuilder.Entity<RolePermissionEntity>("PlatformRolePermission", "Id");
+
+			// Properties
+			modelBuilder.Entity<AccountEntity>().Property(x => x.StoreId).HasMaxLength(128);
+			modelBuilder.Entity<AccountEntity>().Property(x => x.MemberId).HasMaxLength(64);
+			modelBuilder.Entity<AccountEntity>().Property(x => x.UserName).IsRequired().HasMaxLength(128);
+
+			modelBuilder.Entity<ApiAccountEntity>().Property(x => x.Name).HasMaxLength(128);
+			modelBuilder.Entity<ApiAccountEntity>().Property(x => x.AppId).IsRequired().HasMaxLength(128)
+				.HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_AppId") { IsUnique = true }));
+
+			modelBuilder.Entity<RoleEntity>().Property(x => x.Name).IsRequired().HasMaxLength(128);
+
+			modelBuilder.Entity<PermissionEntity>().Property(x => x.Name).IsRequired().HasMaxLength(256);
+
+			modelBuilder.Entity<RoleAssignmentEntity>().Property(x => x.OrganizationId).HasMaxLength(64);
+
+			// Relations
+			modelBuilder.Entity<ApiAccountEntity>()
+				.HasRequired(x => x.Account)
+				.WithMany(x => x.ApiAccounts)
+				.HasForeignKey(x => x.AccountId);
+
+			modelBuilder.Entity<RoleAssignmentEntity>()
+				.HasRequired(x => x.Account)
+				.WithMany(x => x.RoleAssignments)
+				.HasForeignKey(x => x.AccountId);
+
+			modelBuilder.Entity<RoleAssignmentEntity>()
+				.HasRequired(x => x.Role)
+				.WithMany(x => x.RoleAssignments)
+				.HasForeignKey(x => x.RoleId);
+
+			modelBuilder.Entity<RolePermissionEntity>()
+				.HasRequired(x => x.Permission)
+				.WithMany(x => x.RolePermissions)
+				.HasForeignKey(x => x.PermissionId);
+
+			modelBuilder.Entity<RolePermissionEntity>()
+				.HasRequired(x => x.Role)
+				.WithMany(x => x.RolePermissions)
+				.HasForeignKey(x => x.RoleId);
+
+			#endregion
+
+            #region Notifications
+
+			modelBuilder.Entity<NotificationEntity>().ToTable("PlatformNotification").HasKey(x => x.Id);
+			modelBuilder.Entity<NotificationTemplateEntity>().ToTable("PlatformNotificationTemplate").HasKey(x => x.Id);
+			modelBuilder.Entity<NotificationTemplateEntity>()
+				.Property(x => x.NotificationTypeId)
+				.HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformNotificationTemplate_NotificationTypeId_ObjectTypeId_ObjectId_Language", 1) { IsUnique = true }));
+			modelBuilder.Entity<NotificationTemplateEntity>()
+				.Property(x => x.ObjectId)
+				.HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformNotificationTemplate_NotificationTypeId_ObjectTypeId_ObjectId_Language", 2) { IsUnique = true }));
+			modelBuilder.Entity<NotificationTemplateEntity>()
+				.Property(x => x.ObjectTypeId)
+				.HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformNotificationTemplate_NotificationTypeId_ObjectTypeId_ObjectId_Language", 3) { IsUnique = true }));
+			modelBuilder.Entity<NotificationTemplateEntity>()
+				.Property(x => x.Language)
+				.HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformNotificationTemplate_NotificationTypeId_ObjectTypeId_ObjectId_Language", 4) { IsUnique = true }));
 
             #endregion
 
-            // Notifications
-            modelBuilder.Entity<NotificationEntity>().ToTable("PlatformNotification").HasKey(x => x.Id);
-            modelBuilder.Entity<NotificationTemplateEntity>().ToTable("PlatformNotificationTemplate").HasKey(x => x.Id);
-            modelBuilder.Entity<NotificationTemplateEntity>()
-                .Property(x => x.NotificationTypeId)
-                .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformNotificationTemplate_NotificationTypeId_ObjectTypeId_ObjectId_Language", 1) { IsUnique = true }));
-            modelBuilder.Entity<NotificationTemplateEntity>()
-                .Property(x => x.ObjectId)
-                .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformNotificationTemplate_NotificationTypeId_ObjectTypeId_ObjectId_Language", 2) { IsUnique = true }));
-            modelBuilder.Entity<NotificationTemplateEntity>()
-                .Property(x => x.ObjectTypeId)
-                .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformNotificationTemplate_NotificationTypeId_ObjectTypeId_ObjectId_Language", 3) { IsUnique = true }));
-            modelBuilder.Entity<NotificationTemplateEntity>()
-                .Property(x => x.Language)
-                .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformNotificationTemplate_NotificationTypeId_ObjectTypeId_ObjectId_Language", 4) { IsUnique = true }));
+			base.OnModelCreating(modelBuilder);
+		}
 
-            base.OnModelCreating(modelBuilder);
-        }
+		#region IPlatformRepository Members
 
-        #region IPlatformRepository Members
+		public IQueryable<NotificationEntity> Notifications { get { return GetAsQueryable<NotificationEntity>(); } }
+		public IQueryable<NotificationTemplateEntity> NotificationTemplates { get { return GetAsQueryable<NotificationTemplateEntity>(); } }
 
-        public IQueryable<NotificationEntity> Notifications { get { return GetAsQueryable<NotificationEntity>(); } }
-        public IQueryable<NotificationTemplateEntity> NotificationTemplates { get { return GetAsQueryable<NotificationTemplateEntity>(); } }
+		public IQueryable<SettingEntity> Settings { get { return GetAsQueryable<SettingEntity>(); } }
 
-        public IQueryable<SettingEntity> Settings { get { return GetAsQueryable<SettingEntity>(); } }
+        public IQueryable<DynamicPropertyEntity> DynamicProperties { get { return GetAsQueryable<DynamicPropertyEntity>(); } }
+        public IQueryable<DynamicPropertyObjectValueEntity> DynamicPropertyObjectValues { get { return GetAsQueryable<DynamicPropertyObjectValueEntity>(); } }
+        public IQueryable<DynamicPropertyDictionaryItemEntity> DynamicPropertyDictionaryItems { get { return GetAsQueryable<DynamicPropertyDictionaryItemEntity>(); } }
 
-        public IQueryable<AccountEntity> Accounts { get { return GetAsQueryable<AccountEntity>(); } }
-        public IQueryable<ApiAccountEntity> ApiAccounts { get { return GetAsQueryable<ApiAccountEntity>(); } }
-        public IQueryable<RoleEntity> Roles { get { return GetAsQueryable<RoleEntity>(); } }
-        public IQueryable<PermissionEntity> Permissions { get { return GetAsQueryable<PermissionEntity>(); } }
-        public IQueryable<RoleAssignmentEntity> RoleAssignments { get { return GetAsQueryable<RoleAssignmentEntity>(); } }
-        public IQueryable<RolePermissionEntity> RolePermissions { get { return GetAsQueryable<RolePermissionEntity>(); } }
-        public IQueryable<OperationLogEntity> OperationLogs { get { return GetAsQueryable<OperationLogEntity>(); } }
+		public IQueryable<AccountEntity> Accounts { get { return GetAsQueryable<AccountEntity>(); } }
+		public IQueryable<ApiAccountEntity> ApiAccounts { get { return GetAsQueryable<ApiAccountEntity>(); } }
+		public IQueryable<RoleEntity> Roles { get { return GetAsQueryable<RoleEntity>(); } }
+		public IQueryable<PermissionEntity> Permissions { get { return GetAsQueryable<PermissionEntity>(); } }
+		public IQueryable<RoleAssignmentEntity> RoleAssignments { get { return GetAsQueryable<RoleAssignmentEntity>(); } }
+		public IQueryable<RolePermissionEntity> RolePermissions { get { return GetAsQueryable<RolePermissionEntity>(); } }
+		public IQueryable<OperationLogEntity> OperationLogs { get { return GetAsQueryable<OperationLogEntity>(); } }
 
-        public AccountEntity GetAccountByName(string userName, UserDetails detailsLevel)
-        {
-            var query = Accounts;
+		public AccountEntity GetAccountByName(string userName, UserDetails detailsLevel)
+		{
+			var query = Accounts;
 
-            if (detailsLevel == UserDetails.Full)
-            {
-                query = query
-                    .Include(a => a.RoleAssignments.Select(ra => ra.Role.RolePermissions.Select(rp => rp.Permission)))
-                    .Include(a => a.ApiAccounts);
-            }
+			if (detailsLevel == UserDetails.Full)
+			{
+				query = query
+					.Include(a => a.RoleAssignments.Select(ra => ra.Role.RolePermissions.Select(rp => rp.Permission)))
+					.Include(a => a.ApiAccounts);
+			}
 
-            return query.FirstOrDefault(a => a.UserName == userName);
-        }
+			return query.FirstOrDefault(a => a.UserName == userName);
+		}
 
-        #endregion
+		public DynamicPropertyDictionaryItemEntity[] GetDynamicPropertyDictionaryItems(string propertyId)
+		{
+			var retVal = DynamicPropertyDictionaryItems.Include(i => i.DisplayNames)
+													   .Where(i => i.PropertyId == propertyId)
+													   .ToArray();
 
-        public NotificationTemplateEntity GetNotificationTemplateByNotification(string notificationTypeId, string objectId, string objectTypeId, string language)
-        {
-            var query = NotificationTemplates.Where(nt => nt.NotificationTypeId.Equals(notificationTypeId) && nt.ObjectId.Equals(objectId) && nt.ObjectTypeId.Equals(objectTypeId));
+			return retVal;
+		}
 
-            var retVal = query.FirstOrDefault(nt => nt.Language.Equals(language));
+
+		public DynamicPropertyEntity[] GetObjectDynamicProperties(string objectType, string objectId)
+		{
+			var retVal = DynamicProperties.Where(x => x.ObjectType == objectType)
+										  .OrderBy(x => x.Name)
+										  .ToArray();
+			var propertyIds = retVal.Select(x => x.Id).ToArray();
+			var proprValues = DynamicPropertyObjectValues.Include(x => x.DictionaryItem)
+														 .Where(x => propertyIds.Contains(x.PropertyId) && x.ObjectId == objectId).ToArray();
+		
+			return retVal;
+		}
+
+		public DynamicPropertyEntity[] GetDynamicPropertiesByIds(string[] ids)
+		{
+			var retVal = DynamicProperties.Include(x => x.DisplayNames)
+										  .Where(x => ids.Contains(x.Id))
+										  .OrderBy(x => x.Name)
+										  .ToArray();
+			return retVal;
+		}
+
+		public DynamicPropertyEntity[] GetDynamicPropertiesForType(string objectType)
+		{
+			var retVal = DynamicProperties.Include(p => p.DisplayNames)
+										  .Where(p => p.ObjectType == objectType)
+										  .OrderBy(p => p.Name)
+										  .ToArray();
+			return retVal;
+		}
+
+		#endregion
+
+		public NotificationTemplateEntity GetNotificationTemplateByNotification(string notificationTypeId, string objectId, string objectTypeId, string language)
+		{
+			var query = NotificationTemplates.Where(nt => nt.NotificationTypeId.Equals(notificationTypeId) && nt.ObjectId.Equals(objectId) && nt.ObjectTypeId.Equals(objectTypeId));
+
+			var retVal = query.FirstOrDefault(nt => nt.Language.Equals(language));
             if (retVal == null)
-            {
-                retVal = query.FirstOrDefault(nt => nt.IsDefault);
-            }
+			{
+				retVal = query.FirstOrDefault(nt => nt.IsDefault);
+			}
 
-            return retVal;
-        }
-    }
+			return retVal;
+		}
+	}
 }

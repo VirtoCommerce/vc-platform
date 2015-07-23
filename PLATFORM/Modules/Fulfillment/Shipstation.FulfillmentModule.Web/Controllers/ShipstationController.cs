@@ -3,27 +3,24 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Web.Http.Description;
-using Microsoft.Practices.ObjectBuilder2;
 using Shipstation.FulfillmentModule.Web.Converters;
-using Shipstation.FulfillmentModule.Web.Filters;
 using Shipstation.FulfillmentModule.Web.Models.Notice;
 using Shipstation.FulfillmentModule.Web.Models.Order;
 using Shipstation.FulfillmentModule.Web.Services;
 using System.Web.Http;
 using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Domain.Order.Services;
+using VirtoCommerce.Platform.Data.Security.Authentication.Basic.Filters;
 
 namespace Shipstation.FulfillmentModule.Web.Controllers
 {
     [RoutePrefix("api/fulfillment/shipstation")]
     [ControllerConfig]
-    [AllowAnonymous]
-    [BasicAuthenticationFilter]
     public class ShipstationController : ApiController
     {
         private readonly ICustomerOrderService _orderService;
         private readonly ICustomerOrderSearchService _orderSearchService;
-
+        
         public ShipstationController(ICustomerOrderService orderService, ICustomerOrderSearchService orderSearchService)
         {
             _orderSearchService = orderSearchService;
@@ -33,6 +30,7 @@ namespace Shipstation.FulfillmentModule.Web.Controllers
         [HttpGet]
         [Route("")]
         [ResponseType(typeof(Orders))]
+        [IdentityBasicAuthentication]
         public IHttpActionResult GetNewOrders(string action, string start_date, string end_date, int page)
         {
             if (action == "export")
@@ -64,6 +62,7 @@ namespace Shipstation.FulfillmentModule.Web.Controllers
         
         [HttpPost]
         [Route("")]
+        [IdentityBasicAuthentication]
         public IHttpActionResult UpdateOrders(string action, string order_number, string carrier, string service, string tracking_number, ShipNotice shipnotice)
         {
             var order = _orderService.GetByOrderNumber(shipnotice.OrderNumber, CustomerOrderResponseGroup.Full);

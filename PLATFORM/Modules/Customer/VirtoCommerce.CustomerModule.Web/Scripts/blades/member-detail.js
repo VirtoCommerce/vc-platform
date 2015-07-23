@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.customerModule')
-.controller('virtoCommerce.customerModule.memberDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.customerModule.contacts', 'virtoCommerce.customerModule.organizations', 'platformWebApp.accounts', 'platformWebApp.dialogService', function ($scope, bladeNavigationService, contacts, organizations, accounts, dialogService) {
+.controller('virtoCommerce.customerModule.memberDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.customerModule.contacts', 'virtoCommerce.customerModule.organizations', 'platformWebApp.accounts', 'platformWebApp.dynamicProperties.api', 'platformWebApp.dialogService', function ($scope, bladeNavigationService, contacts, organizations, accounts, dynamicPropertiesApi, dialogService) {
     var blade = $scope.blade;
     blade.currentResource = blade.isOrganization ? organizations : contacts;
     var userStateCommand, customerAccount;
@@ -88,7 +88,7 @@
             function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
         } else {
             var newEntity = {
-                properties: [],
+                dynamicPropertyValues: [],
                 addresses: [],
                 phones: [],
                 emails: []
@@ -96,14 +96,18 @@
 
             if (blade.isOrganization) {
                 newEntity.parentId = blade.parentBlade.currentEntity.id;
+                initializeBlade(newEntity);
             } else {
                 newEntity.organizations = [];
                 if (blade.parentBlade.currentEntity.id) {
                     newEntity.organizations.push(blade.parentBlade.currentEntity.id);
                 }
-            }
 
-            initializeBlade(newEntity);
+                dynamicPropertiesApi.query({ id: 'VirtoCommerce.Domain.Customer.Model.Contact' }, function (results) {
+                    newEntity.dynamicPropertyValues = results;
+                    initializeBlade(newEntity);
+                }, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+            }
         }
     }
 
@@ -112,7 +116,6 @@
         if (!blade.isOrganization && data.organizations.length > 0) {
             data.organization = data.organizations[0];
         }
-
         blade.currentEntity = angular.copy(data);
         blade.origEntity = data;
         blade.isLoading = false;

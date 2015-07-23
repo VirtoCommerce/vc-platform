@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 using VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.Domain.Commerce.Model;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.DynamicProperties;
 
 namespace VirtoCommerce.Domain.Order.Model
 {
-	public class LineItem : AuditableEntity, IPosition, IHaveTaxDetalization, ISupportCancellation, IHaveDimension
+	public class LineItem : AuditableEntity, IPosition, IHaveTaxDetalization, ISupportCancellation, IHaveDimension, IHasDynamicProperties
 	{
 		public CurrencyCodes Currency { get; set; }
 		/// <summary>
@@ -71,6 +72,11 @@ namespace VirtoCommerce.Domain.Order.Model
 		public DateTime? CancelledDate { get; set; }
 		public string CancelReason { get; set; }
 
+		#endregion
+
+		#region IHasDynamicProperties Members
+		public string ObjectType { get; set; }
+		public ICollection<DynamicObjectProperty> DynamicProperties { get; set; }
 		#endregion
 
 		public Discount Discount { get; set; }

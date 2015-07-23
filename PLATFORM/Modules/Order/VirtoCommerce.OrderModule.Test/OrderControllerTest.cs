@@ -1,28 +1,28 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Http.Results;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using VirtoCommerce.CartModule.Data.Repositories;
+using VirtoCommerce.CartModule.Data.Services;
+using VirtoCommerce.Domain.Cart.Events;
+using VirtoCommerce.Domain.Common.Events;
+using VirtoCommerce.Domain.Order.Events;
+using VirtoCommerce.Domain.Payment.Model;
+using VirtoCommerce.Domain.Payment.Services;
 using VirtoCommerce.OrderModule.Data.Repositories;
 using VirtoCommerce.OrderModule.Data.Services;
+using VirtoCommerce.OrderModule.Web.BackgroundJobs;
 using VirtoCommerce.OrderModule.Web.Controllers.Api;
+using VirtoCommerce.Platform.Core.Caching;
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Data.Caching;
+using VirtoCommerce.Platform.Data.DynamicProperties;
+using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
+using VirtoCommerce.Platform.Data.Repositories;
 using coreModel = VirtoCommerce.Domain.Order.Model;
 using webModel = VirtoCommerce.OrderModule.Web.Model;
-using VirtoCommerce.Domain.Payment.Services;
-using VirtoCommerce.CartModule.Data.Repositories;
-using VirtoCommerce.Domain.Inventory.Services;
-using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
-using VirtoCommerce.Domain.Common;
-using VirtoCommerce.CartModule.Data.Services;
-using VirtoCommerce.Platform.Core.Common;
-using VirtoCommerce.Domain.Payment.Model;
-using VirtoCommerce.Domain.Order.Events;
-using VirtoCommerce.Domain.Common.Events;
-using VirtoCommerce.Domain.Cart.Events;
-using VirtoCommerce.OrderModule.Web.BackgroundJobs;
-using VirtoCommerce.Platform.Core.Caching;
-using VirtoCommerce.Platform.Data.Caching;
 
 namespace VirtoCommerce.OrderModule.Test
 {
@@ -354,23 +354,18 @@ namespace VirtoCommerce.OrderModule.Test
 
 		private static OrderModuleController GetCustomerOrderController()
 		{
-			var mockInventory = new Mock<IInventoryService>();
-			Func<ICartRepository> repositoryFactory = () =>
-			{
-				return new CartRepositoryImpl("VirtoCommerce", new AuditableInterceptor());
-			};
+            Func<IPlatformRepository> platformRepositoryFactory = () => new PlatformRepository("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor());
+            Func<ICartRepository> repositoryFactory = () => new CartRepositoryImpl("VirtoCommerce", new AuditableInterceptor());
 
+            var dynamicPropertyService = new DynamicPropertyService(platformRepositoryFactory);
 			var orderEventPublisher = new EventPublisher<OrderChangeEvent>(Enumerable.Empty<IObserver<OrderChangeEvent>>().ToArray());
 			var cartEventPublisher = new EventPublisher<CartChangeEvent>(Enumerable.Empty<IObserver<CartChangeEvent>>().ToArray());
 			var cartService = new ShoppingCartServiceImpl(repositoryFactory, cartEventPublisher, null);
 
-
-			var orderService = new CustomerOrderServiceImpl(GetOrderRepositoryFactory(), new TimeBasedNumberGeneratorImpl(), orderEventPublisher, cartService, null);
+            var orderService = new CustomerOrderServiceImpl(GetOrderRepositoryFactory(), new TimeBasedNumberGeneratorImpl(), orderEventPublisher, cartService, null, dynamicPropertyService);
 
 			var controller = new OrderModuleController(orderService, null, null, new TimeBasedNumberGeneratorImpl(), null, null);
 			return controller;
 		}
-
-
 	}
 }

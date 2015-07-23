@@ -5,6 +5,7 @@
         public const string ModuleQuery = "platform:module:query";
         public const string ModuleManage = "platform:module:manage";
         public const string SettingManage = "platform:setting:manage";
+        public const string DynamicPropertiesManage = "platform:dynamic_properties:manage";
         public const string SecurityQuery = "platform:security:query";
         public const string SecurityManage = "platform:security:manage";
         public const string SecurityCallApi = "security:call_api";
@@ -37,6 +38,14 @@
                     Id = SettingManage,
                     Name = "Manage settings",
                     Description = "Permission to manage settings.",
+                    ModuleId = "VirtoCommerce.Platform",
+                    GroupName = "Settings"
+                },
+                new Permission
+                {
+                    Id = DynamicPropertiesManage,
+                    Name = "Manage dynamic properties",
+                    Description = "Permission to manage dynamic properties.",
                     ModuleId = "VirtoCommerce.Platform",
                     GroupName = "Settings"
                 },

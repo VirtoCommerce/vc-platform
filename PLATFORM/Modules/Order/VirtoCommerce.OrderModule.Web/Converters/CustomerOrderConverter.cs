@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Linq;
 using Omu.ValueInjecter;
 using coreModel = VirtoCommerce.Domain.Order.Model;
 using webModel = VirtoCommerce.OrderModule.Web.Model;
@@ -39,6 +36,10 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 
 			retVal.ChildrenOperations = customerOrder.ChildrenOperations.Select(x => x.ToWebModel()).ToList();
 			retVal.TaxDetails = customerOrder.TaxDetails;
+
+            if (customerOrder.DynamicProperties != null)
+                retVal.DynamicProperties = customerOrder.DynamicProperties;
+
 			return retVal;
 		}
 
@@ -62,6 +63,10 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 			if (customerOrder.Discount != null)
 				retVal.Discount = customerOrder.Discount.ToCoreModel();
 			retVal.TaxDetails = customerOrder.TaxDetails;
+
+            if (customerOrder.DynamicProperties != null)
+                retVal.DynamicProperties = customerOrder.DynamicProperties;
+
 			return retVal;
 		}
 

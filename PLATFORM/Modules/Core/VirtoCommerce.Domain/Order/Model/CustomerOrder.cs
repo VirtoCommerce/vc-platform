@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using VirtoCommerce.Domain.Commerce.Model;
+using VirtoCommerce.Platform.Core.DynamicProperties;
 
 namespace VirtoCommerce.Domain.Order.Model
 {
-	public class CustomerOrder : Operation, IHaveTaxDetalization
+    public class CustomerOrder : Operation, IHaveTaxDetalization
 	{
 		public string CustomerId { get; set; }
 		public string CustomerName { get; set; }
@@ -43,7 +42,7 @@ namespace VirtoCommerce.Domain.Order.Model
 				{
 					foreach (var inPayment in InPayments)
 					{
-						inPayment.ParentOperationId = this.Id;
+                        inPayment.ParentOperationId = Id;
 						retVal.Add(inPayment);
 					}
 				}
@@ -52,7 +51,7 @@ namespace VirtoCommerce.Domain.Order.Model
 				{
 					foreach (var shipment in Shipments)
 					{
-						shipment.ParentOperationId = this.Id;
+                        shipment.ParentOperationId = Id;
 						retVal.Add(shipment);
 					}
 				}
@@ -60,6 +59,7 @@ namespace VirtoCommerce.Domain.Order.Model
 			}
 		}
 
+   
 		#region ITaxDetailSupport Members
 
 		public ICollection<TaxDetail> TaxDetails { get; set; }

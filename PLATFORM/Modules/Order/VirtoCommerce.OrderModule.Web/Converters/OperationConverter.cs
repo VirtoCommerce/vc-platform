@@ -16,6 +16,6 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 			retVal.InjectFrom(operation);
 			return retVal;
 		}
-
+	
 	}
 }

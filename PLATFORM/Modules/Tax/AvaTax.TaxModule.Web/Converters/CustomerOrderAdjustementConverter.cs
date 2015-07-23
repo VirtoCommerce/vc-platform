@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Linq.Expressions;
 using AvaTaxCalcREST;
-using Microsoft.Practices.ObjectBuilder2;
 using VirtoCommerce.Domain.Customer.Model;
+using VirtoCommerce.Platform.Core.DynamicProperties;
 using Address = AvaTaxCalcREST.Address;
 using AddressType = VirtoCommerce.Domain.Order.Model.AddressType;
 
@@ -28,7 +27,16 @@ namespace AvaTax.TaxModule.Web.Converters
                     DocCode = string.Format("{0}.{1}", originalOrder.Number, DateTime.UtcNow.ToString("yy-MM-dd-hh-mm")),
                     DetailLevel = DetailLevel.Tax,
                     Commit = commit,
-                    DocType = DocType.ReturnInvoice
+                    DocType = DocType.ReturnInvoice,
+                    TaxOverride = new TaxOverrideDef
+                    {
+                        TaxOverrideType = "TaxDate",
+                        Reason = "Adjustment for return",
+                        TaxDate = originalOrder.CreatedDate == DateTime.MinValue
+                            ? DateTime.UtcNow.ToString("yyyy-MM-dd")
+                            : originalOrder.CreatedDate.ToString("yyyy-MM-dd"),
+                        TaxAmount = "0"
+                    }
                 };
 
                 // Best Practice Request Parameters
@@ -39,14 +47,6 @@ namespace AvaTax.TaxModule.Web.Converters
                 // getTaxRequest.BusinessIdentificationNo = "234243"; //for VAT tax calculations
                 // getTaxRequest.Discount = 50;
 
-                getTaxRequest.TaxOverride = new TaxOverrideDef();
-                getTaxRequest.TaxOverride.TaxOverrideType = "TaxDate";
-                getTaxRequest.TaxOverride.Reason = "Adjustment for return";
-                getTaxRequest.TaxOverride.TaxDate = originalOrder.CreatedDate == DateTime.MinValue
-                            ? DateTime.UtcNow.ToString("yyyy-MM-dd")
-                            : originalOrder.CreatedDate.ToString("yyyy-MM-dd");
-                getTaxRequest.TaxOverride.TaxAmount = "0";
-
                 // Optional Request Parameters
                 //getTaxRequest.PurchaseOrderNo = order.Number;
                 getTaxRequest.ReferenceCode = originalOrder.Number;
@@ -54,11 +54,7 @@ namespace AvaTax.TaxModule.Web.Converters
                 getTaxRequest.CurrencyCode = modifiedOrder.Currency.ToString();
 
                 //add customer tax exemption code to cart if exists
-                if (contact != null && contact.Properties != null && contact.Properties.Any(x => x.Name == "Tax exempt"))
-                {
-                    var taxExemptNo = contact.Properties.Single(x => x.Name == "Tax exempt");
-                    getTaxRequest.ExemptionNo = taxExemptNo.Value.ToString();
-                }
+                getTaxRequest.ExemptionNo = contact.GetDynamicPropertyValue("Tax exempt", string.Empty);
 
                 string destinationAddressIndex = "0";
 
@@ -100,7 +96,7 @@ namespace AvaTax.TaxModule.Web.Converters
                         TaxCode = li.TaxType
                     }
                     ).ToList();
-                
+
                 return getTaxRequest;
             }
             return null;

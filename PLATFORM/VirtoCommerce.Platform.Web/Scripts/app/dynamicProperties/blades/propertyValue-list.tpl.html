@@ -1,0 +1,20 @@
+﻿<div class="blade-static __bottom" ng-include="'Scripts/common/templates/ok-cancel2.tpl.html'"></div>
+<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <form name="formScope" class="form">
+                <fieldset ng-init="setForm(formScope);">
+                    <div class="form-group" ng-repeat="property in blade.currentEntity.dynamicProperties | orderBy: 'name'">
+                        <label class="form-label" for="">
+                            {{property.name}}
+                            <a href="" ng-click="editDictionary(property)" ng-show="property.isDictionary"><i class="form-ico fa fa-pencil"></i></a>
+                        </label>
+                        <va-dynamic-property ng-model="property" languages="languages" />
+                    </div>
+
+                    <div class="text" ng-if="blade.currentEntity.dynamicProperties.length == 0">None</div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>

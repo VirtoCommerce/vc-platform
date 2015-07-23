@@ -5,6 +5,7 @@ using System.Linq;
 using AvaTaxCalcREST;
 using Microsoft.Practices.ObjectBuilder2;
 using VirtoCommerce.Domain.Customer.Model;
+using VirtoCommerce.Platform.Core.DynamicProperties;
 using Address = AvaTaxCalcREST.Address;
 using AddressType = VirtoCommerce.Domain.Cart.Model.AddressType;
 
@@ -28,7 +29,8 @@ namespace AvaTax.TaxModule.Web.Converters
                     DocCode = cart.Id,
                     DetailLevel = DetailLevel.Tax,
                     Commit = false,
-                    DocType = DocType.SalesOrder
+                    DocType = DocType.SalesOrder,
+                    CurrencyCode = cart.Currency.ToString()
                 };
 
                 // Document Level Elements
@@ -38,7 +40,7 @@ namespace AvaTax.TaxModule.Web.Converters
 
                 // Situational Request Parameters
                 // getTaxRequest.CustomerUsageType = "G";
-                
+
                 // getTaxRequest.ExemptionNo = "12345";
                 // getTaxRequest.BusinessIdentificationNo = "234243";
                 // getTaxRequest.Discount = 50;
@@ -52,14 +54,9 @@ namespace AvaTax.TaxModule.Web.Converters
                 //getTaxRequest.PurchaseOrderNo = order.Id;
                 //getTaxRequest.ReferenceCode = "ref123456";
                 //getTaxRequest.PosLaneCode = "09";
-                getTaxRequest.CurrencyCode = cart.Currency.ToString();
 
                 //add customer tax exemption code to cart if exists
-                if (contact != null && contact.Properties != null && contact.Properties.Any(x => x.Name == "Tax exempt"))
-                {
-                    var taxExemptNo = contact.Properties.Single(x => x.Name == "Tax exempt");
-                    getTaxRequest.ExemptionNo = taxExemptNo.Value.ToString();
-                }
+                getTaxRequest.ExemptionNo = contact.GetDynamicPropertyValue("Tax exempt", string.Empty);
 
                 // Address Data
                 string destinationAddressIndex = "0";

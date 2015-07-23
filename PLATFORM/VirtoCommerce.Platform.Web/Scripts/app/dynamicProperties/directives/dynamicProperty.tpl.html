@@ -1,0 +1,175 @@
+﻿<div>
+    <div id='valuePlaceHolder'></div>
+
+    <script type="text/ng-template" id="dShortText.html">
+        <div class="form-input">
+            <input ng-required="currentEntity.property.isRequired"
+                   ng-model="context.currentPropValues[0].value"
+                   placeholder="Enter short text">
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="dLongText.html">
+        <div class="form-input">
+            <textarea ng-required="currentEntity.property.isRequired"
+                      ng-model="context.currentPropValues[0].value"
+                      placeholder="Enter long text"></textarea>
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="dInteger.html">
+        <div class="form-input __number">
+            <input va-number step="1"
+                   ng-required="currentEntity.property.isRequired"
+                   ng-model="context.currentPropValues[0].value"
+                   placeholder="Enter integer number" />
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="dDecimal.html">
+        <div class="form-input __number">
+            <input va-number step="0.01"
+                   ng-required="currentEntity.property.isRequired"
+                   ng-model="context.currentPropValues[0].value"
+                   placeholder="Enter decimal number" />
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="dDateTime.html">
+        <div class="form-input __calendar">
+            <input ng-model="context.currentPropValues[0].value"
+                   datepicker-popup
+                   is-open="datepickers.DateTime"
+                   placeholder="Choose date"
+                   close-text="Close">
+            <button ng-click="open($event, 'DateTime')" type="button" class="btn">
+                <i class="btn-ico fa fa-calendar"></i>
+            </button>
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="dBoolean.html">
+        <label class="form-label __switch">
+            <input type="checkbox" ng-model="context.currentPropValues[0].value">
+            <span class="switch"></span>
+        </label>
+    </script>
+
+    <script type="text/ng-template" id="dShortText-multivalue.html">
+        <tags-input ng-model="context.currentPropValues"
+                    min-length="1"
+                    min-tags="{{currentEntity.property.isRequired ? 1 : undefined}}"
+                    add-on-blur="true"
+                    display-property="value"
+                    placeholder="Add value">
+        </tags-input>
+    </script>
+    <script type="text/ng-template" id="dInteger-multivalue.html">
+        <tags-input ng-model="context.currentPropValues"
+                    min-tags="{{currentEntity.property.isRequired ? 1 : undefined}}"
+                    add-on-blur="true"
+                    allowed-tags-pattern="^[-]?[0-9]*$"
+                    min-length="1"
+                    display-property="value"
+                    placeholder="Add integer">
+        </tags-input>
+    </script>
+    <script type="text/ng-template" id="dDecimal-multivalue.html">
+        <tags-input ng-model="context.currentPropValues"
+                    min-tags="{{currentEntity.property.isRequired ? 1 : undefined}}"
+                    add-on-blur="true"
+                    allowed-tags-pattern="^[-]?[0-9]+[\.]?[0-9]*$"
+                    min-length="1"
+                    display-property="value"
+                    placeholder="Add decimal">
+        </tags-input>
+    </script>
+
+    <script type="text/ng-template" id="dShortText-dictionary.html">
+        <div class="form-input">
+            <ui-select ng-model="context.currentPropValues[0]">
+                <ui-select-match placeholder="Select value">{{$select.selected.name}}</ui-select-match>
+                <ui-select-choices repeat="propValue in context.allDictionaryValues | filter: {name: $select.search}">
+                    <span ng-bind-html="propValue.name | highlight: $select.search"></span>
+                </ui-select-choices>
+            </ui-select>
+        </div>
+    </script>
+
+
+    <script type="text/ng-template" id="dShortText-dictionary-multivalue.html">
+        <div class="form-input">
+            <ui-select multiple ng-model="context.currentPropValues">
+                <ui-select-match placeholder="Select value">{{$item.name}}</ui-select-match>
+                <ui-select-choices repeat="propValue in context.allDictionaryValues | filter: {name: $select.search}">
+                    <span ng-bind-html="propValue.name | highlight: $select.search"></span>
+                </ui-select-choices>
+            </ui-select>
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="dShortText-multilang.html">
+        <div class="form-group" ng-repeat="propValue in context.currentPropValues">
+            <div class="form-input __langs">
+                <span class="flag flag-{{propValue.locale.substr(3).toLowerCase()}}"></span>
+                <input ng-required="currentEntity.property.isRequired"
+                       ng-model="propValue.value"
+                       placeholder="Enter value">
+            </div>
+        </div>
+    </script>
+    <script type="text/ng-template" id="dLongText-multilang.html">
+        <div class="form-group" ng-repeat="propValue in context.currentPropValues">
+            <div class="form-input __langs">
+                <span class="flag flag-{{propValue.locale.substr(3).toLowerCase()}}"></span>
+                <textarea ng-required="currentEntity.property.isRequired"
+                          ng-model="propValue.values[0].value"
+                          placeholder="Enter value" />
+            </div>
+        </div>
+    </script>
+
+
+    <script type="text/ng-template" id="dShortText-multivalue-multilang.html">
+        <div class="form-group" ng-repeat="propValue in context.currentPropValues">
+            <div class="form-input __langs">
+                <span class="flag flag-{{propValue.locale.substr(3).toLowerCase()}}"></span>
+                <tags-input ng-model="propValue.values"
+                            min-tags="{{currentEntity.property.isRequired ? 1 : undefined}}"
+                            add-on-blur="true"
+                            min-length="1"
+                            display-property="value"
+                            placeholder="Add value">
+                </tags-input>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="dShortText-dictionary-multilang.html">
+        <div class="form-group">
+            <div class="form-input">
+                <ui-select ng-model="context.currentPropValues[0]">
+                    <ui-select-match placeholder="Select value">{{$select.selected.name}}</ui-select-match>
+                    <ui-select-choices repeat="propValue in context.allDictionaryValues | filter: {name: $select.search}">
+                        <span ng-bind-html="propValue.name | highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div ng-repeat="data in context.currentPropValues[0].displayNames" style="margin:5px 0;">
+                <span class="flag flag-{{data.locale.substr(3, 2).toLowerCase()}}"></span>
+                {{data.name}}
+            </div>
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="dShortText-dictionary-multivalue-multilang.html">
+        <div class="form-input">
+            <ui-select multiple ng-model="context.currentPropValues">
+                <ui-select-match placeholder="Select value">{{$item.name}}</ui-select-match>
+                <ui-select-choices repeat="propValue in context.allDictionaryValues | filter: {name: $select.search}">
+                    <span ng-bind-html="propValue.name | highlight: $select.search"></span>
+                </ui-select-choices>
+            </ui-select>
+        </div>
+    </script>
+</div>

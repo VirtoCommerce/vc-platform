@@ -20,6 +20,7 @@ using VirtoCommerce.Platform.Core.Asset;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.ChangeLog;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Notification;
@@ -29,6 +30,7 @@ using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Asset;
 using VirtoCommerce.Platform.Data.Caching;
 using VirtoCommerce.Platform.Data.ChangeLog;
+using VirtoCommerce.Platform.Data.DynamicProperties;
 using VirtoCommerce.Platform.Data.ExportImport;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Platform.Data.Notification;
@@ -38,10 +40,10 @@ using VirtoCommerce.Platform.Data.Security;
 using VirtoCommerce.Platform.Data.Security.Identity;
 using VirtoCommerce.Platform.Data.Settings;
 using VirtoCommerce.Platform.Web;
-using VirtoCommerce.Platform.Web.Controllers.Api;
-using WebGrease.Extensions;
 using VirtoCommerce.Platform.Web.BackgroundJobs;
+using VirtoCommerce.Platform.Web.Controllers.Api;
 using VirtoCommerce.Platform.Web.Resources;
+using WebGrease.Extensions;
 
 [assembly: OwinStartup(typeof(Startup))]
 
@@ -259,6 +261,12 @@ namespace VirtoCommerce.Platform.Web
 
             var settingsManager = new SettingsManager(manifestProvider, platformRepositoryFactory, cacheManager, platformSettings);
             container.RegisterInstance<ISettingsManager>(settingsManager);
+
+            #endregion
+
+            #region Dynamic Properties
+
+            container.RegisterType<IDynamicPropertyService, DynamicPropertyService>();
 
             #endregion
 

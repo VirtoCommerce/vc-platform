@@ -67,8 +67,8 @@ angular.module(moduleName, [])
           template: 'Modules/$(VirtoCommerce.Customer)/Scripts/widgets/memberPhonesWidget.tpl.html'
       }, 'customerDetail1');
       widgetService.registerWidget({
-          controller: 'virtoCommerce.customerModule.memberPropertyWidgetController',
-          template: 'Modules/$(VirtoCommerce.Customer)/Scripts/widgets/memberPropertyWidget.tpl.html'
+          controller: 'platformWebApp.dynamicPropertyWidgetController',
+          template: 'Scripts/app/dynamicProperties/widgets/dynamicPropertyWidget.tpl.html'
       }, 'customerDetail2');
 
       //Register widgets in organization details
@@ -84,9 +84,8 @@ angular.module(moduleName, [])
           controller: 'virtoCommerce.customerModule.memberPhonesWidgetController',
           template: 'Modules/$(VirtoCommerce.Customer)/Scripts/widgets/memberPhonesWidget.tpl.html'
       }, 'organizationDetail1');
-      /// hiding some UI functionality until it's fully implemented. Need to release
-      //widgetService.registerWidget({
-      //    controller:'virtoCommerce.customerModule.memberPropertyWidgetController',
-      //    template: 'Modules/$(VirtoCommerce.Customer)/Scripts/widgets/memberPropertyWidget.tpl.html'
-      //}, 'organizationDetail2');
+      widgetService.registerWidget({
+          controller:'platformWebApp.dynamicPropertyWidgetController',
+          template: 'Scripts/app/dynamicProperties/widgets/dynamicPropertyWidget.tpl.html'
+      }, 'organizationDetail2');
   }]);

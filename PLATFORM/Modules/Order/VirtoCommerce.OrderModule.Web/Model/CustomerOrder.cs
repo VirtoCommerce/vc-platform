@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+﻿using System.Collections.Generic;
 using VirtoCommerce.Domain.Commerce.Model;
+using VirtoCommerce.Platform.Core.DynamicProperties;
 
 namespace VirtoCommerce.OrderModule.Web.Model
 {
@@ -30,5 +26,7 @@ namespace VirtoCommerce.OrderModule.Web.Model
 		#region IHaveTaxDetalization Members
 		public ICollection<TaxDetail> TaxDetails { get; set; }
 		#endregion
+
+       
 	}
 }
