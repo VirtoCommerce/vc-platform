@@ -3,37 +3,35 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Web.Http.Description;
-using System.Web.UI.WebControls;
+using Microsoft.Practices.ObjectBuilder2;
 using Shipstation.FulfillmentModule.Web.Converters;
+using Shipstation.FulfillmentModule.Web.Filters;
 using Shipstation.FulfillmentModule.Web.Models.Notice;
 using Shipstation.FulfillmentModule.Web.Models.Order;
 using Shipstation.FulfillmentModule.Web.Services;
 using System.Web.Http;
 using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Domain.Order.Services;
-using VirtoCommerce.Platform.Core.Common;
 
 namespace Shipstation.FulfillmentModule.Web.Controllers
 {
     [RoutePrefix("api/fulfillment/shipstation")]
     [ControllerConfig]
     [AllowAnonymous]
+    [BasicAuthenticationFilter]
     public class ShipstationController : ApiController
     {
-        private readonly IFulfillmentSettings _fulfillmentSettings;
         private readonly ICustomerOrderService _orderService;
         private readonly ICustomerOrderSearchService _orderSearchService;
-        private const string dateTimeFormat = "MM'/'dd'/'yyyy HH:mm";
 
-        public ShipstationController(IFulfillmentSettings fulfillmentSettings, ICustomerOrderService orderService, ICustomerOrderSearchService orderSearchService)
+        public ShipstationController(ICustomerOrderService orderService, ICustomerOrderSearchService orderSearchService)
         {
-            _fulfillmentSettings = fulfillmentSettings;
             _orderSearchService = orderSearchService;
             _orderService = orderService;
         }
 
         [HttpGet]
-        [Route("orders")]
+        [Route("")]
         [ResponseType(typeof(Orders))]
         public IHttpActionResult GetNewOrders(string action, string start_date, string end_date, int page)
         {
@@ -63,16 +61,20 @@ namespace Shipstation.FulfillmentModule.Web.Controllers
             
             return BadRequest();
         }
-
+        
         [HttpPost]
-        [Route("orders")]
+        [Route("")]
         public IHttpActionResult UpdateOrders(string action, string order_number, string carrier, string service, string tracking_number, ShipNotice shipnotice)
         {
-            var order = _orderService.GetById(shipnotice.OrderNumber, CustomerOrderResponseGroup.Full);
-            if (order != null)
-                return Ok(shipnotice);
+            var order = _orderService.GetByOrderNumber(shipnotice.OrderNumber, CustomerOrderResponseGroup.Full);
+            if (order == null)
+            {
+                return BadRequest("Order not found");
+            }
 
-            return BadRequest("Order not found");
+            order.Patch(shipnotice);
+            _orderService.Update(new[] { order });
+            return Ok(shipnotice);
         }
     }
 }

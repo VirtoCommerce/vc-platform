@@ -8,9 +8,8 @@ namespace VirtoCommerce.Platform.Core.Security
         Task<ApplicationUserExtended> FindByIdAsync(string userId, UserDetails detailsLevel);
         Task<ApplicationUserExtended> FindByEmailAsync(string email, UserDetails detailsLevel);
         Task<ApplicationUserExtended> FindByLoginAsync(string loginProvider, string providerKey, UserDetails detailsLevel);
-        Task<SecurityResult> RegisterAsync(ApplicationUserExtended user);
-        Task<string> CreateAsync(ApplicationUserExtended user);
-        Task<string> UpdateAsync(ApplicationUserExtended user);
+        Task<SecurityResult> CreateAsync(ApplicationUserExtended user);
+        Task<SecurityResult> UpdateAsync(ApplicationUserExtended user);
         Task DeleteAsync(string[] names);
         ApiAccount GenerateNewApiAccount(ApiAccountType type);
         Task<string> GeneratePasswordResetTokenAsync(string userId);

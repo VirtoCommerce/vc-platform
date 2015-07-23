@@ -11,8 +11,8 @@ namespace VirtoCommerce.CustomerModule.Web.ExportImport
 {
     public sealed class BackupObject
     {
-        public ICollection<Contact> Contacts { get; set; }
-        public ICollection<Organization> Organizations { get; set; }
+        public List<Contact> Contacts { get; set; }
+        public List<Organization> Organizations { get; set; }
     }
 
     public sealed class CustomerExportImport
@@ -21,11 +21,11 @@ namespace VirtoCommerce.CustomerModule.Web.ExportImport
         private readonly ICustomerSearchService _customerSearchService;
         private readonly IOrganizationService _organizationService;
 
-        public CustomerExportImport(IContactService contactService, ICustomerSearchService customerSearchService, IOrganizationService organizationService)
+        public CustomerExportImport(IContactService contactService, IOrganizationService organizationService, ICustomerSearchService customerSearchService)
         {
             _contactService = contactService;
-            _customerSearchService = customerSearchService;
             _organizationService = organizationService;
+            _customerSearchService = customerSearchService;
         }
 
         public void DoExport(Stream backupStream, Action<ExportImportProgressInfo> progressCallback)
@@ -89,12 +89,29 @@ namespace VirtoCommerce.CustomerModule.Web.ExportImport
         public BackupObject GetBackupObject()
         {
            var responce = _customerSearchService.Search(new SearchCriteria { Count = int.MaxValue });
-           return new BackupObject
+           var backupObject = new BackupObject
             {
-                Contacts = responce.Contacts.Select(x => x.Id).Select(_contactService.GetById).ToArray(),
-                Organizations = responce.Organizations.Select(x => x.Id).Select(_organizationService.GetById).ToArray()
+                Contacts = responce.Contacts.Select(x => _contactService.GetById(x.Id)).ToList(),
+                Organizations = responce.Organizations.Select(x => _organizationService.GetById(x.Id)).ToList()
             };
+
+            TreeComplete(responce.Organizations.Select(x =>x.Id).ToArray(), backupObject);
+            return backupObject;
         }
+
+        private void TreeComplete(IEnumerable<string> ids, BackupObject backupObject)
+        {
+            foreach (var id in ids)
+            {
+                var responce = _customerSearchService.Search(new SearchCriteria { Count = int.MaxValue, OrganizationId = id });
+                var contacts = responce.Contacts.Select(x => _contactService.GetById(x.Id)).ToArray();
+                var organizations = responce.Organizations.Select(x => _organizationService.GetById(x.Id)).ToArray();
+                backupObject.Contacts.AddRange(contacts);
+                backupObject.Organizations.AddRange(organizations);
+                TreeComplete(organizations.Select(x => x.Id).ToArray(), backupObject);
+            }
+        }
+
 
     }
 }
