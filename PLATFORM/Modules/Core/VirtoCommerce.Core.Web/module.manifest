@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <module>
 	<id>VirtoCommerce.Core</id>
-	<version>1.0.0</version>
-	<platformVersion>2.0.0</platformVersion>
+	<version>2.3.0</version>
+	<platformVersion>2.3.0</platformVersion>
 	<title>Virto Commerce Core</title>
 	<description>Core functionality</description>
 	<authors>
