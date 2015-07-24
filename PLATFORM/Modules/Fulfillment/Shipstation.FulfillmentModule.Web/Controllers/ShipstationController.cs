@@ -31,27 +31,39 @@ namespace Shipstation.FulfillmentModule.Web.Controllers
         [Route("")]
         [ResponseType(typeof(Orders))]
         [IdentityBasicAuthentication]
-        public IHttpActionResult GetNewOrders(string action, string start_date, string end_date, int page)
+        public IHttpActionResult GetNewOrders(string action, string start_date, string end_date, int page = 1)
         {
             if (action == "export")
             {
                 var shipstationOrders = new Orders();
-
+                
                 var searchCriteria = new SearchCriteria
                 {
                     StartDate = DateTime.Parse(start_date, new CultureInfo("en-US")),
                     EndDate = DateTime.Parse(end_date, new CultureInfo("en-US")),
                     ResponseGroup = ResponseGroup.Full
                 };
-                var searchResult = _orderSearchService.Search(searchCriteria);
 
+                if (page > 1)
+                {
+                    searchCriteria.Start += searchCriteria.Count * (page-1);
+                }
+
+                var searchResult = _orderSearchService.Search(searchCriteria);
+                
                 if (searchResult.CustomerOrders != null && searchResult.CustomerOrders.Any())
                 {
                     var shipstationOrdersList = new List<OrdersOrder>();
-
                     searchResult.CustomerOrders.ForEach(cu => shipstationOrdersList.Add(cu.ToShipstationOrder()));
-                    
                     shipstationOrders.Order = shipstationOrdersList.ToArray();
+
+
+                    if ((page <= 1) && searchResult.TotalCount > searchCriteria.Count)
+                    {
+                        shipstationOrders.pages = (short)(searchResult.TotalCount / searchCriteria.Count);
+                        shipstationOrders.pages += (short)(searchResult.TotalCount % searchCriteria.Count == 0 ? 0 : 1);
+                        shipstationOrders.pagesSpecified = true;
+                    }
                 }
 
                 return Ok(shipstationOrders);
