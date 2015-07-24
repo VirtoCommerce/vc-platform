@@ -1,4 +1,5 @@
 ﻿using DotLiquid;
+using Tag = VirtoCommerce.Web.Models.Tagging.Tag;
 
 namespace VirtoCommerce.Web.Models.Cms
 {

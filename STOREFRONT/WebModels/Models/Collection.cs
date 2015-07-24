@@ -12,6 +12,7 @@ using VirtoCommerce.Web.Convertors;
 using VirtoCommerce.Web.Extensions;
 using VirtoCommerce.Web.Models.Helpers;
 using VirtoCommerce.Web.Models.Services;
+using VirtoCommerce.Web.Models.Tagging;
 using VirtoCommerce.Web.Views.Engines.Liquid.Extensions;
 using VirtoCommerce.ApiClient.DataContracts.Marketing;
 
@@ -128,7 +129,7 @@ namespace VirtoCommerce.Web.Models
         {
             var pageSize = to == null ? 50 : to - from;
 
-            var tags = this.Context["current_tags"] as string[];
+            var tags = this.Context["current_tags"] as SelectedTagCollection;
 
             var filters = new Dictionary<string, string[]>();
             if (tags != null && tags.Any())

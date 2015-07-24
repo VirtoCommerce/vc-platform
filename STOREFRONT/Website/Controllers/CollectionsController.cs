@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using VirtoCommerce.Web.Extensions;
-using VirtoCommerce.Web.Models;
+using VirtoCommerce.Web.Models.Tagging;
 
 #endregion
 
@@ -95,7 +95,7 @@ namespace VirtoCommerce.Web.Controllers
         #endregion
 
         #region Methods
-        private string[] ParseTags(string tags)
+        private SelectedTagCollection ParseTags(string tags)
         {
             if (String.IsNullOrEmpty(tags))
             {
@@ -103,7 +103,7 @@ namespace VirtoCommerce.Web.Controllers
             }
 
             var tagsArray = tags.Split(new[] { ',' });
-            return tagsArray;
+            return new SelectedTagCollection(tagsArray);
         }
 
         /*
@@ -126,4 +126,6 @@ namespace VirtoCommerce.Web.Controllers
          * */
         #endregion
     }
+
+    
 }

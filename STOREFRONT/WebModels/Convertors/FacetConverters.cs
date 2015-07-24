@@ -4,6 +4,7 @@ using System.Linq;
 using Omu.ValueInjecter;
 using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Models.Searching;
+using VirtoCommerce.Web.Models.Tagging;
 using Data = VirtoCommerce.ApiClient.DataContracts.Search;
 
 #endregion

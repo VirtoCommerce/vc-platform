@@ -9,6 +9,7 @@ using VirtoCommerce.Web.Models.Services;
 using VirtoCommerce.Web.Convertors;
 using VirtoCommerce.Web.Views.Engines.Liquid.Extensions;
 using System.Runtime.Serialization;
+using Tag = VirtoCommerce.Web.Models.Tagging.Tag;
 
 #endregion
 
