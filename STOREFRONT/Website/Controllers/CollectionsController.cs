@@ -90,7 +90,8 @@ namespace VirtoCommerce.Web.Controllers
         {
             //await Task.FromResult<object>(null);
             //Context.Set("current_tags", ParseTags(tags));
-            return View("list-collections");
+            var result = await Task.FromResult("list-collections");
+            return View(result);
         }
         #endregion
 
@@ -127,5 +128,5 @@ namespace VirtoCommerce.Web.Controllers
         #endregion
     }
 
-    
+
 }

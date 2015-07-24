@@ -10,8 +10,6 @@ namespace VirtoCommerce.Web.Models.Tagging
 {
     public class Tag : Drop
     {
-        public Context Context { get; set; }
-
         #region Public Properties
         public int Count { get; set; }
 
@@ -29,7 +27,7 @@ namespace VirtoCommerce.Web.Models.Tagging
 
 
         #region Public Methods and Operators
-        static public explicit operator string(Tag tag)
+        static public explicit operator string (Tag tag)
         {
             return tag.ToString();
         }
@@ -52,7 +50,7 @@ namespace VirtoCommerce.Web.Models.Tagging
             return this.Id;
         }
 
-        public object ToLiquid()
+        public override object ToLiquid()
         {
             return this;
         }
