@@ -59,7 +59,7 @@ namespace Shipstation.FulfillmentModule.Web.Controllers
                     shipstationOrders.Order = shipstationOrdersList.ToArray();
 
                     //if first page was requested and total orders more than returned add to response overall pages count that shipstation should request.
-                    if ((page <= 1) && searchResult.TotalCount > searchCriteria.Count)
+                    if ((page == 1) && searchResult.TotalCount > searchCriteria.Count)
                     {
                         shipstationOrders.pages = (short)(searchResult.TotalCount / searchCriteria.Count);
                         shipstationOrders.pages += (short)(searchResult.TotalCount % searchCriteria.Count == 0 ? 0 : 1);
