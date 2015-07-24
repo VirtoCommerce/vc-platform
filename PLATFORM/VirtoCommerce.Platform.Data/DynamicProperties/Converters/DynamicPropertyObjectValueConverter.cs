@@ -86,9 +86,32 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
 			if (target == null)
 				throw new ArgumentNullException("target");
 
+
 			var patchInjectionPolicy = new PatchInjection<DynamicPropertyObjectValueEntity>(x => x.Locale, x => x.LongTextValue, x => x.BooleanValue, x => x.DateTimeValue,
 																							x => x.DecimalValue, x => x.DictionaryItemId, x => x.IntegerValue, x => x.ShortTextValue);
 			target.InjectFrom(patchInjectionPolicy, source);
+
 		}
+
+		
     }
+
+	public class DynamicPropertyObjectValueComparer : IEqualityComparer<DynamicPropertyObjectValueEntity>
+	{
+		#region IEqualityComparer<DynamicPropertyObjectValueEntity> Members
+
+		public bool Equals(DynamicPropertyObjectValueEntity x, DynamicPropertyObjectValueEntity y)
+		{
+			return GetHashCode(x) == GetHashCode(y);
+		}
+
+		public int GetHashCode(DynamicPropertyObjectValueEntity obj)
+		{
+			var result = obj.RawValue();
+			return result.GetHashCode();
+		}
+
+
+		#endregion
+	}
 }

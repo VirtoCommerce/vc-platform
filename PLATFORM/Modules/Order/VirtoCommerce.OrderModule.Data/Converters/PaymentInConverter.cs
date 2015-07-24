@@ -23,11 +23,6 @@ namespace VirtoCommerce.OrderModule.Data.Converters
             retVal.Currency = (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), entity.Currency);
             retVal.PaymentStatus = EnumUtility.SafeParse<PaymentStatus>(entity.Status, PaymentStatus.Custom);
 
-            if (entity.Properties != null)
-            {
-                retVal.Properties = entity.Properties.Select(x => x.ToCoreModel()).ToList();
-            }
-
             if (entity.Addresses != null && entity.Addresses.Any())
             {
                 retVal.BillingAddress = entity.Addresses.First().ToCoreModel();
@@ -66,10 +61,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
             retVal.Currency = paymentIn.Currency.ToString();
             retVal.Status = paymentIn.PaymentStatus.ToString();
 
-            if (paymentIn.Properties != null)
-            {
-                retVal.Properties = new ObservableCollection<OperationPropertyEntity>(paymentIn.Properties.Select(x => x.ToDataModel()));
-            }
+         
             if (paymentIn.BillingAddress != null)
             {
                 retVal.Addresses = new ObservableCollection<AddressEntity>(new AddressEntity[] { paymentIn.BillingAddress.ToDataModel() });

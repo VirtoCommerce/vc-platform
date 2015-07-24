@@ -76,7 +76,6 @@ angular.module(moduleName, ['virtoCommerce.catalogModule', 'virtoCommerce.pricin
       };
       widgetService.registerWidget(operationCommentWidget, 'customerOrderDetailWidgets');
 
-
       var shipmentAddressWidget = {
           controller: 'virtoCommerce.orderModule.shipmentAddressWidgetController',
           template: 'Modules/$(VirtoCommerce.Orders)/Scripts/widgets/shipment-address-widget.tpl.html',
@@ -90,6 +89,15 @@ angular.module(moduleName, ['virtoCommerce.catalogModule', 'virtoCommerce.pricin
           template: 'Modules/$(VirtoCommerce.Orders)/Scripts/widgets/shipment-totals-widget.tpl.html',
       };
       widgetService.registerWidget(shipmentTotalWidget, 'shipmentDetailWidgets');
+
+      var dynamicPropertyWidget = {
+      	controller: 'platformWebApp.dynamicPropertyWidgetController',
+      	template: 'Scripts/app/dynamicProperties/widgets/dynamicPropertyWidget.tpl.html',
+      };
+      widgetService.registerWidget(dynamicPropertyWidget, 'shipmentDetailWidgets');
+      widgetService.registerWidget(dynamicPropertyWidget, 'customerOrderDetailWidgets');
+      widgetService.registerWidget(dynamicPropertyWidget, 'paymentDetailWidgets');
+
 
 
       var operationsTreeWidget = {

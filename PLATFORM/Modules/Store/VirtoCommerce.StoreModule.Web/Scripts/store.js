@@ -65,10 +65,6 @@ angular.module(moduleName, [
           template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/storeSettingsWidget.tpl.html'
       }, 'storeDetail');
       widgetService.registerWidget({
-          controller: 'platformWebApp.dynamicPropertyWidgetController',
-          template: 'Scripts/app/dynamicProperties/widgets/dynamicPropertyWidget.tpl.html'
-      }, 'storeDetail');
-      widgetService.registerWidget({
           controller: 'virtoCommerce.storeModule.storePaymentsWidgetController',
           template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/storePaymentsWidget.tpl.html'
       }, 'storeDetail');

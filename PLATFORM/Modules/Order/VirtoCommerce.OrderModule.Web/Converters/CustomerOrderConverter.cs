@@ -19,9 +19,6 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 				retVal.DiscountAmount = customerOrder.Discount.DiscountAmount;
 			}
 
-			if (customerOrder.Properties != null)
-				retVal.Properties = customerOrder.Properties.Select(x => x.ToWebModel()).ToList();
-
 			if (customerOrder.Shipments != null)
 				retVal.Shipments = customerOrder.Shipments.Select(x => x.ToWebModel()).ToList();
 
@@ -49,8 +46,7 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 			retVal.InjectFrom(customerOrder);
 			retVal.Currency = customerOrder.Currency;
 
-			if (customerOrder.Properties != null)
-				retVal.Properties = customerOrder.Properties.Select(x => x.ToCoreModel()).ToList();
+		
 			if (customerOrder.Items != null)
 				retVal.Items = customerOrder.Items.Select(x => x.ToCoreModel()).ToList();
 			if (customerOrder.Addresses != null)

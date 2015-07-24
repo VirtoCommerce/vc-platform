@@ -10,6 +10,7 @@ namespace VirtoCommerce.Platform.Core.ExportImport
 {
 	public class PlatformExportImportOptions
 	{
+		public string Author { get; set; }
 		public SemanticVersion PlatformVersion { get; set; }
 		public bool PlatformSettings { get; set; }
 		public bool PlatformSecurity { get; set; }

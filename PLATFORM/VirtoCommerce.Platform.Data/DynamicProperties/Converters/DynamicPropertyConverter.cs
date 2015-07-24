@@ -81,7 +81,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
 
 			if(!source.ObjectValues.IsNullCollection())
 			{
-				source.ObjectValues.Patch(target.ObjectValues, (sourceValue, targetValue) => sourceValue.Patch(targetValue));
+				source.ObjectValues.Patch(target.ObjectValues, new DynamicPropertyObjectValueComparer(), (sourceValue, targetValue) => sourceValue.Patch(targetValue));
 			}
         }
     }

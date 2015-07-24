@@ -42,7 +42,7 @@ namespace VirtoCommerce.Domain.Order.Model
 		public ICollection<DynamicObjectProperty> DynamicProperties { get; set; }
 		#endregion
 
-		public ICollection<OperationProperty> Properties { get; set; }
+	
 		public abstract IEnumerable<Operation> ChildrenOperations
 		{
 			get;

@@ -57,7 +57,6 @@ namespace VirtoCommerce.StoreModule.Data.Services
                     retVal.SeoInfos = _commerceService.GetObjectsSeo(new[] { id }).ToList();
 
                     LoadObjectSettings(_settingManager, retVal);
-                    _dynamicPropertyService.LoadDynamicPropertyValues(retVal);
                 }
             }
 
@@ -87,7 +86,6 @@ namespace VirtoCommerce.StoreModule.Data.Services
 
             //Deep save settings
             SaveObjectSettings(_settingManager, store);
-            _dynamicPropertyService.SaveDynamicPropertyValues(store);
 
             var retVal = GetById(store.Id);
             return retVal;
@@ -112,8 +110,7 @@ namespace VirtoCommerce.StoreModule.Data.Services
                     sourceEntity.Patch(targetEntity);
 
                     SaveObjectSettings(_settingManager, store);
-                    _dynamicPropertyService.SaveDynamicPropertyValues(store);
-
+                
                     //Patch SeoInfo  separately
                     if (store.SeoInfos != null)
                     {
@@ -141,7 +138,6 @@ namespace VirtoCommerce.StoreModule.Data.Services
                 {
                     var store = GetById(id);
                     RemoveObjectSettings(_settingManager, store);
-                    _dynamicPropertyService.DeleteDynamicPropertyValues(store);
 
                     var entity = repository.GetStoreById(id);
                     repository.Remove(entity);

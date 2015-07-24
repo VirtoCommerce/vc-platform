@@ -15,8 +15,6 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 			var retVal = new webModel.Shipment();
 			retVal.InjectFrom(shipment);
 
-			if (shipment.Properties != null)
-				retVal.Properties = shipment.Properties.Select(x => x.ToWebModel()).ToList();
 
 			if (shipment.DeliveryAddress != null)
 				retVal.DeliveryAddress = shipment.DeliveryAddress.ToWebModel();
@@ -50,8 +48,7 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 			var retVal = new coreModel.Shipment();
 			retVal.InjectFrom(shipment);
 
-			if (shipment.Properties != null)
-				retVal.Properties = shipment.Properties.Select(x => x.ToCoreModel()).ToList();
+	
 			if (shipment.DeliveryAddress != null)
 				retVal.DeliveryAddress = shipment.DeliveryAddress.ToCoreModel();
 			if (shipment.InPayments != null)

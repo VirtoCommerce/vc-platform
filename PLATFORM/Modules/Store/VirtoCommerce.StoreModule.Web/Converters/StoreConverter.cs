@@ -33,10 +33,7 @@ namespace VirtoCommerce.StoreModule.Web.Converters
             if (store.FulfillmentCenter != null)
                 retVal.FulfillmentCenter = store.FulfillmentCenter.ToWebModel();
 
-			if (store.DynamicProperties != null)
-				retVal.DynamicProperties = store.DynamicProperties;
-
-            return retVal;
+			return retVal;
         }
 
         public static coreModel.Store ToCoreModel(this webModel.Store store, ShippingMethod[] shippingMethods, PaymentMethod[] paymentMethods)
@@ -82,9 +79,6 @@ namespace VirtoCommerce.StoreModule.Web.Converters
                 retVal.ReturnsFulfillmentCenter = store.ReturnsFulfillmentCenter.ToCoreModel();
             if (store.FulfillmentCenter != null)
                 retVal.FulfillmentCenter = store.FulfillmentCenter.ToCoreModel();
-
-			if (store.DynamicProperties != null)
-				retVal.DynamicProperties = store.DynamicProperties;
 
             return retVal;
         }

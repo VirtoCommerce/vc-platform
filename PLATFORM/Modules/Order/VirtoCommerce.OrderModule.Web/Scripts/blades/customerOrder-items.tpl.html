@@ -28,26 +28,20 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="table-item" ng-repeat-start="data in blade.currentEntity.items" ng-class="{'__selected': data.id === selectedNodeId}" context-menu data-target="col_menu_{{data.id}}" ng-click='selectItem(data)'>
+                        <tr class="table-item" ng-repeat-start="data in blade.currentEntity.items" ng-class="{'__selected': data.id === selectedNodeId}" ng-click='selectItem(data)'>
                             <td class="table-col">
                                 <label class="form-control __checkbox">
                                     <input type="checkbox" ng-model="data.selected">
                                     <span class="check"></span>
                                 </label>
+                                <a class="clear text-mini __link" ng-click="openItemDynamicProperties(data)">Dynamic properties</a>
                             </td>
                             <td class="table-col">
                                 <div class="product-img">
                                     <div class="image" style="background-image: url({{data.imageUrl}})" ng-if="data.imageUrl" ng-click="openItemDetail(data)"></div>
                                     <i class="table-ico fa fa-image" ng-if="!data.imageUrl" />
                                 </div>
-                                <ul role="menu" class="menu __context" id="col_menu_{{data.id}}">
-                                    <li class="menu-item" ng-click='edit(data)'>
-                                        <i class="menu-ico fa fa-edit"></i> Manage
-                                    </li>
-                                    <li class="menu-item" ng-click='delete()'>
-                                        <i class="menu-ico fa fa-trash-o"></i> Delete
-                                    </li>
-                                </ul>
+                              
                             </td>
                             <td class="table-col">
                                 <div class="form-input __mini __number">
@@ -79,17 +73,9 @@
                                 <span>{{data._total | number:2 }}</span>
                             </td>
                         </tr>
-                        <tr ng-repeat-end class="table-item" ng-class="{'__selected': data.id === selectedNodeId}" context-menu data-target="col_menu_{{data.id}}" ng-click='selectItem(data)'>
+                        <tr ng-repeat-end class="table-item" ng-class="{'__selected': data.id === selectedNodeId}" ng-click='selectItem(data)'>
                             <td class="table-head" colspan="9" ng-click="openItemDetail(data)">
                                 {{data.name}}
-                                <ul role="menu" class="menu __context" id="col_menu_{{data.id}}">
-                                    <li class="menu-item" ng-click='edit(data)'>
-                                        <i class="menu-ico fa fa-edit"></i> Manage
-                                    </li>
-                                    <li class="menu-item" ng-click='delete()'>
-                                        <i class="menu-ico fa fa-trash-o"></i> Delete
-                                    </li>
-                                </ul>
                             </td>
                         </tr>
                     </tbody>

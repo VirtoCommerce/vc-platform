@@ -62,6 +62,8 @@ namespace VirtoCommerce.OrderModule.Data.Services
                 }
             }
 
+			_dynamicPropertyService.LoadDynamicPropertyValues(retVal);
+
             _eventPublisher.Publish(new OrderChangeEvent(EntryState.Unchanged, null, retVal));
             return retVal;
         }
@@ -89,12 +91,9 @@ namespace VirtoCommerce.OrderModule.Data.Services
                             }
                         }
                     }
+					_dynamicPropertyService.LoadDynamicPropertyValues(retVal);
                 }
             }
-
-            if (retVal != null)
-                _dynamicPropertyService.LoadDynamicPropertyValues(retVal);
-
             _eventPublisher.Publish(new OrderChangeEvent(EntryState.Unchanged, null, retVal));
 
             return retVal;
