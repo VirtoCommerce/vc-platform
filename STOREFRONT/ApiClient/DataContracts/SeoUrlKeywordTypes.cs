@@ -20,6 +20,11 @@
             return Name;
         }
 
+        public override int GetHashCode()
+        {
+            return Name != null ? Name.GetHashCode() : 0;
+        }
+
         #region Overrides of ValueType
 
         /// <summary>
