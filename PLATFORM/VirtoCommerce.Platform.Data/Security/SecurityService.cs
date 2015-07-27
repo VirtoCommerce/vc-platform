@@ -20,12 +20,14 @@ namespace VirtoCommerce.Platform.Data.Security
         private readonly Func<IPlatformRepository> _platformRepository;
         private readonly ApplicationUserManager _userManager;
         private readonly IApiAccountProvider _apiAccountProvider;
+        private readonly ISecurityOptions _securityOptions;
 
-        public SecurityService(Func<IPlatformRepository> platformRepository, ApplicationUserManager userManager, IApiAccountProvider apiAccountProvider)
+        public SecurityService(Func<IPlatformRepository> platformRepository, ApplicationUserManager userManager, IApiAccountProvider apiAccountProvider, ISecurityOptions securityOptions)
         {
             _platformRepository = platformRepository;
             _userManager = userManager;
             _apiAccountProvider = apiAccountProvider;
+            _securityOptions = securityOptions;
         }
 
         public async Task<ApplicationUserExtended> FindByNameAsync(string userName, UserDetails detailsLevel)
@@ -107,11 +109,9 @@ namespace VirtoCommerce.Platform.Data.Security
             if (user != null)
             {
                 var dbUser = await _userManager.FindByIdAsync(user.Id);
-                if (dbUser == null)
-                {
-                    result = new SecurityResult { Errors = new[] { "User not found." } };
-                }
-                else
+                result = ValidateUser(dbUser);
+
+                if (result.Succeeded)
                 {
                     dbUser.InjectFrom(user);
 
@@ -184,7 +184,7 @@ namespace VirtoCommerce.Platform.Data.Security
 
         public async Task DeleteAsync(string[] names)
         {
-            foreach (var name in names)
+            foreach (var name in names.Where(IsEditableUser))
             {
                 var dbUser = await _userManager.FindByNameAsync(name);
 
@@ -214,15 +214,16 @@ namespace VirtoCommerce.Platform.Data.Security
 
         public async Task<SecurityResult> ChangePasswordAsync(string name, string oldPassword, string newPassword)
         {
-            IdentityResult result = null;
+            var dbUser = await _userManager.FindByNameAsync(name);
+            var result = ValidateUser(dbUser);
 
-            var user = await _userManager.FindByNameAsync(name);
-            if (user != null)
+            if (result.Succeeded)
             {
-                result = await _userManager.ChangePasswordAsync(user.Id, oldPassword, newPassword);
+                var identityResult = await _userManager.ChangePasswordAsync(dbUser.Id, oldPassword, newPassword);
+                result = identityResult.ToCoreModel();
             }
 
-            return result == null ? null : result.ToCoreModel();
+            return result;
         }
 
         public async Task<UserSearchResponse> SearchUsersAsync(UserSearchRequest request)
@@ -264,10 +265,51 @@ namespace VirtoCommerce.Platform.Data.Security
 
         public async Task<SecurityResult> ResetPasswordAsync(string userId, string token, string newPassword)
         {
-            var result = await _userManager.ResetPasswordAsync(userId, token, newPassword);
-            return result.ToCoreModel();
+            var dbUser = await _userManager.FindByIdAsync(userId);
+            var result = ValidateUser(dbUser);
+
+            if (result.Succeeded)
+            {
+                var identityResult = await _userManager.ResetPasswordAsync(userId, token, newPassword);
+                result = identityResult.ToCoreModel();
+            }
+
+            return result;
         }
 
+
+        private SecurityResult ValidateUser(ApplicationUser dbUser)
+        {
+            SecurityResult result;
+
+            if (dbUser == null)
+            {
+                result = new SecurityResult { Errors = new[] { "User not found." } };
+            }
+            else
+            {
+                if (!IsEditableUser(dbUser.UserName))
+                {
+                    result = new SecurityResult { Errors = new[] { "It is forbidden to edit this user." } };
+                }
+                else
+                {
+                    result = new SecurityResult { Succeeded = true };
+                }
+            }
+
+            return result;
+        }
+
+        private bool IsEditableUser(string userName)
+        {
+            var result = true;
+
+            if (_securityOptions != null && _securityOptions.NonEditableUsers != null)
+                result = !_securityOptions.NonEditableUsers.Contains(userName);
+
+            return result;
+        }
 
         private ApplicationUserExtended GetUserExtended(ApplicationUser applicationUser, UserDetails detailsLevel)
         {
