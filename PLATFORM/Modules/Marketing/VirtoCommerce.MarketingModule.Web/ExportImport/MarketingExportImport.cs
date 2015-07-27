@@ -55,10 +55,12 @@ namespace VirtoCommerce.MarketingModule.Web.ExportImport
             UpdateContentItems(originalObject.ContentItems, backupObject.ContentItems);
             UpdateContentPublications(originalObject.ContentPublications, backupObject.ContentPublications);
 
-            ////UpdateCoupons(originalObject.Coupons, backupObject.Coupons);
+            //UpdateCoupons(originalObject.Coupons, backupObject.Coupons);
             UpdatePromotions(originalObject.Promotions, backupObject.Promotions);
         }
 
+        #region Import updates
+        
         private void UpdatePromotions(ICollection<Promotion> original, ICollection<Promotion> backup)
         {
             var toUpdate = new List<Promotion>();
@@ -167,39 +169,50 @@ namespace VirtoCommerce.MarketingModule.Web.ExportImport
             });
         }
 
+        #endregion
+
+        #region BackupObject
+        
         private BackupObject GetBackupObject()
         {
-            var responce = _marketingSearchService.SearchResources(new MarketingSearchCriteria { Count = int.MaxValue, ResponseGroup = SearchResponseGroup.Full});
+            var result = new BackupObject();
+            
+            var rootFolder = GetMarketingSearchResult(null);
+            var folders = rootFolder != null ? rootFolder.Traverse(ChildrenForContent).ToArray() : null;
 
-            var backupObject = new BackupObject
+            if (folders != null)
             {
-                Promotions = responce.Promotions.Select(x => _promotionService.GetPromotionById(x.Id)).ToArray(),
-                Coupons =responce.Coupons,
-                ContentPlaces =responce.ContentPlaces,
-                ContentItems =responce.ContentItems,
-                ContentPublications = responce.ContentPublications.Select(x => _dynamicContentService.GetPublicationById(x.Id)).ToArray(),
-                ContentFolders =  responce.ContentFolders
-            };
-
-            ContentComplete(responce.ContentFolders.Select(x => x.Id).ToArray(), backupObject);
-                return backupObject;
-        }
-
-        private void ContentComplete(IEnumerable<string> folderIds, BackupObject backupObject)
-        {
-            const SearchResponseGroup responseGroup = SearchResponseGroup.WithFolders | SearchResponseGroup.WithContentItems
-                | SearchResponseGroup.WithContentPlaces;
-            foreach (var folderId in folderIds)
-            {
-                var responce =
-                    _marketingSearchService.SearchResources(new MarketingSearchCriteria { FolderId = folderId, Count = int.MaxValue, ResponseGroup = responseGroup });
-                backupObject.ContentFolders.AddRange(responce.ContentFolders);
-                backupObject.ContentItems.AddRange(responce.ContentItems);
-                backupObject.ContentPlaces.AddRange(responce.ContentPlaces);
-                ContentComplete(responce.ContentFolders.Select(x => x.Id).ToArray(), backupObject);
+                result.Promotions = folders.SelectMany(x => x.Promotions)
+                    .Select(x => _promotionService.GetPromotionById(x.Id)).ToArray();
+                result.ContentPublications = folders.SelectMany(x => x.ContentPublications)
+                    .Select(x => _dynamicContentService.GetPublicationById(x.Id)).ToArray();
+                result.Coupons = folders.SelectMany(x => x.Coupons).ToArray();
+                result.ContentPlaces = folders.SelectMany(x => x.ContentPlaces).ToArray();
+                result.ContentItems = folders.SelectMany(x => x.ContentItems).ToArray();
+                result.ContentFolders = folders.SelectMany(x => x.ContentFolders).ToArray();
             }
+            return result;
         }
 
+        private IEnumerable<MarketingSearchResult> ChildrenForContent(MarketingSearchResult result)
+        {
+            return result != null && result.ContentFolders != null
+                ? result.ContentFolders.Select(x => GetMarketingSearchResult(x.Id))
+                : null;
+        }
+
+        private MarketingSearchResult GetMarketingSearchResult(string id)
+        {
+            return _marketingSearchService.SearchResources(new MarketingSearchCriteria
+            {
+                FolderId = id,
+                Count = int.MaxValue,
+                ResponseGroup = SearchResponseGroup.WithFolders | SearchResponseGroup.WithContentItems
+                    | SearchResponseGroup.WithContentPlaces
+            });
+        }
+
+        #endregion
 
     }
 }
