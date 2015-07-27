@@ -200,11 +200,11 @@ namespace VirtoCommerce.Platform.Web
             #region Caching
 
             var cacheProvider = new HttpCacheProvider();
-            var cacheSettings = new[] 
-			{
-				new CacheSettings(CacheGroups.Settings, TimeSpan.FromDays(1)),
-				new CacheSettings(CacheGroups.Security, TimeSpan.FromMinutes(1)),
-			};
+            var cacheSettings = new[]
+            {
+                new CacheSettings(CacheGroups.Settings, TimeSpan.FromDays(1)),
+                new CacheSettings(CacheGroups.Security, TimeSpan.FromMinutes(1)),
+            };
 
             var cacheManager = new CacheManager(cacheProvider, cacheSettings);
             container.RegisterInstance<CacheManager>(cacheManager);
@@ -214,47 +214,47 @@ namespace VirtoCommerce.Platform.Web
             #region Settings
 
             var platformSettings = new[]
-			{
-				new ModuleManifest
-				{
-					Settings = new[]
-					{
-						new ModuleSettingsGroup
-						{
-							Name = "Platform|Notifications|SendGrid",
-							Settings = new []
-							{
-								new ModuleSetting
-								{
-									Name = "VirtoCommerce.Platform.Notifications.SendGrid.UserName",
-									ValueType = ModuleSetting.TypeString,
-									Title = "SendGrid UserName",
-									Description = "Your SendGrid account username"
-								},
-								new ModuleSetting
-								{
-									Name = "VirtoCommerce.Platform.Notifications.SendGrid.Secret",
-									ValueType = ModuleSetting.TypeString,
-									Title = "SendGrid Password",
-									Description = "Your SendGrid account password"
-								}
-							}
-						},
+            {
+                new ModuleManifest
+                {
+                    Settings = new[]
+                    {
+                        new ModuleSettingsGroup
+                        {
+                            Name = "Platform|Notifications|SendGrid",
+                            Settings = new []
+                            {
+                                new ModuleSetting
+                                {
+                                    Name = "VirtoCommerce.Platform.Notifications.SendGrid.UserName",
+                                    ValueType = ModuleSetting.TypeString,
+                                    Title = "SendGrid UserName",
+                                    Description = "Your SendGrid account username"
+                                },
+                                new ModuleSetting
+                                {
+                                    Name = "VirtoCommerce.Platform.Notifications.SendGrid.Secret",
+                                    ValueType = ModuleSetting.TypeString,
+                                    Title = "SendGrid Password",
+                                    Description = "Your SendGrid account password"
+                                }
+                            }
+                        },
 
-						new ModuleSettingsGroup
-						{
-							Name = "Platform|Notifications|SendingJob",
-							Settings = new []
-							{
-								new ModuleSetting
-								{
-									Name = "VirtoCommerce.Platform.Notifications.SendingJob.TakeCount",
-									ValueType = ModuleSetting.TypeInteger,
-									Title = "Job Take Count",
-									Description = "Take count for sending job"
-								}
-							}
-						}
+                        new ModuleSettingsGroup
+                        {
+                            Name = "Platform|Notifications|SendingJob",
+                            Settings = new []
+                            {
+                                new ModuleSetting
+                                {
+                                    Name = "VirtoCommerce.Platform.Notifications.SendingJob.TakeCount",
+                                    ValueType = ModuleSetting.TypeInteger,
+                                    Title = "Job Take Count",
+                                    Description = "Take count for sending job"
+                                }
+                            }
+                        }
                     }
                 }
             };
@@ -369,6 +369,9 @@ namespace VirtoCommerce.Platform.Web
             container.RegisterType<ApplicationSignInManager>(new InjectionFactory(c => HttpContext.Current.GetOwinContext().Get<ApplicationSignInManager>()));
             container.RegisterType<ApplicationUserManager>(new InjectionFactory(c => HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>()));
             container.RegisterType<IAuthenticationManager>(new InjectionFactory(c => HttpContext.Current.GetOwinContext().Authentication));
+
+            var nonEditableUsers = GetAppSettingsValue("VirtoCommerce:NonEditableUsers", string.Empty);
+            container.RegisterInstance<ISecurityOptions>(new SecurityOptions(nonEditableUsers));
 
             container.RegisterType<ISecurityService, SecurityService>();
 
