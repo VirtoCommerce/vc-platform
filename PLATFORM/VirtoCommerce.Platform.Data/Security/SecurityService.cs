@@ -226,6 +226,35 @@ namespace VirtoCommerce.Platform.Data.Security
             return result;
         }
 
+        public async Task<SecurityResult> ResetPasswordAsync(string name, string newPassword)
+        {
+            var dbUser = await _userManager.FindByNameAsync(name);
+            var result = ValidateUser(dbUser);
+
+            if (result.Succeeded)
+            {
+                var token = await _userManager.GeneratePasswordResetTokenAsync(dbUser.Id);
+                var identityResult = await _userManager.ResetPasswordAsync(dbUser.Id, token, newPassword);
+                result = identityResult.ToCoreModel();
+            }
+
+            return result;
+        }
+
+        public async Task<SecurityResult> ResetPasswordAsync(string userId, string token, string newPassword)
+        {
+            var dbUser = await _userManager.FindByIdAsync(userId);
+            var result = ValidateUser(dbUser);
+
+            if (result.Succeeded)
+            {
+                var identityResult = await _userManager.ResetPasswordAsync(userId, token, newPassword);
+                result = identityResult.ToCoreModel();
+            }
+
+            return result;
+        }
+
         public async Task<UserSearchResponse> SearchUsersAsync(UserSearchRequest request)
         {
             request = request ?? new UserSearchRequest();
@@ -261,20 +290,6 @@ namespace VirtoCommerce.Platform.Data.Security
         public async Task<string> GeneratePasswordResetTokenAsync(string userId)
         {
             return await _userManager.GeneratePasswordResetTokenAsync(userId);
-        }
-
-        public async Task<SecurityResult> ResetPasswordAsync(string userId, string token, string newPassword)
-        {
-            var dbUser = await _userManager.FindByIdAsync(userId);
-            var result = ValidateUser(dbUser);
-
-            if (result.Succeeded)
-            {
-                var identityResult = await _userManager.ResetPasswordAsync(userId, token, newPassword);
-                result = identityResult.ToCoreModel();
-            }
-
-            return result;
         }
 
 
