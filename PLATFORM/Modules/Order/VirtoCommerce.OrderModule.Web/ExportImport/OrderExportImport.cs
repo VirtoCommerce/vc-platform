@@ -33,7 +33,7 @@ namespace VirtoCommerce.OrderModule.Web.ExportImport
         protected void Notify(int count = 1)
         {
             _counter += count;
-            if (ProgressCallback != null && _progressInfo != null)
+            if (ProgressCallback != null && _progressInfo != null && (_counter % _notifyMinSize == 0 || _counter == _progressInfo.TotalCount))
             {
                 _progressInfo.ProcessedCount = _counter;
                 _progressInfo.Description = string.Format(_notifyPattern, _progressInfo.ProcessedCount, _progressInfo.TotalCount);
@@ -81,22 +81,21 @@ namespace VirtoCommerce.OrderModule.Web.ExportImport
         private readonly ICustomerOrderSearchService _customerOrderSearchService;
         private readonly ICustomerOrderService _customerOrderService;
 
-        public OrderExportImport(ICustomerOrderSearchService customerOrderSearchService, ICustomerOrderService customerOrderService)
+        public OrderExportImport(ICustomerOrderSearchService customerOrderSearchService, ICustomerOrderService customerOrderService, Action<ExportImportProgressInfo> progressCallback)
         {
+            ProgressCallback = progressCallback;
             _customerOrderSearchService = customerOrderSearchService;
             _customerOrderService = customerOrderService;
         }
 
-        public void DoExport(Stream backupStream, Action<ExportImportProgressInfo> progressCallback)
+        public void DoExport(Stream backupStream)
         {
-            ProgressCallback = progressCallback;
             var backupObject = GetBackupObject(); 
             backupObject.SerializeJson(backupStream);
         }
 
-        public void DoImport(Stream backupStream, Action<ExportImportProgressInfo> progressCallback)
+        public void DoImport(Stream backupStream)
         {
-            ProgressCallback = progressCallback;
             var originalObject = GetBackupObject();
             var backupObject = backupStream.DeserializeJson<BackupObject>();
 
