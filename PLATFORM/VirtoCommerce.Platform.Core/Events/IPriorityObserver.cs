@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VirtoCommerce.Domain.Common.Events
+namespace VirtoCommerce.Platform.Core.Events
 {
 	public interface IPriorityObserver
 	{

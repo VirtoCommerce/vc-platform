@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data.Entity;
 using Microsoft.Practices.Unity;
-using VirtoCommerce.Domain.Common.Events;
+using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Domain.Order.Events;
 using VirtoCommerce.Domain.Order.Services;
 using VirtoCommerce.OrderModule.Data.Observers;

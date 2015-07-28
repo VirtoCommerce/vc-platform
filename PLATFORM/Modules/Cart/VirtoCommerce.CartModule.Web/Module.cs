@@ -5,7 +5,7 @@ using VirtoCommerce.CartModule.Data.Repositories;
 using VirtoCommerce.CartModule.Data.Services;
 using VirtoCommerce.Domain.Cart.Events;
 using VirtoCommerce.Domain.Cart.Services;
-using VirtoCommerce.Domain.Common.Events;
+using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;

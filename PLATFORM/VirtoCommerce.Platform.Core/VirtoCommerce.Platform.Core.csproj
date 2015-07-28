@@ -95,6 +95,9 @@
     <Compile Include="DynamicProperties\DynamicPropertyValueType.cs" />
     <Compile Include="DynamicProperties\IDynamicPropertyService.cs" />
     <Compile Include="DynamicProperties\IHasDynamicProperties.cs" />
+    <Compile Include="Events\EventPublisher.cs" />
+    <Compile Include="Events\IEventPublisher.cs" />
+    <Compile Include="Events\IPriorityObserver.cs" />
     <Compile Include="ExportImport\ExportImportProgressInfo.cs" />
     <Compile Include="ExportImport\IPlatformExportImportManager.cs" />
     <Compile Include="ExportImport\ISupportExportModule.cs" />
