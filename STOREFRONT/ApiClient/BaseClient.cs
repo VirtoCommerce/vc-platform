@@ -168,11 +168,11 @@ namespace VirtoCommerce.ApiClient
                 message.Headers.Add("Cache-Control", "no-cache, no-, must-revalidate"); 
             }
 
-            using (var response = await this._httpClient.SendAsync(message))
+            using (var response = await this._httpClient.SendAsync(message).ConfigureAwait(false))
             {
-                await ThrowIfResponseNotSuccessfulAsync(response);
+                await ThrowIfResponseNotSuccessfulAsync(response).ConfigureAwait(false);
 
-                return await response.Content.ReadAsAsync<T>();
+                return await response.Content.ReadAsAsync<T>().ConfigureAwait(false);
             }
         }
 
@@ -287,7 +287,7 @@ namespace VirtoCommerce.ApiClient
 
                 try
                 {
-                    managementServiceError = await response.Content.ReadAsAsync<ManagementServiceError>();
+                    managementServiceError = await response.Content.ReadAsAsync<ManagementServiceError>().ConfigureAwait(false);
                 }
                 catch (InvalidOperationException)
                 {

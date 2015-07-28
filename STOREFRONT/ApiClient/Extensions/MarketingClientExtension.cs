@@ -16,5 +16,9 @@ namespace VirtoCommerce.ApiClient.Extensions
             return new MarketingClient(new Uri(serviceUrl), source.CreateMessageProcessingHandler());
         }
 
+        public static MarketingClient CreateMarketingClient(this CommerceClients source, string serviceUrl, string appId, string secretKey)
+        {
+            return new MarketingClient(new Uri(serviceUrl), appId, secretKey);
+        }
     }
 }
