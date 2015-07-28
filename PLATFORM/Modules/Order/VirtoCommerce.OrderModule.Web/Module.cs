@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.Entity;
+using System.Dynamic;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Domain.Order.Events;
@@ -59,10 +60,10 @@ namespace VirtoCommerce.OrderModule.Web
             _container.RegisterType<IObserver<OrderChangeEvent>, CalculateTotalsObserver>("CalculateTotalsObserver");
             //Adjust inventory activity
             _container.RegisterType<IObserver<OrderChangeEvent>, AdjustInventoryObserver>("AdjustInventoryObserver");
-			//Create order observer. Send notification
-			_container.RegisterType<IObserver<OrderChangeEvent>, CreateOrderObserver>("CreateOrderObserver");
-			//Cancel payment observer. Payment method cancel operations
-			_container.RegisterType<IObserver<OrderChangeEvent>, CancelPaymentObserver>("CancelPaymentObserver");
+            //Create order observer. Send notification
+            _container.RegisterType<IObserver<OrderChangeEvent>, CreateOrderObserver>("CreateOrderObserver");
+            //Cancel payment observer. Payment method cancel operations
+            _container.RegisterType<IObserver<OrderChangeEvent>, CancelPaymentObserver>("CancelPaymentObserver");
 
             _container.RegisterType<IOrderRepository>(new InjectionFactory(c => new OrderRepositoryImpl("VirtoCommerce", new AuditableInterceptor(), new EntityPrimaryKeyGeneratorInterceptor())));
             //_container.RegisterInstance<IInventoryService>(new Mock<IInventoryService>().Object);
@@ -81,19 +82,19 @@ namespace VirtoCommerce.OrderModule.Web
 			};
             cacheManager.AddCacheSettings(cacheSettings);
 
-			var notificationManager = _container.Resolve<INotificationManager>();
+            var notificationManager = _container.Resolve<INotificationManager>();
 
-			notificationManager.RegisterNotificationType(() => new OrderCreateEmailNotification(_container.Resolve<IEmailNotificationSendingGateway>())
-			{
-				DisplayName = "Create order notification",
-				Description = "This notification sends by email to client when he create order",
-				NotificationTemplate = new NotificationTemplate
-				{
-					Body = OrderNotificationResource.CreateOrderNotificationBody,
-					Subject = OrderNotificationResource.CreateOrderNotificationSubject,
-					Language = "en-US"
-				}
-			});
+            notificationManager.RegisterNotificationType(() => new OrderCreateEmailNotification(_container.Resolve<IEmailNotificationSendingGateway>())
+            {
+                DisplayName = "Create order notification",
+                Description = "This notification sends by email to client when he create order",
+                NotificationTemplate = new NotificationTemplate
+                {
+                    Body = OrderNotificationResource.CreateOrderNotificationBody,
+                    Subject = OrderNotificationResource.CreateOrderNotificationSubject,
+                    Language = "en-US"
+                }
+            });
         }
 
         #endregion
@@ -102,8 +103,8 @@ namespace VirtoCommerce.OrderModule.Web
 
         public void DoExport(System.IO.Stream outStream, Action<ExportImportProgressInfo> progressCallback)
         {
-            var exportJob = _container.Resolve<OrderExportImport>();
-            exportJob.DoExport(outStream, progressCallback);
+            var job = GetOrderExportImport(progressCallback);
+            job.DoExport(outStream);
         }
 
         #endregion
@@ -112,10 +113,18 @@ namespace VirtoCommerce.OrderModule.Web
 
         public void DoImport(System.IO.Stream inputStream, Action<ExportImportProgressInfo> progressCallback)
         {
-            var exportJob = _container.Resolve<OrderExportImport>();
-            exportJob.DoImport(inputStream, progressCallback);
+            var job = GetOrderExportImport(progressCallback);
+            job.DoImport(inputStream);
         }
 
         #endregion
+
+        private OrderExportImport GetOrderExportImport(Action<ExportImportProgressInfo> progressCallback)
+        {
+            return _container.Resolve<OrderExportImport>(new ResolverOverride[]
+                {
+                    new ParameterOverride("progressCallback", progressCallback)
+                });
+        }
     }
 }

@@ -230,6 +230,7 @@
     <Compile Include="Security\CheckPermissionAttribute.cs" />
     <Compile Include="Security\IPermissionService.cs" />
     <Compile Include="Security\IRoleManagementService.cs" />
+    <Compile Include="Security\ISecurityOptions.cs" />
     <Compile Include="Security\ISecurityService.cs" />
     <Compile Include="Security\Permission.cs" />
     <Compile Include="Security\PredefinedPermissions.cs" />

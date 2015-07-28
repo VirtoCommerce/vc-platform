@@ -218,6 +218,22 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
+        /// POST: api/security/users/jo@domain.com/resetpassword
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="resetPassword"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [ResponseType(typeof(IdentityResult))]
+        [Route("users/{name}/resetpassword")]
+        [CheckPermission(Permission = PredefinedPermissions.SecurityManage)]
+        public async Task<IHttpActionResult> ResetPassword(string name, [FromBody] ResetPasswordInfo resetPassword)
+        {
+            var result = await _securityService.ResetPasswordAsync(name, resetPassword.NewPassword);
+            return ProcessSecurityResult(result);
+        }
+
+        /// <summary>
         ///  GET: api/security/users?q=ddd&amp;start=0&amp;count=20
         /// </summary>
         /// <param name="request"></param>

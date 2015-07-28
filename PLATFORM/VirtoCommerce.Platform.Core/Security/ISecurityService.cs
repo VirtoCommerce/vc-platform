@@ -13,8 +13,9 @@ namespace VirtoCommerce.Platform.Core.Security
         Task DeleteAsync(string[] names);
         ApiAccount GenerateNewApiAccount(ApiAccountType type);
         Task<string> GeneratePasswordResetTokenAsync(string userId);
-        Task<SecurityResult> ResetPasswordAsync(string userId, string token, string newPassword);
         Task<SecurityResult> ChangePasswordAsync(string name, string oldPassword, string newPassword);
+        Task<SecurityResult> ResetPasswordAsync(string name, string newPassword);
+        Task<SecurityResult> ResetPasswordAsync(string userId, string token, string newPassword);
         Task<UserSearchResponse> SearchUsersAsync(UserSearchRequest request);
     }
 }

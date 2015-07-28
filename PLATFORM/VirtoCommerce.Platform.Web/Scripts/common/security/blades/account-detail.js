@@ -117,8 +117,8 @@
                     currentEntityId: $scope.blade.currentEntity.userName,
                     title: $scope.blade.title,
                     subtitle: "Change your password",
-                    controller: 'platformWebApp.accountChangePasswordController',
-                    template: 'Scripts/common/security/blades/account-changePassword.tpl.html'
+                    controller: 'platformWebApp.accountResetPasswordController',
+                    template: 'Scripts/common/security/blades/account-resetPassword.tpl.html'
                 };
                 bladeNavigationService.showBlade(newBlade, $scope.blade);
             },
