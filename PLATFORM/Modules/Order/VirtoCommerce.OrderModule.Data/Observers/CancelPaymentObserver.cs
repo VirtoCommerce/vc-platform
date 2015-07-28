@@ -37,6 +37,30 @@ namespace VirtoCommerce.OrderModule.Data.Observers
 
 		private void CancelationPayment(OrderChangeEvent value)
 		{
+			if(value.OrigOrder != null && !value.OrigOrder.IsCancelled && value.ModifiedOrder.IsCancelled)
+			{
+				foreach(var payment in value.ModifiedOrder.InPayments)
+				{
+					var store = _storeService.GetById(value.ModifiedOrder.StoreId);
+					var method = store.PaymentMethods.FirstOrDefault(p => p.Code == payment.GatewayCode);
+
+					if(!payment.IsCancelled && payment.PaymentStatus == PaymentStatus.Authorized)
+					{
+						method.VoidProcessPayment(new VoidProcessPaymentEvaluationContext { Payment = payment });
+					}
+					else if(!payment.IsCancelled && payment.PaymentStatus == PaymentStatus.Paid)
+					{
+						method.RefundProcessPayment(new RefundProcessPaymentEvaluationContext { Payment = payment });
+					}
+					else
+					{
+						payment.PaymentStatus = PaymentStatus.Cancelled;
+						payment.IsCancelled = true;
+						payment.CancelledDate = DateTime.UtcNow;
+					}
+				}
+			}
+
 			if (value.OrigOrder != null && value.OrigOrder.InPayments != null && value.OrigOrder.InPayments.Count > 0)
 			{
 				if (value.ModifiedOrder.InPayments != null && value.ModifiedOrder.InPayments.Count(p => p.PaymentStatus == PaymentStatus.Cancelled) > 0)
