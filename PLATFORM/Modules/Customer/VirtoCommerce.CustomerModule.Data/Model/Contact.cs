@@ -15,40 +15,34 @@ namespace VirtoCommerce.CustomerModule.Data.Model
         public Contact()
         {
             BirthDate = DateTime.Now;
-			ContactPropertyValues = new NullCollection<ContactPropertyValue>();
         }
 
         #region UserProfile members
         [StringLength(128)]
         [Required]
-		public string FullName { get; set; }
+        public string FullName { get; set; }
 
         [StringLength(32)]
-		public string TimeZone { get; set; }
+        public string TimeZone { get; set; }
 
         [StringLength(32)]
-		public string DefaultLanguage { get; set; }
+        public string DefaultLanguage { get; set; }
 
-		public DateTime? BirthDate { get; set; }
-
-        [StringLength(64)]
-		public string TaxpayerId { get; set; }
+        public DateTime? BirthDate { get; set; }
 
         [StringLength(64)]
-		public string PreferredDelivery { get; set; }
+        public string TaxpayerId { get; set; }
 
         [StringLength(64)]
-		public string PreferredCommunication { get; set; }
+        public string PreferredDelivery { get; set; }
 
-		public byte[] Photo { get; set; }
+        [StringLength(64)]
+        public string PreferredCommunication { get; set; }
+
+        public byte[] Photo { get; set; }
 
         [StringLength(256)]
-		public string Salutation { get; set; }
-
-        #endregion
-
-        #region NavigationProperties
-		public ObservableCollection<ContactPropertyValue> ContactPropertyValues { get; set; }
+        public string Salutation { get; set; }
 
         #endregion
     }

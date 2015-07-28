@@ -5,6 +5,7 @@
         generateNewApiAccount: { url: 'api/security/apiaccounts/new' },
         save: { url: 'api/security/users/create', method: 'POST' },
         changepassword: { url: 'api/security/users/:id/changepassword', method: 'POST' },
+        resetPassword: { url: 'api/security/users/:id/resetpassword', method: 'POST' },
         update: { method: 'PUT' }
     });
 }]);

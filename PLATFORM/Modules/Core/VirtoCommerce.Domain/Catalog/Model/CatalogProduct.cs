@@ -78,6 +78,8 @@ namespace VirtoCommerce.Domain.Catalog.Model
 		public ICollection<SeoInfo> SeoInfos { get; set; }
 		public ICollection<EditorialReview> Reviews { get; set; }
 		public ICollection<ProductAssociation> Associations { get; set; }
+		public ICollection<Pricing.Model.Price> Prices { get; set; }
+		public ICollection<Inventory.Model.InventoryInfo> Inventories { get; set; }
 
 	}
 }

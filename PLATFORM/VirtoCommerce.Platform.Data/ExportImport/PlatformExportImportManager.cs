@@ -58,14 +58,14 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 				{
 					//Create part for module
 					var modulePartUri = PackUriHelper.CreatePartUri(new Uri(module.Id, UriKind.Relative));
-					var modulePart = package.CreatePart(modulePartUri, System.Net.Mime.MediaTypeNames.Application.Octet);
+					var modulePart = package.CreatePart(modulePartUri, System.Net.Mime.MediaTypeNames.Application.Octet, CompressionOption.Normal);
 
 					progressInfo.Description = String.Format("{0}: export started.", module.Id);
 					progressCallback(progressInfo);
 
 					Action<ExportImportProgressInfo> modulePorgressCallback = (x) =>
 						{
-							progressInfo.Description = String.Format("{0}: {1} ({2} of {3} processed)", module.Id, x.Description, x.TotalCount, x.ProcessedCount);
+							progressInfo.Description = String.Format("{0}: {1}", module.Id, x.Description);
 							progressCallback(progressInfo);
 						};
 
@@ -89,7 +89,8 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 				var manifestPart = package.CreatePart(_manifestPartUri, System.Net.Mime.MediaTypeNames.Text.Xml);
 				var manifest = new PlatformExportManifest
 				{
-					Author = CurrentPrincipal.GetCurrentUserName(),
+					Author = exportOptions.Author,
+					Created = DateTime.UtcNow,
 					PlatformVersion = exportOptions.PlatformVersion.ToString(),
 					Modules = exportModulesInfo.ToArray(),
 				};
@@ -127,7 +128,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 					{
 						Action<ExportImportProgressInfo> modulePorgressCallback = (x) =>
 						{
-							progressInfo.Description = String.Format("{0}: {1} ({2} of {3} processed)", module.Id, x.Description, x.TotalCount, x.ProcessedCount);
+							progressInfo.Description = String.Format("{0}: {1}", module.Id, x.Description);
 							//FOrmation error and add new
 							if (x.Errors.Any())
 							{

@@ -64,7 +64,8 @@ namespace VirtoCommerce.Platform.Core.Common
                 TypeNameHandling = TypeNameHandling.Auto,
                 TypeNameAssemblyFormat = FormatterAssemblyStyle.Full,
                 NullValueHandling = NullValueHandling.Ignore,
-                Formatting = Formatting.Indented
+                Formatting = Formatting.Indented,
+				ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             };
             serializer.Converters.Add(new JavaScriptDateTimeConverter());
             return serializer;

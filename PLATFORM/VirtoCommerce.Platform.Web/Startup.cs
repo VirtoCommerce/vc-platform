@@ -20,6 +20,7 @@ using VirtoCommerce.Platform.Core.Asset;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.ChangeLog;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Notification;
@@ -29,6 +30,7 @@ using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Asset;
 using VirtoCommerce.Platform.Data.Caching;
 using VirtoCommerce.Platform.Data.ChangeLog;
+using VirtoCommerce.Platform.Data.DynamicProperties;
 using VirtoCommerce.Platform.Data.ExportImport;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Platform.Data.Notification;
@@ -38,10 +40,10 @@ using VirtoCommerce.Platform.Data.Security;
 using VirtoCommerce.Platform.Data.Security.Identity;
 using VirtoCommerce.Platform.Data.Settings;
 using VirtoCommerce.Platform.Web;
-using VirtoCommerce.Platform.Web.Controllers.Api;
-using WebGrease.Extensions;
 using VirtoCommerce.Platform.Web.BackgroundJobs;
+using VirtoCommerce.Platform.Web.Controllers.Api;
 using VirtoCommerce.Platform.Web.Resources;
+using WebGrease.Extensions;
 
 [assembly: OwinStartup(typeof(Startup))]
 
@@ -120,21 +122,21 @@ namespace VirtoCommerce.Platform.Web
 
             OwinConfig.Configure(app, container, connectionStringName, authenticationOptions);
 
-			var jobScheduler = container.Resolve<SendNotificationsJobsSheduler>();
-			jobScheduler.SheduleJobs();
+            var jobScheduler = container.Resolve<SendNotificationsJobsSheduler>();
+            jobScheduler.SheduleJobs();
 
-			var notificationManager = container.Resolve<INotificationManager>();
-			notificationManager.RegisterNotificationType(() => new RegistrationEmailNotification(container.Resolve<IEmailNotificationSendingGateway>())
-			{
-				DisplayName = "Registration notification",
-				Description = "This notification sends by email to client when he finish registration",
-				NotificationTemplate = new NotificationTemplate
-				{
-					Body = PlatformNotificationResource.RegistrationNotificationBody,
-					Subject = PlatformNotificationResource.RegistrationNotificationSubject,
-					Language = "en-US"
-				}
-			});
+            var notificationManager = container.Resolve<INotificationManager>();
+            notificationManager.RegisterNotificationType(() => new RegistrationEmailNotification(container.Resolve<IEmailNotificationSendingGateway>())
+            {
+                DisplayName = "Registration notification",
+                Description = "This notification sends by email to client when he finish registration",
+                NotificationTemplate = new NotificationTemplate
+                {
+                    Body = PlatformNotificationResource.RegistrationNotificationBody,
+                    Subject = PlatformNotificationResource.RegistrationNotificationSubject,
+                    Language = "en-US"
+                }
+            });
 
             var postInitializeModules = moduleCatalog.CompleteListWithDependencies(moduleCatalog.Modules)
                 .Where(m => m.ModuleInstance != null)
@@ -198,11 +200,11 @@ namespace VirtoCommerce.Platform.Web
             #region Caching
 
             var cacheProvider = new HttpCacheProvider();
-            var cacheSettings = new[] 
-			{
-				new CacheSettings(CacheGroups.Settings, TimeSpan.FromDays(1)),
-				new CacheSettings(CacheGroups.Security, TimeSpan.FromMinutes(1)),
-			};
+            var cacheSettings = new[]
+            {
+                new CacheSettings(CacheGroups.Settings, TimeSpan.FromDays(1)),
+                new CacheSettings(CacheGroups.Security, TimeSpan.FromMinutes(1)),
+            };
 
             var cacheManager = new CacheManager(cacheProvider, cacheSettings);
             container.RegisterInstance<CacheManager>(cacheManager);
@@ -211,54 +213,60 @@ namespace VirtoCommerce.Platform.Web
 
             #region Settings
 
-			var platformSettings = new[]
-			{
-				new ModuleManifest
-				{
-					Settings = new[]
-					{
-						new ModuleSettingsGroup
-						{
-							Name = "Platform|Notifications|SendGrid",
-							Settings = new []
-							{
-								new ModuleSetting
-								{
-									Name = "VirtoCommerce.Platform.Notifications.SendGrid.UserName",
-									ValueType = ModuleSetting.TypeString,
-									Title = "SendGrid UserName",
-									Description = "Your SendGrid account username"
-								},
-								new ModuleSetting
-								{
-									Name = "VirtoCommerce.Platform.Notifications.SendGrid.Secret",
-									ValueType = ModuleSetting.TypeString,
-									Title = "SendGrid Password",
-									Description = "Your SendGrid account password"
-								}
-							}
-						},
+            var platformSettings = new[]
+            {
+                new ModuleManifest
+                {
+                    Settings = new[]
+                    {
+                        new ModuleSettingsGroup
+                        {
+                            Name = "Platform|Notifications|SendGrid",
+                            Settings = new []
+                            {
+                                new ModuleSetting
+                                {
+                                    Name = "VirtoCommerce.Platform.Notifications.SendGrid.UserName",
+                                    ValueType = ModuleSetting.TypeString,
+                                    Title = "SendGrid UserName",
+                                    Description = "Your SendGrid account username"
+                                },
+                                new ModuleSetting
+                                {
+                                    Name = "VirtoCommerce.Platform.Notifications.SendGrid.Secret",
+                                    ValueType = ModuleSetting.TypeString,
+                                    Title = "SendGrid Password",
+                                    Description = "Your SendGrid account password"
+                                }
+                            }
+                        },
 
-						new ModuleSettingsGroup
-						{
-							Name = "Platform|Notifications|SendingJob",
-							Settings = new []
-							{
-								new ModuleSetting
-								{
-									Name = "VirtoCommerce.Platform.Notifications.SendingJob.TakeCount",
-									ValueType = ModuleSetting.TypeInteger,
-									Title = "Job Take Count",
-									Description = "Take count for sending job"
-								}
-							}
-						}
+                        new ModuleSettingsGroup
+                        {
+                            Name = "Platform|Notifications|SendingJob",
+                            Settings = new []
+                            {
+                                new ModuleSetting
+                                {
+                                    Name = "VirtoCommerce.Platform.Notifications.SendingJob.TakeCount",
+                                    ValueType = ModuleSetting.TypeInteger,
+                                    Title = "Job Take Count",
+                                    Description = "Take count for sending job"
+                                }
+                            }
+                        }
                     }
                 }
             };
 
             var settingsManager = new SettingsManager(manifestProvider, platformRepositoryFactory, cacheManager, platformSettings);
             container.RegisterInstance<ISettingsManager>(settingsManager);
+
+            #endregion
+
+            #region Dynamic Properties
+
+            container.RegisterType<IDynamicPropertyService, DynamicPropertyService>();
 
             #endregion
 
@@ -277,9 +285,9 @@ namespace VirtoCommerce.Platform.Web
             var defaultSmsNotificationSendingGateway = new DefaultSmsNotificationSendingGateway();
 
             container.RegisterInstance<INotificationTemplateService>(notificationTemplateService);
-			container.RegisterInstance<INotificationManager>(notificationManager);
+            container.RegisterInstance<INotificationManager>(notificationManager);
             container.RegisterInstance<INotificationTemplateResolver>(resolver);
-			container.RegisterInstance<IEmailNotificationSendingGateway>(emailNotificationSendingGateway);
+            container.RegisterInstance<IEmailNotificationSendingGateway>(emailNotificationSendingGateway);
             container.RegisterInstance<ISmsNotificationSendingGateway>(defaultSmsNotificationSendingGateway);
 
             //notificationManager.RegisterNotificationType(
@@ -334,7 +342,7 @@ namespace VirtoCommerce.Platform.Web
             var packagesPath = HostingEnvironment.MapPath("~/App_Data/InstalledPackages");
 
             var packageService = new ZipPackageService(moduleCatalog, manifestProvider, packagesPath, sourcePath);
-			container.RegisterInstance<IPackageService>(packageService);
+            container.RegisterInstance<IPackageService>(packageService);
             container.RegisterType<ModulesController>(new InjectionConstructor(packageService, sourcePath));
 
             #endregion
@@ -362,11 +370,16 @@ namespace VirtoCommerce.Platform.Web
             container.RegisterType<ApplicationUserManager>(new InjectionFactory(c => HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>()));
             container.RegisterType<IAuthenticationManager>(new InjectionFactory(c => HttpContext.Current.GetOwinContext().Authentication));
 
+            var nonEditableUsers = GetAppSettingsValue("VirtoCommerce:NonEditableUsers", string.Empty);
+            container.RegisterInstance<ISecurityOptions>(new SecurityOptions(nonEditableUsers));
+
+            container.RegisterType<ISecurityService, SecurityService>();
+
             #endregion
 
-			#region ExportImport
-			container.RegisterType<IPlatformExportImportManager, PlatformExportImportManager>();
-			#endregion
+            #region ExportImport
+            container.RegisterType<IPlatformExportImportManager, PlatformExportImportManager>();
+            #endregion
         }
 
         private static string MakeRelativePath(string rootPath, string fullPath)

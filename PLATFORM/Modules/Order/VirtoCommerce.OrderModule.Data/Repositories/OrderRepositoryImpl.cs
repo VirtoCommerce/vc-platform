@@ -36,15 +36,7 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 			modelBuilder.Entity<OperationEntity>().ToTable("OrderOperation");
 			#endregion
 
-			#region OperationProperty
-			modelBuilder.Entity<OperationPropertyEntity>().HasKey(x => x.Id)
-					.Property(x => x.Id);
-
-			modelBuilder.Entity<OperationPropertyEntity>().HasRequired(x => x.Operation)
-									   .WithMany(x => x.Properties)
-									   .HasForeignKey(x => x.OperationId).WillCascadeOnDelete(true);
-			modelBuilder.Entity<OperationPropertyEntity>().ToTable("OrderOperationProperty"); 
-			#endregion
+		
 		
 			#region CustomerOrder
 			modelBuilder.Entity<CustomerOrderEntity>().HasKey(x => x.Id)
@@ -215,36 +207,58 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 			get { return GetAsQueryable<PaymentInEntity>(); }
 		}
 
+		public IQueryable<AddressEntity> Addresses
+		{
+			get { return GetAsQueryable<AddressEntity>(); }
+		}
+		public IQueryable<LineItemEntity> LineItems
+		{
+			get { return GetAsQueryable<LineItemEntity>(); }
+		}
+
 		public CustomerOrderEntity GetCustomerOrderById(string id, CustomerOrderResponseGroup responseGroup)
 		{
 			var query = CustomerOrders.Where(x => x.Id == id)
 									  .Include(x => x.Discounts)
-									  .Include(x => x.Properties)
 									  .Include(x => x.TaxDetails);
 
 			if ((responseGroup & CustomerOrderResponseGroup.WithAddresses) == CustomerOrderResponseGroup.WithAddresses)
 			{
-				query = query.Include(x => x.Addresses);
+				var addresses = Addresses.Where(x => x.CustomerOrderId == id).ToArray();
 			}
 			if ((responseGroup & CustomerOrderResponseGroup.WithInPayments) == CustomerOrderResponseGroup.WithInPayments)
 			{
-				query = query.Include(x => x.InPayments.Select(y => y.Addresses))
-							 .Include(x => x.InPayments.Select(y => y.Properties));
+				var inPayments = InPayments.Where(x => x.CustomerOrderId == id).ToArray();
+				var paymentsIds = inPayments.Select(x => x.Id).ToArray();
+				var paymentAddresses = Addresses.Where(x => paymentsIds.Contains(x.PaymentInId)).ToArray();
 			}
 			if ((responseGroup & CustomerOrderResponseGroup.WithItems) == CustomerOrderResponseGroup.WithItems)
 			{
-				query = query.Include(x => x.Items.Select(y => y.Discounts)).Include(x => x.Items.Select(y => y.TaxDetails));
+				var lineItems = LineItems.Include(x => x.TaxDetails)
+										 .Include(x => x.Discounts)
+										 .Where(x => x.CustomerOrderId == id).ToArray();
 			}
 			if ((responseGroup & CustomerOrderResponseGroup.WithShipments) == CustomerOrderResponseGroup.WithShipments)
 			{
-				query = query.Include(x => x.Shipments.Select(y => y.Discounts))
-							 .Include(x => x.Shipments.Select(y => y.Items))
-							 .Include(x => x.Shipments.Select(y => y.Packages.Select(z => z.Items)))
-							 .Include(x => x.Shipments.Select(y => y.Addresses))
-							 .Include(x => x.Shipments.Select(y => y.Properties))
-							 .Include(x => x.Shipments.Select(y => y.TaxDetails));
+				var shipments = Shipments.Include(x => x.TaxDetails)
+										 .Include(x => x.Discounts)
+										 .Include(x => x.Items)
+										 .Include(x => x.Packages.Select(y => y.Items))
+										 .Where(x=>x.CustomerOrderId == id).ToArray();
+				var shipmentIds = shipments.Select(x => x.Id).ToArray();
+				var addresses = Addresses.Where(x => shipmentIds.Contains(x.ShipmentId)).ToArray();
 			}
 			return query.FirstOrDefault();
+		}
+
+		public CustomerOrderEntity GetCustomerOrderByNumber(string orderNumber, CustomerOrderResponseGroup responseGroup)
+		{
+			var id = CustomerOrders.Where(x => x.Number == orderNumber).Select(x => x.Id).FirstOrDefault();
+			if (id != null)
+			{
+				return GetCustomerOrderById(id, responseGroup);
+			}
+			return null;
 		}
 
 		public ShipmentEntity GetShipmentById(string id, CustomerOrderResponseGroup responseGroup)

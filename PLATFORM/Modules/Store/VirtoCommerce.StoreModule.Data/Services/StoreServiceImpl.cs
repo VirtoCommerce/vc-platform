@@ -1,166 +1,167 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using foundationModel = VirtoCommerce.StoreModule.Data.Model;
-using coreModel = VirtoCommerce.Domain.Store.Model;
-using VirtoCommerce.Domain.Store.Services;
-using VirtoCommerce.StoreModule.Data.Repositories;
-using VirtoCommerce.StoreModule.Data.Converters;
-using VirtoCommerce.Platform.Data.Infrastructure;
-using VirtoCommerce.Domain.Commerce.Services;
-using VirtoCommerce.Platform.Core.Settings;
-using VirtoCommerce.Platform.Core.Common;
-using VirtoCommerce.Domain.Shipping.Services;
-using VirtoCommerce.Domain.Shipping.Model;
-using Omu.ValueInjecter;
-using VirtoCommerce.Domain.Payment.Services;
 using System.Collections.ObjectModel;
+using System.Linq;
 using VirtoCommerce.Domain.Commerce.Model;
+using VirtoCommerce.Domain.Commerce.Services;
+using VirtoCommerce.Domain.Payment.Services;
+using VirtoCommerce.Domain.Shipping.Services;
+using VirtoCommerce.Domain.Store.Services;
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.DynamicProperties;
+using VirtoCommerce.Platform.Core.Settings;
+using VirtoCommerce.Platform.Data.Infrastructure;
+using VirtoCommerce.StoreModule.Data.Converters;
+using VirtoCommerce.StoreModule.Data.Repositories;
+using coreModel = VirtoCommerce.Domain.Store.Model;
 
 namespace VirtoCommerce.StoreModule.Data.Services
 {
-	public class StoreServiceImpl : ServiceBase, IStoreService
-	{
-		private readonly Func<IStoreRepository> _repositoryFactory;
-		private readonly ICommerceService _commerceService;
-		private readonly ISettingsManager _settingManager;
-		private readonly IShippingService _shippingService;
-		private readonly IPaymentMethodsService _paymentService;
+    public class StoreServiceImpl : ServiceBase, IStoreService
+    {
+        private readonly Func<IStoreRepository> _repositoryFactory;
+        private readonly ICommerceService _commerceService;
+        private readonly ISettingsManager _settingManager;
+        private readonly IDynamicPropertyService _dynamicPropertyService;
+        private readonly IShippingService _shippingService;
+        private readonly IPaymentMethodsService _paymentService;
 
-		public StoreServiceImpl(Func<IStoreRepository> repositoryFactory, ICommerceService commerceService, ISettingsManager settingManager, IShippingService shippingService, IPaymentMethodsService paymentService)
-		{
-			_repositoryFactory = repositoryFactory;
-			_commerceService = commerceService;
-			_settingManager = settingManager;
-			_shippingService = shippingService;
-			_paymentService = paymentService;
-		}
+        public StoreServiceImpl(Func<IStoreRepository> repositoryFactory, ICommerceService commerceService, ISettingsManager settingManager, IDynamicPropertyService dynamicPropertyService, IShippingService shippingService, IPaymentMethodsService paymentService)
+        {
+            _repositoryFactory = repositoryFactory;
+            _commerceService = commerceService;
+            _settingManager = settingManager;
+            _dynamicPropertyService = dynamicPropertyService;
+            _shippingService = shippingService;
+            _paymentService = paymentService;
+        }
 
-		#region IStoreService Members
+        #region IStoreService Members
 
-		public coreModel.Store GetById(string id)
-		{
-			coreModel.Store retVal = null;
-			using (var repository = _repositoryFactory())
-			{
-				var entity = repository.GetStoreById(id);
+        public coreModel.Store GetById(string id)
+        {
+            coreModel.Store retVal = null;
 
-				if (entity != null)
-				{
-					//Load original typed shipping method and populate it  personalized information from db
-					retVal = entity.ToCoreModel(_shippingService.GetAllShippingMethods(), _paymentService.GetAllPaymentMethods());
+            using (var repository = _repositoryFactory())
+            {
+                var entity = repository.GetStoreById(id);
 
-					var fulfillmentCenters = _commerceService.GetAllFulfillmentCenters();
-					retVal.ReturnsFulfillmentCenter = fulfillmentCenters.FirstOrDefault(x => x.Id == entity.ReturnsFulfillmentCenterId);
-					retVal.FulfillmentCenter = fulfillmentCenters.FirstOrDefault(x => x.Id == entity.FulfillmentCenterId);
-					retVal.SeoInfos = _commerceService.GetObjectsSeo(new string[] { id }).ToList();
+                if (entity != null)
+                {
+                    //Load original typed shipping method and populate it  personalized information from db
+                    retVal = entity.ToCoreModel(_shippingService.GetAllShippingMethods(), _paymentService.GetAllPaymentMethods());
 
-					LoadObjectSettings(_settingManager, retVal);
-				}
+                    var fulfillmentCenters = _commerceService.GetAllFulfillmentCenters().ToList();
+                    retVal.ReturnsFulfillmentCenter = fulfillmentCenters.FirstOrDefault(x => x.Id == entity.ReturnsFulfillmentCenterId);
+                    retVal.FulfillmentCenter = fulfillmentCenters.FirstOrDefault(x => x.Id == entity.FulfillmentCenterId);
+                    retVal.SeoInfos = _commerceService.GetObjectsSeo(new[] { id }).ToList();
 
-			}
+                    LoadObjectSettings(_settingManager, retVal);
+                }
+            }
 
-			return retVal;
-		}
+            return retVal;
+        }
 
-		public coreModel.Store Create(coreModel.Store store)
-		{
-			var dbStore = store.ToDataModel();
-			coreModel.Store retVal = null;
-			using (var repository = _repositoryFactory())
-			{
-				repository.Add(dbStore);
-				CommitChanges(repository);
-			}
+        public coreModel.Store Create(coreModel.Store store)
+        {
+            var dbStore = store.ToDataModel();
 
-			//Need add seo separately
-			if (store.SeoInfos != null)
-			{
-				foreach (var seoInfo in store.SeoInfos)
-				{
-					seoInfo.ObjectId = dbStore.Id;
-					seoInfo.ObjectType = typeof(coreModel.Store).Name;
-					_commerceService.UpsertSeo(seoInfo);
-				}
-			}
-			//Deep save settings
-			SaveObjectSettings(_settingManager, store);
+            using (var repository = _repositoryFactory())
+            {
+                repository.Add(dbStore);
+                CommitChanges(repository);
+            }
 
-			retVal = GetById(store.Id);
-			return retVal;
-		}
+            //Need add seo separately
+            if (store.SeoInfos != null)
+            {
+                foreach (var seoInfo in store.SeoInfos)
+                {
+                    seoInfo.ObjectId = dbStore.Id;
+                    seoInfo.ObjectType = typeof(coreModel.Store).Name;
+                    _commerceService.UpsertSeo(seoInfo);
+                }
+            }
 
-		public void Update(coreModel.Store[] stores)
-		{
-			using (var repository = _repositoryFactory())
-			using (var changeTracker = base.GetChangeTracker(repository))
-			{
-				foreach (var store in stores)
-				{
-					var sourceEntity = store.ToDataModel();
-					var targetEntity = repository.GetStoreById(store.Id);
-					if (targetEntity == null)
-					{
-						throw new NullReferenceException("targetEntity");
-					}
+            //Deep save settings
+            SaveObjectSettings(_settingManager, store);
 
-					changeTracker.Attach(targetEntity);
-					sourceEntity.Patch(targetEntity);
+            var retVal = GetById(store.Id);
+            return retVal;
+        }
 
-					SaveObjectSettings(_settingManager, store);
+        public void Update(coreModel.Store[] stores)
+        {
+            using (var repository = _repositoryFactory())
+            using (var changeTracker = base.GetChangeTracker(repository))
+            {
+                foreach (var store in stores)
+                {
+                    var sourceEntity = store.ToDataModel();
+                    var targetEntity = repository.GetStoreById(store.Id);
 
-					//Patch SeoInfo  separately
-					if (store.SeoInfos != null)
-					{
-						foreach (var seoInfo in store.SeoInfos)
-						{
-							seoInfo.ObjectId = store.Id;
-							seoInfo.ObjectType = typeof(coreModel.Store).Name;
-						}
-						var seoInfos = new ObservableCollection<SeoInfo>(_commerceService.GetObjectsSeo(new string[] { store.Id }));
-						seoInfos.ObserveCollection(x => _commerceService.UpsertSeo(x), x => _commerceService.DeleteSeo(new string[] { x.Id }));
-						store.SeoInfos.Patch(seoInfos, (source, target) => _commerceService.UpsertSeo(source));
-					}
-				}
-				CommitChanges(repository);
+                    if (targetEntity == null)
+                    {
+                        throw new NullReferenceException("targetEntity");
+                    }
 
-			}
-		}
+                    changeTracker.Attach(targetEntity);
+                    sourceEntity.Patch(targetEntity);
 
-		public void Delete(string[] ids)
-		{
-			using (var repository = _repositoryFactory())
-			{
-				foreach (var id in ids)
-				{
-					var store = GetById(id);
-					RemoveObjectSettings(_settingManager, store);
+                    SaveObjectSettings(_settingManager, store);
+                
+                    //Patch SeoInfo  separately
+                    if (store.SeoInfos != null)
+                    {
+                        foreach (var seoInfo in store.SeoInfos)
+                        {
+                            seoInfo.ObjectId = store.Id;
+                            seoInfo.ObjectType = typeof(coreModel.Store).Name;
+                        }
 
-					var entity = repository.GetStoreById(id);
-					repository.Remove(entity);
+                        var seoInfos = new ObservableCollection<SeoInfo>(_commerceService.GetObjectsSeo(new[] { store.Id }));
+                        seoInfos.ObserveCollection(x => _commerceService.UpsertSeo(x), x => _commerceService.DeleteSeo(new[] { x.Id }));
+                        store.SeoInfos.Patch(seoInfos, (source, target) => _commerceService.UpsertSeo(source));
+                    }
+                }
 
-				}
-				CommitChanges(repository);
-			}
-		}
+                CommitChanges(repository);
+            }
+        }
 
-		public IEnumerable<coreModel.Store> GetStoreList()
-		{
-			var retVal = new List<coreModel.Store>();
-			using (var repository = _repositoryFactory())
-			{
-				foreach (var storeId in repository.Stores.Select(x => x.Id).ToArray())
-				{
-					var store = GetById(storeId);
-					retVal.Add(store);
-				}
-			}
-			return retVal;
-		}
+        public void Delete(string[] ids)
+        {
+            using (var repository = _repositoryFactory())
+            {
+                foreach (var id in ids)
+                {
+                    var store = GetById(id);
+                    RemoveObjectSettings(_settingManager, store);
 
-		#endregion
+                    var entity = repository.GetStoreById(id);
+                    repository.Remove(entity);
+                }
 
-	}
+                CommitChanges(repository);
+            }
+        }
+
+        public IEnumerable<coreModel.Store> GetStoreList()
+        {
+            var retVal = new List<coreModel.Store>();
+
+            using (var repository = _repositoryFactory())
+            {
+                foreach (var storeId in repository.Stores.Select(x => x.Id).ToArray())
+                {
+                    var store = GetById(storeId);
+                    retVal.Add(store);
+                }
+            }
+            return retVal;
+        }
+
+        #endregion
+    }
 }

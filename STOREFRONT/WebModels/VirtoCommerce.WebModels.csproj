@@ -159,7 +159,8 @@
     <Compile Include="Models\PropertiesDrop.cs" />
     <Compile Include="Models\Storage\DownloadLink.cs" />
     <Compile Include="Models\Storage\ProductDownloadLinks.cs" />
-    <Compile Include="Models\TagCollection.cs" />
+    <Compile Include="Models\Tagging\SelectedTagCollection.cs" />
+    <Compile Include="Models\Tagging\TagCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\Review.cs" />
     <Compile Include="Routing\CanonicalizedAttribute.cs" />
@@ -201,7 +202,7 @@
     <Compile Include="Models\Storage\FileAsset.cs" />
     <Compile Include="Models\SubmitForm.cs" />
     <Compile Include="Models\SubmitFormErrors.cs" />
-    <Compile Include="Models\Tag.cs" />
+    <Compile Include="Models\Tagging\Tag.cs" />
     <Compile Include="Models\Forms\Form.cs" />
     <Compile Include="Models\TaxLine.cs" />
     <Compile Include="Models\Cms\Theme.cs" />

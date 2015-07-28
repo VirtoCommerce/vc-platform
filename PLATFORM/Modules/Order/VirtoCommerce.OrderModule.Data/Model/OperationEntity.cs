@@ -14,11 +14,7 @@ namespace VirtoCommerce.OrderModule.Data.Model
 {
 	public abstract class OperationEntity : AuditableEntity
 	{
-		public OperationEntity()
-		{
-			Properties = new NullCollection<OperationPropertyEntity>();
-		}
-
+	
 		[Required]
 		[StringLength(64)]
 		public string Number { get; set; }
@@ -43,9 +39,5 @@ namespace VirtoCommerce.OrderModule.Data.Model
 		public string CancelReason { get; set; }
 
 	
-		#region Navigation property
-
-		public virtual ObservableCollection<OperationPropertyEntity> Properties { get; set; }
-		#endregion
 	}
 }

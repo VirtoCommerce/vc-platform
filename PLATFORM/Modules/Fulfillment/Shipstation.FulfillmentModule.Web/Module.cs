@@ -1,15 +1,11 @@
 ﻿using Microsoft.Practices.Unity;
-using Shipstation.FulfillmentModule.Web.Services;
+using Shipstation.FulfillmentModule.Web.Controllers;
 using VirtoCommerce.Platform.Core.Modularity;
-using VirtoCommerce.Platform.Core.Settings;
+
 namespace Shipstation.FulfillmentModule.Web
 {
     public class Module: ModuleBase
     {
-        private const string _usernamePropertyName = "Shipstation.Fulfillment.Credentials.Username";
-        private const string _passwordPropertyName = "Shipstation.Fulfillment.Credentials.Password";
-        private const string _serviceUrlPropertyName = "Shipstation.Fulfillment.Credentials.ServiceUrl";
-
         private readonly IUnityContainer _container;
 
         public Module(IUnityContainer container)
@@ -21,15 +17,7 @@ namespace Shipstation.FulfillmentModule.Web
         
         public override void Initialize()
         {
-            var settingsManager = _container.Resolve<ISettingsManager>();
-            
-            var shipStation = new ShipstationSettings(_usernamePropertyName, _passwordPropertyName, _serviceUrlPropertyName, settingsManager);
-            
-            //_container.RegisterType<ShipstationController>
-            //    (new InjectionConstructor(
-            //        shipStation));
-
-            _container.RegisterInstance<IFulfillmentSettings>(shipStation);
+            _container.RegisterType<ShipstationController>();
         }
         
         #endregion

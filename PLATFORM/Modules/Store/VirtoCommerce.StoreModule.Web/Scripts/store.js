@@ -73,12 +73,12 @@ angular.module(moduleName, [
           template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/storeShippingWidget.tpl.html'
       }, 'storeDetail');
       widgetService.registerWidget({
-      	  controller: 'virtoCommerce.storeModule.storeNotificationsWidgetController',
-		  template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/storeNotificationsWidget.tpl.html'
+          controller: 'virtoCommerce.storeModule.storeNotificationsWidgetController',
+          template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/storeNotificationsWidget.tpl.html'
       }, 'storeDetail');
       widgetService.registerWidget({
-      	  controller: 'virtoCommerce.storeModule.storeNotificationsLogWidgetController',
-      	  template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/storeNotificationsLogWidget.tpl.html'
+          controller: 'virtoCommerce.storeModule.storeNotificationsLogWidgetController',
+          template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/storeNotificationsLogWidget.tpl.html'
       }, 'storeDetail');
 
       var resetCommand = {

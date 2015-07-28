@@ -15,8 +15,6 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 			var retVal = new webModel.Shipment();
 			retVal.InjectFrom(shipment);
 
-			if (shipment.Properties != null)
-				retVal.Properties = shipment.Properties.Select(x => x.ToWebModel()).ToList();
 
 			if (shipment.DeliveryAddress != null)
 				retVal.DeliveryAddress = shipment.DeliveryAddress.ToWebModel();
@@ -38,6 +36,10 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 
 			retVal.ChildrenOperations = shipment.ChildrenOperations.Select(x => x.ToWebModel()).ToList();
 			retVal.TaxDetails = shipment.TaxDetails;
+
+			if (shipment.DynamicProperties != null)
+				retVal.DynamicProperties = shipment.DynamicProperties;
+
 			return retVal;
 		}
 
@@ -46,8 +48,7 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 			var retVal = new coreModel.Shipment();
 			retVal.InjectFrom(shipment);
 
-			if (shipment.Properties != null)
-				retVal.Properties = shipment.Properties.Select(x => x.ToCoreModel()).ToList();
+	
 			if (shipment.DeliveryAddress != null)
 				retVal.DeliveryAddress = shipment.DeliveryAddress.ToCoreModel();
 			if (shipment.InPayments != null)
@@ -58,6 +59,8 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 				retVal.Items = shipment.Items.Select(x => x.ToCoreModel()).ToList();
 			if (shipment.Packages != null)
 				retVal.Packages = shipment.Packages.Select(x => x.ToCoreModel()).ToList();
+			if (shipment.DynamicProperties != null)
+				retVal.DynamicProperties = shipment.DynamicProperties;
 
 			retVal.TaxDetails = shipment.TaxDetails;
 			return retVal;

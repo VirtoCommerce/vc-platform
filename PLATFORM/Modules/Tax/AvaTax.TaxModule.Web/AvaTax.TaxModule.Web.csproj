@@ -159,6 +159,7 @@
     <Compile Include="Converters\CustomerOrderConverter.cs" />
     <Compile Include="Logging\BaseSlabContext.cs" />
     <Compile Include="Logging\EventSourceExtension.cs" />
+    <Compile Include="Logging\IsFileLockedExtension.cs" />
     <Compile Include="Logging\SlabExtendedException.cs" />
     <Compile Include="Logging\SlabInvoker.cs" />
     <Compile Include="Logging\VCEventSources.cs" />

@@ -10,6 +10,7 @@ namespace VirtoCommerce.Domain.Order.Services
 	public interface ICustomerOrderService 
 	{
 		CustomerOrder GetById(string id, CustomerOrderResponseGroup respGroup);
+        CustomerOrder GetByOrderNumber(string number, CustomerOrderResponseGroup respGroup);
 		CustomerOrder Create(CustomerOrder order);
 		CustomerOrder CreateByShoppingCart(string cartId);
 		void Update(CustomerOrder[] orders);

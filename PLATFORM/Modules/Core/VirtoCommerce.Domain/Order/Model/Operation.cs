@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.DynamicProperties;
 
 namespace VirtoCommerce.Domain.Order.Model
 {
-	public abstract class Operation : AuditableEntity, IOperation, ISupportCancellation
+	public abstract class Operation : AuditableEntity, IOperation, ISupportCancellation, IHasDynamicProperties
 	{
 		public string OperationType { 
 			get
@@ -35,7 +36,13 @@ namespace VirtoCommerce.Domain.Order.Model
 
 		#endregion
 
-		public ICollection<OperationProperty> Properties { get; set; }
+
+		#region IHasDynamicProperties Members
+		public string ObjectType { get; set; }
+		public ICollection<DynamicObjectProperty> DynamicProperties { get; set; }
+		#endregion
+
+	
 		public abstract IEnumerable<Operation> ChildrenOperations
 		{
 			get;

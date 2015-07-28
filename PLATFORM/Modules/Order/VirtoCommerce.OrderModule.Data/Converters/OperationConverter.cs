@@ -30,10 +30,6 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 																			   x => x.TaxIncluded, x => x.IsApproved, x => x.Sum);
 			target.InjectFrom(patchInjectionPolicy, source);
 
-			if (!source.Properties.IsNullCollection())
-			{
-				source.Properties.Patch(target.Properties, (sourceProperty, targetProperty) => sourceProperty.Patch(targetProperty));
-			}
 		}
 	}
 }

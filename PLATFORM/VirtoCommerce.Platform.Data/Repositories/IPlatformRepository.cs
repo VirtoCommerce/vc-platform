@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Model;
 
 namespace VirtoCommerce.Platform.Data.Repositories
@@ -7,6 +8,10 @@ namespace VirtoCommerce.Platform.Data.Repositories
 	public interface IPlatformRepository : IRepository
 	{
 		IQueryable<SettingEntity> Settings { get; }
+
+        IQueryable<DynamicPropertyEntity> DynamicProperties { get; }
+        IQueryable<DynamicPropertyDictionaryItemEntity> DynamicPropertyDictionaryItems { get; }
+        IQueryable<DynamicPropertyObjectValueEntity> DynamicPropertyObjectValues { get; }
 
 		IQueryable<AccountEntity> Accounts { get; }
 		IQueryable<ApiAccountEntity> ApiAccounts { get; }
@@ -21,5 +26,9 @@ namespace VirtoCommerce.Platform.Data.Repositories
 
 		AccountEntity GetAccountByName(string userName, UserDetails detailsLevel);
 		NotificationTemplateEntity GetNotificationTemplateByNotification(string notificationTypeId, string objectId, string objectTypeId, string language);
+		DynamicPropertyDictionaryItemEntity[] GetDynamicPropertyDictionaryItems(string propertyId);
+		DynamicPropertyEntity[] GetDynamicPropertiesByIds(string[] ids);
+		DynamicPropertyEntity[] GetDynamicPropertiesForType(string objectType);
+		DynamicPropertyEntity[] GetObjectDynamicProperties(string objectType, string objectId);
 	}
 }

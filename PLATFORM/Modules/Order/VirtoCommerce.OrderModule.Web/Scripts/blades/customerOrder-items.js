@@ -59,6 +59,16 @@
         });
     };
 
+    $scope.openItemDynamicProperties = function (item) {
+    	var blade = {
+    		id: "dynamicPropertiesList",
+    		currentEntity: item,
+    		controller: 'platformWebApp.propertyValueListController',
+    		template: 'Scripts/app/dynamicProperties/blades/propertyValue-list.tpl.html'
+    	};
+    	bladeNavigationService.showBlade(blade, $scope.blade);
+    };
+
     $scope.openItemDetail = function (item) {
         var newBlade = {
             id: "listItemDetail",

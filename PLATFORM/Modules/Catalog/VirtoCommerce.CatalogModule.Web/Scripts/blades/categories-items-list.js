@@ -379,38 +379,38 @@
 				        bladeNavigationService.showBlade(newBlade, $scope.blade);
 				    },
 				    canExecuteMethod: function () { return true; }
-				}
+				},
                  /// hiding some UI functionality until it's fully implemented. Need to release
-                 //{
-                 //    name: "Copy",
-                 //    icon: 'fa fa-files-o',
-                 //    executeMethod: function () {
-                 //        $storage.catalogClipboardContent = _.where($scope.items, { selected: true });
-                 //    },
-                 //    canExecuteMethod: isItemsChecked,
-                 //    permission: 'catalog:items:manage'
-                 //},
-                 //{
-                 //    name: "Paste",
-                 //    icon: 'fa fa-clipboard',
-                 //    executeMethod: function () {
-                 //        blade.isLoading = true;
-                 //        listEntries.paste({
-                 //            catalog: blade.catalogId,
-                 //            category: blade.categoryId,
-                 //            listEntries: $storage.catalogClipboardContent
-                 //        }, function () {
-                 //            delete $storage.catalogClipboardContent;
-                 //            blade.refresh();
-                 //        }, function (error) {
-                 //            bladeNavigationService.setError('Error ' + error.status, blade);
-                 //        });
-                 //    },
-                 //    canExecuteMethod: function () {
-                 //        return $storage.catalogClipboardContent;
-                 //    },
-                 //    permission: 'catalog:items:manage'
-                 //},
+                 {
+                     name: "Copy",
+                     icon: 'fa fa-files-o',
+                     executeMethod: function () {
+                         $storage.catalogClipboardContent = _.where($scope.items, { selected: true });
+                     },
+                     canExecuteMethod: isItemsChecked,
+                     permission: 'catalog:items:manage'
+                 },
+                 {
+                     name: "Paste",
+                     icon: 'fa fa-clipboard',
+                     executeMethod: function () {
+                         blade.isLoading = true;
+                         listEntries.paste({
+                             catalog: blade.catalogId,
+                             category: blade.categoryId,
+                             listEntries: $storage.catalogClipboardContent
+                         }, function () {
+                             delete $storage.catalogClipboardContent;
+                             blade.refresh();
+                         }, function (error) {
+                             bladeNavigationService.setError('Error ' + error.status, blade);
+                         });
+                     },
+                     canExecuteMethod: function () {
+                         return $storage.catalogClipboardContent;
+                     },
+                     permission: 'catalog:items:manage'
+                 }
 
                 //{
                 //    name: "Advanced search", icon: 'fa fa-search',

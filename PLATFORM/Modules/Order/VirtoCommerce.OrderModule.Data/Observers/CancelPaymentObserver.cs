@@ -12,7 +12,6 @@ namespace VirtoCommerce.OrderModule.Data.Observers
 {
 	public class CancelPaymentObserver : IObserver<OrderChangeEvent>
 	{
-		private readonly IPaymentMethodsService _paymentMethodService;
 		private readonly IStoreService _storeService;
 
 		public CancelPaymentObserver(IStoreService storeService)
@@ -72,13 +71,13 @@ namespace VirtoCommerce.OrderModule.Data.Observers
 						{
 							var store = _storeService.GetById(value.ModifiedOrder.StoreId);
 							var method = store.PaymentMethods.FirstOrDefault(p => p.Code == op.GatewayCode);
-							if(method != null)
+                            if (method != null)
 							{
-								if(op.PaymentStatus == PaymentStatus.Authorized)
+                                if (op.PaymentStatus == PaymentStatus.Authorized)
 								{
 									method.VoidProcessPayment(new VoidProcessPaymentEvaluationContext { Payment = payment });
 								}
-								else if(op.PaymentStatus == PaymentStatus.Paid)
+                                else if (op.PaymentStatus == PaymentStatus.Paid)
 								{
 									method.RefundProcessPayment(new RefundProcessPaymentEvaluationContext { Payment = payment });
 								}

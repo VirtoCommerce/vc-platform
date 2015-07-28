@@ -7,6 +7,7 @@ using Newtonsoft.Json.Converters;
 using VirtoCommerce.Domain.Commerce.Model;
 using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.DynamicProperties;
 
 namespace VirtoCommerce.OrderModule.Web.Model
 {
@@ -44,6 +45,7 @@ namespace VirtoCommerce.OrderModule.Web.Model
 		public IEnumerable<Operation> ChildrenOperations { get; set; }
 		public IEnumerable<OperationProperty> Properties { get; set; }
 
-
+		public string ObjectType { get; set; }
+		public ICollection<DynamicObjectProperty> DynamicProperties { get; set; }
 	}
 }

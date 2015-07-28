@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using VirtoCommerce.Web.Extensions;
-using VirtoCommerce.Web.Models;
+using VirtoCommerce.Web.Models.Tagging;
 
 #endregion
 
@@ -90,12 +90,13 @@ namespace VirtoCommerce.Web.Controllers
         {
             //await Task.FromResult<object>(null);
             //Context.Set("current_tags", ParseTags(tags));
-            return View("list-collections");
+            var result = await Task.FromResult("list-collections");
+            return View(result);
         }
         #endregion
 
         #region Methods
-        private string[] ParseTags(string tags)
+        private SelectedTagCollection ParseTags(string tags)
         {
             if (String.IsNullOrEmpty(tags))
             {
@@ -103,7 +104,7 @@ namespace VirtoCommerce.Web.Controllers
             }
 
             var tagsArray = tags.Split(new[] { ',' });
-            return tagsArray;
+            return new SelectedTagCollection(tagsArray);
         }
 
         /*
@@ -126,4 +127,6 @@ namespace VirtoCommerce.Web.Controllers
          * */
         #endregion
     }
+
+
 }

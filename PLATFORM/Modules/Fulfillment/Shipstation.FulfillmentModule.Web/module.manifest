@@ -1,14 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <module>
   <id>Shipstation.Fulfillment</id>
-  <version>1.0.0</version>
-  <platformVersion>2.0.0</platformVersion>
+  <version>2.3.0</version>
+  <platformVersion>2.3.0</platformVersion>
   <dependencies>
-    <dependency id="VirtoCommerce.Core" version="1.0.0" />
+    <dependency id="VirtoCommerce.Core" version="2.3.0" />
   </dependencies>
 
   <title>Shipstation fulfillment</title>
-  <description>APIs and UI for Shipstation integration</description>
+  <description>
+    Shipstation module allows to synchronize orders with ShipStation. That way new orders with shipments made in VirtoCommerce will become available in ShipStation admin and changes of shipment status will be synced with VirtoCommerce platform store.
+  </description>
   <authors>
     <author>Virto Commerce</author>
   </authors>
@@ -29,29 +31,6 @@
   <scripts>
     <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
   </scripts>-->
-
-  <settings>
-    <group name="Fulfillment|Shipstation|Credentials">
-      <setting>
-        <name>Shipstation.Fulfillment.Credentials.Username</name>
-        <valueType>string</valueType>
-        <title>Shipstation username</title>
-        <description>Username provided by Shipstation during registration process</description>
-      </setting>
-      <setting>
-        <name>Shipstation.Fulfillment.Credentials.Password</name>
-        <valueType>string</valueType>
-        <title>Shipstation account password</title>
-        <description>Account password provided by Shipstation during registration process</description>
-      </setting>
-      <setting>
-        <name>Shipstation.Fulfillment.Credentials.ServiceUrl</name>
-        <valueType>string</valueType>
-        <title>Link to Shipstation API service</title>
-        <description>Link to Shipstation API service</description>
-      </setting>
-    </group>
-  </settings>
   <permissions>
     <group name="Fulfillment">
       <permission id="fulfillment:manage" name="Manage fulfillment settings" description="Permission to manage shipstation fulfillment."/>

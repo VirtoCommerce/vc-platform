@@ -22,6 +22,10 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 				retVal.DiscountAmount = orderItem.Discount.DiscountAmount;
 			}
 			retVal.TaxDetails = orderItem.TaxDetails;
+
+			if (orderItem.DynamicProperties != null)
+				retVal.DynamicProperties = orderItem.DynamicProperties;
+
 			return retVal;
 		}
 
@@ -35,6 +39,9 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 				retVal.Discount = orderItem.Discount.ToCoreModel();
 			}
 			retVal.TaxDetails = orderItem.TaxDetails;
+
+			if (orderItem.DynamicProperties != null)
+				retVal.DynamicProperties = orderItem.DynamicProperties;
 			return retVal;
 		}
 

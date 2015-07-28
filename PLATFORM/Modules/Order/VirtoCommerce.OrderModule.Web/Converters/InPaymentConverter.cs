@@ -19,10 +19,11 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 			retVal.InjectFrom(payment);
 			retVal.Currency = payment.Currency;
 
-			if (payment.Properties != null)
-				retVal.Properties = payment.Properties.Select(x => x.ToWebModel()).ToList();
-
+		
 			retVal.ChildrenOperations = payment.ChildrenOperations.Select(x => x.ToWebModel()).ToList();
+
+			if (payment.DynamicProperties != null)
+				retVal.DynamicProperties = payment.DynamicProperties;
 
 			return retVal;
 		}
@@ -33,10 +34,14 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 			retVal.InjectFrom(payment);
 			retVal.PaymentStatus = EnumUtility.SafeParse<PaymentStatus>(payment.Status, PaymentStatus.Custom);
 
-			if (payment.Properties != null)
-				retVal.Properties = payment.Properties.Select(x => x.ToCoreModel()).ToList();
-
+		
 			retVal.Currency = payment.Currency;
+
+
+			if (payment.DynamicProperties != null)
+				retVal.DynamicProperties = payment.DynamicProperties;
+
+
 			return retVal;
 		}
 

@@ -26,10 +26,6 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 
 			retVal.Currency = (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), entity.Currency);
 
-			if (entity.Properties != null)
-			{
-				retVal.Properties = entity.Properties.Select(x => x.ToCoreModel()).ToList();
-			}
 			if(entity.Discounts != null && entity.Discounts.Any())
 			{
 				retVal.Discount = entity.Discounts.First().ToCoreModel();
@@ -83,6 +79,12 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			if (cart.Shipments != null)
 			{
 				retVal.Shipments = cart.Shipments.Select(x => x.ToCoreModel()).ToList();
+				//Redistribute order line items to shipment if cart shipment items empty 
+				var shipment = retVal.Shipments.FirstOrDefault();
+				if(shipment != null && (shipment.Items == null || !shipment.Items.Any()))
+				{
+					shipment.Items = cart.Items.Select(x => x.ToCoreShipmentItemModel()).ToList();
+				}
 			}
 			if (cart.Payments != null)
 			{
@@ -108,11 +110,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 
 			retVal.Currency = order.Currency.ToString();
 
-			if (order.Properties != null)
-			{
-				retVal.Properties = new ObservableCollection<OperationPropertyEntity>(order.Properties.Select(x => x.ToDataModel()));
-			}
-
+	
 			if(order.Addresses != null)
 			{
 				retVal.Addresses = new ObservableCollection<AddressEntity>(order.Addresses.Select(x=>x.ToDataModel()));

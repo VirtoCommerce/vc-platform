@@ -3,6 +3,7 @@ using System.Data.Entity;
 using System.Data.Entity.Infrastructure.Annotations;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
+using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Platform.Data.Model;
@@ -36,19 +37,82 @@ namespace VirtoCommerce.Platform.Data.Repositories
 			#endregion
 
 			#region Settings
+
 			modelBuilder.Entity<SettingEntity>("PlatformSetting", "Id");
 			modelBuilder.Entity<SettingValueEntity>("PlatformSettingValue", "Id");
-			//modelBuilder.Entity<SettingEntity>().HasKey(x => x.Id)
-			//				.Property(x => x.Id);
-			//modelBuilder.Entity<SettingEntity>().ToTable("PlatformSetting");
-			//modelBuilder.Entity<SettingValueEntity>().HasKey(x => x.Id)
-			//				.Property(x => x.Id);
-			//modelBuilder.Entity<SettingValueEntity>().ToTable("PlatformSettingValue");
 
 			modelBuilder.Entity<SettingValueEntity>()
 				.HasRequired(x => x.Setting)
 				.WithMany(x => x.SettingValues)
 				.HasForeignKey(x => x.SettingId);
+
+            #endregion
+
+            #region Dynamic Properties
+
+            modelBuilder.Entity<DynamicPropertyEntity>("PlatformDynamicProperty", "Id");
+            modelBuilder.Entity<DynamicPropertyNameEntity>("PlatformDynamicPropertyName", "Id");
+            modelBuilder.Entity<DynamicPropertyDictionaryItemEntity>("PlatformDynamicPropertyDictionaryItem", "Id");
+            modelBuilder.Entity<DynamicPropertyDictionaryItemNameEntity>("PlatformDynamicPropertyDictionaryItemName", "Id");
+            modelBuilder.Entity<DynamicPropertyObjectValueEntity>("PlatformDynamicPropertyObjectValue", "Id");
+
+            modelBuilder.Entity<DynamicPropertyNameEntity>()
+                .HasRequired(x => x.Property)
+                .WithMany(x => x.DisplayNames)
+                .HasForeignKey(x => x.PropertyId);
+
+            modelBuilder.Entity<DynamicPropertyDictionaryItemEntity>()
+                .HasRequired(x => x.Property)
+                .WithMany(x => x.DictionaryItems)
+                .HasForeignKey(x => x.PropertyId);
+
+            modelBuilder.Entity<DynamicPropertyDictionaryItemNameEntity>()
+                .HasRequired(x => x.DictionaryItem)
+                .WithMany(x => x.DisplayNames)
+                .HasForeignKey(x => x.DictionaryItemId);
+
+            modelBuilder.Entity<DynamicPropertyObjectValueEntity>()
+                .HasRequired(x => x.Property)
+                .WithMany(x => x.ObjectValues)
+                .HasForeignKey(x => x.PropertyId);
+            modelBuilder.Entity<DynamicPropertyObjectValueEntity>()
+                .HasOptional(x => x.DictionaryItem)
+                .WithMany(x => x.ObjectValues)
+                .HasForeignKey(x => x.DictionaryItemId);
+
+            modelBuilder.Entity<DynamicPropertyEntity>()
+                .Property(x => x.ObjectType)
+                .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformDynamicProperty_ObjectType_Name", 1) { IsUnique = true }));
+            modelBuilder.Entity<DynamicPropertyEntity>()
+                .Property(x => x.Name)
+                .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformDynamicProperty_ObjectType_Name", 2) { IsUnique = true }));
+
+            modelBuilder.Entity<DynamicPropertyNameEntity>()
+                .Property(x => x.PropertyId)
+                .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformDynamicPropertyName_PropertyId_Locale_Name", 1) { IsUnique = true }));
+            modelBuilder.Entity<DynamicPropertyNameEntity>()
+                .Property(x => x.Locale)
+                .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformDynamicPropertyName_PropertyId_Locale_Name", 2) { IsUnique = true }));
+            modelBuilder.Entity<DynamicPropertyNameEntity>()
+                .Property(x => x.Name)
+                .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformDynamicPropertyName_PropertyId_Locale_Name", 3) { IsUnique = true }));
+
+            modelBuilder.Entity<DynamicPropertyDictionaryItemEntity>()
+                .Property(x => x.PropertyId)
+                .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformDynamicPropertyDictionaryItem_PropertyId_Name", 1) { IsUnique = true }));
+            modelBuilder.Entity<DynamicPropertyDictionaryItemEntity>()
+                .Property(x => x.Name)
+                .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformDynamicPropertyDictionaryItem_PropertyId_Name", 2) { IsUnique = true }));
+
+            modelBuilder.Entity<DynamicPropertyDictionaryItemNameEntity>()
+                .Property(x => x.DictionaryItemId)
+                .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformDynamicPropertyDictionaryItemName_DictionaryItemId_Locale_Name", 1) { IsUnique = true }));
+            modelBuilder.Entity<DynamicPropertyDictionaryItemNameEntity>()
+                .Property(x => x.Locale)
+                .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformDynamicPropertyDictionaryItemName_DictionaryItemId_Locale_Name", 2) { IsUnique = true }));
+            modelBuilder.Entity<DynamicPropertyDictionaryItemNameEntity>()
+                .Property(x => x.Name)
+                .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformDynamicPropertyDictionaryItemName_DictionaryItemId_Locale_Name", 3) { IsUnique = true }));
 
 			#endregion
 
@@ -105,7 +169,8 @@ namespace VirtoCommerce.Platform.Data.Repositories
 
 			#endregion
 
-			// Notifications
+            #region Notifications
+
 			modelBuilder.Entity<NotificationEntity>().ToTable("PlatformNotification").HasKey(x => x.Id);
 			modelBuilder.Entity<NotificationTemplateEntity>().ToTable("PlatformNotificationTemplate").HasKey(x => x.Id);
 			modelBuilder.Entity<NotificationTemplateEntity>()
@@ -121,6 +186,8 @@ namespace VirtoCommerce.Platform.Data.Repositories
 				.Property(x => x.Language)
 				.HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_PlatformNotificationTemplate_NotificationTypeId_ObjectTypeId_ObjectId_Language", 4) { IsUnique = true }));
 
+            #endregion
+
 			base.OnModelCreating(modelBuilder);
 		}
 
@@ -130,6 +197,10 @@ namespace VirtoCommerce.Platform.Data.Repositories
 		public IQueryable<NotificationTemplateEntity> NotificationTemplates { get { return GetAsQueryable<NotificationTemplateEntity>(); } }
 
 		public IQueryable<SettingEntity> Settings { get { return GetAsQueryable<SettingEntity>(); } }
+
+        public IQueryable<DynamicPropertyEntity> DynamicProperties { get { return GetAsQueryable<DynamicPropertyEntity>(); } }
+        public IQueryable<DynamicPropertyObjectValueEntity> DynamicPropertyObjectValues { get { return GetAsQueryable<DynamicPropertyObjectValueEntity>(); } }
+        public IQueryable<DynamicPropertyDictionaryItemEntity> DynamicPropertyDictionaryItems { get { return GetAsQueryable<DynamicPropertyDictionaryItemEntity>(); } }
 
 		public IQueryable<AccountEntity> Accounts { get { return GetAsQueryable<AccountEntity>(); } }
 		public IQueryable<ApiAccountEntity> ApiAccounts { get { return GetAsQueryable<ApiAccountEntity>(); } }
@@ -153,6 +224,46 @@ namespace VirtoCommerce.Platform.Data.Repositories
 			return query.FirstOrDefault(a => a.UserName == userName);
 		}
 
+		public DynamicPropertyDictionaryItemEntity[] GetDynamicPropertyDictionaryItems(string propertyId)
+		{
+			var retVal = DynamicPropertyDictionaryItems.Include(i => i.DisplayNames)
+													   .Where(i => i.PropertyId == propertyId)
+													   .ToArray();
+
+			return retVal;
+		}
+
+
+		public DynamicPropertyEntity[] GetObjectDynamicProperties(string objectType, string objectId)
+		{
+			var retVal = DynamicProperties.Where(x => x.ObjectType == objectType)
+										  .OrderBy(x => x.Name)
+										  .ToArray();
+			var propertyIds = retVal.Select(x => x.Id).ToArray();
+			var proprValues = DynamicPropertyObjectValues.Include(x => x.DictionaryItem)
+														 .Where(x => propertyIds.Contains(x.PropertyId) && x.ObjectId == objectId).ToArray();
+		
+			return retVal;
+		}
+
+		public DynamicPropertyEntity[] GetDynamicPropertiesByIds(string[] ids)
+		{
+			var retVal = DynamicProperties.Include(x => x.DisplayNames)
+										  .Where(x => ids.Contains(x.Id))
+										  .OrderBy(x => x.Name)
+										  .ToArray();
+			return retVal;
+		}
+
+		public DynamicPropertyEntity[] GetDynamicPropertiesForType(string objectType)
+		{
+			var retVal = DynamicProperties.Include(p => p.DisplayNames)
+										  .Where(p => p.ObjectType == objectType)
+										  .OrderBy(p => p.Name)
+										  .ToArray();
+			return retVal;
+		}
+
 		#endregion
 
 		public NotificationTemplateEntity GetNotificationTemplateByNotification(string notificationTypeId, string objectId, string objectTypeId, string language)
@@ -160,7 +271,7 @@ namespace VirtoCommerce.Platform.Data.Repositories
 			var query = NotificationTemplates.Where(nt => nt.NotificationTypeId.Equals(notificationTypeId) && nt.ObjectId.Equals(objectId) && nt.ObjectTypeId.Equals(objectTypeId));
 
 			var retVal = query.FirstOrDefault(nt => nt.Language.Equals(language));
-			if(retVal == null)
+            if (retVal == null)
 			{
 				retVal = query.FirstOrDefault(nt => nt.IsDefault);
 			}

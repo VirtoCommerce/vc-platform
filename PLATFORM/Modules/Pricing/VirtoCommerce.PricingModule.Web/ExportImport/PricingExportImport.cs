@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Microsoft.Practices.ObjectBuilder2;
 using VirtoCommerce.Domain.Pricing.Model;
 using VirtoCommerce.Domain.Pricing.Services;
 using VirtoCommerce.Platform.Core.Common;
@@ -13,30 +12,6 @@ namespace VirtoCommerce.PricingModule.Web.ExportImport
     public sealed class BackupObject
     {
         public ICollection<Pricelist> Pricelists { get; set; }
-        public ICollection<PricelistAssignment> Assignments { get; set; }
-    }
-
-    public class ExportImport
-    {
-        static public void Update<T>(ICollection<string> originalIds, ICollection<T> importedCollection, Action<string[]> deleteDelegate, Action<T[]> updateDelegate, Func<T, T> createDelegate) where T : Entity
-        {
-            var toAdd = importedCollection.Where(x => !originalIds.Contains(x.Id)).ToArray();
-            var toUpdate = importedCollection.Where(x => originalIds.Contains(x.Id)).ToArray();
-            var toRemove = originalIds.Where(x => importedCollection.All(s => s.Id != x)).ToArray();
-
-            if (toRemove.Any())
-            {
-                deleteDelegate(toRemove);
-            }
-            if (toUpdate.Any())
-            {
-                updateDelegate(toUpdate);
-            }
-            foreach (var item in toAdd)
-            {
-                createDelegate(item);
-            }
-        }
     }
 
     public sealed class PricingExportImport
@@ -53,12 +28,7 @@ namespace VirtoCommerce.PricingModule.Web.ExportImport
             var prodgressInfo = new ExportImportProgressInfo { Description = "loading data..." };
             progressCallback(prodgressInfo);
 
-            var pricelistIds = _pricingService.GetPriceLists().AsParallel().Select(x => x.Id).ToArray();
-            var backupObject = new BackupObject
-            {
-                Pricelists = pricelistIds.AsParallel().Select(x => _pricingService.GetPricelistById(x)).ToArray()
-            };
-
+            var backupObject = GetBackupObject();
             backupObject.SerializeJson(backupStream);
         }
 
@@ -68,20 +38,37 @@ namespace VirtoCommerce.PricingModule.Web.ExportImport
             progressCallback(prodgressInfo);
 
             var backupObject = backupStream.DeserializeJson<BackupObject>();
+            var originalObject = GetBackupObject();
 
-            var assignments = backupObject.Pricelists.SelectMany(x => x.Assignments).ToArray();
-            backupObject.Pricelists.ForEach(x=>x.Assignments =null);
-
-            var originalIds = _pricingService.GetPriceLists().Select(x => x.Id).ToArray();
-            ExportImport.Update(originalIds, backupObject.Pricelists,
-                _pricingService.DeletePricelists, _pricingService.UpdatePricelists, _pricingService.CreatePricelist);
-
-            originalIds = _pricingService.GetPriceListAssignments().Select(x => x.Id).ToArray();
-            ExportImport.Update(originalIds, assignments,
-                _pricingService.DeletePricelistsAssignments, _pricingService.UpdatePricelistAssignments, _pricingService.CreatePriceListAssignment);
-
+            UpdatePricelist(originalObject.Pricelists, backupObject.Pricelists);
         }
 
+        private void UpdatePricelist(ICollection<Pricelist> original, ICollection<Pricelist> backup)
+        {
+            var toUpdate = new List<Pricelist>();
+
+            backup.CompareTo(original, EqualityComparer<Pricelist>.Default, (state, x, y) =>
+            {
+                switch (state)
+                {
+                    case EntryState.Modified:
+                        toUpdate.Add(x);
+                        break;
+                    case EntryState.Added:
+                        _pricingService.CreatePricelist(x);
+                        break;
+                }
+            });
+            _pricingService.UpdatePricelists(toUpdate.ToArray());
+        }
+
+        private BackupObject GetBackupObject()
+        {
+            return new BackupObject
+            {
+                Pricelists = _pricingService.GetPriceLists().Select(x => x.Id).Select(x => _pricingService.GetPricelistById(x)).ToArray()
+            };
+        }
 
     }
 }

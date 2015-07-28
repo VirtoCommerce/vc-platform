@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Linq;
 using Omu.ValueInjecter;
 using coreModel = VirtoCommerce.Domain.Order.Model;
 using webModel = VirtoCommerce.OrderModule.Web.Model;
@@ -22,9 +19,6 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 				retVal.DiscountAmount = customerOrder.Discount.DiscountAmount;
 			}
 
-			if (customerOrder.Properties != null)
-				retVal.Properties = customerOrder.Properties.Select(x => x.ToWebModel()).ToList();
-
 			if (customerOrder.Shipments != null)
 				retVal.Shipments = customerOrder.Shipments.Select(x => x.ToWebModel()).ToList();
 
@@ -39,6 +33,10 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 
 			retVal.ChildrenOperations = customerOrder.ChildrenOperations.Select(x => x.ToWebModel()).ToList();
 			retVal.TaxDetails = customerOrder.TaxDetails;
+
+            if (customerOrder.DynamicProperties != null)
+                retVal.DynamicProperties = customerOrder.DynamicProperties;
+
 			return retVal;
 		}
 
@@ -48,8 +46,7 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 			retVal.InjectFrom(customerOrder);
 			retVal.Currency = customerOrder.Currency;
 
-			if (customerOrder.Properties != null)
-				retVal.Properties = customerOrder.Properties.Select(x => x.ToCoreModel()).ToList();
+		
 			if (customerOrder.Items != null)
 				retVal.Items = customerOrder.Items.Select(x => x.ToCoreModel()).ToList();
 			if (customerOrder.Addresses != null)
@@ -62,6 +59,10 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 			if (customerOrder.Discount != null)
 				retVal.Discount = customerOrder.Discount.ToCoreModel();
 			retVal.TaxDetails = customerOrder.TaxDetails;
+
+            if (customerOrder.DynamicProperties != null)
+                retVal.DynamicProperties = customerOrder.DynamicProperties;
+
 			return retVal;
 		}
 

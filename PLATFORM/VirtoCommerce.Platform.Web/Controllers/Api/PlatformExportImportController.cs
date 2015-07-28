@@ -93,8 +93,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 			 _eventNotifier.Upsert(notification);
 			 var now = DateTime.UtcNow;
 
-
-			 BackgroundJob.Enqueue(() => PlatformExportBackground(exportRequest, PlatformVersion.CurrentVersion.ToString(), notification));
+			 BackgroundJob.Enqueue(() => PlatformExportBackground(exportRequest, PlatformVersion.CurrentVersion.ToString(), CurrentPrincipal.GetCurrentUserName(), notification));
 
 			 return Ok(notification);
 		 }
@@ -152,7 +151,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
 		 }
 
-		 public void PlatformExportBackground(PlatformExportImportRequest exportRequest, string platformVersion, ExportImportProgressNotificationEvent notifyEvent)
+		 public void PlatformExportBackground(PlatformExportImportRequest exportRequest, string platformVersion, string author, ExportImportProgressNotificationEvent notifyEvent)
 		 {
 			 Action<ExportImportProgressInfo> progressCallback = (x) =>
 			 {
@@ -171,7 +170,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 						 Modules = exportedModules,
 						 PlatformSecurity = exportRequest.PlatformSecurity,
 						 PlatformSettings = exportRequest.PlatformSettings,
-						 PlatformVersion = SemanticVersion.Parse(platformVersion)
+						 PlatformVersion = SemanticVersion.Parse(platformVersion),
+						 Author = author
 					 };
 
 					 _platformExportManager.Export(stream, options, progressCallback);
