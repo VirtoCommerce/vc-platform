@@ -19,9 +19,6 @@
     $scope.$on("new-notification-event", function (event, notification) {
         if (blade.notification && notification.id == blade.notification.id) {
             angular.copy(notification, blade.notification);
-            if (notification.finished) {
-                blade.isLoading = false;
-            }
         }
     });
 
@@ -35,7 +32,7 @@
         exportImportResourse.runExport({
             modules: _.pluck(selection, 'id')
         },
-        function (data) { blade.notification = data; },
+        function (data) { blade.notification = data; blade.isLoading = false; },
         function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
     }
 

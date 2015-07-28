@@ -187,42 +187,47 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
                         var properties = repository.GetObjectDynamicProperties(objectType, objectWithDynamicProperties.Id);
 
                         objectWithDynamicProperties.DynamicProperties = properties.Select(p => p.ToDynamicObjectProperty(objectWithDynamicProperties.Id)).ToList();
-                    }
+						//Set object type name
+						objectWithDynamicProperties.ObjectType = objectType;
+					}
                 }
             }
-            //Set object type name
-            owner.ObjectType = GetObjectTypeName(owner);
         }
 
-        public void SaveDynamicPropertyValues(IHasDynamicProperties owner)
-        {
-            var objectsWithDynamicProperties = owner.GetFlatObjectsListWithInterface<IHasDynamicProperties>();
+		public void SaveDynamicPropertyValues(IHasDynamicProperties owner)
+		{
+			if(owner == null)
+			{
+				throw new ArgumentNullException("owner");
+			}
+			//Because one DynamicPropertyEntity may update for multiple object in same time
+			//need create fresh repository for each object to prevent collisions and overrides property values
+			var objectsWithDynamicProperties = owner.GetFlatObjectsListWithInterface<IHasDynamicProperties>();
+			foreach (var objectWithDynamicProperties in objectsWithDynamicProperties)
+			{
+				using (var repository = _repositoryFactory())
+				using (var changeTracker = GetChangeTracker(repository))
+				{
+					if (objectWithDynamicProperties.Id != null)
+					{
+						var result = new List<DynamicPropertyObjectValue>();
 
-            using (var repository = _repositoryFactory())
-            using (var changeTracker = GetChangeTracker(repository))
-            {
-                foreach (var objectWithDynamicProperties in objectsWithDynamicProperties)
-                {
-                    if (objectWithDynamicProperties.Id != null)
-                    {
-                        var result = new List<DynamicPropertyObjectValue>();
+						if (objectWithDynamicProperties.DynamicProperties != null && objectsWithDynamicProperties.Any())
+						{
+							var objectType = GetObjectTypeName(objectWithDynamicProperties);
 
-                        if (objectWithDynamicProperties.DynamicProperties != null)
-                        {
-                            var objectType = GetObjectTypeName(objectWithDynamicProperties);
+							var target = new { Properties = new ObservableCollection<DynamicPropertyEntity>(repository.GetObjectDynamicProperties(objectType, objectWithDynamicProperties.Id)) };
+							var source = new { Properties = new ObservableCollection<DynamicPropertyEntity>(objectWithDynamicProperties.DynamicProperties.Select(x => x.ToEntity())) };
+						
+							changeTracker.Attach(target);
 
-                            var target = new { Properties = new ObservableCollection<DynamicPropertyEntity>(repository.GetObjectDynamicProperties(objectType, objectWithDynamicProperties.Id)) };
-                            var source = new { Properties = new ObservableCollection<DynamicPropertyEntity>(objectWithDynamicProperties.DynamicProperties.Select(x => x.ToEntity())) };
-
-                            changeTracker.Attach(target);
-
-                            source.Properties.Patch(target.Properties, (sourcePopValue, targetPropValue) => sourcePopValue.Patch(targetPropValue));
-                        }
-                    }
-                }
-                repository.UnitOfWork.Commit();
-            }
-        }
+							source.Properties.Patch(target.Properties, (sourcePopValue, targetPropValue) => sourcePopValue.Patch(targetPropValue));
+						}
+					}
+					repository.UnitOfWork.Commit();
+				}
+			}
+		}
 
         public void DeleteDynamicPropertyValues(IHasDynamicProperties owner)
         {

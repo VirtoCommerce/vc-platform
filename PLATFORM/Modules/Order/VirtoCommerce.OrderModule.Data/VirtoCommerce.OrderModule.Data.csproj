@@ -60,7 +60,6 @@
     <Compile Include="Converters\DiscountConverter.cs" />
     <Compile Include="Converters\LineItemConverter.cs" />
     <Compile Include="Converters\OperationConverter.cs" />
-    <Compile Include="Converters\OperationPropertyConverter.cs" />
     <Compile Include="Converters\PaymentInConverter.cs" />
     <Compile Include="Converters\ShipmentConverter.cs" />
     <Compile Include="Converters\ShipmentItemConverter.cs" />
@@ -98,13 +97,16 @@
     <Compile Include="Migrations\201507170854444_AddDatesStatusChanges.Designer.cs">
       <DependentUpon>201507170854444_AddDatesStatusChanges.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201507240957387_RemoveOrderProperties.cs" />
+    <Compile Include="Migrations\201507240957387_RemoveOrderProperties.Designer.cs">
+      <DependentUpon>201507240957387_RemoveOrderProperties.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\AddressEntity.cs" />
     <Compile Include="Model\CustomerOrderEntity.cs" />
     <Compile Include="Model\DiscountEntity.cs" />
     <Compile Include="Model\LineItemEntity.cs" />
     <Compile Include="Model\OperationEntity.cs" />
-    <Compile Include="Model\OperationPropertyEntity.cs" />
     <Compile Include="Model\PaymentInEntity.cs" />
     <Compile Include="Model\ShipmentEntity.cs" />
     <Compile Include="Model\ShipmentPackageEntity.cs" />
@@ -165,6 +167,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201507170854444_AddDatesStatusChanges.resx">
       <DependentUpon>201507170854444_AddDatesStatusChanges.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507240957387_RemoveOrderProperties.resx">
+      <DependentUpon>201507240957387_RemoveOrderProperties.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Repositories\Sql\OrderSampleData.sql" />
   </ItemGroup>

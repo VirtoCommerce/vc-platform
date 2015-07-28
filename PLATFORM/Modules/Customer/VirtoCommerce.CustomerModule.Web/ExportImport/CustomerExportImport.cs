@@ -11,8 +11,8 @@ namespace VirtoCommerce.CustomerModule.Web.ExportImport
 {
     public sealed class BackupObject
     {
-        public List<Contact> Contacts { get; set; }
-        public List<Organization> Organizations { get; set; }
+        public Contact[] Contacts { get; set; }
+        public Organization[] Organizations { get; set; }
     }
 
     public sealed class CustomerExportImport
@@ -50,6 +50,8 @@ namespace VirtoCommerce.CustomerModule.Web.ExportImport
 
         }
 
+        #region Import updates
+        
         private void UpdateOrganizations(ICollection<Organization> original, ICollection<Organization> backup)
         {
             var organizationsToUpdate = new List<Organization>();
@@ -86,32 +88,38 @@ namespace VirtoCommerce.CustomerModule.Web.ExportImport
             _contactService.Update(contactsToUpdate.ToArray());
         }
 
+        #endregion
+
+        #region BackupObject
+
         public BackupObject GetBackupObject()
         {
-           var responce = _customerSearchService.Search(new SearchCriteria { Count = int.MaxValue });
-           var backupObject = new BackupObject
-            {
-                Contacts = responce.Contacts.Select(x => _contactService.GetById(x.Id)).ToList(),
-                Organizations = responce.Organizations.Select(x => _organizationService.GetById(x.Id)).ToList()
-            };
+            var rootOrganization = GetOrganizations(null);
+            var organizations = rootOrganization != null ? rootOrganization.Traverse(ChildrenForOrganization).ToArray() : null;
 
-            TreeComplete(responce.Organizations.Select(x =>x.Id).ToArray(), backupObject);
-            return backupObject;
-        }
-
-        private void TreeComplete(IEnumerable<string> ids, BackupObject backupObject)
-        {
-            foreach (var id in ids)
+            var result = new BackupObject();
+            if (organizations != null)
             {
-                var responce = _customerSearchService.Search(new SearchCriteria { Count = int.MaxValue, OrganizationId = id });
-                var contacts = responce.Contacts.Select(x => _contactService.GetById(x.Id)).ToArray();
-                var organizations = responce.Organizations.Select(x => _organizationService.GetById(x.Id)).ToArray();
-                backupObject.Contacts.AddRange(contacts);
-                backupObject.Organizations.AddRange(organizations);
-                TreeComplete(organizations.Select(x => x.Id).ToArray(), backupObject);
+                result.Contacts = organizations.SelectMany(x => x.Contacts).ToArray();
+                result.Organizations = organizations.SelectMany(x => x.Organizations).ToArray();
             }
+
+            return result;
         }
 
+        private IEnumerable<SearchResult> ChildrenForOrganization(SearchResult result)
+        {
+            return result != null && result.Organizations != null
+                ? result.Organizations.Select(x => GetOrganizations(x.Id))
+                : null;
+        }
+
+        private SearchResult GetOrganizations(string organizationId)
+        {
+            return _customerSearchService.Search(new SearchCriteria { Count = int.MaxValue, OrganizationId = organizationId });
+        }
+
+        #endregion
 
     }
 }

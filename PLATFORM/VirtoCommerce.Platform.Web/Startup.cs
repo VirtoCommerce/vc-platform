@@ -9,10 +9,12 @@ using System.Web;
 using System.Web.Hosting;
 using System.Web.Mvc;
 using Hangfire.SqlServer;
-using Microsoft.AspNet.Identity.Owin;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.SignalR;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
+using Microsoft.Owin.Security.DataProtection;
 using Microsoft.Owin.StaticFiles;
 using Microsoft.Practices.Unity;
 using Owin;
@@ -96,7 +98,7 @@ namespace VirtoCommerce.Platform.Web
 
             //Initialize Platform dependencies
             const string connectionStringName = "VirtoCommerce";
-            InitializePlatform(container, connectionStringName);
+            InitializePlatform(app, container, connectionStringName);
 
             // Ensure all modules are loaded
             var moduleManager = container.Resolve<IModuleManager>();
@@ -172,7 +174,7 @@ namespace VirtoCommerce.Platform.Web
             return assembly;
         }
 
-        private static void InitializePlatform(IUnityContainer container, string connectionStringName)
+        private static void InitializePlatform(IAppBuilder app, IUnityContainer container, string connectionStringName)
         {
             #region Setup database
 
@@ -200,11 +202,11 @@ namespace VirtoCommerce.Platform.Web
             #region Caching
 
             var cacheProvider = new HttpCacheProvider();
-            var cacheSettings = new[] 
-			{
-				new CacheSettings(CacheGroups.Settings, TimeSpan.FromDays(1)),
-				new CacheSettings(CacheGroups.Security, TimeSpan.FromMinutes(1)),
-			};
+            var cacheSettings = new[]
+            {
+                new CacheSettings(CacheGroups.Settings, TimeSpan.FromDays(1)),
+                new CacheSettings(CacheGroups.Security, TimeSpan.FromMinutes(1)),
+            };
 
             var cacheManager = new CacheManager(cacheProvider, cacheSettings);
             container.RegisterInstance<CacheManager>(cacheManager);
@@ -214,47 +216,47 @@ namespace VirtoCommerce.Platform.Web
             #region Settings
 
             var platformSettings = new[]
-			{
-				new ModuleManifest
-				{
-					Settings = new[]
-					{
-						new ModuleSettingsGroup
-						{
-							Name = "Platform|Notifications|SendGrid",
-							Settings = new []
-							{
-								new ModuleSetting
-								{
-									Name = "VirtoCommerce.Platform.Notifications.SendGrid.UserName",
-									ValueType = ModuleSetting.TypeString,
-									Title = "SendGrid UserName",
-									Description = "Your SendGrid account username"
-								},
-								new ModuleSetting
-								{
-									Name = "VirtoCommerce.Platform.Notifications.SendGrid.Secret",
-									ValueType = ModuleSetting.TypeString,
-									Title = "SendGrid Password",
-									Description = "Your SendGrid account password"
-								}
-							}
-						},
+            {
+                new ModuleManifest
+                {
+                    Settings = new[]
+                    {
+                        new ModuleSettingsGroup
+                        {
+                            Name = "Platform|Notifications|SendGrid",
+                            Settings = new []
+                            {
+                                new ModuleSetting
+                                {
+                                    Name = "VirtoCommerce.Platform.Notifications.SendGrid.UserName",
+                                    ValueType = ModuleSetting.TypeString,
+                                    Title = "SendGrid UserName",
+                                    Description = "Your SendGrid account username"
+                                },
+                                new ModuleSetting
+                                {
+                                    Name = "VirtoCommerce.Platform.Notifications.SendGrid.Secret",
+                                    ValueType = ModuleSetting.TypeString,
+                                    Title = "SendGrid Password",
+                                    Description = "Your SendGrid account password"
+                                }
+                            }
+                        },
 
-						new ModuleSettingsGroup
-						{
-							Name = "Platform|Notifications|SendingJob",
-							Settings = new []
-							{
-								new ModuleSetting
-								{
-									Name = "VirtoCommerce.Platform.Notifications.SendingJob.TakeCount",
-									ValueType = ModuleSetting.TypeInteger,
-									Title = "Job Take Count",
-									Description = "Take count for sending job"
-								}
-							}
-						}
+                        new ModuleSettingsGroup
+                        {
+                            Name = "Platform|Notifications|SendingJob",
+                            Settings = new []
+                            {
+                                new ModuleSetting
+                                {
+                                    Name = "VirtoCommerce.Platform.Notifications.SendingJob.TakeCount",
+                                    ValueType = ModuleSetting.TypeInteger,
+                                    Title = "Job Take Count",
+                                    Description = "Take count for sending job"
+                                }
+                            }
+                        }
                     }
                 }
             };
@@ -366,9 +368,14 @@ namespace VirtoCommerce.Platform.Web
 
             container.RegisterType<IClaimsIdentityProvider, ApplicationClaimsIdentityProvider>(new ContainerControlledLifetimeManager());
 
-            container.RegisterType<ApplicationSignInManager>(new InjectionFactory(c => HttpContext.Current.GetOwinContext().Get<ApplicationSignInManager>()));
-            container.RegisterType<ApplicationUserManager>(new InjectionFactory(c => HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>()));
+            container.RegisterInstance(app.GetDataProtectionProvider());
+            container.RegisterType<IUserStore<ApplicationUser>, ApplicationUserStore>(new InjectionConstructor(new SecurityDbContext(connectionStringName)));
             container.RegisterType<IAuthenticationManager>(new InjectionFactory(c => HttpContext.Current.GetOwinContext().Authentication));
+            container.RegisterType<ApplicationUserManager>();
+            container.RegisterType<ApplicationSignInManager>();
+
+            var nonEditableUsers = GetAppSettingsValue("VirtoCommerce:NonEditableUsers", string.Empty);
+            container.RegisterInstance<ISecurityOptions>(new SecurityOptions(nonEditableUsers));
 
             container.RegisterType<ISecurityService, SecurityService>();
 

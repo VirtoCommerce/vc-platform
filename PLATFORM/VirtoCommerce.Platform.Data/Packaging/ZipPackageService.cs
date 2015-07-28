@@ -455,7 +455,7 @@ namespace VirtoCommerce.Platform.Data.Packaging
                     result.IsRemovable = installedPackages.Contains(packageFileName, StringComparer.OrdinalIgnoreCase);
                 }
 
-				result.ModuleInfo = _moduleCatalog.Modules.First(x => x.ModuleName == result.Id);
+				result.ModuleInfo = _moduleCatalog.Modules.FirstOrDefault(x => x.ModuleName == result.Id);
             }
 
             return result;

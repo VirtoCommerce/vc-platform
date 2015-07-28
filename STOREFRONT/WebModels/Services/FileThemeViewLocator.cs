@@ -58,8 +58,10 @@ namespace VirtoCommerce.Web.Services
 
             ViewLocationResult foundView = null;
 
+            var cacheKey = String.Format("{0}-{1}", this.ThemeDirectory, viewNameWithExtension);
+
             // check cache first
-            foundView = ViewLocationCache.GetViewLocation(context, viewNameWithExtension) as ViewLocationResult;
+            foundView = ViewLocationCache.GetViewLocation(context, cacheKey) as ViewLocationResult;
             if (foundView != null) return foundView;
 
             foreach (var fullPath in locations.Select(viewLocation => Combine(this._baseDirectoryPath, this.ThemeDirectory, viewLocation, viewNameWithExtension)))
@@ -100,19 +102,7 @@ namespace VirtoCommerce.Web.Services
                 foundView = new ViewLocationResult(checkedLocations.ToArray());
             }
 
-            // since file is stale, make sure to refresh cache contents
-            /*
-            if (foundView != null && foundView.IsStale())
-            {
-                lock (this._Lock)
-                {
-                    if (!foundView.Reload()) // file was deleted
-                        return null;
-                }
-            }
-             * */
-
-            ViewLocationCache.InsertViewLocation(context, viewNameWithExtension, foundView);
+            ViewLocationCache.InsertViewLocation(context, cacheKey, foundView);
 
             return foundView;
         }

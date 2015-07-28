@@ -35,7 +35,7 @@ namespace VirtoCommerce.Web.Controllers
         [Route("~/files/{*asset}")]
         public async Task<ActionResult> DisplayPageAsset(string asset)
         {
-            var virtualPath = String.Format("~/App_Data/Pages/{0}/{1}", Context.StoreId, asset);
+            var virtualPath = await Task.FromResult(string.Format("~/App_Data/Pages/{0}/{1}", Context.StoreId, asset));
             return new DownloadResult(virtualPath);
         }
         #endregion

@@ -17,8 +17,7 @@ namespace VirtoCommerce.Web.Controllers
         [Route("blogs/{blog}")]
         public async Task<ActionResult> DisplayBlogAsync(string blog)
         {
-            var context = SiteContext.Current;
-            var model = context.Blogs[blog];
+            var model = await Task.FromResult(SiteContext.Current.Blogs[blog]);
             if (model == null)
                 throw new HttpException(404, "NotFound");
 
@@ -31,8 +30,7 @@ namespace VirtoCommerce.Web.Controllers
         [Route("blogs/{blog}/{handle}")]
         public async Task<ActionResult> DisplayBlogArticleAsync(string blog, string handle)
         {
-            var context = SiteContext.Current;
-            var blogModel = context.Blogs[blog] as Blog;
+            var blogModel = await Task.FromResult(SiteContext.Current.Blogs[blog] as Blog);
             if (blogModel == null)
                 throw new HttpException(404, "NotFound");
 

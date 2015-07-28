@@ -133,7 +133,7 @@ namespace VirtoCommerce.Platform.Data.Security.Authentication.Basic.Filters
             else
             {
                 // A correct implementation should verify that Realm does not contain a quote character unless properly
-                // escaped (precededed by a backslash that is not itself escaped).
+                // escaped (preceded by a backslash that is not itself escaped).
                 parameter = "realm=\"" + Realm + "\"";
             }
 

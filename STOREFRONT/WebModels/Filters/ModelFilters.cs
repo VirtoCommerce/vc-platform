@@ -13,6 +13,7 @@ using VirtoCommerce.Web.Views.Engines.Liquid;
 using VirtoCommerce.Web.Views.Engines.Liquid.Extensions;
 using VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine.Extensions;
 using System.Threading;
+using Tag = VirtoCommerce.Web.Models.Tagging.Tag;
 
 #endregion
 
@@ -381,46 +382,6 @@ namespace VirtoCommerce.Web.Models.Filters
             {
                 return helper.SetParameter(requestUri.PathAndQuery, "tags", tag, false);
             }
-
-            // var path = requestUri.LocalPath;
-            // var query = requestUri.Query;
-
-            //var allTags = new List<string>();
-            // var current = context["current_tags"] as string[];
-
-            // // remove existing tags
-            // if (current != null)
-            // {
-            //     query = current.Aggregate(query, (current1, s) => current1.Replace(s, ""));
-            //     query = query.TrimEnd(new[] { '+' });
-            //     allTags.AddRange(current);
-            // }
-
-            // // add trailing "/"
-            // //path = path.EndsWith("/") ? path : path + "/";
-
-            // if (remove)
-            // {
-            //     allTags.Remove(tag);
-            // }
-            // else
-            // {
-            //     allTags.Add(tag);
-            // }
-
-            // var allTagsString = String.Join("+", allTags.OrderBy(x => x));
-
-            // var ret = String.Empty;
-            // if (String.IsNullOrEmpty(query))
-            // {
-            //     ret = String.Format("{0}?tags={1}", path, allTagsString);
-            // }
-            // else
-            // {
-            //     ret = String.Format("{0}{1}&tags={2}", path, query, allTagsString);
-            // }
-
-            // return ret;
         }
         #endregion
 

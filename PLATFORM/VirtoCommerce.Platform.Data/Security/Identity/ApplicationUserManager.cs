@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin;
+using Microsoft.Owin.Security.DataProtection;
 
 namespace VirtoCommerce.Platform.Data.Security.Identity
 {
@@ -11,22 +11,18 @@ namespace VirtoCommerce.Platform.Data.Security.Identity
     /// </summary>
     public class ApplicationUserManager : UserManager<ApplicationUser>
     {
-        public ApplicationUserManager(IUserStore<ApplicationUser> store)
+        public ApplicationUserManager(IUserStore<ApplicationUser> store, IDataProtectionProvider dataProtectionProvider)
             : base(store)
         {
-        }
-
-        public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context)
-        {
-            var manager = new ApplicationUserManager(context.Get<ApplicationUserStore>());
             // Configure validation logic for usernames
-            manager.UserValidator = new UserValidator<ApplicationUser>(manager)
+            UserValidator = new UserValidator<ApplicationUser>(this)
             {
                 AllowOnlyAlphanumericUserNames = false,
                 //RequireUniqueEmail = true, //Cannot require emails because users can be created from wpf admin and username not enforced to be as email
             };
+
             // Configure validation logic for passwords
-            manager.PasswordValidator = new PasswordValidator
+            PasswordValidator = new PasswordValidator
             {
                 RequiredLength = 5,
                 RequireNonLetterOrDigit = false,
@@ -34,30 +30,31 @@ namespace VirtoCommerce.Platform.Data.Security.Identity
                 RequireLowercase = false,
                 RequireUppercase = false,
             };
+
             // Configure user lockout defaults
-            manager.UserLockoutEnabledByDefault = true;
-            manager.DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(5);
-            manager.MaxFailedAccessAttemptsBeforeLockout = 5;
+            UserLockoutEnabledByDefault = true;
+            DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(5);
+            MaxFailedAccessAttemptsBeforeLockout = 5;
+
             // Register two factor authentication providers. This application uses Phone and Emails as a step of receiving a code for verifying the user
             // You can write your own provider and plug in here.
-            manager.RegisterTwoFactorProvider("PhoneCode", new PhoneNumberTokenProvider<ApplicationUser>
+            RegisterTwoFactorProvider("PhoneCode", new PhoneNumberTokenProvider<ApplicationUser>
             {
                 MessageFormat = "Your security code is: {0}"
             });
-            manager.RegisterTwoFactorProvider("EmailCode", new EmailTokenProvider<ApplicationUser>
+            RegisterTwoFactorProvider("EmailCode", new EmailTokenProvider<ApplicationUser>
             {
                 Subject = "SecurityCode",
                 BodyFormat = "Your security code is {0}"
             });
-            manager.EmailService = new EmailService();
-            //manager.SmsService = new SmsService();
-            var dataProtectionProvider = options.DataProtectionProvider;
+            EmailService = new EmailService();
+            //SmsService = new SmsService();
+
             if (dataProtectionProvider != null)
             {
-                manager.UserTokenProvider =
+                UserTokenProvider =
                     new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("ASP.NET Identity"));
             }
-            return manager;
         }
     }
 
