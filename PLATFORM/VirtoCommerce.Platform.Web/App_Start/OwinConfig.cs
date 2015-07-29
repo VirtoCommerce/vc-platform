@@ -24,6 +24,7 @@ namespace VirtoCommerce.Platform.Web
 
         public static void Configure(IAppBuilder app, IUnityContainer container, string databaseConnectionStringName, AuthenticationOptions authenticationOptions)
         {
+            app.CreatePerOwinContext(() => container.Resolve<SecurityDbContext>());
             app.CreatePerOwinContext(() => container.Resolve<ApplicationUserManager>());
 
             if (authenticationOptions.CookiesEnabled)

@@ -277,7 +277,7 @@ namespace VirtoCommerce.Platform.Web
             #region Notifications
 
             var hubSignalR = GlobalHost.ConnectionManager.GetHubContext<ClientPushHub>();
-			var notifier = new InMemoryPushNotificationManager(hubSignalR);
+            var notifier = new InMemoryPushNotificationManager(hubSignalR);
             container.RegisterInstance<IPushNotificationManager>(notifier);
 
             var resolver = new LiquidNotificationTemplateResolver();
@@ -371,7 +371,8 @@ namespace VirtoCommerce.Platform.Web
             container.RegisterType<IClaimsIdentityProvider, ApplicationClaimsIdentityProvider>(new ContainerControlledLifetimeManager());
 
             container.RegisterInstance(app.GetDataProtectionProvider());
-            container.RegisterType<IUserStore<ApplicationUser>, ApplicationUserStore>(new InjectionConstructor(new SecurityDbContext(connectionStringName)));
+            container.RegisterType<SecurityDbContext>(new InjectionConstructor(connectionStringName));
+            container.RegisterType<IUserStore<ApplicationUser>, ApplicationUserStore>();
             container.RegisterType<IAuthenticationManager>(new InjectionFactory(c => HttpContext.Current.GetOwinContext().Authentication));
             container.RegisterType<ApplicationUserManager>();
             container.RegisterType<ApplicationSignInManager>();
