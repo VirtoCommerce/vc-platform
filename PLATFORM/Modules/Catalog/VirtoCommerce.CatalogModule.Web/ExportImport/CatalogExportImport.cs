@@ -57,14 +57,19 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 
 		public void DoImport(Stream backupStream, Action<ExportImportProgressInfo> progressCallback)
 		{
-			var prodgressInfo = new ExportImportProgressInfo { Description = "loading data..." };
-			progressCallback(prodgressInfo);
+			var progressInfo = new ExportImportProgressInfo { Description = "loading data..." };
+			progressCallback(progressInfo);
 
 			var backupObject = backupStream.DeserializeJson<BackupObject>();
 			var originalObject = GetBackupObject(progressCallback);
 
+			progressInfo.Description = String.Format("{0} catalogs importing...", originalObject.Catalogs.Count());
+			progressCallback(progressInfo);
+
 			UpdateCatalogs(originalObject.Catalogs, backupObject.Catalogs);
 
+			progressInfo.Description = String.Format("{0} categories importing...", originalObject.Categories.Count());
+			progressCallback(progressInfo);
 			//Categories should be sorted right way (because it have a hierarchy structure and links to virtual categories)
 			backupObject.Categories = backupObject.Categories.Where(x => x.Links == null || !x.Links.Any())
 															.OrderBy(x => x.Parents != null ? x.Parents.Count() : 0)
@@ -72,6 +77,9 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 															.ToList();
 			UpdateCategories(originalObject.Categories, backupObject.Categories);
 			UpdateProperties(originalObject.Properties, backupObject.Properties);
+
+			progressInfo.Description = String.Format("{0} products importing...", originalObject.Products.Count());
+			progressCallback(progressInfo);
 			UpdateCatalogProducts(originalObject.Products, backupObject.Products);
 		}
 

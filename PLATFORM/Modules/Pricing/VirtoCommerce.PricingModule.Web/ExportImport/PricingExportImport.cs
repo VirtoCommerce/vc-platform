@@ -25,20 +25,19 @@ namespace VirtoCommerce.PricingModule.Web.ExportImport
 
         public void DoExport(Stream backupStream, Action<ExportImportProgressInfo> progressCallback)
         {
-            var prodgressInfo = new ExportImportProgressInfo { Description = "loading data..." };
-            progressCallback(prodgressInfo);
-
-            var backupObject = GetBackupObject();
+  			var backupObject = GetBackupObject(progressCallback);
             backupObject.SerializeJson(backupStream);
         }
 
         public void DoImport(Stream backupStream, Action<ExportImportProgressInfo> progressCallback)
         {
-            var prodgressInfo = new ExportImportProgressInfo { Description = "loading data..." };
-            progressCallback(prodgressInfo);
-
             var backupObject = backupStream.DeserializeJson<BackupObject>();
-            var originalObject = GetBackupObject();
+			var originalObject = GetBackupObject(progressCallback);
+
+			var progressInfo = new ExportImportProgressInfo();
+
+			progressInfo.Description = String.Format("{0} price lists importing...", backupObject.Pricelists.Count());
+			progressCallback(progressInfo);
 
             UpdatePricelist(originalObject.Pricelists, backupObject.Pricelists);
         }
@@ -46,7 +45,7 @@ namespace VirtoCommerce.PricingModule.Web.ExportImport
         private void UpdatePricelist(ICollection<Pricelist> original, ICollection<Pricelist> backup)
         {
             var toUpdate = new List<Pricelist>();
-
+	
             backup.CompareTo(original, EqualityComparer<Pricelist>.Default, (state, x, y) =>
             {
                 switch (state)
@@ -62,11 +61,14 @@ namespace VirtoCommerce.PricingModule.Web.ExportImport
             _pricingService.UpdatePricelists(toUpdate.ToArray());
         }
 
-        private BackupObject GetBackupObject()
+		private BackupObject GetBackupObject(Action<ExportImportProgressInfo> progressCallback)
         {
+			var allPricelistIds = _pricingService.GetPriceLists().Select(x => x.Id);
+			var progressInfo = new ExportImportProgressInfo { Description = String.Format("{0} price lists loading..." , allPricelistIds.Count())};
+			progressCallback(progressInfo);
             return new BackupObject
             {
-                Pricelists = _pricingService.GetPriceLists().Select(x => x.Id).Select(x => _pricingService.GetPricelistById(x)).ToArray()
+                Pricelists = allPricelistIds.Select(x => _pricingService.GetPricelistById(x)).ToList()
             };
         }
 

@@ -10,9 +10,9 @@ function ($scope, bladeNavigationService, eventTemplateResolver, notifications) 
     $scope.notifications = [];
 
     $scope.columns = [
-    	{ title: "Type", orderBy: "NotifyType", checked: true },
+    	{ title: "Type", orderBy: "NotifyType" },
 		{ title: "Title", orderBy: "Title" },
-		{ title: "Created", orderBy: "Created" }
+		{ title: "Created", orderBy: "Created", checked: true, reverse: true }
 
     ];
 	
@@ -56,6 +56,18 @@ function ($scope, bladeNavigationService, eventTemplateResolver, notifications) 
     	$scope.blade.refresh();
     }
     
+    $scope.blade.toolbarCommands = [
+			{
+				name: "Refresh",
+				icon: 'fa fa-refresh',
+				executeMethod: function () {
+					$scope.blade.refresh();
+				},
+				canExecuteMethod: function () {
+					return true;
+				}
+			}];
+
     $scope.$watch('pageSettings.currentPage', function () {
         $scope.blade.refresh();
     });

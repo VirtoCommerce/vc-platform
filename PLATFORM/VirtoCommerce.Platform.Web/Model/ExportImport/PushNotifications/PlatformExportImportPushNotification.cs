@@ -8,11 +8,11 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Notification;
 using VirtoCommerce.Platform.Core.PushNotification;
 
-namespace VirtoCommerce.Platform.Web.Model.ExportImport.NotificationEvent
+namespace VirtoCommerce.Platform.Web.Model.ExportImport.PushNotifications
 {
-	public class ExportImportProgressNotificationEvent : PushNotification
+	public abstract class PlatformExportImportPushNotification : PushNotification
 	{
-		public ExportImportProgressNotificationEvent(string creator)
+		public PlatformExportImportPushNotification(string creator)
 			: base(creator)
 		{
 			Errors = new List<string>();
@@ -33,7 +33,6 @@ namespace VirtoCommerce.Platform.Web.Model.ExportImport.NotificationEvent
 		}
 		[JsonProperty("errors")]
 		public ICollection<string> Errors { get; set; }
-		[JsonProperty("downloadUrl")]
-		public string DownloadUrl { get; set; }
+	
 	}
 }

@@ -104,16 +104,7 @@ angular.module('platformWebApp', AppDependencies).
         };
         mainMenuService.addMenuItem(cfgMenuItem);
 
-        //// remove active button until it is implemented 
-        //var journeyMenuItem = {
-        //    path: 'active',
-        //    title: 'Active',
-        //    icon: 'fa fa-tasks',
-        //    priority: 999
-        //};
-        //mainMenuService.addMenuItem(journeyMenuItem);
-
-
+  
         $rootScope.$on('unauthorized', function (event, rejection) {
             $state.go('loginDialog');
         });

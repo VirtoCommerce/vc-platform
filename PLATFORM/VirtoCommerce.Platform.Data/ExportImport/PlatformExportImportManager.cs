@@ -47,8 +47,8 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 			_roleManagmentService = roleManagmentService;
 			_settingsManager = settingsManager;
 
-			_manifestPartUri = PackUriHelper.CreatePartUri(new Uri("Manifest.xml", UriKind.Relative));
-			_platformEntriesPartUri = PackUriHelper.CreatePartUri(new Uri("PlatformEntries.xml", UriKind.Relative));
+			_manifestPartUri = PackUriHelper.CreatePartUri(new Uri("Manifest.json", UriKind.Relative));
+			_platformEntriesPartUri = PackUriHelper.CreatePartUri(new Uri("PlatformEntries.json", UriKind.Relative));
 		}
 
 		#region IPlatformExportImportManager Members
@@ -59,9 +59,9 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 			using (var package = ZipPackage.Open(stream, FileMode.Open))
 			{
 				var manifestPart = package.GetPart(_manifestPartUri);
-				using (var streamReader = new StreamReader(manifestPart.GetStream()))
+				using (var manifestStream = manifestPart.GetStream())
 				{
-					retVal = streamReader.ReadToEnd().DeserializeXML<PlatformExportManifest>();
+					retVal = manifestStream.DeserializeJson<PlatformExportManifest>();
 				}
 			}
 			return retVal;
@@ -93,9 +93,9 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 					Modules = exportedModules
 				};
 				//After all modules exported need write export manifest part
-				using (var streamWriter = new StreamWriter(manifestPart.GetStream()))
+				using (var stream = manifestPart.GetStream())
 				{
-					streamWriter.Write(manifest.SerializeXML());
+					manifest.SerializeJson<PlatformExportManifest>(stream);
 				}
 			}
 		}
@@ -181,7 +181,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 				}
 			}
 
-			if(exportOptions.HandleSettings)
+			if (exportOptions.HandleSettings)
 			{
 				progressInfo.Description = String.Format("Settings: {0} settings exporting...", 0);
 				progressCallback(progressInfo);
@@ -190,15 +190,13 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 				throw new NotImplementedException();
 			}
 
-			if (platformExportObj.IsNotEmpty)
+			//Create part for platform entries
+			var platformEntiriesPart = package.CreatePart(_platformEntriesPartUri, System.Net.Mime.MediaTypeNames.Application.Octet, CompressionOption.Normal);
+			using (var partStream = platformEntiriesPart.GetStream())
 			{
-				//Create part for platform entries
-				var platformEntiriesPart = package.CreatePart(_platformEntriesPartUri, System.Net.Mime.MediaTypeNames.Application.Octet, CompressionOption.Normal);
-				using (var partStream = platformEntiriesPart.GetStream())
-				{
-					platformExportObj.SerializeJson<PlatformExportEntries>(partStream);
-				}
+				platformExportObj.SerializeJson<PlatformExportEntries>(partStream);
 			}
+
 		}
 
 		private void ImportModulesInternal(Package package, PlatformExportManifest manifest, PlatformExportImportOptions importOptions, Action<ExportImportProgressInfo> progressCallback)

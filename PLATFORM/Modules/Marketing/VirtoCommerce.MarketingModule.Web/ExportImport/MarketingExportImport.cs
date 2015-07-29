@@ -35,28 +35,37 @@ namespace VirtoCommerce.MarketingModule.Web.ExportImport
 
         public void DoExport(Stream backupStream, Action<ExportImportProgressInfo> progressCallback)
         {
-            var prodgressInfo = new ExportImportProgressInfo { Description = "loading data..." };
-            progressCallback(prodgressInfo);
-
-            var backupObject = GetBackupObject();
+			var backupObject = GetBackupObject(progressCallback);
             backupObject.SerializeJson(backupStream);
         }
 
         public void DoImport(Stream backupStream, Action<ExportImportProgressInfo> progressCallback)
         {
-            var prodgressInfo = new ExportImportProgressInfo { Description = "loading data..." };
-            progressCallback(prodgressInfo);
-
             var backupObject = backupStream.DeserializeJson<BackupObject>();
-            var originalObject = GetBackupObject();
+			var originalObject = GetBackupObject(progressCallback);
 
+			var progressInfo = new ExportImportProgressInfo();
+
+			progressInfo.Description = String.Format("{0} promotions importing...", backupObject.Promotions.Count());
+			progressCallback(progressInfo);
+			UpdatePromotions(originalObject.Promotions, backupObject.Promotions);
+
+			progressInfo.Description = String.Format("{0} folders importing...", backupObject.ContentFolders.Count());
+			progressCallback(progressInfo);
             UpdateContentFolders(originalObject.ContentFolders, backupObject.ContentFolders);
+
+			progressInfo.Description = String.Format("{0} places importing...", backupObject.ContentPlaces.Count());
+			progressCallback(progressInfo);
             UpdateContentPlaces(originalObject.ContentPlaces, backupObject.ContentPlaces);
+
+			progressInfo.Description = String.Format("{0} contents importing...", backupObject.ContentItems.Count());
+			progressCallback(progressInfo);
             UpdateContentItems(originalObject.ContentItems, backupObject.ContentItems);
+
+			progressInfo.Description = String.Format("{0} publications importing...", backupObject.ContentPublications.Count());
+			progressCallback(progressInfo);
             UpdateContentPublications(originalObject.ContentPublications, backupObject.ContentPublications);
 
-            //UpdateCoupons(originalObject.Coupons, backupObject.Coupons);
-            UpdatePromotions(originalObject.Promotions, backupObject.Promotions);
         }
 
         #region Import updates
@@ -172,43 +181,70 @@ namespace VirtoCommerce.MarketingModule.Web.ExportImport
         #endregion
 
         #region BackupObject
-        
-        private BackupObject GetBackupObject()
-        {
-            var result = new BackupObject();
-            
-            var rootFolder = GetMarketingSearchResult(null);
-            var folders = rootFolder != null ? rootFolder.Traverse(ChildrenForContent).ToArray() : null;
 
-            if (folders != null)
+		private BackupObject GetBackupObject(Action<ExportImportProgressInfo> progressCallback)
+        {
+	        var result = new BackupObject();
+            var progressInfo = new ExportImportProgressInfo { Description = "Search promotions..." };
+            progressCallback(progressInfo);
+			var allPromotions = _marketingSearchService.SearchResources(new MarketingSearchCriteria
             {
-                result.Promotions = folders.SelectMany(x => x.Promotions)
-                    .Select(x => _promotionService.GetPromotionById(x.Id)).ToArray();
-                result.ContentPublications = folders.SelectMany(x => x.ContentPublications)
-                    .Select(x => _dynamicContentService.GetPublicationById(x.Id)).ToArray();
-                result.Coupons = folders.SelectMany(x => x.Coupons).ToArray();
-                result.ContentPlaces = folders.SelectMany(x => x.ContentPlaces).ToArray();
-                result.ContentItems = folders.SelectMany(x => x.ContentItems).ToArray();
-                result.ContentFolders = folders.SelectMany(x => x.ContentFolders).ToArray();
+                Count = int.MaxValue,
+                ResponseGroup = SearchResponseGroup.WithPromotions
+            }).Promotions;
+
+			progressInfo.Description = String.Format("{0} promotions loading...", allPromotions.Count());
+            progressCallback(progressInfo);
+			result.Promotions = allPromotions.Select(x=> _promotionService.GetPromotionById(x.Id)).ToList();
+
+			progressInfo.Description = "Search dynamic content objects...";
+			 progressCallback(progressInfo);
+
+            var searchResult = SearchInFolder(null);
+            var allFolderSearchResults = searchResult != null ? searchResult.Traverse(ChildrenForFolder).ToArray() : null;
+
+
+            if (allFolderSearchResults != null)
+            {
+				progressInfo.Description = String.Format("Loading folders...");
+				progressCallback(progressInfo);
+				result.ContentFolders = allFolderSearchResults.SelectMany(x => x.ContentFolders).ToList();
+
+				progressInfo.Description = String.Format("Loading places...");
+				progressCallback(progressInfo);
+                result.ContentPlaces = allFolderSearchResults.SelectMany(x => x.ContentPlaces)
+															 .Select(x => _dynamicContentService.GetPlaceById(x.Id))
+															 .ToList();
+
+				progressInfo.Description = String.Format("Loading contents...");
+				progressCallback(progressInfo);
+                result.ContentItems = allFolderSearchResults.SelectMany(x => x.ContentItems)
+														    .Select(x => _dynamicContentService.GetContentItemById(x.Id))
+															.ToList();
+	
+				progressInfo.Description = String.Format("Loading publications...");
+				progressCallback(progressInfo);
+				result.ContentPublications = allFolderSearchResults.SelectMany(x => x.ContentPublications)
+																   .Select(x => _dynamicContentService.GetPublicationById(x.Id))
+																   .ToList();
             }
             return result;
         }
 
-        private IEnumerable<MarketingSearchResult> ChildrenForContent(MarketingSearchResult result)
+		private IEnumerable<MarketingSearchResult> ChildrenForFolder(MarketingSearchResult result)
         {
             return result != null && result.ContentFolders != null
-                ? result.ContentFolders.Select(x => GetMarketingSearchResult(x.Id))
+				? result.ContentFolders.Select(x => SearchInFolder(x.Id))
                 : null;
         }
 
-        private MarketingSearchResult GetMarketingSearchResult(string id)
+		private MarketingSearchResult SearchInFolder(string folderId)
         {
             return _marketingSearchService.SearchResources(new MarketingSearchCriteria
             {
-                FolderId = id,
+				FolderId = folderId,
                 Count = int.MaxValue,
-                ResponseGroup = SearchResponseGroup.WithFolders | SearchResponseGroup.WithContentItems
-                    | SearchResponseGroup.WithContentPlaces
+                ResponseGroup = SearchResponseGroup.WithContentItems | SearchResponseGroup.WithContentPlaces | SearchResponseGroup.WithContentPublications | SearchResponseGroup.WithFolders
             });
         }
 

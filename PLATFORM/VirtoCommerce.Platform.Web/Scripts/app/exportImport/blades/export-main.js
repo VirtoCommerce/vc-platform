@@ -20,7 +20,10 @@
 
     $scope.$on("new-notification-event", function (event, notification) {
         if (blade.notification && notification.id == blade.notification.id) {
-            angular.copy(notification, blade.notification);
+        	angular.copy(notification, blade.notification);
+        	if (notification.errorCount > 0) {
+        		bladeNavigationService.setError('Export error', blade);
+        	}
         }
     });
 

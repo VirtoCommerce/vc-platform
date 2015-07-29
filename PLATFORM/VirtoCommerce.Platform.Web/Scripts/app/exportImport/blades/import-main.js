@@ -4,28 +4,34 @@
     blade.headIcon = 'fa-download';
     blade.title = 'Data import';
     blade.isLoading = false;
-    
+
+    $scope.importRequest = {};
+
     $scope.$on("new-notification-event", function (event, notification) {
         if (blade.notification && notification.id == blade.notification.id) {
-            angular.copy(notification, blade.notification);
+        	angular.copy(notification, blade.notification);
+        	if(notification.errorCount > 0)
+        	{
+        		bladeNavigationService.setError('Import error', blade);
+        	}
         }
     });
 
     $scope.canStartProcess = function () {
-        return blade.currentEntities && _.some(blade.currentEntities, function (x) { return x.isChecked; });
+    	return ($scope.importRequest.modules && $scope.importRequest.modules.length > 0) || $scope.importRequest.handleSecurity || $scope.importRequest.handleSettings;
     }
 
     $scope.startProcess = function () {
         blade.isLoading = true;
-        var selection = _.where(blade.currentEntities, { isChecked: true });
-        exportImportResourse.runImport({
-            fileUrl: blade.fileUrl,
-            modules: _.pluck(selection, 'id')
-        },
+        exportImportResourse.runImport($scope.importRequest,
         function (data) { blade.notification = data; blade.isLoading = false; },
         function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
     }
 
+    $scope.updateModuleSelection = function () {
+    	var selection = _.where(blade.currentEntities, { isChecked: true });
+    	$scope.importRequest.modules = _.pluck(selection, 'id');
+    };
 
     if (!$scope.uploader) {
         function endsWith(str, suffix) {
@@ -56,9 +62,9 @@
         };
 
         uploader.onSuccessItem = function (fileItem, asset, status, headers) {
-            blade.fileUrl = asset[0].relativeUrl;
+        	$scope.importRequest.fileUrl = asset[0].relativeUrl;
 
-            exportImportResourse.getImportInfo({ fileUrl: blade.fileUrl }, function (data) {
+        	exportImportResourse.getImportInfo({ fileUrl: $scope.importRequest.fileUrl }, function (data) {
                 blade.info = data.exportManifest;
                 blade.currentEntities = data.modules;
                 blade.isLoading = false;
