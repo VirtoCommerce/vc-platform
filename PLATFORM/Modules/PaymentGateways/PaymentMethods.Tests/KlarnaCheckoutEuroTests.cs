@@ -9,7 +9,7 @@ using VirtoCommerce.CatalogModule.Data.Repositories;
 using VirtoCommerce.CatalogModule.Data.Services;
 using VirtoCommerce.Domain.Cart.Events;
 using VirtoCommerce.Domain.Catalog.Services;
-using VirtoCommerce.Domain.Common.Events;
+using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Domain.Order.Events;
 using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Domain.Payment.Model;

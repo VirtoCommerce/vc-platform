@@ -38,6 +38,7 @@
                 if (angular.isDefined(parent)) {
                     x.parent = parent;
                     parent.children.push(x);
+                    parent.children.sort(sortByPriority);
                 }
             }
         });

@@ -15,6 +15,7 @@ using GoogleShopping.MerchantModule.Web.Services;
 using Google.Apis.ShoppingContent.v2.Data;
 using GoogleShopping.MerchantModule.Web.Converters;
 using GoogleShopping.MerchantModule.Web.Helpers.Interfaces;
+using VirtoCommerce.Platform.Core.PushNotification;
 #endregion
 
 
@@ -27,20 +28,20 @@ namespace GoogleShopping.MerchantModule.Web.Controllers.Api
         private const string _accessTokenPropertyName = "Google.Shopping.Credentials.AccessToken";
         private readonly IGoogleProductProvider _productProvider;
         private readonly IShoppingSettings _settingsManager;
-        private readonly INotifier _notifier;
+		private readonly IPushNotificationManager _pushNotificationManager;
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly ShoppingContentService _contentService;
 
         public GoogleShoppingController(
             IShoppingSettings settingsManager, 
-            IGoogleProductProvider productProvider, 
-            INotifier notifier, 
+            IGoogleProductProvider productProvider,
+			IPushNotificationManager pushNotificationManager, 
             IDateTimeProvider dateTimeProvider,
             IGoogleContentServiceProvider googleContentServiceProvider)
         {
             _settingsManager = settingsManager;
             _productProvider = productProvider;
-            _notifier = notifier;
+			_pushNotificationManager = pushNotificationManager;
             _dateTimeProvider = dateTimeProvider;
             _contentService = googleContentServiceProvider.GetShoppingContentService();
         }

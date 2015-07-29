@@ -1,11 +1,4 @@
-﻿//Call this to register our module to main application
-var moduleName = "platformWebApp";
-
-if (AppDependencies != undefined) {
-    AppDependencies.push(moduleName);
-}
-
-angular.module(moduleName)
+﻿angular.module(moduleName)
 .config(
   ['$stateProvider', function ($stateProvider) {
       $stateProvider
@@ -31,10 +24,10 @@ angular.module(moduleName)
   ['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', function ($rootScope, mainMenuService, widgetService, $state) {
       //Register module in main menu
       var menuItem = {
-          path: 'browse/packaging',
+          path: 'configuration/packaging',
           icon: 'fa fa-cubes',
           title: 'Modules',
-          priority: 200,
+          priority: 6,
           action: function () { $state.go('workspace.packaging'); },
           permission: 'platform:module:query'
       };

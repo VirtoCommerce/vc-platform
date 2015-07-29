@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Notification;
+using VirtoCommerce.Platform.Core.PushNotification;
 
 namespace VirtoCommerce.Platform.Web.Model.ExportImport.NotificationEvent
 {
-	public class ExportImportProgressNotificationEvent : NotifyEvent
+	public class ExportImportProgressNotificationEvent : PushNotification
 	{
 		public ExportImportProgressNotificationEvent(string creator)
 			: base(creator)

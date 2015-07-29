@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Newtonsoft.Json;
-using VirtoCommerce.Platform.Core.Notification;
+using VirtoCommerce.Platform.Core.PushNotification;
 
 namespace VirtoCommerce.CatalogModule.Web.Model.EventNotifications
 {
-	public class JobNotificationBase : NotifyEvent
+	public class JobNotificationBase : PushNotification
 	{
 		public JobNotificationBase(string creator)
 			: base(creator)

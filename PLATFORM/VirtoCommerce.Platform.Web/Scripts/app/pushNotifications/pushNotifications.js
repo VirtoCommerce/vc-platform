@@ -1,0 +1,182 @@
+﻿angular.module('platformWebApp')
+.config(
+  ['$stateProvider', function ($stateProvider) {
+      $stateProvider
+          .state('pushNotificationsHistory', {
+              url: '/events',
+              templateUrl: 'Scripts/app/pushNotifications/notification.tpl.html',
+              controller: ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
+                  var blade = {
+                      id: 'events',
+                      title: 'System events',
+                      breadcrumbs: [],
+                      subtitle: 'Events history',
+                      controller: 'platformWebApp.pushNotificationsHistoryController',
+                      template: 'Scripts/app/pushNotifications/blade/history.tpl.html',
+                      isClosingDisabled: true
+                  };
+                  bladeNavigationService.showBlade(blade);
+              }
+              ]
+          });
+  }])
+.factory('platformWebApp.pushNotificationTemplateResolver', ['platformWebApp.bladeNavigationService', '$state', function (bladeNavigationService, $state) {
+    var notificationTemplates = [];
+
+    var defaultTypes = ['error', 'info', 'warning'];
+    function register(template) {
+        notificationTemplates.push(template);
+        notificationTemplates.sort(function (a, b) { return a.priority - b.priority; })
+    };
+    function resolve(notification, place) {
+        return _.find(notificationTemplates, function (x) { return x.satisfy(notification, place); })
+    };
+    var retVal = {
+        register: register,
+        resolve: resolve,
+    };
+
+    //Recent events notification template (error, info, debug) 
+    var menuDefaultTemplate =
+		{
+		    priority: 1000,
+		    satisfy: function (notification, place) { return place == 'menu'; },
+		    //template for display that notification in menu and list
+		    template: 'Scripts/app/pushNotifications/menuDefault.tpl.html',
+		    //action executed when notification selected
+		    action: function (notify) { $state.go('pushNotificationsHistory', notify) }
+		};
+
+    //In history list notification template (error, info, debug)
+    var historyDefaultTemplate =
+		{
+		    priority: 1000,
+		    satisfy: function (notification, place) { return place == 'history'; },
+		    //template for display that notification in menu and list
+		    template: 'Scripts/app/pushNotifications/blade/historyDefault.tpl.html',
+		    //action executed in event detail
+		    action: function (notify) {
+		        var blade = {
+		            id: 'notifyDetail',
+		            title: 'Event detail',
+		            subtitle: 'Event detail',
+		            template: 'Scripts/app/pushNotifications/blade/historyDetailDefault.tpl.html',
+		            isClosingDisabled: false,
+		            notify: notify
+		        };
+		        bladeNavigationService.showBlade(blade);
+		    }
+		};
+
+    retVal.register(menuDefaultTemplate);
+    retVal.register(historyDefaultTemplate);
+
+    return retVal;
+}])
+.factory('platformWebApp.pushNotificationService', ['$rootScope', 'platformWebApp.signalRHubProxy', '$interval', '$state', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationTemplateResolver', 'platformWebApp.pushNotifications', 'platformWebApp.signalRServerName', function ($rootScope, signalRHubProxy, $interval, $state, mainMenuService, eventTemplateResolver, notifications, signalRServerName) {
+
+	var clientPushHubProxy = signalRHubProxy(signalRServerName, 'clientPushHub', { logging: true });
+    clientPushHubProxy.on('notification', function (data) {
+    	var notifyMenu = mainMenuService.findByPath('pushNotifications');
+        var notificationTemplate = eventTemplateResolver.resolve(data, 'menu');
+		//broadcast event
+        $rootScope.$broadcast("new-notification-event", data);
+
+        var menuItem = {
+        	parent: notifyMenu,
+        	path: 'pushNotifications/notifications',
+        	icon: 'fa fa-comment',
+        	title: data.title,
+        	priority: 2,
+        	permission: '',
+        	children: [],
+        	action: notificationTemplate.action,
+        	template: notificationTemplate.template,
+        	notify: data
+        };
+
+        var alreadyExitstItem = _.find(notifyMenu.children, function (x) { return x.id == menuItem.id; });
+        if (alreadyExitstItem) {
+        	angular.copy(menuItem, alreadyExitstItem);
+        }
+        else {
+        	notifyMenu.children.push(menuItem);
+        	notifyMenu.newCount++;
+        }
+        notifyMenu.incremented = true;
+    });
+
+    //var timer = new Date().getUTCDate();
+    var notifyStatusEnum =
+		{
+		    running: 0,
+		    aborted: 1,
+		    finished: 2,
+		    error: 3
+		};
+
+    function innerNotification(notification) {
+
+        //Group notification by text
+        notifications.upsert(notification, function (data, status, headers, config) {
+        }, function (error) {
+        });
+    };
+
+    function markAllAsRead() {
+        notifications.markAllAsRead(null, function (data, status, headers, config) {
+        	var notifyMenu = mainMenuService.findByPath('pushNotifications');
+            notifyMenu.incremented = false;
+            notifyMenu.newCount = 0;
+        }, function (error) {
+            //bladeNavigationService.setError('Error ' + error.status, blade);
+        });
+
+    };
+
+    var retVal = {
+        run: function () {
+            if (!this.running) {
+            	var notifyMenu = mainMenuService.findByPath('pushNotifications');
+                if (!angular.isDefined(notifyMenu)) {
+                    notifyMenu = {
+                    	path: 'pushNotifications',
+                        icon: 'fa fa-comments',
+                        title: 'Notifications',
+                        priority: 2,
+                        permission: '',
+                        headerTemplate: 'Scripts/app/pushNotifications/menuHeader.tpl.html',
+                        listTemplate: 'Scripts/app/pushNotifications/menuList.tpl.html',
+                        template: 'Scripts/app/pushNotifications/menu.tpl.html',
+                        action: function () { markAllAsRead(); },
+                        showHistory: function () { $state.go('pushNotificationsHistory'); },
+                        clearRecent: function () { notifyMenu.children.splice(0, notifyMenu.children.length); },
+                        children: [],
+                        newCount: 0
+                    };
+                    mainMenuService.addMenuItem(notifyMenu);
+                }
+                this.running = true;
+            };
+        },
+        running: false,
+        error: function (notification) {
+            notification.notifyType = 'error';
+            return innerNotification(notification);
+        },
+        warning: function (notification) {
+            notification.notifyType = 'warning';
+            return innerNotification(notification);
+        },
+        info: function (notification) {
+            notification.notifyType = 'info';
+            return innerNotification(notification);
+        },
+    	task: function (notification) {
+    		notification.notifyType = 'CatalogExport';
+    	return innerNotification(notification);
+    }
+    };
+    return retVal;
+
+}]);

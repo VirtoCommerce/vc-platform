@@ -25,6 +25,7 @@ using System.Threading.Tasks;
 using VirtoCommerce.Domain.Commerce.Model;
 using VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.Platform.Core.ExportImport;
+using VirtoCommerce.Platform.Core.PushNotification;
 
 
 namespace VirtoCommerce.CatalogModule.Web.ExportImport
@@ -35,7 +36,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 		private readonly ICatalogService _catalogService;
 		private readonly ICategoryService _categoryService;
 		private readonly IItemService _productService;
-		private readonly INotifier _notifier;
+		private readonly IPushNotificationManager _pushNotificationManager;
 		private readonly CacheManager _cacheManager;
 		private readonly ISkuGenerator _skuGenerator;
 		private readonly IPricingService _pricingService;
@@ -46,14 +47,14 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 		private object _lockObject = new object();
 
 		public CsvCatalogImporter(ICatalogService catalogService, ICategoryService categoryService, IItemService productService,
-								INotifier notifier, CacheManager cacheManager, ISkuGenerator skuGenerator,
+								IPushNotificationManager pushNotificationManager, CacheManager cacheManager, ISkuGenerator skuGenerator,
 								IPricingService pricingService, IInventoryService inventoryService, ICommerceService commerceService,
 								IPropertyService propertyService, ICatalogSearchService searchService)
 		{
 			_catalogService = catalogService;
 			_categoryService = categoryService;
 			_productService = productService;
-			_notifier = notifier;
+			_pushNotificationManager = pushNotificationManager;
 			_cacheManager = cacheManager;
 			_skuGenerator = skuGenerator;
 			_pricingService = pricingService;

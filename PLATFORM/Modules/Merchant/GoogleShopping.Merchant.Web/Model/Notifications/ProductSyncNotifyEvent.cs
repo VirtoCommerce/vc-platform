@@ -1,8 +1,8 @@
-﻿using VirtoCommerce.Platform.Core.Notification;
+﻿using VirtoCommerce.Platform.Core.PushNotification;
 
 namespace GoogleShopping.MerchantModule.Web.Model.Notifications
 {
-    public class ProductSyncNotifyEvent : NotifyEvent
+    public class ProductSyncNotifyEvent : PushNotification
     {
         public ProductSyncNotifyEvent(ProductsSyncJob job, string creator)
             : base(creator)
@@ -20,7 +20,7 @@ namespace GoogleShopping.MerchantModule.Web.Model.Notifications
                 Description = string.Format("Import job '{0}' processing was canceled.", Job.Name);
             }
 
-            Job.Notifier.Upsert(this);
+            Job.PushNotifier.Upsert(this);
         }
 
         public bool IsRunning { get; set; }

@@ -99,9 +99,6 @@
     <Compile Include="Commerce\Model\IHaveTaxDetalization.cs" />
     <Compile Include="Commerce\Model\SeoInfo.cs" />
     <Compile Include="Commerce\Model\TaxDetail.cs" />
-    <Compile Include="Common\Events\EventPublisher.cs" />
-    <Compile Include="Common\Events\IEventPublisher.cs" />
-    <Compile Include="Common\Events\IPriorityObserver.cs" />
     <Compile Include="Common\Expressions\ConditionExpressionTree.cs" />
     <Compile Include="Common\Expressions\DynamicExpression.cs" />
     <Compile Include="Common\EvaluationContextBase.cs" />

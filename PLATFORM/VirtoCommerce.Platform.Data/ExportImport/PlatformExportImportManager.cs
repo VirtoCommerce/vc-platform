@@ -6,19 +6,49 @@ using System.Linq;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Packaging;
+using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Security.Identity;
 
 namespace VirtoCommerce.Platform.Data.ExportImport
 {
+	public sealed class PlatformExportEntries
+	{
+		public PlatformExportEntries()
+		{
+			Users = new List<ApplicationUserExtended>();
+			Settings = new List<SettingEntry>();
+		}
+		public bool IsNotEmpty
+		{
+			get
+			{
+				return Users.Any() || Settings.Any();
+			}
+		}
+		public ICollection<ApplicationUserExtended> Users { get; set; }
+		public ICollection<SettingEntry> Settings { get; set; }
+	}
+
+
+
 	public class PlatformExportImportManager : IPlatformExportImportManager
 	{
 		private readonly Uri _manifestPartUri;
-		private readonly Func<ApplicationUserManager> _userManagerFactory;
+		private readonly Uri _platformEntriesPartUri;
 
-		public PlatformExportImportManager(Func<ApplicationUserManager> userManagerFactory)
+		private readonly ISecurityService _securityService;
+		private readonly IRoleManagementService _roleManagmentService;
+		private readonly ISettingsManager _settingsManager;
+
+		public PlatformExportImportManager(ISecurityService securityService, IRoleManagementService roleManagmentService, ISettingsManager settingsManager)
 		{
-			_userManagerFactory = userManagerFactory;
+			_securityService = securityService;
+			_roleManagmentService = roleManagmentService;
+			_settingsManager = settingsManager;
+
 			_manifestPartUri = PackUriHelper.CreatePartUri(new Uri("Manifest.xml", UriKind.Relative));
+			_platformEntriesPartUri = PackUriHelper.CreatePartUri(new Uri("PlatformEntries.xml", UriKind.Relative));
 		}
 
 		#region IPlatformExportImportManager Members
@@ -43,47 +73,13 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 			{
 				throw new ArgumentNullException("exportOptions");
 			}
-			var progressInfo = new ExportImportProgressInfo
-			{
-				Description = "Start platform export...",
-				TotalCount = exportOptions.Modules.Count(),
-				ProcessedCount = 0
-			};
-			progressCallback(progressInfo);
 
 			using (var package = ZipPackage.Open(outStream, FileMode.Create))
 			{
-				var exportModulesInfo = new List<ExportModuleInfo>();
-				foreach (var module in exportOptions.Modules)
-				{
-					//Create part for module
-					var modulePartUri = PackUriHelper.CreatePartUri(new Uri(module.Id, UriKind.Relative));
-					var modulePart = package.CreatePart(modulePartUri, System.Net.Mime.MediaTypeNames.Application.Octet, CompressionOption.Normal);
-
-					progressInfo.Description = String.Format("{0}: export started.", module.Id);
-					progressCallback(progressInfo);
-
-					Action<ExportImportProgressInfo> modulePorgressCallback = (x) =>
-						{
-							progressInfo.Description = String.Format("{0}: {1}", module.Id, x.Description);
-							progressCallback(progressInfo);
-						};
-
-					((ISupportExportModule)module.ModuleInfo.ModuleInstance).DoExport(modulePart.GetStream(), modulePorgressCallback);
-
-					//Register in manifest
-					var moduleManifestPart = new ExportModuleInfo
-					{
-						ModuleId = module.Id,
-						ModuleVersion = module.Version,
-						PartUri = modulePartUri.ToString()
-					};
-					exportModulesInfo.Add(moduleManifestPart);
-
-					progressInfo.Description = String.Format("{0}: export finished.", module.Id);
-					progressInfo.ProcessedCount++;
-					progressCallback(progressInfo);
-				}
+				//Export all selected  modules
+				var exportedModules = ExportModulesInternal(package, exportOptions, progressCallback);
+				//Export all selected platform entries
+				ExportPlatformEntriesInternal(package, exportOptions, progressCallback);
 
 				//Write system information about exported modules
 				var manifestPart = package.CreatePart(_manifestPartUri, System.Net.Mime.MediaTypeNames.Text.Xml);
@@ -92,7 +88,9 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 					Author = exportOptions.Author,
 					Created = DateTime.UtcNow,
 					PlatformVersion = exportOptions.PlatformVersion.ToString(),
-					Modules = exportModulesInfo.ToArray(),
+					IsHasSecurity = exportOptions.HandleSecurity,
+					IsHasSettings = exportOptions.HandleSettings,
+					Modules = exportedModules
 				};
 				//After all modules exported need write export manifest part
 				using (var streamWriter = new StreamWriter(manifestPart.GetStream()))
@@ -102,7 +100,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 			}
 		}
 
-		public void Import(Stream stream, PlatformExportImportOptions exportOptions, Action<ExportImportProgressInfo> progressCallback)
+		public void Import(Stream stream, PlatformExportImportOptions importOptions, Action<ExportImportProgressInfo> progressCallback)
 		{
 			var manifest = ReadPlatformExportManifest(stream);
 			if (manifest == null)
@@ -110,44 +108,151 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 				throw new NullReferenceException("manifest");
 			}
 
-			var progressInfo = new ExportImportProgressInfo
-			{
-				Description = "Start platform import...",
-				TotalCount = exportOptions.Modules.Count(),
-				ProcessedCount = 0
-			};
+			var progressInfo = new ExportImportProgressInfo();
+			progressInfo.Description = "Starting platform import...";
 			progressCallback(progressInfo);
-
+		
 			using (var package = ZipPackage.Open(stream, FileMode.Open))
 			{
-				foreach (var module in exportOptions.Modules)
+				//Import selected modules
+				ImportModulesInternal(package, manifest, importOptions, progressCallback);
+				//Import selected platform entries
+				ImportPlatformEntriesInternal(package, importOptions, progressCallback);
+			}
+		}
+
+		#endregion
+
+		private void ImportPlatformEntriesInternal(Package package, PlatformExportImportOptions importOptions, Action<ExportImportProgressInfo> progressCallback)
+		{
+			var progressInfo = new ExportImportProgressInfo();
+
+			var platformEntriesPart = package.GetPart(_platformEntriesPartUri);
+			if (platformEntriesPart != null)
+			{
+				PlatformExportEntries platformEntries;
+				using (var stream = platformEntriesPart.GetStream())
 				{
-					var moduleInfo = manifest.Modules.First(x => x.ModuleId == module.Id);
-					var modulePart = package.GetPart(new Uri(moduleInfo.PartUri, UriKind.Relative));
-					using (var modulePartStream = modulePart.GetStream())
+					platformEntries = stream.DeserializeJson<PlatformExportEntries>();
+				}
+
+				if(importOptions.HandleSecurity)
+				{
+					progressInfo.Description = String.Format("Import {0} users with roles...", platformEntries.Users.Count());
+					progressCallback(progressInfo);
+
+					//First need import roles
+					var roles = platformEntries.Users.SelectMany(x => x.Roles).Distinct().ToArray();
+					foreach(var role in roles)
 					{
-						Action<ExportImportProgressInfo> modulePorgressCallback = (x) =>
+						_roleManagmentService.AddOrUpdateRole(role);
+					}
+					//Next create or update users
+					foreach(var user in platformEntries.Users)
+					{
+						if(_securityService.FindByIdAsync(user.Id, UserDetails.Reduced).Result != null)
 						{
-							progressInfo.Description = String.Format("{0}: {1}", module.Id, x.Description);
-							//FOrmation error and add new
-							if (x.Errors.Any())
-							{
-								progressInfo.Errors = progressInfo.Errors.Concat(x.Errors).GroupBy(y => y).Select(y => y.Key + (y.Count() > 1 ? String.Format(" ({0})", y.Count()) : "")).ToList();
-							}
-							progressCallback(progressInfo);
-
-						};
-						((ISupportImportModule)module.ModuleInfo.ModuleInstance).DoImport(modulePartStream, modulePorgressCallback);
-
-						progressInfo.Description = String.Format("{0}: import finished.", module.Id);
-						progressInfo.ProcessedCount++;
-						progressCallback(progressInfo);
+							_securityService.UpdateAsync(user);
+						}
+						else
+						{
+							_securityService.CreateAsync(user);
+						}
 					}
 				}
 			}
 		}
 
-		#endregion
+		private void ExportPlatformEntriesInternal(Package package, PlatformExportImportOptions exportOptions, Action<ExportImportProgressInfo> progressCallback)
+		{
+			var progressInfo = new ExportImportProgressInfo();
+			var platformExportObj = new PlatformExportEntries();
+
+			if (exportOptions.HandleSecurity)
+			{
+				//users 
+				var usersResult = _securityService.SearchUsersAsync(new UserSearchRequest { TakeCount = int.MaxValue }).Result;
+				progressInfo.Description = String.Format("Security: {0} users exporting...", usersResult.Users.Count());
+				progressCallback(progressInfo);
+
+				foreach (var user in usersResult.Users)
+				{
+					platformExportObj.Users.Add(_securityService.FindByIdAsync(user.Id, UserDetails.Full).Result);
+				}
+			}
+
+			if(exportOptions.HandleSettings)
+			{
+				progressInfo.Description = String.Format("Settings: {0} settings exporting...", 0);
+				progressCallback(progressInfo);
+
+				//settings 
+				throw new NotImplementedException();
+			}
+
+			if (platformExportObj.IsNotEmpty)
+			{
+				//Create part for platform entries
+				var platformEntiriesPart = package.CreatePart(_platformEntriesPartUri, System.Net.Mime.MediaTypeNames.Application.Octet, CompressionOption.Normal);
+				using (var partStream = platformEntiriesPart.GetStream())
+				{
+					platformExportObj.SerializeJson<PlatformExportEntries>(partStream);
+				}
+			}
+		}
+
+		private void ImportModulesInternal(Package package, PlatformExportManifest manifest, PlatformExportImportOptions importOptions, Action<ExportImportProgressInfo> progressCallback)
+		{
+			var progressInfo = new ExportImportProgressInfo();
+			foreach (var module in importOptions.Modules)
+			{
+				var moduleInfo = manifest.Modules.First(x => x.ModuleId == module.Id);
+				var modulePart = package.GetPart(new Uri(moduleInfo.PartUri, UriKind.Relative));
+				using (var modulePartStream = modulePart.GetStream())
+				{
+					Action<ExportImportProgressInfo> modulePorgressCallback = (x) =>
+					{
+						progressInfo.Description = String.Format("{0}: {1}", module.Id, x.Description);
+						progressCallback(progressInfo);
+					};
+					((ISupportImportModule)module.ModuleInfo.ModuleInstance).DoImport(modulePartStream, modulePorgressCallback);
+
+				}
+			}
+		}
+
+		private ExportModuleInfo[] ExportModulesInternal(Package package, PlatformExportImportOptions exportOptions, Action<ExportImportProgressInfo> progressCallback)
+		{
+			var progressInfo = new ExportImportProgressInfo();
+			var result = new List<ExportModuleInfo>();
+		
+			foreach (var module in exportOptions.Modules)
+			{
+				//Create part for module
+				var modulePartUri = PackUriHelper.CreatePartUri(new Uri(module.Id, UriKind.Relative));
+				var modulePart = package.CreatePart(modulePartUri, System.Net.Mime.MediaTypeNames.Application.Octet, CompressionOption.Normal);
+
+				Action<ExportImportProgressInfo> modulePorgressCallback = (x) =>
+				{
+					progressInfo.Description = String.Format("{0}: {1}", module.Id, x.Description);
+					progressCallback(progressInfo);
+				};
+
+				progressInfo.Description = String.Format("{0}: exporting...", module.Id);
+				progressCallback(progressInfo);
+				((ISupportExportModule)module.ModuleInfo.ModuleInstance).DoExport(modulePart.GetStream(), modulePorgressCallback);
+
+				//Register in manifest
+				var moduleManifestPart = new ExportModuleInfo
+				{
+					ModuleId = module.Id,
+					ModuleVersion = module.Version,
+					PartUri = modulePartUri.ToString()
+				};
+				result.Add(moduleManifestPart);
+			}
+			return result.ToArray();
+		}
 
 
 	}

@@ -16,6 +16,7 @@ using VirtoCommerce.Platform.Core.Asset;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Notification;
+using VirtoCommerce.Platform.Core.PushNotification;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Common;
 using coreModel = VirtoCommerce.Domain.Catalog.Model;
@@ -26,17 +27,17 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 	public class CatalogModuleExportImportController : ApiController
 	{
 		private readonly ICatalogService _catalogService;
-		private readonly INotifier _notifier;
+		private readonly IPushNotificationManager _notifier;
 		private readonly ISettingsManager _settingsManager;
 		private readonly IBlobStorageProvider _blobStorageProvider;
 		private readonly CsvCatalogExporter _csvExporter;
 		private readonly CsvCatalogImporter _csvImporter;
 		private readonly IBlobUrlResolver _blobUrlResolver;
 
-		public CatalogModuleExportImportController(ICatalogService catalogService, INotifier notifier, ISettingsManager settingsManager, IBlobStorageProvider blobStorageProvider, IBlobUrlResolver blobUrlResolver, CsvCatalogExporter csvExporter, CsvCatalogImporter csvImporter)
+		public CatalogModuleExportImportController(ICatalogService catalogService, IPushNotificationManager pushNotificationManager, ISettingsManager settingsManager, IBlobStorageProvider blobStorageProvider, IBlobUrlResolver blobUrlResolver, CsvCatalogExporter csvExporter, CsvCatalogImporter csvImporter)
 		{
 			_catalogService = catalogService;
-			_notifier = notifier;
+			_notifier = pushNotificationManager;
 			_settingsManager = settingsManager;
 			_blobStorageProvider = blobStorageProvider;
 			_csvExporter = csvExporter;
