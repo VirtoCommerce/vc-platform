@@ -21,6 +21,11 @@ namespace VirtoCommerce.ApiClient.Extensions
             return client;
         }
 
+        public static PageClient CreatePageClient(this CommerceClients source, string serviceUrl, string appId, string secretKey)
+        {
+            var client = new PageClient(new Uri(serviceUrl), appId, secretKey);
+            return client;
+        }
         #endregion
     }
 }

@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin;
 
 namespace VirtoCommerce.Platform.Data.Security.Identity
 {
@@ -10,10 +8,6 @@ namespace VirtoCommerce.Platform.Data.Security.Identity
             : base(context)
         {
 
-        }
-        public static ApplicationUserStore Create(IdentityFactoryOptions<ApplicationUserStore> options, IOwinContext context)
-        {
-            return new ApplicationUserStore(context.Get<SecurityDbContext>());
         }
     }
 }
