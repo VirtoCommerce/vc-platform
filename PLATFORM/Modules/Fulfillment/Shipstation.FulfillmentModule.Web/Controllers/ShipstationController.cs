@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Web.Http;
 using System.Web.Http.Description;
 using Shipstation.FulfillmentModule.Web.Converters;
 using Shipstation.FulfillmentModule.Web.Models.Notice;
 using Shipstation.FulfillmentModule.Web.Models.Order;
 using Shipstation.FulfillmentModule.Web.Services;
-using System.Web.Http;
 using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Domain.Order.Services;
-using VirtoCommerce.Platform.Data.Security.Authentication.Basic.Filters;
+using VirtoCommerce.Platform.Data.Security.Authentication.Basic;
 
 namespace Shipstation.FulfillmentModule.Web.Controllers
 {
@@ -20,7 +20,7 @@ namespace Shipstation.FulfillmentModule.Web.Controllers
     {
         private readonly ICustomerOrderService _orderService;
         private readonly ICustomerOrderSearchService _orderSearchService;
-        
+
         public ShipstationController(ICustomerOrderService orderService, ICustomerOrderSearchService orderSearchService)
         {
             _orderSearchService = orderSearchService;
@@ -36,22 +36,26 @@ namespace Shipstation.FulfillmentModule.Web.Controllers
             if (action == "export")
             {
                 var shipstationOrders = new Orders();
-                
+
                 var searchCriteria = new SearchCriteria
                 {
-                    StartDate = DateTime.Parse(start_date, new CultureInfo("en-US")),
-                    EndDate = DateTime.Parse(end_date, new CultureInfo("en-US")),
                     ResponseGroup = ResponseGroup.Full
                 };
+
+                if (start_date != null)
+                    searchCriteria.StartDate = DateTime.Parse(start_date, new CultureInfo("en-US"));
+
+                if (end_date != null)
+                    searchCriteria.EndDate = DateTime.Parse(end_date, new CultureInfo("en-US"));
 
                 //if page more than 1 shipstation requests second or later page to be returned. move start position to that page.
                 if (page > 1)
                 {
-                    searchCriteria.Start += searchCriteria.Count * (page-1);
+                    searchCriteria.Start += searchCriteria.Count * (page - 1);
                 }
 
                 var searchResult = _orderSearchService.Search(searchCriteria);
-                
+
                 if (searchResult.CustomerOrders != null && searchResult.CustomerOrders.Any())
                 {
                     var shipstationOrdersList = new List<OrdersOrder>();
@@ -69,10 +73,10 @@ namespace Shipstation.FulfillmentModule.Web.Controllers
 
                 return Ok(shipstationOrders);
             }
-            
+
             return BadRequest();
         }
-        
+
         [HttpPost]
         [Route("")]
         [IdentityBasicAuthentication]
