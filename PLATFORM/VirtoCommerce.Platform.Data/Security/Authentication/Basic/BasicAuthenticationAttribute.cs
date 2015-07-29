@@ -4,12 +4,13 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http.Filters;
-using VirtoCommerce.Platform.Data.Security.Authentication.Basic.Results;
 
-namespace VirtoCommerce.Platform.Data.Security.Authentication.Basic.Filters
+namespace VirtoCommerce.Platform.Data.Security.Authentication.Basic
 {
     public abstract class BasicAuthenticationAttribute : Attribute, IAuthenticationFilter
     {
+        public const string AuthenticationType = "Basic";
+
         public string Realm { get; set; }
 
         public async Task AuthenticateAsync(HttpAuthenticationContext context, CancellationToken cancellationToken)
@@ -24,7 +25,7 @@ namespace VirtoCommerce.Platform.Data.Security.Authentication.Basic.Filters
                 return;
             }
 
-            if (authorization.Scheme != "Basic")
+            if (authorization.Scheme != AuthenticationType)
             {
                 // No authentication was attempted (for this authentication method).
                 // Do not set either Principal (which would indicate success) or ErrorResult (indicating an error).
@@ -50,7 +51,7 @@ namespace VirtoCommerce.Platform.Data.Security.Authentication.Basic.Filters
             string userName = userNameAndPasword.Item1;
             string password = userNameAndPasword.Item2;
 
-            IPrincipal principal = await AuthenticateAsync(userName, password, cancellationToken);
+            IPrincipal principal = await AuthenticateAsync(userName, password, context, cancellationToken);
 
             if (principal == null)
             {
@@ -64,8 +65,7 @@ namespace VirtoCommerce.Platform.Data.Security.Authentication.Basic.Filters
             }
         }
 
-        protected abstract Task<IPrincipal> AuthenticateAsync(string userName, string password,
-            CancellationToken cancellationToken);
+        protected abstract Task<IPrincipal> AuthenticateAsync(string userName, string password, HttpAuthenticationContext context, CancellationToken cancellationToken);
 
         private static Tuple<string, string> ExtractUserNameAndPassword(string authorizationParameter)
         {
@@ -137,7 +137,7 @@ namespace VirtoCommerce.Platform.Data.Security.Authentication.Basic.Filters
                 parameter = "realm=\"" + Realm + "\"";
             }
 
-            context.ChallengeWith("Basic", parameter);
+            context.ChallengeWith(AuthenticationType, parameter);
         }
 
         public virtual bool AllowMultiple

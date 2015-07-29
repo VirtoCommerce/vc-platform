@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Net.Http.Headers;
 using System.Web.Http.Filters;
-using VirtoCommerce.Platform.Data.Security.Authentication.Basic.Results;
 
-namespace VirtoCommerce.Platform.Data.Security.Authentication.Basic.Filters
+namespace VirtoCommerce.Platform.Data.Security.Authentication.Basic
 {
     public static class HttpAuthenticationChallengeContextExtensions
     {
@@ -24,7 +23,7 @@ namespace VirtoCommerce.Platform.Data.Security.Authentication.Basic.Filters
                 throw new ArgumentNullException("context");
             }
 
-            context.Result = new AddChallengeOnUnauthorizedResult(challenge, context.Result);
+            context.Result = new AuthenticationChallengeResult(challenge, context.Result);
         }
     }
 }

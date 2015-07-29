@@ -6,11 +6,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
 
-namespace VirtoCommerce.Platform.Data.Security.Authentication.Basic.Results
+namespace VirtoCommerce.Platform.Data.Security.Authentication.Basic
 {
-    public class AddChallengeOnUnauthorizedResult : IHttpActionResult
+    public class AuthenticationChallengeResult : IHttpActionResult
     {
-        public AddChallengeOnUnauthorizedResult(AuthenticationHeaderValue challenge, IHttpActionResult innerResult)
+        public AuthenticationChallengeResult(AuthenticationHeaderValue challenge, IHttpActionResult innerResult)
         {
             Challenge = challenge;
             InnerResult = innerResult;
