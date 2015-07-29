@@ -24,9 +24,9 @@
 ];
 
 angular.module('platformWebApp', AppDependencies).
-  controller('platformWebApp.appCtrl', ['$scope', '$window', '$state', 'platformWebApp.notificationService', function ($scope, $window, $state, notificationService) {
+  controller('platformWebApp.appCtrl', ['$scope', '$window', '$state', 'platformWebApp.pushNotificationService', function ($scope, $window, $state, eventService) {
       $scope.platformVersion = $window.platformVersion;
-      notificationService.run();
+      eventService.run();
 
       $scope.curentStateName = function () {
           return $state.current.name;
@@ -71,8 +71,8 @@ angular.module('platformWebApp', AppDependencies).
   ]
 )
 .run(
-  ['$rootScope', '$state', '$stateParams', 'platformWebApp.authService', 'platformWebApp.mainMenuService', 'editableOptions', 'platformWebApp.notificationService', '$animate', '$templateCache', 'gridsterConfig', 'platformWebApp.widgetService',
-    function ($rootScope, $state, $stateParams, authService, mainMenuService, editableOptions, notificationService, $animate, $templateCache, gridsterConfig, widgetService) {
+  ['$rootScope', '$state', '$stateParams', 'platformWebApp.authService', 'platformWebApp.mainMenuService', 'editableOptions', 'platformWebApp.pushNotificationService', '$animate', '$templateCache', 'gridsterConfig', 'platformWebApp.widgetService',
+    function ($rootScope, $state, $stateParams, authService, mainMenuService, editableOptions, eventService, $animate, $templateCache, gridsterConfig, widgetService) {
         //Disable animation
         $animate.enabled(false);
         editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
@@ -88,13 +88,21 @@ angular.module('platformWebApp', AppDependencies).
         };
         mainMenuService.addMenuItem(homeMenuItem);
 
-        var menuItem = {
+        var browseMenuItem = {
             path: 'browse',
             icon: 'fa fa-search',
             title: 'Browse',
             priority: 90,
         };
-        mainMenuService.addMenuItem(menuItem);
+        mainMenuService.addMenuItem(browseMenuItem);
+
+        var cfgMenuItem = {
+        	path: 'configuration',
+        	icon: 'fa fa-wrench',
+        	title: 'Configuration',
+        	priority: 91,
+        };
+        mainMenuService.addMenuItem(cfgMenuItem);
 
         //// remove active button until it is implemented 
         //var journeyMenuItem = {
@@ -112,7 +120,7 @@ angular.module('platformWebApp', AppDependencies).
 
         $rootScope.$on('httpError', function (event, rejection) {
             if (!(rejection.config.url.indexOf('api/notification') + 1)) {
-                notificationService.error({ title: 'HTTP error', description: rejection.status + ' — ' + rejection.statusText, extendedData: rejection.data });
+                eventService.error({ title: 'HTTP error', description: rejection.status + ' — ' + rejection.statusText, extendedData: rejection.data });
             }
         });
 
@@ -153,38 +161,6 @@ angular.module('platformWebApp', AppDependencies).
             return hash;
         };
 
-        // register dashboard demo widgets and templates
-        //widgetService.registerWidget({
-        //    controller: 'platformWebApp.demo.dashboard.notificationsWidgetController',
-        //    template: 'tile-notifications.html'
-        //}, 'mainDashboard');
-
-        //$templateCache.put('tile-count.html', '<div class="gridster-cnt" ng-click="widgetAction()"><div class="cnt-inner"><div class="list-count">{{data.count}}</div><div class="list-t">{{data.descr}}</div></div></div>');
-        //    $templateCache.put('tile-notifications.html', '<ul class="list __notice">\
-        //        <li class="list-item __info">\
-        //            <a class="list-link" href="" ng-click="notification(\'info\')">\
-        //                <i class="list-ico fa fa-comments"></i>\
-        //            Info\
-        //        </a>\
-        //    </li>\
-        //    <li class="list-item __warning">\
-        //        <a class="list-link" href="" ng-click="notification(\'warning\')">\
-        //            <i class="list-ico fa fa-warning"></i>\
-        //            Warning\
-        //        </a>\
-        //    </li>\
-        //    <li class="list-item __task">\
-        //        <a class="list-link" href="" ng-click="notification(\'task\')">\
-        //            <i class="list-ico fa fa-tasks"></i>\
-        //            Task\
-        //        </a>\
-        //    </li>\
-        //    <li class="list-item __error">\
-        //        <a class="list-link" href="" ng-click="notification(\'error\')">\
-        //            <i class="list-ico fa fa-warning"></i>\
-        //            Error\
-        //        </a>\
-        //    </li>\
-        //</ul>');
+     
     }
   ]);

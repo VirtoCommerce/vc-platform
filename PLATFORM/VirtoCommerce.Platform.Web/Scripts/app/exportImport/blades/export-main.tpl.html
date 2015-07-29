@@ -6,15 +6,43 @@
 <div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
-            <div class="sub-t" ng-if="!blade.notification">Select modules to export</div>
-            <div class="list __items" ng-if="!blade.notification">
-                <label class="list-item" ng-repeat="data in blade.currentEntities">
-                    <input type="checkbox" ng-model="data.isChecked">
-                    <span class="switch"></span>
-                    <span class="list-name">{{data.title}}</span>
-                    <span class="list-descr">{{data.description}}</span>
-                </label>
-            </div>
+            <form class="form ng-pristine ng-valid">
+                <fieldset ng-if="!blade.notification">
+                    <legend>Platform entries</legend>
+                    <div class="form-group">
+                        <div class="column">
+                            <div class="form-control __checkbox">
+                                <label class="form-label">
+                                    <input type="checkbox" ng-model="exportRequest.handleSecurity">
+                                    <span class="check"></span>
+                                    <span class="name">Security accounts and roles</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="column">
+                            <div class="form-control __checkbox">
+                                <label class="form-label">
+                                    <input type="checkbox" ng-model="exportRequest.handleSettings">
+                                    <span class="check"></span>
+                                    <span class="name">Settings</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset ng-if="!blade.notification">
+                    <legend>Choose modules to export</legend>
+                    <div class="list __items">
+                        <label class="list-item" ng-repeat="data in blade.currentEntities">
+                            <input type="checkbox" ng-model="data.isChecked" ng-checked="updateModuleSelection()">
+                            <span class="switch"></span>
+                            <span class="list-name">{{data.title}}</span>
+                            <span class="list-descr">{{data.description}}</span>
+                        </label>
+                    </div>
+                </fieldset>
+            </form>
+          
             <div class="form">
                 <div class="block">
                     <div>

@@ -2,6 +2,7 @@
 using GoogleShopping.MerchantModule.Web.Model.Notifications;
 using Newtonsoft.Json;
 using VirtoCommerce.Platform.Core.Notification;
+using VirtoCommerce.Platform.Core.PushNotification;
 
 namespace GoogleShopping.MerchantModule.Web.Model
 {
@@ -13,7 +14,7 @@ namespace GoogleShopping.MerchantModule.Web.Model
 		[JsonIgnore]
 		public ProductSyncNotifyEvent NotifyEvent { get; set; }
 		[JsonIgnore]
-		public INotifier Notifier { get; set; }
+		public IPushNotificationManager PushNotifier { get; set; }
 		
 		[JsonIgnore]
 		public CancellationTokenSource CancellationToken;

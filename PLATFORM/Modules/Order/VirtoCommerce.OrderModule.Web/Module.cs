@@ -103,8 +103,8 @@ namespace VirtoCommerce.OrderModule.Web
 
         public void DoExport(System.IO.Stream outStream, Action<ExportImportProgressInfo> progressCallback)
         {
-            var job = GetOrderExportImport(progressCallback);
-            job.DoExport(outStream);
+			var job = _container.Resolve<OrderExportImport>();
+			job.DoExport(outStream, progressCallback);
         }
 
         #endregion
@@ -113,18 +113,11 @@ namespace VirtoCommerce.OrderModule.Web
 
         public void DoImport(System.IO.Stream inputStream, Action<ExportImportProgressInfo> progressCallback)
         {
-            var job = GetOrderExportImport(progressCallback);
-            job.DoImport(inputStream);
+			var job = _container.Resolve<OrderExportImport>();
+			job.DoImport(inputStream, progressCallback);
         }
 
         #endregion
 
-        private OrderExportImport GetOrderExportImport(Action<ExportImportProgressInfo> progressCallback)
-        {
-            return _container.Resolve<OrderExportImport>(new ResolverOverride[]
-                {
-                    new ParameterOverride("progressCallback", progressCallback)
-                });
-        }
     }
 }

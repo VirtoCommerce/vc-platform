@@ -21,10 +21,10 @@
 .run(
   ['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', function ($rootScope, mainMenuService, widgetService, $state) {
       var menuItem = {
-          path: 'browse/exportImport',
+          path: 'configuration/exportImport',
           icon: 'fa fa-database',
           title: 'Export & Import',
-          priority: 210,
+          priority: 10,
           action: function () { $state.go('workspace.exportImport'); },
           permission: 'platform:backupAdministrator'
       };
