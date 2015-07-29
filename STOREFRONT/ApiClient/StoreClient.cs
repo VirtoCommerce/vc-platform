@@ -53,7 +53,7 @@ namespace VirtoCommerce.ApiClient
             return await
                 GetAsync<SyncAssetGroup[]>(
                     CreateRequestUri(
-                        String.Format(RelativePaths.StoreAssets, storeId), parameters));
+                        String.Format(RelativePaths.StoreAssets, storeId), parameters)).ConfigureAwait(false);
         }
 
         #endregion

@@ -19,6 +19,12 @@ namespace VirtoCommerce.ApiClient.Extensions
             return client;
         }
 
+        public static ReviewsClient CreateReviewClient(this CommerceClients source, string serviceUrl, string appId, string secretKey)
+        {
+            var client = new ReviewsClient(new Uri(serviceUrl), appId, secretKey);
+            return client;
+        }
+
         public static ReviewsClient CreateReviewsClient(this CommerceClients source)
         {
             return source.CreateReviewsClient(Thread.CurrentThread.CurrentUICulture.ToString());
