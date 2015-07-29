@@ -106,16 +106,7 @@
         notifyMenu.incremented = true;
     });
 
-    //var timer = new Date().getUTCDate();
-    var notifyStatusEnum =
-		{
-		    running: 0,
-		    aborted: 1,
-		    finished: 2,
-		    error: 3
-		};
-
-    function innerNotification(notification) {
+   function innerNotification(notification) {
 
         //Group notification by text
         notifications.upsert(notification, function (data, status, headers, config) {
@@ -148,7 +139,7 @@
                         headerTemplate: 'Scripts/app/pushNotifications/menuHeader.tpl.html',
                         listTemplate: 'Scripts/app/pushNotifications/menuList.tpl.html',
                         template: 'Scripts/app/pushNotifications/menu.tpl.html',
-                        action: function () { markAllAsRead(); },
+                        action: function () { markAllAsRead(); if (this.children.length == 0) { this.showHistory(); } },
                         showHistory: function () { $state.go('pushNotificationsHistory'); },
                         clearRecent: function () { notifyMenu.children.splice(0, notifyMenu.children.length); },
                         children: [],

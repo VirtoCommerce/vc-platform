@@ -30,24 +30,23 @@ namespace VirtoCommerce.CustomerModule.Web.ExportImport
 
         public void DoExport(Stream backupStream, Action<ExportImportProgressInfo> progressCallback)
         {
-            var prodgressInfo = new ExportImportProgressInfo { Description = "loading data..." };
-            progressCallback(prodgressInfo);
-
-            var backupObject = GetBackupObject();
+			var backupObject = GetBackupObject(progressCallback);
             backupObject.SerializeJson(backupStream);
         }
 
         public void DoImport(Stream backupStream, Action<ExportImportProgressInfo> progressCallback)
         {
-            var prodgressInfo = new ExportImportProgressInfo { Description = "loading data..." };
-            progressCallback(prodgressInfo);
-
             var backupObject = backupStream.DeserializeJson<BackupObject>();
-            var originalObject = GetBackupObject();
+			var originalObject = GetBackupObject(progressCallback);
 
+			var progressInfo = new ExportImportProgressInfo();
+			progressInfo.Description = String.Format("{0} organizations importing...", backupObject.Organizations.Count());
+			progressCallback(progressInfo);
             UpdateOrganizations(originalObject.Organizations, backupObject.Organizations);
-            UpdateContacts(originalObject.Contacts, backupObject.Contacts);
 
+			progressInfo.Description = String.Format("{0} contacts importing...", backupObject.Contacts.Count());
+			progressCallback(progressInfo);
+            UpdateContacts(originalObject.Contacts, backupObject.Contacts);
         }
 
         #region Import updates
@@ -92,8 +91,12 @@ namespace VirtoCommerce.CustomerModule.Web.ExportImport
 
         #region BackupObject
 
-        public BackupObject GetBackupObject()
+		public BackupObject GetBackupObject(Action<ExportImportProgressInfo> progressCallback)
         {
+			var progressInfo = new ExportImportProgressInfo();
+			progressInfo.Description = "loading organizations and contacts...";
+			progressCallback(progressInfo);
+
             var rootOrganization = GetOrganizations(null);
             var organizations = rootOrganization != null ? rootOrganization.Traverse(ChildrenForOrganization).ToArray() : null;
 

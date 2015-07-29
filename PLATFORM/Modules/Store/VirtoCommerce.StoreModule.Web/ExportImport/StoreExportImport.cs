@@ -26,10 +26,7 @@ namespace VirtoCommerce.StoreModule.Web.ExportImport
 
         public void DoExport(Stream backupStream, Action<ExportImportProgressInfo> progressCallback)
         {
-            var prodgressInfo = new ExportImportProgressInfo { Description = "loading data..." };
-            progressCallback(prodgressInfo);
-
-            var backupObject = GetBackupObject();
+			var backupObject = GetBackupObject(progressCallback);
             //Remove from backup non active methods
             backupObject.Stores.ForEach(x => x.PaymentMethods = x.PaymentMethods.Where(s => s.IsActive).ToList());
             backupObject.Stores.ForEach(x => x.ShippingMethods = x.ShippingMethods.Where(s => s.IsActive).ToList());
@@ -39,11 +36,12 @@ namespace VirtoCommerce.StoreModule.Web.ExportImport
 
         public void DoImport(Stream backupStream, Action<ExportImportProgressInfo> progressCallback)
         {
-            var prodgressInfo = new ExportImportProgressInfo { Description = "loading data..." };
-            progressCallback(prodgressInfo);
-
             var backupObject = backupStream.DeserializeJson<BackupObject>();
-            var originalObject = GetBackupObject();
+			var originalObject = GetBackupObject(progressCallback);
+
+			var progressInfo = new ExportImportProgressInfo();
+			progressInfo.Description = String.Format("{0} stores importing...", backupObject.Stores.Count());
+			progressCallback(progressInfo);
 
             UpdateStores(originalObject.Stores, backupObject.Stores);
         }
@@ -67,8 +65,12 @@ namespace VirtoCommerce.StoreModule.Web.ExportImport
             _storeService.Update(toUpdate.ToArray());
         }
 
-        private BackupObject GetBackupObject()
+		private BackupObject GetBackupObject(Action<ExportImportProgressInfo> progressCallback)
         {
+			var progressInfo = new ExportImportProgressInfo();
+			progressInfo.Description = "stores loading...";
+			progressCallback(progressInfo);
+
             return new BackupObject
             {
                 Stores = _storeService.GetStoreList().Select(x => x.Id).Select(x => _storeService.GetById(x)).ToArray()

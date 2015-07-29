@@ -305,8 +305,10 @@
     <Compile Include="Hangfire\UnityJobActivator.cs" />
     <Compile Include="Model\Asset\BlobInfo.cs" />
     <Compile Include="Model\ExportImport\ImportInfo.cs" />
-    <Compile Include="Model\ExportImport\NotificationEvent\ExportImportNotificationEvent.cs" />
+    <Compile Include="Model\ExportImport\PushNotifications\PlatformExportImportPushNotification.cs" />
     <Compile Include="Model\ExportImport\PlatformExportImportRequest.cs" />
+    <Compile Include="Model\ExportImport\PushNotifications\PlatformExportPushNotification.cs" />
+    <Compile Include="Model\ExportImport\PushNotifications\PlatformImportPushNotification.cs" />
     <Compile Include="Model\Jobs\Job.cs" />
     <Compile Include="Model\Notification\Notification.cs" />
     <Compile Include="Model\Notification\NotificationParameter.cs" />
@@ -359,6 +361,8 @@
     <Content Include="Scripts\app\exportImport\blades\exportImport-main.js" />
     <Content Include="Scripts\app\exportImport\blades\exportImport-main.tpl.html" />
     <Content Include="Scripts\app\exportImport\exportImport.js" />
+    <Content Include="Scripts\app\exportImport\notifications\history.tpl.html" />
+    <Content Include="Scripts\app\exportImport\notifications\menu.tpl.html" />
     <Content Include="Scripts\app\exportImport\resources\exportImport.js" />
     <Content Include="Scripts\app\notifications\blades\notification-journal-details.js" />
     <Content Include="Scripts\app\notifications\blades\notification-journal-details.tpl.html" />
