@@ -159,7 +159,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 				 _eventNotifier.Upsert(notifyEvent);
 			 };
 
-			 var now = DateTime.UtcNow;
 			 try
 			 {
 				 var exportedModules = InnerGetModulesWithInterface(typeof(ISupportExportModule)).Where(x => exportRequest.Modules.Contains(x.Id)).ToArray();
@@ -179,7 +178,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 					 //Upload result  to blob storage
 					 var uploadInfo = new UploadStreamInfo
 					 {
-						 FileName = "Platform-" + now.ToString("yyMMddhh") + "-export.zip",
+                         FileName = string.Format("Export (utc time {0}).zip", DateTime.UtcNow.ToString("yy-MM-dd hh-mm")),
 						 FileByteStream = stream,
 						 FolderName = "tmp"
 					 };
