@@ -5,7 +5,7 @@ using moduleModel = VirtoCommerce.Platform.Core.Packaging;
 
 namespace VirtoCommerce.Platform.Web.Converters.Packaging
 {
-    public static class ModuleDecriptorConverter
+    public static class ModuleDescriptorConverter
     {
         public static webModel.ModuleDescriptor ToWebModel(this moduleModel.ModuleDescriptor descriptor)
         {
