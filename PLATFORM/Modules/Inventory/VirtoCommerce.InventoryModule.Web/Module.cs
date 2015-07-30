@@ -1,14 +1,17 @@
-﻿using Microsoft.Practices.Unity;
+﻿using System;
+using Microsoft.Practices.Unity;
 using VirtoCommerce.Domain.Inventory.Services;
 using VirtoCommerce.InventoryModule.Data.Repositories;
 using VirtoCommerce.InventoryModule.Data.Services;
+using VirtoCommerce.InventoryModule.Web.ExportImport;
+using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 
 namespace VirtoCommerce.InventoryModule.Web
 {
-    public class Module : ModuleBase
+    public class Module : ModuleBase, ISupportExportModule, ISupportImportModule
     {
         private readonly IUnityContainer _container;
 
@@ -36,5 +39,27 @@ namespace VirtoCommerce.InventoryModule.Web
         }
 
         #endregion
+
+        #region ISupportExportModule Members
+
+        public void DoExport(System.IO.Stream outStream, Action<ExportImportProgressInfo> progressCallback)
+        {
+            var job = _container.Resolve<InventoryExportImport>();
+            job.DoExport(outStream, progressCallback);
+        }
+
+        #endregion
+
+        #region ISupportImportModule Members
+
+        public void DoImport(System.IO.Stream inputStream, Action<ExportImportProgressInfo> progressCallback)
+        {
+            var job = _container.Resolve<InventoryExportImport>();
+            job.DoImport(inputStream, progressCallback);
+        }
+
+        #endregion
+
+
     }
 }

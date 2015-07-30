@@ -179,7 +179,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 					 //Upload result  to blob storage
 					 var uploadInfo = new UploadStreamInfo
 					 {
-                         FileName = string.Format("Export (utc time {0}).zip", DateTime.UtcNow.ToString("yy-MM-dd hh-mm")),
+                         FileName = string.Format("Export (UTC {0}).zip", DateTime.UtcNow.ToString("yy-MM-dd hh-mm")),
 						 FileByteStream = stream,
 						 FolderName = "tmp"
 					 };

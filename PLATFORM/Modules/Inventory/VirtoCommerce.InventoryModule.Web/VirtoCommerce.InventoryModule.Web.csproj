@@ -116,6 +116,7 @@
     <Compile Include="Controllers\PredefinedPermissions.cs" />
     <Compile Include="Converters\FulfillmentCenterConverter.cs" />
     <Compile Include="Converters\InventoryConverter.cs" />
+    <Compile Include="ExportImport\InventoryExportImport.cs" />
     <Compile Include="Model\FulfillmentCenter.cs" />
     <Compile Include="Model\InventoryInfo.cs" />
     <Compile Include="Module.cs" />
