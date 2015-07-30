@@ -7,9 +7,9 @@ using VirtoCommerce.Platform.Core.Notification;
 
 namespace VirtoCommerce.Platform.Web.BackgroundJobs
 {
-	public class SendNotificationsJobsSheduler
+	public class SendNotificationsJobsScheduler
 	{
-        public void SheduleJobs()
+        public void ScheduleJobs()
         {
 			RecurringJob.AddOrUpdate<SendNotificationsJobs>("SendNotificationsJob", x => x.Process(), "*/1 * * * *");
         }

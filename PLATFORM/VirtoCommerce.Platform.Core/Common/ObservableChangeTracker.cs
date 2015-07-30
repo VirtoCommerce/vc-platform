@@ -34,7 +34,7 @@ namespace VirtoCommerce.Platform.Core.Common
 
         public Func<object, object> KeySelector { get; set; }
 
-        public Action<object> DettachAction { get; set; }
+        public Action<object> DetachAction { get; set; }
         public Action<object> AttachAction { get; set; }
         public Action<object> UpdateAction { get; set; }
         public Action<object> RemoveAction { get; set; }
@@ -125,9 +125,9 @@ namespace VirtoCommerce.Platform.Core.Common
                 if (entry != null && entry.EntryState == EntryState.Added)
                 {
                     InternalDettach(x, needDettachRelations: true);
-                    if (DettachAction != null)
+                    if (DetachAction != null)
                     {
-                        DettachAction(x);
+                        DetachAction(x);
                     }
                 }
                 else if (TryChangeState(entry, EntryState.Deleted))

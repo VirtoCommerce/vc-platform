@@ -24,7 +24,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     {
         private readonly string _packagesPath;
         private readonly IPackageService _packageService;
-        private static readonly ConcurrentQueue<webModel.ModuleWorkerJob> _sheduledJobs = new ConcurrentQueue<webModel.ModuleWorkerJob>();
+        private static readonly ConcurrentQueue<webModel.ModuleWorkerJob> _scheduledJobs = new ConcurrentQueue<webModel.ModuleWorkerJob>();
         private static readonly ConcurrentBag<webModel.ModuleWorkerJob> _jobList = new ConcurrentBag<webModel.ModuleWorkerJob>();
         private static Task _runningTask;
         private static readonly object _lockObject = new object();
@@ -110,7 +110,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             if (package != null)
             {
-                var result = SheduleJob(package.ToWebModel(), webModel.ModuleAction.Install);
+                var result = ScheduleJob(package.ToWebModel(), webModel.ModuleAction.Install);
                 return Ok(result);
             }
 
@@ -132,7 +132,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
                 if (package != null && package.Id == module.Id)
                 {
-                    var result = SheduleJob(package.ToWebModel(), webModel.ModuleAction.Update);
+                    var result = ScheduleJob(package.ToWebModel(), webModel.ModuleAction.Update);
                     return Ok(result);
                 }
             }
@@ -150,7 +150,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var module = _packageService.GetModules().FirstOrDefault(m => m.Id == id);
             if (module != null)
             {
-                var result = SheduleJob(module.ToWebModel(), webModel.ModuleAction.Uninstall);
+                var result = ScheduleJob(module.ToWebModel(), webModel.ModuleAction.Uninstall);
                 return Ok(result);
             }
             return InternalServerError();
@@ -181,11 +181,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
 
-        private webModel.ModuleWorkerJob SheduleJob(webModel.ModuleDescriptor descriptor, webModel.ModuleAction action)
+        private webModel.ModuleWorkerJob ScheduleJob(webModel.ModuleDescriptor descriptor, webModel.ModuleAction action)
         {
             var retVal = new webModel.ModuleWorkerJob(_packageService, descriptor, action);
 
-            _sheduledJobs.Enqueue(retVal);
+            _scheduledJobs.Enqueue(retVal);
 
             if (_runningTask == null || _runningTask.IsCompleted)
             {
@@ -203,11 +203,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         private static void DoWork()
         {
-            while (_sheduledJobs.Any())
+            while (_scheduledJobs.Any())
             {
                 webModel.ModuleWorkerJob job;
 
-                if (_sheduledJobs.TryDequeue(out job))
+                if (_scheduledJobs.TryDequeue(out job))
                 {
                     try
                     {

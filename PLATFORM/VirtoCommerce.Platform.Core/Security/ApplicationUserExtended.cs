@@ -22,6 +22,6 @@ namespace VirtoCommerce.Platform.Core.Security
         public ApplicationUserLogin[] Logins { get; set; }
         public Role[] Roles { get; set; }
         public string[] Permissions { get; set; }
-        public ApiAccount[] ApiAcounts { get; set; }
+        public ApiAccount[] ApiAccounts { get; set; }
     }
 }

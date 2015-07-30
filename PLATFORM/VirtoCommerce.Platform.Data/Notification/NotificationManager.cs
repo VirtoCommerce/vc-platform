@@ -50,7 +50,7 @@ namespace VirtoCommerce.Platform.Data.Notification
 			return result;
 		}
 
-		public void SheduleSendNotification(Core.Notification.Notification notification)
+		public void ScheduleSendNotification(Core.Notification.Notification notification)
 		{
 			ResolveTemplate(notification);
 

@@ -9,7 +9,7 @@ namespace VirtoCommerce.Platform.Core.Notification
 	public interface INotificationManager
 	{
 		SendNotificationResult SendNotification(Notification notification);
-		void SheduleSendNotification(Notification notification);
+		void ScheduleSendNotification(Notification notification);
 		Notification GetNotificationById(string id);
 		void StopSendingNotifications(string[] ids);
 

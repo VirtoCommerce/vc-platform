@@ -2,7 +2,7 @@
 
 namespace VirtoCommerce.Platform.Core.Common
 {
-	public static class FormatingExtensions
+	public static class FormattingExtensions
 	{
 		public static string ToHumanReadableSize(this long len)
 		{

@@ -24,6 +24,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -33,6 +34,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Common.Logging">
@@ -126,7 +128,7 @@
     <Compile Include="Common\Entity.cs" />
     <Compile Include="Common\EntryState.cs" />
     <Compile Include="Common\EnumUtility.cs" />
-    <Compile Include="Common\FormatingExtensions.cs" />
+    <Compile Include="Common\FormattingExtensions.cs" />
     <Compile Include="Common\IAuditable.cs" />
     <Compile Include="Common\IQueryableExtensions.cs" />
     <Compile Include="Common\IRepository.cs" />
@@ -208,7 +210,7 @@
     <Compile Include="Notification\NotificationTemplate.cs" />
     <Compile Include="PushNotification\PushNotification.cs" />
     <Compile Include="PushNotification\PushNotificationSearchCriteria.cs" />
-    <Compile Include="PushNotification\PushNotifcationSearchResult.cs" />
+    <Compile Include="PushNotification\PushNotificationSearchResult.cs" />
     <Compile Include="Notification\SearchNotificationCriteria.cs" />
     <Compile Include="Notification\SearchNotificationsResult.cs" />
     <Compile Include="Notification\SendNotificationResult.cs" />

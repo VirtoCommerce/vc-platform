@@ -126,8 +126,8 @@ namespace VirtoCommerce.Platform.Web
 
             OwinConfig.Configure(app, container, connectionStringName, authenticationOptions);
 
-            var jobScheduler = container.Resolve<SendNotificationsJobsSheduler>();
-            jobScheduler.SheduleJobs();
+            var jobScheduler = container.Resolve<SendNotificationsJobsScheduler>();
+            jobScheduler.ScheduleJobs();
 
             var notificationManager = container.Resolve<INotificationManager>();
             notificationManager.RegisterNotificationType(() => new RegistrationEmailNotification(container.Resolve<IEmailNotificationSendingGateway>())

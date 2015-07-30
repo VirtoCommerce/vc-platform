@@ -58,7 +58,7 @@ namespace VirtoCommerce.Platform.Data.PushNotification
 
         }
 
-		public core.PushNotifcationSearchResult SearchNotifies(string userId, core.PushNotificationSearchCriteria criteria)
+		public core.PushNotificationSearchResult SearchNotifies(string userId, core.PushNotificationSearchCriteria criteria)
         {
             var query = _innerList.OrderByDescending(x => x.Created).Where(x => x.Creator == userId).AsQueryable();
 			if (criteria.Ids != null && criteria.Ids.Any())
@@ -95,7 +95,7 @@ namespace VirtoCommerce.Platform.Data.PushNotification
                 }
             }
 
-			var retVal = new core.PushNotifcationSearchResult
+			var retVal = new core.PushNotificationSearchResult
             {
                 TotalCount = query.Count(),
                 NewCount = query.Where(x => x.New).Count(),

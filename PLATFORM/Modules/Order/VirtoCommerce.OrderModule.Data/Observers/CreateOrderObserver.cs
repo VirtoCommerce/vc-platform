@@ -73,7 +73,7 @@ namespace VirtoCommerce.OrderModule.Data.Observers
 
 			notification.IsActive = true;
 
-			_notificationManager.SheduleSendNotification(notification);
+			_notificationManager.ScheduleSendNotification(notification);
 		}
 	}
 }

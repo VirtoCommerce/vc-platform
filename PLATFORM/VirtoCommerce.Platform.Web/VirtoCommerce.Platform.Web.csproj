@@ -278,7 +278,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="BackgroundJobs\SendNotificationsJobs.cs" />
-    <Compile Include="BackgroundJobs\SendNotificationsJobsSheduler.cs" />
+    <Compile Include="BackgroundJobs\SendNotificationsJobsScheduler.cs" />
     <Compile Include="Bootstraper.cs" />
     <Compile Include="Controllers\Api\AssetsController.cs" />
     <Compile Include="Controllers\Api\DynamicPropertiesController.cs" />
