@@ -27,7 +27,7 @@ namespace VirtoCommerce.Content.Data.Services
 	        return _menuRepositoryFactory().GetListById(listId);
 	    }
 
-	    public void UpdateList(Models.MenuLinkList list)
+	    public void Update(Models.MenuLinkList list)
 	    {
 	        _menuRepositoryFactory().UpdateList(list);
 	    }

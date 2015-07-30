@@ -22,7 +22,7 @@ namespace VirtoCommerce.ApiClient.DataContracts.CustomerService
         public string PreferredCommunication { get; set; }
         public string PreferredDelivery { get; set; }
 
-        public ContactProperty[] Properties { get; set; }
+        public ContactProperty[] DynamicProperties { get; set; }
         public string Salutation { get; set; }
         public string TaxpayerId { get; set; }
         public string TimeZone { get; set; }

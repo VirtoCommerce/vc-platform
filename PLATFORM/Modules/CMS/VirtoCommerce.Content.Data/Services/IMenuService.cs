@@ -11,7 +11,7 @@ namespace VirtoCommerce.Content.Data.Services
 	{
 		IEnumerable<MenuLinkList> GetListsByStoreId(string storeId);
 		MenuLinkList GetListById(string listId);
-		void UpdateList(MenuLinkList list);
+		void Update(MenuLinkList list);
 		void DeleteList(string listId);
 		bool CheckList(string storeId, string name, string language, string id);
 	}

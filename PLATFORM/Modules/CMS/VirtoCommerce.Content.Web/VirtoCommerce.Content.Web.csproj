@@ -248,6 +248,7 @@
     <Compile Include="Converters\SyncAssetConverter.cs" />
     <Compile Include="Converters\ThemeAssetConverter.cs" />
     <Compile Include="Converters\ThemeConverter.cs" />
+    <Compile Include="ExportImport\ContentExportImport.cs" />
     <Compile Include="Models\CheckNameResponse.cs" />
     <Compile Include="Models\ContentItem.cs" />
     <Compile Include="Models\GetPagesCriteria.cs" />

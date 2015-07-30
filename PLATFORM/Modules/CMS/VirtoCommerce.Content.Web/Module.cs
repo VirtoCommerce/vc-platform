@@ -9,10 +9,12 @@ using VirtoCommerce.Content.Web.Controllers.Api;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
+using VirtoCommerce.Platform.Core.ExportImport;
+using VirtoCommerce.Content.Web.ExportImport;
 
 namespace VirtoCommerce.Content.Web
 {
-    public class Module : ModuleBase
+    public class Module : ModuleBase, ISupportExportModule, ISupportImportModule
     {
         #region Fields
 
@@ -210,5 +212,25 @@ namespace VirtoCommerce.Content.Web
         }
 
         #endregion
-    }
+
+		#region ISupportExportModule Members
+
+		public void DoExport(Stream outStream, Action<ExportImportProgressInfo> progressCallback)
+		{
+			var exportJob = _container.Resolve<ContentExportImport>();
+			exportJob.DoExport(outStream, progressCallback);
+		}
+
+		#endregion
+
+		#region ISupportImportModule Members
+
+		public void DoImport(Stream inputStream, Action<ExportImportProgressInfo> progressCallback)
+		{
+			var exportJob = _container.Resolve<ContentExportImport>();
+			exportJob.DoImport(inputStream, progressCallback);
+		}
+
+		#endregion
+	}
 }

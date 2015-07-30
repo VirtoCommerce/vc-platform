@@ -64,7 +64,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public IHttpActionResult Update(string storeId, MenuLinkList list)
 		{
-			_menuService.UpdateList(list.ToCoreModel());
+			_menuService.Update(list.ToCoreModel());
 			return Ok();
 		}
 

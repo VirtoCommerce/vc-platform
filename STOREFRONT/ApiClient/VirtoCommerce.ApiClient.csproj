@@ -78,6 +78,7 @@
     <Compile Include="DataContracts\Cart\AddressType.cs" />
     <Compile Include="DataContracts\Cart\CartItem.cs" />
     <Compile Include="DataContracts\CustomerService\Address.cs" />
+    <Compile Include="DataContracts\CustomerService\ContactPropertyValue.cs" />
     <Compile Include="DataContracts\CustomerService\CustomerSearchResult.cs" />
     <Compile Include="DataContracts\Inventory.cs" />
     <Compile Include="DataContracts\InventoryStatus.cs" />
