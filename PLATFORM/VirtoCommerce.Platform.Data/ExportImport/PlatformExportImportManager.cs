@@ -236,7 +236,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 						progressInfo.Description = String.Format("{0}: {1}", module.Id, x.Description);
 						progressCallback(progressInfo);
 					};
-					((ISupportImportModule)module.ModuleInfo.ModuleInstance).DoImport(modulePartStream, modulePorgressCallback);
+					((ISupportImportModule)module.ModuleInfo.ModuleInstance).DoImport(modulePartStream, importOptions, modulePorgressCallback);
 
 				}
 			}
@@ -261,7 +261,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 
 				progressInfo.Description = String.Format("{0}: exporting...", module.Id);
 				progressCallback(progressInfo);
-				((ISupportExportModule)module.ModuleInfo.ModuleInstance).DoExport(modulePart.GetStream(), modulePorgressCallback);
+				((ISupportExportModule)module.ModuleInfo.ModuleInstance).DoExport(modulePart.GetStream(), exportOptions, modulePorgressCallback);
 
 				//Register in manifest
 				var moduleManifestPart = new ExportModuleInfo

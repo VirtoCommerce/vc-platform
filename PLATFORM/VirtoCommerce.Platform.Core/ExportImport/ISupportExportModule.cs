@@ -9,6 +9,6 @@ namespace VirtoCommerce.Platform.Core.ExportImport
 {
 	public interface ISupportExportModule
 	{
-		void DoExport(Stream outStream, Action<ExportImportProgressInfo> progressCallback);
+		void DoExport(Stream outStream, PlatformExportImportOptions options, Action<ExportImportProgressInfo> progressCallback);
 	}
 }
