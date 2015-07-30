@@ -56,6 +56,29 @@ namespace VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine
             return template;
         }
 
+        /*
+        public static Template GetTemplateFromFile(ViewLocationResult path)
+        {
+            var contextKey = "vc-cms-file-" + path.Location;
+            var value = HttpRuntime.Cache.Get(contextKey);
+
+            if (value != null)
+            {
+                return value as Template;
+            }
+
+            if (path.Contents == null)
+                return null;
+
+            var contents = path.Contents;
+            var template = Template.Parse(contents);
+
+            HttpRuntime.Cache.Insert(contextKey, template, new CacheDependency(new[] { HostingEnvironment.MapPath(path.Location) }));
+
+            return template;
+        }
+         * */
+
         public void Render(ViewContext viewContext, TextWriter writer)
         {
             if (viewContext == null)
