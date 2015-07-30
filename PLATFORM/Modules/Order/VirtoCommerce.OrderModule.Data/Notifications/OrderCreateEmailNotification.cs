@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Data.Infrastructure;
 
-namespace VirtoCommerce.OrderModule.Data.Notification
+namespace VirtoCommerce.OrderModule.Data.Notifications
 {
 	public class OrderCreateEmailNotification : EmailNotification
 	{

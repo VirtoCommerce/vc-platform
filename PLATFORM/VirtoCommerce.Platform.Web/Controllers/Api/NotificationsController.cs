@@ -7,8 +7,8 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
 using VirtoCommerce.Platform.Core.Notifications;
-using VirtoCommerce.Platform.Web.Converters.Notification;
-using webModels = VirtoCommerce.Platform.Web.Model.Notification;
+using VirtoCommerce.Platform.Web.Converters.Notifications;
+using webModels = VirtoCommerce.Platform.Web.Model.Notifications;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {

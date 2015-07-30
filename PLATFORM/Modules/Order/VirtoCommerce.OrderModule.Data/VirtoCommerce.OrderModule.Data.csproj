@@ -112,7 +112,7 @@
     <Compile Include="Model\ShipmentPackageEntity.cs" />
     <Compile Include="Model\ShipmentItemEntity.cs" />
     <Compile Include="Model\TaxDetailEntity.cs" />
-    <Compile Include="Notification\OrderCreateEmailNotification.cs" />
+    <Compile Include="Notifications\OrderCreateEmailNotification.cs" />
     <Compile Include="Observers\CancelPaymentObserver.cs" />
     <Compile Include="Observers\CreateOrderObserver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

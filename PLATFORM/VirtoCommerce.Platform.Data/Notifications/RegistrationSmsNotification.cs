@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Platform.Core.Notifications;
 
-namespace VirtoCommerce.Platform.Data.Notification
+namespace VirtoCommerce.Platform.Data.Notifications
 {
 	public class RegistrationSmsNotification : SmsNotification
 	{

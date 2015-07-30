@@ -11,7 +11,7 @@ using System.Web;
 using Exceptions;
 using VirtoCommerce.Platform.Core.Settings;
 
-namespace VirtoCommerce.Platform.Data.Notification
+namespace VirtoCommerce.Platform.Data.Notifications
 {
 	public class DefaultEmailNotificationSendingGateway : IEmailNotificationSendingGateway
 	{

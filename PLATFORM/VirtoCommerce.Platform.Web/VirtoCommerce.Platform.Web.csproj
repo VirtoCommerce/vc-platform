@@ -292,7 +292,7 @@
     <Compile Include="Controllers\Api\SettingController.cs" />
     <Compile Include="Controllers\HelpController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Converters\Notification\NotificationConverter.cs" />
+    <Compile Include="Converters\Notifications\NotificationConverter.cs" />
     <Compile Include="Converters\Packaging\ModuleDescriptorConverter.cs" />
     <Compile Include="Converters\Packaging\ProgressMessageConverter.cs" />
     <Compile Include="Converters\Settings\ModuleDescriptorConverter.cs" />
@@ -310,10 +310,10 @@
     <Compile Include="Model\ExportImport\PushNotifications\PlatformExportPushNotification.cs" />
     <Compile Include="Model\ExportImport\PushNotifications\PlatformImportPushNotification.cs" />
     <Compile Include="Model\Jobs\Job.cs" />
-    <Compile Include="Model\Notification\Notification.cs" />
-    <Compile Include="Model\Notification\NotificationParameter.cs" />
-    <Compile Include="Model\Notification\NotificationTemplate.cs" />
-    <Compile Include="Model\Notification\SearchNotificationsResult.cs" />
+    <Compile Include="Model\Notifications\Notification.cs" />
+    <Compile Include="Model\Notifications\NotificationParameter.cs" />
+    <Compile Include="Model\Notifications\NotificationTemplate.cs" />
+    <Compile Include="Model\Notifications\SearchNotificationsResult.cs" />
     <Compile Include="Model\Packaging\ModuleDescriptor.cs" />
     <Compile Include="Model\Packaging\ModuleIdentity.cs" />
     <Compile Include="Model\Packaging\ModuleWorkerJob.cs" />

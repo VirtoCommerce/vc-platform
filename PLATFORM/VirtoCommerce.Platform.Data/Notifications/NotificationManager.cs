@@ -8,7 +8,7 @@ using VirtoCommerce.Platform.Data.Repositories;
 using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Data.Model;
 
-namespace VirtoCommerce.Platform.Data.Notification
+namespace VirtoCommerce.Platform.Data.Notifications
 {
 	public class NotificationManager : INotificationManager
 	{

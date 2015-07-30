@@ -5,7 +5,7 @@ using Microsoft.AspNet.SignalR;
 using core = VirtoCommerce.Platform.Core.PushNotifications ;
 using VirtoCommerce.Platform.Core.Common;
 
-namespace VirtoCommerce.Platform.Data.PushNotification
+namespace VirtoCommerce.Platform.Data.PushNotifications
 {
 	[CLSCompliant(false)]
 	public class ClientPushHub : Hub
