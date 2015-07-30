@@ -63,12 +63,12 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 			var backupObject = backupStream.DeserializeJson<BackupObject>();
 			var originalObject = GetBackupObject(progressCallback);
 
-			progressInfo.Description = String.Format("{0} catalogs importing...", originalObject.Catalogs.Count());
+			progressInfo.Description = String.Format("{0} catalogs importing...", backupObject.Catalogs.Count());
 			progressCallback(progressInfo);
 
 			UpdateCatalogs(originalObject.Catalogs, backupObject.Catalogs);
 
-			progressInfo.Description = String.Format("{0} categories importing...", originalObject.Categories.Count());
+			progressInfo.Description = String.Format("{0} categories importing...", backupObject.Categories.Count());
 			progressCallback(progressInfo);
 			//Categories should be sorted right way (because it have a hierarchy structure and links to virtual categories)
 			backupObject.Categories = backupObject.Categories.Where(x => x.Links == null || !x.Links.Any())
@@ -78,7 +78,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 			UpdateCategories(originalObject.Categories, backupObject.Categories);
 			UpdateProperties(originalObject.Properties, backupObject.Properties);
 
-			progressInfo.Description = String.Format("{0} products importing...", originalObject.Products.Count());
+			progressInfo.Description = String.Format("{0} products importing...", backupObject.Products.Count());
 			progressCallback(progressInfo);
 			UpdateCatalogProducts(originalObject.Products, backupObject.Products);
 		}

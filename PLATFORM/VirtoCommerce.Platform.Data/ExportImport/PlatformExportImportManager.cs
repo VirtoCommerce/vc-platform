@@ -4,6 +4,7 @@ using System.IO;
 using System.IO.Packaging;
 using System.Linq;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Packaging;
 using VirtoCommerce.Platform.Core.Security;
@@ -18,6 +19,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 		{
 			Users = new List<ApplicationUserExtended>();
 			Settings = new List<SettingEntry>();
+			DynamicPropertyDictionaryItems = new List<DynamicPropertyDictionaryItem>();
 		}
 		public bool IsNotEmpty
 		{
@@ -28,6 +30,8 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 		}
 		public ICollection<ApplicationUserExtended> Users { get; set; }
 		public ICollection<SettingEntry> Settings { get; set; }
+		public ICollection<DynamicPropertyDictionaryItem> DynamicPropertyDictionaryItems { get; set; }
+		public ICollection<DynamicProperty> DynamicProperties { get; set; } 
 	}
 
 
@@ -38,13 +42,15 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 		private readonly Uri _platformEntriesPartUri;
 
 		private readonly ISecurityService _securityService;
-		private readonly IRoleManagementService _roleManagmentService;
+        private readonly IRoleManagementService _roleManagementService;
 		private readonly ISettingsManager _settingsManager;
+		private readonly IDynamicPropertyService _dynamicPropertyService;
 
-		public PlatformExportImportManager(ISecurityService securityService, IRoleManagementService roleManagmentService, ISettingsManager settingsManager)
+		public PlatformExportImportManager(ISecurityService securityService, IRoleManagementService roleManagementService, ISettingsManager settingsManager, IDynamicPropertyService dynamicPropertyService)
 		{
+			_dynamicPropertyService = dynamicPropertyService;
 			_securityService = securityService;
-			_roleManagmentService = roleManagmentService;
+            _roleManagementService = roleManagementService;
 			_settingsManager = settingsManager;
 
 			_manifestPartUri = PackUriHelper.CreatePartUri(new Uri("Manifest.json", UriKind.Relative));
@@ -76,10 +82,10 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 
 			using (var package = ZipPackage.Open(outStream, FileMode.Create))
 			{
-				//Export all selected  modules
-				var exportedModules = ExportModulesInternal(package, exportOptions, progressCallback);
 				//Export all selected platform entries
 				ExportPlatformEntriesInternal(package, exportOptions, progressCallback);
+				//Export all selected  modules
+				var exportedModules = ExportModulesInternal(package, exportOptions, progressCallback);
 
 				//Write system information about exported modules
 				var manifestPart = package.CreatePart(_manifestPartUri, System.Net.Mime.MediaTypeNames.Text.Xml);
@@ -114,10 +120,11 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 		
 			using (var package = ZipPackage.Open(stream, FileMode.Open))
 			{
-				//Import selected modules
-				ImportModulesInternal(package, manifest, importOptions, progressCallback);
 				//Import selected platform entries
 				ImportPlatformEntriesInternal(package, importOptions, progressCallback);
+				//Import selected modules
+				ImportModulesInternal(package, manifest, importOptions, progressCallback);
+				
 			}
 		}
 
@@ -136,21 +143,21 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 					platformEntries = stream.DeserializeJson<PlatformExportEntries>();
 				}
 
-				if(importOptions.HandleSecurity)
+                if (importOptions.HandleSecurity)
 				{
 					progressInfo.Description = String.Format("Import {0} users with roles...", platformEntries.Users.Count());
 					progressCallback(progressInfo);
 
 					//First need import roles
 					var roles = platformEntries.Users.SelectMany(x => x.Roles).Distinct().ToArray();
-					foreach(var role in roles)
+                    foreach (var role in roles)
 					{
-						_roleManagmentService.AddOrUpdateRole(role);
+                        _roleManagementService.AddOrUpdateRole(role);
 					}
 					//Next create or update users
-					foreach(var user in platformEntries.Users)
+                    foreach (var user in platformEntries.Users)
 					{
-						if(_securityService.FindByIdAsync(user.Id, UserDetails.Reduced).Result != null)
+                        if (_securityService.FindByIdAsync(user.Id, UserDetails.Reduced).Result != null)
 						{
 							_securityService.UpdateAsync(user);
 						}
@@ -159,6 +166,13 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 							_securityService.CreateAsync(user);
 						}
 					}
+				}
+
+				//Import dynamic properties
+				_dynamicPropertyService.SaveProperties(platformEntries.DynamicProperties.ToArray());
+				foreach (var propDicGroup in platformEntries.DynamicPropertyDictionaryItems.GroupBy(x=>x.PropertyId))
+				{
+					_dynamicPropertyService.SaveDictionaryItems(propDicGroup.Key, propDicGroup.ToArray());
 				}
 			}
 		}
@@ -190,6 +204,15 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 				throw new NotImplementedException();
 			}
 
+			//Dynamic properties
+			var allTypes = _dynamicPropertyService.GetAvailableObjectTypeNames();
+
+			progressInfo.Description = String.Format("Dynamic properties: load properties...");
+			progressCallback(progressInfo);
+
+			platformExportObj.DynamicProperties = allTypes.SelectMany(x => _dynamicPropertyService.GetProperties(x)).ToList();
+			platformExportObj.DynamicPropertyDictionaryItems = platformExportObj.DynamicProperties.Where(x => x.IsDictionary).SelectMany(x => _dynamicPropertyService.GetDictionaryItems(x.Id)).ToList();
+
 			//Create part for platform entries
 			var platformEntiriesPart = package.CreatePart(_platformEntriesPartUri, System.Net.Mime.MediaTypeNames.Application.Octet, CompressionOption.Normal);
 			using (var partStream = platformEntiriesPart.GetStream())
@@ -213,7 +236,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 						progressInfo.Description = String.Format("{0}: {1}", module.Id, x.Description);
 						progressCallback(progressInfo);
 					};
-					((ISupportImportModule)module.ModuleInfo.ModuleInstance).DoImport(modulePartStream, modulePorgressCallback);
+					((ISupportImportModule)module.ModuleInfo.ModuleInstance).DoImport(modulePartStream, importOptions, modulePorgressCallback);
 
 				}
 			}
@@ -238,7 +261,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 
 				progressInfo.Description = String.Format("{0}: exporting...", module.Id);
 				progressCallback(progressInfo);
-				((ISupportExportModule)module.ModuleInfo.ModuleInstance).DoExport(modulePart.GetStream(), modulePorgressCallback);
+				((ISupportExportModule)module.ModuleInfo.ModuleInstance).DoExport(modulePart.GetStream(), exportOptions, modulePorgressCallback);
 
 				//Register in manifest
 				var moduleManifestPart = new ExportModuleInfo

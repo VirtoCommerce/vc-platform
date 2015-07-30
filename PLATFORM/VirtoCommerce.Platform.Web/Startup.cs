@@ -64,10 +64,10 @@ namespace VirtoCommerce.Platform.Web
             const string modulesVirtualPath = "~/Modules";
             var modulesPhysicalPath = HostingEnvironment.MapPath(modulesVirtualPath).EnsureEndSeparator();
 
-            var bootstraper = new VirtoCommercePlatformWebBootstraper(modulesVirtualPath, modulesPhysicalPath, _assembliesPath);
-            bootstraper.Run();
+            var bootstrapper = new VirtoCommercePlatformWebBootstrapper(modulesVirtualPath, modulesPhysicalPath, _assembliesPath);
+            bootstrapper.Run();
 
-            var container = bootstraper.Container;
+            var container = bootstrapper.Container;
             container.RegisterInstance(app);
 
             var moduleCatalog = container.Resolve<IModuleCatalog>();

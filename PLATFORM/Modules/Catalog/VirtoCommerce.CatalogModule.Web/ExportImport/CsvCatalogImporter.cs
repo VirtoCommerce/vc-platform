@@ -289,7 +289,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 
 			//Create price in default price list
 
-			if (csvProduct.ListPrice != null || csvProduct.SalePrice != null)
+			if (csvProduct.Price.EffectiveValue > 0)
 			{
 				csvProduct.Price.ProductId = csvProduct.Id;
 

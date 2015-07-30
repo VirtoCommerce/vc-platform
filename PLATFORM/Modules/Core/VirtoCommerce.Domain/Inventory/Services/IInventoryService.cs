@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using VirtoCommerce.Domain.Inventory.Model;
 
 namespace VirtoCommerce.Domain.Inventory.Services
 {
 	public interface IInventoryService
 	{
-		IEnumerable<InventoryInfo> GetProductsInventoryInfos(IEnumerable<string> productIds);
+	    IEnumerable<InventoryInfo> GetAllInventoryInfos();
+        IEnumerable<InventoryInfo> GetProductsInventoryInfos(IEnumerable<string> productIds);
+        InventoryInfo Create(InventoryInfo inventoryInfo);
 		InventoryInfo UpsertInventory(InventoryInfo inventoryInfo);
 		void UpsertInventories(IEnumerable<InventoryInfo> inventoryInfos);
 	}

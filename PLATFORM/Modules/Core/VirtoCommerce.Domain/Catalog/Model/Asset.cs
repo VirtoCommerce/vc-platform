@@ -15,6 +15,8 @@ namespace VirtoCommerce.Domain.Catalog.Model
 		public string Group { get; set; }
 		public string MimeType { get; set; }
 		public long Size { get; set; }
+		public byte[] BinaryData { get; set; }
+
 
 		#region ISeoSupport Members
 

@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 
 namespace VirtoCommerce.Platform.Core.ExportImport
 {
     public class ExportImportProgressInfo
     {
-        public ExportImportProgressInfo()
+        public ExportImportProgressInfo(string description = null)
         {
             Errors = new List<String>();
+            Description = description;
         }
 
         public string Description { get; set; }

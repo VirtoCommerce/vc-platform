@@ -221,10 +221,12 @@ namespace VirtoCommerce.PricingModule.Data.Services
 					entity.Pricelist = dbDefaultPriceList;
 
 					repository.Add(entity);
+				
+					CommitChanges(repository);
 					//Automatically create catalog assignment 
 					TryToCreateCatalogAssignment(entity, repository);
-					CommitChanges(repository);
 				}
+
 			}
 			price.Id = entity.Id;
 			var retVal = GetPriceById(entity.Id);

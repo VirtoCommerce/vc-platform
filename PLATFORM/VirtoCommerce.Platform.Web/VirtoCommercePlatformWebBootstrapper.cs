@@ -16,13 +16,13 @@ using Common.Logging;
 
 namespace VirtoCommerce.Platform.Web
 {
-    public class VirtoCommercePlatformWebBootstraper : UnityBootstrapper
+    public class VirtoCommercePlatformWebBootstrapper : UnityBootstrapper
     {
         private readonly string _modulesVirtualPath;
         private readonly string _modulesPhysicalPath;
         private readonly string _assembliesPath;
 		private static ILog _logger = LogManager.GetLogger("platform");
-        public VirtoCommercePlatformWebBootstraper(string modulesVirtualPath, string modulesPhysicalPath, string assembliesPath)
+        public VirtoCommercePlatformWebBootstrapper(string modulesVirtualPath, string modulesPhysicalPath, string assembliesPath)
         {
             _modulesVirtualPath = modulesVirtualPath;
             _modulesPhysicalPath = modulesPhysicalPath;

@@ -59,7 +59,7 @@ namespace VirtoCommerce.PricingModule.Web
 
         #region ISupportExportModule Members
 
-        public void DoExport(System.IO.Stream outStream, Action<ExportImportProgressInfo> progressCallback)
+		public void DoExport(System.IO.Stream outStream, PlatformExportImportOptions exportOptions, Action<ExportImportProgressInfo> progressCallback)
         {
             var exportJob = _container.Resolve<PricingExportImport>();
             exportJob.DoExport(outStream, progressCallback);
@@ -69,7 +69,7 @@ namespace VirtoCommerce.PricingModule.Web
 
         #region ISupportImportModule Members
 
-        public void DoImport(System.IO.Stream inputStream, Action<ExportImportProgressInfo> progressCallback)
+		public void DoImport(System.IO.Stream inputStream, PlatformExportImportOptions importOptions, Action<ExportImportProgressInfo> progressCallback)
         {
             var exportJob = _container.Resolve<PricingExportImport>();
             exportJob.DoImport(inputStream, progressCallback);

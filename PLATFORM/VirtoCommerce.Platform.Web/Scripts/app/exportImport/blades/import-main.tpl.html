@@ -36,7 +36,7 @@
                 </li>
             </ul>
             
-            <form class="form ng-pristine ng-valid" ng-if="!blade.notification">
+            <form class="form ng-pristine ng-valid" ng-if="blade.info && !blade.notification">
                 <fieldset>
                     <legend>Platform entries</legend>
                     <div class="form-group">
@@ -47,6 +47,13 @@
                                     <span class="check"></span>
                                     <span class="name">Security accounts and roles</span>
                                 </label>
+                                <div class="form-control __checkbox">
+                                    <label class="form-label">
+                                        <input type="checkbox" ng-model="importRequest.handleBinaryData">
+                                        <span class="check"></span>
+                                        <span class="name">Import binary data</span>
+                                    </label>
+                                </div>
                             </div>
                         </div>
                         <div class="column">
@@ -78,7 +85,7 @@
             <div class="form" ng-if="blade.notification">
                 <div class="block">
                     <div>
-                        <p class="text">{{blade.notification.description}}</p>
+                        <div class="sub-t">{{blade.notification.description}}</div>
                         <div class="block" ng-if="blade.notification.created || blade.notification.finished">
                             <p ng-if="blade.notification.created" ng-class="{'no-data': blade.notification.created}" class="text">Start — <i class="fa fa-clock-o"></i> <span am-time-ago="blade.notification.created"></span></p>
                             <p ng-if="blade.notification.finished" ng-class="{'no-data': blade.notification.finished}" class="text">End — <i class="fa fa-clock-o"></i> <span am-time-ago="blade.notification.finished"></span></p>

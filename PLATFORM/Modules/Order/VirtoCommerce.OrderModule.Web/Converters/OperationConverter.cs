@@ -10,7 +10,7 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 {
 	public static class OperationConverter
 	{
-		public static webModel.Operation ToWebModel(this coreModel.Operation operation)
+		public static webModel.Operation ToWebModel(this coreModel.IOperation operation)
 		{
 			var retVal = new webModel.Operation();
 			retVal.InjectFrom(operation);

@@ -134,11 +134,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 					 var options = new PlatformExportImportOptions
 					 {
 						 Modules = importedModules,
+						 HandleBinaryData = importRequest.HandleBinaryData,
 						 HandleSecurity = importRequest.HandleSecurity,
 						 HandleSettings = importRequest.HandleSettings,
 					 };
 					 _platformExportManager.Import(stream, options, progressCallback);
 				 }
+				 pushNotification.Description = "Import finished";
 			 }
 			 catch (Exception ex)
 			 {
@@ -160,7 +162,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 				 _pushNotifier.Upsert(pushNotification);
 			 };
 
-			 var now = DateTime.UtcNow;
 			 try
 			 {
 				 var exportedModules = InnerGetModulesWithInterface(typeof(ISupportExportModule)).Where(x => exportRequest.Modules.Contains(x.Id)).ToArray();
@@ -171,6 +172,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 						 Modules = exportedModules,
 						 HandleSecurity = exportRequest.HandleSecurity,
 						 HandleSettings = exportRequest.HandleSettings,
+						 HandleBinaryData = exportRequest.HandleBinaryData,
 						 PlatformVersion = SemanticVersion.Parse(platformVersion),
 						 Author = author
 					 };
@@ -180,7 +182,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 					 //Upload result  to blob storage
 					 var uploadInfo = new UploadStreamInfo
 					 {
-						 FileName = "Platform-" + now.ToString("yyMMddhh") + "-export.zip",
+                         FileName = string.Format("Export (UTC {0}).zip", DateTime.UtcNow.ToString("yy-MM-dd hh-mm")),
 						 FileByteStream = stream,
 						 FolderName = "tmp"
 					 };

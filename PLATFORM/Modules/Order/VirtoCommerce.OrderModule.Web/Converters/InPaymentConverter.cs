@@ -8,6 +8,7 @@ using coreModel = VirtoCommerce.Domain.Order.Model;
 using webModel = VirtoCommerce.OrderModule.Web.Model;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Domain.Payment.Model;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.OrderModule.Web.Converters
 {
@@ -19,8 +20,8 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 			retVal.InjectFrom(payment);
 			retVal.Currency = payment.Currency;
 
-		
-			retVal.ChildrenOperations = payment.ChildrenOperations.Select(x => x.ToWebModel()).ToList();
+
+			retVal.ChildrenOperations = payment.GetFlatObjectsListWithInterface<coreModel.IOperation>().Select(x => x.ToWebModel()).ToList();
 
 			if (payment.DynamicProperties != null)
 				retVal.DynamicProperties = payment.DynamicProperties;

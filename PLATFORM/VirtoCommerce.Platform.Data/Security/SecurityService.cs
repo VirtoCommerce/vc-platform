@@ -18,40 +18,52 @@ namespace VirtoCommerce.Platform.Data.Security
     public class SecurityService : ISecurityService
     {
         private readonly Func<IPlatformRepository> _platformRepository;
-        private readonly ApplicationUserManager _userManager;
+		private readonly Func<ApplicationUserManager> _userManagerFactory;
         private readonly IApiAccountProvider _apiAccountProvider;
         private readonly ISecurityOptions _securityOptions;
 
-        public SecurityService(Func<IPlatformRepository> platformRepository, ApplicationUserManager userManager, IApiAccountProvider apiAccountProvider, ISecurityOptions securityOptions)
+        public SecurityService(Func<IPlatformRepository> platformRepository, Func<ApplicationUserManager> userManagerFactory, IApiAccountProvider apiAccountProvider, ISecurityOptions securityOptions)
         {
             _platformRepository = platformRepository;
-            _userManager = userManager;
+			_userManagerFactory = userManagerFactory;
             _apiAccountProvider = apiAccountProvider;
             _securityOptions = securityOptions;
         }
 
         public async Task<ApplicationUserExtended> FindByNameAsync(string userName, UserDetails detailsLevel)
         {
-            var user = await _userManager.FindByNameAsync(userName);
-            return GetUserExtended(user, detailsLevel);
+			using (var userManager = _userManagerFactory())
+			{
+				var user = await userManager.FindByNameAsync(userName);
+				return GetUserExtended(user, detailsLevel);
+			}
         }
 
         public async Task<ApplicationUserExtended> FindByIdAsync(string userId, UserDetails detailsLevel)
         {
-            var user = await _userManager.FindByIdAsync(userId);
-            return GetUserExtended(user, detailsLevel);
+			using (var userManager = _userManagerFactory())
+			{
+				var user = await userManager.FindByIdAsync(userId);
+				return GetUserExtended(user, detailsLevel);
+			}
         }
 
         public async Task<ApplicationUserExtended> FindByEmailAsync(string email, UserDetails detailsLevel)
         {
-            var user = await _userManager.FindByEmailAsync(email);
-            return GetUserExtended(user, detailsLevel);
+			using (var userManager = _userManagerFactory())
+			{
+				var user = await userManager.FindByEmailAsync(email);
+				return GetUserExtended(user, detailsLevel);
+			}
         }
 
         public async Task<ApplicationUserExtended> FindByLoginAsync(string loginProvider, string providerKey, UserDetails detailsLevel)
         {
-            var user = await _userManager.FindAsync(new UserLoginInfo(loginProvider, providerKey));
-            return GetUserExtended(user, detailsLevel);
+			using (var userManager = _userManagerFactory())
+			{
+				var user = await userManager.FindAsync(new UserLoginInfo(loginProvider, providerKey));
+				return GetUserExtended(user, detailsLevel);
+			}
         }
 
         public async Task<SecurityResult> CreateAsync(ApplicationUserExtended user)
@@ -62,15 +74,18 @@ namespace VirtoCommerce.Platform.Data.Security
             {
                 var dbUser = user.ToDataModel();
 
-                if (string.IsNullOrEmpty(user.Password))
-                {
-                    result = await _userManager.CreateAsync(dbUser);
-                }
-                else
-                {
-                    result = await _userManager.CreateAsync(dbUser, user.Password);
-                }
+				using (var userManager = _userManagerFactory())
+				{
+					if (string.IsNullOrEmpty(user.Password))
+					{
+						result = await userManager.CreateAsync(dbUser);
+					}
+					else
+					{
+						result = await userManager.CreateAsync(dbUser, user.Password);
+					}
 
+				}
                 if (result.Succeeded)
                 {
                     using (var repository = _platformRepository())
@@ -108,7 +123,11 @@ namespace VirtoCommerce.Platform.Data.Security
 
             if (user != null)
             {
-                var dbUser = await _userManager.FindByIdAsync(user.Id);
+				ApplicationUser dbUser;
+				using (var userManager = _userManagerFactory())
+				{
+					dbUser = await userManager.FindByIdAsync(user.Id);
+				}
                 result = ValidateUser(dbUser);
 
                 if (result.Succeeded)
@@ -136,7 +155,12 @@ namespace VirtoCommerce.Platform.Data.Security
                         }
                     }
 
-                    var identityResult = await _userManager.UpdateAsync(dbUser);
+					IdentityResult identityResult;
+					using (var userManager = _userManagerFactory())
+					{
+						identityResult = await userManager.UpdateAsync(dbUser);
+					}
+
                     result = identityResult.ToCoreModel();
 
                     if (result.Succeeded)
@@ -184,25 +208,29 @@ namespace VirtoCommerce.Platform.Data.Security
 
         public async Task DeleteAsync(string[] names)
         {
-            foreach (var name in names.Where(IsEditableUser))
-            {
-                var dbUser = await _userManager.FindByNameAsync(name);
+			using (var userManager = _userManagerFactory())
+			{
+				foreach (var name in names.Where(IsEditableUser))
+				{
 
-                if (dbUser != null)
-                {
-                    await _userManager.DeleteAsync(dbUser);
+					var dbUser = await userManager.FindByNameAsync(name);
 
-                    using (var repository = _platformRepository())
-                    {
-                        var account = repository.GetAccountByName(name, UserDetails.Reduced);
-                        if (account != null)
-                        {
-                            repository.Remove(account);
-                            repository.UnitOfWork.Commit();
-                        }
-                    }
-                }
-            }
+					if (dbUser != null)
+					{
+						await userManager.DeleteAsync(dbUser);
+
+						using (var repository = _platformRepository())
+						{
+							var account = repository.GetAccountByName(name, UserDetails.Reduced);
+							if (account != null)
+							{
+								repository.Remove(account);
+								repository.UnitOfWork.Commit();
+							}
+						}
+					}
+				}
+			}
         }
 
         public ApiAccount GenerateNewApiAccount(ApiAccountType type)
@@ -214,45 +242,54 @@ namespace VirtoCommerce.Platform.Data.Security
 
         public async Task<SecurityResult> ChangePasswordAsync(string name, string oldPassword, string newPassword)
         {
-            var dbUser = await _userManager.FindByNameAsync(name);
-            var result = ValidateUser(dbUser);
+			using (var userManager = _userManagerFactory())
+			{
+				var dbUser = await userManager.FindByNameAsync(name);
+				var result = ValidateUser(dbUser);
 
-            if (result.Succeeded)
-            {
-                var identityResult = await _userManager.ChangePasswordAsync(dbUser.Id, oldPassword, newPassword);
-                result = identityResult.ToCoreModel();
-            }
+				if (result.Succeeded)
+				{
+					var identityResult = await userManager.ChangePasswordAsync(dbUser.Id, oldPassword, newPassword);
+					result = identityResult.ToCoreModel();
+				}
 
-            return result;
+				return result;
+			}
         }
 
         public async Task<SecurityResult> ResetPasswordAsync(string name, string newPassword)
         {
-            var dbUser = await _userManager.FindByNameAsync(name);
-            var result = ValidateUser(dbUser);
+			using (var userManager = _userManagerFactory())
+			{
+				var dbUser = await userManager.FindByNameAsync(name);
+				var result = ValidateUser(dbUser);
 
-            if (result.Succeeded)
-            {
-                var token = await _userManager.GeneratePasswordResetTokenAsync(dbUser.Id);
-                var identityResult = await _userManager.ResetPasswordAsync(dbUser.Id, token, newPassword);
-                result = identityResult.ToCoreModel();
-            }
+				if (result.Succeeded)
+				{
+					var token = await userManager.GeneratePasswordResetTokenAsync(dbUser.Id);
+					var identityResult = await userManager.ResetPasswordAsync(dbUser.Id, token, newPassword);
+					result = identityResult.ToCoreModel();
+				}
 
-            return result;
+				return result;
+			}
         }
 
         public async Task<SecurityResult> ResetPasswordAsync(string userId, string token, string newPassword)
         {
-            var dbUser = await _userManager.FindByIdAsync(userId);
-            var result = ValidateUser(dbUser);
+			using (var userManager = _userManagerFactory())
+			{
+				var dbUser = await userManager.FindByIdAsync(userId);
+				var result = ValidateUser(dbUser);
 
-            if (result.Succeeded)
-            {
-                var identityResult = await _userManager.ResetPasswordAsync(userId, token, newPassword);
-                result = identityResult.ToCoreModel();
-            }
+				if (result.Succeeded)
+				{
+					var identityResult = await userManager.ResetPasswordAsync(userId, token, newPassword);
+					result = identityResult.ToCoreModel();
+				}
 
-            return result;
+				return result;
+			}
         }
 
         public async Task<UserSearchResponse> SearchUsersAsync(UserSearchRequest request)
@@ -260,36 +297,42 @@ namespace VirtoCommerce.Platform.Data.Security
             request = request ?? new UserSearchRequest();
             var result = new UserSearchResponse();
 
-            var query = _userManager.Users;
+			using (var userManager = _userManagerFactory())
+			{
+				var query = userManager.Users;
 
-            if (request.Keyword != null)
-            {
-                query = query.Where(u => u.UserName.Contains(request.Keyword));
-            }
+				if (request.Keyword != null)
+				{
+					query = query.Where(u => u.UserName.Contains(request.Keyword));
+				}
 
-            result.TotalCount = query.Count();
+				result.TotalCount = query.Count();
 
-            var users = query.OrderBy(x => x.UserName)
-                             .Skip(request.SkipCount)
-                             .Take(request.TakeCount)
-                             .ToArray();
+				var users = query.OrderBy(x => x.UserName)
+								 .Skip(request.SkipCount)
+								 .Take(request.TakeCount)
+								 .ToArray();
 
-            var extendedUsers = new List<ApplicationUserExtended>();
+				var extendedUsers = new List<ApplicationUserExtended>();
 
-            foreach (var user in users)
-            {
-                var extendedUser = await FindByNameAsync(user.UserName, UserDetails.Reduced);
-                extendedUsers.Add(extendedUser);
-            }
+				foreach (var user in users)
+				{
+					var extendedUser = await FindByNameAsync(user.UserName, UserDetails.Reduced);
+					extendedUsers.Add(extendedUser);
+				}
 
-            result.Users = extendedUsers.ToArray();
+				result.Users = extendedUsers.ToArray();
 
-            return result;
+				return result;
+			}
         }
 
         public async Task<string> GeneratePasswordResetTokenAsync(string userId)
         {
-            return await _userManager.GeneratePasswordResetTokenAsync(userId);
+			using (var userManager = _userManagerFactory())
+			{
+				return await userManager.GeneratePasswordResetTokenAsync(userId);
+			}
         }
 
 

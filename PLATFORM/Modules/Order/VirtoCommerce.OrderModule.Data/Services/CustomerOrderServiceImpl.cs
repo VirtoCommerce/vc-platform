@@ -176,7 +176,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
 
         private void EnsureThatAllOperationsHaveNumber(CustomerOrder order)
         {
-            foreach (var operation in order.Traverse<Operation>(x => x.ChildrenOperations))
+            foreach (var operation in order.GetFlatObjectsListWithInterface<IOperation>())
             {
                 if (operation.Number == null)
                 {

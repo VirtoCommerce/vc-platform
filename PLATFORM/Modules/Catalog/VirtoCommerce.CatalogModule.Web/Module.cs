@@ -80,7 +80,7 @@ namespace VirtoCommerce.CatalogModule.Web
 
 		#region ISupportExport Members
 
-		public void DoExport(Stream outStream, Action<ExportImportProgressInfo> progressCallback)
+		public void DoExport(Stream outStream, PlatformExportImportOptions importOptions, Action<ExportImportProgressInfo> progressCallback)
 		{
             var exportJob = _container.Resolve<CatalogExportImport>();
             exportJob.DoExport(outStream, progressCallback);
@@ -90,7 +90,7 @@ namespace VirtoCommerce.CatalogModule.Web
 
 		#region ISupportImportModule Members
 
-		public void DoImport(Stream inputStream, Action<ExportImportProgressInfo> progressCallback)
+		public void DoImport(Stream inputStream, PlatformExportImportOptions importOptions, Action<ExportImportProgressInfo> progressCallback)
 		{
             var exportJob = _container.Resolve<CatalogExportImport>();
             exportJob.DoImport(inputStream, progressCallback);
