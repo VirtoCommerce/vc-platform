@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using VirtoCommerce.Platform.Core.Common;
-using VirtoCommerce.Platform.Core.Notification;
-using VirtoCommerce.Platform.Core.PushNotification;
+using VirtoCommerce.Platform.Core.Notifications;
+using VirtoCommerce.Platform.Core.PushNotifications;
 
 namespace VirtoCommerce.Platform.Web.Model.ExportImport.PushNotifications
 {

@@ -21,6 +21,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,6 +31,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DotLiquid">
@@ -196,15 +198,15 @@
     <Compile Include="Model\RolePermissionEntity.cs" />
     <Compile Include="Model\SettingEntity.cs" />
     <Compile Include="Model\SettingValueEntity.cs" />
-    <Compile Include="Notification\DefaultEmailNotificationSendingGateway.cs" />
-    <Compile Include="Notification\DefaultSmsNotificationSendingGateway.cs" />
-    <Compile Include="PushNotification\InMemoryPushNotificationManager.cs" />
-    <Compile Include="Notification\LiquidNotificationTemplateResolver.cs" />
-    <Compile Include="Notification\NotificationConverter.cs" />
-    <Compile Include="Notification\NotificationManager.cs" />
-    <Compile Include="Notification\NotificationTemplateServiceImpl.cs" />
-    <Compile Include="Notification\RegistrationEmailNotification.cs" />
-    <Compile Include="Notification\RegistrationSmsNotification.cs" />
+    <Compile Include="Notifications\DefaultEmailNotificationSendingGateway.cs" />
+    <Compile Include="Notifications\DefaultSmsNotificationSendingGateway.cs" />
+    <Compile Include="PushNotifications\InMemoryPushNotificationManager.cs" />
+    <Compile Include="Notifications\LiquidNotificationTemplateResolver.cs" />
+    <Compile Include="Notifications\NotificationConverter.cs" />
+    <Compile Include="Notifications\NotificationManager.cs" />
+    <Compile Include="Notifications\NotificationTemplateServiceImpl.cs" />
+    <Compile Include="Notifications\RegistrationEmailNotification.cs" />
+    <Compile Include="Notifications\RegistrationSmsNotification.cs" />
     <Compile Include="Packaging\ZipPackageService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\IPlatformRepository.cs" />

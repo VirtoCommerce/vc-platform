@@ -50,7 +50,7 @@ namespace VirtoCommerce.SearchModule.Web
             base.PostInitialize();
 
             var jobScheduler = _container.Resolve<SearchIndexJobsScheduler>();
-            jobScheduler.SheduleJobs();
+            jobScheduler.ScheduleJobs();
 
             var searchProviderManager = _container.Resolve<ISearchProviderManager>();
 
