@@ -40,7 +40,7 @@
                 <fieldset>
                     <legend>Platform entries</legend>
                     <div class="list __items">
-                        <label class="list-item">
+                        <label class="list-item" ng-if="blade.isHasSecurity">
                             <input type="checkbox" ng-model="importRequest.handleSecurity">
                             <span class="switch"></span>
                             <span class="list-name">Security</span>
@@ -52,7 +52,7 @@
                             <span class="list-name">Binary</span>
                             <span class="list-descr">Binary data</span>
                         </label>
-                        <label class="list-item">
+                        <label class="list-item" ng-if="blade.isHasSettings">
                             <input type="checkbox" ng-model="importRequest.handleSettings">
                             <span class="switch"></span>
                             <span class="list-name">Settings</span>
