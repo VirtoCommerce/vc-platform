@@ -33,30 +33,10 @@ namespace VirtoCommerce.InventoryModule.Web.ExportImport
 
         public void DoImport(Stream backupStream, Action<ExportImportProgressInfo> progressCallback)
         {
-            var originalObject = GetBackupObject(progressCallback);
             var backupObject = backupStream.DeserializeJson<BackupObject>();
 
-            UpdateInventories(originalObject.InventoryInfos, backupObject.InventoryInfos);
+            _inventoryService.UpsertInventories(backupObject.InventoryInfos);
             progressCallback(new ExportImportProgressInfo("update inventory done"));
-        }
-
-        private void UpdateInventories(InventoryInfo[] original, InventoryInfo[] backup)
-        {
-            var toUpdate = new List<InventoryInfo>();
-
-            backup.CompareTo(original, EqualityComparer<InventoryInfo>.Default, (state, x, y) =>
-            {
-                switch (state)
-                {
-                    case EntryState.Modified:
-                        toUpdate.Add(x);
-                        break;
-                    case EntryState.Added:
-                        _inventoryService.Create(x);
-                        break;
-                }
-            });
-            _inventoryService.UpsertInventories(toUpdate.ToArray());
         }
 
         private BackupObject GetBackupObject(Action<ExportImportProgressInfo> progressCallback)

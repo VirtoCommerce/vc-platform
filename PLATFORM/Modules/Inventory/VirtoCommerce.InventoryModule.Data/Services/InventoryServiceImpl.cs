@@ -96,18 +96,5 @@ namespace VirtoCommerce.InventoryModule.Data.Services
 
         #endregion
 
-
-        public coreModel.InventoryInfo Create(coreModel.InventoryInfo inventoryInfo)
-        {
-            var entity = inventoryInfo.ToDataModel();
-
-            using (var repository = _repositoryFactory())
-            {
-                repository.Add(entity);
-                CommitChanges(repository);
-            }
-
-            return GetById(entity.Id);
-        }
     }
 }
