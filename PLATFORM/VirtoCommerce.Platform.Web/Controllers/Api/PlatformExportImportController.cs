@@ -134,11 +134,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 					 var options = new PlatformExportImportOptions
 					 {
 						 Modules = importedModules,
+						 HandleBinaryData = importRequest.HandleBinaryData,
 						 HandleSecurity = importRequest.HandleSecurity,
 						 HandleSettings = importRequest.HandleSettings,
 					 };
 					 _platformExportManager.Import(stream, options, progressCallback);
 				 }
+				 pushNotification.Description = "Import finished";
 			 }
 			 catch (Exception ex)
 			 {
@@ -170,6 +172,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 						 Modules = exportedModules,
 						 HandleSecurity = exportRequest.HandleSecurity,
 						 HandleSettings = exportRequest.HandleSettings,
+						 HandleBinaryData = exportRequest.HandleBinaryData,
 						 PlatformVersion = SemanticVersion.Parse(platformVersion),
 						 Author = author
 					 };

@@ -7,7 +7,7 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Domain.Order.Model
 {
-	public class ShipmentItem : AuditableEntity, IPosition
+	public class ShipmentItem : AuditableEntity
 	{
 		public ShipmentItem()
 		{
@@ -27,35 +27,6 @@ namespace VirtoCommerce.Domain.Order.Model
 		public string BarCode { get; set; }
 
 		public int Quantity { get; set; }
-
-
-		#region IPosition Members
-
-		public string ProductId
-		{
-			get { return LineItem.ProductId; }
-		}
-
-		public string CatalogId
-		{
-			get { return LineItem.CatalogId; }
-		}
-
-		public string CategoryId
-		{
-			get { return LineItem.CategoryId; }
-		}
-
-		public string Name
-		{
-			get { return LineItem.Name; }
-		}
-
-		public string ImageUrl
-		{
-			get { return LineItem.ImageUrl; }
-		}
-
-		#endregion
+	
 	}
 }

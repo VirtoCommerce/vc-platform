@@ -10,6 +10,9 @@ namespace VirtoCommerce.Domain.Catalog.Model
 	    public string Group { get; set; }
 		public int SortOrder { get; set; }
 
+		public byte[] BinaryData { get; set; }
+
+
 		#region ISeoSupport Members
 
 		public ICollection<SeoInfo> SeoInfos { get; set; }

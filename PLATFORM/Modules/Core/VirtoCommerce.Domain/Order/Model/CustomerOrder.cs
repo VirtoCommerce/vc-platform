@@ -31,34 +31,6 @@ namespace VirtoCommerce.Domain.Order.Model
 				return Discount != null ? Discount.DiscountAmount : 0;
 			}
 		}
-
-		public override IEnumerable<Operation> ChildrenOperations
-		{
-			get
-			{
-				var retVal = new List<Operation>();
-
-				if (InPayments != null)
-				{
-					foreach (var inPayment in InPayments)
-					{
-                        inPayment.ParentOperationId = Id;
-						retVal.Add(inPayment);
-					}
-				}
-
-				if (Shipments != null)
-				{
-					foreach (var shipment in Shipments)
-					{
-                        shipment.ParentOperationId = Id;
-						retVal.Add(shipment);
-					}
-				}
-				return retVal;
-			}
-		}
-
    
 		#region ITaxDetailSupport Members
 

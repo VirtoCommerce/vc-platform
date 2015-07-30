@@ -170,9 +170,6 @@
     <Compile Include="Order\Model\IHaveDimension.cs" />
     <Compile Include="Order\Model\IOperation.cs" />
     <Compile Include="Order\Model\IPosition.cs" />
-    <Compile Include="Order\Model\IStockInOperation.cs" />
-    <Compile Include="Order\Model\IStockOperation.cs" />
-    <Compile Include="Order\Model\IStockOutOperation.cs" />
     <Compile Include="Order\Model\ISupportCancellation.cs" />
     <Compile Include="Order\Model\LineItem.cs" />
     <Compile Include="Order\Model\OperationProperty.cs" />

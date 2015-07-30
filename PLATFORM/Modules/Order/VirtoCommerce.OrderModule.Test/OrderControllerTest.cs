@@ -39,6 +39,13 @@ namespace VirtoCommerce.OrderModule.Test
 		}
 
 		[TestMethod]
+		public void GetOrderById()
+		{
+			var orderService = GetCustomerOrderService();
+			var order = orderService.GetById("863f4bdf-7c0b-4e4c-a2e7-a0984b1a4b94", coreModel.CustomerOrderResponseGroup.Full);
+		}
+
+		[TestMethod]
 		public void StatisticTest()
 		{
 			var cacheManager = new CacheManager(new InMemoryCachingProvider(), null);
@@ -352,18 +359,24 @@ namespace VirtoCommerce.OrderModule.Test
 			return orderRepositoryFactory;
 		}
 
-		private static OrderModuleController GetCustomerOrderController()
+		private static CustomerOrderServiceImpl GetCustomerOrderService()
 		{
-            Func<IPlatformRepository> platformRepositoryFactory = () => new PlatformRepository("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor());
-            Func<ICartRepository> repositoryFactory = () => new CartRepositoryImpl("VirtoCommerce", new AuditableInterceptor());
+			Func<IPlatformRepository> platformRepositoryFactory = () => new PlatformRepository("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor());
+			Func<ICartRepository> repositoryFactory = () => new CartRepositoryImpl("VirtoCommerce", new AuditableInterceptor());
 
-            var dynamicPropertyService = new DynamicPropertyService(platformRepositoryFactory);
+			var dynamicPropertyService = new DynamicPropertyService(platformRepositoryFactory);
 			var orderEventPublisher = new EventPublisher<OrderChangeEvent>(Enumerable.Empty<IObserver<OrderChangeEvent>>().ToArray());
 			var cartEventPublisher = new EventPublisher<CartChangeEvent>(Enumerable.Empty<IObserver<CartChangeEvent>>().ToArray());
 			var cartService = new ShoppingCartServiceImpl(repositoryFactory, cartEventPublisher, null);
 
-            var orderService = new CustomerOrderServiceImpl(GetOrderRepositoryFactory(), new TimeBasedNumberGeneratorImpl(), orderEventPublisher, cartService, null, dynamicPropertyService);
+			var orderService = new CustomerOrderServiceImpl(GetOrderRepositoryFactory(), new TimeBasedNumberGeneratorImpl(), orderEventPublisher, cartService, null, dynamicPropertyService);
 
+			return orderService;
+		}
+
+		private static OrderModuleController GetCustomerOrderController()
+		{
+			var orderService = GetCustomerOrderService();
 			var controller = new OrderModuleController(orderService, null, null, new TimeBasedNumberGeneratorImpl(), null, null);
 			return controller;
 		}

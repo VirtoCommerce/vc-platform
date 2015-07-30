@@ -14,6 +14,10 @@ namespace VirtoCommerce.Platform.Core.ExportImport
 		public SemanticVersion PlatformVersion { get; set; }
 		public bool HandleSettings { get; set; }
 		public bool HandleSecurity { get; set; }
+		/// <summary>
+		/// Flag means the use of  binary data in export or import operations
+		/// </summary>
+		public bool HandleBinaryData { get; set; }
 		public ModuleDescriptor[] Modules { get; set; }
 	}
 }

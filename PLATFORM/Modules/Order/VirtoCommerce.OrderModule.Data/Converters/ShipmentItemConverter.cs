@@ -53,7 +53,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			
 			if(shipmentItem.LineItem != null)
 			{
-				retVal.LineItem = orderEntity.Items.FirstOrDefault(x => x.ProductId == shipmentItem.ProductId);
+				retVal.LineItem = orderEntity.Items.FirstOrDefault(x => x.ProductId == shipmentItem.LineItem.ProductId);
 			}
 			return retVal;
 		}

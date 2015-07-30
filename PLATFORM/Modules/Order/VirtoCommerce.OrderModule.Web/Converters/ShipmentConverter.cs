@@ -5,6 +5,7 @@ using System.Web;
 using Omu.ValueInjecter;
 using coreModel = VirtoCommerce.Domain.Order.Model;
 using webModel = VirtoCommerce.OrderModule.Web.Model;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.OrderModule.Web.Converters
 {
@@ -34,7 +35,8 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 				retVal.DiscountAmount = shipment.Discount.DiscountAmount;
 			}
 
-			retVal.ChildrenOperations = shipment.ChildrenOperations.Select(x => x.ToWebModel()).ToList();
+			retVal.ChildrenOperations = shipment.GetFlatObjectsListWithInterface<coreModel.IOperation>().Select(x => x.ToWebModel()).ToList();
+
 			retVal.TaxDetails = shipment.TaxDetails;
 
 			if (shipment.DynamicProperties != null)

@@ -9,6 +9,6 @@ namespace VirtoCommerce.Domain.Order.Services
 {
 	public interface IOperationNumberGenerator
 	{
-		string GenerateNumber(Operation operation);
+		string GenerateNumber(IOperation operation);
 	}
 }

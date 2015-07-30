@@ -75,7 +75,7 @@
 			        bladeNavigationService.showBlade(newBlade, $scope.blade);
 			    }
 
-			    $scope.openStatusSettingManagment = function () {
+			    $scope.openStatusSettingManagement = function () {
 			        var newBlade = {
 			            id: 'moduleSettingsSection',
 			            moduleId: 'VirtoCommerce.Orders',
