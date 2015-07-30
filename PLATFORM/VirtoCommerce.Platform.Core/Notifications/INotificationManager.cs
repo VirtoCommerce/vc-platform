@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VirtoCommerce.Platform.Core.Notification
+namespace VirtoCommerce.Platform.Core.Notifications
 {
 	public interface INotificationManager
 	{
@@ -13,9 +13,9 @@ namespace VirtoCommerce.Platform.Core.Notification
 		Notification GetNotificationById(string id);
 		void StopSendingNotifications(string[] ids);
 
-		Core.Notification.Notification GetNewNotification(string type);
-		T GetNewNotification<T>(string objectId, string objectTypeId, string language) where T : Core.Notification.Notification;
-		Core.Notification.Notification GetNewNotification(string type, string objectId, string objectTypeId, string language);
+		Core.Notifications.Notification GetNewNotification(string type);
+		T GetNewNotification<T>(string objectId, string objectTypeId, string language) where T : Core.Notifications.Notification;
+		Core.Notifications.Notification GetNewNotification(string type, string objectId, string objectTypeId, string language);
 		void UpdateNotification(Notification notifications);
 		void DeleteNotification(string id);
 		SearchNotificationsResult SearchNotifications(SearchNotificationCriteria criteria);

@@ -5,7 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VirtoCommerce.Platform.Core.Notification;
+using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Data.Infrastructure;
 
 namespace VirtoCommerce.Platform.Data.Notification

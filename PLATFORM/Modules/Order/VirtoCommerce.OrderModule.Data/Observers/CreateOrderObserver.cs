@@ -7,7 +7,7 @@ using VirtoCommerce.Domain.Customer.Services;
 using VirtoCommerce.Domain.Order.Events;
 using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.OrderModule.Data.Notification;
-using VirtoCommerce.Platform.Core.Notification;
+using VirtoCommerce.Platform.Core.Notifications;
 
 namespace VirtoCommerce.OrderModule.Data.Observers
 {

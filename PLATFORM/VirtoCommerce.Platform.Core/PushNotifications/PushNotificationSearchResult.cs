@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace VirtoCommerce.Platform.Core.PushNotification
+namespace VirtoCommerce.Platform.Core.PushNotifications
 {
     public class PushNotificationSearchResult
     {

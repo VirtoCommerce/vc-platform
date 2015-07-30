@@ -14,7 +14,7 @@ using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
-using VirtoCommerce.Platform.Core.Notification;
+using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.OrderModule.Data.Notification;
 using VirtoCommerce.OrderModule.Web.Resources;
 

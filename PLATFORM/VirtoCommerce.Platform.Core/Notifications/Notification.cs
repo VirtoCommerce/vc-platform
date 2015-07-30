@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Platform.Core.Common;
 
-namespace VirtoCommerce.Platform.Core.Notification
+namespace VirtoCommerce.Platform.Core.Notifications
 {
 	public abstract class Notification : AuditableEntity
 	{

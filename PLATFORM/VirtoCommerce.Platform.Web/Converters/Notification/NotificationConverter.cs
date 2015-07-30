@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using webModels = VirtoCommerce.Platform.Web.Model.Notification;
-using coreModels = VirtoCommerce.Platform.Core.Notification;
-using VirtoCommerce.Platform.Core.Notification;
+using coreModels = VirtoCommerce.Platform.Core.Notifications;
+using VirtoCommerce.Platform.Core.Notifications;
 
 namespace VirtoCommerce.Platform.Web.Converters.Notification
 {

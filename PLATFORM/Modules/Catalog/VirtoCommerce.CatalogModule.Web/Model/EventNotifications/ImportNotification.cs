@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using VirtoCommerce.Platform.Core.Notification;
+using VirtoCommerce.Platform.Core.Notifications;
 
 namespace VirtoCommerce.CatalogModule.Web.Model.EventNotifications
 {

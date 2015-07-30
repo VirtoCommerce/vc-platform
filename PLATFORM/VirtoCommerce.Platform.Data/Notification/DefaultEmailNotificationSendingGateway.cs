@@ -5,7 +5,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
-using VirtoCommerce.Platform.Core.Notification;
+using VirtoCommerce.Platform.Core.Notifications;
 using SendGrid;
 using System.Web;
 using Exceptions;
@@ -28,7 +28,7 @@ namespace VirtoCommerce.Platform.Data.Notification
 			_settingsManager = settingsManager;
 		}
 
-		public SendNotificationResult SendNotification(Core.Notification.Notification notification)
+		public SendNotificationResult SendNotification(Core.Notifications.Notification notification)
 		{
 			var retVal = new SendNotificationResult();
 
@@ -65,7 +65,7 @@ namespace VirtoCommerce.Platform.Data.Notification
 			return retVal;
 		}
 
-		public bool ValidateNotification(Core.Notification.Notification notification)
+		public bool ValidateNotification(Core.Notifications.Notification notification)
 		{
 			var retVal = false;
 			retVal = ValidateNotificationRecipient(notification.Recipient);

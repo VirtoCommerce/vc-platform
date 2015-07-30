@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNet.SignalR;
-using core = VirtoCommerce.Platform.Core.PushNotification ;
+using core = VirtoCommerce.Platform.Core.PushNotifications ;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Data.PushNotification

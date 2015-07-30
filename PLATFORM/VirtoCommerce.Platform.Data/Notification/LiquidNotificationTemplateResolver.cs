@@ -7,14 +7,14 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using VirtoCommerce.Platform.Core.Notification;
+using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Data.Infrastructure;
 
 namespace VirtoCommerce.Platform.Data.Notification
 {
 	public class LiquidNotificationTemplateResolver : INotificationTemplateResolver
 	{
-		public void ResolveTemplate(Core.Notification.Notification notification)
+		public void ResolveTemplate(Core.Notifications.Notification notification)
 		{
 			var parameters = ResolveNotificationParameters(notification);
 			Dictionary<string, object> myDict = new Dictionary<string, object>();
@@ -31,7 +31,7 @@ namespace VirtoCommerce.Platform.Data.Notification
 		}
 
 
-		public NotificationParameter[] ResolveNotificationParameters(Core.Notification.Notification notification)
+		public NotificationParameter[] ResolveNotificationParameters(Core.Notifications.Notification notification)
 		{
 			var retVal = new List<NotificationParameter>();
 

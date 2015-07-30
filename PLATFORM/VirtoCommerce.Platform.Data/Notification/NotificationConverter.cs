@@ -11,7 +11,7 @@ namespace VirtoCommerce.Platform.Data.Notification
 {
 	public static class NotificationConverter
 	{
-		public static NotificationEntity ToDataModel(this Core.Notification.Notification notification)
+		public static NotificationEntity ToDataModel(this Core.Notifications.Notification notification)
 		{
 			NotificationEntity retVal = new NotificationEntity();
 
@@ -22,7 +22,7 @@ namespace VirtoCommerce.Platform.Data.Notification
 			return retVal;
 		}
 
-		public static NotificationTemplateEntity ToDataModel(this Core.Notification.NotificationTemplate notificationTemplate)
+		public static NotificationTemplateEntity ToDataModel(this Core.Notifications.NotificationTemplate notificationTemplate)
 		{
 			NotificationTemplateEntity retVal = new NotificationTemplateEntity();
 
@@ -31,9 +31,9 @@ namespace VirtoCommerce.Platform.Data.Notification
 			return retVal;
 		}
 
-		public static Core.Notification.NotificationTemplate ToCoreModel(this NotificationTemplateEntity notificationTemplate)
+		public static Core.Notifications.NotificationTemplate ToCoreModel(this NotificationTemplateEntity notificationTemplate)
 		{
-			Core.Notification.NotificationTemplate retVal = new Core.Notification.NotificationTemplate();
+			Core.Notifications.NotificationTemplate retVal = new Core.Notifications.NotificationTemplate();
 
 			retVal.InjectFrom(notificationTemplate);
 

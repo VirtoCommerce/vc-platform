@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace VirtoCommerce.Platform.Core.PushNotification
+namespace VirtoCommerce.Platform.Core.PushNotifications
 {
     public class PushNotification
     {

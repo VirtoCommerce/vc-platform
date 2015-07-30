@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
-using VirtoCommerce.Platform.Core.Notification;
-using VirtoCommerce.Platform.Core.PushNotification;
+using VirtoCommerce.Platform.Core.Notifications;
+using VirtoCommerce.Platform.Core.PushNotifications;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
