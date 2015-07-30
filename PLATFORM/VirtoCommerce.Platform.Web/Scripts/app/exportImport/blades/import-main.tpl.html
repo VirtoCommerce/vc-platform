@@ -39,32 +39,25 @@
             <form class="form ng-pristine ng-valid" ng-if="blade.info && !blade.notification">
                 <fieldset>
                     <legend>Platform entries</legend>
-                    <div class="form-group">
-                        <div class="column">
-                            <div class="form-control __checkbox">
-                                <label class="form-label">
-                                    <input type="checkbox" ng-model="importRequest.handleSecurity">
-                                    <span class="check"></span>
-                                    <span class="name">Security accounts and roles</span>
-                                </label>
-                                <div class="form-control __checkbox">
-                                    <label class="form-label">
-                                        <input type="checkbox" ng-model="importRequest.handleBinaryData">
-                                        <span class="check"></span>
-                                        <span class="name">Import binary data</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="column">
-                            <div class="form-control __checkbox">
-                                <label class="form-label">
-                                    <input type="checkbox" ng-model="importRequest.handleSettings">
-                                    <span class="check"></span>
-                                    <span class="name">Settings</span>
-                                </label>
-                            </div>
-                        </div>
+                    <div class="list __items">
+                        <label class="list-item" ng-if="blade.isHasSecurity">
+                            <input type="checkbox" ng-model="importRequest.handleSecurity">
+                            <span class="switch"></span>
+                            <span class="list-name">Security</span>
+                            <span class="list-descr">Accounts and roles</span>
+                        </label>
+                        <label class="list-item">
+                            <input type="checkbox" ng-model="importRequest.handleBinaryData">
+                            <span class="switch"></span>
+                            <span class="list-name">Binary</span>
+                            <span class="list-descr">Binary data</span>
+                        </label>
+                        <label class="list-item" ng-if="blade.isHasSettings">
+                            <input type="checkbox" ng-model="importRequest.handleSettings">
+                            <span class="switch"></span>
+                            <span class="list-name">Settings</span>
+                            <span class="list-descr">Platform settings</span>
+                        </label>
                     </div>
                 </fieldset>
                 <fieldset>
