@@ -3,11 +3,11 @@ using Omu.ValueInjecter;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using webModels = VirtoCommerce.Platform.Web.Model.Notification;
+using webModels = VirtoCommerce.Platform.Web.Model.Notifications;
 using coreModels = VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Core.Notifications;
 
-namespace VirtoCommerce.Platform.Web.Converters.Notification
+namespace VirtoCommerce.Platform.Web.Converters.Notifications
 {
 	public static class NotificationConverter
 	{

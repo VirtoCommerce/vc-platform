@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Data.Infrastructure;
 
-namespace VirtoCommerce.Platform.Data.Notification
+namespace VirtoCommerce.Platform.Data.Notifications
 {
 	[CLSCompliant(false)]
 	public class RegistrationEmailNotification : EmailNotification

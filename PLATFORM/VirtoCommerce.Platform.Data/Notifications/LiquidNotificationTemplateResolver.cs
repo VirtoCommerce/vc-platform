@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Data.Infrastructure;
 
-namespace VirtoCommerce.Platform.Data.Notification
+namespace VirtoCommerce.Platform.Data.Notifications
 {
 	public class LiquidNotificationTemplateResolver : INotificationTemplateResolver
 	{
