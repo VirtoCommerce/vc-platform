@@ -24,13 +24,12 @@
   ['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', function ($rootScope, mainMenuService, widgetService, $state) {
       //Register module in main menu
       var menuItem = {
-          path: 'settings',
+          path: 'configuration/settings',
           icon: 'fa fa-gears',
           title: 'Settings',
-          priority: 1000,
+          priority: 1,
           action: function () { $state.go('workspace.modulesSettings'); },
           permission: 'platform:setting:manage'
       };
       mainMenuService.addMenuItem(menuItem);
-  }])
-;
+  }]);

@@ -21,6 +21,10 @@ namespace VirtoCommerce.ApiClient.Extensions
             var client = new BrowseClient(new Uri(serviceUrl), source.CreateMessageProcessingHandler());
             return client;
         }
+        public static BrowseClient CreateBrowseClient(this CommerceClients source, string serviceUrl, string appId, string secretKey)
+        {
+            return new BrowseClient(new Uri(serviceUrl), appId, secretKey);
+        }
 
         #endregion
     }

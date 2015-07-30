@@ -21,6 +21,11 @@ namespace VirtoCommerce.ApiClient.Extensions
             return client;
         }
 
+        public static ThemeClient CreateThemeClient(this CommerceClients source, string serviceUrl, string appId, string secretKey)
+        {
+            var client = new ThemeClient(new Uri(serviceUrl), appId, secretKey);
+            return client;
+        }
         #endregion
     }
 }

@@ -33,7 +33,7 @@ angular.module(catalogsModuleName, [
   ]
 )
 .run(
-  ['platformWebApp.authService', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', 'platformWebApp.notificationTemplateResolver', 'platformWebApp.bladeNavigationService', 'virtoCommerce.catalogModule.catalogImportService', 'virtoCommerce.catalogModule.catalogExportService', function (authService, mainMenuService, widgetService, $state, notificationTemplateResolver, bladeNavigationService, catalogImportService, catalogExportService) {
+  ['platformWebApp.authService', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', 'platformWebApp.pushNotificationTemplateResolver', 'platformWebApp.bladeNavigationService', 'virtoCommerce.catalogModule.catalogImportService', 'virtoCommerce.catalogModule.catalogExportService', function (authService, mainMenuService, widgetService, $state, pushNotificationTemplateResolver, bladeNavigationService, catalogImportService, catalogExportService) {
       //Register module in main menu
       var menuItem = {
           path: 'browse/catalog',
@@ -52,9 +52,9 @@ angular.module(catalogsModuleName, [
               priority: 900,
               satisfy: function (notify, place) { return place == 'menu' && notify.notifyType == 'CatalogCsvExport'; },
               template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/export/notifications/menuExport.tpl.html',
-              action: function (notify) { $state.go('notificationsHistory', notify) }
+              action: function (notify) { $state.go('pushNotificationsHistory', notify) }
           };
-      notificationTemplateResolver.register(menuExportTemplate);
+      pushNotificationTemplateResolver.register(menuExportTemplate);
 
       var historyExportTemplate =
 		{
@@ -73,16 +73,16 @@ angular.module(catalogsModuleName, [
 		        bladeNavigationService.showBlade(blade);
 		    }
 		};
-      notificationTemplateResolver.register(historyExportTemplate);
+      pushNotificationTemplateResolver.register(historyExportTemplate);
       //Import
       var menuImportTemplate =
 		{
 		    priority: 900,
 		    satisfy: function (notify, place) { return place == 'menu' && notify.notifyType == 'CatalogCsvImport'; },
 		    template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/import/notifications/menuImport.tpl.html',
-		    action: function (notify) { $state.go('notificationsHistory', notify) }
+		    action: function (notify) { $state.go('pushNotificationsHistory', notify) }
 		};
-      notificationTemplateResolver.register(menuImportTemplate);
+      pushNotificationTemplateResolver.register(menuImportTemplate);
 
       var historyImportTemplate =
 		{
@@ -101,7 +101,7 @@ angular.module(catalogsModuleName, [
 		        bladeNavigationService.showBlade(blade);
 		    }
 		};
-      notificationTemplateResolver.register(historyImportTemplate);
+      pushNotificationTemplateResolver.register(historyImportTemplate);
 
       //Register dashboard widgets
       //widgetService.registerWidget({

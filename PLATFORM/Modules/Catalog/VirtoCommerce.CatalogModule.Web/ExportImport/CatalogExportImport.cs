@@ -25,37 +25,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 		public ICollection<Property> Properties { get; set; }
 	}
 
-	internal sealed class ProgressNotifier
-	{
-		private readonly string _notifyPattern;
-		private int _notifyMinSize = 50;
-		private int _counter = 0;
-		private readonly Action<ExportImportProgressInfo> _progressCallback;
-		private readonly ExportImportProgressInfo _progressInfo;
-		public ProgressNotifier(string notifyPattern, int totalCount, Action<ExportImportProgressInfo> progressCallback)
-		{
-			_notifyPattern = notifyPattern;
-			_progressCallback = progressCallback;
-			_progressInfo = new ExportImportProgressInfo
-			{
-				TotalCount = totalCount,
-				Description = String.Format(notifyPattern, totalCount, 0),
-				ProcessedCount = 0
-			};
-		}
-
-		public void Notify()
-		{
-			_counter++;
-			_progressInfo.ProcessedCount = _counter;
-			_progressInfo.Description = string.Format(_notifyPattern, _progressInfo.ProcessedCount, _progressInfo.TotalCount);
-			if (_counter % _notifyMinSize == 0 || _counter == _progressInfo.TotalCount)
-			{
-				_progressCallback(_progressInfo);
-			}
-		}
-	}
-
+	
 	public sealed class CatalogExportImport
 	{
 		private readonly ICatalogService _catalogService;
@@ -87,14 +57,19 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 
 		public void DoImport(Stream backupStream, Action<ExportImportProgressInfo> progressCallback)
 		{
-			var prodgressInfo = new ExportImportProgressInfo { Description = "loading data..." };
-			progressCallback(prodgressInfo);
+			var progressInfo = new ExportImportProgressInfo { Description = "loading data..." };
+			progressCallback(progressInfo);
 
 			var backupObject = backupStream.DeserializeJson<BackupObject>();
 			var originalObject = GetBackupObject(progressCallback);
 
+			progressInfo.Description = String.Format("{0} catalogs importing...", originalObject.Catalogs.Count());
+			progressCallback(progressInfo);
+
 			UpdateCatalogs(originalObject.Catalogs, backupObject.Catalogs);
 
+			progressInfo.Description = String.Format("{0} categories importing...", originalObject.Categories.Count());
+			progressCallback(progressInfo);
 			//Categories should be sorted right way (because it have a hierarchy structure and links to virtual categories)
 			backupObject.Categories = backupObject.Categories.Where(x => x.Links == null || !x.Links.Any())
 															.OrderBy(x => x.Parents != null ? x.Parents.Count() : 0)
@@ -102,11 +77,11 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 															.ToList();
 			UpdateCategories(originalObject.Categories, backupObject.Categories);
 			UpdateProperties(originalObject.Properties, backupObject.Properties);
+
+			progressInfo.Description = String.Format("{0} products importing...", originalObject.Products.Count());
+			progressCallback(progressInfo);
 			UpdateCatalogProducts(originalObject.Products, backupObject.Products);
-
-
 		}
-
 
 		private void UpdateCatalogs(ICollection<Catalog> original, ICollection<Catalog> backup)
 		{
@@ -191,39 +166,35 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 			
 			var retVal = new BackupObject();
 
-			var progressNotifier = new ProgressNotifier("{0} of {1} catalogs loaded", searchResponse.Catalogs.Count(), progressCallback);
-			foreach (var catalog in searchResponse.Catalogs)
-			{
-				retVal.Catalogs.Add(_catalogService.GetById(catalog.Id));
-				progressNotifier.Notify();
-			}
+			var progressInfo = new ExportImportProgressInfo();
+			progressInfo.Description = String.Format("{0} catalogs loading", searchResponse.Catalogs.Count());
+			progressCallback(progressInfo);
 
-			progressNotifier = new ProgressNotifier("{0} of {1} categories loaded", searchResponse.Categories.Count(), progressCallback);
-			foreach (var category in searchResponse.Categories)
-			{
-				retVal.Categories.Add(_categoryService.GetById(category.Id));
-				progressNotifier.Notify();
-			}
+			retVal.Catalogs = searchResponse.Catalogs.Select(x => _catalogService.GetById(x.Id)).ToList();
+		
+			progressInfo.Description = String.Format("{0} categories loading", searchResponse.Categories.Count());
+			progressCallback(progressInfo);
 
-			progressNotifier = new ProgressNotifier("{0} of {1} products loaded", searchResponse.TotalCount, progressCallback);
-			foreach (var product in searchResponse.Products)
+			retVal.Categories = searchResponse.Categories.Select(x => _categoryService.GetById(x.Id)).ToList();
+		
+			for (int i = 0; i < searchResponse.Products.Count(); i += 50)
 			{
-				retVal.Products.Add(_itemService.GetById(product.Id, ItemResponseGroup.ItemMedium | ItemResponseGroup.Variations | ItemResponseGroup.Seo));
-				progressNotifier.Notify();
+				var products = _itemService.GetByIds(searchResponse.Products.Skip(i).Take(50).Select(x => x.Id).ToArray(), ItemResponseGroup.ItemMedium | ItemResponseGroup.Variations | ItemResponseGroup.Seo);
+				retVal.Products.AddRange(products);
+			
+				progressInfo.Description = String.Format("{0} of {1} products loaded", Math.Min(searchResponse.TotalCount, i), searchResponse.TotalCount);
+				progressCallback(progressInfo);
 			}
 
 
 			var catalogsPropertiesIds = retVal.Catalogs.SelectMany(x => _propertyService.GetCatalogProperties(x.Id)).Select(x => x.Id).ToArray();
 			var categoriesPropertiesIds = retVal.Categories.SelectMany(x => _propertyService.GetCategoryProperties(x.Id)).Select(x => x.Id).ToArray();
 			var propertiesIds = catalogsPropertiesIds.Concat(categoriesPropertiesIds).Distinct().ToArray();
-			progressNotifier = new ProgressNotifier("{0} of {1} properties loaded", propertiesIds.Count(), progressCallback);
-			foreach (var propertyId in propertiesIds)
-			{
-				var property = _propertyService.GetById(propertyId);
-				retVal.Properties.Add(property);
-				progressNotifier.Notify();
-			}
-			
+
+			progressInfo.Description = String.Format("{0} properties loading", propertiesIds.Count());
+			progressCallback(progressInfo);
+
+			retVal.Properties = propertiesIds.Select(x => _propertyService.GetById(x)).ToList();
 			return retVal;
 
 		}

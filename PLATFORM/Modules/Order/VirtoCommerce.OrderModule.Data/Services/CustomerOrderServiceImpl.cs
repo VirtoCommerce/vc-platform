@@ -2,7 +2,7 @@
 using System.Linq;
 using VirtoCommerce.Domain.Cart.Services;
 using VirtoCommerce.Domain.Catalog.Services;
-using VirtoCommerce.Domain.Common.Events;
+using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Domain.Order.Events;
 using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Domain.Order.Services;

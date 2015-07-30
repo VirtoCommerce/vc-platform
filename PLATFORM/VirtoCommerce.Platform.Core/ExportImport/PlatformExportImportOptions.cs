@@ -12,8 +12,8 @@ namespace VirtoCommerce.Platform.Core.ExportImport
 	{
 		public string Author { get; set; }
 		public SemanticVersion PlatformVersion { get; set; }
-		public bool PlatformSettings { get; set; }
-		public bool PlatformSecurity { get; set; }
+		public bool HandleSettings { get; set; }
+		public bool HandleSecurity { get; set; }
 		public ModuleDescriptor[] Modules { get; set; }
 	}
 }

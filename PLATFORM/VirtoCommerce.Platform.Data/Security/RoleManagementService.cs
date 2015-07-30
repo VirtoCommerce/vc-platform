@@ -41,7 +41,7 @@ namespace VirtoCommerce.Platform.Data.Security
                     .Include(r => r.RolePermissions.Select(rp => rp.Permission))
                     .ToArray();
 
-                result.Roles = roles.Select(r => r.ToCoreModel(true)).ToArray();
+                result.Roles = roles.Select(r => r.ToCoreModel()).ToArray();
             }
 
             return result;
@@ -59,7 +59,7 @@ namespace VirtoCommerce.Platform.Data.Security
 
                 if (role != null)
                 {
-                    result = role.ToCoreModel(true);
+                    result = role.ToCoreModel();
                 }
             }
 

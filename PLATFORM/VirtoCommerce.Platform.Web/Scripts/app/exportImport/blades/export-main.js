@@ -4,6 +4,8 @@
     blade.headIcon = 'fa-upload';
     blade.title = 'Data export';
 
+    $scope.exportRequest = {};
+
     function initializeBlade() {
         exportImportResourse.getExportersList(function (data) {
             blade.currentEntities = data;
@@ -18,20 +20,26 @@
 
     $scope.$on("new-notification-event", function (event, notification) {
         if (blade.notification && notification.id == blade.notification.id) {
-            angular.copy(notification, blade.notification);
+        	angular.copy(notification, blade.notification);
+        	if (notification.errorCount > 0) {
+        		bladeNavigationService.setError('Export error', blade);
+        	}
         }
     });
 
     $scope.canStartProcess = function () {
-        return blade.currentEntities && _.some(blade.currentEntities, function (x) { return x.isChecked; });
+    	return ($scope.exportRequest.modules && $scope.exportRequest.modules.length > 0) || $scope.exportRequest.handleSecurity || $scope.exportRequest.handleSettings;
     }
 
+    $scope.updateModuleSelection = function () {
+    	var selection = _.where(blade.currentEntities, { isChecked: true });
+    	$scope.exportRequest.modules = _.pluck(selection, 'id');
+    };
+
     $scope.startExport = function () {
-        blade.isLoading = true;
-        var selection = _.where(blade.currentEntities, { isChecked: true });
-        exportImportResourse.runExport({
-            modules: _.pluck(selection, 'id')
-        },
+    	blade.isLoading = true;
+
+    	exportImportResourse.runExport($scope.exportRequest,
         function (data) { blade.notification = data; blade.isLoading = false; },
         function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
     }

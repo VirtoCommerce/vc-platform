@@ -349,7 +349,7 @@ namespace VirtoCommerce.Platform.Data.Security
                         if (detailsLevel == UserDetails.Full)
                         {
                             var roles = user.RoleAssignments.Select(x => x.Role).ToArray();
-                            result.Roles = roles.Select(r => r.ToCoreModel(false)).ToArray();
+                            result.Roles = roles.Select(r => r.ToCoreModel()).ToArray();
 
                             var permissionIds = roles
                                     .SelectMany(x => x.RolePermissions)

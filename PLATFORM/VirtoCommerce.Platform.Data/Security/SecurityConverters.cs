@@ -45,7 +45,7 @@ namespace VirtoCommerce.Platform.Data.Security
             return result;
         }
 
-        public static Role ToCoreModel(this RoleEntity source, bool fillPermissions)
+        public static Role ToCoreModel(this RoleEntity source)
         {
             var result = new Role
             {
@@ -54,7 +54,7 @@ namespace VirtoCommerce.Platform.Data.Security
                 Description = source.Description,
             };
 
-            if (fillPermissions && source.RolePermissions != null)
+            if (source.RolePermissions != null)
             {
                 result.Permissions = source.RolePermissions.Select(rp => rp.Permission.ToCoreModel()).ToArray();
             }

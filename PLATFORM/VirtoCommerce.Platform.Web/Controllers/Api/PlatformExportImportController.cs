@@ -12,13 +12,14 @@ using VirtoCommerce.Platform.Web.Converters.Packaging;
 using VirtoCommerce.Platform.Core.Notification;
 using VirtoCommerce.Platform.Web.Model.ExportImport;
 using VirtoCommerce.Platform.Core.Common;
-using VirtoCommerce.Platform.Web.Model.ExportImport.NotificationEvent;
 using VirtoCommerce.Platform.Core.Asset;
 using System.Reflection;
 using Hangfire;
 using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Data.Common;
 using System.IO;
+using VirtoCommerce.Platform.Core.PushNotification;
+using VirtoCommerce.Platform.Web.Model.ExportImport.PushNotifications;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
@@ -26,15 +27,15 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 	public class PlatformExportImportController : ApiController
 	{
 		private readonly IPlatformExportImportManager _platformExportManager;
-		private readonly INotifier _eventNotifier;
+		private readonly IPushNotificationManager _pushNotifier;
 		private readonly IBlobStorageProvider _blobStorageProvider;
 		private readonly IBlobUrlResolver _blobUrlResolver;
 		private readonly IPackageService _packageService;
 
-		public PlatformExportImportController(IPlatformExportImportManager platformExportManager, INotifier eventNotifier, IBlobStorageProvider blobStorageProvider, IBlobUrlResolver blobUrlResolver, IPackageService packageService)
+		public PlatformExportImportController(IPlatformExportImportManager platformExportManager, IPushNotificationManager pushNotifier, IBlobStorageProvider blobStorageProvider, IBlobUrlResolver blobUrlResolver, IPackageService packageService)
 		{
 			_platformExportManager = platformExportManager;
-			_eventNotifier = eventNotifier;
+			_pushNotifier = pushNotifier;
 			_blobStorageProvider = blobStorageProvider;
 			_blobUrlResolver = blobUrlResolver;
 			_packageService = packageService;
@@ -81,16 +82,16 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 		 }
 
 		 [HttpPost]
-		 [ResponseType(typeof(NotifyEvent))]
+		 [ResponseType(typeof(PushNotification))]
 		 [Route("export")]
 		 public IHttpActionResult ProcessExport(PlatformExportImportRequest exportRequest)
 		 {
-			 var notification = new ExportImportProgressNotificationEvent(CurrentPrincipal.GetCurrentUserName())
+			 var notification = new PlatformExportPushNotification(CurrentPrincipal.GetCurrentUserName())
 			 {
 				 Title = "Platform export task",
 				 Description = "starting export...."
 			 };
-			 _eventNotifier.Upsert(notification);
+			 _pushNotifier.Upsert(notification);
 			 var now = DateTime.UtcNow;
 
 			 BackgroundJob.Enqueue(() => PlatformExportBackground(exportRequest, PlatformVersion.CurrentVersion.ToString(), CurrentPrincipal.GetCurrentUserName(), notification));
@@ -99,16 +100,16 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 		 }
 
 		 [HttpPost]
-		 [ResponseType(typeof(NotifyEvent))]
+		 [ResponseType(typeof(PushNotification))]
 		 [Route("import")]
 		 public IHttpActionResult ProcessImport(PlatformExportImportRequest importRequest)
 		 {
-			 var notification = new ExportImportProgressNotificationEvent(CurrentPrincipal.GetCurrentUserName())
+			 var notification = new PlatformImportPushNotification(CurrentPrincipal.GetCurrentUserName())
 			 {
 				 Title = "Platform import task",
 				 Description = "starting import...."
 			 };
-			 _eventNotifier.Upsert(notification);
+			 _pushNotifier.Upsert(notification);
 			 var now = DateTime.UtcNow;
 
 			 BackgroundJob.Enqueue(() => PlatformImportBackground(importRequest, notification));
@@ -116,47 +117,47 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 			 return Ok(notification);
 		 }
 
-		 public void PlatformImportBackground(PlatformExportImportRequest importRequest, ExportImportProgressNotificationEvent notifyEvent)
+		 public void PlatformImportBackground(PlatformExportImportRequest importRequest, PlatformImportPushNotification pushNotification)
 		 {
 			 Action<ExportImportProgressInfo> progressCallback = (x) =>
 			 {
-				 notifyEvent.InjectFrom(x);
-				 _eventNotifier.Upsert(notifyEvent);
+				 pushNotification.InjectFrom(x);
+				 _pushNotifier.Upsert(pushNotification);
 			 };
 
 			 var now = DateTime.UtcNow;
 			 try
 			 {
-				 var importedModules = InnerGetModulesWithInterface(typeof(ISupportImportModule)).Where(x => importRequest.Modules.Contains(x.Id)).ToArray();
+				 var importedModules = InnerGetModulesWithInterface(typeof(ISupportImportModule)).Where(x =>importRequest.Modules != null && importRequest.Modules.Contains(x.Id)).ToArray();
 				 using (var stream = _blobStorageProvider.OpenReadOnly(importRequest.FileUrl))
 				 {
 					 var options = new PlatformExportImportOptions
 					 {
 						 Modules = importedModules,
-						 PlatformSecurity = importRequest.PlatformSecurity,
-						 PlatformSettings = importRequest.PlatformSettings,
+						 HandleSecurity = importRequest.HandleSecurity,
+						 HandleSettings = importRequest.HandleSettings,
 					 };
 					 _platformExportManager.Import(stream, options, progressCallback);
 				 }
 			 }
 			 catch (Exception ex)
 			 {
-				 notifyEvent.Errors.Add(ex.ExpandExceptionMessage());
+				 pushNotification.Errors.Add(ex.ExpandExceptionMessage());
 			 }
 			 finally
 			 {
-				 notifyEvent.Finished = DateTime.UtcNow;
-				 _eventNotifier.Upsert(notifyEvent);
+				 pushNotification.Finished = DateTime.UtcNow;
+				 _pushNotifier.Upsert(pushNotification);
 			 }
 
 		 }
 
-		 public void PlatformExportBackground(PlatformExportImportRequest exportRequest, string platformVersion, string author, ExportImportProgressNotificationEvent notifyEvent)
+		 public void PlatformExportBackground(PlatformExportImportRequest exportRequest, string platformVersion, string author, PlatformExportPushNotification pushNotification)
 		 {
 			 Action<ExportImportProgressInfo> progressCallback = (x) =>
 			 {
-				 notifyEvent.InjectFrom(x);
-				 _eventNotifier.Upsert(notifyEvent);
+				 pushNotification.InjectFrom(x);
+				 _pushNotifier.Upsert(pushNotification);
 			 };
 
 			 try
@@ -167,8 +168,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 					 var options = new PlatformExportImportOptions
 					 {
 						 Modules = exportedModules,
-						 PlatformSecurity = exportRequest.PlatformSecurity,
-						 PlatformSettings = exportRequest.PlatformSettings,
+						 HandleSecurity = exportRequest.HandleSecurity,
+						 HandleSettings = exportRequest.HandleSettings,
 						 PlatformVersion = SemanticVersion.Parse(platformVersion),
 						 Author = author
 					 };
@@ -184,18 +185,18 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 					 };
 					 var blobKey = _blobStorageProvider.Upload(uploadInfo);
 					 //Get a download url
-					 notifyEvent.DownloadUrl = _blobUrlResolver.GetAbsoluteUrl(blobKey);
-					 notifyEvent.Description = "Export finished";
+					 pushNotification.DownloadUrl = _blobUrlResolver.GetAbsoluteUrl(blobKey);
+					 pushNotification.Description = "Export finished";
 				 }
 			 }
 			 catch(Exception ex)
 			 {
-				 notifyEvent.Errors.Add(ex.ExpandExceptionMessage()); 
+				 pushNotification.Errors.Add(ex.ExpandExceptionMessage()); 
 			 }
 			 finally
 			 {
-				 notifyEvent.Finished = DateTime.UtcNow;
-				 _eventNotifier.Upsert(notifyEvent);
+				 pushNotification.Finished = DateTime.UtcNow;
+				 _pushNotifier.Upsert(pushNotification);
 			 }
 
 		 }

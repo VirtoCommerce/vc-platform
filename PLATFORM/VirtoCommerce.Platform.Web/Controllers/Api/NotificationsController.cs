@@ -17,15 +17,15 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 	{
 		private readonly INotificationTemplateService _notificationTemplateService;
 		private readonly INotificationManager _notificationManager;
-		private readonly INotificationTemplateResolver _notificationTemplateResolver;
+		private readonly INotificationTemplateResolver _eventTemplateResolver;
 		public NotificationsController(
 			INotificationTemplateService notificationTemplateService,
 			INotificationManager notificationManager,
-			INotificationTemplateResolver notificationTemplateResolver)
+			INotificationTemplateResolver eventTemplateResolver)
 		{
 			_notificationTemplateService = notificationTemplateService;
 			_notificationManager = notificationManager;
-			_notificationTemplateResolver = notificationTemplateResolver;
+			_eventTemplateResolver = eventTemplateResolver;
 		}
 
 		[HttpGet]
@@ -93,7 +93,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 		public IHttpActionResult PrepareTest(string type)
 		{
 			var notification = _notificationManager.GetNewNotification(type);
-			var retVal = _notificationTemplateResolver.ResolveNotificationParameters(notification);
+			var retVal = _eventTemplateResolver.ResolveNotificationParameters(notification);
 
 			return Ok(retVal.Select(s => s.ToWebModel()).ToArray());
 		}
@@ -109,7 +109,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 				var property = notification.GetType().GetProperty(param.Key);
 				property.SetValue(notification, param.Value);
 			}
-			_notificationTemplateResolver.ResolveTemplate(notification);
+			_eventTemplateResolver.ResolveTemplate(notification);
 
 			return Ok(notification.ToWebModel());
 		}

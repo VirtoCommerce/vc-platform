@@ -24,11 +24,8 @@ namespace VirtoCommerce.Platform.Web
 
         public static void Configure(IAppBuilder app, IUnityContainer container, string databaseConnectionStringName, AuthenticationOptions authenticationOptions)
         {
-            // Configure the db context, user manager and role manager to use a single instance per request
-            app.CreatePerOwinContext(() => new SecurityDbContext(databaseConnectionStringName));
-            app.CreatePerOwinContext<ApplicationUserStore>(ApplicationUserStore.Create);
-            app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
-            app.CreatePerOwinContext<ApplicationSignInManager>(ApplicationSignInManager.Create);
+            app.CreatePerOwinContext(() => container.Resolve<SecurityDbContext>());
+            app.CreatePerOwinContext(() => container.Resolve<ApplicationUserManager>());
 
             if (authenticationOptions.CookiesEnabled)
             {

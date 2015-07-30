@@ -9,10 +9,12 @@ using System.Web;
 using System.Web.Hosting;
 using System.Web.Mvc;
 using Hangfire.SqlServer;
-using Microsoft.AspNet.Identity.Owin;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.SignalR;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
+using Microsoft.Owin.Security.DataProtection;
 using Microsoft.Owin.StaticFiles;
 using Microsoft.Practices.Unity;
 using Owin;
@@ -25,6 +27,7 @@ using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Notification;
 using VirtoCommerce.Platform.Core.Packaging;
+using VirtoCommerce.Platform.Core.PushNotification;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Asset;
@@ -35,6 +38,7 @@ using VirtoCommerce.Platform.Data.ExportImport;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Platform.Data.Notification;
 using VirtoCommerce.Platform.Data.Packaging;
+using VirtoCommerce.Platform.Data.PushNotification;
 using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.Platform.Data.Security;
 using VirtoCommerce.Platform.Data.Security.Identity;
@@ -96,7 +100,7 @@ namespace VirtoCommerce.Platform.Web
 
             //Initialize Platform dependencies
             const string connectionStringName = "VirtoCommerce";
-            InitializePlatform(container, connectionStringName);
+            InitializePlatform(app, container, connectionStringName);
 
             // Ensure all modules are loaded
             var moduleManager = container.Resolve<IModuleManager>();
@@ -172,7 +176,7 @@ namespace VirtoCommerce.Platform.Web
             return assembly;
         }
 
-        private static void InitializePlatform(IUnityContainer container, string connectionStringName)
+        private static void InitializePlatform(IAppBuilder app, IUnityContainer container, string connectionStringName)
         {
             #region Setup database
 
@@ -273,8 +277,8 @@ namespace VirtoCommerce.Platform.Web
             #region Notifications
 
             var hubSignalR = GlobalHost.ConnectionManager.GetHubContext<ClientPushHub>();
-            var notifier = new InMemoryNotifierImpl(hubSignalR);
-            container.RegisterInstance<INotifier>(notifier);
+            var notifier = new InMemoryPushNotificationManager(hubSignalR);
+            container.RegisterInstance<IPushNotificationManager>(notifier);
 
             var resolver = new LiquidNotificationTemplateResolver();
             var notificationTemplateService = new NotificationTemplateServiceImpl(platformRepositoryFactory);
@@ -366,9 +370,12 @@ namespace VirtoCommerce.Platform.Web
 
             container.RegisterType<IClaimsIdentityProvider, ApplicationClaimsIdentityProvider>(new ContainerControlledLifetimeManager());
 
-            container.RegisterType<ApplicationSignInManager>(new InjectionFactory(c => HttpContext.Current.GetOwinContext().Get<ApplicationSignInManager>()));
-            container.RegisterType<ApplicationUserManager>(new InjectionFactory(c => HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>()));
+            container.RegisterInstance(app.GetDataProtectionProvider());
+            container.RegisterType<SecurityDbContext>(new InjectionConstructor(connectionStringName));
+            container.RegisterType<IUserStore<ApplicationUser>, ApplicationUserStore>();
             container.RegisterType<IAuthenticationManager>(new InjectionFactory(c => HttpContext.Current.GetOwinContext().Authentication));
+            container.RegisterType<ApplicationUserManager>();
+            container.RegisterType<ApplicationSignInManager>();
 
             var nonEditableUsers = GetAppSettingsValue("VirtoCommerce:NonEditableUsers", string.Empty);
             container.RegisterInstance<ISecurityOptions>(new SecurityOptions(nonEditableUsers));

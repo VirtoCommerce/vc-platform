@@ -55,20 +55,20 @@ namespace AvaTax.TaxModule.Web
                 var provider = properties["provider"];
                 var assetsConnectionString = properties.ToString(";", "=", "provider");
 
-                if (string.Equals(provider, FileSystemBlobProvider.ProviderName, StringComparison.OrdinalIgnoreCase))
-                {
-                    var logFile = new FileInfo("AvaTax.log");
+                //if (string.Equals(provider, FileSystemBlobProvider.ProviderName, StringComparison.OrdinalIgnoreCase))
+                //{
+                //    var logFile = new FileInfo("AvaTax.log");
 
-                    if (!logFile.IsFileLocked())
-                    {
-                        eventListener.LogToRollingFlatFile("AvaTax.log",
-                            10000,
-                            "hh",
-                            RollFileExistsBehavior.Increment,
-                            RollInterval.Day);
-                    }
-                }
-                else
+                //    if (!logFile.IsFileLocked())
+                //    {
+                //        eventListener.LogToRollingFlatFile("AvaTax.log",
+                //            10000,
+                //            "hh",
+                //            RollFileExistsBehavior.Increment,
+                //            RollInterval.Day);
+                //    }
+                //}
+                //else
                     if (string.Equals(provider, AzureBlobProvider.ProviderName, StringComparison.OrdinalIgnoreCase))
                     {
                         eventListener.LogToWindowsAzureTable(

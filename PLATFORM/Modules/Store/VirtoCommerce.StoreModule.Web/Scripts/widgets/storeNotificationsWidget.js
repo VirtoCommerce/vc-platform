@@ -12,7 +12,7 @@
 			objectTypeId: objectTypeId,
 			subtitle: 'Notifications service',
 			controller: 'platformWebApp.notificationsListController',
-			template: 'Scripts/app/newnotifications/blades/notifications-list.tpl.html'
+			template: 'Scripts/app/notifications/blades/notifications-list.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, blade);
 	};
