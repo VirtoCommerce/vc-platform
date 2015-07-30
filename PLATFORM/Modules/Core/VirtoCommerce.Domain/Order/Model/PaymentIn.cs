@@ -27,10 +27,5 @@ namespace VirtoCommerce.Domain.Order.Model
 		public DateTime? AuthorizedDate { get; set; }
 		public DateTime? CapturedDate { get; set; }
 		public DateTime? VoidedDate { get; set; }
-
-		public override IEnumerable<Operation> ChildrenOperations
-		{
-			get { return Enumerable.Empty<Operation>(); }
-		}
 	}
 }

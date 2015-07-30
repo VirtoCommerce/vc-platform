@@ -2,6 +2,7 @@
 using Omu.ValueInjecter;
 using coreModel = VirtoCommerce.Domain.Order.Model;
 using webModel = VirtoCommerce.OrderModule.Web.Model;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.OrderModule.Web.Converters
 {
@@ -31,7 +32,7 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 			if (customerOrder.Addresses != null)
 				retVal.Addresses = customerOrder.Addresses.Select(x => x.ToWebModel()).ToList();
 
-			retVal.ChildrenOperations = customerOrder.ChildrenOperations.Select(x => x.ToWebModel()).ToList();
+			retVal.ChildrenOperations = customerOrder.GetFlatObjectsListWithInterface<coreModel.IOperation>().Select(x => x.ToWebModel()).ToList();
 			retVal.TaxDetails = customerOrder.TaxDetails;
 
             if (customerOrder.DynamicProperties != null)

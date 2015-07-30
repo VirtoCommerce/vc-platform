@@ -139,6 +139,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 					 };
 					 _platformExportManager.Import(stream, options, progressCallback);
 				 }
+				 pushNotification.Description = "Import finished";
 			 }
 			 catch (Exception ex)
 			 {

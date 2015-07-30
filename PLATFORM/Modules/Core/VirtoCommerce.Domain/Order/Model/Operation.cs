@@ -41,12 +41,5 @@ namespace VirtoCommerce.Domain.Order.Model
 		public string ObjectType { get; set; }
 		public ICollection<DynamicObjectProperty> DynamicProperties { get; set; }
 		#endregion
-
-	
-		public abstract IEnumerable<Operation> ChildrenOperations
-		{
-			get;
-		}
-	
 	}
 }

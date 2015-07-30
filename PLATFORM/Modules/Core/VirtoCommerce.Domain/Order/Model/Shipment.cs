@@ -5,7 +5,7 @@ using VirtoCommerce.Domain.Commerce.Model;
 
 namespace VirtoCommerce.Domain.Order.Model
 {
-	public class Shipment : Operation, IStockOutOperation, IHaveTaxDetalization, ISupportCancellation
+	public class Shipment : Operation, IHaveTaxDetalization, ISupportCancellation
 	{
 		public string OrganizationId { get; set; }
 		public string OrganizationName { get; set; }
@@ -48,36 +48,7 @@ namespace VirtoCommerce.Domain.Order.Model
 			}
 		}
 		public Discount Discount { get; set; }
-
-		
-
-		public override IEnumerable<Operation> ChildrenOperations
-		{
-			get
-			{
-				var retVal = new List<Operation>();
-
-				if (InPayments != null)
-				{
-					foreach (var inPayment in InPayments)
-					{
-						inPayment.ParentOperationId = this.Id;
-						retVal.Add(inPayment);
-					}
-				}
-				return retVal;
-			}
-		}
-
-		#region IStockOperation Members
-
-		public IEnumerable<IPosition> Positions
-		{
-			get { return Items; }
-		}
-
-		#endregion
-
+	
 		#region ITaxDetailSupport Members
 
 		public ICollection<TaxDetail> TaxDetails { get; set; }

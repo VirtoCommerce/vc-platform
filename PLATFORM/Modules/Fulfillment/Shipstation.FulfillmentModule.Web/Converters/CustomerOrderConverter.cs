@@ -34,15 +34,15 @@ namespace Shipstation.FulfillmentModule.Web.Converters
                     {
                         var item = new OrdersOrderItem
                         {
-                            SKU = shi.ProductId,
-                            ImageUrl = shi.ImageUrl,
-                            LineItemID = shi.LineItemId,
-                            Name = shi.Name,
+                            SKU = shi.LineItem.ProductId,
+							ImageUrl = shi.LineItem.ImageUrl,
+							LineItemID = shi.LineItemId,
+							Name = shi.LineItem.Name,
                             Quantity = (sbyte)shi.Quantity,
-                            UnitPrice = (float)order.Items.Single(i => i.ProductId == shi.ProductId).Price,
-                            Weight = (float)(order.Items.Single(i => i.ProductId == shi.ProductId).Weight ?? 0),
-                            WeightSpecified = order.Items.Single(i => i.ProductId == shi.ProductId).Weight != null,
-                            WeightUnits = order.Items.Single(i => i.ProductId == shi.ProductId).WeightUnit,
+							UnitPrice = (float)order.Items.Single(i => i.ProductId == shi.LineItem.ProductId).Price,
+							Weight = (float)(order.Items.Single(i => i.ProductId == shi.LineItem.ProductId).Weight ?? 0),
+							WeightSpecified = order.Items.Single(i => i.ProductId == shi.LineItem.ProductId).Weight != null,
+							WeightUnits = order.Items.Single(i => i.ProductId == shi.LineItem.ProductId).WeightUnit,
 
                         };
 

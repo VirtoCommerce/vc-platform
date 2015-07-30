@@ -4,6 +4,7 @@ using System.IO;
 using System.IO.Packaging;
 using System.Linq;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Packaging;
 using VirtoCommerce.Platform.Core.Security;
@@ -18,6 +19,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 		{
 			Users = new List<ApplicationUserExtended>();
 			Settings = new List<SettingEntry>();
+			DynamicPropertyDictionaryItems = new List<DynamicPropertyDictionaryItem>();
 		}
 		public bool IsNotEmpty
 		{
@@ -28,6 +30,8 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 		}
 		public ICollection<ApplicationUserExtended> Users { get; set; }
 		public ICollection<SettingEntry> Settings { get; set; }
+		public ICollection<DynamicPropertyDictionaryItem> DynamicPropertyDictionaryItems { get; set; }
+		public ICollection<DynamicProperty> DynamicProperties { get; set; } 
 	}
 
 
@@ -40,9 +44,11 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 		private readonly ISecurityService _securityService;
 		private readonly IRoleManagementService _roleManagmentService;
 		private readonly ISettingsManager _settingsManager;
+		private readonly IDynamicPropertyService _dynamicPropertyService;
 
-		public PlatformExportImportManager(ISecurityService securityService, IRoleManagementService roleManagmentService, ISettingsManager settingsManager)
+		public PlatformExportImportManager(ISecurityService securityService, IRoleManagementService roleManagmentService, ISettingsManager settingsManager, IDynamicPropertyService dynamicPropertyService)
 		{
+			_dynamicPropertyService = dynamicPropertyService;
 			_securityService = securityService;
 			_roleManagmentService = roleManagmentService;
 			_settingsManager = settingsManager;
@@ -76,11 +82,11 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 
 			using (var package = ZipPackage.Open(outStream, FileMode.Create))
 			{
-				//Export all selected  modules
-				var exportedModules = ExportModulesInternal(package, exportOptions, progressCallback);
 				//Export all selected platform entries
 				ExportPlatformEntriesInternal(package, exportOptions, progressCallback);
-
+				//Export all selected  modules
+				var exportedModules = ExportModulesInternal(package, exportOptions, progressCallback);
+			
 				//Write system information about exported modules
 				var manifestPart = package.CreatePart(_manifestPartUri, System.Net.Mime.MediaTypeNames.Text.Xml);
 				var manifest = new PlatformExportManifest
@@ -114,10 +120,11 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 		
 			using (var package = ZipPackage.Open(stream, FileMode.Open))
 			{
-				//Import selected modules
-				ImportModulesInternal(package, manifest, importOptions, progressCallback);
 				//Import selected platform entries
 				ImportPlatformEntriesInternal(package, importOptions, progressCallback);
+				//Import selected modules
+				ImportModulesInternal(package, manifest, importOptions, progressCallback);
+				
 			}
 		}
 
@@ -160,6 +167,13 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 						}
 					}
 				}
+
+				//Import dynamic properties
+				_dynamicPropertyService.SaveProperties(platformEntries.DynamicProperties.ToArray());
+				foreach (var propDicGroup in platformEntries.DynamicPropertyDictionaryItems.GroupBy(x=>x.PropertyId))
+				{
+					_dynamicPropertyService.SaveDictionaryItems(propDicGroup.Key, propDicGroup.ToArray());
+				}
 			}
 		}
 
@@ -189,6 +203,15 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 				//settings 
 				throw new NotImplementedException();
 			}
+
+			//Dynamic properties
+			var allTypes = _dynamicPropertyService.GetAvailableObjectTypeNames();
+
+			progressInfo.Description = String.Format("Dynamic properties: load properties...");
+			progressCallback(progressInfo);
+
+			platformExportObj.DynamicProperties = allTypes.SelectMany(x => _dynamicPropertyService.GetProperties(x)).ToList();
+			platformExportObj.DynamicPropertyDictionaryItems = platformExportObj.DynamicProperties.Where(x => x.IsDictionary).SelectMany(x => _dynamicPropertyService.GetDictionaryItems(x.Id)).ToList();
 
 			//Create part for platform entries
 			var platformEntiriesPart = package.CreatePart(_platformEntriesPartUri, System.Net.Mime.MediaTypeNames.Application.Octet, CompressionOption.Normal);

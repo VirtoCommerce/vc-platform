@@ -46,7 +46,7 @@
             <div class="form" ng-if="blade.notification">
                 <div class="block">
                     <div>
-                        <p class="text">{{blade.notification.description}}</p>
+                        <div class="sub-t">{{blade.notification.description}}</div>
                         <div class="block" ng-if="blade.notification.created || blade.notification.finished">
                             <p ng-if="blade.notification.created" ng-class="{'no-data': blade.notification.created}" class="text">Start — <i class="fa fa-clock-o"></i> <span am-time-ago="blade.notification.created"></span></p>
                             <p ng-if="blade.notification.finished" ng-class="{'no-data': blade.notification.finished}" class="text">End — <i class="fa fa-clock-o"></i> <span am-time-ago="blade.notification.finished"></span></p>

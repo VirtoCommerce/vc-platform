@@ -217,7 +217,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
             var order = _customerOrderService.GetById(id, coreModel.CustomerOrderResponseGroup.Full);
             if (order != null)
             {
-                var operation = ((coreModel.Operation)order).Traverse(x => x.ChildrenOperations).FirstOrDefault(x => x.Id == operationId);
+                var operation = order.GetFlatObjectsListWithInterface<coreModel.IOperation>().FirstOrDefault(x => ((Entity)x).Id == operationId);
                 if (operation != null)
                 {
                     var shipment = operation as coreModel.Shipment;

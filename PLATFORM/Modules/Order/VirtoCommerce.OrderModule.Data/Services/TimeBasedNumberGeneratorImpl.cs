@@ -32,7 +32,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
 
 		#region IOperationNumberGenerator Members
 
-		public string GenerateNumber(Domain.Order.Model.Operation operation)
+		public string GenerateNumber(Domain.Order.Model.IOperation operation)
 		{
             var now = DateTime.UtcNow;
             //var retVal = operation.GetType().Name.Substring(0, 2).ToUpper() + now.DayOfYear.ToString("000") + now.TimeOfDay.Minutes.ToString("00");
