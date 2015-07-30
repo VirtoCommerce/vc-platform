@@ -134,6 +134,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 					 var options = new PlatformExportImportOptions
 					 {
 						 Modules = importedModules,
+						 HandleBinaryData = importRequest.HandleBinaryData,
 						 HandleSecurity = importRequest.HandleSecurity,
 						 HandleSettings = importRequest.HandleSettings,
 					 };
@@ -172,6 +173,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 						 Modules = exportedModules,
 						 HandleSecurity = exportRequest.HandleSecurity,
 						 HandleSettings = exportRequest.HandleSettings,
+						 HandleBinaryData = exportRequest.HandleBinaryData,
 						 PlatformVersion = SemanticVersion.Parse(platformVersion),
 						 Author = author
 					 };
