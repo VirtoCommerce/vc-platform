@@ -36,6 +36,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -44,6 +45,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
@@ -278,8 +280,8 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="BackgroundJobs\SendNotificationsJobs.cs" />
-    <Compile Include="BackgroundJobs\SendNotificationsJobsSheduler.cs" />
-    <Compile Include="Bootstraper.cs" />
+    <Compile Include="BackgroundJobs\SendNotificationsJobsScheduler.cs" />
+    <Compile Include="VirtoCommercePlatformWebBootstrapper.cs" />
     <Compile Include="Controllers\Api\AssetsController.cs" />
     <Compile Include="Controllers\Api\DynamicPropertiesController.cs" />
     <Compile Include="Controllers\Api\PlatformExportImportController.cs" />
@@ -292,7 +294,7 @@
     <Compile Include="Controllers\Api\SettingController.cs" />
     <Compile Include="Controllers\HelpController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Converters\Notification\NotificationConverter.cs" />
+    <Compile Include="Converters\Notifications\NotificationConverter.cs" />
     <Compile Include="Converters\Packaging\ModuleDescriptorConverter.cs" />
     <Compile Include="Converters\Packaging\ProgressMessageConverter.cs" />
     <Compile Include="Converters\Settings\ModuleDescriptorConverter.cs" />
@@ -310,10 +312,10 @@
     <Compile Include="Model\ExportImport\PushNotifications\PlatformExportPushNotification.cs" />
     <Compile Include="Model\ExportImport\PushNotifications\PlatformImportPushNotification.cs" />
     <Compile Include="Model\Jobs\Job.cs" />
-    <Compile Include="Model\Notification\Notification.cs" />
-    <Compile Include="Model\Notification\NotificationParameter.cs" />
-    <Compile Include="Model\Notification\NotificationTemplate.cs" />
-    <Compile Include="Model\Notification\SearchNotificationsResult.cs" />
+    <Compile Include="Model\Notifications\Notification.cs" />
+    <Compile Include="Model\Notifications\NotificationParameter.cs" />
+    <Compile Include="Model\Notifications\NotificationTemplate.cs" />
+    <Compile Include="Model\Notifications\SearchNotificationsResult.cs" />
     <Compile Include="Model\Packaging\ModuleDescriptor.cs" />
     <Compile Include="Model\Packaging\ModuleIdentity.cs" />
     <Compile Include="Model\Packaging\ModuleWorkerJob.cs" />
@@ -333,6 +335,9 @@
     <Compile Include="UrlRewriterOwinMiddleware.cs" />
   </ItemGroup>
   <ItemGroup>
+    <CodeAnalysisDictionary Include="..\CustomDictionary.xml">
+      <Link>CustomDictionary.xml</Link>
+    </CodeAnalysisDictionary>
     <Content Include="Content\angular-gridster.css" />
     <Content Include="Content\angular-multi-select.css" />
     <Content Include="Scripts\angular-gridster.js" />

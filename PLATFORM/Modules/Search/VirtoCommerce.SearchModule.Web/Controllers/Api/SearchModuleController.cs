@@ -38,7 +38,7 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
         [CheckPermission(Permission = "VirtoCommerce.Search:Index:Rebuild")]
         public IHttpActionResult Rebuild()
         {
-            var jobId = _scheduler.SheduleRebuildIndex();
+            var jobId = _scheduler.ScheduleRebuildIndex();
             var result = new { Id = jobId };
             return Ok(result);
         }

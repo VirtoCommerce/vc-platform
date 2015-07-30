@@ -55,8 +55,8 @@
        }
     ];
 
-    $scope.$watch('blade.parentBlade.currentEntity.apiAcounts', initializeBlade);
+    $scope.$watch('blade.parentBlade.currentEntity.apiAccounts', initializeBlade);
 
     // actions on load
-    // $scope.$watch('blade.parentBlade.currentEntity.apiAcounts' gets fired
+    // $scope.$watch('blade.parentBlade.currentEntity.apiAccounts' gets fired
 }]);

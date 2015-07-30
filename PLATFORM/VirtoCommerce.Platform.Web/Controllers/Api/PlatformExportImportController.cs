@@ -9,7 +9,7 @@ using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Packaging;
 using webModel = VirtoCommerce.Platform.Web.Model.ExportImport;
 using VirtoCommerce.Platform.Web.Converters.Packaging;
-using VirtoCommerce.Platform.Core.Notification;
+using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Web.Model.ExportImport;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Asset;
@@ -18,7 +18,7 @@ using Hangfire;
 using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Data.Common;
 using System.IO;
-using VirtoCommerce.Platform.Core.PushNotification;
+using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Web.Model.ExportImport.PushNotifications;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api

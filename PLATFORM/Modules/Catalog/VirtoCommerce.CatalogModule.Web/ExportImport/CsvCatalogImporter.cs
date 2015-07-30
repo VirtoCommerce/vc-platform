@@ -6,7 +6,7 @@ using coreModel = VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Platform.Core.Asset;
 using VirtoCommerce.Platform.Core.Caching;
-using VirtoCommerce.Platform.Core.Notification;
+using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Core.Common;
 using System.IO;
 using CsvHelper;
@@ -25,7 +25,7 @@ using System.Threading.Tasks;
 using VirtoCommerce.Domain.Commerce.Model;
 using VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.Platform.Core.ExportImport;
-using VirtoCommerce.Platform.Core.PushNotification;
+using VirtoCommerce.Platform.Core.PushNotifications;
 
 
 namespace VirtoCommerce.CatalogModule.Web.ExportImport

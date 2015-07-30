@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using VirtoCommerce.Domain.Customer.Services;
 using VirtoCommerce.Domain.Order.Events;
 using VirtoCommerce.Domain.Store.Services;
-using VirtoCommerce.OrderModule.Data.Notification;
-using VirtoCommerce.Platform.Core.Notification;
+using VirtoCommerce.OrderModule.Data.Notifications;
+using VirtoCommerce.Platform.Core.Notifications;
 
 namespace VirtoCommerce.OrderModule.Data.Observers
 {
@@ -73,7 +73,7 @@ namespace VirtoCommerce.OrderModule.Data.Observers
 
 			notification.IsActive = true;
 
-			_notificationManager.SheduleSendNotification(notification);
+			_notificationManager.ScheduleSendNotification(notification);
 		}
 	}
 }

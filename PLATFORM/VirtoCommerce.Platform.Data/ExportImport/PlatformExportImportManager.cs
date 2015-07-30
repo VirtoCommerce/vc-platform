@@ -42,15 +42,15 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 		private readonly Uri _platformEntriesPartUri;
 
 		private readonly ISecurityService _securityService;
-		private readonly IRoleManagementService _roleManagmentService;
+        private readonly IRoleManagementService _roleManagementService;
 		private readonly ISettingsManager _settingsManager;
 		private readonly IDynamicPropertyService _dynamicPropertyService;
 
-		public PlatformExportImportManager(ISecurityService securityService, IRoleManagementService roleManagmentService, ISettingsManager settingsManager, IDynamicPropertyService dynamicPropertyService)
+		public PlatformExportImportManager(ISecurityService securityService, IRoleManagementService roleManagementService, ISettingsManager settingsManager, IDynamicPropertyService dynamicPropertyService)
 		{
 			_dynamicPropertyService = dynamicPropertyService;
 			_securityService = securityService;
-			_roleManagmentService = roleManagmentService;
+            _roleManagementService = roleManagementService;
 			_settingsManager = settingsManager;
 
 			_manifestPartUri = PackUriHelper.CreatePartUri(new Uri("Manifest.json", UriKind.Relative));
@@ -86,7 +86,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 				ExportPlatformEntriesInternal(package, exportOptions, progressCallback);
 				//Export all selected  modules
 				var exportedModules = ExportModulesInternal(package, exportOptions, progressCallback);
-			
+
 				//Write system information about exported modules
 				var manifestPart = package.CreatePart(_manifestPartUri, System.Net.Mime.MediaTypeNames.Text.Xml);
 				var manifest = new PlatformExportManifest
@@ -143,21 +143,21 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 					platformEntries = stream.DeserializeJson<PlatformExportEntries>();
 				}
 
-				if(importOptions.HandleSecurity)
+                if (importOptions.HandleSecurity)
 				{
 					progressInfo.Description = String.Format("Import {0} users with roles...", platformEntries.Users.Count());
 					progressCallback(progressInfo);
 
 					//First need import roles
 					var roles = platformEntries.Users.SelectMany(x => x.Roles).Distinct().ToArray();
-					foreach(var role in roles)
+                    foreach (var role in roles)
 					{
-						_roleManagmentService.AddOrUpdateRole(role);
+                        _roleManagementService.AddOrUpdateRole(role);
 					}
 					//Next create or update users
-					foreach(var user in platformEntries.Users)
+                    foreach (var user in platformEntries.Users)
 					{
-						if(_securityService.FindByIdAsync(user.Id, UserDetails.Reduced).Result != null)
+                        if (_securityService.FindByIdAsync(user.Id, UserDetails.Reduced).Result != null)
 						{
 							_securityService.UpdateAsync(user);
 						}

@@ -167,33 +167,33 @@ namespace VirtoCommerce.Platform.Data.Security
                     {
                         using (var repository = _platformRepository())
                         {
-                            var acount = repository.GetAccountByName(user.UserName, UserDetails.Full);
+                            var account = repository.GetAccountByName(user.UserName, UserDetails.Full);
 
-                            if (acount == null)
+                            if (account == null)
                             {
-                                result = new SecurityResult { Errors = new[] { "Acount not found." } };
+                                result = new SecurityResult { Errors = new[] { "Account not found." } };
                             }
                             else
                             {
-                                acount.RegisterType = (RegisterType)user.UserType;
-                                acount.AccountState = (AccountState)user.UserState;
-                                acount.MemberId = user.MemberId;
-                                acount.StoreId = user.StoreId;
+                                account.RegisterType = (RegisterType)user.UserType;
+                                account.AccountState = (AccountState)user.UserState;
+                                account.MemberId = user.MemberId;
+                                account.StoreId = user.StoreId;
 
-                                if (user.ApiAcounts != null)
+                                if (user.ApiAccounts != null)
                                 {
-                                    var sourceCollection = new ObservableCollection<ApiAccountEntity>(user.ApiAcounts.Select(x => x.ToEntity()));
+                                    var sourceCollection = new ObservableCollection<ApiAccountEntity>(user.ApiAccounts.Select(x => x.ToEntity()));
                                     var comparer = AnonymousComparer.Create((ApiAccountEntity x) => x.Id);
-                                    acount.ApiAccounts.ObserveCollection(x => repository.Add(x), x => repository.Remove(x));
-                                    sourceCollection.Patch(acount.ApiAccounts, comparer, (sourceItem, targetItem) => sourceItem.Patch(targetItem));
+                                    account.ApiAccounts.ObserveCollection(x => repository.Add(x), x => repository.Remove(x));
+                                    sourceCollection.Patch(account.ApiAccounts, comparer, (sourceItem, targetItem) => sourceItem.Patch(targetItem));
                                 }
 
                                 if (user.Roles != null)
                                 {
                                     var sourceCollection = new ObservableCollection<RoleAssignmentEntity>(user.Roles.Select(r => new RoleAssignmentEntity { RoleId = r.Id }));
                                     var comparer = AnonymousComparer.Create((RoleAssignmentEntity x) => x.RoleId);
-                                    acount.RoleAssignments.ObserveCollection(x => repository.Add(x), ra => repository.Remove(ra));
-                                    sourceCollection.Patch(acount.RoleAssignments, comparer, (sourceItem, targetItem) => sourceItem.Patch(targetItem));
+                                    account.RoleAssignments.ObserveCollection(x => repository.Add(x), ra => repository.Remove(ra));
+                                    sourceCollection.Patch(account.RoleAssignments, comparer, (sourceItem, targetItem) => sourceItem.Patch(targetItem));
                                 }
 
                                 repository.UnitOfWork.Commit();
@@ -401,7 +401,7 @@ namespace VirtoCommerce.Platform.Data.Security
                                     .ToArray();
 
                             result.Permissions = permissionIds;
-                            result.ApiAcounts = user.ApiAccounts.Select(x => x.ToCoreModel()).ToArray();
+                            result.ApiAccounts = user.ApiAccounts.Select(x => x.ToCoreModel()).ToArray();
                         }
                     }
                 }

@@ -13,7 +13,7 @@ namespace VirtoCommerce.Platform.Core.ExportImport
 		public string SystemInfo { get; set; }
 		public DateTime Created { get; set; }
 		public string Author { get; set; }
-		public string CheckSum { get; set; }
+		public string Checksum { get; set; }
 
 		public bool IsHasSecurity { get; set; }
 		public bool IsHasSettings { get; set; }

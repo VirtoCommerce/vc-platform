@@ -25,9 +25,9 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Modularity;
-using VirtoCommerce.Platform.Core.Notification;
+using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Core.Packaging;
-using VirtoCommerce.Platform.Core.PushNotification;
+using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Asset;
@@ -36,9 +36,9 @@ using VirtoCommerce.Platform.Data.ChangeLog;
 using VirtoCommerce.Platform.Data.DynamicProperties;
 using VirtoCommerce.Platform.Data.ExportImport;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
-using VirtoCommerce.Platform.Data.Notification;
+using VirtoCommerce.Platform.Data.Notifications;
 using VirtoCommerce.Platform.Data.Packaging;
-using VirtoCommerce.Platform.Data.PushNotification;
+using VirtoCommerce.Platform.Data.PushNotifications;
 using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.Platform.Data.Security;
 using VirtoCommerce.Platform.Data.Security.Identity;
@@ -64,10 +64,10 @@ namespace VirtoCommerce.Platform.Web
             const string modulesVirtualPath = "~/Modules";
             var modulesPhysicalPath = HostingEnvironment.MapPath(modulesVirtualPath).EnsureEndSeparator();
 
-            var bootstraper = new VirtoCommercePlatformWebBootstraper(modulesVirtualPath, modulesPhysicalPath, _assembliesPath);
-            bootstraper.Run();
+            var bootstrapper = new VirtoCommercePlatformWebBootstrapper(modulesVirtualPath, modulesPhysicalPath, _assembliesPath);
+            bootstrapper.Run();
 
-            var container = bootstraper.Container;
+            var container = bootstrapper.Container;
             container.RegisterInstance(app);
 
             var moduleCatalog = container.Resolve<IModuleCatalog>();
@@ -126,8 +126,8 @@ namespace VirtoCommerce.Platform.Web
 
             OwinConfig.Configure(app, container, connectionStringName, authenticationOptions);
 
-            var jobScheduler = container.Resolve<SendNotificationsJobsSheduler>();
-            jobScheduler.SheduleJobs();
+            var jobScheduler = container.Resolve<SendNotificationsJobsScheduler>();
+            jobScheduler.ScheduleJobs();
 
             var notificationManager = container.Resolve<INotificationManager>();
             notificationManager.RegisterNotificationType(() => new RegistrationEmailNotification(container.Resolve<IEmailNotificationSendingGateway>())

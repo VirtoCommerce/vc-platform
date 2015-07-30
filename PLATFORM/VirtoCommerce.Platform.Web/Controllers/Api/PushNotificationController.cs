@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
-using VirtoCommerce.Platform.Core.Notification;
-using VirtoCommerce.Platform.Core.PushNotification;
+using VirtoCommerce.Platform.Core.Notifications;
+using VirtoCommerce.Platform.Core.PushNotifications;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
@@ -14,9 +14,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     public class PushNotificationController : ApiController
     {
         private readonly IPushNotificationManager _pushNotifier;
-		public PushNotificationController(IPushNotificationManager pushNotifier)
+        public PushNotificationController(IPushNotificationManager pushNotifier)
         {
-			_pushNotifier = pushNotifier;
+            _pushNotifier = pushNotifier;
         }
 
         /// <summary>
@@ -24,7 +24,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [ResponseType(typeof(PushNotifcationSearchResult))]
+        [ResponseType(typeof(PushNotificationSearchResult))]
         [Route("")]
         public IHttpActionResult Search([FromUri]PushNotificationSearchCriteria criteria)
         {

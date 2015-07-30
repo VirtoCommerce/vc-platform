@@ -1,4 +1,4 @@
-﻿using VirtoCommerce.Platform.Core.Notification;
+﻿using VirtoCommerce.Platform.Core.Notifications;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
@@ -15,7 +15,7 @@ using GoogleShopping.MerchantModule.Web.Services;
 using Google.Apis.ShoppingContent.v2.Data;
 using GoogleShopping.MerchantModule.Web.Converters;
 using GoogleShopping.MerchantModule.Web.Helpers.Interfaces;
-using VirtoCommerce.Platform.Core.PushNotification;
+using VirtoCommerce.Platform.Core.PushNotifications;
 #endregion
 
 

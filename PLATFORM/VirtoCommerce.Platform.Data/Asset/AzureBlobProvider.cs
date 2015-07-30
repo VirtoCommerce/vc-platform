@@ -29,35 +29,35 @@ namespace VirtoCommerce.Platform.Data.Asset
 
         #region IBlobStorageProvider Members
 
-		public string Upload(UploadStreamInfo request)
-		{
-			string result = null;
-			var containerName = request.FolderName;
+        public string Upload(UploadStreamInfo request)
+        {
+            string result = null;
+            var containerName = request.FolderName;
 
-			var container = _cloudBlobClient.GetContainerReference(containerName);
-			if (!container.Exists())
-			{
-				container.CreateIfNotExists(BlobContainerPublicAccessType.Blob);
-			}
+            var container = _cloudBlobClient.GetContainerReference(containerName);
+            if (!container.Exists())
+            {
+                container.CreateIfNotExists(BlobContainerPublicAccessType.Blob);
+            }
 
-			var blob = container.GetBlockBlobReference(request.FileName);
-			blob.Properties.ContentType = MimeTypeResolver.ResolveContentType(request.FileName);
+            var blob = container.GetBlockBlobReference(request.FileName);
+            blob.Properties.ContentType = MimeTypeResolver.ResolveContentType(request.FileName);
 
-			using (var memoryStream = new MemoryStream())
-			{
-				// upload to MemoryStream
-				//memoryStream.SetLength(request.Length);
-				request.FileByteStream.CopyTo(memoryStream);
-				memoryStream.Position = 0;
-				// fill blob
-				blob.UploadFromStream(memoryStream);
-			}
+            using (var memoryStream = new MemoryStream())
+            {
+                // upload to MemoryStream
+                //memoryStream.SetLength(request.Length);
+                request.FileByteStream.CopyTo(memoryStream);
+                memoryStream.Position = 0;
+                // fill blob
+                blob.UploadFromStream(memoryStream);
+            }
 
-			result = blob.Uri.AbsolutePath.TrimStart('/');
+            result = blob.Uri.AbsolutePath.TrimStart('/');
 
 
-			return result;
-		}
+            return result;
+        }
 
 
         public System.IO.Stream OpenReadOnly(string blobKey)
@@ -84,28 +84,28 @@ namespace VirtoCommerce.Platform.Data.Asset
 
         public string GetAbsoluteUrl(string blobKey)
         {
-			var retVal = blobKey;
-			if (!Uri.IsWellFormedUriString(blobKey, UriKind.Absolute))
-			{
-				var root = _cloudStorageAccount.BlobEndpoint.AbsoluteUri;
-				retVal = String.Format("{0}{1}", root.EndsWith("/") ? root : root + "/", blobKey);
+            var retVal = blobKey;
+            if (!Uri.IsWellFormedUriString(blobKey, UriKind.Absolute))
+            {
+                var root = _cloudStorageAccount.BlobEndpoint.AbsoluteUri;
+                retVal = String.Format("{0}{1}", root.EndsWith("/") ? root : root + "/", blobKey);
 
-			}
-			return retVal;
+            }
+            return retVal;
         }
 
         #endregion
 
         private static CloudStorageAccount ParseConnectionString(string connectionString)
         {
-            CloudStorageAccount cloudStorageAcount;
-            if (!CloudStorageAccount.TryParse(connectionString, out cloudStorageAcount))
+            CloudStorageAccount cloudStorageAccount;
+            if (!CloudStorageAccount.TryParse(connectionString, out cloudStorageAccount))
             {
                 throw new InvalidOperationException("Failed to get valid connection string");
             }
-            return cloudStorageAcount;
+            return cloudStorageAccount;
         }
 
-    
+
     }
 }
