@@ -56,7 +56,14 @@ namespace VirtoCommerce.Content.Web.ExportImport
 			UpdateMenuLinkLists(originalObject.MenuLinkLists, backupObject.MenuLinkLists);
 			if (importOptions.HandleBinaryData)
 			{
+				progressInfo.Description = String.Format("importing binary data: {0} pages importing...", backupObject.Pages.Count());
+				progressCallback(progressInfo);
+
 				UpdatePages(originalObject.Pages, backupObject.Pages);
+
+				progressInfo.Description = String.Format("importing binary data: {0} theme assets importing...", backupObject.ThemeAssets.Count());
+				progressCallback(progressInfo);
+
 				UpdateThemeAssets(originalObject.ThemeAssets, backupObject.ThemeAssets);
 			}
 		}
