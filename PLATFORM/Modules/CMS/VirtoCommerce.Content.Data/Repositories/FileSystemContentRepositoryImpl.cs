@@ -63,7 +63,7 @@ namespace VirtoCommerce.Content.Data.Repositories
 
 			var files = Directory.GetFiles(fullPath, "*.*", SearchOption.AllDirectories);
 
-			if (criteria.LastUpdateDate.HasValue)
+			if (criteria != null && criteria.LastUpdateDate.HasValue)
 			{
 				var filterDate = criteria.LastUpdateDate.Value;
 				if (filterDate.Kind == DateTimeKind.Unspecified)
