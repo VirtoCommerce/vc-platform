@@ -110,9 +110,11 @@ namespace VirtoCommerce.Platform.Data.Settings
                     {
                         foreach (var setting in group.Settings)
                         {
-                            var settingEntity = settingEntities.FirstOrDefault(x => x.Name == setting.Name && x.ObjectId == null);
-                            var settingDescriptor = setting.ToModel(settingEntity, group.Name);
-                            result.Add(settingDescriptor);
+                            var dbSetting = settingEntities.FirstOrDefault(x => x.Name == setting.Name && x.ObjectId == null);
+
+                            var settingEntry = setting.ToModel(dbSetting, group.Name);
+							settingEntry.ModuleId = moduleId;
+							result.Add(settingEntry);
                         }
                     }
                 }
