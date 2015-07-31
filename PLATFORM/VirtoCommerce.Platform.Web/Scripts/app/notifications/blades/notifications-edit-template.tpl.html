@@ -29,7 +29,7 @@
 						<div class=" form-group" ng-if="blade.isNew" style="margin-top:-16px;">
 							<div class="form-input">
 								<ui-select ng-model="blade.currentEntity.language">
-									<ui-select-match placeholder="Select...">{{$select.selected}}</ui-select-match>
+									<ui-select-match placeholder="Select..."><span class="flag flag-{{blade.getFlag($select.selected)}}"></span> {{$select.selected}}</ui-select-match>
 									<ui-select-choices repeat="x in blade.languages">
 										<span class="flag flag-{{blade.getFlag(x)}}"></span>
 										<span ng-bind-html="x"></span>

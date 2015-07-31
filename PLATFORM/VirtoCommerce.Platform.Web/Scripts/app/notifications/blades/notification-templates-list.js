@@ -7,6 +7,9 @@
 		blade.isLoading = true;
 		notifications.getTemplates({ type: blade.notificationType, objectId: blade.objectId, objectTypeId: blade.objectTypeId }, function (data) {
 			blade.currentEntities = data;
+			if (blade.currentEntities.length < 1) {
+				bladeNavigationService.closeBlade(blade);
+			}
 			blade.isLoading = false;
 		});
 	}

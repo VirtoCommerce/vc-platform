@@ -12,6 +12,9 @@ namespace VirtoCommerce.Platform.Data.Notifications
 {
 	public class NotificationManager : INotificationManager
 	{
+		private const string _platformObjectId = "Platform";
+		private const string _platformObjectType = "Platform";
+
 		private INotificationTemplateResolver _resolver;
 		private Func<IPlatformRepository> _repositoryFactory;
 		private INotificationTemplateService _notificationTemplateService;
@@ -156,8 +159,16 @@ namespace VirtoCommerce.Platform.Data.Notifications
 				retVal.Notifications = new List<Core.Notifications.Notification>();
 				if (!criteria.IsActive)
 				{
-					var notifications = repository.Notifications.Where(n => n.ObjectId == criteria.ObjectId && n.ObjectTypeId == criteria.ObjectTypeId).OrderBy(n => n.CreatedDate).Skip(criteria.Skip).Take(criteria.Take);
-					foreach (var notification in notifications)
+					var query = repository.Notifications;
+					
+					if (!criteria.ObjectId.Equals(_platformObjectId) || !criteria.ObjectTypeId.Equals(_platformObjectType))
+					{
+						query = query.Where(n => n.ObjectId == criteria.ObjectId && n.ObjectTypeId == criteria.ObjectTypeId);
+					}
+
+					query = query.OrderBy(n => n.CreatedDate).Skip(criteria.Skip).Take(criteria.Take);
+
+					foreach (var notification in query.ToList())
 					{
 						retVal.Notifications.Add(GetNotificationCoreModel(notification));
 					}
