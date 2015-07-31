@@ -127,7 +127,7 @@ namespace VirtoCommerce.Content.Data.Repositories
 					});
 			}
 
-			return Task.FromResult(themes.AsEnumerable());
+			return Task.FromResult(themes.ToArray().AsEnumerable());
 		}
 
 		public Task<bool> SaveContentItem(string path, ContentItem item)
@@ -301,6 +301,11 @@ namespace VirtoCommerce.Content.Data.Repositories
 			}
 
 			return retVal.Trim('/');
+		}
+
+		public void Dispose()
+		{
+			
 		}
 	}
 }

@@ -96,7 +96,7 @@ namespace VirtoCommerce.Content.Data.Repositories
 
 			var items = Themes.Where(c => c.ThemePath.StartsWith(storePath));
 
-			return Task.FromResult(items.AsEnumerable());
+			return Task.FromResult(items.ToArray().AsEnumerable());
 		}
 
 		public Task<IEnumerable<ContentItem>> GetContentItems(string path, GetThemeAssetsCriteria criteria)

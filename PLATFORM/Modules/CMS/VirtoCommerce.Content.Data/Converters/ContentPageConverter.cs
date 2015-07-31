@@ -54,6 +54,7 @@ namespace VirtoCommerce.Content.Data.Converters
 			retVal.Language = contentPage.Language;
 			retVal.Updated = contentPage.ModifiedDate.HasValue ? contentPage.ModifiedDate.Value : contentPage.CreatedDate;
 			retVal.ContentType = contentPage.ContentType;
+			retVal.FullPath = contentPage.Id;
 
 			return retVal;
 		}

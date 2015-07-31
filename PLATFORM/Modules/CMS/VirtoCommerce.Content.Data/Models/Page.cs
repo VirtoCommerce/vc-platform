@@ -20,5 +20,7 @@ namespace VirtoCommerce.Content.Data.Models
 		public string ContentType { get; set; }
 
 		public DateTime Updated { get; set; }
+
+		public string FullPath { get; set; }
 	}
 }

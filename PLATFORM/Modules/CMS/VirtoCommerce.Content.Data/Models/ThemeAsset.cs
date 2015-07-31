@@ -12,6 +12,8 @@ namespace VirtoCommerce.Content.Data.Models
 
 		public byte[] ByteContent { get; set; }
 
+		public string Path { get; set; }
+
 		public string ContentType { get; set; }
         public DateTime Updated { get; set; }
     }

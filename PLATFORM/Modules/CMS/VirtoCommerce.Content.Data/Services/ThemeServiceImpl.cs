@@ -13,62 +13,79 @@ namespace VirtoCommerce.Content.Data.Services
 {
 	public class ThemeServiceImpl : IThemeService
 	{
-		private readonly IContentRepository _repository;
+		private readonly Func<IContentRepository> _repositoryFactory;
 
-		public ThemeServiceImpl(IContentRepository repository)
+		public ThemeServiceImpl(Func<IContentRepository> repositoryFactory)
 		{
-			if (repository == null)
-				throw new ArgumentNullException("repository");
+			if (repositoryFactory == null)
+				throw new ArgumentNullException("repositoryFactory");
 
-			_repository = repository;
+			_repositoryFactory = repositoryFactory;
 		}
 
-		public ThemeServiceImpl(IContentRepository repository, string tempPath)
+		public ThemeServiceImpl(Func<IContentRepository> repositoryFactory, string tempPath)
 		{
-			if (repository == null)
-				throw new ArgumentNullException("repository");
+			if (repositoryFactory == null)
+				throw new ArgumentNullException("repositoryFactory");
 
-			_repository = repository;
+			_repositoryFactory = repositoryFactory;
 		}
 
 		public Task<IEnumerable<Theme>> GetThemes(string storeId)
 		{
 			var themePath = GetThemePath(storeId, string.Empty);
 
-			var items = _repository.GetThemes(themePath);
-			return items;
+			using (var repository = _repositoryFactory())
+			{
+				var items = repository.GetThemes(themePath);
+				return items;
+			}
 		}
 
 		public async Task DeleteTheme(string storeId, string themeId)
 		{
 			var themePath = GetThemePath(storeId, themeId);
 
-			await _repository.DeleteTheme(themePath);
+			using (var repository = _repositoryFactory())
+			{
+				await repository.DeleteTheme(themePath);
+			}
 		}
 
 		public async Task<IEnumerable<ThemeAsset>> GetThemeAssets(string storeId, string themeName, GetThemeAssetsCriteria criteria)
 		{
 			var themePath = GetThemePath(storeId, themeName);
-			var items = await _repository.GetContentItems(themePath, criteria);
-
-			foreach (var item in items)
+			using (var repository = _repositoryFactory())
 			{
-				item.Path = FixPath(themePath, item.Path);
-				item.ContentType = ContentTypeUtility.GetContentType(item.Name, item.ByteContent);
-			}
+				var items = await repository.GetContentItems(themePath, criteria);
+				var retVal = new List<ThemeAsset>();
 
-			return items.Select(c => c.AsThemeAsset());
+				foreach (var item in items)
+				{
+					var path = item.Path;
+					item.Path = FixPath(themePath, item.Path);
+					item.ContentType = ContentTypeUtility.GetContentType(item.Name, item.ByteContent);
+					var addedItem = item.AsThemeAsset();
+					addedItem.Path = path;
+					retVal.Add(addedItem);
+				}
+
+				return retVal;
+			}
 		}
 
 		public async Task<ThemeAsset> GetThemeAsset(string storeId, string themeId, string path)
 		{
 			var fullPath = GetFullPath(storeId, themeId, path);
-			var item = await _repository.GetContentItem(fullPath);
+			using (var repository = _repositoryFactory())
+			{
+				var item = await repository.GetContentItem(fullPath);
 
-			item.Path = FixPath(GetThemePath(storeId, themeId), item.Path);
-			item.ContentType = ContentTypeUtility.GetContentType(item.Name, item.ByteContent);
+				item.Path = FixPath(GetThemePath(storeId, themeId), item.Path);
+				item.ContentType = ContentTypeUtility.GetContentType(item.Name, item.ByteContent);
 
-			return item.AsThemeAsset();
+				return item.AsThemeAsset();
+			}
 		}
 
 		public async Task SaveThemeAsset(string storeId, string themeId, Models.ThemeAsset asset)
@@ -76,17 +93,22 @@ namespace VirtoCommerce.Content.Data.Services
 			var retVal = false;
 
 			var fullPath = GetFullPath(storeId, themeId, asset.Id);
-
-			retVal = await _repository.SaveContentItem(fullPath, asset.AsContentItem());
+			using (var repository = _repositoryFactory())
+			{
+				retVal = await repository.SaveContentItem(fullPath, asset.AsContentItem());
+			}
 		}
 
 		public async Task DeleteThemeAssets(string storeId, string themeId, params string[] assetIds)
 		{
-			foreach (var assetId in assetIds)
+			using (var repository = _repositoryFactory())
 			{
-				var fullPath = GetFullPath(storeId, themeId, assetId);
+				foreach (var assetId in assetIds)
+				{
+					var fullPath = GetFullPath(storeId, themeId, assetId);
 
-				await _repository.DeleteContentItem(fullPath);
+					await repository.DeleteContentItem(fullPath);
+				}
 			}
 		}
 
@@ -119,30 +141,33 @@ namespace VirtoCommerce.Content.Data.Services
 			var retVal = false;
 
 			var themesPath = GetThemePath(storeId, string.Empty);
-			var themes = await _repository.GetThemes(themesPath);
-			if (!themes.Any() || !string.IsNullOrEmpty(themePath))
+			using (var repository = _repositoryFactory())
 			{
-				var files = Directory.GetFiles(themePath, "*.*", SearchOption.AllDirectories);
-
-				var items =
-					files.Select(
-						file => new ContentItem { Name = Path.GetFileName(file), Path = RemoveBaseDirectory(file, themePath), ModifiedDate = File.GetLastWriteTimeUtc(file) })
-						.ToList();
-
-				foreach (var contentItem in items)
+				var themes = await repository.GetThemes(themesPath);
+				if (!themes.Any() || !string.IsNullOrEmpty(themePath))
 				{
-					var fullFile = GetContentItem(contentItem.Path, storeId, themePath);
-					contentItem.Id = Guid.NewGuid().ToString();
-					contentItem.ByteContent = fullFile.ByteContent;
-					contentItem.ContentType = fullFile.ContentType;
-					contentItem.Path = string.Format("{0}/{1}", storeId, contentItem.Path);
-					contentItem.CreatedDate = DateTime.UtcNow;
-					contentItem.ModifiedDate = DateTime.UtcNow;
+					var files = Directory.GetFiles(themePath, "*.*", SearchOption.AllDirectories);
 
-					await _repository.SaveContentItem(contentItem.Path, contentItem);
+					var items =
+						files.Select(
+							file => new ContentItem { Name = Path.GetFileName(file), Path = RemoveBaseDirectory(file, themePath), ModifiedDate = File.GetLastWriteTimeUtc(file) })
+							.ToList();
+
+					foreach (var contentItem in items)
+					{
+						var fullFile = GetContentItem(contentItem.Path, storeId, themePath);
+						contentItem.Id = Guid.NewGuid().ToString();
+						contentItem.ByteContent = fullFile.ByteContent;
+						contentItem.ContentType = fullFile.ContentType;
+						contentItem.Path = string.Format("{0}/{1}", storeId, contentItem.Path);
+						contentItem.CreatedDate = DateTime.UtcNow;
+						contentItem.ModifiedDate = DateTime.UtcNow;
+
+						await repository.SaveContentItem(contentItem.Path, contentItem);
+					}
+
+					retVal = true;
 				}
-
-				retVal = true;
 			}
 
 			return retVal;

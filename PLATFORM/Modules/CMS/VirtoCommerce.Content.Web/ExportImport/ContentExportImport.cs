@@ -9,89 +9,131 @@ using VirtoCommerce.Platform.Core.ExportImport;
 using Microsoft.Practices.ObjectBuilder2;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Domain.Store.Services;
+using System.Threading.Tasks;
 
 namespace VirtoCommerce.Content.Web.ExportImport
 {
 	public sealed class BackupObject
 	{
 		public ICollection<MenuLinkList> MenuLinkLists { get; set; }
+		public ICollection<ThemeAsset> ThemeAssets { get; set; }
+		public ICollection<Page> Pages { get; set; }
 	}
 
 	public sealed class ContentExportImport
 	{
 		private readonly IMenuService _menuService;
 		private readonly IStoreService _storeService;
+		private readonly IThemeService _themeService;
+		private readonly IPagesService _pagesService;
 
-		public ContentExportImport(IMenuService menuService, IStoreService storeService)
+		public ContentExportImport(IMenuService menuService, IThemeService themeService, IPagesService pagesService, IStoreService storeService)
 		{
 			_menuService = menuService;
 			_storeService = storeService;
+			_themeService = themeService;
+			_pagesService = pagesService;
 		}
 
-		public void DoExport(Stream backupStream, Action<ExportImportProgressInfo> progressCallback)
+		public void DoExport(Stream backupStream, PlatformExportImportOptions exportOptions, Action<ExportImportProgressInfo> progressCallback)
 		{
-			var backupObject = GetBackupObject(progressCallback);
+			var backupObject = GetBackupObject(progressCallback, exportOptions.HandleBinaryData);
 
 			backupObject.MenuLinkLists.ForEach(x => x.MenuLinks = x.MenuLinks.Where(m => m.IsActive).ToList());
 
 			backupObject.SerializeJson(backupStream);
 		}
 
-		public void DoImport(Stream backupStream, Action<ExportImportProgressInfo> progressCallback)
+		public void DoImport(Stream backupStream, PlatformExportImportOptions importOptions, Action<ExportImportProgressInfo> progressCallback)
 		{
 			var backupObject = backupStream.DeserializeJson<BackupObject>();
-			var originalObject = GetBackupObject(progressCallback);
+			var originalObject = GetBackupObject(progressCallback, importOptions.HandleBinaryData);
 
 			var progressInfo = new ExportImportProgressInfo();
 			progressInfo.Description = String.Format("{0} menu link lists importing...", backupObject.MenuLinkLists.Count());
 			progressCallback(progressInfo);
 
-			UpdateStores(originalObject.MenuLinkLists, backupObject.MenuLinkLists);
+			UpdateMenuLinkLists(originalObject.MenuLinkLists, backupObject.MenuLinkLists);
+			if (importOptions.HandleBinaryData)
+			{
+				UpdatePages(originalObject.Pages, backupObject.Pages);
+				UpdateThemeAssets(originalObject.ThemeAssets, backupObject.ThemeAssets);
+			}
 		}
 
-		private void UpdateStores(ICollection<MenuLinkList> original, ICollection<MenuLinkList> backup)
+		private void UpdateMenuLinkLists(ICollection<MenuLinkList> original, ICollection<MenuLinkList> backup)
 		{
-			var toUpdate = new List<MenuLinkList>();
-
-			backup.CompareTo(original, EqualityComparer<MenuLinkList>.Default, (state, x, y) =>
-			{
-				switch (state)
-				{
-					case EntryState.Modified:
-						toUpdate.Add(x);
-						break;
-					case EntryState.Added:
-						_menuService.Update(x);
-						break;
-				}
-			});
-
-			foreach (var item in toUpdate)
+			foreach (var item in backup)
 			{
 				_menuService.Update(item);
 			}
 		}
 
-		private BackupObject GetBackupObject(Action<ExportImportProgressInfo> progressCallback)
+		private void UpdatePages(ICollection<Page> original, ICollection<Page> backup)
+		{
+			foreach (var item in backup)
+			{
+				_pagesService.SavePage(GetStoreIdForPage(item), item);
+			}
+		}
+
+		private void UpdateThemeAssets(ICollection<ThemeAsset> original, ICollection<ThemeAsset> backup)
+		{
+			foreach (var item in backup)
+			{
+				_themeService.SaveThemeAsset(GetStoreIdForThemeAsset(item), GetThemeIdForThemeAsset(item), item);
+			}
+		}
+
+		private string GetStoreIdForPage(Page page)
+		{
+			return page.FullPath.Split(new char[] { '/' })[0];
+		}
+
+		private string GetThemeIdForThemeAsset(ThemeAsset themeAsset)
+		{
+			return themeAsset.Path.Split(new char[] { '/' })[1];
+		}
+
+		private string GetStoreIdForThemeAsset(ThemeAsset themeAsset)
+		{
+			return themeAsset.Path.Split(new char[] { '/' })[0];
+		}
+
+		private BackupObject GetBackupObject(Action<ExportImportProgressInfo> progressCallback, bool handleBynaryData)
 		{
 			var progressInfo = new ExportImportProgressInfo();
-			progressInfo.Description = "menu link lists loading...";
+			progressInfo.Description = "cms content loading...";
 			progressCallback(progressInfo);
 
 			var stores = _storeService.GetStoreList();
 			var menuLinkLists = new List<MenuLinkList>();
+			var contentItems = new List<ThemeAsset>();
+			var contentPages = new List<Page>();
 			foreach(var store in stores)
 			{
 				var storeLists = _menuService.GetListsByStoreId(store.Id);
-				foreach(var storeList in storeLists)
+				menuLinkLists.AddRange(storeLists);
+
+				if (handleBynaryData)
 				{
-					menuLinkLists.Add(storeList);
+					var storePages = _pagesService.GetPages(store.Id, null);
+					contentPages.AddRange(storePages);
+
+					var storeThemes = _themeService.GetThemes(store.Id).Result.ToArray();
+					foreach (var storeTheme in storeThemes)
+					{
+						var themeContentItems = _themeService.GetThemeAssets(store.Id, storeTheme.Name, null).Result.ToArray();
+						contentItems.AddRange(themeContentItems);
+					}
 				}
 			}
 
 			return new BackupObject
 			{
-				MenuLinkLists = menuLinkLists
+				MenuLinkLists = menuLinkLists,
+				ThemeAssets = contentItems,
+				Pages = contentPages
 			};
 		}
 	}

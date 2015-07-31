@@ -312,5 +312,10 @@ namespace VirtoCommerce.Content.Data.Repositories
 		{
 			throw new NotImplementedException();
 		}
+
+		public void Dispose()
+		{
+			
+		}
 	}
 }

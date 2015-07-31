@@ -75,7 +75,7 @@ namespace VirtoCommerce.Content.Web
                 switch (x)
                 {
                     case "GitHub":
-                        return new ThemeServiceImpl(
+                        return new ThemeServiceImpl(() =>
                             new GitHubContentRepositoryImpl(
                                 githubLogin,
                                 githubPassword,
@@ -85,17 +85,17 @@ namespace VirtoCommerce.Content.Web
                                 githubMainPath));
 
                     case "Database":
-                        return new ThemeServiceImpl(
+						return new ThemeServiceImpl(() =>
                             new DatabaseContentRepositoryImpl(
                                 "VirtoCommerce",
                                 new AuditableInterceptor(),
                                 new EntityPrimaryKeyGeneratorInterceptor()));
 
                     case "File System":
-                        return new ThemeServiceImpl(new FileSystemContentRepositoryImpl(fileSystemMainPath));
+						return new ThemeServiceImpl(() => new FileSystemContentRepositoryImpl(fileSystemMainPath));
 
                     case "Azure and Database":
-                        return new ThemeServiceImpl(
+						return new ThemeServiceImpl(() =>
                             new DatabaseContentRepositoryImpl(
                                 "VirtoCommerce",
                                 new AuditableInterceptor(),
@@ -103,7 +103,7 @@ namespace VirtoCommerce.Content.Web
                             uploadPath); // TODO: It could be not the Azure provider.
 
                     default:
-                        return new ThemeServiceImpl(new FileSystemContentRepositoryImpl(fileSystemMainPath));
+						return new ThemeServiceImpl(() => new FileSystemContentRepositoryImpl(fileSystemMainPath));
                 }
             };
 
@@ -156,7 +156,7 @@ namespace VirtoCommerce.Content.Web
                 switch (x)
                 {
                     case "GitHub":
-                        return new PagesServiceImpl(
+						return new PagesServiceImpl(() =>
                             new GitHubContentRepositoryImpl(
                                 githubLogin,
                                 githubPassword,
@@ -166,17 +166,17 @@ namespace VirtoCommerce.Content.Web
                                 pagesGithubMainPath));
 
                     case "Database":
-                        return new PagesServiceImpl(
+						return new PagesServiceImpl(() =>
                             new DatabaseContentRepositoryImpl(
                                 "VirtoCommerce",
                                 new AuditableInterceptor(),
                                 new EntityPrimaryKeyGeneratorInterceptor()));
 
                     case "File System":
-                        return new PagesServiceImpl(new FileSystemContentRepositoryImpl(pagesFileSystemMainPath));
+						return new PagesServiceImpl(() => new FileSystemContentRepositoryImpl(pagesFileSystemMainPath));
 
                     default:
-                        return new PagesServiceImpl(new FileSystemContentRepositoryImpl(pagesFileSystemMainPath));
+						return new PagesServiceImpl(() => new FileSystemContentRepositoryImpl(pagesFileSystemMainPath));
                 }
             };
 
@@ -215,20 +215,20 @@ namespace VirtoCommerce.Content.Web
 
 		#region ISupportExportModule Members
 
-		public void DoExport(Stream outStream, Action<ExportImportProgressInfo> progressCallback)
+		public void DoExport(System.IO.Stream outStream, PlatformExportImportOptions exportOptions, Action<ExportImportProgressInfo> progressCallback)
 		{
 			var exportJob = _container.Resolve<ContentExportImport>();
-			exportJob.DoExport(outStream, progressCallback);
+			exportJob.DoExport(outStream, exportOptions, progressCallback);
 		}
 
 		#endregion
 
 		#region ISupportImportModule Members
 
-		public void DoImport(Stream inputStream, Action<ExportImportProgressInfo> progressCallback)
+		public void DoImport(System.IO.Stream inputStream, PlatformExportImportOptions importOptions, Action<ExportImportProgressInfo> progressCallback)
 		{
 			var exportJob = _container.Resolve<ContentExportImport>();
-			exportJob.DoImport(inputStream, progressCallback);
+			exportJob.DoImport(inputStream, importOptions, progressCallback);
 		}
 
 		#endregion

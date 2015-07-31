@@ -4,13 +4,15 @@ namespace VirtoCommerce.Content.Data.Repositories
 {
 	#region
 
+	using System;
 	using System.Linq;
 	using System.Threading.Tasks;
 	using VirtoCommerce.Content.Data.Models;
+	using VirtoCommerce.Platform.Core.Common;
 
 	#endregion
 
-	public interface IContentRepository 
+	public interface IContentRepository : IDisposable
 	{
 		Task<ContentItem> GetContentItem(string path);
 

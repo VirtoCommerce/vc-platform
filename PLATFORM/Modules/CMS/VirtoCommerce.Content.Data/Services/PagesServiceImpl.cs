@@ -15,27 +15,27 @@ namespace VirtoCommerce.Content.Data.Services
 	public class PagesServiceImpl : IPagesService
 	{
 		private readonly object _lockObject = new object();
-		private readonly IContentRepository _repository;
+		private readonly Func<IContentRepository> _repositoryFactory;
 		private readonly IBlobStorageProvider _blobProvider;
 		private readonly string _tempPath;
 
-		public PagesServiceImpl(IContentRepository repository)
+		public PagesServiceImpl(Func<IContentRepository> repositoryFactory)
 		{
-			if (repository == null)
-				throw new ArgumentNullException("repository");
+			if (repositoryFactory == null)
+				throw new ArgumentNullException("repositoryFactory");
 
-			_repository = repository;
+			_repositoryFactory = repositoryFactory;
 		}
 
-		public PagesServiceImpl(IContentRepository repository, IBlobStorageProvider blobProvider, string tempPath)
+		public PagesServiceImpl(Func<IContentRepository> repositoryFactory, IBlobStorageProvider blobProvider, string tempPath)
 		{
-			if (repository == null)
-				throw new ArgumentNullException("repository");
+			if (repositoryFactory == null)
+				throw new ArgumentNullException("repositoryFactory");
 
 			if (blobProvider == null)
 				throw new ArgumentNullException("blobProvider");
 
-			_repository = repository;
+			_repositoryFactory = repositoryFactory;
 			_blobProvider = blobProvider;
 			_tempPath = HostingEnvironment.MapPath("~/App_Data/Uploads/");
 		}
@@ -43,31 +43,37 @@ namespace VirtoCommerce.Content.Data.Services
 		public IEnumerable<Models.Page> GetPages(string storeId, GetPagesCriteria criteria)
 		{
 			var path = string.Format("{0}/", storeId);
-			var pages = _repository.GetPages(path, criteria);
-
-			foreach (var page in pages)
+			using (var repository = _repositoryFactory())
 			{
-				page.Path = FixPath(GetPageMainPath(storeId, page.Language), page.Path);
-				page.ContentType = ContentTypeUtility.GetContentType(page.Name, page.ByteContent);
-			}
+				var pages = repository.GetPages(path, criteria);
 
-			return pages.Select(p => p.AsPage());
+				foreach (var page in pages)
+				{
+					page.Path = FixPath(GetPageMainPath(storeId, page.Language), page.Path);
+					page.ContentType = ContentTypeUtility.GetContentType(page.Name, page.ByteContent);
+				}
+
+				return pages.Select(p => p.AsPage()).ToArray();
+			}
 		}
 
 		public Models.Page GetPage(string storeId, string pageName, string language)
 		{
 			var fullPath = GetFullName(storeId, pageName, language);
-			var item = _repository.GetPage(fullPath);
-
-			if(item == null)
+			using (var repository = _repositoryFactory())
 			{
-				return null;
+				var item = repository.GetPage(fullPath);
+
+				if (item == null)
+				{
+					return null;
+				}
+
+				item.Path = FixPath(GetPageMainPath(storeId, language), item.Path);
+				item.ContentType = ContentTypeUtility.GetContentType(item.Name, item.ByteContent);
+
+				return item.AsPage();
 			}
-
-			item.Path = FixPath(GetPageMainPath(storeId, language), item.Path);
-			item.ContentType = ContentTypeUtility.GetContentType(item.Name, item.ByteContent);
-
-			return item.AsPage();
 		}
 
 		public void SavePage(string storeId, Models.Page page)
@@ -76,16 +82,22 @@ namespace VirtoCommerce.Content.Data.Services
 
 			page.Id = fullPath;
 
-			_repository.SavePage(fullPath, page.AsContentPage());
+			using (var repository = _repositoryFactory())
+			{
+				repository.SavePage(fullPath, page.AsContentPage());
+			}
 		}
 
 		public void DeletePage(string storeId, Page[] pages)
 		{
-			foreach (var page in pages)
+			using (var repository = _repositoryFactory())
 			{
-				var fullPath = GetFullName(storeId, page.PageName, page.Language);
+				foreach (var page in pages)
+				{
+					var fullPath = GetFullName(storeId, page.PageName, page.Language);
 
-				_repository.DeletePage(fullPath);
+					repository.DeletePage(fullPath);
+				}
 			}
 		}
 
