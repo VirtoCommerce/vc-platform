@@ -28,6 +28,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 			_eventTemplateResolver = eventTemplateResolver;
 		}
 
+		/// <summary>
+		/// Get all students
+		/// </summary>
+		/// <remarks>Get an array of all students</remarks>
+		/// <response code="500">Internal Server Error</response>
 		[HttpGet]
 		[ResponseType(typeof(webModels.Notification[]))]
 		[Route("")]

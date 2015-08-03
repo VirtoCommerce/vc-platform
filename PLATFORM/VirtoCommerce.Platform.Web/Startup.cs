@@ -48,6 +48,9 @@ using VirtoCommerce.Platform.Web.BackgroundJobs;
 using VirtoCommerce.Platform.Web.Controllers.Api;
 using VirtoCommerce.Platform.Web.Resources;
 using WebGrease.Extensions;
+using System.Web.Http;
+using Swashbuckle.Application;
+using System.Net.Http;
 
 [assembly: OwinStartup(typeof(Startup))]
 
@@ -154,6 +157,24 @@ namespace VirtoCommerce.Platform.Web
             var hubConfiguration = new HubConfiguration();
             hubConfiguration.EnableJavaScriptProxies = false;
             app.MapSignalR(hubConfiguration);
+
+			HttpConfiguration httpConfiguration = new HttpConfiguration();
+
+			httpConfiguration.
+				EnableSwagger(
+				c =>
+				{
+					//c.IncludeXmlComments(GetXmlCommentsPath());
+					c.IgnoreObsoleteProperties();
+					c.UseFullTypeNameInSchemaIds();
+					c.DescribeAllEnumsAsStrings();
+					c.SingleApiVersion("v1", "VirtoCommerce Platform Web documentation");
+					c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+					c.RootUrl(req => new Uri(req.RequestUri, req.GetRequestContext().VirtualPathRoot).ToString());
+				}
+				).EnableSwaggerUi();
+
+			app.UseWebApi(httpConfiguration);
         }
 
 
@@ -430,6 +451,11 @@ namespace VirtoCommerce.Platform.Web
 
             return result;
         }
+
+		protected static string GetXmlCommentsPath()
+		{
+			return System.String.Format(@"{0}\bin\VirtoCommerce.Platform.Web.XML", System.AppDomain.CurrentDomain.BaseDirectory);
+		}
     }
 
     public class AuthenticationOptions

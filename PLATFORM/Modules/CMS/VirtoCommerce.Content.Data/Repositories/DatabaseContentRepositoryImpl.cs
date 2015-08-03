@@ -85,21 +85,21 @@ namespace VirtoCommerce.Content.Data.Repositories
 			get { return GetAsQueryable<ContentPage>(); }
 		}
 
-		public async Task<ContentItem> GetContentItem(string path)
+		public ContentItem GetContentItem(string path)
 		{
-			return await ContentItems.FirstOrDefaultAsync(p => p.Path == path);
+			return ContentItems.FirstOrDefault(p => p.Path == path);
 		}
 
-		public Task<IEnumerable<Theme>> GetThemes(string storePath)
+		public IEnumerable<Theme> GetThemes(string storePath)
 		{
 			var path = string.Format("{0}/", storePath);
 
 			var items = Themes.Where(c => c.ThemePath.StartsWith(storePath));
 
-			return Task.FromResult(items.ToArray().AsEnumerable());
+			return items.ToArray().AsEnumerable();
 		}
 
-		public Task<IEnumerable<ContentItem>> GetContentItems(string path, GetThemeAssetsCriteria criteria)
+		public IEnumerable<ContentItem> GetContentItems(string path, GetThemeAssetsCriteria criteria)
 		{
 		    var query = ContentItems.Where(i => i.Path.StartsWith(path));
 
@@ -110,7 +110,7 @@ namespace VirtoCommerce.Content.Data.Repositories
                     compareDate < i.ModifiedDate.Value) || (compareDate < i.CreatedDate));
 			}
 
-		    return Task.FromResult(query.AsEnumerable());
+		    return query.AsEnumerable();
 		}
 
 		public ContentPage GetPage(string path)
@@ -131,7 +131,7 @@ namespace VirtoCommerce.Content.Data.Repositories
 			return query.AsEnumerable();
 		}
 
-		public Task<bool> SaveContentItem(string path, ContentItem item)
+		public void SaveContentItem(string path, ContentItem item)
 		{
 			var existingItem = ContentItems.FirstOrDefault(p => p.Path == path);
 			if (existingItem != null)
@@ -167,8 +167,6 @@ namespace VirtoCommerce.Content.Data.Repositories
 			}
 
 			UnitOfWork.Commit();
-
-			return Task.FromResult(true);
 		}
 
 		public void SavePage(string path, ContentPage page)
@@ -189,7 +187,7 @@ namespace VirtoCommerce.Content.Data.Repositories
 			UnitOfWork.Commit();
 		}
 
-		public Task<bool> DeleteContentItem(string path)
+		public void DeleteContentItem(string path)
 		{
 			var existingItem = ContentItems.FirstOrDefault(p => p.Path == path);
 			if (existingItem != null)
@@ -210,13 +208,11 @@ namespace VirtoCommerce.Content.Data.Repositories
 			}
 
 			UnitOfWork.Commit();
-
-			return Task.FromResult(true);
 		}
 
-		public async Task<bool> DeleteTheme(string path)
+		public void DeleteTheme(string path)
 		{
-			var existingTheme = await Themes.FirstOrDefaultAsync(t => t.Id == path);
+			var existingTheme = Themes.FirstOrDefaultAsync(t => t.Id == path);
 			if (existingTheme != null)
 			{
 				Remove(existingTheme);
@@ -228,8 +224,6 @@ namespace VirtoCommerce.Content.Data.Repositories
 
 				UnitOfWork.Commit();
 			}
-
-			return true;
 		}
 
 		public void DeletePage(string path)

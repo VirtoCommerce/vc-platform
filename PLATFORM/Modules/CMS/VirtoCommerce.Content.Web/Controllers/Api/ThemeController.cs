@@ -68,18 +68,18 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		[HttpGet]
 		[ResponseType(typeof(ThemeAsset))]
 		[Route("themes/{themeId}/assets/{*assetId}")]
-		public async Task<IHttpActionResult> GetThemeAsset(string assetId, string storeId, string themeId)
+		public IHttpActionResult GetThemeAsset(string assetId, string storeId, string themeId)
 		{
-			var item = await this._themeService.GetThemeAsset(storeId, themeId, assetId);
+			var item = this._themeService.GetThemeAsset(storeId, themeId, assetId);
 			return this.Ok(item.ToWebModel());
 		}
 
 		[HttpGet]
 		[ResponseType(typeof(ThemeAsset[]))]
 		[Route("themes/{themeId}/assets")]
-		public async Task<IHttpActionResult> GetThemeAssets(string storeId, string themeId, [FromUri]GetThemeAssetsCriteria criteria)
+		public IHttpActionResult GetThemeAssets(string storeId, string themeId, [FromUri]GetThemeAssetsCriteria criteria)
 		{
-			var items = await this._themeService.GetThemeAssets(storeId, themeId, criteria.ToCoreModel());
+			var items = this._themeService.GetThemeAssets(storeId, themeId, criteria.ToCoreModel());
 
 			return this.Ok(items.OrderBy(x => x.Updated).Select(s => s.ToWebModel()).ToArray());
 		}
@@ -88,9 +88,9 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		[ResponseType(typeof(void))]
 		[Route("themes/{themeId}")]
 		[CheckPermission(Permission = PredefinedPermissions.Manage)]
-		public async Task<IHttpActionResult> DeleteTheme(string storeId, string themeId)
+		public IHttpActionResult DeleteTheme(string storeId, string themeId)
 		{
-			await this._themeService.DeleteTheme(storeId, themeId);
+			this._themeService.DeleteTheme(storeId, themeId);
 
 			return this.Ok();
 		}
@@ -98,9 +98,9 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		[HttpGet]
 		[ResponseType(typeof(ThemeAssetFolder[]))]
 		[Route("themes/{themeId}/folders")]
-		public async Task<IHttpActionResult> GetThemeAssets(string storeId, string themeId)
+		public IHttpActionResult GetThemeAssets(string storeId, string themeId)
 		{
-			var items = await this._themeService.GetThemeAssets(storeId, themeId, new VirtoCommerce.Content.Data.Models.GetThemeAssetsCriteria());
+			var items = this._themeService.GetThemeAssets(storeId, themeId, new VirtoCommerce.Content.Data.Models.GetThemeAssetsCriteria());
 
 			return this.Ok(items.ToWebModel());
 		}
@@ -109,16 +109,16 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		[ResponseType(typeof(Theme[]))]
 		[ClientCache(Duration = 30)]
 		[Route("themes")]
-		public async Task<IHttpActionResult> GetThemes(string storeId)
+		public IHttpActionResult GetThemes(string storeId)
 		{
-			var items = await this._themeService.GetThemes(storeId);
+			var items = this._themeService.GetThemes(storeId);
 			return this.Ok(items.Select(s => s.ToWebModel()).ToArray());
 		}
 
 		[HttpPost]
 		[Route("themes/{themeId}/assets")]
 		[CheckPermission(Permission = PredefinedPermissions.Manage)]
-		public async Task<IHttpActionResult> SaveItem(ThemeAsset asset, string storeId, string themeId)
+		public IHttpActionResult SaveItem(ThemeAsset asset, string storeId, string themeId)
 		{
 			if (!string.IsNullOrEmpty(asset.AssetUrl))
 			{
@@ -126,23 +126,23 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 				asset.ByteContent = File.ReadAllBytes(filePath);
 			}
 
-			await this._themeService.SaveThemeAsset(storeId, themeId, asset.ToDomainModel());
+			this._themeService.SaveThemeAsset(storeId, themeId, asset.ToDomainModel());
 			return this.Ok();
 		}
 
 		[HttpDelete]
 		[Route("themes/{themeId}/assets")]
 		[CheckPermission(Permission = PredefinedPermissions.Manage)]
-		public async Task<IHttpActionResult> DeleteAssets(string storeId, string themeId, [FromUri]string[] assetIds)
+		public IHttpActionResult DeleteAssets(string storeId, string themeId, [FromUri]string[] assetIds)
 		{
-			await this._themeService.DeleteThemeAssets(storeId, themeId, assetIds);
+			this._themeService.DeleteThemeAssets(storeId, themeId, assetIds);
 			return this.Ok();
 		}
 
 		[HttpGet]
 		[Route("themes/file")]
 		[CheckPermission(Permission = PredefinedPermissions.Manage)]
-		public async Task<IHttpActionResult> CreateNewTheme(string storeId, string themeFileUrl, string themeName)
+		public IHttpActionResult CreateNewTheme(string storeId, string themeFileUrl, string themeName)
 		{
 			using (var webClient = new WebClient())
 			{
@@ -152,7 +152,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 
 				using (ZipArchive archive = ZipFile.OpenRead(fullFilePath))
 				{
-					await _themeService.UploadTheme(storeId, themeName, archive);
+					_themeService.UploadTheme(storeId, themeName, archive);
 				}
 
 				File.Delete(fullFilePath);
@@ -164,7 +164,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		[HttpPost]
 		[Route("themes/{themeId}/assets/file/{folderName}")]
 		[CheckPermission(Permission = PredefinedPermissions.Manage)]
-		public async Task<IHttpActionResult> SaveImageItem(string storeId, string themeId, string folderName)
+		public IHttpActionResult SaveImageItem(string storeId, string themeId, string folderName)
 		{
 			if (!Request.Content.IsMimeMultipartContent())
 			{
@@ -173,7 +173,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 
 			var provider = new MultipartFileStreamProvider(_pathForMultipart);
 
-			await Request.Content.ReadAsMultipartAsync(provider);
+			Request.Content.ReadAsMultipartAsync(provider);
 
 			var loadItemInfo = new LoadItemInfo();
 
@@ -187,7 +187,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 
 					using (var f = File.Create(filePath))
 					{
-						await stream.CopyToAsync(f);
+						stream.CopyToAsync(f);
 					}
 
 					loadItemInfo.Name = fileName;
@@ -207,18 +207,11 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		[Route("themes/createdefault")]
 		[ResponseType(typeof(bool))]
 		[CheckPermission(Permission = PredefinedPermissions.Manage)]
-		public async Task<IHttpActionResult> CreateDefaultTheme(string storeId)
+		public IHttpActionResult CreateDefaultTheme(string storeId)
 		{
-			var retVal = await _themeService.CreateDefaultTheme(storeId, _defaultThemePath);
-
-			if (!retVal)
-			{
-				return BadRequest();
-			}
-			else
-			{
-				return Ok();
-			}
+			_themeService.CreateDefaultTheme(storeId, _defaultThemePath);
+			
+			return Ok();
 		}
 		#endregion
 	}
