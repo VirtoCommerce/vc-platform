@@ -65,10 +65,9 @@
         	$scope.importRequest.fileUrl = asset[0].relativeUrl;
 
         	exportImportResourse.getImportInfo({ fileUrl: $scope.importRequest.fileUrl }, function (data) {
-	            console.log(data);
         	    blade.info = data.exportManifest;
         	    blade.currentEntities = data.modules;
-        	    blade.isHasSecurity = data.exportManifest.isHasSecurity;
+	            blade.isHasSecurity = data.exportManifest.isHasSecurity;
         	    blade.isHasSettings = data.exportManifest.isHasSettings;
         	    blade.isLoading = false;
             }, function (error) {
