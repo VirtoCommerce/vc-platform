@@ -75,6 +75,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 															.OrderBy(x => x.Parents != null ? x.Parents.Count() : 0)
 															.Concat(backupObject.Categories.Where(x => x.Links != null && x.Links.Any()))
 															.ToList();
+			backupObject.Products = backupObject.Products.OrderBy(x => x.MainProductId).ToList();
 			UpdateCategories(originalObject.Categories, backupObject.Categories);
 			UpdateProperties(originalObject.Properties, backupObject.Properties);
 
@@ -161,7 +162,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 
 		private BackupObject GetBackupObject(Action<ExportImportProgressInfo> progressCallback)
 		{
-			const ResponseGroup responseGroup = ResponseGroup.Full;
+			const ResponseGroup responseGroup = ResponseGroup.WithCatalogs | ResponseGroup.WithCategories | ResponseGroup.WithProducts;
 			var searchResponse = _catalogSearchService.Search(new SearchCriteria { Count = int.MaxValue, GetAllCategories = true, Start = 0, ResponseGroup = responseGroup });
 			
 			var retVal = new BackupObject();

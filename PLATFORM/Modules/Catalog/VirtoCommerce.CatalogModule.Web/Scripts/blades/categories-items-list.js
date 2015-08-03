@@ -175,7 +175,7 @@
                     callback: function (remove) {
                         if (remove) {
                             closeChildrenBlades();
-
+                            blade.isLoading = true;
                             if (listEntryLinks.length > 0) {
                                 listEntries.deletelinks(listEntryLinks, function (data, headers) {
                                     blade.refresh();
