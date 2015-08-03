@@ -109,6 +109,12 @@ namespace VirtoCommerce.Web
             ctx.Shop = shop;
             ctx.Themes = await commerceService.GetThemesAsync(SiteContext.Current);
 
+            if (ctx.Themes == null || !ctx.Themes.Any())
+            {
+                await RenderHtmlContents(context, "notheme");
+                return;
+            }
+
             // if language is not set, set it to default shop language
             if (String.IsNullOrEmpty(ctx.Language))
             {
