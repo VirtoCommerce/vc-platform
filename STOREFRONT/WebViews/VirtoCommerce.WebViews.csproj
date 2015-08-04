@@ -107,6 +107,7 @@
     <Compile Include="Contents\RawContentItem.cs" />
     <Compile Include="Engines\Liquid\FileViewLocationResult.cs" />
     <Compile Include="Engines\Liquid\IFileSystemFactory.cs" />
+    <Compile Include="Engines\Liquid\ITemplateParser.cs" />
     <Compile Include="Engines\Liquid\IViewLocator.cs" />
     <Compile Include="Engines\Liquid\Tags\CurrentPage.cs" />
     <Compile Include="Engines\Liquid\Tags\Layout.cs" />
