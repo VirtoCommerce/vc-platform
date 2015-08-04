@@ -103,6 +103,11 @@ namespace VirtoCommerce.Web.Models.Filters
             return AssetUrl("~/global/assets/", input.ToString());
         }
 
+        public static string StripHtml(string input)
+        {
+            return HttpUtility.HtmlDecode(input);
+        }
+
         public static string GlobalAssetUrl(string input)
         {
             var httpContext = HttpContext.Current;
