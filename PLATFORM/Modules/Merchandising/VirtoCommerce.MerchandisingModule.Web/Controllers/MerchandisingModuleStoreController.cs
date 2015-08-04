@@ -34,16 +34,9 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		[Route("")]
 		public IHttpActionResult GetStores()
 		{
-			var cacheKey = CacheKey.Create("MP", "GetStores");
-			var stores = _cacheManager.Get(cacheKey, this.GetFullLoadedStoreList);
-
+			var stores = _storeService.GetStoreList().Select(fullLoadedStore => fullLoadedStore.ToWebModel());
 			return Ok(stores);
 		}
 
-		private IEnumerable<Store> GetFullLoadedStoreList()
-		{
-			var stores = _storeService.GetStoreList();
-			return stores.Select(fullLoadedStore => fullLoadedStore.ToWebModel());
-		}
 	}
 }

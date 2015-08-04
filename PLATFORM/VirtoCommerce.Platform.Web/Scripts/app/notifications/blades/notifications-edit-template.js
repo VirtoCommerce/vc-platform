@@ -1,5 +1,9 @@
 ﻿angular.module('platformWebApp')
 .controller('platformWebApp.editTemplateController', ['$rootScope', '$scope', '$timeout', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.notifications', function ($rootScope, $scope, $timeout, bladeNavigationService, dialogService, notifications) {
+	$scope.setForm = function (form) {
+		$scope.formScope = form;
+	}
+
 	var blade = $scope.blade;
 	var codemirrorEditor;
 	blade.parametersForTemplate = [];
@@ -181,10 +185,6 @@
 		];
 	}
 
-	$scope.setForm = function (form) {
-		$scope.formScope = form;
-	}
-
 	$scope.editorOptions = {
 		lineWrapping: true,
 		lineNumbers: true,
@@ -199,7 +199,11 @@
 	};
 
 	blade.canSave = function () {
-		return !angular.equals(blade.origEntity, blade.currentEntity) && !$scope.formScope.$invalid;
+		var retVal = (!angular.equals(blade.origEntity, blade.currentEntity) || blade.isNew);
+		if (!angular.isUndefined($scope.formScope)) {
+			retVal = retVal && !$scope.formScope.$invalid;
+		}
+		return retVal;
 	}
 
 	blade.getLanguages = function () {

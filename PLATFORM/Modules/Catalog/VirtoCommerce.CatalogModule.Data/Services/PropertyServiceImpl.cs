@@ -72,6 +72,11 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 				var catalog = dbCatalog.ToCoreModel();
 				var category = dbCategory.ToCoreModel(catalog);
 
+				//property override - need leave only property has a min distance to target category 
+				//Algorithm based on index property in resulting list (property with min index will more closed to category)
+				var propertyGroups = dbProperties.Select((x, index) => new { PropertyName = x.Name.ToLowerInvariant(), Property = x, Index = index }).GroupBy(x => x.PropertyName);
+				dbProperties = propertyGroups.Select(x => x.OrderBy(y => y.Index).First().Property).ToArray();
+
 				retVal = dbProperties.Select(x => x.ToCoreModel(catalog, category)).ToArray();
 			}
 			return retVal;

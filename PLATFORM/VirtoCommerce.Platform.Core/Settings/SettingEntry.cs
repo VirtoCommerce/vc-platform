@@ -2,6 +2,7 @@
 {
     public class SettingEntry
     {
+		public string ModuleId { get; set; }
 		/// <summary>
 		/// Setting may belong to any object in system
 		/// </summary>

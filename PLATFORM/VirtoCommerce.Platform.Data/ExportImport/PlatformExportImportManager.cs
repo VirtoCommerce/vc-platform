@@ -143,6 +143,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 					platformEntries = stream.DeserializeJson<PlatformExportEntries>();
 				}
 
+				//Import security objects
                 if (importOptions.HandleSecurity)
 				{
 					progressInfo.Description = String.Format("Import {0} users with roles...", platformEntries.Users.Count());
@@ -174,6 +175,15 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 				{
 					_dynamicPropertyService.SaveDictionaryItems(propDicGroup.Key, propDicGroup.ToArray());
 				}
+
+				//Import modules settings
+				if(importOptions.HandleSettings)
+				{
+					foreach(var module in importOptions.Modules)
+					{
+						_settingsManager.SaveSettings(platformEntries.Settings.Where(x => x.ModuleId == module.Id).ToArray());
+					}
+				}
 			}
 		}
 
@@ -195,13 +205,13 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 				}
 			}
 
+			//Export setting for selected modules
 			if (exportOptions.HandleSettings)
 			{
-				progressInfo.Description = String.Format("Settings: {0} settings exporting...", 0);
+				progressInfo.Description = String.Format("Settings: selected modules settings exporting...");
 				progressCallback(progressInfo);
 
-				//settings 
-				throw new NotImplementedException();
+				platformExportObj.Settings = exportOptions.Modules.SelectMany(x => _settingsManager.GetModuleSettings(x.Id)).ToList();
 			}
 
 			//Dynamic properties

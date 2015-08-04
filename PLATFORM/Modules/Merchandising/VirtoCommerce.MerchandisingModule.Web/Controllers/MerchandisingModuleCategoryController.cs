@@ -104,8 +104,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 
 		private storeModel.Store GetStoreById(string storeId)
 		{
-			var cacheKey = CacheKey.Create("MP", "GetStoreById", storeId);
-			var retVal = _cacheManager.Get(cacheKey, () => _storeService.GetById(storeId));
+			var retVal = _storeService.GetById(storeId);
 			return retVal;
 		}
 
