@@ -67,6 +67,10 @@ namespace VirtoCommerce.Platform.Web
             const string modulesVirtualPath = "~/Modules";
             var modulesPhysicalPath = HostingEnvironment.MapPath(modulesVirtualPath).EnsureEndSeparator();
 
+			var hubConfiguration = new HubConfiguration();
+			hubConfiguration.EnableJavaScriptProxies = false;
+			app.MapSignalR(hubConfiguration);
+
 			GlobalConfiguration.Configuration.
 				EnableSwagger(
 				c =>
@@ -169,14 +173,10 @@ namespace VirtoCommerce.Platform.Web
                 .Where(m => m.ModuleInstance != null)
                 .ToArray();
 
-            foreach (var module in postInitializeModules)
-            {
-                moduleManager.PostInitializeModule(module);
-            }
-
-            var hubConfiguration = new HubConfiguration();
-            hubConfiguration.EnableJavaScriptProxies = false;
-            app.MapSignalR(hubConfiguration);
+			foreach (var module in postInitializeModules)
+			{
+				moduleManager.PostInitializeModule(module);
+			}
 
 			//TODO: Sample data initialization here
         }
