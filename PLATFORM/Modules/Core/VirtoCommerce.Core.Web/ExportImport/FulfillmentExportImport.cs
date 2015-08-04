@@ -7,7 +7,7 @@ using VirtoCommerce.Domain.Commerce.Services;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.ExportImport;
 
-namespace Shipstation.FulfillmentModule.Web.ExportImport
+namespace VirtoCommerce.CoreModule.Web.ExportImport
 {
     public sealed class BackupObject
     {

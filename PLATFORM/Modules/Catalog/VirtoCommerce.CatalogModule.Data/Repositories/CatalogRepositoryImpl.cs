@@ -85,6 +85,8 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             modelBuilder.Entity<dataModel.Catalog>().HasOptional(m => m.PropertySet).WithMany().WillCascadeOnDelete(true);
 			modelBuilder.Entity<dataModel.CatalogPropertyValue>().HasRequired(m => m.Catalog).WithMany(x=>x.CatalogPropertyValues)
 																 .HasForeignKey(x=>x.CatalogId).WillCascadeOnDelete(true);
+			modelBuilder.Entity<dataModel.CategoryPropertyValue>().HasRequired(m => m.Category).WithMany(x => x.CategoryPropertyValues)
+																 .HasForeignKey(x => x.CategoryId).WillCascadeOnDelete(true);
 		
 
 

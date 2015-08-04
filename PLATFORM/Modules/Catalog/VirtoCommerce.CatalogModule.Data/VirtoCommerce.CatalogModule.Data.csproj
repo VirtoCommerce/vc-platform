@@ -259,24 +259,6 @@
     <EmbeddedResource Include="Repositories\Sql\ItemRelation.sql" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Repositories\Sql\Property.reduced.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Repositories\Sql\Property.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Repositories\Sql\PropertyAttribute.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Repositories\Sql\PropertySet.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Repositories\Sql\PropertySetProperty.reduced.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Repositories\Sql\PropertySetProperty.sql" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Repositories\Sql\VirtualCatalog.sql" />
   </ItemGroup>
   <ItemGroup>
