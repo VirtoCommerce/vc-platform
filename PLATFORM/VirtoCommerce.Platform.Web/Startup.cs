@@ -67,6 +67,26 @@ namespace VirtoCommerce.Platform.Web
             const string modulesVirtualPath = "~/Modules";
             var modulesPhysicalPath = HostingEnvironment.MapPath(modulesVirtualPath).EnsureEndSeparator();
 
+			GlobalConfiguration.Configuration.
+				EnableSwagger(
+				c =>
+				{
+					c.IncludeXmlComments(GetXmlCommentsPath());
+					c.IgnoreObsoleteProperties();
+					c.UseFullTypeNameInSchemaIds();
+					c.DescribeAllEnumsAsStrings();
+					c.SingleApiVersion("v1", "VirtoCommerce Platform Web documentation");
+					c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+					c.RootUrl(req => new Uri(req.RequestUri, req.GetRequestContext().VirtualPathRoot).ToString());
+					c.ApiKey("apiKey")
+						.Description("API Key Authentication")
+						.Name("api_key")
+						.In("header");
+				}
+				).EnableSwaggerUi();
+
+			app.UseWebApi(GlobalConfiguration.Configuration);
+
             var bootstrapper = new VirtoCommercePlatformWebBootstrapper(modulesVirtualPath, modulesPhysicalPath, _assembliesPath);
             bootstrapper.Run();
 
@@ -157,24 +177,6 @@ namespace VirtoCommerce.Platform.Web
             var hubConfiguration = new HubConfiguration();
             hubConfiguration.EnableJavaScriptProxies = false;
             app.MapSignalR(hubConfiguration);
-
-			HttpConfiguration httpConfiguration = new HttpConfiguration();
-
-			httpConfiguration.
-				EnableSwagger(
-				c =>
-				{
-					//c.IncludeXmlComments(GetXmlCommentsPath());
-					c.IgnoreObsoleteProperties();
-					c.UseFullTypeNameInSchemaIds();
-					c.DescribeAllEnumsAsStrings();
-					c.SingleApiVersion("v1", "VirtoCommerce Platform Web documentation");
-					c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
-					c.RootUrl(req => new Uri(req.RequestUri, req.GetRequestContext().VirtualPathRoot).ToString());
-				}
-				).EnableSwaggerUi();
-
-			app.UseWebApi(httpConfiguration);
         }
 
 

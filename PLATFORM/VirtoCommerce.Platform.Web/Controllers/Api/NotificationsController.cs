@@ -29,9 +29,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 		}
 
 		/// <summary>
-		/// Get all students
+		/// Get all registered notification types
 		/// </summary>
-		/// <remarks>Get an array of all students</remarks>
+		/// <remarks>Get all registered notification types in platform</remarks>
 		/// <response code="500">Internal Server Error</response>
 		[HttpGet]
 		[ResponseType(typeof(webModels.Notification[]))]
@@ -43,6 +43,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 			return Ok(notifications.Select(s => s.ToWebModel()).ToArray());
 		}
 
+
+		/// <summary>
+		/// Get notification template
+		/// </summary>
+		/// <param name="student">Student Model</param>
+		/// <remarks>Get notification template by notification type, objectId, objectTypeId and language</remarks>
+		/// <response code="500">Internal Server Error</response>
 		[HttpGet]
 		[ResponseType(typeof(webModels.NotificationTemplate))]
 		[Route("template/{type}/{objectId}/{objectTypeId}/{language}")]
@@ -74,6 +81,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 		}
 
 		[HttpPost]
+		[ResponseType(typeof(void))]
 		[Route("template")]
 		public IHttpActionResult UpdateNotificationTemplate([FromBody] webModels.NotificationTemplate notificationTemplate)
 		{
@@ -83,6 +91,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 		}
 
 		[HttpDelete]
+		[ResponseType(typeof(void))]
 		[Route("template/{id}")]
 		public IHttpActionResult DeleteNotificationTemplate(string id)
 		{
@@ -160,6 +169,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 		}
 
 		[HttpPost]
+		[ResponseType(typeof(void))]
 		[Route("stopnotifications")]
 		public IHttpActionResult StopSendingNotifications(string[] ids)
 		{
