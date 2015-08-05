@@ -2,10 +2,11 @@
 .factory('platformWebApp.exportImport.resource', ['$resource', function ($resource) {
 
     return $resource(null, null, {
-        getExportersList: { url: 'api/platform/export/modules', isArray: true },
+    	getNewExportManifest: { url: 'api/platform/export/manifest/new' },
         runExport: { method: 'POST', url: 'api/platform/export' },
 
-        getImportInfo: { url: 'api/platform/import/info' },
-        runImport: { method: 'POST', url: 'api/platform/import' }
+        loadExportManifest: { url: 'api/platform/export/manifest/load' },
+        runImport: { method: 'POST', url: 'api/platform/import' },
+        importSampleData: { url: 'api/platform/sampledata/import' }
     });
 }]);

@@ -9,25 +9,29 @@ namespace VirtoCommerce.Platform.Core.ExportImport
 {
 	public class PlatformExportManifest
 	{
-		public string PlatformVersion { get; set; }
-		public string SystemInfo { get; set; }
-		public DateTime Created { get; set; }
 		public string Author { get; set; }
-		public string Checksum { get; set; }
-
-		public bool IsHasSecurity { get; set; }
-		public bool IsHasSettings { get; set; }
-
+		public string SystemInfo { get; set; }
+		public string PlatformVersion { get; set; }
 		/// <summary>
-		/// Modules parts information 
+		/// Export or import modules settings
+		/// </summary>
+		public bool HandleSettings { get; set; }
+		/// <summary>
+		/// Export or import security objects
+		/// </summary>
+		public bool HandleSecurity { get; set; }
+		/// <summary>
+		/// Flag means the use of  binary data in export or import operations
+		/// </summary>
+		public bool HandleBinaryData { get; set; }
+		/// <summary>
+		/// List of all exported or imported modules
 		/// </summary>
 		public ExportModuleInfo[] Modules { get; set; }
+
+		public DateTime Created { get; set; }
+		public string Checksum { get; set; }
 	}
 
-	public class ExportModuleInfo
-	{
-		public string ModuleId { get; set; }
-		public string ModuleVersion { get; set; }
-		public string PartUri { get; set; }
-	}
+	
 }

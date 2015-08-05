@@ -29,6 +29,17 @@
     <scripts>
         <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
     </scripts>
+	<settings>
+		<group name="Pricing|General">
+			<setting>
+				<name>Pricing.ExportImport.Description</name>
+				<valueType>string</valueType>
+				<defaultValue>Export/Import price lists, assignments and prices</defaultValue>
+				<title>Export/Import description</title>
+				<description>Module description in platform export/import wizard</description>
+			</setting>
+		</group>
+	</settings>
     <permissions>
         <group name="Pricing">
             <permission id="pricing:query" name="Browse pricing data" description="Permission to open pricing menu and browse data."/>

@@ -12,8 +12,9 @@ namespace VirtoCommerce.Platform.Core.ExportImport
 {
 	public interface IPlatformExportImportManager
 	{
-		PlatformExportManifest ReadPlatformExportManifest(Stream stream);
-		void Export(Stream outStream, PlatformExportImportOptions exportOptions, Action<ExportImportProgressInfo> progressCallback);
-		void Import(Stream inputStream, PlatformExportImportOptions importOptions, Action<ExportImportProgressInfo> progressCallback);
+		PlatformExportManifest GetNewExportManifest();
+		PlatformExportManifest ReadExportManifest(Stream stream);
+		void Export(Stream outStream, PlatformExportManifest exportOptions, Action<ExportImportProgressInfo> progressCallback);
+		void Import(Stream inputStream, PlatformExportManifest importOptions, Action<ExportImportProgressInfo> progressCallback);
 	}
 }

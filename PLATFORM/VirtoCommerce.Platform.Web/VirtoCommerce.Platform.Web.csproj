@@ -279,8 +279,10 @@
     <Compile Include="App_Start\OwinConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="BackgroundJobs\SampleDataImportJob.cs" />
     <Compile Include="BackgroundJobs\SendNotificationsJobs.cs" />
-    <Compile Include="BackgroundJobs\SendNotificationsJobsScheduler.cs" />
+    <Compile Include="Converters\ExportImport\ExportImportRequestConverter.cs" />
+    <Compile Include="Model\ExportImport\PushNotifications\SampleDataImportPushNotification.cs" />
     <Compile Include="VirtoCommercePlatformWebBootstrapper.cs" />
     <Compile Include="Controllers\Api\AssetsController.cs" />
     <Compile Include="Controllers\Api\DynamicPropertiesController.cs" />
@@ -308,7 +310,7 @@
     <Compile Include="Model\Asset\BlobInfo.cs" />
     <Compile Include="Model\ExportImport\ImportInfo.cs" />
     <Compile Include="Model\ExportImport\PushNotifications\PlatformExportImportPushNotification.cs" />
-    <Compile Include="Model\ExportImport\PlatformExportImportRequest.cs" />
+    <Compile Include="Model\ExportImport\PlatformImportExportRequest.cs" />
     <Compile Include="Model\ExportImport\PushNotifications\PlatformExportPushNotification.cs" />
     <Compile Include="Model\ExportImport\PushNotifications\PlatformImportPushNotification.cs" />
     <Compile Include="Model\Jobs\Job.cs" />
@@ -369,6 +371,7 @@
     <Content Include="Scripts\app\exportImport\notifications\history.tpl.html" />
     <Content Include="Scripts\app\exportImport\notifications\menu.tpl.html" />
     <Content Include="Scripts\app\exportImport\resources\exportImport.js" />
+    <Content Include="Scripts\app\exportImport\templates\sampleDataInitialization.tpl.html" />
     <Content Include="Scripts\app\notifications\blades\notification-journal-details.js" />
     <Content Include="Scripts\app\notifications\blades\notification-journal-details.tpl.html" />
     <Content Include="Scripts\app\notifications\blades\notification-templates-list.tpl.html" />

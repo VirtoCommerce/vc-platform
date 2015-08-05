@@ -20,39 +20,39 @@
                     </div>
                 </fieldset>
             </form>
-            <div class="sub-t" ng-if="blade.info">Import data information</div>
-            <ul class="list __info" ng-if="blade.info">
+            <div class="sub-t" ng-if="importRequest.exportManifest">Import data information</div>
+            <ul class="list __info" ng-if="importRequest.exportManifest">
                 <li class="list-item">
                     <div class="list-t">Author</div>
-                    <div class="list-descr">{{blade.info.author}}</div>
+                    <div class="list-descr">{{importRequest.exportManifest.author}}</div>
                 </li>
                 <li class="list-item">
                     <div class="list-t">Data file created</div>
-                    <div class="list-descr" am-time-ago="blade.info.created"></div>
+                    <div class="list-descr" am-time-ago="importRequest.exportManifest.created"></div>
                 </li>
                 <li class="list-item">
                     <div class="list-t">Created in platform version</div>
-                    <div class="list-descr">{{blade.info.platformVersion}}</div>
+                    <div class="list-descr">{{importRequest.exportManifest.platformVersion}}</div>
                 </li>
             </ul>
             
-            <form class="form ng-pristine ng-valid" ng-if="blade.info && !blade.notification">
+            <form class="form ng-pristine ng-valid" ng-if="importRequest.exportManifest && !blade.notification">
                 <fieldset>
                     <legend>Platform entries</legend>
                     <div class="list __items">
-                        <label class="list-item" ng-if="blade.isHasSecurity">
+                        <label class="list-item" ng-class="{ '__disabled' : !importRequest.exportManifest.handleSecurity }">
                             <input type="checkbox" ng-model="importRequest.handleSecurity">
                             <span class="switch"></span>
                             <span class="list-name">Security</span>
                             <span class="list-descr">Accounts and roles</span>
                         </label>
-                        <label class="list-item">
+                        <label class="list-item" ng-class="{ '__disabled' : !importRequest.exportManifest.handleBinaryData }">
                             <input type="checkbox" ng-model="importRequest.handleBinaryData">
                             <span class="switch"></span>
                             <span class="list-name">Binary</span>
                             <span class="list-descr">Binary data</span>
                         </label>
-                        <label class="list-item" ng-if="blade.isHasSettings">
+                        <label class="list-item" ng-class="{ '__disabled' : !importRequest.exportManifest.handleSettings }">
                             <input type="checkbox" ng-model="importRequest.handleSettings">
                             <span class="switch"></span>
                             <span class="list-name">Settings</span>
@@ -63,10 +63,10 @@
                 <fieldset>
                     <legend>Choose modules to import</legend>
                     <div class="list __items">
-                        <label class="list-item" ng-repeat="data in blade.currentEntities">
+                        <label class="list-item" ng-repeat="data in importRequest.exportManifest.modules">
                             <input type="checkbox" ng-model="data.isChecked" ng-checked="updateModuleSelection()">
                             <span class="switch"></span>
-                            <span class="list-name">{{data.title}}</span>
+                            <span class="list-name">{{data.id}}</span>
                             <span class="list-descr">{{data.description}}</span>
                         </label>
                     </div>

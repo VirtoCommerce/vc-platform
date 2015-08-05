@@ -31,6 +31,15 @@
     </scripts>
 
     <settings>
+		<group name="CMS Content|General">
+			<setting>
+				<name>VirtoCommerce.Content.ExportImport.Description</name>
+				<valueType>string</valueType>
+				<defaultValue>Export/Import pages, themes, links, menu items </defaultValue>
+				<title>Export/Import description</title>
+				<description>Module description in platform export/import wizard</description>
+			</setting>
+		</group>
         <group name="CMS Content|Main Properties">
             <setting>
                 <name>VirtoCommerce.Content.MainProperties.PagesRepositoryType</name>
