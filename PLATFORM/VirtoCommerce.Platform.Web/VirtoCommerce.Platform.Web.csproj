@@ -279,7 +279,6 @@
     <Compile Include="App_Start\OwinConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="BackgroundJobs\SampleDataImportJob.cs" />
     <Compile Include="BackgroundJobs\SendNotificationsJobs.cs" />
     <Compile Include="Converters\ExportImport\ExportImportRequestConverter.cs" />
     <Compile Include="Model\ExportImport\PushNotifications\SampleDataImportPushNotification.cs" />
