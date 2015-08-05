@@ -27,7 +27,7 @@
 	</scripts>
 
 	<settings>
-		<group name="Platform|General">
+		<group name="Commerce|General">
 			<setting>
 				<name>VirtoCommerce.Core.General.Currencies</name>
 				<valueType>string</valueType>
@@ -67,6 +67,13 @@
 					<value>ru-RU</value>
 					<value>zh-CN</value>
 				</arrayValues>
+			</setting>
+			<setting>
+				<name>VirtoCommerce.Core.ExportImport.Description</name>
+				<valueType>string</valueType>
+				<defaultValue>Export/Import fulfillment centers</defaultValue>
+				<title>Export/Import description</title>
+				<description>Module description in platform export/import wizard</description>
 			</setting>
 		</group>
 	</settings>
