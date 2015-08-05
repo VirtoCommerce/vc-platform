@@ -71,7 +71,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 				Modules = InnerGetModulesWithInterface(typeof(ISupportExportImportModule)).Select(x => new ExportModuleInfo
 				  {
 					  Id = x.Id,
-					  Dependencies = x.Dependencies.ToArray(),
+					  Dependencies = x.Dependencies != null ? x.Dependencies.ToArray() : null,
 					  Version = x.Version,
 					  Description = ((ISupportExportImportModule)x.ModuleInfo.ModuleInstance).ExportDescription
 				  }).ToArray()
