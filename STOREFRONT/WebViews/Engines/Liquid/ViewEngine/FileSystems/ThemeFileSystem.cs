@@ -19,9 +19,9 @@ namespace VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine.FileSystems
 
         #region Implementation of IFileSystem
 
-        public string ReadTemplateFile(Context context, string templateName)
+        public string ReadTemplateFile(Context context, string templatePath)
         {
-            var templatePath = (string)context[templateName];
+            //var templatePath = (string)context[templateName];
 
             if (templatePath == null || !_templateRegex.IsMatch(templatePath))
             {
@@ -31,7 +31,7 @@ namespace VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine.FileSystems
             var foundView = this._locator.LocatePartialView(templatePath);
 
             if (foundView.Contents == null)
-                return String.Format("not found {0}", templateName);
+                return String.Format("not found {0}", templatePath);
 
             return foundView.Contents;
         }

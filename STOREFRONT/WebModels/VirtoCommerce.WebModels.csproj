@@ -193,6 +193,7 @@
     <Compile Include="Services\FileMonitoringService.cs" />
     <Compile Include="Services\FileStorageCacheService.cs" />
     <Compile Include="Services\FileThemeViewLocator.cs" />
+    <Compile Include="Services\LiquidTemplateParser.cs" />
     <Compile Include="Services\PagesService.cs" />
     <Compile Include="Services\SecurityService.cs" />
     <Compile Include="Models\Settings.cs" />

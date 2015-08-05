@@ -1,10 +1,13 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.CoreModule.Data.Repositories;
 using VirtoCommerce.CoreModule.Data.Shipping;
+using VirtoCommerce.CoreModule.Web.ExportImport;
 using VirtoCommerce.Domain.Commerce.Services;
 using VirtoCommerce.Domain.Payment.Services;
 using VirtoCommerce.Domain.Shipping.Services;
+using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Infrastructure;
@@ -14,7 +17,7 @@ using VirtoCommerce.CoreModule.Data.Payment;
 
 namespace VirtoCommerce.CoreModule.Web
 {
-    public class Module : ModuleBase
+    public class Module : ModuleBase, ISupportExportModule, ISupportImportModule
     {
         private const string _connectionStringName = "VirtoCommerce";
         private readonly IUnityContainer _container;
@@ -94,6 +97,26 @@ namespace VirtoCommerce.CoreModule.Web
 					Description = "Manual test, don't use on production",
 					LogoUrl = "http://virtocommerce.com/Content/images/logo.jpg",
 				});
+        }
+
+        #endregion
+
+        #region ISupportExportModule Members
+
+        public void DoExport(System.IO.Stream outStream, PlatformExportImportOptions importOptions, Action<ExportImportProgressInfo> progressCallback)
+        {
+            var job = _container.Resolve<FulfillmentExportImport>();
+            job.DoExport(outStream, progressCallback);
+        }
+
+        #endregion
+
+        #region ISupportImportModule Members
+
+        public void DoImport(System.IO.Stream inputStream, PlatformExportImportOptions importOptions, Action<ExportImportProgressInfo> progressCallback)
+        {
+            var job = _container.Resolve<FulfillmentExportImport>();
+            job.DoImport(inputStream, progressCallback);
         }
 
         #endregion

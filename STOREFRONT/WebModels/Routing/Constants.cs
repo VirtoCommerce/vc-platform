@@ -28,7 +28,7 @@ namespace VirtoCommerce.Web.Models.Routing
         /// <summary>
         ///     The language regex
         /// </summary>
-        public static Regex LanguageRegex = new Regex("^([a-z]{2}(-[A-Z]{2})?)$", RegexOptions.Compiled);
+        public static Regex LanguageRegex = new Regex("^([a-zA-Z]{2}(-[a-zA-Z]{2})?)$", RegexOptions.Compiled);
 
         /// <summary>
         ///     The store route key

@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Caching;
+using System.Web.Hosting;
 using System.Web.Mvc;
 using DotLiquid;
 using VirtoCommerce.Web.Views.Engines.Liquid.Extensions;
@@ -17,13 +18,14 @@ namespace VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine
     public class DotLiquidView : IView
     {
         private readonly IViewLocator _locator = null;
+        private readonly ITemplateParser _parser = null;
         #region Constructors and Destructors
-        public DotLiquidView(ControllerContext controllerContext, IViewLocator locator, ViewLocationResult partialPath)
-            : this(controllerContext, locator, partialPath, null)
+        public DotLiquidView(ControllerContext controllerContext, IViewLocator locator, ITemplateParser parser, ViewLocationResult partialPath)
+            : this(controllerContext, locator, parser, partialPath, null)
         {
         }
 
-        public DotLiquidView(ControllerContext controllerContext, IViewLocator locator, ViewLocationResult viewResult, ViewLocationResult masterViewResult)
+        public DotLiquidView(ControllerContext controllerContext, IViewLocator locator, ITemplateParser parser, ViewLocationResult viewResult, ViewLocationResult masterViewResult)
         {
             if (controllerContext == null)
             {
@@ -36,6 +38,7 @@ namespace VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine
             }
 
             _locator = locator;
+            _parser = parser;
             this.ViewResult = viewResult;
             this.MasterViewResult = masterViewResult;
         }
@@ -48,37 +51,6 @@ namespace VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine
         #endregion
 
         #region Public Methods and Operators
-        public static Template GetTemplateFromFile(ViewLocationResult path)
-        {
-            // can't cache anything here since template depends on current context
-            var contents = path.Contents;
-            var template = Template.Parse(contents);
-            return template;
-        }
-
-        /*
-        public static Template GetTemplateFromFile(ViewLocationResult path)
-        {
-            var contextKey = "vc-cms-file-" + path.Location;
-            var value = HttpRuntime.Cache.Get(contextKey);
-
-            if (value != null)
-            {
-                return value as Template;
-            }
-
-            if (path.Contents == null)
-                return null;
-
-            var contents = path.Contents;
-            var template = Template.Parse(contents);
-
-            HttpRuntime.Cache.Insert(contextKey, template, new CacheDependency(new[] { HostingEnvironment.MapPath(path.Location) }));
-
-            return template;
-        }
-         * */
-
         public void Render(ViewContext viewContext, TextWriter writer)
         {
             if (viewContext == null)
@@ -123,7 +95,7 @@ namespace VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine
 
             var renderParams = new RenderParameters { LocalVariables = Hash.FromDictionary(localVars) };
 
-            var template = GetTemplateFromFile(this.ViewResult);
+            var template = _parser.Parse(this.ViewResult);
 
             if (this.MasterViewResult == null)
             {
@@ -141,8 +113,8 @@ namespace VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine
                     : _locator.LocateView(layout);
 
                 // render master with contents
-                var masterTemplate = GetTemplateFromFile(layoutPath);
-                var headerTemplate = GetTemplateFromFile(_locator.LocatePartialView("content_header"));
+                var masterTemplate = _parser.Parse(layoutPath);
+                var headerTemplate = _parser.Parse(_locator.LocatePartialView("content_header"));
                 var renderedHeaderContents = headerTemplate.RenderWithTracing(renderParams);
 
                 renderParams.LocalVariables.Add("content_for_layout", renderedContents);
