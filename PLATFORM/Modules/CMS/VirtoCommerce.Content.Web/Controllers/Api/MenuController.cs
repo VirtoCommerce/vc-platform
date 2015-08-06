@@ -25,6 +25,13 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 			_menuService = menuService;
 		}
 
+		/// <summary>
+		/// Get menu link lists
+		/// </summary>
+		/// <remarks>Get all menu link lists by store. Returns array of store menu link lists</remarks>
+        /// <param name="storeId">Store Id</param>
+        /// <response code="500">Internal Server Error</response>
+        /// <response code="200">Menu link lists returned OK</response>
 		[HttpGet]
 		[ResponseType(typeof(IEnumerable<MenuLinkList>))]
 		[ClientCache(Duration = 30)]
@@ -39,6 +46,13 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 			return Ok();
 		}
 
+		/// <summary>
+		/// Get menu link list by id
+		/// </summary>
+		/// <remarks>Get menu link list by list id. Returns menu link list</remarks>
+		/// <param name="listId">List Id</param>
+		/// <response code="500">Internal Server Error</response>
+		/// <response code="200">Menu link list returned OK</response>
 		[HttpGet]
 		[ResponseType(typeof(MenuLinkList))]
 		[Route("menu/{listId}")]
@@ -48,13 +62,23 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 			return Ok(item);
 		}
 
+		/// <summary>
+		/// Checking name of menu link list
+		/// </summary>
+		/// <remarks>Checking pair of name+language of menu link list for unique. Return result of checking</remarks>
+		/// <param name="storeId">Store Id</param>
+		/// <param name="name">Name of menu link list</param>
+		/// <param name="language">Language of menu link list</param>
+		/// <param name="id">Menu link list id</param>
+		/// <response code="500">Internal Server Error</response>
+		/// <response code="200">Checking name returns OK</response>
 		[HttpGet]
-		[ResponseType(typeof(CheckNameResponse))]
+		[ResponseType(typeof(CheckNameResult))]
 		[Route("menu/checkname")]
 		public IHttpActionResult CheckName(string storeId, string name, string language, string id)
 		{
 			var retVal = _menuService.CheckList(storeId, name, language, id);
-			var response = new CheckNameResponse { Result = retVal };
+			var response = new CheckNameResult { Result = retVal };
 			return Ok(response);
 		}
 

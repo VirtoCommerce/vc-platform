@@ -28,6 +28,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\VirtoCommerce.Content.Web.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -249,7 +250,7 @@
     <Compile Include="Converters\ThemeAssetConverter.cs" />
     <Compile Include="Converters\ThemeConverter.cs" />
     <Compile Include="ExportImport\ContentExportImport.cs" />
-    <Compile Include="Models\CheckNameResponse.cs" />
+    <Compile Include="Models\CheckNameResult.cs" />
     <Compile Include="Models\ContentItem.cs" />
     <Compile Include="Models\GetPagesCriteria.cs" />
     <Compile Include="Models\GetPagesResponse.cs" />

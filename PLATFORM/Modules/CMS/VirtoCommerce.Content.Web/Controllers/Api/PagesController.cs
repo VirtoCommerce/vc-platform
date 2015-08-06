@@ -89,12 +89,12 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		}
 
 		[HttpGet]
-		[ResponseType(typeof(CheckNameResponse))]
+		[ResponseType(typeof(CheckNameResult))]
 		[Route("pages/checkname")]
 		public IHttpActionResult CheckName(string storeId, [FromUri]string pageName, [FromUri]string language)
 		{
 			var result = _pagesService.CheckList(storeId, pageName, language);
-			var response = new CheckNameResponse { Result = result };
+			var response = new CheckNameResult { Result = result };
 			return Ok(response);
 		}
 

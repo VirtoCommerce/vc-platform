@@ -5,8 +5,14 @@ using System.Web;
 
 namespace VirtoCommerce.Content.Web.Models
 {
-	public class CheckNameResponse
+	/// <summary>
+	/// Checking menu link list result
+	/// </summary>
+	public class CheckNameResult
 	{
+		/// <summary>
+		/// Result
+		/// </summary>
 		public bool Result { get; set; }
 	}
 }

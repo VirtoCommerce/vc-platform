@@ -71,25 +71,25 @@ namespace VirtoCommerce.Platform.Web
 			hubConfiguration.EnableJavaScriptProxies = false;
 			app.MapSignalR(hubConfiguration);
 
-			GlobalConfiguration.Configuration.
-				EnableSwagger(
-				c =>
-				{
-					c.IncludeXmlComments(GetXmlCommentsPath());
-					c.IgnoreObsoleteProperties();
-					c.UseFullTypeNameInSchemaIds();
-					c.DescribeAllEnumsAsStrings();
-					c.SingleApiVersion("v1", "VirtoCommerce Platform Web documentation");
-					c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
-					c.RootUrl(req => new Uri(req.RequestUri, req.GetRequestContext().VirtualPathRoot).ToString());
-					c.ApiKey("apiKey")
-						.Description("API Key Authentication")
-						.Name("api_key")
-						.In("header");
-				}
-				).EnableSwaggerUi();
+			//GlobalConfiguration.Configuration.
+			//	EnableSwagger(
+			//	c =>
+			//	{
+			//		c.IncludeXmlComments(GetXmlCommentsPath());
+			//		c.IgnoreObsoleteProperties();
+			//		c.UseFullTypeNameInSchemaIds();
+			//		c.DescribeAllEnumsAsStrings();
+			//		c.SingleApiVersion("v1", "VirtoCommerce Platform Web documentation");
+			//		c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+			//		c.RootUrl(req => new Uri(req.RequestUri, req.GetRequestContext().VirtualPathRoot).ToString());
+			//		c.ApiKey("apiKey")
+			//			.Description("API Key Authentication")
+			//			.Name("api_key")
+			//			.In("header");
+			//	}
+			//	).EnableSwaggerUi();
 
-			app.UseWebApi(GlobalConfiguration.Configuration);
+			//app.UseWebApi(GlobalConfiguration.Configuration);
 
             var bootstrapper = new VirtoCommercePlatformWebBootstrapper(modulesVirtualPath, modulesPhysicalPath, _assembliesPath);
             bootstrapper.Run();
