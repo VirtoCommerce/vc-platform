@@ -5,7 +5,7 @@
     <div class="blade-inner">
         <div class="inner-block">
             <form name="itemProperties" class="form" ng-init="propGroups = [{title:'Product properties', type:'product'}, {title:'Variation properties', type:'variation'}]">
-                <fieldset ng-repeat="propGroup in propGroups" ng-init="setForm(itemProperties)">
+                <fieldset class="stripe" ng-repeat="propGroup in propGroups" ng-init="setForm(itemProperties)">
                     <legend>
                         {{propGroup.title}}: <span class="count">{{properties.length}}</span>
                     </legend>
