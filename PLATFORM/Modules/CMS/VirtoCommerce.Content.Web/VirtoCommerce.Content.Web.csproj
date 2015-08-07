@@ -240,7 +240,6 @@
     <Compile Include="Controllers\Api\SyncController.cs" />
     <Compile Include="Controllers\Api\ThemeController.cs" />
     <Compile Include="Controllers\PredefinedPermissions.cs" />
-    <Compile Include="Converters\ContentItemConverter.cs" />
     <Compile Include="Converters\GetPagesCriteriaConverter.cs" />
     <Compile Include="Converters\GetThemeAssetsCriteriaConverter.cs" />
     <Compile Include="Converters\MenuLinkConverter.cs" />
@@ -251,11 +250,9 @@
     <Compile Include="Converters\ThemeConverter.cs" />
     <Compile Include="ExportImport\ContentExportImport.cs" />
     <Compile Include="Models\CheckNameResult.cs" />
-    <Compile Include="Models\ContentItem.cs" />
     <Compile Include="Models\GetPagesCriteria.cs" />
-    <Compile Include="Models\GetPagesResponse.cs" />
+    <Compile Include="Models\GetPagesResult.cs" />
     <Compile Include="Models\GetThemeAssetsCriteria.cs" />
-    <Compile Include="Models\LoadItemInfo.cs" />
     <Compile Include="Models\MenuLink.cs" />
     <Compile Include="Models\MenuLinkList.cs" />
     <Compile Include="Models\Page.cs" />

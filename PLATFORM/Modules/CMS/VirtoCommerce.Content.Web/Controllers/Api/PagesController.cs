@@ -19,7 +19,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 
 	#endregion
 
-	[RoutePrefix("api/cms/{storeId}")]
+	[RoutePrefix("api/cms/{storeId}/pages")]
 	[CheckPermission(Permission = PredefinedPermissions.Query)]
 	public class PagesController : ApiController
 	{
@@ -54,18 +54,33 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 
 		#endregion
 
+		/// <summary>
+		/// Get pages
+		/// </summary>
+		/// <remarks>Get all pages by store. Returns array of store pages</remarks>
+		/// <param name="storeId">Store Id</param>
+		/// <param name="criteria">Searching pages criteria</param>
+		/// <response code="500">Internal Server Error</response>
+		/// <response code="200">Pages returned OK</response>
 		[HttpGet]
 		[ResponseType(typeof(IEnumerable<Page>))]
-		[Route("pages")]
+		[Route("")]
 		public IHttpActionResult GetPages(string storeId, [FromUri]GetPagesCriteria criteria)
 		{
 			var items = _pagesService.GetPages(storeId, criteria.ToCoreModel()).Select(s => s.ToWebModel());
 			return Ok(items);
 		}
 
+		/// <summary>
+		/// Get pages folders
+		/// </summary>
+		/// <remarks>Get all pages folders by store. Returns array of store pages folders</remarks>
+		/// <param name="storeId">Store Id</param>
+		/// <response code="500">Internal Server Error</response>
+		/// <response code="200">Pages folders returned OK</response>
 		[HttpGet]
-		[ResponseType(typeof(GetPagesResponse))]
-		[Route("pages/folders")]
+		[ResponseType(typeof(GetPagesResult))]
+		[Route("folders")]
 		public IHttpActionResult GetFolders(string storeId)
 		{
 			var items = _pagesService.GetPages(storeId, null);
@@ -73,10 +88,20 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 			return Ok(items.ToWebModel());
 		}
 
+		/// <summary>
+		/// Get page
+		/// </summary>
+		/// <remarks>Get page by store and name+language pair. Returns page</remarks>
+		/// <param name="storeId">Store Id</param>
+		/// <param name="language">Page language</param>
+		/// <param name="pageName">Page name</param>
+		/// <response code="500">Internal Server Error</response>
+		/// <response code="204">No content</response>
+		/// <response code="200">Page returned OK</response>
 		[HttpGet]
 		[ResponseType(typeof(Page))]
 		[ClientCache(Duration = 30)]
-		[Route("pages/{language}/{*pageName}")]
+		[Route("{language}/{*pageName}")]
 		public IHttpActionResult GetPage(string storeId, string language, string pageName)
 		{
 			var item = _pagesService.GetPage(storeId, pageName, language);
@@ -88,9 +113,18 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 			return Ok(item.ToWebModel());
 		}
 
+		/// <summary>
+		/// Check page name
+		/// </summary>
+		/// <remarks>Check page pair name+language for store. Returns result of checking</remarks>
+		/// <param name="storeId">Store Id</param>
+		/// <param name="language">Page language</param>
+		/// <param name="pageName">Page name</param>
+		/// <response code="500">Internal Server Error</response>
+		/// <response code="200">Pages returned OK</response>
 		[HttpGet]
 		[ResponseType(typeof(CheckNameResult))]
-		[Route("pages/checkname")]
+		[Route("checkname")]
 		public IHttpActionResult CheckName(string storeId, [FromUri]string pageName, [FromUri]string language)
 		{
 			var result = _pagesService.CheckList(storeId, pageName, language);
@@ -98,8 +132,16 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 			return Ok(response);
 		}
 
+		/// <summary>
+		/// Save page
+		/// </summary>
+		/// <remarks>Save page</remarks>
+		/// <param name="storeId">Store Id</param>
+		/// <param name="page">Page</param>
+		/// <response code="500">Internal Server Error</response>
+		/// <response code="200">Page saved OK</response>
 		[HttpPost]
-		[Route("pages")]
+		[Route("")]
 		[CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public IHttpActionResult SaveItem(string storeId, Page page)
 		{
@@ -116,8 +158,16 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 			return Ok();
 		}
 
+		/// <summary>
+		/// Delete page
+		/// </summary>
+		/// <remarks>Delete page</remarks>
+		/// <param name="storeId">Store Id</param>
+		/// <param name="pageNamesAndLanguges">Array of pairs name+language</param>
+		/// <response code="500">Internal Server Error</response>
+		/// <response code="200">Pages deleted OK</response>
 		[HttpDelete]
-		[Route("pages")]
+		[Route("")]
 		[CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public IHttpActionResult DeleteItem(string storeId, [FromUri]string[] pageNamesAndLanguges)
 		{

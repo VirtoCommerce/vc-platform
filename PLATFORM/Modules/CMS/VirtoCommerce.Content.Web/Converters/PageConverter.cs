@@ -68,9 +68,9 @@ namespace VirtoCommerce.Content.Web.Converters
 			return retVal;
 		}
 
-		public static webModels.GetPagesResponse ToWebModel(this IEnumerable<coreModels.Page> pages)
+		public static webModels.GetPagesResult ToWebModel(this IEnumerable<coreModels.Page> pages)
 		{
-			var retVal = new webModels.GetPagesResponse();
+			var retVal = new webModels.GetPagesResult();
 
 			pages = pages.ToArray();
 

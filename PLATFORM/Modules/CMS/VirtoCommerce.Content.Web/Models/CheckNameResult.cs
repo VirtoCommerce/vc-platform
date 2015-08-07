@@ -11,7 +11,7 @@ namespace VirtoCommerce.Content.Web.Models
 	public class CheckNameResult
 	{
 		/// <summary>
-		/// Result
+		/// Checking result
 		/// </summary>
 		public bool Result { get; set; }
 	}
