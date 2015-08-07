@@ -49,7 +49,6 @@ using VirtoCommerce.Platform.Web.Controllers.Api;
 using VirtoCommerce.Platform.Web.Resources;
 using WebGrease.Extensions;
 using System.Web.Http;
-using Swashbuckle.Application;
 using System.Net.Http;
 
 [assembly: OwinStartup(typeof(Startup))]
