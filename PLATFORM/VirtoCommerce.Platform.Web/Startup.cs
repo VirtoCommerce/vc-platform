@@ -7,7 +7,10 @@ using System.Linq;
 using System.Reflection;
 using System.Web;
 using System.Web.Hosting;
+using System.Web.Http;
 using System.Web.Mvc;
+using System.Web.Optimization;
+using System.Web.Routing;
 using Hangfire;
 using Hangfire.SqlServer;
 using Microsoft.AspNet.Identity;
@@ -68,53 +71,54 @@ namespace VirtoCommerce.Platform.Web
             const string modulesVirtualPath = "~/Modules";
             var modulesPhysicalPath = HostingEnvironment.MapPath(modulesVirtualPath).EnsureEndSeparator();
 
+			//Modules initialization
             var bootstrapper = new VirtoCommercePlatformWebBootstrapper(modulesVirtualPath, modulesPhysicalPath, _assembliesPath);
             bootstrapper.Run();
 
             var container = bootstrapper.Container;
             container.RegisterInstance(app);
 
-            var moduleCatalog = container.Resolve<IModuleCatalog>();
-
-            // Register URL rewriter before modules initialization
-            if (Directory.Exists(modulesPhysicalPath))
-            {
-                var applicationBase = AppDomain.CurrentDomain.SetupInformation.ApplicationBase.EnsureEndSeparator();
-                var modulesRelativePath = MakeRelativePath(applicationBase, modulesPhysicalPath);
-
-                var urlRewriterOptions = new UrlRewriterOptions();
-                var moduleInitializerOptions = (ModuleInitializerOptions)container.Resolve<IModuleInitializerOptions>();
-                moduleInitializerOptions.SampleDataLevel = EnumUtility.SafeParse(ConfigurationManager.AppSettings["VirtoCommerce:SampleDataLevel"], SampleDataLevel.None);
-
-                foreach (var module in moduleCatalog.Modules.OfType<ManifestModuleInfo>())
-                {
-                    var urlRewriteKey = string.Format(CultureInfo.InvariantCulture, "/Modules/$({0})", module.ModuleName);
-                    var urlRewriteValue = MakeRelativePath(modulesPhysicalPath, module.FullPhysicalPath);
-                    urlRewriterOptions.Items.Add(PathString.FromUriComponent(urlRewriteKey), "/" + urlRewriteValue);
-
-                    moduleInitializerOptions.ModuleDirectories.Add(module.ModuleName, module.FullPhysicalPath);
-                }
-
-                app.Use<UrlRewriterOwinMiddleware>(urlRewriterOptions);
-                app.UseStaticFiles(new StaticFileOptions
-                {
-                    FileSystem = new Microsoft.Owin.FileSystems.PhysicalFileSystem(modulesRelativePath)
-                });
-            }
-
             //Initialize Platform dependencies
             const string connectionStringName = "VirtoCommerce";
             InitializePlatform(app, container, connectionStringName);
 
-            // Ensure all modules are loaded
-            var moduleManager = container.Resolve<IModuleManager>();
+		
+			var moduleManager = container.Resolve<IModuleManager>();
+			var moduleCatalog = container.Resolve<IModuleCatalog>();
 
+			// Register URL rewriter before modules initialization
+			if (Directory.Exists(modulesPhysicalPath))
+			{
+				var applicationBase = AppDomain.CurrentDomain.SetupInformation.ApplicationBase.EnsureEndSeparator();
+				var modulesRelativePath = MakeRelativePath(applicationBase, modulesPhysicalPath);
+
+				var urlRewriterOptions = new UrlRewriterOptions();
+				var moduleInitializerOptions = (ModuleInitializerOptions)container.Resolve<IModuleInitializerOptions>();
+				moduleInitializerOptions.SampleDataLevel = EnumUtility.SafeParse(ConfigurationManager.AppSettings["VirtoCommerce:SampleDataLevel"], SampleDataLevel.None);
+
+				foreach (var module in moduleCatalog.Modules.OfType<ManifestModuleInfo>())
+				{
+					var urlRewriteKey = string.Format(CultureInfo.InvariantCulture, "/Modules/$({0})", module.ModuleName);
+					var urlRewriteValue = MakeRelativePath(modulesPhysicalPath, module.FullPhysicalPath);
+					urlRewriterOptions.Items.Add(PathString.FromUriComponent(urlRewriteKey), "/" + urlRewriteValue);
+
+					moduleInitializerOptions.ModuleDirectories.Add(module.ModuleName, module.FullPhysicalPath);
+				}
+
+				app.Use<UrlRewriterOwinMiddleware>(urlRewriterOptions);
+				app.UseStaticFiles(new StaticFileOptions
+				{
+					FileSystem = new Microsoft.Owin.FileSystems.PhysicalFileSystem(modulesRelativePath)
+				});
+			}
+
+			// Ensure all modules are loaded
             foreach (var module in moduleCatalog.Modules.Where(x => x.State == ModuleState.NotStarted))
             {
                 moduleManager.LoadModule(module.ModuleName);
             }
 
-            // Post-initialize
+            // Security owin configuration
             var authenticationOptions = new AuthenticationOptions
             {
 				CookiesEnabled = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Authentication:Cookies.Enabled", true),
@@ -127,8 +131,14 @@ namespace VirtoCommerce.Platform.Web
 				ApiKeysHttpHeaderName = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Authentication:ApiKeys.HttpHeaderName", "api_key"),
 				ApiKeysQueryStringParameterName = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Authentication:ApiKeys.QueryStringParameterName", "api_key"),
             };
-
             OwinConfig.Configure(app, container, connectionStringName, authenticationOptions);
+
+			//Platform mvc configuration
+			AreaRegistration.RegisterAllAreas();
+			GlobalConfiguration.Configure(WebApiConfig.Register);
+			FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
+			RouteConfig.RegisterRoutes(RouteTable.Routes);
+			BundleConfig.RegisterBundles(BundleTable.Bundles);
 
 			RecurringJob.AddOrUpdate<SendNotificationsJobs>("SendNotificationsJob", x => x.Process(), "*/1 * * * *");
 
