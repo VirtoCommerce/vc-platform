@@ -157,9 +157,6 @@ namespace VirtoCommerce.Platform.Web
             var hubConfiguration = new HubConfiguration();
             hubConfiguration.EnableJavaScriptProxies = false;
             app.MapSignalR(hubConfiguration);
-
-
-		
         }
 
 
