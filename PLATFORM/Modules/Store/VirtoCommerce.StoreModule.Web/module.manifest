@@ -47,6 +47,13 @@
           <value>RestrictedAccess</value>
         </arrayValues>
       </setting>
+	  <setting>
+        <name>Stores.ExportImport.Description</name>
+        <valueType>string</valueType>
+        <defaultValue>Export/Import stores with all related informations</defaultValue>
+        <title>Export/Import description</title>
+        <description>Module description in platform export/import wizard</description>
+      </setting>
     </group>
     <group name="Store|Caching">
       <setting>

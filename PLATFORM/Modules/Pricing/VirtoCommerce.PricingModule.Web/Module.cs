@@ -4,6 +4,7 @@ using Microsoft.Practices.Unity;
 using VirtoCommerce.Domain.Pricing.Services;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Platform.Data.Repositories;
@@ -14,7 +15,7 @@ using dataModel = VirtoCommerce.PricingModule.Data.Model;
 
 namespace VirtoCommerce.PricingModule.Web
 {
-    public class Module : ModuleBase, ISupportExportModule, ISupportImportModule
+    public class Module : ModuleBase, ISupportExportImportModule
     {
         private readonly IUnityContainer _container;
 
@@ -57,24 +58,28 @@ namespace VirtoCommerce.PricingModule.Web
 
         #endregion
 
-        #region ISupportExportModule Members
+		#region ISupportExportImportModule Members
 
-		public void DoExport(System.IO.Stream outStream, PlatformExportImportOptions exportOptions, Action<ExportImportProgressInfo> progressCallback)
+		public void DoExport(System.IO.Stream outStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
         {
             var exportJob = _container.Resolve<PricingExportImport>();
             exportJob.DoExport(outStream, progressCallback);
         }
 
-        #endregion
-
-        #region ISupportImportModule Members
-
-		public void DoImport(System.IO.Stream inputStream, PlatformExportImportOptions importOptions, Action<ExportImportProgressInfo> progressCallback)
+		public void DoImport(System.IO.Stream inputStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
         {
             var exportJob = _container.Resolve<PricingExportImport>();
             exportJob.DoImport(inputStream, progressCallback);
         }
 
+		public string ExportDescription
+		{
+			get
+			{
+				var settingManager = _container.Resolve<ISettingsManager>();
+				return settingManager.GetValue("Pricing.ExportImport.Description", String.Empty);
+			}
+		}
         #endregion
     }
 }

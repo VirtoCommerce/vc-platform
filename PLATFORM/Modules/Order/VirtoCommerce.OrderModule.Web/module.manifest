@@ -1,91 +1,98 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <module>
-  <id>VirtoCommerce.Orders</id>
-  <version>2.3.0</version>
-  <platformVersion>2.3.0</platformVersion>
-  <dependencies>
-    <dependency id="VirtoCommerce.Core" version="2.3.0" />
-  </dependencies>
+	<id>VirtoCommerce.Orders</id>
+	<version>2.3.0</version>
+	<platformVersion>2.3.0</platformVersion>
+	<dependencies>
+		<dependency id="VirtoCommerce.Core" version="2.3.0" />
+	</dependencies>
 
-  <title>Virto Commerce Orders</title>
-  <description>APIs and UI for managing orders</description>
-  <authors>
-    <author>Virto Commerce</author>
-  </authors>
-  <owners>
-    <owner>Virto Commerce</owner>
-  </owners>
-  <projectUrl>http://virtocommerce.com/</projectUrl>
-  <iconUrl>https://pbs.twimg.com/profile_images/378800000043280363/23efdf268b0001d3e68fd48216845d5f.png</iconUrl>
-  <releaseNotes>First version.</releaseNotes>
-  <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
-  <tags>order system</tags>
+	<title>Virto Commerce Orders</title>
+	<description>APIs and UI for managing orders</description>
+	<authors>
+		<author>Virto Commerce</author>
+	</authors>
+	<owners>
+		<owner>Virto Commerce</owner>
+	</owners>
+	<projectUrl>http://virtocommerce.com/</projectUrl>
+	<iconUrl>https://pbs.twimg.com/profile_images/378800000043280363/23efdf268b0001d3e68fd48216845d5f.png</iconUrl>
+	<releaseNotes>First version.</releaseNotes>
+	<copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
+	<tags>order system</tags>
 
-  <assemblyFile>VirtoCommerce.OrderModule.Web.dll</assemblyFile>
-  <moduleType>VirtoCommerce.OrderModule.Web.Module, VirtoCommerce.OrderModule.Web</moduleType>
-  <styles>
-    <directory virtualPath="$/Content/css" searchPattern="*.css" searchSubdirectories="true" />
-  </styles>
-  <scripts>
-    <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
-  </scripts>
+	<assemblyFile>VirtoCommerce.OrderModule.Web.dll</assemblyFile>
+	<moduleType>VirtoCommerce.OrderModule.Web.Module, VirtoCommerce.OrderModule.Web</moduleType>
+	<styles>
+		<directory virtualPath="$/Content/css" searchPattern="*.css" searchSubdirectories="true" />
+	</styles>
+	<scripts>
+		<directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
+	</scripts>
 
-  <settings>
-    <group name="Orders|General">
-      <setting>
-        <name>Order.Status</name>
-        <valueType>string</valueType>
-        <defaultValue>New</defaultValue>
-        <title>Customer order statuses</title>
-        <description>Customer order statuses</description>
-        <isArray>true</isArray>
-        <arrayValues>
-          <value>New</value>
-          <value>Processing</value>
-          <value>Cancelled</value>
-          <value>Completed</value>
-        </arrayValues>
-      </setting>
-      <setting>
-        <name>Shipment.Status</name>
-        <valueType>string</valueType>
-        <defaultValue>New</defaultValue>
-        <title>Shipment statuses</title>
-        <description>Shipment statuses</description>
-        <isArray>true</isArray>
-        <arrayValues>
-          <value>New</value>
-          <value>PickPack</value>
-          <value>Cancelled</value>
-          <value>ReadyToSend</value>
-          <value>Send</value>
-        </arrayValues>
-      </setting>
-      <setting>
-        <name>PaymentIn.Status</name>
-        <valueType>string</valueType>
-        <defaultValue>New</defaultValue>
-        <title>Payment statuses</title>
-        <description>Incoming payment statuses</description>
-        <isArray>true</isArray>
-        <arrayValues>
-          <value>New</value>
-          <value>Pending</value>
-          <value>Authorized</value>
-          <value>Paid</value>
+	<settings>
+		<group name="Orders|General">
+			<setting>
+				<name>Order.Status</name>
+				<valueType>string</valueType>
+				<defaultValue>New</defaultValue>
+				<title>Customer order statuses</title>
+				<description>Customer order statuses</description>
+				<isArray>true</isArray>
+				<arrayValues>
+					<value>New</value>
+					<value>Processing</value>
+					<value>Cancelled</value>
+					<value>Completed</value>
+				</arrayValues>
+			</setting>
+			<setting>
+				<name>Shipment.Status</name>
+				<valueType>string</valueType>
+				<defaultValue>New</defaultValue>
+				<title>Shipment statuses</title>
+				<description>Shipment statuses</description>
+				<isArray>true</isArray>
+				<arrayValues>
+					<value>New</value>
+					<value>PickPack</value>
+					<value>Cancelled</value>
+					<value>ReadyToSend</value>
+					<value>Send</value>
+				</arrayValues>
+			</setting>
+			<setting>
+				<name>PaymentIn.Status</name>
+				<valueType>string</valueType>
+				<defaultValue>New</defaultValue>
+				<title>Payment statuses</title>
+				<description>Incoming payment statuses</description>
+				<isArray>true</isArray>
+				<arrayValues>
+					<value>New</value>
+					<value>Pending</value>
+					<value>Authorized</value>
+					<value>Paid</value>
 					<value>PartiallyRefunded</value>
 					<value>Refunded</value>
 					<value>Voided</value>
 					<value>Custom</value>
 					<value>Cancelled</value>
-        </arrayValues>
-      </setting>
-    </group>
-  </settings>
-  <permissions>
-    <group name="Order">
-      <permission id="order:query" name="Browse orders" description="Permission to open orders menu and browse data."/>
-      <permission id="order:manage" name="Manage orders" description="Permission to manage orders."/>
-    </group>
-  </permissions>
+				</arrayValues>
+			</setting>
+			<setting>
+				<name>Order.ExportImport.Description</name>
+				<valueType>string</valueType>
+				<defaultValue>Export/Import customer orders with all related objects (line items, shipments, payments etc)</defaultValue>
+				<title>Export/Import description</title>
+				<description>Module description in platform export/import wizard</description>
+			</setting>
+		</group>
+	</settings>
+	<permissions>
+		<group name="Order">
+			<permission id="order:query" name="Browse orders" description="Permission to open orders menu and browse data."/>
+			<permission id="order:manage" name="Manage orders" description="Permission to manage orders."/>
+		</group>
+	</permissions>
 </module>

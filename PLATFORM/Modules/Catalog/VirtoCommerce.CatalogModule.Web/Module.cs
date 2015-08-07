@@ -9,13 +9,14 @@ using VirtoCommerce.CatalogModule.Web.ExportImport;
 using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Platform.Data.Repositories;
 
 namespace VirtoCommerce.CatalogModule.Web
 {
-	public class Module : ModuleBase, ISupportExportModule, ISupportImportModule
+	public class Module : ModuleBase, ISupportExportImportModule
     {
         private const string _connectionStringName = "VirtoCommerce";
         private readonly IUnityContainer _container;
@@ -78,24 +79,29 @@ namespace VirtoCommerce.CatalogModule.Web
 
         #endregion
 
-		#region ISupportExport Members
+		#region ISupportExportImportModule Members
 
-		public void DoExport(Stream outStream, PlatformExportImportOptions importOptions, Action<ExportImportProgressInfo> progressCallback)
+		public void DoExport(Stream outStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
 		{
             var exportJob = _container.Resolve<CatalogExportImport>();
-            exportJob.DoExport(outStream, progressCallback);
+			exportJob.DoExport(outStream, manifest, progressCallback);
         }
 
-		#endregion
-
-		#region ISupportImportModule Members
-
-		public void DoImport(Stream inputStream, PlatformExportImportOptions importOptions, Action<ExportImportProgressInfo> progressCallback)
+		public void DoImport(Stream inputStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
 		{
             var exportJob = _container.Resolve<CatalogExportImport>();
-            exportJob.DoImport(inputStream, progressCallback);
+            exportJob.DoImport(inputStream, manifest, progressCallback);
         }
 
+
+		public string ExportDescription
+		{
+			get
+			{
+				var settingManager = _container.Resolve<ISettingsManager>();
+				return settingManager.GetValue("Catalog.ExportImport.Description", String.Empty);
+			}
+		}
 		#endregion
 	}
 }

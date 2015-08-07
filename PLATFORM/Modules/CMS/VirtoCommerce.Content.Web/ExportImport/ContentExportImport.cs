@@ -35,26 +35,26 @@ namespace VirtoCommerce.Content.Web.ExportImport
 			_pagesService = pagesService;
 		}
 
-		public void DoExport(Stream backupStream, PlatformExportImportOptions exportOptions, Action<ExportImportProgressInfo> progressCallback)
+		public void DoExport(Stream backupStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
 		{
-			var backupObject = GetBackupObject(progressCallback, exportOptions.HandleBinaryData);
+			var backupObject = GetBackupObject(progressCallback, manifest.HandleBinaryData);
 
 			backupObject.MenuLinkLists.ForEach(x => x.MenuLinks = x.MenuLinks.Where(m => m.IsActive).ToList());
 
 			backupObject.SerializeJson(backupStream);
 		}
 
-		public void DoImport(Stream backupStream, PlatformExportImportOptions importOptions, Action<ExportImportProgressInfo> progressCallback)
+		public void DoImport(Stream backupStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
 		{
 			var backupObject = backupStream.DeserializeJson<BackupObject>();
-			var originalObject = GetBackupObject(progressCallback, importOptions.HandleBinaryData);
+			var originalObject = GetBackupObject(progressCallback, manifest.HandleBinaryData);
 
 			var progressInfo = new ExportImportProgressInfo();
 			progressInfo.Description = String.Format("{0} menu link lists importing...", backupObject.MenuLinkLists.Count());
 			progressCallback(progressInfo);
 
 			UpdateMenuLinkLists(originalObject.MenuLinkLists, backupObject.MenuLinkLists);
-			if (importOptions.HandleBinaryData)
+			if (manifest.HandleBinaryData)
 			{
 				progressInfo.Description = String.Format("importing binary data: {0} pages importing...", backupObject.Pages.Count());
 				progressCallback(progressInfo);

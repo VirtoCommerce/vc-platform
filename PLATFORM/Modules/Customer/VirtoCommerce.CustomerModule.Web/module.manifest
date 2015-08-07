@@ -29,6 +29,19 @@
     <scripts>
         <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
     </scripts>
+	
+	<settings>
+		<group name="Customer|General">
+			<setting>
+				<name>Customer.ExportImport.Description</name>
+				<valueType>string</valueType>
+				<defaultValue>Export/Import contacts and organizations</defaultValue>
+				<title>Export/Import description</title>
+				<description>Module description in platform export/import wizard</description>
+			</setting>
+		</group>
+	</settings>
+	
     <permissions>
         <group name="Customers">
             <permission id="customer:query" name="Browse customers" description="Permission to open customers menu and browse data."/>

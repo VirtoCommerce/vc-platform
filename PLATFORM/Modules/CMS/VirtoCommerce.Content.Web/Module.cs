@@ -14,7 +14,7 @@ using VirtoCommerce.Content.Web.ExportImport;
 
 namespace VirtoCommerce.Content.Web
 {
-    public class Module : ModuleBase, ISupportExportModule, ISupportImportModule
+    public class Module : ModuleBase, ISupportExportImportModule
     {
         #region Fields
 
@@ -213,22 +213,27 @@ namespace VirtoCommerce.Content.Web
 
         #endregion
 
-		#region ISupportExportModule Members
+		#region ISupportExportImportModule Members
 
-		public void DoExport(System.IO.Stream outStream, PlatformExportImportOptions exportOptions, Action<ExportImportProgressInfo> progressCallback)
+		public void DoExport(System.IO.Stream outStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
 		{
 			var exportJob = _container.Resolve<ContentExportImport>();
-			exportJob.DoExport(outStream, exportOptions, progressCallback);
+			exportJob.DoExport(outStream, manifest, progressCallback);
 		}
 
-		#endregion
-
-		#region ISupportImportModule Members
-
-		public void DoImport(System.IO.Stream inputStream, PlatformExportImportOptions importOptions, Action<ExportImportProgressInfo> progressCallback)
+		public void DoImport(System.IO.Stream inputStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
 		{
 			var exportJob = _container.Resolve<ContentExportImport>();
-			exportJob.DoImport(inputStream, importOptions, progressCallback);
+			exportJob.DoImport(inputStream, manifest, progressCallback);
+		}
+
+		public string ExportDescription
+		{
+			get
+			{
+				var settingManager = _container.Resolve<ISettingsManager>();
+				return settingManager.GetValue("VirtoCommerce.Content.ExportImport.Description", String.Empty);
+			}
 		}
 
 		#endregion

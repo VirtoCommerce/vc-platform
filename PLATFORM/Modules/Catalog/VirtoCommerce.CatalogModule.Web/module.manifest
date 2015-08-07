@@ -30,6 +30,18 @@
     <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
   </scripts>
 
+	<settings>
+		<group name="Catalog|General">
+			<setting>
+				<name>Catalog.ExportImport.Description</name>
+				<valueType>string</valueType>
+				<defaultValue>Export/Import catalogs, categories, products, properties with images binary if you check binary flag</defaultValue>
+				<title>Export/Import description</title>
+				<description>Module description in platform export/import wizard</description>
+			</setting>
+		</group>
+	</settings>
+	
   <permissions>
     <group name="Catalog">
       <permission id="catalog:query" name="Browse catalog data" description="Permission to open catalog menu and browse data."/>

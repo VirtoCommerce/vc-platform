@@ -9,11 +9,13 @@ namespace VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine
     public class DotLiquidViewEngine : IViewEngine
     {
         private readonly IViewLocator _viewLocator;
+        private readonly ITemplateParser _parser;
         private readonly IFileSystemFactory _fileSystem;
-        public DotLiquidViewEngine(IFileSystemFactory fileSystem, IViewLocator viewLocator, IEnumerable<Type> filters)
+        public DotLiquidViewEngine(IFileSystemFactory fileSystem, IViewLocator viewLocator, ITemplateParser parser, IEnumerable<Type> filters)
         {
             DotLiquid.Liquid.UseRubyDateFormat = true;
             _viewLocator = viewLocator;
+            _parser = parser;
             this._fileSystem = fileSystem;
             // Register custom tags (Only need to do this once)
             Template.RegisterFilter(typeof(CommonFilters));
@@ -53,7 +55,7 @@ namespace VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine
                 return new ViewEngineResult(view.SearchedLocations);
             }
 
-            return new ViewEngineResult(new DotLiquidView(controllerContext, _viewLocator, view), this);
+            return new ViewEngineResult(new DotLiquidView(controllerContext, _viewLocator, _parser, view), this);
         }
 
         /// <summary>
@@ -80,7 +82,7 @@ namespace VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine
                 return new ViewEngineResult(view.SearchedLocations);
             }
 
-            return new ViewEngineResult(new DotLiquidView(controllerContext, _viewLocator, view, master), this);
+            return new ViewEngineResult(new DotLiquidView(controllerContext, _viewLocator, _parser, view, master), this);
         }
 
         /// <summary>

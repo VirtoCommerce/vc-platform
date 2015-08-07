@@ -49,7 +49,7 @@ namespace VirtoCommerce.Web.Views.Engines.Liquid
 
         private void Initialize()
         {
-            Template.RegisterFilter(typeof(CommonFilters));
+            //Template.RegisterFilter(typeof(CommonFilters));
         }
         #endregion
 

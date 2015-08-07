@@ -7,8 +7,8 @@
     $scope.exportRequest = {};
 
     function initializeBlade() {
-        exportImportResourse.getExportersList(function (data) {
-            blade.currentEntities = data;
+    	exportImportResourse.getNewExportManifest(function (data) {
+    		$scope.exportRequest.exportManifest = data;
             blade.isLoading = false;
         },
         function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
@@ -32,7 +32,7 @@
     }
 
     $scope.updateModuleSelection = function () {
-    	var selection = _.where(blade.currentEntities, { isChecked: true });
+    	var selection = _.where($scope.exportRequest.exportManifest.modules, { isChecked: true });
     	$scope.exportRequest.modules = _.pluck(selection, 'id');
     };
 

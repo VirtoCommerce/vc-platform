@@ -94,6 +94,17 @@
         }
     }
 
+    $scope.removeItem = function (image) {
+        var idx = blade.currentEntity.images.indexOf(image);
+        if (idx >= 0) {
+            blade.currentEntity.images.splice(idx, 1);
+        }
+    };
+
+    $scope.copyUrl = function (data) {
+        window.prompt("Copy to clipboard: Ctrl+C, Enter", data.url);
+    }
+
     $scope.removeAction = function (selectedImages) {
         if (selectedImages == undefined) {
             selectedImages = $filter('filter')(blade.currentEntity.images, { $selected: true });

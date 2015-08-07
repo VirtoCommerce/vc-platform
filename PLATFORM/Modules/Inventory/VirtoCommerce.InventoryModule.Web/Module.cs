@@ -6,12 +6,13 @@ using VirtoCommerce.InventoryModule.Data.Services;
 using VirtoCommerce.InventoryModule.Web.ExportImport;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 
 namespace VirtoCommerce.InventoryModule.Web
 {
-    public class Module : ModuleBase, ISupportExportModule, ISupportImportModule
+    public class Module : ModuleBase, ISupportExportImportModule
     {
         private readonly IUnityContainer _container;
 
@@ -40,24 +41,28 @@ namespace VirtoCommerce.InventoryModule.Web
 
         #endregion
 
-        #region ISupportExportModule Members
+		#region ISupportExportImportModule Members
 
-        public void DoExport(System.IO.Stream outStream, PlatformExportImportOptions importOptions, Action<ExportImportProgressInfo> progressCallback)
+		public void DoExport(System.IO.Stream outStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
         {
             var job = _container.Resolve<InventoryExportImport>();
             job.DoExport(outStream, progressCallback);
         }
 
-        #endregion
-
-        #region ISupportImportModule Members
-
-        public void DoImport(System.IO.Stream inputStream, PlatformExportImportOptions importOptions, Action<ExportImportProgressInfo> progressCallback)
+		public void DoImport(System.IO.Stream inputStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
         {
             var job = _container.Resolve<InventoryExportImport>();
             job.DoImport(inputStream, progressCallback);
         }
 
+		public string ExportDescription
+		{
+			get
+			{
+				var settingManager = _container.Resolve<ISettingsManager>();
+				return settingManager.GetValue("Inventory.ExportImport.Description", String.Empty);
+			}
+		}
         #endregion
 
 

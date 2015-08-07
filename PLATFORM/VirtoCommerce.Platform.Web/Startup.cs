@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Web;
 using System.Web.Hosting;
 using System.Web.Mvc;
+using Hangfire;
 using Hangfire.SqlServer;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -46,6 +47,7 @@ using VirtoCommerce.Platform.Data.Settings;
 using VirtoCommerce.Platform.Web;
 using VirtoCommerce.Platform.Web.BackgroundJobs;
 using VirtoCommerce.Platform.Web.Controllers.Api;
+using VirtoCommerce.Platform.Web.Model.ExportImport.PushNotifications;
 using VirtoCommerce.Platform.Web.Resources;
 using WebGrease.Extensions;
 using System.Web.Http;
@@ -65,30 +67,6 @@ namespace VirtoCommerce.Platform.Web
 
             const string modulesVirtualPath = "~/Modules";
             var modulesPhysicalPath = HostingEnvironment.MapPath(modulesVirtualPath).EnsureEndSeparator();
-
-			var hubConfiguration = new HubConfiguration();
-			hubConfiguration.EnableJavaScriptProxies = false;
-			app.MapSignalR(hubConfiguration);
-
-			//GlobalConfiguration.Configuration.
-			//	EnableSwagger(
-			//	c =>
-			//	{
-			//		c.IncludeXmlComments(GetXmlCommentsPath());
-			//		c.IgnoreObsoleteProperties();
-			//		c.UseFullTypeNameInSchemaIds();
-			//		c.DescribeAllEnumsAsStrings();
-			//		c.SingleApiVersion("v1", "VirtoCommerce Platform Web documentation");
-			//		c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
-			//		c.RootUrl(req => new Uri(req.RequestUri, req.GetRequestContext().VirtualPathRoot).ToString());
-			//		c.ApiKey("apiKey")
-			//			.Description("API Key Authentication")
-			//			.Name("api_key")
-			//			.In("header");
-			//	}
-			//	).EnableSwaggerUi();
-
-			//app.UseWebApi(GlobalConfiguration.Configuration);
 
             var bootstrapper = new VirtoCommercePlatformWebBootstrapper(modulesVirtualPath, modulesPhysicalPath, _assembliesPath);
             bootstrapper.Run();
@@ -139,21 +117,20 @@ namespace VirtoCommerce.Platform.Web
             // Post-initialize
             var authenticationOptions = new AuthenticationOptions
             {
-                CookiesEnabled = GetAppSettingsValue("VirtoCommerce:Authentication:Cookies.Enabled", true),
-                CookiesValidateInterval = GetAppSettingsValue("VirtoCommerce:Authentication:Cookies.ValidateInterval", TimeSpan.FromHours(24)),
-                BearerTokensEnabled = GetAppSettingsValue("VirtoCommerce:Authentication:BearerTokens.Enabled", true),
-                BearerTokensExpireTimeSpan = GetAppSettingsValue("VirtoCommerce:Authentication:BearerTokens.AccessTokenExpireTimeSpan", TimeSpan.FromHours(1)),
-                HmacEnabled = GetAppSettingsValue("VirtoCommerce:Authentication:Hmac.Enabled", true),
-                HmacSignatureValidityPeriod = GetAppSettingsValue("VirtoCommerce:Authentication:Hmac.SignatureValidityPeriod", TimeSpan.FromMinutes(20)),
-                ApiKeysEnabled = GetAppSettingsValue("VirtoCommerce:Authentication:ApiKeys.Enabled", true),
-                ApiKeysHttpHeaderName = GetAppSettingsValue("VirtoCommerce:Authentication:ApiKeys.HttpHeaderName", "api_key"),
-                ApiKeysQueryStringParameterName = GetAppSettingsValue("VirtoCommerce:Authentication:ApiKeys.QueryStringParameterName", "api_key"),
+				CookiesEnabled = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Authentication:Cookies.Enabled", true),
+				CookiesValidateInterval = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Authentication:Cookies.ValidateInterval", TimeSpan.FromDays(1)),
+				BearerTokensEnabled = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Authentication:BearerTokens.Enabled", true),
+				BearerTokensExpireTimeSpan = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Authentication:BearerTokens.AccessTokenExpireTimeSpan", TimeSpan.FromHours(1)),
+				HmacEnabled = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Authentication:Hmac.Enabled", true),
+				HmacSignatureValidityPeriod = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Authentication:Hmac.SignatureValidityPeriod", TimeSpan.FromMinutes(20)),
+				ApiKeysEnabled = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Authentication:ApiKeys.Enabled", true),
+				ApiKeysHttpHeaderName = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Authentication:ApiKeys.HttpHeaderName", "api_key"),
+				ApiKeysQueryStringParameterName = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Authentication:ApiKeys.QueryStringParameterName", "api_key"),
             };
 
             OwinConfig.Configure(app, container, connectionStringName, authenticationOptions);
 
-            var jobScheduler = container.Resolve<SendNotificationsJobsScheduler>();
-            jobScheduler.ScheduleJobs();
+			RecurringJob.AddOrUpdate<SendNotificationsJobs>("SendNotificationsJob", x => x.Process(), "*/1 * * * *");
 
             var notificationManager = container.Resolve<INotificationManager>();
             notificationManager.RegisterNotificationType(() => new RegistrationEmailNotification(container.Resolve<IEmailNotificationSendingGateway>())
@@ -172,12 +149,17 @@ namespace VirtoCommerce.Platform.Web
                 .Where(m => m.ModuleInstance != null)
                 .ToArray();
 
-			foreach (var module in postInitializeModules)
-			{
-				moduleManager.PostInitializeModule(module);
-			}
+            foreach (var module in postInitializeModules)
+            {
+                moduleManager.PostInitializeModule(module);
+            }
 
-			//TODO: Sample data initialization here
+            var hubConfiguration = new HubConfiguration();
+            hubConfiguration.EnableJavaScriptProxies = false;
+            app.MapSignalR(hubConfiguration);
+
+
+		
         }
 
 
@@ -318,21 +300,6 @@ namespace VirtoCommerce.Platform.Web
             container.RegisterInstance<IEmailNotificationSendingGateway>(emailNotificationSendingGateway);
             container.RegisterInstance<ISmsNotificationSendingGateway>(defaultSmsNotificationSendingGateway);
 
-            //notificationManager.RegisterNotificationType(
-            //	() => new RegistrationSmsNotification(defaultSmsNotificationSendingGateway)
-            //	{
-            //		DisplayName = "Registration notification",
-            //		Description = "This notification sends by sms to client when he finish registration",
-            //		ObjectId = "Platform",
-            //		NotificationTemplate = new NotificationTemplate
-            //		{
-            //			Body = @"Dear {{ context.first_name }} {{ context.last_name }}, you has registered on our site. Your login  - {{ context.login }} Your login - {{ context.password }}",
-            //			Subject = @"",
-            //			NotificationTypeId = "RegistrationSmsNotification",
-            //			ObjectId = "Platform"
-            //		}
-            //	}
-            //);
 
             #endregion
 
@@ -401,7 +368,7 @@ namespace VirtoCommerce.Platform.Web
             container.RegisterType<ApplicationUserManager>();
             container.RegisterType<ApplicationSignInManager>();
 
-            var nonEditableUsers = GetAppSettingsValue("VirtoCommerce:NonEditableUsers", string.Empty);
+			var nonEditableUsers = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:NonEditableUsers", string.Empty);
             container.RegisterInstance<ISecurityOptions>(new SecurityOptions(nonEditableUsers));
 
             container.RegisterType<ISecurityService, SecurityService>();
@@ -421,44 +388,7 @@ namespace VirtoCommerce.Platform.Web
             return relativePath;
         }
 
-        private static T GetAppSettingsValue<T>(string name, T defaultValue)
-        {
-            var result = defaultValue;
 
-            var valueType = typeof(T);
-            var stringValue = ConfigurationManager.AppSettings[name];
-
-            if (valueType == typeof(string))
-            {
-                if (stringValue != null)
-                {
-                    result = (T)(object)stringValue;
-                }
-            }
-            else if (valueType == typeof(bool))
-            {
-                bool value;
-                if (bool.TryParse(stringValue, out value))
-                {
-                    result = (T)(object)value;
-                }
-            }
-            else if (valueType == typeof(TimeSpan))
-            {
-                TimeSpan value;
-                if (TimeSpan.TryParse(stringValue, CultureInfo.InvariantCulture, out value))
-                {
-                    result = (T)(object)value;
-                }
-            }
-
-            return result;
-        }
-
-		protected static string GetXmlCommentsPath()
-		{
-			return System.String.Format(@"{0}\bin\VirtoCommerce.Platform.Web.XML", System.AppDomain.CurrentDomain.BaseDirectory);
-		}
     }
 
     public class AuthenticationOptions

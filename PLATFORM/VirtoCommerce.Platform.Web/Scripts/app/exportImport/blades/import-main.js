@@ -18,7 +18,7 @@
     });
 
     $scope.canStartProcess = function () {
-    	return ($scope.importRequest.modules && $scope.importRequest.modules.length > 0) || $scope.importRequest.handleSecurity || $scope.importRequest.handleSettings;
+    	return ($scope.importRequest.modules && $scope.importRequest.modules.length > 0) || $scope.importRequest.handleSecurity || $scope.importRequest.handleSettings || $scope.importRequest.handleBinary;
     }
 
     $scope.startProcess = function () {
@@ -29,7 +29,7 @@
     }
 
     $scope.updateModuleSelection = function () {
-    	var selection = _.where(blade.currentEntities, { isChecked: true });
+    	var selection = _.where($scope.importRequest.exportManifest.modules, { isChecked: true });
     	$scope.importRequest.modules = _.pluck(selection, 'id');
     };
 
@@ -64,12 +64,9 @@
         uploader.onSuccessItem = function (fileItem, asset, status, headers) {
         	$scope.importRequest.fileUrl = asset[0].relativeUrl;
 
-        	exportImportResourse.getImportInfo({ fileUrl: $scope.importRequest.fileUrl }, function (data) {
-        	    blade.info = data.exportManifest;
-        	    blade.currentEntities = data.modules;
-	            blade.isHasSecurity = data.exportManifest.isHasSecurity;
-        	    blade.isHasSettings = data.exportManifest.isHasSettings;
-        	    blade.isLoading = false;
+        	exportImportResourse.loadExportManifest({ fileUrl: $scope.importRequest.fileUrl }, function (data) {
+        		$scope.importRequest.exportManifest = data;
+          	    blade.isLoading = false;
             }, function (error) {
                 bladeNavigationService.setError('Error ' + error.status, blade);
             });

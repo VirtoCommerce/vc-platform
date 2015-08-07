@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using Microsoft.Practices.ObjectBuilder2;
 using VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.Domain.Catalog.Services;
+using VirtoCommerce.Platform.Core.Asset;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.ExportImport;
 
@@ -33,10 +35,13 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 		private readonly ICategoryService _categoryService;
 		private readonly IItemService _itemService;
 		private readonly IPropertyService _propertyService;
+		private readonly IBlobStorageProvider _blobStorageProvider;
 
 		public CatalogExportImport(ICatalogSearchService catalogSearchService,
-			ICatalogService catalogService, ICategoryService categoryService, IItemService itemService, IPropertyService propertyService)
+			ICatalogService catalogService, ICategoryService categoryService, IItemService itemService, 
+			IPropertyService propertyService, IBlobStorageProvider blobStorageProvider)
 		{
+			_blobStorageProvider = blobStorageProvider;
 			_catalogSearchService = catalogSearchService;
 			_catalogService = catalogService;
 			_categoryService = categoryService;
@@ -45,23 +50,23 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 		}
 
 
-		public void DoExport(Stream backupStream, Action<ExportImportProgressInfo> progressCallback)
+		public void DoExport(Stream backupStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
 		{
 			var prodgressInfo = new ExportImportProgressInfo { Description = "loading data..." };
 			progressCallback(prodgressInfo);
 
-			var backupObject = GetBackupObject(progressCallback);
+			var backupObject = GetBackupObject(manifest, progressCallback);
 
 			backupObject.SerializeJson(backupStream);
 		}
 
-		public void DoImport(Stream backupStream, Action<ExportImportProgressInfo> progressCallback)
+		public void DoImport(Stream backupStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
 		{
 			var progressInfo = new ExportImportProgressInfo { Description = "loading data..." };
 			progressCallback(progressInfo);
 
 			var backupObject = backupStream.DeserializeJson<BackupObject>();
-			var originalObject = GetBackupObject(progressCallback);
+			var originalObject = GetBackupObject(manifest, progressCallback);
 
 			progressInfo.Description = String.Format("{0} catalogs importing...", backupObject.Catalogs.Count());
 			progressCallback(progressInfo);
@@ -78,6 +83,31 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 			backupObject.Products = backupObject.Products.OrderBy(x => x.MainProductId).ToList();
 			UpdateCategories(originalObject.Categories, backupObject.Categories);
 			UpdateProperties(originalObject.Properties, backupObject.Properties);
+
+			//Binary data
+			if (manifest.HandleBinaryData)
+			{
+				var allBackupImages = backupObject.Products.SelectMany(x => x.Images);
+				allBackupImages = allBackupImages.Concat(backupObject.Products.SelectMany(x => x.Variations).SelectMany(x => x.Images));
+
+				var allOrigImages = originalObject.Products.SelectMany(x => x.Images);
+				allOrigImages = allOrigImages.Concat(originalObject.Products.SelectMany(x => x.Variations).SelectMany(x => x.Images));
+
+				var allNewImpages = allBackupImages.Where(x => !allOrigImages.Contains(x));
+				var index = 0;
+				var progressTemplate = "{0} of " + allNewImpages.Count() + " images uploading";
+				foreach (var image in allNewImpages)
+				{
+					progressInfo.Description = String.Format(progressTemplate, index);
+					progressCallback(progressInfo);
+					using (var stream = new MemoryStream(image.BinaryData))
+					{
+						image.Url = _blobStorageProvider.Upload(new UploadStreamInfo { FileByteStream = stream, FileName = image.Name, FolderName = "catalog" });
+					}
+
+					index++;
+				}
+			}
 
 			progressInfo.Description = String.Format("{0} products importing...", backupObject.Products.Count());
 			progressCallback(progressInfo);
@@ -160,7 +190,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 			_itemService.Update(toUpdate.ToArray());
 		}
 
-		private BackupObject GetBackupObject(Action<ExportImportProgressInfo> progressCallback)
+		private BackupObject GetBackupObject(PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
 		{
 			const ResponseGroup responseGroup = ResponseGroup.WithCatalogs | ResponseGroup.WithCategories | ResponseGroup.WithProducts;
 			var searchResponse = _catalogSearchService.Search(new SearchCriteria { Count = int.MaxValue, GetAllCategories = true, Start = 0, ResponseGroup = responseGroup });
@@ -171,13 +201,15 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 			progressInfo.Description = String.Format("{0} catalogs loading", searchResponse.Catalogs.Count());
 			progressCallback(progressInfo);
 
+			//Catalogs
 			retVal.Catalogs = searchResponse.Catalogs.Select(x => _catalogService.GetById(x.Id)).ToList();
 		
 			progressInfo.Description = String.Format("{0} categories loading", searchResponse.Categories.Count());
 			progressCallback(progressInfo);
 
+			//Categories
 			retVal.Categories = searchResponse.Categories.Select(x => _categoryService.GetById(x.Id)).ToList();
-		
+			//Products
 			for (int i = 0; i < searchResponse.Products.Count(); i += 50)
 			{
 				var products = _itemService.GetByIds(searchResponse.Products.Skip(i).Take(50).Select(x => x.Id).ToArray(), ItemResponseGroup.ItemMedium | ItemResponseGroup.Variations | ItemResponseGroup.Seo);
@@ -186,8 +218,25 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 				progressInfo.Description = String.Format("{0} of {1} products loaded", Math.Min(searchResponse.TotalCount, i), searchResponse.TotalCount);
 				progressCallback(progressInfo);
 			}
+			//Binary data
+			if(manifest.HandleBinaryData)
+			{
+				var allImages = retVal.Products.SelectMany(x => x.Images);
+				allImages = allImages.Concat(retVal.Products.SelectMany(x => x.Variations).SelectMany(x => x.Images));
 
+				var index = 0;
+				var progressTemplate = "{0} of " + allImages.Count() + " images downloading";
+				foreach(var image in allImages)
+				{
+					progressInfo.Description = String.Format(progressTemplate, index);
+					progressCallback(progressInfo);
+					image.BinaryData = _blobStorageProvider.OpenReadOnly(image.Url).ReadFully();
 
+					index++;
+				}
+			}
+
+			//Properties
 			var catalogsPropertiesIds = retVal.Catalogs.SelectMany(x => _propertyService.GetCatalogProperties(x.Id)).Select(x => x.Id).ToArray();
 			var categoriesPropertiesIds = retVal.Categories.SelectMany(x => _propertyService.GetCategoryProperties(x.Id)).Select(x => x.Id).ToArray();
 			var propertiesIds = catalogsPropertiesIds.Concat(categoriesPropertiesIds).Distinct().ToArray();

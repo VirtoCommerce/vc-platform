@@ -29,6 +29,18 @@
     <scripts>
         <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
     </scripts>
+
+	<settings>
+		<group name="Inventory|General">
+			<setting>
+				<name>Inventory.ExportImport.Description</name>
+				<valueType>string</valueType>
+				<defaultValue>Export/Import inventory information</defaultValue>
+				<title>Export/Import description</title>
+				<description>Module description in platform export/import wizard</description>
+			</setting>
+		</group>
+	</settings>
     <permissions>
         <group name="Inventory">
             <!--<permission id="inventory:query" name="Browse inventory data" description="Permission to open inventory menu and browse data."/>-->

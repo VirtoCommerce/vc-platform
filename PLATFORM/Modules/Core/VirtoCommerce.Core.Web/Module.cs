@@ -17,7 +17,7 @@ using VirtoCommerce.CoreModule.Data.Payment;
 
 namespace VirtoCommerce.CoreModule.Web
 {
-    public class Module : ModuleBase, ISupportExportModule, ISupportImportModule
+	public class Module : ModuleBase, ISupportExportImportModule
     {
         private const string _connectionStringName = "VirtoCommerce";
         private readonly IUnityContainer _container;
@@ -101,24 +101,29 @@ namespace VirtoCommerce.CoreModule.Web
 
         #endregion
 
-        #region ISupportExportModule Members
+		#region ISupportExportImportModule Members
 
-        public void DoExport(System.IO.Stream outStream, PlatformExportImportOptions importOptions, Action<ExportImportProgressInfo> progressCallback)
+		public void DoExport(System.IO.Stream outStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
         {
-            var job = _container.Resolve<FulfillmentExportImport>();
+			var job = _container.Resolve<CoreExportImport>();
             job.DoExport(outStream, progressCallback);
         }
 
-        #endregion
-
-        #region ISupportImportModule Members
-
-        public void DoImport(System.IO.Stream inputStream, PlatformExportImportOptions importOptions, Action<ExportImportProgressInfo> progressCallback)
+		public void DoImport(System.IO.Stream inputStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
         {
-            var job = _container.Resolve<FulfillmentExportImport>();
+			var job = _container.Resolve<CoreExportImport>();
             job.DoImport(inputStream, progressCallback);
         }
 
-        #endregion
-    }
+		public string ExportDescription
+		{
+			get
+			{
+				var settingManager = _container.Resolve<ISettingsManager>();
+				return settingManager.GetValue("VirtoCommerce.Core.ExportImport.Description", String.Empty);
+			}
+		}
+
+		#endregion
+	}
 }

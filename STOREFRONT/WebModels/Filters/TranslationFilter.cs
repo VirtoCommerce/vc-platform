@@ -4,11 +4,9 @@ using System.Linq;
 using System.Web;
 using System.Web.Caching;
 using DotLiquid;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using VirtoCommerce.Web.Models.Services;
 using VirtoCommerce.Web.Views.Engines.Liquid.Extensions;
-using VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine.Util;
 
 #endregion
 
@@ -86,6 +84,26 @@ namespace VirtoCommerce.Web.Models.Filters
             return retVal;
         }
         #endregion
+
+        private static Template ParseCached(string contents)
+        {
+            if (contents == null)
+                return null;
+
+            var contextKey = "vc-cms-template-" + contents.GetHashCode();
+            var value = HttpRuntime.Cache.Get(contextKey);
+
+            if (value != null)
+            {
+                return value as Template;
+            }
+
+            var t = Template.Parse(contents);
+
+            HttpRuntime.Cache.Insert(contextKey, t, null, DateTime.UtcNow.AddHours(1), Cache.NoSlidingExpiration);
+
+            return t;
+        }
     }
 
     public static class LocaleExtensions
