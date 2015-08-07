@@ -37,6 +37,7 @@
         </div>
 
         <script type="text/ng-template" id="imageTemplate.html">
+            <a class="tile-action" ng-click="copyUrl(image)"></a>
             <img class="tile-img" ng-src="{{image.url ? image.url : ''}}">
         </script>
     </div>
