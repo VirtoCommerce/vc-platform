@@ -53,6 +53,8 @@ using VirtoCommerce.Platform.Web.Controllers.Api;
 using VirtoCommerce.Platform.Web.Model.ExportImport.PushNotifications;
 using VirtoCommerce.Platform.Web.Resources;
 using WebGrease.Extensions;
+using System.Web.Http;
+using System.Net.Http;
 
 [assembly: OwinStartup(typeof(Startup))]
 
@@ -165,9 +167,6 @@ namespace VirtoCommerce.Platform.Web
             var hubConfiguration = new HubConfiguration();
             hubConfiguration.EnableJavaScriptProxies = false;
             app.MapSignalR(hubConfiguration);
-
-
-		
         }
 
 
@@ -308,7 +307,7 @@ namespace VirtoCommerce.Platform.Web
             container.RegisterInstance<IEmailNotificationSendingGateway>(emailNotificationSendingGateway);
             container.RegisterInstance<ISmsNotificationSendingGateway>(defaultSmsNotificationSendingGateway);
 
-   
+
             #endregion
 
             #region Assets
@@ -396,7 +395,7 @@ namespace VirtoCommerce.Platform.Web
             return relativePath;
         }
 
-    
+
     }
 
     public class AuthenticationOptions

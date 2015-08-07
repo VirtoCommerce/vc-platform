@@ -41,7 +41,6 @@ namespace VirtoCommerce.Content.Data.Models
 					existingLink.Title = link.Title;
 					existingLink.IsActive = link.IsActive;
 					existingLink.Priority = link.Priority;
-					existingLink.Type = link.Type;
 				}
 			}
 		}

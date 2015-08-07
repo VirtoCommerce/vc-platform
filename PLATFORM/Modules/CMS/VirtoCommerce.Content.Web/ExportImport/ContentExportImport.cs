@@ -127,10 +127,10 @@ namespace VirtoCommerce.Content.Web.ExportImport
 					var storePages = _pagesService.GetPages(store.Id, null);
 					contentPages.AddRange(storePages);
 
-					var storeThemes = _themeService.GetThemes(store.Id).Result.ToArray();
+					var storeThemes = _themeService.GetThemes(store.Id).ToArray();
 					foreach (var storeTheme in storeThemes)
 					{
-						var themeContentItems = _themeService.GetThemeAssets(store.Id, storeTheme.Name, null).Result.ToArray();
+						var themeContentItems = _themeService.GetThemeAssets(store.Id, storeTheme.Name, null).ToArray();
 						contentItems.AddRange(themeContentItems);
 					}
 				}

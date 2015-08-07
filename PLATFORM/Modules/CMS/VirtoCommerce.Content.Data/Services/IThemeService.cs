@@ -7,18 +7,18 @@ namespace VirtoCommerce.Content.Data.Services
 {
 	public interface IThemeService
 	{
-		Task<IEnumerable<Theme>> GetThemes(string storeId);
+		IEnumerable<Theme> GetThemes(string storeId);
 
-		Task<IEnumerable<ThemeAsset>> GetThemeAssets(string storeId, string themeId, GetThemeAssetsCriteria criteria);
-		Task<ThemeAsset> GetThemeAsset(string storeId, string themeId, string assetKey);
+		IEnumerable<ThemeAsset> GetThemeAssets(string storeId, string themeId, GetThemeAssetsCriteria criteria);
+		ThemeAsset GetThemeAsset(string storeId, string themeId, string assetKey);
 
-		Task DeleteTheme(string storeId, string themeId);
+		void DeleteTheme(string storeId, string themeId);
 
-		Task SaveThemeAsset(string storeId, string themeId, ThemeAsset asset);
-		Task DeleteThemeAssets(string storeId, string themeId, params string[] assetKey);
+		void SaveThemeAsset(string storeId, string themeId, ThemeAsset asset);
+		void DeleteThemeAssets(string storeId, string themeId, params string[] assetKey);
 
-		Task UploadTheme(string storeId, string themeName, ZipArchive archive);
+		void UploadTheme(string storeId, string themeName, ZipArchive archive);
 
-		Task<bool> CreateDefaultTheme(string storeId, string themePath);
+		void CreateDefaultTheme(string storeId, string themePath);
 	}
 }

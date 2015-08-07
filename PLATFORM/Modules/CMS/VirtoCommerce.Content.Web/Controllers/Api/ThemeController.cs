@@ -64,61 +64,110 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		}
 		#endregion
 
-		#region Public Methods and Operators
+		/// <summary>
+		/// Get theme asset
+		/// </summary>
+		/// <remarks>Get theme asset. Returns theme asset</remarks>
+		/// <param name="storeId">Store id</param>
+		/// <param name="themeId">Theme id</param>
+		/// <param name="assetId">Theme asset id</param>
+		/// <response code="500">Internal Server Error</response>
+		/// <response code="200">Theme asset returned OK</response>
 		[HttpGet]
 		[ResponseType(typeof(ThemeAsset))]
 		[Route("themes/{themeId}/assets/{*assetId}")]
-		public async Task<IHttpActionResult> GetThemeAsset(string assetId, string storeId, string themeId)
+		public IHttpActionResult GetThemeAsset(string assetId, string storeId, string themeId)
 		{
-			var item = await this._themeService.GetThemeAsset(storeId, themeId, assetId);
+			var item = this._themeService.GetThemeAsset(storeId, themeId, assetId);
 			return this.Ok(item.ToWebModel());
 		}
 
+		/// <summary>
+		/// Search theme assets
+		/// </summary>
+		/// <remarks>Search theme assets. Returns theme assets array</remarks>
+		/// <param name="storeId">Store id</param>
+		/// <param name="themeId">Theme id</param>
+		/// <param name="criteria">Searching theme assets criteria</param>
+		/// <response code="500">Internal Server Error</response>
+		/// <response code="200">Theme assets returned OK</response>
 		[HttpGet]
 		[ResponseType(typeof(ThemeAsset[]))]
 		[Route("themes/{themeId}/assets")]
-		public async Task<IHttpActionResult> GetThemeAssets(string storeId, string themeId, [FromUri]GetThemeAssetsCriteria criteria)
+		public IHttpActionResult GetThemeAssets(string storeId, string themeId, [FromUri]GetThemeAssetsCriteria criteria)
 		{
-			var items = await this._themeService.GetThemeAssets(storeId, themeId, criteria.ToCoreModel());
+			var items = this._themeService.GetThemeAssets(storeId, themeId, criteria.ToCoreModel());
 
 			return this.Ok(items.OrderBy(x => x.Updated).Select(s => s.ToWebModel()).ToArray());
 		}
 
+		/// <summary>
+		/// Delete theme
+		/// </summary>
+		/// <remarks>Delete theme</remarks>
+		/// <param name="storeId">Store id</param>
+		/// <param name="themeId">Theme id</param>
+		/// <response code="500">Internal Server Error</response>
+		/// <response code="200">Theme deleted OK</response>
 		[HttpDelete]
 		[ResponseType(typeof(void))]
 		[Route("themes/{themeId}")]
 		[CheckPermission(Permission = PredefinedPermissions.Manage)]
-		public async Task<IHttpActionResult> DeleteTheme(string storeId, string themeId)
+		public IHttpActionResult DeleteTheme(string storeId, string themeId)
 		{
-			await this._themeService.DeleteTheme(storeId, themeId);
+			this._themeService.DeleteTheme(storeId, themeId);
 
 			return this.Ok();
 		}
 
+		/// <summary>
+		/// Get theme assets folders
+		/// </summary>
+		/// <remarks>Get theme assets folders by store and theme. Returns theme assets folders array</remarks>
+		/// <param name="storeId">Store id</param>
+		/// <param name="themeId">Theme id</param>
+		/// <response code="500">Internal Server Error</response>
+		/// <response code="200">Theme assets folders returned OK</response>
 		[HttpGet]
 		[ResponseType(typeof(ThemeAssetFolder[]))]
 		[Route("themes/{themeId}/folders")]
-		public async Task<IHttpActionResult> GetThemeAssets(string storeId, string themeId)
+		public IHttpActionResult GetThemeAssets(string storeId, string themeId)
 		{
-			var items = await this._themeService.GetThemeAssets(storeId, themeId, new VirtoCommerce.Content.Data.Models.GetThemeAssetsCriteria());
+			var items = this._themeService.GetThemeAssets(storeId, themeId, null);
 
 			return this.Ok(items.ToWebModel());
 		}
 
+		/// <summary>
+		/// Get themes
+		/// </summary>
+		/// <remarks>Get themes by store. Returns themes array</remarks>
+		/// <param name="storeId">Store id</param>
+		/// <response code="500">Internal Server Error</response>
+		/// <response code="200">Themes returned OK</response>
 		[HttpGet]
 		[ResponseType(typeof(Theme[]))]
 		[ClientCache(Duration = 30)]
 		[Route("themes")]
-		public async Task<IHttpActionResult> GetThemes(string storeId)
+		public IHttpActionResult GetThemes(string storeId)
 		{
-			var items = await this._themeService.GetThemes(storeId);
+			var items = this._themeService.GetThemes(storeId);
 			return this.Ok(items.Select(s => s.ToWebModel()).ToArray());
 		}
 
+		/// <summary>
+		/// Save theme asset
+		/// </summary>
+		/// <remarks>Save theme asset</remarks>
+		/// <param name="storeId">Store id</param>
+		/// <param name="themeId">Theme id</param>
+		/// <param name="asset">Theme asset</param>
+		/// <response code="500">Internal Server Error</response>
+		/// <response code="200">Theme asset saved OK</response>
 		[HttpPost]
 		[Route("themes/{themeId}/assets")]
 		[CheckPermission(Permission = PredefinedPermissions.Manage)]
-		public async Task<IHttpActionResult> SaveItem(ThemeAsset asset, string storeId, string themeId)
+		public IHttpActionResult SaveItem(ThemeAsset asset, string storeId, string themeId)
 		{
 			if (!string.IsNullOrEmpty(asset.AssetUrl))
 			{
@@ -126,23 +175,41 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 				asset.ByteContent = File.ReadAllBytes(filePath);
 			}
 
-			await this._themeService.SaveThemeAsset(storeId, themeId, asset.ToDomainModel());
+			this._themeService.SaveThemeAsset(storeId, themeId, asset.ToDomainModel());
 			return this.Ok();
 		}
 
+		/// <summary>
+		/// Delete theme assets
+		/// </summary>
+		/// <remarks>Delete theme assets</remarks>
+		/// <param name="storeId">Store id</param>
+		/// <param name="themeId">Theme id</param>
+		/// <param name="assetIds">Deleted asset ids</param>
+		/// <response code="500">Internal Server Error</response>
+		/// <response code="200">Theme assets deleted OK</response>
 		[HttpDelete]
 		[Route("themes/{themeId}/assets")]
 		[CheckPermission(Permission = PredefinedPermissions.Manage)]
-		public async Task<IHttpActionResult> DeleteAssets(string storeId, string themeId, [FromUri]string[] assetIds)
+		public IHttpActionResult DeleteAssets(string storeId, string themeId, [FromUri]string[] assetIds)
 		{
-			await this._themeService.DeleteThemeAssets(storeId, themeId, assetIds);
+			this._themeService.DeleteThemeAssets(storeId, themeId, assetIds);
 			return this.Ok();
 		}
 
+		/// <summary>
+		/// Create new theme
+		/// </summary>
+		/// <remarks>Create new theme</remarks>
+		/// <param name="storeId">Store id</param>
+		/// <param name="themeName">Theme name</param>
+		/// <param name="themeFileUrl">Theme file url</param>
+		/// <response code="500">Internal Server Error</response>
+		/// <response code="200">Theme created OK</response>
 		[HttpGet]
 		[Route("themes/file")]
 		[CheckPermission(Permission = PredefinedPermissions.Manage)]
-		public async Task<IHttpActionResult> CreateNewTheme(string storeId, string themeFileUrl, string themeName)
+		public IHttpActionResult CreateNewTheme(string storeId, string themeFileUrl, string themeName)
 		{
 			using (var webClient = new WebClient())
 			{
@@ -152,7 +219,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 
 				using (ZipArchive archive = ZipFile.OpenRead(fullFilePath))
 				{
-					await _themeService.UploadTheme(storeId, themeName, archive);
+					_themeService.UploadTheme(storeId, themeName, archive);
 				}
 
 				File.Delete(fullFilePath);
@@ -161,65 +228,22 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 			return Ok();
 		}
 
-		[HttpPost]
-		[Route("themes/{themeId}/assets/file/{folderName}")]
-		[CheckPermission(Permission = PredefinedPermissions.Manage)]
-		public async Task<IHttpActionResult> SaveImageItem(string storeId, string themeId, string folderName)
-		{
-			if (!Request.Content.IsMimeMultipartContent())
-			{
-				throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
-			}
-
-			var provider = new MultipartFileStreamProvider(_pathForMultipart);
-
-			await Request.Content.ReadAsMultipartAsync(provider);
-
-			var loadItemInfo = new LoadItemInfo();
-
-			foreach (var file in provider.FileData)
-			{
-				var fileInfo = new FileInfo(file.LocalFileName);
-				using (FileStream stream = fileInfo.OpenRead())
-				{
-					var fileName = file.Headers.ContentDisposition.FileName.Replace("\"", string.Empty);
-					var filePath = string.Format("{0}{1}", _pathForFiles, fileName);
-
-					using (var f = File.Create(filePath))
-					{
-						await stream.CopyToAsync(f);
-					}
-
-					loadItemInfo.Name = fileName;
-					loadItemInfo.ContentType = file.Headers.ContentType.MediaType;
-					if (ContentTypeUtility.IsImageContentType(loadItemInfo.ContentType))
-					{
-						loadItemInfo.Content = ContentTypeUtility.
-							ConvertImageToBase64String(File.ReadAllBytes(filePath), file.Headers.ContentType.MediaType);
-					}
-				}
-			}
-
-			return this.Ok(loadItemInfo);
-		}
-
+		/// <summary>
+		/// Create default theme
+		/// </summary>
+		/// <remarks>Create default theme</remarks>
+		/// <param name="storeId">Store id</param>
+		/// <response code="500">Internal Server Error</response>
+		/// <response code="200">Default theme created OK</response>
 		[HttpGet]
 		[Route("themes/createdefault")]
 		[ResponseType(typeof(bool))]
 		[CheckPermission(Permission = PredefinedPermissions.Manage)]
-		public async Task<IHttpActionResult> CreateDefaultTheme(string storeId)
+		public IHttpActionResult CreateDefaultTheme(string storeId)
 		{
-			var retVal = await _themeService.CreateDefaultTheme(storeId, _defaultThemePath);
-
-			if (!retVal)
-			{
-				return BadRequest();
-			}
-			else
-			{
-				return Ok();
-			}
+			_themeService.CreateDefaultTheme(storeId, _defaultThemePath);
+			
+			return Ok();
 		}
-		#endregion
 	}
 }
