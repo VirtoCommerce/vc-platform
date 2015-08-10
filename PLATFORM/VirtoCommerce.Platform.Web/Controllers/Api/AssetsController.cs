@@ -11,7 +11,7 @@ using webModel = VirtoCommerce.Platform.Web.Model.Asset;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
-    [RoutePrefix("api/assets")]
+    [RoutePrefix("api/platform/assets")]
     public class AssetsController : ApiController
     {
         private readonly IBlobStorageProvider _blobProvider;

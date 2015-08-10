@@ -8,7 +8,7 @@ using VirtoCommerce.Platform.Web.Model.Jobs;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
-    [RoutePrefix("api/jobs")]
+    [RoutePrefix("api/platform/jobs")]
     [CheckPermission(Permission = PredefinedPermissions.BackgroundJobsManage)]
     public class JobsController : ApiController
     {

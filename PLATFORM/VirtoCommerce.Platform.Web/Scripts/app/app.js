@@ -9,7 +9,7 @@
   'ngAnimate',
   'ngStorage',
   'ngResource',
-  'xeditable',
+  //'xeditable',
   'fiestah.money',
   'ngCookies',
   'angularMoment',
@@ -71,12 +71,11 @@ angular.module('platformWebApp', AppDependencies).
   ]
 )
 .run(
-  ['$rootScope', '$state', '$stateParams', 'platformWebApp.authService', 'platformWebApp.mainMenuService', 'editableOptions', 'platformWebApp.pushNotificationService', '$animate', '$templateCache', 'gridsterConfig', 'platformWebApp.widgetService',
-    function ($rootScope, $state, $stateParams, authService, mainMenuService, editableOptions, eventService, $animate, $templateCache, gridsterConfig, widgetService) {
+  ['$rootScope', '$state', '$stateParams', 'platformWebApp.authService', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', '$animate', '$templateCache', 'gridsterConfig',
+    function ($rootScope, $state, $stateParams, authService, mainMenuService, eventService, $animate, $templateCache, gridsterConfig) {
         //Disable animation
         $animate.enabled(false);
-        editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
-
+        
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
         var homeMenuItem = {
@@ -110,7 +109,7 @@ angular.module('platformWebApp', AppDependencies).
         });
 
         $rootScope.$on('httpError', function (event, rejection) {
-            if (!(rejection.config.url.indexOf('api/notification') + 1)) {
+            if (!(rejection.config.url.indexOf('api/platform/notification') + 1)) {
                 eventService.error({ title: 'HTTP error', description: rejection.status + ' — ' + rejection.statusText, extendedData: rejection.data });
             }
         });

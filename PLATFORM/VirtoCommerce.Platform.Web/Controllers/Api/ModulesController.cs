@@ -18,7 +18,7 @@ using webModel = VirtoCommerce.Platform.Web.Model.Packaging;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
-    [RoutePrefix("api/modules")]
+    [RoutePrefix("api/platform/modules")]
     [CheckPermission(Permission = PredefinedPermissions.ModuleQuery)]
     public class ModulesController : ApiController
     {

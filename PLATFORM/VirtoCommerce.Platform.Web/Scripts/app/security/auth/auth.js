@@ -25,7 +25,7 @@
     };
 }])
 .factory('platformWebApp.authService', ['$http', '$rootScope', '$cookieStore', '$state', function ($http, $rootScope, $cookieStore, $state) {
-    var serviceBase = 'api/security/';
+    var serviceBase = 'api/platform/security/';
     var authContext = {
         userLogin: null,
         fullName: null,

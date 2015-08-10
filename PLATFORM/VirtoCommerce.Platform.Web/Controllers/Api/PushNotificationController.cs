@@ -10,7 +10,7 @@ using VirtoCommerce.Platform.Core.PushNotifications;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
-    [RoutePrefix("api/pushnotifications")]
+    [RoutePrefix("api/platform/pushnotifications")]
     public class PushNotificationController : ApiController
     {
         private readonly IPushNotificationManager _pushNotifier;

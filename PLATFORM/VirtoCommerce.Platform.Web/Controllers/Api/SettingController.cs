@@ -14,7 +14,7 @@ using VirtoCommerce.Platform.Web.Converters.Settings;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
-    [RoutePrefix("api/settings")]
+    [RoutePrefix("api/platform/settings")]
     public class SettingController : ApiController
     {
         private readonly ISettingsManager _settingsManager;

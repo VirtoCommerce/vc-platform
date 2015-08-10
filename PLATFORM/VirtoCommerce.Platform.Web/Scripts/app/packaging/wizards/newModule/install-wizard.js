@@ -39,7 +39,7 @@
             var uploader = $scope.uploader = new FileUploader({
                 scope: $scope,
                 headers: { Accept: 'application/json' },
-                url: 'api/modules',
+                url: 'api/platform/modules',
                 autoUpload: true,
                 removeAfterUpload: true
             });

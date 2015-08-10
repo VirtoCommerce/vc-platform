@@ -13,7 +13,7 @@ using VirtoCommerce.Platform.Web.Model.Security;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
-    [RoutePrefix("api/security")]
+    [RoutePrefix("api/platform/security")]
     public class SecurityController : ApiController
     {
         private readonly Func<IAuthenticationManager> _authenticationManagerFactory;

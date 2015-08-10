@@ -12,7 +12,7 @@ using webModels = VirtoCommerce.Platform.Web.Model.Notifications;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
-	[RoutePrefix("api/notification")]
+    [RoutePrefix("api/platform/notification")]
 	public class NotificationsController : ApiController
 	{
 		private readonly INotificationTemplateService _notificationTemplateService;
