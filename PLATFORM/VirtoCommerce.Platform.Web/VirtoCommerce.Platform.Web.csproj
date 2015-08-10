@@ -37,6 +37,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -1456,6 +1458,12 @@
     <Content Include="Scripts\version.json" />
     <Content Include="Views\Shared\_GoogleAnalyticsPartial.cshtml" />
     <Content Include="Scripts\underscore.min.map" />
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Modules\" />
@@ -1526,6 +1534,24 @@
     <PostBuildEvent>
     </PostBuildEvent>
   </PropertyGroup>
+  <!-- Transform Web.config -->
+  <UsingTask TaskName="TransformXml" AssemblyFile="$(VSToolsPath)\Web\Microsoft.Web.Publishing.Tasks.dll" Condition="Exists('$(VSToolsPath)\Web\Microsoft.Web.Publishing.Tasks.dll')" />
+  <PropertyGroup>
+    <TransformInputFile>$(WebProjectOutputDir)\Web.Temp.config</TransformInputFile>
+    <TransformFile>$(WebProjectOutputDir)\Web.$(Configuration).config</TransformFile>
+    <TransformOutputFile>$(WebProjectOutputDir)\Web.config</TransformOutputFile>
+    <StackTraceEnabled>False</StackTraceEnabled>
+  </PropertyGroup>
+  <ItemGroup>
+    <OriginalWebConfig Include="$(WebProjectOutputDir)\Web.config" />
+    <TempWebConfig Include="$(WebProjectOutputDir)\Web.Temp.config" />
+  </ItemGroup>
+  <Target Name="TransformWebConfig" AfterTargets="Build">
+    <!-- Copy our web.config into a temp folder as the 'TransformXml' task has a file lock bug -->
+    <Copy SourceFiles="@(OriginalWebConfig)" DestinationFiles="@(TempWebConfig)" />
+    <TransformXml Source="$(TransformInputFile)" Transform="$(TransformFile)" Destination="$(TransformOutputFile)" StackTrace="$(StackTraceEnabled)" />
+    <Delete Files="@(TempWebConfig)" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

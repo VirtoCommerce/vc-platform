@@ -10,7 +10,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
     {
         private readonly string _contentVirtualPath;
         private readonly string _assembliesPath;
-        private static readonly string[] _assemblyFileExtensions = { ".dll", ".pdb", ".exe" };
+        private static readonly string[] _assemblyFileExtensions = { ".dll", ".pdb", ".exe", ".xml" };
 
         public IModuleManifestProvider ManifestProvider { get; private set; }
 

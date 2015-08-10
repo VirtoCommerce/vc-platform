@@ -57,7 +57,7 @@
             var uploader = $scope.uploader = new FileUploader({
                 scope: $scope,
                 headers: { Accept: 'application/json' },
-                url: 'api/assets/catalog',
+                url: 'api/platform/assets/catalog',
                 autoUpload: true,
                 removeAfterUpload: true
             });
@@ -92,6 +92,17 @@
                 image.$selected = true;
             }
         }
+    }
+
+    $scope.removeItem = function (image) {
+        var idx = blade.currentEntity.images.indexOf(image);
+        if (idx >= 0) {
+            blade.currentEntity.images.splice(idx, 1);
+        }
+    };
+
+    $scope.copyUrl = function (data) {
+        window.prompt("Copy to clipboard: Ctrl+C, Enter", data.url);
     }
 
     $scope.removeAction = function (selectedImages) {

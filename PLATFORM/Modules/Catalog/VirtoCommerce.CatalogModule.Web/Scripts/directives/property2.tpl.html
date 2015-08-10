@@ -29,9 +29,8 @@
             <input ng-disabled="currentEntity.isReadOnly"
                    ng-required="currentEntity.required && !currentEntity.isReadOnly"
                    ng-model="context.currentPropValues[0].value"
-                   ng-pattern="/^\d+$/"
+                   money
                    ng-class="{'error': context.currentEntity.valueType.$error.pattern}"
-                   name="{{currentEntity.valueType}}"
                    placeholder="Please enter number"
                    type="text">
         </div>
@@ -40,7 +39,6 @@
     <script type="text/ng-template" id="DateTime.html">
         <div class="form-input __calendar">
             <input type="text"
-                   datepicker-popup="shortDate"
                    close-text="Close"
                    datepicker-options="dateOptions"
                    min-date="today"
@@ -294,38 +292,4 @@
             </div>
         </div>
     </script>
-
-    <!--<script type="text/ng-template" id="numberPropType.html">
-        <input ng-if="!currentEntity.multivalue"
-               ng-disabled="currentEntity.isReadOnly"
-               class="form-control"
-               ng-model="currentEntity.values[0].value"
-               type="number"
-               name="{{currentEntity.valueType}}"
-               placeholder="enter number"
-               ng-required="currentEntity.required && !currentEntity.isReadOnly" />
-
-        <tags-input ng-if="currentEntity.multivalue && currentEntity.isReadOnly"
-                    ng-model="currentEntity.values"
-                    allowed-tags-pattern="^[-]?[0-9]+[\.]?[0-9]*$"
-                    min-length="1"
-                    add-on-blur="false"
-                    name="{{currentEntity.valueType}}"
-                    display-property="value"
-                    placeholder="enter number">
-
-        </tags-input>
-    </script>
-    <script type="text/ng-template" id="longTextPropType.html">
-        <span ng-repeat="val in currentEntity.values track by $index">
-            <textarea ng-if="currentEntity.multivalue || $index == 0"
-                      ng-disabled="currentEntity.isReadOnly"
-                      class="form-control"
-                      ng-model="val.value"
-                      name="{{currentEntity.valueType}}"
-                      ng-required="currentEntity.required && !currentEntity.isReadOnly" />
-            <a ng-if="currentEntity.multivalue && $index > 0" ng-click="currentEntity.values.splice(currentEntity.values.indexOf(val.value),1)">remove</a>
-        </span>
-        <a ng-if="currentEntity.multivalue && !currentEntity.isReadOnly" ng-click="currentEntity.values.push({value:''})" style="cursor:pointer;">add value</a>
-    </script>-->
 </div>

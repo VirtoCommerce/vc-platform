@@ -19,7 +19,7 @@ namespace VirtoCommerce.Content.Data.Repositories
 			this._baseDirectoryPath = baseDirectoryPath;
 		}
 
-		public Task<bool> DeleteContentItem(string path)
+		public void DeleteContentItem(string path)
 		{
 			var fullPath = this.GetFullPath(path);
 
@@ -36,11 +36,9 @@ namespace VirtoCommerce.Content.Data.Repositories
 				Directory.Delete(directoryPath, false);
 				directoryPath = newDirectoryPath;
 			}
-
-			return Task.FromResult(true);
 		}
 
-		public Task<ContentItem> GetContentItem(string path)
+		public ContentItem GetContentItem(string path)
 		{
 			var retVal = new ContentItem();
 
@@ -51,10 +49,10 @@ namespace VirtoCommerce.Content.Data.Repositories
 			retVal.Name = itemName;
 			retVal.Path = path;
 
-			return Task.FromResult(retVal);
+			return retVal;
 		}
 
-		public async Task<IEnumerable<ContentItem>> GetContentItems(string path, GetThemeAssetsCriteria criteria)
+		public IEnumerable<ContentItem> GetContentItems(string path, GetThemeAssetsCriteria criteria)
 		{
 			var fullPath = this.GetFullPath(path);
 
@@ -81,22 +79,22 @@ namespace VirtoCommerce.Content.Data.Repositories
 			//{
 			foreach (var contentItem in items)
 			{
-				var fullFile = await this.GetContentItem(contentItem.Path);
+				var fullFile = this.GetContentItem(contentItem.Path);
 				contentItem.ByteContent = fullFile.ByteContent;
 				contentItem.ContentType = fullFile.ContentType;
 			}
 			//}
 
-			return await Task.FromResult(items.AsEnumerable());
+			return items.AsEnumerable();
 		}
 
-		public Task<IEnumerable<Theme>> GetThemes(string storePath)
+		public IEnumerable<Theme> GetThemes(string storePath)
 		{
 			var fullPath = this.GetFullPath(storePath);
 
 			if (!Directory.Exists(fullPath))
 			{
-				return Task.FromResult(Enumerable.Empty<Theme>());
+				return Enumerable.Empty<Theme>();
 			}
 
 			var directories = Directory.GetDirectories(fullPath);
@@ -127,10 +125,10 @@ namespace VirtoCommerce.Content.Data.Repositories
 					});
 			}
 
-			return Task.FromResult(themes.ToArray().AsEnumerable());
+			return themes.ToArray().AsEnumerable();
 		}
 
-		public Task<bool> SaveContentItem(string path, ContentItem item)
+		public void SaveContentItem(string path, ContentItem item)
 		{
 			var fullPath = this.GetFullPath(path);
 
@@ -145,8 +143,6 @@ namespace VirtoCommerce.Content.Data.Repositories
 				fs.Write(item.ByteContent, 0, item.ByteContent.Length);
 				fs.Close();
 			}
-
-			return Task.FromResult(true);
 		}
 
 		private string FixName(string path, string fullPath)
@@ -164,15 +160,13 @@ namespace VirtoCommerce.Content.Data.Repositories
 			return path.Replace(this._baseDirectoryPath, string.Empty).Replace("\\", "/").TrimStart('/');
 		}
 
-		public Task<bool> DeleteTheme(string path)
+		public void DeleteTheme(string path)
 		{
 			var retVal = true;
 
 			var fullPath = GetFullPath(path);
 
 			Directory.Delete(fullPath, true);
-
-			return Task.FromResult(retVal);
 		}
 
 
@@ -305,7 +299,7 @@ namespace VirtoCommerce.Content.Data.Repositories
 
 		public void Dispose()
 		{
-			
+			GC.SuppressFinalize(this);
 		}
 	}
 }

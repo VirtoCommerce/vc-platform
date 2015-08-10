@@ -40,12 +40,12 @@ namespace VirtoCommerce.Content.Data.Repositories
 
 		}
 
-		public async Task<ContentItem> GetContentItem(string path)
+		public ContentItem GetContentItem(string path)
 		{
 			var fullPath = GetFullPath(path);
 
 			var retVal = new ContentItem();
-			var result = await this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, fullPath);
+			var result = Task.Run(() => this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, fullPath)).Result;
 
 			var item = result.SingleOrDefault();
 			if (item != null)
@@ -57,11 +57,11 @@ namespace VirtoCommerce.Content.Data.Repositories
 			return retVal;
 		}
 
-		public async Task<IEnumerable<Theme>> GetThemes(string storePath)
+		public IEnumerable<Theme> GetThemes(string storePath)
 		{
 			var fullPath = GetFullPath(storePath);
 
-			var result = await this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, fullPath);
+			var result = Task.Run(() => this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, fullPath)).Result;
 
 			var themes = result.Where(s => s.Type == ContentType.Dir);
 
@@ -69,10 +69,10 @@ namespace VirtoCommerce.Content.Data.Repositories
 
 			foreach (var theme in themes)
 			{
-				var commits = await this._client.
+				var commits = Task.Run(() => this._client.
 					Repository.
 					Commits.
-					GetAll(this._ownerName, this._repositoryName, new CommitRequest { Path = theme.Path });
+					GetAll(this._ownerName, this._repositoryName, new CommitRequest { Path = theme.Path })).Result;
 
 				var commit = commits.First();
 				var date = commit.Commit.Committer.Date;
@@ -88,11 +88,11 @@ namespace VirtoCommerce.Content.Data.Repositories
 			return list;
 		}
 
-		public async Task<IEnumerable<ContentItem>> GetContentItems(string path, GetThemeAssetsCriteria criteria)
+		public IEnumerable<ContentItem> GetContentItems(string path, GetThemeAssetsCriteria criteria)
 		{
 			var fullPath = GetFullPath(path);
 
-			var result = await this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, fullPath);
+			var result = Task.Run(() => this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, fullPath)).Result;
 
 			var items = result.Where(s => s.Type == ContentType.Dir || s.Type == ContentType.File);
 
@@ -109,7 +109,7 @@ namespace VirtoCommerce.Content.Data.Repositories
 			while (directoriesQueue.Count > 0)
 			{
 				var directory = directoriesQueue.Dequeue();
-				result = await this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, directory);
+				result = Task.Run(() => this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, directory)).Result;
 
 				var results = result.Where(s => s.Type == ContentType.Dir || s.Type == ContentType.File);
 
@@ -133,7 +133,7 @@ namespace VirtoCommerce.Content.Data.Repositories
 			{
 				Parallel.ForEach(files, async file =>
 				{
-					var fullFile = await GetContentItem(file.Path);
+					var fullFile = GetContentItem(file.Path);
 					file.ByteContent = fullFile.ByteContent;
 				});
 			}
@@ -141,59 +141,54 @@ namespace VirtoCommerce.Content.Data.Repositories
 			return files;
 		}
 
-		public async Task<bool> SaveContentItem(string path, ContentItem item)
+		public void SaveContentItem(string path, ContentItem item)
 		{
 			var fullPath = GetFullPath(path);
 
-			var existingItem = this.GetItem(fullPath).Result;
+			var existingItem = this.GetItem(fullPath);
 
 			var sha = String.Empty;
 
 			if (existingItem == null) // create new
 			{
-				var response = await
+				var response = Task.Run(() =>
 					this._client.Repository.Content.CreateFile(
 						this._ownerName,
 						this._repositoryName,
 						fullPath,
-						new CreateFileRequest("Updating file from admin", Encoding.UTF8.GetString(item.ByteContent)));
+						new CreateFileRequest("Updating file from admin", Encoding.UTF8.GetString(item.ByteContent)))).Result;
 			}
 			else // update existing
 			{
-				var response = await
-					this._client.Repository.Content.UpdateFile(
+				var response = this._client.Repository.Content.UpdateFile(
 						this._ownerName,
 						this._repositoryName,
 						fullPath,
-						new UpdateFileRequest("Updating file from admin", Encoding.UTF8.GetString(item.ByteContent), existingItem.Sha));
+						new UpdateFileRequest("Updating file from admin", Encoding.UTF8.GetString(item.ByteContent), existingItem.Sha)).Result;
 			}
-
-			return true;
 		}
 
-		public async Task<bool> DeleteContentItem(string path)
+		public void DeleteContentItem(string path)
 		{
 			var fullPath = GetFullPath(path);
 
-			var existingItem = this.GetItem(fullPath).Result;
+			var existingItem = this.GetItem(fullPath);
 			if (existingItem != null)
 			{
-				await this._client.Repository.Content.DeleteFile(
+				this._client.Repository.Content.DeleteFile(
 					this._ownerName,
 					this._repositoryName,
 					fullPath,
-					new DeleteFileRequest("Updating file from admin", existingItem.Sha));
+					new DeleteFileRequest("Updating file from admin", existingItem.Sha)).Wait();
 			}
-
-			return true;
 		}
 
-		private async Task<RepositoryContent> GetItem(string path)
+		private RepositoryContent GetItem(string path)
 		{
 			try
 			{
 				var existingItems =
-					await this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, path);
+					Task.Run(() => this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, path)).Result;
 				if (existingItems.Count == 0)
 				{
 					return null;
@@ -217,7 +212,7 @@ namespace VirtoCommerce.Content.Data.Repositories
 			return path.Replace(_mainPath, string.Empty).TrimStart('/');
 		}
 
-		public Task<bool> DeleteTheme(string path)
+		public void DeleteTheme(string path)
 		{
 			throw new NotImplementedException();
 		}
@@ -268,7 +263,7 @@ namespace VirtoCommerce.Content.Data.Repositories
 		{
 			var fullPath = GetFullPath(path);
 
-			var existingItem = this.GetItem(fullPath).Result;
+			var existingItem = this.GetItem(fullPath);
 
 			var sha = String.Empty;
 
@@ -296,7 +291,7 @@ namespace VirtoCommerce.Content.Data.Repositories
 		{
 			var fullPath = GetFullPath(path);
 
-			var existingItem = this.GetItem(fullPath).Result;
+			var existingItem = this.GetItem(fullPath);
 			if (existingItem != null)
 			{
 				this._client.Repository.Content.DeleteFile(
@@ -315,7 +310,7 @@ namespace VirtoCommerce.Content.Data.Repositories
 
 		public void Dispose()
 		{
-			
+			GC.SuppressFinalize(this);
 		}
 	}
 }

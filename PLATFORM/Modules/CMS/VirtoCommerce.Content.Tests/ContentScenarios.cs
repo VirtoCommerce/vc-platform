@@ -63,7 +63,7 @@ namespace VirtoCommerce.Content.Tests
             var fullPath = string.Format("{0}\\Themes\\", Environment.CurrentDirectory.Replace("\\bin\\Debug", string.Empty));
 
             var fileSystemFileRepository = new FileSystemContentRepositoryImpl(fullPath);
-            var item = fileSystemFileRepository.GetContentItem("Apple/Simple/layout/theme.liquid").Result;
+            var item = fileSystemFileRepository.GetContentItem("Apple/Simple/layout/theme.liquid");
 
             var repository = _fixture.Db;
 
