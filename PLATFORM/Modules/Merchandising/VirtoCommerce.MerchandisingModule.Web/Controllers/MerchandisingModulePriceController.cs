@@ -26,6 +26,12 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 			_cacheManager = cacheManager;
 		}
 
+        /// <summary>
+        /// Get collection of pricelists for given catalog
+        /// </summary>
+        /// <param name="catalog">Catalog id (required)</param>
+        /// <param name="currency">Currency code (optional)</param>
+        /// <param name="tags">Array of tags (optional)</param>
 		[HttpGet]
 		[ClientCache(Duration = 60)]
 		[ResponseType(typeof(string[]))]
@@ -45,6 +51,11 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 			return this.Ok(retVal);
 		}
 
+        /// <summary>
+        /// Get prices collection for products and pricelists
+        /// </summary>
+        /// <param name="priceLists">Array of product ids (required)</param>
+        /// <param name="products">Array of pricelists ids (required)</param>
 		[HttpGet]
 		[ResponseType(typeof(Price[]))]
 		[ArrayInput(ParameterName = "priceLists")]

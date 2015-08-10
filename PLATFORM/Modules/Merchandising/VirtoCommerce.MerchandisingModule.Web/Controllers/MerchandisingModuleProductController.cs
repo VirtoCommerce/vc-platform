@@ -58,10 +58,15 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 			_cacheManager = cacheManager;
 		}
 
-		#region Public Methods and Operators
+        #region Public Methods and Operators
 
-		// GET: api/mp/products?ids=212&ids=2123&ids=434
-		[HttpGet]
+        /// <summary>
+        /// Get store products collection by their ids
+        /// </summary>
+        /// <param name="store">Store id (required)</param>
+        /// <param name="ids">Product ids (required)</param>
+        /// <param name="responseGroup">Response detalization scale (optional, default value is ItemInfo)</param>
+        [HttpGet]
 		[ArrayInput(ParameterName = "ids")]
 		[ResponseType(typeof(CatalogItem[]))]
 		[ClientCache(Duration = 30)]
@@ -78,6 +83,13 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 			return Ok(retVal);
 		}
 
+        /// <summary>
+        /// Get store product by ???
+        /// </summary>
+        /// <param name="store">Store id (required)</param>
+        /// <param name="product">Product ??? (required)</param>
+        /// <param name="responseGroup">Response detalization scale (optional, default value is ItemLarge)</param>
+        /// <param name="language">Culture name (optional, devault value is "en-us")</param>
 		[HttpGet]
 		[ResponseType(typeof(CatalogItem))]
 		[ClientCache(Duration = 30)]
@@ -99,8 +111,14 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 			return NotFound();
 		}
 
-		/// GET: api/mp/products?store=apple&code='22'
-		[HttpGet]
+        /// <summary>
+        /// Get store product by code
+        /// </summary>
+        /// <param name="store">Store id (required)</param>
+        /// <param name="code">Product code (required)</param>
+        /// <param name="responseGroup">Response detalization scale (optional, default value is ItemLarge)</param>
+        /// <param name="language">Culture name (optional, devault value is "en-us")</param>
+        [HttpGet]
 		[ResponseType(typeof(CatalogItem))]
 		[ClientCache(Duration = 30)]
 		[Route("")]
@@ -133,6 +151,13 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 			return NotFound();
 		}
 
+        /// <summary>
+        /// Get store product by SEO keyword
+        /// </summary>
+        /// <param name="store">Store id (required)</param>
+        /// <param name="keyword">Product SEO keyword (required)</param>
+        /// <param name="responseGroup">Response detalization scale (optional, default value is ItemLarge)</param>
+        /// <param name="language">Culture name (optional, devault value is "en-us")</param>
 		[HttpGet]
 		[ResponseType(typeof(CatalogItem))]
 		[ClientCache(Duration = 30)]
@@ -166,17 +191,16 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 			return NotFound();
 		}
 
-		/// <summary>
-		///     Searches the specified catalog.
-		/// </summary>
-		/// <param name="store">The store.</param>
-		/// <param name="parameters"></param>
-		/// <param name="responseGroup">The response group.</param>
-		/// <param name="outline">The outline.</param>
-		/// <param name="language">The language.</param>
-		/// <param name="currency"></param>
-		/// <param name="priceLists"></param>
-		/// <returns></returns>
+        /// <summary>
+        /// Search store products
+        /// </summary>
+        /// <param name="store">Store id (required)</param>
+        /// <param name="priceLists">Array of pricelists ids (required)</param>
+        /// <param name="parameters">Search parameters (required)</param>
+        /// <param name="responseGroup">Response detalization scale (optional, default value is ItemMedium)</param>
+        /// <param name="outline">Product's category outline (optional)</param>
+        /// <param name="language">Culture name (optional, devault value is "en-us")</param>
+        /// <param name="currency">Currency (optional, default value is "USD")</param>
 		[HttpGet]
 		[ArrayInput(ParameterName = "priceLists")]
 		[ClientCache(Duration = 30)]

@@ -28,6 +28,9 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 			_cacheManager = cacheManager;
 		}
 
+        /// <summary>
+        /// Get stores
+        /// </summary>
 		[HttpGet]
 		[ResponseType(typeof(Store[]))]
 		[ClientCache(Duration = 60)]
