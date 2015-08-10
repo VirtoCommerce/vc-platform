@@ -34,7 +34,7 @@
     };
 
     authContext.fillAuthData = function () {
-        $http.get(serviceBase + 'usersession').then(
+        $http.get(serviceBase + 'currentuser').then(
 			function (results) {
 			    changeAuth(results.data);
 			},
