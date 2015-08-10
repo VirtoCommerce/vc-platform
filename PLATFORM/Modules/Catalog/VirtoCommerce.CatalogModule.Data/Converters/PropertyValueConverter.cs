@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using dataModel = VirtoCommerce.CatalogModule.Data.Model;
 using coreModel = VirtoCommerce.Domain.Catalog.Model;
@@ -25,13 +26,13 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
             if (dbPropValue == null)
                 throw new ArgumentNullException("dbPropValue");
 
-			var retVal = new coreModel.PropertyValue();
-			retVal.InjectFrom(dbPropValue);
-			retVal.LanguageCode = dbPropValue.Locale;
-			retVal.PropertyName = dbPropValue.Name;
-			retVal.Value = dbPropValue.ToObjectValue();
-			retVal.ValueId = dbPropValue.KeyValue;
-			retVal.ValueType = (coreModel.PropertyValueType)dbPropValue.ValueType;
+            var retVal = new coreModel.PropertyValue();
+            retVal.InjectFrom(dbPropValue);
+            retVal.LanguageCode = dbPropValue.Locale;
+            retVal.PropertyName = dbPropValue.Name;
+            retVal.Value = dbPropValue.ToObjectValue();
+            retVal.ValueId = dbPropValue.KeyValue;
+            retVal.ValueType = (coreModel.PropertyValueType)dbPropValue.ValueType;
 
             if (properties != null)
             {
@@ -57,12 +58,12 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
                 throw new ArgumentNullException("propValue");
 
             var retVal = new T();
-			var id = retVal.Id;
-			retVal.InjectFrom(propValue);
-			if(propValue.Id == null)
-			{
-				retVal.Id = id;
-			}
+            var id = retVal.Id;
+            retVal.InjectFrom(propValue);
+            if (propValue.Id == null)
+            {
+                retVal.Id = id;
+            }
 
             retVal.Name = propValue.PropertyName;
             retVal.KeyValue = propValue.ValueId;
@@ -86,38 +87,38 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
             }
 
 
-			var patchInjectionPolicy = new PatchInjection<dataModel.PropertyValueBase>(x => x.BooleanValue, x => x.DateTimeValue,
-																				  x => x.DecimalValue, x => x.IntegerValue,
-																				  x => x.KeyValue, x => x.LongTextValue, x => x.ShortTextValue);
-			target.InjectFrom(patchInjectionPolicy, source);
+            var patchInjectionPolicy = new PatchInjection<dataModel.PropertyValueBase>(x => x.BooleanValue, x => x.DateTimeValue,
+                                                                                  x => x.DecimalValue, x => x.IntegerValue,
+                                                                                  x => x.KeyValue, x => x.LongTextValue, x => x.ShortTextValue);
+            target.InjectFrom(patchInjectionPolicy, source);
         }
 
-		private static void SetPropertyValue(dataModel.PropertyValueBase retVal, coreModel.PropertyValueType type, string value)
-		{
-			switch (type)
-			{
-				case coreModel.PropertyValueType.LongText:
-					retVal.LongTextValue = value;
-					break;
-				case coreModel.PropertyValueType.ShortText:
-					retVal.ShortTextValue = value;
-					break;
-				case coreModel.PropertyValueType.Number:
-					decimal parsedDecimal;
-					Decimal.TryParse(value, out parsedDecimal);
-					retVal.DecimalValue = parsedDecimal;
-					break;
-				case coreModel.PropertyValueType.DateTime:
-					retVal.DateTimeValue = DateTime.Parse(value);
-					break;
-				case coreModel.PropertyValueType.Boolean:
-					retVal.BooleanValue = Boolean.Parse(value);
-					break;
-			}
-		}
+        private static void SetPropertyValue(dataModel.PropertyValueBase retVal, coreModel.PropertyValueType type, string value)
+        {
+            switch (type)
+            {
+                case coreModel.PropertyValueType.LongText:
+                    retVal.LongTextValue = value;
+                    break;
+                case coreModel.PropertyValueType.ShortText:
+                    retVal.ShortTextValue = value;
+                    break;
+                case coreModel.PropertyValueType.Number:
+                    decimal parsedDecimal;
+                    Decimal.TryParse(value.Replace(',', '.'), NumberStyles.Any, CultureInfo.InvariantCulture, out parsedDecimal);
+                    retVal.DecimalValue = parsedDecimal;
+                    break;
+                case coreModel.PropertyValueType.DateTime:
+                    retVal.DateTimeValue = DateTime.Parse(value);
+                    break;
+                case coreModel.PropertyValueType.Boolean:
+                    retVal.BooleanValue = Boolean.Parse(value);
+                    break;
+            }
+        }
     }
 
 
 
-  
+
 }
