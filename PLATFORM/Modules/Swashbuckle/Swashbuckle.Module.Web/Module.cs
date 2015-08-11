@@ -88,6 +88,18 @@ namespace SwashbuckleModule.Web
 				var defaultApiKey = _settingManager.GetValue("Swashbuckle.DefaultApiKey", string.Empty);
 
 				swaggerDoc.info.description = string.Format("For this sample, you can use the `{0}` key to test the authorization filters.", defaultApiKey);
+				swaggerDoc.info.contact = new Contact
+				{
+					email = "support@virtocommerce.com",
+					name = "VirtoCommerce",
+					url = "http://virtocommerce.com"
+				};
+				swaggerDoc.info.termsOfService = "";
+				swaggerDoc.info.license = new License
+				{
+					name = "Virto Commerce Open Software License 3.0",
+					url = "http://virtocommerce.com/opensourcelicense"
+				};
 				var tags = _packageService.GetModules().Select(x => new Tag
 					{
 						name = x.Title,
