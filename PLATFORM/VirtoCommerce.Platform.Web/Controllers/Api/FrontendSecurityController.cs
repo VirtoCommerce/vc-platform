@@ -2,12 +2,14 @@
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
+using System.Web.Http.Description;
 using Hangfire;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Security.Identity;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
+    [ApiExplorerSettings(IgnoreApi = true)]
     [RoutePrefix("api/security/frontend")]
     public class FrontEndSecurityController : ApiController
     {
