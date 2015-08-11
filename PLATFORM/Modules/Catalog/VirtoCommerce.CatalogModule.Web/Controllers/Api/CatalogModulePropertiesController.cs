@@ -63,7 +63,6 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         /// Gets property metainformation by id.
         /// </summary>
         /// <param name="propertyId">The property id.</param>
-        /// <response code="404">Property not found.</response>
 		[HttpGet]
 		[Route("{propertyId}")]
 		[ResponseType(typeof(webModel.Property))]
@@ -143,7 +142,6 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         /// </summary>
         /// <remarks>If property.IsNew == True, a new property is created. It's updated otherwise</remarks>
         /// <param name="property">The property.</param>
-        /// <returns></returns>
         [HttpPost]
 		[Route("")]
         [ResponseType(typeof(void))]
