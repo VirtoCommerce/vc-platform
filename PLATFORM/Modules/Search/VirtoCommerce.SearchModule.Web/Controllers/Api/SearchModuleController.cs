@@ -7,6 +7,7 @@ using VirtoCommerce.SearchModule.Web.BackgroundJobs;
 
 namespace VirtoCommerce.SearchModule.Web.Controllers.Api
 {
+	[ApiExplorerSettings(IgnoreApi=true)]
     [RoutePrefix("api/search")]
     [CheckPermission(Permission = "VirtoCommerce.Search:Debug")]
     public class SearchModuleController : ApiController

@@ -19,6 +19,7 @@ using System.Net;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
+	[ApiExplorerSettings(IgnoreApi=true)]
 	[RoutePrefix("api/platform")]
 	public class PlatformExportImportController : ApiController
 	{

@@ -26,7 +26,9 @@ namespace VirtoCommerce.StoreModule.Web.Controllers.Api
 			_paymentService = paymentService;
 		}
 
-		// GET: api/stores
+		/// <summary>
+		/// Get all stores
+		/// </summary>
 		[HttpGet]
 		[ResponseType(typeof(webModel.Store[]))]
 		[Route("")]
@@ -37,7 +39,12 @@ namespace VirtoCommerce.StoreModule.Web.Controllers.Api
 			return Ok(retVal);
 		}
 
-		// GET: api/stores/{id}
+		/// <summary>
+		/// Get store by id
+		/// </summary>
+		/// <param name="id">Store id</param>
+		/// <responce code="404">Store not found</responce>
+		/// <responce code="200">Store returned successfully OK</responce>
 		[HttpGet]
 		[ResponseType(typeof(webModel.Store))]
 		[Route("{id}")]
@@ -52,7 +59,10 @@ namespace VirtoCommerce.StoreModule.Web.Controllers.Api
 		}
 
 		
-		// POST: api/stores
+		/// <summary>
+		/// Create store
+		/// </summary>
+		/// <param name="store">Store</param>
 		[HttpPost]
 		[ResponseType(typeof(webModel.Store))]
 		[Route("")]
@@ -64,7 +74,11 @@ namespace VirtoCommerce.StoreModule.Web.Controllers.Api
 			return Ok(retVal.ToWebModel());
 		}
 
-		// PUT: api/stores
+		/// <summary>
+		/// Update store
+		/// </summary>
+		/// <param name="store">Store</param>
+		/// <returns></returns>
 		[HttpPut]
 		[ResponseType(typeof(void))]
 		[Route("")]
@@ -76,7 +90,10 @@ namespace VirtoCommerce.StoreModule.Web.Controllers.Api
 			return StatusCode(HttpStatusCode.NoContent);
 		}
 
-		// DELETE: api/stores?ids=21
+		/// <summary>
+		/// Delete stores
+		/// </summary>
+		/// <param name="ids">Ids of store that needed to delete</param>
 		[HttpDelete]
 		[ResponseType(typeof(void))]
 		[Route("")]
