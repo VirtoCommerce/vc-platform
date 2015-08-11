@@ -29,6 +29,9 @@ namespace VirtoCommerce.Platform.Web.Model.Packaging
         public ICollection<string> ValidationErrors { get; set; }
         public bool IsRemovable { get; set; }
 
+        /// <summary>
+        /// Module package file name
+        /// </summary>
         public string FileName { get; set; }
     }
 }

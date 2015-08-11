@@ -9,12 +9,12 @@ using VirtoCommerce.Platform.Data.Security.Identity;
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
     [RoutePrefix("api/security/frontend")]
-    public class FrontendSecurityController : ApiController
+    public class FrontEndSecurityController : ApiController
     {
         private readonly ISecurityService _securityService;
         private readonly Func<ApplicationSignInManager> _signInManagerFactory;
 
-        public FrontendSecurityController(ISecurityService securityService, Func<ApplicationSignInManager> signInManagerFactory)
+        public FrontEndSecurityController(ISecurityService securityService, Func<ApplicationSignInManager> signInManagerFactory)
         {
             _securityService = securityService;
             _signInManagerFactory = signInManagerFactory;

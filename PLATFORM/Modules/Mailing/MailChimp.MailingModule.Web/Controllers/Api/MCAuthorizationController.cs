@@ -11,6 +11,7 @@ using VirtoCommerce.Platform.Core.Settings;
 
 namespace MailChimp.MailingModule.Web.Controllers.Api
 {
+    [ApiExplorerSettings(IgnoreApi = true)]
     [RoutePrefix("mc/api/auth")]
     public class MCAuthorizationController : ApiController
     {

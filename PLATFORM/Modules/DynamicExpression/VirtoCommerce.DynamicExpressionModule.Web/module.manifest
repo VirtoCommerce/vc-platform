@@ -9,8 +9,8 @@
 		<dependency id="VirtoCommerce.Marketing" version="2.3.0" />
     </dependencies>
 
-    <title>Virto Dynamic Expression Library</title>
-    <description>Expressions for Marketing and Pricing dynamic condition builders</description>
+    <title>Virto Commerce dynamic expression library module</title>
+    <description>Expressions for marketing and pricing dynamic condition builders</description>
     <authors>
         <author>Virto Commerce</author>
     </authors>

@@ -62,9 +62,14 @@ namespace VirtoCommerce.OrderModule.Web.Model
 
 		public string TaxType { get; set; }
 		#region ISupportCancelation Members
-
+		/// <summary>
+		/// Flag represent that line item was canceled
+		/// </summary>
 		public bool IsCancelled { get; set; }
 		public DateTime? CancelledDate { get; set; }
+		/// <summary>
+		/// Text representation of cancel reason
+		/// </summary>
 		public string CancelReason { get; set; }
 
 		#endregion
@@ -72,7 +77,13 @@ namespace VirtoCommerce.OrderModule.Web.Model
 		public Discount Discount { get; set; }
 		public ICollection<TaxDetail> TaxDetails { get; set; }
 
+		/// <summary>
+		/// Used for dynamic properties management, contains object type string
+		/// </summary>
 		public string ObjectType { get; set; }
+		/// <summary>
+		/// Dynamic properties collections
+		/// </summary>
 		public ICollection<DynamicObjectProperty> DynamicProperties { get; set; }
 	}
 }

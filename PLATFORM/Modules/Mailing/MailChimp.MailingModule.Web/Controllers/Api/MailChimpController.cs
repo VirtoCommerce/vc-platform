@@ -6,6 +6,7 @@ using VirtoCommerce.Platform.Core.Security;
 
 namespace MailChimp.MailingModule.Web.Controllers.Api
 {
+    [ApiExplorerSettings(IgnoreApi = true)]
     [RoutePrefix("api/mc")]
     [CheckPermission(Permission = PredefinedPermissions.Manage)]
     public class MailChimpController : ApiController

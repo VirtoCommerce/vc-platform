@@ -30,8 +30,7 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 			retVal.InjectFrom(dbEntity);
 
 			retVal.ContentType = dbEntity.ContentTypeId;
-			retVal.Properties = dbEntity.PropertyValues.Select(x => x.ToCoreModel()).ToList();
-
+	
 			if (dbEntity.Folder != null)
 			{
 				retVal.Folder = dbEntity.Folder.ToCoreModel();
@@ -50,15 +49,7 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 			retVal.InjectFrom(contentItem);
 			retVal.ContentTypeId = contentItem.ContentType;
 		
-			retVal.PropertyValues = new NullCollection<dataModel.DynamicContentItemProperty>();
-			if(contentItem.Properties != null)
-			{
-				retVal.PropertyValues = new ObservableCollection<dataModel.DynamicContentItemProperty>(contentItem.Properties.Select(x => x.ToDataModel()));
-				foreach (var property in retVal.PropertyValues)
-				{
-					property.DynamicContentItemId = retVal.Id;
-				}
-			}
+		
 			return retVal;
 		}
 
@@ -73,11 +64,7 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 				throw new ArgumentNullException("target");
 
 			var patchInjection = new PatchInjection<dataModel.DynamicContentItem>(x => x.Name, x => x.Description, x=>x.FolderId, x=>x.ImageUrl, x=>x.ContentTypeId);
-			if (!source.PropertyValues.IsNullCollection())
-			{
-				var propertyComparer = AnonymousComparer.Create((dataModel.DynamicContentItemProperty x) => x.Name);
-				source.PropertyValues.Patch(target.PropertyValues, propertyComparer, (sourceProperty, targetProperty) => sourceProperty.Patch(targetProperty));
-			}
+		
 			target.InjectFrom(patchInjection, source);
 		}
 

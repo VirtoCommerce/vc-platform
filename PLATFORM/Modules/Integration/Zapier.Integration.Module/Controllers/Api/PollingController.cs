@@ -6,6 +6,7 @@ using Zapier.IntegrationModule.Web.Providers.Interfaces;
 
 namespace Zapier.IntegrationModule.Web.Controllers.Api
 {
+	[ApiExplorerSettings(IgnoreApi = true)]
     [RoutePrefix("api/zapier")]
     public class PollingController : ApiController
     {

@@ -24,7 +24,15 @@
 	<moduleType>SwashbuckleModule.Web.Module, SwashbuckleModule.Web</moduleType>
 
 	<settings>
-
+        <group name="SwashBuckle|General">
+            <setting>
+                <name>Swashbuckle.DefaultApiKey</name>
+                <valueType>string</valueType>
+                <defaultValue></defaultValue>
+                <title>Default api key</title>
+                <description>Default api key for Swashbuckle requests from UI</description>
+            </setting>
+        </group>
 	</settings>
 	<permissions>
 

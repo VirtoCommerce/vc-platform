@@ -9,6 +9,9 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.OrderModule.Web.Model
 {
+	/// <summary>
+	/// Represent information about quantity and line item belongs to shipment
+	/// </summary>
 	public class ShipmentItem : AuditableEntity
 	{
 		public string LineItemId { get; set; }
