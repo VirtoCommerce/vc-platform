@@ -9,14 +9,26 @@ namespace VirtoCommerce.Platform.Core.DynamicProperties
     {
         public string Name { get; set; }
         public string ObjectType { get; set; }
+        /// <summary>
+        /// Defines whether a property supports multiple values.
+        /// </summary>
         public bool IsArray { get; set; }
+        /// <summary>
+        /// Dictionary has a predefined set of values. User can select one or more of them and cannot enter arbitrary values.
+        /// </summary>
         public bool IsDictionary { get; set; }
+        /// <summary>
+        /// For multilingual properties user can enter different values for each of registered languages.
+        /// </summary>
         public bool IsMultilingual { get; set; }
         public bool IsRequired { get; set; }
 
         [JsonConverter(typeof(StringEnumConverter))]
         public DynamicPropertyValueType ValueType { get; set; }
 
+        /// <summary>
+        /// Property names for different languages.
+        /// </summary>
         public DynamicPropertyName[] DisplayNames { get; set; }
 
         public DynamicProperty Clone()
