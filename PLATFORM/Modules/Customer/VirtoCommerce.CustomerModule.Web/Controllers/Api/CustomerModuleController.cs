@@ -72,7 +72,7 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
 
 
         /// <summary>
-        /// Get contact.
+        /// Get contact
         /// </summary>
         /// <param name="id">Contact id</param>
         /// <response code="404">Contact not found.</response>
@@ -87,7 +87,7 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
 
 
         /// <summary>
-        /// Create contact.
+        /// Create contact
         /// </summary>
         [HttpPost]
 		[ResponseType(typeof(webModel.Contact))]
@@ -100,7 +100,7 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
 		}
 
         /// <summary>
-        /// Update contact.
+        /// Update contact
         /// </summary>
         /// <response code="204">Operation completed.</response>
         [HttpPut]
@@ -114,7 +114,7 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
 		}
 
         /// <summary>
-        /// Delete contacts.
+        /// Delete contacts
         /// </summary>
         /// <remarks>Delete contacts by given array of ids.</remarks>
         /// <param name="ids">An array of contacts ids</param>
@@ -131,7 +131,7 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
 
 
         /// <summary>
-        /// Get organization.
+        /// Get organization
         /// </summary>
         /// <param name="id">Organization id</param>
         /// <response code="404">Organization not found.</response>
@@ -146,7 +146,7 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
 
 
         /// <summary>
-        /// Create organization.
+        /// Create organization
         /// </summary>
         [HttpPost]
 		[ResponseType(typeof(webModel.Organization))]
@@ -159,7 +159,7 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
 		}
 
         /// <summary>
-        /// Update organization.
+        /// Update organization
         /// </summary>
         /// <response code="204">Operation completed.</response>
         [HttpPut]
@@ -173,7 +173,7 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
 		}
 
         /// <summary>
-        /// Delete organizations.
+        /// Delete organizations
         /// </summary>
         /// <remarks>Delete organizations by given array of ids.</remarks>
         /// <param name="ids">An array of organizations ids</param>
