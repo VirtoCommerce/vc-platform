@@ -2,6 +2,9 @@
 
 namespace VirtoCommerce.CatalogModule.Web.Model
 {
+    /// <summary>
+    /// Product ListEntry record.
+    /// </summary>
 	public class ListEntryProduct : ListEntryBase
 	{
 		public static string TypeName = "product";

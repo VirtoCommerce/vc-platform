@@ -36,7 +36,12 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 			_blobUrlResolver = blobUrlResolver;
         }
 
-        // GET: api/catalog/categories/5
+
+        /// <summary>
+        /// Gets category by id.
+        /// </summary>
+        /// <param name="id">Category id.</param>
+        /// <response code="404">Category not found.</response>
         [HttpGet]
         [ResponseType(typeof(webModel.Category))]
         [Route("{id}")]
@@ -53,7 +58,11 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             return Ok(retVal);
         }
 
-        // GET: api/catalog/apple/categories/newcategory&parentCategoryId='ddd'"
+        /// <summary>
+        /// Gets the template for a new category.
+        /// </summary>
+        /// <param name="catalogId">The catalog id.</param>
+        /// <param name="parentCategoryId">The parent category id. (Optional)</param>
         [HttpGet]
         [Route("~/api/catalog/{catalogId}/categories/newcategory")]
         [ResponseType(typeof(webModel.Category))]
@@ -73,7 +82,13 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         }
 
 
-        // POST:  api/catalog/categories
+        /// <summary>
+        /// Creates or updates the specified category.
+        /// </summary>
+        /// <remarks>If category.id is null, a new category is created. It's updated otherwise</remarks>
+        /// <param name="category">The category.</param>
+        /// <response code="200">Returns the newly created Category.</response>
+        /// <response code="204">Category was updated successfully.</response>
         [HttpPost]
         [ResponseType(typeof(void))]
         [Route("")]
@@ -104,7 +119,11 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             }
         }
 
-        // POST: api/catalog/categories/5
+        
+        /// <summary>
+        /// Deletes the specified categories by id.
+        /// </summary>
+        /// <param name="ids">The categories ids.</param>
         [HttpDelete]
         [ResponseType(typeof(void))]
         [Route("")]

@@ -34,7 +34,13 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             _itemService = itemService;
             _blobUrlResolver = blobUrlResolver;
         }
-        // GET: api/catalog/listentries&q='some'&catalog=apple&category=cat1&respGroup=8&skip=0&take=20
+
+
+        /// <summary>
+        /// Searches for the items by complex criteria.
+        /// </summary>
+        /// <param name="criteria">The search criteria.</param>
+        /// <returns></returns>
         [HttpGet]
         [Route("")]
         [ResponseType(typeof(webModel.ListEntrySearchResult))]
@@ -61,7 +67,11 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             return Ok(retVal);
         }
 
-        // POST: api/catalog/listentrylinks
+
+        /// <summary>
+        /// Creates links for categories or items to parent categories and catalogs.
+        /// </summary>
+        /// <param name="links">The links.</param>
         [HttpPost]
         [Route("~/api/catalog/listentrylinks")]
         [ResponseType(typeof(void))]
@@ -71,7 +81,8 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // GET: api/catalog/getslug
+
+        [ApiExplorerSettings(IgnoreApi=true)]
         [HttpGet]
         [Route("~/api/catalog/getslug")]
         [ResponseType(typeof(string))]
@@ -85,7 +96,10 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         }
 
 
-        // DELETE: api/catalog/listentrylinks
+        /// <summary>
+        /// Unlinks the linked categories or items from parent categories and catalogs.
+        /// </summary>
+        /// <param name="links">The links.</param>
         [HttpPost]
         [Route("~/api/catalog/listentrylinks/delete")]
         [ResponseType(typeof(void))]
