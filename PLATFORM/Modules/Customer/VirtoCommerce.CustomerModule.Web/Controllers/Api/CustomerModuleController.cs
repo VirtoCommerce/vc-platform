@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
 using System.Web.Http.ModelBinding;
 using VirtoCommerce.CustomerModule.Web.Binders;
-using VirtoCommerce.Domain.Cart.Services;
 using VirtoCommerce.Domain.Customer.Services;
-using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.CustomerModule.Web.Converters;
 using VirtoCommerce.Platform.Core.Security;
 using coreModel = VirtoCommerce.Domain.Customer.Model;
@@ -30,8 +26,11 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
 			_contactService = contactService;
 		}
 
-		// GET: api/organizations
-		[HttpGet]
+        /// <summary>
+        /// Get organizations
+        /// </summary>
+        /// <remarks>Get array of all organizations.</remarks>
+        [HttpGet]
 		[ResponseType(typeof(webModel.Organization[]))]
 		[Route("organizations")]
 		public IHttpActionResult ListOrganizations()
@@ -40,8 +39,12 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
 			return Ok(retVal);
 		}
 
-		// GET: api/members?q=ddd&organization=org1&start=0&count=20
-		[HttpGet]
+        /// <summary>
+        /// Get members
+        /// </summary>
+        /// <remarks>Get array of members satisfied search criteria.</remarks>
+        /// <param name="criteria">Search criteria</param>
+        [HttpGet]
 		[ResponseType(typeof(webModel.SearchResult))]
 		[Route("members")]
 		public IHttpActionResult Search([ModelBinder(typeof(SearchCriteriaBinder))] webModel.SearchCriteria criteria)
@@ -68,23 +71,25 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
 		}
 
 
-		// GET: api/contacts/{id}
-		[HttpGet]
+        /// <summary>
+        /// Get contact.
+        /// </summary>
+        /// <param name="id">Contact id</param>
+        /// <response code="404">Contact not found.</response>
+        [HttpGet]
 		[ResponseType(typeof(webModel.Contact))]
 		[Route("contacts/{id}")]
 		public IHttpActionResult GetContactById(string id)
 		{
 			var retVal = _contactService.GetById(id);
-			if(retVal == null)
-			{
-				return NotFound();
-			}
-			return Ok(retVal.ToWebModel());
+			return retVal != null ? Ok(retVal.ToWebModel()): (IHttpActionResult)NotFound();
 		}
 
 
-		// POST: api/contacts
-		[HttpPost]
+        /// <summary>
+        /// Create contact.
+        /// </summary>
+        [HttpPost]
 		[ResponseType(typeof(webModel.Contact))]
 		[Route("contacts")]
         [CheckPermission(Permission = PredefinedPermissions.Manage)]
@@ -94,8 +99,11 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
 			return Ok(retVal.ToWebModel());
 		}
 
-		// PUT: api/contacts
-		[HttpPut]
+        /// <summary>
+        /// Update contact.
+        /// </summary>
+        /// <response code="204">Operation successfully.</response>
+        [HttpPut]
 		[ResponseType(typeof(void))]
 		[Route("contacts")]
         [CheckPermission(Permission = PredefinedPermissions.Manage)]
@@ -105,8 +113,13 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
 			return StatusCode(HttpStatusCode.NoContent);
 		}
 
-		// DELETE: api/contacts?ids=21
-		[HttpDelete]
+        /// <summary>
+        /// Delete contacts.
+        /// </summary>
+        /// <remarks>Delete contacts by given array of ids.</remarks>
+        /// <param name="ids">An array of contacts ids</param>
+        /// <response code="204">Operation successfully.</response>
+        [HttpDelete]
 		[ResponseType(typeof(void))]
 		[Route("contacts")]
         [CheckPermission(Permission = PredefinedPermissions.Manage)]
@@ -117,23 +130,25 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
 		}
 
 
-		// GET: api/organizations/{id}
-		[HttpGet]
+        /// <summary>
+        /// Get organization.
+        /// </summary>
+        /// <param name="id">Organization id</param>
+        /// <response code="404">Organization not found.</response>
+        [HttpGet]
 		[ResponseType(typeof(webModel.Organization))]
 		[Route("organizations/{id}")]
 		public IHttpActionResult GetOrganizationById(string id)
 		{
 			var retVal =  _organizationService.GetById(id);
-			if (retVal == null)
-			{
-				return NotFound();
-			}
-			return Ok(retVal.ToWebModel());
+            return retVal != null ? Ok(retVal.ToWebModel()) : (IHttpActionResult)NotFound();
 		}
 
 
-		// POST: api/organizations
-		[HttpPost]
+        /// <summary>
+        /// Create organization.
+        /// </summary>
+        [HttpPost]
 		[ResponseType(typeof(webModel.Organization))]
 		[Route("organizations")]
         [CheckPermission(Permission = PredefinedPermissions.Manage)]
@@ -143,8 +158,11 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
 			return Ok(retVal.ToWebModel());
 		}
 
-		// PUT: api/organizations
-		[HttpPut]
+        /// <summary>
+        /// Update organization.
+        /// </summary>
+        /// <response code="204">Operation successfully.</response>
+        [HttpPut]
 		[ResponseType(typeof(void))]
 		[Route("organizations")]
         [CheckPermission(Permission = PredefinedPermissions.Manage)]
@@ -154,8 +172,13 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
 			return StatusCode(HttpStatusCode.NoContent);
 		}
 
-		// DELETE: api/organizations?ids=21
-		[HttpDelete]
+        /// <summary>
+        /// Delete organizations.
+        /// </summary>
+        /// <remarks>Delete organizations by given array of ids.</remarks>
+        /// <param name="ids">An array of organizations ids</param>
+        /// <response code="204">Operation successfully.</response>
+        [HttpDelete]
 		[ResponseType(typeof(void))]
 		[Route("organizations")]
         [CheckPermission(Permission = PredefinedPermissions.Manage)]

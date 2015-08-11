@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
 
@@ -9,20 +6,35 @@ namespace VirtoCommerce.CustomerModule.Web.Model
 {
 	public abstract class Member : AuditableEntity
 	{
-		public Member(string memberType)
+	    protected Member(string memberType)
 		{
 			MemberType = memberType;
 		}
 
-	
 		public abstract string DisplayName { get; }
-		public string MemberType { get; set; }
+
+        /// <summary>
+        /// String representation of member type (Organization or Contact). Used as Discriminator
+        /// </summary>
+        public string MemberType { get; set; }
+
 		public ICollection<Address> Addresses { get; set; }
 		public ICollection<string> Phones { get; set; }
 		public ICollection<string> Emails { get; set; }
+
+        /// <summary>
+        /// Additional information about the member
+        /// </summary>
 		public ICollection<Note> Notes { get; set; }
 
-		public string ObjectType { get; set; }
+        /// <summary>
+        /// Not documented
+        /// </summary>
+        public string ObjectType { get; set; }
+
+        /// <summary>
+        /// Some additional properties
+        /// </summary>
 		public ICollection<DynamicObjectProperty> DynamicProperties { get; set; }
 
 	}

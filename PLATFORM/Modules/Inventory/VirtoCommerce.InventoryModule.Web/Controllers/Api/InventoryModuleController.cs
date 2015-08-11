@@ -23,10 +23,10 @@ namespace VirtoCommerce.InventoryModule.Web.Controllers.Api
 		}
 
         /// <summary>
-        /// Return Inventory of Products by given product Ids
+        /// Get inventories of products
         /// </summary>
-        /// <remarks>Return Inventory of Products by given product Ids. The inventories include all fulfillment centers</remarks>
-        /// <param name="ids">Products Ids</param>
+        /// <remarks>Get inventory of products by given product ids. The inventories separate by fulfillment centers.</remarks>
+        /// <param name="ids">Products ids</param>
 		[HttpGet]
 		[ResponseType(typeof(webModel.InventoryInfo[]))]
 		[Route("~/api/inventory/products")]
@@ -53,10 +53,10 @@ namespace VirtoCommerce.InventoryModule.Web.Controllers.Api
 		}
 
         /// <summary>
-        /// Return Inventory of Product by given product Id
+        /// Get inventories of product
         /// </summary>
-        /// <remarks>Return Inventory of Product by given product Id. The inventory includes all fulfillment centers</remarks>
-        /// <param name="productId">Product Id</param>
+        /// <remarks>Get inventories of product by given product id. The inventories separate by fulfillment centers.</remarks>
+        /// <param name="productId">Product id</param>
         [HttpGet]
 		[ResponseType(typeof(webModel.InventoryInfo[]))]
 		[Route("~/api/inventory/products/{productId}")]
@@ -66,9 +66,9 @@ namespace VirtoCommerce.InventoryModule.Web.Controllers.Api
 		}
 
         /// <summary>
-        /// Upsert Inventory of Product
+        /// Upsert inventory
         /// </summary>
-        /// <remarks>Upsert (add or update) given Inventory of Product</remarks>
+        /// <remarks>Upsert (add or update) given inventory of product.</remarks>
         /// <param name="inventory">Inventory to upsert</param>
 		[HttpPut]
 		[ResponseType(typeof(webModel.InventoryInfo))]

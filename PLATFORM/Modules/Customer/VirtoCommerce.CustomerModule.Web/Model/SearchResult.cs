@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace VirtoCommerce.CustomerModule.Web.Model
 {
@@ -12,8 +8,15 @@ namespace VirtoCommerce.CustomerModule.Web.Model
 		{
 			Members = new List<Member>();
 		}
-		public int TotalCount { get; set; }
+		
+        /// <summary>
+        /// Total count of objects satisfied Search Criteria
+        /// </summary>
+        public int TotalCount { get; set; }
 
+        /// <summary>
+        /// Part of objects satisfied Search Criteria. See Skip and Count parameters of Search Criteria
+        /// </summary>
 		public List<Member> Members { get; set; }
 
 	}

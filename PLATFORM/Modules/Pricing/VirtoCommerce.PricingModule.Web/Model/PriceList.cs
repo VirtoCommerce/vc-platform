@@ -12,13 +12,13 @@ namespace VirtoCommerce.PricingModule.Web.Model
 		public string Description { get; set; }
 
         /// <summary>
-        /// Currency defined for all prices in the price list.
+        /// Currency defined for all prices in the price list
         /// </summary>
 		[JsonConverter(typeof(StringEnumConverter))]
 		public CurrencyCodes Currency { get; set; }
 
         /// <summary>
-        /// List of Products prices. It includes tiered prices also.
+        /// List of Products prices. It includes tiered prices also
         /// </summary>
 		public ICollection<ProductPrice> ProductPrices { get; set; }
 
