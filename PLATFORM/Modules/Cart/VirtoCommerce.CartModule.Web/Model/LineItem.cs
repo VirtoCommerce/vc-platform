@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using VirtoCommerce.Domain.Commerce.Model;
@@ -10,58 +6,184 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.CartModule.Web.Model
 {
-	public class LineItem : AuditableEntity, IHaveTaxDetalization
-	{
-		public string ProductId { get; set; }
-		public string CatalogId { get; set; }
-		public string CategoryId { get; set; }
-		public string ProductCode { get; set; }
+    public class LineItem : AuditableEntity, IHaveTaxDetalization
+    {
+        /// <summary>
+        /// Gets or sets the value of product id
+        /// </summary>
+        public string ProductId { get; set; }
 
-		public string Name { get; set; }
-		public int Quantity { get; set; }
+        /// <summary>
+        /// Gets or sets the value of catalog id
+        /// </summary>
+        public string CatalogId { get; set; }
 
-		[JsonConverter(typeof(StringEnumConverter))]
-		public CurrencyCodes Currency { get; set; }
-		public string WarehouseLocation { get; set; }
-		public string ShipmentMethodCode { get; set; }
-		public bool RequiredShipping { get; set; }
-		public string ThumbnailImageUrl { get; set; }
-		public string ImageUrl { get; set; }
+        /// <summary>
+        /// Gets or sets the value of category id
+        /// </summary>
+        public string CategoryId { get; set; }
 
-		public bool IsGift { get; set; }
+        /// <summary>
+        /// Gets or sets the value of product code
+        /// </summary>
+        public string ProductCode { get; set; }
 
-		public ICollection<Discount> Discounts { get; set; }
+        /// <summary>
+        /// Gets or sets the value of line item name
+        /// </summary>
+        public string Name { get; set; }
 
-		public string LanguageCode { get; set; }
+        /// <summary>
+        /// Gets or sets the value of line item quantity
+        /// </summary>
+        public int Quantity { get; set; }
 
-		public string Comment { get; set; }
+        /// <summary>
+        /// Gets or sets the value of line item currency
+        /// </summary>
+        /// <value>
+        /// Currency code in ISO 4217 format
+        /// </value>
+        [JsonConverter(typeof(StringEnumConverter))]
+        public CurrencyCodes Currency { get; set; }
 
-		public bool IsReccuring { get; set; }
+        /// <summary>
+        /// Gets or sets the value of line item warehouse location
+        /// </summary>
+        public string WarehouseLocation { get; set; }
 
-		public bool TaxIncluded { get; set; }
+        /// <summary>
+        /// Gets or sets the value of line item shipping method code
+        /// </summary>
+        public string ShipmentMethodCode { get; set; }
 
-		public decimal? VolumetricWeight { get; set; }
-		public string WeightUnit { get; set; }
-		public decimal? Weight { get; set; }
+        /// <summary>
+        /// Gets or sets the requirement for line item shipping
+        /// </summary>
+        public bool RequiredShipping { get; set; }
 
-		public string MeasureUnit { get; set; }
-		public decimal? Height { get; set; }
-		public decimal? Length { get; set; }
-		public decimal? Width { get; set; }
+        /// <summary>
+        /// Gets or sets the value of line item thumbnail image absolute URL
+        /// </summary>
+        public string ThumbnailImageUrl { get; set; }
 
+        /// <summary>
+        /// Gets or sets the value of line item image absolute URL
+        /// </summary>
+        public string ImageUrl { get; set; }
 
-		public decimal ListPrice { get; set; }
-		public decimal SalePrice { get; set; }
-		public decimal PlacedPrice { get; set; }
-		public decimal ExtendedPrice { get; set; }
-		public decimal DiscountTotal { get; set; }
-		public decimal TaxTotal { get; set; }
+        /// <summary>
+        /// Gets or sets the flag of line item is a gift
+        /// </summary>
+        public bool IsGift { get; set; }
 
-		public string TaxType { get; set; }
+        /// <summary>
+        /// Gets or sets the collection of line item discounts
+        /// </summary>
+        /// <value>
+        /// Collection od Discount objects
+        /// </value>
+        public ICollection<Discount> Discounts { get; set; }
 
-		#region IHaveTaxDetalization Members
-		public ICollection<TaxDetail> TaxDetails { get; set; }
-		#endregion
+        /// <summary>
+        /// Gets or sets the value of language code
+        /// </summary>
+        /// <value>
+        /// Culture name in ISO 3166-1 alpha-3 format
+        /// </value>
+        public string LanguageCode { get; set; }
 
-	}
+        /// <summary>
+        /// Gets or sets the value of line item comment
+        /// </summary>
+        public string Comment { get; set; }
+
+        /// <summary>
+        /// Gets or sets the flag of line item is recurring
+        /// </summary>
+        public bool IsReccuring { get; set; }
+
+        /// <summary>
+        /// Gets or sets flag of line item has tax
+        /// </summary>
+        public bool TaxIncluded { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of line item volumetric weight
+        /// </summary>
+        public decimal? VolumetricWeight { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of line item weight unit
+        /// </summary>
+        public string WeightUnit { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of line item weight
+        /// </summary>
+        public decimal? Weight { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of line item measurement unit
+        /// </summary>
+        public string MeasureUnit { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of line item height
+        /// </summary>
+        public decimal? Height { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of line item length
+        /// </summary>
+        public decimal? Length { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of line item width
+        /// </summary>
+        public decimal? Width { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of line item original price
+        /// </summary>
+        public decimal ListPrice { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of line item sale price (include static discount)
+        /// </summary>
+        public decimal SalePrice { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of line item actual price (include all types of discounts)
+        /// </summary>
+        public decimal PlacedPrice { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of line item subtotal price (actual price * line item quantity)
+        /// </summary>
+        public decimal ExtendedPrice { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of line item total discount amount
+        /// </summary>
+        public decimal DiscountTotal { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of line item total tax amount
+        /// </summary>
+        public decimal TaxTotal { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of line item tax type
+        /// </summary>
+        public string TaxType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the collection of line item tax detalization lines
+        /// </summary>
+        /// <value>
+        /// Collection of TaxDetail objects
+        /// </value>
+        public ICollection<TaxDetail> TaxDetails { get; set; }
+    }
 }
