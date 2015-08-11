@@ -2,32 +2,32 @@
 {
     public class Association
     {
-        #region Public Properties
         /// <summary>
-        /// Association description
+        /// Gets or sets the value of catalog item association description
         /// </summary>
         public string Description { get; set; }
 
         /// <summary>
-        /// Association item id (i.e.: product id)
+        /// Gets or sets the value of catalog item id for current association
         /// </summary>
         public string ItemId { get; set; }
 
         /// <summary>
-        /// Association name
+        /// Gets or sets the value of catalog item association name
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// Association priority for sorting
+        /// Gets or sets the numeric value of catalog item association priority
         /// </summary>
         public int Priority { get; set; }
 
         /// <summary>
-        /// Association type
+        /// Gets or sets the value of catalog item association type
         /// </summary>
+        /// <value>
+        /// "CrossSale", "UpSale", "DownSale", "RelatedProducts", "Optional" by default
+        /// </value>
         public string Type { get; set; }
-
-        #endregion
     }
 }

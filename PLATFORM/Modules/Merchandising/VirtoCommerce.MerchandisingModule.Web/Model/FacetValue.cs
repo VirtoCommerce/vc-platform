@@ -2,13 +2,24 @@
 {
     public class FacetValue
     {
-        #region Public Properties
-
+        /// <summary>
+        /// Gets or sets the facet value count
+        /// </summary>
         public int Count { get; set; }
-        public bool IsApplied { get; set; }
-        public string Label { get; set; }
-        public object Value { get; set; }
 
-        #endregion
+        /// <summary>
+        /// Gets or sets the flag for facet value is applied
+        /// </summary>
+        public bool IsApplied { get; set; }
+
+        /// <summary>
+        /// Gets or sets the facet value label
+        /// </summary>
+        public string Label { get; set; }
+
+        /// <summary>
+        /// Gets or sets the facet value
+        /// </summary>
+        public object Value { get; set; }
     }
 }

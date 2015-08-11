@@ -5,220 +5,245 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model
 {
     public class CatalogItem
     {
-        #region Public Properties
         /// <summary>
-        /// Manufacturer part number
+        /// Gets or sets the value of catalog item manufacturer part number
         /// </summary>
-		public string ManufacturerPartNumber { get; set; }
-
-		/// <summary>
-		/// Global Trade Item Number (GTIN). These identifiers include UPC (in North America), EAN (in Europe), JAN (in Japan), and ISBN (for books).
-		/// </summary>
-		public string Gtin { get; set; }
+        public string ManufacturerPartNumber { get; set; }
 
         /// <summary>
-        /// Collection of product associations
+        /// Gets or sets the value of catalog item Global Trade Item Number (GTIN).
+        /// These identifiers include UPC (in North America), EAN (in Europe), JAN (in Japan), and ISBN (for books).
         /// </summary>
+        public string Gtin { get; set; }
+
+        /// <summary>
+        /// Gets or sets the collection of product associations
+        /// </summary>
+        /// <value>
+        /// Array of Association objects
+        /// </value>
         public Association[] Associations { get; set; }
 
         /// <summary>
-        /// Catalog id
+        /// Gets or sets the value of catalog id
         /// </summary>
         [Required]
         public string CatalogId { get; set; }
 
         /// <summary>
-        /// Category id
+        /// Gets or sets the value of category id
         /// </summary>
         public string CategoryId { get; set; }
 
         /// <summary>
-        /// Product code (used as SKU)
+        /// Gets or sets the value of catalog item code
         /// </summary>
         [Required]
         public string Code { get; set; }
 
         /// <summary>
-        /// Collection of editorial reviews
+        /// Gets or sets the collection of catalog item editorial reviews
         /// </summary>
+        /// <value>
+        /// Array of EditorialReview objects
+        /// </value>
         public EditorialReview[] EditorialReviews { get; set; }
 
         /// <summary>
-        /// Product id
+        /// Gets or sets the value of catalog item id
         /// </summary>
         [Required]
         public string Id { get; set; }
-		
+
         /// <summary>
-        /// Product primary image
+        /// Gets or sets the value of catalog item primary image
         /// </summary>
+        /// <value>
+        /// Image object
+        /// </value>
         public Image PrimaryImage { get; set; }
 
         /// <summary>
-        /// Product image collection
+        /// Gets or sets the collection of catalog item images
         /// </summary>
+        /// <value>
+        /// Array of Image objects
+        /// </value>
         public Image[] Images { get; set; }
-		
+
         /// <summary>
-        /// Product assets collection
+        /// Gets or sets the collection of catalog item assets
         /// </summary>
+        /// <value>
+        /// Array of Asset objects
+        /// </value>
         public Asset[] Assets { get; set; }
         
         /// <summary>
-        /// Main product id (if catalog item is a variation of product)
+        /// Gets or sets the value of catalog item main product id
         /// </summary>
         public string MainProductId { get; set; }
 
         /// <summary>
-        /// Enable tracking inventory for catalog item
+        /// Gets or sets the ability to perform inventory tracking for catalog item
         /// </summary>
         public bool? TrackInventory { get; set; }
 
         /// <summary>
-        /// Catalog item can be purchased
+        /// Gets or sets the ability to buy catalog item
         /// </summary>
         public bool? IsBuyable { get; set; }
 
         /// <summary>
-        /// Catalog item is active
+        /// Gets or sets the activity status of catalog item 
         /// </summary>
         public bool? IsActive { get; set; }
 
         /// <summary>
-        /// Maximum inventory quantity
+        /// Gets or sets the value of catalog item maximum inventory quantity
         /// </summary>
-		public int? MaxQuantity { get; set; }
+        public int? MaxQuantity { get; set; }
 
         /// <summary>
-        /// Minimum inventory quantity
+        /// Gets or sets the value of catalog item minimum inventory quantity
         /// </summary>
-		public int? MinQuantity { get; set; }
+        public int? MinQuantity { get; set; }
 
         /// <summary>
-        /// Catalog item name
+        /// Gets or sets the value of catalog item name
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// Category outline
+        /// Gets or sets the value of catalog item categories outline
         /// </summary>
         public string Outline { get; set; }
 
         /// <summary>
-        /// Catalog item properties collection with keys and values
+        /// Gets or sets the dictionary of catalog item properties
         /// </summary>
         public PropertyDictionary Properties { get; set; }
 
         /// <summary>
-        /// Variation properties collection with keys and values
+        /// Gets or sets the dictionary of catalog item variation properties
         /// </summary>
-		public PropertyDictionary VariationProperties { get; set; }
+        public PropertyDictionary VariationProperties { get; set; }
 
         /// <summary>
-        /// Numeric catalog item rating
+        /// Gets or sets the value of catalog item rating
         /// </summary>
         public double Rating { get; set; }
 
         /// <summary>
-        /// Total catalog item reviews count
+        /// Gets or sets the value of catalog item total reviews quantity
         /// </summary>
         public int ReviewsTotal { get; set; }
 
         /// <summary>
-        /// Collection of SEO parameters
+        /// Gets or sets the collection of catalog item SEO parameters
         /// </summary>
+        /// <value>
+        /// Array of SeoKeyword objects
+        /// </value>
         public SeoKeyword[] Seo { get; set; }
 
         /// <summary>
-        /// Start selling date/time 
+        /// Gets or sets the value of catalog item selling start date/time
         /// </summary>
         public DateTime StartDate { get; set; }
 
         /// <summary>
-        /// End selling date/time
+        /// Gets or sets the value of catalog item selling end date/time
         /// </summary>
         public DateTime? EndDate { get; set; }
 
-		/// <summary>
-		/// Product type (can be Physical, Digital or Subscription)
-		/// </summary>
-		public string ProductType { get; set; }
+        /// <summary>
+        /// Gets or sets the value of catalog item type
+        /// </summary>
+        /// <value>
+        /// "Physical", "Digital" or "Subscription"
+        /// </value>
+        public string ProductType { get; set; }
 
         /// <summary>
-        /// Catalog item weight unit
+        /// Gets or sets the value of catalog item weight unit
         /// </summary>
-		public string WeightUnit { get; set; }
-		
+        public string WeightUnit { get; set; }
+
         /// <summary>
-        /// Catalog item weight
+        /// Gets or sets the value of catalog item weight
         /// </summary>
         public decimal? Weight { get; set; }
 
         /// <summary>
-        /// Catalog item measurement unit
+        /// Gets or sets the value of catalog item measurement unit
         /// </summary>
-		public string MeasureUnit { get; set; }
-		
+        public string MeasureUnit { get; set; }
+
         /// <summary>
-        /// Catalog item height
+        /// Gets or sets the value of catalog item height
         /// </summary>
         public decimal? Height { get; set; }
-		
+
         /// <summary>
-        /// Catalog item length
+        /// Gets or sets the value of catalog item length
         /// </summary>
         public decimal? Length { get; set; }
 
         /// <summary>
-        /// Catalog item width
+        /// Gets or sets the value of catalog item width
         /// </summary>
-		public decimal? Width { get; set; }
+        public decimal? Width { get; set; }
 
         /// <summary>
-        /// Users can post reviews for catalog item
+        /// Gets or sets the ability to add a review for catalog item
         /// </summary>
-		public bool? EnableReview { get; set; }
+        public bool? EnableReview { get; set; }
 
         /// <summary>
-        /// Catalog item inventory policy
+        /// Gets or sets catalog item inventory policy
         /// </summary>
+        /// <value>
+        /// Inventory object
+        /// </value>
         public Inventory Inventory { get; set; }
 
         /// <summary>
-		/// Maximum download limit (for digital products)
-		/// </summary>
-		public int? MaxNumberOfDownload { get; set; }
-		
+        /// Gets or sets the value of catalog item maximum download limit (for digital products)
+        /// </summary>
+        public int? MaxNumberOfDownload { get; set; }
+
         /// <summary>
-        /// Download expiration date/time
+        /// Gets or sets the value of catalog item download expiration date/time (for digital products)
         /// </summary>
         public DateTime? DownloadExpiration { get; set; }
-		
-        /// <summary>
-		/// Download type: Standard Product, Software, Music
-		/// </summary>
-		public string DownloadType { get; set; }
 
         /// <summary>
-        /// Product has end-user license agreement
+        /// Gets or sets the value of catalog item download type
         /// </summary>
-		public bool? HasUserAgreement { get; set; }
+        /// <value>
+        /// "Standard Product", "Software", "Music"
+        /// </value>
+        public string DownloadType { get; set; }
 
         /// <summary>
-        /// Shipping type
+        /// Gets or sets the presence of catalog item end-user license agreement (for digital products)
         /// </summary>
-		public string ShippingType { get; set; }
+        public bool? HasUserAgreement { get; set; }
 
         /// <summary>
-        /// Tax type
+        /// Gets or sets the value of catalog item shipping type
         /// </summary>
-		public string TaxType { get; set; }
+        public string ShippingType { get; set; }
 
         /// <summary>
-        /// Vendor
+        /// Gets or sets the value of catalog item tax type
         /// </summary>
-		public string Vendor { get; set; }
+        public string TaxType { get; set; }
 
-        #endregion
+        /// <summary>
+        /// Gets or sets the value of catalog item vendor name
+        /// </summary>
+        public string Vendor { get; set; }
     }
 }

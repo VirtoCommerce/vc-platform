@@ -6,23 +6,21 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model
 {
     public class ResponseCollection<T>
     {
-        #region Constructors and Destructors
-
         public ResponseCollection()
         {
-            this.Items = new Collection<T>();
+            Items = new Collection<T>();
         }
 
-        #endregion
-
-        #region Public Properties
-
+        /// <summary>
+        /// Gets or sets the collection of reposponse items
+        /// </summary>
         [JsonProperty("items")]
         public ICollection<T> Items { get; set; }
 
+        /// <summary>
+        /// Gets or sets the value of response items total count
+        /// </summary>
         [JsonProperty("total")]
         public int TotalCount { get; set; }
-
-        #endregion
     }
 }

@@ -21,8 +21,8 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         /// <summary>
         /// Get product reviews
         /// </summary>
-        /// <param name="productId">Product id (required)</param>
-        /// <param name="language">Culture name (required, for example "en-us")</param>
+        /// <param name="productId">Product id</param>
+        /// <param name="language">Culture name</param>
         [HttpGet]
         [ResponseType(typeof(webModel.Review))]
         [ClientCache(Duration = 30)]
