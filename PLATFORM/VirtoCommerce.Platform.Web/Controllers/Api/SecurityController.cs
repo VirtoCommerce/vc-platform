@@ -13,6 +13,8 @@ using VirtoCommerce.Platform.Web.Model.Security;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
+    /// <summary>
+    /// </summary>
     [RoutePrefix("api/platform/security")]
     public class SecurityController : ApiController
     {
@@ -22,6 +24,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly IRoleManagementService _roleService;
         private readonly ISecurityService _securityService;
 
+        /// <summary>
+        /// </summary>
         public SecurityController(Func<ApplicationSignInManager> signInManagerFactory, Func<IAuthenticationManager> authManagerFactory,
             IPermissionService permissionService, IRoleManagementService roleService, ISecurityService securityService)
         {
@@ -32,8 +36,16 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _securityService = securityService;
         }
 
+        /// <summary>
+        /// Sign in with user name and password.
+        /// </summary>
+        /// <remarks>
+        /// Verifies provided credentials and if succeeded returns full user details, otherwise returns 401 Unauthorized.
+        /// </remarks>
+        /// <param name="model">User credentials.</param>
         [HttpPost]
         [Route("login")]
+        [ResponseType(typeof(ApplicationUserExtended))]
         [AllowAnonymous]
         public async Task<IHttpActionResult> Login(UserLogin model)
         {
@@ -45,6 +57,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return StatusCode(HttpStatusCode.Unauthorized);
         }
 
+        /// <summary>
+        /// Sign out.
+        /// </summary>
         [HttpPost]
         [Route("logout")]
         public IHttpActionResult Logout()
@@ -53,6 +68,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return Ok(new { status = true });
         }
 
+        /// <summary>
+        /// Get current user details.
+        /// </summary>
         [HttpGet]
         [Route("currentuser")]
         [ResponseType(typeof(ApplicationUserExtended))]
@@ -61,6 +79,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return Ok(await _securityService.FindByNameAsync(User.Identity.Name, UserDetails.Full));
         }
 
+        /// <summary>
+        /// Get all registered permissions.
+        /// </summary>
         [HttpGet]
         [Route("permissions")]
         [ResponseType(typeof(Permission[]))]
@@ -75,6 +96,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return Ok(result);
         }
 
+        /// <summary>
+        /// Search roles by keyword.
+        /// </summary>
+        /// <param name="request">Search parameters.</param>
         [HttpGet]
         [Route("roles")]
         [ResponseType(typeof(RoleSearchResponse))]
@@ -85,6 +110,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return Ok(result);
         }
 
+        /// <summary>
+        /// Get role by ID.
+        /// </summary>
+        /// <param name="roleId"></param>
         [HttpGet]
         [Route("roles/{roleId}")]
         [ResponseType(typeof(Role))]
@@ -96,10 +125,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
+        /// Delete roles by ID.
         /// DELETE: api/security/roles?id=1&amp;id=2
         /// </summary>
-        /// <param name="roleIds"></param>
-        /// <returns></returns>
+        /// <param name="roleIds">An array of role IDs.</param>
         [HttpDelete]
         [Route("roles")]
         [CheckPermission(Permission = PredefinedPermissions.SecurityManage)]
@@ -116,6 +145,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return Ok();
         }
 
+        /// <summary>
+        /// Add a new role or update an existing role.
+        /// </summary>
+        /// <param name="role"></param>
         [HttpPut]
         [Route("roles")]
         [ResponseType(typeof(Role))]
@@ -127,9 +160,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
-        ///  GET: api/security/apiaccounts/new
+        /// Generate new API key.
         /// </summary>
-        /// <returns></returns>
+        /// <remarks>
+        /// Generates new key but does not save it.
+        /// </remarks>
+        /// <param name="type"></param>
         [HttpGet]
         [ResponseType(typeof(ApiAccount))]
         [Route("apiaccounts/new")]
@@ -141,63 +177,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return Ok(result);
         }
 
-
         /// <summary>
-        ///  GET: api/security/users/jo@domain.com
+        /// Search users by keyword.
         /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        [HttpGet]
-        [ResponseType(typeof(ApplicationUserExtended))]
-        [Route("users/{name}")]
-        [CheckPermission(Permission = PredefinedPermissions.SecurityQuery)]
-        public async Task<IHttpActionResult> GetUserByName(string name)
-        {
-            var retVal = await _securityService.FindByNameAsync(name, UserDetails.Full);
-            return Ok(retVal);
-        }
-
-        /// <summary>
-        /// POST: api/security/users/jo@domain.com/changepassword
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="changePassword"></param>
-        /// <returns></returns>
-        [HttpPost]
-        [ResponseType(typeof(IdentityResult))]
-        [Route("users/{name}/changepassword")]
-        [CheckPermission(Permission = PredefinedPermissions.SecurityQuery)]
-        public async Task<IHttpActionResult> ChangePassword(string name, [FromBody] ChangePasswordInfo changePassword)
-        {
-            var result = await _securityService.ChangePasswordAsync(name, changePassword.OldPassword, changePassword.NewPassword);
-
-            if (result == null)
-                return NotFound();
-
-            return Ok(result);
-        }
-
-        /// <summary>
-        /// POST: api/security/users/jo@domain.com/resetpassword
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="resetPassword"></param>
-        /// <returns></returns>
-        [HttpPost]
-        [ResponseType(typeof(IdentityResult))]
-        [Route("users/{name}/resetpassword")]
-        [CheckPermission(Permission = PredefinedPermissions.SecurityManage)]
-        public async Task<IHttpActionResult> ResetPassword(string name, [FromBody] ResetPasswordInfo resetPassword)
-        {
-            var result = await _securityService.ResetPasswordAsync(name, resetPassword.NewPassword);
-            return ProcessSecurityResult(result);
-        }
-
-        /// <summary>
-        ///  GET: api/security/users?q=ddd&amp;start=0&amp;count=20
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
+        /// <param name="request">Search parameters.</param>
         [HttpGet]
         [ResponseType(typeof(UserSearchResponse))]
         [Route("users")]
@@ -209,24 +192,70 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
-        /// DELETE: api/security/users?names=21
+        /// Get user details by user name.
         /// </summary>
-        /// <param name="names"></param>
-        /// <returns></returns>
-        [HttpDelete]
-        [Route("users")]
-        [CheckPermission(Permission = PredefinedPermissions.SecurityManage)]
-        public async Task<IHttpActionResult> DeleteAsync([FromUri] string[] names)
+        /// <param name="userName"></param>
+        [HttpGet]
+        [ResponseType(typeof(ApplicationUserExtended))]
+        [Route("users/{userName}")]
+        [CheckPermission(Permission = PredefinedPermissions.SecurityQuery)]
+        public async Task<IHttpActionResult> GetUserByName(string userName)
         {
-            await _securityService.DeleteAsync(names);
-            return Ok();
+            var retVal = await _securityService.FindByNameAsync(userName, UserDetails.Full);
+            return Ok(retVal);
         }
 
         /// <summary>
-        /// PUT: api/security/users
+        /// Create new user.
         /// </summary>
-        /// <param name="user"></param>
-        /// <returns></returns>
+        /// <param name="user">User details.</param>
+        [HttpPost]
+        [Route("users/create")]
+        [CheckPermission(Permission = PredefinedPermissions.SecurityManage)]
+        public async Task<IHttpActionResult> CreateAsync(ApplicationUserExtended user)
+        {
+            var result = await _securityService.CreateAsync(user);
+            return ProcessSecurityResult(result);
+        }
+
+        /// <summary>
+        /// Change password.
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <param name="changePassword">Old and new passwords.</param>
+        [HttpPost]
+        [ResponseType(typeof(IdentityResult))]
+        [Route("users/{userName}/changepassword")]
+        [CheckPermission(Permission = PredefinedPermissions.SecurityQuery)]
+        public async Task<IHttpActionResult> ChangePassword(string userName, [FromBody] ChangePasswordInfo changePassword)
+        {
+            var result = await _securityService.ChangePasswordAsync(userName, changePassword.OldPassword, changePassword.NewPassword);
+
+            if (result == null)
+                return NotFound();
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Reset password.
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <param name="resetPassword">New password.</param>
+        [HttpPost]
+        [ResponseType(typeof(IdentityResult))]
+        [Route("users/{userName}/resetpassword")]
+        [CheckPermission(Permission = PredefinedPermissions.SecurityManage)]
+        public async Task<IHttpActionResult> ResetPassword(string userName, [FromBody] ResetPasswordInfo resetPassword)
+        {
+            var result = await _securityService.ResetPasswordAsync(userName, resetPassword.NewPassword);
+            return ProcessSecurityResult(result);
+        }
+
+        /// <summary>
+        /// Update user details by user ID.
+        /// </summary>
+        /// <param name="user">User details.</param>
         [HttpPut]
         [Route("users")]
         [CheckPermission(Permission = PredefinedPermissions.SecurityManage)]
@@ -237,33 +266,36 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
-        /// POST: api/security/users/create
+        /// Delete users by name.
         /// </summary>
-        /// <param name="user"></param>
-        /// <returns></returns>
-        [HttpPost]
-        [Route("users/create")]
+        /// <param name="names">An array of user names.</param>
+        [HttpDelete]
+        [Route("users")]
         [CheckPermission(Permission = PredefinedPermissions.SecurityManage)]
-        public async Task<IHttpActionResult> CreateAsync(ApplicationUserExtended user)
+        public async Task<IHttpActionResult> DeleteAsync([FromUri] string[] names)
         {
-            var result = await _securityService.CreateAsync(user);
-            return ProcessSecurityResult(result);
+            await _securityService.DeleteAsync(names);
+            return Ok();
         }
 
 
-        private IHttpActionResult ProcessSecurityResult(SecurityResult result)
+        private IHttpActionResult ProcessSecurityResult(SecurityResult securityResult)
         {
-            if (result == null)
+            IHttpActionResult result;
+
+            if (securityResult == null)
             {
-                return BadRequest();
+                result = BadRequest();
             }
             else
             {
-                if (!result.Succeeded)
-                    return BadRequest(result.Errors != null ? string.Join(" ", result.Errors) : "Unknown error.");
+                if (!securityResult.Succeeded)
+                    result = BadRequest(securityResult.Errors != null ? string.Join(" ", securityResult.Errors) : "Unknown error.");
                 else
-                    return Ok();
+                    result = Ok();
             }
+
+            return result;
         }
     }
 }
