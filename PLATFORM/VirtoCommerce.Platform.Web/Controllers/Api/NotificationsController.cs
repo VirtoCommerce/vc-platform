@@ -171,7 +171,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 		/// Sending test notification
 		/// </summary>
 		/// <remarks>
-		/// Method sending notification, that based on notification template. Template for rendering choosen by type, objectId, objectTypeId, language.
+		/// Method sending notification, that based on notification template. Template for rendering chosen by type, objectId, objectTypeId, language.
 		/// Parameters for template may be prepared by the method of getTestingParameters. Method returns string. If sending finished with success status
 		/// this string is empty, otherwise string contains error message.
 		/// </remarks>

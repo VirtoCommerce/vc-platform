@@ -9,7 +9,7 @@ namespace VirtoCommerce.Content.Web.Models
 	{
 		public string Id { get; set; }
 		/// <summary>
-        /// Page element name, contatins the path relative to the root pages folder
+        /// Page element name, contains the path relative to the root pages folder
 		/// </summary>
 		public string Name { get; set; }
 

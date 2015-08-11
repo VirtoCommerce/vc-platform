@@ -79,10 +79,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		/// <summary>
 		/// Update menu link list
 		/// </summary>
-		/// <remarks>Update menu link list</remarks>
 		/// <param name="list">Menu link list</param>
-		/// <response code="500">Internal Server Error</response>
-		/// <response code="200">Update menu link list OK</response>
 		[HttpPost]
 		[ResponseType(typeof(void))]
 		[Route("menu")]
@@ -96,10 +93,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		/// <summary>
 		/// Delete menu link list
 		/// </summary>
-		/// <remarks>Delete menu link list</remarks>
 		/// <param name="listId">Menu link list id</param>
-		/// <response code="500">Internal Server Error</response>
-		/// <response code="200">Delete menu link list OK</response>
 		[HttpDelete]
 		[ResponseType(typeof(void))]
 		[Route("menu")]
