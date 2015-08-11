@@ -9,8 +9,8 @@ using VirtoCommerce.Platform.Data.Security.Identity;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
-    [ApiExplorerSettings(IgnoreApi = true)]
     [RoutePrefix("api/security/frontend")]
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class FrontEndSecurityController : ApiController
     {
         private readonly ISecurityService _securityService;

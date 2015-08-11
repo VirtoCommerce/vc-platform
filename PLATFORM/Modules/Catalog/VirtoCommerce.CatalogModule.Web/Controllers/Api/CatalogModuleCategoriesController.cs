@@ -41,7 +41,6 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         /// Gets category by id.
         /// </summary>
         /// <param name="id">Category id.</param>
-        /// <response code="404">Category not found.</response>
         [HttpGet]
         [ResponseType(typeof(webModel.Category))]
         [Route("{id}")]
@@ -87,8 +86,6 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         /// </summary>
         /// <remarks>If category.id is null, a new category is created. It's updated otherwise</remarks>
         /// <param name="category">The category.</param>
-        /// <response code="200">Returns the newly created Category.</response>
-        /// <response code="204">Category was updated successfully.</response>
         [HttpPost]
         [ResponseType(typeof(void))]
         [Route("")]

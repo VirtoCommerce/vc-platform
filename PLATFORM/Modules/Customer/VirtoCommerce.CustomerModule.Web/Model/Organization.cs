@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using VirtoCommerce.Platform.Core.DynamicProperties;
-
-namespace VirtoCommerce.CustomerModule.Web.Model
+﻿namespace VirtoCommerce.CustomerModule.Web.Model
 {
 	public class Organization : Member
     {
@@ -17,8 +14,20 @@ namespace VirtoCommerce.CustomerModule.Web.Model
 
         public string Name { get; set; }
         public string Description { get; set; }
+
+        /// <summary>
+        /// String definition of business category
+        /// </summary>
         public string BusinessCategory { get; set; }
+
+        /// <summary>
+        /// Not documented
+        /// </summary>
         public string OwnerId { get; set; }
+
+        /// <summary>
+        /// Parent organization id
+        /// </summary>
         public string ParentId { get; set; }
 
     }

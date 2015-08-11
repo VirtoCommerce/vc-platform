@@ -16,17 +16,17 @@ namespace VirtoCommerce.PricingModule.Web.Model
 		public string ProductId { get; set; }
         
         /// <summary>
-        /// Sale price of a product. It can be null, then Sale price will be equal List price.
+        /// Sale price of a product. It can be null, then Sale price will be equal List price
         /// </summary>
         public decimal? Sale { get; set; }
 
         /// <summary>
-        /// Price of a product. It can be catalog price or purchase price.
+        /// Price of a product. It can be catalog price or purchase price
         /// </summary>
         public decimal List { get; set; }
 
         /// <summary>
-        /// It defines the minimum quantity of Products. Use it for creating tier prices. 
+        /// It defines the minimum quantity of Products. Use it for creating tier prices.
         /// </summary>
         public int MinQuantity { get; set; }
 	}

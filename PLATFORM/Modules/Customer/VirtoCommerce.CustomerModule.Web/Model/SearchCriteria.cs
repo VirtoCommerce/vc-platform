@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace VirtoCommerce.CustomerModule.Web.Model
+﻿namespace VirtoCommerce.CustomerModule.Web.Model
 {
 	public class SearchCriteria
 	{
@@ -13,11 +7,25 @@ namespace VirtoCommerce.CustomerModule.Web.Model
 			Count = 20;
 		}
 
-		public string Keyword { get; set; }
-		public string OrganizationId { get; set; }
-	
-		public int Start { get; set; }
+        /// <summary>
+        /// Word, part of word or phrase to search
+        /// </summary>
+        public string Keyword { get; set; }
 
+        /// <summary>
+        /// It used to limit search within an organization
+        /// </summary>
+		public string OrganizationId { get; set; }
+	    
+        /// <summary>
+        /// It used to skip some first search results 
+        /// </summary>
+		public int Start { get; set; }
+        
+        /// <summary>
+        /// It used to limit the number of search results
+        /// </summary>
+        /// <value>20 by default</value>
 		public int Count { get; set; }
 	}
 }

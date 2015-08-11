@@ -39,8 +39,6 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         /// Gets item by id.
         /// </summary>
         /// <param name="id">Item id.</param>
-        /// <response code="404">Item not found.</response>
-        /// <returns></returns>
         [HttpGet]
         [ResponseType(typeof(webModel.Product))]
         [Route("{id}")]
@@ -116,7 +114,6 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         /// Gets the template for a new variation.
         /// </summary>
         /// <param name="productId">The parent product id.</param>
-        /// <response code="404">Parent product not found.</response>
         [HttpGet]
         [ResponseType(typeof(webModel.Product))]
         [Route("{productId}/getnewvariation")]
@@ -168,8 +165,6 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         /// Updates the specified product.
         /// </summary>
         /// <param name="product">The product.</param>
-        /// <response code="200">Returns the newly created Item.</response>
-        /// <response code="204">Item was updated successfully.</response>
         [HttpPost]
         [ResponseType(typeof(void))]
         [Route("")]
