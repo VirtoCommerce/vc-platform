@@ -26,7 +26,7 @@ namespace VirtoCommerce.PricingModule.Web.Model
         public decimal List { get; set; }
 
         /// <summary>
-        /// It defines the minimum quantity of Products batch for which the price is valid 
+        /// It defines the minimum quantity of Products. Use it for creating tier prices. 
         /// </summary>
         public int MinQuantity { get; set; }
 	}
