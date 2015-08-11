@@ -8,6 +8,7 @@ using Zendesk.HelpdeskModule.Web.Services;
 
 namespace Zendesk.HelpdeskModule.Web.Controllers.Api
 {
+	[ApiExplorerSettings(IgnoreApi = true)]
     [RoutePrefix("api/help")]
     public class ZDAuthorizationController: ApiController
     {

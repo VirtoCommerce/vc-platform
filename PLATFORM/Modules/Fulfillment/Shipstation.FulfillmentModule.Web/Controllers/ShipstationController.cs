@@ -14,6 +14,7 @@ using VirtoCommerce.Platform.Data.Security.Authentication.Basic;
 
 namespace Shipstation.FulfillmentModule.Web.Controllers
 {
+	[ApiExplorerSettings(IgnoreApi = true)]
     [RoutePrefix("api/fulfillment/shipstation")]
     [ControllerConfig]
     public class ShipstationController : ApiController

@@ -3,7 +3,7 @@ using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Platform.Core.Security
 {
-    public class ApplicationUserExtended// : ApplicationUser
+    public class ApplicationUserExtended
     {
         public string Id { get; set; }
         public string UserName { get; set; }
@@ -19,9 +19,24 @@ namespace VirtoCommerce.Platform.Core.Security
         public UserState UserState { get; set; }
         public string Password { get; set; }
 
+        /// <summary>
+        /// External provider logins.
+        /// </summary>
         public ApplicationUserLogin[] Logins { get; set; }
+
+        /// <summary>
+        /// Assigned roles.
+        /// </summary>
         public Role[] Roles { get; set; }
+
+        /// <summary>
+        /// All permissions from assigned roles.
+        /// </summary>
         public string[] Permissions { get; set; }
+
+        /// <summary>
+        /// API keys
+        /// </summary>
         public ApiAccount[] ApiAccounts { get; set; }
     }
 }

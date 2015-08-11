@@ -30,9 +30,9 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
         }
 
         /// <summary>
-        /// Return PricelistAssignment by given Id
+        /// Return PricelistAssignment
         /// </summary>
-        /// <remarks>Return PricelistAssignment by given Id</remarks>
+        /// <remarks>Return PricelistAssignment by given Id or NotFoundResult instead</remarks>
         /// <param name="id">PricelistAssignment Id</param>
         [HttpGet]
         [ResponseType(typeof(webModel.PricelistAssignment))]
@@ -40,18 +40,18 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
         public IHttpActionResult GetPricelistAssignmentById(string id)
         {
             var assignment = _pricingService.GetPricelistAssignmentById(id);
-            if (assignment == null)
-            {
-                return NotFound();
-            }
-            return Ok(assignment.ToWebModel(null, _extensionManager.ConditionExpressionTree));
+            var result = assignment != null
+                ? assignment.ToWebModel(null, _extensionManager.ConditionExpressionTree)
+                : null;
+
+            return result != null ? Ok(result) : (IHttpActionResult)NotFound();
         }
 
         /// <summary>
-        /// Return list of all PricelistAssignments
+        /// Return list PricelistAssignments
         /// </summary>
-        /// <remarks>Return list of all PricelistAssignments</remarks>
-        /// <response code="200">PricelistAssignments returned OK</response>
+        /// <remarks>Return list of all PricelistAssignments for all catalogs</remarks>
+        /// <todo>Do we need return for all catalogs?</todo>
         [HttpGet]
         [ResponseType(typeof(webModel.PricelistAssignment[]))]
         [Route("api/pricing/assignments")]
@@ -65,8 +65,7 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
         /// <summary>
         /// Return a new PricelistAssignment
         /// </summary>
-        /// <remarks>Return a new PricelistAssignment object. It doesn't create or save the PricelistAssignment object</remarks>
-        /// <response code="200">PricelistAssignment returned OK</response>
+        /// <remarks>Return a new PricelistAssignment object. It doesn't create and save one</remarks>
         [HttpGet]
         [ResponseType(typeof(webModel.PricelistAssignment))]
         [Route("api/pricing/assignments/new")]
@@ -80,14 +79,10 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
             return Ok(result);
         }
 
-
-
         /// <summary>
         /// Create PricelistAssignment
         /// </summary>
-        /// <remarks>Create PricelistAssignment</remarks>
         /// <param name="assignment">PricelistAssignment</param>
-        /// <response code="200">PricelistAssignment returned OK</response>
         /// <todo>Rename the method</todo>
         [HttpPost]
         [ResponseType(typeof(webModel.PricelistAssignment))]
@@ -103,9 +98,9 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
         /// <summary>
         /// Update PricelistAssignment
         /// </summary>
-        /// <remarks>Update PricelistAssignment</remarks>
         /// <param name="assignment">PricelistAssignment</param>
         /// <response code="204">No content</response>
+        /// <todo>Need reafacor. To return Ok or something else if can't do that</todo>
         [HttpPut]
         [ResponseType(typeof(void))]
         [Route("api/pricing/assignments")]
@@ -119,9 +114,9 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
         /// <summary>
         /// Delete PricelistAssignments
         /// </summary>
-        /// <remarks>Delete PricelistAssignments by given Ids</remarks>
         /// <param name="ids">List of PricelistAssignment Ids to delete</param>
         /// <response code="204">No content</response>
+        /// <todo>Need reafacor. To return Ok or something else if can't do that</todo>
         [HttpDelete]
         [ResponseType(typeof(void))]
         [Route("api/pricing/assignments")]
@@ -137,7 +132,6 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
         /// </summary>
         /// <remarks>Return list of valid Product prices for each currency</remarks>
         /// <param name="productId">Product Id</param>
-        /// <response code="200">Product prices returned OK</response>
         [HttpGet]
         [ResponseType(typeof(webModel.Price[]))]
         [Route("api/products/{productId}/prices")]
@@ -148,14 +142,13 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
                 ? prices.GroupBy(x => x.Currency).Select(x => x.First().ToWebModel()).ToArray()
                 : null;
 
-            return result != null ? Ok(result) : (IHttpActionResult)NotFound(); //todo desctibe NotFound
+            return result != null ? Ok(result) : (IHttpActionResult)NotFound(); //todo describe NotFound
         }
 
         /// <summary>
         /// Return all Pricelists
         /// </summary>
-        /// <remarks>Return all Pricelists</remarks>
-        /// <response code="200">Pricelists returned OK</response>
+        /// <remarks>Return all Pricelists for all catalogs</remarks>
         [HttpGet]
         [ResponseType(typeof(webModel.Pricelist[]))]
         [Route("api/pricing/pricelists")]
@@ -169,9 +162,7 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
         /// <summary>
         /// Return Pricelist
         /// </summary>
-        /// <remarks>Return pricelist by given Id</remarks>
         /// <param name="id">Pricelist Id</param>
-        /// <response code="200">Pricelist returned OK</response>
         [HttpGet]
         [ResponseType(typeof(webModel.Pricelist))]
         [Route("api/pricing/pricelists/{id}")]
@@ -186,15 +177,14 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
                 var catalogs = _catalogService.GetCatalogsList().ToArray();
                 result = pricelist.ToWebModel(products, catalogs, _extensionManager.ConditionExpressionTree);
             }
-            return result != null ? Ok(result) : (IHttpActionResult)NotFound(); //todo desctibe NotFound
+            return result != null ? Ok(result) : (IHttpActionResult)NotFound(); //todo describe NotFound
         }
 
         /// <summary>
         /// Return Pricelists for a product
         /// </summary>
-        /// <remarks>Return Pricelists for a product by given product Id</remarks>
+        /// <remarks>Return Pricelists where product is, without conditions and rules of PriceListAssignments</remarks>
         /// <param name="productId">Product Id</param>
-        /// <response code="200">Pricelists returned OK</response>
         /// <todo>I don't understand inherite algorithm. If product has two prices (different quantity of batch) but variation has only one, then how (if need) variation does pick up inherite product prices</todo>
         [HttpGet]
         [ResponseType(typeof(webModel.Pricelist[]))]
@@ -232,9 +222,7 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
         /// <summary>
         /// Create Pricelist
         /// </summary>
-        /// <remarks>Create Pricelist</remarks>
         /// <param name="priceList">Pricelist</param>
-        /// <response code="200">Pricelist returned OK</response>
         [HttpPost]
         [ResponseType(typeof(webModel.Pricelist))]
         [Route("api/pricing/pricelists")]
@@ -251,7 +239,7 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
         /// </summary>
         /// <remarks>Update Pricelist</remarks>
         /// <param name="priceList">Pricelist</param>
-        /// <response code="200">Pricelist returned OK</response>
+        /// <response code="204"></response>
         [HttpPut]
         [ResponseType(typeof(void))]
         [Route("api/pricing/pricelists")]
@@ -265,7 +253,6 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
         /// <summary>
         /// Update prices of Product for a Pricelist  
         /// </summary>
-        /// <remarks>Update prices of given Product for a given Pricelist</remarks>
         /// <param name="productId">Product Id</param>
         /// <param name="priceList">Pricelist with new product prices</param>
         /// <response code="204">No content</response>
@@ -298,7 +285,6 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
         /// <summary>
         /// Delete Pricelists  
         /// </summary>
-        /// <remarks>Delete Pricelists by given Pricelist</remarks>
         /// <param name="ids">Pricelist Ids to delete</param>
         /// <response code="204">No content</response>
         [HttpDelete]
