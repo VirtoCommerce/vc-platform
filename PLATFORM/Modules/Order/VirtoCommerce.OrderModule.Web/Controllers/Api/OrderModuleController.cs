@@ -45,7 +45,10 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 			_repositoryFactory = repositoryFactory;
         }
 
-        // GET: api/order/customerOrders?q=ddd&site=site1&customer=user1&start=0&count=20
+		/// <summary>
+		/// Search customer orders by given criteria
+		/// </summary>
+		/// <param name="criteria">criteria</param>
         [HttpGet]
         [ResponseType(typeof(webModel.SearchResult))]
         [Route("")]
@@ -55,7 +58,11 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
             return Ok(retVal.ToWebModel());
         }
 
-        // GET: api/order/customerOrders/{id}
+		/// <summary>
+		/// Find customer order by id
+		/// </summary>
+		/// <remarks>Return a single customer order with all nested documents</remarks>
+		/// <param name="id">customer order id</param>
         [HttpGet]
         [ResponseType(typeof(webModel.CustomerOrder))]
         [Route("{id}")]
@@ -69,7 +76,10 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
             return Ok(retVal.ToWebModel());
         }
 
-        // POST: api/order/customerOrders/{cartId}
+		/// <summary>
+		/// Create new customer order based on shopping cart.
+		/// </summary>
+		/// <param name="cartId">shopping cart id</param>
         [HttpPost]
         [ResponseType(typeof(webModel.CustomerOrder))]
         [Route("{cartId}")]
@@ -79,7 +89,13 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
             return Ok(retVal.ToWebModel());
         }
 
-        // GET: api/order/customerOrders/{orderId}/processPayment/{paymentId}
+		/// <summary>
+		/// Registration customer order payment in external payment system
+		/// </summary>
+		/// <remarks>Used in front-end checkout or manual order payment registration</remarks>
+		/// <param name="bankCardInfo">banking card information</param>
+		/// <param name="orderId">customer order id</param>
+		/// <param name="paymentId">payment id</param>
         [HttpPost]
         [ResponseType(typeof(webModel.CustomerOrder))]
         [Route("{orderId}/processPayment/{paymentId}")]
@@ -121,8 +137,11 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
             return Ok(retVal);
         }
 
-        // POST: api/order/customerOrders
-        [HttpPost]
+		/// <summary>
+		/// Add new customer order to system
+		/// </summary>
+		/// <param name="customerOrder">customer order</param>
+		[HttpPost]
         [ResponseType(typeof(webModel.CustomerOrder))]
         [Route("")]
         public IHttpActionResult CreateOrder(webModel.CustomerOrder customerOrder)
@@ -131,19 +150,26 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
             return Ok(retVal.ToWebModel());
         }
 
-        // PUT: api/order/customerOrders
+		/// <summary>
+		///  Update a existing customer order 
+		/// </summary>
+		/// <param name="customerOrder">customer order</param>
         [HttpPut]
         [ResponseType(typeof(void))]
         [Route("")]
         [CheckPermission(Permission = PredefinedPermissions.Manage)]
-        public IHttpActionResult Update(webModel.CustomerOrder order)
+		public IHttpActionResult Update(webModel.CustomerOrder customerOrder)
         {
-            var coreOrder = order.ToCoreModel();
+			var coreOrder = customerOrder.ToCoreModel();
             _customerOrderService.Update(new coreModel.CustomerOrder[] { coreOrder });
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // GET:  api/order/customerOrders/{id}/shipments/new
+		/// <summary>
+		/// Get new shipment for specified customer order
+		/// </summary>
+		/// <remarks>Return new shipment document with populates all required properties.</remarks>
+		/// <param name="id">customer order id </param>
         [HttpGet]
         [ResponseType(typeof(webModel.Shipment))]
         [Route("{id}/shipments/new")]
@@ -172,7 +198,11 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
             return NotFound();
         }
 
-        // GET:  api/order/customerOrders/{id}/payments/new
+		/// <summary>
+		/// Get new payment for specified customer order
+		/// </summary>
+		/// <remarks>Return new payment  document with populates all required properties.</remarks>
+		/// <param name="id">customer order id </param>
         [HttpGet]
         [ResponseType(typeof(webModel.PaymentIn))]
         [Route("{id}/payments/new")]
@@ -195,9 +225,10 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
             return NotFound();
         }
 
-
-
-        // DELETE: /api/order/customerOrders?ids=21
+		/// <summary>
+		///  Delete a whole customer orders
+		/// </summary>
+		/// <param name="ids">customer order ids for delete</param>
         [HttpDelete]
         [ResponseType(typeof(void))]
         [Route("")]
@@ -208,7 +239,11 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // DELETE: /api/order/customerOrders/id/operations/id
+		/// <summary>
+		///  Delete a concrete customer order operation (document) 
+		/// </summary>
+		/// <param name="id">customer order id</param>
+		/// <param name="operationId">operation id</param>
         [HttpDelete]
         [ResponseType(typeof(void))]
         [Route("~/api/order/customerOrders/{id}/operations/{operationId}")]
@@ -242,7 +277,11 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // GET:  api/order/dashboardStatistics
+		/// <summary>
+		///  Get a some order statistic information for Commerce manager dashboard
+		/// </summary>
+		/// <param name="start">start interval date</param>
+		/// <param name="end">end interval date</param>
 		[HttpGet]
 		[ResponseType(typeof(webModel.DashboardStatisticsResult))]
 		[Route("~/api/order/dashboardStatistics")]

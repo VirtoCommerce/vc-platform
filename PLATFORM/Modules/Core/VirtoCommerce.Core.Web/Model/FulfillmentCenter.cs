@@ -7,6 +7,9 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.CoreModule.Web.Model
 {
+	/// <summary>
+	/// Represent fulfillment center information
+	/// </summary>
 	public class FulfillmentCenter : Entity
 	{
 		public string Name { get; set; }

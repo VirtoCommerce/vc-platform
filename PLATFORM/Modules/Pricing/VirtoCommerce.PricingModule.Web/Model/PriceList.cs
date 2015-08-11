@@ -18,7 +18,7 @@ namespace VirtoCommerce.PricingModule.Web.Model
 		public CurrencyCodes Currency { get; set; }
 
         /// <summary>
-        /// Number of Products prices. It can include prices of a product with different quantity of batch
+        /// List of Products prices. It includes tiered prices also.
         /// </summary>
 		public ICollection<ProductPrice> ProductPrices { get; set; }
 

@@ -7,8 +7,8 @@
         <dependency id="VirtoCommerce.Core" version="2.3.0" />
     </dependencies>
 
-    <title>Virto Commerce Pricing</title>
-    <description>APIs and UI for pricing management</description>
+    <title>Virto Commerce pricing module</title>
+    <description>Robust pricing management functionality based on price list and dynamic evaluation</description>
     <authors>
         <author>Virto Commerce</author>
     </authors>

@@ -14,6 +14,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     {
         private static readonly string[] _finalStates = { DeletedState.StateName, FailedState.StateName, SucceededState.StateName };
 
+        /// <summary>
+        /// Get background job status
+        /// </summary>
+        /// <param name="id">Job ID.</param>
+        /// <returns></returns>
         [HttpGet]
         [Route("{id}")]
         [ResponseType(typeof(Job))]

@@ -15,7 +15,7 @@ namespace VirtoCommerce.PricingModule.Web.Model
 		public string ProductName { get; set; }
         
         /// <summary>
-        /// List of product prices with different quantity of batch
+        /// List prices for the products. It includes tiered prices also. (Depending on the quantity, for example)
         /// </summary>
 		public ICollection<Price> Prices { get; set; }
 	}

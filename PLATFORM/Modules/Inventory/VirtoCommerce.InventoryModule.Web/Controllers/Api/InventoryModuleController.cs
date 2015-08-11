@@ -1,5 +1,4 @@
-﻿using System.Net;
-using System.Linq;
+﻿using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Description;
 using VirtoCommerce.Domain.Inventory.Services;
@@ -23,57 +22,63 @@ namespace VirtoCommerce.InventoryModule.Web.Controllers.Api
 			_commerceService = commerceService;
 		}
 
-		// GET: api/inventory/products?ids=212&ids=333
+        /// <summary>
+        /// Return Inventory of Products by given product Ids
+        /// </summary>
+        /// <remarks>Return Inventory of Products by given product Ids. The inventories include all fulfillment centers</remarks>
+        /// <param name="ids">Products Ids</param>
 		[HttpGet]
 		[ResponseType(typeof(webModel.InventoryInfo[]))]
 		[Route("~/api/inventory/products")]
 		public IHttpActionResult GetProductsInventories([FromUri] string[] ids)
 		{
-			var retVal = new List<webModel.InventoryInfo>();
-			var allFulfillments = _commerceService.GetAllFulfillmentCenters();
+			var result = new List<webModel.InventoryInfo>();
+			var allFulfillments = _commerceService.GetAllFulfillmentCenters().ToArray();
 			var inventories = _inventoryService.GetProductsInventoryInfos(ids).ToList();
 
 			foreach (var productId in ids)
 			{
 				foreach (var fulfillment in allFulfillments)
 				{
-					var productInventory = inventories.FirstOrDefault(x => x.ProductId == productId && x.FulfillmentCenterId == fulfillment.Id);
-					if (productInventory == null)
-					{
-						productInventory = new coreModel.InventoryInfo
-						{
-							FulfillmentCenterId = fulfillment.Id,
-							ProductId = productId
-						};
-					}
-					var webModelInventory = productInventory.ToWebModel();
+					var productInventory = inventories.FirstOrDefault(x => x.ProductId == productId && x.FulfillmentCenterId == fulfillment.Id)
+					    ?? new coreModel.InventoryInfo { FulfillmentCenterId = fulfillment.Id, ProductId = productId };
+				    
+                    var webModelInventory = productInventory.ToWebModel();
 					webModelInventory.FulfillmentCenter = fulfillment.ToWebModel();
-					retVal.Add(webModelInventory);
+					result.Add(webModelInventory);
 				}
 			}
 
-			return Ok(retVal.ToArray());
+			return Ok(result.ToArray());
 		}
 
-		// GET: api/inventory/products/{productId}
-		[HttpGet]
+        /// <summary>
+        /// Return Inventory of Product by given product Id
+        /// </summary>
+        /// <remarks>Return Inventory of Product by given product Id. The inventory includes all fulfillment centers</remarks>
+        /// <param name="productId">Product Id</param>
+        [HttpGet]
 		[ResponseType(typeof(webModel.InventoryInfo[]))]
 		[Route("~/api/inventory/products/{productId}")]
 		public IHttpActionResult GetProductInventories(string productId)
 		{
-			return GetProductsInventories(new string[] { productId });
+			return GetProductsInventories(new [] { productId });
 		}
 
-		// PUT: api/inventory/products/123/inventory
+        /// <summary>
+        /// Upsert Inventory of Product
+        /// </summary>
+        /// <remarks>Upsert (add or update) given Inventory of Product</remarks>
+        /// <param name="inventory">Inventory to upsert</param>
 		[HttpPut]
 		[ResponseType(typeof(webModel.InventoryInfo))]
 		[Route("~/api/inventory/products/{productId}")]
         [CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public IHttpActionResult UpsertProductInventory(webModel.InventoryInfo inventory)
 		{
-			var retVal = _inventoryService.UpsertInventory( inventory.ToCoreModel() );
+			var result = _inventoryService.UpsertInventory( inventory.ToCoreModel() );
 
-			return Ok(retVal);
+			return Ok(result);
 		}
 
 

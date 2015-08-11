@@ -12,6 +12,7 @@ using domainModel = VirtoCommerce.Domain.Commerce.Model;
 
 namespace AvaTax.TaxModule.Web.Controller
 {
+	[ApiExplorerSettings(IgnoreApi = true)]
     [RoutePrefix("api/tax/avatax")]
     public class AvaTaxController : ApiController
     {

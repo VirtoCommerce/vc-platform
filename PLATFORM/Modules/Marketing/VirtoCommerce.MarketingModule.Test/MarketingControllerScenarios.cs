@@ -29,13 +29,7 @@ namespace VirtoCommerce.MarketingModule.Test
 			{
 				Name = "ss",
 			};
-			contentItem.PropertyValues = new dataModel.DynamicContentItemProperty[] { 
-				new dataModel.DynamicContentItemProperty
-				{
-					 Name = "ssss",
-					  DecimalValue = 33.0m
-				}
-			};
+	
 			repository.Add(contentItem);
 			repository.UnitOfWork.Commit();
 

@@ -2,19 +2,21 @@
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
+using System.Web.Http.Description;
 using Hangfire;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Security.Identity;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
+    [ApiExplorerSettings(IgnoreApi = true)]
     [RoutePrefix("api/security/frontend")]
-    public class FrontendSecurityController : ApiController
+    public class FrontEndSecurityController : ApiController
     {
         private readonly ISecurityService _securityService;
         private readonly Func<ApplicationSignInManager> _signInManagerFactory;
 
-        public FrontendSecurityController(ISecurityService securityService, Func<ApplicationSignInManager> signInManagerFactory)
+        public FrontEndSecurityController(ISecurityService securityService, Func<ApplicationSignInManager> signInManagerFactory)
         {
             _securityService = securityService;
             _signInManagerFactory = signInManagerFactory;

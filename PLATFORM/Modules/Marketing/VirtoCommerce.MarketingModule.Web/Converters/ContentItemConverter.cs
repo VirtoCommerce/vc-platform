@@ -16,10 +16,6 @@ namespace VirtoCommerce.MarketingModule.Web.Converters
 				retVal.Outline = content.Folder.Outline;
 				retVal.Path = content.Folder.Path;
 			}
-			if(content.Properties != null)
-			{
-				retVal.Properties = content.Properties.Select(x => x.ToWebModel()).ToList();
-			}
 			return retVal;
 		}
 
@@ -27,10 +23,6 @@ namespace VirtoCommerce.MarketingModule.Web.Converters
 		{
 			var retVal = new coreModel.DynamicContentItem();
 			retVal.InjectFrom(content);
-			if (content.Properties != null)
-			{
-				retVal.Properties = content.Properties.Select(x => x.ToCoreModel()).ToList();
-			}
 			return retVal;
 		}
 	
