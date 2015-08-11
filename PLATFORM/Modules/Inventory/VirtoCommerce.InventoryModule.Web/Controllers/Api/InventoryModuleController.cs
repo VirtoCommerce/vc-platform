@@ -25,7 +25,7 @@ namespace VirtoCommerce.InventoryModule.Web.Controllers.Api
         /// <summary>
         /// Get inventories of products
         /// </summary>
-        /// <remarks>Get inventory of products by given product ids. The inventories separate by fulfillment centers.</remarks>
+        /// <remarks>Get inventory of products for each fulfillment center.</remarks>
         /// <param name="ids">Products ids</param>
 		[HttpGet]
 		[ResponseType(typeof(webModel.InventoryInfo[]))]
@@ -55,7 +55,7 @@ namespace VirtoCommerce.InventoryModule.Web.Controllers.Api
         /// <summary>
         /// Get inventories of product
         /// </summary>
-        /// <remarks>Get inventories of product by given product id. The inventories separate by fulfillment centers.</remarks>
+        /// <remarks>Get inventories of product for each fulfillment center.</remarks>
         /// <param name="productId">Product id</param>
         [HttpGet]
 		[ResponseType(typeof(webModel.InventoryInfo[]))]

@@ -17,12 +17,12 @@ namespace VirtoCommerce.PricingModule.Web.Model
         public int Priority { get; set; }
 
         /// <summary>
-        /// Start of period when Prices Assignment is valid. Null value means without limit
+        /// Start of period when Prices Assignment is valid. Null value means no limit
         /// </summary>
         public DateTime? StartDate { get; set; }
 
         /// <summary>
-        /// End of period when Prices Assignment is valid. Null value means without limit
+        /// End of period when Prices Assignment is valid. Null value means no limit
         /// </summary>
         public DateTime? EndDate { get; set; }
 

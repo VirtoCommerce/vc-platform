@@ -102,7 +102,7 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
         /// <summary>
         /// Update contact.
         /// </summary>
-        /// <response code="204">Operation successfully.</response>
+        /// <response code="204">Operation completed.</response>
         [HttpPut]
 		[ResponseType(typeof(void))]
 		[Route("contacts")]
@@ -118,7 +118,7 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
         /// </summary>
         /// <remarks>Delete contacts by given array of ids.</remarks>
         /// <param name="ids">An array of contacts ids</param>
-        /// <response code="204">Operation successfully.</response>
+        /// <response code="204">Operation completed.</response>
         [HttpDelete]
 		[ResponseType(typeof(void))]
 		[Route("contacts")]
@@ -161,7 +161,7 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
         /// <summary>
         /// Update organization.
         /// </summary>
-        /// <response code="204">Operation successfully.</response>
+        /// <response code="204">Operation completed.</response>
         [HttpPut]
 		[ResponseType(typeof(void))]
 		[Route("organizations")]
@@ -177,7 +177,7 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
         /// </summary>
         /// <remarks>Delete organizations by given array of ids.</remarks>
         /// <param name="ids">An array of organizations ids</param>
-        /// <response code="204">Operation successfully.</response>
+        /// <response code="204">Operation completed.</response>
         [HttpDelete]
 		[ResponseType(typeof(void))]
 		[Route("organizations")]

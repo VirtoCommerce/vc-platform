@@ -98,7 +98,7 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
         /// Update pricelist assignment
         /// </summary>
         /// <param name="assignment">PricelistAssignment</param>
-        /// <response code="204">Operation successfully.</response>
+        /// <response code="204">Operation completed.</response>
         /// <todo>Return no any reason if can't update</todo>
         [HttpPut]
         [ResponseType(typeof(void))]
@@ -115,7 +115,7 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
         /// </summary>
         /// <remarks>Delete pricelist assignment by given array of ids.</remarks>
         /// <param name="ids">An array of pricelist assignment ids</param>
-        /// <response code="204">Operation successfully.</response>
+        /// <response code="204">Operation completed.</response>
         /// <todo>Return no any reason if can't update</todo>
         [HttpDelete]
         [ResponseType(typeof(void))]
@@ -130,7 +130,7 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
         /// <summary>
         /// Get array of product prices
         /// </summary>
-        /// <remarks>Get array of valid product prices for each currency.</remarks>
+        /// <remarks>Get an array of valid product prices for each currency.</remarks>
         /// <param name="productId">Product id</param>
         /// <response code="404">Prices not found.</response>
         [HttpGet]
@@ -185,7 +185,7 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
         /// <summary>
         /// Get pricelists for a product
         /// </summary>
-        /// <remarks>Get pricelists for given product. Without conditions and rules of pricelist assignments.</remarks>
+        /// <remarks>Get all pricelists for given product.</remarks>
         /// <param name="productId">Product id</param>
         /// <response code="404">Pricelists not found.</response>
         /// <todo>I don't understand inherite algorithm. If product has two prices but variation has only one, then how (if need) variation does pick up inherite product prices</todo>
@@ -239,7 +239,7 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
         /// <summary>
         /// Update pricelist
         /// </summary>
-        /// <response code="204">Operation successfully.</response>
+        /// <response code="204">Operation completed.</response>
         [HttpPut]
         [ResponseType(typeof(void))]
         [Route("api/pricing/pricelists")]
@@ -253,10 +253,10 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
         /// <summary>
         /// Update prices  
         /// </summary>
-        /// <remarks>Update prices of product for a pricelist.</remarks>
+        /// <remarks>Update prices of product for given pricelist.</remarks>
         /// <param name="productId">Product id</param>
         /// <param name="priceList">Pricelist with new product prices</param>
-        /// <response code="204">Operation successfully.</response>
+        /// <response code="204">Operation completed.</response>
         [HttpPut]
         [ResponseType(typeof(void))]
         [Route("api/catalog/products/{productId}/pricelists")]
@@ -288,7 +288,7 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
         /// </summary>
         /// <remarks>Delete pricelists by given array of pricelist ids.</remarks>
         /// <param name="ids">An array of pricelist ids</param>
-        /// <response code="204">Operation successfully.</response>
+        /// <response code="204">Operation completed.</response>
         [HttpDelete]
         [ResponseType(typeof(void))]
         [Route("api/pricing/pricelists")]
