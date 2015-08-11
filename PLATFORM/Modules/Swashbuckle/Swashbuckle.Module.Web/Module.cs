@@ -13,38 +13,38 @@ using System.IO;
 
 namespace SwashbuckleModule.Web
 {
-    public class Module : ModuleBase
-    {
-        private readonly IUnityContainer _container;
+	public class Module : ModuleBase
+	{
+		private readonly IUnityContainer _container;
 
-        public Module(IUnityContainer container)
-        {
-            _container = container;
-        }
+		public Module(IUnityContainer container)
+		{
+			_container = container;
+		}
 
-        #region IModule Members
+		#region IModule Members
 
-        public override void Initialize()
-        {
-            var settingsManager = _container.Resolve<ISettingsManager>();
-            var xmlRelativePath = settingsManager.GetValue("Swashbuckle.XmlRelativePath", string.Empty);
-            var defaultApiKey = settingsManager.GetValue("Swashbuckle.DefaultApiKey", string.Empty);
-            GlobalConfiguration.Configuration.
+		public override void Initialize()
+		{
+			var settingsManager = _container.Resolve<ISettingsManager>();
+			var xmlRelativePaths = new[] { "~/App_Data/Modules", "~/bin" };
+			var defaultApiKey = settingsManager.GetValue("Swashbuckle.DefaultApiKey", string.Empty);
+			GlobalConfiguration.Configuration.
 				 EnableSwagger(
 				 c =>
 				 {
-                     if (!string.IsNullOrEmpty(xmlRelativePath))
-                     {
-                         var xmlFilesPaths = GetXmlFilesPaths(xmlRelativePath);
-                         foreach (var path in xmlFilesPaths)
-                         {
-                             c.IncludeXmlComments(path);
-                         }
-                     }
+					 foreach (var xmlRelativePath in xmlRelativePaths)
+					 {
+						 var xmlFilesPaths = GetXmlFilesPaths(xmlRelativePath);
+						 foreach (var path in xmlFilesPaths)
+						 {
+							 c.IncludeXmlComments(path);
+						 }
+					 }
 					 c.IgnoreObsoleteProperties();
 					 c.UseFullTypeNameInSchemaIds();
 					 c.DescribeAllEnumsAsStrings();
-                     c.SingleApiVersion("v1", string.Format("VirtoCommerce Platform Web documentation. For this sample, you can use the {0} special-key to test the authorization filters.", defaultApiKey));
+					 c.SingleApiVersion("v1", string.Format("VirtoCommerce Platform Web documentation. For this sample, you can use the {0} special-key to test the authorization filters.", defaultApiKey));
 					 c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
 					 c.RootUrl(req => new Uri(req.RequestUri, req.GetRequestContext().VirtualPathRoot).ToString());
 					 c.ApiKey("apiKey")
@@ -52,21 +52,21 @@ namespace SwashbuckleModule.Web
 						 .Name("api_key")
 						 .In("header");
 				 }
-                 ).EnableSwaggerUi(c =>
-                 {
-                 }
-                 );
+				 ).EnableSwaggerUi(c =>
+				 {
+				 }
+				 );
 
-        }
+		}
 
-        private string[] GetXmlFilesPaths(string xmlRelativePath)
-        {
-            var path = HostingEnvironment.MapPath(xmlRelativePath);
-            var files = Directory.GetFiles(path, "*.Web.XML");
-            return files;
-        }
+		private string[] GetXmlFilesPaths(string xmlRelativePath)
+		{
+			var path = HostingEnvironment.MapPath(xmlRelativePath);
+			var files = Directory.GetFiles(path, "*.Web.XML");
+			return files;
+		}
 
-        #endregion
+		#endregion
 
-    }
+	}
 }
