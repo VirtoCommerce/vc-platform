@@ -10,11 +10,6 @@ namespace VirtoCommerce.MarketingModule.Data.Model
 {
 	public class DynamicContentItem : AuditableEntity
 	{
-		public DynamicContentItem()
-		{
-			PropertyValues = new NullCollection<DynamicContentItemProperty>();
-		}
-
 		[Required]
 		[StringLength(128)]
 		public string Name { get; set; }
@@ -40,8 +35,6 @@ namespace VirtoCommerce.MarketingModule.Data.Model
 		public string ImageUrl { get; set; }
 
 		public virtual DynamicContentFolder Folder { get; set; }
-
-		public virtual ICollection<DynamicContentItemProperty> PropertyValues { get; set; }
 
 		#endregion
 	}

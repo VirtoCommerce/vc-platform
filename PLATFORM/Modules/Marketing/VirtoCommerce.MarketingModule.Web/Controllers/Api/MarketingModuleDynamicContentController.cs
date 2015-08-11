@@ -29,7 +29,6 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 		/// </summary>
 		/// <remarks>Return a single dynamic content item object </remarks>
 		/// <param name="id"> content item id</param>
-		/// <response code="404">dynamic content object item not found</response>
 		[HttpGet]
 		[ResponseType(typeof(webModel.DynamicContentItem))]
 		[Route("contentitems/{id}")]
@@ -93,7 +92,6 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 		/// </summary>
 		/// <remarks>Return a single dynamic content place object </remarks>
 		/// <param name="id">place id</param>
-		/// <response code="404">dynamic content place not found</response>
 		[HttpGet]
 		[ResponseType(typeof(webModel.DynamicContentPlace))]
 		[Route("contentplaces/{id}")]
@@ -175,7 +173,6 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 		/// </summary>
 		/// <remarks>Return a single dynamic content publication object </remarks>
 		/// <param name="id">publication id</param>
-		/// <response code="404">dynamic content object publication not found</response>
 		[HttpGet]
 		[ResponseType(typeof(webModel.DynamicContentPublication))]
 		[Route("contentpublications/{id}")]
@@ -238,7 +235,6 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 		/// </summary>
 		/// <remarks>Return a single dynamic content folder</remarks>
 		/// <param name="id">folder id</param>
-		/// <response code="404">dynamic content folder not found</response>
 		[HttpGet]
 		[ResponseType(typeof(webModel.DynamicContentFolder))]
 		[Route("contentfolders/{id}")]

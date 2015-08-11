@@ -27,8 +27,12 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 			_promotionService = promotionService;
 		}
 
-		
-		// GET: api/marketing/promotions/{id}
+
+		/// <summary>
+		/// Find promotion object by id
+		/// </summary>
+		/// <remarks>Return a single promotion (dynamic or custom) object </remarks>
+		/// <param name="id">promotion id</param>
 		[HttpGet]
 		[ResponseType(typeof(webModel.Promotion))]
 		[Route("{id}")]
@@ -42,7 +46,10 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 			return NotFound();
 		}
 
-        // GET: api/marketing/promotions/new
+		/// <summary>
+		/// Get new dynamic promotion object 
+		/// </summary>
+		/// <remarks>Return a new dynamic promotion object with populated dynamic expression tree</remarks>
         [HttpGet]
         [ResponseType(typeof(webModel.Promotion))]
         [Route("new")]
@@ -58,7 +65,10 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
             return Ok(retVal);
         }
 
-		// POST: api/marketing/promotions
+		/// <summary>
+		/// Add new dynamic promotion object to marketing system
+		/// </summary>
+		/// <param name="promotion">dynamic promotion object that needs to be added to the marketing system</param>
 		[HttpPost]
 		[ResponseType(typeof(webModel.Promotion))]
 		[Route("")]
@@ -70,7 +80,10 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 		}
 
 
-		// PUT: api/marketing/promotions
+		/// <summary>
+		/// Update a existing dynamic promotion object in marketing system
+		/// </summary>
+		/// <param name="promotion">>dynamic promotion object that needs to be updated in the marketing system</param>
 		[HttpPut]
 		[ResponseType(typeof(void))]
 		[Route("")]
@@ -81,7 +94,10 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 			return StatusCode(HttpStatusCode.NoContent);
 		}
 
-		// DELETE: api/marketing/promotions?ids=21
+		/// <summary>
+		///  Delete promotions objects
+		/// </summary>
+		/// <param name="ids">promotions object ids for delete in the marketing system</param>
 		[HttpDelete]
 		[ResponseType(typeof(void))]
 		[Route("")]

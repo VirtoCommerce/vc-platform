@@ -95,7 +95,7 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 		{
 			using (var repository = _repositoryFactory())
 			{
-				var query = repository.Items.Include(x => x.PropertyValues).Where(x => x.FolderId == criteria.FolderId);
+				var query = repository.Items.Where(x => x.FolderId == criteria.FolderId);
 				result.TotalCount += query.Count();
 
 				result.ContentItems = query.OrderBy(x => x.Id)
