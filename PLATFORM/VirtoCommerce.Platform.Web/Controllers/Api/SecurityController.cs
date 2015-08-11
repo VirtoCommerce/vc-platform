@@ -37,7 +37,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
-        /// Sign in with user name and password.
+        /// Sign in with user name and password
         /// </summary>
         /// <remarks>
         /// Verifies provided credentials and if succeeded returns full user details, otherwise returns 401 Unauthorized.
@@ -58,7 +58,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
-        /// Sign out.
+        /// Sign out
         /// </summary>
         [HttpPost]
         [Route("logout")]
@@ -69,7 +69,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
-        /// Get current user details.
+        /// Get current user details
         /// </summary>
         [HttpGet]
         [Route("currentuser")]
@@ -80,7 +80,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
-        /// Get all registered permissions.
+        /// Get all registered permissions
         /// </summary>
         [HttpGet]
         [Route("permissions")]
@@ -97,7 +97,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
-        /// Search roles by keyword.
+        /// Search roles by keyword
         /// </summary>
         /// <param name="request">Search parameters.</param>
         [HttpGet]
@@ -111,7 +111,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
-        /// Get role by ID.
+        /// Get role by ID
         /// </summary>
         /// <param name="roleId"></param>
         [HttpGet]
@@ -125,8 +125,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
-        /// Delete roles by ID.
-        /// DELETE: api/security/roles?id=1&amp;id=2
+        /// Delete roles by ID
         /// </summary>
         /// <param name="roleIds">An array of role IDs.</param>
         [HttpDelete]
@@ -146,7 +145,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
-        /// Add a new role or update an existing role.
+        /// Add a new role or update an existing role
         /// </summary>
         /// <param name="role"></param>
         [HttpPut]
@@ -160,7 +159,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
-        /// Generate new API key.
+        /// Generate new API key
         /// </summary>
         /// <remarks>
         /// Generates new key but does not save it.
@@ -178,7 +177,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
-        /// Search users by keyword.
+        /// Search users by keyword
         /// </summary>
         /// <param name="request">Search parameters.</param>
         [HttpGet]
@@ -192,7 +191,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
-        /// Get user details by user name.
+        /// Get user details by user name
         /// </summary>
         /// <param name="userName"></param>
         [HttpGet]
@@ -206,7 +205,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
-        /// Create new user.
+        /// Create new user
         /// </summary>
         /// <param name="user">User details.</param>
         [HttpPost]
@@ -219,7 +218,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
-        /// Change password.
+        /// Change password
         /// </summary>
         /// <param name="userName"></param>
         /// <param name="changePassword">Old and new passwords.</param>
@@ -238,7 +237,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
-        /// Reset password.
+        /// Reset password
         /// </summary>
         /// <param name="userName"></param>
         /// <param name="resetPassword">New password.</param>
@@ -253,7 +252,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
-        /// Update user details by user ID.
+        /// Update user details by user ID
         /// </summary>
         /// <param name="user">User details.</param>
         [HttpPut]
@@ -266,7 +265,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
-        /// Delete users by name.
+        /// Delete users by name
         /// </summary>
         /// <param name="names">An array of user names.</param>
         [HttpDelete]
