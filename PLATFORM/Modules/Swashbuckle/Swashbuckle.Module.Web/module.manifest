@@ -26,13 +26,6 @@
 	<settings>
         <group name="SwashBuckle|General">
             <setting>
-                <name>Swashbuckle.XmlRelativePath</name>
-                <valueType>string</valueType>
-                <defaultValue>~/App_Data/Modules</defaultValue>
-                <title>Xml comments files relative path</title>
-                <description>Xml comments files relative for Swashbuckle IncludeXmlComments method</description>
-            </setting>
-            <setting>
                 <name>Swashbuckle.DefaultApiKey</name>
                 <valueType>string</valueType>
                 <defaultValue></defaultValue>
