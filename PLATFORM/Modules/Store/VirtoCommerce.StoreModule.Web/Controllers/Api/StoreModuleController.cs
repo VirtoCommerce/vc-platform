@@ -78,7 +78,6 @@ namespace VirtoCommerce.StoreModule.Web.Controllers.Api
 		/// Update store
 		/// </summary>
 		/// <param name="store">Store</param>
-		/// <returns></returns>
 		[HttpPut]
 		[ResponseType(typeof(void))]
 		[Route("")]
