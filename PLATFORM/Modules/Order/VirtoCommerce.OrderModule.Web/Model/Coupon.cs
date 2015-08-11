@@ -6,6 +6,9 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.OrderModule.Web.Model
 {
+	/// <summary>
+	/// Represent coupon entered by customer on checkout 
+	/// </summary>
 	public class Coupon : ValueObject<Coupon>
 	{
 		public string Code { get; set; }
