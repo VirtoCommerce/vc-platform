@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
-using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Core.PushNotifications;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
@@ -20,8 +15,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
-		/// api/pushnotifications?start=0&amp;count=10
+        /// Search push notifications
         /// </summary>
+        /// <param name="criteria">Search parameters.</param>
         /// <returns></returns>
         [HttpGet]
         [ResponseType(typeof(PushNotificationSearchResult))]
@@ -32,8 +28,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return Ok(retVal);
         }
 
+        /// <summary>
+        /// Mark all notifications as read
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
-        [ResponseType(typeof(void))]
+        [ResponseType(typeof(PushNotificationSearchResult))]
         [Route("markAllAsRead")]
         public IHttpActionResult MarkAllAsRead()
         {
@@ -48,7 +48,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return Ok(retVal);
         }
 
+        /// <summary>
+        /// Add new notification or update an existing one
+        /// </summary>
+        /// <param name="notify"></param>
+        /// <returns></returns>
         [HttpPost]
+        [ResponseType(typeof(PushNotification))]
         [Route("")]
         public IHttpActionResult Upsert(PushNotification notify)
         {
