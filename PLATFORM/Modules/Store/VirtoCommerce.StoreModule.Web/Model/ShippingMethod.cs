@@ -8,12 +8,19 @@ namespace VirtoCommerce.StoreModule.Web.Model
 {
 	public class ShippingMethod : Entity
 	{
+		/// <summary>
+		/// Inner unique method code
+		/// </summary>
 		public string Code { get; set; }
+
+		/// <summary>
+		/// Display name of shipping method
+		/// </summary>
 		public string Name { get; set; }
 		public string Description { get; set; }
 
 		/// <summary>
-		/// Logo url of shipping method, can be used in UI
+		/// Absolute logo url of shipping method, can be used in UI
 		/// </summary>
 		public string LogoUrl { get; set; }
 
@@ -25,7 +32,7 @@ namespace VirtoCommerce.StoreModule.Web.Model
 		public int Priority { get; set; }
 
 		/// <summary>
-		/// Type of taxes
+		/// Type of tax
 		/// </summary>
 		public string TaxType { get; set; }
 
