@@ -34,7 +34,6 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
         /// </summary>
         /// <remarks>Return PricelistAssignment by given Id</remarks>
         /// <param name="id">PricelistAssignment Id</param>
-        /// <response code="200">PricelistAssignment returned OK</response>
         [HttpGet]
         [ResponseType(typeof(webModel.PricelistAssignment))]
         [Route("api/pricing/assignments/{id}")]

@@ -24,7 +24,12 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 			_marketingExtensionManager = marketingExtensionManager;
 		}
 
-		// GET: api/marketing/contentitems/{id}
+		/// <summary>
+		/// Find dynamic content item object by id
+		/// </summary>
+		/// <remarks>Return a single dynamic content item object </remarks>
+		/// <param name="id"> content item id</param>
+		/// <response code="404">dynamic content object item not found</response>
 		[HttpGet]
 		[ResponseType(typeof(webModel.DynamicContentItem))]
 		[Route("contentitems/{id}")]
@@ -39,30 +44,39 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 		}
 
 
-		// POST: api/marketing/contentitems
+		/// <summary>
+		/// Add new dynamic content item object to marketing system
+		/// </summary>
+		/// <param name="contentItem">dynamic content object that needs to be added to the dynamic content system</param>
 		[HttpPost]
 		[ResponseType(typeof(webModel.DynamicContentItem))]
 		[Route("contentitems")]
         [CheckPermission(Permission = PredefinedPermissions.Manage)]
-		public IHttpActionResult CreateDynamicContent(webModel.DynamicContentItem content)
+		public IHttpActionResult CreateDynamicContent(webModel.DynamicContentItem contentItem)
 		{
-			var retVal = _dynamicContentService.CreateContent(content.ToCoreModel());
+			var retVal = _dynamicContentService.CreateContent(contentItem.ToCoreModel());
 			return GetDynamicContentById(retVal.Id);
 		}
 
 
-		// PUT: api/marketing/content/tems
+		/// <summary>
+		///  Update a existing dynamic content item object
+		/// </summary>
+		/// <param name="contentItem">dynamic content object that needs to be updated in the dynamic content system</param>
 		[HttpPut]
 		[ResponseType(typeof(void))]
 		[Route("contentitems")]
         [CheckPermission(Permission = PredefinedPermissions.Manage)]
-		public IHttpActionResult UpdateDynamicContent(webModel.DynamicContentItem content)
+		public IHttpActionResult UpdateDynamicContent(webModel.DynamicContentItem contentItem)
 		{
-			_dynamicContentService.UpdateContents(new coreModel.DynamicContentItem[] { content.ToCoreModel() });
+			_dynamicContentService.UpdateContents(new coreModel.DynamicContentItem[] { contentItem.ToCoreModel() });
 			return StatusCode(HttpStatusCode.NoContent);
 		}
 
-		// DELETE: api/marketing/contentitems?ids=21
+		/// <summary>
+		///  Delete a dynamic content item objects
+		/// </summary>
+		/// <param name="ids">content item object ids for delete in the dynamic content system</param>
 		[HttpDelete]
 		[ResponseType(typeof(void))]
 		[Route("contentitems")]
@@ -74,7 +88,12 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 		}
 
 
-		// GET: api/marketing/contentplaces/{id}
+		/// <summary>
+		/// Find dynamic content place object by id
+		/// </summary>
+		/// <remarks>Return a single dynamic content place object </remarks>
+		/// <param name="id">place id</param>
+		/// <response code="404">dynamic content place not found</response>
 		[HttpGet]
 		[ResponseType(typeof(webModel.DynamicContentPlace))]
 		[Route("contentplaces/{id}")]
@@ -89,30 +108,39 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 		}
 
 
-		// POST: api/marketing/contentplaces
+		/// <summary>
+		/// Add new dynamic content place object to marketing system
+		/// </summary>
+		/// <param name="contentPlace">dynamic content place object that needs to be added to the dynamic content system</param>
 		[HttpPost]
 		[ResponseType(typeof(webModel.DynamicContentPlace))]
 		[Route("contentplaces")]
         [CheckPermission(Permission = PredefinedPermissions.Manage)]
-		public IHttpActionResult CreateDynamicContentPlace(webModel.DynamicContentPlace place)
+		public IHttpActionResult CreateDynamicContentPlace(webModel.DynamicContentPlace contentPlace)
 		{
-			var retVal = _dynamicContentService.CreatePlace(place.ToCoreModel());
+			var retVal = _dynamicContentService.CreatePlace(contentPlace.ToCoreModel());
 			return GetDynamicContentPlaceById(retVal.Id);
 		}
 
 
-		// PUT: api/marketing/contentplaces
+		/// <summary>
+		///  Update a existing dynamic content place object
+		/// </summary>
+		/// <param name="contentPlace">dynamic content place object that needs to be updated in the dynamic content system</param>
 		[HttpPut]
 		[ResponseType(typeof(void))]
 		[Route("contentplaces")]
         [CheckPermission(Permission = PredefinedPermissions.Manage)]
-		public IHttpActionResult UpdateDynamicContentPlace(webModel.DynamicContentPlace place)
+		public IHttpActionResult UpdateDynamicContentPlace(webModel.DynamicContentPlace contentPlace)
 		{
-			_dynamicContentService.UpdatePlace(place.ToCoreModel());
+			_dynamicContentService.UpdatePlace(contentPlace.ToCoreModel());
 			return StatusCode(HttpStatusCode.NoContent);
 		}
 
-		// DELETE: api/marketing/contentplaces?ids=21
+		/// <summary>
+		///  Delete a dynamic content place objects
+		/// </summary>
+		/// <param name="ids">content place object ids for delete from dynamic content system</param>
 		[HttpDelete]
 		[ResponseType(typeof(void))]
 		[Route("contentplaces")]
@@ -123,7 +151,9 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 			return StatusCode(HttpStatusCode.NoContent);
 		}
 
-		// GET: api/marketing/contentpublications/new
+		/// <summary>
+		/// Get new dynamic content publication object 
+		/// </summary>
 		[HttpGet]
         [ResponseType(typeof(webModel.DynamicContentPublication))]
 		[Route("contentpublications/new")]
@@ -140,7 +170,12 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 			return Ok(retVal);
 		}
 
-		// GET: api/marketing/contentpublications/{id}
+		/// <summary>
+		/// Find dynamic content publication object by id
+		/// </summary>
+		/// <remarks>Return a single dynamic content publication object </remarks>
+		/// <param name="id">publication id</param>
+		/// <response code="404">dynamic content object publication not found</response>
 		[HttpGet]
 		[ResponseType(typeof(webModel.DynamicContentPublication))]
 		[Route("contentpublications/{id}")]
@@ -155,7 +190,10 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 		}
 
 
-		// POST: api/marketing/contentpublications
+		/// <summary>
+		/// Add new dynamic content publication object to marketing system
+		/// </summary>
+		/// <param name="publication">dynamic content publication object that needs to be added to the dynamic content system</param>
 		[HttpPost]
 		[ResponseType(typeof(webModel.DynamicContentPublication))]
 		[Route("contentpublications")]
@@ -167,7 +205,10 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 		}
 
 
-		// PUT: api/marketing/contentpublications
+		/// <summary>
+		///  Update a existing dynamic content publication object
+		/// </summary>
+		/// <param name="publication">dynamic content publication object that needs to be updated in the dynamic content system</param>
 		[HttpPut]
 		[ResponseType(typeof(void))]
 		[Route("contentpublications")]
@@ -178,7 +219,10 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 			return StatusCode(HttpStatusCode.NoContent);
 		}
 
-		// DELETE: api/marketing/contentpublications?ids=21
+		/// <summary>
+		///  Delete a dynamic content publication objects
+		/// </summary>
+		/// <param name="ids">content publication object ids for delete from dynamic content system</param>
 		[HttpDelete]
 		[ResponseType(typeof(void))]
 		[Route("contentpublications")]
@@ -189,7 +233,12 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 			return StatusCode(HttpStatusCode.NoContent);
 		}
 
-		// GET: api/marketing/contentfolders/{id}
+		/// <summary>
+		/// Find dynamic content folder by id
+		/// </summary>
+		/// <remarks>Return a single dynamic content folder</remarks>
+		/// <param name="id">folder id</param>
+		/// <response code="404">dynamic content folder not found</response>
 		[HttpGet]
 		[ResponseType(typeof(webModel.DynamicContentFolder))]
 		[Route("contentfolders/{id}")]
@@ -204,7 +253,10 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 		}
 
 
-		// POST: api/marketing/contentfolders
+		/// <summary>
+		/// Add new dynamic content folder
+		/// </summary>
+		/// <param name="folder">dynamic content folder that needs to be added</param>
 		[HttpPost]
 		[ResponseType(typeof(webModel.DynamicContentFolder))]
 		[Route("contentfolders")]
@@ -215,8 +267,10 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 			return GetDynamicContentFolderById(retVal.Id);
 		}
 
-
-		// PUT: api/marketing/contentfolders
+		/// <summary>
+		///  Update a existing dynamic content folder
+		/// </summary>
+		/// <param name="folder">dynamic content folder that needs to be updated</param>
 		[HttpPut]
 		[ResponseType(typeof(void))]
 		[Route("contentfolders")]
@@ -227,7 +281,10 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 			return StatusCode(HttpStatusCode.NoContent);
 		}
 
-		// DELETE: api/marketing/contentfolders?ids=21
+		/// <summary>
+		///  Delete a dynamic content folders
+		/// </summary>
+		/// <param name="ids">folders ids for delete</param>
 		[HttpDelete]
 		[ResponseType(typeof(void))]
 		[Route("contentfolders")]
