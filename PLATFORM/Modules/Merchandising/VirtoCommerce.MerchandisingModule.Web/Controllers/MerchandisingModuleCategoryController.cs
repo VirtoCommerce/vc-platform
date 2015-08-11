@@ -38,9 +38,10 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         /// <summary>
         /// Get store category by id
         /// </summary>
-        /// <param name="category">Category id (required)</param>
-        /// <param name="store">Store id (required)</param>
-        /// <param name="language">Culture name (optional, default value is "en-us")</param>
+        /// <param name="category">Category id</param>
+        /// <param name="store">Store id</param>
+        /// <param name="language">Culture name (default value is "en-us")</param>
+        /// <response code="404">Category not found</response>
 		[HttpGet]
 		[ResponseType(typeof(webModel.Category))]
 		[ClientCache(Duration = 30)]
@@ -56,9 +57,10 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         /// <summary>
         /// Get store category by code
         /// </summary>
-        /// <param name="store">Store id (required)</param>
-        /// <param name="code">Category code (required)</param>
-        /// <param name="language">Culture name (optional, default value is "en-us")</param>
+        /// <param name="store">Store id</param>
+        /// <param name="code">Category code</param>
+        /// <param name="language">Culture name (default value is "en-us")</param>
+        /// <response code="404">Category not found</response>
         [HttpGet]
         [ResponseType(typeof(webModel.Category))]
         [ClientCache(Duration = 30)]
@@ -87,11 +89,12 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		}
 
         /// <summary>
-        /// Get store category by SEO keyword (slug)
+        /// Get store category by SEO keyword
         /// </summary>
-        /// <param name="store">Store id (required)</param>
-        /// <param name="keyword">Category SEO keyword (required)</param>
-        /// <param name="language">Culture name (optional, default value is "en-us")</param>
+        /// <param name="store">Store id</param>
+        /// <param name="keyword">Category SEO keyword</param>
+        /// <param name="language">Culture name (default value is "en-us")</param>
+        /// <response code="404">Category not found</response>
         [HttpGet]
         [ResponseType(typeof(webModel.Category))]
         [ClientCache(Duration = 30)]
@@ -119,11 +122,11 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		}
 
         /// <summary>
-        /// Search store categories; search can be performed for subcategories
+        /// Search for store categories
         /// </summary>
-        /// <param name="store">Store id (required)</param>
-        /// <param name="language">Culture name (optional, default value is "en-us")</param>
-        /// <param name="parentId">Parent category id (optional)</param>
+        /// <param name="store">Store id</param>
+        /// <param name="language">Culture name (default value is "en-us")</param>
+        /// <param name="parentId">Parent category id</param>
         [HttpGet]
         [ResponseType(typeof(webModel.ResponseCollection<webModel.Category>))]
         [ClientCache(Duration = 30)]

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using VirtoCommerce.Domain.Customer.Model;
 
@@ -11,17 +6,35 @@ namespace VirtoCommerce.CustomerModule.Web.Model
 {
 	public class Address
 	{
-		[JsonConverter(typeof(StringEnumConverter))]
-		public AddressType AddressType { get; set; }
-		public string Name { get; set; }
+        /// <summary>
+        /// Type of address.
+        /// </summary>
+        /// <value>0: Billing, 1: Shipping, 3: BillingAndShipping</value>
+        [JsonConverter(typeof(StringEnumConverter))]
+        public AddressType AddressType { get; set; }
+
+        /// <summary>
+        /// Not documented
+        /// </summary>
+        public string Name { get; set; }
+        /// <summary>
+        /// Not documented
+        /// </summary>
 		public string Organization { get; set; }
+        
+        /// <summary>
+        /// ISO 3166-1 alpha-3
+        /// </summary>
 		public string CountryCode { get; set; }
 		public string CountryName { get; set; }
 		public string City { get; set; }
 		public string PostalCode { get; set; }
 		public string Zip { get; set; }
 		public string Line1 { get; set; }
-		public string Line2 { get; set; }
+        public string Line2 { get; set; }
+        /// <summary>
+        /// Code of Region (AL - Alabama)
+        /// </summary>
 		public string RegionId { get; set; }
 		public string RegionName { get; set; }
 		public string FirstName { get; set; }

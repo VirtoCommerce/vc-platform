@@ -1,22 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using VirtoCommerce.Platform.Core.Common;
 
 
 namespace VirtoCommerce.CartModule.Web.Model
 {
-	public class Discount : ValueObject<Coupon>
-	{
-		public string PromotionId { get; set; }
-		[JsonConverter(typeof(StringEnumConverter))]
-		public CurrencyCodes Currency { get; set; }
-		public decimal DiscountAmount { get; set; }
-	
-		public string Description { get; set; }
-	}
+    public class Discount : ValueObject<Coupon>
+    {
+        /// <summary>
+        /// Gets or sets the value of promotion id
+        /// </summary>
+        public string PromotionId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of currency
+        /// </summary>
+        /// <value>
+        /// Currency code in ISO 4217 format
+        /// </value>
+        [JsonConverter(typeof(StringEnumConverter))]
+        public CurrencyCodes Currency { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of discount amount
+        /// </summary>
+        public decimal DiscountAmount { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of discount description
+        /// </summary>
+        public string Description { get; set; }
+    }
 }

@@ -19,8 +19,8 @@ using System.Net;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
-	[ApiExplorerSettings(IgnoreApi=true)]
 	[RoutePrefix("api/platform")]
+    [ApiExplorerSettings(IgnoreApi = true)]
 	public class PlatformExportImportController : ApiController
 	{
 		private readonly IPlatformExportImportManager _platformExportManager;
@@ -207,7 +207,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 					 pushNotification.Description = "Export finished";
 				 }
 			 }
-			 catch(Exception ex)
+            catch (Exception ex)
 			 {
 				 pushNotification.Errors.Add(ex.ExpandExceptionMessage()); 
 			 }

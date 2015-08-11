@@ -1,27 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Model
 {
     public class DynamicContentItemGroup
     {
-        #region Constructors and Destructors
-
         public DynamicContentItemGroup(string groupName)
         {
-            this.GroupName = groupName;
-            this.Items = new List<DynamicContentItem>();
+            GroupName = groupName;
+            Items = new List<DynamicContentItem>();
         }
 
-        #endregion
-
-        #region Public Properties
-
+        /// <summary>
+        /// Gets or sets the value of dynamic content item group name
+        /// </summary>
         public string GroupName { get; set; }
-        public List<DynamicContentItem> Items { get; private set; }
 
-        #endregion
+        /// <summary>
+        /// Gets or sets the collection of dynamic content items for dynamic content item group
+        /// </summary>
+        public List<DynamicContentItem> Items { get; private set; }
     }
 }

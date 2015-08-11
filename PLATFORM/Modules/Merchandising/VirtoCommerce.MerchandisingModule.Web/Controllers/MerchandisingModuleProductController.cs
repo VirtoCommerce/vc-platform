@@ -63,9 +63,9 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         /// <summary>
         /// Get store products collection by their ids
         /// </summary>
-        /// <param name="store">Store id (required)</param>
-        /// <param name="ids">Product ids (required)</param>
-        /// <param name="responseGroup">Response detalization scale (optional, default value is ItemInfo)</param>
+        /// <param name="store">Store id</param>
+        /// <param name="ids">Product ids</param>
+        /// <param name="responseGroup">Response detalization scale (default value is ItemInfo)</param>
         [HttpGet]
 		[ArrayInput(ParameterName = "ids")]
 		[ResponseType(typeof(CatalogItem[]))]
@@ -84,12 +84,13 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		}
 
         /// <summary>
-        /// Get store product by ???
+        /// Get store product by id
         /// </summary>
-        /// <param name="store">Store id (required)</param>
-        /// <param name="product">Product ??? (required)</param>
-        /// <param name="responseGroup">Response detalization scale (optional, default value is ItemLarge)</param>
-        /// <param name="language">Culture name (optional, devault value is "en-us")</param>
+        /// <param name="store">Store id</param>
+        /// <param name="product">Product id</param>
+        /// <param name="responseGroup">Response detalization scale (default value is ItemLarge)</param>
+        /// <param name="language">Culture name (default value is "en-us")</param>
+        /// <response code="404">Product not found</response>
 		[HttpGet]
 		[ResponseType(typeof(CatalogItem))]
 		[ClientCache(Duration = 30)]
@@ -114,10 +115,11 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         /// <summary>
         /// Get store product by code
         /// </summary>
-        /// <param name="store">Store id (required)</param>
-        /// <param name="code">Product code (required)</param>
-        /// <param name="responseGroup">Response detalization scale (optional, default value is ItemLarge)</param>
-        /// <param name="language">Culture name (optional, devault value is "en-us")</param>
+        /// <param name="store">Store id</param>
+        /// <param name="code">Product code</param>
+        /// <param name="responseGroup">Response detalization scale (default value is ItemLarge)</param>
+        /// <param name="language">Culture name (default value is "en-us")</param>
+        /// <response code="404">Product not found</response>
         [HttpGet]
 		[ResponseType(typeof(CatalogItem))]
 		[ClientCache(Duration = 30)]
@@ -154,10 +156,11 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         /// <summary>
         /// Get store product by SEO keyword
         /// </summary>
-        /// <param name="store">Store id (required)</param>
-        /// <param name="keyword">Product SEO keyword (required)</param>
-        /// <param name="responseGroup">Response detalization scale (optional, default value is ItemLarge)</param>
-        /// <param name="language">Culture name (optional, devault value is "en-us")</param>
+        /// <param name="store">Store id</param>
+        /// <param name="keyword">Product SEO keyword</param>
+        /// <param name="responseGroup">Response detalization scale (default value is ItemLarge)</param>
+        /// <param name="language">Culture name (default value is "en-us")</param>
+        /// <response code="404">Product not found</response>
 		[HttpGet]
 		[ResponseType(typeof(CatalogItem))]
 		[ClientCache(Duration = 30)]
@@ -192,15 +195,15 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		}
 
         /// <summary>
-        /// Search store products
+        /// Search for store products
         /// </summary>
-        /// <param name="store">Store id (required)</param>
-        /// <param name="priceLists">Array of pricelists ids (required)</param>
-        /// <param name="parameters">Search parameters (required)</param>
-        /// <param name="responseGroup">Response detalization scale (optional, default value is ItemMedium)</param>
-        /// <param name="outline">Product's category outline (optional)</param>
-        /// <param name="language">Culture name (optional, devault value is "en-us")</param>
-        /// <param name="currency">Currency (optional, default value is "USD")</param>
+        /// <param name="store">Store id</param>
+        /// <param name="priceLists">Array of pricelists ids</param>
+        /// <param name="parameters">Search parameters</param>
+        /// <param name="responseGroup">Response detalization scale (default value is ItemMedium)</param>
+        /// <param name="outline">Product category outline</param>
+        /// <param name="language">Culture name (default value is "en-us")</param>
+        /// <param name="currency">Currency (default value is "USD")</param>
 		[HttpGet]
 		[ArrayInput(ParameterName = "priceLists")]
 		[ClientCache(Duration = 30)]

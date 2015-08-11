@@ -1,25 +1,62 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.CartModule.Web.Model
 {
-	public class ShippingMethod : ValueObject<ShippingMethod>
-	{
-		public string ShipmentMethodCode { get; set; }
-		public string Name { get; set; }
-		public string OptionName { get; set; }
-		public string OptionDescription { get; set; }
-		public string LogoUrl { get; set; }
-		public string TaxType { get; set; }
-		[JsonConverter(typeof(StringEnumConverter))]
-		public CurrencyCodes Currency { get; set; }
-		public decimal Price { get; set; }
-		public ICollection<Discount> Discounts { get; set; }
-	}
+    public class ShippingMethod : ValueObject<ShippingMethod>
+    {
+        /// <summary>
+        /// Gets or sets the value of shipping method code
+        /// </summary>
+        public string ShipmentMethodCode { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of shipping method name
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of shipping method option name
+        /// </summary>
+        public string OptionName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of shipping method option description
+        /// </summary>
+        public string OptionDescription { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of shipping method logo absolute URL
+        /// </summary>
+        public string LogoUrl { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of shipping method tax type
+        /// </summary>
+        public string TaxType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of shipping method currency
+        /// </summary>
+        /// <value>
+        /// Currency code in ISO 4217 format
+        /// </value>
+        [JsonConverter(typeof(StringEnumConverter))]
+        public CurrencyCodes Currency { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of shipping method price
+        /// </summary>
+        public decimal Price { get; set; }
+
+        /// <summary>
+        /// Gets or sets the collection of shipping method discounts
+        /// </summary>
+        /// <value>
+        /// Collection of Discount objects
+        /// </value>
+        public ICollection<Discount> Discounts { get; set; }
+    }
 }
