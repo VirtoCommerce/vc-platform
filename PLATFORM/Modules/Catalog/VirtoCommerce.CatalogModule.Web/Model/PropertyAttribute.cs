@@ -1,6 +1,9 @@
 ﻿
 namespace VirtoCommerce.CatalogModule.Web.Model
 {
+    /// <summary>
+    /// Additional metainformation for a Property
+    /// </summary>
     public class PropertyAttribute
     {
         public string Id { get; set; }

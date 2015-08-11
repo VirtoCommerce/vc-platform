@@ -8,6 +8,9 @@ using VirtoCommerce.Platform.Core.Notifications;
 
 namespace VirtoCommerce.CatalogModule.Web.Model.EventNotifications
 {
+    /// <summary>
+    ///  Notification for catalog data import job.
+    /// </summary>
 	public class ImportNotification : JobNotificationBase
 	{
 		public ImportNotification(string creator)

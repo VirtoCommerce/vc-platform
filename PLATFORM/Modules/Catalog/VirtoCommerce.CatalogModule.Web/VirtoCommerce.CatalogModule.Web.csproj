@@ -154,7 +154,6 @@
     <Compile Include="Model\EventNotifications\JobNotificationBase.cs" />
     <Compile Include="Model\ListEntryLink.cs" />
     <Compile Include="ExportImport\CsvProductPropertyMap.cs" />
-    <Compile Include="Model\ProgressStatus.cs" />
     <Compile Include="Model\ProductAssociation.cs" />
     <Compile Include="Model\PropertyDictionaryValue.cs" />
     <Compile Include="Model\Language.cs" />

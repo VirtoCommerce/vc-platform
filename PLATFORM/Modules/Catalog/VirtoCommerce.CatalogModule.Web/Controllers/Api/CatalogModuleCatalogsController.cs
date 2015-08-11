@@ -36,7 +36,10 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 			_permissionService = permissionService;
         }
 
-		// GET: api/catalog/catalogs
+        /// <summary>
+        /// Get Catalogs list
+        /// </summary>
+        /// <remarks>Get common and virtual Catalogs list with minimal information included. Returns array of Catalog</remarks>
 		[HttpGet]
 		[ResponseType(typeof(webModel.Catalog[]))]
 		[Route("")]
@@ -51,7 +54,11 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             return Ok(retVal);
         }
 
-		// GET:  api/catalog/catalogs/4
+        /// <summary>
+        /// Gets Catalog by id.
+        /// </summary>
+        /// <remarks>Gets Catalog by id with full information loaded</remarks>
+        /// <param name="id">The Catalog id.</param>
 		[HttpGet]
         [ResponseType(typeof(webModel.Catalog))]
 		[Route("{id}")]
@@ -113,7 +120,10 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         //    return Ok();
         //}
 
-		// GET: api/catalog/catalogs/getnew
+        /// <summary>
+        /// Gets the template for a new catalog.
+        /// </summary>
+        /// <remarks>Gets the template for a new common catalog</remarks>
         [HttpGet]
         [ResponseType(typeof(webModel.Catalog))]
 		[Route("getnew")]
@@ -136,7 +146,10 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             //retVal = _catalogService.Create(retVal.ToModuleModel()).ToWebModel();
             return Ok(retVal);
         }
-        // GET: api/catalogs/getnewvirtualcatalog
+
+        /// <summary>
+        /// Gets the template for a new virtual catalog.
+        /// </summary>
         [HttpGet]
         [ResponseType(typeof(webModel.Catalog))]
 		[Route("getnewvirtual")]
@@ -160,7 +173,12 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             return Ok(retVal);
         }
 
-		// POST: api/catalog/catalogs
+        /// <summary>
+        /// Creates the specified catalog.
+        /// </summary>
+        /// <remarks>Creates the specified catalog</remarks>
+        /// <param name="catalog">The catalog to create</param>
+        /// <exception cref="System.UnauthorizedAccessException"></exception>
 		[HttpPost]
 		[ResponseType(typeof(webModel.Catalog))]
 		[Route("")]
@@ -178,8 +196,12 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                 throw new UnauthorizedAccessException();
             }
         }
-
-		// PUT: api/catalog/catalogs
+        
+        /// <summary>
+        /// Updates the specified catalog.
+        /// </summary>
+        /// <remarks>Updates the specified catalog.</remarks>
+        /// <param name="catalog">The catalog.</param>
 		[HttpPut]
         [ResponseType(typeof(void))]
 		[Route("")]
@@ -191,7 +213,12 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         }
       
 
-        // DELETE: api/catalogs/5
+        /// <summary>
+        /// Deletes catalog by id.
+        /// </summary>
+        /// <remarks>Deletes catalog by id</remarks>
+        /// <param name="id">Catalog id.</param>
+        /// <returns></returns>
 		[HttpDelete]
         [ResponseType(typeof(void))]
 		[Route("{id}")]
@@ -208,18 +235,18 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             _catalogService.Update(new moduleModel.Catalog[] { moduleCatalog });
         }
 
-        private IEnumerable<webModel.CatalogLanguage> GetSystemLanguages()
-        {
-            var retVal = new List<webModel.CatalogLanguage>();
+        //private IEnumerable<webModel.CatalogLanguage> GetSystemLanguages()
+        //{
+        //    var retVal = new List<webModel.CatalogLanguage>();
 
-			var languages = _settingManager.GetArray<string>("VirtoCommerce.Core.Languages", new string[] { "en-US" });
+        //    var languages = _settingManager.GetArray<string>("VirtoCommerce.Core.Languages", new string[] { "en-US" });
 
-			foreach (var languageCode in languages)
-						{
-							retVal.Add(new webModel.CatalogLanguage(languageCode));
-						}
+        //    foreach (var languageCode in languages)
+        //                {
+        //                    retVal.Add(new webModel.CatalogLanguage(languageCode));
+        //                }
 
-            return retVal;
-        }
+        //    return retVal;
+        //}
     }
 }

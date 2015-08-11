@@ -56,10 +56,9 @@
                     <span class="list-t">Value Type</span>
                     <span class="list-descr">{{blade.currentEntity.valueType}}</span>
                 </li>
-                <li class="list-item" ng-class="{'__selected': currentChild === 'dict', '__disabled': !blade.currentEntity.isDictionary || blade.isNew}" ng-click='openChild("dict")'>
+                <li class="list-item" ng-class="{'__selected': currentChild === 'dict', '__disabled': !blade.currentEntity.isDictionary}" ng-click='openChild("dict")'>
                     <span class="list-t">Dictionary values</span>
-                    <span class="list-descr" ng-if="blade.currentEntity.isDictionary && !blade.isNew">Manage dictionary</span>
-                    <div class="error" ng-if="blade.currentEntity.isDictionary && blade.isNew">Create property before managing dictionary values</div>
+                    <span class="list-descr" ng-if="blade.currentEntity.isDictionary">Manage dictionary</span>
                 </li>
             </ul>
         </div>
