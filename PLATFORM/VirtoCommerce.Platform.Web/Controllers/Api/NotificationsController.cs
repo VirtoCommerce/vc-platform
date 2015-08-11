@@ -83,12 +83,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 		[HttpGet]
 		[ResponseType(typeof(webModels.NotificationTemplate[]))]
 		[Route("template/{type}/{objectId}/{objectTypeId}")]
-		public  IHttpActionResult GetNotificationTemplates(string type, string objectId, string objectTypeId)
+        public IHttpActionResult GetNotificationTemplates(string type, string objectId, string objectTypeId)
 		{
 			List<webModels.NotificationTemplate> retVal = new List<webModels.NotificationTemplate>();
 			var templates = _notificationTemplateService.GetNotificationTemplatesByNotification(type, objectId, objectTypeId);
 
-			if(templates.Any())
+            if (templates.Any())
 			{
 				retVal = templates.Select(t => t.ToWebModel()).ToList();
 			}

@@ -7,8 +7,8 @@
         <dependency id="VirtoCommerce.Core" version="2.3.0" />
     </dependencies>
 
-    <title>Virto Commerce Customer</title>
-    <description>APIs and UI for managing customers</description>
+    <title>Virto Commerce customer management module</title>
+    <description>Managing customers contacts and organizations</description>
     <authors>
         <author>Virto Commerce</author>
     </authors>

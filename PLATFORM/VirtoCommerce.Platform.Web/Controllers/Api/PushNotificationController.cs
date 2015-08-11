@@ -20,7 +20,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
-		/// api/pushnotifications?start=0&count=10&
+		/// api/pushnotifications?start=0&amp;count=10
         /// </summary>
         /// <returns></returns>
         [HttpGet]

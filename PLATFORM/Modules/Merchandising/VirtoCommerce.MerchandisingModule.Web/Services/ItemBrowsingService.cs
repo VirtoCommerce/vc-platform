@@ -78,6 +78,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Services
         ///     Gets the context item outline based on what customer is browsing
         /// </summary>
         /// <param name="itemOutline"></param>
+        /// <param name="prefixOutline"></param>
         /// <returns></returns>
         private string GetItemOutlineUsingContext(string itemOutline, string prefixOutline)
         {

@@ -1,7 +1,5 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Net;
-using System.Runtime.Remoting;
 using System.Web.Http;
 using System.Web.Http.Description;
 using VirtoCommerce.Platform.Core.DynamicProperties;
@@ -21,7 +19,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
-        /// GET: api/platform/dynamic/types
+        /// Get object types which support dynamic properties
         /// </summary>
         /// <returns></returns>
         [HttpGet]
@@ -33,9 +31,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return Ok(types);
         }
 
-
         /// <summary>
-        /// GET: api/platform/dynamic/types/{typeName}/properties
+        /// Get dynamic properties registered for object type
         /// </summary>
         /// <returns></returns>
         [HttpGet]
@@ -48,8 +45,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
-        /// POST: api/platform/dynamic/types/{typeName}/properties
+        /// Add or update dynamic properties
         /// </summary>
+        /// <remarks>
+        /// Fill property ID to update existing property or leave it empty to create a new property.
+        /// </remarks>
         /// <returns></returns>
         [HttpPost]
         [ResponseType(typeof(void))]
@@ -66,7 +66,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
-        /// DELETE: api/platform/dynamic/types/{typeName}/properties/{propertyId}
+        /// Delete dynamic property
         /// </summary>
         /// <returns></returns>
         [HttpDelete]
@@ -78,9 +78,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-
         /// <summary>
-        /// GET: api/platform/dynamic/types/{typeName}/properties/{propertyId}/dictionaryitems
+        /// Get dictionary items
         /// </summary>
         /// <returns></returns>
         [HttpGet]
@@ -93,8 +92,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
-        /// POST: api/platform/dynamic/types/{typeName}/properties/{propertyId}/dictionaryitems
+        /// Add or update dictionary items
         /// </summary>
+        /// <remarks>
+        /// Fill item ID to update existing item or leave it empty to create a new item.
+        /// </remarks>
         /// <returns></returns>
         [HttpPost]
         [ResponseType(typeof(void))]
@@ -106,8 +108,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
-        /// DELETE: api/platform/dynamic/types/{typeName}/properties/{propertyId}/dictionaryitems
+        /// Delete dictionary items
         /// </summary>
+        /// <param name="typeName"></param>
+        /// <param name="propertyId"></param>
+        /// <param name="ids">IDs of dictionary items to delete.</param>
         /// <returns></returns>
         [HttpDelete]
         [ResponseType(typeof(void))]
@@ -117,8 +122,5 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _service.DeleteDictionaryItems(ids);
             return StatusCode(HttpStatusCode.NoContent);
         }
-
-
-     
     }
 }

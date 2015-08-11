@@ -130,8 +130,6 @@
     <Compile Include="Marketing\Model\DynamicContent\DynamicContentItem.cs" />
     <Compile Include="Marketing\Model\DynamicContent\DynamicContentPlace.cs" />
     <Compile Include="Marketing\Model\DynamicContent\DynamicContentPublication.cs" />
-    <Compile Include="Marketing\Model\DynamicContent\Property.cs" />
-    <Compile Include="Marketing\Model\DynamicContent\PropertyValueType.cs" />
     <Compile Include="Marketing\Model\Promotions\Expression\IRewardExpression.cs" />
     <Compile Include="Marketing\Model\Promotions\Expression\PromoDynamicExpressionTree.cs" />
     <Compile Include="Marketing\Model\Promotions\IMarketingEvent.cs" />
