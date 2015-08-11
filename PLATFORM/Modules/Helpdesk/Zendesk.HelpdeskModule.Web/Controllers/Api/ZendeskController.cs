@@ -8,6 +8,7 @@ using ZendeskApi_v2.Models.Tickets;
 
 namespace Zendesk.HelpdeskModule.Web.Controllers.Api
 {
+	[ApiExplorerSettings(IgnoreApi = true)]
     [RoutePrefix("api/help")]
     public class ZendeskController: ApiController
     {

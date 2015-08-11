@@ -21,6 +21,7 @@ using VirtoCommerce.Platform.Core.PushNotifications;
 
 namespace GoogleShopping.MerchantModule.Web.Controllers.Api
 {
+	[ApiExplorerSettings(IgnoreApi=true)]
     [RoutePrefix("api/g")]
     [CheckPermission(Permission = PredefinedPermissions.Manage)]
     public class GoogleShoppingController : ApiController
