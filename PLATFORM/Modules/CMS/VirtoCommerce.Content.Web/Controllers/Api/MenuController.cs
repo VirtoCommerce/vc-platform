@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
 using VirtoCommerce.Content.Data.Services;
@@ -25,13 +26,10 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 			_menuService = menuService;
 		}
 
-		/// <summary>
-		/// Get menu link lists
-		/// </summary>
-		/// <remarks>Get all menu link lists by store. Returns array of store menu link lists</remarks>
-        /// <param name="storeId">Store Id</param>
-        /// <response code="500">Internal Server Error</response>
-        /// <response code="200">Menu link lists returned OK</response>
+        /// <summary>
+        /// Get menu link lists
+        /// </summary>
+        /// <param name="storeId">Store id</param>
 		[HttpGet]
 		[ResponseType(typeof(IEnumerable<MenuLinkList>))]
 		[ClientCache(Duration = 30)]
@@ -43,20 +41,18 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		    {
 		        return this.Ok(lists.Select(s => s.ToWebModel()));
 		    }
-			return Ok();
+            return StatusCode(HttpStatusCode.NoContent);
 		}
 
 		/// <summary>
 		/// Get menu link list by id
 		/// </summary>
-		/// <remarks>Get menu link list by list id. Returns menu link list</remarks>
-		/// <param name="listId">List Id</param>
-		/// <response code="500">Internal Server Error</response>
-		/// <response code="200">Menu link list returned OK</response>
+		/// <param name="listId">List id</param>
+        /// <param name="storeId">Store id</param>
 		[HttpGet]
 		[ResponseType(typeof(MenuLinkList))]
 		[Route("menu/{listId}")]
-		public IHttpActionResult GetList(string listId)
+		public IHttpActionResult GetList(string storeId, string listId)
 		{
 			var item = _menuService.GetListById(listId).ToWebModel();
 			return Ok(item);
@@ -65,13 +61,11 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		/// <summary>
 		/// Checking name of menu link list
 		/// </summary>
-		/// <remarks>Checking pair of name+language of menu link list for unique. Return result of checking</remarks>
-		/// <param name="storeId">Store Id</param>
+		/// <remarks>Checking pair of name+language of menu link list for unique, if checking result - false saving unavailable</remarks>
+		/// <param name="storeId">Store id</param>
 		/// <param name="name">Name of menu link list</param>
 		/// <param name="language">Language of menu link list</param>
 		/// <param name="id">Menu link list id</param>
-		/// <response code="500">Internal Server Error</response>
-		/// <response code="200">Checking name returns OK</response>
 		[HttpGet]
 		[ResponseType(typeof(CheckNameResult))]
 		[Route("menu/checkname")]
@@ -96,7 +90,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		public IHttpActionResult Update(MenuLinkList list)
 		{
 			_menuService.Update(list.ToCoreModel());
-			return Ok();
+            return StatusCode(HttpStatusCode.NoContent);
 		}
 
 		/// <summary>
@@ -113,7 +107,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		public IHttpActionResult Delete(string listId)
 		{
 			_menuService.DeleteList(listId);
-			return Ok();
+            return StatusCode(HttpStatusCode.NoContent);
 		}
 
 	}

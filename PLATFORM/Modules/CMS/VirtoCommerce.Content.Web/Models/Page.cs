@@ -5,49 +5,33 @@ using System.Web;
 
 namespace VirtoCommerce.Content.Web.Models
 {
-	/// <summary>
-	/// Page element
-	/// </summary>
 	public class Page
 	{
-		/// <summary>
-		/// Page element id
-		/// </summary>
 		public string Id { get; set; }
-
 		/// <summary>
-		/// Page element name
+        /// Page element name, contatins the path relative to the root pages folder
 		/// </summary>
 		public string Name { get; set; }
 
 		/// <summary>
-		/// Page element content
+		/// Page element text content (text page element), based on content type
 		/// </summary>
 		public string Content { get; set; }
 
 		/// <summary>
-		/// Page element byte content
+		/// Page element byte content (non-text page element), bases on content type
 		/// </summary>
 		public byte[] ByteContent { get; set; }
 
-		/// <summary>
-		/// Page element content type
-		/// </summary>
 		public string ContentType { get; set; }
 
 		/// <summary>
-		/// Page element language
+		/// Locale
 		/// </summary>
 		public string Language { get; set; }
 
-		/// <summary>
-		/// Page element modified date
-		/// </summary>
 		public DateTime ModifiedDate { get; set; }
 
-		/// <summary>
-		/// Page element file url
-		/// </summary>
 		public string FileUrl { get; set; }
 	}
 }

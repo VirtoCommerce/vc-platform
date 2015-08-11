@@ -5,43 +5,31 @@ using System.Web;
 
 namespace VirtoCommerce.Content.Web.Models
 {
-	/// <summary>
-	/// Sync asset element
-	/// </summary>
     public class SyncAsset
     {
-		/// <summary>
-		/// Asset element id
-		/// </summary>
         public string Id { get; set; }
 
 		/// <summary>
-		/// Asset element name
+		/// Asset element name, contains full path of theme asset or page element relative to the root
 		/// </summary>
         public string Name { get; set; }
 
 		/// <summary>
-		/// Asset element text content
+		/// Asset element text content (text files - html, js, css, txt, liquid & etc), based on content type
 		/// </summary>
         public string Content { get; set; }
 
 		/// <summary>
-		/// Asset element byte content
+		/// Asset element byte content (non-text files - images, fonts, zips, pdfs & etc), based on content type
 		/// </summary>
         public byte[] ByteContent { get; set; }
 
-		/// <summary>
-		/// 
-		/// </summary>
         public string AssetUrl { get; set; }
 
-		/// <summary>
-		/// Asset element content type
-		/// </summary>
         public string ContentType { get; set; }
 
 		/// <summary>
-		/// Asset element updated date
+		/// Last updated date of the asset element
 		/// </summary>
         public DateTime Updated { get; set; }
     }

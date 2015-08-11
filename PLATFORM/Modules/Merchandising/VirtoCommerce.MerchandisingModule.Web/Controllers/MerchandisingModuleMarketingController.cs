@@ -28,7 +28,10 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 			_cacheManager = cacheManager;
         }
 
-		// POST: api/mp/promotions/evaluate
+		/// <summary>
+        /// Evaluate promotions
+        /// </summary>
+        /// <param name="context">Promotion evaluation context (required)</param>
 		[HttpPost]
 		[ResponseType(typeof(webModel.PromotionReward[]))]
 		[Route("promotions/evaluate")]
@@ -42,7 +45,10 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 			return Ok(retVal.Rewards.Select(x => x.ToWebModel()).ToArray());
 		}
 
-		// POST: api/mp/promotions/processevent
+		/// <summary>
+        /// Process marketing event
+        /// </summary>
+        /// <param name="marketingEvent">Marketing event (required)</param>
 		[HttpPost]
 		[ResponseType(typeof(webModel.PromotionReward[]))]
 		[Route("promotions/processevent")]
@@ -63,7 +69,12 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         //    return Ok(retVal.Select(x => x.ToWebModel()).ToArray());
         //}
 
-
+        /// <summary>
+        /// Get dynamic content for given placeholders
+        /// </summary>
+        /// <param name="placeHolders">Array of placeholder ids (required)</param>
+        /// <param name="tags">Array of tags (optional)</param>
+        /// <param name="language">Culture name (optional, devault value is "en-us")</param>
 	    [HttpGet]
 	    [ResponseType(typeof(webModel.ResponseCollection<webModel.DynamicContentItemGroup>))]
 	    [ArrayInput(ParameterName = "placeHolders")]

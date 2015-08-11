@@ -1,18 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.PricingModule.Web.Model
 {
-	public class Pricelist : AuditableEntity
+    public class Pricelist : AuditableEntity
 	{
 		public string Name { get; set; }
+
 		public string Description { get; set; }
+
+        /// <summary>
+        /// Currency defined for all prices in the price list.
+        /// </summary>
 		[JsonConverter(typeof(StringEnumConverter))]
 		public CurrencyCodes Currency { get; set; }
+
+        /// <summary>
+        /// Number of Products prices. It can include prices of a product with different quantity of batch
+        /// </summary>
 		public ICollection<ProductPrice> ProductPrices { get; set; }
+
+        /// <summary>
+        /// Assignments define condition and rules to use the price list
+        /// </summary>
 		public ICollection<PricelistAssignment> Assignments { get; set; }
 
 	}

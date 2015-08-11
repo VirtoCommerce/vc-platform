@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Reflection;
 using System.Web;
 using System.Web.Hosting;
@@ -67,7 +68,7 @@ namespace VirtoCommerce.Platform.Web
             const string modulesVirtualPath = "~/Modules";
             var modulesPhysicalPath = HostingEnvironment.MapPath(modulesVirtualPath).EnsureEndSeparator();
 
-			//Modules initialization
+            //Modules initialization
             var bootstrapper = new VirtoCommercePlatformWebBootstrapper(modulesVirtualPath, modulesPhysicalPath, _assembliesPath);
             bootstrapper.Run();
 
@@ -78,37 +79,37 @@ namespace VirtoCommerce.Platform.Web
             const string connectionStringName = "VirtoCommerce";
             InitializePlatform(app, container, connectionStringName);
 
-		
-			var moduleManager = container.Resolve<IModuleManager>();
-			var moduleCatalog = container.Resolve<IModuleCatalog>();
 
-			// Register URL rewriter before modules initialization
-			if (Directory.Exists(modulesPhysicalPath))
-			{
-				var applicationBase = AppDomain.CurrentDomain.SetupInformation.ApplicationBase.EnsureEndSeparator();
-				var modulesRelativePath = MakeRelativePath(applicationBase, modulesPhysicalPath);
+            var moduleManager = container.Resolve<IModuleManager>();
+            var moduleCatalog = container.Resolve<IModuleCatalog>();
 
-				var urlRewriterOptions = new UrlRewriterOptions();
-				var moduleInitializerOptions = (ModuleInitializerOptions)container.Resolve<IModuleInitializerOptions>();
-				moduleInitializerOptions.SampleDataLevel = EnumUtility.SafeParse(ConfigurationManager.AppSettings["VirtoCommerce:SampleDataLevel"], SampleDataLevel.None);
+            // Register URL rewriter before modules initialization
+            if (Directory.Exists(modulesPhysicalPath))
+            {
+                var applicationBase = AppDomain.CurrentDomain.SetupInformation.ApplicationBase.EnsureEndSeparator();
+                var modulesRelativePath = MakeRelativePath(applicationBase, modulesPhysicalPath);
 
-				foreach (var module in moduleCatalog.Modules.OfType<ManifestModuleInfo>())
-				{
-					var urlRewriteKey = string.Format(CultureInfo.InvariantCulture, "/Modules/$({0})", module.ModuleName);
-					var urlRewriteValue = MakeRelativePath(modulesPhysicalPath, module.FullPhysicalPath);
-					urlRewriterOptions.Items.Add(PathString.FromUriComponent(urlRewriteKey), "/" + urlRewriteValue);
+                var urlRewriterOptions = new UrlRewriterOptions();
+                var moduleInitializerOptions = (ModuleInitializerOptions)container.Resolve<IModuleInitializerOptions>();
+                moduleInitializerOptions.SampleDataLevel = EnumUtility.SafeParse(ConfigurationManager.AppSettings["VirtoCommerce:SampleDataLevel"], SampleDataLevel.None);
 
-					moduleInitializerOptions.ModuleDirectories.Add(module.ModuleName, module.FullPhysicalPath);
-				}
+                foreach (var module in moduleCatalog.Modules.OfType<ManifestModuleInfo>())
+                {
+                    var urlRewriteKey = string.Format(CultureInfo.InvariantCulture, "/Modules/$({0})", module.ModuleName);
+                    var urlRewriteValue = MakeRelativePath(modulesPhysicalPath, module.FullPhysicalPath);
+                    urlRewriterOptions.Items.Add(PathString.FromUriComponent(urlRewriteKey), "/" + urlRewriteValue);
 
-				app.Use<UrlRewriterOwinMiddleware>(urlRewriterOptions);
-				app.UseStaticFiles(new StaticFileOptions
-				{
-					FileSystem = new Microsoft.Owin.FileSystems.PhysicalFileSystem(modulesRelativePath)
-				});
-			}
+                    moduleInitializerOptions.ModuleDirectories.Add(module.ModuleName, module.FullPhysicalPath);
+                }
 
-			// Ensure all modules are loaded
+                app.Use<UrlRewriterOwinMiddleware>(urlRewriterOptions);
+                app.UseStaticFiles(new StaticFileOptions
+                {
+                    FileSystem = new Microsoft.Owin.FileSystems.PhysicalFileSystem(modulesRelativePath)
+                });
+            }
+
+            // Ensure all modules are loaded
             foreach (var module in moduleCatalog.Modules.Where(x => x.State == ModuleState.NotStarted))
             {
                 moduleManager.LoadModule(module.ModuleName);
@@ -117,26 +118,26 @@ namespace VirtoCommerce.Platform.Web
             // Security owin configuration
             var authenticationOptions = new AuthenticationOptions
             {
-				CookiesEnabled = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Authentication:Cookies.Enabled", true),
-				CookiesValidateInterval = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Authentication:Cookies.ValidateInterval", TimeSpan.FromDays(1)),
-				BearerTokensEnabled = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Authentication:BearerTokens.Enabled", true),
-				BearerTokensExpireTimeSpan = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Authentication:BearerTokens.AccessTokenExpireTimeSpan", TimeSpan.FromHours(1)),
-				HmacEnabled = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Authentication:Hmac.Enabled", true),
-				HmacSignatureValidityPeriod = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Authentication:Hmac.SignatureValidityPeriod", TimeSpan.FromMinutes(20)),
-				ApiKeysEnabled = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Authentication:ApiKeys.Enabled", true),
-				ApiKeysHttpHeaderName = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Authentication:ApiKeys.HttpHeaderName", "api_key"),
-				ApiKeysQueryStringParameterName = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Authentication:ApiKeys.QueryStringParameterName", "api_key"),
+                CookiesEnabled = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Authentication:Cookies.Enabled", true),
+                CookiesValidateInterval = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Authentication:Cookies.ValidateInterval", TimeSpan.FromDays(1)),
+                BearerTokensEnabled = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Authentication:BearerTokens.Enabled", true),
+                BearerTokensExpireTimeSpan = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Authentication:BearerTokens.AccessTokenExpireTimeSpan", TimeSpan.FromHours(1)),
+                HmacEnabled = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Authentication:Hmac.Enabled", true),
+                HmacSignatureValidityPeriod = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Authentication:Hmac.SignatureValidityPeriod", TimeSpan.FromMinutes(20)),
+                ApiKeysEnabled = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Authentication:ApiKeys.Enabled", true),
+                ApiKeysHttpHeaderName = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Authentication:ApiKeys.HttpHeaderName", "api_key"),
+                ApiKeysQueryStringParameterName = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Authentication:ApiKeys.QueryStringParameterName", "api_key"),
             };
             OwinConfig.Configure(app, container, connectionStringName, authenticationOptions);
 
-			//Platform mvc configuration
-			AreaRegistration.RegisterAllAreas();
-			GlobalConfiguration.Configure(WebApiConfig.Register);
-			FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
-			RouteConfig.RegisterRoutes(RouteTable.Routes);
-			BundleConfig.RegisterBundles(BundleTable.Bundles);
+            //Platform mvc configuration
+            AreaRegistration.RegisterAllAreas();
+            GlobalConfiguration.Configure(WebApiConfig.Register);
+            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
+            RouteConfig.RegisterRoutes(RouteTable.Routes);
+            BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-			RecurringJob.AddOrUpdate<SendNotificationsJobs>("SendNotificationsJob", x => x.Process(), "*/1 * * * *");
+            RecurringJob.AddOrUpdate<SendNotificationsJobs>("SendNotificationsJob", x => x.Process(), "*/1 * * * *");
 
             var notificationManager = container.Resolve<INotificationManager>();
             notificationManager.RegisterNotificationType(() => new RegistrationEmailNotification(container.Resolve<IEmailNotificationSendingGateway>())
@@ -371,7 +372,7 @@ namespace VirtoCommerce.Platform.Web
             container.RegisterType<ApplicationUserManager>();
             container.RegisterType<ApplicationSignInManager>();
 
-			var nonEditableUsers = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:NonEditableUsers", string.Empty);
+            var nonEditableUsers = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:NonEditableUsers", string.Empty);
             container.RegisterInstance<ISecurityOptions>(new SecurityOptions(nonEditableUsers));
 
             container.RegisterType<ISecurityService, SecurityService>();

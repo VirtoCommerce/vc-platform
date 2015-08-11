@@ -32,8 +32,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _securityService = securityService;
         }
 
-        #region Internal Web admin actions
-
         [HttpPost]
         [Route("login")]
         [AllowAnonymous]
@@ -56,9 +54,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         [HttpGet]
-        [Route("usersession")]
+        [Route("currentuser")]
         [ResponseType(typeof(ApplicationUserExtended))]
-        public async Task<IHttpActionResult> GetCurrentUserSession()
+        public async Task<IHttpActionResult> GetCurrentUser()
         {
             return Ok(await _securityService.FindByNameAsync(User.Identity.Name, UserDetails.Full));
         }
@@ -127,44 +125,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var result = _roleService.AddOrUpdateRole(role);
             return Ok(result);
         }
-
-        #endregion
-
-        #region Public methods
-
-        [HttpGet]
-        [Route("usersession/{userName}")]
-        public async Task<ApplicationUserExtended> GetUserSession(string userName)
-        {
-            return await _securityService.FindByNameAsync(userName, UserDetails.Full);
-        }
-
-        #region Methods needed to integrate identity security with external user store that will call api methods
-
-        #region IUserStore<ApplicationUser> Members
-
-        [Route("users/id/{userId}")]
-        [HttpGet]
-        public async Task<ApplicationUserExtended> FindByIdAsync(string userId)
-        {
-            return await _securityService.FindByIdAsync(userId, UserDetails.Reduced);
-        }
-
-        [Route("users/name/{userName}")]
-        [HttpGet]
-        public async Task<ApplicationUserExtended> FindByNameAsync(string userName)
-        {
-            return await _securityService.FindByNameAsync(userName, UserDetails.Reduced);
-        }
-
-        [Route("users/email/{email}")]
-        [HttpGet]
-        public async Task<ApplicationUserExtended> FindByEmailAsync(string email)
-        {
-            return await _securityService.FindByEmailAsync(email, UserDetails.Reduced);
-        }
-
-        #endregion
 
         /// <summary>
         ///  GET: api/security/apiaccounts/new
@@ -289,10 +249,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var result = await _securityService.CreateAsync(user);
             return ProcessSecurityResult(result);
         }
-
-        #endregion
-
-        #endregion
 
 
         private IHttpActionResult ProcessSecurityResult(SecurityResult result)

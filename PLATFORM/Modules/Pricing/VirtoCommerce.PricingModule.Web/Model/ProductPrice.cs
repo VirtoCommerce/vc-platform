@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 namespace VirtoCommerce.PricingModule.Web.Model
 {
@@ -15,7 +13,10 @@ namespace VirtoCommerce.PricingModule.Web.Model
 		}
 		public string ProductId { get; set; }
 		public string ProductName { get; set; }
-
+        
+        /// <summary>
+        /// List of product prices with different quantity of batch
+        /// </summary>
 		public ICollection<Price> Prices { get; set; }
 	}
 }

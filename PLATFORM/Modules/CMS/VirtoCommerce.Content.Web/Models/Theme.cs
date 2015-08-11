@@ -10,18 +10,15 @@ namespace VirtoCommerce.Content.Web.Models
 	/// </summary>
 	public class Theme
 	{
-		/// <summary>
-		/// Theme name
-		/// </summary>
 		public string Name { get; set; }
 
 		/// <summary>
-		/// Theme path
+		/// Theme path, contains store id
 		/// </summary>
 		public string Path { get; set; }
 
 		/// <summary>
-		/// Theme modified date
+		/// Last modified date of any element in theme
 		/// </summary>
 		public DateTime Modified { get; set; }
 	}

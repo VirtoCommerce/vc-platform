@@ -5,13 +5,10 @@ using System.Web;
 
 namespace VirtoCommerce.Content.Web.Models
 {
-	/// <summary>
-	/// Searching criteria of pages
-	/// </summary>
 	public class GetPagesCriteria
 	{
 		/// <summary>
-		/// Last update date
+		/// Max value of last updated date, if it's null returns all pages for store
 		/// </summary>
 		public DateTime? LastUpdateDate { get; set; }
 	}

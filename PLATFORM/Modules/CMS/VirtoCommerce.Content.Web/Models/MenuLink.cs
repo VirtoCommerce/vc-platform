@@ -1,38 +1,29 @@
 ﻿namespace VirtoCommerce.Content.Web.Models
 {
-	/// <summary>
-	/// Menu link
-	/// </summary>
 	public class MenuLink
 	{
-		/// <summary>
-		/// Id of menu link
-		/// </summary>
 		public string Id { get; set; }
 
 		/// <summary>
-		/// Title of menu link
+        /// Title of menu link element, displayed as link text or link title
 		/// </summary>
 		public string Title { get; set; }
 
 		/// <summary>
-		/// Url of menu link
+		/// Url of menu link element, inserts in href attribute of link
 		/// </summary>
 		public string Url { get; set; }
 
 		/// <summary>
-		/// Priority of menu link
+        /// Priority of menu link element, the higher the value, the higher in the list
 		/// </summary>
 		public int Priority { get; set; }
 
 		/// <summary>
-		/// Is menu link active
+		/// If true - will displayed in the list, if false - not
 		/// </summary>
 		public bool IsActive { get; set; }
 
-		/// <summary>
-		/// Menu link list parent id
-		/// </summary>
 		public string MenuLinkListId { get; set; }
 	}
 }
