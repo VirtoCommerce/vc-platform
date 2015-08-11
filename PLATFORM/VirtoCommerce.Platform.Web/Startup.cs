@@ -14,7 +14,6 @@ using System.Web.Routing;
 using Hangfire;
 using Hangfire.SqlServer;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.SignalR;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
@@ -50,11 +49,8 @@ using VirtoCommerce.Platform.Data.Settings;
 using VirtoCommerce.Platform.Web;
 using VirtoCommerce.Platform.Web.BackgroundJobs;
 using VirtoCommerce.Platform.Web.Controllers.Api;
-using VirtoCommerce.Platform.Web.Model.ExportImport.PushNotifications;
 using VirtoCommerce.Platform.Web.Resources;
 using WebGrease.Extensions;
-using System.Web.Http;
-using System.Net.Http;
 
 [assembly: OwinStartup(typeof(Startup))]
 
