@@ -20,7 +20,7 @@ namespace VirtoCommerce.StoreModule.Web.Model
         public string Url { get; set; }
 
 		/// <summary>
-		/// State of store ('Open', 'Closed', 'RestrictedAccess')
+		/// State of store
 		/// </summary>
         [JsonConverter(typeof(StringEnumConverter))]
         public coreModel.StoreState StoreState { get; set; }
