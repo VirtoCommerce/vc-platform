@@ -13,7 +13,6 @@ using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Asset;
 using VirtoCommerce.Platform.Core.Packaging;
 using VirtoCommerce.Platform.Web.Converters.Packaging;
-using moduleModel = VirtoCommerce.Platform.Core.Packaging;
 using webModel = VirtoCommerce.Platform.Web.Model.Packaging;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
@@ -35,7 +34,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _packagesPath = packagesPath;
         }
 
-        // GET: api/modules
+        /// <summary>
+        /// Get installed modules
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [ResponseType(typeof(webModel.ModuleDescriptor[]))]
         [Route("")]
@@ -45,7 +47,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return Ok(retVal);
         }
 
-        // GET: api/modules/121
+        /// <summary>
+        /// Get module details
+        /// </summary>
+        /// <param name="id">Module ID.</param>
+        /// <returns></returns>
         [HttpGet]
         [ResponseType(typeof(webModel.ModuleDescriptor))]
         [Route("{id}")]
@@ -59,7 +65,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return NotFound();
         }
 
-        // POST: api/modules
+        /// <summary>
+        /// Upload module package for installation or update
+        /// </summary>
+        /// <returns></returns>
         [HttpPost]
         [ResponseType(typeof(webModel.ModuleDescriptor))]
         [Route("")]
@@ -99,7 +108,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return NotFound();
         }
 
-        // GET: api/modules/install?fileName=''
+        /// <summary>
+        /// Install module from uploaded file
+        /// </summary>
+        /// <param name="fileName">Module package file name.</param>
+        /// <returns></returns>
         [HttpGet]
         [ResponseType(typeof(webModel.ModuleWorkerJob))]
         [Route("install")]
@@ -117,7 +130,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return InternalServerError();
         }
 
-        // GET: api/modules/121/update
+        /// <summary>
+        /// Update module from uploaded file
+        /// </summary>
+        /// <param name="id">Module ID.</param>
+        /// <param name="fileName">Module package file name.</param>
+        /// <returns></returns>
         [HttpGet]
         [ResponseType(typeof(webModel.ModuleWorkerJob))]
         [Route("{id}/update")]
@@ -140,7 +158,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return InternalServerError();
         }
 
-        // GET: api/modules/121/uninstall
+        /// <summary>
+        /// Uninstall module
+        /// </summary>
+        /// <param name="id">Module ID.</param>
+        /// <returns></returns>
         [HttpGet]
         [ResponseType(typeof(webModel.ModuleWorkerJob))]
         [Route("{id}/uninstall")]
@@ -156,7 +178,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return InternalServerError();
         }
 
-        // GET: api/modules/jobs/111
+        /// <summary>
+        /// Get installation or update details
+        /// </summary>
+        /// <param name="id">Job ID.</param>
+        /// <returns></returns>
         [HttpGet]
         [ResponseType(typeof(webModel.ModuleWorkerJob))]
         [Route("jobs/{id}")]
@@ -170,7 +196,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return NotFound();
         }
 
-        // GET: api/modules/restart
+        /// <summary>
+        /// Restart web application
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("restart")]
         [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
