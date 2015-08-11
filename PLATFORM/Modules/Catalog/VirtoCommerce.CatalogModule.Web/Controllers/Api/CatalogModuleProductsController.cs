@@ -21,20 +21,24 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
     {
         private readonly IItemService _itemsService;
         private readonly IPropertyService _propertyService;
-		private readonly IBlobUrlResolver _blobUrlResolver;
-		private readonly ICatalogService _catalogService;
-		private readonly ISkuGenerator _skuGenerator;
+        private readonly IBlobUrlResolver _blobUrlResolver;
+        private readonly ICatalogService _catalogService;
+        private readonly ISkuGenerator _skuGenerator;
 
-		public CatalogModuleProductsController(IItemService itemsService, IPropertyService propertyService, IBlobUrlResolver blobUrlResolver, ICatalogService catalogService, ISkuGenerator skuGenerator)
+        public CatalogModuleProductsController(IItemService itemsService, IPropertyService propertyService, IBlobUrlResolver blobUrlResolver, ICatalogService catalogService, ISkuGenerator skuGenerator)
         {
             _itemsService = itemsService;
             _propertyService = propertyService;
-			_blobUrlResolver = blobUrlResolver;
-			_catalogService = catalogService;
-			_skuGenerator = skuGenerator;
+            _blobUrlResolver = blobUrlResolver;
+            _catalogService = catalogService;
+            _skuGenerator = skuGenerator;
         }
 
-        // GET: api/catalog/products/5
+
+        /// <summary>
+        /// Gets item by id.
+        /// </summary>
+        /// <param name="id">Item id.</param>
         [HttpGet]
         [ResponseType(typeof(webModel.Product))]
         [Route("{id}")]
@@ -46,12 +50,17 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                 return NotFound();
             }
 
-			var properties = GetAllCatalogProperies(item.CatalogId, item.CategoryId);
-			var retVal = item.ToWebModel(_blobUrlResolver, properties);
+            var properties = GetAllCatalogProperies(item.CatalogId, item.CategoryId);
+            var retVal = item.ToWebModel(_blobUrlResolver, properties);
 
             return Ok(retVal);
         }
 
+        /// <summary>
+        /// Gets the template for a new product (outside of category).
+        /// </summary>
+        /// <remarks>Use when need to create item belonging to catalog directly.</remarks>
+        /// <param name="catalogId">The catalog id.</param>
         [HttpGet]
         [ResponseType(typeof(webModel.Product))]
         [Route("~/api/catalog/{catalogId}/products/getnew")]
@@ -61,7 +70,13 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             return GetNewProduct(catalogId, null);
         }
 
-        // GET: /api/catalog/apple/categories/new category/products/getnew
+
+        /// <summary>
+        /// Gets the template for a new product (inside category).
+        /// </summary>
+        /// <remarks>Use when need to create item belonging to catalog category.</remarks>
+        /// <param name="catalogId">The catalog id.</param>
+        /// <param name="categoryId">The category id.</param>
         [HttpGet]
         [ResponseType(typeof(webModel.Product))]
         [Route("~/api/catalog/{catalogId}/categories/{categoryId}/products/getnew")]
@@ -72,29 +87,33 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             {
                 CategoryId = categoryId,
                 CatalogId = catalogId,
-				IsActive = true,
-			
+                IsActive = true,
+
             };
-		
-			if (catalogId != null)
+
+            if (catalogId != null)
             {
-				var properites = GetAllCatalogProperies(catalogId, categoryId);
-				retVal.Properties = properites.Select(x => x.ToWebModel()).ToList();
+                var properites = GetAllCatalogProperies(catalogId, categoryId);
+                retVal.Properties = properites.Select(x => x.ToWebModel()).ToList();
 
                 foreach (var property in retVal.Properties)
                 {
                     property.Values = new List<webModel.PropertyValue>();
                     property.IsManageable = true;
-					property.IsReadOnly = property.Type != coreModel.PropertyType.Product && property.Type != coreModel.PropertyType.Variation;
+                    property.IsReadOnly = property.Type != coreModel.PropertyType.Product && property.Type != coreModel.PropertyType.Variation;
                 }
             }
 
-			retVal.Code = _skuGenerator.GenerateSku(retVal.ToModuleModel(null));
+            retVal.Code = _skuGenerator.GenerateSku(retVal.ToModuleModel(null));
 
             return Ok(retVal);
         }
 
-        // GET: /api/catalog/products/121/getnewvariation
+
+        /// <summary>
+        /// Gets the template for a new variation.
+        /// </summary>
+        /// <param name="productId">The parent product id.</param>
         [HttpGet]
         [ResponseType(typeof(webModel.Product))]
         [Route("{productId}/getnewvariation")]
@@ -107,8 +126,8 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                 return NotFound();
             }
 
-			var properties = GetAllCatalogProperies(product.CatalogId, product.CategoryId);
-		    var mainWebProduct = product.ToWebModel(_blobUrlResolver, properties);
+            var properties = GetAllCatalogProperies(product.CatalogId, product.CategoryId);
+            var mainWebProduct = product.ToWebModel(_blobUrlResolver, properties);
 
             var newVariation = new webModel.Product
             {
@@ -116,7 +135,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                 CategoryId = product.CategoryId,
                 CatalogId = product.CatalogId,
                 TitularItemId = product.MainProductId ?? productId,
-				Properties = mainWebProduct.Properties.Where(x => x.Type == coreModel.PropertyType.Variation).ToList(),
+                Properties = mainWebProduct.Properties.Where(x => x.Type == coreModel.PropertyType.Variation).ToList(),
             };
 
             foreach (var property in newVariation.Properties)
@@ -124,11 +143,11 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                 //Need reset value ids
                 foreach (var val in property.Values.ToArray())
                 {
-					val.Id = null;
+                    val.Id = null;
                 }
 
                 // Mark variation property as required
-				if (property.Type == coreModel.PropertyType.Variation)
+                if (property.Type == coreModel.PropertyType.Variation)
                 {
                     property.Required = true;
                 }
@@ -137,11 +156,15 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             }
 
 
-			newVariation.Code = _skuGenerator.GenerateSku(newVariation.ToModuleModel(null));
+            newVariation.Code = _skuGenerator.GenerateSku(newVariation.ToModuleModel(null));
             return Ok(newVariation);
         }
 
-        // POST: /api/catalog/products
+        
+        /// <summary>
+        /// Updates the specified product.
+        /// </summary>
+        /// <param name="product">The product.</param>
         [HttpPost]
         [ResponseType(typeof(void))]
         [Route("")]
@@ -156,7 +179,11 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // DELETE: /api/catalog/products?ids=21
+        
+        /// <summary>
+        /// Deletes the specified items by id.
+        /// </summary>
+        /// <param name="ids">The items ids.</param>
         [HttpDelete]
         [ResponseType(typeof(void))]
         [Route("")]
@@ -167,43 +194,43 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-		private coreModel.Property[] GetAllCatalogProperies(string catalogId, string categoryId)
-		{
-			if (catalogId == null)
-				throw new ArgumentNullException("catalogId");
+        private coreModel.Property[] GetAllCatalogProperies(string catalogId, string categoryId)
+        {
+            if (catalogId == null)
+                throw new ArgumentNullException("catalogId");
 
-			coreModel.Property[] retVal = null;
-			if (!String.IsNullOrEmpty(categoryId))
-			{
-				retVal = _propertyService.GetCategoryProperties(categoryId);
-			}
-			else
-			{
-				retVal = _propertyService.GetCatalogProperties(catalogId);
-			}
-			return retVal;
-		}
+            coreModel.Property[] retVal = null;
+            if (!String.IsNullOrEmpty(categoryId))
+            {
+                retVal = _propertyService.GetCategoryProperties(categoryId);
+            }
+            else
+            {
+                retVal = _propertyService.GetCatalogProperties(catalogId);
+            }
+            return retVal;
+        }
 
         private coreModel.CatalogProduct UpdateProduct(webModel.Product product)
         {
             var moduleProduct = product.ToModuleModel(_blobUrlResolver);
             if (moduleProduct.Id == null)
             {
-				if (moduleProduct.SeoInfos == null || !moduleProduct.SeoInfos.Any())
-				{
-					var slugUrl = GenerateProductDefaultSlugUrl(product);
-					if (!string.IsNullOrEmpty(slugUrl))
-					{
-						var catalog = _catalogService.GetById(product.CatalogId);
-						var defaultLanguageCode = catalog.Languages.First(x => x.IsDefault).LanguageCode;
-						var seoInfo = new SeoInfo
-						{
-							LanguageCode = defaultLanguageCode,
-							SemanticUrl = slugUrl
-						};
-						moduleProduct.SeoInfos = new SeoInfo[] { seoInfo };
-					}
-				}
+                if (moduleProduct.SeoInfos == null || !moduleProduct.SeoInfos.Any())
+                {
+                    var slugUrl = GenerateProductDefaultSlugUrl(product);
+                    if (!string.IsNullOrEmpty(slugUrl))
+                    {
+                        var catalog = _catalogService.GetById(product.CatalogId);
+                        var defaultLanguageCode = catalog.Languages.First(x => x.IsDefault).LanguageCode;
+                        var seoInfo = new SeoInfo
+                        {
+                            LanguageCode = defaultLanguageCode,
+                            SemanticUrl = slugUrl
+                        };
+                        moduleProduct.SeoInfos = new SeoInfo[] { seoInfo };
+                    }
+                }
                 return _itemsService.Create(moduleProduct);
             }
             else
@@ -214,18 +241,18 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             return null;
         }
 
-		private string GenerateProductDefaultSlugUrl(webModel.Product product)
-		{
-			var retVal = new List<string>();
-			retVal.Add(product.Name);
-			if(product.Properties != null)
-			{
-				foreach(var property in product.Properties.Where(x=>x.Type == coreModel.PropertyType.Variation && x.Values != null))
-				{
-					retVal.AddRange(property.Values.Select(x=>x.PropertyName + "-" + x.Value));
-				}
-			}
-			return String.Join(" ", retVal).GenerateSlug();
-		}
+        private string GenerateProductDefaultSlugUrl(webModel.Product product)
+        {
+            var retVal = new List<string>();
+            retVal.Add(product.Name);
+            if (product.Properties != null)
+            {
+                foreach (var property in product.Properties.Where(x => x.Type == coreModel.PropertyType.Variation && x.Values != null))
+                {
+                    retVal.AddRange(property.Values.Select(x => x.PropertyName + "-" + x.Value));
+                }
+            }
+            return String.Join(" ", retVal).GenerateSlug();
+        }
     }
 }

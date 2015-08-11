@@ -17,33 +17,15 @@
 
         var newBlade = {
             subtitle: 'Manage property',
-            currentEntity: node,
-            confirmChangesFn: function (entry) {
-                angular.copy(entry, node);
-                $scope.saveChanges();
-            },
-            deleteFn: function () {
-                //var idx = blade.currentEntities.indexOf(node);
-                //if (idx >= 0) {
-                //    blade.currentEntities.splice(idx, 1);
-                //}
-                dynamicPropertiesApi.delete({ id: blade.objectType, propertyId: node.id },
-                    blade.refresh,
-                    function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
-            }
+            currentEntity: node
         };
         openDetailsBlade(newBlade);
     }
 
-    $scope.saveChanges = function () {
-        dynamicPropertiesApi.save({ id: blade.objectType }, blade.currentEntities,
-            blade.refresh,
-            function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
-    };
-
     function openDetailsBlade(node) {
         var newBlade = {
             id: "dynamicPropertyDetail",
+            objectType: blade.objectType,
             controller: 'platformWebApp.dynamicPropertyDetailController',
             template: 'Scripts/app/dynamicProperties/blades/dynamicProperty-detail.tpl.html'
         };
@@ -69,10 +51,9 @@
                var newBlade = {
                    subtitle: 'New property',
                    isNew: true,
-                   confirmChangesFn: function (entry) {
-                       blade.currentEntities.push(entry);
-                       $scope.saveChanges();
-                   },
+                   onChangesConfirmedFn: function (entry) {
+                       $scope.selectedNodeId = entry.id;
+                   }
                };
                openDetailsBlade(newBlade);
            },

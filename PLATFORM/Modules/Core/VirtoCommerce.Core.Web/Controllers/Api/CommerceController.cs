@@ -32,9 +32,8 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 		}
 
 		/// <summary>
-		/// GET: api/fulfillment/centers
+		/// Return all fulfillment centers registered in the system
 		/// </summary>
-		/// <returns></returns>
 		[HttpGet]
 		[ResponseType(typeof(webModel.FulfillmentCenter[]))]
 		[Route("fulfillment/centers")]
@@ -44,7 +43,10 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 			return Ok(retVal);
 		}
 
-		// GET: api/fulfillment/centers/{id}
+		/// <summary>
+		/// Find fulfillment center by id
+		/// </summary>
+		/// <param name="id">fulfillment center id</param>
 		[HttpGet]
 		[ResponseType(typeof(webModel.FulfillmentCenter))]
 		[Route("fulfillment/centers/{id}")]
@@ -54,7 +56,10 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 			return Ok(retVal.ToWebModel());
 		}
 
-		// PUT: api/fulfillment/centers
+		/// <summary>
+		///  Update a existing fulfillment center 
+		/// </summary>
+		/// <param name="center">fulfillment center</param>
 		[HttpPut]
 		[ResponseType(typeof(webModel.FulfillmentCenter))]
 		[Route("fulfillment/centers")]
@@ -64,6 +69,10 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 			return Ok(retVal);
 		}
 
+		/// <summary>
+		/// Payment callback operation used by external payment services to inform post process payment in our system
+		/// </summary>
+		/// <param name="orderId">customer order id</param>
 		[HttpGet]
 		[Route("paymentcallback")]
 		public IHttpActionResult PostProcessPayment(string orderId)

@@ -7,6 +7,9 @@ using VirtoCommerce.Platform.Core.Notifications;
 
 namespace VirtoCommerce.CatalogModule.Web.Model.EventNotifications
 {
+    /// <summary>
+    ///  Notification for catalog data export job.
+    /// </summary>
 	public class ExportNotification : JobNotificationBase
 	{
 		public ExportNotification(string creator)
@@ -15,6 +18,12 @@ namespace VirtoCommerce.CatalogModule.Web.Model.EventNotifications
 			NotifyType = "CatalogCsvExport";
 		}
 
+        /// <summary>
+        /// Gets or sets the URL for downloading exported data.
+        /// </summary>
+        /// <value>
+        /// The download URL.
+        /// </value>
 		[JsonProperty("downloadUrl")]
 		public string DownloadUrl { get; set; }
 		

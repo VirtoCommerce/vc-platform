@@ -8,14 +8,33 @@ using VirtoCommerce.Domain.Commerce.Model;
 
 namespace VirtoCommerce.OrderModule.Web.Model
 {
+	/// <summary>
+	/// Represent customer order shipment operation (document)
+	/// contains information as delivery address, items, dimensions etc.
+	/// </summary>
 	public class Shipment : Operation, IHaveTaxDetalization
 	{
+		/// <summary>
+		/// Customer organization
+		/// </summary>
 		public string OrganizationName { get; set; }
 		public string OrganizationId { get; set; }
+		/// <summary>
+		/// Fulfillment center where shipment will be handled
+		/// </summary>
 		public string FulfillmentCenterName { get; set; }
 		public string FulfillmentCenterId { get; set; }
+		/// <summary>
+		/// Code used for link shipment with external carrier service implementation (FedEx, USPS etc)
+		/// </summary>
 		public string ShipmentMethodCode { get; set; }
+		/// <summary>
+		/// Describe some shipment options (Vip, Air, Moment etc)
+		/// </summary>
 		public string ShipmentMethodOption { get; set; }
+		/// <summary>
+		/// Employee who responsible for handling current shipment
+		/// </summary>
 		public string EmployeeName { get; set; }
 		public string EmployeeId { get; set; }
 		public decimal DiscountAmount { get; set; }
@@ -30,7 +49,13 @@ namespace VirtoCommerce.OrderModule.Web.Model
 
 		public string TaxType { get; set; }
 
+		/// <summary>
+		/// Information about quantity and order items belongs to current shipment
+		/// </summary>
 		public ICollection<ShipmentItem> Items { get; set; }
+		/// <summary>
+		/// Information about packages belongs to current shipment
+		/// </summary>
 		public ICollection<ShipmentPackage> Packages { get; set; }
 		public ICollection<PaymentIn> InPayments { get; set; }
 		public Address DeliveryAddress { get; set; }

@@ -10,22 +10,31 @@
     function refresh() {
         blade.isLoading = true;
         blade.selectedAll = false;
-        dictionaryItemsApi.query({ id: blade.currentEntity.objectType, propertyId: blade.currentEntity.id }, function (data) {
-            blade.origEntity = data;
-            blade.currentEntities = angular.copy(data);
 
-            if (blade.currentEntity.isMultilingual && !availableLanguages) {
-                settings.getValues({ id: 'VirtoCommerce.Core.General.Languages' }, function (promiseData) {
-                    availableLanguages = _.map(promiseData.sort(), function (x) { return { locale: x }; });
-                    resetNewValue();
-                    blade.isLoading = false;
-                },
+        if (blade.isApiSave) {
+            dictionaryItemsApi.query({ id: blade.currentEntity.objectType, propertyId: blade.currentEntity.id },
+                initializeBlade,
                 function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
-            } else {
+        } else {
+            initializeBlade(blade.data);
+        }
+    }
+
+    function initializeBlade(data) {
+        blade.origEntity = data;
+        blade.currentEntities = angular.copy(data);
+
+        if (blade.currentEntity.isMultilingual && !availableLanguages) {
+            settings.getValues({ id: 'VirtoCommerce.Core.General.Languages' }, function (promiseData) {
+                availableLanguages = _.map(promiseData.sort(), function (x) { return { locale: x }; });
                 resetNewValue();
                 blade.isLoading = false;
-            }
-        }, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+            },
+            function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+        } else {
+            resetNewValue();
+            blade.isLoading = false;
+        }
     }
 
     $scope.dictItemNameValidator = function (value) {
@@ -128,18 +137,26 @@
     };
 
     $scope.saveChanges = function () {
-        if (blade.currentEntity.isMultilingual) {
-            blade.currentEntity.displayNames = _.filter(blade.currentEntity.displayNames, function (x) { return x.name; });
-        } else {
-            blade.currentEntity.displayNames = undefined;
-        }
+        if (blade.isApiSave) {
+            blade.isLoading = true;
 
-        dictionaryItemsApi.save({ id: blade.currentEntity.objectType, propertyId: blade.currentEntity.id }, blade.currentEntities,
-            refresh,
-            function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+            //if (blade.currentEntity.isMultilingual) {
+            //    blade.currentEntity.displayNames = _.filter(blade.currentEntity.displayNames, function (x) { return x.name; });
+            //} else {
+            //    blade.currentEntity.displayNames = undefined;
+            //}
+
+            dictionaryItemsApi.save({ id: blade.currentEntity.objectType, propertyId: blade.currentEntity.id },
+                blade.currentEntities,
+                refresh,
+                function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+        } else {
+            blade.onChangesConfirmedFn(blade.currentEntities);
+            $scope.bladeClose();
+        }
     };
 
-    $scope.blade.toolbarCommands = [
+    blade.toolbarCommands = [
         {
             name: "Save", icon: 'fa fa-save',
             executeMethod: function () {
@@ -169,9 +186,13 @@
         }
     ];
 
+    if (!blade.isApiSave) {
+        $scope.blade.toolbarCommands.splice(0, 1); // remove save button
+    }
+
     $scope.toggleAll = function () {
         angular.forEach(blade.currentEntities, function (item) {
-            item.$selected = $scope.blade.selectedAll;
+            item.$selected = blade.selectedAll;
         });
     };
 
