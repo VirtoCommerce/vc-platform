@@ -7,44 +7,48 @@ using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Settings;
 using Swashbuckle.Application;
 using System.Net.Http;
-using System.Reflection;
+using VirtoCommerce.Platform.Core.Packaging;
+using Swashbuckle.Swagger;
 using System.Web.Hosting;
 using System.IO;
 
 namespace SwashbuckleModule.Web
 {
-	public class Module : ModuleBase
-	{
-		private readonly IUnityContainer _container;
+    public class Module : ModuleBase
+    {
+        private readonly IUnityContainer _container;
 
-		public Module(IUnityContainer container)
-		{
-			_container = container;
-		}
+        public Module(IUnityContainer container)
+        {
+            _container = container;
+        }
 
-		#region IModule Members
+        #region IModule Members
 
-		public override void Initialize()
-		{
-			var settingsManager = _container.Resolve<ISettingsManager>();
+        public override void Initialize()
+        {
+            var settingsManager = _container.Resolve<ISettingsManager>();
 			var xmlRelativePaths = new[] { "~/App_Data/Modules", "~/bin" };
-			var defaultApiKey = settingsManager.GetValue("Swashbuckle.DefaultApiKey", string.Empty);
-			GlobalConfiguration.Configuration.
+            var defaultApiKey = settingsManager.GetValue("Swashbuckle.DefaultApiKey", string.Empty);
+			Func<PopulateTagsFilter> tagsFilterFactory = () => new PopulateTagsFilter(_container.Resolve<IPackageService>());
+            GlobalConfiguration.Configuration.
 				 EnableSwagger(
 				 c =>
 				 {
 					 foreach (var xmlRelativePath in xmlRelativePaths)
-					 {
-						 var xmlFilesPaths = GetXmlFilesPaths(xmlRelativePath);
-						 foreach (var path in xmlFilesPaths)
-						 {
-							 c.IncludeXmlComments(path);
-						 }
-					 }
+                     {
+                         var xmlFilesPaths = GetXmlFilesPaths(xmlRelativePath);
+                         foreach (var path in xmlFilesPaths)
+                         {
+                             c.IncludeXmlComments(path);
+                         }
+                     }
 					 c.IgnoreObsoleteProperties();
 					 c.UseFullTypeNameInSchemaIds();
 					 c.DescribeAllEnumsAsStrings();
-					 c.SingleApiVersion("v1", string.Format("VirtoCommerce Platform Web documentation. For this sample, you can use the {0} special-key to test the authorization filters.", defaultApiKey));
+					c.SingleApiVersion("v1", string.Format("VirtoCommerce Platform Web documentation. For this sample, you can use the <code>{0}</code> special-key to test the authorization filters.", defaultApiKey));
+					c.DocumentFilter(tagsFilterFactory);
+					c.OperationFilter(tagsFilterFactory);
 					 c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
 					 c.RootUrl(req => new Uri(req.RequestUri, req.GetRequestContext().VirtualPathRoot).ToString());
 					 c.ApiKey("apiKey")
@@ -52,21 +56,68 @@ namespace SwashbuckleModule.Web
 						 .Name("api_key")
 						 .In("header");
 				 }
-				 ).EnableSwaggerUi(c =>
-				 {
-				 }
-				 );
+				).EnableSwaggerUi();
 
-		}
-
-		private string[] GetXmlFilesPaths(string xmlRelativePath)
-		{
-			var path = HostingEnvironment.MapPath(xmlRelativePath);
-			var files = Directory.GetFiles(path, "*.Web.XML");
-			return files;
-		}
+                 }
 
 		#endregion
 
+        private string[] GetXmlFilesPaths(string xmlRelativePath)
+        {
+            var path = HostingEnvironment.MapPath(xmlRelativePath);
+            var files = Directory.GetFiles(path, "*.Web.XML");
+            return files;
+        }
+		private string GroupAction(System.Web.Http.Description.ApiDescription apiDescriptor)
+		{
+			return apiDescriptor.ActionDescriptor.ControllerDescriptor.ControllerName;
+		}
+
+		private class PopulateTagsFilter : IDocumentFilter, IOperationFilter
+		{
+			private readonly IPackageService _packageService;
+			public PopulateTagsFilter(IPackageService packageService)
+			{
+				_packageService = packageService;
+			}
+			#region IDocumentFilter Members
+
+			public void Apply(SwaggerDocument swaggerDoc, SchemaRegistry schemaRegistry, System.Web.Http.Description.IApiExplorer apiExplorer)
+			{
+				var tags = _packageService.GetModules().Select(x => new Tag
+					{
+						name = x.Id,
+						description = x.Description
+					}).ToList();
+				tags.Add(new Tag { 
+						name = "VirtoCommerce.Platform",
+						description = "Platform functionality represent common resources and operations"
+				});
+				swaggerDoc.tags = tags;
+
+			}
+
+        #endregion
+
+			#region IOperationFilter Members
+
+			public void Apply(Operation operation, SchemaRegistry schemaRegistry, System.Web.Http.Description.ApiDescription apiDescription)
+			{
+				var module = _packageService.GetModules().Where(x => x.ModuleInfo.ModuleInstance != null).FirstOrDefault(x => apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType.Assembly == x.ModuleInfo.ModuleInstance.GetType().Assembly);
+				if (module != null)
+				{
+					operation.tags = new string[] { module.Id };
+				}
+				else if (apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType.Assembly.GetName().Name == "VirtoCommerce.Platform.Web")
+				{
+					operation.tags = new string[] { "VirtoCommerce.Platform" };
+				}
+    }
+
+			#endregion
+		}
+
 	}
+
+
 }
