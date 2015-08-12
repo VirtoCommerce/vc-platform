@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Hosting;
 using System.Web.Http;
+using System.Web.Http.Description;
 using VirtoCommerce.Platform.Core.Asset;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Asset;
@@ -34,6 +35,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <returns></returns>
         [HttpPost]
         [Route("{folder?}")]
+        [ResponseType(typeof(webModel.BlobInfo[]))]
         public async Task<webModel.BlobInfo[]> UploadAsset(string folder = "tmp")
         {
             if (!Request.Content.IsMimeMultipartContent())

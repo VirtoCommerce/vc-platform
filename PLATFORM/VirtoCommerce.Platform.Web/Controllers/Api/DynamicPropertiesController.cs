@@ -23,8 +23,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [ResponseType(typeof(string[]))]
         [Route("types")]
+        [ResponseType(typeof(string[]))]
         public IHttpActionResult GetObjectTypes()
         {
             var types = _service.GetAvailableObjectTypeNames();
@@ -36,8 +36,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [ResponseType(typeof(DynamicProperty[]))]
         [Route("types/{typeName}/properties")]
+        [ResponseType(typeof(DynamicProperty[]))]
         public IHttpActionResult GetProperties(string typeName)
         {
             var properties = _service.GetProperties(typeName);
@@ -52,8 +52,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </remarks>
         /// <returns></returns>
         [HttpPost]
-        [ResponseType(typeof(void))]
         [Route("types/{typeName}/properties")]
+        [ResponseType(typeof(void))]
         public IHttpActionResult SaveProperties(string typeName, DynamicProperty[] properties)
         {
             foreach (var property in properties.Where(property => string.IsNullOrEmpty(property.ObjectType)))
@@ -70,8 +70,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </summary>
         /// <returns></returns>
         [HttpDelete]
-        [ResponseType(typeof(void))]
         [Route("types/{typeName}/properties/{propertyId}")]
+        [ResponseType(typeof(void))]
         public IHttpActionResult DeleteProperty(string typeName, string propertyId)
         {
             _service.DeleteProperties(new[] { propertyId });
@@ -83,8 +83,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [ResponseType(typeof(DynamicPropertyDictionaryItem[]))]
         [Route("types/{typeName}/properties/{propertyId}/dictionaryitems")]
+        [ResponseType(typeof(DynamicPropertyDictionaryItem[]))]
         public IHttpActionResult GetDictionaryItems(string typeName, string propertyId)
         {
             var items = _service.GetDictionaryItems(propertyId);
@@ -99,8 +99,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </remarks>
         /// <returns></returns>
         [HttpPost]
-        [ResponseType(typeof(void))]
         [Route("types/{typeName}/properties/{propertyId}/dictionaryitems")]
+        [ResponseType(typeof(void))]
         public IHttpActionResult SaveDictionaryItems(string typeName, string propertyId, DynamicPropertyDictionaryItem[] items)
         {
             _service.SaveDictionaryItems(propertyId, items);
@@ -115,8 +115,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <param name="ids">IDs of dictionary items to delete.</param>
         /// <returns></returns>
         [HttpDelete]
-        [ResponseType(typeof(void))]
         [Route("types/{typeName}/properties/{propertyId}/dictionaryitems")]
+        [ResponseType(typeof(void))]
         public IHttpActionResult DeleteDictionaryItem(string typeName, string propertyId, [FromUri] string[] ids)
         {
             _service.DeleteDictionaryItems(ids);

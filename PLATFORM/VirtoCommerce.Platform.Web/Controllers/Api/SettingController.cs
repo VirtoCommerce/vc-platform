@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
 using VirtoCommerce.Platform.Core.Security;
@@ -22,8 +23,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [ResponseType(typeof(webModel.Setting[]))]
         [Route("")]
+        [ResponseType(typeof(webModel.Setting[]))]
         public IHttpActionResult GetAllSettings()
         {
             var modules = _settingsManager.GetModules();
@@ -36,8 +37,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <param name="id">Module ID.</param>
         /// <returns></returns>
         [HttpGet]
-        [ResponseType(typeof(webModel.Setting[]))]
         [Route("modules/{id}")]
+        [ResponseType(typeof(webModel.Setting[]))]
         public IHttpActionResult GetModuleSettings(string id)
         {
             var retVal = _settingsManager.GetModuleSettings(id);
@@ -49,9 +50,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </summary>
         /// <param name="id">Setting system name.</param>
         /// <returns></returns>
+        /// <response code="200"></response>
+        /// <response code="404">Setting not found.</response>
         [HttpGet]
-        [ResponseType(typeof(webModel.Setting))]
         [Route("{id}")]
+        [ResponseType(typeof(webModel.Setting))]
         public IHttpActionResult GetSetting(string id)
         {
             var retVal = _settingsManager.GetSettingByName(id);
@@ -68,10 +71,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <param name="settings"></param>
         [HttpPost]
         [Route("")]
+        [ResponseType(typeof(void))]
         [CheckPermission(Permission = PredefinedPermissions.SettingManage)]
-        public void Update(webModel.Setting[] settings)
+        public IHttpActionResult Update(webModel.Setting[] settings)
         {
             _settingsManager.SaveSettings(settings.Select(x => x.ToModuleModel()).ToArray());
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
         /// <summary>
@@ -80,8 +85,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <param name="name">Setting system name.</param>
         /// <returns></returns>
         [HttpGet]
-        [ResponseType(typeof(object))]
         [Route("value/{name}")]
+        [ResponseType(typeof(object))]
         public IHttpActionResult GetValue(string name)
         {
             var value = _settingsManager.GetValue<object>(name, null);
@@ -94,8 +99,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <param name="name">Setting system name.</param>
         /// <returns></returns>
         [HttpGet]
-        [ResponseType(typeof(object[]))]
         [Route("values/{name}")]
+        [ResponseType(typeof(object[]))]
         public IHttpActionResult GetArray(string name)
         {
             var value = _settingsManager.GetArray<object>(name, null);
