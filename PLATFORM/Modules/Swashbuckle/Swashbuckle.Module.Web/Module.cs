@@ -11,6 +11,7 @@ using VirtoCommerce.Platform.Core.Packaging;
 using Swashbuckle.Swagger;
 using System.Web.Hosting;
 using System.IO;
+using System.Reflection;
 
 namespace SwashbuckleModule.Web
 {
@@ -27,35 +28,42 @@ namespace SwashbuckleModule.Web
 
 		public override void Initialize()
 		{
+            var assembly = Assembly.GetExecutingAssembly();
 			var settingsManager = _container.Resolve<ISettingsManager>();
 			var xmlRelativePaths = new[] { "~/App_Data/Modules", "~/bin" };
 			Func<PopulateTagsFilter> tagsFilterFactory = () => new PopulateTagsFilter(_container.Resolve<IPackageService>(), _container.Resolve<ISettingsManager>());
-			GlobalConfiguration.Configuration.
-				 EnableSwagger(
-				 c =>
-				 {
-					 foreach (var xmlRelativePath in xmlRelativePaths)
-					 {
-						 var xmlFilesPaths = GetXmlFilesPaths(xmlRelativePath);
-						 foreach (var path in xmlFilesPaths)
-						 {
-							 c.IncludeXmlComments(path);
-						 }
-					 }
-					 c.IgnoreObsoleteProperties();
-					 c.UseFullTypeNameInSchemaIds();
-					 c.DescribeAllEnumsAsStrings();
-					 c.SingleApiVersion("v1", "VirtoCommerce Platform RESTful API documentation");
-					 c.DocumentFilter(tagsFilterFactory);
-					 c.OperationFilter(tagsFilterFactory);
-					 c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
-					 c.RootUrl(req => new Uri(req.RequestUri, req.GetRequestContext().VirtualPathRoot).ToString());
-					 c.ApiKey("apiKey")
-						 .Description("API Key Authentication")
-						 .Name("api_key")
-						 .In("header");
-				 }
-				).EnableSwaggerUi();
+            GlobalConfiguration.Configuration.
+                 EnableSwagger(
+                 c =>
+                 {
+                     foreach (var xmlRelativePath in xmlRelativePaths)
+                     {
+                         var xmlFilesPaths = GetXmlFilesPaths(xmlRelativePath);
+                         foreach (var path in xmlFilesPaths)
+                         {
+                             c.IncludeXmlComments(path);
+                         }
+                     }
+                     c.IgnoreObsoleteProperties();
+                     c.UseFullTypeNameInSchemaIds();
+                     c.DescribeAllEnumsAsStrings();
+                     c.SingleApiVersion("v1", "VirtoCommerce Platform RESTful API documentation");
+                     c.DocumentFilter(tagsFilterFactory);
+                     c.OperationFilter(tagsFilterFactory);
+                     c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+                     c.RootUrl(req => new Uri(req.RequestUri, req.GetRequestContext().VirtualPathRoot).ToString());
+                     c.ApiKey("apiKey")
+                         .Description("API Key Authentication")
+                         .Name("api_key")
+                         .In("header");
+                 }
+                ).EnableSwaggerUi(
+                c =>
+                {
+                    c.CustomAsset("index", assembly, "SwashbuckleModule.Web.Extensions.index.html");
+                    c.CustomAsset("images/logo_small-png", assembly, "SwashbuckleModule.Web.Extensions.logo_small.png");
+                    c.CustomAsset("css/vc-css", assembly, "SwashbuckleModule.Web.Extensions.vc.css");
+                });
 
 		}
 

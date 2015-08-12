@@ -91,6 +91,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <EmbeddedResource Include="Extensions\index.html" />
+    <EmbeddedResource Include="Extensions\logo_small.png" />
+    <EmbeddedResource Include="Extensions\vc.css" />
     <Content Include="module.manifest" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
