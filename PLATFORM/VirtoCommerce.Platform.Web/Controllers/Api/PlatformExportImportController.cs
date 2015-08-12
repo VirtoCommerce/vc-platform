@@ -164,7 +164,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 					 manifest.Created = now;
 					 _platformExportManager.Import(stream, manifest, progressCallback);
 				 }
-				 pushNotification.Description = "Import finished";
 			 }
 			 catch (Exception ex)
 			 {
@@ -172,6 +171,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 			 }
 			 finally
 			 {
+				 pushNotification.Description = "Import finished";
 				 pushNotification.Finished = DateTime.UtcNow;
 				 _pushNotifier.Upsert(pushNotification);
 			 }
@@ -204,7 +204,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 					 var blobKey = _blobStorageProvider.Upload(uploadInfo);
 					 //Get a download url
 					 pushNotification.DownloadUrl = _blobUrlResolver.GetAbsoluteUrl(blobKey);
-					 pushNotification.Description = "Export finished";
 				 }
 			 }
             catch (Exception ex)
@@ -213,6 +212,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 			 }
 			 finally
 			 {
+				 pushNotification.Description = "Export finished";
 				 pushNotification.Finished = DateTime.UtcNow;
 				 _pushNotifier.Upsert(pushNotification);
 			 }
