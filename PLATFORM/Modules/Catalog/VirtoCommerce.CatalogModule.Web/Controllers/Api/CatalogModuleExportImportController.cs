@@ -122,7 +122,8 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 			return Ok(notification);
 		}
 
-        private void BackgroundImport(CsvImportInfo importInfo, ImportNotification notifyEvent)
+        // Only public methods can be invoked in the background. (Hangfire)
+        public void BackgroundImport(CsvImportInfo importInfo, ImportNotification notifyEvent)
 		{
 			 Action<ExportImportProgressInfo> progressCallback = (x) =>
 			 {
@@ -151,7 +152,8 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 			}
 		}
 
-        private void BackgroundExport(CsvExportInfo exportInfo, ExportNotification notifyEvent)
+        // Only public methods can be invoked in the background. (Hangfire)
+        public void BackgroundExport(CsvExportInfo exportInfo, ExportNotification notifyEvent)
 		{
 			var curencySetting = _settingsManager.GetSettingByName("VirtoCommerce.Core.General.Currencies");
 			var defaultCurrency = EnumUtility.SafeParse<CurrencyCodes>(curencySetting.DefaultValue, CurrencyCodes.USD);
