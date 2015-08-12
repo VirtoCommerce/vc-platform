@@ -39,8 +39,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [ResponseType(typeof(webModel.ModuleDescriptor[]))]
         [Route("")]
+        [ResponseType(typeof(webModel.ModuleDescriptor[]))]
         public IHttpActionResult GetModules()
         {
             var retVal = _packageService.GetModules().Select(x => x.ToWebModel()).ToArray();
@@ -53,8 +53,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <param name="id">Module ID.</param>
         /// <returns></returns>
         [HttpGet]
-        [ResponseType(typeof(webModel.ModuleDescriptor))]
         [Route("{id}")]
+        [ResponseType(typeof(webModel.ModuleDescriptor))]
         public IHttpActionResult GetModuleById(string id)
         {
             var retVal = _packageService.GetModules().FirstOrDefault(x => x.Id == id);
@@ -70,8 +70,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        [ResponseType(typeof(webModel.ModuleDescriptor))]
         [Route("")]
+        [ResponseType(typeof(webModel.ModuleDescriptor))]
         [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
         public async Task<IHttpActionResult> Upload()
         {
@@ -114,8 +114,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <param name="fileName">Module package file name.</param>
         /// <returns></returns>
         [HttpGet]
-        [ResponseType(typeof(webModel.ModuleWorkerJob))]
         [Route("install")]
+        [ResponseType(typeof(webModel.ModuleWorkerJob))]
         [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
         public IHttpActionResult InstallModule(string fileName)
         {
@@ -137,8 +137,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <param name="fileName">Module package file name.</param>
         /// <returns></returns>
         [HttpGet]
-        [ResponseType(typeof(webModel.ModuleWorkerJob))]
         [Route("{id}/update")]
+        [ResponseType(typeof(webModel.ModuleWorkerJob))]
         [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
         public IHttpActionResult UpdateModule(string id, string fileName)
         {
@@ -164,8 +164,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <param name="id">Module ID.</param>
         /// <returns></returns>
         [HttpGet]
-        [ResponseType(typeof(webModel.ModuleWorkerJob))]
         [Route("{id}/uninstall")]
+        [ResponseType(typeof(webModel.ModuleWorkerJob))]
         [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
         public IHttpActionResult UninstallModule(string id)
         {
@@ -184,8 +184,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <param name="id">Job ID.</param>
         /// <returns></returns>
         [HttpGet]
-        [ResponseType(typeof(webModel.ModuleWorkerJob))]
         [Route("jobs/{id}")]
+        [ResponseType(typeof(webModel.ModuleWorkerJob))]
         public IHttpActionResult GetJob(string id)
         {
             var job = _jobList.FirstOrDefault(x => x.Id == id);
@@ -202,11 +202,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <returns></returns>
         [HttpGet]
         [Route("restart")]
+        [ResponseType(typeof(void))]
         [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
         public IHttpActionResult Restart()
         {
             HttpRuntime.UnloadAppDomain();
-            return Ok();
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
 

@@ -43,6 +43,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// Verifies provided credentials and if succeeded returns full user details, otherwise returns 401 Unauthorized.
         /// </remarks>
         /// <param name="model">User credentials.</param>
+        /// <response code="200"></response>
+        /// <response code="401">Invalid user name or password.</response>
         [HttpPost]
         [Route("login")]
         [ResponseType(typeof(ApplicationUserExtended))]
@@ -62,10 +64,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </summary>
         [HttpPost]
         [Route("logout")]
+        [ResponseType(typeof(void))]
         public IHttpActionResult Logout()
         {
             _authenticationManagerFactory().SignOut();
-            return Ok(new { status = true });
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
         /// <summary>
@@ -130,6 +133,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <param name="roleIds">An array of role IDs.</param>
         [HttpDelete]
         [Route("roles")]
+        [ResponseType(typeof(void))]
         [CheckPermission(Permission = PredefinedPermissions.SecurityManage)]
         public IHttpActionResult DeleteRoles([FromUri(Name = "ids")] string[] roleIds)
         {
@@ -141,7 +145,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 }
             }
 
-            return Ok();
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
         /// <summary>
@@ -166,8 +170,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </remarks>
         /// <param name="type"></param>
         [HttpGet]
-        [ResponseType(typeof(ApiAccount))]
         [Route("apiaccounts/new")]
+        [ResponseType(typeof(ApiAccount))]
         [CheckPermission(Permission = PredefinedPermissions.SecurityManage)]
         public IHttpActionResult GenerateNewApiAccount(ApiAccountType type)
         {
@@ -181,8 +185,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </summary>
         /// <param name="request">Search parameters.</param>
         [HttpGet]
-        [ResponseType(typeof(UserSearchResponse))]
         [Route("users")]
+        [ResponseType(typeof(UserSearchResponse))]
         [CheckPermission(Permission = PredefinedPermissions.SecurityQuery)]
         public async Task<IHttpActionResult> SearchUsersAsync([FromUri] UserSearchRequest request)
         {
@@ -195,8 +199,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </summary>
         /// <param name="userName"></param>
         [HttpGet]
-        [ResponseType(typeof(ApplicationUserExtended))]
         [Route("users/{userName}")]
+        [ResponseType(typeof(ApplicationUserExtended))]
         [CheckPermission(Permission = PredefinedPermissions.SecurityQuery)]
         public async Task<IHttpActionResult> GetUserByName(string userName)
         {
@@ -210,6 +214,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <param name="user">User details.</param>
         [HttpPost]
         [Route("users/create")]
+        [ResponseType(typeof(SecurityResult))]
         [CheckPermission(Permission = PredefinedPermissions.SecurityManage)]
         public async Task<IHttpActionResult> CreateAsync(ApplicationUserExtended user)
         {
@@ -222,9 +227,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </summary>
         /// <param name="userName"></param>
         /// <param name="changePassword">Old and new passwords.</param>
+        /// <response code="200"></response>
+        /// <response code="404">User not found.</response>
         [HttpPost]
-        [ResponseType(typeof(IdentityResult))]
         [Route("users/{userName}/changepassword")]
+        [ResponseType(typeof(SecurityResult))]
         [CheckPermission(Permission = PredefinedPermissions.SecurityQuery)]
         public async Task<IHttpActionResult> ChangePassword(string userName, [FromBody] ChangePasswordInfo changePassword)
         {
@@ -242,8 +249,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <param name="userName"></param>
         /// <param name="resetPassword">New password.</param>
         [HttpPost]
-        [ResponseType(typeof(IdentityResult))]
         [Route("users/{userName}/resetpassword")]
+        [ResponseType(typeof(SecurityResult))]
         [CheckPermission(Permission = PredefinedPermissions.SecurityManage)]
         public async Task<IHttpActionResult> ResetPassword(string userName, [FromBody] ResetPasswordInfo resetPassword)
         {
@@ -257,6 +264,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <param name="user">User details.</param>
         [HttpPut]
         [Route("users")]
+        [ResponseType(typeof(SecurityResult))]
         [CheckPermission(Permission = PredefinedPermissions.SecurityManage)]
         public async Task<IHttpActionResult> UpdateAsync(ApplicationUserExtended user)
         {
@@ -270,11 +278,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <param name="names">An array of user names.</param>
         [HttpDelete]
         [Route("users")]
+        [ResponseType(typeof(void))]
         [CheckPermission(Permission = PredefinedPermissions.SecurityManage)]
         public async Task<IHttpActionResult> DeleteAsync([FromUri] string[] names)
         {
             await _securityService.DeleteAsync(names);
-            return Ok();
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
 
