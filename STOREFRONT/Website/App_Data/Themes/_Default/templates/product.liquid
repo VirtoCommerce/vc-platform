@@ -104,7 +104,7 @@
     </div>
 
     <div class="product-description rte" itemprop="description">
-      {{ product.description }}
+      {{ product.description | strip_html }}
     </div>
 
     {% if settings.social_sharing_products %}

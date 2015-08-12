@@ -10,8 +10,6 @@ using webModel = VirtoCommerce.PricingModule.Web.Model;
 using coreModel = VirtoCommerce.Domain.Pricing.Model;
 using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Platform.Core.Common;
-using VirtoCommerce.Domain.Common;
-using System;
 
 namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 {
@@ -31,70 +29,94 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
             _catalogService = catalogService;
         }
 
-        // GET: api/pricing/assignments/id
+        /// <summary>
+        /// Get pricelist assignment
+        /// </summary>
+        /// <param name="id">Pricelist assignment id</param>
+        /// <response code="404">Pricelist assignment not found.</response>
         [HttpGet]
         [ResponseType(typeof(webModel.PricelistAssignment))]
         [Route("api/pricing/assignments/{id}")]
         public IHttpActionResult GetPricelistAssignmentById(string id)
         {
             var assignment = _pricingService.GetPricelistAssignmentById(id);
-            if (assignment == null)
-            {
-                return NotFound();
-            }
-            return Ok(assignment.ToWebModel(null, _extensionManager.ConditionExpressionTree));
+            var result = assignment != null
+                ? assignment.ToWebModel(null, _extensionManager.ConditionExpressionTree)
+                : null;
+
+            return result != null ? Ok(result) : (IHttpActionResult)NotFound();
         }
 
-        // GET: api/pricing/assignments
+        /// <summary>
+        /// Get pricelist assignments
+        /// </summary>
+        /// <remarks>Get array of all pricelist assignments for all catalogs.</remarks>
+        /// <todo>Do we need return for all catalogs?</todo>
         [HttpGet]
         [ResponseType(typeof(webModel.PricelistAssignment[]))]
         [Route("api/pricing/assignments")]
         public IHttpActionResult GetPricelistAssignments()
         {
             var assignments = _pricingService.GetPriceListAssignments();
-            var retVal = Ok(assignments.Select(x => x.ToWebModel()).ToArray());
-            return retVal;
+            var result  = assignments.Select(x => x.ToWebModel()).ToArray();
+            return Ok(result);
         }
 
-        // GET: api/pricing/assignments/new
+        /// <summary>
+        /// Get a new pricelist assignment
+        /// </summary>
+        /// <remarks>Get a new pricelist assignment object. Create new pricelist assignment, but does not save one.</remarks>
         [HttpGet]
         [ResponseType(typeof(webModel.PricelistAssignment))]
         [Route("api/pricing/assignments/new")]
         public IHttpActionResult GetNewPricelistAssignments()
         {
-            var retVal = new webModel.PricelistAssignment
+            var result = new webModel.PricelistAssignment
             {
                 Priority = 1,
                 DynamicExpression = _extensionManager.ConditionExpressionTree
             };
-            return Ok(retVal);
+            return Ok(result);
         }
 
-
-
-        // POST: api/pricing/assignments
+        /// <summary>
+        /// Create pricelist assignment
+        /// </summary>
+        /// <param name="assignment">PricelistAssignment</param>
         [HttpPost]
         [ResponseType(typeof(webModel.PricelistAssignment))]
         [Route("api/pricing/assignments")]
         [CheckPermission(Permission = PredefinedPermissions.Manage)]
-        public IHttpActionResult CreatePriceList(webModel.PricelistAssignment assignment)
+        public IHttpActionResult CreatePricelistAssignment(webModel.PricelistAssignment assignment)
         {
-            var retVal = _pricingService.CreatePriceListAssignment(assignment.ToCoreModel());
-            return Ok(retVal.ToWebModel(null, _extensionManager.ConditionExpressionTree));
+            var priceListAssignment = _pricingService.CreatePriceListAssignment(assignment.ToCoreModel());
+            var result = priceListAssignment.ToWebModel(null, _extensionManager.ConditionExpressionTree);
+            return Ok(result);
         }
 
-        // PUT: api/pricing/assignments
+        /// <summary>
+        /// Update pricelist assignment
+        /// </summary>
+        /// <param name="assignment">PricelistAssignment</param>
+        /// <response code="204">Operation completed.</response>
+        /// <todo>Return no any reason if can't update</todo>
         [HttpPut]
         [ResponseType(typeof(void))]
         [Route("api/pricing/assignments")]
         [CheckPermission(Permission = PredefinedPermissions.Manage)]
         public IHttpActionResult UpdatePriceListAssignment(webModel.PricelistAssignment assignment)
         {
-            _pricingService.UpdatePricelistAssignments(new coreModel.PricelistAssignment[] { assignment.ToCoreModel() });
+            _pricingService.UpdatePricelistAssignments(new [] { assignment.ToCoreModel() });
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // DELETE: /api/pricing/assignments?ids=21
+        /// <summary>
+        /// Delete pricelist assignments
+        /// </summary>
+        /// <remarks>Delete pricelist assignment by given array of ids.</remarks>
+        /// <param name="ids">An array of pricelist assignment ids</param>
+        /// <response code="204">Operation completed.</response>
+        /// <todo>Return no any reason if can't update</todo>
         [HttpDelete]
         [ResponseType(typeof(void))]
         [Route("api/pricing/assignments")]
@@ -105,59 +127,74 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // GET: api/products/{productId}/prices
+        /// <summary>
+        /// Get array of product prices
+        /// </summary>
+        /// <remarks>Get an array of valid product prices for each currency.</remarks>
+        /// <param name="productId">Product id</param>
+        /// <response code="404">Prices not found.</response>
         [HttpGet]
         [ResponseType(typeof(webModel.Price[]))]
         [Route("api/products/{productId}/prices")]
         public IHttpActionResult GetProductPrices(string productId)
         {
-            IHttpActionResult retVal = NotFound();
-            var prices = _pricingService.EvaluateProductPrices(new coreModel.PriceEvaluationContext { ProductIds = new string[] { productId } });
-            if (prices != null)
-            {
-                retVal = Ok(prices.GroupBy(x => x.Currency).Select(x => x.First().ToWebModel()).ToArray());
-            }
-            return retVal;
+            var prices = _pricingService.EvaluateProductPrices(new coreModel.PriceEvaluationContext { ProductIds = new [] { productId } });
+            var result = prices != null
+                ? prices.GroupBy(x => x.Currency).Select(x => x.First().ToWebModel()).ToArray()
+                : null;
+
+            return result != null ? Ok(result) : (IHttpActionResult)NotFound(); 
         }
 
-        // GET: api/pricing/pricelists
+        /// <summary>
+        /// Get pricelists
+        /// </summary>
+        /// <remarks>Get all pricelists for all catalogs.</remarks>
         [HttpGet]
         [ResponseType(typeof(webModel.Pricelist[]))]
         [Route("api/pricing/pricelists")]
         public IHttpActionResult GetPriceLists()
         {
             var priceLists = _pricingService.GetPriceLists();
-            var retVal = Ok(priceLists.Select(x => x.ToWebModel()).ToArray());
-            return retVal;
+            var result = priceLists.Select(x => x.ToWebModel()).ToArray();
+            return Ok(result);
         }
 
-        // GET: api/pricing/pricelists/id
+        /// <summary>
+        /// Get pricelist
+        /// </summary>
+        /// <param name="id">Pricelist id</param>
+        /// <response code="404">Pricelist not found.</response>
         [HttpGet]
         [ResponseType(typeof(webModel.Pricelist))]
         [Route("api/pricing/pricelists/{id}")]
         public IHttpActionResult GetPriceListById(string id)
         {
-            IHttpActionResult retVal = NotFound();
-            var result = _pricingService.GetPricelistById(id);
-            var productIds = result.Prices.Select(x => x.ProductId).Distinct().ToArray();
-            var products = _itemService.GetByIds(productIds, Domain.Catalog.Model.ItemResponseGroup.ItemInfo);
-            var catalogs = _catalogService.GetCatalogsList().ToArray();
-            if (result != null)
+            webModel.Pricelist result = null;
+            var pricelist = _pricingService.GetPricelistById(id);
+            if (pricelist != null)
             {
-                retVal = Ok(result.ToWebModel(products, catalogs, _extensionManager.ConditionExpressionTree));
+                var productIds = pricelist.Prices.Select(x => x.ProductId).Distinct().ToArray();
+                var products = _itemService.GetByIds(productIds, Domain.Catalog.Model.ItemResponseGroup.ItemInfo);
+                var catalogs = _catalogService.GetCatalogsList().ToArray();
+                result = pricelist.ToWebModel(products, catalogs, _extensionManager.ConditionExpressionTree);
             }
-            return retVal;
+            return result != null ? Ok(result) : (IHttpActionResult)NotFound();
         }
 
-        // GET: api/catalog/products/{productId}/pricelists
+        /// <summary>
+        /// Get pricelists for a product
+        /// </summary>
+        /// <remarks>Get all pricelists for given product.</remarks>
+        /// <param name="productId">Product id</param>
+        /// <response code="404">Pricelists not found.</response>
+        /// <todo>I don't understand inherite algorithm. If product has two prices but variation has only one, then how (if need) variation does pick up inherite product prices</todo>
         [HttpGet]
         [ResponseType(typeof(webModel.Pricelist[]))]
         [Route("api/catalog/products/{productId}/pricelists")]
         public IHttpActionResult GetProductPriceLists(string productId)
         {
-			
             var result = new List<webModel.Pricelist>();
-            IHttpActionResult retVal = NotFound();
             var priceLists = _pricingService.GetPriceLists();
             foreach (var priceList in priceLists)
             {
@@ -181,41 +218,52 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 				}
                 result.Add(priceList.ToWebModel());
             }
-            retVal = Ok(result.ToArray());
-            return retVal;
+            return result.Any() ? Ok(result.ToArray()) : (IHttpActionResult)NotFound();
         }
 
 
-        // POST: api/pricing/pricelists
+        /// <summary>
+        /// Create pricelist
+        /// </summary>
         [HttpPost]
         [ResponseType(typeof(webModel.Pricelist))]
         [Route("api/pricing/pricelists")]
         [CheckPermission(Permission = PredefinedPermissions.Manage)]
         public IHttpActionResult CreatePriceList(webModel.Pricelist priceList)
         {
-            var retVal = _pricingService.CreatePricelist(priceList.ToCoreModel());
-            return Ok(retVal.ToWebModel());
+            var pricelist = _pricingService.CreatePricelist(priceList.ToCoreModel());
+            var result = pricelist.ToWebModel();
+            return Ok(result);
         }
 
-        // PUT: api/pricing/pricelists
+        /// <summary>
+        /// Update pricelist
+        /// </summary>
+        /// <response code="204">Operation completed.</response>
         [HttpPut]
         [ResponseType(typeof(void))]
         [Route("api/pricing/pricelists")]
         [CheckPermission(Permission = PredefinedPermissions.Manage)]
         public IHttpActionResult UpdatePriceList(webModel.Pricelist priceList)
         {
-            _pricingService.UpdatePricelists(new coreModel.Pricelist[] { priceList.ToCoreModel() });
+            _pricingService.UpdatePricelists(new [] { priceList.ToCoreModel() });
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // PUT: api/catalog/products/123/pricelists
+        /// <summary>
+        /// Update prices  
+        /// </summary>
+        /// <remarks>Update prices of product for given pricelist.</remarks>
+        /// <param name="productId">Product id</param>
+        /// <param name="priceList">Pricelist with new product prices</param>
+        /// <response code="204">Operation completed.</response>
         [HttpPut]
         [ResponseType(typeof(void))]
         [Route("api/catalog/products/{productId}/pricelists")]
         [CheckPermission(Permission = PredefinedPermissions.Manage)]
         public IHttpActionResult UpdateProductPriceLists(string productId, webModel.Pricelist priceList)
         {
-			var product = _itemService.GetById(productId, Domain.Catalog.Model.ItemResponseGroup.ItemInfo);
+			var product = _itemService.GetById(productId, Domain.Catalog.Model.ItemResponseGroup.ItemInfo); //todo check uses
             var originalPriceList = _pricingService.GetPricelistById(priceList.Id);
             if (originalPriceList != null)
             {
@@ -228,14 +276,19 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 
                 //Add changed prices to original pricelist
                 originalPriceList.Prices.AddRange(priceList.ToCoreModel().Prices);
-                _pricingService.UpdatePricelists(new coreModel.Pricelist[] { originalPriceList });
+                _pricingService.UpdatePricelists(new [] { originalPriceList });
             }
 
             return StatusCode(HttpStatusCode.NoContent);
         }
 
 
-        // DELETE: /api/pricing/pricelists?ids=21
+        /// <summary>
+        /// Delete pricelists  
+        /// </summary>
+        /// <remarks>Delete pricelists by given array of pricelist ids.</remarks>
+        /// <param name="ids">An array of pricelist ids</param>
+        /// <response code="204">Operation completed.</response>
         [HttpDelete]
         [ResponseType(typeof(void))]
         [Route("api/pricing/pricelists")]

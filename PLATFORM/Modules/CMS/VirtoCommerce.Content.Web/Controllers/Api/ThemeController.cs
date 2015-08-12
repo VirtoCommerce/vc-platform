@@ -67,30 +67,32 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		/// <summary>
 		/// Get theme asset
 		/// </summary>
-		/// <remarks>Get theme asset. Returns theme asset</remarks>
+		/// <remarks>Get theme asset by store id, theme id and asset id. Asset id - asset path relative to root theme path</remarks>
 		/// <param name="storeId">Store id</param>
 		/// <param name="themeId">Theme id</param>
 		/// <param name="assetId">Theme asset id</param>
-		/// <response code="500">Internal Server Error</response>
-		/// <response code="200">Theme asset returned OK</response>
+		/// <response code="404">Theme asset not found</response>
 		[HttpGet]
 		[ResponseType(typeof(ThemeAsset))]
 		[Route("themes/{themeId}/assets/{*assetId}")]
 		public IHttpActionResult GetThemeAsset(string assetId, string storeId, string themeId)
 		{
 			var item = this._themeService.GetThemeAsset(storeId, themeId, assetId);
-			return this.Ok(item.ToWebModel());
+			if (item != null)
+			{
+				return this.Ok(item.ToWebModel());
+			}
+
+			return NotFound();
 		}
 
 		/// <summary>
 		/// Search theme assets
 		/// </summary>
-		/// <remarks>Search theme assets. Returns theme assets array</remarks>
+		/// <remarks>Search theme assets by store id, theme id and criteria</remarks>
 		/// <param name="storeId">Store id</param>
 		/// <param name="themeId">Theme id</param>
 		/// <param name="criteria">Searching theme assets criteria</param>
-		/// <response code="500">Internal Server Error</response>
-		/// <response code="200">Theme assets returned OK</response>
 		[HttpGet]
 		[ResponseType(typeof(ThemeAsset[]))]
 		[Route("themes/{themeId}/assets")]
@@ -104,11 +106,9 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		/// <summary>
 		/// Delete theme
 		/// </summary>
-		/// <remarks>Delete theme</remarks>
+		/// /// <remarks>Search theme assets by store id and theme id</remarks>
 		/// <param name="storeId">Store id</param>
 		/// <param name="themeId">Theme id</param>
-		/// <response code="500">Internal Server Error</response>
-		/// <response code="200">Theme deleted OK</response>
 		[HttpDelete]
 		[ResponseType(typeof(void))]
 		[Route("themes/{themeId}")]
@@ -123,11 +123,9 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		/// <summary>
 		/// Get theme assets folders
 		/// </summary>
-		/// <remarks>Get theme assets folders by store and theme. Returns theme assets folders array</remarks>
+		/// <remarks>Get theme assets folders by store id and theme id</remarks>
 		/// <param name="storeId">Store id</param>
 		/// <param name="themeId">Theme id</param>
-		/// <response code="500">Internal Server Error</response>
-		/// <response code="200">Theme assets folders returned OK</response>
 		[HttpGet]
 		[ResponseType(typeof(ThemeAssetFolder[]))]
 		[Route("themes/{themeId}/folders")]
@@ -139,12 +137,9 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		}
 
 		/// <summary>
-		/// Get themes
+		/// Get themes by store id
 		/// </summary>
-		/// <remarks>Get themes by store. Returns themes array</remarks>
 		/// <param name="storeId">Store id</param>
-		/// <response code="500">Internal Server Error</response>
-		/// <response code="200">Themes returned OK</response>
 		[HttpGet]
 		[ResponseType(typeof(Theme[]))]
 		[ClientCache(Duration = 30)]
@@ -158,14 +153,13 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		/// <summary>
 		/// Save theme asset
 		/// </summary>
-		/// <remarks>Save theme asset</remarks>
+		/// <remarks>Save theme asset considering store id and theme id</remarks>
 		/// <param name="storeId">Store id</param>
 		/// <param name="themeId">Theme id</param>
 		/// <param name="asset">Theme asset</param>
-		/// <response code="500">Internal Server Error</response>
-		/// <response code="200">Theme asset saved OK</response>
 		[HttpPost]
 		[Route("themes/{themeId}/assets")]
+		[ResponseType(typeof(void))]
 		[CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public IHttpActionResult SaveItem(ThemeAsset asset, string storeId, string themeId)
 		{
@@ -180,16 +174,15 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		}
 
 		/// <summary>
-		/// Delete theme assets
+		/// Delete theme assets by assetIds
 		/// </summary>
-		/// <remarks>Delete theme assets</remarks>
+		/// <remarks>Delete theme assets considering store id, theme id and assetIds</remarks>
 		/// <param name="storeId">Store id</param>
 		/// <param name="themeId">Theme id</param>
 		/// <param name="assetIds">Deleted asset ids</param>
-		/// <response code="500">Internal Server Error</response>
-		/// <response code="200">Theme assets deleted OK</response>
 		[HttpDelete]
 		[Route("themes/{themeId}/assets")]
+		[ResponseType(typeof(void))]
 		[CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public IHttpActionResult DeleteAssets(string storeId, string themeId, [FromUri]string[] assetIds)
 		{
@@ -200,14 +193,13 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		/// <summary>
 		/// Create new theme
 		/// </summary>
-		/// <remarks>Create new theme</remarks>
+		/// <remarks>Create new theme considering store id, theme file url and theme name</remarks>
 		/// <param name="storeId">Store id</param>
-		/// <param name="themeName">Theme name</param>
 		/// <param name="themeFileUrl">Theme file url</param>
-		/// <response code="500">Internal Server Error</response>
-		/// <response code="200">Theme created OK</response>
+		/// <param name="themeName">Theme name</param>
 		[HttpGet]
 		[Route("themes/file")]
+		[ResponseType(typeof(void))]
 		[CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public IHttpActionResult CreateNewTheme(string storeId, string themeFileUrl, string themeName)
 		{
@@ -229,15 +221,12 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		}
 
 		/// <summary>
-		/// Create default theme
+		/// Create default theme by store id
 		/// </summary>
-		/// <remarks>Create default theme</remarks>
 		/// <param name="storeId">Store id</param>
-		/// <response code="500">Internal Server Error</response>
-		/// <response code="200">Default theme created OK</response>
 		[HttpGet]
 		[Route("themes/createdefault")]
-		[ResponseType(typeof(bool))]
+		[ResponseType(typeof(void))]
 		[CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public IHttpActionResult CreateDefaultTheme(string storeId)
 		{

@@ -12,15 +12,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
 			var retVal = new webModel.DynamicContentItem();
 			retVal.InjectFrom(content);
 		
-			if(content.Properties != null)
-			{
-				retVal.Properties = new webModel.PropertyDictionary();
-
-				foreach (var property in content.Properties)
-				{
-					retVal.Properties.Add(property.Name, property.Value);
-				}
-			}
+		
 			return retVal;
 		}
 

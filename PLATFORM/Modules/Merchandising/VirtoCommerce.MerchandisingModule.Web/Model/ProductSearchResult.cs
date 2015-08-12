@@ -2,10 +2,12 @@
 {
     public class ProductSearchResult : ResponseCollection<Product>
     {
-        #region Public Properties
-
+        /// <summary>
+        /// Gets or sets the collection of facets
+        /// </summary>
+        /// <value>
+        /// Array of Facet objects
+        /// </value>
         public Facet[] Facets { get; set; }
-
-        #endregion
     }
 }

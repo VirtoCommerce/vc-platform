@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 namespace VirtoCommerce.PricingModule.Web.Model
 {
@@ -15,7 +13,10 @@ namespace VirtoCommerce.PricingModule.Web.Model
 		}
 		public string ProductId { get; set; }
 		public string ProductName { get; set; }
-
+        
+        /// <summary>
+        /// List prices for the products. It includes tiered prices also. (Depending on the quantity, for example)
+        /// </summary>
 		public ICollection<Price> Prices { get; set; }
 	}
 }

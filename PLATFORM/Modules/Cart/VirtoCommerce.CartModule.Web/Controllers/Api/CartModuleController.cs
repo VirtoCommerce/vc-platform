@@ -29,7 +29,12 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 			_storeService = storeService;
 		}
 
-		// GET: api/cart/store1/customer2/carts/current
+		/// <summary>
+        /// Get shopping cart by store id and customer id
+        /// </summary>
+        /// <param name="storeId">Store id</param>
+        /// <param name="customerId">Customer id</param>
+        /// <response code="404">Shopping cart not found</response>
 		[HttpGet]
 		[ResponseType(typeof(webModel.ShoppingCart))]
 		[Route("{storeId}/{customerId}/carts/current")]
@@ -55,7 +60,11 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 			return Ok(retVal.ToWebModel());
 		}
 
-		// GET: api/cart/carts/{id}
+		/// <summary>
+        /// Get shopping cart by id
+        /// </summary>
+        /// <param name="id">Shopping cart id</param>
+        /// <response code="404">Shopping cart not found</response>
 		[HttpGet]
 		[ResponseType(typeof(webModel.ShoppingCart))]
 		[Route("carts/{id}")]
@@ -69,7 +78,10 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 			return Ok(retVal.ToWebModel());
 		}
 
-		// GET: api/cart/carts?q=ddd&site=site1&customer=user1&start=0&count=20
+		/// <summary>
+        /// Search for shopping carts by criteria
+        /// </summary>
+        /// <param name="criteria">Search criteria</param>
 		[HttpGet]
 		[ResponseType(typeof(webModel.SearchResult))]
 		[Route("carts")]
@@ -79,7 +91,11 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 			return Ok(retVal.ToWebModel());
 		}
 
-		// POST: api/cart/carts
+		/// <summary>
+        /// Create shopping cart
+        /// </summary>
+        /// <param name="cart">Shopping cart model</param>
+        /// <response code="204">Operation completed</response>
 		[HttpPost]
 		[ResponseType(typeof(void))]
 		[Route("carts")]
@@ -91,7 +107,10 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 			return this.StatusCode(HttpStatusCode.NoContent);
 		}
 
-		// PUT: api/cart/carts
+		/// <summary>
+        /// Update shopping cart
+        /// </summary>
+        /// <param name="cart">Shopping cart model</param>
         [HttpPut]
         [ResponseType(typeof(ShoppingCart))]
         [Route("carts")]
@@ -104,7 +123,10 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
             return Ok(retVal.ToWebModel());
         }
 
-		// GET: api/cart/carts/{cartId}/shipmentMethods
+		/// <summary>
+        /// Get shipping methods for shopping cart
+        /// </summary>
+        /// <param name="cartId">Shopping cart id</param>
 		[HttpGet]
 		[ResponseType(typeof(webModel.ShippingMethod[]))]
 		[Route("carts/{cartId}/shipmentMethods")]
@@ -130,7 +152,10 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 			return Ok(retVal);
 		}
 
-		// GET: api/cart/carts/{cartId}/paymentMethods
+		/// <summary>
+        /// Get payment methods for shopping cart
+        /// </summary>
+        /// <param name="cartId">Shopping cart id</param>
 		[HttpGet]
 		[ResponseType(typeof(webModel.PaymentMethod[]))]
 		[Route("carts/{cartId}/paymentMethods")]
@@ -154,7 +179,10 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 			return this.Ok(retVal);
 		}
 
-        // GET: api/cart/stores/{storeId}/paymentMethods
+        /// <summary>
+        /// Get payment methods for store
+        /// </summary>
+        /// <param name="storeId">Store id</param>
         [HttpGet]
         [ResponseType(typeof(webModel.PaymentMethod[]))]
         [Route("stores/{storeId}/paymentMethods")]
@@ -176,7 +204,11 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
             return this.Ok(retVal);
         }
 
-		// POST: api/cart/carts/{cartId}/coupons/{couponCode}
+		/// <summary>
+        /// Apply coupon for shopping cart
+        /// </summary>
+        /// <param name="cartId">Shopping cart id</param>
+        /// <param name="couponCode">Coupon code</param>
 		[HttpPost]
 		[ResponseType(typeof(webModel.ShoppingCart))]
 		[Route("carts/{cartId}/coupons/{couponCode}")]
@@ -204,7 +236,11 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 			return this.Ok(retVal.ToWebModel());
 		}
 
-		// DELETE: api/cart/carts?ids=21
+		/// <summary>
+        /// Delete shopping carts by ids
+        /// </summary>
+        /// <param name="ids">Array of shopping cart ids</param>
+        /// <response code="204">Operation completed</response>
 		[HttpDelete]
 		[ResponseType(typeof(void))]
 		[Route("carts")]

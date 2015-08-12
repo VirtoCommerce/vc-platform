@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Platform.Core.Common;
 namespace VirtoCommerce.PricingModule.Web.Model
@@ -13,9 +10,25 @@ namespace VirtoCommerce.PricingModule.Web.Model
 		public string PricelistId { get; set; }
 		public string Name { get; set; }
 		public string Description { get; set; }
-		public int Priority { get; set; }
-		public DateTime? StartDate { get; set; }
-		public DateTime? EndDate { get; set; }
-		public ConditionExpressionTree DynamicExpression { get; set; }
+
+        /// <summary>
+        /// If two PricelistAssignments satisfies the conditions and rules, will use one with the greater priority
+		/// </summary>
+        public int Priority { get; set; }
+
+        /// <summary>
+        /// Start of period when Prices Assignment is valid. Null value means no limit
+        /// </summary>
+        public DateTime? StartDate { get; set; }
+
+        /// <summary>
+        /// End of period when Prices Assignment is valid. Null value means no limit
+        /// </summary>
+        public DateTime? EndDate { get; set; }
+
+        /// <summary>
+        /// List of conditions and rules to define Prices Assignment is valid
+        /// </summary>
+        public ConditionExpressionTree DynamicExpression { get; set; }
 	}
 }

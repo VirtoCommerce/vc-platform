@@ -46,11 +46,10 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 		}
 
 		/// <summary>
-		/// GET api/catalog/export/sony
+        /// Start catalog data export process.
 		/// </summary>
-		/// <param name="id"></param>
-		/// <param name="filePath"></param>
-		/// <returns></returns>
+        /// <remarks>Data export is an async process. An ExportNotification is returned for progress reporting.</remarks>
+        /// <param name="exportInfo">The export configuration.</param>
 		[ResponseType(typeof(ExportNotification))]
 		[HttpPost]
 		[Route("export")]
@@ -67,16 +66,15 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 			BackgroundJob.Enqueue(() => BackgroundExport(exportInfo, notification));
 
 			return Ok(notification);
-
 		}
 
 
 		/// <summary>
-		/// GET api/catalog/import/mapping?path='c:\\sss.csv'&importType=product&delimiter=,
+        /// Gets the CSV mapping configuration.
 		/// </summary>
-		/// <param name="templatePath"></param>
-		/// <param name="importerType"></param>
-		/// <param name="delimiter"></param>
+        /// <remarks>Analyses the supplied file's structure and returns automatic column mapping.</remarks>
+        /// <param name="fileUrl">The file URL.</param>
+        /// <param name="delimiter">The CSV delimiter.</param>
 		/// <returns></returns>
 		[ResponseType(typeof(CsvProductMappingConfiguration))]
 		[HttpGet]
@@ -91,7 +89,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 			using (var reader = new CsvReader(new StreamReader(_blobStorageProvider.OpenReadOnly(fileUrl))))
 			{
 				reader.Configuration.Delimiter = delimiter;
-				if(reader.Read())
+                if (reader.Read())
 				{
 					retVal.AutoMap(reader.FieldHeaders);
 				}
@@ -102,10 +100,10 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 
 
 		/// <summary>
-		/// GET api/catalog/import/sony
+        /// Start catalog data import process.
 		/// </summary>
-		/// <param name="id"></param>
-		/// <param name="filePath"></param>
+        /// <remarks>Data import is an async process. An ImportNotification is returned for progress reporting.</remarks>
+        /// <param name="importInfo">The import data configuration.</param>
 		/// <returns></returns>
 		[ResponseType(typeof(ImportNotification))]
 		[HttpPost]
@@ -124,27 +122,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 			return Ok(notification);
 		}
 
-
-		/// <summary>
-		///  GET api/catalog/importjobs/123/cancel
-		/// </summary>
-		/// <param name="id"></param>
-		/// <returns></returns>
-		[HttpGet]
-		[Route("{id}/cancel")]
-		[ResponseType(typeof(void))]
-		public IHttpActionResult Cancel(string id)
-		{
-			return StatusCode(HttpStatusCode.NoContent);
-			//var job = _jobList.FirstOrDefault(x => x.Id == id);
-			//if (job != null && job.CanBeCanceled)
-			//{
-			//	job.CancellationToken.Cancel();
-			//}
-
-			//return StatusCode(HttpStatusCode.NoContent);
-		}
-		public void BackgroundImport(CsvImportInfo importInfo, ImportNotification notifyEvent)
+        private void BackgroundImport(CsvImportInfo importInfo, ImportNotification notifyEvent)
 		{
 			 Action<ExportImportProgressInfo> progressCallback = (x) =>
 			 {
@@ -158,7 +136,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 				{
 					_csvImporter.DoImport(stream, importInfo, progressCallback);
 				}
-				catch(Exception ex)
+                catch (Exception ex)
 				{
 					notifyEvent.Description = "Export error";
 					notifyEvent.ErrorCount++;
@@ -173,7 +151,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 			}
 		}
 
-		public void BackgroundExport(CsvExportInfo exportInfo, ExportNotification notifyEvent)
+        private void BackgroundExport(CsvExportInfo exportInfo, ExportNotification notifyEvent)
 		{
 			var curencySetting = _settingsManager.GetSettingByName("VirtoCommerce.Core.General.Currencies");
 			var defaultCurrency = EnumUtility.SafeParse<CurrencyCodes>(curencySetting.DefaultValue, CurrencyCodes.USD);

@@ -3,30 +3,22 @@ using System.Collections.ObjectModel;
 
 namespace VirtoCommerce.Content.Web.Models
 {
-	/// <summary>
-	/// Menu link list
-	/// </summary>
 	public class MenuLinkList
 	{
-		/// <summary>
-		/// Id of menu link list
-		/// </summary>
 		public string Id { get; set; }
 		/// <summary>
-		/// Name of menu link list
+		/// Name of menu link list, can be used as title of list in frontend
 		/// </summary>
 		public string Name { get; set; }
 		/// <summary>
-		/// Store id of menu link list
+        /// Store identifier, for which the list belongs
 		/// </summary>
 		public string StoreId { get; set; }
 		/// <summary>
-		/// Language of menu link list
+		/// Locale of this menu link list
 		/// </summary>
 		public string Language { get; set; }
-		/// <summary>
-		/// Collection of links
-		/// </summary>
+
 		public ICollection<MenuLink> MenuLinks { get; set; }
 	}
 }

@@ -1,15 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VirtoCommerce.Platform.Core.Common;
+﻿using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.CartModule.Web.Model
 {
-	public class Coupon : ValueObject<Coupon>
-	{
-		public string CouponCode { get; set; }
-		public string InvalidDescription { get; set; }
-	}
+    public class Coupon : ValueObject<Coupon>
+    {
+        /// <summary>
+        /// Gets or sets the value of coupon code
+        /// </summary>
+        public string CouponCode { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of description of invalid operation with coupon
+        /// </summary>
+        public string InvalidDescription { get; set; }
+    }
 }

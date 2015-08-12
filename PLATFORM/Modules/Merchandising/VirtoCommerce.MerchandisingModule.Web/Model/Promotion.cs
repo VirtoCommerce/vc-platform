@@ -1,27 +1,66 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Model
 {
-	public class Promotion : AuditableEntity
-	{
-		public string Type { get; set; }
-		public string Name { get; set; }
-		public string Store { get; set; }
-		public string Catalog { get; set; }
+    public class Promotion : AuditableEntity
+    {
+        /// <summary>
+        /// Gets or sets the value of promotion type
+        /// </summary>
+        public string Type { get; set; }
 
-		public string Description { get; set; }
-		public bool IsActive { get; set; }
-		public int MaxUsageCount { get; set; }
-		public int MaxPersonalUsageCount { get; set; }
-		public string[] Coupons { get; set; }
+        /// <summary>
+        /// Gets or sets the value of promotion name
+        /// </summary>
+        public string Name { get; set; }
 
-		public DateTime? StartDate { get; set; }
-		public DateTime? EndDate { get; set; }
-	}
+        /// <summary>
+        /// Gets or sets the value of store id
+        /// </summary>
+        public string Store { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of catalog id
+        /// </summary>
+        public string Catalog { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of promotion description
+        /// </summary>
+        public string Description { get; set; }
+
+        /// <summary>
+        /// Gets or sets the activity flag for promotion
+        /// </summary>
+        public bool IsActive { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of promotion maximum common usage limit
+        /// </summary>
+        public int MaxUsageCount { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of promotion maximum personal usage limit
+        /// </summary>
+        public int MaxPersonalUsageCount { get; set; }
+
+        /// <summary>
+        /// Gets or sets the collection of coupon codes
+        /// </summary>
+        /// <value>
+        /// Array of coupon codes
+        /// </value>
+        public string[] Coupons { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of promotion start date/time
+        /// </summary>
+        public DateTime? StartDate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of promotion end date/time
+        /// </summary>
+        public DateTime? EndDate { get; set; }
+    }
 }

@@ -15,9 +15,9 @@ namespace VirtoCommerce.Platform.Core
     public abstract class Bootstrapper
     {
         /// <summary>
-        /// Gets the <see cref="ILoggerFacade"/> for the application.
+        /// Gets the <see cref="ILog"/> for the application.
         /// </summary>
-        /// <value>A <see cref="ILoggerFacade"/> instance.</value>
+        /// <value>A <see cref="ILog"/> instance.</value>
         protected ILog Logger { get; set; }
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace VirtoCommerce.Platform.Core
 
 
         /// <summary>
-        /// Create the <see cref="ILoggerFacade" /> used by the bootstrapper.
+        /// Create the <see cref="ILog" /> used by the bootstrapper.
         /// </summary>
         /// <remarks>
         /// The base implementation returns a new TextLogger.
@@ -36,7 +36,7 @@ namespace VirtoCommerce.Platform.Core
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "The Logger is added to the container which will dispose it when the container goes out of scope.")]
         protected virtual ILog CreateLogger()
         {
-			return LogManager.GetLogger("default");
+            return LogManager.GetLogger("default");
         }
 
         /// <summary>
@@ -66,14 +66,10 @@ namespace VirtoCommerce.Platform.Core
         {
         }
 
-        /// <summary>
-        /// Registers the <see cref="Type"/>s of the Exceptions that are not considered 
-        /// root exceptions by the <see cref="ExceptionExtensions"/>.
-        /// </summary>
         protected virtual void RegisterFrameworkExceptionTypes()
         {
-			//ExceptionExtensions.RegisterFrameworkExceptionType(
-			//	typeof(Microsoft.Practices.ServiceLocation.ActivationException));
+            //ExceptionExtensions.RegisterFrameworkExceptionType(
+            //	typeof(Microsoft.Practices.ServiceLocation.ActivationException));
         }
 
         /// <summary>
@@ -84,7 +80,7 @@ namespace VirtoCommerce.Platform.Core
             IModuleManager manager = ServiceLocator.Current.GetInstance<IModuleManager>();
             manager.Run();
         }
-   
+
 
         /// <summary>
         /// Initializes the shell.

@@ -14,10 +14,6 @@ namespace VirtoCommerce.Domain.Marketing.Model
 		public string ContentType { get; set; }
 		public string ImageUrl { get; set; }
 
-
-
-		public ICollection<Property> Properties { get; set; }
-
 		#region IHasFolder Members
 		public string FolderId { get; set; }
 		public DynamicContentFolder Folder { get; set; }

@@ -29,14 +29,20 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 		
         }
 
-        // GET api/catalog/properties/11/values
+        
+        /// <summary>
+        /// Gets all dictionary values that specified property can have.
+        /// </summary>
+        /// <param name="propertyId">The property id.</param>
+        /// <param name="keyword">The keyword. (Optional)</param>
+        /// <returns></returns>
         [HttpGet]
 		[Route("{propertyId}/values")]
 		[ResponseType(typeof(webModel.PropertyValue[]))]
         public IHttpActionResult GetPropertyValues(string propertyId, [FromUri]string keyword = null)
         {
+            //Need to return PropertyValue as it's more convenient in UI
 			var retVal = new List<webModel.PropertyValue>();
-			//Need return propValue because it more convenient for ui
 			var dictValues = _propertyService.SearchDictionaryValues(propertyId, keyword);
 			foreach(var dictValue in dictValues)
 			{
@@ -52,7 +58,11 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 			return Ok(retVal.ToArray());
         }
 
-		// GET: api/catalog/properties/11
+
+        /// <summary>
+        /// Gets property metainformation by id.
+        /// </summary>
+        /// <param name="propertyId">The property id.</param>
 		[HttpGet]
 		[Route("{propertyId}")]
 		[ResponseType(typeof(webModel.Property))]
@@ -68,7 +78,11 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 			return Ok(retVal);
         }
 
-		// GET: api/catalog/apple/properties/getnew
+		
+        /// <summary>
+        /// Gets the template for a new catalog property.
+        /// </summary>
+        /// <param name="catalogId">The catalog id.</param>
 		[HttpGet]
 		[Route("~/api/catalog/{catalogId}/properties/getnew")]
 		[ResponseType(typeof(webModel.Property))]
@@ -92,7 +106,11 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 			return Ok(retVal);
 		}
 
-		// GET: api/catalog/categories/apple/properties/getnew
+
+        /// <summary>
+        /// Gets the template for a new category property.
+        /// </summary>
+        /// <param name="categoryId">The category id.</param>
         [HttpGet]
 		[Route("~/api/catalog/categories/{categoryId}/properties/getnew")]
 		[ResponseType(typeof(webModel.Property))]
@@ -118,7 +136,12 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             return Ok(retVal);
         }
 
-		// POST: api/catalog/properties
+
+        /// <summary>
+        /// Creates or updates the specified property.
+        /// </summary>
+        /// <remarks>If property.IsNew == True, a new property is created. It's updated otherwise</remarks>
+        /// <param name="property">The property.</param>
         [HttpPost]
 		[Route("")]
         [ResponseType(typeof(void))]
@@ -138,13 +161,18 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 		    return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // DELETE: api/catalog/properties?id=222
+        
+        /// <summary>
+        /// Deletes property by id.
+        /// </summary>
+        /// <param name="id">The property id.</param>
+        /// <returns></returns>
 		[HttpDelete]
 		[Route("")]
         [ResponseType(typeof(void))]
         public IHttpActionResult Delete(string id)
         {
-            _propertyService.Delete(new string[] { id });
+            _propertyService.Delete(new [] { id });
             return StatusCode(HttpStatusCode.NoContent);
         }
     }

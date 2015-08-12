@@ -47,13 +47,6 @@ namespace VirtoCommerce.MarketingModule.Data.Repositories
 								   .WithMany(x => x.ContentItems)
 								   .HasForeignKey(x => x.FolderId);
 
-			modelBuilder.Entity<DynamicContentItemProperty>().ToTable("DynamicContentItemProperty");
-			modelBuilder.Entity<DynamicContentItemProperty>().HasKey(x => x.Id)
-					.Property(x => x.Id);
-			modelBuilder.Entity<DynamicContentItemProperty>().HasRequired(x => x.DynamicContentItem)
-									   .WithMany(x => x.PropertyValues)
-									   .HasForeignKey(x => x.DynamicContentItemId);
-
 			modelBuilder.Entity<DynamicContentPlace>().ToTable("DynamicContentPlace");
 			modelBuilder.Entity<DynamicContentPlace>().HasKey(x => x.Id)
 					.Property(x => x.Id);
@@ -162,7 +155,7 @@ namespace VirtoCommerce.MarketingModule.Data.Repositories
 
 		public DynamicContentItem GetContentItemById(string id)
 		{
-			var retVal = Items.Include(x => x.PropertyValues).FirstOrDefault(x => x.Id == id);
+			var retVal = Items.FirstOrDefault(x => x.Id == id);
 			if (retVal != null)
 			{
 				retVal.Folder = GetContentFolderById(retVal.FolderId);

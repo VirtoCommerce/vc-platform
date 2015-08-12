@@ -20,6 +20,7 @@
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
     <TargetFrameworkProfile />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -29,6 +30,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\VirtoCommerce.MarketingModule.Web.XML</DocumentationFile>
+    <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -37,6 +40,8 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\VirtoCommerce.MarketingModule.Web.XML</DocumentationFile>
+    <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -118,7 +123,6 @@
     <Compile Include="Converters\ContentFolderConverter.cs" />
     <Compile Include="Converters\ContentPlaceConverter.cs" />
     <Compile Include="Converters\ContentPublicationConverter.cs" />
-    <Compile Include="Converters\PropertyConverter.cs" />
     <Compile Include="Converters\PromotionConverter.cs" />
     <Compile Include="Converters\ContentItemConverter.cs" />
     <Compile Include="ExportImport\MarketingExportImport.cs" />
@@ -128,7 +132,6 @@
     <Compile Include="Model\DynamicContentPlace.cs" />
     <Compile Include="Model\DynamicContentPublication.cs" />
     <Compile Include="Model\Promotion.cs" />
-    <Compile Include="Model\Property.cs" />
     <Compile Include="Model\MarketingSearchResult.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -35,6 +35,13 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 			_blobUrlResolver = blobUrlResolver;
         }
 
+        /// <summary>
+        /// Get store category by id
+        /// </summary>
+        /// <param name="category">Category id</param>
+        /// <param name="store">Store id</param>
+        /// <param name="language">Culture name (default value is "en-us")</param>
+        /// <response code="404">Category not found</response>
 		[HttpGet]
 		[ResponseType(typeof(webModel.Category))]
 		[ClientCache(Duration = 30)]
@@ -47,7 +54,13 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 			return NotFound();
 		}
 
-        /// GET: api/mp/apple/en-us/categories?code=22
+        /// <summary>
+        /// Get store category by code
+        /// </summary>
+        /// <param name="store">Store id</param>
+        /// <param name="code">Category code</param>
+        /// <param name="language">Culture name (default value is "en-us")</param>
+        /// <response code="404">Category not found</response>
         [HttpGet]
         [ResponseType(typeof(webModel.Category))]
         [ClientCache(Duration = 30)]
@@ -75,7 +88,13 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 			return NotFound();
 		}
 
-        /// GET: api/mp/apple/en-us/categories?keyword=apple-mp3
+        /// <summary>
+        /// Get store category by SEO keyword
+        /// </summary>
+        /// <param name="store">Store id</param>
+        /// <param name="keyword">Category SEO keyword</param>
+        /// <param name="language">Culture name (default value is "en-us")</param>
+        /// <response code="404">Category not found</response>
         [HttpGet]
         [ResponseType(typeof(webModel.Category))]
         [ClientCache(Duration = 30)]
@@ -102,19 +121,12 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 			return NotFound();
 		}
 
-		private storeModel.Store GetStoreById(string storeId)
-		{
-			var retVal = _storeService.GetById(storeId);
-			return retVal;
-		}
-
         /// <summary>
-        ///     GET: api/mp/apple/en-us/categories?parentId='22'
+        /// Search for store categories
         /// </summary>
-        /// <param name="store">The store.</param>
-        /// <param name="language">The language.</param>
-        /// <param name="parentId">The parent identifier.</param>
-        /// <returns></returns>
+        /// <param name="store">Store id</param>
+        /// <param name="language">Culture name (default value is "en-us")</param>
+        /// <param name="parentId">Parent category id</param>
         [HttpGet]
         [ResponseType(typeof(webModel.ResponseCollection<webModel.Category>))]
         [ClientCache(Duration = 30)]
@@ -126,23 +138,29 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         {
             var catalog = _storeService.GetById(store).Catalog;
             var criteria = new moduleModel.SearchCriteria
-                           {
-                               CatalogId = catalog,
-                               CategoryId = parentId,
-                               Start = 0,
-                               Count = int.MaxValue,
-                               HideDirectLinedCategories = true,
-                               ResponseGroup = moduleModel.ResponseGroup.WithCategories,
-                               GetAllCategories = string.IsNullOrEmpty(parentId)
-                           };
+            {
+                CatalogId = catalog,
+                CategoryId = parentId,
+                Start = 0,
+                Count = int.MaxValue,
+                HideDirectLinedCategories = true,
+                ResponseGroup = moduleModel.ResponseGroup.WithCategories,
+                GetAllCategories = string.IsNullOrEmpty(parentId)
+            };
             var result = this._searchService.Search(criteria);
             var categories = result.Categories.Where(x => x.IsActive ?? true);
             return this.Ok(
                 new webModel.ResponseCollection<webModel.Category>
                 {
                     TotalCount = categories.Count(),
-					Items = categories.Select(x => x.ToWebModel(_blobUrlResolver)).ToList()
+                    Items = categories.Select(x => x.ToWebModel(_blobUrlResolver)).ToList()
                 });
         }
+
+        private storeModel.Store GetStoreById(string storeId)
+		{
+			var retVal = _storeService.GetById(storeId);
+			return retVal;
+		}
     }
 }

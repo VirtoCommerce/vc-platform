@@ -21,7 +21,11 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 			_marketingSearchService = marketingSearchService;
 		}
 
-		// GET: api/marketing/search?respGroup=withPromotions&start=0&count=20
+		/// <summary>
+		/// Search marketing objects by given criteria
+		/// </summary>
+		/// <remarks>Allow to find all marketing module objects (Promotions, Dynamic content objects)</remarks>
+		/// <param name="criteria">criteria</param>
 		[HttpGet]
 		[ResponseType(typeof(webModel.MarketingSearchResult))]
 		[Route("search")]

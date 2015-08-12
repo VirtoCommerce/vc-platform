@@ -62,16 +62,18 @@
     <Compile Include="Converters\ContentItemConverter.cs" />
     <Compile Include="Converters\ContentPlaceConverter.cs" />
     <Compile Include="Converters\PromotionConverter.cs" />
-    <Compile Include="Converters\PropertyConverter.cs" />
     <Compile Include="Migrations\201504301503151_Initial.cs" />
     <Compile Include="Migrations\201504301503151_Initial.Designer.cs">
       <DependentUpon>201504301503151_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201508111056466_RemoveProperties.cs" />
+    <Compile Include="Migrations\201508111056466_RemoveProperties.Designer.cs">
+      <DependentUpon>201508111056466_RemoveProperties.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Coupon.cs" />
     <Compile Include="Model\DynamicContentFolder.cs" />
     <Compile Include="Model\DynamicContentItem.cs" />
-    <Compile Include="Model\DynamicContentItemProperty.cs" />
     <Compile Include="Model\DynamicContentPlace.cs" />
     <Compile Include="Model\DynamicContentPublishingGroup.cs" />
     <Compile Include="Model\Promotion.cs" />
@@ -113,6 +115,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201504301503151_Initial.resx">
       <DependentUpon>201504301503151_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508111056466_RemoveProperties.resx">
+      <DependentUpon>201508111056466_RemoveProperties.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

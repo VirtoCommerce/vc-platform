@@ -8,8 +8,8 @@
         <dependency id="VirtoCommerce.Catalog" version="2.3.0" />
     </dependencies>
 
-    <title>Virto Commerce Merchandising</title>
-    <description>Web API for various frontends to access various modules functionality</description>
+    <title>Virto Commerce merchandising module</title>
+    <description>API layer for frontends to access various modules functionality</description>
     <authors>
         <author>Virto Commerce</author>
     </authors>

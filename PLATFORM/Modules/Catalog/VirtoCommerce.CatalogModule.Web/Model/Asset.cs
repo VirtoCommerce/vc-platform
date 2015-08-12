@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace VirtoCommerce.CatalogModule.Web.Model
 {
+    /// <summary>
+    /// Asset containing any content.
+    /// </summary>
 	public class Asset : AssetBase
 	{
 		public Asset()

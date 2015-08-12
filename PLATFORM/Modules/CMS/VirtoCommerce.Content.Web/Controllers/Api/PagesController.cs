@@ -55,13 +55,11 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		#endregion
 
 		/// <summary>
-		/// Get pages
+		/// Search pages
 		/// </summary>
-		/// <remarks>Get all pages by store. Returns array of store pages</remarks>
+		/// <remarks>Get all pages by store and criteria</remarks>
 		/// <param name="storeId">Store Id</param>
 		/// <param name="criteria">Searching pages criteria</param>
-		/// <response code="500">Internal Server Error</response>
-		/// <response code="200">Pages returned OK</response>
 		[HttpGet]
 		[ResponseType(typeof(IEnumerable<Page>))]
 		[Route("")]
@@ -72,12 +70,9 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		}
 
 		/// <summary>
-		/// Get pages folders
+		/// Get pages folders by store id
 		/// </summary>
-		/// <remarks>Get all pages folders by store. Returns array of store pages folders</remarks>
 		/// <param name="storeId">Store Id</param>
-		/// <response code="500">Internal Server Error</response>
-		/// <response code="200">Pages folders returned OK</response>
 		[HttpGet]
 		[ResponseType(typeof(GetPagesResult))]
 		[Route("folders")]
@@ -91,12 +86,11 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		/// <summary>
 		/// Get page
 		/// </summary>
-		/// <remarks>Get page by store and name+language pair. Returns page</remarks>
+		/// <remarks>Get page by store and name+language pair.</remarks>
 		/// <param name="storeId">Store Id</param>
 		/// <param name="language">Page language</param>
 		/// <param name="pageName">Page name</param>
-		/// <response code="500">Internal Server Error</response>
-		/// <response code="204">No content</response>
+		/// <response code="404">Page not found</response>
 		/// <response code="200">Page returned OK</response>
 		[HttpGet]
 		[ResponseType(typeof(Page))]
@@ -107,7 +101,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 			var item = _pagesService.GetPage(storeId, pageName, language);
 			if (item == null)
 			{
-				return StatusCode(HttpStatusCode.NoContent);
+				return NotFound();
 			}
 
 			return Ok(item.ToWebModel());
@@ -116,12 +110,10 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		/// <summary>
 		/// Check page name
 		/// </summary>
-		/// <remarks>Check page pair name+language for store. Returns result of checking</remarks>
+		/// <remarks>Check page pair name+language for store</remarks>
 		/// <param name="storeId">Store Id</param>
 		/// <param name="language">Page language</param>
 		/// <param name="pageName">Page name</param>
-		/// <response code="500">Internal Server Error</response>
-		/// <response code="200">Pages returned OK</response>
 		[HttpGet]
 		[ResponseType(typeof(CheckNameResult))]
 		[Route("checkname")]
@@ -135,11 +127,8 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		/// <summary>
 		/// Save page
 		/// </summary>
-		/// <remarks>Save page</remarks>
 		/// <param name="storeId">Store Id</param>
 		/// <param name="page">Page</param>
-		/// <response code="500">Internal Server Error</response>
-		/// <response code="200">Page saved OK</response>
 		[HttpPost]
 		[Route("")]
 		[CheckPermission(Permission = PredefinedPermissions.Manage)]
@@ -161,11 +150,9 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		/// <summary>
 		/// Delete page
 		/// </summary>
-		/// <remarks>Delete page</remarks>
+		/// <remarks>Delete pages with name+language pairs, that defined in pageNamesAndLanguges uri parameter</remarks>
 		/// <param name="storeId">Store Id</param>
 		/// <param name="pageNamesAndLanguges">Array of pairs name+language</param>
-		/// <response code="500">Internal Server Error</response>
-		/// <response code="200">Pages deleted OK</response>
 		[HttpDelete]
 		[Route("")]
 		[CheckPermission(Permission = PredefinedPermissions.Manage)]

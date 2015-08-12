@@ -2,13 +2,30 @@
 {
     public class Facet
     {
-        #region Public Properties
-
+        /// <summary>
+        /// Gets or sets the value of facet type
+        /// </summary>
+        /// <value>
+        /// "Attribute", "PriceRange", "Range" or "Category"
+        /// </value>
         public string FacetType { get; set; }
-        public string Field { get; set; }
-        public string Label { get; set; }
-        public FacetValue[] Values { get; set; }
 
-        #endregion
+        /// <summary>
+        /// Gets or sets the value of facet field
+        /// </summary>
+        public string Field { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of facet label
+        /// </summary>
+        public string Label { get; set; }
+
+        /// <summary>
+        /// Gets or sets the collection of facet values
+        /// </summary>
+        /// <value>
+        /// Array of FacetValue objects
+        /// </value>
+        public FacetValue[] Values { get; set; }
     }
 }

@@ -1,16 +1,10 @@
-﻿using System;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using System.Web;
+﻿using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Description;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
-using VirtoCommerce.Platform.Web.Model.Settings;
-using webModel = VirtoCommerce.Platform.Web.Model.Settings;
-using moduleModel = VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Web.Converters.Settings;
+using webModel = VirtoCommerce.Platform.Web.Model.Settings;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
@@ -23,22 +17,23 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _settingsManager = settingsManager;
         }
 
-		/// <summary>
-		/// api/settings
-		/// </summary>
-		/// <returns></returns>
-		[HttpGet]
-		[ResponseType(typeof(webModel.Setting[]))]
-		[Route("")]
-		public IHttpActionResult GetAllSettings()
-		{
-			var modules = _settingsManager.GetModules();
-			return Ok(modules.SelectMany(x => _settingsManager.GetModuleSettings(x.Id)).Select(x => x.ToWebModel()).ToArray());
-		}
+        /// <summary>
+        /// Get all settings
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [ResponseType(typeof(webModel.Setting[]))]
+        [Route("")]
+        public IHttpActionResult GetAllSettings()
+        {
+            var modules = _settingsManager.GetModules();
+            return Ok(modules.SelectMany(x => _settingsManager.GetModuleSettings(x.Id)).Select(x => x.ToWebModel()).ToArray());
+        }
 
         /// <summary>
-        /// api/settings/modules/123
+        /// Get settings registered by specific module
         /// </summary>
+        /// <param name="id">Module ID.</param>
         /// <returns></returns>
         [HttpGet]
         [ResponseType(typeof(webModel.Setting[]))]
@@ -49,23 +44,28 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return Ok(retVal.Select(x => x.ToWebModel()).ToArray());
         }
 
-		/// <summary>
-		/// api/settings/modules/123
-		/// </summary>
-		/// <returns></returns>
-		[HttpGet]
-		[ResponseType(typeof(webModel.Setting))]
-		[Route("{id}")]
-		public IHttpActionResult GetSetting(string id)
-		{
-			var retVal = _settingsManager.GetSettingByName(id);
-			if(retVal != null)
-			{
-				return Ok(retVal.ToWebModel());
-			}
-			return NotFound();
-		}
+        /// <summary>
+        /// Get setting details by name
+        /// </summary>
+        /// <param name="id">Setting system name.</param>
+        /// <returns></returns>
+        [HttpGet]
+        [ResponseType(typeof(webModel.Setting))]
+        [Route("{id}")]
+        public IHttpActionResult GetSetting(string id)
+        {
+            var retVal = _settingsManager.GetSettingByName(id);
+            if (retVal != null)
+            {
+                return Ok(retVal.ToWebModel());
+            }
+            return NotFound();
+        }
 
+        /// <summary>
+        /// Update settings values
+        /// </summary>
+        /// <param name="settings"></param>
         [HttpPost]
         [Route("")]
         [CheckPermission(Permission = PredefinedPermissions.SettingManage)]
@@ -75,8 +75,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
-        /// api/settings/value/name
+        /// Get non-array setting value by name
         /// </summary>
+        /// <param name="name">Setting system name.</param>
         /// <returns></returns>
         [HttpGet]
         [ResponseType(typeof(object))]
@@ -88,11 +89,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
-        /// api/settings/values/name
+        /// Get array setting values by name
         /// </summary>
+        /// <param name="name">Setting system name.</param>
         /// <returns></returns>
         [HttpGet]
-        [ResponseType(typeof(object))]
+        [ResponseType(typeof(object[]))]
         [Route("values/{name}")]
         public IHttpActionResult GetArray(string name)
         {

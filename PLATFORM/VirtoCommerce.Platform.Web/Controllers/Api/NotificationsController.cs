@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
@@ -32,7 +33,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 		/// Get all registered notification types
 		/// </summary>
 		/// <remarks>Get all registered notification types in platform</remarks>
-		/// <response code="500">Internal Server Error</response>
 		[HttpGet]
 		[ResponseType(typeof(webModels.Notification[]))]
 		[Route("")]
@@ -47,9 +47,14 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 		/// <summary>
 		/// Get notification template
 		/// </summary>
-		/// <param name="student">Student Model</param>
-		/// <remarks>Get notification template by notification type, objectId, objectTypeId and language</remarks>
-		/// <response code="500">Internal Server Error</response>
+		/// <param name="type">Notification type of template</param>
+		/// <param name="objectId">Object id of template</param>
+		/// <param name="objectTypeId">Object type id of template</param>
+		/// <param name="language">Locale of template</param>
+		/// <remarks>
+		/// Get notification template by notification type, objectId, objectTypeId and language. Object id and object type id - params of object, that initialize creating of
+		/// template. By default object id and object type id = "Platform". For example for store with id = "SampleStore", objectId = "SampleStore", objectTypeId = "Store".
+		/// </remarks>
 		[HttpGet]
 		[ResponseType(typeof(webModels.NotificationTemplate))]
 		[Route("template/{type}/{objectId}/{objectTypeId}/{language}")]
@@ -65,21 +70,35 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 			return Ok(retVal.ToWebModel());
 		}
 
+		/// <summary>
+		/// Get notification templates
+		/// </summary>
+		/// <remarks>
+		/// Get all notification templates by notification type, objectId, objectTypeId. Object id and object type id - params of object, that initialize creating of
+		/// template. By default object id and object type id = "Platform". For example for store with id = "SampleStore", objectId = "SampleStore", objectTypeId = "Store".
+		/// </remarks>
+		/// <param name="type">Notification type of template</param>
+		/// <param name="objectId">Object id of template</param>
+		/// <param name="objectTypeId">Object type id of template</param>
 		[HttpGet]
 		[ResponseType(typeof(webModels.NotificationTemplate[]))]
 		[Route("template/{type}/{objectId}/{objectTypeId}")]
-		public  IHttpActionResult GetNotificationTemplates(string type, string objectId, string objectTypeId)
+        public IHttpActionResult GetNotificationTemplates(string type, string objectId, string objectTypeId)
 		{
 			List<webModels.NotificationTemplate> retVal = new List<webModels.NotificationTemplate>();
 			var templates = _notificationTemplateService.GetNotificationTemplatesByNotification(type, objectId, objectTypeId);
 
-			if(templates.Any())
+            if (templates.Any())
 			{
 				retVal = templates.Select(t => t.ToWebModel()).ToList();
 			}
 			return Ok(retVal.ToArray());
 		}
 
+		/// <summary>
+		/// Update notification template
+		/// </summary>
+		/// <param name="notificationTemplate">Notification template</param>
 		[HttpPost]
 		[ResponseType(typeof(void))]
 		[Route("template")]
@@ -87,9 +106,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 		{
 			_notificationTemplateService.Update(new NotificationTemplate[] { notificationTemplate.ToCoreModel() });
 
-			return Ok();
+			return StatusCode(HttpStatusCode.NoContent);
 		}
 
+		/// <summary>
+		/// Delete notification template
+		/// </summary>
+		/// <param name="id">Template id</param>
 		[HttpDelete]
 		[ResponseType(typeof(void))]
 		[Route("template/{id}")]
@@ -97,14 +120,18 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 		{
 			_notificationTemplateService.Delete(new string[] { id });
 
-			return Ok();
+			return StatusCode(HttpStatusCode.NoContent);
 		}
 
-
+		/// <summary>
+		/// Get testing parameters
+		/// </summary>
+		/// <remarks>Method returns notification properties, that defined in notification class, this proprties used in notification template.</remarks>
+		/// <param name="type">Notification type</param>
 		[HttpGet]
 		[ResponseType(typeof(NotificationParameter[]))]
-		[Route("template/{type}/preparetestdata")]
-		public IHttpActionResult PrepareTest(string type)
+		[Route("template/{type}/getTestingParameters")]
+		public IHttpActionResult GetTestingParameters(string type)
 		{
 			var notification = _notificationManager.GetNewNotification(type);
 			var retVal = _eventTemplateResolver.ResolveNotificationParameters(notification);
@@ -112,9 +139,21 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 			return Ok(retVal.Select(s => s.ToWebModel()).ToArray());
 		}
 
+		/// <summary>
+		/// Get rendered notification html
+		/// </summary>
+		/// <remarks>
+		/// Method returns rendered html, that based on notification template. Template for rendering choosen by type, objectId, objectTypeId, language.
+		/// Parameters for template may be prepared by the method of getTestingParameters.
+		/// </remarks>
+		/// <param name="parameters">Notification special parameters</param>
+		/// <param name="type">Notification type</param>
+		/// <param name="objectId">Object id</param>
+		/// <param name="objectTypeId">Object type id</param>
+		/// <param name="language">Locale</param>
 		[HttpPost]
 		[ResponseType(typeof(webModels.Notification))]
-		[Route("template/{type}/{objectId}/{objectTypeId}/{language}/resolvenotification")]
+		[Route("template/{type}/{objectId}/{objectTypeId}/{language}/rendernotificationhtml")]
 		public IHttpActionResult ResolveNotification([FromBody]List<KeyValuePair<string, string>> parameters, string type, string objectId, string objectTypeId, string language)
 		{
 			var notification = _notificationManager.GetNewNotification(type, objectId, objectTypeId, language);
@@ -128,6 +167,19 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 			return Ok(notification.ToWebModel());
 		}
 
+		/// <summary>
+		/// Sending test notification
+		/// </summary>
+		/// <remarks>
+		/// Method sending notification, that based on notification template. Template for rendering chosen by type, objectId, objectTypeId, language.
+		/// Parameters for template may be prepared by the method of getTestingParameters. Method returns string. If sending finished with success status
+		/// this string is empty, otherwise string contains error message.
+		/// </remarks>
+		/// <param name="parameters">Notification special parameters</param>
+		/// <param name="type">Notification type</param>
+		/// <param name="objectId">Object id</param>
+		/// <param name="objectTypeId">Object type id</param>
+		/// <param name="language">Locale</param>
 		[HttpPost]
 		[ResponseType(typeof(string))]
 		[Route("template/{type}/{objectId}/{objectTypeId}/{language}/sendnotification")]
@@ -144,6 +196,17 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 			return Ok(result.ErrorMessage);
 		}
 
+		/// <summary>
+		/// Get notification journal page
+		/// </summary>
+		/// <remarks>
+		/// Method returns notification journal page with array of notification, that was send, sending or will be send in future. Result contains total count, that can be used
+		/// for paging.
+		/// </remarks>
+		/// <param name="objectId">Object id</param>
+		/// <param name="objectTypeId">Object type id</param>
+		/// <param name="start">Page setting start</param>
+		/// <param name="count">Page setting count</param>
 		[HttpGet]
 		[ResponseType(typeof(webModels.SearchNotificationsResult))]
 		[Route("journal/{objectId}/{objectTypeId}")]
@@ -158,6 +221,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 			return Ok(retVal);
 		}
 
+		/// <summary>
+		/// Get sending notification
+		/// </summary>
+		/// <param name="id">Sending notification id</param>
 		[HttpGet]
 		[ResponseType(typeof(webModels.Notification))]
 		[Route("notification/{id}")]
@@ -168,6 +235,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 			return Ok(retVal.ToWebModel());
 		}
 
+		/// <summary>
+		/// Stop sending notification
+		/// </summary>
+		/// <param name="ids">Stop sending notification ids</param>
 		[HttpPost]
 		[ResponseType(typeof(void))]
 		[Route("stopnotifications")]
@@ -175,7 +246,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 		{
 			_notificationManager.StopSendingNotifications(ids);
 
-			return Ok();
+			return StatusCode(HttpStatusCode.NoContent);
 		}
 	}
 }

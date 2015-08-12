@@ -1,20 +1,48 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VirtoCommerce.Platform.Core.Common;
+﻿using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.CartModule.Web.Model
 {
-	public class PaymentMethod  : ValueObject<PaymentMethod>
-	{
-		public string GatewayCode { get; set; }
-		public string Name { get; set; }
-		public string IconUrl { get; set; }
-		public string Description { get; set; }
-		public string Type { get; set; }
-		public string Group { get; set; }
-		public int Priority { get; set; }
-	}
+    public class PaymentMethod  : ValueObject<PaymentMethod>
+    {
+        /// <summary>
+        /// Gets or sets the value of payment gateway code
+        /// </summary>
+        public string GatewayCode { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of payment method name
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of payment method logo absolute URL
+        /// </summary>
+        public string IconUrl { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of payment method description
+        /// </summary>
+        public string Description { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of payment method type
+        /// </summary>
+        /// <value>
+        /// "Unknown", "Standard", "Redirection", "PreparedForm"
+        /// </value>
+        public string Type { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of payment method group type
+        /// </summary>
+        /// <value>
+        /// "Paypal", "BankCard", "Alternative", "Manual"
+        /// </value>
+        public string Group { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of payment method priority
+        /// </summary>
+        public int Priority { get; set; }
+    }
 }

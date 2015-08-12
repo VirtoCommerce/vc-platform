@@ -11,89 +11,76 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model
 {
     public class SearchParameters
     {
-        #region Constants
-
         /// <summary>
-        ///     The default page size
+        /// The value of default page size
         /// </summary>
         public const int DefaultPageSize = 8;
 
-        #endregion
-
-        #region Static Fields
-
         /// <summary>
-        ///     The facet regex
+        /// The facet regex
         /// </summary>
         private static readonly Regex FacetRegex = new Regex("^f_", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        // used to apply facet filtering
-
+        /// <summary>
+        /// Used to apply facet filtering
+        /// </summary>
         private static readonly Regex TermRegex = new Regex("^t_", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        #endregion
-
-        // used to filter by any property
-
-        #region Constructors and Destructors
-
         /// <summary>
-        ///     Initializes a new instance of the <see cref="SearchParameters" /> class.
+        /// Initializes a new instance of the <see cref="SearchParameters" /> class.
         /// </summary>
         public SearchParameters()
         {
-            this.Facets = new Dictionary<string, string[]>();
-            this.PageSize = 0;
-            this.StartingRecord = 0;
+            Facets = new Dictionary<string, string[]>();
+            PageSize = 0;
+            StartingRecord = 0;
         }
 
-        #endregion
-
-        #region Public Properties
-
         /// <summary>
-        ///     Gets or sets the facets.
+        /// Gets or sets the facets
         /// </summary>
-        /// <value>The facets.</value>
+        /// <value>The facets</value>
         public IDictionary<string, string[]> Facets { get; set; }
 
         /// <summary>
-        ///     Gets or sets the free search.
+        /// Gets or sets the free search
         /// </summary>
-        /// <value>The free search.</value>
+        /// <value>The free search</value>
         public string FreeSearch { get; set; }
 
         /// <summary>
-        ///     Gets or sets the size of the page.
+        /// Gets or sets the size of the page
         /// </summary>
-        /// <value>The size of the page.</value>
+        /// <value>The size of the page</value>
         public int PageSize { get; set; }
 
         /// <summary>
-        ///     Gets or sets the sort.
+        /// Gets or sets the sort
         /// </summary>
-        /// <value>The sort.</value>
+        /// <value>The sort</value>
         public string Sort { get; set; }
 
         /// <summary>
-        ///     Gets or sets the sort order asc or desc.
+        /// Gets or sets the sort order ascending or descending
         /// </summary>
         /// <value>True if descending, false if ascending</value>
         public string SortOrder { get; set; }
 
+        /// <summary>
+        /// Gets or sets the start date
+        /// </summary>
         public DateTime? StartDateFrom { get; set; }
 
         /// <summary>
-        ///     Gets or sets the index of the page.
+        /// Gets or sets the index of the page
         /// </summary>
-        /// <value>The index of the page.</value>
+        /// <value>The index of the page</value>
         public int StartingRecord { get; set; }
 
+        /// <summary>
+        /// Gets or sets search terms collection
+        /// </summary>
         public IDictionary<string, string[]> Terms { get; set; }
-
-        #endregion
-
-        #region Public Methods and Operators
 
         public static bool TryParse(string s, out SearchParameters result)
         {
@@ -161,10 +148,6 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model
             return builder.ToString();
         }
 
-        #endregion
-
-        #region Methods
-
         /// <summary>
         ///     Name values to dictionary.
         /// </summary>
@@ -179,7 +162,5 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model
             }
             return d;
         }
-
-        #endregion
     }
 }
