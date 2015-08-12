@@ -286,6 +286,7 @@
     <Compile Include="BackgroundJobs\SendNotificationsJobs.cs" />
     <Compile Include="Converters\ExportImport\ExportImportRequestConverter.cs" />
     <Compile Include="Model\ExportImport\PushNotifications\SampleDataImportPushNotification.cs" />
+    <Compile Include="Model\Notifications\RenderNotificationContentResult.cs" />
     <Compile Include="VirtoCommercePlatformWebBootstrapper.cs" />
     <Compile Include="Controllers\Api\AssetsController.cs" />
     <Compile Include="Controllers\Api\DynamicPropertiesController.cs" />

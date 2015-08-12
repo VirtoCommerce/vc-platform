@@ -3,21 +3,22 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
-using VirtoCommerce.Content.Data.Models;
+using coreModels = VirtoCommerce.Content.Data.Models;
 using VirtoCommerce.Content.Data.Services;
 using VirtoCommerce.Platform.Core.ExportImport;
 using Microsoft.Practices.ObjectBuilder2;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Domain.Store.Services;
 using System.Threading.Tasks;
+using Omu.ValueInjecter;
 
 namespace VirtoCommerce.Content.Web.ExportImport
 {
 	public sealed class BackupObject
 	{
 		public ICollection<MenuLinkList> MenuLinkLists { get; set; }
-		public ICollection<ThemeAsset> ThemeAssets { get; set; }
-		public ICollection<Page> Pages { get; set; }
+        public ICollection<coreModels.ThemeAsset> ThemeAssets { get; set; }
+        public ICollection<coreModels.Page> Pages { get; set; }
 	}
 
 	public sealed class ContentExportImport
@@ -72,11 +73,12 @@ namespace VirtoCommerce.Content.Web.ExportImport
 		{
 			foreach (var item in backup)
 			{
-				_menuService.Update(item);
+                var addedItem = ConvertToCoreModel(item);
+                _menuService.Update(addedItem);
 			}
 		}
 
-		private void UpdatePages(ICollection<Page> original, ICollection<Page> backup)
+        private void UpdatePages(ICollection<coreModels.Page> original, ICollection<coreModels.Page> backup)
 		{
 			foreach (var item in backup)
 			{
@@ -84,7 +86,7 @@ namespace VirtoCommerce.Content.Web.ExportImport
 			}
 		}
 
-		private void UpdateThemeAssets(ICollection<ThemeAsset> original, ICollection<ThemeAsset> backup)
+        private void UpdateThemeAssets(ICollection<coreModels.ThemeAsset> original, ICollection<coreModels.ThemeAsset> backup)
 		{
 			foreach (var item in backup)
 			{
@@ -92,17 +94,17 @@ namespace VirtoCommerce.Content.Web.ExportImport
 			}
 		}
 
-		private string GetStoreIdForPage(Page page)
+        private string GetStoreIdForPage(coreModels.Page page)
 		{
 			return page.FullPath.Split(new char[] { '/' })[0];
 		}
 
-		private string GetThemeIdForThemeAsset(ThemeAsset themeAsset)
+        private string GetThemeIdForThemeAsset(coreModels.ThemeAsset themeAsset)
 		{
 			return themeAsset.Path.Split(new char[] { '/' })[1];
 		}
 
-		private string GetStoreIdForThemeAsset(ThemeAsset themeAsset)
+        private string GetStoreIdForThemeAsset(coreModels.ThemeAsset themeAsset)
 		{
 			return themeAsset.Path.Split(new char[] { '/' })[0];
 		}
@@ -115,12 +117,12 @@ namespace VirtoCommerce.Content.Web.ExportImport
 
 			var stores = _storeService.GetStoreList();
 			var menuLinkLists = new List<MenuLinkList>();
-			var contentItems = new List<ThemeAsset>();
-			var contentPages = new List<Page>();
+            var contentItems = new List<coreModels.ThemeAsset>();
+            var contentPages = new List<coreModels.Page>();
 			foreach(var store in stores)
 			{
 				var storeLists = _menuService.GetListsByStoreId(store.Id);
-				menuLinkLists.AddRange(storeLists);
+				menuLinkLists.AddRange(storeLists.Select(s => ConvertToExportModel(s)));
 
 				if (handleBynaryData)
 				{
@@ -143,5 +145,37 @@ namespace VirtoCommerce.Content.Web.ExportImport
 				Pages = contentPages
 			};
 		}
+
+        private MenuLinkList ConvertToExportModel(coreModels.MenuLinkList list)
+        {
+            var retVal = new MenuLinkList();
+
+            retVal.InjectFrom(list);
+
+            foreach (var link in list.MenuLinks)
+            {
+                var addedLink = new MenuLink();
+                addedLink.InjectFrom(link);
+                retVal.MenuLinks.Add(addedLink);
+            }
+
+            return retVal;
+        }
+
+        private coreModels.MenuLinkList ConvertToCoreModel(MenuLinkList list)
+        {
+            var retVal = new coreModels.MenuLinkList();
+
+            retVal.InjectFrom(list);
+
+            foreach (var link in list.MenuLinks)
+            {
+                var addedLink = new coreModels.MenuLink();
+                addedLink.InjectFrom(link);
+                retVal.MenuLinks.Add(addedLink);
+            }
+
+            return retVal;
+        }
 	}
 }
