@@ -57,3 +57,37 @@ body
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
 }
+
+.apiDescriptionInfo
+{
+    display: block;
+    color: #222;
+    margin: 5px 0 0;
+    font-size: 0.75em;
+    font-weight: 300;
+}
+
+.swagger-section .swagger-ui-wrap ul#resources li.resource div.heading h2
+{
+    font-family: 'Exo 2';
+}
+
+.swagger-section .swagger-ui-wrap ul#resources li.resource
+{
+    margin: 20px 0 0;
+}
+
+.swagger-section .swagger-ui-wrap ul#resources li.resource div.heading ul.options
+{
+    margin: 15px 10px 0 0;
+}
+
+.swagger-section .swagger-ui-wrap ul#resources li.resource div.heading h2 a
+{
+    color: #4c4c4c;
+}
+
+.swagger-section .swagger-ui-wrap ul#resources
+{
+    font-family: 'Exo 2';
+}

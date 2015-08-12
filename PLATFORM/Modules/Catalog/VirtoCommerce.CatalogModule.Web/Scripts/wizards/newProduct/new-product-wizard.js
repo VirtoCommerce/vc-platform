@@ -1,11 +1,10 @@
 ﻿angular.module('virtoCommerce.catalogModule')
 .controller('virtoCommerce.catalogModule.newProductWizardController', ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
     var blade = $scope.blade;
-
-    var initialName = blade.item.name;
-    var lastGeneratedName = blade.item.name;
-
     blade.headIcon = blade.item.productType === 'Digital' ? 'fa fa-file-archive-o' : 'fa fa-truck';
+
+    var initialName = blade.item.name ? blade.item.name : '';
+    var lastGeneratedName = initialName;
 
     $scope.createItem = function () {
         blade.isLoading = true;
@@ -117,13 +116,16 @@
     }
 
     $scope.$watch('blade.item.properties', function (currentEntities) {
-        if (lastGeneratedName === blade.item.name
-        && blade.childrenBlades.length > 0
-        && blade.childrenBlades[0].controller === 'virtoCommerce.catalogModule.newProductWizardPropertiesController') {
+        // auto-generate item.name from property values if user didn't change it
+        if ((lastGeneratedName == blade.item.name || (!lastGeneratedName && !blade.item.name))
+            && _.any(blade.childrenBlades, function (x) { return x.controller === 'virtoCommerce.catalogModule.newProductWizardPropertiesController'; })) {
             lastGeneratedName = initialName;
             _.each(currentEntities, function (x) {
-                if (x.values && x.values.length > 0) {
-                    lastGeneratedName += ', ' + x.values[0].value;
+                if (_.any(x.values, function (val) { return val.value; })) {
+                    var currVal = _.find(x.values, function (val) { return val.value; });
+                    if (currVal) {
+                        lastGeneratedName += (lastGeneratedName ? ', ' : '') + currVal.value;
+                    }
                 }
             });
             blade.item.name = lastGeneratedName;
@@ -133,5 +135,3 @@
 
     blade.isLoading = false;
 }]);
-
-

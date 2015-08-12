@@ -63,6 +63,7 @@ namespace SwashbuckleModule.Web
 					c.CustomAsset("index", assembly, "SwashbuckleModule.Web.SwaggerUi.CustomAssets.index.html");
 					c.CustomAsset("images/logo_small-png", assembly, "SwashbuckleModule.Web.SwaggerUi.CustomAssets.logo_small.png");
 					c.CustomAsset("css/vc-css", assembly, "SwashbuckleModule.Web.SwaggerUi.CustomAssets.vc.css");
+                    c.CustomAsset("swagger-ui-js", assembly, "SwashbuckleModule.Web.SwaggerUi.CustomAssets.swagger-ui.js");
                 });
 
 		}
