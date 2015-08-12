@@ -9,7 +9,7 @@
     <dependency id="VirtoCommerce.Catalog" version="2.3.0" />
   </dependencies>
 
-  <title>Virto Commerce multi store module</title>
+  <title>Store module</title>
   <description>Multi store management with individual store settings</description>
   <authors>
     <author>Virto Commerce</author>

@@ -7,7 +7,7 @@
     <dependency id="VirtoCommerce.Core" version="2.3.0" />
   </dependencies>
 
-  <title>Virto Commerce catalog module</title>
+  <title>Catalog module</title>
   <description>Catalog, categories, products, variations, properties management</description>
   <authors>
     <author>Virto Commerce</author>

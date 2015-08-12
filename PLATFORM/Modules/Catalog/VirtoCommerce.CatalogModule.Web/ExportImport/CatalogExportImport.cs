@@ -52,21 +52,17 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 
 		public void DoExport(Stream backupStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
 		{
-			var prodgressInfo = new ExportImportProgressInfo { Description = "loading data..." };
-			progressCallback(prodgressInfo);
-
-			var backupObject = GetBackupObject(manifest, progressCallback);
+			var backupObject = GetBackupObject(progressCallback, manifest.HandleBinaryData);
 
 			backupObject.SerializeJson(backupStream);
 		}
 
 		public void DoImport(Stream backupStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
 		{
-			var progressInfo = new ExportImportProgressInfo { Description = "loading data..." };
-			progressCallback(progressInfo);
+			var progressInfo = new ExportImportProgressInfo();
 
 			var backupObject = backupStream.DeserializeJson<BackupObject>();
-			var originalObject = GetBackupObject(manifest, progressCallback);
+			var originalObject = GetBackupObject(progressCallback, false);
 
 			progressInfo.Description = String.Format("{0} catalogs importing...", backupObject.Catalogs.Count());
 			progressCallback(progressInfo);
@@ -190,14 +186,17 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 			_itemService.Update(toUpdate.ToArray());
 		}
 
-		private BackupObject GetBackupObject(PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
+		private BackupObject GetBackupObject(Action<ExportImportProgressInfo> progressCallback, bool loadBinaryData)
 		{
+			var progressInfo = new ExportImportProgressInfo { Description = "loading data..." };
+			progressCallback(progressInfo);
+
+
 			const ResponseGroup responseGroup = ResponseGroup.WithCatalogs | ResponseGroup.WithCategories | ResponseGroup.WithProducts;
 			var searchResponse = _catalogSearchService.Search(new SearchCriteria { Count = int.MaxValue, GetAllCategories = true, Start = 0, ResponseGroup = responseGroup });
 			
 			var retVal = new BackupObject();
 
-			var progressInfo = new ExportImportProgressInfo();
 			progressInfo.Description = String.Format("{0} catalogs loading", searchResponse.Catalogs.Count());
 			progressCallback(progressInfo);
 
@@ -219,7 +218,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 				progressCallback(progressInfo);
 			}
 			//Binary data
-			if(manifest.HandleBinaryData)
+			if (loadBinaryData)
 			{
 				var allImages = retVal.Products.SelectMany(x => x.Images);
 				allImages = allImages.Concat(retVal.Products.SelectMany(x => x.Variations).SelectMany(x => x.Images));
