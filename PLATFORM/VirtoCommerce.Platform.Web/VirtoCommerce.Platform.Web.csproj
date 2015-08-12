@@ -286,6 +286,9 @@
     <Compile Include="BackgroundJobs\SendNotificationsJobs.cs" />
     <Compile Include="Converters\ExportImport\ExportImportRequestConverter.cs" />
     <Compile Include="Model\ExportImport\PushNotifications\SampleDataImportPushNotification.cs" />
+    <Compile Include="Model\Packaging\ModuleAction.cs" />
+    <Compile Include="Model\Packaging\ModuleBackgroundJobOptions.cs" />
+    <Compile Include="Model\Packaging\ModulePushNotification.cs" />
     <Compile Include="VirtoCommercePlatformWebBootstrapper.cs" />
     <Compile Include="Controllers\Api\AssetsController.cs" />
     <Compile Include="Controllers\Api\DynamicPropertiesController.cs" />
@@ -323,7 +326,6 @@
     <Compile Include="Model\Notifications\SearchNotificationsResult.cs" />
     <Compile Include="Model\Packaging\ModuleDescriptor.cs" />
     <Compile Include="Model\Packaging\ModuleIdentity.cs" />
-    <Compile Include="Model\Packaging\ModuleWorkerJob.cs" />
     <Compile Include="Model\Packaging\ProgressMessage.cs" />
     <Compile Include="Model\Security\ResetPasswordInfo.cs" />
     <Compile Include="Model\Security\ChangePasswordInfo.cs" />
@@ -1550,7 +1552,6 @@
     <TransformXml Source="$(TransformInputFile)" Transform="$(TransformFile)" Destination="$(TransformOutputFile)" StackTrace="$(StackTraceEnabled)" />
     <Delete Files="$(TransformInputFile)" />
   </Target>
-
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

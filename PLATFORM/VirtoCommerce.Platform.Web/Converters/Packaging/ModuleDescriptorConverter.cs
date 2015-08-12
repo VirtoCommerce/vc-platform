@@ -26,11 +26,5 @@ namespace VirtoCommerce.Platform.Web.Converters.Packaging
             result.InjectFrom(source);
             return result;
         }
-
-        public static moduleModel.ModuleDescriptor ToModuleModel(this webModel.ModuleDescriptor descriptor)
-        {
-            var retVal = new moduleModel.ModuleDescriptor();
-            return retVal;
-        }
     }
 }

@@ -35,5 +35,5 @@
     }
 
     $scope.blade.refresh();
-    var intervalPromise = $interval($scope.blade.refresh, 1500);
+    //var intervalPromise = $interval($scope.blade.refresh, 1500);
 }]);
