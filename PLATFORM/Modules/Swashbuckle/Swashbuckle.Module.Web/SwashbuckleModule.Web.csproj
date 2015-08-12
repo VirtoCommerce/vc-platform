@@ -56,7 +56,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="Swashbuckle.Core">
+    <Reference Include="Swashbuckle.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cd1bb07a5ac7c7bc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\Swashbuckle.Core.5.2.1\lib\net40\Swashbuckle.Core.dll</HintPath>
     </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
@@ -91,9 +92,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <EmbeddedResource Include="Extensions\index.html" />
-    <EmbeddedResource Include="Extensions\logo_small.png" />
-    <EmbeddedResource Include="Extensions\vc.css" />
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\index.html" />
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\logo_small.png" />
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\vc.css" />
     <Content Include="module.manifest" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

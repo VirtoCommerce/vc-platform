@@ -7,7 +7,7 @@
 		<dependency id="VirtoCommerce.Core" version="2.3.0" />
 	</dependencies>
 
-	<title>Virto Commerce marketing module</title>
+	<title>Marketing module</title>
 	<description>Marketing system with dynamic contents and promotions management</description>
 	<authors>
 		<author>Virto Commerce</author>

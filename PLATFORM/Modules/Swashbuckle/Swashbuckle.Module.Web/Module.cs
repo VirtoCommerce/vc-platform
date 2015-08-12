@@ -33,7 +33,7 @@ namespace SwashbuckleModule.Web
 			var xmlRelativePaths = new[] { "~/App_Data/Modules", "~/bin" };
 			Func<PopulateTagsFilter> tagsFilterFactory = () => new PopulateTagsFilter(_container.Resolve<IPackageService>(), _container.Resolve<ISettingsManager>());
             GlobalConfiguration.Configuration.
-                 EnableSwagger(
+                 EnableSwagger("docs/{apiVersion}",
                  c =>
                  {
                      foreach (var xmlRelativePath in xmlRelativePaths)
@@ -51,24 +51,29 @@ namespace SwashbuckleModule.Web
                      c.DocumentFilter(tagsFilterFactory);
                      c.OperationFilter(tagsFilterFactory);
                      c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
-                     c.RootUrl(req => new Uri(req.RequestUri, req.GetRequestContext().VirtualPathRoot).ToString());
+					 c.RootUrl(GetRootUrl);
                      c.ApiKey("apiKey")
                          .Description("API Key Authentication")
                          .Name("api_key")
                          .In("header");
                  }
-                ).EnableSwaggerUi(
+				).EnableSwaggerUi("docs/ui/{*assetPath}",
                 c =>
                 {
-                    c.CustomAsset("index", assembly, "SwashbuckleModule.Web.Extensions.index.html");
-                    c.CustomAsset("images/logo_small-png", assembly, "SwashbuckleModule.Web.Extensions.logo_small.png");
-                    c.CustomAsset("css/vc-css", assembly, "SwashbuckleModule.Web.Extensions.vc.css");
+					c.CustomAsset("index", assembly, "SwashbuckleModule.Web.SwaggerUi.CustomAssets.index.html");
+					c.CustomAsset("images/logo_small-png", assembly, "SwashbuckleModule.Web.SwaggerUi.CustomAssets.logo_small.png");
+					c.CustomAsset("css/vc-css", assembly, "SwashbuckleModule.Web.SwaggerUi.CustomAssets.vc.css");
                 });
 
 		}
 
 		#endregion
 
+		private string GetRootUrl(HttpRequestMessage req)
+		{
+			var retVal = new Uri(req.RequestUri, req.GetRequestContext().VirtualPathRoot).ToString();
+			return retVal;
+		}
 		private string[] GetXmlFilesPaths(string xmlRelativePath)
 		{
 			var path = HostingEnvironment.MapPath(xmlRelativePath);
