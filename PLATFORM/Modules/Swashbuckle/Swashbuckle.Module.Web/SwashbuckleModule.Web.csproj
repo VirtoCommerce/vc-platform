@@ -104,6 +104,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\swagger-ui.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
