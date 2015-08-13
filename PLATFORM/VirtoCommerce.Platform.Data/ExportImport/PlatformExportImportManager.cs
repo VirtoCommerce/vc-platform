@@ -30,6 +30,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 			}
 		}
 		public ICollection<ApplicationUserExtended> Users { get; set; }
+		public ICollection<Role> Roles { get; set; }
 		public ICollection<SettingEntry> Settings { get; set; }
 		public ICollection<DynamicPropertyDictionaryItem> DynamicPropertyDictionaryItems { get; set; }
 		public ICollection<DynamicProperty> DynamicProperties { get; set; } 
@@ -163,8 +164,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 					progressCallback(progressInfo);
 
 					//First need import roles
-					var roles = platformEntries.Users.SelectMany(x => x.Roles).Distinct().ToArray();
-                    foreach (var role in roles)
+					foreach (var role in platformEntries.Roles)
 					{
                         _roleManagementService.AddOrUpdateRole(role);
 					}
@@ -207,6 +207,8 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 
 			if (manifest.HandleSecurity)
 			{
+				//Roles
+				platformExportObj.Roles = _roleManagementService.SearchRoles(new RoleSearchRequest { SkipCount = 0, TakeCount = int.MaxValue }).Roles;
 				//users 
 				var usersResult = _securityService.SearchUsersAsync(new UserSearchRequest { TakeCount = int.MaxValue }).Result;
 				progressInfo.Description = String.Format("Security: {0} users exporting...", usersResult.Users.Count());
@@ -216,6 +218,8 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 				{
 					platformExportObj.Users.Add(_securityService.FindByIdAsync(user.Id, UserDetails.Full).Result);
 				}
+
+
 			}
 
 			//Export setting for selected modules
@@ -285,7 +289,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 				if (moduleDescriptor != null)
 				{
 					//Create part for module
-					var modulePartUri = PackUriHelper.CreatePartUri(new Uri(module.Id, UriKind.Relative));
+					var modulePartUri = PackUriHelper.CreatePartUri(new Uri(module.Id + ".json", UriKind.Relative));
 					var modulePart = package.CreatePart(modulePartUri, System.Net.Mime.MediaTypeNames.Application.Octet, CompressionOption.Normal);
 
 					Action<ExportImportProgressInfo> modulePorgressCallback = (x) =>

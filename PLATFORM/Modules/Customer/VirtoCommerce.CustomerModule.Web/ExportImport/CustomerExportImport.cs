@@ -103,8 +103,8 @@ namespace VirtoCommerce.CustomerModule.Web.ExportImport
             var result = new BackupObject();
             if (organizations != null)
             {
-                result.Contacts = organizations.SelectMany(x => x.Contacts).ToArray();
-                result.Organizations = organizations.SelectMany(x => x.Organizations).ToArray();
+                result.Contacts = organizations.SelectMany(x => x.Contacts).Select(x => _contactService.GetById(x.Id)).ToArray();
+                result.Organizations = organizations.SelectMany(x => x.Organizations).Select(x=> _organizationService.GetById(x.Id)).ToArray();
             }
 
             return result;
