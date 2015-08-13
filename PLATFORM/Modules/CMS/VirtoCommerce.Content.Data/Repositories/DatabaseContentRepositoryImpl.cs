@@ -212,7 +212,7 @@ namespace VirtoCommerce.Content.Data.Repositories
 
 		public void DeleteTheme(string path)
 		{
-			var existingTheme = Themes.FirstOrDefaultAsync(t => t.Id == path);
+			var existingTheme = Themes.FirstOrDefault(t => t.Id == path);
 			if (existingTheme != null)
 			{
 				Remove(existingTheme);
