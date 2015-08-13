@@ -12,6 +12,7 @@ using Swashbuckle.Swagger;
 using System.Web.Hosting;
 using System.IO;
 using System.Reflection;
+using VirtoCommerce.Platform.Core.Caching;
 
 namespace SwashbuckleModule.Web
 {
@@ -36,6 +37,7 @@ namespace SwashbuckleModule.Web
                  EnableSwagger("docs/{apiVersion}",
                  c =>
                  {
+					 c.SwaggerProviderResolver((apiExplorer, jsonSettings, versions, options) => new CachedSwaggerProviderWrapper(new SwaggerGenerator(apiExplorer, jsonSettings, versions, options), _container.Resolve<CacheManager>()));
                      foreach (var xmlRelativePath in xmlRelativePaths)
                      {
                          var xmlFilesPaths = GetXmlFilesPaths(xmlRelativePath);
@@ -52,7 +54,7 @@ namespace SwashbuckleModule.Web
                      c.OperationFilter(tagsFilterFactory);
                      c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
 					 c.RootUrl(GetRootUrl);
-                     c.ApiKey("apiKey")
+					 c.ApiKey("apiKey")
                          .Description("API Key Authentication")
                          .Name("api_key")
                          .In("header");
@@ -66,6 +68,19 @@ namespace SwashbuckleModule.Web
                     c.CustomAsset("swagger-ui-js", assembly, "SwashbuckleModule.Web.SwaggerUi.CustomAssets.swagger-ui.js");
                 });
 
+		}
+
+		public override void PostInitialize()
+		{
+			var settingsManager = _container.Resolve<ISettingsManager>();
+			var cacheManager = _container.Resolve<CacheManager>();
+			var cacheSettings = new[] 
+			{
+				new CacheSettings("Swashbuckle", TimeSpan.FromDays(365))
+			};
+			cacheManager.AddCacheSettings(cacheSettings);
+
+			base.PostInitialize();
 		}
 
 		#endregion
