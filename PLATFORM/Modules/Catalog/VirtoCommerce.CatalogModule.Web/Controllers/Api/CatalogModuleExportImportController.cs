@@ -122,6 +122,8 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 			return Ok(notification);
 		}
 
+
+        [ApiExplorerSettings(IgnoreApi = true)]
         // Only public methods can be invoked in the background. (Hangfire)
         public void BackgroundImport(CsvImportInfo importInfo, ImportNotification notifyEvent)
 		{
@@ -152,6 +154,8 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 			}
 		}
 
+
+        [ApiExplorerSettings(IgnoreApi = true)]
         // Only public methods can be invoked in the background. (Hangfire)
         public void BackgroundExport(CsvExportInfo exportInfo, ExportNotification notifyEvent)
 		{

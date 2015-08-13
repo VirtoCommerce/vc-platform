@@ -67,6 +67,6 @@
 
     // open blade for new review 
     if (!_.some($scope.blade.currentEntities)) {
-        $timeout(openAddEntityBlade, 0, false);
+        $timeout(openAddEntityBlade, 60, false);
     }
 }]);
