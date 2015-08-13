@@ -72,14 +72,9 @@ body
     font-family: 'Exo 2';
 }
 
-.swagger-section .swagger-ui-wrap ul#resources li.resource
-{
-    margin: 20px 0 0;
-}
-
 .swagger-section .swagger-ui-wrap ul#resources li.resource div.heading ul.options
 {
-    margin: 15px 10px 0 0;
+    margin: 10px 10px 0 0;
 }
 
 .swagger-section .swagger-ui-wrap ul#resources li.resource div.heading h2 a
