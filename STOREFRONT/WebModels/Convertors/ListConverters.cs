@@ -25,7 +25,7 @@ namespace VirtoCommerce.Web.Convertors
             var listModel = new LinkList();
             listModel.InjectFrom(list);
             listModel.Handle = list.Name;
-            listModel.Links = list.Links.Select(l => l.AsWebModel());
+            listModel.Links = list.Links != null ? list.Links.Select(l => l.AsWebModel()) : new List<Link>();
             return listModel;
         }
 
