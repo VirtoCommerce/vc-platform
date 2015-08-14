@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using VirtoCommerce.Web.Models;
 using Data = VirtoCommerce.ApiClient.DataContracts;
 
@@ -47,7 +48,7 @@ namespace VirtoCommerce.Web.Convertors
             ret.CancelReasonLabel = customerOrder.CancelReason;
 
             ret.CreatedAt = customerOrder.CreatedDate;
-            ret.CustomerUrl = new Uri(string.Format("account/order/{0}", customerOrder.Id), UriKind.Relative).ToString();
+            ret.CustomerUrl = VirtualPathUtility.ToAbsolute(string.Format("~/account/order/{0}", customerOrder.Id));
 
             if (customerOrder.Discount != null)
             {
