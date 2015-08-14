@@ -28,17 +28,17 @@ namespace VirtoCommerce.Content.Data
 		{
 			base.Seed(repository);
 
-			CreateDefaultMenuLinkLists(repository, "SampleStore");
-			CreateAppleMenuLinkLists(repository, "AppleStore");
-			CreateSonyMenuLinkLists(repository, "SonyStore");
+            //CreateDefaultMenuLinkLists(repository, "SampleStore");
+            //CreateAppleMenuLinkLists(repository, "AppleStore");
+            //CreateSonyMenuLinkLists(repository, "SonyStore");
 
-			CreateDefaultPages(repository, "AppleStore");
-			CreateDefaultPages(repository, "SampleStore");
-			CreateDefaultPages(repository, "SonyStore");
+            //CreateDefaultPages(repository, "AppleStore");
+            //CreateDefaultPages(repository, "SampleStore");
+            //CreateDefaultPages(repository, "SonyStore");
 
-			CreateDefaultTheme(repository, "AppleStore");
-			CreateDefaultTheme(repository, "SampleStore");
-			CreateDefaultTheme(repository, "SonyStore");
+            //CreateDefaultTheme(repository, "AppleStore");
+            //CreateDefaultTheme(repository, "SampleStore");
+            //CreateDefaultTheme(repository, "SonyStore");
 		}
 
         #region Footer Menu

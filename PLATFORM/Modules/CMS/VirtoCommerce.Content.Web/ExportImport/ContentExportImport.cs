@@ -40,8 +40,6 @@ namespace VirtoCommerce.Content.Web.ExportImport
 		{
 			var backupObject = GetBackupObject(progressCallback, manifest.HandleBinaryData);
 
-			backupObject.MenuLinkLists.ForEach(x => x.MenuLinks = x.MenuLinks.Where(m => m.IsActive).ToList());
-
 			backupObject.SerializeJson(backupStream);
 		}
 
