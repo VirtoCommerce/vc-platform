@@ -313,7 +313,7 @@ namespace VirtoCommerce.Web
 
             if (string.IsNullOrEmpty(language))
             {
-                language = String.Empty;
+				language = "en-us";
             }
 
             return language;
@@ -416,6 +416,11 @@ namespace VirtoCommerce.Web
                             s => s.StoreId.Equals(storeId, StringComparison.OrdinalIgnoreCase));
                 }
             }
+
+			if(store == null)
+			{
+				store = SiteContext.Current.Shops.FirstOrDefault(x => x.Languages.Contains(language));
+			}
 
             return store;
         }

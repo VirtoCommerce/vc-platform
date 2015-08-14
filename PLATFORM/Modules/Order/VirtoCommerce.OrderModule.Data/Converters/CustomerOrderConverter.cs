@@ -60,6 +60,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 				Id = Guid.NewGuid().ToString(),
 				Currency = cart.Currency,
 				CustomerId = cart.CustomerId,
+				CustomerName = cart.CustomerName,
 				StoreId = cart.StoreId,
 				OrganizationId = cart.OrganizationId
 			};
