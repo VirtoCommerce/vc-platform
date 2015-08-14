@@ -13,13 +13,14 @@ namespace VirtoCommerce.Content.Data
 	public class SqlContentDatabaseInitializer : SetupDatabaseInitializer<DatabaseContentRepositoryImpl, Migrations.Configuration>
 	{
 		private readonly string _themePath;
+        private readonly bool _createSampleData;
 
 		public SqlContentDatabaseInitializer()
 		{
 
 		}
 
-		public SqlContentDatabaseInitializer(string themePath)
+		public SqlContentDatabaseInitializer(string themePath, bool createSampleData)
 		{
 			_themePath = themePath;
 		}
@@ -28,17 +29,20 @@ namespace VirtoCommerce.Content.Data
 		{
 			base.Seed(repository);
 
-            CreateDefaultMenuLinkLists(repository, "SampleStore");
-            CreateAppleMenuLinkLists(repository, "AppleStore");
-            CreateSonyMenuLinkLists(repository, "SonyStore");
+            if (_createSampleData)
+            {
+                CreateDefaultMenuLinkLists(repository, "SampleStore");
+                CreateAppleMenuLinkLists(repository, "AppleStore");
+                CreateSonyMenuLinkLists(repository, "SonyStore");
 
-            CreateDefaultPages(repository, "AppleStore");
-            CreateDefaultPages(repository, "SampleStore");
-            CreateDefaultPages(repository, "SonyStore");
+                CreateDefaultPages(repository, "AppleStore");
+                CreateDefaultPages(repository, "SampleStore");
+                CreateDefaultPages(repository, "SonyStore");
 
-            CreateDefaultTheme(repository, "AppleStore");
-            CreateDefaultTheme(repository, "SampleStore");
-            CreateDefaultTheme(repository, "SonyStore");
+                CreateDefaultTheme(repository, "AppleStore");
+                CreateDefaultTheme(repository, "SampleStore");
+                CreateDefaultTheme(repository, "SonyStore");
+            }
 		}
 
         #region Footer Menu

@@ -206,10 +206,14 @@ namespace VirtoCommerce.Content.Web
 
             using (var context = new DatabaseContentRepositoryImpl())
             {
+                var initializer = new SqlContentDatabaseInitializer(themePath, true);
                 switch (sampleDataLevel)
                 {
                     case SampleDataLevel.Full:
-                        var initializer = new SqlContentDatabaseInitializer(themePath);
+                        initializer.InitializeDatabase(context);
+                        break;
+                    default:
+                        initializer = new SqlContentDatabaseInitializer(themePath, false);
                         initializer.InitializeDatabase(context);
                         break;
                 }
