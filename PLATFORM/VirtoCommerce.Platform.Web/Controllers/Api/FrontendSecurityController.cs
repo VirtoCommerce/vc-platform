@@ -101,6 +101,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Route("user")]
         public async Task<IHttpActionResult> Create(ApplicationUserExtended user)
         {
+            if (user != null)
+            {
+                user.PasswordHash = null;
+                user.SecurityStamp = null;
+            }
+
             var result = await _securityService.CreateAsync(user);
 
             if (result == null)
