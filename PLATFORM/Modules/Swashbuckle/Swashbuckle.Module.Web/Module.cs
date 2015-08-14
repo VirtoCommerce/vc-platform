@@ -11,6 +11,8 @@ using VirtoCommerce.Platform.Core.Packaging;
 using Swashbuckle.Swagger;
 using System.Web.Hosting;
 using System.IO;
+using System.Reflection;
+using VirtoCommerce.Platform.Core.Caching;
 
 namespace SwashbuckleModule.Web
 {
@@ -27,40 +29,67 @@ namespace SwashbuckleModule.Web
 
 		public override void Initialize()
 		{
+            var assembly = Assembly.GetExecutingAssembly();
 			var settingsManager = _container.Resolve<ISettingsManager>();
 			var xmlRelativePaths = new[] { "~/App_Data/Modules", "~/bin" };
 			Func<PopulateTagsFilter> tagsFilterFactory = () => new PopulateTagsFilter(_container.Resolve<IPackageService>(), _container.Resolve<ISettingsManager>());
-			GlobalConfiguration.Configuration.
-				 EnableSwagger(
-				 c =>
-				 {
-					 foreach (var xmlRelativePath in xmlRelativePaths)
-					 {
-						 var xmlFilesPaths = GetXmlFilesPaths(xmlRelativePath);
-						 foreach (var path in xmlFilesPaths)
-						 {
-							 c.IncludeXmlComments(path);
-						 }
-					 }
-					 c.IgnoreObsoleteProperties();
-					 c.UseFullTypeNameInSchemaIds();
-					 c.DescribeAllEnumsAsStrings();
-					 c.SingleApiVersion("v1", "VirtoCommerce Platform RESTful API documentation");
-					 c.DocumentFilter(tagsFilterFactory);
-					 c.OperationFilter(tagsFilterFactory);
-					 c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
-					 c.RootUrl(req => new Uri(req.RequestUri, req.GetRequestContext().VirtualPathRoot).ToString());
+            GlobalConfiguration.Configuration.
+                 EnableSwagger("docs/{apiVersion}",
+                 c =>
+                 {
+					 c.SwaggerProviderResolver((apiExplorer, jsonSettings, versions, options) => new CachedSwaggerProviderWrapper(new SwaggerGenerator(apiExplorer, jsonSettings, versions, options), _container.Resolve<CacheManager>()));
+                     foreach (var xmlRelativePath in xmlRelativePaths)
+                     {
+                         var xmlFilesPaths = GetXmlFilesPaths(xmlRelativePath);
+                         foreach (var path in xmlFilesPaths)
+                         {
+                             c.IncludeXmlComments(path);
+                         }
+                     }
+                     c.IgnoreObsoleteProperties();
+                     c.UseFullTypeNameInSchemaIds();
+                     c.DescribeAllEnumsAsStrings();
+                     c.SingleApiVersion("v1", "VirtoCommerce Platform RESTful API documentation");
+                     c.DocumentFilter(tagsFilterFactory);
+                     c.OperationFilter(tagsFilterFactory);
+                     c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+					 c.RootUrl(GetRootUrl);
 					 c.ApiKey("apiKey")
-						 .Description("API Key Authentication")
-						 .Name("api_key")
-						 .In("header");
-				 }
-				).EnableSwaggerUi();
+                         .Description("API Key Authentication")
+                         .Name("api_key")
+                         .In("header");
+                 }
+				).EnableSwaggerUi("docs/ui/{*assetPath}",
+                c =>
+                {
+					c.CustomAsset("index", assembly, "SwashbuckleModule.Web.SwaggerUi.CustomAssets.index.html");
+					c.CustomAsset("images/logo_small-png", assembly, "SwashbuckleModule.Web.SwaggerUi.CustomAssets.logo_small.png");
+					c.CustomAsset("css/vc-css", assembly, "SwashbuckleModule.Web.SwaggerUi.CustomAssets.vc.css");
+                    c.CustomAsset("swagger-ui-js", assembly, "SwashbuckleModule.Web.SwaggerUi.CustomAssets.swagger-ui.js");
+                });
 
+		}
+
+		public override void PostInitialize()
+		{
+			var settingsManager = _container.Resolve<ISettingsManager>();
+			var cacheManager = _container.Resolve<CacheManager>();
+			var cacheSettings = new[] 
+			{
+				new CacheSettings("Swashbuckle", TimeSpan.FromDays(365))
+			};
+			cacheManager.AddCacheSettings(cacheSettings);
+
+			base.PostInitialize();
 		}
 
 		#endregion
 
+		private string GetRootUrl(HttpRequestMessage req)
+		{
+			var retVal = new Uri(req.RequestUri, req.GetRequestContext().VirtualPathRoot).ToString();
+			return retVal;
+		}
 		private string[] GetXmlFilesPaths(string xmlRelativePath)
 		{
 			var path = HostingEnvironment.MapPath(xmlRelativePath);

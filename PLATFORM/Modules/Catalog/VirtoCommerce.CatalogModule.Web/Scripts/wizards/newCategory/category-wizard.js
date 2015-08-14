@@ -4,8 +4,8 @@
         $scope.blade.currentEntity.$update(null, function (data) {
             $scope.bladeClose(function () {
                 var categoryListBlade = $scope.blade.parentBlade;
-                // categoryListBlade.showCategoryBlade(data.id, data, data.name);
                 categoryListBlade.setSelectedItem(data);
+                categoryListBlade.showCategoryBlade(data.id, data, data.name);
                 categoryListBlade.refresh();
             });
         },

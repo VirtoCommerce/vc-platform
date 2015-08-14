@@ -76,9 +76,9 @@
     }
 
     blade.unpackingContentItem = function () {
-        for (var i = 0; i < blade.entity.properties.length; i++) {
-            blade.entity[blade.entity.properties[i].name] = blade.entity.properties[i].value;
-        }
+        _.each(blade.entity.properties, function (prop) {
+            blade.entity[prop.name] = prop.value;
+        });
     }
 
     blade.createContentItem = function () {

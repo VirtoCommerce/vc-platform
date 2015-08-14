@@ -7,7 +7,7 @@
         <dependency id="VirtoCommerce.Core" version="2.3.0" />
     </dependencies>
 
-    <title>Virto Commerce CMS Content module</title>
+    <title>CMS Content module</title>
     <description>Front-end CMS functionality based on liquid technology</description>
     <authors>
         <author>Virto Commerce</author>

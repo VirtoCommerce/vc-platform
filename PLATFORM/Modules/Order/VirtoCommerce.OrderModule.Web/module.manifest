@@ -7,7 +7,7 @@
 		<dependency id="VirtoCommerce.Core" version="2.3.0" />
 	</dependencies>
 
-	<title>Virto Commerce orders module</title>
+	<title>Order module</title>
 	<description>Document based flexible orders management functionality</description>
 	<authors>
 		<author>Virto Commerce</author>

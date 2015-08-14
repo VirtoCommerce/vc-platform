@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.coreModule.common')
-.controller('virtoCommerce.coreModule.common.coreAddressListController', ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
+.controller('virtoCommerce.coreModule.common.coreAddressListController', ['$timeout', '$scope', 'platformWebApp.bladeNavigationService', function ($timeout, $scope, bladeNavigationService) {
 	$scope.selectedItem = null;
 
 	$scope.openDetailBlade = function (address) {
@@ -81,6 +81,6 @@
 	
 	// open blade for new setting
 	if (!_.some($scope.blade.currentEntities)) {
-		$scope.openDetailBlade();
+	    $timeout($scope.openDetailBlade, 60, false);
 	}
 }]);

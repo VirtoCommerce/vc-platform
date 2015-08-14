@@ -207,9 +207,6 @@ angular.module('platformWebApp')
                 callback();
             }
         },
-        hasBlade: function (id) {
-            return service.findBlade(id) !== undefined;
-        },
         stateBlades: function (stateName) {
             if (angular.isUndefined(stateName)) {
                 stateName = $state.current.name;

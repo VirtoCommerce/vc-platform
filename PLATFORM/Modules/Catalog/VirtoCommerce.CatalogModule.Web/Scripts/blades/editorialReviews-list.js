@@ -1,7 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.editorialReviewsListController', ['$rootScope', '$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.catalogModule.items', function ($rootScope, $scope, bladeNavigationService, items) {
-    //$scope.blade.origEntity = {};
-    //$scope.blade.currentEntities = {};
+.controller('virtoCommerce.catalogModule.editorialReviewsListController', ['$timeout', '$scope', 'platformWebApp.bladeNavigationService', function ($timeout, $scope, bladeNavigationService) {
 
     $scope.blade.refresh = function (parentRefresh) {
         if (parentRefresh) {
@@ -69,6 +67,6 @@
 
     // open blade for new review 
     if (!_.some($scope.blade.currentEntities)) {
-        openAddEntityBlade();
+        $timeout(openAddEntityBlade, 60, false);
     }
 }]);

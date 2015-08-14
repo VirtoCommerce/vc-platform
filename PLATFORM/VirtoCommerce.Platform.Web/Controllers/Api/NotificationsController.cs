@@ -140,10 +140,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 		}
 
 		/// <summary>
-		/// Get rendered notification html
+		/// Get rendered notification content
 		/// </summary>
 		/// <remarks>
-		/// Method returns rendered html, that based on notification template. Template for rendering choosen by type, objectId, objectTypeId, language.
+        /// Method returns rendered content, that based on notification template. Template for rendering choosen by type, objectId, objectTypeId, language.
 		/// Parameters for template may be prepared by the method of getTestingParameters.
 		/// </remarks>
 		/// <param name="parameters">Notification special parameters</param>
@@ -152,10 +152,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 		/// <param name="objectTypeId">Object type id</param>
 		/// <param name="language">Locale</param>
 		[HttpPost]
-		[ResponseType(typeof(webModels.Notification))]
-		[Route("template/{type}/{objectId}/{objectTypeId}/{language}/rendernotificationhtml")]
-		public IHttpActionResult ResolveNotification([FromBody]List<KeyValuePair<string, string>> parameters, string type, string objectId, string objectTypeId, string language)
+		[ResponseType(typeof(webModels.RenderNotificationContentResult))]
+		[Route("template/{type}/{objectId}/{objectTypeId}/{language}/rendernotificationcontent")]
+		public IHttpActionResult RenderNotificationContent([FromBody]List<KeyValuePair<string, string>> parameters, string type, string objectId, string objectTypeId, string language)
 		{
+            var retVal = new webModels.RenderNotificationContentResult();
 			var notification = _notificationManager.GetNewNotification(type, objectId, objectTypeId, language);
 			foreach (var param in parameters)
 			{
@@ -164,14 +165,17 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 			}
 			_eventTemplateResolver.ResolveTemplate(notification);
 
-			return Ok(notification.ToWebModel());
+            retVal.Subject = notification.Subject;
+            retVal.Body = notification.Body;
+
+            return Ok(retVal);
 		}
 
 		/// <summary>
 		/// Sending test notification
 		/// </summary>
 		/// <remarks>
-		/// Method sending notification, that based on notification template. Template for rendering choosen by type, objectId, objectTypeId, language.
+		/// Method sending notification, that based on notification template. Template for rendering chosen by type, objectId, objectTypeId, language.
 		/// Parameters for template may be prepared by the method of getTestingParameters. Method returns string. If sending finished with success status
 		/// this string is empty, otherwise string contains error message.
 		/// </remarks>

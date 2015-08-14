@@ -48,6 +48,17 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		}
 		#endregion
 
+		/// <summary>
+		/// Sync assets elements
+		/// </summary>
+		/// <remarks>
+		/// Method allows synchronize asset elements(theme assets and pages). For synchronization used store id, theme id and last theme and pages update date.
+		/// If last update dates = null, returns all pages or theme assets for that store and theme.
+		/// </remarks>
+		/// <param name="storeId">Store id</param>
+		/// <param name="theme">Theme name</param>
+		/// <param name="themeUpdated">Last theme updated date</param>
+		/// <param name="pagesUpdated">Last pages updated date</param>
         [HttpGet]
         [ResponseType(typeof(SyncAssetGroup[]))]
         [Route("stores/{storeId}/assets")]

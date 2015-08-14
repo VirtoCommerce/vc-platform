@@ -1,9 +1,11 @@
 ﻿angular.module('virtoCommerce.inventoryModule')
-.controller('virtoCommerce.inventoryModule.inventoryFulfillmentcentersListController', ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
+.controller('virtoCommerce.inventoryModule.inventoryFulfillmentcentersListController', ['$scope', '$timeout', 'platformWebApp.bladeNavigationService', function ($scope, $timeout, bladeNavigationService) {
     $scope.selectedItem = null;
     var openFirstEntityDetailsOnce = _.once(function () {
         if ($scope.blade.currentEntities && $scope.blade.currentEntities.length > 0)
-            $scope.openBlade($scope.blade.currentEntities[0]);
+            $timeout(function () {
+                $scope.openBlade($scope.blade.currentEntities[0]);
+            }, 0, false);
     });
 
     $scope.blade.refresh = function () {
@@ -16,7 +18,7 @@
             return results;
         });
     }
-    
+
     $scope.openBlade = function (data) {
         $scope.selectedItem = data;
 
@@ -54,6 +56,6 @@
             }
         }
     ];
-    
+
     $scope.blade.refresh();
 }]);

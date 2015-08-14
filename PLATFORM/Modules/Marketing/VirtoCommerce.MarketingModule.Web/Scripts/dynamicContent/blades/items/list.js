@@ -168,9 +168,9 @@
 						if (folder.id === blade.choosenFolder) {
 							ent = folder;
 						}
-						angular.forEach(folder.childrenFolders, function (folder) {
-							newColl.push(folder)
-						})
+					    angular.forEach(folder.childrenFolders, function(folder) {
+					        newColl.push(folder);
+					    });
 					});
 					if (ent !== undefined) {
 						coll = [];
@@ -184,8 +184,7 @@
 			}
 
 			marketing_dynamicContents_res_search.search({ folder: blade.choosenFolder, respGroup: '18' }, function (data) {
-				blade.currentEntity.childrenFolders = data.contentFolders;
-				blade.currentEntity.items = data.contentItems;
+			    blade.currentEntities = data.contentFolders;
 			},
             function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 		},

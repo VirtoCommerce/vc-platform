@@ -20,8 +20,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <param name="criteria">Search parameters.</param>
         /// <returns></returns>
         [HttpGet]
-        [ResponseType(typeof(PushNotificationSearchResult))]
         [Route("")]
+        [ResponseType(typeof(PushNotificationSearchResult))]
         public IHttpActionResult Search([FromUri]PushNotificationSearchCriteria criteria)
         {
             var retVal = _pushNotifier.SearchNotifies(User.Identity.Name, criteria);
@@ -33,8 +33,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [ResponseType(typeof(PushNotificationSearchResult))]
         [Route("markAllAsRead")]
+        [ResponseType(typeof(PushNotificationSearchResult))]
         public IHttpActionResult MarkAllAsRead()
         {
             var criteria = new PushNotificationSearchCriteria { OnlyNew = true, Start = 0, Count = int.MaxValue };
@@ -54,8 +54,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <param name="notify"></param>
         /// <returns></returns>
         [HttpPost]
-        [ResponseType(typeof(PushNotification))]
         [Route("")]
+        [ResponseType(typeof(PushNotification))]
         public IHttpActionResult Upsert(PushNotification notify)
         {
             notify.New = true;

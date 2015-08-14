@@ -253,6 +253,8 @@
     <Compile Include="Converters\ThemeAssetConverter.cs" />
     <Compile Include="Converters\ThemeConverter.cs" />
     <Compile Include="ExportImport\ContentExportImport.cs" />
+    <Compile Include="ExportImport\MenuLink.cs" />
+    <Compile Include="ExportImport\MenuLinkList.cs" />
     <Compile Include="Models\CheckNameResult.cs" />
     <Compile Include="Models\GetPagesCriteria.cs" />
     <Compile Include="Models\GetPagesResult.cs" />
