@@ -4,6 +4,7 @@
     {
         Undefined,
         Full,
-        Reduced
+        Reduced,
+        Export,
     }
 }

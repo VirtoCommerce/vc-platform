@@ -218,6 +218,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.SecurityManage)]
         public async Task<IHttpActionResult> CreateAsync(ApplicationUserExtended user)
         {
+            ClearSecurityProperties(user);
             var result = await _securityService.CreateAsync(user);
             return ProcessSecurityResult(result);
         }
@@ -268,6 +269,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.SecurityManage)]
         public async Task<IHttpActionResult> UpdateAsync(ApplicationUserExtended user)
         {
+            ClearSecurityProperties(user);
             var result = await _securityService.UpdateAsync(user);
             return ProcessSecurityResult(result);
         }
@@ -286,6 +288,15 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return StatusCode(HttpStatusCode.NoContent);
         }
 
+
+        private void ClearSecurityProperties(ApplicationUserExtended user)
+        {
+            if (user != null)
+            {
+                user.PasswordHash = null;
+                user.SecurityStamp = null;
+            }
+        }
 
         private IHttpActionResult ProcessSecurityResult(SecurityResult securityResult)
         {

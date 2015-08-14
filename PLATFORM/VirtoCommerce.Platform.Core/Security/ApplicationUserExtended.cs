@@ -19,6 +19,9 @@ namespace VirtoCommerce.Platform.Core.Security
         public UserState UserState { get; set; }
         public string Password { get; set; }
 
+        public string PasswordHash { get; set; }
+        public string SecurityStamp { get; set; }
+
         /// <summary>
         /// External provider logins.
         /// </summary>

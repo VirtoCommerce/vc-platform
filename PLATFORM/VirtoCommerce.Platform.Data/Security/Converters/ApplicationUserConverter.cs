@@ -15,10 +15,30 @@ namespace VirtoCommerce.Platform.Data.Security.Converters
         public static ApplicationUser ToDataModel(this ApplicationUserExtended user)
         {
             var dbUser = new ApplicationUser();
-            var id = dbUser.Id;
-            dbUser.InjectFrom(user);
-            dbUser.Id = id;
+            dbUser.CopyFrom(user);
+            return dbUser;
+        }
 
+        public static void CopyFrom(this ApplicationUser dbUser, ApplicationUserExtended user)
+        {
+            // Backup old values
+            var id = dbUser.Id;
+            var passwordHash = dbUser.PasswordHash;
+            var securityStamp = dbUser.SecurityStamp;
+
+            dbUser.InjectFrom(user);
+
+            // Restore old values
+            if (user.Id == null)
+                dbUser.Id = id;
+
+            if (user.PasswordHash == null)
+                dbUser.PasswordHash = passwordHash;
+
+            if (user.SecurityStamp == null)
+                dbUser.SecurityStamp = securityStamp;
+
+            // Copy logins
             if (user.Logins != null)
             {
                 foreach (var login in user.Logins)
@@ -39,8 +59,6 @@ namespace VirtoCommerce.Platform.Data.Security.Converters
                     }
                 }
             }
-
-            return dbUser;
         }
     }
 }
