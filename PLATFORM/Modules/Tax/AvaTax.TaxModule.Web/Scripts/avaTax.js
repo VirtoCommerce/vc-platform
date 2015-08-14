@@ -46,32 +46,32 @@ angular.module(moduleName, [
 
       toolbarService.register(validateCommand, 'virtoCommerce.coreModule.common.coreAddressDetailController');
 
-      var testAvaTaxCommand = {
-          name: "Test connection",
-          icon: 'fa fa-check-square-o',
-          index: 2,
-          executeMethod: function () {
-              avataxModuleResources.ping(function () {
-                  var dialog = {
-                      id: "avaTaxNotification",
-                      title: "Success",
-                      message: "Connected successfully!"
-                  };
-                  dialogService.showNotificationDialog(dialog);
-              },
-                  function (error) {
-                      var dialog = {
-                          id: "avaTaxNotification",
-                          title: "Failed",
-                          message: error.data.message
-                      };
-                      dialogService.showNotificationDialog(dialog);
-                  });
-          },
-          canExecuteMethod: function () { return true; },
-          permission: 'tax:manage'
-      };
+      //var testAvaTaxCommand = {
+      //    name: "Test connection",
+      //    icon: 'fa fa-check-square-o',
+      //    index: 2,
+      //    executeMethod: function () {
+      //        avataxModuleResources.ping(function () {
+      //            var dialog = {
+      //                id: "avaTaxNotification",
+      //                title: "Success",
+      //                message: "Connected successfully!"
+      //            };
+      //            dialogService.showNotificationDialog(dialog);
+      //        },
+      //            function (error) {
+      //                var dialog = {
+      //                    id: "avaTaxNotification",
+      //                    title: "Failed",
+      //                    message: error.data.message
+      //                };
+      //                dialogService.showNotificationDialog(dialog);
+      //            });
+      //    },
+      //    canExecuteMethod: function () { return true; },
+      //    permission: 'tax:manage'
+      //};
 
-      toolbarService.register(testAvaTaxCommand, 'platformWebApp.settingsDetailController');
+      //toolbarService.register(testAvaTaxCommand, 'platformWebApp.settingsDetailController');
   }])
 ;

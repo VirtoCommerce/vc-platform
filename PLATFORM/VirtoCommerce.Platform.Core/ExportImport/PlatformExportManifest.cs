@@ -9,6 +9,10 @@ namespace VirtoCommerce.Platform.Core.ExportImport
 {
 	public class PlatformExportManifest
 	{
+		public PlatformExportManifest()
+		{
+			Created = DateTime.UtcNow;
+		}
 		public string Author { get; set; }
 		public string SystemInfo { get; set; }
 		public string PlatformVersion { get; set; }

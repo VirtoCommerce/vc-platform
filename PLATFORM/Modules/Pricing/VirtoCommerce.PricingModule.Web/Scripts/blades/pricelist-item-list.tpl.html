@@ -1,8 +1,9 @@
 ﻿<div class="blade-static">
     <div class="form-group">
         <div class="form-input __search">
-            <input type="text" placeholder="Search Item by name..." ng-model="filter.searchKeyword" ui-keyup="{'enter':'doFilter()'}">
+            <input placeholder="Search Item by name..." ng-model="searchText">
         </div>
+        <p class="form-count">Count: <span class="count">{{filteredEntities.length}}</span></p>
     </div>
 </div>
 <div class="blade-content __large-wide">
@@ -19,7 +20,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="table-item" ng-repeat="data in blade.currentEntities | orderBy:'productName' track by data.productId" ng-class="{'__selected': data.productId === selectedNodeId}" ng-click='selectNode(data)'>
+                        <tr class="table-item" ng-repeat="data in blade.currentEntities | orderBy:'productName' | filter:searchText as filteredEntities track by data.productId" ng-class="{'__selected': data.productId === selectedNodeId}" ng-click='selectNode(data)'>
                             <td class="table-col __product-name">
                                 <span title="{{data.productName}}">{{data.productName}}</span>
                             </td>

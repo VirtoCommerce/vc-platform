@@ -342,7 +342,7 @@ namespace VirtoCommerce.Platform.Web
 
             var packageService = new ZipPackageService(moduleCatalog, manifestProvider, packagesPath, sourcePath);
             container.RegisterInstance<IPackageService>(packageService);
-            container.RegisterType<ModulesController>(new InjectionConstructor(packageService, sourcePath));
+            container.RegisterType<ModulesController>(new InjectionConstructor(packageService, sourcePath, notifier));
 
             #endregion
 

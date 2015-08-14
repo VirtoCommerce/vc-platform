@@ -11,7 +11,7 @@ using foundationModel = VirtoCommerce.CustomerModule.Data.Model;
 
 namespace VirtoCommerce.CustomerModule.Data.Services
 {
-    public class ContactServiceImpl : ServiceBase, IContactService, ICustomerSearchService
+    public class ContactServiceImpl : ServiceBase, IContactService
     {
         private readonly Func<ICustomerRepository> _repositoryFactory;
         private readonly IDynamicPropertyService _dynamicPropertyService;
@@ -102,34 +102,5 @@ namespace VirtoCommerce.CustomerModule.Data.Services
         }
         #endregion
 
-        #region IContactSearchService Members
-
-        public coreModel.SearchResult Search(coreModel.SearchCriteria criteria)
-        {
-            coreModel.SearchResult retVal;
-            using (var repository = _repositoryFactory())
-            {
-                var query = repository.Members.OrderBy(x => x.CreatedDate).OfType<foundationModel.Contact>().Select(x => x.Id);
-
-                retVal = new coreModel.SearchResult
-                {
-                    TotalCount = query.Count(),
-                    Contacts = new List<coreModel.Contact>()
-                };
-
-                foreach (var contactId in query.Skip(criteria.Start).Take(criteria.Count).ToArray())
-                {
-                    var contact = repository.GetContactById(contactId);
-                    if (contact != null)
-                    {
-                        retVal.Contacts.Add(contact.ToCoreModel());
-                    }
-                }
-            }
-
-            return retVal;
-        }
-
-        #endregion
     }
 }

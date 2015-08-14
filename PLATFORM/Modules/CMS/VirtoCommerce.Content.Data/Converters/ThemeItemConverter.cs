@@ -14,7 +14,7 @@ namespace VirtoCommerce.Content.Data.Converters
 
 		public static ThemeAsset AsThemeAsset(this ContentItem item)
 		{
-            var retVal = new ThemeAsset { Id = item.Path, Path = item.Path, ByteContent = item.ByteContent, ContentType = item.ContentType, Updated = item.ModifiedDate.HasValue ? RemoveMilliseconds(item.ModifiedDate.Value) : RemoveMilliseconds(item.CreatedDate) };
+            var retVal = new ThemeAsset { Id = item.Path, AssetName = item.Name, Path = item.Path, ByteContent = item.ByteContent, ContentType = item.ContentType, Updated = item.ModifiedDate.HasValue ? RemoveMilliseconds(item.ModifiedDate.Value) : RemoveMilliseconds(item.CreatedDate) };
 
 		    return retVal;
 		}

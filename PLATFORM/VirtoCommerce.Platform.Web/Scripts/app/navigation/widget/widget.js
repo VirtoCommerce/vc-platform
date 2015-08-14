@@ -36,7 +36,7 @@
             }, true);
 
             scope.getKey = function (prefix, widget) {
-                return (prefix + widget.controller + widget.template).hashCode();
+                return (prefix + widget.controller + widget.template + scope.group).hashCode();
             }
         }
     }

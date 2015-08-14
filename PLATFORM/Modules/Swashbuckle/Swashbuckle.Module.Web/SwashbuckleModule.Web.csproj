@@ -56,8 +56,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="Swashbuckle.Core">
-      <HintPath>..\..\..\packages\Swashbuckle.Core.5.2.1\lib\net40\Swashbuckle.Core.dll</HintPath>
+    <Reference Include="Swashbuckle.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Shared\Swashbuckle.Core.dll</HintPath>
     </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Net.Http" />
@@ -91,6 +92,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\index.html" />
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\logo_small.png" />
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\vc.css" />
     <Content Include="module.manifest" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -100,9 +104,11 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\swagger-ui.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CachedSwaggerProviderWrapper.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

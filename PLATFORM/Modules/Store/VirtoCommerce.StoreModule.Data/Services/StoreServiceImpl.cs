@@ -93,6 +93,11 @@ namespace VirtoCommerce.StoreModule.Data.Services
             //Deep save settings
             SaveObjectSettings(_settingManager, store);
 
+
+			//Reset cache
+			var cacheKey = CacheKey.Create("StoreModule", "GetById", store.Id);
+			_cacheManager.Remove(cacheKey);
+
             var retVal = GetById(store.Id);
             return retVal;
         }

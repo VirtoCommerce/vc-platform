@@ -29,8 +29,8 @@ namespace VirtoCommerce.Content.Data
 			base.Seed(repository);
 
 			CreateDefaultMenuLinkLists(repository, "SampleStore");
-            CreateAppleMenuLinkLists(repository, "AppleStore");
-            CreateSonyMenuLinkLists(repository, "SonyStore");
+			CreateAppleMenuLinkLists(repository, "AppleStore");
+			CreateSonyMenuLinkLists(repository, "SonyStore");
 
 			CreateDefaultPages(repository, "AppleStore");
 			CreateDefaultPages(repository, "SampleStore");

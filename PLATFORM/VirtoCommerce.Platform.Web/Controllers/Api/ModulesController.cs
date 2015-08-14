@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -8,10 +7,13 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
+using Hangfire;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Packaging;
+using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Asset;
-using VirtoCommerce.Platform.Core.Packaging;
+using VirtoCommerce.Platform.Data.Common;
 using VirtoCommerce.Platform.Web.Converters.Packaging;
 using webModel = VirtoCommerce.Platform.Web.Model.Packaging;
 
@@ -21,17 +23,15 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     [CheckPermission(Permission = PredefinedPermissions.ModuleQuery)]
     public class ModulesController : ApiController
     {
-        private readonly string _packagesPath;
         private readonly IPackageService _packageService;
-        private static readonly ConcurrentQueue<webModel.ModuleWorkerJob> _scheduledJobs = new ConcurrentQueue<webModel.ModuleWorkerJob>();
-        private static readonly ConcurrentBag<webModel.ModuleWorkerJob> _jobList = new ConcurrentBag<webModel.ModuleWorkerJob>();
-        private static Task _runningTask;
-        private static readonly object _lockObject = new object();
+        private readonly string _packagesPath;
+        private readonly IPushNotificationManager _pushNotifier;
 
-        public ModulesController(IPackageService packageService, string packagesPath)
+        public ModulesController(IPackageService packageService, string packagesPath, IPushNotificationManager pushNotifier)
         {
             _packageService = packageService;
             _packagesPath = packagesPath;
+            _pushNotifier = pushNotifier;
         }
 
         /// <summary>
@@ -39,8 +39,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [ResponseType(typeof(webModel.ModuleDescriptor[]))]
         [Route("")]
+        [ResponseType(typeof(webModel.ModuleDescriptor[]))]
         public IHttpActionResult GetModules()
         {
             var retVal = _packageService.GetModules().Select(x => x.ToWebModel()).ToArray();
@@ -53,8 +53,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <param name="id">Module ID.</param>
         /// <returns></returns>
         [HttpGet]
-        [ResponseType(typeof(webModel.ModuleDescriptor))]
         [Route("{id}")]
+        [ResponseType(typeof(webModel.ModuleDescriptor))]
         public IHttpActionResult GetModuleById(string id)
         {
             var retVal = _packageService.GetModules().FirstOrDefault(x => x.Id == id);
@@ -70,8 +70,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        [ResponseType(typeof(webModel.ModuleDescriptor))]
         [Route("")]
+        [ResponseType(typeof(webModel.ModuleDescriptor))]
         [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
         public async Task<IHttpActionResult> Upload()
         {
@@ -114,8 +114,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <param name="fileName">Module package file name.</param>
         /// <returns></returns>
         [HttpGet]
-        [ResponseType(typeof(webModel.ModuleWorkerJob))]
         [Route("install")]
+        [ResponseType(typeof(webModel.ModulePushNotification))]
         [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
         public IHttpActionResult InstallModule(string fileName)
         {
@@ -123,7 +123,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             if (package != null)
             {
-                var result = ScheduleJob(package.ToWebModel(), webModel.ModuleAction.Install);
+                var result = ScheduleJob(webModel.ModuleAction.Install, package);
                 return Ok(result);
             }
 
@@ -137,8 +137,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <param name="fileName">Module package file name.</param>
         /// <returns></returns>
         [HttpGet]
-        [ResponseType(typeof(webModel.ModuleWorkerJob))]
         [Route("{id}/update")]
+        [ResponseType(typeof(webModel.ModulePushNotification))]
         [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
         public IHttpActionResult UpdateModule(string id, string fileName)
         {
@@ -150,7 +150,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
                 if (package != null && package.Id == module.Id)
                 {
-                    var result = ScheduleJob(package.ToWebModel(), webModel.ModuleAction.Update);
+                    var result = ScheduleJob(webModel.ModuleAction.Update, package);
                     return Ok(result);
                 }
             }
@@ -164,36 +164,20 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <param name="id">Module ID.</param>
         /// <returns></returns>
         [HttpGet]
-        [ResponseType(typeof(webModel.ModuleWorkerJob))]
         [Route("{id}/uninstall")]
+        [ResponseType(typeof(webModel.ModulePushNotification))]
         [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
         public IHttpActionResult UninstallModule(string id)
         {
             var module = _packageService.GetModules().FirstOrDefault(m => m.Id == id);
+
             if (module != null)
             {
-                var result = ScheduleJob(module.ToWebModel(), webModel.ModuleAction.Uninstall);
+                var result = ScheduleJob(webModel.ModuleAction.Uninstall, module);
                 return Ok(result);
             }
-            return InternalServerError();
-        }
 
-        /// <summary>
-        /// Get installation or update details
-        /// </summary>
-        /// <param name="id">Job ID.</param>
-        /// <returns></returns>
-        [HttpGet]
-        [ResponseType(typeof(webModel.ModuleWorkerJob))]
-        [Route("jobs/{id}")]
-        public IHttpActionResult GetJob(string id)
-        {
-            var job = _jobList.FirstOrDefault(x => x.Id == id);
-            if (job != null)
-            {
-                return Ok(job);
-            }
-            return NotFound();
+            return InternalServerError();
         }
 
         /// <summary>
@@ -202,69 +186,84 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <returns></returns>
         [HttpGet]
         [Route("restart")]
+        [ResponseType(typeof(void))]
         [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
         public IHttpActionResult Restart()
         {
             HttpRuntime.UnloadAppDomain();
-            return Ok();
+            return StatusCode(HttpStatusCode.NoContent);
+        }
+
+        public void ModuleBackgroundJob(webModel.ModuleBackgroundJobOptions options, webModel.ModulePushNotification notification)
+        {
+            try
+            {
+                notification.Started = DateTime.UtcNow;
+
+                var reportProgress = new Progress<ProgressMessage>(m =>
+                {
+                    notification.ProgressLog.Add(m.ToWebModel());
+                    _pushNotifier.Upsert(notification);
+                });
+
+                switch (options.Action)
+                {
+                    case webModel.ModuleAction.Install:
+                        _packageService.Install(options.ModuleId, options.Version, reportProgress);
+                        break;
+                    case webModel.ModuleAction.Update:
+                        _packageService.Update(options.ModuleId, options.Version, reportProgress);
+                        break;
+                    case webModel.ModuleAction.Uninstall:
+                        _packageService.Uninstall(options.ModuleId, reportProgress);
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                notification.ProgressLog.Add(new webModel.ProgressMessage
+                {
+                    Level = ProgressMessageLevel.Error.ToString(),
+                    Message = ex.ExpandExceptionMessage(),
+                });
+            }
+            finally
+            {
+                notification.Finished = DateTime.UtcNow;
+                _pushNotifier.Upsert(notification);
+            }
         }
 
 
-        private webModel.ModuleWorkerJob ScheduleJob(webModel.ModuleDescriptor descriptor, webModel.ModuleAction action)
+        private webModel.ModulePushNotification ScheduleJob(webModel.ModuleAction action, ModuleIdentity module)
         {
-            var retVal = new webModel.ModuleWorkerJob(_packageService, descriptor, action);
-
-            _scheduledJobs.Enqueue(retVal);
-
-            if (_runningTask == null || _runningTask.IsCompleted)
+            var options = new webModel.ModuleBackgroundJobOptions
             {
-                lock (_lockObject)
-                {
-                    if (_runningTask == null || _runningTask.IsCompleted)
-                    {
-                        _runningTask = Task.Run(() => { DoWork(); }, retVal.CancellationToken);
-                    }
-                }
+                Action = action,
+                ModuleId = module.Id,
+                Version = module.Version,
+            };
+
+            var notification = new webModel.ModulePushNotification(CurrentPrincipal.GetCurrentUserName());
+
+            switch (action)
+            {
+                case webModel.ModuleAction.Install:
+                    notification.Title = "Install Module";
+                    break;
+                case webModel.ModuleAction.Update:
+                    notification.Title = "Update Module";
+                    break;
+                case webModel.ModuleAction.Uninstall:
+                    notification.Title = "Uninstall Module";
+                    break;
             }
 
-            return retVal;
-        }
+            _pushNotifier.Upsert(notification);
 
-        private static void DoWork()
-        {
-            while (_scheduledJobs.Any())
-            {
-                webModel.ModuleWorkerJob job;
+            BackgroundJob.Enqueue(() => ModuleBackgroundJob(options, notification));
 
-                if (_scheduledJobs.TryDequeue(out job))
-                {
-                    try
-                    {
-                        _jobList.Add(job);
-                        job.Started = DateTime.UtcNow;
-                        var reportProgress = new Progress<ProgressMessage>(m => { job.ProgressLog.Add(m.ToWebModel()); });
-
-                        if (job.Action == webModel.ModuleAction.Install)
-                        {
-                            job.PackageService.Install(job.ModuleDescriptor.Id, job.ModuleDescriptor.Version, reportProgress);
-                        }
-                        else if (job.Action == webModel.ModuleAction.Update)
-                        {
-                            job.PackageService.Update(job.ModuleDescriptor.Id, job.ModuleDescriptor.Version, reportProgress);
-                        }
-                        else if (job.Action == webModel.ModuleAction.Uninstall)
-                        {
-                            job.PackageService.Uninstall(job.ModuleDescriptor.Id, reportProgress);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        job.ProgressLog.Add(new webModel.ProgressMessage { Message = ex.ToString(), Level = ProgressMessageLevel.Error.ToString() });
-                    }
-
-                    job.Completed = DateTime.UtcNow;
-                }
-            }
+            return notification;
         }
     }
 }
