@@ -5,6 +5,7 @@ using VirtoCommerce.MarketingModule.Data.Repositories;
 using VirtoCommerce.MarketingModule.Data.Services;
 using VirtoCommerce.MarketingModule.Web.ExportImport;
 using VirtoCommerce.MarketingModule.Web.Model;
+using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Settings;
@@ -51,7 +52,35 @@ namespace VirtoCommerce.MarketingModule.Web
         {
             var promotionExtensionManager = _container.Resolve<IMarketingExtensionManager>();
             EnsureRootFoldersExist(new[] { MarketingConstants.ContentPlacesRootFolderId, MarketingConstants.CotentItemRootFolderId });
-        }
+
+			//Create standard dynamic properties for dynamic content item (content type (dic) and html (long text))
+			var dynamicPropertyService = _container.Resolve<IDynamicPropertyService>();
+			var contentItemTypeProperty = new DynamicProperty
+			{
+				Id = "Marketing_DynamicContentItem_Type_Property",
+				IsDictionary = true,
+				Name = "Content type",
+				ObjectType = typeof(DynamicContentItem).FullName,
+				ValueType = DynamicPropertyValueType.ShortText,
+				CreatedBy = "Auto",
+			};
+			var htmlProperty = new DynamicProperty
+			{
+				Id = "Marketing_DynamicContentItem_Html_Property",
+				Name = "Html",
+				ObjectType = typeof(DynamicContentItem).FullName,
+				ValueType = DynamicPropertyValueType.LongText,
+				CreatedBy = "Auto",
+			};
+			var dictItemHtml = new DynamicPropertyDictionaryItem
+			{
+				 Id = "Html",
+				 Name = "Html"
+			};
+			dynamicPropertyService.SaveProperties(new [] { contentItemTypeProperty, htmlProperty });
+			dynamicPropertyService.SaveDictionaryItems(contentItemTypeProperty.Id,  new [] { dictItemHtml });
+		}
+
 
         #endregion
 

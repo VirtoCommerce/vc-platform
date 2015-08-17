@@ -16,6 +16,7 @@ namespace VirtoCommerce.MarketingModule.Web.Converters
 				retVal.Outline = content.Folder.Outline;
 				retVal.Path = content.Folder.Path;
 			}
+			retVal.DynamicProperties = content.DynamicProperties;
 			return retVal;
 		}
 
@@ -23,6 +24,7 @@ namespace VirtoCommerce.MarketingModule.Web.Converters
 		{
 			var retVal = new coreModel.DynamicContentItem();
 			retVal.InjectFrom(content);
+			retVal.DynamicProperties = content.DynamicProperties;
 			return retVal;
 		}
 	

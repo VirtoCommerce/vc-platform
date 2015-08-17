@@ -16,11 +16,13 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 	{
 		private readonly Func<IMarketingRepository> _repositoryFactory;
 		private readonly IMarketingExtensionManager _customPromotionManager;
+		private readonly IDynamicContentService _dynamicContentService;
 
-		public MarketingSearchServiceImpl(Func<IMarketingRepository> repositoryFactory, IMarketingExtensionManager customPromotionManager)
+		public MarketingSearchServiceImpl(Func<IMarketingRepository> repositoryFactory, IMarketingExtensionManager customPromotionManager, IDynamicContentService dynamicContentService)
 		{
 			_repositoryFactory = repositoryFactory;
 			_customPromotionManager = customPromotionManager;
+			_dynamicContentService = dynamicContentService;
 		}
 
 
@@ -97,13 +99,11 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 			{
 				var query = repository.Items.Where(x => x.FolderId == criteria.FolderId);
 				result.TotalCount += query.Count();
-
-				result.ContentItems = query.OrderBy(x => x.Id)
-											  .Skip(criteria.Start)
-											  .Take(criteria.Count)
-											  .ToArray()
-											  .Select(x => x.ToCoreModel())
-											  .ToList();
+				var ids = query.OrderBy(x => x.Id)
+							   .Select(x => x.Id)
+							   .Skip(criteria.Start)
+							   .Take(criteria.Count).ToArray();
+				result.ContentItems = ids.Select(x => _dynamicContentService.GetContentItemById(x)).ToList();
 			}
 
 		}
@@ -114,13 +114,11 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 			{
 				var query = repository.Places.Where(x => x.FolderId == criteria.FolderId);
 				result.TotalCount += query.Count();
-
-				result.ContentPlaces = query.OrderBy(x => x.Id)
-											  .Skip(criteria.Start)
-											  .Take(criteria.Count)
-											  .ToArray()
-											  .Select(x => x.ToCoreModel())
-											  .ToList();
+				var ids = query.OrderBy(x => x.Id)
+							   .Select(x => x.Id)
+							   .Skip(criteria.Start)
+							   .Take(criteria.Count).ToArray();
+				result.ContentPlaces = ids.Select(x => _dynamicContentService.GetPlaceById(x)).ToList();
 			}
 
 		}
@@ -132,12 +130,11 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 				var query = repository.PublishingGroups;
 				result.TotalCount += query.Count();
 
-				result.ContentPublications = query.OrderBy(x => x.Id)
-											  .Skip(criteria.Start)
-											  .Take(criteria.Count)
-											  .ToArray()
-											  .Select(x => x.ToCoreModel())
-											  .ToList();
+				var ids = query.OrderBy(x => x.Id)
+						   .Select(x => x.Id)
+						   .Skip(criteria.Start)
+						   .Take(criteria.Count).ToArray();
+				result.ContentPublications = ids.Select(x => _dynamicContentService.GetPublicationById(x)).ToList();
 			}
 
 		}

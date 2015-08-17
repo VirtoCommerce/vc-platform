@@ -9,15 +9,19 @@ using dataModel = VirtoCommerce.MarketingModule.Data.Model;
 using coreModel = VirtoCommerce.Domain.Marketing.Model;
 using VirtoCommerce.CustomerModule.Data.Converters;
 using VirtoCommerce.Platform.Data.Infrastructure;
+using VirtoCommerce.Platform.Core.DynamicProperties;
 
 namespace VirtoCommerce.MarketingModule.Data.Services
 {
 	public class DynamicContentServiceImpl : ServiceBase, IDynamicContentService
 	{
 		private readonly Func<IMarketingRepository> _repositoryFactory;
-		public DynamicContentServiceImpl(Func<IMarketingRepository> repositoryFactory)
+		private readonly IDynamicPropertyService _dynamicPropertyService;
+
+		public DynamicContentServiceImpl(Func<IMarketingRepository> repositoryFactory, IDynamicPropertyService dynamicPropertyService)
 		{
 			_repositoryFactory = repositoryFactory;
+			_dynamicPropertyService = dynamicPropertyService;
 		}
 
 		#region IDynamicContentService Members
@@ -33,6 +37,12 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 					retVal = entity.ToCoreModel();
 				}
 			}
+
+			if (retVal != null)
+			{
+				_dynamicPropertyService.LoadDynamicPropertyValues(retVal);
+			}
+
 			return retVal;
 		}
 
@@ -46,6 +56,9 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 				repository.Add(entity);
 				CommitChanges(repository);
 			}
+
+			_dynamicPropertyService.SaveDynamicPropertyValues(content);
+
 			retVal = GetContentItemById(entity.Id);
 			return retVal;
 		}
@@ -68,6 +81,7 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 						changeTracker.Attach(targetEntity);
 						sourceEntity.Patch(targetEntity);
 					}
+					_dynamicPropertyService.SaveDynamicPropertyValues(content);
 				}
 				CommitChanges(repository);
 			}
@@ -79,6 +93,9 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 			{
 				foreach (var id in ids)
 				{
+					var content = GetContentItemById(id);
+					_dynamicPropertyService.DeleteDynamicPropertyValues(content);
+
 					var entity = repository.GetContentItemById(id);
 					repository.Remove(entity);
 				}

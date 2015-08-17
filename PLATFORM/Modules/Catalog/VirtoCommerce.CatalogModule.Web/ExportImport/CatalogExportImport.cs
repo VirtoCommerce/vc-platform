@@ -84,9 +84,11 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 			if (manifest.HandleBinaryData)
 			{
 				var allBackupImages = backupObject.Products.SelectMany(x => x.Images);
+				allBackupImages = allBackupImages.Concat(backupObject.Categories.SelectMany(x => x.Images));
 				allBackupImages = allBackupImages.Concat(backupObject.Products.SelectMany(x => x.Variations).SelectMany(x => x.Images));
 
 				var allOrigImages = originalObject.Products.SelectMany(x => x.Images);
+				allOrigImages = allOrigImages.Concat(originalObject.Categories.SelectMany(x => x.Images));
 				allOrigImages = allOrigImages.Concat(originalObject.Products.SelectMany(x => x.Variations).SelectMany(x => x.Images));
 
 				var allNewImpages = allBackupImages.Where(x => !allOrigImages.Contains(x));
@@ -221,11 +223,12 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 			if (loadBinaryData)
 			{
 				var allImages = retVal.Products.SelectMany(x => x.Images);
+				allImages = allImages.Concat(retVal.Categories.SelectMany(x => x.Images));
 				allImages = allImages.Concat(retVal.Products.SelectMany(x => x.Variations).SelectMany(x => x.Images));
-
+				
 				var index = 0;
 				var progressTemplate = "{0} of " + allImages.Count() + " images downloading";
-				foreach(var image in allImages)
+				foreach (var image in allImages)
 				{
 					progressInfo.Description = String.Format(progressTemplate, index);
 					progressCallback(progressInfo);

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.DynamicProperties;
 
 namespace VirtoCommerce.MarketingModule.Web.Model
 {
@@ -24,5 +25,8 @@ namespace VirtoCommerce.MarketingModule.Web.Model
 		/// all parent folders names concatenated (Root\Child\Child2)
 		/// </summary>
 		public string Path { get; set; }
+
+		public string ObjectType { get; set; }
+		public ICollection<DynamicObjectProperty> DynamicProperties { get; set; }
 	}
 }
