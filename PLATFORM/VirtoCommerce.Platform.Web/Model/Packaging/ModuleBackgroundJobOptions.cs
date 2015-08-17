@@ -3,7 +3,7 @@
     public class ModuleBackgroundJobOptions
     {
         public ModuleAction Action { get; set; }
-        public string ModuleId { get; set; }
-        public string Version { get; set; }
+        public string PackageId { get; set; }
+        public string PackageFilePath { get; set; }
     }
 }

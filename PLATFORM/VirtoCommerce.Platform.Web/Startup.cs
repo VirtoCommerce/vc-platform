@@ -337,12 +337,12 @@ namespace VirtoCommerce.Platform.Web
 
             #region Packaging
 
-            var sourcePath = HostingEnvironment.MapPath("~/App_Data/SourcePackages");
             var packagesPath = HostingEnvironment.MapPath("~/App_Data/InstalledPackages");
-
-            var packageService = new ZipPackageService(moduleCatalog, manifestProvider, packagesPath, sourcePath);
+            var packageService = new ZipPackageService(moduleCatalog, manifestProvider, packagesPath);
             container.RegisterInstance<IPackageService>(packageService);
-            container.RegisterType<ModulesController>(new InjectionConstructor(packageService, sourcePath, notifier));
+
+            var uploadsPath = HostingEnvironment.MapPath("~/App_Data/Uploads");
+            container.RegisterType<ModulesController>(new InjectionConstructor(packageService, uploadsPath, notifier));
 
             #endregion
 
