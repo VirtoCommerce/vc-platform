@@ -4,7 +4,6 @@ using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Reflection;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Packaging;
@@ -19,14 +18,12 @@ namespace VirtoCommerce.Platform.Data.Packaging
         private readonly IModuleCatalog _moduleCatalog;
         private readonly IModuleManifestProvider _manifestProvider;
         private readonly string _installedPackagesPath;
-        private readonly string _sourcePackagesPath;
 
-        public ZipPackageService(IModuleCatalog moduleCatalog, IModuleManifestProvider manifestProvider, string installedPackagesPath, string sourcePackagesPath)
+        public ZipPackageService(IModuleCatalog moduleCatalog, IModuleManifestProvider manifestProvider, string installedPackagesPath)
         {
             _moduleCatalog = moduleCatalog;
             _manifestProvider = manifestProvider;
             _installedPackagesPath = installedPackagesPath;
-            _sourcePackagesPath = sourcePackagesPath;
         }
 
         #region IPackageService Members
@@ -65,81 +62,81 @@ namespace VirtoCommerce.Platform.Data.Packaging
             return result;
         }
 
-        public void Install(string packageId, string version, IProgress<ProgressMessage> progress)
+        public void Install(string sourcePackageFilePath, IProgress<ProgressMessage> progress)
         {
-            var packageIdAndVersion = string.Join(" ", packageId, version);
-            Report(progress, ProgressMessageLevel.Info, "Installing '{0}'.", packageIdAndVersion);
+            sourcePackageFilePath = Path.GetFullPath(sourcePackageFilePath);
+            Report(progress, ProgressMessageLevel.Info, "Installing '{0}'.", sourcePackageFilePath);
 
-            var installedModules = GetModules();
+            var sourcePackage = OpenPackage(sourcePackageFilePath);
 
-            // Check if already installed
-            if (installedModules.Any(m => m.Id == packageId))
+            if (sourcePackage == null)
             {
-                Report(progress, ProgressMessageLevel.Error, "'{0}' is already installed.", packageId);
+                Report(progress, ProgressMessageLevel.Error, "Cannot open package '{0}'.", sourcePackageFilePath);
             }
             else
             {
-                var sourcePackageFileName = GetPackageFileName(packageId, version);
-                var sourcePackageFilePath = Path.Combine(_sourcePackagesPath, sourcePackageFileName);
-                var sourcePackage = OpenPackage(sourcePackageFilePath);
+                var installedModules = GetModules();
 
-                if (sourcePackage == null)
+                // Check if already installed
+                if (installedModules.Any(m => m.Id == sourcePackage.Id))
                 {
-                    Report(progress, ProgressMessageLevel.Error, "Cannot open package '{0}'.", sourcePackageFilePath);
+                    Report(progress, ProgressMessageLevel.Error, "'{0}' is already installed.", sourcePackage.Id);
                 }
-                else
+                else if (CheckDependencies(sourcePackage, installedModules, progress))
                 {
-                    if (CheckDependencies(sourcePackage, installedModules, progress))
-                    {
-                        // Unpack all files
-                        var moduleDirectoryPath = Path.Combine(_manifestProvider.RootPath, sourcePackage.Id);
-                        Report(progress, ProgressMessageLevel.Debug, "Copying files to '{0}'.", moduleDirectoryPath);
-                        ProcessPackage(sourcePackageFilePath, moduleDirectoryPath, PackageAction.Install);
+                    // Unpack all files
+                    var moduleDirectoryPath = Path.Combine(_manifestProvider.RootPath, sourcePackage.Id);
+                    Report(progress, ProgressMessageLevel.Debug, "Copying files to '{0}'.", moduleDirectoryPath);
+                    ProcessPackage(sourcePackageFilePath, moduleDirectoryPath, PackageAction.Install);
 
-                        // Copy package to installed packages directory
-                        var installedPackageFilePath = Path.Combine(_installedPackagesPath, sourcePackageFileName);
-                        Report(progress, ProgressMessageLevel.Debug, "Copying package '{0}' to '{1}'.", sourcePackageFilePath, installedPackageFilePath);
-                        EnsureDirectoryExists(installedPackageFilePath);
-                        File.Copy(sourcePackageFilePath, installedPackageFilePath, true);
+                    // Copy package to installed packages directory
+                    var installedPackageFilePath = Path.Combine(_installedPackagesPath, GetPackageFileName(sourcePackage.Id, sourcePackage.Version));
+                    Report(progress, ProgressMessageLevel.Debug, "Copying package '{0}' to '{1}'.", sourcePackageFilePath, installedPackageFilePath);
+                    EnsureDirectoryExists(installedPackageFilePath);
+                    File.Copy(sourcePackageFilePath, installedPackageFilePath, true);
 
-                        Report(progress, ProgressMessageLevel.Info, "Successfully installed '{0}'.", packageIdAndVersion);
-                    }
+                    Report(progress, ProgressMessageLevel.Info, "Successfully installed '{0} {1}'.", sourcePackage.Id, sourcePackage.Version);
                 }
             }
 
             _manifestProvider.ClearCache();
         }
 
-        public void Update(string packageId, string version, IProgress<ProgressMessage> progress)
+        public void Update(string packageId, string newPackageFilePath, IProgress<ProgressMessage> progress)
         {
-            Report(progress, ProgressMessageLevel.Info, "Updating '{0}' to version '{1}'.", packageId, version);
+            newPackageFilePath = Path.GetFullPath(newPackageFilePath);
+            Report(progress, ProgressMessageLevel.Info, "Updating '{0}' with '{1}'.", packageId, newPackageFilePath);
 
-            var installedModules = GetModules();
-            var module = installedModules.FirstOrDefault(m => m.Id == packageId);
-
-            if (module == null)
+            var newPackage = OpenPackage(newPackageFilePath);
+            if (newPackage == null)
             {
-                Report(progress, ProgressMessageLevel.Error, "'{0}' is not installed.", packageId);
+                Report(progress, ProgressMessageLevel.Error, "Cannot open new package '{0}'.", newPackageFilePath);
+            }
+            else if (newPackage.Id != packageId)
+            {
+                Report(progress, ProgressMessageLevel.Error, "New package ID '{0}' does not equal to old package ID '{1}'.", newPackage.Id, packageId);
             }
             else
             {
-                var oldPackageFileName = GetPackageFileName(module.Id, module.Version);
-                var oldPackageFilePath = Path.Combine(_installedPackagesPath, oldPackageFileName);
-                var oldPackage = OpenPackage(oldPackageFilePath);
+                var installedModules = GetModules();
+                var module = installedModules.FirstOrDefault(m => m.Id == packageId);
 
-                if (oldPackage == null)
+                if (module == null)
                 {
-                    Report(progress, ProgressMessageLevel.Error, "Cannot open old package '{0}'.", oldPackageFilePath);
+                    Report(progress, ProgressMessageLevel.Error, "'{0}' is not installed.", packageId);
+                }
+                else if (newPackage.Version == module.Version)
+                {
+                    Report(progress, ProgressMessageLevel.Error, "New package version '{0}' is the same as installed version.", newPackage.Version);
                 }
                 else
                 {
-                    var newPackageFileName = GetPackageFileName(packageId, version);
-                    var newPackageFilePath = Path.Combine(_sourcePackagesPath, newPackageFileName);
-                    var newPackage = OpenPackage(newPackageFilePath);
+                    var oldPackageFilePath = Path.Combine(_installedPackagesPath, GetPackageFileName(module.Id, module.Version));
+                    var oldPackage = OpenPackage(oldPackageFilePath);
 
-                    if (newPackage == null)
+                    if (oldPackage == null)
                     {
-                        Report(progress, ProgressMessageLevel.Error, "Cannot open new package '{0}'.", newPackageFilePath);
+                        Report(progress, ProgressMessageLevel.Error, "Cannot open old package '{0}'.", oldPackageFilePath);
                     }
                     else
                     {
@@ -153,7 +150,7 @@ namespace VirtoCommerce.Platform.Data.Packaging
 
                             Report(progress, ProgressMessageLevel.Debug, "Deleting old files from '{0}'.", moduleDirectoryPath);
                             var oldFiles = ProcessPackage(oldPackageFilePath, moduleDirectoryPath, PackageAction.Uninstall);
-                            var filesToDelete = oldFiles.Except(newFiles).ToList();
+                            var filesToDelete = oldFiles.Except(newFiles, StringComparer.OrdinalIgnoreCase).ToList();
                             DeleteFiles(filesToDelete, moduleDirectoryPath);
 
                             // Delete old package from installed packages directory
@@ -161,12 +158,12 @@ namespace VirtoCommerce.Platform.Data.Packaging
                             File.Delete(oldPackageFilePath);
 
                             // Copy new package to installed packages directory
-                            var installedPackageFilePath = Path.Combine(_installedPackagesPath, newPackageFileName);
+                            var installedPackageFilePath = Path.Combine(_installedPackagesPath, GetPackageFileName(newPackage.Id, newPackage.Version));
                             Report(progress, ProgressMessageLevel.Debug, "Copying new package '{0}' to '{1}'.", newPackageFilePath, installedPackageFilePath);
                             EnsureDirectoryExists(installedPackageFilePath);
                             File.Copy(newPackageFilePath, installedPackageFilePath, true);
 
-                            Report(progress, ProgressMessageLevel.Info, "Successfully updated '{0}' to version '{1}'.", packageId, version);
+                            Report(progress, ProgressMessageLevel.Info, "Successfully updated '{0}' to version '{1}'.", packageId, newPackage.Version);
                         }
                     }
                 }
@@ -246,8 +243,6 @@ namespace VirtoCommerce.Platform.Data.Packaging
         {
             var errors = new List<string>();
 
-			var platformVersion = PlatformVersion.CurrentVersion;
-
             if (!SemanticVersion.Parse(package.PlatformVersion).IsCompatibleWith(PlatformVersion.CurrentVersion))
             {
                 errors.Add(string.Format(CultureInfo.CurrentCulture, "Required platform version: '{0}'.", package.PlatformVersion));
@@ -259,13 +254,6 @@ namespace VirtoCommerce.Platform.Data.Packaging
             }
 
             return errors;
-        }
-
-        private static string GetPlatformVersion()
-        {
-            var assembly = Assembly.GetExecutingAssembly();
-            var result = string.Join(".", assembly.GetInformationalVersion(), assembly.GetFileVersion());
-            return result;
         }
 
         private static List<ModuleIdentity> GetMissingDependencies(IEnumerable<ModuleIdentity> dependencies, IEnumerable<ModuleIdentity> installedModules)
@@ -283,7 +271,7 @@ namespace VirtoCommerce.Platform.Data.Packaging
 
                     if (installedModule != null)
                     {
-						isMissing = !SemanticVersion.Parse(dependency.Version).IsCompatibleWith(SemanticVersion.Parse(installedModule.Version));
+                        isMissing = !SemanticVersion.Parse(dependency.Version).IsCompatibleWith(SemanticVersion.Parse(installedModule.Version));
                     }
 
                     if (isMissing)
@@ -296,7 +284,7 @@ namespace VirtoCommerce.Platform.Data.Packaging
             return result;
         }
 
-		
+
         private static void Report(IProgress<ProgressMessage> progress, ProgressMessageLevel level, string format, params object[] args)
         {
             if (progress != null)
@@ -416,7 +404,7 @@ namespace VirtoCommerce.Platform.Data.Packaging
             }
         }
 
-        private  ModuleDescriptor ConvertToModuleDescriptor(ModuleManifest manifest, List<string> installedPackages = null)
+        private ModuleDescriptor ConvertToModuleDescriptor(ModuleManifest manifest, List<string> installedPackages = null)
         {
             ModuleDescriptor result = null;
 
@@ -455,7 +443,8 @@ namespace VirtoCommerce.Platform.Data.Packaging
                     result.IsRemovable = installedPackages.Contains(packageFileName, StringComparer.OrdinalIgnoreCase);
                 }
 
-				result.ModuleInfo = _moduleCatalog.Modules.FirstOrDefault(x => x.ModuleName == result.Id);
+                if (_moduleCatalog != null && _moduleCatalog.Modules != null)
+                    result.ModuleInfo = _moduleCatalog.Modules.FirstOrDefault(x => x.ModuleName == result.Id);
             }
 
             return result;

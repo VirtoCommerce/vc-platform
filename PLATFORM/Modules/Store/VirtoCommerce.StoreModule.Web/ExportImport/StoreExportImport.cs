@@ -67,8 +67,7 @@ namespace VirtoCommerce.StoreModule.Web.ExportImport
 
 		private BackupObject GetBackupObject(Action<ExportImportProgressInfo> progressCallback)
         {
-			var progressInfo = new ExportImportProgressInfo();
-			progressInfo.Description = "stores loading...";
+            var progressInfo = new ExportImportProgressInfo("stores loading...");
 			progressCallback(progressInfo);
 
             return new BackupObject

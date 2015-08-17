@@ -24,13 +24,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     public class ModulesController : ApiController
     {
         private readonly IPackageService _packageService;
-        private readonly string _packagesPath;
+        private readonly string _uploadsPath;
         private readonly IPushNotificationManager _pushNotifier;
 
-        public ModulesController(IPackageService packageService, string packagesPath, IPushNotificationManager pushNotifier)
+        public ModulesController(IPackageService packageService, string uploadsPath, IPushNotificationManager pushNotifier)
         {
             _packageService = packageService;
-            _packagesPath = packagesPath;
+            _uploadsPath = uploadsPath;
             _pushNotifier = pushNotifier;
         }
 
@@ -81,18 +81,18 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
             }
 
-            if (!Directory.Exists(_packagesPath))
+            if (!Directory.Exists(_uploadsPath))
             {
-                Directory.CreateDirectory(_packagesPath);
+                Directory.CreateDirectory(_uploadsPath);
             }
 
-            var streamProvider = new CustomMultipartFormDataStreamProvider(_packagesPath);
+            var streamProvider = new CustomMultipartFormDataStreamProvider(_uploadsPath);
             await Request.Content.ReadAsMultipartAsync(streamProvider);
 
             var file = streamProvider.FileData.FirstOrDefault();
             if (file != null)
             {
-                var descriptor = _packageService.OpenPackage(Path.Combine(_packagesPath, file.LocalFileName));
+                var descriptor = _packageService.OpenPackage(file.LocalFileName);
                 if (descriptor != null)
                 {
                     var retVal = descriptor.ToWebModel();
@@ -119,15 +119,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
         public IHttpActionResult InstallModule(string fileName)
         {
-            var package = _packageService.OpenPackage(Path.Combine(_packagesPath, fileName));
-
-            if (package != null)
-            {
-                var result = ScheduleJob(webModel.ModuleAction.Install, package);
-                return Ok(result);
-            }
-
-            return InternalServerError();
+            var packageFilePath = Path.Combine(_uploadsPath, fileName);
+            var options = new webModel.ModuleBackgroundJobOptions { PackageFilePath = packageFilePath };
+            var result = ScheduleJob(webModel.ModuleAction.Install, options);
+            return Ok(result);
         }
 
         /// <summary>
@@ -142,20 +137,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
         public IHttpActionResult UpdateModule(string id, string fileName)
         {
-            var module = _packageService.GetModules().FirstOrDefault(m => m.Id == id);
-
-            if (module != null)
-            {
-                var package = _packageService.OpenPackage(Path.Combine(_packagesPath, fileName));
-
-                if (package != null && package.Id == module.Id)
-                {
-                    var result = ScheduleJob(webModel.ModuleAction.Update, package);
-                    return Ok(result);
-                }
-            }
-
-            return InternalServerError();
+            var packageFilePath = Path.Combine(_uploadsPath, fileName);
+            var options = new webModel.ModuleBackgroundJobOptions { PackageId = id, PackageFilePath = packageFilePath };
+            var result = ScheduleJob(webModel.ModuleAction.Update, options);
+            return Ok(result);
         }
 
         /// <summary>
@@ -169,15 +154,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
         public IHttpActionResult UninstallModule(string id)
         {
-            var module = _packageService.GetModules().FirstOrDefault(m => m.Id == id);
-
-            if (module != null)
-            {
-                var result = ScheduleJob(webModel.ModuleAction.Uninstall, module);
-                return Ok(result);
-            }
-
-            return InternalServerError();
+            var options = new webModel.ModuleBackgroundJobOptions { PackageId = id };
+            var result = ScheduleJob(webModel.ModuleAction.Uninstall, options);
+            return Ok(result);
         }
 
         /// <summary>
@@ -209,13 +188,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 switch (options.Action)
                 {
                     case webModel.ModuleAction.Install:
-                        _packageService.Install(options.ModuleId, options.Version, reportProgress);
+                        _packageService.Install(options.PackageFilePath, reportProgress);
                         break;
                     case webModel.ModuleAction.Update:
-                        _packageService.Update(options.ModuleId, options.Version, reportProgress);
+                        _packageService.Update(options.PackageId, options.PackageFilePath, reportProgress);
                         break;
                     case webModel.ModuleAction.Uninstall:
-                        _packageService.Uninstall(options.ModuleId, reportProgress);
+                        _packageService.Uninstall(options.PackageId, reportProgress);
                         break;
                 }
             }
@@ -235,15 +214,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
 
-        private webModel.ModulePushNotification ScheduleJob(webModel.ModuleAction action, ModuleIdentity module)
+        private webModel.ModulePushNotification ScheduleJob(webModel.ModuleAction action, webModel.ModuleBackgroundJobOptions options)
         {
-            var options = new webModel.ModuleBackgroundJobOptions
-            {
-                Action = action,
-                ModuleId = module.Id,
-                Version = module.Version,
-            };
-
             var notification = new webModel.ModulePushNotification(CurrentPrincipal.GetCurrentUserName());
 
             switch (action)

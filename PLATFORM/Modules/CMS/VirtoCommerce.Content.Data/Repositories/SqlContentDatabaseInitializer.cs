@@ -17,12 +17,13 @@ namespace VirtoCommerce.Content.Data
 
 		public SqlContentDatabaseInitializer()
 		{
-
+            _createSampleData = true;
 		}
 
 		public SqlContentDatabaseInitializer(string themePath, bool createSampleData)
 		{
 			_themePath = themePath;
+            _createSampleData = createSampleData;
 		}
 
 		protected override void Seed(DatabaseContentRepositoryImpl repository)

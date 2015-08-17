@@ -7,8 +7,8 @@ namespace VirtoCommerce.Platform.Core.Packaging
         ModuleDescriptor OpenPackage(string path);
         string[] GetDependencyErrors(ModuleDescriptor package);
         ModuleDescriptor[] GetModules();
-        void Install(string packageId, string version, IProgress<ProgressMessage> progress);
-        void Update(string packageId, string version, IProgress<ProgressMessage> progress);
+        void Install(string sourcePackageFilePath, IProgress<ProgressMessage> progress);
+        void Update(string packageId, string newPackageFilePath, IProgress<ProgressMessage> progress);
         void Uninstall(string packageId, IProgress<ProgressMessage> progress);
     }
 }

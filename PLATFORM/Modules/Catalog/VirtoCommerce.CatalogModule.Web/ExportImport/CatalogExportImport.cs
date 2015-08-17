@@ -225,7 +225,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 				var allImages = retVal.Products.SelectMany(x => x.Images);
 				allImages = allImages.Concat(retVal.Categories.SelectMany(x => x.Images));
 				allImages = allImages.Concat(retVal.Products.SelectMany(x => x.Variations).SelectMany(x => x.Images));
-				
+
 				var index = 0;
 				var progressTemplate = "{0} of " + allImages.Count() + " images downloading";
 				foreach (var image in allImages)
