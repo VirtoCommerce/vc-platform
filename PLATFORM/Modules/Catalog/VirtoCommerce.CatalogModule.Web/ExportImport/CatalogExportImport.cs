@@ -91,10 +91,10 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 				allOrigImages = allOrigImages.Concat(originalObject.Categories.SelectMany(x => x.Images));
 				allOrigImages = allOrigImages.Concat(originalObject.Products.SelectMany(x => x.Variations).SelectMany(x => x.Images));
 
-				var allNewImpages = allBackupImages.Where(x => !allOrigImages.Contains(x));
+				var allNewImages = allBackupImages.Where(x => !allOrigImages.Contains(x)).Where(x=>x.BinaryData != null);
 				var index = 0;
-				var progressTemplate = "{0} of " + allNewImpages.Count() + " images uploading";
-				foreach (var image in allNewImpages)
+				var progressTemplate = "{0} of " + allNewImages.Count() + " images uploading";
+				foreach (var image in allNewImages)
 				{
 					progressInfo.Description = String.Format(progressTemplate, index);
 					progressCallback(progressInfo);
