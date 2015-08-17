@@ -1,10 +1,10 @@
 ﻿using System;
 using Microsoft.Practices.Unity;
+using VirtoCommerce.Domain.Marketing.Model;
 using VirtoCommerce.Domain.Marketing.Services;
 using VirtoCommerce.MarketingModule.Data.Repositories;
 using VirtoCommerce.MarketingModule.Data.Services;
 using VirtoCommerce.MarketingModule.Web.ExportImport;
-using VirtoCommerce.MarketingModule.Web.Model;
 using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Modularity;
@@ -51,7 +51,7 @@ namespace VirtoCommerce.MarketingModule.Web
         public override void PostInitialize()
         {
             var promotionExtensionManager = _container.Resolve<IMarketingExtensionManager>();
-            EnsureRootFoldersExist(new[] { MarketingConstants.ContentPlacesRootFolderId, MarketingConstants.CotentItemRootFolderId });
+            EnsureRootFoldersExist(new[] { VirtoCommerce.MarketingModule.Web.Model.MarketingConstants.ContentPlacesRootFolderId, VirtoCommerce.MarketingModule.Web.Model.MarketingConstants.CotentItemRootFolderId });
 
 			//Create standard dynamic properties for dynamic content item (content type (dic) and html (long text))
 			var dynamicPropertyService = _container.Resolve<IDynamicPropertyService>();
