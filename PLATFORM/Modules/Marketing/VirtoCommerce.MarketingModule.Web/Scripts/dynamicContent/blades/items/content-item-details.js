@@ -38,10 +38,23 @@
 				        return true;
 				    },
 				    permission: 'marketing:manage'
+				},
+				{
+					name: "Manage type properties", icon: 'fa fa-edit',
+					executeMethod: function () {
+						var newBlade = {
+							id: 'dynamicPropertyList',
+							objectType: blade.entity.objectType,
+							controller: 'platformWebApp.dynamicPropertyListController',
+							template: 'Scripts/app/dynamicProperties/blades/dynamicProperty-list.tpl.html'
+						};
+						bladeNavigationService.showBlade(newBlade, blade);
+					},
+					canExecuteMethod: function () {
+						return angular.isDefined(blade.entity.objectType);
+					}
 				}
             ];
-
-            blade.unpackingContentItem();
         }
 
         blade.originalEntity = angular.copy(blade.entity);
@@ -58,7 +71,6 @@
     }
 
     blade.saveChanges = function () {
-        blade.createContentItem();
         if (blade.isNew) {
             marketing_dynamicContents_res_contentItems.save({}, blade.entity, function (data) {
                 blade.parentBlade.updateChoosen();
@@ -73,92 +85,6 @@
             },
             function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
         }
-    }
-
-    blade.unpackingContentItem = function () {
-        _.each(blade.entity.properties, function (prop) {
-            blade.entity[prop.name] = prop.value;
-        });
-    }
-
-    blade.createContentItem = function () {
-        var properties = blade.properties[blade.entity.contentType];
-
-        blade.entity.properties = [];
-
-        for (var i = 0; i < properties.length; i++) {
-            blade.entity.properties.push({ name: properties[i].name, value: blade.entity[properties[i].name], valueType: properties[i].valueType });
-        }
-    }
-
-    blade.contentTypes = [
-		'Html',
-        'Flash',
-        //'Liquid',
-        //'Razor',
-		'ImageClickable',
-		'ImageNonClickable',
-		//'Product',
-        'ProductsWithinCategory'
-    ];
-
-    blade.properties = {
-        /*
-	    Category: [
-			{ name: 'categoryId', valueType: 'ShortText' },
-			{ name: 'imageUrl', valueType: 'ShortText' },
-			{ name: 'externalImageUrl', valueType: 'ShortText' },
-			{ name: 'message', valueType: 'LongText' }
-		],
-        */
-        ProductsWithinCategory: [
-			{ name: 'categoryCode', valueType: 'ShortText' },
-			{ name: 'title', valueType: 'ShortText' },
-			{ name: 'sortField', valueType: 'ShortText' },
-			{ name: 'itemCount', valueType: 'Integer' },
-			{ name: 'newItems', valueType: 'Boolean' }
-        ],
-        Flash: [
-			{ name: 'flashFilePath', valueType: 'ShortText' },
-			{ name: 'link1Url', valueType: 'ShortText' },
-			{ name: 'link2Url', valueType: 'ShortText' },
-			{ name: 'link3Url', valueType: 'ShortText' }
-        ],
-        Html: [
-			{ name: 'rawHtml', valueType: 'LongText' }
-        ],
-        Razor: [
-			{ name: 'razorHtml', valueType: 'LongText' }
-        ],
-        Liquid: [
-			{ name: 'liquidHtml', valueType: 'LongText' }
-        ],
-        ImageClickable: [
-			{ name: 'alternativeText', valueType: 'LongText' },
-			{ name: 'imageUrl', valueType: 'ShortText' },
-			{ name: 'targetUrl', valueType: 'ShortText' },
-			{ name: 'title', valueType: 'ShortText' }
-        ],
-        ImageNonClickable: [
-			{ name: 'alternativeText', valueType: 'LongText' },
-			{ name: 'imageUrl', valueType: 'ShortText' }
-        ],
-        Product: [
-			{ name: 'productCode', valueType: 'ShortText' },
-        ]
-    }
-
-    blade.isPropertyShows = function (propertyName) {
-        var properties = blade.properties[blade.entity.contentType];
-
-        var retVal = false;
-
-        for (var i = 0; i < properties.length; i++) {
-            if (properties[i].name === propertyName)
-                retVal = true;
-        }
-
-        return retVal;
     }
 
     $scope.blade.headIcon = 'fa-inbox';
