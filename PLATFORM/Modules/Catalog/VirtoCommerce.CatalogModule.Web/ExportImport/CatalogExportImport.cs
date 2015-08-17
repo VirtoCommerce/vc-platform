@@ -220,8 +220,9 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 			//Binary data
 			if (loadBinaryData)
 			{
-				var allImages = retVal.Products.SelectMany(x => x.Images);
-				allImages = allImages.Concat(retVal.Products.SelectMany(x => x.Variations).SelectMany(x => x.Images));
+                var allImages = retVal.Products.SelectMany(x => x.Images)
+                    .Concat(retVal.Products.SelectMany(x => x.Variations).SelectMany(x => x.Images))
+                    .Concat(retVal.Categories.SelectMany(x => x.Images)).ToArray();
 
 				var index = 0;
 				var progressTemplate = "{0} of " + allImages.Count() + " images downloading";
