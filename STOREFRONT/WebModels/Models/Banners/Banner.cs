@@ -5,7 +5,7 @@ namespace VirtoCommerce.Web.Models.Banners
 {
     public class Banner : Drop
     {
-        private IDictionary<string, string> _properties = new Dictionary<string, string>();
+        private IDictionary<string, object> _properties = new Dictionary<string, object>();
 
         public virtual string ContentType { get; set; }
 
@@ -15,7 +15,7 @@ namespace VirtoCommerce.Web.Models.Banners
 
         public virtual string Name { get; set; }
 
-        public virtual IDictionary<string, string> Properties
+        public virtual IDictionary<string, object> Properties
         {
             get { return this._properties; }
             set { this._properties = value; }

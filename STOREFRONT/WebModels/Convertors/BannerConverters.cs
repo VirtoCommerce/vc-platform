@@ -22,7 +22,13 @@ namespace VirtoCommerce.Web.Convertors
         public static Banner AsWebModel(this Data.DynamicContentItem item)
         {
             var dc = new Banner();
-            dc.InjectFrom(item);
+
+            dc.ContentType = item.ContentType;
+            dc.Id = item.Id;
+            dc.IsMultilingual = item.IsMultilingual;
+            dc.Name = item.Name;
+            dc.Properties = item.Properties;
+
             return dc;
         }
 

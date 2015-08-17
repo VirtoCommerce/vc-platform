@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using VirtoCommerce.Web.Models.Banners;
 using VirtoCommerce.Web.Convertors;
+using System.Collections.Generic;
 
 namespace VirtoCommerce.Web.Controllers
 {
@@ -36,8 +37,16 @@ namespace VirtoCommerce.Web.Controllers
             var response = await Service.GetDynamicContentAsync(placeNames);
             if (response != null && response.Items != null)
             {
-                Context.Set("placeholders", new PlaceHolderCollection(response.Items.Select(x => x.AsWebModel())));
-                return PartialView("placeholders", this.Context);
+                var placeholders = new List<PlaceHolder>();
+
+                foreach (var item in response.Items)
+                {
+                    placeholders.Add(item.AsWebModel());
+                }
+
+                //Context.Set("placeholders", new PlaceHolderCollection(response.Items.Select(x => x.AsWebModel())));
+                //return PartialView("placeholders", this.Context);
+                return Json(placeholders, JsonRequestBehavior.AllowGet);
             }
 
             return null;
