@@ -232,8 +232,15 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 				{
 					progressInfo.Description = String.Format(progressTemplate, index);
 					progressCallback(progressInfo);
-					image.BinaryData = _blobStorageProvider.OpenReadOnly(image.Url).ReadFully();
-
+					try
+					{
+						image.BinaryData = _blobStorageProvider.OpenReadOnly(image.Url).ReadFully();
+					}
+					catch(Exception ex)
+					{
+						progressInfo.Errors.Add(ex.ToString());
+						progressCallback(progressInfo);
+					}
 					index++;
 				}
 			}

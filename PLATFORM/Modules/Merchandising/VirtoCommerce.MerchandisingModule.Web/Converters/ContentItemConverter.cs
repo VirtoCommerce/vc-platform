@@ -2,6 +2,7 @@
 using System.Linq;
 using coreModel = VirtoCommerce.Domain.Marketing.Model;
 using webModel = VirtoCommerce.MerchandisingModule.Web.Model;
+using System.Collections.Generic;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Converters
 {
@@ -12,7 +13,16 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
 			var retVal = new webModel.DynamicContentItem();
 			retVal.InjectFrom(content);
 		
-		
+			retVal.Properties = new webModel.PropertyDictionary();
+			foreach(var property in content.DynamicProperties)
+			{
+				var propValue = property.Values.FirstOrDefault();
+				if (propValue != null)
+				{
+					retVal.Properties.Add(new KeyValuePair<string, object>(property.Name, propValue.Value));
+				}
+			}
+			
 			return retVal;
 		}
 

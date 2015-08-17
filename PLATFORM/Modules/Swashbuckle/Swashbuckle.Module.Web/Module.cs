@@ -16,7 +16,7 @@ using VirtoCommerce.Platform.Core.Caching;
 
 namespace SwashbuckleModule.Web
 {
-	public class Module : ModuleBase
+	public class Module : ModuleBase, ISupportExportImportModule
 	{
 		private readonly IUnityContainer _container;
 
@@ -163,6 +163,31 @@ namespace SwashbuckleModule.Web
 			#endregion
 		}
 
+
+		#region ISupportExportImportModule Members
+
+		public string ExportDescription
+		{
+			get
+			{
+				var settingManager = _container.Resolve<ISettingsManager>();
+				return settingManager.GetValue("Swashbuckle.ExportImport.Description", String.Empty);
+			}
+		}
+
+		public void DoExport(Stream outStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
+		{
+			//Nothing todo
+			//Is needed only for settings export
+		}
+
+		public void DoImport(Stream inputStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
+		{
+			//Nothing todo
+			//Is needed only for settings import
+		}
+
+		#endregion
 	}
 
 

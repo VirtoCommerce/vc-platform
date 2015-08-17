@@ -32,6 +32,13 @@
                 <title>Default api key</title>
                 <description>Default api key for Swashbuckle requests from UI</description>
             </setting>
+			<setting>
+				<name>Swashbuckle.ExportImport.Description</name>
+				<valueType>string</valueType>
+				<defaultValue>Export/Import api secret key</defaultValue>
+				<title>Export/Import description</title>
+				<description>Module description in platform export/import wizard</description>
+			</setting>
         </group>
 	</settings>
 	<permissions>
