@@ -680,6 +680,7 @@
     <Content Include="fonts\ui-grid.eot" />
     <Content Include="Content\ui-grid.ttf" />
     <Content Include="Content\ui-grid.woff" />
+    <Content Include="App_Data\SampleData\sampleData.zip" />
     <None Include="Scripts\jquery-1.11.1.intellisense.js" />
     <Content Include="Scripts\codemirror\htmlmixed.js" />
     <Content Include="Scripts\i18n\angular-locale_aa-dj.js" />
