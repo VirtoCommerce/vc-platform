@@ -53,7 +53,7 @@ namespace VirtoCommerce.MarketingModule.Web
             var promotionExtensionManager = _container.Resolve<IMarketingExtensionManager>();
             EnsureRootFoldersExist(new[] { VirtoCommerce.MarketingModule.Web.Model.MarketingConstants.ContentPlacesRootFolderId, VirtoCommerce.MarketingModule.Web.Model.MarketingConstants.CotentItemRootFolderId });
 
-			//Create standard dynamic properties for dynamic content item (content type (dic) and html (long text))
+			//Create standard dynamic properties for dynamic content item
 			var dynamicPropertyService = _container.Resolve<IDynamicPropertyService>();
 			var contentItemTypeProperty = new DynamicProperty
 			{
@@ -64,21 +64,8 @@ namespace VirtoCommerce.MarketingModule.Web
 				ValueType = DynamicPropertyValueType.ShortText,
 				CreatedBy = "Auto",
 			};
-			var htmlProperty = new DynamicProperty
-			{
-				Id = "Marketing_DynamicContentItem_Html_Property",
-				Name = "Html",
-				ObjectType = typeof(DynamicContentItem).FullName,
-				ValueType = DynamicPropertyValueType.LongText,
-				CreatedBy = "Auto",
-			};
-			var dictItemHtml = new DynamicPropertyDictionaryItem
-			{
-				 Id = "Html",
-				 Name = "Html"
-			};
-			dynamicPropertyService.SaveProperties(new [] { contentItemTypeProperty, htmlProperty });
-			dynamicPropertyService.SaveDictionaryItems(contentItemTypeProperty.Id,  new [] { dictItemHtml });
+		
+			dynamicPropertyService.SaveProperties(new [] { contentItemTypeProperty });
 		}
 
 
