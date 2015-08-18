@@ -70,6 +70,10 @@
     <Compile Include="Migrations\201508111056466_RemoveProperties.Designer.cs">
       <DependentUpon>201508111056466_RemoveProperties.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201508181221540_PublishingGroupCascadeDeletion.cs" />
+    <Compile Include="Migrations\201508181221540_PublishingGroupCascadeDeletion.Designer.cs">
+      <DependentUpon>201508181221540_PublishingGroupCascadeDeletion.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Coupon.cs" />
     <Compile Include="Model\DynamicContentFolder.cs" />
@@ -118,6 +122,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201508111056466_RemoveProperties.resx">
       <DependentUpon>201508111056466_RemoveProperties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508181221540_PublishingGroupCascadeDeletion.resx">
+      <DependentUpon>201508181221540_PublishingGroupCascadeDeletion.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />
