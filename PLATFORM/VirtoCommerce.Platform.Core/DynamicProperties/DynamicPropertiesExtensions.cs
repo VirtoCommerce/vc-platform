@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Newtonsoft.Json.Linq;
 
 namespace VirtoCommerce.Platform.Core.DynamicProperties
 {
@@ -14,9 +15,22 @@ namespace VirtoCommerce.Platform.Core.DynamicProperties
 													   .SelectMany(v => v.Values)
 													   .FirstOrDefault();
 
-				if(propValue != null)
+				if(propValue != null && propValue.Value != null)
 				{
-					result = (T)propValue.Value;
+					var jObject = propValue.Value as JObject;
+					var dictItem = propValue.Value as DynamicPropertyDictionaryItem;
+					if(jObject != null)
+					{
+						dictItem = jObject.ToObject<DynamicPropertyDictionaryItem>();
+					}
+					if(dictItem != null)
+					{
+						result = (T)(object)dictItem.Name;
+					}
+					else
+					{
+						result = (T)propValue.Value;
+					}
 				}
             }
 

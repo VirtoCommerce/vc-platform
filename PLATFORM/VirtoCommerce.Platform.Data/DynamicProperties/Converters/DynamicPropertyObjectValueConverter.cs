@@ -108,7 +108,11 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
 		public int GetHashCode(DynamicPropertyObjectValueEntity obj)
 		{
 			var result = obj.RawValue();
-			return result.GetHashCode();
+			if (result != null)
+			{
+				return result.GetHashCode();
+			}
+			return 0;
 		}
 
 
