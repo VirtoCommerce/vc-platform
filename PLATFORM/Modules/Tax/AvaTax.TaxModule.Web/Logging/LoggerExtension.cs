@@ -5,9 +5,9 @@ using System.Linq;
 
 namespace AvaTax.TaxModule.Web.Logging
 {
-    public static class EventSourceExtension
+    public static class LoggerExtension
     {
-        public static void Write(this EventSource log, int eventCode, object context)
+        public static void Write(this AvalaraLogger log, int eventCode, object context)
         {
             try
             {

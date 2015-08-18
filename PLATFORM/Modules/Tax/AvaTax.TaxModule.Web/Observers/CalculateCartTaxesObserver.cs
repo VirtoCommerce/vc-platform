@@ -4,6 +4,7 @@ using AvaTax.TaxModule.Web.Converters;
 using AvaTax.TaxModule.Web.Logging;
 using AvaTax.TaxModule.Web.Services;
 using AvaTaxCalcREST;
+using Common.Logging;
 using VirtoCommerce.Domain.Cart.Events;
 using VirtoCommerce.Domain.Customer.Model;
 using VirtoCommerce.Domain.Customer.Services;
@@ -17,11 +18,13 @@ namespace AvaTax.TaxModule.Web.Observers
 	{
         private readonly ITaxSettings _taxSettings;
         private readonly IContactService _customerSearchService;
+        private readonly AvalaraLogger _logger;
 
-        public CalculateCartTaxesObserver(ITaxSettings taxSettings, IContactService customerSearchService)
+        public CalculateCartTaxesObserver(ITaxSettings taxSettings, IContactService customerSearchService, ILog log)
         {
             _taxSettings = taxSettings;
             _customerSearchService = customerSearchService;
+            _logger = new AvalaraLogger(log);
         }
 
 		#region IObserver<ShoppingCart> Members
@@ -44,7 +47,7 @@ namespace AvaTax.TaxModule.Web.Observers
 
 		private void CalculateCustomerOrderTaxes(CartChangeEvent context)
 		{
-            SlabInvoker<VirtoCommerceEventSource.TaxRequestContext>.Execute(slab =>
+            LogInvoker<AvalaraLogger.TaxRequestContext>.Execute(log =>
                 {
 		            if (_taxSettings.IsEnabled && !string.IsNullOrEmpty(_taxSettings.Username) && !string.IsNullOrEmpty(_taxSettings.Password)
                         && !string.IsNullOrEmpty(_taxSettings.ServiceUrl)
@@ -58,10 +61,10 @@ namespace AvaTax.TaxModule.Web.Observers
                         var request = cart.ToAvaTaxRequest(_taxSettings.CompanyCode, contact);
                         if (request != null)
                         {
-                            slab.docCode = request.DocCode;
-                            slab.customerCode = request.CustomerCode;
-                            slab.docType = request.DocType.ToString();
-                            slab.amount = (double) cart.Total;
+                            log.docCode = request.DocCode;
+                            log.customerCode = request.CustomerCode;
+                            log.docType = request.DocType.ToString();
+                            log.amount = (double)cart.Total;
                     
                             var taxSvc = new JsonTaxSvc(_taxSettings.Username, _taxSettings.Password, _taxSettings.ServiceUrl);
                             var getTaxResult = taxSvc.GetTax(request);
@@ -141,8 +144,8 @@ namespace AvaTax.TaxModule.Web.Observers
                         throw new Exception("Tax calculation disabled or credentials not provided");
                     }
                 })
-                .OnError(VirtoCommerceEventSource.Log, VirtoCommerceEventSource.EventCodes.TaxCalculationError)
-                .OnSuccess(VirtoCommerceEventSource.Log, VirtoCommerceEventSource.EventCodes.GetTaxRequestTime);
+                .OnError(_logger, AvalaraLogger.EventCodes.TaxCalculationError)
+                .OnSuccess(_logger, AvalaraLogger.EventCodes.GetTaxRequestTime);
 		}
     }
 }
