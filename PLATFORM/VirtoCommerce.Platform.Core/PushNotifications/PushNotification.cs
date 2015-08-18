@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace VirtoCommerce.Platform.Core.PushNotifications
 {
-    public class PushNotification
+    public abstract class PushNotification
     {
         public PushNotification(string creator)
         {
@@ -12,7 +12,6 @@ namespace VirtoCommerce.Platform.Core.PushNotifications
             New = true;
             Id = Guid.NewGuid().ToString();
             Creator = creator;
-            ExtendedData = new Dictionary<string, string>();
 			NotifyType = this.GetType().Name;
         }
         [JsonProperty("id")]
@@ -31,8 +30,6 @@ namespace VirtoCommerce.Platform.Core.PushNotifications
         public string Title { get; set; }
         [JsonProperty("repeatCount")]
         public int RepeatCount { get; set; }
-        [JsonProperty("extendedData")]
-        public IDictionary<string, string> ExtendedData { get; set; }
 
         public bool ItHasSameContent(PushNotification other)
         {
