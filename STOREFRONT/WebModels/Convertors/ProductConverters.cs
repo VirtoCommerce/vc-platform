@@ -153,7 +153,14 @@ namespace VirtoCommerce.Web.Convertors
             variantModel.NumericPrice = price != null ? (price.Sale.HasValue ? price.Sale.Value : price.List) : 0M;
             if (reward != null)
             {
-                variantModel.NumericPrice -= reward.Amount;
+                if (reward.AmountType.Equals("absolute", StringComparison.OrdinalIgnoreCase))
+                {
+                    variantModel.NumericPrice -= reward.Amount;
+                }
+                if (reward.AmountType.Equals("relative", StringComparison.OrdinalIgnoreCase))
+                {
+                    variantModel.NumericPrice -= variantModel.NumericPrice * reward.Amount / 100;
+                }
             }
 
             variantModel.Selected = variantlUrlParameter != null;
