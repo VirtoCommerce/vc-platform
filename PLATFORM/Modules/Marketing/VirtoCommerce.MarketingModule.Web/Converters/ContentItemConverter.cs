@@ -2,6 +2,7 @@
 using System.Linq;
 using coreModel = VirtoCommerce.Domain.Marketing.Model;
 using webModel = VirtoCommerce.MarketingModule.Web.Model;
+using VirtoCommerce.Platform.Core.DynamicProperties;
 
 namespace VirtoCommerce.MarketingModule.Web.Converters
 {
@@ -25,6 +26,10 @@ namespace VirtoCommerce.MarketingModule.Web.Converters
 			var retVal = new coreModel.DynamicContentItem();
 			retVal.InjectFrom(content);
 			retVal.DynamicProperties = content.DynamicProperties;
+			if (retVal.ContentType == null && content.DynamicProperties != null)
+			{
+				retVal.ContentType = retVal.GetDynamicPropertyValue<string>("Content type", null);
+			}
 			return retVal;
 		}
 	
