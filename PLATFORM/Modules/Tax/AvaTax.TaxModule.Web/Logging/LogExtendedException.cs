@@ -5,18 +5,18 @@ using Newtonsoft.Json;
 
 namespace AvaTax.TaxModule.Web.Logging
 {
-    public class SlabExtendedException : Exception
+    public class LogExtendedException : Exception
     {
         private readonly Exception _exception;
-        public SlabExtendedException(Exception error)
+        public LogExtendedException(Exception error)
             : base(error.Message, error)
         {
             _exception = error;
         }
 
-        public static SlabExtendedException Create(Exception ex)
+        public static LogExtendedException Create(Exception ex)
         {
-            return new SlabExtendedException(ex);
+            return new LogExtendedException(ex);
         }
 
         public override string ToString()

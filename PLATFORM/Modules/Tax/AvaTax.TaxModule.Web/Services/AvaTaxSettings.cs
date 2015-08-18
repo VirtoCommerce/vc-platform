@@ -1,5 +1,4 @@
-﻿using AvaTax.TaxModule.Web.Services;
-using VirtoCommerce.Platform.Core.Settings;
+﻿using VirtoCommerce.Platform.Core.Settings;
 
 namespace AvaTax.TaxModule.Web.Services
 {

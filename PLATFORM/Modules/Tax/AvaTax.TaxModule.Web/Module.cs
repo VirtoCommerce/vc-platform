@@ -4,10 +4,9 @@ using System.IO;
 using AvaTax.TaxModule.Web.Controller;
 using AvaTax.TaxModule.Web.Observers;
 using AvaTax.TaxModule.Web.Services;
-using Microsoft.Practices.EnterpriseLibrary.SemanticLogging;
-using Microsoft.Practices.EnterpriseLibrary.SemanticLogging.Sinks;
 using System.Diagnostics.Tracing;
 using AvaTax.TaxModule.Web.Logging;
+using Common.Logging;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.Domain.Cart.Events;
 using VirtoCommerce.Domain.Order.Events;
@@ -38,53 +37,15 @@ namespace AvaTax.TaxModule.Web
         
         public override void Initialize()
         {
-            var eventListener = new ObservableEventListener();
-
-            eventListener.EnableEvents(
-                VirtoCommerceEventSource.Log,
-                EventLevel.LogAlways,
-                Keywords.All);
-
-            
-
-            var assetsConnection = ConfigurationManager.ConnectionStrings["AssetsConnectionString"];
-
-            if (assetsConnection != null)
-            {
-                var properties = assetsConnection.ConnectionString.ToDictionary(";", "=");
-                var provider = properties["provider"];
-                var assetsConnectionString = properties.ToString(";", "=", "provider");
-
-                //if (string.Equals(provider, FileSystemBlobProvider.ProviderName, StringComparison.OrdinalIgnoreCase))
-                //{
-                //    var logFile = new FileInfo("AvaTax.log");
-
-                //    if (!logFile.IsFileLocked())
-                //    {
-                //        eventListener.LogToRollingFlatFile("AvaTax.log",
-                //            10000,
-                //            "hh",
-                //            RollFileExistsBehavior.Increment,
-                //            RollInterval.Day);
-                //    }
-                //}
-                //else
-                    if (string.Equals(provider, AzureBlobProvider.ProviderName, StringComparison.OrdinalIgnoreCase))
-                    {
-                        eventListener.LogToWindowsAzureTable(
-                            "VirtoCommerce2", assetsConnectionString);
-
-                    }
-            }
-
-
             var settingsManager = _container.Resolve<ISettingsManager>();
             
             var avalaraTax = new AvaTaxSettings(_usernamePropertyName, _passwordPropertyName, _serviceUrlPropertyName, _companyCodePropertyName, _isEnabledPropertyName, _isValidateAddressPropertyName, settingsManager);
-            
+
+            var logManager = _container.Resolve<ILog>();
+
             _container.RegisterType<AvaTaxController>
                 (new InjectionConstructor(
-                    avalaraTax));
+                    avalaraTax, logManager));
 
             _container.RegisterInstance<ITaxSettings>(avalaraTax);
 

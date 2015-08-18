@@ -2,7 +2,7 @@
 
 namespace AvaTax.TaxModule.Web.Logging
 {
-    public class BaseSlabContext
+    public class BaseLogContext
     {
         public DateTime StartTime { get; set; }
         public string startTime { get { return StartTime.ToString("s"); } }

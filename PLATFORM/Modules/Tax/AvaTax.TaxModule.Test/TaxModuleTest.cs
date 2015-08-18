@@ -341,7 +341,7 @@ namespace AvaTax.TaxModule.Test
             
             var avalaraTax = new AvaTaxSettings(_usernamePropertyName, _passwordPropertyName, _serviceUrlPropertyName, _companyCodePropertyName, _isEnabledPropertyName, _isValidateAddressPropertyName, settingsManager.Object);
 
-            var controller = new AvaTaxController(avalaraTax);
+            var controller = new AvaTaxController(avalaraTax, null);
             return controller;
         }
     }
