@@ -7,9 +7,10 @@
     <div class="blade-inner">
         <div class="inner-block">
             <div class="sub-t">{{blade.currentEntity.title}}</div>
-            <div class="block" ng-if="blade.currentEntity.created || blade.currentEntity.finished">
-                <p ng-if="blade.currentEntity.created" ng-class="{'no-data': blade.currentEntity.created}" class="text">Start — <i class="fa fa-clock-o"></i> <span am-time-ago="blade.currentEntity.created"></span></p>
-                <p ng-if="blade.currentEntity.finished" ng-class="{'no-data': blade.currentEntity.finished}" class="text">End — <i class="fa fa-clock-o"></i> <span am-time-ago="blade.currentEntity.finished"></span></p>
+            <div class="block">
+                <p ng-if="blade.currentEntity.created" class="text no-data">Start — <i class="fa fa-clock-o"></i> <span am-time-ago="blade.currentEntity.created"></span></p>
+                <p ng-if="!blade.currentEntity.finished" class="dropdown-content"><span class="list-bar progress-bar" data-role="progress-bar" data-value="30" style="margin-left: 0"></span></p>
+                <p ng-if="blade.currentEntity.finished" class="text no-data">End — <i class="fa fa-clock-o"></i> <span am-time-ago="blade.currentEntity.finished"></span></p>
             </div>
             <div class="sub-t">Progress messages</div>
             <div class="log">
