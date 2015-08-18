@@ -26,7 +26,7 @@ namespace VirtoCommerce.MarketingModule.Web.Converters
 			var retVal = new coreModel.DynamicContentItem();
 			retVal.InjectFrom(content);
 			retVal.DynamicProperties = content.DynamicProperties;
-			if (retVal.ContentType == null && content.DynamicProperties != null)
+			if (content.DynamicProperties != null)
 			{
 				retVal.ContentType = retVal.GetDynamicPropertyValue<string>("Content type", null);
 			}
