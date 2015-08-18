@@ -22,7 +22,6 @@
             id: 'moduleInstallProgress',
             currentEntity: data,
             title: $scope.blade.title,
-            subtitle: 'Installation progress',
             controller: 'platformWebApp.moduleInstallProgressController',
             template: 'Scripts/app/packaging/wizards/newModule/module-wizard-progress-step.tpl.html'
         };

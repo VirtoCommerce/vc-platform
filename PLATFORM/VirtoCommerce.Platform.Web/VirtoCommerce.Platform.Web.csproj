@@ -403,6 +403,8 @@
     <Content Include="Scripts\app\packaging\blades\module-detail.tpl.html" />
     <Content Include="Scripts\app\packaging\blades\modules-list.js" />
     <Content Include="Scripts\app\packaging\blades\modules-list.tpl.html" />
+    <Content Include="Scripts\app\packaging\notifications\history.tpl.html" />
+    <Content Include="Scripts\app\packaging\notifications\menu.tpl.html" />
     <Content Include="Scripts\app\settings\blades\entitySetting-list.js" />
     <Content Include="Scripts\app\settings\blades\entitySetting-list.tpl.html" />
     <Content Include="Scripts\app\settings\widgets\entitySettingsWidget.js" />

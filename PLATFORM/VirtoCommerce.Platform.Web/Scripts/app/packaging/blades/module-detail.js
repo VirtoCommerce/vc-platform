@@ -88,7 +88,6 @@
                             currentEntity: data,
                             currentEntityId: data.id,
                             title: 'Module uninstall',
-                            subtitle: 'Installation progress',
                             controller: 'platformWebApp.moduleInstallProgressController',
                             template: 'Scripts/app/packaging/wizards/newModule/module-wizard-progress-step.tpl.html'
                         };
