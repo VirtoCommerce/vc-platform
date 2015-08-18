@@ -32,6 +32,6 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model
         /// <summary>
         /// Gets or sets the dictionary of dynamic content item propertines
         /// </summary>
-		public ICollection<DynamicObjectProperty> Properties { get; set; }
+		public PropertyDictionary Properties { get; set; }
     }
 }
