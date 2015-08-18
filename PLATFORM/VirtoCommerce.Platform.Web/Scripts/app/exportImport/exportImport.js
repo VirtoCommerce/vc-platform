@@ -77,14 +77,16 @@
 	  };
   	pushNotificationTemplateResolver.register(historyExportImportTemplate);
 
+  	$rootScope.$on("new-notification-event", function (event, notification) {
+  		if (notification.notifyType == 'SampleDataImportPushNotification' && $state.current && $state.current.name != 'sampleDataInitialization')
+  		{
+  			$state.go('sampleDataInitialization')
+  		}
+  	});
   	//Try to import sample data
   	$rootScope.$on('loginStatusChanged', function (event, authContext) {
   		if (authContext.isAuthenticated) {
-  			exportImportResourse.importSampleData({}, function (notification) {
-  				if (angular.isDefined(notification) && notification.notifyType == 'SampleDataImportPushNotification') {
-  					$state.go('sampleDataInitialization')
-  				}
-  			});
+  			exportImportResourse.importSampleData({});
   		}
   	});
   
