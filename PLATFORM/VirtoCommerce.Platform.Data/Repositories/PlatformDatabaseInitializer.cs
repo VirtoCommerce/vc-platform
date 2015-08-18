@@ -1,54 +1,20 @@
-﻿using System.Linq;
-using VirtoCommerce.Platform.Core.Common;
+﻿using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Model;
-using VirtoCommerce.Platform.Data.Security;
 
 namespace VirtoCommerce.Platform.Data.Repositories
 {
     public class PlatformDatabaseInitializer : SetupDatabaseInitializer<PlatformRepository, Migrations.Configuration>
     {
-        private const string _roleApiClient = "API Client";
-
         protected override void Seed(PlatformRepository context)
         {
             base.Seed(context);
-
-            CreatePermissions(context);
-            CreateRoles(context);
             CreateAccounts(context);
         }
 
 
-        private static void CreatePermissions(IRepository repository)
-        {
-            var permissions = PredefinedPermissions.Permissions.Select(p => p.ToDataModel()).ToList();
-            permissions.ForEach(repository.Add);
-            repository.UnitOfWork.Commit();
-        }
-
-        private static void CreateRoles(IRepository repository)
-        {
-            var roles = new[]
-            {
-                new Role
-                {
-                    Name = _roleApiClient,
-                    Description = "Allows to make calls to Web API methods.",
-                    Permissions = new []
-                    {
-                        new Permission { Id = PredefinedPermissions.SecurityCallApi }
-                    },
-                }
-            }
-            .Select(r => r.ToDataModel()).ToList();
-
-            roles.ForEach(repository.Add);
-            repository.UnitOfWork.Commit();
-        }
-
-        private static void CreateAccounts(IPlatformRepository repository)
+        private static void CreateAccounts(IRepository repository)
         {
             repository.Add(new AccountEntity
             {
@@ -62,15 +28,9 @@ namespace VirtoCommerce.Platform.Data.Repositories
             {
                 Id = "9b605a3096ba4cc8bc0b8d80c397c59f",
                 UserName = "frontend",
-                //RegisterType = RegisterType.SiteAdministrator,
-                RegisterType = RegisterType.Administrator, // temporal hack 
+                RegisterType = RegisterType.Administrator,
                 AccountState = AccountState.Approved,
             };
-            frontendAccount.RoleAssignments.Add(new RoleAssignmentEntity
-            {
-                AccountId = frontendAccount.Id,
-                RoleId = repository.Roles.Where(r => r.Name == _roleApiClient).Select(r => r.Id).FirstOrDefault(),
-            });
             frontendAccount.ApiAccounts.Add(new ApiAccountEntity
             {
                 Name = "Frontend",
