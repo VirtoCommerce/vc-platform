@@ -20,7 +20,7 @@
     function onAfterSubmitted(data) {
         var newBlade = {
             id: 'moduleInstallProgress',
-            currentEntityId: data.id,
+            currentEntity: data,
             title: $scope.blade.title,
             subtitle: 'Installation progress',
             controller: 'platformWebApp.moduleInstallProgressController',

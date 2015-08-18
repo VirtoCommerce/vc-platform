@@ -1,39 +1,26 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.moduleInstallProgressController', ['$scope', '$interval', '$window', 'platformWebApp.bladeNavigationService', 'platformWebApp.modules', function ($scope, $interval, $window, bladeNavigationService, modules) {
-    $scope.blade.refresh = function () {
-        // $scope.blade.isLoading = true;
+.controller('platformWebApp.moduleInstallProgressController', ['$scope', '$window', 'platformWebApp.bladeNavigationService', 'platformWebApp.modules', function ($scope, $window, bladeNavigationService, modules) {
+    var blade = $scope.blade;
 
-        modules.getInstallationStatus({ id: $scope.blade.currentEntityId }, function (results) {
-            $scope.currentEntity = results;
-            if (results.completed) {
-                $scope.blade.isLoading = false;
-                $scope.completed = true;
-                stopRefresh();
-                $scope.blade.parentBlade.refresh();
+    $scope.$on("new-notification-event", function (event, notification) {
+        if (blade.currentEntity && notification.id == blade.currentEntity.id) {
+            angular.copy(notification, blade.currentEntity);
+            if (notification.finished) {
+                blade.isLoading = false;
+                if (_.any(notification.progressLog) && _.last(notification.progressLog).level !== 'Error') {
+                    blade.parentBlade.refresh();
+                }
             }
-        },
-        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
-
-    };
-
-    function stopRefresh() {
-        if (angular.isDefined(intervalPromise)) {
-            $interval.cancel(intervalPromise);
         }
-    };
-
-    $scope.$on('$destroy', function () {
-        // Make sure that the interval is destroyed too
-        stopRefresh();
     });
 
     $scope.restart = function () {
+        $scope.restarted = true;
         modules.restart({}, function () {
             $window.location.reload();
         },
-        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+        function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
     }
 
-    $scope.blade.refresh();
-    //var intervalPromise = $interval($scope.blade.refresh, 1500);
+    // blade.isLoading = false;
 }]);

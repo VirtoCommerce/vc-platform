@@ -85,8 +85,9 @@
                     modules.uninstall({ id: blade.currentEntity.id }, function (data) {
                         var newBlade = {
                             id: 'moduleInstallProgress',
+                            currentEntity: data,
                             currentEntityId: data.id,
-                            title: 'module uninstall',
+                            title: 'Module uninstall',
                             subtitle: 'Installation progress',
                             controller: 'platformWebApp.moduleInstallProgressController',
                             template: 'Scripts/app/packaging/wizards/newModule/module-wizard-progress-step.tpl.html'
