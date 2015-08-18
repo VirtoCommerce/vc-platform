@@ -39,7 +39,8 @@ VirtoCommerce.redirect = function(url, params) {
 };
 
 VirtoCommerce.url = function (url) {
-    var baseUrl = window.location.protocol + "//" + location.host;
+    //var baseUrl = window.location.protocol + "//" + location.host;
+    var baseUrl = $("base").attr("href");
     return baseUrl + url;
 };
 
