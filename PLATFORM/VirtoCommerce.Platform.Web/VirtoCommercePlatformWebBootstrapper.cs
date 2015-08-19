@@ -21,7 +21,7 @@ namespace VirtoCommerce.Platform.Web
         private readonly string _modulesVirtualPath;
         private readonly string _modulesPhysicalPath;
         private readonly string _assembliesPath;
-		private static ILog _logger = LogManager.GetLogger("platform");
+        private static ILog _logger = LogManager.GetLogger("platform");
         public VirtoCommercePlatformWebBootstrapper(string modulesVirtualPath, string modulesPhysicalPath, string assembliesPath)
         {
             _modulesVirtualPath = modulesVirtualPath;
@@ -59,6 +59,9 @@ namespace VirtoCommerce.Platform.Web
 
             //It necessary because WEB API does not get assemblies from AppDomain.
             GlobalConfiguration.Configuration.Services.Replace(typeof(IAssembliesResolver), new CustomAssemblyResolver(ModuleCatalog.Modules));
+
+            // Standard WebHostHttpControllerTypeResolver uses cache and does not see new modules.
+            GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpControllerTypeResolver), new DefaultHttpControllerTypeResolver());
 
             var moduleCatalog = ModuleCatalog as ManifestModuleCatalog;
             if (moduleCatalog != null)
@@ -120,12 +123,12 @@ namespace VirtoCommerce.Platform.Web
 
                 try
                 {
-					_logger.DebugFormat("Loading assembly '{0}'.", name);
+                    _logger.DebugFormat("Loading assembly '{0}'.", name);
                     result = Assembly.Load(name);
                 }
                 catch (FileLoadException)
                 {
-					_logger.DebugFormat("Cannot load assembly '{0}'.", name);
+                    _logger.DebugFormat("Cannot load assembly '{0}'.", name);
                 }
 
                 if (result == null && name.Version != null)

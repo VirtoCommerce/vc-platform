@@ -58,10 +58,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [ResponseType(typeof(PushNotification))]
         public IHttpActionResult Upsert(PushNotification notify)
         {
-            notify.New = true;
-            notify.Created = DateTime.UtcNow;
-            notify.Creator = User.Identity.Name;
-            _pushNotifier.Upsert(notify);
+			if (notify != null)
+			{
+				notify.New = true;
+				notify.Created = DateTime.UtcNow;
+				notify.Creator = User.Identity.Name;
+				_pushNotifier.Upsert(notify);
+			}
             return Ok(notify);
         }
     }

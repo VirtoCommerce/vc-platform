@@ -39,7 +39,8 @@ VirtoCommerce.redirect = function(url, params) {
 };
 
 VirtoCommerce.url = function (url) {
-    var baseUrl = window.location.protocol + "//" + location.host;
+    //var baseUrl = window.location.protocol + "//" + location.host;
+    var baseUrl = $("base").attr("href");
     return baseUrl + url;
 };
 
@@ -62,20 +63,19 @@ VirtoCommerce.renderDynamicContent = function () {
             if (jsonResponse) {
                 for (var i = 0; i < jsonResponse.length; i++) {
                     var placeholder = jsonResponse[i];
-                    var placeholderElement = $("div[data-vccontentid='" + placeholder.name + "']");
+                    var placeholderElement = $("[data-vccontentid='" + placeholder.name + "']");
                     if (placeholderElement.length) {
                         placeholderElement.empty();
-                        if (placeholder.name == "HomePageSlider") {
-                            placeholderElement.html("<div class=\"flexslider\"><ul class=\"slides\"></ul></div>");
-                        }
                         for (var j = 0; j < placeholder.banners.length; j++) {
                             var banner = placeholder.banners[j];
-                            if (banner.content_type.toLowerCase() == "html") {
-                                if (placeholder.name == "HomePageSlider") {
-                                    placeholderElement.find(".slides").append("<li>" + banner.properties.html + "</li>");
-                                } else {
-                                    placeholderElement.append(banner.properties.html);
+                            if (banner.content_type.toLowerCase() == "slider") {
+                                placeholderElement.append("<div class=\"flexslider\"><ul class=\"slides\"></ul></div>");
+                                for (var k = 0; k < banner.properties.image_links.length; k++) {
+                                    var image = banner.properties.image_links[k].value;
+                                    placeholderElement.find(".slides").append("<li><img src=\"" + image + "\" /></li>");
                                 }
+                            } else {
+                                // Another dynamic content type
                             }
                         }
                     }

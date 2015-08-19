@@ -4,6 +4,7 @@ using AvaTax.TaxModule.Web.Converters;
 using AvaTax.TaxModule.Web.Logging;
 using AvaTax.TaxModule.Web.Services;
 using AvaTaxCalcREST;
+using Common.Logging;
 using VirtoCommerce.Domain.Order.Events;
 using VirtoCommerce.Platform.Core.Common;
 using domainModel = VirtoCommerce.Domain.Commerce.Model;
@@ -13,10 +14,12 @@ namespace AvaTax.TaxModule.Web.Observers
     public class CancelOrderTaxesObserver : IObserver<OrderChangeEvent>
 	{
         private readonly ITaxSettings _taxSettings;
+        private readonly AvalaraLogger _logger;
 
-        public CancelOrderTaxesObserver(ITaxSettings taxSettings)
+        public CancelOrderTaxesObserver(ITaxSettings taxSettings, ILog log)
         {
             _taxSettings = taxSettings;
+            _logger = new AvalaraLogger(log);
         }
 
 		#region IObserver<CustomerOrder> Members
@@ -43,7 +46,7 @@ namespace AvaTax.TaxModule.Web.Observers
 		        return;
 		    }
 
-            SlabInvoker<VirtoCommerceEventSource.TaxRequestContext>.Execute(slab =>
+            LogInvoker<AvalaraLogger.TaxRequestContext>.Execute(log =>
                 {
 		            if (_taxSettings.IsEnabled && !string.IsNullOrEmpty(_taxSettings.Username) && !string.IsNullOrEmpty(_taxSettings.Password)
 		                && !string.IsNullOrEmpty(_taxSettings.ServiceUrl)
@@ -53,8 +56,8 @@ namespace AvaTax.TaxModule.Web.Observers
 		                var request = order.ToAvaTaxCancelRequest(_taxSettings.CompanyCode, CancelCode.DocDeleted);
 		                if (request != null)
 		                {
-                            slab.docCode = request.DocCode;
-                            slab.docType = request.DocType.ToString();
+                            log.docCode = request.DocCode;
+                            log.docType = request.DocType.ToString();
 
                             var taxSvc = new JsonTaxSvc(_taxSettings.Username, _taxSettings.Password, _taxSettings.ServiceUrl);
 		                    var getTaxResult = taxSvc.CancelTax(request);
@@ -71,8 +74,8 @@ namespace AvaTax.TaxModule.Web.Observers
 		                throw new Exception("AvaTax credentials not provided or tax calculation disabled");
 		            }
                 })
-                .OnError(VirtoCommerceEventSource.Log, VirtoCommerceEventSource.EventCodes.TaxCalculationError)
-                .OnSuccess(VirtoCommerceEventSource.Log, VirtoCommerceEventSource.EventCodes.GetTaxRequestTime);
+                .OnError(_logger, AvalaraLogger.EventCodes.TaxCalculationError)
+                .OnSuccess(_logger, AvalaraLogger.EventCodes.GetTaxRequestTime);
 		}
 	}
 }

@@ -403,6 +403,8 @@
     <Content Include="Scripts\app\packaging\blades\module-detail.tpl.html" />
     <Content Include="Scripts\app\packaging\blades\modules-list.js" />
     <Content Include="Scripts\app\packaging\blades\modules-list.tpl.html" />
+    <Content Include="Scripts\app\packaging\notifications\history.tpl.html" />
+    <Content Include="Scripts\app\packaging\notifications\menu.tpl.html" />
     <Content Include="Scripts\app\settings\blades\entitySetting-list.js" />
     <Content Include="Scripts\app\settings\blades\entitySetting-list.tpl.html" />
     <Content Include="Scripts\app\settings\widgets\entitySettingsWidget.js" />
@@ -680,6 +682,7 @@
     <Content Include="fonts\ui-grid.eot" />
     <Content Include="Content\ui-grid.ttf" />
     <Content Include="Content\ui-grid.woff" />
+    <Content Include="App_Data\SampleData\sampleData.zip" />
     <None Include="Scripts\jquery-1.11.1.intellisense.js" />
     <Content Include="Scripts\codemirror\htmlmixed.js" />
     <Content Include="Scripts\i18n\angular-locale_aa-dj.js" />

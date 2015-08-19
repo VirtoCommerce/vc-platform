@@ -6,7 +6,6 @@
         install: { url: 'api/platform/modules/install' },
         update: { url: 'api/platform/modules/:id/update' },
         uninstall: { url: 'api/platform/modules/:id/uninstall' },
-        restart: { url: 'api/platform/modules/restart' },
-        getInstallationStatus: { url: 'api/platform/modules/jobs/:id' }
+        restart: { url: 'api/platform/modules/restart' }
     });
 }]);

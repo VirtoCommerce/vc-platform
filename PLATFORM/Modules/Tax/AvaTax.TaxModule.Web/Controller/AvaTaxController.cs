@@ -7,6 +7,7 @@ using AvaTax.TaxModule.Web.Converters;
 using AvaTax.TaxModule.Web.Logging;
 using AvaTax.TaxModule.Web.Services;
 using AvaTaxCalcREST;
+using Common.Logging;
 using CartAddressType = VirtoCommerce.Domain.Cart.Model.AddressType;
 using domainModel = VirtoCommerce.Domain.Commerce.Model;
 
@@ -17,10 +18,12 @@ namespace AvaTax.TaxModule.Web.Controller
     public class AvaTaxController : ApiController
     {
         private readonly ITaxSettings _taxSettings;
+        private readonly AvalaraLogger _logger;
 
-        public AvaTaxController(ITaxSettings taxSettings)
+        public AvaTaxController(ITaxSettings taxSettings, ILog log)
         {
             _taxSettings = taxSettings;
+            _logger = new AvalaraLogger(log);
         }
 
         [HttpGet]
@@ -29,7 +32,7 @@ namespace AvaTax.TaxModule.Web.Controller
         public IHttpActionResult TestConnection()
         {
             IHttpActionResult retVal = BadRequest();
-            SlabInvoker<VirtoCommerceEventSource.TaxRequestContext>.Execute(slab =>
+            LogInvoker<AvalaraLogger.TaxRequestContext>.Execute(log =>
             {
                 if (!string.IsNullOrEmpty(_taxSettings.Username) && !string.IsNullOrEmpty(_taxSettings.Password)
                     && !string.IsNullOrEmpty(_taxSettings.ServiceUrl)
@@ -60,8 +63,8 @@ namespace AvaTax.TaxModule.Web.Controller
                     throw new Exception((retVal as BadRequestErrorMessageResult).Message);
                 }
             })
-                .OnError(VirtoCommerceEventSource.Log, VirtoCommerceEventSource.EventCodes.TaxPingError)
-                .OnSuccess(VirtoCommerceEventSource.Log, VirtoCommerceEventSource.EventCodes.Ping);
+                .OnError(_logger, AvalaraLogger.EventCodes.TaxPingError)
+                .OnSuccess(_logger, AvalaraLogger.EventCodes.Ping);
 
             return retVal;
         }
@@ -72,7 +75,7 @@ namespace AvaTax.TaxModule.Web.Controller
         public IHttpActionResult ValidateAddress(VirtoCommerce.Domain.Customer.Model.Address address)
         {
             IHttpActionResult retVal = BadRequest();
-            SlabInvoker<VirtoCommerceEventSource.TaxRequestContext>.Execute(slab =>
+            LogInvoker<AvalaraLogger.TaxRequestContext>.Execute(log =>
             {
                 if (!_taxSettings.IsValidateAddress)
                 {
@@ -107,8 +110,8 @@ namespace AvaTax.TaxModule.Web.Controller
                     throw new Exception((retVal as BadRequestErrorMessageResult).Message);
                 }
             })
-                .OnError(VirtoCommerceEventSource.Log, VirtoCommerceEventSource.EventCodes.AddressValidationError)
-                .OnSuccess(VirtoCommerceEventSource.Log, VirtoCommerceEventSource.EventCodes.ValidateAddress);
+                .OnError(_logger, AvalaraLogger.EventCodes.AddressValidationError)
+                .OnSuccess(_logger, AvalaraLogger.EventCodes.ValidateAddress);
 
             return retVal;
         }

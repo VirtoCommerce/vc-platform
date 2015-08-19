@@ -28,7 +28,7 @@ namespace VirtoCommerce.MarketingModule.Data.Promotions
 			}
 
 			//Check coupon
-			var couponValid = Coupons != null  ? Coupons.Any(x=> String.Equals(x, promoContext.Coupon, StringComparison.InvariantCultureIgnoreCase)) : true;
+			var couponValid = (Coupons != null && Coupons.Any()) ? Coupons.Any(x=> String.Equals(x, promoContext.Coupon, StringComparison.InvariantCultureIgnoreCase)) : true;
 
 			//deserealize dynamic condition
 			var condition = SerializationUtil.DeserializeExpression<Func<IEvaluationContext, bool>>(PredicateSerialized);

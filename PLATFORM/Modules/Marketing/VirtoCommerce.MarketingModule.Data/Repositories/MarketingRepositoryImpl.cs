@@ -63,14 +63,14 @@ namespace VirtoCommerce.MarketingModule.Data.Repositories
 					.Property(x => x.Id);
 			modelBuilder.Entity<PublishingGroupContentItem>().HasRequired(p => p.ContentItem)
 					.WithMany().HasForeignKey(x=>x.DynamicContentItemId)
-					.WillCascadeOnDelete(false);
+					.WillCascadeOnDelete(true);
 	
 			modelBuilder.Entity<PublishingGroupContentPlace>().ToTable("PublishingGroupContentPlace");
 			modelBuilder.Entity<PublishingGroupContentPlace>().HasKey(x => x.Id)
 					.Property(x => x.Id);
 			modelBuilder.Entity<PublishingGroupContentPlace>().HasRequired(p => p.ContentPlace).WithMany()
 				.HasForeignKey(x=>x.DynamicContentPlaceId)
-				.WillCascadeOnDelete(false);
+				.WillCascadeOnDelete(true);
 
 			modelBuilder.Entity<DynamicContentFolder>().ToTable("DynamicContentFolder");
 			modelBuilder.Entity<DynamicContentFolder>().HasKey(x => x.Id)
