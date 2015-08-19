@@ -134,6 +134,15 @@ namespace VirtoCommerce.Web.Models
         [DataMember]
         public string WeightInUnit { get; set; }
 
+        [DataMember]
+        public decimal Savings
+        {
+            get
+            {
+                return CompareAtPrice - NumericPrice;
+            }
+        }
+
         #region Public Methods and Operators
         public override object BeforeMethod(string method)
         {
