@@ -9,5 +9,6 @@
         Decimal,
         DateTime,
         Boolean,
+        Html,
     }
 }

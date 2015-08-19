@@ -12,6 +12,7 @@ namespace VirtoCommerce.Platform.Data.Model
         public const string TypeDecimal = "Decimal";
         public const string TypeBoolean = "Boolean";
         public const string TypeDateTime = "DateTime";
+        public const string TypeHtml = "Html";
 
         [StringLength(256)]
         public string ObjectType { get; set; }
@@ -57,6 +58,7 @@ namespace VirtoCommerce.Platform.Data.Model
                 case TypeInteger:
                     return IntegerValue;
                 case TypeLongText:
+                case TypeHtml:
                     return LongTextValue;
                 case TypeShortText:
                     return ShortTextValue;
@@ -81,6 +83,7 @@ namespace VirtoCommerce.Platform.Data.Model
                 case TypeInteger:
                     return IntegerValue == null ? null : IntegerValue.Value.ToString(formatProvider);
                 case TypeLongText:
+                case TypeHtml:
                     return LongTextValue;
                 case TypeShortText:
                     return ShortTextValue;
