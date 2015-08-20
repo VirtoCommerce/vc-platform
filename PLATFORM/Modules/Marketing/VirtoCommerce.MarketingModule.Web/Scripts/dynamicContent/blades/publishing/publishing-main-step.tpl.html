@@ -29,7 +29,7 @@
                                 <div class="form-group">
                                     <label class="form-label">Store</label>
                                     <div class="form-input">
-                                        <ui-select ng-model="blade.entity.store" required>
+                                        <ui-select ng-model="blade.entity.storeId" required>
                                             <ui-select-match placeholder="Select...">{{$select.selected.name}}</ui-select-match>
                                             <ui-select-choices repeat="store.id as store in stores | filter: { name: $select.search }">
                                                 <span ng-bind-html="store.name | highlight: $select.search"></span>
