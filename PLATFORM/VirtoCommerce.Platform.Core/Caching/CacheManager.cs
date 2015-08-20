@@ -129,6 +129,14 @@ namespace VirtoCommerce.Platform.Core.Caching
             return retVal;
         }
 
+		public void Clear()
+		{
+			foreach(var provider in _cacheProviders.Values)
+			{
+				provider.Clear();
+			}
+		}
+
         public bool Remove(CacheKey cacheKey)
         {
             if (cacheKey == null)

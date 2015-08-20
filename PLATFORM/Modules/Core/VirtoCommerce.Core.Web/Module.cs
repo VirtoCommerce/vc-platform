@@ -29,25 +29,13 @@ namespace VirtoCommerce.CoreModule.Web
 
         #region IModule Members
 
-        public override void SetupDatabase(SampleDataLevel sampleDataLevel)
+        public override void SetupDatabase()
         {
-            using (var db = new CommerceRepositoryImpl("VirtoCommerce"))
-            {
-                IDatabaseInitializer<CommerceRepositoryImpl> initializer;
-
-                switch (sampleDataLevel)
-                {
-                    case SampleDataLevel.Full:
-                    case SampleDataLevel.Reduced:
-                        initializer = new SqlCommerceSampleDatabaseInitializer();
-                        break;
-                    default:
-                        initializer = new SetupDatabaseInitializer<CommerceRepositoryImpl, VirtoCommerce.CoreModule.Data.Migrations.Configuration>();
-                        break;
-                }
-
-                initializer.InitializeDatabase(db);
-            }
+			using (var db = new CommerceRepositoryImpl("VirtoCommerce"))
+			{
+				var initializer = new SetupDatabaseInitializer<CommerceRepositoryImpl, VirtoCommerce.CoreModule.Data.Migrations.Configuration>();
+				initializer.InitializeDatabase(db);
+			}
         }
 
         public override void Initialize()

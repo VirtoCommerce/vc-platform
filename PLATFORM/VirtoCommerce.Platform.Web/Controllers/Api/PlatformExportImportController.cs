@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Description;
 using Hangfire;
@@ -16,6 +17,7 @@ using VirtoCommerce.Platform.Core.Settings;
 using System.Configuration;
 using System.Web.Hosting;
 using System.Net;
+using System.Collections.Generic;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
@@ -40,21 +42,69 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 		}
 
 		[HttpGet]
+		[ResponseType(typeof(SampleDataInfo[]))]
+		[Route("sampledata/discover")]
+		public IHttpActionResult DiscoverSampleData()
+		{
+			var retVal = new List<SampleDataInfo>();
+			if (!_settingsManager.GetValue("VirtoCommerce:SampleDataInstalled", false))
+			{
+				var sampleDataUrl = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:SampleDataUrl", string.Empty);
+				if(!String.IsNullOrEmpty(sampleDataUrl))
+				{
+					//Discovery mode
+					if (!sampleDataUrl.EndsWith(".zip"))
+					{
+						var manifestUrl = sampleDataUrl + "\\manifest.json";
+						using(var client = new WebClient())
+						using (var stream = client.OpenRead(new Uri(manifestUrl)))
+						{
+							//Add empty template
+							retVal.Add(new SampleDataInfo { Name = "Empty" } );
+							var sampleDataInfos = stream.DeserializeJson<List<SampleDataInfo>>();
+							//Need filter unsupported versions and take one most new sample data
+							sampleDataInfos = sampleDataInfos.Select(x=> new  { Version = SemanticVersion.Parse(x.PlatformVersion),  Name = x.Name, Data = x })
+															 .Where(x => x.Version.IsCompatibleWith(PlatformVersion.CurrentVersion))
+															 .GroupBy(x=> x.Name)
+															 .Select(x=> x.OrderBy(y=>y.Version).First().Data)
+															 .ToList();
+							//Convert relative  sample data urls to absolute
+							foreach (var sampleDataInfo in sampleDataInfos)
+							{
+								if (!Uri.IsWellFormedUriString(sampleDataInfo.Url, UriKind.Absolute))
+								{
+									var uri = new Uri(sampleDataUrl);
+									sampleDataInfo.Url = new Uri(uri, uri.AbsolutePath + "/" + sampleDataInfo.Url).ToString();
+								}
+							}
+							retVal.AddRange(sampleDataInfos);
+						
+						}
+					}
+					else
+					{
+						//Direct file mode
+						retVal.Add(new SampleDataInfo { Url = sampleDataUrl });
+					}
+				}
+			}
+			return Ok(retVal);
+		}
+
+		[HttpPost]
 		[ResponseType(typeof(SampleDataImportPushNotification))]
 		[Route("sampledata/import")]
-		public IHttpActionResult TryToImportSampleData()
+		public IHttpActionResult TryToImportSampleData([FromUri]string url = null)
 		{
 			lock (_lockObject)
 			{
 				//Sample data initialization
-				var sampleDataPath = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:SampleDataPath", string.Empty);
-				if (!String.IsNullOrEmpty(sampleDataPath) && !_settingsManager.GetValue("VirtoCommerce:SampleDataInstalled", false))
+				if (Uri.IsWellFormedUriString(url, UriKind.Absolute) && !_settingsManager.GetValue("VirtoCommerce:SampleDataInstalled", false))
 				{
 					_settingsManager.SetValue("VirtoCommerce:SampleDataInstalled", true);
-
 					var pushNotification = new SampleDataImportPushNotification("System");
 					_pushNotifier.Upsert(pushNotification);
-					BackgroundJob.Enqueue(() => SampleDataImportBackground(HostingEnvironment.MapPath(sampleDataPath), pushNotification));
+					BackgroundJob.Enqueue(() => SampleDataImportBackground(new Uri(url),  HostingEnvironment.MapPath("~/App_Data/Uploads/"), pushNotification));
 
 					return Ok(pushNotification);
 				}
@@ -119,7 +169,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 			 return Ok(notification);
 		 }
 
-		 public void SampleDataImportBackground(string filePath, SampleDataImportPushNotification pushNotification)
+		 public void SampleDataImportBackground(Uri url, string tmpPath, SampleDataImportPushNotification pushNotification)
 		 {
 			 Action<ExportImportProgressInfo> progressCallback = (x) =>
 			 {
@@ -128,7 +178,20 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 			 };
 			 try
 			 {
-				 using (var stream = File.Open(filePath, FileMode.Open))
+				 pushNotification.Description = "Start downloading from " + url.ToString();
+				 _pushNotifier.Upsert(pushNotification);
+				 var fileName = System.IO.Path.GetFileName(url.ToString());
+				 var tmpFilePath = Path.Combine(tmpPath, System.IO.Path.GetFileName(url.ToString()));
+				 using (var client = new WebClient())
+				 {
+					 client.DownloadProgressChanged += (sender, args) => {
+						 pushNotification.Description = String.Format("Sample data {0} of {1} downloading...", args.BytesReceived.ToHumanReadableSize(), args.TotalBytesToReceive.ToHumanReadableSize());
+						 _pushNotifier.Upsert(pushNotification);
+					 };
+					 var task = client.DownloadFileTaskAsync(url, tmpFilePath);
+					 task.Wait();
+				 }
+				 using (var stream = File.Open(tmpFilePath, FileMode.Open))
 				 {
 					 var manifest = _platformExportManager.ReadExportManifest(stream);
 					 if (manifest != null)

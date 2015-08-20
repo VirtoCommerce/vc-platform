@@ -18,6 +18,24 @@
         });
 
 	$stateProvider
+        .state('sampleDataChoose', {
+        	url: '/sampleDataChoose',
+        	params: { sampleDataInfos: null },
+        	templateUrl: 'Scripts/app/exportImport/templates/sampleDataChoose.tpl.html',
+        	controller: ['$scope', '$state', '$stateParams', 'platformWebApp.exportImport.resource', function ($scope, $state, $stateParams, exportImportResource) {
+        		$scope.sampleDataInfos = $stateParams.sampleDataInfos;
+        		$scope.loading = false;
+        		$scope.selectItem = function (sampleData) {
+        			$scope.loading = true;
+        			exportImportResource.importSampleData({ url: sampleData.url }, function () {
+        				$state.go(sampleData.url ? 'sampleDataInitialization' : 'workspace');
+        			});
+        		};
+        	}
+        	]
+        });
+
+	$stateProvider
         .state('sampleDataInitialization', {
         	url: '/sampleDataInitialization',
         	templateUrl: 'Scripts/app/exportImport/templates/sampleDataInitialization.tpl.html',
@@ -32,6 +50,7 @@
         				}
         			}
         		});
+        	
         	}
         	]
         });
@@ -86,7 +105,18 @@
   	//Try to import sample data
   	$rootScope.$on('loginStatusChanged', function (event, authContext) {
   		if (authContext.isAuthenticated) {
-  			exportImportResourse.importSampleData({});
+  			exportImportResourse.sampleDataDiscover({}, function (sampleDataInfos) {
+  				if (angular.isArray(sampleDataInfos) && sampleDataInfos.length > 0)
+  				{
+  					if (sampleDataInfos.length > 1) {
+  						$state.go('sampleDataChoose', { sampleDataInfos: sampleDataInfos });
+  					}
+  					else
+  					{
+  						exportImportResourse.importSampleData({ url: sampleDataInfos[0].url });
+  					}
+  				}
+  			});
   		}
   	});
   

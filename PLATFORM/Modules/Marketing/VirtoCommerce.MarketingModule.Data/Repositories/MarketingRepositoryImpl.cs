@@ -24,7 +24,7 @@ namespace VirtoCommerce.MarketingModule.Data.Repositories
 			: base(nameOrConnectionString, null, interceptors)
 		{
 			Configuration.LazyLoadingEnabled = false;
-			Database.SetInitializer<MarketingRepositoryImpl>(null);
+		
 		}
 
 		protected override void OnModelCreating(DbModelBuilder modelBuilder)

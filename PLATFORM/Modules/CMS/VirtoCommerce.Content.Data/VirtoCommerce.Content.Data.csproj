@@ -84,9 +84,6 @@
     <Compile Include="Repositories\GitHubContentRepositoryImpl.cs" />
     <Compile Include="Repositories\IContentRepository.cs" />
     <Compile Include="Repositories\IMenuRepository.cs" />
-    <Compile Include="Repositories\SqlContentDatabaseInitializer.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Services\IMenuService.cs" />
     <Compile Include="Services\IPagesService.cs" />
     <Compile Include="Services\IThemeService.cs" />

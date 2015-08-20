@@ -71,7 +71,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\CommerceRepositoryImpl.cs" />
     <Compile Include="Repositories\IСommerceRepository.cs" />
-    <Compile Include="Repositories\SqlCommerceSampleDatabaseInitializer.cs" />
     <Compile Include="Services\CommerceServiceImpl.cs" />
     <Compile Include="Shipping\FixedRateShipmentMethod.cs" />
   </ItemGroup>
@@ -103,7 +102,6 @@
     <EmbeddedResource Include="Migrations\201506221214574_SeoRenaming.resx">
       <DependentUpon>201506221214574_SeoRenaming.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Repositories\Sql\SeoUrlKeyword.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

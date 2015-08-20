@@ -23,7 +23,6 @@ namespace VirtoCommerce.OrderModule.Web
 {
     public class Module : ModuleBase, ISupportExportImportModule
     {
-        private const string _connectionStringName = "VirtoCommerce";
         private readonly IUnityContainer _container;
 
         public Module(IUnityContainer container)
@@ -33,24 +32,12 @@ namespace VirtoCommerce.OrderModule.Web
 
         #region IModule Members
 
-        public override void SetupDatabase(SampleDataLevel sampleDataLevel)
+        public override void SetupDatabase()
         {
-            using (var context = new OrderRepositoryImpl(_connectionStringName))
+            using (var context = new OrderRepositoryImpl())
             {
-                IDatabaseInitializer<OrderRepositoryImpl> initializer;
-
-                switch (sampleDataLevel)
-                {
-                    case SampleDataLevel.Full:
-                    case SampleDataLevel.Reduced:
-                        initializer = new OrderSampleDatabaseInitializer();
-                        break;
-                    default:
-                        initializer = new SetupDatabaseInitializer<OrderRepositoryImpl, Data.Migrations.Configuration>();
-                        break;
-                }
-
-                initializer.InitializeDatabase(context);
+				var initializer = new SetupDatabaseInitializer<OrderRepositoryImpl, Data.Migrations.Configuration>();
+				initializer.InitializeDatabase(context);
             }
         }
 

@@ -23,7 +23,7 @@ namespace VirtoCommerce.InventoryModule.Data.Repositories
 		public InventoryRepositoryImpl(string nameOrConnectionString, params IInterceptor[] interceptors)
 			: base(nameOrConnectionString, null, interceptors)
 		{
-
+			Configuration.LazyLoadingEnabled = false;
 		}
 
 

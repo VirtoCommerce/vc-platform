@@ -202,7 +202,6 @@
     <Compile Include="Modularity\ModuleState.cs" />
     <Compile Include="Modularity\Exceptions\ModuleTypeLoaderNotFoundException.cs" />
     <Compile Include="Modularity\Exceptions\ModuleTypeLoadingException.cs" />
-    <Compile Include="Modularity\SampleDataLevel.cs" />
     <Compile Include="Notifications\EmailNotification.cs" />
     <Compile Include="Notifications\IEmailNotificationSendingGateway.cs" />
     <Compile Include="Notifications\INotificationManager.cs" />
