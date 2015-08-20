@@ -59,41 +59,17 @@ VirtoCommerce.renderDynamicContent = function () {
             }
         }
 
-        $.get(url, function (jsonResponse) {
-            if (jsonResponse) {
-                for (var i = 0; i < jsonResponse.length; i++) {
-                    var placeholder = jsonResponse[i];
-                    var placeholderElement = $("[data-vccontentid='" + placeholder.name + "']");
-                    if (placeholderElement.length) {
-                        placeholderElement.empty();
-                        for (var j = 0; j < placeholder.banners.length; j++) {
-                            var banner = placeholder.banners[j];
-                            if (banner.content_type.toLowerCase() == "slider") {
-                                placeholderElement.append("<div class=\"flexslider\"><ul class=\"slides\"></ul></div>");
-                                for (var k = 0; k < banner.properties.image_links.length; k++) {
-                                    var image = banner.properties.image_links[k].value;
-                                    placeholderElement.find(".slides").append("<li><img src=\"" + image + "\" /></li>");
-                                }
-                            } else {
-                                // Another dynamic content type
-                            }
-                        }
-                    }
+        $.get(url, function(htmlResponse) {
+            if (htmlResponse) {
+                var htmlData = $("<div />").html(htmlResponse);
+                for (var i = 0; i < placeholderIds.length; i++) {
+                    var htmlPlaceContent = htmlData.find("#" + placeholderIds[i]).html();
+                    $("[data-vccontentid='" + placeholderIds[i] + "']").html(htmlPlaceContent);
                 }
+
+                $(".flexslider").flexslider();
             }
-
-            $(".flexslider").flexslider();
         });
-
-        //$.get(url, function(htmlResponse) {
-            //if (htmlResponse) {
-                //var htmlData = $("<div />").html(htmlResponse);
-                //for (var i = 0; i < placeholderIds.length; i++) {
-                //    var htmlPlaceContent = htmlResponse.find("#" + placeholderIds[i]).html();
-                //    $("[data-vccontentid='" + placeholderIds[i] + "']").html(htmlPlaceContent);
-                //}
-            //}
-        //});
     }
 };
 
