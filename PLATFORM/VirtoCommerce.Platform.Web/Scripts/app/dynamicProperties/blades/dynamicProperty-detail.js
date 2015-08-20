@@ -31,7 +31,7 @@
     };
 
     $scope.multilingualFlagValidator = function (value) {
-        return !value || blade.currentEntity.valueType === 'ShortText' || blade.currentEntity.valueType === 'LongText';
+        return !value || blade.currentEntity.valueType === 'ShortText' || blade.currentEntity.valueType === 'LongText' || blade.currentEntity.valueType === 'Html';
     };
 
     $scope.openChild = function (childType) {

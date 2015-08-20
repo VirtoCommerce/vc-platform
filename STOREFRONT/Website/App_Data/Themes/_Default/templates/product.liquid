@@ -185,7 +185,7 @@
         {% comment %}
         priceSaving += ' (' + ( (variant.compare_at_price - variant.price)*100/(variant.compare_at_price) ).toFixed(0) + '%)';
         {% endcomment %}
-        $comparePrice.html({{ 'products.general.save_html' | t: saved_amount: '[$]' | json }}.replace('[$]', "{{ variant.savings | money }}")).show();
+        $comparePrice.html({{ 'products.general.save_html' | t: saved_amount: '[$]' | json }}.replace('[$]', priceSaving)).show();
       } else {
         $comparePrice.hide();
       }
