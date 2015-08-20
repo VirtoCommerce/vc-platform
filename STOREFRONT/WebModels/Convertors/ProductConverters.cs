@@ -73,9 +73,14 @@ namespace VirtoCommerce.Web.Convertors
             productModel.Url = string.Format(pathTemplate, product.Code);
             productModel.Vendor = fieldsCollection.ContainsKey("brand") ? fieldsCollection["brand"] as string : null;
             productModel.TaxType = product.TaxType;
+
+            if (collection != null)
+            {
+                productModel.Collections = new Collections(new[] { collection });
+            }
+
             // form url
             // "/products/code" or "/en-us/store/collection/outline" 
-
             // specify SEO based url
             var urlHelper = GetUrlHelper();
             var url = String.Empty;

@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using Newtonsoft.Json.Linq;
-using VirtoCommerce.Platform.Core.DynamicProperties;
-using VirtoCommerce.Platform.Data.Model;
 using Omu.ValueInjecter;
+using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Data.Common.ConventionInjections;
+using VirtoCommerce.Platform.Data.Model;
 namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
 {
     public static class DynamicPropertyObjectValueConverter
@@ -15,7 +14,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
         {
 			var retVal = new DynamicPropertyObjectValue();
 			retVal.Locale = entity.Locale;
-			if(entity.DictionaryItem != null)
+            if (entity.DictionaryItem != null)
 			{
 				retVal.Value = entity.DictionaryItem.ToModel();
 			}
@@ -73,6 +72,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
 						result.IntegerValue = Convert.ToInt32(propertyValue.Value, CultureInfo.InvariantCulture);
                         break;
                     case DynamicPropertyValueType.LongText:
+                    case DynamicPropertyValueType.Html:
 						result.LongTextValue = (string)propertyValue.Value;
                         break;
                     default:

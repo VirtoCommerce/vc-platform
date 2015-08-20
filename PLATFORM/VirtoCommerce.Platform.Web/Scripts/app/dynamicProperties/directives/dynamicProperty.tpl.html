@@ -16,6 +16,12 @@
                       placeholder="Enter long text"></textarea>
         </div>
     </script>
+    <script type="text/ng-template" id="dHtml.html">
+        <div ng-required="currentEntity.property.isRequired"
+             ng-model="context.currentPropValues[0].value"
+             placeholder="Enter HTML"
+             class="editable" text-angular text-angular-name="dHtmlmyEditor"></div>
+    </script>
 
     <script type="text/ng-template" id="dInteger.html">
         <div class="form-input __number">
@@ -123,9 +129,18 @@
             <div class="form-input __langs">
                 <span class="flag flag-{{propValue.locale.substr(3).toLowerCase()}}"></span>
                 <textarea ng-required="currentEntity.property.isRequired"
-                          ng-model="propValue.values[0].value"
+                          ng-model="propValue.value"
                           placeholder="Enter value" />
             </div>
+        </div>
+    </script>
+    <script type="text/ng-template" id="dHtml-multilang.html">
+        <div ng-class="{'form-group': !$first}" ng-repeat="propValue in context.currentPropValues">
+            <span class="flag flag-{{propValue.locale.substr(3).toLowerCase()}}"></span>
+            <div ng-required="currentEntity.property.isRequired"
+                 ng-model="propValue.value"
+                 placeholder="Enter HTML"
+                 class="editable" text-angular text-angular-name="dHMmyEditor"></div>
         </div>
     </script>
 

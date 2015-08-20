@@ -28,6 +28,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 		private readonly IBlobStorageProvider _blobStorageProvider;
 		private readonly IBlobUrlResolver _blobUrlResolver;
 		private readonly ISettingsManager _settingsManager;
+		private static object _lockObject = new object();
 
 		public PlatformExportImportController(IPlatformExportImportManager platformExportManager, IPushNotificationManager pushNotifier, IBlobStorageProvider blobStorageProvider, IBlobUrlResolver blobUrlResolver, ISettingsManager settingManager)
 		{
@@ -43,17 +44,20 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 		[Route("sampledata/import")]
 		public IHttpActionResult TryToImportSampleData()
 		{
-			//Sample data initialization
-			var sampleDataPath = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:SampleDataPath", string.Empty);
-			if (!String.IsNullOrEmpty(sampleDataPath) && !_settingsManager.GetValue("VirtoCommerce:SampleDataInstalled", false))
+			lock (_lockObject)
 			{
-				_settingsManager.SetValue("VirtoCommerce:SampleDataInstalled", true);
+				//Sample data initialization
+				var sampleDataPath = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:SampleDataPath", string.Empty);
+				if (!String.IsNullOrEmpty(sampleDataPath) && !_settingsManager.GetValue("VirtoCommerce:SampleDataInstalled", false))
+				{
+					_settingsManager.SetValue("VirtoCommerce:SampleDataInstalled", true);
 
-				var pushNotification = new SampleDataImportPushNotification("System");
-				_pushNotifier.Upsert(pushNotification);
-				BackgroundJob.Enqueue(() => SampleDataImportBackground(HostingEnvironment.MapPath(sampleDataPath), pushNotification));
+					var pushNotification = new SampleDataImportPushNotification("System");
+					_pushNotifier.Upsert(pushNotification);
+					BackgroundJob.Enqueue(() => SampleDataImportBackground(HostingEnvironment.MapPath(sampleDataPath), pushNotification));
 
-				return Ok(pushNotification);
+					return Ok(pushNotification);
+				}
 			}
 			return StatusCode(HttpStatusCode.NoContent);
 		}
