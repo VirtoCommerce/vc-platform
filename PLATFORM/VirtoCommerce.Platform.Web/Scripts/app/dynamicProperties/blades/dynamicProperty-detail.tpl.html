@@ -32,7 +32,7 @@
                             <span class="name">Multilingual</span>
                         </label>
                     </div>
-                    <div class="error" ng-if="formScope.multilingualFlag.$invalid">Only text values can be multilingual.</div>
+                    <div class="error" ng-if="formScope.multilingualFlag.$invalid">Only text or HTML value can be multilingual.</div>
                     <div class="form-control __checkbox" ng-class="{'__disabled': !blade.isNew}">
                         <label class="form-label">
                             <input type="checkbox" ng-model="blade.currentEntity.isDictionary" ui-validate=" '!$value || blade.currentEntity.valueType === \'ShortText\'' " ui-validate-watch=" 'blade.currentEntity.valueType' " name="dictFlag">
@@ -54,7 +54,7 @@
             <ul class="list __items">
                 <li class="list-item" ng-class="{'__selected': currentChild === 'valType', '__disabled': !blade.isNew}" ng-click='openChild("valType")'>
                     <span class="list-t">Value Type</span>
-                    <span class="list-descr">{{blade.currentEntity.valueType}}</span>
+                    <span class="list-descr">{{blade.currentEntity.valueType | dynamicPropertyValueTypeToText}}</span>
                 </li>
                 <li class="list-item" ng-class="{'__selected': currentChild === 'dict', '__disabled': !blade.currentEntity.isDictionary}" ng-click='openChild("dict")'>
                     <span class="list-t">Dictionary values</span>
