@@ -217,7 +217,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
 							var objectType = GetObjectTypeName(objectWithDynamicProperties);
 
 							var target = new { Properties = new ObservableCollection<DynamicPropertyEntity>(repository.GetObjectDynamicProperties(objectType, objectWithDynamicProperties.Id)) };
-							var source = new { Properties = new ObservableCollection<DynamicPropertyEntity>(objectWithDynamicProperties.DynamicProperties.Select(x => x.ToEntity())) };
+							var source = new { Properties = new ObservableCollection<DynamicPropertyEntity>(objectWithDynamicProperties.DynamicProperties.Select(x => x.ToEntity(owner.Id))) };
 						
 							changeTracker.Attach(target);
 

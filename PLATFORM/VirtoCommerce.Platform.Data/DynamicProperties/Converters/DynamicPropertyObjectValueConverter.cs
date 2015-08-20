@@ -26,7 +26,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
 			return retVal;
         }
     
-        public static DynamicPropertyObjectValueEntity ToEntity(this DynamicPropertyObjectValue propertyValue, DynamicObjectProperty property)
+        public static DynamicPropertyObjectValueEntity ToEntity(this DynamicPropertyObjectValue propertyValue, DynamicObjectProperty property, string objectId)
         {
             var result = new DynamicPropertyObjectValueEntity
             {
@@ -36,6 +36,9 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
             };
 
 			result.InjectFrom(propertyValue);
+
+			if(!string.IsNullOrEmpty(objectId))
+				result.ObjectId = objectId;
 
             if (property.IsDictionary)
             {

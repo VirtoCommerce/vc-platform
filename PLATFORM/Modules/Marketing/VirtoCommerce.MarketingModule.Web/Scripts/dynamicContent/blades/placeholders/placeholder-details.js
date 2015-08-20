@@ -59,7 +59,18 @@
 				{
 					name: "Delete", icon: 'fa fa-trash',
 					executeMethod: function () {
-						blade.delete();
+						var dialog = {
+							id: "confirmDeleteContentPlaceholder",
+							title: "Delete confirmation",
+							message: "Are you sure want to delete content placeholder?",
+							callback: function (remove) {
+								if (remove) {
+									blade.delete();
+								}
+							}
+						};
+
+						dialogService.showConfirmationDialog(dialog);
 					},
 					canExecuteMethod: function () {
 						return true;
@@ -73,27 +84,31 @@
 	}
 
 	blade.delete = function () {
+		blade.isLoading = true;
 		marketing_dynamicContents_res_contentPlaces.delete({ ids: [blade.entity.id] }, function () {
-			blade.parentBlade.updateChoosen();
+			blade.parentBlade.initialize();
 			bladeNavigationService.closeBlade(blade);
 		},
-        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); blade.isLoading = false; });
 	}
 
 	blade.saveChanges = function () {
+		blade.isLoading = true;
+
 		if (blade.isNew) {
 			marketing_dynamicContents_res_contentPlaces.save({}, blade.entity, function (data) {
-				blade.parentBlade.updateChoosen();
+				blade.parentBlade.initialize();
 				bladeNavigationService.closeBlade(blade);
 			},
-            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); blade.isLoading = false; });
 		}
 		else {
 			marketing_dynamicContents_res_contentPlaces.update({}, blade.entity, function (data) {
-				blade.parentBlade.updateChoosen();
+				blade.parentBlade.initialize();
 				blade.originalEntity = angular.copy(blade.entity);
+				blade.isLoading = false;
 			},
-            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); blade.isLoading = false; });
 		}
 	}
 

@@ -1,18 +1,21 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('virtoCommerce.marketingModule.itemsDynamicContentListController', ['$scope', 'virtoCommerce.marketingModule.dynamicContent.search', 'virtoCommerce.marketingModule.dynamicContent.folders', 'platformWebApp.bladeNavigationService', function ($scope, marketing_dynamicContents_res_search, marketing_dynamicContents_res_folders, bladeNavigationService) {
+.controller('virtoCommerce.marketingModule.itemsDynamicContentListController', ['$scope', 'virtoCommerce.marketingModule.dynamicContent.search', 'virtoCommerce.marketingModule.dynamicContent.folders', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function ($scope, marketing_dynamicContents_res_search, marketing_dynamicContents_res_folders, bladeNavigationService, dialogService) {
 	var blade = $scope.blade;
-	blade.choosenFolder = 'ContentItem';
-	blade.currentEntity = undefined;
+	blade.currentEntity = {};
 
 	$scope.selectedNodeId = null;
 
 	blade.initializeBlade = function () {
+		if (blade.choosenFolder === undefined) {
+			blade.choosenFolder = 'ContentItem';
+		}
 		marketing_dynamicContents_res_search.search({ folder: blade.choosenFolder, respGroup: '18' }, function (data) {
-			blade.currentEntities = data.contentFolders;
+			blade.currentEntity.childrenFolders = data.contentFolders;
+			blade.currentEntity.items = data.contentItems;
+			setBreadcrumbs();
+			blade.isLoading = false;
 		},
-        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
-
-		blade.isLoading = false;
+        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); blade.isLoading = false; });
 	};
 
 	blade.addNew = function () {
@@ -96,6 +99,7 @@
 	}
 
 	blade.folderClick = function (contentItemFolder) {
+	    blade.isLoading = true;
 		blade.closeChildrenBlades();
 
 		if (angular.isUndefined(blade.choosenFolder) || !angular.equals(blade.choosenFolder, contentItemFolder.id)) {
@@ -104,91 +108,77 @@
 			marketing_dynamicContents_res_search.search({ folder: contentItemFolder.id, respGroup: '18' }, function (data) {
 				contentItemFolder.childrenFolders = data.contentFolders;
 				contentItemFolder.items = data.contentItems;
-			},
-            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
-		}
-	}
-
-	blade.checkFolder = function (data) {
-		var retVal = angular.equals(data.id, blade.choosenFolder);
-		if (data.childrenFolders) {
-			var childFolders = data.childrenFolders;
-			var nextLevelChildFolders = [];
-			while (childFolders.length > 0 && !retVal) {
-				if (!angular.isUndefined(_.find(childFolders, function (folder) { return angular.equals(folder.id, blade.choosenFolder); }))) {
-					retVal = true;
-				}
-				else {
-					for (var i = 0; i < childFolders.length; i++) {
-						if (childFolders[i].childrenFolders) {
-							if (childFolders[i].childrenFolders.length > 0) {
-								nextLevelChildFolders = _.union(nextLevelChildFolders, childFolders[i].childrenFolders);
-							}
+				blade.isLoading = false;
+				blade.breadcrumbs.push(
+					{
+						id: contentItemFolder.id,
+						name: contentItemFolder.name,
+						blade: blade,
+						navigate: function (breadcrumb) {
+							bladeNavigationService.closeBlade(blade,
+								function () {
+									blade.disableOpenAnimation = true;
+									bladeNavigationService.showBlade(blade, blade.parentBlade);
+									blade.choosenFolder = breadcrumb.id;
+								});
 						}
-					}
-					childFolders = nextLevelChildFolders;
-					nextLevelChildFolders = [];
-				}
-			}
+					});
+			},
+            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); blade.isLoading = false; });
 		}
-
-		return retVal;
 	}
 
-	blade.updateChoosen = function () {
-		if (blade.choosenFolder === 'ContentItem') {
-			marketing_dynamicContents_res_search.search({ folder: blade.choosenFolder, respGroup: '18' }, function (data) {
-				blade.currentEntities = data.contentFolders;
-			},
-            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+	function setBreadcrumbs() {
+		if (blade.breadcrumbs === undefined) {
+			blade.breadcrumbs = [];
 		}
-		else {
-			marketing_dynamicContents_res_search.search({ folder: blade.choosenFolder, respGroup: '18' }, function (data) {
-				blade.currentEntity.childrenFolders = data.contentFolders;
-				blade.currentEntity.items = data.contentItems;
-			},
-            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
-		}
-	};
+		
+		var index = _.findLastIndex(blade.breadcrumbs, { id: blade.choosenFolder });
 
-	blade.clickDefault = function () {
-		blade.choosenFolder = 'ContentItem';
-		blade.currentEntity = undefined;
+		if(index !== -1)
+			blade.breadcrumbs = blade.breadcrumbs.slice(0, index + 1);
+
+		//catalog breadcrumb by default
+		var breadCrumb = {
+			id: 'ContentItem',
+			name: 'Items',
+			blade: blade
+		};
+
+		//prevent duplicate items
+		if (!_.some(blade.breadcrumbs, function (x) { return x.id == breadCrumb.id })) {
+			blade.breadcrumbs.push(breadCrumb);
+		}
+
+		breadCrumb.navigate = function (breadcrumb) {
+			bladeNavigationService.closeBlade(blade,
+				function () {
+					blade.disableOpenAnimation = true;
+					bladeNavigationService.showBlade(blade, blade.parentBlade);
+					blade.choosenFolder = breadcrumb.id;
+				});
+		};
 	}
 
 	blade.deleteFolder = function (data) {
-		marketing_dynamicContents_res_folders.delete({ ids: [data.id] }, function () {
-			if (data.id === blade.choosenFolder) {
-				blade.choosenFolder = data.parentFolderId;
-				var coll = blade.currentEntities;
-				var newColl = [];
-				var ent = undefined;
-				while(coll.length > 0) {
-					angular.forEach(coll, function (folder) {
-						if (folder.id === blade.choosenFolder) {
-							ent = folder;
-						}
-					    angular.forEach(folder.childrenFolders, function(folder) {
-					        newColl.push(folder);
-					    });
-					});
-					if (ent !== undefined) {
-						coll = [];
-					}
-					else {
-						coll = newColl;
-					}
+		var dialog = {
+			id: "confirmDeleteContentItemsFolder",
+			title: "Delete confirmation",
+			message: "Are you sure want to delete content items folder?",
+			callback: function (remove) {
+				if (remove) {
+					marketing_dynamicContents_res_folders.delete({ ids: [data.id] }, function () {
+						var pathSteps = data.outline.split(';');
+						var id = pathSteps[pathSteps.length - 2];
+						blade.choosenFolder = id;
+						blade.initializeBlade();
+					},
+					function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); blade.isLoading = false; });
 				}
-
-				blade.currentEntity = ent;
 			}
+		};
 
-			marketing_dynamicContents_res_search.search({ folder: blade.choosenFolder, respGroup: '18' }, function (data) {
-			    blade.currentEntities = data.contentFolders;
-			},
-            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
-		},
-        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+		dialogService.showConfirmationDialog(dialog);
 	}
 
 	$scope.blade.toolbarCommands = [
