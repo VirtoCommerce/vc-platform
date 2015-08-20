@@ -13,12 +13,14 @@ namespace VirtoCommerce.Domain.Marketing.Model.DynamicContent
 		{
 		}
 
-		public DynamicContentEvaluationContext(string placeName, DateTime toDate, TagSet tags)
+		public DynamicContentEvaluationContext(string storeId, string placeName, DateTime toDate, TagSet tags)
 		{
 			PlaceName = placeName;
 			ToDate = toDate;
 		    Tags = tags;
 		}
+
+		public string StoreId { get; set; }
 
 		public string PlaceName { get; set; }
 

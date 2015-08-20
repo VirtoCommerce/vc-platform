@@ -74,6 +74,10 @@
     <Compile Include="Migrations\201508181221540_PublishingGroupCascadeDeletion.Designer.cs">
       <DependentUpon>201508181221540_PublishingGroupCascadeDeletion.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201508201236497_AddStoreToPublication.cs" />
+    <Compile Include="Migrations\201508201236497_AddStoreToPublication.Designer.cs">
+      <DependentUpon>201508201236497_AddStoreToPublication.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Coupon.cs" />
     <Compile Include="Model\DynamicContentFolder.cs" />
@@ -125,6 +129,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201508181221540_PublishingGroupCascadeDeletion.resx">
       <DependentUpon>201508181221540_PublishingGroupCascadeDeletion.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508201236497_AddStoreToPublication.resx">
+      <DependentUpon>201508201236497_AddStoreToPublication.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

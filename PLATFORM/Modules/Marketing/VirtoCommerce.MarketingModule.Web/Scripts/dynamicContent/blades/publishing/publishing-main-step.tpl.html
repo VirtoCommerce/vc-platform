@@ -8,57 +8,76 @@
     <div class="blade-inner">
         <div class="inner-block">
             <form class="form" name="contextEntityDetailForm">
-                <div class="columns clearfix">
-                    <div class="column">
-                        <div class="form-group" ng-init="setForm(contextEntityDetailForm)">
-                            <label class="form-label">Publishing name</label>
-                            <div class="form-input">
-                                <input focus-on="" required class="form-control" ng-model="blade.entity.name" placeholder="Enter publishing name" />
-                            </div>
+                <fieldset ng-init="setForm(contextEntityDetailForm)">
+
+                    <div class="form-group">
+                        <label class="form-label">Name</label>
+                        <div class="form-input">
+                            <input focus-on="" required class="form-control" ng-model="blade.entity.name" placeholder="Enter publishing name" />
                         </div>
-                        <div class="form-group">
-                            <label class="form-label">Is active</label>
-                            <div class="form-input">
-                                <label class="form-label __switch">
-                                    <input type="checkbox" ng-model="blade.entity.isActive" />
-                                    <span class="switch"></span>
-                                </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <div class="form-input">
+                            <textarea required cols="60" rows="30" ng-model="blade.entity.description" placeholder="Enter publishing description"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="columns clearfix">
+                            <div class="column">
+                                <div class="form-group">
+                                    <label class="form-label">Store</label>
+                                    <div class="form-input">
+                                        <ui-select ng-model="blade.entity.store" required>
+                                            <ui-select-match placeholder="Select...">{{$select.selected.name}}</ui-select-match>
+                                            <ui-select-choices repeat="store.id as store in stores | filter: { name: $select.search }">
+                                                <span ng-bind-html="store.name | highlight: $select.search"></span>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <div class="form-group">
+                                    <label class="form-label">Is active</label>
+                                    <div class="form-input">
+                                        <label class="form-label __switch">
+                                            <input type="checkbox" ng-model="blade.entity.isActive" />
+                                            <span class="switch"></span>
+                                        </label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="column">
-                        <div class="form-group">
-                            <label class="form-label">Publishing description</label>
-                            <div class="form-input">
-                                <textarea required cols="60" rows="30" ng-model="blade.entity.description" placeholder="Enter publishing description"></textarea>
+                    <div class="form-group">
+                        <div class="columns clearfix">
+                            <div class="column">
+                                <div class="form-group">
+                                    <label class="form-label">Start date</label>
+                                    <div class="form-input __calendar">
+                                        <input type="text" class="form-control" ng-model="blade.entity.startDate" datepicker-popup="{{format}}" name="startDate" is-open="datepickers.startDate" min-date="today" datepicker-options="dateOptions" close-text="Close" placeholder="Enter value" />
+                                        <button class="btn" type="button" ng-click="open($event,'startDate')">
+                                            <i class="btn-ico fa fa-calendar"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <div class="form-group">
+                                    <label class="form-label">End date</label>
+                                    <div class="form-input __calendar">
+                                        <input type="text" class="form-control" ng-model="blade.entity.endDate" datepicker-popup="{{format}}" name="endDate" is-open="datepickers.endDate" min-date="blade.entity.startDate" datepicker-options="dateOptions" close-text="Close" placeholder="Enter value" />
+                                        <button class="btn" type="button" ng-click="open($event,'endDate')">
+                                            <i class="btn-ico fa fa-calendar"></i>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="columns clearfix">
-                    <div class="column">
-                        <div class="form-group">
-                            <label class="form-label">Start date</label>
-                            <div class="form-input __calendar">
-                                <input type="text" class="form-control" ng-model="blade.entity.startDate" datepicker-popup="{{format}}" name="startDate" is-open="datepickers.startDate" min-date="today" datepicker-options="dateOptions" close-text="Close" placeholder="Enter value" />
-                                <button class="btn" type="button" ng-click="open($event,'startDate')">
-                                    <i class="btn-ico fa fa-calendar"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="column">
-                        <div class="form-group">
-                            <label class="form-label">End date</label>
-                            <div class="form-input __calendar">
-                                <input type="text" class="form-control" ng-model="blade.entity.endDate" datepicker-popup="{{format}}" name="endDate" is-open="datepickers.endDate" min-date="blade.entity.startDate" datepicker-options="dateOptions" close-text="Close" placeholder="Enter value" />
-                                <button class="btn" type="button" ng-click="open($event,'endDate')">
-                                    <i class="btn-ico fa fa-calendar"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                </fieldset>
             </form>
             <ul class="list __items">
                 <li class="list-item" ng-click="blade.addPlaceholders()">
