@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('virtoCommerce.marketingModule.addFolderPlaceholderController', ['$scope', 'virtoCommerce.marketingModule.dynamicContent.folders', 'platformWebApp.bladeNavigationService', function ($scope, marketing_dynamicContents_res_folders, bladeNavigationService) {
+.controller('virtoCommerce.marketingModule.addFolderPlaceholderController', ['$scope', 'virtoCommerce.marketingModule.dynamicContent.folders', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function ($scope, marketing_dynamicContents_res_folders, bladeNavigationService, dialogService) {
     $scope.setForm = function (form) {
         $scope.formScope = form;
     }
@@ -61,15 +61,15 @@
     blade.saveChanges = function () {
         if (blade.isNew) {
             marketing_dynamicContents_res_folders.save({}, blade.entity, function (data) {
-                bladeNavigationService.closeBlade(blade);
-                blade.parentBlade.updateChoosen();
+            	blade.parentBlade.initialize();
+            	bladeNavigationService.closeBlade(blade);
             },
             function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
         }
         else {
             marketing_dynamicContents_res_folders.update({}, blade.entity, function (data) {
                 blade.originalEntity = angular.copy(blade.entity);
-                blade.parentBlade.updateChoosen();
+                blade.parentBlade.initialize();
             },
             function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
         }
@@ -80,7 +80,7 @@
     		var pathSteps = data.outline.split(';');
     		var id = pathSteps[pathSteps.length - 2];
     		blade.parentBlade.choosenFolder = id;
-    		blade.parentBlade.initializeBlade();
+    		blade.parentBlade.initialize();
     	},
         function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); blade.isLoading = false; });
     }

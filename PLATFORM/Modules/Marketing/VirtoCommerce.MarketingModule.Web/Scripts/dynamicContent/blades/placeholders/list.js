@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('virtoCommerce.marketingModule.placeholdersDynamicContentListController', ['$scope', 'virtoCommerce.marketingModule.dynamicContent.search', 'virtoCommerce.marketingModule.dynamicContent.folders', 'platformWebApp.bladeNavigationService', function ($scope, marketing_dynamicContents_res_search, marketing_dynamicContents_res_folders, bladeNavigationService) {
+.controller('virtoCommerce.marketingModule.placeholdersDynamicContentListController', ['$scope', 'virtoCommerce.marketingModule.dynamicContent.search', 'virtoCommerce.marketingModule.dynamicContent.folders', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function ($scope, marketing_dynamicContents_res_search, marketing_dynamicContents_res_folders, bladeNavigationService, dialogService) {
     var blade = $scope.blade;
     blade.currentEntity = {};
 
@@ -105,9 +105,9 @@
     	if (angular.isUndefined(blade.choosenFolder) || !angular.equals(blade.choosenFolder, placeholderFolder.id)) {
     		blade.choosenFolder = placeholderFolder.id;
     		blade.currentEntity = placeholderFolder;
-    		marketing_dynamicContents_res_search.search({ folder: placeholderFolder.id, respGroup: '18' }, function (data) {
+    		marketing_dynamicContents_res_search.search({ folder: placeholderFolder.id, respGroup: '20' }, function (data) {
     			placeholderFolder.childrenFolders = data.contentFolders;
-    			placeholderFolder.items = data.contentPlaces;
+    			placeholderFolder.placeholders = data.contentPlaces;
     			blade.isLoading = false;
     			blade.breadcrumbs.push(
 					{

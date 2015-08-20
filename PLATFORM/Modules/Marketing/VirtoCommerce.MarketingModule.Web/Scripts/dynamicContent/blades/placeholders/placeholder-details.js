@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('virtoCommerce.marketingModule.addPlaceholderController', ['$scope', 'virtoCommerce.marketingModule.dynamicContent.contentPlaces', 'platformWebApp.bladeNavigationService', 'FileUploader', function ($scope, marketing_dynamicContents_res_contentPlaces, bladeNavigationService, FileUploader) {
+.controller('virtoCommerce.marketingModule.addPlaceholderController', ['$scope', 'virtoCommerce.marketingModule.dynamicContent.contentPlaces', 'platformWebApp.bladeNavigationService', 'FileUploader', 'platformWebApp.dialogService', function ($scope, marketing_dynamicContents_res_contentPlaces, bladeNavigationService, FileUploader, dialogService) {
 	$scope.setForm = function (form) {
 		$scope.formScope = form;
 	}

@@ -2,13 +2,14 @@
 .controller('virtoCommerce.marketingModule.addPublishingPlaceholdersStepController', ['$scope', 'virtoCommerce.marketingModule.dynamicContent.search', 'virtoCommerce.marketingModule.dynamicContent.contentPlaces', 'platformWebApp.bladeNavigationService', function ($scope, marketing_dynamicContents_res_search, marketing_dynamicContents_res_contentPlaces, bladeNavigationService) {
 	var blade = $scope.blade;
 
-	blade.choosenFolder = undefined;
-	blade.currentEntity = undefined;
-	blade.currentEntities = [];
+	blade.choosenFolder = 'ContentPlace';
+	blade.currentEntity = {};
 
 	blade.initialize = function () {
-		marketing_dynamicContents_res_search.search({ folder: 'ContentPlace', respGroup: '20' }, function (data) {
-			blade.currentEntities = data.contentFolders;
+		marketing_dynamicContents_res_search.search({ folder: blade.choosenFolder, respGroup: '20' }, function (data) {
+			blade.currentEntity.childrenFolders = data.contentFolders;
+			blade.currentEntity.placeholders = data.contentPlaces;
+			blade.setBreadcrumbs();
 		},
         function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 
@@ -34,6 +35,20 @@
 			marketing_dynamicContents_res_search.search({ folder: placeholderFolder.id, respGroup: '20' }, function (data) {
 				placeholderFolder.childrenFolders = data.contentFolders;
 				placeholderFolder.placeholders = data.contentPlaces;
+				blade.breadcrumbs.push(
+					{
+						id: placeholderFolder.id,
+						name: placeholderFolder.name,
+						blade: blade,
+						navigate: function (breadcrumb) {
+							blade.choosenFolder = breadcrumb.id;
+							marketing_dynamicContents_res_search.search({ folder: blade.choosenFolder, respGroup: '20' }, function (data) {
+								blade.currentEntity.childrenFolders = data.contentFolders;
+								blade.currentEntity.placeholders = data.contentPlaces;
+								blade.setBreadcrumbs();
+							}, function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+						}
+					});
 			},
             function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 		}
@@ -41,32 +56,6 @@
 			blade.choosenFolder = placeholderFolder.parentFolderId;
 			blade.currentEntity = undefined;
 		}
-	}
-
-	blade.checkFolder = function (data) {
-		var retVal = angular.equals(data.id, blade.choosenFolder);
-		if (data.childrenFolders) {
-			var childFolders = data.childrenFolders;
-			var nextLevelChildFolders = [];
-			while (childFolders.length > 0 && !retVal) {
-				if (!angular.isUndefined(_.find(childFolders, function (folder) { return angular.equals(folder.id, blade.choosenFolder); }))) {
-					retVal = true;
-				}
-				else {
-					for (var i = 0; i < childFolders.length; i++) {
-						if (childFolders[i].childrenFolders) {
-							if (childFolders[i].childrenFolders.length > 0) {
-								nextLevelChildFolders = _.union(nextLevelChildFolders, childFolders[i].childrenFolders);
-							}
-						}
-					}
-					childFolders = nextLevelChildFolders;
-					nextLevelChildFolders = [];
-				}
-			}
-		}
-
-		return retVal;
 	}
 
 	blade.deleteAllPlaceholder = function () {
@@ -81,9 +70,37 @@
 		return _.filter(blade.entity.contentPlaces, function (ci) { return angular.equals(ci.id, data.id); }).length == 0;
 	}
 
-	blade.clickDefault = function () {
-		blade.choosenFolder = 'ContentItem';
-		blade.currentEntity = undefined;
+	blade.setBreadcrumbs = function () {
+		if (blade.breadcrumbs === undefined) {
+			blade.breadcrumbs = [];
+		}
+
+		var index = _.findLastIndex(blade.breadcrumbs, { id: blade.choosenFolder });
+
+		if (index !== -1)
+			blade.breadcrumbs = blade.breadcrumbs.slice(0, index + 1);
+
+		//catalog breadcrumb by default
+		var breadCrumb = {
+			id: 'ContentPlace',
+			name: 'Placeholders',
+			blade: blade
+		};
+
+		//prevent duplicate items
+		if (!_.some(blade.breadcrumbs, function (x) { return x.id == breadCrumb.id })) {
+			blade.breadcrumbs.push(breadCrumb);
+		}
+
+		breadCrumb.navigate = function (breadcrumb) {
+			blade.choosenFolder = breadcrumb.id;
+			marketing_dynamicContents_res_search.search({ folder: blade.choosenFolder, respGroup: '20' }, function (data) {
+				blade.currentEntity.childrenFolders = data.contentFolders;
+				blade.currentEntity.placeholders = data.contentPlaces;
+				blade.setBreadcrumbs();
+			},
+			function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+		};
 	}
 
 	$scope.blade.headIcon = 'fa-paperclip';
