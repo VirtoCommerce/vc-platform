@@ -911,7 +911,7 @@ namespace VirtoCommerce.Web.Models.Services
             }
         }
 
-        public async Task<ResponseCollection<DynamicContentItemGroup>> GetDynamicContentAsync(string[] placeholders)
+        public async Task<ResponseCollection<DynamicContentItemGroup>> GetDynamicContentAsync(string storeId, string[] placeholders)
         {
             var tagQuery = new TagQuery();
 
@@ -925,7 +925,7 @@ namespace VirtoCommerce.Web.Models.Services
                 }
             }
 
-            return await _marketingClient.GetDynamicContentAsync(placeholders, tagQuery);
+            return await _marketingClient.GetDynamicContentAsync(storeId, placeholders, tagQuery);
         }
         #endregion
 
