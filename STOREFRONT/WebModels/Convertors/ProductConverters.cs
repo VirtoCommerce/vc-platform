@@ -25,7 +25,7 @@ namespace VirtoCommerce.Web.Convertors
                                ProductId = product.Id,
                                VariantId = variant.Id,
                                Handle = product.Handle,
-                               Price = variant.NumericPrice,
+                               Price = (decimal)variant.Price / 100,
                                RequiresShipping = String.IsNullOrEmpty(product.Type) ||
                                     !String.IsNullOrEmpty(product.Type) && product.Type.Equals("Physical", StringComparison.OrdinalIgnoreCase),
                                Quantity = 1,
@@ -102,7 +102,7 @@ namespace VirtoCommerce.Web.Convertors
                     productModel.Url = url;
             }
 
-            var productRewards = rewards.Where(r => r.RewardType == "CatalogItemAmountReward" && r.ProductId == product.Id);
+            var productRewards = rewards.Where(r => r.RewardType == "CatalogItemAmountReward" && r.ProductId == product.Id && r.IsValid);
 
             if (product.Variations != null)
             {
@@ -147,7 +147,7 @@ namespace VirtoCommerce.Web.Convertors
             var reward = rewards.FirstOrDefault();
 
             variantModel.Barcode = null; // TODO
-            variantModel.CompareAtPrice = price != null ? (price.Sale.HasValue ? price.Sale.Value : price.List) : 0M;
+            variantModel.CompareAtPrice = (int)((price != null ? (price.Sale.HasValue ? price.Sale.Value : price.List) : 0M) * 100);
             //variantModel.Id = variation.Id;
             variantModel.Id = variation.Code;
             variantModel.Image = variationImage != null ? variationImage.AsWebModel(variation.Name, variation.MainProductId) : null;
@@ -155,16 +155,16 @@ namespace VirtoCommerce.Web.Convertors
             PopulateInventory(ref variantModel, variation);
             variantModel.Options = GetOptionValues(options, variation.VariationProperties);
 
-            variantModel.NumericPrice = price != null ? (price.Sale.HasValue ? price.Sale.Value : price.List) : 0M;
+            variantModel.Price = (int)((price != null ? (price.Sale.HasValue ? price.Sale.Value : price.List) : 0M) * 100);
             if (reward != null)
             {
                 if (reward.AmountType.Equals("absolute", StringComparison.OrdinalIgnoreCase))
                 {
-                    variantModel.NumericPrice -= reward.Amount;
+                    variantModel.Price -= (int)(reward.Amount * 100);
                 }
                 if (reward.AmountType.Equals("relative", StringComparison.OrdinalIgnoreCase))
                 {
-                    variantModel.NumericPrice -= variantModel.NumericPrice * reward.Amount / 100;
+                    variantModel.Price -= (int)(variantModel.Price * reward.Amount / 100);
                 }
             }
 

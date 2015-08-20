@@ -77,7 +77,7 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 			if (target == null)
 				throw new ArgumentNullException("target");
 
-			var patchInjection = new PatchInjection<dataModel.DynamicContentPublishingGroup>(x => x.Name, x => x.Description, x => x.IsActive,
+			var patchInjection = new PatchInjection<dataModel.DynamicContentPublishingGroup>(x=> x.StoreId, x => x.Name, x => x.Description, x => x.IsActive,
 																								  x => x.StartDate, x => x.EndDate, x=>x.PredicateVisualTreeSerialized, x=>x.ConditionExpression);
 
 			target.InjectFrom(patchInjection, source);

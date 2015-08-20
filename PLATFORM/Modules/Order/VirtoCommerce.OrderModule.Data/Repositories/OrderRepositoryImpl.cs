@@ -13,14 +13,11 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 	{
 		public OrderRepositoryImpl()
 		{
-			Database.SetInitializer<OrderRepositoryImpl>(null);
-			Configuration.LazyLoadingEnabled = false;
 		}
 
 		public OrderRepositoryImpl(string nameOrConnectionString, params IInterceptor[] interceptors)
 			: base(nameOrConnectionString, null,  interceptors)
 		{
-			Database.SetInitializer<OrderRepositoryImpl>(null);
 			Configuration.LazyLoadingEnabled = false;
 		}
 

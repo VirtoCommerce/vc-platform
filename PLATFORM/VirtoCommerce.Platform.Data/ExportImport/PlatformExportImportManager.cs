@@ -11,6 +11,7 @@ using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Security.Identity;
 using VirtoCommerce.Platform.Data.Common;
+using VirtoCommerce.Platform.Core.Caching;
 
 namespace VirtoCommerce.Platform.Data.ExportImport
 {
@@ -48,15 +49,16 @@ namespace VirtoCommerce.Platform.Data.ExportImport
         private readonly IRoleManagementService _roleManagementService;
         private readonly ISettingsManager _settingsManager;
         private readonly IDynamicPropertyService _dynamicPropertyService;
+		private readonly CacheManager _cacheManager;
 
-        public PlatformExportImportManager(ISecurityService securityService, IRoleManagementService roleManagementService, ISettingsManager settingsManager, IDynamicPropertyService dynamicPropertyService, IPackageService packageService)
+        public PlatformExportImportManager(ISecurityService securityService, IRoleManagementService roleManagementService, ISettingsManager settingsManager, IDynamicPropertyService dynamicPropertyService, IPackageService packageService, CacheManager cacheManager)
         {
             _dynamicPropertyService = dynamicPropertyService;
             _securityService = securityService;
             _roleManagementService = roleManagementService;
             _settingsManager = settingsManager;
             _packageService = packageService;
-
+			_cacheManager = cacheManager;
             _manifestPartUri = PackUriHelper.CreatePartUri(new Uri("Manifest.json", UriKind.Relative));
             _platformEntriesPartUri = PackUriHelper.CreatePartUri(new Uri("PlatformEntries.json", UriKind.Relative));
         }
@@ -138,6 +140,8 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                 ImportPlatformEntriesInternal(package, manifest, progressCallback);
                 //Import selected modules
                 ImportModulesInternal(package, manifest, progressCallback);
+				//Reset cache
+				_cacheManager.Clear();
 
             }
         }

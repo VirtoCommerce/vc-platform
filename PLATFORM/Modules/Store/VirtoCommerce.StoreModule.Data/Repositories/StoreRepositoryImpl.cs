@@ -23,7 +23,7 @@ namespace VirtoCommerce.StoreModule.Data.Repositories
 		public StoreRepositoryImpl(string nameOrConnectionString, params IInterceptor[] interceptors)
 			: base(nameOrConnectionString, null, interceptors)
 		{
-
+			Configuration.LazyLoadingEnabled = false;
 		}
 
 		protected override void OnModelCreating(DbModelBuilder modelBuilder)

@@ -24,7 +24,7 @@ namespace VirtoCommerce.MarketingModule.Data.Repositories
 			: base(nameOrConnectionString, null, interceptors)
 		{
 			Configuration.LazyLoadingEnabled = false;
-			Database.SetInitializer<MarketingRepositoryImpl>(null);
+		
 		}
 
 		protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -134,7 +134,7 @@ namespace VirtoCommerce.MarketingModule.Data.Repositories
 		public Promotion[] GetActivePromotions()
 		{
 			var now = DateTime.UtcNow;
-			var retVal = Promotions.Where(x => x.IsActive && (x.StartDate == null || now >= x.StartDate) && (x.EndDate == null || x.EndDate >= now))
+			var retVal = Promotions.Include(x => x.Coupons).Where(x => x.IsActive && (x.StartDate == null || now >= x.StartDate) && (x.EndDate == null || x.EndDate >= now))
 											   .OrderByDescending(x => x.Priority).ToArray();
 			return retVal;
 		}

@@ -80,7 +80,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 	    [ArrayInput(ParameterName = "placeHolders")]
         [ClientCache(Duration = 5)]
 	    [Route("contentitems")]
-	    public IHttpActionResult GetDynamicContent(
+		public IHttpActionResult GetDynamicContent(string store,
 	        string[] placeHolders,
 	        [FromUri] string[] tags,
 	        string language = "en-us")
@@ -104,7 +104,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 	        foreach (var holder in placeHolders)
 	        {
 	            var group = new webModel.DynamicContentItemGroup(holder);
-	            var ctx = new DynamicContentEvaluationContext(holder, DateTime.Now, tagSet);
+				var ctx = new DynamicContentEvaluationContext(store, holder, DateTime.Now, tagSet);
 
 	            var results = _contentEvaluator.EvaluateItems(ctx);
 

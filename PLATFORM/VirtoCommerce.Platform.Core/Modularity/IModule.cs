@@ -9,8 +9,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
         /// Allows module to configure database.
         /// This method is called before Initialize().
         /// </summary>
-        /// <param name="sampleDataLevel">Defines the amount of sample data that should be inserted, if any.</param>
-        void SetupDatabase(SampleDataLevel sampleDataLevel);
+        void SetupDatabase();
 
         /// <summary>
         /// Notifies the module that it has been initialized.

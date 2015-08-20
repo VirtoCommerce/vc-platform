@@ -57,7 +57,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
             {
                 var moduleInstance = CreateModule(moduleInfo);
                 moduleInfo.ModuleInstance = moduleInstance;
-                moduleInstance.SetupDatabase(_options.SampleDataLevel);
+                moduleInstance.SetupDatabase();
                 moduleInstance.Initialize();
             }
             catch (Exception ex)

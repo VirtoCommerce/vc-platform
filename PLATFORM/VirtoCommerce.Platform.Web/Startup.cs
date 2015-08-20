@@ -91,8 +91,7 @@ namespace VirtoCommerce.Platform.Web
 
                 var urlRewriterOptions = new UrlRewriterOptions();
                 var moduleInitializerOptions = (ModuleInitializerOptions)container.Resolve<IModuleInitializerOptions>();
-                moduleInitializerOptions.SampleDataLevel = EnumUtility.SafeParse(ConfigurationManager.AppSettings["VirtoCommerce:SampleDataLevel"], SampleDataLevel.None);
-
+            
                 foreach (var module in moduleCatalog.Modules.OfType<ManifestModuleInfo>())
                 {
                     var urlRewriteKey = string.Format(CultureInfo.InvariantCulture, "/Modules/$({0})", module.ModuleName);

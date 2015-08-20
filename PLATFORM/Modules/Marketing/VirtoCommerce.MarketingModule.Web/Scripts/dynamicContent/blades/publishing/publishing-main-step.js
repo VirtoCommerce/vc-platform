@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('virtoCommerce.marketingModule.addPublishingFirstStepController', ['$scope', 'virtoCommerce.marketingModule.dynamicContent.contentPublications', 'platformWebApp.bladeNavigationService', 'virtoCommerce.coreModule.common.dynamicExpressionService', function ($scope, contentPublications, bladeNavigationService, dynamicExpressionService) {
+.controller('virtoCommerce.marketingModule.addPublishingFirstStepController', ['$scope', 'virtoCommerce.marketingModule.dynamicContent.contentPublications', 'platformWebApp.bladeNavigationService', 'virtoCommerce.coreModule.common.dynamicExpressionService', 'virtoCommerce.storeModule.stores', function ($scope, contentPublications, bladeNavigationService, dynamicExpressionService, stores) {
     $scope.setForm = function (form) {
         $scope.formScope = form;
     }
@@ -148,7 +148,8 @@
 							blade.entity.contentPlaces.length > 0;
 
         if (retVal) {
-            retVal = !angular.equals(blade.entity.name, blade.originalEntity.name) ||
+        	retVal = !angular.equals(blade.entity.name, blade.originalEntity.name) ||
+				!angular.equals(blade.entity.store, blade.originalEntity.store) ||
 				!angular.equals(blade.entity.description, blade.originalEntity.description) ||
 				!angular.equals(blade.entity.priority, blade.originalEntity.priority) ||
 				!angular.equals(blade.entity.isActive, blade.originalEntity.isActive) ||
@@ -254,4 +255,5 @@
     };
 
     blade.initializeBlade();
+	$scope.stores = stores.query();
 }]);

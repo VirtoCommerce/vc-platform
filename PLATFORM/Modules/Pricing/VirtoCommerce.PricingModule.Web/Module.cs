@@ -26,23 +26,11 @@ namespace VirtoCommerce.PricingModule.Web
 
         #region IModule Members
 
-        public override void SetupDatabase(SampleDataLevel sampleDataLevel)
+        public override void SetupDatabase()
         {
             using (var context = new PricingRepositoryImpl("VirtoCommerce"))
             {
-                IDatabaseInitializer<PricingRepositoryImpl> initializer;
-
-                switch (sampleDataLevel)
-                {
-                    case SampleDataLevel.Full:
-                    case SampleDataLevel.Reduced:
-                        initializer = new PricingSampleDatabaseInitializer();
-                        break;
-                    default:
-                        initializer = new SetupDatabaseInitializer<PricingRepositoryImpl, Data.Migrations.Configuration>();
-                        break;
-                }
-
+				var initializer = new SetupDatabaseInitializer<PricingRepositoryImpl, Data.Migrations.Configuration>();
                 initializer.InitializeDatabase(context);
             }
         }
