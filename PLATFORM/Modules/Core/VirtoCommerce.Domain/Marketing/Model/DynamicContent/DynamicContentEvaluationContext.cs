@@ -15,6 +15,7 @@ namespace VirtoCommerce.Domain.Marketing.Model.DynamicContent
 
 		public DynamicContentEvaluationContext(string storeId, string placeName, DateTime toDate, TagSet tags)
 		{
+			StoreId = storeId;
 			PlaceName = placeName;
 			ToDate = toDate;
 		    Tags = tags;
