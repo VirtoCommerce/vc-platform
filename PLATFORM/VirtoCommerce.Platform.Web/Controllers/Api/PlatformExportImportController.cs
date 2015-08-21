@@ -66,7 +66,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 							sampleDataInfos = sampleDataInfos.Select(x=> new  { Version = SemanticVersion.Parse(x.PlatformVersion),  Name = x.Name, Data = x })
 															 .Where(x => x.Version.IsCompatibleWith(PlatformVersion.CurrentVersion))
 															 .GroupBy(x=> x.Name)
-															 .Select(x=> x.OrderBy(y=>y.Version).First().Data)
+															 .Select(x=> x.OrderByDescending(y=>y.Version).First().Data)
 															 .ToList();
 							//Convert relative  sample data urls to absolute
 							foreach (var sampleDataInfo in sampleDataInfos)
