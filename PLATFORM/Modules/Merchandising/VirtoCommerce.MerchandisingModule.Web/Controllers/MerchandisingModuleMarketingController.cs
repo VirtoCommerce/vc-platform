@@ -14,49 +14,49 @@ using webModel = VirtoCommerce.MerchandisingModule.Web.Model;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 {
-	[RoutePrefix("api/mp/marketing")]
-	public class MerchandisingModuleMarketingController : ApiController
+    [RoutePrefix("api/mp/marketing")]
+    public class MerchandisingModuleMarketingController : ApiController
     {
-		private readonly IMarketingPromoEvaluator _promotionEvaluator;
-		private readonly IMarketingDynamicContentEvaluator _contentEvaluator;
-		private readonly CacheManager _cacheManager;
+        private readonly IMarketingPromoEvaluator _promotionEvaluator;
+        private readonly IMarketingDynamicContentEvaluator _contentEvaluator;
+        private readonly CacheManager _cacheManager;
 
-		public MerchandisingModuleMarketingController(IMarketingPromoEvaluator promotionEvaluator, IMarketingDynamicContentEvaluator contentEvaluator, CacheManager cacheManager) 
+        public MerchandisingModuleMarketingController(IMarketingPromoEvaluator promotionEvaluator, IMarketingDynamicContentEvaluator contentEvaluator, CacheManager cacheManager)
         {
-			_promotionEvaluator = promotionEvaluator;
-			_contentEvaluator = contentEvaluator;
-			_cacheManager = cacheManager;
+            _promotionEvaluator = promotionEvaluator;
+            _contentEvaluator = contentEvaluator;
+            _cacheManager = cacheManager;
         }
 
-		/// <summary>
+        /// <summary>
         /// Evaluate promotions
         /// </summary>
         /// <param name="context">Promotion evaluation context</param>
-		[HttpPost]
-		[ResponseType(typeof(webModel.PromotionReward[]))]
-		[Route("promotions/evaluate")]
-		[ClientCache(Duration = 1)]
-		public IHttpActionResult EvaluatePromotions(coreModel.PromotionEvaluationContext context)
-		{
+        [HttpPost]
+        [ResponseType(typeof(webModel.PromotionReward[]))]
+        [Route("promotions/evaluate")]
+        [ClientCache(Duration = 1)]
+        public IHttpActionResult EvaluatePromotions(coreModel.PromotionEvaluationContext context)
+        {
             // DOESN'T WORK
-			//var cacheKey = CacheKey.Create("MarketingController.EvaluatePromotions", context.GetHash<MD5CryptoServiceProvider>());
-			//var retVal = _cacheManager.Get(cacheKey, () => _promotionEvaluator.EvaluatePromotion(context));
-		    var retVal = _promotionEvaluator.EvaluatePromotion(context);
-			return Ok(retVal.Rewards.Select(x => x.ToWebModel()).ToArray());
-		}
+            //var cacheKey = CacheKey.Create("MarketingController.EvaluatePromotions", context.GetHash<MD5CryptoServiceProvider>());
+            //var retVal = _cacheManager.Get(cacheKey, () => _promotionEvaluator.EvaluatePromotion(context));
+            var retVal = _promotionEvaluator.EvaluatePromotion(context);
+            return Ok(retVal.Rewards.Select(x => x.ToWebModel()).ToArray());
+        }
 
-		/// <summary>
+        /// <summary>
         /// Process marketing event
         /// </summary>
         /// <param name="marketingEvent">Marketing event</param>
-		[HttpPost]
-		[ResponseType(typeof(webModel.PromotionReward[]))]
-		[Route("promotions/processevent")]
-		public IHttpActionResult ProcessMarketingEvent(coreModel.IMarketingEvent marketingEvent)
-		{
-			var retVal = _promotionEvaluator.ProcessEvent(marketingEvent);
-			return Ok(retVal.Rewards.Select(x => x.ToWebModel()).ToArray());
-		}
+        [HttpPost]
+        [ResponseType(typeof(webModel.PromotionReward[]))]
+        [Route("promotions/processevent")]
+        public IHttpActionResult ProcessMarketingEvent(coreModel.IMarketingEvent marketingEvent)
+        {
+            var retVal = _promotionEvaluator.ProcessEvent(marketingEvent);
+            return Ok(retVal.Rewards.Select(x => x.ToWebModel()).ToArray());
+        }
 
         //// POST: api/mp/contentitems/evaluate
         //[HttpPost]
@@ -72,58 +72,59 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         /// <summary>
         /// Get dynamic content for given placeholders
         /// </summary>
+        /// <param name="store">Store ID</param>
         /// <param name="placeHolders">Array of placeholder ids</param>
         /// <param name="tags">Array of tags</param>
         /// <param name="language">Culture name (devault value is "en-us")</param>
 	    [HttpGet]
-	    [ResponseType(typeof(webModel.ResponseCollection<webModel.DynamicContentItemGroup>))]
-	    [ArrayInput(ParameterName = "placeHolders")]
+        [ResponseType(typeof(webModel.ResponseCollection<webModel.DynamicContentItemGroup>))]
+        [ArrayInput(ParameterName = "placeHolders")]
         [ClientCache(Duration = 5)]
-	    [Route("contentitems")]
-		public IHttpActionResult GetDynamicContent(string store,
-	        string[] placeHolders,
-	        [FromUri] string[] tags,
-	        string language = "en-us")
-	    {
-	        var tagSet = new TagSet();
+        [Route("contentitems")]
+        public IHttpActionResult GetDynamicContent(string store,
+            string[] placeHolders,
+            [FromUri] string[] tags,
+            string language = "en-us")
+        {
+            var tagSet = new TagSet();
 
-	        if (tags != null)
-	        {
-	            foreach (var tagArray in tags.Select(tag => tag.Split(new[] { ':' })))
-	            {
-	                tagSet.Add(tagArray[0], tagArray[1]);
-	            }
-	        }
+            if (tags != null)
+            {
+                foreach (var tagArray in tags.Select(tag => tag.Split(new[] { ':' })))
+                {
+                    tagSet.Add(tagArray[0], tagArray[1]);
+                }
+            }
 
-	        // TODO: add tags ?tags={users:[id1,id2]}
-	        // TODO: add caching
+            // TODO: add tags ?tags={users:[id1,id2]}
+            // TODO: add caching
 
-	        //Mutiple placeholders can be requested
-	        var groups = new List<webModel.DynamicContentItemGroup>();
+            //Mutiple placeholders can be requested
+            var groups = new List<webModel.DynamicContentItemGroup>();
 
-	        foreach (var holder in placeHolders)
-	        {
-	            var group = new webModel.DynamicContentItemGroup(holder);
-				var ctx = new DynamicContentEvaluationContext(store, holder, DateTime.Now, tagSet);
+            foreach (var holder in placeHolders)
+            {
+                var group = new webModel.DynamicContentItemGroup(holder);
+                var ctx = new DynamicContentEvaluationContext(store, holder, DateTime.Now, tagSet);
 
-	            var results = _contentEvaluator.EvaluateItems(ctx);
+                var results = _contentEvaluator.EvaluateItems(ctx);
 
-	            if (results != null && results.Any())
-	            {
-	                group.Items.AddRange(results.Select(x => x.ToWebModel()));
-	                groups.Add(group);
-	            }
-	        }
+                if (results != null && results.Any())
+                {
+                    group.Items.AddRange(results.Select(x => x.ToWebModel()));
+                    groups.Add(group);
+                }
+            }
 
-	        var retVal = new webModel.ResponseCollection<webModel.DynamicContentItemGroup>
-	                     {
-	                         Items = groups,
-	                         TotalCount = groups.Count()
-	                     };
+            var retVal = new webModel.ResponseCollection<webModel.DynamicContentItemGroup>
+            {
+                Items = groups,
+                TotalCount = groups.Count()
+            };
 
 
-	        return this.Ok(retVal);
-	        //return this.StatusCode(HttpStatusCode.NoContent);
-	    }
+            return this.Ok(retVal);
+            //return this.StatusCode(HttpStatusCode.NoContent);
+        }
     }
 }
