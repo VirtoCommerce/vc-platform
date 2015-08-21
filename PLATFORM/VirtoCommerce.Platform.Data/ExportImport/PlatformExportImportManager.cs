@@ -272,7 +272,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                         }
                         catch (Exception ex)
                         {
-                            progressInfo.Errors.Add(ex.ExpandExceptionMessage());
+							progressInfo.Errors.Add(String.Format("{0}: {1}", moduleInfo.Id, ex.ExpandExceptionMessage()));
                             progressCallback(progressInfo);
                         }
                     }
@@ -308,7 +308,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                     }
                     catch (Exception ex)
                     {
-                        progressInfo.Errors.Add(ex.ExpandExceptionMessage());
+						progressInfo.Errors.Add(String.Format("{0}: {1}", module.Id, ex.ExpandExceptionMessage()));
                         progressCallback(progressInfo);
                     }
 
