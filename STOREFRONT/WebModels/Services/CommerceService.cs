@@ -587,6 +587,7 @@ namespace VirtoCommerce.Web.Models.Services
                     new ProductPromoEntry
                     {
                         CatalogId = product.CatalogId,
+						CategoryId = product.CategoryId,
                         Price = price != null ? (price.Sale.HasValue ? price.Sale.Value : price.List) : 0M,
                         ProductId = product.Id,
                         Quantity = 1
@@ -629,6 +630,7 @@ namespace VirtoCommerce.Web.Models.Services
                     new ProductPromoEntry
                     {
                         CatalogId = product.CatalogId,
+						CategoryId = product.CategoryId,
                         Price = price != null ? (price.Sale.HasValue ? price.Sale.Value : price.List) : 0M,
                         ProductId = product.Id,
                         Quantity = 1
@@ -825,6 +827,7 @@ namespace VirtoCommerce.Web.Models.Services
                 promoEntries.Add(new ProductPromoEntry
                 {
                     CatalogId = item.CatalogId,
+					CategoryId = item.CategoryId,
                     Price = price != null ? (price.Sale.HasValue ? price.Sale.Value : price.List) : 0M,
                     ProductId = item.Id,
                     Quantity = 1
