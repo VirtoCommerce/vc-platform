@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Reflection;
 using System.Web;
 using System.Web.Hosting;
@@ -59,7 +58,7 @@ namespace VirtoCommerce.Platform.Web
 {
     public class Startup
     {
-        private static readonly string _assembliesPath = HostingEnvironment.MapPath("~/App_data/Modules");
+        private static readonly string _assembliesPath = HostingEnvironment.MapPath("~/App_Data/Modules");
 
         public void Configuration(IAppBuilder app)
         {
@@ -91,7 +90,7 @@ namespace VirtoCommerce.Platform.Web
 
                 var urlRewriterOptions = new UrlRewriterOptions();
                 var moduleInitializerOptions = (ModuleInitializerOptions)container.Resolve<IModuleInitializerOptions>();
-            
+
                 foreach (var module in moduleCatalog.Modules.OfType<ManifestModuleInfo>())
                 {
                     var urlRewriteKey = string.Format(CultureInfo.InvariantCulture, "/Modules/$({0})", module.ModuleName);
