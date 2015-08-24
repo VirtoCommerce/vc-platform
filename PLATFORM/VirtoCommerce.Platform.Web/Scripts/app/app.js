@@ -71,11 +71,11 @@ angular.module('platformWebApp', AppDependencies).
   ]
 )
 .run(
-  ['$rootScope', '$state', '$stateParams', 'platformWebApp.authService', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', '$animate', '$templateCache', 'gridsterConfig',
-    function ($rootScope, $state, $stateParams, authService, mainMenuService, eventService, $animate, $templateCache, gridsterConfig) {
+  ['$rootScope', '$state', '$stateParams', 'platformWebApp.authService', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', '$animate', '$templateCache', 'gridsterConfig', 'taOptions',
+    function ($rootScope, $state, $stateParams, authService, mainMenuService, eventService, $animate, $templateCache, gridsterConfig, taOptions) {
         //Disable animation
         $animate.enabled(false);
-        
+      
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
         var homeMenuItem = {
@@ -96,14 +96,14 @@ angular.module('platformWebApp', AppDependencies).
         mainMenuService.addMenuItem(browseMenuItem);
 
         var cfgMenuItem = {
-        	path: 'configuration',
-        	icon: 'fa fa-wrench',
-        	title: 'Configuration',
-        	priority: 91,
+            path: 'configuration',
+            icon: 'fa fa-wrench',
+            title: 'Configuration',
+            priority: 91,
         };
         mainMenuService.addMenuItem(cfgMenuItem);
 
-  
+
         $rootScope.$on('unauthorized', function (event, rejection) {
             $state.go('loginDialog');
         });
@@ -151,6 +151,10 @@ angular.module('platformWebApp', AppDependencies).
             return hash;
         };
 
-     
+        // textAngular
+        taOptions.toolbar = [
+        ['bold', 'italics', 'underline', 'strikeThrough', 'ul', 'ol', 'redo', 'undo', 'clear', 'quote'],
+        ['justifyLeft', 'justifyCenter', 'justifyRight', 'indent', 'outdent', 'html', 'insertImage', 'insertLink', 'insertVideo']];
+
     }
   ]);

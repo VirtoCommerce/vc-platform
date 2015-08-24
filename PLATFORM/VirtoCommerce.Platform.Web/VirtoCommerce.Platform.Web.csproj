@@ -347,7 +347,7 @@
       <Link>CustomDictionary.xml</Link>
     </CodeAnalysisDictionary>
     <Content Include="Content\angular-gridster.css" />
-    <Content Include="Content\angular-multi-select.css" />
+    <Content Include="gulpfile.js" />
     <Content Include="Scripts\angular-gridster.js" />
     <Content Include="Scripts\app\dynamicProperties\blades\dynamicProperty-detail.js" />
     <Content Include="Scripts\app\dynamicProperties\blades\dynamicProperty-detail.tpl.html" />
@@ -549,7 +549,6 @@
     <Content Include="Scripts\codemirror\liquid.js" />
     <Content Include="Scripts\common\templates\create.tpl.html" />
     <Content Include="Scripts\common\directives\angular-money-directive.js" />
-    <Content Include="Scripts\angular-multi-select.js" />
     <Content Include="Scripts\angular-resource.js" />
     <Content Include="Scripts\angular-resource.min.js" />
     <Content Include="Scripts\angular-route.js" />
@@ -683,6 +682,9 @@
     <Content Include="Content\ui-grid.ttf" />
     <Content Include="Content\ui-grid.woff" />
     <Content Include="App_Data\SampleData\sampleData.zip" />
+    <Content Include=".bowerrc" />
+    <Content Include="bower.json" />
+    <Content Include="package.json" />
     <None Include="Scripts\jquery-1.11.1.intellisense.js" />
     <Content Include="Scripts\codemirror\htmlmixed.js" />
     <Content Include="Scripts\i18n\angular-locale_aa-dj.js" />

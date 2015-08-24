@@ -26,7 +26,6 @@ namespace VirtoCommerce.Platform.Web
                     "~/Scripts/codemirror/liquid.css",
                     "~/Content/select.css",
                     "~/Content/angular-gridster.css",
-                    "~/Content/angular-multi-select.css",
                     "~/Content/ng-tags-input.css",
                     "~/Content/textAngular.css",
                     "~/Content/themes/base/jquery.ui.core.css",
@@ -41,14 +40,14 @@ namespace VirtoCommerce.Platform.Web
                     "~/Content/themes/base/jquery.ui.datepicker.css",
                     "~/Content/themes/base/jquery.ui.progressbar.css",
                     "~/Content/themes/base/jquery.ui.theme.css",
-                    "~/Content/themes/base/xeditable.css",
-                //SELECT2
+                    //"~/Content/themes/base/xeditable.css",
+                    //SELECT2
                     "~/Content/select2.css",
-                //Angular ui-grid
+                    //Angular ui-grid
                     "~/Content/ui-grid-unstable.css",
-                //Selectize
+                    //Selectize
                     "~/Content/Selectize/css/selectize.default.css",
-                //Theme UI
+                    //Theme UI
                     "~/Content/themes/main/css/reset.css",
                     "~/Content/themes/main/css/base-modules.css",
                     "~/Content/themes/main/css/project-modules.css",
@@ -60,50 +59,52 @@ namespace VirtoCommerce.Platform.Web
 
             #region JS
 
-            bundles.Add(
-                new ScriptBundle("~/scripts/jquery").Include(
-                    "~/Scripts/jquery-{version}.js",
-                    "~/Scripts/jquery.mousewheel.js",
-                    "~/Scripts/jquery.signalR-2.2.0.min.js",
-                    "~/Scripts/jquery-ui-{version}.js",
-                    "~/Scripts/underscore.js",
-                    "~/Scripts/moment.js"));
+            //bundles.Add(
+                //new ScriptBundle("~/scripts/jquery").Include(
+                //    "~/Scripts/jquery-{version}.js",
+                //    "~/Scripts/jquery.mousewheel.js",
+                //    "~/Scripts/jquery.signalR-2.2.0.min.js",
+                //    "~/Scripts/jquery-ui-{version}.js",
+                //    "~/Scripts/underscore.js",
+                //     "~/Scripts/moment.js"
+                //    ));
 
             //AngularJS 
             //Note: must match the real path (~/Scripts/.) to find source map files references from .min.js (ex. # sourceMappingURL=angular-resource.min.js.map)
             bundles.Add(
                 new ScriptBundle("~/scripts/angular").Include(
-                    "~/Scripts/angular.js",
-                    "~/Scripts/angular-animate.js",
-                    "~/Scripts/angular-cookies.js",
-                    "~/Scripts/angular-file-upload.js",
-                    "~/Scripts/angular-loader.js",
-                    "~/Scripts/angular-resource.js",
-                    "~/Scripts/angular-route.js",
-                    "~/Scripts/angular-sanitize.js",
-                    "~/Scripts/angular-route.js",
-                    "~/Scripts/angular-touch.js",
-                    "~/Scripts/sortable.js",
-                    "~/Scripts/AngularUI/ui-router.js",
-                //Angular ui
-                    "~/Scripts/angular-ui/ui-bootstrap.js",
-                    "~/Scripts/angular-ui/ui-bootstrap-tpls.js",
-                    "~/Scripts/angular-ui/ui-utils.js",
-                    "~/Scripts/angular-ui/ui-utils-ieshiv.js",
-                    "~/Scripts/angular-multi-select.js",
-                     "~/Scripts/angular-ui/select.js",
-                //Angular ui-grid
-                    "~/Scripts/ui-grid-unstable.js",
-                // Angular Misc
-                    "~/Scripts/angular-gridster.js",
-                    "~/Scripts/ng-context-menu.js",
-                    "~/Scripts/xeditable.js",
-                    "~/Scripts/ng-focus-on.js",
-                    "~/Scripts/ng-google-chart.js",
-                    "~/Scripts/ng-tags-input.js",
-                    "~/Scripts/ngStorage.min.js",
-                    "~/Scripts/textAngular.min.js",
-                    "~/Scripts/textAngular-rangy.min.js")
+                    "~/Scripts/allPackages.js"
+                    //"~/Scripts/angular.js",
+                    //"~/Scripts/angular-animate.js",
+                    //"~/Scripts/angular-cookies.js",
+                    //"~/Scripts/angular-file-upload.js",
+                    //"~/Scripts/angular-loader.js",
+                    //"~/Scripts/angular-resource.js",
+                    //"~/Scripts/angular-route.js",
+                    //"~/Scripts/angular-sanitize.js",
+                    //"~/Scripts/angular-route.js",
+                    //"~/Scripts/angular-touch.js",
+                    // "~/Scripts/sortable.js",
+                    //"~/Scripts/AngularUI/ui-router.js"
+                    //Angular ui
+                    //"~/Scripts/angular-ui/ui-bootstrap.js",
+                    //"~/Scripts/angular-ui/ui-bootstrap-tpls.js",
+                    //"~/Scripts/angular-ui/ui-utils.js",
+                    //"~/Scripts/angular-ui/ui-utils-ieshiv.js",
+                    // "~/Scripts/angular-ui/select.js",
+                    //Angular ui-grid
+                    // "~/Scripts/ui-grid-unstable.js",
+                    // Angular Misc
+                    //"~/Scripts/angular-gridster.js",
+                    //"~/Scripts/ng-context-menu.js",
+                    //"~/Scripts/xeditable.js",
+                    // "~/Scripts/ng-focus-on.js",
+                    // "~/Scripts/ng-google-chart.js",
+                    // "~/Scripts/ng-tags-input.js",
+                    // "~/Scripts/ngStorage.min.js",
+                    //"~/Scripts/textAngular.min.js",
+                    //"~/Scripts/textAngular-rangy.min.js"                    
+                    )
                     .IncludeDirectory("~/Scripts/codemirror/", "*.js", true)
                     .IncludeDirectory("~/Scripts/app/", "*.js", true)
                     .IncludeDirectory("~/Scripts/common/", "*.js", true));
