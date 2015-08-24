@@ -193,3 +193,5 @@ Shared/VirtoCommerce/VirtoCommerce.PaymentGateways.dll
 /STOREFRONT/Website/App_Data/Pages
 /STOREFRONT/Website/App_Data/Themes
 .vs/
+/PLATFORM/VirtoCommerce.Platform.Web/client_packages
+/PLATFORM/VirtoCommerce.Platform.Web/node_modules
