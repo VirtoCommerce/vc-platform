@@ -286,6 +286,7 @@
     <Compile Include="BackgroundJobs\SendNotificationsJobs.cs" />
     <Compile Include="Converters\ExportImport\ExportImportRequestConverter.cs" />
     <Compile Include="Model\ExportImport\PushNotifications\SampleDataImportPushNotification.cs" />
+    <Compile Include="Model\ExportImport\SampleDataInfo.cs" />
     <Compile Include="Model\Notifications\RenderNotificationContentResult.cs" />
     <Compile Include="Model\Packaging\ModuleAction.cs" />
     <Compile Include="Model\Packaging\ModuleBackgroundJobOptions.cs" />
@@ -377,6 +378,7 @@
     <Content Include="Scripts\app\exportImport\notifications\history.tpl.html" />
     <Content Include="Scripts\app\exportImport\notifications\menu.tpl.html" />
     <Content Include="Scripts\app\exportImport\resources\exportImport.js" />
+    <Content Include="Scripts\app\exportImport\templates\sampleDataChoose.tpl.html" />
     <Content Include="Scripts\app\exportImport\templates\sampleDataInitialization.tpl.html" />
     <Content Include="Scripts\app\notifications\blades\notification-journal-details.js" />
     <Content Include="Scripts\app\notifications\blades\notification-journal-details.tpl.html" />
@@ -569,8 +571,6 @@
     <Content Include="Scripts\angular-ui\ui-utils.min.js" />
     <Content Include="Scripts\angular.js" />
     <Content Include="Scripts\angular.min.js" />
-    <Content Include="Scripts\AngularUI\ui-router.js" />
-    <Content Include="Scripts\AngularUI\ui-router.min.js" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
@@ -681,7 +681,6 @@
     <Content Include="fonts\ui-grid.eot" />
     <Content Include="Content\ui-grid.ttf" />
     <Content Include="Content\ui-grid.woff" />
-    <Content Include="App_Data\SampleData\sampleData.zip" />
     <Content Include=".bowerrc" />
     <Content Include="bower.json" />
     <Content Include="package.json" />

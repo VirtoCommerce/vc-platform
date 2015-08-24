@@ -85,7 +85,7 @@ namespace VirtoCommerce.Platform.Web
                     //"~/Scripts/angular-route.js",
                     //"~/Scripts/angular-touch.js",
                     // "~/Scripts/sortable.js",
-                    //"~/Scripts/AngularUI/ui-router.js"
+                    //~/Scripts/AngularUI/angular-ui-router.js"
                     //Angular ui
                     //"~/Scripts/angular-ui/ui-bootstrap.js",
                     //"~/Scripts/angular-ui/ui-bootstrap-tpls.js",
