@@ -57,6 +57,7 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 				CommitChanges(repository);
 			}
 
+            content.Id = entity.Id;
 			_dynamicPropertyService.SaveDynamicPropertyValues(content);
 
 			retVal = GetContentItemById(entity.Id);

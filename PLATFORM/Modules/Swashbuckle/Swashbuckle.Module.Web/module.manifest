@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <module>
-	<id>VirtoCommerce.Swachbuckle</id>
+	<id>VirtoCommerce.Swashbuckle</id>
 	<version>2.4.0</version>
 	<platformVersion>2.4.0</platformVersion>
 	<dependencies>
 	</dependencies>
 
-	<title>Swachbuckle (Swagger) WEB API documentation</title>
+	<title>Swashbuckle (Swagger) WEB API documentation</title>
 	<description></description>
 	<authors>
 		<author>Virto Commerce</author>
@@ -18,7 +18,7 @@
 	<iconUrl>https://pbs.twimg.com/profile_images/378800000043280363/23efdf268b0001d3e68fd48216845d5f.png</iconUrl>
 	<releaseNotes>First version.</releaseNotes>
 	<copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
-	<tags>Swachbuckle</tags>
+	<tags>Swashbuckle</tags>
 
 	<assemblyFile>SwashbuckleModule.Web.dll</assemblyFile>
 	<moduleType>SwashbuckleModule.Web.Module, SwashbuckleModule.Web</moduleType>

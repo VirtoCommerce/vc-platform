@@ -58,7 +58,8 @@ angular.module('platformWebApp', AppDependencies).
 }])
 .config(
   ['$stateProvider', '$httpProvider', 'uiSelectConfig', function ($stateProvider, $httpProvider, uiSelectConfig) {
-      $stateProvider.state('workspace', {
+  	$stateProvider.state('workspace', {
+  		url: '/workspace',
           templateUrl: 'Scripts/app/workspace.tpl.html'
       });
 

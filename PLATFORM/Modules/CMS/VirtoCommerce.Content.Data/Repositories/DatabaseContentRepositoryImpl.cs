@@ -15,14 +15,11 @@ namespace VirtoCommerce.Content.Data.Repositories
 	{
 		public DatabaseContentRepositoryImpl()
 		{
-			Database.SetInitializer<DatabaseContentRepositoryImpl>(null);
-			Configuration.LazyLoadingEnabled = false;
 		}
 
 		public DatabaseContentRepositoryImpl(string nameOrConnectionString, params IInterceptor[] interceptors)
 			: base(nameOrConnectionString, null, interceptors)
 		{
-			Database.SetInitializer<DatabaseContentRepositoryImpl>(null);
 			Configuration.LazyLoadingEnabled = false;
 		}
 

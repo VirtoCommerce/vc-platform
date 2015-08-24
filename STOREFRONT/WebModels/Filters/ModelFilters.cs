@@ -58,6 +58,11 @@ namespace VirtoCommerce.Web.Models.Filters
             return String.Format("<a href=\"{0}\" id=\"customer_login_link\">{1}</a>", path, input);
         }
 
+        public static decimal Minus(decimal input, decimal parameter)
+        {
+            return input - parameter;
+        }
+
         public static string CustomerLogoutLink(string input)
         {
             var path = VirtualPathUtility.ToAbsolute("~/account/logoff");

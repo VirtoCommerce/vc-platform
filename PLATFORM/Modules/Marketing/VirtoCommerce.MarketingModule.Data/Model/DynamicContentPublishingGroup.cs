@@ -27,6 +27,9 @@ namespace VirtoCommerce.MarketingModule.Data.Model
 
 		public bool IsActive { get; set; }
 
+		[StringLength(256)]
+		public string StoreId { get; set; }
+
 		public DateTime? StartDate { get; set; }
 
 		public DateTime? EndDate { get; set; }

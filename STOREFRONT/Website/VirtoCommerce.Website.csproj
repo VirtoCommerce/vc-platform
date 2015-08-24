@@ -187,6 +187,7 @@
     <Content Include="App_Data\Themes\_Global\assets\icon_google_32.png" />
     <Content Include="App_Data\Themes\_Global\assets\icon_facebook_32.png" />
     <Content Include="App_Data\Themes\_Global\assets\loader_spinner.gif" />
+    <Content Include="App_Data\Themes\_Global\templates\banners\Slider.liquid" />
     <Content Include="App_Data\Themes\_Global\validation.js" />
     <Content Include="App_Data\Themes\_Global\virtocommerce.js" />
     <Content Include="App_Data\Themes\_Global\social\shopify-social.svg" />
@@ -422,7 +423,6 @@
     </ItemGroup>
     <Delete Files="@(LibSassFiles)" />
   </Target>
-
   <!-- Transform Web.config -->
   <UsingTask TaskName="TransformXml" AssemblyFile="$(VSToolsPath)\Web\Microsoft.Web.Publishing.Tasks.dll" Condition="Exists('$(VSToolsPath)\Web\Microsoft.Web.Publishing.Tasks.dll')" />
   <PropertyGroup>
@@ -437,7 +437,6 @@
     <TransformXml Source="$(TransformInputFile)" Transform="$(TransformFile)" Destination="$(TransformOutputFile)" StackTrace="$(StackTraceEnabled)" />
     <Delete Files="$(TransformInputFile)" />
   </Target>
-
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

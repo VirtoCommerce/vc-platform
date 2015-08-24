@@ -23,7 +23,7 @@ namespace VirtoCommerce.CartModule.Web
 
         #region IModule Members
 
-        public override void SetupDatabase(SampleDataLevel sampleDataLevel)
+        public override void SetupDatabase()
         {
             using (var context = new CartRepositoryImpl())
             {

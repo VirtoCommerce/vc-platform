@@ -28,29 +28,16 @@ namespace VirtoCommerce.CatalogModule.Web
 
         #region IDatabaseModule Members
 
-        public override void SetupDatabase(SampleDataLevel sampleDataLevel)
+        public override void SetupDatabase()
         {
-            base.SetupDatabase(sampleDataLevel);
+            base.SetupDatabase();
 
-            using (var db = new CatalogRepositoryImpl(_connectionStringName))
-            {
-                IDatabaseInitializer<CatalogRepositoryImpl> initializer;
+			using (var db = new CatalogRepositoryImpl(_connectionStringName))
+			{
+				var initializer = new SetupDatabaseInitializer<CatalogRepositoryImpl, Data.Migrations.Configuration>();
 
-                switch (sampleDataLevel)
-                {
-                    case SampleDataLevel.Full:
-                        initializer = new SqlCatalogSampleDatabaseInitializer();
-                        break;
-                    case SampleDataLevel.Reduced:
-                        initializer = new SqlCatalogReducedSampleDatabaseInitializer();
-                        break;
-                    default:
-                        initializer = new SetupDatabaseInitializer<CatalogRepositoryImpl, Data.Migrations.Configuration>();
-                        break;
-                }
-
-                initializer.InitializeDatabase(db);
-            }
+				initializer.InitializeDatabase(db);
+			}
         }
 
         public override void Initialize()

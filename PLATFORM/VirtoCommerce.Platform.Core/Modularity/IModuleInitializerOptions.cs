@@ -2,7 +2,6 @@
 {
     public interface IModuleInitializerOptions
     {
-        SampleDataLevel SampleDataLevel { get; }
-        string GetModuleDirectoryPath(string moduleId);
+       string GetModuleDirectoryPath(string moduleId);
     }
 }

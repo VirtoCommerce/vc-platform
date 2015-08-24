@@ -2,7 +2,7 @@
 {
     public abstract class ModuleBase : IModule
     {
-        public virtual void SetupDatabase(SampleDataLevel sampleDataLevel)
+        public virtual void SetupDatabase()
         {
         }
 

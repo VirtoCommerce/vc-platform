@@ -30,7 +30,7 @@ namespace VirtoCommerce.Web.Models
                     }
                 }
 
-                if (NumericPrice == 0)
+                if (Price == 0)
                 {
                     isAvailable = false;
                 }
@@ -43,7 +43,7 @@ namespace VirtoCommerce.Web.Models
         public string Barcode { get; set; }
 
         [DataMember]
-        public decimal CompareAtPrice { get; set; }
+        public int CompareAtPrice { get; set; }
 
         [DataMember]
         public string Id { get; set; }
@@ -102,16 +102,8 @@ namespace VirtoCommerce.Web.Models
             }
         }
 
-        public decimal NumericPrice { get; set; }
-
         [DataMember]
-        public string Price
-        {
-            get
-            {
-                return NumericPrice.ToString("#.00", System.Globalization.CultureInfo.GetCultureInfo("en-US"));
-            }
-        }
+        public int Price { get; set; }
 
         [DataMember]
         public bool Selected { get; set; }
@@ -133,15 +125,6 @@ namespace VirtoCommerce.Web.Models
 
         [DataMember]
         public string WeightInUnit { get; set; }
-
-        [DataMember]
-        public decimal Savings
-        {
-            get
-            {
-                return CompareAtPrice - NumericPrice;
-            }
-        }
 
         #region Public Methods and Operators
         public override object BeforeMethod(string method)

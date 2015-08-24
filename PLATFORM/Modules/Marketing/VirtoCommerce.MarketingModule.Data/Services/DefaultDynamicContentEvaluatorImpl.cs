@@ -36,6 +36,7 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 			{
 				var query = repository.PublishingGroups.Include(x => x.ContentItems)
 													   .Where(x => x.IsActive)
+													   .Where(x => x.StoreId == dynamicContext.StoreId)
 													   .Where(x => (x.StartDate == null || dynamicContext.ToDate >= x.StartDate) && (x.EndDate == null || x.EndDate >= dynamicContext.ToDate))
 													   .Where(x => x.ContentPlaces.Any(y => y.ContentPlace.Name == dynamicContext.PlaceName))
 													   .OrderBy(x => x.Priority)

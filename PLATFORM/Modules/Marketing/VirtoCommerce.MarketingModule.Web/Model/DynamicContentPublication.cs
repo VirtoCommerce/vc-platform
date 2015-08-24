@@ -21,7 +21,10 @@ namespace VirtoCommerce.MarketingModule.Web.Model
 		/// </summary>
 		public int Priority { get; set; }
 		public bool IsActive { get; set; }
-
+		/// <summary>
+		/// Store where the publication is active 
+		/// </summary>
+		public string StoreId { get; set; }
 		public DateTime? StartDate { get; set; }
 		public DateTime? EndDate { get; set; }
 
