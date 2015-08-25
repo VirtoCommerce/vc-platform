@@ -1,4 +1,4 @@
-﻿/// <binding Clean='clean' />
+﻿/// <binding BeforeBuild='packCss' ProjectOpened='watch' />
 
 /*
 This file in the main entry point for defining Gulp tasks and using Gulp plugins.
@@ -7,11 +7,10 @@ Click here to learn more. http://go.microsoft.com/fwlink/?LinkId=518007
 
 var gulp = require("gulp"),
     mainBowerFiles = require('main-bower-files'),
-    rimraf = require("rimraf"),
+    // rimraf = require("rimraf"),
     concat = require("gulp-concat"),
     cssmin = require("gulp-cssmin"),
     uglify = require("gulp-uglify");
-//project = require("./project.json");
 
 //var paths = {
 //    webroot: "./" + project.webroot + "/"
@@ -50,32 +49,11 @@ var gulp = require("gulp"),
 
 //gulp.task("min", ["min:js", "min:css"]);
 
-var srcDir = 'client_packages/';
 
 // Concatenate JS Files
-//gulp.task('packScriptsManual', function () {
-//    // return gulp.src('client_packages/**/*.js')
-//    return gulp.src([srcDir + 'angular-google-chart/ng-google-chart.js',
-//        srcDir + 'angular-gridster/dist/angular-gridster.min.js',
-//        //srcDir + 'CodeMirror/**/*.js',
-//        srcDir + 'ng-context-menu/dist/ng-context-menu.min.js',
-//        srcDir + 'ng-focus-on/ng-focus-on.min.js',
-//        srcDir + 'ng-tags-input/ng-tags-input.js',
-//        srcDir + 'ngstorage/ngStorage.min.js',
-//        srcDir + 'textAngular/dist/textAngular-rangy.min.js',
-//        srcDir + 'textAngular/dist/textAngular-sanitize.min.js',
-//        srcDir + 'textAngular/dist/textAngular.min.js'
-//    ])
-//      .pipe(concat('allPackagesManual.js'))
-//      .pipe(uglify())
-//      .pipe(gulp.dest('Scripts'));
-//});
-
-gulp.task('packScriptsAuto', function () {
+gulp.task('packScripts', function () {
+    // Only return the JavaScript files
     return gulp.src(mainBowerFiles({
-        // Set the base path for your bower components
-        // base: './bower_components',
-
         // Only return the JavaScript files
         filter: /.*\.js$/i
     }))
@@ -84,10 +62,22 @@ gulp.task('packScriptsAuto', function () {
       .pipe(gulp.dest('Scripts'));
 });
 
+gulp.task('packCss', function () {
+    // Only return the JavaScript files
+    return gulp.src(mainBowerFiles({
+        // Only return the JavaScript files
+        filter: /.*\.css$/i
+    }))
+      .pipe(concat('allStyles.css'))
+      .pipe(cssmin())
+      .pipe(gulp.dest('Scripts'));
+});
+
 gulp.task('watch', function () {
-    // All files in bower_components
-    gulp.watch('client_packages/*.js', ['packScriptsAuto']);
+    // All files in client_packages
+    gulp.watch('client_packages/**/*.js', ['packScripts']);
+    gulp.watch('client_packages/**/*.css', ['packCss']);
 });
 
 // Default Task
-gulp.task('default', ['packScriptsAuto']);
+gulp.task('default', ['packScripts']);
