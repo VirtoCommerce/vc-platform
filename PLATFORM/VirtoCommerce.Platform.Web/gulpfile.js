@@ -73,6 +73,8 @@ gulp.task('packCss', function () {
       .pipe(gulp.dest('Scripts'));
 });
 
+gulp.task('packAll', ['packScripts', 'packCss']);
+
 gulp.task('watch', function () {
     // All files in client_packages
     gulp.watch('client_packages/**/*.js', ['packScripts']);
