@@ -98,10 +98,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 		{
 			lock (_lockObject)
 			{
+				_settingsManager.SetValue("VirtoCommerce:SampleDataInstalled", true);
 				//Sample data initialization
 				if (Uri.IsWellFormedUriString(url, UriKind.Absolute) && !_settingsManager.GetValue("VirtoCommerce:SampleDataInstalled", false))
 				{
-					_settingsManager.SetValue("VirtoCommerce:SampleDataInstalled", true);
 					var pushNotification = new SampleDataImportPushNotification("System");
 					_pushNotifier.Upsert(pushNotification);
 					BackgroundJob.Enqueue(() => SampleDataImportBackground(new Uri(url),  HostingEnvironment.MapPath("~/App_Data/Uploads/"), pushNotification));
