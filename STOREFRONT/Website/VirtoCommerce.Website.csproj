@@ -418,8 +418,8 @@
   </ProjectExtensions>
   <Target Name="DeleteLibSassFilesFromBin" AfterTargets="Build">
     <ItemGroup>
-      <LibSassFiles Include="$(OutputPath)libsassnet.dll" />
-      <LibSassFiles Include="$(OutputPath)LibSass.x64.dll" />
+      <LibSassFiles Include="$(WebProjectOutputDir)\bin\libsassnet.dll" />
+      <LibSassFiles Include="$(WebProjectOutputDir)\bin\LibSass.x64.dll" />
     </ItemGroup>
     <Delete Files="@(LibSassFiles)" />
   </Target>
