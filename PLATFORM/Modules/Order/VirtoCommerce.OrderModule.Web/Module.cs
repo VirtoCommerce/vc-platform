@@ -68,7 +68,7 @@ namespace VirtoCommerce.OrderModule.Web
 
             _container.RegisterType<IOrderRepository>(new InjectionFactory(c => new OrderRepositoryImpl("VirtoCommerce", new AuditableInterceptor(), new EntityPrimaryKeyGeneratorInterceptor())));
             //_container.RegisterInstance<IInventoryService>(new Mock<IInventoryService>().Object);
-            _container.RegisterType<IOperationNumberGenerator, TimeBasedNumberGeneratorImpl>();
+            _container.RegisterType<IOperationNumberGenerator, SequenceServiceImpl>();
 
             _container.RegisterType<ICustomerOrderService, CustomerOrderServiceImpl>();
             _container.RegisterType<ICustomerOrderSearchService, CustomerOrderSearchServiceImpl>();

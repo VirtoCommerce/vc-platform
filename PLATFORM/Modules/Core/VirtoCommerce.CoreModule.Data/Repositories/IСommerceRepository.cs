@@ -12,5 +12,6 @@ namespace VirtoCommerce.CoreModule.Data.Repositories
 	{
 		IQueryable<FulfillmentCenter> FulfillmentCenters { get; }
 		IQueryable<SeoUrlKeyword> SeoUrlKeywords { get; }
+        IQueryable<Sequence> Sequences { get; }
 	}
 }
