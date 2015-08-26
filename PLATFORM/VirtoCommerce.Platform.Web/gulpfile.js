@@ -1,4 +1,4 @@
-﻿/// <binding BeforeBuild='packCss' ProjectOpened='watch' />
+﻿/// <binding BeforeBuild='packCss' AfterBuild='packAll' ProjectOpened='watch' />
 
 /*
 This file in the main entry point for defining Gulp tasks and using Gulp plugins.
