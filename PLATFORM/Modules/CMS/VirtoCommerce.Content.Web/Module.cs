@@ -11,6 +11,7 @@ using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Content.Web.ExportImport;
+using VirtoCommerce.Platform.Data.Infrastructure;
 
 namespace VirtoCommerce.Content.Web
 {
@@ -198,7 +199,7 @@ namespace VirtoCommerce.Content.Web
             #endregion
         }
 
-        public override void SetupDatabase(SampleDataLevel sampleDataLevel)
+        public override void SetupDatabase()
         {
             var options = _container.Resolve<IModuleInitializerOptions>();
             var modulePath = options.GetModuleDirectoryPath("VirtoCommerce.Content");
@@ -206,17 +207,8 @@ namespace VirtoCommerce.Content.Web
 
             using (var context = new DatabaseContentRepositoryImpl())
             {
-                var initializer = new SqlContentDatabaseInitializer(themePath, true);
-                switch (sampleDataLevel)
-                {
-                    case SampleDataLevel.Full:
-                        initializer.InitializeDatabase(context);
-                        break;
-                    default:
-                        initializer = new SqlContentDatabaseInitializer(themePath, false);
-                        initializer.InitializeDatabase(context);
-                        break;
-                }
+				var initializer = new SetupDatabaseInitializer<DatabaseContentRepositoryImpl, Data.Migrations.Configuration>();
+                initializer.InitializeDatabase(context);
             }
         }
 

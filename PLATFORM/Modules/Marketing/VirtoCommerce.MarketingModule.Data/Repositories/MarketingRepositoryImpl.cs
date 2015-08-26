@@ -24,7 +24,7 @@ namespace VirtoCommerce.MarketingModule.Data.Repositories
 			: base(nameOrConnectionString, null, interceptors)
 		{
 			Configuration.LazyLoadingEnabled = false;
-			Database.SetInitializer<MarketingRepositoryImpl>(null);
+		
 		}
 
 		protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -63,14 +63,14 @@ namespace VirtoCommerce.MarketingModule.Data.Repositories
 					.Property(x => x.Id);
 			modelBuilder.Entity<PublishingGroupContentItem>().HasRequired(p => p.ContentItem)
 					.WithMany().HasForeignKey(x=>x.DynamicContentItemId)
-					.WillCascadeOnDelete(false);
+					.WillCascadeOnDelete(true);
 	
 			modelBuilder.Entity<PublishingGroupContentPlace>().ToTable("PublishingGroupContentPlace");
 			modelBuilder.Entity<PublishingGroupContentPlace>().HasKey(x => x.Id)
 					.Property(x => x.Id);
 			modelBuilder.Entity<PublishingGroupContentPlace>().HasRequired(p => p.ContentPlace).WithMany()
 				.HasForeignKey(x=>x.DynamicContentPlaceId)
-				.WillCascadeOnDelete(false);
+				.WillCascadeOnDelete(true);
 
 			modelBuilder.Entity<DynamicContentFolder>().ToTable("DynamicContentFolder");
 			modelBuilder.Entity<DynamicContentFolder>().HasKey(x => x.Id)
@@ -134,7 +134,7 @@ namespace VirtoCommerce.MarketingModule.Data.Repositories
 		public Promotion[] GetActivePromotions()
 		{
 			var now = DateTime.UtcNow;
-			var retVal = Promotions.Where(x => x.IsActive && (x.StartDate == null || now >= x.StartDate) && (x.EndDate == null || x.EndDate >= now))
+			var retVal = Promotions.Include(x => x.Coupons).Where(x => x.IsActive && (x.StartDate == null || now >= x.StartDate) && (x.EndDate == null || x.EndDate >= now))
 											   .OrderByDescending(x => x.Priority).ToArray();
 			return retVal;
 		}

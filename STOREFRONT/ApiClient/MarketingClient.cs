@@ -30,9 +30,9 @@ namespace VirtoCommerce.ApiClient
             return rewards;
         }
 
-        public Task<ResponseCollection<DynamicContentItemGroup>> GetDynamicContentAsync(string[] placeHolders, TagQuery query)
+        public Task<ResponseCollection<DynamicContentItemGroup>> GetDynamicContentAsync(string storeId, string[] placeHolders, TagQuery query)
         {
-            var parameters = new { placeHolders = String.Join(",", placeHolders) };
+            var parameters = new { store = storeId, placeHolders = String.Join(",", placeHolders) };
             return GetAsync<ResponseCollection<DynamicContentItemGroup>>(
                 CreateRequestUri(RelativePaths.DynamicContents, query.GetQueryString(parameters)));
         }

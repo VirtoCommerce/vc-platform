@@ -39,7 +39,8 @@ VirtoCommerce.redirect = function(url, params) {
 };
 
 VirtoCommerce.url = function (url) {
-    var baseUrl = window.location.protocol + "//" + location.host;
+    //var baseUrl = window.location.protocol + "//" + location.host;
+    var baseUrl = $("base").attr("href");
     return baseUrl + url;
 };
 
@@ -58,42 +59,17 @@ VirtoCommerce.renderDynamicContent = function () {
             }
         }
 
-        $.get(url, function (jsonResponse) {
-            if (jsonResponse) {
-                for (var i = 0; i < jsonResponse.length; i++) {
-                    var placeholder = jsonResponse[i];
-                    var placeholderElement = $("div[data-vccontentid='" + placeholder.name + "']");
-                    if (placeholderElement.length) {
-                        placeholderElement.empty();
-                        if (placeholder.name == "HomePageSlider") {
-                            placeholderElement.html("<div class=\"flexslider\"><ul class=\"slides\"></ul></div>");
-                        }
-                        for (var j = 0; j < placeholder.banners.length; j++) {
-                            var banner = placeholder.banners[j];
-                            if (banner.content_type.toLowerCase() == "html") {
-                                if (placeholder.name == "HomePageSlider") {
-                                    placeholderElement.find(".slides").append("<li>" + banner.properties.html + "</li>");
-                                } else {
-                                    placeholderElement.append(banner.properties.html);
-                                }
-                            }
-                        }
-                    }
+        $.get(url, function(htmlResponse) {
+            if (htmlResponse) {
+                var htmlData = $("<div />").html(htmlResponse);
+                for (var i = 0; i < placeholderIds.length; i++) {
+                    var htmlPlaceContent = htmlData.find("#" + placeholderIds[i]).html();
+                    $("[data-vccontentid='" + placeholderIds[i] + "']").html(htmlPlaceContent);
                 }
+
+                $(".flexslider").flexslider();
             }
-
-            $(".flexslider").flexslider();
         });
-
-        //$.get(url, function(htmlResponse) {
-            //if (htmlResponse) {
-                //var htmlData = $("<div />").html(htmlResponse);
-                //for (var i = 0; i < placeholderIds.length; i++) {
-                //    var htmlPlaceContent = htmlResponse.find("#" + placeholderIds[i]).html();
-                //    $("[data-vccontentid='" + placeholderIds[i] + "']").html(htmlPlaceContent);
-                //}
-            //}
-        //});
     }
 };
 

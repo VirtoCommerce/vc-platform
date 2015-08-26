@@ -3,43 +3,43 @@ using System.Diagnostics.Tracing;
 
 namespace AvaTax.TaxModule.Web.Logging
 {
-    public class SlabInvoker : SlabInvoker<BaseSlabContext>
+    public class LogInvoker : LogInvoker<BaseLogContext>
     {
     }
 
-    public class SlabInvoker<T> where T : BaseSlabContext
+    public class LogInvoker<T> where T : BaseLogContext
     {
-        public SlabInvoker()
+        public LogInvoker()
         {
             this.Context = Activator.CreateInstance<T>();
         }
 
-        public delegate void SlabMethod(T context);
+        public delegate void LogMethod(T context);
         public delegate void WrappedMethod(T context);
         public T Context { get; set; }
 
-        public static SlabInvoker<T> Execute(WrappedMethod codeBody)
+        public static LogInvoker<T> Execute(WrappedMethod codeBody)
         {
-            var slabInvoker = new SlabInvoker<T>();
+            var logInvoker = new LogInvoker<T>();
 
             try
             {
-                slabInvoker.Context.Start();
-                codeBody.Invoke(slabInvoker.Context);
+                logInvoker.Context.Start();
+                codeBody.Invoke(logInvoker.Context);
             }
             catch (Exception ex)
             {
-                slabInvoker.Context.Error = SlabExtendedException.Create(ex);
+                logInvoker.Context.Error = LogExtendedException.Create(ex);
             }
             finally
             {
-                slabInvoker.Context.Stop();
+                logInvoker.Context.Stop();
             }
 
-            return slabInvoker;
+            return logInvoker;
         }
 
-        public SlabInvoker<T> OnSuccess(SlabMethod codeBody)
+        public LogInvoker<T> OnSuccess(LogMethod codeBody)
         {
             if (!this.Context.HasError)
             {
@@ -49,7 +49,7 @@ namespace AvaTax.TaxModule.Web.Logging
             return this;
         }
 
-        public SlabInvoker<T> OnSuccess(EventSource eventSource, int eventCode)
+        public LogInvoker<T> OnSuccess(AvalaraLogger eventSource, int eventCode)
         {
             if (!this.Context.HasError)
             {
@@ -58,7 +58,7 @@ namespace AvaTax.TaxModule.Web.Logging
             return this;
         }
 
-        public SlabInvoker<T> OnError(SlabMethod codeBody)
+        public LogInvoker<T> OnError(LogMethod codeBody)
         {
             if (this.Context.HasError)
             {
@@ -68,7 +68,7 @@ namespace AvaTax.TaxModule.Web.Logging
             return this;
         }
 
-        public SlabInvoker<T> OnError(EventSource eventSource, int eventCode)
+        public LogInvoker<T> OnError(AvalaraLogger eventSource, int eventCode)
         {
             if (this.Context.HasError)
             {
@@ -78,13 +78,13 @@ namespace AvaTax.TaxModule.Web.Logging
             return this;
         }
 
-        public SlabInvoker<T> OnFinished(SlabMethod codeBody)
+        public LogInvoker<T> OnFinished(LogMethod codeBody)
         {
             codeBody.Invoke(this.Context);
             return this;
         }
 
-        public SlabInvoker<T> OnFinished(EventSource eventSource, int eventCode)
+        public LogInvoker<T> OnFinished(AvalaraLogger eventSource, int eventCode)
         {
             eventSource.Write(eventCode, this.Context);
             return this;

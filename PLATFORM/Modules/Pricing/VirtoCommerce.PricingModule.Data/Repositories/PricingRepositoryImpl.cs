@@ -24,9 +24,7 @@ namespace VirtoCommerce.PricingModule.Data.Repositories
 		public PricingRepositoryImpl(string nameOrConnectionString, params IInterceptor[] interceptors)
 			: base(nameOrConnectionString, null, interceptors)
 		{
-			this.Configuration.AutoDetectChangesEnabled = true;
-			this.Configuration.ProxyCreationEnabled = true;
-			Database.SetInitializer<PricingRepositoryImpl>(null);
+			Configuration.LazyLoadingEnabled = false;
 		}
 
 		protected override void OnModelCreating(DbModelBuilder modelBuilder)

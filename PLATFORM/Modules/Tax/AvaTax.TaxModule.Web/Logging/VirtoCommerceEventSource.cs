@@ -7,7 +7,7 @@ namespace AvaTax.TaxModule.Web.Logging
     {
         #region Context
 
-        public class TaxRequestContext : BaseSlabContext
+        public class TaxRequestContext : BaseLogContext
         {
             public string docCode { get; set; }
             public string docType { get; set; }

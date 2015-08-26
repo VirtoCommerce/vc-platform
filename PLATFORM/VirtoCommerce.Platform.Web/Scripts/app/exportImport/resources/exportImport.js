@@ -7,6 +7,7 @@
 
         loadExportManifest: { url: 'api/platform/export/manifest/load' },
         runImport: { method: 'POST', url: 'api/platform/import' },
-        importSampleData: { url: 'api/platform/sampledata/import' }
+        sampleDataDiscover: { url: 'api/platform/sampledata/discover', isArray: true },
+        importSampleData: { method: 'POST', url: 'api/platform/sampledata/import', params: { url: '@url' } }
     });
 }]);

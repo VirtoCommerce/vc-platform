@@ -15,14 +15,11 @@ namespace VirtoCommerce.CartModule.Data.Repositories
 	{
 		public CartRepositoryImpl()
 		{
-			Database.SetInitializer<CartRepositoryImpl>(null);
-			Configuration.LazyLoadingEnabled = false;
 		}
 
 		public CartRepositoryImpl(string nameOrConnectionString, params IInterceptor[] interceptors)
 			: base(nameOrConnectionString, null, interceptors)
 		{
-			Database.SetInitializer<CartRepositoryImpl>(null);
 			Configuration.LazyLoadingEnabled = false;
 		}
 

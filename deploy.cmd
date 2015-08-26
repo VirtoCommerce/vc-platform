@@ -64,9 +64,9 @@ IF DEFINED CLEAN_LOCAL_DEPLOYMENT_TEMP (
 	mkdir "%DEPLOYMENT_TEMP%"
 )
 
-IF NOT DEFINED MSBUILD_PATH (
-	SET MSBUILD_PATH=%WINDIR%\Microsoft.NET\Framework\v4.0.30319\msbuild.exe
-)
+IF NOT DEFINED MSBUILD_PATH IF EXIST "%ProgramFiles(x86)%\MSBuild\14.0\Bin\MSBuild.exe" SET MSBUILD_PATH=%ProgramFiles(x86)%\MSBuild\14.0\Bin\MSBuild.exe
+IF NOT DEFINED MSBUILD_PATH IF EXIST "%ProgramFiles(x86)%\MSBuild\12.0\Bin\MSBuild.exe" SET MSBUILD_PATH=%ProgramFiles(x86)%\MSBuild\12.0\Bin\MSBuild.exe
+IF NOT DEFINED MSBUILD_PATH SET MSBUILD_PATH=%WINDIR%\Microsoft.NET\Framework\v4.0.30319\msbuild.exe
 
 SET ADMIN_SOLUTION_DIR=%DEPLOYMENT_SOURCE%\PLATFORM
 SET ADMIN_SOLUTION_FILE=%ADMIN_SOLUTION_DIR%\VirtoCommerce.Manager.sln
@@ -93,10 +93,6 @@ IF /I "%APPSETTING_VirtoCommerce_DeployApplications%" NEQ "Web Admin Only" (
 
     call :ExecuteCmd rename "%PUBLISHED_WEBSITES%\VirtoCommerce.Website" store
     IF !ERRORLEVEL! NEQ 0 goto error
-
-    call :ExecuteCmd del "%PUBLISHED_WEBSITES%\store\bin\libsassnet.dll"
-    call :ExecuteCmd del "%PUBLISHED_WEBSITES%\store\bin\LibSass.x64.dll"
-    call :ExecuteCmd del "%PUBLISHED_WEBSITES%\store\bin\LibSass.x86.dll"
 )
 
 :: Build platform

@@ -10,48 +10,48 @@ using VirtoCommerce.CoreModule.Data.Model;
 
 namespace VirtoCommerce.CoreModule.Data.Repositories
 {
-    public class CommerceRepositoryImpl : EFRepositoryBase, IСommerceRepository
-    {
-        public CommerceRepositoryImpl()
-        {
-        }
+	public class CommerceRepositoryImpl : EFRepositoryBase, IСommerceRepository
+	{
+		public CommerceRepositoryImpl()
+		{
+		}
 
-        public CommerceRepositoryImpl(string nameOrConnectionString)
-            : this(nameOrConnectionString, null)
-        {
-        }
-        public CommerceRepositoryImpl(string nameOrConnectionString, params IInterceptor[] interceptors)
-            : base(nameOrConnectionString, null, interceptors)
-        {
+		public CommerceRepositoryImpl(string nameOrConnectionString)
+			: this(nameOrConnectionString, null)
+		{
+		}
+		public CommerceRepositoryImpl(string nameOrConnectionString, params IInterceptor[] interceptors)
+			: base(nameOrConnectionString, null, interceptors)
+		{
+			Configuration.LazyLoadingEnabled = false;
+		}
 
-        }
-
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {
-            MapEntity<FulfillmentCenter>(modelBuilder, toTable: "FulfillmentCenter");
-            MapEntity<SeoUrlKeyword>(modelBuilder, toTable: "SeoUrlKeyword");
+		protected override void OnModelCreating(DbModelBuilder modelBuilder)
+		{
+			MapEntity<FulfillmentCenter>(modelBuilder, toTable: "FulfillmentCenter");
+			MapEntity<SeoUrlKeyword>(modelBuilder, toTable: "SeoUrlKeyword");
             MapEntity<Sequence>(modelBuilder, toTable: "Sequence");
 
-            base.OnModelCreating(modelBuilder);
-        }
+			base.OnModelCreating(modelBuilder);
+		}
 
-        #region IСommerceRepository Members
+		#region IСommerceRepository Members
 
-        public IQueryable<FulfillmentCenter> FulfillmentCenters
-        {
-            get { return GetAsQueryable<FulfillmentCenter>(); }
-        }
-        public IQueryable<SeoUrlKeyword> SeoUrlKeywords
-        {
-            get { return GetAsQueryable<SeoUrlKeyword>(); }
-        }
+		public IQueryable<FulfillmentCenter> FulfillmentCenters
+		{
+			get { return GetAsQueryable<FulfillmentCenter>(); }
+		}
+		public IQueryable<SeoUrlKeyword> SeoUrlKeywords
+		{
+			get { return GetAsQueryable<SeoUrlKeyword>(); }
+		}
         public IQueryable<Sequence> Sequences
         {
             get { return GetAsQueryable<Sequence>(); }
         }
-        #endregion
+		#endregion
 
-
-    }
+	
+	}
 
 }

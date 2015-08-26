@@ -119,9 +119,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
         public IHttpActionResult InstallModule(string fileName)
         {
-            var packageFilePath = Path.Combine(_uploadsPath, fileName);
-            var options = new webModel.ModuleBackgroundJobOptions { PackageFilePath = packageFilePath };
-            var result = ScheduleJob(webModel.ModuleAction.Install, options);
+            var options = new webModel.ModuleBackgroundJobOptions
+            {
+                Action = webModel.ModuleAction.Install,
+                PackageFilePath = Path.Combine(_uploadsPath, fileName),
+            };
+            var result = ScheduleJob(options);
             return Ok(result);
         }
 
@@ -137,9 +140,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
         public IHttpActionResult UpdateModule(string id, string fileName)
         {
-            var packageFilePath = Path.Combine(_uploadsPath, fileName);
-            var options = new webModel.ModuleBackgroundJobOptions { PackageId = id, PackageFilePath = packageFilePath };
-            var result = ScheduleJob(webModel.ModuleAction.Update, options);
+            var options = new webModel.ModuleBackgroundJobOptions
+            {
+                Action = webModel.ModuleAction.Update,
+                PackageId = id,
+                PackageFilePath = Path.Combine(_uploadsPath, fileName)
+            };
+            var result = ScheduleJob(options);
             return Ok(result);
         }
 
@@ -154,8 +161,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
         public IHttpActionResult UninstallModule(string id)
         {
-            var options = new webModel.ModuleBackgroundJobOptions { PackageId = id };
-            var result = ScheduleJob(webModel.ModuleAction.Uninstall, options);
+            var options = new webModel.ModuleBackgroundJobOptions
+            {
+                Action = webModel.ModuleAction.Uninstall,
+                PackageId = id
+            };
+            var result = ScheduleJob(options);
             return Ok(result);
         }
 
@@ -214,11 +225,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
 
-        private webModel.ModulePushNotification ScheduleJob(webModel.ModuleAction action, webModel.ModuleBackgroundJobOptions options)
+        private webModel.ModulePushNotification ScheduleJob(webModel.ModuleBackgroundJobOptions options)
         {
             var notification = new webModel.ModulePushNotification(CurrentPrincipal.GetCurrentUserName());
 
-            switch (action)
+            switch (options.Action)
             {
                 case webModel.ModuleAction.Install:
                     notification.Title = "Install Module";

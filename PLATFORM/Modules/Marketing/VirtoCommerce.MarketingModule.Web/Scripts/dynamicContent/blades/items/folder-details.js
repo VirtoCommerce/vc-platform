@@ -31,11 +31,22 @@
 				    permission: 'marketing:manage'
 				},
                 {
-                    name: "Delete", icon: 'fa fa-trash',
-                    executeMethod: function () {
-                        blade.parentBlade.deleteFolder(blade.entity);
-                        bladeNavigationService.closeBlade(blade);
-                    },
+                	name: "Delete", icon: 'fa fa-trash',
+                	executeMethod: function () {
+                		var dialog = {
+                			id: "confirmDeleteContentItem",
+                			title: "Delete confirmation",
+                			message: "Are you sure want to delete content item?",
+                			callback: function (remove) {
+                				if (remove) {
+                					blade.deleteFolder(blade.entity);
+                					bladeNavigationService.closeBlade(blade);
+                				}
+                			}
+                		};
+
+                		dialogService.showConfirmationDialog(dialog);
+                	},
                     canExecuteMethod: function () {
                         return true;
                     },
@@ -48,20 +59,34 @@
     }
 
     blade.saveChanges = function () {
+        blade.isLoading = true;
+
         if (blade.isNew) {
             marketing_dynamicContents_res_folders.save({}, blade.entity, function (data) {
-                blade.parentBlade.updateChoosen();
+            	blade.parentBlade.initializeBlade();
                 bladeNavigationService.closeBlade(blade);
+                blade.isLoading = false;
             },
-            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); blade.isLoading = false; });
         }
         else {
             marketing_dynamicContents_res_folders.update({}, blade.entity, function (data) {
-                blade.parentBlade.updateChoosen();
+            	blade.parentBlade.initializeBlade();
                 blade.originalEntity = angular.copy(blade.entity);
+                blade.isLoading = false;
             },
-            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); blade.isLoading = false; });
         }
+    }
+
+    blade.deleteFolder = function (data) {
+    	marketing_dynamicContents_res_folders.delete({ ids: [data.id] }, function () {
+    		var pathSteps = data.outline.split(';');
+    		var id = pathSteps[pathSteps.length - 2];
+    		blade.parentBlade.choosenFolder = id;
+    		blade.parentBlade.initializeBlade();
+    	},
+        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); blade.isLoading = false; });
     }
 
     $scope.blade.headIcon = 'fa-inbox';

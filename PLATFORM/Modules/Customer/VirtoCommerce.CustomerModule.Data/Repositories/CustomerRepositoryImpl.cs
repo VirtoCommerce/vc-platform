@@ -17,7 +17,6 @@ namespace VirtoCommerce.CustomerModule.Data.Repositories
         {
             //Configuration.AutoDetectChangesEnabled = true;
             Configuration.ProxyCreationEnabled = false;
-            Database.SetInitializer<CustomerRepositoryImpl>(null);
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

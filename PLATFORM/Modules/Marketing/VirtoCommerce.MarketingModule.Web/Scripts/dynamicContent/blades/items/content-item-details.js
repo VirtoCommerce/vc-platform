@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('virtoCommerce.marketingModule.addContentItemsController', ['$scope', 'virtoCommerce.marketingModule.dynamicContent.contentItems', 'platformWebApp.bladeNavigationService', function ($scope, marketing_dynamicContents_res_contentItems, bladeNavigationService) {
+.controller('virtoCommerce.marketingModule.addContentItemsController', ['$scope', 'virtoCommerce.marketingModule.dynamicContent.contentItems', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function ($scope, marketing_dynamicContents_res_contentItems, bladeNavigationService, dialogService) {
     $scope.setForm = function (form) {
         $scope.formScope = form;
     }
@@ -7,6 +7,8 @@
     var blade = $scope.blade;
 
     blade.initialize = function () {
+        $scope.blade.toolbarCommands = [];
+
         if (!blade.isNew) {
             $scope.blade.toolbarCommands = [
 				{
@@ -32,30 +34,43 @@
 				{
 				    name: "Delete", icon: 'fa fa-trash',
 				    executeMethod: function () {
-				        blade.delete();
+				    	var dialog = {
+				    		id: "confirmDeleteContentItem",
+				    		title: "Delete confirmation",
+				    		message: "Are you sure want to delete content item?",
+				    		callback: function (remove) {
+				    			if (remove) {
+				    				blade.delete();
+				    			}
+				    		}
+				    	};
+
+				    	dialogService.showConfirmationDialog(dialog);
 				    },
 				    canExecuteMethod: function () {
 				        return true;
 				    },
 				    permission: 'marketing:manage'
-				},
-				{
-					name: "Manage type properties", icon: 'fa fa-edit',
-					executeMethod: function () {
-						var newBlade = {
-							id: 'dynamicPropertyList',
-							objectType: blade.entity.objectType,
-							controller: 'platformWebApp.dynamicPropertyListController',
-							template: 'Scripts/app/dynamicProperties/blades/dynamicProperty-list.tpl.html'
-						};
-						bladeNavigationService.showBlade(newBlade, blade);
-					},
-					canExecuteMethod: function () {
-						return angular.isDefined(blade.entity.objectType);
-					}
 				}
             ];
         }
+
+        $scope.blade.toolbarCommands.push(
+            {
+                name: "Manage type properties", icon: 'fa fa-edit',
+                executeMethod: function () {
+            	    var newBlade = {
+            		    id: 'dynamicPropertyList',
+            		    objectType: blade.entity.objectType,
+            		    controller: 'platformWebApp.dynamicPropertyListController',
+            		    template: 'Scripts/app/dynamicProperties/blades/dynamicProperty-list.tpl.html'
+            	    };
+            	    bladeNavigationService.showBlade(newBlade, blade);
+                },
+                canExecuteMethod: function () {
+            	    return angular.isDefined(blade.entity.objectType);
+                }
+            });
 
         blade.originalEntity = angular.copy(blade.entity);
 
@@ -63,27 +78,31 @@
     }
 
     blade.delete = function () {
+        blade.isLoading = true;
         marketing_dynamicContents_res_contentItems.delete({ ids: [blade.entity.id] }, function () {
-            blade.parentBlade.updateChoosen();
+            blade.parentBlade.initializeBlade();
             bladeNavigationService.closeBlade(blade);
         },
-        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); blade.isLoading = false; });
     }
 
     blade.saveChanges = function () {
+        blade.isLoading = true;
+
         if (blade.isNew) {
             marketing_dynamicContents_res_contentItems.save({}, blade.entity, function (data) {
-                blade.parentBlade.updateChoosen();
+            	blade.parentBlade.initializeBlade();
                 bladeNavigationService.closeBlade(blade);
             },
-            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); blade.isLoading = false; });
         }
         else {
             marketing_dynamicContents_res_contentItems.update({}, blade.entity, function (data) {
-                blade.parentBlade.updateChoosen();
+            	blade.parentBlade.initializeBlade();
                 blade.originalEntity = angular.copy(blade.entity);
+                blade.isLoading = false;
             },
-            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); blade.isLoading = false; });
         }
     }
 

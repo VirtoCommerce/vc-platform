@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.AspNet.SignalR;
 using core = VirtoCommerce.Platform.Core.PushNotifications ;
 using VirtoCommerce.Platform.Core.Common;
+using System.Collections.Concurrent;
 
 namespace VirtoCommerce.Platform.Data.PushNotifications
 {
@@ -15,7 +16,7 @@ namespace VirtoCommerce.Platform.Data.PushNotifications
 	[CLSCompliant(false)]
 	public class InMemoryPushNotificationManager : core.IPushNotificationManager
     {
-		private List<core.PushNotification> _innerList = new List<core.PushNotification>();
+		private ConcurrentBag<core.PushNotification> _innerList = new ConcurrentBag<core.PushNotification>();
 		private readonly IHubContext _hubSignalR;
 
 		public InMemoryPushNotificationManager(IHubContext hubSignalR)
@@ -35,7 +36,7 @@ namespace VirtoCommerce.Platform.Data.PushNotifications
 
             if (alreadyExistNotify != null)
             {
-                _innerList.Remove(alreadyExistNotify);
+                _innerList.TryTake(out alreadyExistNotify);
                 _innerList.Add(notify);
 
             }

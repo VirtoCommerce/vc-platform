@@ -38,9 +38,11 @@ namespace VirtoCommerce.Web.Controllers
             return this.View("product");
         }
 
-        public async Task<ActionResult> ProductByKeywordAsync(string item)
+        public async Task<ActionResult> ProductByKeywordAsync(string category, string item)
         {
-            var product = await this.Service.GetProductByKeywordAsync(SiteContext.Current, item) ?? await this.Service.GetProductAsync(SiteContext.Current, item);
+            var collection = await this.Service.GetCollectionByKeywordAsync(SiteContext.Current, category) ?? await this.Service.GetCollectionAsync(SiteContext.Current, category);
+            this.Context.Set("Collection", collection);
+            var product = await this.Service.GetProductByKeywordAsync(SiteContext.Current, item, collection) ?? await this.Service.GetProductAsync(SiteContext.Current, item, collection);
 
             if (product != null)
             {
@@ -59,9 +61,10 @@ namespace VirtoCommerce.Web.Controllers
         //[Route("collections/{collection}/products/{handle}")]
         public async Task<ActionResult> ProductInCollectionAsync(string collection, string handle, int page = 1)
         {
-            this.Context.Set("Collection", await this.Service.GetCollectionAsync(SiteContext.Current, collection));
+            var parentCollection = await this.Service.GetCollectionByKeywordAsync(SiteContext.Current, collection) ?? await this.Service.GetCollectionAsync(SiteContext.Current, collection);
+            this.Context.Set("Collection", parentCollection);
 
-            var product = await this.Service.GetProductAsync(SiteContext.Current, handle);
+            var product = await this.Service.GetProductAsync(SiteContext.Current, handle, parentCollection);
             this.Context.Set("Product", product);
 
             if (product == null)

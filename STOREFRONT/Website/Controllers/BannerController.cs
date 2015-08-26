@@ -20,7 +20,7 @@ namespace VirtoCommerce.Web.Controllers
         //[ChildActionOnly]
         public async Task<ActionResult> ShowDynamicContent(string placeName)
         {
-            var response = await Service.GetDynamicContentAsync(new[] { placeName });
+            var response = await Service.GetDynamicContentAsync(Context.StoreId, new[] { placeName });
             if (response != null && response.Items != null)
             {
                 Context.Set("placeholders", new PlaceHolderCollection(response.Items.AsWebModel()));
@@ -34,7 +34,7 @@ namespace VirtoCommerce.Web.Controllers
         [Route("")]
         public async Task<ActionResult> ShowDynamicContents(string[] placeNames)
         {
-            var response = await Service.GetDynamicContentAsync(placeNames);
+            var response = await Service.GetDynamicContentAsync(Context.StoreId, placeNames);
             if (response != null && response.Items != null)
             {
                 var placeholders = new List<PlaceHolder>();
@@ -44,9 +44,9 @@ namespace VirtoCommerce.Web.Controllers
                     placeholders.Add(item.AsWebModel());
                 }
 
-                //Context.Set("placeholders", new PlaceHolderCollection(response.Items.Select(x => x.AsWebModel())));
-                //return PartialView("placeholders", this.Context);
-                return Json(placeholders, JsonRequestBehavior.AllowGet);
+                Context.Set("placeholders", new PlaceHolderCollection(placeholders));
+
+                return PartialView("placeholders", this.Context);
             }
 
             return null;

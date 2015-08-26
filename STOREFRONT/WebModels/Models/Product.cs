@@ -30,11 +30,20 @@ namespace VirtoCommerce.Web.Models
         public Collections Collections { get; set; }
 
         [DataMember]
+        public decimal CompareAtPrice
+        {
+            get
+            {
+                return (decimal)SelectedOrFirstAvailableVariant.CompareAtPrice / 100;
+            }
+        }
+
+        [DataMember]
         public decimal CompareAtPriceMax
         {
             get
             {
-                return this.Variants.Max(v => v.CompareAtPrice);
+                return (decimal)Variants.Max(v => v.CompareAtPrice) / 100;
             }
         }
 
@@ -43,7 +52,7 @@ namespace VirtoCommerce.Web.Models
         {
             get
             {
-                return this.Variants.Min(v => v.CompareAtPrice);
+                return (decimal)Variants.Min(v => v.CompareAtPrice) / 100;
             }
         }
 
@@ -109,7 +118,7 @@ namespace VirtoCommerce.Web.Models
         {
             get
             {
-                return this.SelectedOrFirstAvailableVariant.NumericPrice;
+                return (decimal)SelectedOrFirstAvailableVariant.Price / 100;
             }
         }
 
@@ -118,7 +127,7 @@ namespace VirtoCommerce.Web.Models
         {
             get
             {
-                return this.Variants.Max(v => v.NumericPrice);
+                return (decimal)Variants.Max(v => v.Price) / 100;
             }
         }
 
@@ -127,7 +136,7 @@ namespace VirtoCommerce.Web.Models
         {
             get
             {
-                return this.Variants.Min(v => v.NumericPrice);
+                return (decimal)Variants.Min(v => v.Price) / 100;
             }
         }
 

@@ -286,6 +286,7 @@
     <Compile Include="BackgroundJobs\SendNotificationsJobs.cs" />
     <Compile Include="Converters\ExportImport\ExportImportRequestConverter.cs" />
     <Compile Include="Model\ExportImport\PushNotifications\SampleDataImportPushNotification.cs" />
+    <Compile Include="Model\ExportImport\SampleDataInfo.cs" />
     <Compile Include="Model\Notifications\RenderNotificationContentResult.cs" />
     <Compile Include="Model\Packaging\ModuleAction.cs" />
     <Compile Include="Model\Packaging\ModuleBackgroundJobOptions.cs" />
@@ -349,6 +350,8 @@
     <Content Include="Content\angular-gridster.css" />
     <Content Include="Content\angular-multi-select.css" />
     <Content Include="Scripts\angular-gridster.js" />
+    <Content Include="Scripts\AngularUI\angular-ui-router.js" />
+    <Content Include="Scripts\AngularUI\angular-ui-router.min.js" />
     <Content Include="Scripts\app\dynamicProperties\blades\dynamicProperty-detail.js" />
     <Content Include="Scripts\app\dynamicProperties\blades\dynamicProperty-detail.tpl.html" />
     <Content Include="Scripts\app\dynamicProperties\blades\dynamicObject-list.js" />
@@ -377,6 +380,7 @@
     <Content Include="Scripts\app\exportImport\notifications\history.tpl.html" />
     <Content Include="Scripts\app\exportImport\notifications\menu.tpl.html" />
     <Content Include="Scripts\app\exportImport\resources\exportImport.js" />
+    <Content Include="Scripts\app\exportImport\templates\sampleDataChoose.tpl.html" />
     <Content Include="Scripts\app\exportImport\templates\sampleDataInitialization.tpl.html" />
     <Content Include="Scripts\app\notifications\blades\notification-journal-details.js" />
     <Content Include="Scripts\app\notifications\blades\notification-journal-details.tpl.html" />
@@ -403,6 +407,8 @@
     <Content Include="Scripts\app\packaging\blades\module-detail.tpl.html" />
     <Content Include="Scripts\app\packaging\blades\modules-list.js" />
     <Content Include="Scripts\app\packaging\blades\modules-list.tpl.html" />
+    <Content Include="Scripts\app\packaging\notifications\history.tpl.html" />
+    <Content Include="Scripts\app\packaging\notifications\menu.tpl.html" />
     <Content Include="Scripts\app\settings\blades\entitySetting-list.js" />
     <Content Include="Scripts\app\settings\blades\entitySetting-list.tpl.html" />
     <Content Include="Scripts\app\settings\widgets\entitySettingsWidget.js" />
@@ -568,8 +574,6 @@
     <Content Include="Scripts\angular-ui\ui-utils.min.js" />
     <Content Include="Scripts\angular.js" />
     <Content Include="Scripts\angular.min.js" />
-    <Content Include="Scripts\AngularUI\ui-router.js" />
-    <Content Include="Scripts\AngularUI\ui-router.min.js" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
@@ -1471,6 +1475,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="App_Data\Assets\" />
     <Folder Include="App_Data\Modules\" />
     <Folder Include="Filters\" />
     <Folder Include="Views\Notifications\" />

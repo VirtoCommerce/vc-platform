@@ -31,7 +31,7 @@
     };
 
     $scope.multilingualFlagValidator = function (value) {
-        return !value || blade.currentEntity.valueType === 'ShortText' || blade.currentEntity.valueType === 'LongText';
+        return !value || blade.currentEntity.valueType === 'ShortText' || blade.currentEntity.valueType === 'LongText' || blade.currentEntity.valueType === 'Html';
     };
 
     $scope.openChild = function (childType) {
@@ -104,7 +104,7 @@
             message: "Are you sure you want to delete this dynamic property?",
             callback: function (remove) {
                 if (remove) {
-                    dynamicPropertiesApi.delete({ id: blade.objectType, propertyId: node.id },
+                    dynamicPropertiesApi.delete({ id: blade.objectType, propertyId: blade.currentEntity.id },
                         function () {
                             $scope.bladeClose();
                             blade.parentBlade.refresh();

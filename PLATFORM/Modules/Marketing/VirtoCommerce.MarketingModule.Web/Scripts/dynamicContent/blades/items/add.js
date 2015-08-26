@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('virtoCommerce.marketingModule.addContentItemsElementController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.catalogModule.categories', 'virtoCommerce.catalogModule.items', function ($scope, bladeNavigationService, categories, items) {
+.controller('virtoCommerce.marketingModule.addContentItemsElementController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.catalogModule.categories', 'virtoCommerce.catalogModule.items', 'virtoCommerce.marketing.dynamicContent.dynamicProperties', function ($scope, bladeNavigationService, categories, items, dynamicProperties) {
 	var blade = $scope.blade;
 
 	blade.addFolder = function () {
@@ -8,8 +8,14 @@
 	};
 
 	blade.addContentItem = function () {
-	    var data = { name: '', description: '', contentType: 'Html', categoryId: '', imageUrl: '', externalImageUrl: '', message: '', categoryCode: '', title: '', sortField: '', itemCount: 1, newItems: false, flashFilePath: '', link1Url: '', link2Url: '', link3Url: '', rawHtml: '', razorHtml: '', liquidHtml: '', alternativeText: '', targetUrl: '', productCode: '', folderId: blade.choosenFolder };
-		blade.parentBlade.addNewContentItem(data);
+	    dynamicProperties.getDynamicProperties({ typeName: 'VirtoCommerce.Domain.Marketing.Model.DynamicContentItem' }, function (data) {
+	        angular.forEach(data, function (item){
+	        	item.values = [];
+	        	item.displayNames = [];
+	        });
+	        var contentItem = { name: '', description: '', folderId: blade.choosenFolder, dynamicProperties: data };
+	        blade.parentBlade.addNewContentItem(contentItem);
+	    });
 	};
 
 	$scope.blade.isLoading = false;

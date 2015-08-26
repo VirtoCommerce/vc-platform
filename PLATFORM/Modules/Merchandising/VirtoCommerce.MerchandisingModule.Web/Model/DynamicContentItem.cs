@@ -1,4 +1,6 @@
-﻿namespace VirtoCommerce.MerchandisingModule.Web.Model
+﻿using System.Collections.Generic;
+using VirtoCommerce.Platform.Core.DynamicProperties;
+namespace VirtoCommerce.MerchandisingModule.Web.Model
 {
     public class DynamicContentItem
     {
@@ -30,6 +32,6 @@
         /// <summary>
         /// Gets or sets the dictionary of dynamic content item propertines
         /// </summary>
-        public PropertyDictionary Properties { get; set; }
+		public PropertyDictionary Properties { get; set; }
     }
 }

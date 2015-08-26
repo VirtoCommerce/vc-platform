@@ -3,13 +3,15 @@
 	
 	var blade = $scope.blade;
 
-	blade.choosenFolder = undefined;
-	blade.currentEntity = undefined;
-	blade.currentEntities = [];
+	blade.choosenFolder = 'ContentItem';
+	blade.currentEntity = {};
 
 	blade.initialize = function () {
-		marketing_dynamicContents_res_search.search({ folder: 'ContentItem', respGroup: '18' }, function (data) {
-			blade.currentEntities = data.contentFolders;
+		marketing_dynamicContents_res_search.search({ folder: blade.choosenFolder, respGroup: '18' }, function (data) {
+			blade.currentEntity.childrenFolders = data.contentFolders;
+			blade.currentEntity.items = data.contentItems;
+			blade.setBreadcrumbs();
+			blade.isLoading = false;
 		},
         function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 
@@ -19,8 +21,6 @@
 		        },
 		        function(error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 		});
-
-		blade.isLoading = false;
 	}
 
 	blade.addContentItem = function (contentItem) {
@@ -46,43 +46,59 @@
 			marketing_dynamicContents_res_search.search({ folder: contentItem.id, respGroup: '18' }, function (data) {
 				contentItem.childrenFolders = data.contentFolders;
 				contentItem.items = data.contentItems;
+				blade.breadcrumbs.push(
+					{
+						id: contentItem.id,
+						name: contentItem.name,
+						blade: blade,
+						navigate: function (breadcrumb) {
+							blade.choosenFolder = breadcrumb.id;
+							marketing_dynamicContents_res_search.search({ folder: blade.choosenFolder, respGroup: '18' }, function (data) {
+								blade.currentEntity.childrenFolders = data.contentFolders;
+								blade.currentEntity.items = data.contentItems;
+								blade.setBreadcrumbs();
+							}, function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+						}
+					});
 			},
             function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 		}
 	}
 
-	blade.clickDefault = function () {
-		blade.choosenFolder = 'ContentItem';
-		blade.currentEntity = undefined;
-	}
+	$scope.blade.headIcon = 'fa-paperclip';
 
-	blade.checkFolder = function (data) {
-		var retVal = angular.equals(data.id, blade.choosenFolder);
-		if (data.childrenFolders) {
-			var childFolders = data.childrenFolders;
-			var nextLevelChildFolders = [];
-			while (childFolders.length > 0 && !retVal) {
-				if (!angular.isUndefined(_.find(childFolders, function (folder) { return angular.equals(folder.id, blade.choosenFolder); }))) {
-					retVal = true;
-				}
-				else {
-					for (var i = 0; i < childFolders.length; i++) {
-						if (childFolders[i].childrenFolders) {
-							if (childFolders[i].childrenFolders.length > 0) {
-								nextLevelChildFolders = _.union(nextLevelChildFolders, childFolders[i].childrenFolders);
-							}
-						}
-					}
-					childFolders = nextLevelChildFolders;
-					nextLevelChildFolders = [];
-				}
-			}
+	blade.setBreadcrumbs = function() {
+		if (blade.breadcrumbs === undefined) {
+			blade.breadcrumbs = [];
 		}
 
-		return retVal;
-	}
+		var index = _.findLastIndex(blade.breadcrumbs, { id: blade.choosenFolder });
 
-	$scope.blade.headIcon = 'fa-paperclip';
+		if (index !== -1)
+			blade.breadcrumbs = blade.breadcrumbs.slice(0, index + 1);
+
+		//catalog breadcrumb by default
+		var breadCrumb = {
+			id: 'ContentItem',
+			name: 'Items',
+			blade: blade
+		};
+
+		//prevent duplicate items
+		if (!_.some(blade.breadcrumbs, function (x) { return x.id == breadCrumb.id })) {
+			blade.breadcrumbs.push(breadCrumb);
+		}
+
+		breadCrumb.navigate = function (breadcrumb) {
+			blade.choosenFolder = breadcrumb.id;
+			marketing_dynamicContents_res_search.search({ folder: blade.choosenFolder, respGroup: '18' }, function (data) {
+				blade.currentEntity.childrenFolders = data.contentFolders;
+				blade.currentEntity.items = data.contentItems;
+				blade.setBreadcrumbs();
+			},
+			function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+		};
+	}
 
 	blade.initialize();
 }]);

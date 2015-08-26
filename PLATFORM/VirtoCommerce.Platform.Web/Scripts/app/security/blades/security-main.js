@@ -4,8 +4,9 @@
 
     function initializeBlade() {
         var entities = [
-            { name: 'Roles', entityName: 'role' },
-            { name: 'Users', entityName: 'account' }];
+            { name: 'Users', entityName: 'account' },
+            { name: 'Roles', entityName: 'role' }
+        ];
         $scope.blade.currentEntities = entities;
         $scope.blade.isLoading = false;
 

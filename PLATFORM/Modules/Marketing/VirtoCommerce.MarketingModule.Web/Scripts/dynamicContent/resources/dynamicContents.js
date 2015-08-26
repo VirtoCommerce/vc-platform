@@ -32,4 +32,9 @@
 	        update: { method: 'PUT' },
 	        remove: { method: 'DELETE' },
 	    });
-	}]);
+	}])
+    .factory('virtoCommerce.marketing.dynamicContent.dynamicProperties', ['$resource', function ($resource) {
+        return $resource('api/platform/dynamic/types/:typeName/properties', {}, {
+            getDynamicProperties: { method: 'GET', isArray: true }
+        });
+    }]);

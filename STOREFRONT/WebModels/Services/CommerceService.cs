@@ -555,7 +555,7 @@ namespace VirtoCommerce.Web.Models.Services
             return response == null ? null : response.Where(r => r.Language == language).AsWebModel();
         }
 
-        public async Task<Product> GetProductAsync(SiteContext context, string handle, ItemResponseGroups responseGroup = ItemResponseGroups.ItemLarge)
+        public async Task<Product> GetProductAsync(SiteContext context, string handle, Collection parentCollection = null, ItemResponseGroups responseGroup = ItemResponseGroups.ItemLarge)
         {
             var product =
                 await
@@ -587,6 +587,7 @@ namespace VirtoCommerce.Web.Models.Services
                     new ProductPromoEntry
                     {
                         CatalogId = product.CatalogId,
+						CategoryId = product.CategoryId,
                         Price = price != null ? (price.Sale.HasValue ? price.Sale.Value : price.List) : 0M,
                         ProductId = product.Id,
                         Quantity = 1
@@ -598,10 +599,10 @@ namespace VirtoCommerce.Web.Models.Services
 
             var rewards = await _marketingClient.GetPromotionRewardsAsync(promoContext);
 
-            return product.AsWebModel(prices, rewards);
+            return product.AsWebModel(prices, rewards, parentCollection);
         }
 
-        public async Task<Product> GetProductByKeywordAsync(SiteContext context, string keyword, ItemResponseGroups responseGroup = ItemResponseGroups.ItemLarge)
+        public async Task<Product> GetProductByKeywordAsync(SiteContext context, string keyword, Collection parentCollection = null, ItemResponseGroups responseGroup = ItemResponseGroups.ItemLarge)
         {
             var product =
                 await
@@ -629,6 +630,7 @@ namespace VirtoCommerce.Web.Models.Services
                     new ProductPromoEntry
                     {
                         CatalogId = product.CatalogId,
+						CategoryId = product.CategoryId,
                         Price = price != null ? (price.Sale.HasValue ? price.Sale.Value : price.List) : 0M,
                         ProductId = product.Id,
                         Quantity = 1
@@ -639,7 +641,7 @@ namespace VirtoCommerce.Web.Models.Services
             };
 
             var rewards = await _marketingClient.GetPromotionRewardsAsync(promoContext);
-            return product.AsWebModel(prices, rewards);
+            return product.AsWebModel(prices, rewards, parentCollection);
         }
 
         public async Task<IEnumerable<PromotionReward>>
@@ -825,6 +827,7 @@ namespace VirtoCommerce.Web.Models.Services
                 promoEntries.Add(new ProductPromoEntry
                 {
                     CatalogId = item.CatalogId,
+					CategoryId = item.CategoryId,
                     Price = price != null ? (price.Sale.HasValue ? price.Sale.Value : price.List) : 0M,
                     ProductId = item.Id,
                     Quantity = 1
@@ -911,7 +914,7 @@ namespace VirtoCommerce.Web.Models.Services
             }
         }
 
-        public async Task<ResponseCollection<DynamicContentItemGroup>> GetDynamicContentAsync(string[] placeholders)
+        public async Task<ResponseCollection<DynamicContentItemGroup>> GetDynamicContentAsync(string storeId, string[] placeholders)
         {
             var tagQuery = new TagQuery();
 
@@ -925,7 +928,7 @@ namespace VirtoCommerce.Web.Models.Services
                 }
             }
 
-            return await _marketingClient.GetDynamicContentAsync(placeholders, tagQuery);
+            return await _marketingClient.GetDynamicContentAsync(storeId, placeholders, tagQuery);
         }
         #endregion
 
