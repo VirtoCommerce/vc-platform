@@ -23,7 +23,7 @@
 			objectTypeId: objectTypeId,
 			subtitle: 'Marketing service',
 			controller: 'platformWebApp.' + data.controllerName,
-			template: 'Scripts/app/notifications/blades/' + data.templateName + '.tpl.html'
+			template: '$(Platform)/Scripts/app/notifications/blades/' + data.templateName + '.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, blade);
 	}

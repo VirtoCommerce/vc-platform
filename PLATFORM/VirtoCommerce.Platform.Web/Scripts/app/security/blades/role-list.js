@@ -48,7 +48,7 @@ function ($scope, roles, bladeNavigationService, dialogService) {
             title: selectedNode.name,
             subtitle: $scope.blade.subtitle,
             controller: 'platformWebApp.roleDetailController',
-            template: 'Scripts/app/security/blades/role-detail.tpl.html'
+            template: '$(Platform)/Scripts/app/security/blades/role-detail.tpl.html'
         };
 
         bladeNavigationService.showBlade(newBlade, $scope.blade);
@@ -115,7 +115,7 @@ function ($scope, roles, bladeNavigationService, dialogService) {
                     title: 'New Role',
                     subtitle: $scope.blade.subtitle,
                     controller: 'platformWebApp.roleDetailController',
-                    template: 'Scripts/app/security/wizards/new-role-wizard.tpl.html'
+                    template: '$(Platform)/Scripts/app/security/wizards/new-role-wizard.tpl.html'
                 };
                 bladeNavigationService.showBlade(newBlade, $scope.blade);
             },

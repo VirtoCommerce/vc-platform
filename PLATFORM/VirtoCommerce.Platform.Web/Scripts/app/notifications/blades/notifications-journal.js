@@ -29,7 +29,7 @@
 			currentNotificationId: data.id,
 			currentEntity: data,
 			controller: 'platformWebApp.notificationsJournalDetailtsController',
-			template: 'Scripts/app/notifications/blades/notification-journal-details.tpl.html'
+			template: '$(Platform)/Scripts/app/notifications/blades/notification-journal-details.tpl.html'
 		};
 
 		bladeNavigationService.showBlade(newBlade, blade);

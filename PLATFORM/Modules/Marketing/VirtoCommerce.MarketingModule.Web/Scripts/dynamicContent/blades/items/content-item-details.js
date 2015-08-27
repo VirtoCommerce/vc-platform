@@ -63,7 +63,7 @@
             		    id: 'dynamicPropertyList',
             		    objectType: blade.entity.objectType,
             		    controller: 'platformWebApp.dynamicPropertyListController',
-            		    template: 'Scripts/app/dynamicProperties/blades/dynamicProperty-list.tpl.html'
+            		    template: '$(Platform)/Scripts/app/dynamicProperties/blades/dynamicProperty-list.tpl.html'
             	    };
             	    bladeNavigationService.showBlade(newBlade, blade);
                 },

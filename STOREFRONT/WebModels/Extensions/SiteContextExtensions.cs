@@ -24,7 +24,7 @@ namespace VirtoCommerce.Web.Extensions
         {
             var allShops = context.Shops;
 
-            if (!allShops.Any())
+            if (allShops == null || !allShops.Any())
             {
                 return null;
             }

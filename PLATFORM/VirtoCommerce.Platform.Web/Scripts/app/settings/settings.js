@@ -4,14 +4,14 @@
       $stateProvider
           .state('workspace.modulesSettings', {
               url: '/settings',
-              templateUrl: 'Scripts/common/templates/home.tpl.html',
+              templateUrl: '$(Platform)/Scripts/common/templates/home.tpl.html',
               controller: ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
                   var blade = {
                       id: 'settings',
                       title: 'Settings',
                       //subtitle: 'Manage settings',
                       controller: 'platformWebApp.settingGroupListController',
-                      template: 'Scripts/app/settings/blades/settingGroup-list.tpl.html',
+                      template: '$(Platform)/Scripts/app/settings/blades/settingGroup-list.tpl.html',
                       isClosingDisabled: true
                   };
                   bladeNavigationService.showBlade(blade);

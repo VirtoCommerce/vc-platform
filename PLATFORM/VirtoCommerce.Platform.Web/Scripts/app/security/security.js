@@ -3,7 +3,7 @@
 
 	    $stateProvider.state('loginDialog', {
 	        url: '/login',
-	        templateUrl: 'Scripts/app/security/login/login.tpl.html',
+	        templateUrl: '$(Platform)/Scripts/app/security/login/login.tpl.html',
 	        controller: ['$scope', 'platformWebApp.authService', function ($scope, authService) {
 	            $scope.user = {};
 	            $scope.authError = null;
@@ -38,14 +38,14 @@
 
 	    .state('workspace.securityModule', {
 	        url: '/security',
-	        templateUrl: 'Scripts/common/templates/home.tpl.html',
+	        templateUrl: '$(Platform)/Scripts/common/templates/home.tpl.html',
 	        controller: ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
 				    var blade = {
 				        id: 'security',
 				        title: 'Security',
 				        subtitle: 'User management',
 				        controller: 'platformWebApp.securityMainController',
-				        template: 'Scripts/app/security/blades/security-main.tpl.html',
+				        template: '$(Platform)/Scripts/app/security/blades/security-main.tpl.html',
 				        isClosingDisabled: true
 				    };
 				    bladeNavigationService.showBlade(blade);
@@ -68,10 +68,10 @@
         //Register widgets
         widgetService.registerWidget({
             controller: 'platformWebApp.accountRolesWidgetController',
-            template: 'Scripts/app/security/widgets/accountRolesWidget.tpl.html',
+            template: '$(Platform)/Scripts/app/security/widgets/accountRolesWidget.tpl.html',
         }, 'accountDetail');
         widgetService.registerWidget({
             controller: 'platformWebApp.accountApiWidgetController',
-            template: 'Scripts/app/security/widgets/accountApiWidget.tpl.html',
+            template: '$(Platform)/Scripts/app/security/widgets/accountApiWidget.tpl.html',
         }, 'accountDetail');
     }]);

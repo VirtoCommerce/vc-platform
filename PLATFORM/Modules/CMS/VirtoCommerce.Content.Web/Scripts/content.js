@@ -27,7 +27,7 @@ angular.module(moduleName, ['angularUUID2'])
 	$stateProvider
 		.state('workspace.content', {
 			url: '/content?storeId',
-			templateUrl: 'Scripts/common/templates/home.tpl.html',
+			templateUrl: '$(Platform)/Scripts/common/templates/home.tpl.html',
 			controller: [
 				'$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
 					var blade = {

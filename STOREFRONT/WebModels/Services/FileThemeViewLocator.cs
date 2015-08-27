@@ -58,32 +58,16 @@ namespace VirtoCommerce.Web.Services
 
             ViewLocationResult foundView = null;
 
-            var cacheKey = String.Format("{0}-{1}", this.ThemeDirectory, viewNameWithExtension);
+            var themeDirectory = ThemeDirectory;
+            var cacheKey = string.Format("{0}-{1}", themeDirectory, viewNameWithExtension);
 
-            // check cache first
-            foundView = ViewLocationCache.GetViewLocation(context, cacheKey) as ViewLocationResult;
-            if (foundView != null) return foundView;
-
-            foreach (var fullPath in locations.Select(viewLocation => Combine(this._baseDirectoryPath, this.ThemeDirectory, viewLocation, viewNameWithExtension)))
+            if (!string.IsNullOrEmpty(themeDirectory))
             {
-                var file = VirtualPathProviderHelper.GetFile(fullPath);
-                if (file != null)
-                {
-                    foundView = new FileViewLocationResult(file, file.VirtualPath);
-                    viewFound = true;
-                    break;
-                }
+                // check cache first
+                foundView = ViewLocationCache.GetViewLocation(context, cacheKey) as ViewLocationResult;
+                if (foundView != null) return foundView;
 
-                checkedLocations.Add(fullPath);
-            }
-
-            // now search in global location
-            // App_Data/Themes/_Global
-            if (!viewFound)
-            {
-                foreach (var fullPath in
-                    locations.Select(
-                        viewLocation => Combine(this._baseDirectoryPath, "_global", viewLocation, viewNameWithExtension)))
+                foreach (var fullPath in locations.Select(viewLocation => Combine(this._baseDirectoryPath, themeDirectory, viewLocation, viewNameWithExtension)))
                 {
                     var file = VirtualPathProviderHelper.GetFile(fullPath);
                     if (file != null)
@@ -93,7 +77,27 @@ namespace VirtoCommerce.Web.Services
                         break;
                     }
 
-                    checkedLocations.Add(Path.Combine(this._baseDirectoryPath, fullPath));
+                    checkedLocations.Add(fullPath);
+                }
+
+                // now search in global location
+                // App_Data/Themes/_Global
+                if (!viewFound)
+                {
+                    foreach (var fullPath in
+                        locations.Select(
+                            viewLocation => Combine(this._baseDirectoryPath, "_global", viewLocation, viewNameWithExtension)))
+                    {
+                        var file = VirtualPathProviderHelper.GetFile(fullPath);
+                        if (file != null)
+                        {
+                            foundView = new FileViewLocationResult(file, file.VirtualPath);
+                            viewFound = true;
+                            break;
+                        }
+
+                        checkedLocations.Add(Path.Combine(this._baseDirectoryPath, fullPath));
+                    }
                 }
             }
 
@@ -160,7 +164,12 @@ namespace VirtoCommerce.Web.Services
             get
             {
                 //var fileSystemMainPath = Path.Combine(this._baseDirectoryPath, SiteContext.Current.Theme.Path);
-                return SiteContext.Current.Theme.Path;
+                string result = null;
+
+                if (SiteContext.Current.Theme != null)
+                    result = SiteContext.Current.Theme.Path;
+
+                return result;
             }
         }
     }

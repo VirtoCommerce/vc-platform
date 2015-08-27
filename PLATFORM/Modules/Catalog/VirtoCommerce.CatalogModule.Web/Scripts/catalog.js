@@ -13,7 +13,7 @@ angular.module(catalogsModuleName, [
       $stateProvider
           .state('workspace.catalog', {
               url: '/catalog',
-              templateUrl: 'Scripts/common/templates/home.tpl.html',
+              templateUrl: '$(Platform)/Scripts/common/templates/home.tpl.html',
               controller: [
                   '$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
                       var blade = {

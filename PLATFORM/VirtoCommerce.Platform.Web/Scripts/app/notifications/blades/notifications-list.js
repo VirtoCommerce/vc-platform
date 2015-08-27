@@ -22,7 +22,7 @@
 			objectId: blade.objectId,
 			objectTypeId: blade.objectTypeId,
 			controller: 'platformWebApp.notificationTemplatesListController',
-			template: 'Scripts/app/notifications/blades/notification-templates-list.tpl.html'
+			template: '$(Platform)/Scripts/app/notifications/blades/notification-templates-list.tpl.html'
 		};
 
 		bladeNavigationService.showBlade(newBlade, blade);
@@ -40,7 +40,7 @@
 			isFirst: true,
 			usedLanguages: [],
 			controller: 'platformWebApp.editTemplateController',
-			template: 'Scripts/app/notifications/blades/notifications-edit-template.tpl.html'
+			template: '$(Platform)/Scripts/app/notifications/blades/notifications-edit-template.tpl.html'
 		};
 
 		bladeNavigationService.showBlade(newBlade, blade);

@@ -20,18 +20,18 @@ namespace VirtoCommerce.Platform.Web
             #region CSS
 
             bundles.Add(
-                new BetterStyleBundle("~/css/core").Include(
+                new BetterStyleBundle("~/css/core").Include2(
                     "~/Scripts/allStyles.css",
                     "~/Scripts/codemirror/codemirror.css",
                     "~/Scripts/codemirror/fold/foldgutter.css",
                     "~/Scripts/codemirror/liquid.css",
                     "~/Content/select.css",
                     "~/Content/angular-gridster.css",
-                    //SELECT2
+                //SELECT2
                     "~/Content/select2.css",
-                    //Selectize
+                //Selectize
                     "~/Content/Selectize/css/selectize.default.css",
-                    //Theme UI
+                //Theme UI
                     "~/Content/themes/main/css/reset.css",
                     "~/Content/themes/main/css/base-modules.css",
                     "~/Content/themes/main/css/project-modules.css",
@@ -44,10 +44,11 @@ namespace VirtoCommerce.Platform.Web
             //AngularJS 
             //Note: must match the real path (~/Scripts/.) to find source map files references from .min.js (ex. # sourceMappingURL=angular-resource.min.js.map)
             bundles.Add(
-                new ScriptBundle("~/scripts/angular").Include("~/Scripts/allPackages.js")
-                    .IncludeDirectory("~/Scripts/codemirror/", "*.js", true)
-                    .IncludeDirectory("~/Scripts/app/", "*.js", true)
-                    .IncludeDirectory("~/Scripts/common/", "*.js", true));
+                new ScriptBundle("~/scripts/angular")
+                    .Include2("~/Scripts/allPackages.js")
+                    .IncludeDirectory2("~/Scripts/codemirror/", "*.js", true)
+                    .IncludeDirectory2("~/Scripts/app/", "*.js", true)
+                    .IncludeDirectory2("~/Scripts/common/", "*.js", true));
 
             #endregion
 
@@ -79,6 +80,32 @@ namespace VirtoCommerce.Platform.Web
 
     internal static class BundleExtensions
     {
+        public static Bundle Include2(this Bundle bundle, params string[] items)
+        {
+            foreach (var item in items)
+            {
+                var virtualPath = FixVirtualRoot(item);
+                bundle.Include(virtualPath);
+            }
+
+            return bundle;
+        }
+
+        public static Bundle IncludeDirectory2(this Bundle bundle, string directoryVirtualPath, string searchPattern, bool searchSubdirectories)
+        {
+            var virtualPath = FixVirtualRoot(directoryVirtualPath);
+            bundle.IncludeDirectory(virtualPath, searchPattern, searchSubdirectories);
+
+            return bundle;
+        }
+
+        private static string FixVirtualRoot(string virtualPath)
+        {
+            if (virtualPath.StartsWith("~/"))
+                virtualPath = Startup.VirtualRoot + virtualPath.Substring(1);
+            return virtualPath;
+        }
+
         public static Bundle Include(this Bundle bundle, IEnumerable<BundleItem> items)
         {
             foreach (var item in items)

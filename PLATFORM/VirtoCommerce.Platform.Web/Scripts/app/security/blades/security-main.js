@@ -21,7 +21,7 @@
             title: data.name,
             subtitle: 'Security service',
             controller: 'platformWebApp.' + data.entityName + 'ListController',
-            template: 'Scripts/app/security/blades/' + data.entityName + '-list.tpl.html'
+            template: '$(Platform)/Scripts/app/security/blades/' + data.entityName + '-list.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     }

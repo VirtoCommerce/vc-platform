@@ -99,7 +99,7 @@
             title: 'Tax types',
             parentRefresh: function(data) { $scope.taxTypes = data; },
             controller: 'platformWebApp.settingDictionaryController',
-            template: 'Scripts/app/settings/blades/setting-dictionary.tpl.html'
+            template: '$(Platform)/Scripts/app/settings/blades/setting-dictionary.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     };

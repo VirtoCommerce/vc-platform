@@ -2,6 +2,8 @@
 {
     public interface IModuleInitializerOptions
     {
-       string GetModuleDirectoryPath(string moduleId);
+        string RoutPrefix { get; }
+        string VirtualRoot { get; }
+        string GetModuleDirectoryPath(string moduleId);
     }
 }

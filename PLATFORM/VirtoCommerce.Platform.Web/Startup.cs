@@ -1,4 +1,6 @@
-﻿using System;
+﻿#region usings
+
+using System;
 using System.Configuration;
 using System.Diagnostics;
 using System.Globalization;
@@ -52,20 +54,34 @@ using VirtoCommerce.Platform.Web.Controllers.Api;
 using VirtoCommerce.Platform.Web.Resources;
 using WebGrease.Extensions;
 
+#endregion
+
 [assembly: OwinStartup(typeof(Startup))]
 
 namespace VirtoCommerce.Platform.Web
 {
     public class Startup
     {
-        private static readonly string _assembliesPath = HostingEnvironment.MapPath("~/App_Data/Modules");
+        private static string _assembliesPath;
+
+        public static bool IsApplication { get; private set; }
+        public static string VirtualRoot { get; private set; }
 
         public void Configuration(IAppBuilder app)
         {
-            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
+            IsApplication = true;
+            Configuration(app, "~", string.Empty);
+        }
 
-            const string modulesVirtualPath = "~/Modules";
+        public void Configuration(IAppBuilder app, string virtualRoot, string routPrefix)
+        {
+            VirtualRoot = virtualRoot;
+
+            _assembliesPath = HostingEnvironment.MapPath(VirtualRoot + "/App_Data/Modules");
+            var modulesVirtualPath = VirtualRoot + "/Modules";
             var modulesPhysicalPath = HostingEnvironment.MapPath(modulesVirtualPath).EnsureEndSeparator();
+
+            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
 
             //Modules initialization
             var bootstrapper = new VirtoCommercePlatformWebBootstrapper(modulesVirtualPath, modulesPhysicalPath, _assembliesPath);
@@ -74,22 +90,36 @@ namespace VirtoCommerce.Platform.Web
             var container = bootstrapper.Container;
             container.RegisterInstance(app);
 
+            var moduleInitializerOptions = (ModuleInitializerOptions)container.Resolve<IModuleInitializerOptions>();
+            moduleInitializerOptions.VirtualRoot = virtualRoot;
+            moduleInitializerOptions.RoutPrefix = routPrefix;
+
             //Initialize Platform dependencies
             const string connectionStringName = "VirtoCommerce";
             InitializePlatform(app, container, connectionStringName);
 
-
             var moduleManager = container.Resolve<IModuleManager>();
             var moduleCatalog = container.Resolve<IModuleCatalog>();
+
+            var applicationBase = AppDomain.CurrentDomain.SetupInformation.ApplicationBase.EnsureEndSeparator();
+
+            // Register URL rewriter for platform scripts
+            var scriptsPhysicalPath = HostingEnvironment.MapPath(VirtualRoot + "/Scripts").EnsureEndSeparator();
+            var scriptsRelativePath = MakeRelativePath(applicationBase, scriptsPhysicalPath);
+            var platformUrlRewriterOptions = new UrlRewriterOptions();
+            platformUrlRewriterOptions.Items.Add(PathString.FromUriComponent("/$(Platform)/Scripts"), "");
+            app.Use<UrlRewriterOwinMiddleware>(platformUrlRewriterOptions);
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileSystem = new Microsoft.Owin.FileSystems.PhysicalFileSystem(scriptsRelativePath)
+            });
 
             // Register URL rewriter before modules initialization
             if (Directory.Exists(modulesPhysicalPath))
             {
-                var applicationBase = AppDomain.CurrentDomain.SetupInformation.ApplicationBase.EnsureEndSeparator();
                 var modulesRelativePath = MakeRelativePath(applicationBase, modulesPhysicalPath);
 
                 var urlRewriterOptions = new UrlRewriterOptions();
-                var moduleInitializerOptions = (ModuleInitializerOptions)container.Resolve<IModuleInitializerOptions>();
 
                 foreach (var module in moduleCatalog.Modules.OfType<ManifestModuleInfo>())
                 {
@@ -113,7 +143,21 @@ namespace VirtoCommerce.Platform.Web
                 moduleManager.LoadModule(module.ModuleName);
             }
 
-            // Security owin configuration
+            // Post-initialize
+
+            // Platform MVC configuration
+            if (IsApplication)
+            {
+                AreaRegistration.RegisterAllAreas();
+            }
+
+            GlobalConfiguration.Configure(WebApiConfig.Register);
+            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
+            RouteConfig.RegisterRoutes(RouteTable.Routes);
+            BundleConfig.RegisterBundles(BundleTable.Bundles);
+            AuthConfig.RegisterAuth();
+
+            // Security OWIN configuration
             var authenticationOptions = new AuthenticationOptions
             {
                 CookiesEnabled = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Authentication:Cookies.Enabled", true),
@@ -127,13 +171,6 @@ namespace VirtoCommerce.Platform.Web
                 ApiKeysQueryStringParameterName = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Authentication:ApiKeys.QueryStringParameterName", "api_key"),
             };
             OwinConfig.Configure(app, container, connectionStringName, authenticationOptions);
-
-            //Platform mvc configuration
-            AreaRegistration.RegisterAllAreas();
-            GlobalConfiguration.Configure(WebApiConfig.Register);
-            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
-            RouteConfig.RegisterRoutes(RouteTable.Routes);
-            BundleConfig.RegisterBundles(BundleTable.Bundles);
 
             RecurringJob.AddOrUpdate<SendNotificationsJobs>("SendNotificationsJob", x => x.Process(), "*/1 * * * *");
 
@@ -161,7 +198,7 @@ namespace VirtoCommerce.Platform.Web
 
             var hubConfiguration = new HubConfiguration();
             hubConfiguration.EnableJavaScriptProxies = false;
-            app.MapSignalR(hubConfiguration);
+            app.MapSignalR("/" + moduleInitializerOptions.RoutPrefix + "signalr", hubConfiguration);
         }
 
 
@@ -205,7 +242,7 @@ namespace VirtoCommerce.Platform.Web
 
             Func<IPlatformRepository> platformRepositoryFactory = () => new PlatformRepository(connectionStringName, new AuditableInterceptor(), new EntityPrimaryKeyGeneratorInterceptor());
             container.RegisterType<IPlatformRepository>(new InjectionFactory(c => platformRepositoryFactory()));
-            container.RegisterInstance<Func<IPlatformRepository>>(platformRepositoryFactory);
+            container.RegisterInstance(platformRepositoryFactory);
             var moduleCatalog = container.Resolve<IModuleCatalog>();
             var manifestProvider = container.Resolve<IModuleManifestProvider>();
 
@@ -219,7 +256,7 @@ namespace VirtoCommerce.Platform.Web
             };
 
             var cacheManager = new CacheManager(cacheProvider, cacheSettings);
-            container.RegisterInstance<CacheManager>(cacheManager);
+            container.RegisterInstance(cacheManager);
 
             #endregion
 
@@ -335,11 +372,11 @@ namespace VirtoCommerce.Platform.Web
 
             #region Packaging
 
-            var packagesPath = HostingEnvironment.MapPath("~/App_Data/InstalledPackages");
+            var packagesPath = HostingEnvironment.MapPath(VirtualRoot + "/App_Data/InstalledPackages");
             var packageService = new ZipPackageService(moduleCatalog, manifestProvider, packagesPath);
             container.RegisterInstance<IPackageService>(packageService);
 
-            var uploadsPath = HostingEnvironment.MapPath("~/App_Data/Uploads");
+            var uploadsPath = HostingEnvironment.MapPath(VirtualRoot + "/App_Data/Uploads");
             container.RegisterType<ModulesController>(new InjectionConstructor(packageService, uploadsPath, notifier));
 
             #endregion

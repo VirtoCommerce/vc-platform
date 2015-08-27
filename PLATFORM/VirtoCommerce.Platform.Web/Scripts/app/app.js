@@ -60,7 +60,7 @@ angular.module('platformWebApp', AppDependencies).
   ['$stateProvider', '$httpProvider', 'uiSelectConfig', function ($stateProvider, $httpProvider, uiSelectConfig) {
   	$stateProvider.state('workspace', {
   		url: '/workspace',
-          templateUrl: 'Scripts/app/workspace.tpl.html'
+  		templateUrl: '$(Platform)/Scripts/app/workspace.tpl.html'
       });
 
       //Add interseptor

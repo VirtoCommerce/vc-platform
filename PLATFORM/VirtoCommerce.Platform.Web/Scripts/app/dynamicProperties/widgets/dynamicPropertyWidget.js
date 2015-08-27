@@ -6,7 +6,7 @@
         	id: "dynamicPropertiesList",
         	currentEntity: $scope.blade.currentEntity,
             controller: 'platformWebApp.propertyValueListController',
-            template: 'Scripts/app/dynamicProperties/blades/propertyValue-list.tpl.html'
+            template: '$(Platform)/Scripts/app/dynamicProperties/blades/propertyValue-list.tpl.html'
         };
 
         bladeNavigationService.showBlade(blade, $scope.blade);

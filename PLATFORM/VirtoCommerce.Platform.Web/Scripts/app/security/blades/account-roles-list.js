@@ -29,7 +29,7 @@
                        title: $scope.blade.title,
                        subtitle: 'Manage roles',
                        controller: 'platformWebApp.accountRolesController',
-                       template: 'Scripts/app/security/blades/account-roles.tpl.html'
+                       template: '$(Platform)/Scripts/app/security/blades/account-roles.tpl.html'
                    };
 
                    bladeNavigationService.showBlade(newBlade, $scope.blade);
