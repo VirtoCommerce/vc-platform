@@ -20,18 +20,18 @@ namespace VirtoCommerce.Platform.Web
             #region CSS
 
             bundles.Add(
-                new BetterStyleBundle("~/css/core").Include2(
+                new BetterStyleBundle(Startup.VirtualRoot + "/css/core").Include2(
                     "~/Scripts/allStyles.css",
                     "~/Scripts/codemirror/codemirror.css",
                     "~/Scripts/codemirror/fold/foldgutter.css",
                     "~/Scripts/codemirror/liquid.css",
                     "~/Content/select.css",
                     "~/Content/angular-gridster.css",
-                //SELECT2
+                    //SELECT2
                     "~/Content/select2.css",
-                //Selectize
+                    //Selectize
                     "~/Content/Selectize/css/selectize.default.css",
-                //Theme UI
+                    //Theme UI
                     "~/Content/themes/main/css/reset.css",
                     "~/Content/themes/main/css/base-modules.css",
                     "~/Content/themes/main/css/project-modules.css",
@@ -44,7 +44,7 @@ namespace VirtoCommerce.Platform.Web
             //AngularJS 
             //Note: must match the real path (~/Scripts/.) to find source map files references from .min.js (ex. # sourceMappingURL=angular-resource.min.js.map)
             bundles.Add(
-                new ScriptBundle("~/scripts/angular")
+                new ScriptBundle(Startup.VirtualRoot + "/scripts/angular")
                     .Include2("~/Scripts/allPackages.js")
                     .IncludeDirectory2("~/Scripts/codemirror/", "*.js", true)
                     .IncludeDirectory2("~/Scripts/app/", "*.js", true)
@@ -67,8 +67,8 @@ namespace VirtoCommerce.Platform.Web
                 .SelectMany(m => m.Scripts.Select(i => new BundleItem { Module = m, Item = i }))
                 .ToArray();
 
-            bundles.Add(new BetterStyleBundle("~/css/modules").Include(styles));
-            bundles.Add(new ScriptBundle("~/scripts/modules").Include(scripts));
+            bundles.Add(new BetterStyleBundle(Startup.VirtualRoot + "/css/modules").Include(styles));
+            bundles.Add(new ScriptBundle(Startup.VirtualRoot + "/scripts/modules").Include(scripts));
         }
     }
 
