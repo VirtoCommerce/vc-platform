@@ -597,7 +597,6 @@
     <Folder Include="Views\Notifications\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include=".bin\node.cmd" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
