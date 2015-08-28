@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VirtoCommerce.CoreModule.Data.Repositories;
+using VirtoCommerce.CoreModule.Data.Services;
 using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.OrderModule.Data.Services;
 
@@ -44,14 +45,14 @@ namespace VirtoCommerce.OrderModule.Test
         [TestMethod]
         [DeploymentItem("connectionStrings.config")]
         [DeploymentItem("Configs/AppConfig.config", "Configs")]
-        public void Run_sequences_performance()
+        public void RunSequencesPerformance()
         {
             var repository = new CommerceRepositoryImpl("VirtoCommerce");
-            var sequence = new SequenceServiceImpl(() => repository);
+            var sequence = new SequenceUniqueNumberGeneratorServiceImpl(() => repository);
 
-            for (var i = 1; i < SequenceServiceImpl.SequenceReservationRange; i++)
+            for (var i = 1; i < 100; i++)
             {
-                var result = sequence.GenerateNumber(new CustomerOrder());
+                var result = sequence.GenerateNumber((typeof (CustomerOrder)).Name);
                 Debug.WriteLine(result);
 
                 //This would fail if any duplicate generated

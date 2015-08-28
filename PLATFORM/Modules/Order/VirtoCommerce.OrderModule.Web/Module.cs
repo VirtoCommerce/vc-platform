@@ -2,6 +2,8 @@
 using System.Data.Entity;
 using System.Dynamic;
 using Microsoft.Practices.Unity;
+using VirtoCommerce.CoreModule.Data.Services;
+using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Domain.Order.Events;
 using VirtoCommerce.Domain.Order.Services;
@@ -55,7 +57,7 @@ namespace VirtoCommerce.OrderModule.Web
 
             _container.RegisterType<IOrderRepository>(new InjectionFactory(c => new OrderRepositoryImpl("VirtoCommerce", new AuditableInterceptor(), new EntityPrimaryKeyGeneratorInterceptor())));
             //_container.RegisterInstance<IInventoryService>(new Mock<IInventoryService>().Object);
-            _container.RegisterType<IOperationNumberGenerator, SequenceServiceImpl>();
+            _container.RegisterType<IUniqueNumberGenerator, SequenceUniqueNumberGeneratorServiceImpl>();
 
             _container.RegisterType<ICustomerOrderService, CustomerOrderServiceImpl>();
             _container.RegisterType<ICustomerOrderSearchService, CustomerOrderSearchServiceImpl>();

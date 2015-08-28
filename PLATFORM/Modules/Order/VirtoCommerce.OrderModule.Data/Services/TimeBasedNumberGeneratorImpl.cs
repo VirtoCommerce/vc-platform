@@ -4,12 +4,13 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Domain.Order.Services;
 
 namespace VirtoCommerce.OrderModule.Data.Services
 {
-	public class TimeBasedNumberGeneratorImpl : IOperationNumberGenerator
-	{
+    public class TimeBasedNumberGeneratorImpl : IUniqueNumberGenerator
+    {
         #region Private fields
 
         //********These settings could be saved in database:
@@ -30,17 +31,22 @@ namespace VirtoCommerce.OrderModule.Data.Services
 
         #endregion
 
-		#region IOperationNumberGenerator Members
+        #region IOperationNumberGenerator Members
 
-		public string GenerateNumber(Domain.Order.Model.IOperation operation)
-		{
-            var now = DateTime.UtcNow;
-            //var retVal = operation.GetType().Name.Substring(0, 2).ToUpper() + now.DayOfYear.ToString("000") + now.TimeOfDay.Minutes.ToString("00");
-            //return retVal;
-
-            var objectType = operation.GetType().Name.Substring(0, 2).ToUpper();
+        public string GenerateNumber(string objectTypeName)
+        {
+            return GenerateNumber(objectTypeName, "{0}{1}-{2}", "yyMMdd", 100, 5);
+        }
+        public string GenerateNumber(
+           string objectTypeName,
+           string numberTemplate,
+           string dateFormat,
+           int sequenceReservationRange,
+           int counterLength)
+        {
+            var objectType = objectTypeName.Substring(0, 2).ToUpper();
             var startNumber = 1;
-		    const int increment = 1;
+            const int increment = 1;
 
             lock (SequenceLock)
             {
@@ -50,16 +56,16 @@ namespace VirtoCommerce.OrderModule.Data.Services
                 {
                     var startCounter = startNumber;
                     var endCounter = startCounter + SequenceReservationRange * increment;
-                    
+
                     //Pregenerate
                     InMemorySequences[objectType].Pregenerate(startCounter, endCounter, increment);
                 }
 
                 return string.Format(InMemorySequences[objectType].Next());
             }
-		}
+        }
 
-		#endregion
+        #endregion
 
         private class InMemorySequence
         {
@@ -132,5 +138,5 @@ namespace VirtoCommerce.OrderModule.Data.Services
                 }
             }
         }
-	}
+    }
 }
