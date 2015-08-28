@@ -34,9 +34,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 		/// <param name="folder">Folder name.</param>
 		/// <returns></returns>
 		[HttpPost]
-		[Route("{folder}")]
+		[Route("{folder?}")]
 		[ResponseType(typeof(webModel.BlobInfo[]))]
-		public async Task<IHttpActionResult> UploadAsset(string folder)
+		[ApiExplorerSettings(IgnoreApi=true)]
+		public async Task<IHttpActionResult> UploadAsset(string folder = "tmp")
 		{
 			if(string.IsNullOrEmpty(folder))
 			{
