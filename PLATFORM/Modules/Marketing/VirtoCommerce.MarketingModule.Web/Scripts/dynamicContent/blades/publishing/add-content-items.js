@@ -17,9 +17,12 @@
 
 		blade.entity.contentItems.forEach(function (el) {
 		    marketing_dynamicContents_res_contentItems.get({ id: el.id }, function(data) {
-		            el.path = data.path;
-		        },
-		        function(error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+		    	var orEl = _.find(blade.parentBlade.originalEntity.contentItems, function (contentItem) { return contentItem.id === el.id });
+		    	el.path = orEl.path = data.path;
+		    	el.dynamicProperties = orEl.dynamicProperties = data.dynamicProperties;
+		    	el.outline = orEl.outline = data.outline;
+		    	el.objectType = orEl.objectType = data.objectType;
+			}, function(error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 		});
 	}
 

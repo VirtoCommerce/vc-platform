@@ -40,7 +40,7 @@
     	var editDictionaryBlade = {
     		id: "propertyDictionary",
     		controller: 'platformWebApp.propertyDictionaryController',
-    		template: 'Scripts/app/dynamicProperties/blades/property-dictionary.tpl.html',
+    		template: '$(Platform)/Scripts/app/dynamicProperties/blades/property-dictionary.tpl.html',
     		currentEntity: property
     	};
 		bladeNavigationService.showBlade(editDictionaryBlade, blade);
@@ -63,7 +63,7 @@
 		 			id: 'dynamicPropertyList',
 		 			objectType: blade.currentEntity.objectType,
 		 			controller: 'platformWebApp.dynamicPropertyListController',
-		 			template: 'Scripts/app/dynamicProperties/blades/dynamicProperty-list.tpl.html'
+		 			template: '$(Platform)/Scripts/app/dynamicProperties/blades/dynamicProperty-list.tpl.html'
 		 		};
 		 		bladeNavigationService.showBlade(newBlade, blade);
 		 	},

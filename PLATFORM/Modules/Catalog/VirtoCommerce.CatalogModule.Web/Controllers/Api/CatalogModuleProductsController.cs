@@ -56,58 +56,58 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             return Ok(retVal);
         }
 
-        /// <summary>
-        /// Gets the template for a new product (outside of category).
-        /// </summary>
-        /// <remarks>Use when need to create item belonging to catalog directly.</remarks>
-        /// <param name="catalogId">The catalog id.</param>
-        [HttpGet]
-        [ResponseType(typeof(webModel.Product))]
-        [Route("~/api/catalog/{catalogId}/products/getnew")]
-        [CheckPermission(Permission = PredefinedPermissions.ItemsManage)]
-        public IHttpActionResult GetNewProduct(string catalogId)
-        {
-            return GetNewProduct(catalogId, null);
-        }
+		/// <summary>
+		/// Gets the template for a new product (outside of category).
+		/// </summary>
+		/// <remarks>Use when need to create item belonging to catalog directly.</remarks>
+		/// <param name="catalogId">The catalog id.</param>
+		[HttpGet]
+		[ResponseType(typeof(webModel.Product))]
+		[Route("~/api/catalog/{catalogId}/products/getnew")]
+		[CheckPermission(Permission = PredefinedPermissions.ItemsManage)]
+		public IHttpActionResult GetNewProductByCatalog(string catalogId)
+		{
+			return GetNewProductByCatalogAndCategory(catalogId, null);
+		}
 
 
-        /// <summary>
-        /// Gets the template for a new product (inside category).
-        /// </summary>
-        /// <remarks>Use when need to create item belonging to catalog category.</remarks>
-        /// <param name="catalogId">The catalog id.</param>
-        /// <param name="categoryId">The category id.</param>
-        [HttpGet]
-        [ResponseType(typeof(webModel.Product))]
-        [Route("~/api/catalog/{catalogId}/categories/{categoryId}/products/getnew")]
-        [CheckPermission(Permission = PredefinedPermissions.ItemsManage)]
-        public IHttpActionResult GetNewProduct(string catalogId, string categoryId)
-        {
-            var retVal = new webModel.Product
-            {
-                CategoryId = categoryId,
-                CatalogId = catalogId,
-                IsActive = true,
+		/// <summary>
+		/// Gets the template for a new product (inside category).
+		/// </summary>
+		/// <remarks>Use when need to create item belonging to catalog category.</remarks>
+		/// <param name="catalogId">The catalog id.</param>
+		/// <param name="categoryId">The category id.</param>
+		[HttpGet]
+		[ResponseType(typeof(webModel.Product))]
+		[Route("~/api/catalog/{catalogId}/categories/{categoryId}/products/getnew")]
+		[CheckPermission(Permission = PredefinedPermissions.ItemsManage)]
+		public IHttpActionResult GetNewProductByCatalogAndCategory(string catalogId, string categoryId)
+		{
+			var retVal = new webModel.Product
+			{
+				CategoryId = categoryId,
+				CatalogId = catalogId,
+				IsActive = true,
 
-            };
+			};
 
-            if (catalogId != null)
-            {
-                var properites = GetAllCatalogProperies(catalogId, categoryId);
-                retVal.Properties = properites.Select(x => x.ToWebModel()).ToList();
+			if (catalogId != null)
+			{
+				var properites = GetAllCatalogProperies(catalogId, categoryId);
+				retVal.Properties = properites.Select(x => x.ToWebModel()).ToList();
 
-                foreach (var property in retVal.Properties)
-                {
-                    property.Values = new List<webModel.PropertyValue>();
-                    property.IsManageable = true;
-                    property.IsReadOnly = property.Type != coreModel.PropertyType.Product && property.Type != coreModel.PropertyType.Variation;
-                }
-            }
+				foreach (var property in retVal.Properties)
+				{
+					property.Values = new List<webModel.PropertyValue>();
+					property.IsManageable = true;
+					property.IsReadOnly = property.Type != coreModel.PropertyType.Product && property.Type != coreModel.PropertyType.Variation;
+				}
+			}
 
-            retVal.Code = _skuGenerator.GenerateSku(retVal.ToModuleModel(null));
+			retVal.Code = _skuGenerator.GenerateSku(retVal.ToModuleModel(null));
 
-            return Ok(retVal);
-        }
+			return Ok(retVal);
+		}
 
 
         /// <summary>

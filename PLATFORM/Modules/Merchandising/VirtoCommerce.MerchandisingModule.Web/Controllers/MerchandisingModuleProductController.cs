@@ -194,16 +194,16 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 			return NotFound();
 		}
 
-        /// <summary>
-        /// Search for store products
-        /// </summary>
-        /// <param name="store">Store id</param>
-        /// <param name="priceLists">Array of pricelists ids</param>
-        /// <param name="parameters">Search parameters</param>
-        /// <param name="responseGroup">Response detalization scale (default value is ItemMedium)</param>
-        /// <param name="outline">Product category outline</param>
-        /// <param name="language">Culture name (default value is "en-us")</param>
-        /// <param name="currency">Currency (default value is "USD")</param>
+		/// <summary>
+		/// Search for store products
+		/// </summary>
+		/// <param name="store">Store id</param>
+		/// <param name="priceLists">Array of pricelists ids</param>
+		/// <param name="parameters">Search parameters</param>
+		/// <param name="responseGroup">Response detalization scale (default value is ItemMedium)</param>
+		/// <param name="outline">Product category outline</param>
+		/// <param name="language">Culture name (default value is "en-us")</param>
+		/// <param name="currency">Currency (default value is "USD")</param>
 		[HttpGet]
 		[ArrayInput(ParameterName = "priceLists")]
 		[ClientCache(Duration = 30)]
@@ -214,9 +214,9 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 										[FromUri] string outline = "", string language = "en-us", string currency = "USD")
 		{
 			var context = new Dictionary<string, object>
-                          {
-                              { "StoreId", store },
-                          };
+						  {
+							  { "StoreId", store },
+						  };
 
 			var fullLoadedStore = GetStoreById(store);
 			if (fullLoadedStore == null)
@@ -235,10 +235,10 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 				criteria.Outlines.Add(String.Format("{0}/{1}*", catalog, outline));
 				categoryId = outline.Split(new[] { '/' }).Last();
 				context.Add("CategoryId", categoryId);
-            }
+			}
 
-            #region Filters
-            // Now fill in filters
+			#region Filters
+			// Now fill in filters
 			var filters = _browseFilterService.GetFilters(context);
 
 			// Add all filters
@@ -259,28 +259,28 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 
 					criteria.Apply(appliedFilter);
 				}
-            }
-            #endregion
+			}
+			#endregion
 
-            #region Facets
-            // apply facet filters
+			#region Facets
+			// apply facet filters
 			var facets = parameters.Facets;
 			if (facets.Count != 0)
 			{
-				foreach (var key in facets.Keys)
+				foreach (var key in facets.Select(f => f.Key))
 				{
 					var filter = filters.SingleOrDefault(
 						x => x.Key.Equals(key, StringComparison.OrdinalIgnoreCase)
 							&& (!(x is PriceRangeFilter)
 								|| ((PriceRangeFilter)x).Currency.Equals(currency, StringComparison.OrdinalIgnoreCase)));
 
-					var appliedFilter = _browseFilterService.Convert(filter, facets[key]);
+					var appliedFilter = _browseFilterService.Convert(filter, facets.FirstOrDefault(f => f.Key == key).Value);
 					criteria.Apply(appliedFilter);
 				}
-            }
-            #endregion
+			}
+			#endregion
 
-            //criteria.ClassTypes.Add("Product");
+			//criteria.ClassTypes.Add("Product");
 			criteria.RecordsToRetrieve = parameters.PageSize == 0 ? 10 : parameters.PageSize;
 			criteria.StartingRecord = parameters.StartingRecord;
 			criteria.Pricelists = priceLists;
@@ -344,13 +344,13 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 			//Load ALL products 
 			var searchResults = _browseService.SearchItems(criteria, responseGroup);
 
-            // populate inventory
-		    if ((responseGroup & ItemResponseGroup.ItemProperties) == ItemResponseGroup.ItemProperties)
-		    {
-                PopulateInventory(fullLoadedStore.FulfillmentCenter, searchResults.Items);
-		    }
+			// populate inventory
+			if ((responseGroup & ItemResponseGroup.ItemProperties) == ItemResponseGroup.ItemProperties)
+			{
+				PopulateInventory(fullLoadedStore.FulfillmentCenter, searchResults.Items);
+			}
 
-		    return this.Ok(searchResults);
+			return this.Ok(searchResults);
 		}
 
 		private storeModel.Store GetStoreById(string storeId)

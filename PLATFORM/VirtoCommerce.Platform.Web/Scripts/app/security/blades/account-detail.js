@@ -118,7 +118,7 @@
                     title: $scope.blade.title,
                     subtitle: "Change your password",
                     controller: 'platformWebApp.accountResetPasswordController',
-                    template: 'Scripts/app/security/blades/account-resetPassword.tpl.html'
+                    template: '$(Platform)/Scripts/app/security/blades/account-resetPassword.tpl.html'
                 };
                 bladeNavigationService.showBlade(newBlade, $scope.blade);
             },

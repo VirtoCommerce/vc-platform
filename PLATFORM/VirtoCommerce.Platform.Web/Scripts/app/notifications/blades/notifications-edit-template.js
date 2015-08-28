@@ -74,7 +74,7 @@
 			objectTypeId: blade.objectTypeId,
 			language: blade.currentEntity.language,
 			controller: 'platformWebApp.testResolveController',
-			template: 'Scripts/app/notifications/blades/notifications-test-resolve.tpl.html'
+			template: '$(Platform)/Scripts/app/notifications/blades/notifications-test-resolve.tpl.html'
 		};
 
 		bladeNavigationService.showBlade(newBlade, blade);
@@ -90,7 +90,7 @@
 			objectTypeId: blade.objectTypeId,
 			language: blade.currentEntity.language,
 			controller: 'platformWebApp.testSendController',
-			template: 'Scripts/app/notifications/blades/notifications-test-send.tpl.html'
+			template: '$(Platform)/Scripts/app/notifications/blades/notifications-test-send.tpl.html'
 		};
 
 		bladeNavigationService.showBlade(newBlade, blade);

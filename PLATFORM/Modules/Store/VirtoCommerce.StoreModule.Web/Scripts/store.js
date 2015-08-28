@@ -14,7 +14,7 @@ angular.module(moduleName, [
       $stateProvider
           .state('workspace.storeModule', {
               url: '/store',
-              templateUrl: 'Scripts/common/templates/home.tpl.html',
+              templateUrl: '$(Platform)/Scripts/common/templates/home.tpl.html',
               controller: [
                   '$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
                       var blade = {
@@ -102,7 +102,7 @@ angular.module(moduleName, [
               var newBlade = {
                   id: 'entitySettingList',
                   controller: 'platformWebApp.entitySettingListController',
-                  template: 'Scripts/app/settings/blades/entitySetting-list.tpl.html'
+                  template: '$(Platform)/Scripts/app/settings/blades/entitySetting-list.tpl.html'
               };
               bladeNavigationService.showBlade(newBlade, blade);
           },
@@ -116,7 +116,7 @@ angular.module(moduleName, [
 
       //var settingsWidget = {
       //    controller: 'platformWebApp.entitySettingsWidgetController',
-      //    template: 'Scripts/app/settings/widgets/entitySettingsWidget.tpl.html'
+      //    template: '$(Platform)/Scripts/app/settings/widgets/entitySettingsWidget.tpl.html'
       //};
       //widgetService.registerWidget(settingsWidget, 'shippingMethodDetail');
       //widgetService.registerWidget(settingsWidget, 'paymentMethodDetail');

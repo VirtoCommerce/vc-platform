@@ -1,7 +1,6 @@
 ﻿using System.Web.Http;
 using System.Web.Http.OData.Extensions;
 using Newtonsoft.Json;
-
 using VirtoCommerce.Platform.Core.Security;
 
 namespace VirtoCommerce.Platform.Web
@@ -14,10 +13,8 @@ namespace VirtoCommerce.Platform.Web
 
             // Web API routes
             config.MapHttpAttributeRoutes();
-            config.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
 
-            //config.Routes.MapHttpRoute("DefaultApiGet", "api/{controller}/{id}", new { id = RouteParameter.Optional }, new { id = @"^[0-9]+$" });
-            config.Routes.MapHttpRoute("DefaultApi", "api/{controller}/{action}/{id}", new { id = RouteParameter.Optional, action = RouteParameter.Optional });
+            config.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
 
             var formatter = config.Formatters.JsonFormatter;
             formatter.SerializerSettings.ContractResolver = new DeltaContractResolver(formatter);

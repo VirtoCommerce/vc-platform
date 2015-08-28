@@ -3,12 +3,12 @@
     $stateProvider
         .state('workspace.dynamicProperties', {
             url: '/dynamicProperties',
-            templateUrl: 'Scripts/common/templates/home.tpl.html',
+            templateUrl: '$(Platform)/Scripts/common/templates/home.tpl.html',
             controller: ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
                 var blade = {
                     id: 'dynamicPropertiesTypes',
                     controller: 'platformWebApp.dynamicObjectListController',
-                    template: 'Scripts/app/dynamicProperties/blades/dynamicObject-list.tpl.html',
+                    template: '$(Platform)/Scripts/app/dynamicProperties/blades/dynamicObject-list.tpl.html',
                     isClosingDisabled: true
                 };
                 bladeNavigationService.showBlade(blade);

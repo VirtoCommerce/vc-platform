@@ -17,7 +17,7 @@
     return {
         restrict: 'E',
         replace: true,
-        templateUrl: 'Scripts/app/navigation/widget/widgetContainer.tpl.html',
+        templateUrl: '$(Platform)/Scripts/app/navigation/widget/widgetContainer.tpl.html',
         scope: {
             gridsterOpts: '=?',
             group: '@',

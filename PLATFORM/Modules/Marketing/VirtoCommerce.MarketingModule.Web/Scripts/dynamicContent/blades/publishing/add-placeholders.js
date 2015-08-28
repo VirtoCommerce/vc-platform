@@ -15,9 +15,10 @@
 
 		blade.entity.contentPlaces.forEach(function(el) {
 		    marketing_dynamicContents_res_contentPlaces.get({ id: el.id }, function(data) {
-		            el.path = data.path;
-		        },
-		        function(error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+		    	var orEl = _.find(blade.parentBlade.originalEntity.contentPlaces, function (contentPlace) { return contentPlace.id === el.id });
+		    	el.path = orEl.path = data.path;
+		    	el.outline = orEl.outline = data.outline;
+			}, function(error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 		});
 		
 		blade.isLoading = false;

@@ -23,7 +23,7 @@
             currentEntity: data,
             title: $scope.blade.title,
             controller: 'platformWebApp.moduleInstallProgressController',
-            template: 'Scripts/app/packaging/wizards/newModule/module-wizard-progress-step.tpl.html'
+            template: '$(Platform)/Scripts/app/packaging/wizards/newModule/module-wizard-progress-step.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade.parentBlade);
     }

@@ -21,7 +21,7 @@
             title: 'Module information',
             currentEntityId: id,
             controller: 'platformWebApp.moduleDetailController',
-            template: 'Scripts/app/packaging/blades/module-detail.tpl.html'
+            template: '$(Platform)/Scripts/app/packaging/blades/module-detail.tpl.html'
         };
 
         bladeNavigationService.showBlade(newBlade, $scope.blade);
@@ -71,7 +71,7 @@
             // subtitle: '',
             mode: 'install',
             controller: 'platformWebApp.installWizardController',
-            template: 'Scripts/app/packaging/blades/module-detail.tpl.html'
+            template: '$(Platform)/Scripts/app/packaging/blades/module-detail.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     }

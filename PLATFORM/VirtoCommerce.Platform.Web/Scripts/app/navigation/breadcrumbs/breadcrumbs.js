@@ -6,7 +6,7 @@
     	require: 'ngModel',
         replace: true,
         scope: { },
-        templateUrl: 'Scripts/app/navigation/breadcrumbs/breadcrumbs.tpl.html',
+        templateUrl: '$(Platform)/Scripts/app/navigation/breadcrumbs/breadcrumbs.tpl.html',
         link: function (scope, element, attr, ngModelController, linker) {
         	scope.breadcrumbs = {};
         	ngModelController.$render = function () {

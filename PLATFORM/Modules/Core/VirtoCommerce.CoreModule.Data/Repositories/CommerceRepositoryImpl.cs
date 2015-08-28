@@ -30,6 +30,7 @@ namespace VirtoCommerce.CoreModule.Data.Repositories
 		{
 			MapEntity<FulfillmentCenter>(modelBuilder, toTable: "FulfillmentCenter");
 			MapEntity<SeoUrlKeyword>(modelBuilder, toTable: "SeoUrlKeyword");
+            MapEntity<Sequence>(modelBuilder, toTable: "Sequence");
 
 			base.OnModelCreating(modelBuilder);
 		}
@@ -44,6 +45,10 @@ namespace VirtoCommerce.CoreModule.Data.Repositories
 		{
 			get { return GetAsQueryable<SeoUrlKeyword>(); }
 		}
+        public IQueryable<Sequence> Sequences
+        {
+            get { return GetAsQueryable<Sequence>(); }
+        }
 		#endregion
 
 	

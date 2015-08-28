@@ -28,7 +28,7 @@
 			isFirst: false,
 			usedLanguages: _.pluck(blade.currentEntities, 'language'),
 			controller: 'platformWebApp.editTemplateController',
-			template: 'Scripts/app/notifications/blades/notifications-edit-template.tpl.html'
+			template: '$(Platform)/Scripts/app/notifications/blades/notifications-edit-template.tpl.html'
 		};
 
 		bladeNavigationService.showBlade(newBlade, blade);
@@ -46,7 +46,7 @@
 			isFirst: false,
 			usedLanguages: _.pluck(blade.currentEntities, 'language'),
 			controller: 'platformWebApp.editTemplateController',
-			template: 'Scripts/app/notifications/blades/notifications-edit-template.tpl.html'
+			template: '$(Platform)/Scripts/app/notifications/blades/notifications-edit-template.tpl.html'
 		};
 
 		bladeNavigationService.showBlade(newBlade, blade);

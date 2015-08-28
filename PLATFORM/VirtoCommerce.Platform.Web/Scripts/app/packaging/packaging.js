@@ -4,14 +4,14 @@
       $stateProvider
           .state('workspace.packaging', {
               url: '/modules',
-              templateUrl: 'Scripts/common/templates/home.tpl.html',
+              templateUrl: '$(Platform)/Scripts/common/templates/home.tpl.html',
               controller: ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
                   var blade = {
                       id: 'modules',
                       title: 'Modules',
                       subtitle: 'Manage installed modules',
                       controller: 'platformWebApp.modulesListController',
-                      template: 'Scripts/app/packaging/blades/modules-list.tpl.html',
+                      template: '$(Platform)/Scripts/app/packaging/blades/modules-list.tpl.html',
                       isClosingDisabled: true
                   };
                   bladeNavigationService.showBlade(blade);
@@ -38,7 +38,7 @@
          {
              priority: 900,
              satisfy: function (notify, place) { return place == 'menu' && notify.notifyType == 'ModulePushNotification'; },
-             template: 'Scripts/app/packaging/notifications/menu.tpl.html',
+             template: '$(Platform)/Scripts/app/packaging/notifications/menu.tpl.html',
              action: function (notify) { $state.go('pushNotificationsHistory', notify); }
          };
       pushNotificationTemplateResolver.register(menuExportImportTemplate);
@@ -47,14 +47,14 @@
 	  {
 	      priority: 900,
 	      satisfy: function (notify, place) { return place == 'history' && notify.notifyType == 'ModulePushNotification'; },
-	      template: 'Scripts/app/packaging/notifications/history.tpl.html',
+	      template: '$(Platform)/Scripts/app/packaging/notifications/history.tpl.html',
 	      action: function (notify) {
 	          var blade = {
 	              id: 'moduleInstallProgress',
 	              title: notify.title,
 	              currentEntity: notify,
 	              controller: 'platformWebApp.moduleInstallProgressController',
-	              template: 'Scripts/app/packaging/wizards/newModule/module-wizard-progress-step.tpl.html'
+	              template: '$(Platform)/Scripts/app/packaging/wizards/newModule/module-wizard-progress-step.tpl.html'
 	          };
 	          bladeNavigationService.showBlade(blade);
 	      }

@@ -43,12 +43,12 @@
         switch (childType) {
             case 'valType':
                 newBlade.controller = 'platformWebApp.propertyValueTypeController';
-                newBlade.template = 'Scripts/app/dynamicProperties/blades/property-valueType.tpl.html';
+                newBlade.template = '$(Platform)/Scripts/app/dynamicProperties/blades/property-valueType.tpl.html';
                 break;
             case 'dict':
                 newBlade.isApiSave = !blade.isNew;
                 newBlade.controller = 'platformWebApp.propertyDictionaryController';
-                newBlade.template = 'Scripts/app/dynamicProperties/blades/property-dictionary.tpl.html';
+                newBlade.template = '$(Platform)/Scripts/app/dynamicProperties/blades/property-dictionary.tpl.html';
                 if (blade.isNew) {
                     newBlade.data = localDictionaryValues;
                     newBlade.onChangesConfirmedFn = function (data) {

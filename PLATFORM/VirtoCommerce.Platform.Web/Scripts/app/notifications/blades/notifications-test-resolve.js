@@ -42,7 +42,7 @@
 				title: 'Preview result',
 				notification: notification,
 				controller: 'platformWebApp.resolveResultController',
-				template: 'Scripts/app/notifications/blades/resolve-result.tpl.html'
+				template: '$(Platform)/Scripts/app/notifications/blades/resolve-result.tpl.html'
 			};
 
 			bladeNavigationService.showBlade(newBlade, blade);

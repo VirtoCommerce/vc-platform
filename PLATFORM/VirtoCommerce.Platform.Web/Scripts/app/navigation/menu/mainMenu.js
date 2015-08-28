@@ -68,7 +68,7 @@
     return {
         restrict: 'E',
         replace: true,
-        templateUrl: 'Scripts/app/navigation/menu/mainMenu.tpl.html',
+        templateUrl: '$(Platform)/Scripts/app/navigation/menu/mainMenu.tpl.html',
         link: function (scope, element, attr) {
 
             scope.currentMenuItem = undefined;

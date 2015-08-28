@@ -12,7 +12,7 @@
 			objectTypeId: objectTypeId,
 			subtitle: 'Notifications log',
 			controller: 'platformWebApp.notificationsJournalController',
-			template: 'Scripts/app/notifications/blades/notifications-journal.tpl.html'
+			template: '$(Platform)/Scripts/app/notifications/blades/notifications-journal.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, blade);
 	};

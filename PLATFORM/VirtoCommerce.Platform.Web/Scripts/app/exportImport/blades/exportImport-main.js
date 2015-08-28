@@ -6,7 +6,7 @@
 
         var newBlade = {
             controller: 'platformWebApp.exportImport.exportMainController',
-            template: 'Scripts/app/exportImport/blades/export-main.tpl.html'
+            template: '$(Platform)/Scripts/app/exportImport/blades/export-main.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     };
@@ -16,7 +16,7 @@
 
         var newBlade = {
             controller: 'platformWebApp.exportImport.importMainController',
-            template: 'Scripts/app/exportImport/blades/import-main.tpl.html'
+            template: '$(Platform)/Scripts/app/exportImport/blades/import-main.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     };

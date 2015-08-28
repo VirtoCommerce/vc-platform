@@ -96,7 +96,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		[HttpGet]
 		[ResponseType(typeof(ThemeAsset[]))]
 		[Route("themes/{themeId}/assets")]
-		public IHttpActionResult GetThemeAssets(string storeId, string themeId, [FromUri]GetThemeAssetsCriteria criteria)
+		public IHttpActionResult SearchThemeAssets(string storeId, string themeId, [FromUri]GetThemeAssetsCriteria criteria)
 		{
 			var items = this._themeService.GetThemeAssets(storeId, themeId, criteria.ToCoreModel());
 

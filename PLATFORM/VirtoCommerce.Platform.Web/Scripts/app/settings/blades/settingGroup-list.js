@@ -70,7 +70,7 @@ function ($injector, $scope, settings, bladeNavigationService) {
                     data: selectedSettings,
                     title: 'Setting values',
                     controller: 'platformWebApp.settingsDetailController',
-                    template: 'Scripts/app/settings/blades/settings-detail.tpl.html'
+                    template: '$(Platform)/Scripts/app/settings/blades/settings-detail.tpl.html'
                 };
 
                 bladeNavigationService.showBlade(newBlade, blade);
