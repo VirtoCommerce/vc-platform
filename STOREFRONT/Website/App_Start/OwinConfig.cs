@@ -264,6 +264,18 @@ namespace VirtoCommerce.Web
                     ctx.Shop.MoneyFormat = "{{ amount }} " + commerceService.CurrencyDictionary[ctx.Shop.Currency];
                 }
 
+                var gaTrackingId = ConfigurationManager.AppSettings["GoogleAnalytics.TrackingId"];
+                if (!string.IsNullOrEmpty(gaTrackingId))
+                {
+                    ctx.Set("google_analytics_tracking_id", gaTrackingId);
+                }
+
+                var fbTrackingId = ConfigurationManager.AppSettings["Facebook.TrackingId"];
+                if (!string.IsNullOrEmpty(fbTrackingId))
+                {
+                    ctx.Set("facebook_tracking_id", fbTrackingId);
+                }
+
                 context.Set("vc_sitecontext", ctx);
             }
 
