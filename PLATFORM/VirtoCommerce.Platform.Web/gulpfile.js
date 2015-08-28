@@ -1,4 +1,4 @@
-﻿/// <binding BeforeBuild='packCss' AfterBuild='packAll' ProjectOpened='watch' />
+﻿/// <binding />
 
 /*
 This file in the main entry point for defining Gulp tasks and using Gulp plugins.
@@ -69,17 +69,14 @@ gulp.task('packCss', function () {
         filter: /.*\.css$/i
     }))
       .pipe(concat('allStyles.css'))
-      .pipe(cssmin())
+      // .pipe(cssmin())
       .pipe(gulp.dest('Scripts'));
 });
 
 gulp.task('packAll', ['packScripts', 'packCss']);
 
-gulp.task('watch', function () {
-    // All files in client_packages
-    gulp.watch('client_packages/**/*.js', ['packScripts']);
-    gulp.watch('client_packages/**/*.css', ['packCss']);
-});
-
-// Default Task
-gulp.task('default', ['packScripts']);
+//gulp.task('watch', function () {
+//    // All files in client_packages
+//    gulp.watch('client_packages/**/*.js', ['packScripts']);
+//    gulp.watch('client_packages/**/*.css', ['packCss']);
+//});
