@@ -264,13 +264,13 @@ namespace VirtoCommerce.Web
                     ctx.Shop.MoneyFormat = "{{ amount }} " + commerceService.CurrencyDictionary[ctx.Shop.Currency];
                 }
 
-                var gaTrackingId = ConfigurationManager.AppSettings["GoogleAnalytics.TrackingId"];
+				var gaTrackingId = ConfigurationManager.AppSettings["GoogleAnalytics:AccountId"];
                 if (!string.IsNullOrEmpty(gaTrackingId))
                 {
                     ctx.Set("google_analytics_tracking_id", gaTrackingId);
                 }
 
-                var fbTrackingId = ConfigurationManager.AppSettings["Facebook.TrackingId"];
+				var fbTrackingId = ConfigurationManager.AppSettings["FacebookTracker:AddPixelId"];
                 if (!string.IsNullOrEmpty(fbTrackingId))
                 {
                     ctx.Set("facebook_tracking_id", fbTrackingId);
