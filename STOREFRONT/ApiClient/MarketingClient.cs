@@ -34,7 +34,7 @@ namespace VirtoCommerce.ApiClient
         {
             var parameters = new { store = storeId, placeHolders = String.Join(",", placeHolders) };
             return GetAsync<ResponseCollection<DynamicContentItemGroup>>(
-                CreateRequestUri(RelativePaths.DynamicContents, query.GetQueryString(parameters)));
+                CreateRequestUri(RelativePaths.DynamicContents, query.GetQueryString(parameters)), useCache: false);
         }
 
         protected class RelativePaths
