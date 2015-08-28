@@ -20,7 +20,7 @@ namespace VirtoCommerce.Platform.Web
             #region CSS
 
             bundles.Add(
-                new BetterStyleBundle(Startup.VirtualRoot + "/css/core").Include2(
+                new BetterStyleBundle(Startup.VirtualRoot + "/css/core").IncludeAndFixRoot(
                     "~/Scripts/allStyles.css",
                     "~/Scripts/codemirror/codemirror.css",
                     "~/Scripts/codemirror/fold/foldgutter.css",
@@ -45,10 +45,10 @@ namespace VirtoCommerce.Platform.Web
             //Note: must match the real path (~/Scripts/.) to find source map files references from .min.js (ex. # sourceMappingURL=angular-resource.min.js.map)
             bundles.Add(
                 new ScriptBundle(Startup.VirtualRoot + "/scripts/angular")
-                    .Include2("~/Scripts/allPackages.js")
-                    .IncludeDirectory2("~/Scripts/codemirror/", "*.js", true)
-                    .IncludeDirectory2("~/Scripts/app/", "*.js", true)
-                    .IncludeDirectory2("~/Scripts/common/", "*.js", true));
+                    .IncludeAndFixRoot("~/Scripts/allPackages.js")
+                    .IncludeDirectoryAndFixRoot("~/Scripts/codemirror/", "*.js", true)
+                    .IncludeDirectoryAndFixRoot("~/Scripts/app/", "*.js", true)
+                    .IncludeDirectoryAndFixRoot("~/Scripts/common/", "*.js", true));
 
             #endregion
 
@@ -80,18 +80,13 @@ namespace VirtoCommerce.Platform.Web
 
     internal static class BundleExtensions
     {
-        public static Bundle Include2(this Bundle bundle, params string[] items)
+        public static Bundle IncludeAndFixRoot(this Bundle bundle, params string[] items)
         {
-            foreach (var item in items)
-            {
-                var virtualPath = FixVirtualRoot(item);
-                bundle.Include(virtualPath);
-            }
-
+            bundle.Include(items.Select(FixVirtualRoot).ToArray());
             return bundle;
         }
 
-        public static Bundle IncludeDirectory2(this Bundle bundle, string directoryVirtualPath, string searchPattern, bool searchSubdirectories)
+        public static Bundle IncludeDirectoryAndFixRoot(this Bundle bundle, string directoryVirtualPath, string searchPattern, bool searchSubdirectories)
         {
             var virtualPath = FixVirtualRoot(directoryVirtualPath);
             bundle.IncludeDirectory(virtualPath, searchPattern, searchSubdirectories);

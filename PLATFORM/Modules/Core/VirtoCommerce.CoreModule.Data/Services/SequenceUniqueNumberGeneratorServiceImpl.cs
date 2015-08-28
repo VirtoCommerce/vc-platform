@@ -2,31 +2,27 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VirtoCommerce.CoreModule.Data.Model;
 using VirtoCommerce.CoreModule.Data.Repositories;
-using VirtoCommerce.Domain.Order.Model;
-using VirtoCommerce.Domain.Order.Services;
-using VirtoCommerce.OrderModule.Data.Repositories;
+using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Platform.Data.Infrastructure;
 
-namespace VirtoCommerce.OrderModule.Data.Services
+namespace VirtoCommerce.CoreModule.Data.Services
 {
-    public class SequenceServiceImpl : ServiceBase, IOperationNumberGenerator
+    public class SequenceUniqueNumberGeneratorServiceImpl : ServiceBase, IUniqueNumberGenerator
     {
         #region Private fields
 
         //********These settings could be saved in database:
 
         //Prefix_Date_Seq
-        public static string IdTemplate = "{0}{1}-{2}";
+        string _numberTemplate;
         //How many sequence items will be stored in-memory
-        public const int SequenceReservationRange = 100;
-        //Constant length of counter. Trailing zeros are added to left.
-        public const int CounterLength = 5;
+        int _sequenceReservationRange;
+        // the length of counter. Trailing zeros are added to left.
+        int _counterLength;
 
-        public static string DateFormat = "yyMMdd";
+        string _dateFormat;
 
         //***********************************************
 
@@ -37,7 +33,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
         #endregion
 
 
-        public SequenceServiceImpl(Func<IСommerceRepository> repositoryFactory)
+        public SequenceUniqueNumberGeneratorServiceImpl(Func<IСommerceRepository> repositoryFactory)
         {
             _repositoryFactory = repositoryFactory;
 
@@ -61,14 +57,27 @@ namespace VirtoCommerce.OrderModule.Data.Services
             //}
         }
 
-        public string GenerateNumber(IOperation operation)
+        public string GenerateNumber(string objectTypeName)
         {
+            return GenerateNumber(objectTypeName, "{0}{1}-{2}");
+        }
+        public string GenerateNumber(
+          string objectTypeName,
+          string numberTemplate,
+          string dateFormat = "yyMMdd",
+          int sequenceReservationRange = 100,
+          int counterLength = 5)
+        {
+            _numberTemplate = numberTemplate;
+            _dateFormat = dateFormat;
+            _sequenceReservationRange = sequenceReservationRange;
+            _counterLength = counterLength;
+
             // take upercase chars to form operation type. Or just take 2 first chars
-            var s = operation.GetType().Name;
-            var objectType = string.Concat(s.Select(c => char.IsUpper(c) ? c.ToString() : ""));
+            var objectType = string.Concat(objectTypeName.Select(c => char.IsUpper(c) ? c.ToString() : ""));
             if (objectType.Length < 2)
             {
-                objectType = s.Substring(0, 2).ToUpper();
+                objectType = objectTypeName.Substring(0, 2).ToUpper();
             }
 
             lock (SequenceLock)
@@ -109,7 +118,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
                     if (initializedCounters)
                     {
                         //Pregenerate
-                        InMemorySequences[objectType].Pregenerate(startCounter, endCounter);
+                        InMemorySequences[objectType].Pregenerate(startCounter, endCounter, _numberTemplate, _dateFormat, _counterLength);
                     }
                 }
 
@@ -150,13 +159,13 @@ namespace VirtoCommerce.OrderModule.Data.Services
 
                 try
                 {
-                    endCounter = checked(startCounter + SequenceReservationRange);
+                    endCounter = checked(startCounter + _sequenceReservationRange);
                 }
                 catch (OverflowException)
                 {
                     //need to reset
                     startCounter = 0;
-                    endCounter = SequenceReservationRange;
+                    endCounter = _sequenceReservationRange;
                 }
 
                 sequence.Value = endCounter;
@@ -201,14 +210,14 @@ namespace VirtoCommerce.OrderModule.Data.Services
                 return _sequence.Pop();
             }
 
-            public void Pregenerate(int startCount, int endCount)
+            public void Pregenerate(int startCount, int endCount, string numberTemplate, string dateFormat, int counterLength)
             {
                 _lastGenerationDateTime = DateTime.UtcNow;
                 var generatedItems = new Stack<string>();
                 for (var index = startCount; index < endCount; index++)
                 {
-                    var strCount = index.ToString(CultureInfo.InvariantCulture).PadLeft(CounterLength, '0');
-                    generatedItems.Push(string.Format(IdTemplate, _prefix, _lastGenerationDateTime.Value.ToString(DateFormat), strCount));
+                    var strCount = index.ToString(CultureInfo.InvariantCulture).PadLeft(counterLength, '0');
+                    generatedItems.Push(string.Format(numberTemplate, _prefix, _lastGenerationDateTime.Value.ToString(dateFormat), strCount));
                 }
 
                 //This revereses the sequence

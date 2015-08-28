@@ -175,7 +175,7 @@
     <Compile Include="Order\Model\ResponseGroup.cs" />
     <Compile Include="Order\Model\ShipmentPackage.cs" />
     <Compile Include="Order\Model\ShipmentItem.cs" />
-    <Compile Include="Order\Services\IOperationNumberGenerator.cs" />
+    <Compile Include="Common\IUniqueNumberGenerator.cs" />
     <Compile Include="Order\Model\CustomerOrderResponseGroup.cs" />
     <Compile Include="Order\Model\Discount.cs" />
     <Compile Include="Order\Model\Operation.cs" />

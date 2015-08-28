@@ -2,12 +2,12 @@
 using System.Linq;
 using VirtoCommerce.Domain.Cart.Services;
 using VirtoCommerce.Domain.Catalog.Services;
+using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Domain.Order.Events;
 using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Domain.Order.Services;
 using VirtoCommerce.OrderModule.Data.Converters;
-using VirtoCommerce.OrderModule.Data.Model;
 using VirtoCommerce.OrderModule.Data.Repositories;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
@@ -18,17 +18,17 @@ namespace VirtoCommerce.OrderModule.Data.Services
     public class CustomerOrderServiceImpl : ServiceBase, ICustomerOrderService
     {
         private readonly Func<IOrderRepository> _repositoryFactory;
-        private readonly IOperationNumberGenerator _operationNumberGenerator;
+        private readonly IUniqueNumberGenerator _uniqueNumberGenerator;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IItemService _productService;
         private readonly IEventPublisher<OrderChangeEvent> _eventPublisher;
         private readonly IDynamicPropertyService _dynamicPropertyService;
 
-        public CustomerOrderServiceImpl(Func<IOrderRepository> orderRepositoryFactory, IOperationNumberGenerator operationNumberGenerator, IEventPublisher<OrderChangeEvent> eventPublisher, IShoppingCartService shoppingCartService, IItemService productService, IDynamicPropertyService dynamicPropertyService)
+        public CustomerOrderServiceImpl(Func<IOrderRepository> orderRepositoryFactory, IUniqueNumberGenerator uniqueNumberGenerator, IEventPublisher<OrderChangeEvent> eventPublisher, IShoppingCartService shoppingCartService, IItemService productService, IDynamicPropertyService dynamicPropertyService)
         {
             _repositoryFactory = orderRepositoryFactory;
             _shoppingCartService = shoppingCartService;
-            _operationNumberGenerator = operationNumberGenerator;
+            _uniqueNumberGenerator = uniqueNumberGenerator;
             _eventPublisher = eventPublisher;
             _productService = productService;
             _dynamicPropertyService = dynamicPropertyService;
@@ -62,7 +62,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
                 }
             }
 
-			_dynamicPropertyService.LoadDynamicPropertyValues(retVal);
+            _dynamicPropertyService.LoadDynamicPropertyValues(retVal);
 
             _eventPublisher.Publish(new OrderChangeEvent(EntryState.Unchanged, null, retVal));
             return retVal;
@@ -91,7 +91,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
                             }
                         }
                     }
-					_dynamicPropertyService.LoadDynamicPropertyValues(retVal);
+                    _dynamicPropertyService.LoadDynamicPropertyValues(retVal);
                 }
             }
             _eventPublisher.Publish(new OrderChangeEvent(EntryState.Unchanged, null, retVal));
@@ -180,7 +180,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
             {
                 if (operation.Number == null)
                 {
-                    operation.Number = _operationNumberGenerator.GenerateNumber(operation);
+                    operation.Number = _uniqueNumberGenerator.GenerateNumber(operation.GetType().Name);
                 }
             }
 

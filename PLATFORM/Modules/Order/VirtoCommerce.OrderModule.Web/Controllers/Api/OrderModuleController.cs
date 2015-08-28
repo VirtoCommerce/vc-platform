@@ -19,6 +19,7 @@ using VirtoCommerce.Domain.Payment.Model;
 using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Core.Caching;
 using Hangfire;
+using VirtoCommerce.Domain.Common;
 using VirtoCommerce.OrderModule.Web.BackgroundJobs;
 using VirtoCommerce.OrderModule.Data.Repositories;
 
@@ -30,16 +31,16 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
     {
         private readonly ICustomerOrderService _customerOrderService;
         private readonly ICustomerOrderSearchService _searchService;
-        private readonly IOperationNumberGenerator _operationNumberGenerator;
+        private readonly IUniqueNumberGenerator _uniqueNumberGenerator;
         private readonly IStoreService _storeService;
 		private readonly CacheManager _cacheManager;
 		private readonly Func<IOrderRepository> _repositoryFactory;
 
-		public OrderModuleController(ICustomerOrderService customerOrderService, ICustomerOrderSearchService searchService, IStoreService storeService, IOperationNumberGenerator numberGenerator, CacheManager cacheManager, Func<IOrderRepository> repositoryFactory)
+		public OrderModuleController(ICustomerOrderService customerOrderService, ICustomerOrderSearchService searchService, IStoreService storeService, IUniqueNumberGenerator numberGenerator, CacheManager cacheManager, Func<IOrderRepository> repositoryFactory)
         {
             _customerOrderService = customerOrderService;
             _searchService = searchService;
-            _operationNumberGenerator = numberGenerator;
+            _uniqueNumberGenerator = numberGenerator;
             _storeService = storeService;
 			_cacheManager = cacheManager;
 			_repositoryFactory = repositoryFactory;
@@ -183,11 +184,11 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
                 {
                     Currency = order.Currency
                 };
-                retVal.Number = _operationNumberGenerator.GenerateNumber(retVal);
+                retVal.Number = _uniqueNumberGenerator.GenerateNumber(retVal.GetType().Name);
 
                 //Detect not whole shipped items
-				//TODO: LineItem partial shipping
-				var shippedLineItemIds = order.Shipments.SelectMany(x => x.Items).Select(x=>x.LineItemId);
+                //TODO: LineItem partial shipping
+                var shippedLineItemIds = order.Shipments.SelectMany(x => x.Items).Select(x=>x.LineItemId);
 
                 //TODO Add check for digital products (don't add to shipment)
 				retVal.Items = order.Items.Where(x => !shippedLineItemIds.Contains(x.Id))
@@ -218,7 +219,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
                     Currency = order.Currency,
                     CustomerId = order.CustomerId
                 };
-                retVal.Number = _operationNumberGenerator.GenerateNumber(retVal);
+                retVal.Number = _uniqueNumberGenerator.GenerateNumber(retVal.GetType().Name);
                 return Ok(retVal.ToWebModel());
             }
 
