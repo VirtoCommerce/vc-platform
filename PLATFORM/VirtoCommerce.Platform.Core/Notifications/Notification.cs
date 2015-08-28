@@ -56,7 +56,7 @@ namespace VirtoCommerce.Platform.Core.Notifications
         public string Recipient { get; set; }
 
         /// <summary>
-        /// Number of current attemp
+        /// Number of current attempt
         /// </summary>
         public int AttemptCount { get; set; }
 

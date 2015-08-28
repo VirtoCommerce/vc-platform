@@ -79,13 +79,13 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 		/// <summary>
 		/// Create new customer order based on shopping cart.
 		/// </summary>
-		/// <param name="cartId">shopping cart id</param>
+		/// <param name="id">shopping cart id</param>
         [HttpPost]
         [ResponseType(typeof(webModel.CustomerOrder))]
-        [Route("{cartId}")]
-        public IHttpActionResult CreateOrderFromCart(string cartId)
+        [Route("{id}")]
+		public IHttpActionResult CreateOrderFromCart(string id)
         {
-            var retVal = _customerOrderService.CreateByShoppingCart(cartId);
+			var retVal = _customerOrderService.CreateByShoppingCart(id);
             return Ok(retVal.ToWebModel());
         }
 
@@ -233,7 +233,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         [ResponseType(typeof(void))]
         [Route("")]
         [CheckPermission(Permission = PredefinedPermissions.Manage)]
-        public IHttpActionResult Delete([FromUri] string[] ids)
+        public IHttpActionResult DeleteOrdersByIds([FromUri] string[] ids)
         {
             _customerOrderService.Delete(ids);
             return StatusCode(HttpStatusCode.NoContent);

@@ -25,43 +25,48 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _tempPath = HostingEnvironment.MapPath("~/App_Data/Uploads/");
         }
 
-        /// <summary>
-        /// Upload assets to the folder
-        /// </summary>
-        /// <remarks>
-        /// Request body can contain multiple files.
-        /// </remarks>
-        /// <param name="folder">Folder name.</param>
-        /// <returns></returns>
-        [HttpPost]
-        [Route("{folder?}")]
-        [ResponseType(typeof(webModel.BlobInfo[]))]
-        public async Task<webModel.BlobInfo[]> UploadAsset(string folder = "tmp")
-        {
-            if (!Request.Content.IsMimeMultipartContent())
-            {
-                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
-            }
+		/// <summary>
+		/// Upload assets to the folder
+		/// </summary>
+		/// <remarks>
+		/// Request body can contain multiple files.
+		/// </remarks>
+		/// <param name="folder">Folder name.</param>
+		/// <returns></returns>
+		[HttpPost]
+		[Route("{folder}")]
+		[ResponseType(typeof(webModel.BlobInfo[]))]
+		public async Task<IHttpActionResult> UploadAsset(string folder)
+		{
+			if(string.IsNullOrEmpty(folder))
+			{
+				folder = "tmp";
+			}
 
-            var blobMultipartProvider = new BlobStorageMultipartProvider(_blobProvider, _tempPath, folder);
-            await Request.Content.ReadAsMultipartAsync(blobMultipartProvider);
+			if (!Request.Content.IsMimeMultipartContent())
+			{
+				throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+			}
 
-            var retVal = new List<webModel.BlobInfo>();
+			var blobMultipartProvider = new BlobStorageMultipartProvider(_blobProvider, _tempPath, folder);
+			await Request.Content.ReadAsMultipartAsync(blobMultipartProvider);
 
-            foreach (var blobInfo in blobMultipartProvider.BlobInfos)
-            {
-                retVal.Add(new webModel.BlobInfo
-                {
-                    Name = blobInfo.FileName,
-                    Size = blobInfo.Size.ToString(),
-                    MimeType = blobInfo.ContentType,
-                    RelativeUrl = blobInfo.Key,
-                    Url = _urlResolver.GetAbsoluteUrl(blobInfo.Key)
-                });
-            }
+			var retVal = new List<webModel.BlobInfo>();
 
-            return retVal.ToArray();
-        }
+			foreach (var blobInfo in blobMultipartProvider.BlobInfos)
+			{
+				retVal.Add(new webModel.BlobInfo
+				{
+					Name = blobInfo.FileName,
+					Size = blobInfo.Size.ToString(),
+					MimeType = blobInfo.ContentType,
+					RelativeUrl = blobInfo.Key,
+					Url = _urlResolver.GetAbsoluteUrl(blobInfo.Key)
+				});
+			}
+
+			return Ok(retVal.ToArray());
+		}
 
     }
 

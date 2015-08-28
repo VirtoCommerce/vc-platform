@@ -195,7 +195,7 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 		[ResponseType(typeof(webModel.DynamicContentPublication))]
 		[Route("contentpublications")]
         [CheckPermission(Permission = PredefinedPermissions.Manage)]
-		public IHttpActionResult CreateDynamicContent(webModel.DynamicContentPublication publication)
+		public IHttpActionResult CreateDynamicContentPublication(webModel.DynamicContentPublication publication)
 		{
 			var retVal = _dynamicContentService.CreatePublication(publication.ToCoreModel());
 			return GetDynamicContentPublicationById(retVal.Id);
