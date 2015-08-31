@@ -69,7 +69,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		[HttpGet]
 		[ResponseType(typeof(CheckNameResult))]
 		[Route("menu/checkname")]
-		public IHttpActionResult CheckName(string storeId, string name, string language, string id)
+		public IHttpActionResult CheckName(string storeId, string name, string language, string id = "")
 		{
 			var retVal = _menuService.CheckList(storeId, name, language, id);
 			var response = new CheckNameResult { Result = retVal };

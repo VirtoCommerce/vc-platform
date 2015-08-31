@@ -43,7 +43,9 @@ namespace VirtoCommerce.Content.Data.Services
 	        {
 	            var lists = repository.GetListsByStoreId(storeId);
 
-	            return !lists.Any(l => l.Name == name && l.Language == language && l.Id != id);
+                var retVal = !lists.Any(l => l.Name == name && l.Language == language && l.Id != id);
+
+	            return retVal;
 	        }
 		}
 	}
