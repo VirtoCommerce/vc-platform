@@ -264,16 +264,22 @@ namespace VirtoCommerce.Web
                     ctx.Shop.MoneyFormat = "{{ amount }} " + commerceService.CurrencyDictionary[ctx.Shop.Currency];
                 }
 
-				var gaTrackingId = ConfigurationManager.AppSettings["GoogleAnalytics:AccountId"];
-                if (!string.IsNullOrEmpty(gaTrackingId))
+                if (ctx.Settings["google_analytics_tracking_id"] == null)
                 {
-                    ctx.Set("google_analytics_tracking_id", gaTrackingId);
+                    var gaTrackingId = ConfigurationManager.AppSettings["GoogleAnalytics:AccountId"];
+                    if (!string.IsNullOrEmpty(gaTrackingId))
+                    {
+                        ctx.Settings.Set("google_analytics_tracking_id", gaTrackingId);
+                    }
                 }
 
-				var fbTrackingId = ConfigurationManager.AppSettings["FacebookTracker:AddPixelId"];
-                if (!string.IsNullOrEmpty(fbTrackingId))
+                if (ctx.Settings["facebook_tracking_id"] == null)
                 {
-                    ctx.Set("facebook_tracking_id", fbTrackingId);
+                    var fbTrackingId = ConfigurationManager.AppSettings["FacebookTracker:AddPixelId"];
+                    if (!string.IsNullOrEmpty(fbTrackingId))
+                    {
+                        ctx.Settings.Set("facebook_tracking_id", fbTrackingId);
+                    }
                 }
 
                 context.Set("vc_sitecontext", ctx);

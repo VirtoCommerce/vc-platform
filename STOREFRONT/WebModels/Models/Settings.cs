@@ -23,6 +23,18 @@ namespace VirtoCommerce.Web.Models
         }
         #endregion
 
+        public void Set(string key, object value)
+        {
+            if (_settings.ContainsKey(key))
+            {
+                _settings[key] = value;
+            }
+            else
+            {
+                _settings.Add(key, value);
+            }
+        }
+
         #region Public Methods and Operators
         public override object BeforeMethod(string method)
         {

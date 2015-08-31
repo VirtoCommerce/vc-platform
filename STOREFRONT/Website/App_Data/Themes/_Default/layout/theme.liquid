@@ -62,7 +62,7 @@
                 {{ 'modernizr.min.js' | asset_url | script_tag }}
                 {{ 'virtocommerce.js' | shopify_asset_url | script_tag }}
 
-                {% if facebook_tracking_id != null %}
+                {% if settings.facebook_tracking_id != null %}
                 <script>
                     (function() {
                     var _fbq = window._fbq || (window._fbq = []);
@@ -74,21 +74,24 @@
                     s.parentNode.insertBefore(fbds, s);
                     _fbq.loaded = true;
                     }
-                    _fbq.push(['addPixelId', '{{ facebook_tracking_id }}']);
+                    _fbq.push(['addPixelId', '{{ settings.facebook_tracking_id }}']);
                     })();
                     window._fbq = window._fbq || [];
                     window._fbq.push(['track', 'PixelInitialized', {}]);
                 </script>
+                <noscript>
+                    <img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?id={{ settings.facebook_tracking_id }}&ev=PixelInitialized" />
+                </noscript>
                 {% endif %}
 
                 <base href="{{ shop.simplified_url }}" />
         </head>
 
   <body id="{{ page_title | handle }}" class="{% if customer %}customer-logged-in {% endif %}template-{{ template | replace: '.', ' ' | truncatewords: 1, '' | handle }}" >
-      {% if google_analytics_tracking_id != null %}
+      {% if settings.google_analytics_tracking_id != null %}
           <script type="text/javascript">
               var _gaq = _gaq || [];
-              _gaq.push(['_setAccount', '{{ google_analytics_tracking_id }}']);
+              _gaq.push(['_setAccount', '{{ settings.google_analytics_tracking_id }}']);
               _gaq.push(['_setDomainName', 'virtocommerce.com']);
               _gaq.push(['_trackPageview']);
 
@@ -98,11 +101,6 @@
               var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
               })();
           </script>
-      {% endif %}
-      {% if settings.facebook_tracking_id != null %}
-          <noscript>
-              <img height="1" width="1" alt="" style="display:none" src="@string.Format("https:=""//www.facebook.com/tr?id={0}&amp;ev=PixelInitialized", @System.Configuration.ConfigurationManager.AppSettings["FacebookTracker:AddPixelId"])" />
-          </noscript>
       {% endif %}
 
       {% if settings.store_selector_enable %}{% include 'top-header-selector' %}{% endif %}
@@ -222,7 +220,7 @@
         });
     </script>
     {% endif %}
-    {% if google_analytics_tracking_id != null %}
+    {% if settings.google_analytics_tracking_id != null %}
         <script src="https://apis.google.com/js/platform.js" async="" defer=""></script>
     {% endif %}
   </body>

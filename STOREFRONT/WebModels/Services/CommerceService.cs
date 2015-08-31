@@ -958,11 +958,11 @@ namespace VirtoCommerce.Web.Models.Services
 
 
                 // TODO: It's bad for Facebook ID which contains only digits and becomes Single and displayed in exponential form
-                Single valSingle;
-                if (Single.TryParse(input, out valSingle))
-                {
-                    return valSingle;
-                }
+                //Single valSingle;
+                //if (Single.TryParse(input, out valSingle))
+                //{
+                //    return valSingle;
+                //}
             }
 
             return val;
