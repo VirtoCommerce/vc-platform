@@ -308,7 +308,6 @@
     <Content Include="Scripts\wizards\newProduct\new-product-wizard-seo-detail-step.js" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\priceRuCategoryTest.yml" />
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>

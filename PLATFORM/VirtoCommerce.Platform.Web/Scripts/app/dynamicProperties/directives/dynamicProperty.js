@@ -6,7 +6,7 @@
         require: 'ngModel',
         replace: true,
         transclude: true,
-        templateUrl: 'Scripts/app/dynamicProperties/directives/dynamicProperty.tpl.html',
+        templateUrl: '$(Platform)/Scripts/app/dynamicProperties/directives/dynamicProperty.tpl.html',
         scope: { languages: "=" },
         link: function (scope, element, attr, ngModelController, linker) {
 

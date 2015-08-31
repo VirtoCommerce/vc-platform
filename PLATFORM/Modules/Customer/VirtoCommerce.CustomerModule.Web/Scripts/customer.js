@@ -11,7 +11,7 @@ angular.module(moduleName, [])
       $stateProvider
           .state('workspace.customerModule', {
               url: '/customers',
-              templateUrl: 'Scripts/common/templates/home.tpl.html',
+              templateUrl: '$(Platform)/Scripts/common/templates/home.tpl.html',
               controller: [
                   '$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
                       var blade = {
@@ -55,7 +55,7 @@ angular.module(moduleName, [])
       }, 'customerDetail1');
       widgetService.registerWidget({
           controller: 'platformWebApp.dynamicPropertyWidgetController',
-          template: 'Scripts/app/dynamicProperties/widgets/dynamicPropertyWidget.tpl.html'
+          template: '$(Platform)/Scripts/app/dynamicProperties/widgets/dynamicPropertyWidget.tpl.html'
       }, 'customerDetail2');
 
       //Register widgets in organization details
@@ -73,6 +73,6 @@ angular.module(moduleName, [])
       }, 'organizationDetail1');
       widgetService.registerWidget({
           controller: 'platformWebApp.dynamicPropertyWidgetController',
-          template: 'Scripts/app/dynamicProperties/widgets/dynamicPropertyWidget.tpl.html'
+          template: '$(Platform)/Scripts/app/dynamicProperties/widgets/dynamicPropertyWidget.tpl.html'
       }, 'organizationDetail2');
   }]);

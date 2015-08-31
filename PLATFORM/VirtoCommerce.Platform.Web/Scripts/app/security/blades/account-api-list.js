@@ -25,7 +25,7 @@
             id: "accountApiDetail",
             title: $scope.blade.title,
             controller: 'platformWebApp.accountApiController',
-            template: 'Scripts/app/security/blades/account-api.tpl.html'
+            template: '$(Platform)/Scripts/app/security/blades/account-api.tpl.html'
         };
         angular.extend(newBlade, node);
 

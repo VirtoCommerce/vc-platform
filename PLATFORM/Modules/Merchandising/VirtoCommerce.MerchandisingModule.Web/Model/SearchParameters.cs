@@ -31,7 +31,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model
         /// </summary>
         public SearchParameters()
         {
-            Facets = new Dictionary<string, string[]>();
+			Facets = new List<KeyValuePair<string, string[]>>();
             PageSize = 0;
             StartingRecord = 0;
         }
@@ -40,7 +40,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model
         /// Gets or sets the facets
         /// </summary>
         /// <value>The facets</value>
-        public IDictionary<string, string[]> Facets { get; set; }
+        public List<KeyValuePair<string, string[]>> Facets { get; set; }
 
         /// <summary>
         /// Gets or sets the free search
@@ -80,7 +80,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model
         /// <summary>
         /// Gets or sets search terms collection
         /// </summary>
-        public IDictionary<string, string[]> Terms { get; set; }
+		public List<KeyValuePair<string, string[]>> Terms { get; set; }
 
         public static bool TryParse(string s, out SearchParameters result)
         {
@@ -94,13 +94,13 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model
             var facets =
                 qsDict.Where(k => FacetRegex.IsMatch(k.Key))
                     .Select(k => k.WithKey(FacetRegex.Replace(k.Key, "")))
-                    .ToDictionary(x => x.Key, y => y.Value.Split(','));
+                    .ToDictionary(x => x.Key, y => y.Value.Split(',')).ToList();
 
             // parse facets
             var terms =
                 qsDict.Where(k => TermRegex.IsMatch(k.Key))
                     .Select(k => k.WithKey(TermRegex.Replace(k.Key, "")))
-                    .ToDictionary(x => x.Key, y => y.Value.Split(','));
+					.ToDictionary(x => x.Key, y => y.Value.Split(',')).ToList();
 
             var sp = new SearchParameters
                      {

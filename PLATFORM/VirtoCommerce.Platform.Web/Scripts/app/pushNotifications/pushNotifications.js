@@ -4,7 +4,7 @@
       $stateProvider
           .state('pushNotificationsHistory', {
               url: '/events',
-              templateUrl: 'Scripts/app/pushNotifications/notification.tpl.html',
+              templateUrl: '$(Platform)/Scripts/app/pushNotifications/notification.tpl.html',
               controller: ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
                   var blade = {
                       id: 'events',
@@ -12,7 +12,7 @@
                       breadcrumbs: [],
                       subtitle: 'Events history',
                       controller: 'platformWebApp.pushNotificationsHistoryController',
-                      template: 'Scripts/app/pushNotifications/blade/history.tpl.html',
+                      template: '$(Platform)/Scripts/app/pushNotifications/blade/history.tpl.html',
                       isClosingDisabled: true
                   };
                   bladeNavigationService.showBlade(blade);
@@ -42,7 +42,7 @@
 		    priority: 1000,
 		    satisfy: function (notification, place) { return place == 'menu'; },
 		    //template for display that notification in menu and list
-		    template: 'Scripts/app/pushNotifications/menuDefault.tpl.html',
+		    template: '$(Platform)/Scripts/app/pushNotifications/menuDefault.tpl.html',
 		    //action executed when notification selected
 		    action: function (notify) { $state.go('pushNotificationsHistory', notify) }
 		};
@@ -53,14 +53,14 @@
 		    priority: 1000,
 		    satisfy: function (notification, place) { return place == 'history'; },
 		    //template for display that notification in menu and list
-		    template: 'Scripts/app/pushNotifications/blade/historyDefault.tpl.html',
+		    template: '$(Platform)/Scripts/app/pushNotifications/blade/historyDefault.tpl.html',
 		    //action executed in event detail
 		    action: function (notify) {
 		        var blade = {
 		            id: 'notifyDetail',
 		            title: 'Event detail',
 		            subtitle: 'Event detail',
-		            template: 'Scripts/app/pushNotifications/blade/historyDetailDefault.tpl.html',
+		            template: '$(Platform)/Scripts/app/pushNotifications/blade/historyDetailDefault.tpl.html',
 		            isClosingDisabled: false,
 		            notify: notify
 		        };
@@ -136,9 +136,9 @@
                         title: 'Notifications',
                         priority: 2,
                         permission: '',
-                        headerTemplate: 'Scripts/app/pushNotifications/menuHeader.tpl.html',
-                        listTemplate: 'Scripts/app/pushNotifications/menuList.tpl.html',
-                        template: 'Scripts/app/pushNotifications/menu.tpl.html',
+                        headerTemplate: '$(Platform)/Scripts/app/pushNotifications/menuHeader.tpl.html',
+                        listTemplate: '$(Platform)/Scripts/app/pushNotifications/menuList.tpl.html',
+                        template: '$(Platform)/Scripts/app/pushNotifications/menu.tpl.html',
                         action: function () { markAllAsRead(); if (this.children.length == 0) { this.showHistory(); } },
                         showHistory: function () { $state.go('pushNotificationsHistory'); },
                         clearRecent: function () { notifyMenu.children.splice(0, notifyMenu.children.length); },

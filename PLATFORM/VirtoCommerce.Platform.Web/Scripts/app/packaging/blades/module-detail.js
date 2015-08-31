@@ -51,7 +51,7 @@
                     title: 'Module settings',
                     //subtitle: '',
                     controller: 'platformWebApp.settingsDetailController',
-                    template: 'Scripts/app/settings/blades/settings-detail.tpl.html'
+                    template: '$(Platform)/Scripts/app/settings/blades/settings-detail.tpl.html'
                 };
                 bladeNavigationService.showBlade(newBlade, blade);
             },
@@ -68,7 +68,7 @@
             // subtitle: '',
             mode: 'update',
             controller: 'platformWebApp.installWizardController',
-            template: 'Scripts/app/packaging/blades/module-detail.tpl.html'
+            template: '$(Platform)/Scripts/app/packaging/blades/module-detail.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, blade);
     }
@@ -89,7 +89,7 @@
                             currentEntityId: data.id,
                             title: 'Module uninstall',
                             controller: 'platformWebApp.moduleInstallProgressController',
-                            template: 'Scripts/app/packaging/wizards/newModule/module-wizard-progress-step.tpl.html'
+                            template: '$(Platform)/Scripts/app/packaging/wizards/newModule/module-wizard-progress-step.tpl.html'
                         };
                         bladeNavigationService.showBlade(newBlade, blade.parentBlade);
                     }, function (error) {

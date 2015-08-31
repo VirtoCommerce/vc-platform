@@ -9,6 +9,7 @@ using Microsoft.Owin.Security.OAuth;
 using Microsoft.Practices.Unity;
 using Owin;
 using VirtoCommerce.Platform.Core.Caching;
+using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Security;
 using VirtoCommerce.Platform.Data.Security.Authentication.ApiKeys;
@@ -96,11 +97,13 @@ namespace VirtoCommerce.Platform.Web
             }
 
             var permissionService = container.Resolve<IPermissionService>();
+            var moduleInitializerOptions = container.Resolve<IModuleInitializerOptions>();
             app.UseHangfire(config =>
             {
                 config.UseUnityActivator(container);
                 config.UseSqlServerStorage(databaseConnectionStringName, new SqlServerStorageOptions { PrepareSchemaIfNecessary = false, QueuePollInterval = TimeSpan.FromSeconds(60) /* 15 Default value */ });
                 config.UseAuthorizationFilters(new PermissionBasedAuthorizationFilter(permissionService) { Permission = PredefinedPermissions.BackgroundJobsManage });
+                config.UseDashboardPath("/" + moduleInitializerOptions.RoutPrefix + "hangfire");
                 config.UseServer();
             });
         }

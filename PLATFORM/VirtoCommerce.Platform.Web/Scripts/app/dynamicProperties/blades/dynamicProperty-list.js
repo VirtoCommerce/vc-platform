@@ -27,7 +27,7 @@
             id: "dynamicPropertyDetail",
             objectType: blade.objectType,
             controller: 'platformWebApp.dynamicPropertyDetailController',
-            template: 'Scripts/app/dynamicProperties/blades/dynamicProperty-detail.tpl.html'
+            template: '$(Platform)/Scripts/app/dynamicProperties/blades/dynamicProperty-detail.tpl.html'
         };
         angular.extend(newBlade, node);
 

@@ -20,7 +20,7 @@ namespace VirtoCommerce.Platform.Web
             #region CSS
 
             bundles.Add(
-                new BetterStyleBundle("~/css/core").Include(
+                new BetterStyleBundle(Startup.VirtualRoot + "/css/core").IncludeAndFixRoot(
                     "~/Scripts/allStyles.css",
                     "~/Scripts/codemirror/codemirror.css",
                     "~/Scripts/codemirror/fold/foldgutter.css",
@@ -44,10 +44,11 @@ namespace VirtoCommerce.Platform.Web
             //AngularJS 
             //Note: must match the real path (~/Scripts/.) to find source map files references from .min.js (ex. # sourceMappingURL=angular-resource.min.js.map)
             bundles.Add(
-                new ScriptBundle("~/scripts/angular").Include("~/Scripts/allPackages.js")
-                    .IncludeDirectory("~/Scripts/codemirror/", "*.js", true)
-                    .IncludeDirectory("~/Scripts/app/", "*.js", true)
-                    .IncludeDirectory("~/Scripts/common/", "*.js", true));
+                new ScriptBundle(Startup.VirtualRoot + "/scripts/angular")
+                    .IncludeAndFixRoot("~/Scripts/allPackages.js")
+                    .IncludeDirectoryAndFixRoot("~/Scripts/codemirror/", "*.js", true)
+                    .IncludeDirectoryAndFixRoot("~/Scripts/app/", "*.js", true)
+                    .IncludeDirectoryAndFixRoot("~/Scripts/common/", "*.js", true));
 
             #endregion
 
@@ -66,8 +67,8 @@ namespace VirtoCommerce.Platform.Web
                 .SelectMany(m => m.Scripts.Select(i => new BundleItem { Module = m, Item = i }))
                 .ToArray();
 
-            bundles.Add(new BetterStyleBundle("~/css/modules").Include(styles));
-            bundles.Add(new ScriptBundle("~/scripts/modules").Include(scripts));
+            bundles.Add(new BetterStyleBundle(Startup.VirtualRoot + "/css/modules").Include(styles));
+            bundles.Add(new ScriptBundle(Startup.VirtualRoot + "/scripts/modules").Include(scripts));
         }
     }
 
@@ -79,6 +80,27 @@ namespace VirtoCommerce.Platform.Web
 
     internal static class BundleExtensions
     {
+        public static Bundle IncludeAndFixRoot(this Bundle bundle, params string[] items)
+        {
+            bundle.Include(items.Select(FixVirtualRoot).ToArray());
+            return bundle;
+        }
+
+        public static Bundle IncludeDirectoryAndFixRoot(this Bundle bundle, string directoryVirtualPath, string searchPattern, bool searchSubdirectories)
+        {
+            var virtualPath = FixVirtualRoot(directoryVirtualPath);
+            bundle.IncludeDirectory(virtualPath, searchPattern, searchSubdirectories);
+
+            return bundle;
+        }
+
+        private static string FixVirtualRoot(string virtualPath)
+        {
+            if (virtualPath.StartsWith("~/"))
+                virtualPath = Startup.VirtualRoot + virtualPath.Substring(1);
+            return virtualPath;
+        }
+
         public static Bundle Include(this Bundle bundle, IEnumerable<BundleItem> items)
         {
             foreach (var item in items)

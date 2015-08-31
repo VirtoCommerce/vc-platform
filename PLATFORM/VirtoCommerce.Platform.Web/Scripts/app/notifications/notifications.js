@@ -10,14 +10,14 @@ angular.module(moduleName)
   	$stateProvider
 		.state('workspace.notifications', {
 			url: '/notifications?objectId&objectTypeId',
-			templateUrl: 'Scripts/common/templates/home.tpl.html',
+			templateUrl: '$(Platform)/Scripts/common/templates/home.tpl.html',
 			controller: ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
 				var blade = {
 					id: 'notifications',
 					title: 'Notifications',
 					subtitle: 'Working with notifications system',
 					controller: 'platformWebApp.notificationsMenuController',
-					template: 'Scripts/app/notifications/blades/notifications-menu.tpl.html',
+					template: '$(Platform)/Scripts/app/notifications/blades/notifications-menu.tpl.html',
 					isClosingDisabled: true
 				};
 				bladeNavigationService.showBlade(blade);

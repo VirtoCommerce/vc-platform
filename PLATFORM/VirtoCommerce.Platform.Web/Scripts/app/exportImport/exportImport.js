@@ -3,13 +3,13 @@
 	$stateProvider
         .state('workspace.exportImport', {
         	url: '/exportImport',
-        	templateUrl: 'Scripts/common/templates/home.tpl.html',
+        	templateUrl: '$(Platform)/Scripts/common/templates/home.tpl.html',
         	controller: ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
         		var blade = {
         			id: 'exportImport',
         			title: 'Data export and import',
         			controller: 'platformWebApp.exportImport.mainController',
-        			template: 'Scripts/app/exportImport/blades/exportImport-main.tpl.html',
+        			template: '$(Platform)/Scripts/app/exportImport/blades/exportImport-main.tpl.html',
         			isClosingDisabled: true
         		};
         		bladeNavigationService.showBlade(blade);
@@ -21,7 +21,7 @@
         .state('sampleDataChoose', {
         	url: '/sampleDataChoose',
         	params: { sampleDataInfos: null },
-        	templateUrl: 'Scripts/app/exportImport/templates/sampleDataChoose.tpl.html',
+        	templateUrl: '$(Platform)/Scripts/app/exportImport/templates/sampleDataChoose.tpl.html',
         	controller: ['$scope', '$state', '$stateParams', 'platformWebApp.exportImport.resource', function ($scope, $state, $stateParams, exportImportResource) {
         		$scope.sampleDataInfos = $stateParams.sampleDataInfos;
         		$scope.loading = false;
@@ -38,7 +38,7 @@
 	$stateProvider
         .state('sampleDataInitialization', {
         	url: '/sampleDataInitialization',
-        	templateUrl: 'Scripts/app/exportImport/templates/sampleDataInitialization.tpl.html',
+        	templateUrl: '$(Platform)/Scripts/app/exportImport/templates/sampleDataInitialization.tpl.html',
         	controller: ['$scope', '$state', function ($scope, $state) {
         		$scope.notification = {};
         		$scope.close = function () { $state.go('workspace') };
@@ -73,7 +73,7 @@
 	   {
 	   	priority: 900,
 	   	satisfy: function (notify, place) { return place == 'menu' && (notify.notifyType == 'PlatformExportPushNotification' || notify.notifyType == 'PlatformImportPushNotification'); },
-	   	template: 'Scripts/app/exportImport/notifications/menu.tpl.html',
+	   	template: '$(Platform)/Scripts/app/exportImport/notifications/menu.tpl.html',
 	   	action: function (notify) { $state.go('pushNotificationsHistory', notify) }
 	   };
   	pushNotificationTemplateResolver.register(menuExportImportTemplate);
@@ -82,13 +82,13 @@
 	  {
 	  	priority: 900,
 	  	satisfy: function (notify, place) { return place == 'history' && (notify.notifyType == 'PlatformExportPushNotification' || notify.notifyType == 'PlatformImportPushNotification'); },
-	  	template: 'Scripts/app/exportImport/notifications/history.tpl.html',
+	  	template: '$(Platform)/Scripts/app/exportImport/notifications/history.tpl.html',
 	  	action: function (notify) {
 	  		var isExport = notify.notifyType == 'PlatformExportPushNotification';
 	  		var blade = {
 	  			id: 'platformExportImport',
 	  			controller: isExport ? 'platformWebApp.exportImport.exportMainController' : 'platformWebApp.exportImport.importMainController',
-	  			template: isExport ? 'Scripts/app/exportImport/blades/export-main.tpl.html' : 'Scripts/app/exportImport/blades/import-main.tpl.html',
+	  			template: isExport ? '$(Platform)/Scripts/app/exportImport/blades/export-main.tpl.html' : '$(Platform)/Scripts/app/exportImport/blades/import-main.tpl.html',
 	  			notification: notify
 	  		};
 	  		bladeNavigationService.showBlade(blade);

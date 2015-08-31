@@ -8,7 +8,7 @@
             title: $scope.blade.title,
             subtitle: 'API keys',
             controller: 'platformWebApp.accountApiListController',
-            template: 'Scripts/app/security/blades/account-api-list.tpl.html'
+            template: '$(Platform)/Scripts/app/security/blades/account-api-list.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     };

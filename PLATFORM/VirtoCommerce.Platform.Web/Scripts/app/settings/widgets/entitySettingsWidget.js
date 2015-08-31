@@ -6,7 +6,7 @@
         var newBlade = {
             id: 'entitySettingList',
             controller: 'platformWebApp.entitySettingListController',
-            template: 'Scripts/app/settings/blades/entitySetting-list.tpl.html'
+            template: '$(Platform)/Scripts/app/settings/blades/entitySetting-list.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, blade);
     };

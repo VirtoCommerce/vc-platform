@@ -51,10 +51,6 @@ namespace VirtoCommerce.Web
 
         protected void Application_Start()
         {
-            EnginesConfig.RegisterEngines(ViewEngines.Engines);
-            AreaRegistration.RegisterAllAreas();
-            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
-            RouteConfig.RegisterRoutes(RouteTable.Routes);
         }
 
         #endregion

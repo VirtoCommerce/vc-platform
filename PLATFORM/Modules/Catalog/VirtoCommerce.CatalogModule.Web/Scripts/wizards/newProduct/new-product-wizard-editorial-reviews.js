@@ -18,7 +18,7 @@
             languages: $scope.wizardBlade.parentBlade.catalog.languages,
             title: 'Review',
             subtitle: 'Product Review',
-            bottomTemplate: 'Scripts/common/templates/ok.tpl.html',
+            bottomTemplate: '$(Platform)/Scripts/common/templates/ok.tpl.html',
             controller: 'virtoCommerce.catalogModule.editorialReviewDetailWizardStepController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/editorialReview-detail.tpl.html'
         };

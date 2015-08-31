@@ -11,6 +11,8 @@ namespace VirtoCommerce.Platform.Core.Modularity
             ModuleDirectories = new Dictionary<string, string>();
         }
 
+        public virtual string RoutPrefix { get; set; }
+        public virtual string VirtualRoot { get; set; }
         public virtual string GetModuleDirectoryPath(string moduleId)
         {
             return ModuleDirectories[moduleId];

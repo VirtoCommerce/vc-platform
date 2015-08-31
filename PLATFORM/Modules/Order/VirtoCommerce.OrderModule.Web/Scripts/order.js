@@ -11,7 +11,7 @@ angular.module(moduleName, ['virtoCommerce.catalogModule', 'virtoCommerce.pricin
       $stateProvider
           .state('workspace.orderModule', {
               url: '/orders',
-              templateUrl: 'Scripts/common/templates/home.tpl.html',
+              templateUrl: '$(Platform)/Scripts/common/templates/home.tpl.html',
               controller: [
                   '$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
                       var blade = {
@@ -92,7 +92,7 @@ angular.module(moduleName, ['virtoCommerce.catalogModule', 'virtoCommerce.pricin
 
       var dynamicPropertyWidget = {
       	controller: 'platformWebApp.dynamicPropertyWidgetController',
-      	template: 'Scripts/app/dynamicProperties/widgets/dynamicPropertyWidget.tpl.html',
+      	template: '$(Platform)/Scripts/app/dynamicProperties/widgets/dynamicPropertyWidget.tpl.html',
       };
       widgetService.registerWidget(dynamicPropertyWidget, 'shipmentDetailWidgets');
       widgetService.registerWidget(dynamicPropertyWidget, 'customerOrderDetailWidgets');

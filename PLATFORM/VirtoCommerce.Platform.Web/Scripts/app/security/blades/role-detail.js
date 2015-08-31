@@ -124,7 +124,7 @@
                             title: $scope.blade.title,
                             subtitle: 'Manage permissions',
                             controller: 'platformWebApp.rolePermissionsController',
-                            template: 'Scripts/app/security/blades/role-permissions.tpl.html'
+                            template: '$(Platform)/Scripts/app/security/blades/role-permissions.tpl.html'
                         };
 
                         bladeNavigationService.showBlade(newBlade, $scope.blade);

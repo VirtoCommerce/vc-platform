@@ -1,5 +1,6 @@
 ﻿using webModels = VirtoCommerce.Content.Web.Models;
 using coreModels = VirtoCommerce.Content.Data.Models;
+using Omu.ValueInjecter;
 
 namespace VirtoCommerce.Content.Web.Converters
 {
@@ -7,16 +8,16 @@ namespace VirtoCommerce.Content.Web.Converters
 	{
 		public static coreModels.MenuLink ToCoreModel(this webModels.MenuLink link)
 		{
-			var retVal = new coreModels.MenuLink { Id = link.Id, Title = link.Title, Url = link.Url, Priority = link.Priority, IsActive = link.IsActive, MenuLinkListId = link.MenuLinkListId };
-
-		    return retVal;
+            var retVal = new coreModels.MenuLink();
+            retVal.InjectFrom(link);
+            return retVal;
 		}
 
 		public static webModels.MenuLink ToWebModel(this coreModels.MenuLink link)
 		{
-			var retVal = new webModels.MenuLink { Id = link.Id, Title = link.Title, Url = link.Url, Priority = link.Priority, IsActive = link.IsActive, MenuLinkListId = link.MenuLinkListId };
-
-		    return retVal;
+            var retVal = new webModels.MenuLink();
+            retVal.InjectFrom(link);
+            return retVal;
 		}
 	}
 }

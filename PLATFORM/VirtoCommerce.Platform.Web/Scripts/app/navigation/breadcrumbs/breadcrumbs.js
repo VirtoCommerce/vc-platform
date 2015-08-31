@@ -8,7 +8,7 @@
                 scope: {
                     bladeId: '='
                 },
-                templateUrl: 'Scripts/app/navigation/breadcrumbs/breadcrumbs.tpl.html',
+        templateUrl: '$(Platform)/Scripts/app/navigation/breadcrumbs/breadcrumbs.tpl.html',
                 link: function (scope, element, attr, ngModelController) {
                     scope.breadcrumbs = [];
                     ngModelController.$render = function () {

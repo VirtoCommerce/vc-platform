@@ -51,7 +51,7 @@
             currentEntityId: node.name,
             title: blade.title,
             controller: 'platformWebApp.settingDictionaryController',
-            template: 'Scripts/app/settings/blades/setting-dictionary.tpl.html'
+            template: '$(Platform)/Scripts/app/settings/blades/setting-dictionary.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, blade);
     }

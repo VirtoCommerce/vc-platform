@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.contentModule')
-.controller('virtoCommerce.contentModule.menuLinkListController', ['$scope', 'virtoCommerce.contentModule.menus', 'virtoCommerce.contentModule.stores', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'uuid2', function ($scope, menus, menusStores, bladeNavigationService, dialogService, uuid2) {
+.controller('virtoCommerce.contentModule.menuLinkListController', ['$scope', 'virtoCommerce.contentModule.menus', 'virtoCommerce.contentModule.stores', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function ($scope, menus, menusStores, bladeNavigationService, dialogService) {
     var blade = $scope.blade;
     blade.selectedItemIds = [];
 
@@ -9,12 +9,12 @@
             blade.defaultStoreLanguage = data.defaultLanguage;
 
             if (blade.newList) {
-                blade.currentEntity = { id: uuid2.newguid(), title: undefined, language: blade.defaultStoreLanguage, storeId: blade.choosenStoreId, menuLinks: [] };
+                blade.currentEntity = { title: undefined, language: blade.defaultStoreLanguage, storeId: blade.choosenStoreId, menuLinks: [] };
                 blade.choosenListId = blade.currentEntity.id;
                 $scope.blade.toolbarCommands = [{
                     name: "Add link", icon: 'fa fa-plus',
                     executeMethod: function () {
-                        var newEntity = { id: uuid2.newguid(), url: undefined, title: undefined, type: undefined, priority: 0, isActive: false, language: undefined, menuLinkListId: blade.choosenListId };
+                        var newEntity = { url: undefined, title: undefined, type: undefined, priority: 0, isActive: false, language: undefined, menuLinkListId: blade.choosenListId };
                         blade.currentEntity.menuLinks.push(newEntity);
                         blade.recalculatePriority();
                     },
@@ -47,7 +47,7 @@
                     $scope.blade.toolbarCommands = [{
                         name: "Add link", icon: 'fa fa-plus',
                         executeMethod: function () {
-                            var newEntity = { id: uuid2.newguid(), url: undefined, title: undefined, isActive: false, priority: 0, menuLinkListId: blade.choosenListId };
+                            var newEntity = { url: undefined, title: undefined, isActive: false, priority: 0, menuLinkListId: blade.choosenListId };
                             blade.currentEntity.menuLinks.push(newEntity);
                             blade.recalculatePriority();
                         },

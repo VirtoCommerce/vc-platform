@@ -35,7 +35,7 @@
                     item: blade.item,
                     title: blade.item.name,
                     subtitle: 'item properties',
-                    bottomTemplate: 'Scripts/common/templates/ok.tpl.html',
+                    bottomTemplate: '$(Platform)/Scripts/common/templates/ok.tpl.html',
                     controller: 'virtoCommerce.catalogModule.newProductWizardPropertiesController',
                     template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/item-property-list.tpl.html'
                 };
@@ -46,7 +46,7 @@
                     item: blade.item,
                     title: blade.item.name,
                     subtitle: 'item images',
-                    bottomTemplate: 'Scripts/common/templates/ok.tpl.html',
+                    bottomTemplate: '$(Platform)/Scripts/common/templates/ok.tpl.html',
                     controller: 'virtoCommerce.catalogModule.newProductWizardImagesController',
                     template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/images.tpl.html'
                 };
@@ -79,7 +79,7 @@
                         languages: getCatalog().languages,
                         title: 'Review',
                         subtitle: 'Product Review',
-                        bottomTemplate: 'Scripts/common/templates/ok.tpl.html',
+                        bottomTemplate: '$(Platform)/Scripts/common/templates/ok.tpl.html',
                         controller: 'virtoCommerce.catalogModule.editorialReviewDetailWizardStepController',
                         template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/editorialReview-detail.tpl.html'
                     };

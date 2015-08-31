@@ -48,7 +48,7 @@ function ($scope, accounts, bladeNavigationService, dialogService) {
             title: selectedNode.userName,
             subtitle: $scope.blade.subtitle,
             controller: 'platformWebApp.accountDetailController',
-            template: 'Scripts/app/security/blades/account-detail.tpl.html'
+            template: '$(Platform)/Scripts/app/security/blades/account-detail.tpl.html'
         };
 
         bladeNavigationService.showBlade(newBlade, $scope.blade);
@@ -115,7 +115,7 @@ function ($scope, accounts, bladeNavigationService, dialogService) {
                     title: 'New Account',
                     subtitle: $scope.blade.subtitle,
                     controller: 'platformWebApp.newAccountWizardController',
-                    template: 'Scripts/app/security/wizards/newAccount/new-account-wizard.tpl.html'
+                    template: '$(Platform)/Scripts/app/security/wizards/newAccount/new-account-wizard.tpl.html'
                 };
                 bladeNavigationService.showBlade(newBlade, $scope.blade);
             },

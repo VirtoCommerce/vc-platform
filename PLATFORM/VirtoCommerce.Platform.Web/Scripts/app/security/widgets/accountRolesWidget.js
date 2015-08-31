@@ -8,7 +8,7 @@
             title: $scope.blade.title,
             subtitle: 'View roles',
             controller: 'platformWebApp.accountRolesListController',
-            template: 'Scripts/app/security/blades/account-roles-list.tpl.html'
+            template: '$(Platform)/Scripts/app/security/blades/account-roles-list.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     };

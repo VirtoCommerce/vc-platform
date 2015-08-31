@@ -148,16 +148,7 @@
 							blade.entity.contentPlaces.length > 0;
 
         if (retVal) {
-        	retVal = !angular.equals(blade.entity.name, blade.originalEntity.name) ||
-				!angular.equals(blade.entity.store, blade.originalEntity.store) ||
-				!angular.equals(blade.entity.description, blade.originalEntity.description) ||
-				!angular.equals(blade.entity.priority, blade.originalEntity.priority) ||
-				!angular.equals(blade.entity.isActive, blade.originalEntity.isActive) ||
-				!angular.equals(blade.entity.startDate, blade.originalEntity.startDate) ||
-				!angular.equals(blade.entity.endDate, blade.originalEntity.endDate) ||
-				!angular.equals(blade.entity.dynamicExpression, blade.originalEntity.dynamicExpression) ||
-				blade.entity.contentItems.length !== blade.originalEntity.contentItems.length ||
-				blade.entity.contentPlaces.length !== blade.originalEntity.contentPlaces.length;
+        	retVal = !angular.equals(blade.entity, blade.originalEntity);
 
             if (!retVal) {
                 var ciIdse = blade.entity.contentItems.map(function (v) {
