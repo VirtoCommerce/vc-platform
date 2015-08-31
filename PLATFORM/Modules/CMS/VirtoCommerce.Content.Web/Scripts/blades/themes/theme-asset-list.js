@@ -30,6 +30,10 @@
 	blade.checkFolder = function (data) {
 		var folder = _.find(blade.folders, function (folder) { return data.folderName === folder.name; });
 
+		if (angular.isUndefined(folder)) {
+		    return false;
+		}
+
 		return folder.isOpen;
 	}
 
@@ -39,6 +43,10 @@
 
 	blade.getOneItemName = function (data) {
 		var folder = _.find(blade.folders, function (folder) { return data.folderName === folder.name; });
+
+		if (angular.isUndefined(folder)) {
+		    return false;
+		}
 
 		return folder.oneItemName;
 	}
