@@ -180,7 +180,15 @@ namespace VirtoCommerce.OrderModule.Data.Services
             {
                 if (operation.Number == null)
                 {
-                    operation.Number = _uniqueNumberGenerator.GenerateNumber(operation.GetType().Name);
+                    var objectTypeName = operation.GetType().Name;
+                    // take upercase chars to form operation type, or just take 2 first chars. (CustomerOrder => CO, PaymentIn => PI, Shipment => SH)
+                    var objectType = string.Concat(objectTypeName.Select(c => char.IsUpper(c) ? c.ToString() : ""));
+                    if (objectType.Length < 2)
+                    {
+                        objectType = objectTypeName.Substring(0, 2).ToUpper();
+                    }
+
+                    operation.Number = _uniqueNumberGenerator.GenerateNumber(objectType + "{0:yyMMdd}-{1:D5}");
                 }
             }
 

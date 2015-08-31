@@ -50,9 +50,9 @@ namespace VirtoCommerce.OrderModule.Test
             var repository = new CommerceRepositoryImpl("VirtoCommerce");
             var sequence = new SequenceUniqueNumberGeneratorServiceImpl(() => repository);
 
-            for (var i = 1; i < 100; i++)
+            for (var i = 1; i < SequenceUniqueNumberGeneratorServiceImpl.SequenceReservationRange; i++)
             {
-                var result = sequence.GenerateNumber((typeof (CustomerOrder)).Name);
+                var result = sequence.GenerateNumber("CO{0:yyMMdd}-{1:D5}");
                 Debug.WriteLine(result);
 
                 //This would fail if any duplicate generated

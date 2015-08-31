@@ -13,22 +13,12 @@ namespace VirtoCommerce.CoreModule.Data.Services
     {
         #region Private fields
 
-        //********These settings could be saved in database:
-
-        //Prefix_Date_Seq
-        string _numberTemplate;
         //How many sequence items will be stored in-memory
-        int _sequenceReservationRange;
-        // the length of counter. Trailing zeros are added to left.
-        int _counterLength;
-
-        string _dateFormat;
-
-        //***********************************************
+        public const int SequenceReservationRange = 100;
 
         private readonly Func<IСommerceRepository> _repositoryFactory;
-        private static readonly object SequenceLock = new object();
-        private static readonly InMemorySequenceList InMemorySequences = new InMemorySequenceList();
+        private static readonly object _sequenceLock = new object();
+        private static readonly InMemorySequenceList _inMemorySequences = new InMemorySequenceList();
 
         #endregion
 
@@ -36,55 +26,20 @@ namespace VirtoCommerce.CoreModule.Data.Services
         public SequenceUniqueNumberGeneratorServiceImpl(Func<IСommerceRepository> repositoryFactory)
         {
             _repositoryFactory = repositoryFactory;
-
-            //TODO: changing format is not safe because it can break unique tracking number
-            /*Uncomment following lines on your own risk. Dont forget these rules
-             * 1. Traking number contains three parts {0}{1}{2}
-             * {0}. Prefix is option
-             * {1}. Date part is required and must contain all three Year/Month/Day
-             * {2}  Counter is required
-             */
-            //var template = repository.Settings.Expand(x=>x.SettingValues).FirstOrDefault(x => x.Name == "TrackingNumberFormat");
-            //if (template != null && template.SettingValues.Any())
-            //{
-            //    IdTemplate = template.SettingValues[0].ToString();
-            //}
-
-            //var dateFormat = repository.Settings.Expand(x=>x.SettingValues).FirstOrDefault(x => x.Name == "TrackingNumberFormatDateFormat");
-            //if (dateFormat != null && dateFormat.SettingValues.Any())
-            //{
-            //    DateFormat = dateFormat.SettingValues[0].ToString();
-            //}
         }
 
-        public string GenerateNumber(string objectTypeName)
+        /// <summary>
+        /// Generates unique number using given template. E.g. GenerateNumber("Order{0:yyMMdd}-{1:D5}")
+        /// </summary>
+        /// <param name="numberTemplate">The number template. Pass the format to be used in string.Format function. The supplied parameters: 0 - date (the UTC time of name generation); 1 - the sequence number.</param>
+        /// <returns></returns>
+        public string GenerateNumber(string numberTemplate)
         {
-            return GenerateNumber(objectTypeName, "{0}{1}-{2}");
-        }
-        public string GenerateNumber(
-          string objectTypeName,
-          string numberTemplate,
-          string dateFormat = "yyMMdd",
-          int sequenceReservationRange = 100,
-          int counterLength = 5)
-        {
-            _numberTemplate = numberTemplate;
-            _dateFormat = dateFormat;
-            _sequenceReservationRange = sequenceReservationRange;
-            _counterLength = counterLength;
-
-            // take upercase chars to form operation type. Or just take 2 first chars
-            var objectType = string.Concat(objectTypeName.Select(c => char.IsUpper(c) ? c.ToString() : ""));
-            if (objectType.Length < 2)
+            lock (_sequenceLock)
             {
-                objectType = objectTypeName.Substring(0, 2).ToUpper();
-            }
+                _inMemorySequences[numberTemplate] = _inMemorySequences[numberTemplate] ?? new InMemorySequence(numberTemplate);
 
-            lock (SequenceLock)
-            {
-                InMemorySequences[objectType] = InMemorySequences[objectType] ?? new InMemorySequence(objectType);
-
-                if (InMemorySequences[objectType].IsEmpty || InMemorySequences[objectType].HasExpired)
+                if (_inMemorySequences[numberTemplate].IsEmpty || _inMemorySequences[numberTemplate].HasExpired)
                 {
                     var startCounter = 0;
                     var endCounter = 0;
@@ -97,7 +52,7 @@ namespace VirtoCommerce.CoreModule.Data.Services
                     {
                         try
                         {
-                            InitCounters(objectType, out startCounter, out endCounter);
+                            InitCounters(numberTemplate, out startCounter, out endCounter);
                             initializedCounters = true;
                         }
                         catch (System.Data.Entity.Infrastructure.DbUpdateException)
@@ -118,11 +73,11 @@ namespace VirtoCommerce.CoreModule.Data.Services
                     if (initializedCounters)
                     {
                         //Pregenerate
-                        InMemorySequences[objectType].Pregenerate(startCounter, endCounter, _numberTemplate, _dateFormat, _counterLength);
+                        _inMemorySequences[numberTemplate].Pregenerate(startCounter, endCounter, numberTemplate);
                     }
                 }
 
-                return string.Format(InMemorySequences[objectType].Next());
+                return string.Format(_inMemorySequences[numberTemplate].Next());
             }
         }
 
@@ -159,13 +114,13 @@ namespace VirtoCommerce.CoreModule.Data.Services
 
                 try
                 {
-                    endCounter = checked(startCounter + _sequenceReservationRange);
+                    endCounter = checked(startCounter + SequenceReservationRange);
                 }
                 catch (OverflowException)
                 {
                     //need to reset
                     startCounter = 0;
-                    endCounter = _sequenceReservationRange;
+                    endCounter = SequenceReservationRange;
                 }
 
                 sequence.Value = endCounter;
@@ -179,15 +134,11 @@ namespace VirtoCommerce.CoreModule.Data.Services
             private readonly string _type;
             private Stack<string> _sequence = new Stack<string>();
             private DateTime? _lastGenerationDateTime;
-            private readonly string _prefix;
 
             public InMemorySequence(string type)
             {
                 _type = type;
                 _sequence = new Stack<string>();
-
-                _prefix = type.Substring(type.LastIndexOf(".", StringComparison.OrdinalIgnoreCase) + 1);
-                _prefix = String.IsNullOrEmpty(_prefix) ? "U" : _prefix.ToUpper();
             }
 
             public string ObjectType
@@ -210,14 +161,13 @@ namespace VirtoCommerce.CoreModule.Data.Services
                 return _sequence.Pop();
             }
 
-            public void Pregenerate(int startCount, int endCount, string numberTemplate, string dateFormat, int counterLength)
+            public void Pregenerate(int startCount, int endCount, string numberTemplate)
             {
                 _lastGenerationDateTime = DateTime.UtcNow;
                 var generatedItems = new Stack<string>();
                 for (var index = startCount; index < endCount; index++)
                 {
-                    var strCount = index.ToString(CultureInfo.InvariantCulture).PadLeft(counterLength, '0');
-                    generatedItems.Push(string.Format(numberTemplate, _prefix, _lastGenerationDateTime.Value.ToString(dateFormat), strCount));
+                    generatedItems.Push(string.Format(numberTemplate, _lastGenerationDateTime.Value, index));
                 }
 
                 //This revereses the sequence
