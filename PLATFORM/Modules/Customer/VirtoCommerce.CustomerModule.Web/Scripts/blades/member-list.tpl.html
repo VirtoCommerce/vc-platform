@@ -1,5 +1,5 @@
 ﻿<div class="blade-static __expanded">
-    <va-breadcrumb ng-model="blade.breadcrumbs"></va-breadcrumb>
+    <va-breadcrumb ng-model="blade.breadcrumbs" blade-id="blade.id"></va-breadcrumb>
     <div class="form-group">
         <div class="form-input __search">
             <input type="text" placeholder="Search keyword..." ng-model="filter.searchKeyword" ui-keyup="{'enter':'blade.refresh()'}">
@@ -17,7 +17,7 @@
                         <tr>
                             <th class="table-col __product-control">
                                 <label class="form-control __checkbox">
-                                    <input type="checkbox" ng-model="selectedAll" ng-change="checkAll(selectedAll)" />
+                                    <input type="checkbox" ng-model="pageSettings.selectedAll" ng-change="checkAll(pageSettings.selectedAll)" />
                                     <span class="check"></span>
                                 </label>
                             </th>

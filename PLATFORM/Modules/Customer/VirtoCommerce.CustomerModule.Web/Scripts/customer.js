@@ -16,24 +16,11 @@ angular.module(moduleName, [])
                   '$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
                       var blade = {
                           id: 'memberList',
-                          currentEntity: {},
+                          currentEntity: { id: null },
                           controller: 'virtoCommerce.customerModule.memberListController',
                           template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/member-list.tpl.html',
                           isClosingDisabled: true
                       };
-
-                      blade.breadcrumbs = [{
-                          id: null,
-                          name: "all",
-                          navigate: function () {
-                              bladeNavigationService.closeBlade(blade,
-                              function () {
-                                  bladeNavigationService.showBlade(blade);
-                                  blade.refresh();
-                              });
-                          }
-                      }];
-
                       bladeNavigationService.showBlade(blade);
                   }
               ]
@@ -85,7 +72,7 @@ angular.module(moduleName, [])
           template: 'Modules/$(VirtoCommerce.Customer)/Scripts/widgets/memberPhonesWidget.tpl.html'
       }, 'organizationDetail1');
       widgetService.registerWidget({
-          controller:'platformWebApp.dynamicPropertyWidgetController',
+          controller: 'platformWebApp.dynamicPropertyWidgetController',
           template: 'Scripts/app/dynamicProperties/widgets/dynamicPropertyWidget.tpl.html'
       }, 'organizationDetail2');
   }]);

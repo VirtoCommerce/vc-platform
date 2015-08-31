@@ -1,5 +1,5 @@
 ﻿<div class="blade-static __expanded" ng-if="!isCatalogSelectMode()">
-    <va-breadcrumb ng-model="blade.breadcrumbs"></va-breadcrumb>
+    <va-breadcrumb ng-model="blade.breadcrumbs" blade-id="blade.id"></va-breadcrumb>
     <div class="form-group">
         <div class="form-input __search">
             <input type="text" placeholder="Search keyword..." ng-model="filter.searchKeyword" ui-keyup="{'enter':'blade.refresh()'}">

@@ -21,9 +21,8 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
                     }
                 });
             }
-            setBreadcrumbs();
         },
-        function (error) { bladeNavigationService.setError('Error ' +error.status, $scope.blade); });
+        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 
     };
 
@@ -41,31 +40,6 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
         else {
             closeCallback();
         }
-    };
-
-    //Breadcrumbs
-    function setBreadcrumbs() {
-        //Clone array (angular.copy leave a same reference)
-        blade.breadcrumbs = blade.breadcrumbs.slice(0);
-
-        var breadCrumb = {
-            id: "Catalogs",
-            name: "Catalogs",
-        };
-
-        //prevent duplicate items
-        if (!_.some(blade.breadcrumbs, function (x) { return x.id == breadCrumb.id })) {
-            blade.breadcrumbs.push(breadCrumb);
-        }
-
-        breadCrumb.navigate = function (breadcrumb) {
-            bladeNavigationService.closeBlade(blade,
-			function () {
-			    bladeNavigationService.showBlade(blade);
-			    blade.refresh();
-			});
-        };
-
     };
 
     $scope.refreshItems = function () {

@@ -9,22 +9,23 @@
 
     $scope.filter = { searchKeyword: undefined };
 
-    $scope.pageSettings.selectedAll = false;
     var selectedNode = null;
     var preventOrganizationListingOnce; // prevent from unwanted additional actions after command was activated from context menu
-    $scope.blade.title = 'Organizations & Customers';
 
-    $scope.blade.refresh = function () {
-        $scope.blade.isLoading = true;
+    var blade = $scope.blade;
+    blade.title = 'Organizations & Customers';
+
+    blade.refresh = function () {
+        blade.isLoading = true;
         members.search(
             {
-                organization: $scope.blade.currentEntity.id,
+                organization: blade.currentEntity.id,
                 keyword: $scope.filter.searchKeyword,
                 start: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
                 count: $scope.pageSettings.itemsPerPageCount
             },
 		function (data) {
-		    $scope.blade.isLoading = false;
+		    blade.isLoading = false;
 		    $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
 		    $scope.listEntries = data.members;
 		    $scope.pageSettings.selectedAll = false;
@@ -41,39 +42,45 @@
 		    //Set navigation breadcrumbs
 		    setBreadcrumbs();
 		}, function (error) {
-		    bladeNavigationService.setError('Error ' + error.status, $scope.blade);
+		    bladeNavigationService.setError('Error ' + error.status, blade);
 		});
     }
 
     //Breadcrumbs
     function setBreadcrumbs() {
-        //Clone array (angular.copy leaves the same reference)
-        $scope.blade.breadcrumbs = $scope.blade.breadcrumbs.slice(0);
+        if (blade.breadcrumbs) {
+            //Clone array (angular.copy leaves the same reference)
+            var breadcrumbs = blade.breadcrumbs.slice(0);
 
-        //catalog breadcrumb by default
-        var breadCrumb = {
-            id: $scope.blade.currentEntity.id,
-            name: $scope.blade.currentEntity.displayName,
-            blade: $scope.blade
-        };
-
-        //prevent duplicate items
-        if (!_.some($scope.blade.breadcrumbs, function (x) { return x.id == breadCrumb.id; })) {
-            $scope.blade.breadcrumbs.push(breadCrumb);
+            //prevent duplicate items
+            if (_.all(breadcrumbs, function (x) { return x.id !== blade.currentEntity.id; })) {
+                var breadCrumb = generateBreadcrumb(blade.currentEntity.id, blade.currentEntity.displayName);
+                breadcrumbs.push(breadCrumb);
+            }
+            blade.breadcrumbs = breadcrumbs;
+        } else {
+            blade.breadcrumbs = [generateBreadcrumb(null, 'all')];
         }
+    }
 
-        breadCrumb.navigate = function (breadcrumb) {
-            bladeNavigationService.closeBlade($scope.blade,
-                function () {
-                    $scope.blade.disableOpenAnimation = true;
-                    bladeNavigationService.showBlade($scope.blade, $scope.blade.parentBlade);
-                    $scope.blade.refresh();
-                });
-        };
+    function generateBreadcrumb(id, name) {
+        return {
+            id: id,
+            name: name,
+            blade: blade,
+            navigate: function (breadcrumb) {
+                //bladeNavigationService.closeBlade(breadcrumb.blade,
+                //function () {
+                breadcrumb.blade.disableOpenAnimation = true;
+                bladeNavigationService.showBlade(breadcrumb.blade);
+                breadcrumb.blade.refresh();
+                //});
+            }
+        }
     }
 
     $scope.$watch('pageSettings.currentPage', function (newPage) {
-        $scope.blade.refresh();
+        blade.refresh();
     });
 
     $scope.getMainAddress = function (data) {
@@ -113,13 +120,13 @@
         closeChildrenBlades();
 
         if (listItem.memberType === 'Organization') {
-            $scope.blade.showDetailBlade(listItem, listItem.displayName);
+            blade.showDetailBlade(listItem, listItem.displayName);
         }
         // else do nothing as customer is opened on selecting it.
     };
 
-    $scope.blade.showDetailBlade = function (listItem, title) {
-        $scope.blade.setSelectedNode(listItem);
+    blade.showDetailBlade = function (listItem, title) {
+        blade.setSelectedNode(listItem);
 
         var newBlade = {
             id: "listMemberDetail",
@@ -137,7 +144,7 @@
             newBlade.template = 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/organization-detail.tpl.html';
         }
 
-        bladeNavigationService.showBlade(newBlade, $scope.blade);
+        bladeNavigationService.showBlade(newBlade, blade);
     };
 
     $scope.delete = function () {
@@ -175,15 +182,15 @@
 
                     if (organizationIds.length > 0) {
                         organizations.remove({ ids: organizationIds }, function (data) {
-                            $scope.blade.refresh();
+                            blade.refresh();
                         },
-                        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+                        function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
                     }
                     if (customerIds.length > 0) {
                         contacts.remove({ ids: customerIds }, function (data) {
-                            $scope.blade.refresh();
+                            blade.refresh();
                         },
-                        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+                        function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
                     }
                 }
             }
@@ -191,13 +198,13 @@
         dialogService.showConfirmationDialog(dialog);
     }
 
-    $scope.blade.setSelectedNode = function (listItem) {
+    blade.setSelectedNode = function (listItem) {
         selectedNode = listItem;
         $scope.selectedNodeId = selectedNode.id;
     };
 
     $scope.selectNode = function (listItem) {
-        $scope.blade.setSelectedNode(listItem);
+        blade.setSelectedNode(listItem);
 
         if (listItem.memberType === 'Organization') {
             if (preventOrganizationListingOnce) {
@@ -205,40 +212,40 @@
             } else {
                 var newBlade = {
                     id: 'memberList',
-                    breadcrumbs: $scope.blade.breadcrumbs,
+                    breadcrumbs: blade.breadcrumbs,
                     subtitle: 'Browsing "' + listItem.displayName + '"',
                     currentEntity: listItem,
                     disableOpenAnimation: true,
-                    controller: $scope.blade.controller,
-                    template: $scope.blade.template,
+                    controller: blade.controller,
+                    template: blade.template,
                     isClosingDisabled: true
                 };
 
-                bladeNavigationService.showBlade(newBlade, $scope.blade.parentBlade);
+                bladeNavigationService.showBlade(newBlade, blade.parentBlade);
             }
         } else {
-            $scope.blade.showDetailBlade(listItem, listItem.displayName);
+            blade.showDetailBlade(listItem, listItem.displayName);
         }
     };
 
-    $scope.blade.onClose = function (closeCallback) {
+    blade.onClose = function (closeCallback) {
         closeChildrenBlades();
         closeCallback();
     };
 
     function closeChildrenBlades() {
-        angular.forEach($scope.blade.childrenBlades.slice(), function (child) {
+        angular.forEach(blade.childrenBlades.slice(), function (child) {
             bladeNavigationService.closeBlade(child);
         });
     }
 
-    $scope.blade.headIcon = 'fa-user';
+    blade.headIcon = 'fa-user';
 
-    $scope.blade.toolbarCommands = [
+    blade.toolbarCommands = [
         {
             name: "Refresh", icon: 'fa fa-refresh',
             executeMethod: function () {
-                $scope.blade.refresh();
+                blade.refresh();
             },
             canExecuteMethod: function () {
                 return true;
@@ -256,7 +263,7 @@
                     controller: 'virtoCommerce.customerModule.memberAddController',
                     template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/member-add.tpl.html'
                 };
-                bladeNavigationService.showBlade(newBlade, $scope.blade);
+                bladeNavigationService.showBlade(newBlade, blade);
             },
             canExecuteMethod: function () {
                 return true;
@@ -293,5 +300,5 @@
     };
 
     //No need to call this because page 'pageSettings.currentPage' is watched!!! It would trigger subsequent duplicated req...
-    //$scope.blade.refresh();
+    //blade.refresh();
 }]);

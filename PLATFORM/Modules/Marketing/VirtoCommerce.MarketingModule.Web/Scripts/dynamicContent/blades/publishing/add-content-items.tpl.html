@@ -15,7 +15,7 @@
 			</fieldset>
 			<fieldset>
 				<legend class="ng-binding">Content items</legend>
-				<va-breadcrumb ng-model="blade.breadcrumbs"></va-breadcrumb>
+				<va-breadcrumb ng-model="blade.breadcrumbs" blade-id="blade.id"></va-breadcrumb>
 
 				<div class="table-wrapper">
 					<table class="table" ng-if="blade.currentEntity && (blade.currentEntity.childrenFolders.length > 0 || blade.currentEntity.items.length > 0)">
