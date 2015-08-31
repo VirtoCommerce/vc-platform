@@ -184,7 +184,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
                 {
                     Currency = order.Currency
                 };
-                retVal.Number = _uniqueNumberGenerator.GenerateNumber(retVal.GetType().Name);
+                retVal.Number = _uniqueNumberGenerator.GenerateNumber("SH{0:yyMMdd}-{1:D5}");
 
                 //Detect not whole shipped items
                 //TODO: LineItem partial shipping
@@ -219,7 +219,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
                     Currency = order.Currency,
                     CustomerId = order.CustomerId
                 };
-                retVal.Number = _uniqueNumberGenerator.GenerateNumber(retVal.GetType().Name);
+                retVal.Number = _uniqueNumberGenerator.GenerateNumber("PI{0:yyMMdd}-{1:D5}");
                 return Ok(retVal.ToWebModel());
             }
 

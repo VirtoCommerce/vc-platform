@@ -33,18 +33,15 @@ namespace VirtoCommerce.OrderModule.Data.Services
 
         #region IOperationNumberGenerator Members
 
-        public string GenerateNumber(string objectTypeName)
+
+        /// <summary>
+        /// Generates unique number using given template.
+        /// </summary>
+        /// <param name="numberTemplate">The number template. Pass object type name, e.g. "CustomerOrder".</param>
+        /// <returns></returns>
+        public string GenerateNumber(string numberTemplate)
         {
-            return GenerateNumber(objectTypeName, "{0}{1}-{2}", "yyMMdd", 100, 5);
-        }
-        public string GenerateNumber(
-           string objectTypeName,
-           string numberTemplate,
-           string dateFormat,
-           int sequenceReservationRange,
-           int counterLength)
-        {
-            var objectType = objectTypeName.Substring(0, 2).ToUpper();
+            var objectType = numberTemplate.Substring(0, 2).ToUpper();
             var startNumber = 1;
             const int increment = 1;
 
