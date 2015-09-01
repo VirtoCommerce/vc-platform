@@ -9,9 +9,7 @@ DEMO
 
 Documentation: http://docs.virtocommerce.com
 
-Frontend Demo: http://demo.virtocommerce.com
-
-Commerce Manager Demo: http://demo.virtocommerce.com/admin
+Demo: http://virtocommerce.com/try-now/online-demo
 
 Cloud Private Demo
 -----------
