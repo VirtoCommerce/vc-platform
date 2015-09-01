@@ -1475,6 +1475,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="App_Data\Assets\" />
     <Folder Include="App_Data\Modules\" />
     <Folder Include="Filters\" />
     <Folder Include="Views\Notifications\" />
