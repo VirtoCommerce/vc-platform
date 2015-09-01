@@ -1,0 +1,213 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MesLibrary</name>
+    </assembly>
+    <members>
+        <member name="M:Mes.Core.ResponseObject.#ctor(System.Int32,System.String,System.Single)">
+            <summary>Contains details about the response.</summary>
+        </member>
+        <member name="M:Mes.Core.ResponseObject.getResponseValue(System.String)">
+            <summary>Returns a specific value from the response given a name. Returns null if it is not found.</summary>
+        </member>
+        <member name="M:Mes.Core.ResponseObject.getDuration">
+            <summary>Returns the duration the request took to process (full round trip time in ms).</summary>
+        </member>
+        <member name="M:Mes.Core.ResponseObject.getHttpCode">
+            <summary>Returns the HTTP response code recieved during the request.</summary>
+        </member>
+        <member name="M:Mes.Core.Settings.setHostUrl(System.String)">
+            <summary>Sets the full URL of the host.</summary>
+        </member>
+        <member name="M:Mes.Core.Settings.setMethod(Mes.Core.Settings.Method)">
+            <summary>Sets the HTTP method to GET or POST.</summary>
+        </member>
+        <member name="M:Mes.Core.Settings.setVerbose(System.Boolean)">
+            <summary>Sets request / response data posting to the console when true.</summary>
+        </member>
+        <member name="M:Mes.Core.Settings.getHostUrl">
+            <summary>Returns the full host URL.</summary>
+        </member>
+        <member name="M:Mes.Core.Settings.isVerbose">
+            <summary>Returns whether the request will post details to the console.</summary>
+        </member>
+        <member name="T:Mes.Gateway.GatewayRequest">
+            <summary>A request object for use with the Payment Gateway.</summary>
+        </member>
+        <member name="M:Mes.Gateway.GatewayRequest.#ctor(Mes.Gateway.GatewayRequest.TransactionType)">
+            <summary>The type of transaction being sent to the gateway.</summary>
+            Available transaction types are:
+            <code>
+             Sale: An authorization followed by an automatic capture.
+             Preauth: An authorization only.
+             Settle: Captures a preauthorization for funding.
+             Reauth: A clone transaction (only valid within 28 days from the original authorization date).
+             Offline: A forced-entry transaction using an approval code.
+             Void: Cancels a transaction authorized same-day and attempts to reverse it to the issuer.
+             Credit: An unmatched credit, requiring a full card number. This function is disabled at MeS by default.
+             Refund: Using an authorization's transaction id, a void is performed (if same-day) or credit is given (if the transaction was settled).
+             Verify: Validates the card account is open. Not supported by all issuers.
+             Tokenize: The transaction id returned by this request may be sent in the card_id field, replacing any card number field.
+             Detokenize: Removes the referenced token from the database.
+             Batchclose: Attempts to settle the current batch. Must a supply batch_number.
+            </code>
+        </member>
+        <member name="M:Mes.Gateway.GatewayRequest.setAmount(System.String)">
+            <summary>Sets the requested amount.</summary>
+        </member>
+        <member name="M:Mes.Gateway.GatewayRequest.setTaxAmount(System.String)">
+            <summary>Sets the tax amount. This is NOT added to the total, and is for reporting purposes only.</summary>
+        </member>
+        <member name="M:Mes.Gateway.GatewayRequest.setCardData(System.String,System.String)">
+            <summary>Sets the card number and expiry date.</summary>
+        </member>
+        <member name="M:Mes.Gateway.GatewayRequest.setBillingAddress(System.String,System.String)">
+            <summary>Sets the card holder billing address. Must be set for preferred interchange.</summary>
+        </member>
+        <member name="M:Mes.Gateway.GatewayRequest.setTokenData(System.String,System.String)">
+            <summary>Sets the token, and expiry date.</summary>
+        </member>
+        <member name="M:Mes.Gateway.GatewayRequest.setTranId(System.String)">
+            <summary>Sets the transaction ID required by some transaction types.</summary>
+        </member>
+        <member name="M:Mes.Gateway.GatewayRequest.setClientReference(System.String)">
+            <summary>Sets the custom reference number, which populates in reporting. Max 96 char (additional is truncated)</summary>
+        </member>
+        <member name="M:Mes.Gateway.GatewayRequest.setInvoice(System.String)">
+            <summary>Sets the transaction's invoice number, which populates in reporting and on merchant statements.  Must be set for preferred interchange. Max 17 char (additional is truncated).</summary>
+        </member>
+        <member name="M:Mes.Gateway.GatewayRequest.setAuthCode(System.String)">
+            <summary>Sets the Authorization Code. Only used with the Offline transaction type.</summary>
+        </member>
+        <member name="M:Mes.Gateway.GatewayRequest.set3DVBVData(System.String,System.String)">
+            <summary>Sets the 3D Secure Verified by Visa data obtained from a 3rd party MPI provider.</summary>
+        </member>
+        <member name="M:Mes.Gateway.GatewayRequest.set3DMSCData(System.String,System.String)">
+            <summary>Sets the 3D Secure MasterCard Secure Code data obtained from a 3rd party MPI provider.</summary>
+        </member>
+        <member name="M:Mes.Gateway.GatewayRequest.setCurrencyCode(System.String)">
+            <summary>Sets the ISO Currency Code for the transaction. 3-digit numeric or alpha codes are both accepted.</summary>
+        </member>
+        <member name="M:Mes.Gateway.GatewayRequest.getType">
+            <summary>Returns the current transaction type.</summary>
+        </member>
+        <member name="M:Mes.Gateway.GatewayResponse.#ctor(System.Int32,System.String,System.Single)">
+            <summary>A response object encapsulating a Payment Gateway response string.</summary>
+        </member>
+        <member name="M:Mes.Gateway.GatewayResponse.isApproved">
+            <summary>Returns whether the request was approved. Always false when the HTTP code is not 200.</summary>
+        </member>
+        <member name="M:Mes.Gateway.GatewayResponse.getErrorCode">
+            <summary>Returns the error code recieved from the gateway. Returns null if the request failed.</summary>
+        </member>
+        <member name="M:Mes.Gateway.GatewayResponse.getAuthCode">
+            <summary>Returns the authorization code recieved from the gateway. Returns null if the request was not approved.</summary>
+        </member>
+        <member name="M:Mes.Gateway.GatewayResponse.getAvsResult">
+            <summary>Returns the address verification result recieved from the gateway. Returns null if the request was not approved.</summary>
+        </member>
+        <member name="M:Mes.Gateway.GatewayResponse.getCvvResult">
+            <summary>Returns the card verification result recieved from the gateway. Returns null if the request was not approved.</summary>
+        </member>
+        <member name="M:Mes.Gateway.GatewayResponse.getResponseText">
+            <summary>Returns the plain text response recieved during the request. Returns null if the request failed. This is a human-readable string, not intended to be parsed.</summary>
+        </member>
+        <member name="M:Mes.Gateway.GatewayResponse.getTransactionId">
+            <summary>Returns the transaction ID of the gateway request. Returns null if the request failed.</summary>
+        </member>
+        <member name="T:Mes.Gateway.Gateway">
+            <summary>An instance of the MeS Payment Gateway.</summary>
+        </member>
+        <member name="M:Mes.Gateway.Gateway.run(Mes.Gateway.GatewayRequest)">
+            <summary>
+            Sends the given request to the gateway, and returns a response object.
+            </summary>
+        </member>
+        <member name="F:Mes.Gateway.GatewaySettings.URL_TEST">
+            <summary>Used by MeS to test new release code before being pushed to production. Uses the transaction simulator.</summary>
+        </member>
+        <member name="F:Mes.Gateway.GatewaySettings.URL_CERT">
+            <summary>Uses the same codebase as the live URL, but is pointed to the transaction simulator.</summary>
+        </member>
+        <member name="F:Mes.Gateway.GatewaySettings.URL_LIVE">
+            <summary>Used to process live transaction requests.</summary>
+        </member>
+        <member name="M:Mes.Gateway.GatewaySettings.#ctor">
+            <summary>Gateway specific settings.</summary>
+        </member>
+        <member name="M:Mes.Gateway.GatewaySettings.setCredentials(System.String,System.String)">
+            <summary>Sets the profile ID and Key.</summary>
+        </member>
+        <member name="M:Mes.Gateway.GatewaySettings.getProfileId">
+            <summary>Returns the currently set profileID.</summary>
+        </member>
+        <member name="M:Mes.Gateway.GatewaySettings.getProfileKey">
+            <summary>Returns the currently set profile Key.</summary>
+        </member>
+        <member name="T:Mes.Reporting.ReportingRequest">
+            <summary>A request object for use with the Payment Gateway.</summary>
+        </member>
+        <member name="M:Mes.Reporting.ReportingRequest.#ctor(Mes.Reporting.ReportingRequest.ReportType,Mes.Reporting.ReportingRequest.ReportMode)">
+            <summary>The type of report being requested.</summary>
+        </member>
+        <member name="M:Mes.Reporting.ReportingRequest.setStartDate(System.String,System.String,System.String)">
+            <summary>Sets the starting date of the report.</summary>
+        </member>
+        <member name="M:Mes.Reporting.ReportingRequest.setEndDate(System.String,System.String,System.String)">
+            <summary>Sets the ending date of the report.</summary>
+        </member>
+        <member name="M:Mes.Reporting.ReportingRequest.setNode(System.String)">
+            <summary>Sets the MID or association to use.</summary>
+        </member>
+        <member name="M:Mes.Reporting.ReportingRequest.includeTranId(System.Boolean)">
+            <summary>Requests the Trident Transaction ID to be in the response data.</summary>
+        </member>
+        <member name="M:Mes.Reporting.ReportingRequest.includePurchId(System.Boolean)">
+            <summary>Requests the Purchase ID (Invoice Number) to be in the response data.</summary>
+        </member>
+        <member name="M:Mes.Reporting.ReportingRequest.includeClientRefNum(System.Boolean)">
+            <summary>Requests the Client Reference Number to be in the response data.</summary>
+        </member>
+        <member name="M:Mes.Reporting.ReportingRequest.setProfileId(System.String)">
+            <summary>Sets the profile ID, only for use with the Payment Gateway Request Log report.</summary>
+        </member>
+        <member name="M:Mes.Reporting.ReportingRequest.setQueryId(System.String)">
+            <summary>Sets the custom query ID, only for use with the Custom Query Report.</summary>
+        </member>
+        <member name="M:Mes.Reporting.ReportingRequest.setResponseFormat(Mes.Reporting.ReportingRequest.ResponseFormat)">
+            <summary>Sets the response data type.</summary>
+        </member>
+        <member name="M:Mes.Reporting.ReportingRequest.getType">
+            <summary>Returns the current report type.</summary>
+        </member>
+        <member name="M:Mes.Reporting.ReportingRequest.getMode">
+            <summary>Returns the current report mode.</summary>
+        </member>
+        <member name="F:Mes.Reporting.ReportingSettings.URL_TEST">
+            <summary>Used by MeS to test new release code before being pushed to production.</summary>
+        </member>
+        <member name="F:Mes.Reporting.ReportingSettings.URL_LIVE">
+            <summary>Used to request reporting from the live database.</summary>
+        </member>
+        <member name="M:Mes.Reporting.ReportingSettings.#ctor">
+            <summary>Gateway specific settings.</summary>
+        </member>
+        <member name="M:Mes.Reporting.ReportingSettings.setCredentials(System.String,System.String)">
+            <summary>Sets the reporting API Credentials.</summary>
+        </member>
+        <member name="M:Mes.Reporting.ReportingSettings.getUserName">
+            <summary>Returns the currently set username.</summary>
+        </member>
+        <member name="M:Mes.Reporting.ReportingSettings.getUserPass">
+            <summary>Returns the currently set user password.</summary>
+        </member>
+        <member name="T:Mes.Reporting.Reporting">
+            <summary>An instance of the MeS Payment Gateway.</summary>
+        </member>
+        <member name="M:Mes.Reporting.Reporting.run(Mes.Reporting.ReportingRequest)">
+            <summary>
+            Sends the given request to the gateway, and returns a response object.
+            </summary>
+        </member>
+    </members>
+</doc>

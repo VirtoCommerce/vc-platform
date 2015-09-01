@@ -1,0 +1,33 @@
+﻿@using VirtoCommerce.Platform.Web
+<!DOCTYPE html>
+<html lang="en" ng-app="platformWebApp">
+<head>
+    <meta charset="utf-8" />
+    <title>Virto Commerce @ViewBag.Title</title>
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"> -->
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+
+    <!-- Google fonts -->
+    <link href='http://fonts.googleapis.com/css?family=Exo+2:400,300,500,600,400italic&amp;subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+
+    @Styles.Render("~/css/core")
+    @Styles.Render("~/css/modules")
+    @*<script src="//cdnjs.cloudflare.com/ajax/libs/es5-shim/3.4.0/es5-shim.min.js"></script>*@
+
+    <meta name="viewport" content="width=device-width" />
+    <base href="~/" />
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+</head>
+<body ng-controller="platformWebApp.appCtrl">
+    <script type="text/javascript">
+        var platformVersion = '@Html.Version()';
+    </script>
+    @Html.Partial("_GoogleAnalyticsPartial")
+    @RenderBody()
+
+    @Scripts.Render("~/scripts/jquery")
+    @Scripts.Render("~/scripts/angular")
+    @Scripts.Render("~/scripts/modules")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

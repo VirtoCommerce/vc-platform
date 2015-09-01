@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web.LoadTests", "Web.LoadTests\Web.LoadTests.csproj", "{FBF06967-5905-45CF-81B0-C832378FF642}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7E556C44-85EB-489C-822D-63600BECB9E3}"
+	ProjectSection(SolutionItems) = preProject
+		Local.testsettings = Local.testsettings
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.ApiClient", "..\..\ApiClient\VirtoCommerce.ApiClient.csproj", "{84B945B7-85E4-4057-B0DF-1F8A03B8D53C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FBF06967-5905-45CF-81B0-C832378FF642}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBF06967-5905-45CF-81B0-C832378FF642}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBF06967-5905-45CF-81B0-C832378FF642}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBF06967-5905-45CF-81B0-C832378FF642}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84B945B7-85E4-4057-B0DF-1F8A03B8D53C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84B945B7-85E4-4057-B0DF-1F8A03B8D53C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84B945B7-85E4-4057-B0DF-1F8A03B8D53C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84B945B7-85E4-4057-B0DF-1F8A03B8D53C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
