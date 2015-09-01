@@ -25,14 +25,9 @@
         };
 
         accounts.resetPassword({ id: blade.currentEntityId }, postData, function (data) {
-            if (data.succeeded) {
-                $scope.bladeClose();
-            }
-            else {
-                bladeNavigationService.setError('Error: ' + data.errors[0], $scope.blade);
-            }
+            $scope.bladeClose();
         }, function (error) {
-            bladeNavigationService.setError('Error: ' + error.status, $scope.blade);
+            bladeNavigationService.setError('Error: ' + error.data.message, $scope.blade);
         });
     };
     

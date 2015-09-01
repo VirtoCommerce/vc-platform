@@ -68,7 +68,7 @@
                                                title: blade.title,
                                                subtitle: "Change user's password",
                                                controller: 'platformWebApp.accountChangePasswordController',
-                                               template: '$(Platform)/Scripts/common/security/blades/account-changePassword.tpl.html'
+                                               template: '$(Platform)/Scripts/app/security/blades/account-changePassword.tpl.html'
                                            };
                                            bladeNavigationService.showBlade(newBlade, blade);
                                        },
