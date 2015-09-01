@@ -20,9 +20,6 @@ build/
 # Enable "build/" folder in the NuGet Packages folder since NuGet packages use it for MSBuild targets
 !packages/*/build/
 
-# Virto Commerce ES Search
-!es/bin/
-
 # MSTest test Results
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*
@@ -103,7 +100,7 @@ publish/
 
 # NuGet Packages Directory
 ## TODO: If you have NuGet Package Restore enabled, uncomment the next line
-#packages/
+packages/
 
 # Windows Azure Build Output
 csx
@@ -154,19 +151,9 @@ $RECYCLE.BIN/
 
 # Mac crap
 .DS_Store
-/SDK/packages
-/SDK/Setup/VirtoCommerce.Bootstrapper/distr
-/SDK/Setup/VirtoCommerce.ConfigurationUtility.Application/bin/Resources
-/SDK/Setup/VirtoCommerce.ElasticSearch/Distro/data/elasticsearch/nodes/0
-/SDK/Setup/VirtoCommerce.ElasticSearch/Distro/logs
-/Tools/ElasticSearch/data
-/Tools/ElasticSearch/logs
-/VirtoCommerce.sln.GhostDoc.xml
+
 /artifacts
 /PLATFORM/packages
-/PLATFORM/VirtoCommerce.Platform.Web/App_Data/Modules
-/PLATFORM/VirtoCommerce.Platform.Web/App_Data/Assets
-/PLATFORM/VirtoCommerce.Platform.Web/App_Data/Lucene
 /PLATFORM/VirtoCommerce.Platform.Web/App_Data
 /PLATFORM/Modules/Catalog/VirtoCommerce.CatalogModule.Test/products.csv
 /PLATFORM/Modules/Marketing/VirtoCommerce.MarketingModule.Data/app.config
