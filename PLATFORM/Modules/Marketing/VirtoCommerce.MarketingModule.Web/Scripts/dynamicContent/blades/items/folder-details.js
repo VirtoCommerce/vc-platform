@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('virtoCommerce.marketingModule.addFolderContentItemsController', ['$scope', 'virtoCommerce.marketingModule.dynamicContent.folders', 'platformWebApp.bladeNavigationService', function ($scope, marketing_dynamicContents_res_folders, bladeNavigationService) {
+.controller('virtoCommerce.marketingModule.addFolderContentItemsController', ['$scope', 'virtoCommerce.marketingModule.dynamicContent.folders', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function ($scope, marketing_dynamicContents_res_folders, bladeNavigationService, dialogService) {
     $scope.setForm = function (form) {
         $scope.formScope = form;
     }
@@ -36,7 +36,7 @@
                 		var dialog = {
                 			id: "confirmDeleteContentItem",
                 			title: "Delete confirmation",
-                			message: "Are you sure want to delete content item?",
+                			message: "Are you sure want to delete this folder?",
                 			callback: function (remove) {
                 				if (remove) {
                 					blade.deleteFolder(blade.entity);

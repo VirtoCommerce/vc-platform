@@ -3,19 +3,21 @@
     var blade = $scope.blade;
     blade.currentEntity = {};
 
-    $scope.selectedNodeId = null;
-
-    blade.initializeBlade = function () {
-        if (blade.choosenFolder === undefined) {
-            blade.choosenFolder = 'ContentItem';
-        }
+    function refresh() {
         marketing_dynamicContents_res_search.search({ folder: blade.choosenFolder, respGroup: '18' }, function (data) {
             blade.currentEntity.childrenFolders = data.contentFolders;
             blade.currentEntity.items = data.contentItems;
             setBreadcrumbs();
             blade.isLoading = false;
         },
-        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); blade.isLoading = false; });
+        function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+    }
+
+    blade.initializeBlade = function () {
+        if (blade.choosenFolder === undefined) {
+            blade.choosenFolder = 'ContentItem';
+        }
+        refresh();
     };
 
     blade.addNew = function () {
@@ -29,7 +31,7 @@
             controller: 'virtoCommerce.marketingModule.addContentItemsElementController',
             template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/items/add.tpl.html'
         };
-        bladeNavigationService.showBlade(newBlade, $scope.blade);
+        bladeNavigationService.showBlade(newBlade, blade);
     }
 
     blade.addNewFolder = function (data) {
@@ -44,7 +46,7 @@
             controller: 'virtoCommerce.marketingModule.addFolderContentItemsController',
             template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/items/folder-details.tpl.html'
         };
-        bladeNavigationService.showBlade(newBlade, $scope.blade);
+        bladeNavigationService.showBlade(newBlade, blade);
     }
 
     blade.editFolder = function (data) {
@@ -59,7 +61,7 @@
             controller: 'virtoCommerce.marketingModule.addFolderContentItemsController',
             template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/items/folder-details.tpl.html'
         };
-        bladeNavigationService.showBlade(newBlade, $scope.blade);
+        bladeNavigationService.showBlade(newBlade, blade);
     }
 
     blade.addNewContentItem = function (data) {
@@ -74,7 +76,7 @@
             controller: 'virtoCommerce.marketingModule.addContentItemsController',
             template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/items/content-item-details.tpl.html'
         };
-        bladeNavigationService.showBlade(newBlade, $scope.blade);
+        bladeNavigationService.showBlade(newBlade, blade);
     }
 
     blade.editContentItem = function (data) {
@@ -89,7 +91,7 @@
             controller: 'virtoCommerce.marketingModule.addContentItemsController',
             template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/items/content-item-details.tpl.html'
         };
-        bladeNavigationService.showBlade(newBlade, $scope.blade);
+        bladeNavigationService.showBlade(newBlade, blade);
     }
 
     blade.closeChildrenBlades = function () {
@@ -105,44 +107,34 @@
         if (angular.isUndefined(blade.choosenFolder) || !angular.equals(blade.choosenFolder, contentItemFolder.id)) {
             blade.choosenFolder = contentItemFolder.id;
             blade.currentEntity = contentItemFolder;
-            marketing_dynamicContents_res_search.search({ folder: contentItemFolder.id, respGroup: '18' }, function (data) {
-                contentItemFolder.childrenFolders = data.contentFolders;
-                contentItemFolder.items = data.contentItems;
-                blade.isLoading = false;
-                blade.breadcrumbs.push(generateBreadcrumb(contentItemFolder.id, contentItemFolder.name));
-            },
-            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); blade.isLoading = false; });
+            refresh();
         }
     }
 
     function setBreadcrumbs() {
-        if (blade.breadcrumbs === undefined) {
-            blade.breadcrumbs = [];
-        }
-
-        var index = _.findLastIndex(blade.breadcrumbs, { id: blade.choosenFolder });
-
-        if (index !== -1)
-            blade.breadcrumbs = blade.breadcrumbs.slice(0, index + 1);
-
-        //prevent duplicate items
-        if (!_.some(blade.breadcrumbs, function (x) { return x.id == 'ContentItem'; })) {
-            blade.breadcrumbs.push(generateBreadcrumb('ContentItem', 'Items'));
+        if (blade.breadcrumbs) {
+            var breadcrumbs;
+            var index = _.findLastIndex(blade.breadcrumbs, { id: blade.choosenFolder });
+            if (index > -1) {
+                //Clone array (angular.copy leaves the same reference)
+                breadcrumbs = blade.breadcrumbs.slice(0, index + 1);
+            }
+            else {
+                breadcrumbs = blade.breadcrumbs.slice(0);
+                breadcrumbs.push(generateBreadcrumb(blade.currentEntity));
+            }
+            blade.breadcrumbs = breadcrumbs;
+        } else {
+            blade.breadcrumbs = [(generateBreadcrumb({ id: 'ContentItem', name: 'Items' }))];
         }
     }
 
-    function generateBreadcrumb(id, name) {
+    function generateBreadcrumb(node) {
         return {
-            id: id,
-            name: name,
-            blade: blade,
-            navigate: function (breadcrumb) {
-                //bladeNavigationService.closeBlade(breadcrumb.blade,
-                //function () {
-                breadcrumb.blade.disableOpenAnimation = true;
-                bladeNavigationService.showBlade(breadcrumb.blade, breadcrumb.blade.parentBlade);
-                breadcrumb.blade.choosenFolder = breadcrumb.id;
-                //});
+            id: node.id,
+            name: node.name,
+            navigate: function () {
+                blade.folderClick(node);
             }
         }
     }
@@ -160,7 +152,7 @@
                         blade.choosenFolder = id;
                         blade.initializeBlade();
                     },
-					function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); blade.isLoading = false; });
+					function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
                 }
             }
         };
@@ -168,7 +160,7 @@
         dialogService.showConfirmationDialog(dialog);
     }
 
-    $scope.blade.toolbarCommands = [
+    blade.toolbarCommands = [
 		{
 		    name: "Add", icon: 'fa fa-plus',
 		    executeMethod: function () {
@@ -191,7 +183,7 @@
 		}
     ];
 
-    $scope.blade.headIcon = 'fa-inbox';
+    blade.headIcon = 'fa-inbox';
 
     blade.initializeBlade();
 }]);
