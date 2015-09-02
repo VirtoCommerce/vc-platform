@@ -16,7 +16,7 @@
         <owner>Virto Commerce</owner>
     </owners>
     <projectUrl>http://virtocommerce.com/</projectUrl>
-    <iconUrl>http://ocgoogle.com/wp-content/uploads/2014/11/Google-Shopping-Logo1.jpg</iconUrl>
+    <iconUrl>Modules/$(GoogleShopping.Merchant)/Content/Google-Shopping-Logo1.jpg</iconUrl>
     <releaseNotes>First version.</releaseNotes>
     <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
     <tags>google shopping merchant</tags>

@@ -18,7 +18,7 @@
     <owner>Virto Commerce</owner>
   </owners>
   <projectUrl>http://virtocommerce.com/</projectUrl>
-  <iconUrl>https://app.shipstation.com/images/logo.png</iconUrl>
+  <iconUrl>Modules/$(Shipstation.Fulfillment)/Content/logo.png</iconUrl>
   <releaseNotes>First version.</releaseNotes>
   <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
   <tags>shipstation fulfillment</tags>

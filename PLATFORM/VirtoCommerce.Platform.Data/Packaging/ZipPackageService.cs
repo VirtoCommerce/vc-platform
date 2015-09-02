@@ -435,7 +435,7 @@ namespace VirtoCommerce.Platform.Data.Packaging
                     result.ProjectUrl = new Uri(manifest.ProjectUrl);
 
                 if (manifest.IconUrl != null)
-                    result.IconUrl = new Uri(manifest.IconUrl);
+                    result.IconUrl = new Uri(manifest.IconUrl, UriKind.RelativeOrAbsolute);
 
                 if (installedPackages != null && installedPackages.Any())
                 {
