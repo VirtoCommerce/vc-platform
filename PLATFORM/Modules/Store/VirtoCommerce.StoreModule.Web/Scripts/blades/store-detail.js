@@ -1,35 +1,43 @@
 ﻿angular.module('virtoCommerce.storeModule')
 .controller('virtoCommerce.storeModule.storeDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.storeModule.stores', 'virtoCommerce.catalogModule.catalogs', 'platformWebApp.settings', 'platformWebApp.dialogService', function ($scope, bladeNavigationService, stores, catalogs, settings, dialogService) {
-    $scope.blade.refresh = function (parentRefresh) {
-        stores.get({ id: $scope.blade.currentEntityId }, function (data) {
+    var blade = $scope.blade;
+
+    blade.refresh = function (parentRefresh) {
+        stores.get({ id: blade.currentEntityId }, function (data) {
             initializeBlade(data);
             if (parentRefresh) {
-                $scope.blade.parentBlade.refresh();
+                blade.parentBlade.refresh();
             }
         },
-        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+        function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
     }
 
     function initializeBlade(data) {
-        $scope.blade.currentEntityId = data.id;
-        $scope.blade.title = data.name;
+        data.additionalLanguages = _.without(data.languages, data.defaultLanguage);
+        data.additionalCurrencies = _.without(data.currencies, data.defaultCurrency);
 
-        $scope.blade.currentEntity = angular.copy(data);
-        $scope.blade.origEntity = data;
-        $scope.blade.isLoading = false;
+        blade.currentEntityId = data.id;
+        blade.title = data.name;
+
+        blade.currentEntity = angular.copy(data);
+        blade.origEntity = data;
+        blade.isLoading = false;
     };
 
     function isDirty() {
-        return !angular.equals($scope.blade.currentEntity, $scope.blade.origEntity);
+        return !angular.equals(blade.currentEntity, blade.origEntity);
     };
 
     $scope.saveChanges = function () {
-        $scope.blade.isLoading = true;
+        blade.isLoading = true;
 
-        stores.update({}, $scope.blade.currentEntity, function (data) {
-            $scope.blade.refresh(true);
+        blade.currentEntity.languages = _.union([blade.currentEntity.defaultLanguage], blade.currentEntity.additionalLanguages);
+        blade.currentEntity.currencies = _.union([blade.currentEntity.defaultCurrency], blade.currentEntity.additionalCurrencies);
+
+        stores.update({}, blade.currentEntity, function (data) {
+            blade.refresh(true);
         }, function (error) {
-            bladeNavigationService.setError('Error ' + error.status, $scope.blade);
+            bladeNavigationService.setError('Error ' + error.status, blade);
         });
     };
 
@@ -40,13 +48,13 @@
             message: "Are you sure you want to delete this Store?",
             callback: function (remove) {
                 if (remove) {
-                    $scope.blade.isLoading = true;
+                    blade.isLoading = true;
 
-                    stores.remove({ ids: $scope.blade.currentEntityId }, function () {
+                    stores.remove({ ids: blade.currentEntityId }, function () {
                         $scope.bladeClose();
-                        $scope.blade.parentBlade.refresh();
+                        blade.parentBlade.refresh();
                     }, function (error) {
-                        bladeNavigationService.setError('Error ' + error.status, $scope.blade);
+                        bladeNavigationService.setError('Error ' + error.status, blade);
                     });
                 }
             }
@@ -58,7 +66,7 @@
         $scope.formScope = form;
     }
 
-    $scope.blade.onClose = function (closeCallback) {
+    blade.onClose = function (closeCallback) {
         closeChildrenBlades();
         if (isDirty()) {
             var dialog = {
@@ -80,14 +88,14 @@
     };
 
     function closeChildrenBlades() {
-        angular.forEach($scope.blade.childrenBlades.slice(), function (child) {
+        angular.forEach(blade.childrenBlades.slice(), function (child) {
             bladeNavigationService.closeBlade(child);
         });
     }
 
-    $scope.blade.headIcon = 'fa-archive';
+    blade.headIcon = 'fa-archive';
 
-    $scope.blade.toolbarCommands = [
+    blade.toolbarCommands = [
         {
             name: "Save",
             icon: 'fa fa-save',
@@ -103,7 +111,7 @@
             name: "Reset",
             icon: 'fa fa-undo',
             executeMethod: function () {
-                angular.copy($scope.blade.origEntity, $scope.blade.currentEntity);
+                angular.copy(blade.origEntity, blade.currentEntity);
             },
             canExecuteMethod: function () {
                 return isDirty();
@@ -123,7 +131,9 @@
     ];
 
 
-    $scope.blade.refresh(false);
+    blade.refresh(false);
     $scope.catalogs = catalogs.getCatalogs();
     $scope.storeStates = settings.getValues({ id: 'Stores.States' });
+    $scope.languages = settings.getValues({ id: 'VirtoCommerce.Core.General.Languages' });
+    $scope.currencies = settings.getValues({ id: 'VirtoCommerce.Core.General.Currencies' });
 }]);

@@ -1,6 +1,6 @@
 ﻿<div class="blade-content __medium-wide">
-	<div class="blade-inner">
-		<div class="inner-block clearfix">
+    <div class="blade-inner">
+        <div class="inner-block clearfix">
             <form class="form" name="detailForm">
                 <div ng-init="setForm(detailForm)">
                     <label class="form-label">Code</label>
@@ -42,9 +42,65 @@
                         </div>
                     </div>
                 </div>
+                <div class="columns clearfix">
+                    <div class="column">
+                        <div class="form-group">
+                            <label class="form-label">Default language</label>
+                            <div class="form-input">
+                                <ui-select ng-model="blade.currentEntity.defaultLanguage" required>
+                                    <ui-select-match placeholder="Select...">{{$select.selected}}</ui-select-match>
+                                    <ui-select-choices repeat="x in languages | filter: $select.search">
+                                        <span ng-bind-html="x | highlight: $select.search"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="form-group">
+                            <label class="form-label">Additional languages</label>
+                            <div class="form-input" data-role="input-control">
+                                <ui-select multiple ng-model="blade.currentEntity.additionalLanguages">
+                                    <ui-select-match placeholder="Select...">{{$item}}</ui-select-match>
+                                    <ui-select-choices repeat="x in languages | filter:'!'+blade.currentEntity.defaultLanguage | filter: $select.search">
+                                        <span ng-bind-html="x | highlight: $select.search"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="columns clearfix">
+                    <div class="column">
+                        <div class="form-group">
+                            <label class="form-label">Default currency</label>
+                            <div class="form-input">
+                                <ui-select ng-model="blade.currentEntity.defaultCurrency" required>
+                                    <ui-select-match placeholder="Select...">{{$select.selected}}</ui-select-match>
+                                    <ui-select-choices repeat="x in currencies | filter: $select.search">
+                                        <span ng-bind-html="x | highlight: $select.search"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="form-group">
+                            <label class="form-label">Additional currencies</label>
+                            <div class="form-input" data-role="input-control">
+                                <ui-select multiple ng-model="blade.currentEntity.additionalCurrencies">
+                                    <ui-select-match placeholder="Select...">{{$item}}</ui-select-match>
+                                    <ui-select-choices repeat="x in currencies | filter:'!'+blade.currentEntity.defaultCurrency | filter: $select.search">
+                                        <span ng-bind-html="x | highlight: $select.search"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </form>
 
             <va-widget-container group="storeDetail" blade="blade" gridster-opts="{width: 526}"></va-widget-container>
-		</div>
-	</div>
+        </div>
+    </div>
 </div>
