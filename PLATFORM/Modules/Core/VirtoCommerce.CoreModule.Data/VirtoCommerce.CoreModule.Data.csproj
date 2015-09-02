@@ -78,6 +78,7 @@
     <Compile Include="Repositories\IСommerceRepository.cs" />
     <Compile Include="Services\CommerceServiceImpl.cs" />
     <Compile Include="Services\SequenceUniqueNumberGeneratorServiceImpl.cs" />
+    <Compile Include="Services\TimeBasedNumberGeneratorImpl.cs" />
     <Compile Include="Shipping\FixedRateShipmentMethod.cs" />
   </ItemGroup>
   <ItemGroup>

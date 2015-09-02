@@ -2,12 +2,9 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VirtoCommerce.Domain.Common;
-using VirtoCommerce.Domain.Order.Services;
 
-namespace VirtoCommerce.OrderModule.Data.Services
+namespace VirtoCommerce.CoreModule.Data.Services
 {
     public class TimeBasedNumberGeneratorImpl : IUniqueNumberGenerator
     {
