@@ -24,7 +24,12 @@ Setup your own private Microsoft Cloud environment and evaluate the latest versi
 
 Contributing
 -----------
-We welcome & recognize contributors to Virto Commerce. If you feel that you have a desire and knowledge to extend VC, 
-please let us know. There are many benefits available for our contributers, from special licensing to project
-involvement. Contact us at support@virtocommerce.com for more information.
+We welcome & recognize contributors to Virto Commerce. There are many benefits available for our contributers, from special licensing to project involvement. Follow the guide below to contribute:
 
+1. Before starting work on a new contribution, take a moment and search the commits and issues for similar proposals.
+2. <a href="https://github.com/VirtoCommerce/vc-community#fork-destination-box">Fork the Virto Commerce repository</a> into your account.
+3. Make your changes. We also recommend you test your code before contributing.
+4. Once ready to commit your changes, create a pull request according to <a href="https://help.github.com/articles/creating-a-pull-request/">Githubs's Create a Pull Request</a>.
+5. Once received, the Virto Commerce development team will review your contribution and if approved, will pull your request to the appropriate branch.
+
+Note: You must agree to <a href="http://virtocommerce.com/contribute-agreement">Virto Commerce Contributor License Agreement</a> before pulling any requests. You only need to sign the agreement once.
