@@ -5,7 +5,7 @@
  */
 angular.module('ui.codemirror', [])
   .constant('uiCodemirrorConfig', {})
-  .directive('uiCodemirror', uiCodemirrorDirective);
+  .directive('uiCodemirror', ["$timeout", "uiCodemirrorConfig", uiCodemirrorDirective]);
 
 /**
  * @ngInject
