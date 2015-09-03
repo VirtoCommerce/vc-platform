@@ -84,7 +84,23 @@
                 </noscript>
                 {% endif %}
 
-                <base href="{{ shop.simplified_url }}" />
+            <style type="text/css">
+                .flex-caption {
+                    background: rgba(0,0,0,.5);
+                    bottom: 0;
+                    color: #fff;
+                    font-size: 14px;
+                    left: 0;
+                    line-height: 18px;
+                    margin-bottom: 0;
+                    padding: 2%;
+                    position: absolute;
+                    right: 0;
+                    text-shadow: 0 -1px 0 rgba(0,0,0,.3);
+                }
+            </style>
+
+            <base href="{{ shop.simplified_url }}" />
         </head>
 
   <body id="{{ page_title | handle }}" class="{% if customer %}customer-logged-in {% endif %}template-{{ template | replace: '.', ' ' | truncatewords: 1, '' | handle }}" >
