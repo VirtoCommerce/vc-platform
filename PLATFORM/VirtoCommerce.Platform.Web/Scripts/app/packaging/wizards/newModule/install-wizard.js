@@ -53,6 +53,7 @@
             });
 
             uploader.onAfterAddingFile = function (item) {
+                bladeNavigationService.setError(null, $scope.blade);
                 $scope.blade.isLoading = true;
             };
 
@@ -66,6 +67,14 @@
                 }
                 $scope.blade.currentEntity = data;
             };
+
+            uploader.onErrorItem = function (item, response, status, headers) {
+                if (item.isUploaded) {
+                    bladeNavigationService.setError('File uploaded with error status: ' + status, $scope.blade);
+                } else {
+                    bladeNavigationService.setError('Failed to upload. Error status: ' + status, $scope.blade);
+                }
+            }
         }
     };
 
