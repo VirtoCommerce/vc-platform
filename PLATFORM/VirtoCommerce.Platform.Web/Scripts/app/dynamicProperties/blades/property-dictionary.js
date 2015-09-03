@@ -148,7 +148,11 @@
 
             dictionaryItemsApi.save({ id: blade.currentEntity.objectType, propertyId: blade.currentEntity.id },
                 blade.currentEntities,
-                refresh,
+                function () {
+                    refresh();
+                    if (blade.onChangesConfirmedFn)
+                        blade.onChangesConfirmedFn();
+                },
                 function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
         } else {
             blade.onChangesConfirmedFn(blade.currentEntities);
@@ -211,7 +215,11 @@
                 if (remove) {
                     blade.isLoading = true;
                     dictionaryItemsApi.delete({ id: blade.currentEntity.objectType, propertyId: blade.currentEntity.id, ids: ids }, null,
-                        refresh,
+                        function () {
+                            refresh();
+                            if (blade.onChangesConfirmedFn)
+                                blade.onChangesConfirmedFn();
+                        },
                         function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
                 }
             }
