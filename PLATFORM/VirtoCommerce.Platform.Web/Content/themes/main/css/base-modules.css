@@ -2755,6 +2755,11 @@ h3
         margin: 5px 0 0 10px;
     }
 
+    .table .table-ico.sort.fa-sort-down
+    {
+      margin: -8px 0 0 10px;
+    }
+
     .table-item.__error .table-ico
     {
         color: #e51400;
@@ -6951,6 +6956,8 @@ input.ui-grid-filter-input[type="text"]
         {
             display: inline-block;
             height: auto;
+            line-height: 1.4;
+            margin: -24px 0 0;
             padding: 0;
             vertical-align: middle;
             word-spacing: 0;
