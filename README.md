@@ -4,14 +4,11 @@ Virto Commerce 2.x
 
 Virto Commerce is the second generation release and is the only enterprise level e-commerce product fully available under Open Source license. Virto Commerce is based on .NET 4.5 with extensive use of MVC, IoC, EF, Azure, Angular JS and many other cutting edge technologies. It can be deployed in Microsoft Cloud (Azure), Amazon Web Services (AWS) and on-premise.
 
-DEMO
------------
-
 Documentation: http://docs.virtocommerce.com
 
-Frontend Demo: http://demo.virtocommerce.com
-
-Commerce Manager Demo: http://demo.virtocommerce.com/admin
+DEMO
+-----------
+http://virtocommerce.com/try-now/online-demo
 
 Cloud Private Demo
 -----------
