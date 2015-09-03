@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Security.Cryptography;
@@ -89,5 +90,22 @@ namespace VirtoCommerce.Platform.Core.Common
 				return Convert.ToBase64String(cryptoServiceProvider.Hash);
 			}
 		}
-	}
+
+        public static Nullable<T> ToNullable<T>(this object obj) where T : struct
+        {
+            Nullable<T> result = new Nullable<T>();
+            if(obj != null)
+            {
+                if (obj is string)
+                {
+                    result = ((string)obj).ToNullable<T>();
+                }
+                else
+                {
+                    result = (Nullable<T>)obj;
+                }
+            }
+            return result;
+        }
+    }
 }
