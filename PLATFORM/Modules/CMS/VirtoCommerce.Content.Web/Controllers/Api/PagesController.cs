@@ -161,5 +161,49 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 			_pagesService.DeletePage(storeId, PagesUtility.GetShortPageInfoFromString(pageNamesAndLanguges).ToArray());
 			return Ok();
 		}
+
+        [HttpPost]
+        [ResponseType(typeof(void))]
+        [Route("blog/{blogName}")]
+        public IHttpActionResult CreateBlog(string storeId, string blogName)
+        {
+            var page = GetDefaultBlog(blogName);
+            _pagesService.SavePage(storeId, page.ToCoreModel());
+            return StatusCode(HttpStatusCode.NoContent);
+        }
+
+        [HttpDelete]
+        [ResponseType(typeof(void))]
+        [Route("blog/{blogName}")]
+        public IHttpActionResult DeleteBlog(string storeId, string blogName)
+        {
+            _pagesService.DeleteBlog(storeId, blogName);
+            return StatusCode(HttpStatusCode.NoContent);
+        }
+
+        [HttpPost]
+        [ResponseType(typeof(void))]
+        [Route("blog/{blogName}/{oldBlogName}")]
+        public IHttpActionResult UpdateBlog(string storeId, string blogName, string oldBlogName)
+        {
+            _pagesService.UpdateBlog(storeId, blogName, oldBlogName);
+            return StatusCode(HttpStatusCode.NoContent);
+        }
+
+
+        private Page GetDefaultBlog(string blogName)
+        {
+            var name = string.Format("blogs/{0}/default.md", blogName);
+            var retVal = new Page
+            {
+                Id = name,
+                Name = name,
+                Language = "en-US",
+                Content = "<p>Default blog content</p>",
+                ContentType = "text/html"
+            };
+
+            return retVal;
+        }
 	}
 }

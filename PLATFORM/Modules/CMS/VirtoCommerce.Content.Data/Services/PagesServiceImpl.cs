@@ -9,6 +9,7 @@ using VirtoCommerce.Content.Data.Converters;
 using System.Web.Hosting;
 using VirtoCommerce.Content.Data.Utility;
 using VirtoCommerce.Platform.Core.Asset;
+using System.Text.RegularExpressions;
 
 namespace VirtoCommerce.Content.Data.Services
 {
@@ -101,7 +102,40 @@ namespace VirtoCommerce.Content.Data.Services
 			}
 		}
 
-		public bool CheckList(string storeId, string name, string language)
+        public void DeleteBlog(string storeId, string blogName)
+        {
+            var path = string.Format("{0}/", storeId);
+            using (var repository = _repositoryFactory())
+            {
+                var pages = repository.GetPages(path, null);
+                pages = pages.Where(p => p.Id.Split('/').Length > 4 && p.Id.Split('/')[2].Equals("blogs") && p.Id.Split('/')[3].Equals(blogName));
+                foreach(var page in pages.ToArray())
+                {
+                    repository.DeletePage(page.Id);
+                }
+            }
+        }
+
+        public void UpdateBlog(string storeId, string blogName, string oldBlogName)
+        {
+            var path = string.Format("{0}/", storeId);
+            using (var repository = _repositoryFactory())
+            {
+                var pages = repository.GetPages(path, null);
+                pages = pages.Where(p => p.Id.Split('/').Length > 4 && p.Id.Split('/')[2].Equals("blogs") && p.Id.Split('/')[3].Equals(oldBlogName));
+                foreach (var page in pages.ToArray())
+                {
+                    repository.DeletePage(page.Id);
+                    var regex = new Regex(Regex.Escape(oldBlogName));
+                    page.Id = regex.Replace(page.Id, blogName, 1);
+                    page.Path = regex.Replace(page.Path, blogName, 1);
+                    page.Name = regex.Replace(page.Name, blogName, 1);
+                    repository.SavePage(GetFullName(storeId, page.Name, page.Language), page);
+                }
+            }
+        }
+
+        public bool CheckList(string storeId, string name, string language)
 		{
 			var page = GetPage(storeId, name, language);
 			if (page != null)
@@ -126,5 +160,5 @@ namespace VirtoCommerce.Content.Data.Services
 		{
 			return string.Format("{0}/{1}/{2}", storeId, language, pageName);
 		}
-	}
+    }
 }

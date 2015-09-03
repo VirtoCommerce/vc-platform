@@ -1,0 +1,20 @@
+﻿<div class="blade-static __bottom" ng-if="blade.isNew">
+    <button class="btn" ng-click="blade.saveChanges()" ng-disabled="formScope.$invalid">
+        <span>Create</span>
+    </button>
+</div>
+
+<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <form class="form" name="formScope">
+                <div class="form-group" ng-init="setForm(formScope)">
+                    <label class="form-label">Blog name:</label>
+                    <div class="form-input">
+                        <input focus-on="" required class="form-control" ng-model="blade.entity.name" placeholder="Enter blog name" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
