@@ -65,7 +65,7 @@ gulp.task('packScripts', function () {
 gulp.task('packCss', function () {
     // Only return the JavaScript files
     return gulp.src(mainBowerFiles({
-        // Only return the JavaScript files
+        // Only return the CSS files
         filter: /.*\.css$/i
     }))
       .pipe(concat('allStyles.css'))
