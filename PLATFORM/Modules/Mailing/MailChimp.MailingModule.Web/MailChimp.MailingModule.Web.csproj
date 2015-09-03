@@ -146,6 +146,7 @@
     <Compile Include="Services\OAuth2.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\mailchimp-logo.png" />
     <Content Include="module.manifest" />
     <Content Include="Scripts\mailing.js" />
     <Content Include="Scripts\widgets\mailingWidget.js" />

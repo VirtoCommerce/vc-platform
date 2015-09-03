@@ -16,7 +16,7 @@
     <owner>Virto Commerce</owner>
   </owners>
   <projectUrl>http://virtocommerce.com/</projectUrl>
-  <iconUrl>https://pbs.twimg.com/profile_images/459770288868032512/Bu135OKW_400x400.png</iconUrl>
+  <iconUrl>Modules/$(Avalara.Tax)/Content/400.png</iconUrl>
   <releaseNotes>First version.</releaseNotes>
   <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
   <tags>avalara tax</tags>

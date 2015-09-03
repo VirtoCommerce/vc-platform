@@ -129,10 +129,6 @@
     <Content Include="Scripts\blades\shippingMethod-list.tpl.html" />
     <Content Include="Scripts\blades\stores-list.js" />
     <Content Include="Scripts\blades\stores-list.tpl.html" />
-    <Content Include="Scripts\blades\store-currencies.js" />
-    <Content Include="Scripts\blades\store-languages.js" />
-    <Content Include="Scripts\blades\store-currencies.tpl.html" />
-    <Content Include="Scripts\blades\store-languages.tpl.html" />
     <Content Include="Scripts\blades\store-setting-detail.js" />
     <Content Include="Scripts\blades\store-setting-detail.tpl.html" />
     <Content Include="Scripts\blades\store-settings-list.js" />
@@ -142,8 +138,6 @@
     <Content Include="Scripts\blades\store-advanced.tpl.html" />
     <Content Include="Scripts\widgets\seoWidget.js" />
     <Content Include="Scripts\widgets\seoWidget.tpl.html" />
-    <Content Include="Scripts\widgets\storeCurrenciesWidget.js" />
-    <Content Include="Scripts\widgets\storeCurrenciesWidget.tpl.html" />
     <Content Include="Scripts\widgets\storeNotificationsLogWidget.js" />
     <Content Include="Scripts\widgets\storeNotificationsLogWidget.tpl.html" />
     <Content Include="Scripts\widgets\storeNotificationsWidget.js" />
@@ -160,8 +154,6 @@
     <Content Include="Scripts\blades\store-detail.tpl.html" />
     <Content Include="Scripts\store.js" />
     <Content Include="Scripts\resources\stores.js" />
-    <Content Include="Scripts\widgets\storeLanguagesWidget.js" />
-    <Content Include="Scripts\widgets\storeLanguagesWidget.tpl.html" />
     <Content Include="Scripts\wizards\newStore\new-store-wizard.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>

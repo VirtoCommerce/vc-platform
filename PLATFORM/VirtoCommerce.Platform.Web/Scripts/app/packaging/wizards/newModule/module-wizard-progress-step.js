@@ -18,7 +18,7 @@
     $scope.restart = function () {
         $scope.restarted = true;
         modules.restart({},
-            $window.location.reload,
+            function () { $window.location.reload(); },
             function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
     };
 

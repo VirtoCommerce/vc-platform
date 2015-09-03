@@ -16,7 +16,7 @@
 		<owner>Virto Commerce</owner>
 	</owners>
 	<projectUrl>http://virtocommerce.com/</projectUrl>
-	<iconUrl>https://pbs.twimg.com/profile_images/378800000043280363/23efdf268b0001d3e68fd48216845d5f.png</iconUrl>
+  <iconUrl>Modules/$(VirtoCommerce.Core)/Content/logoVC.png</iconUrl>
 	<releaseNotes>First version.</releaseNotes>
 	<copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
 	<tags>marketing promotion</tags>

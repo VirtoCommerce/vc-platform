@@ -149,6 +149,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Klarna-Logo.png" />
     <Content Include="module.manifest" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>

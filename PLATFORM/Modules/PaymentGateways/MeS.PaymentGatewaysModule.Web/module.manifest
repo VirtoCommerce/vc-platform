@@ -16,7 +16,7 @@
     <owner>Virto Commerce</owner>
   </owners>
   <projectUrl>http://virtocommerce.com/</projectUrl>
-  <iconUrl>https://www.cardpaymentoptions.com/wp-content/uploads/2012/08/Merchant-e-Solutions.png</iconUrl>
+  <iconUrl>Modules/$(MeS.PaymentGateway)/Content/Merchant-e-Solutions.png</iconUrl>
   <releaseNotes>First version.</releaseNotes>
   <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
   <tags>mes payment gateway</tags>

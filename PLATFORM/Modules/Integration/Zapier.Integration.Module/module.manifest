@@ -16,7 +16,7 @@
         <owner>Virto Commerce</owner>
     </owners>
     <projectUrl>http://virtocommerce.com/</projectUrl>
-    <iconUrl>https://sendgrid.com/blog/wp-content/uploads/2012/09/Zapier-300x155.png</iconUrl>
+    <iconUrl>Modules/$(Zapier.Integration)/Content/Zapier-300x155.png</iconUrl>
     <releaseNotes>First version.</releaseNotes>
     <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
     <tags>zapier</tags>
