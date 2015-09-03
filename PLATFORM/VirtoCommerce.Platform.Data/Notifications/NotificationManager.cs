@@ -86,7 +86,12 @@ namespace VirtoCommerce.Platform.Data.Notifications
 			return retVal;
 		}
 
-		public Core.Notifications.Notification GetNewNotification(string type)
+        public T GetNewNotification<T>() where T : Notification
+        {
+            return GetNewNotification<T>(null, null, null);
+        }
+
+        public Core.Notifications.Notification GetNewNotification(string type)
 		{
 			return GetNewNotification(type, null, null, null);
 		}
@@ -124,7 +129,6 @@ namespace VirtoCommerce.Platform.Data.Notifications
 
 		public T GetNewNotification<T>(string objectId, string objectTypeId, string language) where T : Core.Notifications.Notification
 		{
-			var notifications = GetNotifications();
 			return GetNewNotification(typeof(T).Name, objectId, objectTypeId, language) as T;
 		}
 
@@ -187,22 +191,6 @@ namespace VirtoCommerce.Platform.Data.Notifications
 			return retVal;
 		}
 
-		public Core.Notifications.Notification GetNotification(string id)
-		{
-			Core.Notifications.Notification retVal = null;
-
-			using(var repository = _repositoryFactory())
-			{
-				var notification = repository.Notifications.FirstOrDefault(n => n.Id == id);
-				if(notification != null)
-				{
-					retVal = GetNotificationCoreModel(notification);
-				}
-			}
-
-			return retVal;
-		}
-
 		public void StopSendingNotifications(string[] ids)
 		{
 			using(var repository = _repositoryFactory())
@@ -228,5 +216,5 @@ namespace VirtoCommerce.Platform.Data.Notifications
 
 			return retVal;
 		}
-	}
+    }
 }
