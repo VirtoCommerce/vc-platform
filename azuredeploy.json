@@ -34,7 +34,7 @@
                 "Manager and Storefront",
                 "Manager Only"
             ],
-            "defaultValue": "Web Admin and Store"
+            "defaultValue": "Manager and Storefront"
         },
 
         "repoUrl": {
