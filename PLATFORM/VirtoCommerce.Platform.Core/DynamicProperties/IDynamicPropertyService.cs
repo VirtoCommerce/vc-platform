@@ -8,7 +8,7 @@ namespace VirtoCommerce.Platform.Core.DynamicProperties
         string GetObjectTypeName(Type type);
 
         DynamicProperty[] GetProperties(string objectType);
-        void SaveProperties(DynamicProperty[] properties);
+        DynamicProperty[] SaveProperties(DynamicProperty[] properties);
         void DeleteProperties(string[] propertyIds);
 
         DynamicPropertyDictionaryItem[] GetDictionaryItems(string propertyId);

@@ -45,23 +45,38 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
-        /// Add or update dynamic properties
+        /// Add new dynamic property
         /// </summary>
-        /// <remarks>
-        /// Fill property ID to update existing property or leave it empty to create a new property.
-        /// </remarks>
         /// <returns></returns>
         [HttpPost]
         [Route("types/{typeName}/properties")]
-        [ResponseType(typeof(void))]
-        public IHttpActionResult SaveProperties(string typeName, DynamicProperty[] properties)
+        [ResponseType(typeof(DynamicProperty))]
+        public IHttpActionResult CreateProperty(string typeName, DynamicProperty property)
         {
-            foreach (var property in properties.Where(property => string.IsNullOrEmpty(property.ObjectType)))
-            {
-                property.ObjectType = typeName;
-            }
+            property.Id = null;
 
-            _service.SaveProperties(properties);
+            if (string.IsNullOrEmpty(property.ObjectType))
+                property.ObjectType = typeName;
+
+            var result = _service.SaveProperties(new[] { property });
+            return Ok(result.FirstOrDefault());
+        }
+
+        /// <summary>
+        /// Update existing dynamic property
+        /// </summary>
+        /// <returns></returns>
+        [HttpPut]
+        [Route("types/{typeName}/properties/{propertyId}")]
+        [ResponseType(typeof(void))]
+        public IHttpActionResult UpdateProperty(string typeName, string propertyId, DynamicProperty property)
+        {
+            property.Id = propertyId;
+
+            if (string.IsNullOrEmpty(property.ObjectType))
+                property.ObjectType = typeName;
+
+            _service.SaveProperties(new[] { property });
             return StatusCode(HttpStatusCode.NoContent);
         }
 
