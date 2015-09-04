@@ -31,7 +31,7 @@
         });
     };
     
-    blade.headIcon = 'fa-lock';
+    blade.headIcon = 'fa-key';
 
     // actions on load
     initializeBlade();

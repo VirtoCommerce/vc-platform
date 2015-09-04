@@ -15,7 +15,12 @@
 		getPage: { url: 'api/cms/:storeId/pages/:language/:pageName', method: 'GET' },
 		checkName: { url: 'api/cms/:storeId/pages/checkname', method: 'GET' },
 		update: { url: 'api/cms/:storeId/pages/', method: 'POST' },
-		delete: { url: 'api/cms/:storeId/pages/', method: 'DELETE' }
+		delete: { url: 'api/cms/:storeId/pages/', method: 'DELETE' },
+
+		createBlog: { url: 'api/cms/:storeId/pages/blog/:blogName', method: 'POST' },
+		updateBlog: { url: 'api/cms/:storeId/pages/blog/:blogName/:oldBlogName', method: 'POST' },
+        deleteBlog: { url: 'api/cms/:storeId/pages/blog/:blogName', method: 'DELETE' }
+
 	});
 }])
 .factory('virtoCommerce.contentModule.themes', ['$resource', function ($resource) {

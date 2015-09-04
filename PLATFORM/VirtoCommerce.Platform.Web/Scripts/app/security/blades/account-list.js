@@ -92,7 +92,7 @@ function ($scope, accounts, bladeNavigationService, dialogService) {
         });
     }
 
-    $scope.blade.headIcon = 'fa-lock';
+    $scope.blade.headIcon = 'fa-key';
 
     $scope.blade.toolbarCommands = [
         {

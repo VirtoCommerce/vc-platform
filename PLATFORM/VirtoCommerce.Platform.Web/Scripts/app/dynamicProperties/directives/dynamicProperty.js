@@ -68,7 +68,7 @@
             			}
             		}
 	           	}
-            	chageValueTemplate(scope.currentEntity.valueType);
+            	changeValueTemplate();
             };
 
             var difference = function (one, two) {
@@ -105,8 +105,7 @@
                     scope.context.currentPropValues = [];
 
                     angular.forEach(result, function (dictValue) {
-                    	//Need seldictValueect already selected value
-                        //Dictionary values it a same type like a standart values
+                        //Need to select already selected values. Dictionary values have same type as standard values.
                         dictValue.selected = angular.isDefined(_.find(selectedValues, function (x) { return x.value.id == dictValue.id }));
                         scope.context.allDictionaryValues.push(dictValue);
                         if (dictValue.selected) {
@@ -135,7 +134,7 @@
                 return result;
             };
 
-            function chageValueTemplate(valueType) {
+            function changeValueTemplate() {
                 var templateName = getTemplateName(scope.currentEntity);
 
 

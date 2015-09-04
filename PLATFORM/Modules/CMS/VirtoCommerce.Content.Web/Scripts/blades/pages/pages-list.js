@@ -26,15 +26,15 @@
         $scope.selectedNodeId = data.pageName;
         closeChildrenBlades();
 
-        var add = '';
-        if (blade.steps.length > 1) {
-            add = _.last(blade.steps) + '/';
-        }
+        //var add = '';
+        //if (blade.steps.length > 1) {
+        //    add = _.last(blade.steps) + '/';
+        //}
 
         var newBlade = {
             id: 'editPageBlade',
             choosenStoreId: blade.storeId,
-            choosenPageName: add + data.name,
+            choosenPageName: data.id,
             choosenPageLanguage: data.language,
             newPage: false,
             title: 'Edit ' + data.name,
@@ -51,7 +51,7 @@
 
         var path = '';
         if (blade.steps.length > 1) {
-            path = _.last(blade.steps) + '/';
+            path = blade.steps.slice(1).join('/') + '/';
         }
 
         if (!isBytes) {
@@ -98,6 +98,42 @@
         blade.steps.push(data.folderName);
 
         blade.currentPageCatalog = data;
+
+        if (blade.currentPageCatalog.folderName === 'blogs') {
+            $scope.blade.toolbarCommands = [
+                {
+                    name: "Add blog", icon: 'fa fa-plus',
+                    executeMethod: function () {
+                        blade.openBlogNew(true, { name: undefined });
+                    },
+                    canExecuteMethod: function () {
+                        return true;
+                    },
+                    permission: 'content:manage'
+                }];
+        }
+        else {
+            blade.defaultButtons();
+        }
+
+        if (blade.currentPageCatalog.folderName !== 'blogs' && _.find(blade.steps, function (step) { return step === 'blogs'; }) !== undefined) {
+            $scope.blade.toolbarCommands.push(
+            {
+                name: "Manage blog", icon: 'fa fa-edit',
+                executeMethod: function () {
+                    blade.openBlogNew(false, { name: blade.currentPageCatalog.folderName });
+                },
+                canExecuteMethod: function () {
+                    return true;
+                },
+                permission: 'content:manage'
+            });
+        }
+    }
+
+    blade.checkPreviousStep = function () {
+        blade.selectedStep = 1;
+        blade.stepsClick();
     }
 
     blade.stepsClick = function () {
@@ -108,6 +144,38 @@
 
         for (var i = 1; i < index; i++) {
             blade.currentPageCatalog = _.find(blade.currentPageCatalog.folders, function (folder) { return folder.folderName === blade.steps[i] });
+        }
+
+        if (blade.currentPageCatalog.folderName === 'blogs') {
+            $scope.blade.toolbarCommands = [
+                {
+                    name: "Add blog", icon: 'fa fa-plus',
+                    executeMethod: function () {
+                        blade.openBlogNew(true, { name: undefined });
+                    },
+                    canExecuteMethod: function () {
+                        return true;
+                    },
+                    permission: 'content:manage'
+                }
+            ];
+        }
+        else {
+            blade.defaultButtons();
+        }
+
+        if (blade.currentPageCatalog.folderName !== 'blogs' && _.find(blade.steps, function (step) { return step === 'blogs'; }) !== undefined) {
+            $scope.blade.toolbarCommands.push(
+            {
+                name: "Manage blog", icon: 'fa fa-edit',
+                executeMethod: function () {
+                    blade.openBlogNew(false, { name: blade.currentPageCatalog.folderName });
+                },
+                canExecuteMethod: function () {
+                    return true;
+                },
+                permission: 'content:manage'
+            });
         }
     }
 
@@ -146,28 +214,48 @@
         }
     }
 
-    $scope.blade.toolbarCommands = [
-        {
-            name: "Add page", icon: 'fa fa-plus',
-            executeMethod: function () {
-                blade.openBladeNew(false);
+    blade.openBlogNew = function (isNew, data) {
+        var title = isNew ? 'Add blog' : 'Edit blog';
+        var subTitle = isNew ? 'Create new blog' : 'Edit blog folder';
+
+        var newBlade = {
+            id: 'openBlogNew',
+            choosenStoreId: blade.storeId,
+            isNew: isNew,
+            entity: data,
+            title: title,
+            subtitle: subTitle,
+            controller: 'virtoCommerce.contentModule.editBlogController',
+            template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/pages/edit-blog.tpl.html'
+        };
+        bladeNavigationService.showBlade(newBlade, $scope.blade);
+    }
+
+    blade.defaultButtons = function () {
+        $scope.blade.toolbarCommands = [
+            {
+                name: "Add page", icon: 'fa fa-plus',
+                executeMethod: function () {
+                    blade.openBladeNew(false);
+                },
+                canExecuteMethod: function () {
+                    return true;
+                },
+                permission: 'content:manage'
             },
-            canExecuteMethod: function () {
-                return true;
-            },
-            permission: 'content:manage'
-        },
-		{
-		    name: "Add file", icon: 'fa fa-plus',
-		    executeMethod: function () {
-		        blade.openBladeNew(true);
-		    },
-		    canExecuteMethod: function () {
-		        return true;
-		    },
-		    permission: 'content:manage'
-		},
-    ];
+		    {
+		        name: "Add file", icon: 'fa fa-plus',
+		        executeMethod: function () {
+		            blade.openBladeNew(true);
+		        },
+		        canExecuteMethod: function () {
+		            return true;
+		        },
+		        permission: 'content:manage'
+		    }
+        ];
+    }
+    blade.defaultButtons();
 
     blade.initialize();
 }]);

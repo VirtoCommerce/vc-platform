@@ -5,7 +5,7 @@ if (AppDependencies != undefined) {
 	AppDependencies.push(moduleName);
 }
 
-angular.module(moduleName, ['angularUUID2'])
+angular.module(moduleName, [])
 .run(['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', function ($rootScope, mainMenuService, widgetService, $state) {
 
 	var menuItem = {

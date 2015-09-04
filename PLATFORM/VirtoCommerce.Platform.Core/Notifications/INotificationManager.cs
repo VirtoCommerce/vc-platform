@@ -12,7 +12,7 @@ namespace VirtoCommerce.Platform.Core.Notifications
         void ScheduleSendNotification(Notification notification);
         Notification GetNotificationById(string id);
         void StopSendingNotifications(string[] ids);
-
+        T GetNewNotification<T>() where T : Core.Notifications.Notification;
         Core.Notifications.Notification GetNewNotification(string type);
         T GetNewNotification<T>(string objectId, string objectTypeId, string language) where T : Core.Notifications.Notification;
         Core.Notifications.Notification GetNewNotification(string type, string objectId, string objectTypeId, string language);

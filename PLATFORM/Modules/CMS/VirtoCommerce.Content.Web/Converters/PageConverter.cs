@@ -38,13 +38,8 @@ namespace VirtoCommerce.Content.Web.Converters
 			{
 				if (page.ByteContent != null)
 				{
-					//retVal.Content = ContentTypeUtility.ConvertImageToBase64String(item.ByteContent, item.ContentType);
 					retVal.ByteContent = page.ByteContent;
 				}
-				//else
-				//{
-				//	retVal.Content = retVal.AssetUrl = item.AssetUrl;
-				//}
 			}
 			else if (ContentTypeUtility.IsTextContentType(page.ContentType))
 			{
@@ -83,6 +78,10 @@ namespace VirtoCommerce.Content.Web.Converters
 			{
 				folders.Add("includes");
 			}
+            if (!folders.Any(f => f.Equals("blogs")))
+            {
+                folders.Add("blogs");
+            }
 
 			foreach (var folder in folders)
 			{
@@ -96,13 +95,30 @@ namespace VirtoCommerce.Content.Web.Converters
 				foreach (var page in addedPages)
 				{
 					var steps = page.Name.Split('/');
-					if (steps.Length > 1)
-					{
-						steps = steps.Skip(1).ToArray();
-					}
-					page.Name = string.Join("/", steps);
+                    if (steps.Length > 1)
+                    {
+                        steps = steps.Skip(1).ToArray();
+                    }
+                    page.Name = steps.LastOrDefault();
 
-					pageFolder.Pages.Add(page);
+                    if (steps.Length > 1)
+                    {
+                        if (pageFolder.Folders.Any(f => f.FolderName == steps[0]))
+                        {
+                            var addedFolder = pageFolder.Folders.FirstOrDefault(f => f.FolderName == steps[0]);
+                            addedFolder.Pages.Add(page);
+                        }
+                        else
+                        {
+                            var addedFolder = new webModels.PageFolder { FolderName = steps[0] };
+                            addedFolder.Pages.Add(page);
+                            pageFolder.Folders.Add(addedFolder);
+                        }
+                    }
+                    else
+                    {
+                        pageFolder.Pages.Add(page);
+                    }
 				}
 
 				retVal.Folders.Add(pageFolder);

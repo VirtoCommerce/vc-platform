@@ -6,6 +6,8 @@ using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Data.Common.ConventionInjections;
 using VirtoCommerce.Platform.Data.Model;
+using VirtoCommerce.Platform.Core.Common;
+
 namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
 {
     public static class DynamicPropertyObjectValueConverter
@@ -60,20 +62,16 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
                 switch (property.ValueType)
                 {
                     case DynamicPropertyValueType.Boolean:
-                        result.BooleanValue = Convert.ToBoolean(propertyValue.Value);
+                        result.BooleanValue = propertyValue.Value.ToNullable<Boolean>();
                         break;
                     case DynamicPropertyValueType.DateTime:
-						result.DateTimeValue = Convert.ToDateTime(propertyValue.Value, CultureInfo.InvariantCulture);
+						result.DateTimeValue = propertyValue.Value.ToNullable<DateTime>();
                         break;
                     case DynamicPropertyValueType.Decimal:
-						result.DecimalValue = Convert.ToDecimal(propertyValue.Value, CultureInfo.InvariantCulture);
+						result.DecimalValue = propertyValue.Value.ToNullable<Decimal>();
                         break;
                     case DynamicPropertyValueType.Integer:
-						result.IntegerValue = Convert.ToInt32(propertyValue.Value, CultureInfo.InvariantCulture);
-                        break;
-                    case DynamicPropertyValueType.LongText:
-                    case DynamicPropertyValueType.Html:
-						result.LongTextValue = (string)propertyValue.Value;
+						result.IntegerValue = propertyValue.Value.ToNullable<Int32>();
                         break;
                     default:
 						result.ShortTextValue = (string)propertyValue.Value;

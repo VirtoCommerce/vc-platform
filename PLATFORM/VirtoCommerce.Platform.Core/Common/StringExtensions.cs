@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -231,5 +232,20 @@ namespace VirtoCommerce.Platform.Core.Common
 			// Step 7
 			return d[n, m];
 		}
-	}
+
+        public static Nullable<T> ToNullable<T>(this string s) where T : struct
+        {
+            Nullable<T> result = new Nullable<T>();
+            try
+            {
+                if (!string.IsNullOrEmpty(s) && s.Trim().Length > 0)
+                {
+                    TypeConverter conv = TypeDescriptor.GetConverter(typeof(T));
+                    result = (T)conv.ConvertFromInvariantString(s);
+                }
+            }
+            catch { }
+            return result;
+        }
+    }
 }
