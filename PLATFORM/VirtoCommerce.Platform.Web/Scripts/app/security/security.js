@@ -57,7 +57,7 @@
         //Register module in main menu
         var menuItem = {
             path: 'configuration/security',
-            icon: 'fa fa-lock',
+            icon: 'fa fa-key',
             title: 'Security',
             priority: 5,
             action: function () { $state.go('workspace.securityModule'); },

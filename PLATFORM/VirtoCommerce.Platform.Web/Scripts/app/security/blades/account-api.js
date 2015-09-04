@@ -50,7 +50,7 @@
         dialogService.showConfirmationDialog(dialog);
     }
 
-    $scope.blade.headIcon = 'fa-lock';
+    $scope.blade.headIcon = 'fa-key';
 
     $scope.blade.toolbarCommands = [
         {

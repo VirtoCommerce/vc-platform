@@ -88,7 +88,7 @@
         });
     }
 
-    $scope.blade.headIcon = 'fa-lock';
+    $scope.blade.headIcon = 'fa-key';
 
     function initializeToolbar() {
         if (!$scope.blade.isNew) {

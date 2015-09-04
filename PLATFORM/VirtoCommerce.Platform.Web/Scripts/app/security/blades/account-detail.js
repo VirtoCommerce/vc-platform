@@ -61,7 +61,7 @@
         });
     }
 
-    $scope.blade.headIcon = 'fa-lock';
+    $scope.blade.headIcon = 'fa-key';
 
     var userStateCommand = {
         updateName: function () {

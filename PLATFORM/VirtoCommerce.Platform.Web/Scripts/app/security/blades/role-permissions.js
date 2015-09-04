@@ -28,7 +28,7 @@
         $scope.bladeClose();
     };
 
-    $scope.blade.headIcon = 'fa-lock';
+    $scope.blade.headIcon = 'fa-key';
 
     $scope.$watch('blade.parentBlade.currentEntity', initializeBlade);
 

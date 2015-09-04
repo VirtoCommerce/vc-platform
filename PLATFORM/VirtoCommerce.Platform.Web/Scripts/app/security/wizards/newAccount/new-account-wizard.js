@@ -33,7 +33,7 @@
         });
     };
     
-    $scope.blade.headIcon = 'fa-lock';
+    $scope.blade.headIcon = 'fa-key';
     
     // actions on load
     initializeBlade($scope.blade.currentEntity);
