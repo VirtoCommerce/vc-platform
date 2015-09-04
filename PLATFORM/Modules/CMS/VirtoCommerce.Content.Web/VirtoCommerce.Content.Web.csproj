@@ -197,6 +197,7 @@
     <Content Include="Default_Theme\Default\templates\customers\order.liquid" />
     <Content Include="Default_Theme\Default\templates\customers\register.liquid" />
     <Content Include="Default_Theme\Default\templates\customers\reset_password.liquid" />
+    <Content Include="Default_Theme\Default\assets\flexslider.css.liquid" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
