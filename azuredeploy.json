@@ -158,7 +158,7 @@
                         "appSettings": [
                             {
                                 "name": "VirtoCommerce_DeployApplications",
-                                "value": "[variables(parameters('deployApplications')).configValue)]"
+                                "value": "[variables(parameters('deployApplications')).configValue]"
                             }
                         ],
                         "virtualApplications": [
