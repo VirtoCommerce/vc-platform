@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using VirtoCommerce.CustomerModule.Data.Converters;
 using VirtoCommerce.CustomerModule.Data.Repositories;
 using VirtoCommerce.Domain.Customer.Services;
 using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using coreModel = VirtoCommerce.Domain.Customer.Model;
-using foundationModel = VirtoCommerce.CustomerModule.Data.Model;
 
 namespace VirtoCommerce.CustomerModule.Data.Services
 {
@@ -53,6 +50,7 @@ namespace VirtoCommerce.CustomerModule.Data.Services
                 CommitChanges(repository);
             }
 
+            contact.SetObjectId(entity.Id);
             _dynamicPropertyService.SaveDynamicPropertyValues(contact);
 
             var retVal = GetById(entity.Id);
@@ -62,7 +60,7 @@ namespace VirtoCommerce.CustomerModule.Data.Services
         public void Update(coreModel.Contact[] contacts)
         {
             using (var repository = _repositoryFactory())
-            using (var changeTracker = base.GetChangeTracker(repository))
+            using (var changeTracker = GetChangeTracker(repository))
             {
                 foreach (var contact in contacts)
                 {

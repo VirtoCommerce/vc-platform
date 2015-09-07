@@ -12,29 +12,42 @@ namespace VirtoCommerce.Platform.Core.DynamicProperties
             if (owner != null && owner.DynamicProperties != null)
             {
                 var propValue = owner.DynamicProperties.Where(v => v.Name == propertyName && v.Values != null)
-													   .SelectMany(v => v.Values)
-													   .FirstOrDefault();
+                                                       .SelectMany(v => v.Values)
+                                                       .FirstOrDefault();
 
-				if(propValue != null && propValue.Value != null)
-				{
-					var jObject = propValue.Value as JObject;
-					var dictItem = propValue.Value as DynamicPropertyDictionaryItem;
-					if(jObject != null)
-					{
-						dictItem = jObject.ToObject<DynamicPropertyDictionaryItem>();
-					}
-					if(dictItem != null)
-					{
-						result = (T)(object)dictItem.Name;
-					}
-					else
-					{
-						result = (T)propValue.Value;
-					}
-				}
+                if (propValue != null && propValue.Value != null)
+                {
+                    var jObject = propValue.Value as JObject;
+                    var dictItem = propValue.Value as DynamicPropertyDictionaryItem;
+                    if (jObject != null)
+                    {
+                        dictItem = jObject.ToObject<DynamicPropertyDictionaryItem>();
+                    }
+                    if (dictItem != null)
+                    {
+                        result = (T)(object)dictItem.Name;
+                    }
+                    else
+                    {
+                        result = (T)propValue.Value;
+                    }
+                }
             }
 
             return result;
+        }
+
+        public static void SetObjectId(this IHasDynamicProperties owner, string id)
+        {
+            if (owner != null && owner.DynamicProperties != null)
+            {
+                owner.Id = id;
+
+                foreach (var dynamicObjectProperty in owner.DynamicProperties)
+                {
+                    dynamicObjectProperty.ObjectId = id;
+                }
+            }
         }
     }
 }

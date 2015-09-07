@@ -3,7 +3,6 @@ using System.Linq;
 using VirtoCommerce.Domain.Cart.Services;
 using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Domain.Common;
-using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Domain.Order.Events;
 using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Domain.Order.Services;
@@ -11,6 +10,7 @@ using VirtoCommerce.OrderModule.Data.Converters;
 using VirtoCommerce.OrderModule.Data.Repositories;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
+using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Data.Infrastructure;
 
 namespace VirtoCommerce.OrderModule.Data.Services
@@ -105,19 +105,19 @@ namespace VirtoCommerce.OrderModule.Data.Services
 
             _eventPublisher.Publish(new OrderChangeEvent(EntryState.Added, null, order));
 
-            var orderEntity = order.ToDataModel();
+            var entity = order.ToDataModel();
 
             using (var repository = _repositoryFactory())
             {
-                repository.Add(orderEntity);
+                repository.Add(entity);
                 CommitChanges(repository);
             }
 
+            order.SetObjectId(entity.Id);
             _dynamicPropertyService.SaveDynamicPropertyValues(order);
 
-            var retVal = GetById(orderEntity.Id, CustomerOrderResponseGroup.Full);
+            var retVal = GetById(entity.Id, CustomerOrderResponseGroup.Full);
             return retVal;
-
         }
 
         public virtual CustomerOrder CreateByShoppingCart(string cartId)
