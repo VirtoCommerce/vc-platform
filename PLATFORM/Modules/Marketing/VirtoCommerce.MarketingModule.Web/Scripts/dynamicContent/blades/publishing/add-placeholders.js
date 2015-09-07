@@ -20,8 +20,12 @@
         blade.entity.contentPlaces.forEach(function (el) {
             marketing_dynamicContents_res_contentPlaces.get({ id: el.id }, function (data) {
                 var orEl = _.find(blade.parentBlade.originalEntity.contentPlaces, function (contentPlace) { return contentPlace.id === el.id });
-                el.path = orEl.path = data.path;
-                el.outline = orEl.outline = data.outline;
+                if (!angular.isUndefined(orEl)) {
+                    orEl.path = data.path;
+                    orEl.outline = data.outline;
+                }
+                el.path = data.path;
+                el.outline = data.outline;
             }, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
         });
     }

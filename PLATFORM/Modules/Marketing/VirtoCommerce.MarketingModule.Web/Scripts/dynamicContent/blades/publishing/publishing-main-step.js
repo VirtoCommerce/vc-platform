@@ -70,6 +70,7 @@
         blade.entity = data;
         blade.originalEntity = angular.copy(blade.entity);
         blade.isLoading = false;
+        $scope.$watch('blade.entity', blade.autogenerateName, true);
     }
 
     blade.addPlaceholders = function () {
@@ -269,7 +270,6 @@
         return this.replace(new RegExp("[" + charlist + "]+$"), "");
     };
 
-    $scope.$watch('blade.entity', blade.autogenerateName, true);
     blade.focusNameInput = false;
     blade.autogenerateName = function () {
         if (!blade.focusNameInput) {

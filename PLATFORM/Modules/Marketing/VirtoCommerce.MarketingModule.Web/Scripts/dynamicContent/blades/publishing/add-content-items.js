@@ -20,10 +20,16 @@
         blade.entity.contentItems.forEach(function (el) {
             marketing_dynamicContents_res_contentItems.get({ id: el.id }, function (data) {
                 var orEl = _.find(blade.parentBlade.originalEntity.contentItems, function (contentItem) { return contentItem.id === el.id });
-                el.path = orEl.path = data.path;
-                el.dynamicProperties = orEl.dynamicProperties = data.dynamicProperties;
-                el.outline = orEl.outline = data.outline;
-                el.objectType = orEl.objectType = data.objectType;
+                if (!angular.isUndefined(orEl)) {
+                    orEl.path = data.path;
+                    orEl.outline = data.outline;
+                    orEl.dynamicProperties = data.dynamicProperties;
+                    orEl.objectType = data.objectType;
+                }
+                el.path = data.path;
+                el.outline = data.outline;
+                el.dynamicProperties = data.dynamicProperties;
+                el.objectType = data.objectType;
             }, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
         });
     }
