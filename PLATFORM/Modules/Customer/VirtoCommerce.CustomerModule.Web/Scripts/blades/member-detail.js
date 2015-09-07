@@ -88,7 +88,7 @@
             function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
         } else {
             var newEntity = {
-                dynamicPropertyValues: [],
+                dynamicProperties: [],
                 addresses: [],
                 phones: [],
                 emails: []
@@ -96,19 +96,23 @@
 
             if (blade.isOrganization) {
                 newEntity.parentId = blade.parentBlade.currentEntity.id;
-                initializeBlade(newEntity);
+                fillDynamicProperties(newEntity, 'VirtoCommerce.Domain.Customer.Model.Organization');
             } else {
                 newEntity.organizations = [];
                 if (blade.parentBlade.currentEntity.id) {
                     newEntity.organizations.push(blade.parentBlade.currentEntity.id);
                 }
-
-                dynamicPropertiesApi.query({ id: 'VirtoCommerce.Domain.Customer.Model.Contact' }, function (results) {
-                    newEntity.dynamicPropertyValues = results;
-                    initializeBlade(newEntity);
-                }, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+                fillDynamicProperties(newEntity, 'VirtoCommerce.Domain.Customer.Model.Contact');
             }
         }
+    }
+
+    function fillDynamicProperties(newEntity, typeName) {
+        dynamicPropertiesApi.query({ id: typeName }, function (results) {
+            _.each(results, function (x) { x.values = []; });
+            newEntity.dynamicProperties = results;
+            initializeBlade(newEntity);
+        }, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
     }
 
     function initializeBlade(data) {
