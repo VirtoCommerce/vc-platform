@@ -73,8 +73,11 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
                     case DynamicPropertyValueType.Integer:
 						result.IntegerValue = propertyValue.Value.ToNullable<Int32>();
                         break;
+                    case DynamicPropertyValueType.ShortText:
+                        result.ShortTextValue = (string)propertyValue.Value;
+                        break;
                     default:
-						result.ShortTextValue = (string)propertyValue.Value;
+						result.LongTextValue = (string)propertyValue.Value;
                         break;
                 }
             }
