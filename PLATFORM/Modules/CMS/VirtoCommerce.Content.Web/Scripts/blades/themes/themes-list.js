@@ -9,7 +9,10 @@
 	blade.initialize = function () {
 		blade.isLoading = true;
 		themes.get({ storeId: blade.storeId }, function (data) {
-			blade.currentEntities = data;
+		    blade.currentEntities = data;
+		    if (data.length > 0) {
+		        blade.choosenTheme = blade.currentEntities[0];
+		    }
 			themesStores.get({ id: blade.storeId }, function (data) {
 				blade.store = data;
 				if (_.find(blade.store.settings, function (setting) { return setting.name === 'DefaultThemeName'; }) !== undefined) {

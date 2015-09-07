@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('virtoCommerce.marketingModule.addPublishingFirstStepController', ['$scope', 'virtoCommerce.marketingModule.dynamicContent.contentPublications', 'platformWebApp.bladeNavigationService', 'virtoCommerce.coreModule.common.dynamicExpressionService', 'virtoCommerce.storeModule.stores', function ($scope, contentPublications, bladeNavigationService, dynamicExpressionService, stores) {
+.controller('virtoCommerce.marketingModule.addPublishingFirstStepController', ['$scope', 'virtoCommerce.marketingModule.dynamicContent.contentPublications', 'platformWebApp.bladeNavigationService', 'virtoCommerce.coreModule.common.dynamicExpressionService', 'virtoCommerce.storeModule.stores', 'platformWebApp.dialogService', function ($scope, contentPublications, bladeNavigationService, dynamicExpressionService, stores, dialogService) {
     $scope.setForm = function (form) {
         $scope.formScope = form;
     }
@@ -35,8 +35,19 @@
 				    {
 				        name: "Delete", icon: 'fa fa-trash',
 				        executeMethod: function () {
-				            bladeNavigationService.closeBlade(blade);
-				            blade.delete();
+				            var dialog = {
+				                id: "confirmDeleteContentItem",
+				                title: "Delete confirmation",
+				                message: "Are you sure want to delete publication?",
+				                callback: function (remove) {
+				                    if (remove) {
+				                        bladeNavigationService.closeBlade(blade);
+				                        blade.delete();
+				                    }
+				                }
+				            };
+
+				            dialogService.showConfirmationDialog(dialog);
 				        },
 				        canExecuteMethod: function () {
 				            return true;
@@ -244,6 +255,49 @@
 
         _.each(expressionElement.children, stripOffUiInformation);
     };
+
+    String.prototype.trimLeft = function (charlist) {
+        if (charlist === undefined)
+            charlist = "\s";
+
+        return this.replace(new RegExp("^[" + charlist + "]+"), "");
+    };
+    String.prototype.trimRight = function (charlist) {
+        if (charlist === undefined)
+            charlist = "\s";
+
+        return this.replace(new RegExp("[" + charlist + "]+$"), "");
+    };
+
+    $scope.$watch('blade.entity', blade.autogenerateName, true);
+    blade.focusNameInput = false;
+    blade.autogenerateName = function () {
+        if (!blade.focusNameInput) {
+            var placeholderPublicationNamePart = '';
+            var contentItemPublicationNamePart = '';
+
+            if (!angular.isUndefined(blade.entity)) {
+                if (!angular.isUndefined(blade.entity.contentPlaces) && blade.entity.contentPlaces.length == 1) {
+                    placeholderPublicationNamePart = blade.entity.contentPlaces[0].name;
+                }
+
+                if (!angular.isUndefined(blade.entity.contentItems) && blade.entity.contentItems.length == 1) {
+                    contentItemPublicationNamePart = blade.entity.contentItems[0].name;
+                }
+            }
+
+            var newName = (placeholderPublicationNamePart + '_' + contentItemPublicationNamePart).trimLeft('_').trimRight('_');
+
+            if (!angular.isUndefined(blade.entity.name) && blade.entity.name !== null && blade.entity.name !== '' && newName !== '_') {
+                if (blade.entity.name.indexOf(placeholderPublicationNamePart) >= 0 || blade.entity.name.indexOf(contentItemPublicationNamePart) >= 0) {
+                    blade.entity.name = newName;
+                }
+            }
+            else if (newName !== '_') {
+                blade.entity.name = newName;
+            }
+        }
+    }
 
     blade.initializeBlade();
 	$scope.stores = stores.query();

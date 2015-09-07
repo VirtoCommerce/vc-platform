@@ -18,7 +18,7 @@ namespace Paypal.ExpressCheckout
 
         #region IModule Members
 
-        public override void Initialize()
+        public override void PostInitialize()
         {
             var settings = _container.Resolve<ISettingsManager>().GetModuleSettings("Paypal.ExpressCheckout");
 

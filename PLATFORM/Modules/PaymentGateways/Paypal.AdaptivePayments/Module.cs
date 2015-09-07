@@ -18,19 +18,19 @@ namespace Paypal.AdaptivePayments
 
         #region IModule Members
 
-        public override void Initialize()
+        public override void PostInitialize()
         {
-			//var settings = _container.Resolve<ISettingsManager>().GetModuleSettings("Paypal.AdaptivePayments");
+            //var settings = _container.Resolve<ISettingsManager>().GetModuleSettings("Paypal.AdaptivePayments");
 
-			//Func<PaypalAdaptivePaymentsPaymentMethod> paypalBankCardsAdaptivePaymentsPaymentMethodFactory = () => new PaypalAdaptivePaymentsPaymentMethod
-			//{
-			//	Name = "Paypal Adaptive Payments",
-			//	Description = "Paypal adaptive payments integration",
-			//	LogoUrl = "http://www.credit-card-logos.com/images/multiple_credit-card-logos-2/credit_card_paypal_logos_2.gif",
-			//	Settings = settings
-			//};
+            //Func<PaypalAdaptivePaymentsPaymentMethod> paypalBankCardsAdaptivePaymentsPaymentMethodFactory = () => new PaypalAdaptivePaymentsPaymentMethod
+            //{
+            //	Name = "Paypal Adaptive Payments",
+            //	Description = "Paypal adaptive payments integration",
+            //	LogoUrl = "http://www.credit-card-logos.com/images/multiple_credit-card-logos-2/credit_card_paypal_logos_2.gif",
+            //	Settings = settings
+            //};
 
-			//_container.Resolve<IPaymentMethodsService>().RegisterPaymentMethod(paypalBankCardsAdaptivePaymentsPaymentMethodFactory);
+            //_container.Resolve<IPaymentMethodsService>().RegisterPaymentMethod(paypalBankCardsAdaptivePaymentsPaymentMethodFactory);
         }
 
         #endregion
