@@ -1,1 +1,3 @@
-﻿{{ banner.Properties.html[0] }}
+﻿{% if banner.Properties.html != null %}
+    {{ banner.Properties.html[0] }}
+{% endif %}

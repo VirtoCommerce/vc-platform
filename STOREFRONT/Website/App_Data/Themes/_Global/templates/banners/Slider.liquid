@@ -1,8 +1,10 @@
 <div class="flexslider">
     <ul class="slides">
         {% for slide in banner.Properties.imageLinks %}
-            {% assign image_src = slide[0] %}
-            <li><img src="{{ image_src }}" /></li>
+            {% if slide[0] != null %}
+                {% assign image_src = slide[0] %}
+                <li><img src="{{ image_src }}" /></li>
+            {% endif %}
         {% endfor %}
     </ul>
 </div>
