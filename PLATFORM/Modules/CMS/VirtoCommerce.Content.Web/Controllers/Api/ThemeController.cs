@@ -142,7 +142,6 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		/// <param name="storeId">Store id</param>
 		[HttpGet]
 		[ResponseType(typeof(Theme[]))]
-		[ClientCache(Duration = 30)]
 		[Route("themes")]
 		public IHttpActionResult GetThemes(string storeId)
 		{

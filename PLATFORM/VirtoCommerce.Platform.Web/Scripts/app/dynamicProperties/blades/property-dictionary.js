@@ -140,12 +140,6 @@
         if (blade.isApiSave) {
             blade.isLoading = true;
 
-            //if (blade.currentEntity.isMultilingual) {
-            //    blade.currentEntity.displayNames = _.filter(blade.currentEntity.displayNames, function (x) { return x.name; });
-            //} else {
-            //    blade.currentEntity.displayNames = undefined;
-            //}
-
             dictionaryItemsApi.save({ id: blade.currentEntity.objectType, propertyId: blade.currentEntity.id },
                 blade.currentEntities,
                 function () {

@@ -70,31 +70,33 @@
     };
 
     $scope.saveChanges = function () {
-        dynamicPropertiesApi.save({ id: blade.objectType }, [blade.currentEntity],
-            function (data) {
-                // save dictionary items for new entity
-                if (blade.isNew) {
+        if (blade.isNew) {
+            dynamicPropertiesApi.save({ id: blade.objectType }, blade.currentEntity,
+                function (data) {
                     blade.onChangesConfirmedFn(data);
+                    // save dictionary items for new entity
                     if (data.isDictionary) {
-                        //if (blade.currentEntity.isMultilingual) {
-                        //    blade.currentEntity.displayNames = _.filter(blade.currentEntity.displayNames, function (x) { return x.name; });
-                        //} else {
-                        //    blade.currentEntity.displayNames = undefined;
-                        //}
-
-                        dictionaryItemsApi.save({ id: blade.currentEntity.objectType, propertyId: data.id },
+                        dictionaryItemsApi.save({ id: blade.objectType, propertyId: data.id },
                             localDictionaryValues,
-                            refresh,
+                            function () {
+                                $scope.bladeClose();
+                                blade.parentBlade.refresh();
+                            },
                             function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+                    } else {
+                        $scope.bladeClose();
+                        blade.parentBlade.refresh();
                     }
-                }
-
-                $scope.bladeClose();
-                blade.parentBlade.refresh();
-            },
-            function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
-
-        // angular.copy(blade.currentEntity, blade.origEntity);
+                },
+                function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+        } else {
+            dynamicPropertiesApi.update({ id: blade.objectType, propertyId: blade.currentEntity.id }, blade.currentEntity,
+                function () {
+                    blade.refresh();
+                    blade.parentBlade.refresh();
+                },
+                function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+        }
     };
 
     function deleteEntry() {
