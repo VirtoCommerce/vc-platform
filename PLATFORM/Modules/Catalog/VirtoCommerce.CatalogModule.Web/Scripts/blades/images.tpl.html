@@ -24,6 +24,10 @@
                         <i class="btn-ico fa fa-image"></i>
                     </button>
                 </div>
+
+                <div class="form-input">
+                    <input ng-paste="addImageFromUrl()" ng-model="blade.newExternalImageUrl" type="url" placeholder='Paste image URL here' tabindex="-1">
+                </div>
             </form>
             
             <div ng-show="uploader.isUploading">

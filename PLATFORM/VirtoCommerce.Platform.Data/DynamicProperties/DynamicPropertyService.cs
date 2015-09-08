@@ -68,12 +68,12 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
                 var targetProperties = repository.GetDynamicPropertiesByIds(properties.Select(x => x.Id).ToArray()).ToList();
                 sourceProperties.CompareTo(targetProperties, EqualityComparer<DynamicPropertyEntity>.Default, (state, source, target) =>
                     {
-                        if (state == Core.Common.EntryState.Modified)
+                        if (state == EntryState.Modified)
                         {
                             changeTracker.Attach(target);
                             source.Patch(target);
                         }
-                        else if (state == Core.Common.EntryState.Added)
+                        else if (state == EntryState.Added)
                         {
                             repository.Add(source);
                         }
@@ -114,15 +114,12 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
             if (propertyId == null)
                 throw new ArgumentNullException("propertyId");
 
-            DynamicPropertyDictionaryItem[] result = null;
-
             using (var repository = _repositoryFactory())
             {
                 var items = repository.GetDynamicPropertyDictionaryItems(propertyId);
-                result = items.OrderBy(i => i.Name).Select(i => i.ToModel()).ToArray();
+                var result = items.OrderBy(i => i.Name).Select(i => i.ToModel()).ToArray();
+                return result;
             }
-
-            return result.ToArray();
         }
 
         public void SaveDictionaryItems(string propertyId, DynamicPropertyDictionaryItem[] items)
@@ -135,18 +132,18 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
             using (var repository = _repositoryFactory())
             using (var changeTracker = GetChangeTracker(repository))
             {
-                var property = repository.GetDynamicPropertiesByIds(new string[] { propertyId }).First();
+                var property = repository.GetDynamicPropertiesByIds(new[] { propertyId }).First();
                 var sourceDicItems = items.Select(x => x.ToEntity(property)).ToList();
                 var targetDicItems = repository.GetDynamicPropertyDictionaryItems(propertyId).ToList();
 
                 sourceDicItems.CompareTo(targetDicItems, EqualityComparer<DynamicPropertyDictionaryItemEntity>.Default, (state, source, target) =>
                 {
-                    if (state == Core.Common.EntryState.Modified)
+                    if (state == EntryState.Modified)
                     {
                         changeTracker.Attach(target);
                         source.Patch(target);
                     }
-                    else if (state == Core.Common.EntryState.Added)
+                    else if (state == EntryState.Added)
                     {
                         repository.Add(source);
                     }
@@ -213,8 +210,6 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
                 {
                     if (objectWithDynamicProperties.Id != null)
                     {
-                        var result = new List<DynamicPropertyObjectValue>();
-
                         if (objectWithDynamicProperties.DynamicProperties != null && objectsWithDynamicProperties.Any())
                         {
                             var objectType = GetObjectTypeName(objectWithDynamicProperties);
@@ -227,6 +222,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
                             source.Properties.Patch(target.Properties, (sourcePopValue, targetPropValue) => sourcePopValue.Patch(targetPropValue));
                         }
                     }
+
                     repository.UnitOfWork.Commit();
                 }
             }

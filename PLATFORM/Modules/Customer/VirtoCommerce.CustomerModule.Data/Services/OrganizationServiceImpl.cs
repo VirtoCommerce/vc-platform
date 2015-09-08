@@ -1,17 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VirtoCommerce.Platform.Core.DynamicProperties;
-using foundationModel = VirtoCommerce.CustomerModule.Data.Model;
-using coreModel = VirtoCommerce.Domain.Customer.Model;
-using VirtoCommerce.Domain.Store.Services;
-using VirtoCommerce.Domain.Customer.Services;
-using VirtoCommerce.CustomerModule.Data.Repositories;
 using VirtoCommerce.CustomerModule.Data.Converters;
-using System.Data.Entity;
+using VirtoCommerce.CustomerModule.Data.Repositories;
+using VirtoCommerce.Domain.Customer.Services;
+using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Data.Infrastructure;
+using coreModel = VirtoCommerce.Domain.Customer.Model;
 
 namespace VirtoCommerce.CustomerModule.Data.Services
 {
@@ -57,6 +52,7 @@ namespace VirtoCommerce.CustomerModule.Data.Services
                 CommitChanges(repository);
             }
 
+            organization.SetObjectId(entity.Id);
             _dynamicPropertyService.SaveDynamicPropertyValues(organization);
 
             var retVal = GetById(entity.Id);
@@ -66,7 +62,7 @@ namespace VirtoCommerce.CustomerModule.Data.Services
         public void Update(coreModel.Organization[] organizations)
         {
             using (var repository = _repositoryFactory())
-            using (var changeTracker = base.GetChangeTracker(repository))
+            using (var changeTracker = GetChangeTracker(repository))
             {
                 foreach (var organization in organizations)
                 {
@@ -106,12 +102,14 @@ namespace VirtoCommerce.CustomerModule.Data.Services
 
         public IEnumerable<coreModel.Organization> List()
         {
-            var retVal = new List<coreModel.Organization>();
             using (var repository = _repositoryFactory())
             {
-                retVal = repository.Organizations.ToArray().Select(x => x.ToCoreModel()).ToList();
+                var retVal = repository.Organizations
+                    .ToList()
+                    .Select(x => x.ToCoreModel())
+                    .ToList();
+                return retVal;
             }
-            return retVal;
         }
 
         #endregion

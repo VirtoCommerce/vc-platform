@@ -4206,6 +4206,8 @@ button.btn
             display: block;
             font-size: 14px;
             font-weight: 500;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .__items .list-descr
@@ -6998,7 +7000,6 @@ input.ui-grid-filter-input[type="text"]
             color: #4c4c4c;
             font-size: 12px;
             font-weight: 500;
-            margin: 0 0 5px;
             word-spacing: 0;
         }
 
@@ -7026,7 +7027,6 @@ input.ui-grid-filter-input[type="text"]
         {
             color: #dee9f0;
             font-size: 24px;
-            margin: 0 0 5px;
         }
 
         .gridster .gallery-ico,

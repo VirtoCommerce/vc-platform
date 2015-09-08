@@ -11,18 +11,15 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
 {
     public static class DynamicPropertyConverter
     {
-        private static readonly object[] _emptyValues = new object[0];
-
-		public static DynamicObjectProperty ToDynamicObjectProperty(this DynamicPropertyEntity entity, string objectId)
+        public static DynamicObjectProperty ToDynamicObjectProperty(this DynamicPropertyEntity entity, string objectId)
         {
-			var retVal = new DynamicObjectProperty();
-			var property = entity.ToModel();
-			retVal.InjectFrom(entity);
-			retVal.ObjectId = objectId;
-			retVal.ValueType = EnumUtility.SafeParse(entity.ValueType, DynamicPropertyValueType.Undefined);
-			retVal.DisplayNames = entity.DisplayNames.Select(x => x.ToModel()).ToArray();
-			retVal.Values = entity.ObjectValues.Select(x => x.ToModel()).ToArray();
-			return retVal;
+            var retVal = new DynamicObjectProperty();
+            retVal.InjectFrom(entity);
+            retVal.ObjectId = objectId;
+            retVal.ValueType = EnumUtility.SafeParse(entity.ValueType, DynamicPropertyValueType.Undefined);
+            retVal.DisplayNames = entity.DisplayNames.Select(x => x.ToModel()).ToArray();
+            retVal.Values = entity.ObjectValues.Select(x => x.ToModel()).ToArray();
+            return retVal;
         }
 
         public static DynamicProperty ToModel(this DynamicPropertyEntity entity)
@@ -54,16 +51,17 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
             return result;
         }
 
-		public static DynamicPropertyEntity ToEntity(this DynamicObjectProperty model, string objectId)
-		{
-			if (model == null)
-				throw new ArgumentNullException("model");
+        public static DynamicPropertyEntity ToEntity(this DynamicObjectProperty model, string objectId)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
 
-			var result = ((DynamicProperty)model).ToEntity();
-			result.ObjectValues = new ObservableCollection<DynamicPropertyObjectValueEntity>(model.Values.Select(x => x.ToEntity(model, objectId)));
-		
-			return result;
-		}
+            var result = model.ToEntity();
+            result.DisplayNames = new NullCollection<DynamicPropertyNameEntity>();
+            result.ObjectValues = new ObservableCollection<DynamicPropertyObjectValueEntity>(model.Values.Select(x => x.ToEntity(model, objectId)));
+
+            return result;
+        }
 
         public static void Patch(this DynamicPropertyEntity source, DynamicPropertyEntity target)
         {
@@ -79,10 +77,10 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
                 source.DisplayNames.Patch(target.DisplayNames, comparer, (sourceItem, targetItem) => { });
             }
 
-			if(!source.ObjectValues.IsNullCollection())
-			{
-				source.ObjectValues.Patch(target.ObjectValues, new DynamicPropertyObjectValueComparer(), (sourceValue, targetValue) => sourceValue.Patch(targetValue));
-			}
+            if (!source.ObjectValues.IsNullCollection())
+            {
+                source.ObjectValues.Patch(target.ObjectValues, new DynamicPropertyObjectValueComparer(), (sourceValue, targetValue) => sourceValue.Patch(targetValue));
+            }
         }
     }
 }

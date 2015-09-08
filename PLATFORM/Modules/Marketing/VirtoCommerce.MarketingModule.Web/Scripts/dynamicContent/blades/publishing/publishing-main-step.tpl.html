@@ -13,13 +13,13 @@
                     <div class="form-group">
                         <label class="form-label">Name</label>
                         <div class="form-input">
-                            <input focus-on="" required class="form-control" ng-model="blade.entity.name" placeholder="Enter publishing name" />
+                            <input focus-on="" ng-focus="blade.focusNameInput = true;" ng-blur="blade.focusNameInput = false; blade.autogenerateName();" required class="form-control" ng-model="blade.entity.name" placeholder="Enter publishing name" />
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Description</label>
                         <div class="form-input">
-                            <textarea required cols="60" rows="30" ng-model="blade.entity.description" placeholder="Enter publishing description"></textarea>
+                            <textarea cols="60" rows="30" ng-model="blade.entity.description" placeholder="Enter publishing description"></textarea>
                         </div>
                     </div>
 

@@ -18,19 +18,19 @@ namespace Paypal.DirectPayments
 
         #region IModule Members
 
-        public override void Initialize()
+        public override void PostInitialize()
         {
-			//var settings = _container.Resolve<ISettingsManager>().GetModuleSettings("Paypal.DirectPayments");
+            //var settings = _container.Resolve<ISettingsManager>().GetModuleSettings("Paypal.DirectPayments");
 
-			//Func<PaypalDirectPaymentsPaymentMethod> paypalBankCardsExpressCheckoutPaymentMethodFactory = () => new PaypalDirectPaymentsPaymentMethod
-			//{
-			//	Name = "Credit Card",
-			//	Description = "Paypal direct payment integration",
-			//	LogoUrl = "http://www.credit-card-logos.com/images/multiple_credit-card-logos-2/credit_card_paypal_logos_2.gif",
-			//	Settings = settings
-			//};
+            //Func<PaypalDirectPaymentsPaymentMethod> paypalBankCardsExpressCheckoutPaymentMethodFactory = () => new PaypalDirectPaymentsPaymentMethod
+            //{
+            //	Name = "Credit Card",
+            //	Description = "Paypal direct payment integration",
+            //	LogoUrl = "http://www.credit-card-logos.com/images/multiple_credit-card-logos-2/credit_card_paypal_logos_2.gif",
+            //	Settings = settings
+            //};
 
-			//_container.Resolve<IPaymentMethodsService>().RegisterPaymentMethod(paypalBankCardsExpressCheckoutPaymentMethodFactory);
+            //_container.Resolve<IPaymentMethodsService>().RegisterPaymentMethod(paypalBankCardsExpressCheckoutPaymentMethodFactory);
         }
 
         #endregion
