@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.newProductWizardImagesController', ['$scope', '$filter', 'FileUploader', function ($scope, $filter, FileUploader) {
+.controller('virtoCommerce.catalogModule.newProductWizardImagesController', ['$scope', '$filter', '$timeout', 'FileUploader', function ($scope, $filter, $timeout, FileUploader) {
     var blade = $scope.blade;
 
     blade.currentEntity = angular.copy(blade.item);
@@ -7,6 +7,19 @@
         blade.currentEntity.images = [];
     }
     blade.isLoading = false;
+
+    $scope.addImageFromUrl = function () {
+        $timeout(function () {
+            if (blade.newExternalImageUrl) {
+                blade.currentEntity.images.push({
+                    name: blade.newExternalImageUrl.substr(blade.newExternalImageUrl.lastIndexOf("/") + 1),
+                    url: blade.newExternalImageUrl,
+                    group: 'images'
+                });
+                blade.newExternalImageUrl = undefined;
+            }
+        }, 20);
+    };
 
     $scope.saveChanges = function () {
         blade.parentBlade.item.images = blade.currentEntity.images;
