@@ -6959,8 +6959,7 @@ input.ui-grid-filter-input[type="text"]
         {
             display: inline-block;
             height: auto;
-            line-height: 1.4;
-            margin: -24px 0 0;
+            margin: -4px 0 0;
             padding: 0;
             vertical-align: middle;
             word-spacing: 0;
