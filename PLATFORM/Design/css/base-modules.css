@@ -6928,7 +6928,6 @@ input.ui-grid-filter-input[type="text"]
     .gridster [ng-model="widget"]
     {
         height: 100%;
-        line-height: 1.4;
         width: 100%;
     }
 
@@ -6959,7 +6958,8 @@ input.ui-grid-filter-input[type="text"]
         {
             display: inline-block;
             height: auto;
-            margin: -4px 0 0;
+            line-height: 1.4;
+            margin: -24px 0 0;
             padding: 0;
             vertical-align: middle;
             word-spacing: 0;
@@ -7000,7 +7000,6 @@ input.ui-grid-filter-input[type="text"]
             color: #4c4c4c;
             font-size: 12px;
             font-weight: 500;
-            margin: 0 0 5px;
             word-spacing: 0;
         }
 
@@ -7028,7 +7027,6 @@ input.ui-grid-filter-input[type="text"]
         {
             color: #dee9f0;
             font-size: 24px;
-            margin: 0 0 5px;
         }
 
         .gridster .gallery-ico,
