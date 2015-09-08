@@ -109,7 +109,10 @@
 
     function fillDynamicProperties(newEntity, typeName) {
         dynamicPropertiesApi.query({ id: typeName }, function (results) {
-            _.each(results, function (x) { x.values = []; });
+            _.each(results, function (x) {
+                x.displayNames = undefined;
+                x.values = [];
+            });
             newEntity.dynamicProperties = results;
             initializeBlade(newEntity);
         }, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
