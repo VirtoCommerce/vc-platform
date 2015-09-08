@@ -4206,6 +4206,8 @@ button.btn
             display: block;
             font-size: 14px;
             font-weight: 500;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .__items .list-descr
@@ -6926,6 +6928,7 @@ input.ui-grid-filter-input[type="text"]
     .gridster [ng-model="widget"]
     {
         height: 100%;
+        line-height: 1.4;
         width: 100%;
     }
 
