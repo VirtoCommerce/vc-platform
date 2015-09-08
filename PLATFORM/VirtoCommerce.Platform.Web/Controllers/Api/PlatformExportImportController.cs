@@ -184,6 +184,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 pushNotification.Description = "Start downloading from " + url.ToString();
                 _pushNotifier.Upsert(pushNotification);
+
+                if (!Directory.Exists(tmpPath))
+                {
+                    Directory.CreateDirectory(tmpPath);
+                }
+
                 var fileName = System.IO.Path.GetFileName(url.ToString());
                 var tmpFilePath = Path.Combine(tmpPath, System.IO.Path.GetFileName(url.ToString()));
                 using (var client = new WebClient())
