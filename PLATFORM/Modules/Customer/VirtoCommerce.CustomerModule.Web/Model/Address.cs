@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using VirtoCommerce.Domain.Customer.Model;
+using VirtoCommerce.Domain.Commerce.Model;
 
 namespace VirtoCommerce.CustomerModule.Web.Model
 {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VirtoCommerce.Domain.Cart.Model
+namespace VirtoCommerce.Domain.Commerce.Model
 {
 	[Flags]
 	public enum AddressType

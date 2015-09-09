@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Linq;
-using System.Collections.Generic;
 using System.Web.Http.Results;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VirtoCommerce.CartModule.Data.Repositories;
 using VirtoCommerce.CartModule.Data.Services;
-using VirtoCommerce.Domain.Cart.Model;
-using VirtoCommerce.Domain.Cart.Services;
-using coreModel = VirtoCommerce.Domain.Cart.Model;
 using dataModel = VirtoCommerce.CartModule.Data.Model;
 using webModel = VirtoCommerce.CartModule.Web.Model;
+using VirtoCommerce.Domain.Commerce.Model;
 
 namespace VirtoCommerce.CartModule.Test
 {

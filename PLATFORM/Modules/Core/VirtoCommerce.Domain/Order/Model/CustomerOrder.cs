@@ -14,7 +14,7 @@ namespace VirtoCommerce.Domain.Order.Model
 		public string OrganizationId { get; set; }
 		public string OrganizationName { get; set; }
 		public string EmployeeId { get; set; }
-		public string EmployeeeName { get; set; }
+		public string EmployeeName { get; set; }
 
 		public ICollection<Address> Addresses { get; set; }
 		public ICollection<PaymentIn> InPayments { get; set; }

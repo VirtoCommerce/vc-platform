@@ -6,7 +6,7 @@ using AvaTaxCalcREST;
 using VirtoCommerce.Domain.Customer.Model;
 using VirtoCommerce.Platform.Core.DynamicProperties;
 using Address = AvaTaxCalcREST.Address;
-using AddressType = VirtoCommerce.Domain.Order.Model.AddressType;
+using AddressType = VirtoCommerce.Domain.Commerce.Model.AddressType;
 
 namespace AvaTax.TaxModule.Web.Converters
 {
