@@ -1,7 +1,7 @@
 ﻿'use strict';
 
 angular.module('platformWebApp')
-    .directive('vaAutofill', function ($timeout) {
+    .directive('vaAutofill', ['$timeout', function ($timeout) {
         return {
             require: 'ngModel',
             link: function (scope, elem, attrs, ngModel) {
@@ -14,5 +14,5 @@ angular.module('platformWebApp')
                 }, 500);
             }
         }
-    })
+    }])
 ;
