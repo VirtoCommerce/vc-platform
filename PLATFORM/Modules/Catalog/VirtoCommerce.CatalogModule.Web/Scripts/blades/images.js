@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.imagesController', ['$scope', '$filter', '$timeout', 'FileUploader', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'platformWebApp.authService', function ($scope, $filter, $timeout, FileUploader, dialogService, bladeNavigationService, authService) {
+.controller('virtoCommerce.catalogModule.imagesController', ['$scope', '$filter', 'FileUploader', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'platformWebApp.authService', function ($scope, $filter, FileUploader, dialogService, bladeNavigationService, authService) {
     var blade = $scope.blade;
 
     blade.refresh = function (parentRefresh) {
@@ -23,16 +23,14 @@
     };
 
     $scope.addImageFromUrl = function () {
-        $timeout(function () {
-            if (blade.newExternalImageUrl) {
-                blade.currentEntity.images.push({
-                    name: blade.newExternalImageUrl.substr(blade.newExternalImageUrl.lastIndexOf("/") + 1),
-                    url: blade.newExternalImageUrl,
-                    group: 'images'
-                });
-                blade.newExternalImageUrl = undefined;
-            }
-        }, 20);
+        if (blade.newExternalImageUrl) {
+            blade.currentEntity.images.push({
+                name: blade.newExternalImageUrl.substr(blade.newExternalImageUrl.lastIndexOf("/") + 1),
+                url: blade.newExternalImageUrl,
+                group: 'images'
+            });
+            blade.newExternalImageUrl = undefined;
+        }
     };
 
     blade.onClose = function (closeCallback) {
