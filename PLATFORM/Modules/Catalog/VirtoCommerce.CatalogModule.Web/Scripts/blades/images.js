@@ -22,6 +22,17 @@
         angular.copy($scope.origItem, blade.currentEntity);
     };
 
+    $scope.addImageFromUrl = function () {
+        if (blade.newExternalImageUrl) {
+            blade.currentEntity.images.push({
+                name: blade.newExternalImageUrl.substr(blade.newExternalImageUrl.lastIndexOf("/") + 1),
+                url: blade.newExternalImageUrl,
+                group: 'images'
+            });
+            blade.newExternalImageUrl = undefined;
+        }
+    };
+
     blade.onClose = function (closeCallback) {
         if ($scope.isDirty() && authService.checkPermission(blade.permission)) {
             var dialog = {

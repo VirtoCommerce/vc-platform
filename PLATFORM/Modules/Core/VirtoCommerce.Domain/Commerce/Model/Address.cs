@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Platform.Core.Common;
 
-namespace VirtoCommerce.Domain.Customer.Model
+namespace VirtoCommerce.Domain.Commerce.Model
 {
-	public class Address : ValueObject<Address>
+   public class Address : ValueObject<Address>
 	{
 		public AddressType AddressType { get; set; }
 		public string Name { get; set; }

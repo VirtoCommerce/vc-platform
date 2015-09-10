@@ -8,6 +8,17 @@
     }
     blade.isLoading = false;
 
+    $scope.addImageFromUrl = function () {
+        if (blade.newExternalImageUrl) {
+            blade.currentEntity.images.push({
+                name: blade.newExternalImageUrl.substr(blade.newExternalImageUrl.lastIndexOf("/") + 1),
+                url: blade.newExternalImageUrl,
+                group: 'images'
+            });
+            blade.newExternalImageUrl = undefined;
+        }
+    };
+
     $scope.saveChanges = function () {
         blade.parentBlade.item.images = blade.currentEntity.images;
         $scope.bladeClose();

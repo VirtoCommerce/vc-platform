@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Converters;
 using VirtoCommerce.Domain.Cart.Model;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Domain.Commerce.Model;
 
 namespace VirtoCommerce.CartModule.Web.Model
 {

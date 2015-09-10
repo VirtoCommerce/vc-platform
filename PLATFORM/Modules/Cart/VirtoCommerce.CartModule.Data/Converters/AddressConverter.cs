@@ -7,6 +7,7 @@ using VirtoCommerce.CartModule.Data.Model;
 using VirtoCommerce.Domain.Cart.Model;
 using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Data.Common.ConventionInjections;
+using VirtoCommerce.Domain.Commerce.Model;
 
 namespace VirtoCommerce.CartModule.Data.Converters
 {

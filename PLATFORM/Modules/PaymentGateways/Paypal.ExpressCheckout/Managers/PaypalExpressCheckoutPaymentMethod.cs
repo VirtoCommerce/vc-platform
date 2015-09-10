@@ -349,7 +349,7 @@ namespace Paypal.ExpressCheckout.Managers
 				ecDetails.LandingPage = LandingPageType.LOGIN;
 			}
 
-			var billingAddress = order.Addresses.FirstOrDefault(s => s.AddressType == VirtoCommerce.Domain.Order.Model.AddressType.Billing);
+			var billingAddress = order.Addresses.FirstOrDefault(s => s.AddressType == VirtoCommerce.Domain.Commerce.Model.AddressType.Billing);
 
 			if (billingAddress != null)
 				ecDetails.BuyerEmail = billingAddress.Email;
