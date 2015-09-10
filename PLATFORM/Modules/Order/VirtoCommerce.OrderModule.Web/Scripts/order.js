@@ -44,41 +44,41 @@ angular.module(moduleName, ['virtoCommerce.catalogModule', 'virtoCommerce.pricin
 
       //Register widgets
       var operationItemsWidget = {
-      	controller: 'virtoCommerce.orderModule.customerOrderItemsWidgetController',
-          template: 'Modules/$(VirtoCommerce.Orders)/Scripts/widgets/customerOrder-items-widget.tpl.html',
+          controller: 'virtoCommerce.orderModule.customerOrderItemsWidgetController',
+          template: 'Modules/$(VirtoCommerce.Orders)/Scripts/widgets/customerOrder-items-widget.tpl.html'
       };
       widgetService.registerWidget(operationItemsWidget, 'customerOrderDetailWidgets');
 
       var shipmentItemsWidget = {
-      	controller: 'virtoCommerce.orderModule.shipmentItemsWidgetController',
-      	template: 'Modules/$(VirtoCommerce.Orders)/Scripts/widgets/shipment-items-widget.tpl.html',
+          controller: 'virtoCommerce.orderModule.shipmentItemsWidgetController',
+          template: 'Modules/$(VirtoCommerce.Orders)/Scripts/widgets/shipment-items-widget.tpl.html'
       };
       widgetService.registerWidget(shipmentItemsWidget, 'shipmentDetailWidgets');
 
 
       var customerOrderAddressWidget = {
           controller: 'virtoCommerce.orderModule.customerOrderAddressWidgetController',
-          template: 'Modules/$(VirtoCommerce.Orders)/Scripts/widgets/customerOrder-address-widget.tpl.html',
+          template: 'Modules/$(VirtoCommerce.Orders)/Scripts/widgets/customerOrder-address-widget.tpl.html'
       };
       widgetService.registerWidget(customerOrderAddressWidget, 'customerOrderDetailWidgets');
 
       var customerOrderTotalsWidget = {
           controller: 'virtoCommerce.orderModule.customerOrderTotalsWidgetController',
           size: [2, 1],
-          template: 'Modules/$(VirtoCommerce.Orders)/Scripts/widgets/customerOrder-totals-widget.tpl.html',
+          template: 'Modules/$(VirtoCommerce.Orders)/Scripts/widgets/customerOrder-totals-widget.tpl.html'
       };
       widgetService.registerWidget(customerOrderTotalsWidget, 'customerOrderDetailWidgets');
 
 
       var operationCommentWidget = {
           controller: 'virtoCommerce.orderModule.operationCommentWidgetController',
-          template: 'Modules/$(VirtoCommerce.Orders)/Scripts/widgets/operation-comment-widget.tpl.html',
+          template: 'Modules/$(VirtoCommerce.Orders)/Scripts/widgets/operation-comment-widget.tpl.html'
       };
       widgetService.registerWidget(operationCommentWidget, 'customerOrderDetailWidgets');
 
       var shipmentAddressWidget = {
           controller: 'virtoCommerce.orderModule.shipmentAddressWidgetController',
-          template: 'Modules/$(VirtoCommerce.Orders)/Scripts/widgets/shipment-address-widget.tpl.html',
+          template: 'Modules/$(VirtoCommerce.Orders)/Scripts/widgets/shipment-address-widget.tpl.html'
       };
       widgetService.registerWidget(shipmentAddressWidget, 'shipmentDetailWidgets');
 
@@ -86,13 +86,13 @@ angular.module(moduleName, ['virtoCommerce.catalogModule', 'virtoCommerce.pricin
       var shipmentTotalWidget = {
           controller: 'virtoCommerce.orderModule.shipmentTotalsWidgetController',
           size: [2, 1],
-          template: 'Modules/$(VirtoCommerce.Orders)/Scripts/widgets/shipment-totals-widget.tpl.html',
+          template: 'Modules/$(VirtoCommerce.Orders)/Scripts/widgets/shipment-totals-widget.tpl.html'
       };
       widgetService.registerWidget(shipmentTotalWidget, 'shipmentDetailWidgets');
 
       var dynamicPropertyWidget = {
-      	controller: 'platformWebApp.dynamicPropertyWidgetController',
-      	template: '$(Platform)/Scripts/app/dynamicProperties/widgets/dynamicPropertyWidget.tpl.html',
+          controller: 'platformWebApp.dynamicPropertyWidgetController',
+          template: '$(Platform)/Scripts/app/dynamicProperties/widgets/dynamicPropertyWidget.tpl.html'
       };
       widgetService.registerWidget(dynamicPropertyWidget, 'shipmentDetailWidgets');
       widgetService.registerWidget(dynamicPropertyWidget, 'customerOrderDetailWidgets');
@@ -103,7 +103,7 @@ angular.module(moduleName, ['virtoCommerce.catalogModule', 'virtoCommerce.pricin
       var operationsTreeWidget = {
           controller: 'virtoCommerce.orderModule.operationTreeWidgetController',
           size: [4, 4],
-          template: 'Modules/$(VirtoCommerce.Orders)/Scripts/widgets/operation-tree-widget.tpl.html',
+          template: 'Modules/$(VirtoCommerce.Orders)/Scripts/widgets/operation-tree-widget.tpl.html'
       };
       widgetService.registerWidget(operationsTreeWidget, 'customerOrderDetailWidgets');
       widgetService.registerWidget(operationsTreeWidget, 'shipmentDetailWidgets');
@@ -114,42 +114,42 @@ angular.module(moduleName, ['virtoCommerce.catalogModule', 'virtoCommerce.pricin
       widgetService.registerWidget({
           controller: statisticsController,
           size: [2, 1],
-          template: 'order-statistics-revenue.html',
+          template: 'order-statistics-revenue.html'
       }, 'mainDashboard');
       widgetService.registerWidget({
           controller: statisticsController,
           size: [2, 1],
-          template: 'order-statistics-customersCount.html',
+          template: 'order-statistics-customersCount.html'
       }, 'mainDashboard');
       widgetService.registerWidget({
           controller: statisticsController,
           size: [2, 1],
-          template: 'order-statistics-revenuePerCustomer.html',
+          template: 'order-statistics-revenuePerCustomer.html'
       }, 'mainDashboard');
       widgetService.registerWidget({
           controller: statisticsController,
           size: [2, 1],
-          template: 'order-statistics-orderValue.html',
+          template: 'order-statistics-orderValue.html'
       }, 'mainDashboard');
       widgetService.registerWidget({
           controller: statisticsController,
           size: [2, 1],
-          template: 'order-statistics-itemsPurchased.html',
+          template: 'order-statistics-itemsPurchased.html'
       }, 'mainDashboard');
       widgetService.registerWidget({
           controller: statisticsController,
           size: [2, 1],
-          template: 'order-statistics-lineitemsPerOrder.html',
+          template: 'order-statistics-lineitemsPerOrder.html'
       }, 'mainDashboard');
       widgetService.registerWidget({
           controller: statisticsController,
           size: [3, 2],
-          template: 'order-statistics-revenueByQuarter.html',
+          template: 'order-statistics-revenueByQuarter.html'
       }, 'mainDashboard');
       widgetService.registerWidget({
           controller: statisticsController,
           size: [3, 2],
-          template: 'order-statistics-orderValueByQuarter.html',
+          template: 'order-statistics-orderValueByQuarter.html'
       }, 'mainDashboard');
 
       $http.get('Modules/$(VirtoCommerce.Orders)/Scripts/widgets/dashboard/statistics-templates.html').then(function (response) {
@@ -165,56 +165,72 @@ angular.module(moduleName, ['virtoCommerce.catalogModule', 'virtoCommerce.pricin
 
               customerOrders.getDashboardStatistics({ start: startDate, end: now }, function (data) {
                   // prepare statistics
-                  var statisticsToChartRows = function (statsList) {
-                      return _.map(statsList, function (stats) {
+                  var statisticsToChartRows = function (statsList, allCurrencies) {
+                      var groupedQuarters = _.groupBy(statsList, function (stats) { return stats.year + ' Q' + stats.quarter; });
+                      return _.map(groupedQuarters, function (stats, key) {
+                          var values = [{ v: key }];
+                          _.each(allCurrencies, function (x) {
+                              var stat = _.findWhere(stats, { currency: x });
+                              values.push({ v: stat ? stat.amount : 0 });
+                          });
                           return {
-                              c: [{ v: stats.year + ' Q' + stats.quarter },
-                                  { v: stats.amount }]
+                              c: values
                           };
                       });
                   }
 
+                  var allCurrencies = _.unique(_.pluck(data.avgOrderValuePeriodDetails, 'currency').sort());
+
+                  var cols = [{ id: "quarter", label: "Quarter", type: "string" }];
+                  _.each(allCurrencies, function (x) {
+                      cols.push({ id: "revenue" + x, label: x, type: "number" });
+                  });
+
                   data.chartRevenueByQuarter = {
                       "type": "LineChart",
                       "data": {
-                          "cols": [
-                              { id: "quarter", label: "Quarter", type: "string" },
-                              { id: "revenue", label: "Revenue", type: "number" }
-                          ],
-                          rows: statisticsToChartRows(data.revenuePeriodDetails)
+                          cols: cols,
+                          rows: statisticsToChartRows(data.revenuePeriodDetails, allCurrencies)
                       },
                       "options": {
                           "title": "Revenue by quarter",
                           "legend": { position: 'top' },
                           "vAxis": {
                               // "title": "Sales unit",
-                              "gridlines": { "count": 8 }
+                              gridlines: { count: 8 }
                           },
                           "hAxis": {
                               // "title": "Date"
+                              slantedText: true,
+                              slantedTextAngle: 20
                           }
                       },
-                      "formatters": {},
+                      "formatters": {}
                   };
+
+                  cols = [{ id: "quarter", label: "Quarter", type: "string" }];
+                  _.each(allCurrencies, function (x) {
+                      cols.push({ id: "avg-orderValue" + x, label: x, type: "number" });
+                  });
 
                   data.chartOrderValueByQuarter = {
                       "type": "ColumnChart",
                       "data": {
-                          "cols": [
-                              { id: "quarter", label: "Quarter", type: "string" },
-                              { id: "avg-orderValue", label: "Average Order value", type: "number" }
-                          ],
-                          rows: statisticsToChartRows(data.avgOrderValuePeriodDetails)
+                          cols: cols,
+                          rows: statisticsToChartRows(data.avgOrderValuePeriodDetails, allCurrencies)
                       },
                       "options": {
                           "title": "Average Order value by quarter",
                           "legend": { position: 'top' },
                           "vAxis": {
-                              "gridlines": { "count": 8 }
+                              gridlines: { count: 8 }
                           },
-                          "hAxis": {}
+                          "hAxis": {
+                              slantedText: true,
+                              slantedTextAngle: 20
+                          }
                       },
-                      "formatters": {},
+                      "formatters": {}
                   };
 
                   $localStorage.ordersDashboardStatistics = data;
