@@ -3933,6 +3933,12 @@ button.btn
     width: 510px;
 }
 
+.tile.quadro.wide.mini
+{
+    height: 120px;
+    width: 510px;
+}
+
 .tile .tile-count
 {
     color: #999;
