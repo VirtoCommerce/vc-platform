@@ -216,8 +216,10 @@
     <Compile Include="Quote\Model\QuoteRequest.cs" />
     <Compile Include="Quote\Model\QuoteRequestSearchCriteria.cs" />
     <Compile Include="Quote\Model\QuoteRequestSearchResult.cs" />
+    <Compile Include="Quote\Model\ShipmentMethod.cs" />
     <Compile Include="Quote\Model\TierPrice.cs" />
     <Compile Include="Quote\Services\IQuoteRequestService.cs" />
+    <Compile Include="Quote\Services\IQuoteTotalsCalculator.cs" />
     <Compile Include="Search\Filters\AttributeFilter.cs" />
     <Compile Include="Search\Filters\Filters.cs">
       <DependentUpon>Filters.xsd</DependentUpon>
