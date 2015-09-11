@@ -4407,6 +4407,12 @@ button.btn
     padding: 0 10px;
 }
 
+.md-editor .btn-toolbar .btn-group .btn.hidden
+{
+    display: none !important;
+    visibility: hidden !important;
+}
+
 .md-editor .btn-toolbar .btn-group .btn + .btn
 {
     border-left: 1px solid rgba(255,255,255,.35);
