@@ -1,6 +1,4 @@
-angular.module('app', []);
-
-angular.module('app').directive('vaTabs', function () {
+angular.module('platformWebApp').directive('vaTabs', function () {
     return {
         restrict: 'A',
         link: function (scope, element, attrs) {
