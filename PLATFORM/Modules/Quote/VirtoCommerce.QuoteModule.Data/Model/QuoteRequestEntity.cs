@@ -11,7 +11,12 @@ namespace VirtoCommerce.QuoteModule.Data.Model
 {
 	public class QuoteRequestEntity : AuditableEntity
 	{
-
+        public QuoteRequestEntity()
+        {
+            Addresses = new NullCollection<AddressEntity>();
+            Items = new NullCollection<QuoteItemEntity>();
+            Attachments = new NullCollection<AttachmentEntity>();
+        }
 		[Required]
 		[StringLength(64)]
 		public string Number { get; set; }

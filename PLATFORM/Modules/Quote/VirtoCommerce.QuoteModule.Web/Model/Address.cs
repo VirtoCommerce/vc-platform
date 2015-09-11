@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VirtoCommerce.Platform.Core.Common;
+using System.Web;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using VirtoCommerce.Domain.Commerce.Model;
 
-namespace VirtoCommerce.Domain.Commerce.Model
+namespace VirtoCommerce.QuoteModule.Web.Model
 {
-   public class Address : ValueObject<Address>
+	public class Address
 	{
+		[JsonConverter(typeof(StringEnumConverter))]
 		public AddressType AddressType { get; set; }
-		public string Name { get; set; }
 		public string Organization { get; set; }
 		public string CountryCode { get; set; }
 		public string CountryName { get; set; }
@@ -27,5 +28,4 @@ namespace VirtoCommerce.Domain.Commerce.Model
 		public string Phone { get; set; }
 		public string Email { get; set; }
 	}
-
 }

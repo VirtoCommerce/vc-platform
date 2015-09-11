@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using VirtoCommerce.Domain.Commerce.Model;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
 
-namespace VirtoCommerce.Domain.Quote.Model
+namespace VirtoCommerce.QuoteModule.Web.Model
 {
-	public class QuoteRequest : AuditableEntity, IHaveTaxDetalization, ISupportCancellation, IHasDynamicProperties, ILanguageSupport
+	public class QuoteRequest : AuditableEntity
 	{
 		public string Number { get; set; }
 		public string StoreId { get; set; }
@@ -32,8 +34,11 @@ namespace VirtoCommerce.Domain.Quote.Model
 
 		public string Comment { get; set; }
 		public string InnerComment { get; set; }
-		public CurrencyCodes Currency { get; set; }
 
+        [JsonConverter(typeof(StringEnumConverter))]
+        public CurrencyCodes Currency { get; set; }
+
+        public QuoteRequestTotals Totals { get; set; }
 		public string Coupon { get; set; }
 
 		public ShipmentMethod ShipmentMethod { get; set; }
@@ -41,23 +46,16 @@ namespace VirtoCommerce.Domain.Quote.Model
 		public ICollection<QuoteItem> Items { get; set; }
 		public ICollection<QuoteAttachment> Attachments { get; set; }
 
-		#region ILanguageSupport Members
 		public string LanguageCode { get; set; }
-		#endregion
 
-		#region IHaveTaxDetalization Members
 		public ICollection<TaxDetail> TaxDetails { get; set; }
-		#endregion
-
-		#region ISupportCancelation Members
+	
 		public bool IsCancelled { get; set; }
 		public DateTime? CancelledDate { get; set; }
 		public string CancelReason { get; set; }
-		#endregion
-
-		#region IHasDynamicProperties Members
+	
 		public string ObjectType { get; set; }
 		public ICollection<DynamicObjectProperty> DynamicProperties { get; set; }
-		#endregion
+	
 	}
 }
