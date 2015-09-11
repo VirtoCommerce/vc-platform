@@ -9,7 +9,7 @@ angular.module('app').directive('vaTabs', function () {
                     index = self.index();
 
                 self.addClass('__selected').siblings().removeClass('__selected');
-                $('.tab-cnt').eq(index).addClass('__opened').siblings().removeClass('__opened');
+                self.parents('.tabs').find('.tab-cnt').eq(index).addClass('__opened').siblings().removeClass('__opened');
             });
         }
     }

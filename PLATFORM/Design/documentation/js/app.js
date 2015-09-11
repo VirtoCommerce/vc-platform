@@ -1,5 +1,20 @@
 var app = angular.module('app', ['ui.bootstrap', 'gridster']);
 
+app.directive('vaTabs', function () {
+    return {
+        restrict: 'A',
+        link: function (scope, element, attrs) {
+            $('body').delegate('.tab-item', 'click', function () {
+                var self = $(this);
+                    index = self.index();
+
+                self.addClass('__selected').siblings().removeClass('__selected');
+                self.parents('.tabs').find('.tab-cnt').eq(index).addClass('__opened').siblings().removeClass('__opened');
+            });
+        }
+    }
+});
+
 app.controller('TestController', ['$scope', function ($scope){
     $scope.testValue   = 5;
     $scope.testValue_2 = 10;
