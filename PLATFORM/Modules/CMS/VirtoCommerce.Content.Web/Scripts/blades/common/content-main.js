@@ -25,6 +25,7 @@
 					entity.listLinksCount = '...';
 					entity.pagesCount = '...';
 					entity.themesCount = '...';
+					entity.blogsCount = '...';
 					entity.defaultThemeName = undefined;
 					entity.defaultTheme = undefined;
 					entity.themes = [];
@@ -33,7 +34,11 @@
 						entity.listLinksCount = data.length;
 
 						pages.get({ storeId: entity.store.id }, function (data) {
-							entity.pagesCount = data.length;
+						    entity.pagesCount = _.reject(data, function (page) { return page.id.startsWith("blogs/"); }).length;
+
+						    pages.getFolders({ storeId: entity.store.id }, function (data) {
+						        entity.blogsCount = _.find(data.folders, function (folder) { return folder.folderName === "blogs" }).folders.length;
+						    }, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
 
 							themes.get({ storeId: entity.store.id }, function (data) {
 								entity.themesCount = data.length;
@@ -74,7 +79,7 @@
 
 			case 'pages':
 				pages.get({ storeId: storeId }, function (data) {
-					entity.pagesCount = data.length;
+				    entity.pagesCount = _.reject(data, function (page) { return page.id.startsWith("blogs/"); }).length;
 				}, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
 				break;
 
@@ -96,6 +101,12 @@
 					}, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
 				}, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
 				break;
+
+		    case 'blogs':
+		        pages.getFolders({ storeId: storeId }, function (data) {
+		            entity.blogsCount = _.find(data.folders, function (folder) { return folder.folderName === "blogs" }).folders.length;
+		        }, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+		        break;
 
 			default:
 				break;
@@ -135,6 +146,7 @@
 			id: "pagesListBlade",
 			storeId: data.store.id,
 			title: data.store.name + ' pages list',
+            type: 'pages',
 			subtitle: 'Pages List',
 			controller: 'virtoCommerce.contentModule.pagesListController',
 			template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/pages/pages-list.tpl.html'
@@ -154,6 +166,21 @@
 			template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/menu/link-lists.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, blade);
+	}
+
+	blade.openBlogs = function (data) {
+	    closeChildrenBlades();
+
+	    var newBlade = {
+	        id: "blogsListBlade",
+	        storeId: data.store.id,
+	        title: data.store.name + ' link Lists',
+            type: 'blogs',
+	        subtitle: 'Blogs List',
+	        controller: 'virtoCommerce.contentModule.pagesListController',
+	        template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/pages/pages-list.tpl.html'
+	    };
+	    bladeNavigationService.showBlade(newBlade, blade);
 	}
 
 	blade.addNewTheme = function (data) {
@@ -200,6 +227,22 @@
 			template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/menu/menu-link-list.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, $scope.blade);
+	}
+
+	blade.addBlog = function (data) {
+	    closeChildrenBlades();
+
+	    var newBlade = {
+	        id: 'openBlogNew',
+	        choosenStoreId: data.store.id,
+	        isNew: true,
+	        entity: { name: undefined },
+	        title: 'Add blog',
+	        subtitle: 'Create new blog',
+	        controller: 'virtoCommerce.contentModule.editBlogController',
+	        template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/pages/edit-blog.tpl.html'
+	    };
+	    bladeNavigationService.showBlade(newBlade, $scope.blade);
 	}
 
 	blade.openTheme = function (data) {

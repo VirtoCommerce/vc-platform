@@ -3,13 +3,22 @@
     $scope.selectedNodeId = null;
 
     var blade = $scope.blade;
-    blade.steps = ['Pages'];
+    blade.steps = blade.type === 'pages' ? ['Pages'] : ['Blogs'];
     blade.selectedStep = 0;
 
     blade.initialize = function () {
         blade.isLoading = true;
         pages.getFolders({ storeId: blade.storeId }, function (data) {
             blade.isLoading = false;
+            //blade.pagesCatalog = data;
+            //blade.currentPageCatalog = data;
+            if (blade.type === 'pages') {
+                data.folders = _.reject(data.folders, function (folder) { return folder.folderName === 'blogs' });
+            }
+            else if (blade.type === 'blogs') {
+                data = _.find(data.folders, function (folder) { return folder.folderName === 'blogs' });
+            }
+
             blade.pagesCatalog = data;
             blade.currentPageCatalog = data;
 
@@ -17,7 +26,7 @@
                 blade.currentPageCatalog = _.find(blade.currentPageCatalog.folders, function (folder) { return folder.folderName === blade.steps[i] });
             }
 
-            blade.parentBlade.refresh(blade.storeId, 'pages');
+            blade.parentBlade.refresh(blade.storeId, blade.type);
         },
 	    function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
     }
@@ -25,11 +34,6 @@
     blade.openBlade = function (data) {
         $scope.selectedNodeId = data.pageName;
         closeChildrenBlades();
-
-        //var add = '';
-        //if (blade.steps.length > 1) {
-        //    add = _.last(blade.steps) + '/';
-        //}
 
         var newBlade = {
             id: 'editPageBlade',
@@ -116,7 +120,7 @@
             blade.defaultButtons();
         }
 
-        if (blade.currentPageCatalog.folderName !== 'blogs' && _.find(blade.steps, function (step) { return step === 'blogs'; }) !== undefined) {
+        if (blade.currentPageCatalog.folderName !== 'blogs' && _.find(blade.steps, function (step) { return step === 'Blogs'; }) !== undefined) {
             $scope.blade.toolbarCommands.push(
             {
                 name: "Manage blog", icon: 'fa fa-edit',
@@ -164,7 +168,7 @@
             blade.defaultButtons();
         }
 
-        if (blade.currentPageCatalog.folderName !== 'blogs' && _.find(blade.steps, function (step) { return step === 'blogs'; }) !== undefined) {
+        if (blade.currentPageCatalog.folderName !== 'blogs' && _.find(blade.steps, function (step) { return step === 'Blogs'; }) !== undefined) {
             $scope.blade.toolbarCommands.push(
             {
                 name: "Manage blog", icon: 'fa fa-edit',

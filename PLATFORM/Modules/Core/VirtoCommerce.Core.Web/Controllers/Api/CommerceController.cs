@@ -84,7 +84,8 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 			}
 
 			var store = _storeService.GetById(order.StoreId);
-			var paymentMethod = store.PaymentMethods.Where(x => x.IsActive).FirstOrDefault(x => x.ValidatePostProcessRequest(HttpContext.Current.Request.QueryString).IsSuccess);
+            var parameters = HttpContext.Current.Request.QueryString;
+            var paymentMethod = store.PaymentMethods.Where(x => x.IsActive).FirstOrDefault(x => x.ValidatePostProcessRequest(parameters).IsSuccess);
 			if (paymentMethod != null)
 			{
 				var paymentOuterId = paymentMethod.ValidatePostProcessRequest(HttpContext.Current.Request.QueryString).OuterId;
@@ -105,7 +106,8 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 					Order = order,
 					Payment = payment,
 					Store = store,
-					OuterId = paymentOuterId
+					OuterId = paymentOuterId,
+                    Parameters = parameters
 				};
 
 				var retVal = paymentMethod.PostProcessPayment(context);
@@ -121,5 +123,5 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 
 			return Ok(new PostProcessPaymentResult { ErrorMessage = "cancel payment" });
 		}
-	}
+    }
 }

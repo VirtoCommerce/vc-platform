@@ -166,6 +166,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ApiDocumentation", "ApiDocu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwashbuckleModule.Web", "Modules\Swashbuckle\Swashbuckle.Module.Web\SwashbuckleModule.Web.csproj", "{A9F079E5-EA4D-40BF-85A6-CFBCA823222B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authorize.Net", "Modules\PaymentGateways\Authorize.Net\Authorize.Net.csproj", "{21C72F1C-39AB-4EE5-B622-17ED5E7B1618}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -392,6 +394,10 @@ Global
 		{A9F079E5-EA4D-40BF-85A6-CFBCA823222B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A9F079E5-EA4D-40BF-85A6-CFBCA823222B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A9F079E5-EA4D-40BF-85A6-CFBCA823222B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21C72F1C-39AB-4EE5-B622-17ED5E7B1618}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21C72F1C-39AB-4EE5-B622-17ED5E7B1618}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21C72F1C-39AB-4EE5-B622-17ED5E7B1618}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21C72F1C-39AB-4EE5-B622-17ED5E7B1618}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -472,5 +478,6 @@ Global
 		{DF4F3017-1D4B-447C-8C6A-D027D2DFA90B} = {4E79CE95-D200-41C9-B191-324B741494BE}
 		{FD389BF1-6E58-48AB-8587-AC509AC67271} = {A4C0D164-BF77-4B57-8970-B5459B100AC3}
 		{A9F079E5-EA4D-40BF-85A6-CFBCA823222B} = {FD389BF1-6E58-48AB-8587-AC509AC67271}
+		{21C72F1C-39AB-4EE5-B622-17ED5E7B1618} = {4E79CE95-D200-41C9-B191-324B741494BE}
 	EndGlobalSection
 EndGlobal

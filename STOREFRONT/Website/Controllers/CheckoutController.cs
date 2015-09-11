@@ -370,6 +370,11 @@ namespace VirtoCommerce.Web.Controllers
                 parameters.Add(new KeyValuePair<string, string>(key, HttpContext.Request.QueryString[key]));
             }
 
+            foreach (var key in HttpContext.Request.Form.AllKeys)
+            {
+                parameters.Add(new KeyValuePair<string, string>(key, HttpContext.Request.QueryString[key]));
+            }
+
             var postPaymentResult = await Service.PostPaymentProcessAsync(parameters);
 
             if (postPaymentResult != null)

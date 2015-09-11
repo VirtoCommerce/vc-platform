@@ -1,7 +1,8 @@
 ﻿angular.module('virtoCommerce.contentModule')
 .controller('virtoCommerce.contentModule.editPageController', ['$scope', 'platformWebApp.dialogService', 'virtoCommerce.contentModule.stores', 'virtoCommerce.contentModule.pages', '$timeout', 'platformWebApp.bladeNavigationService', 'FileUploader', function ($scope, dialogService, pagesStores, pages, $timeout, bladeNavigationService, FileUploader) {
     var blade = $scope.blade;
-    var codemirrorEditor;
+    blade.body = '';
+    blade.metadata = '';
 
     blade.initialize = function () {
         pagesStores.get({ id: blade.choosenStoreId }, function (data) {
@@ -16,13 +17,7 @@
                     blade.isByteContent = blade.isFile();
 
                     if (!blade.isFile()) {
-                    $timeout(function () {
-                        if (codemirrorEditor) {
-                            codemirrorEditor.refresh();
-                            codemirrorEditor.focus();
-                        }
                         blade.origEntity = angular.copy(blade.currentEntity);
-                    }, 1);
                     }
                     else {
                     	if (blade.isImage()) {
@@ -31,6 +26,10 @@
                     }
 
                     blade.origEntity = angular.copy(blade.currentEntity);
+
+                    var parts = blade.currentEntity.content.split('---');
+                    blade.body = parts[2].trim();
+                    blade.metadata = parts[1].trim();
                 },
                 function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
             }
@@ -38,8 +37,13 @@
 				blade.currentEntity.language = blade.defaultStoreLanguage;
 				blade.isByteContent = blade.isFile();
 				blade.isLoading = false;
+				blade.currentEntity.content = "---\n---\n"
 				blade.origEntity = angular.copy(blade.currentEntity);
-			}
+
+				var parts = blade.currentEntity.content.split('---');
+				blade.body = parts[2].trim();
+				blade.metadata = parts[1].trim();
+            }
 
             blade.initializeUploader();
             blade.initializeButtons();
@@ -54,7 +58,7 @@
     			var uploader = $scope.uploader = new FileUploader({
     				scope: $scope,
     				headers: { Accept: 'application/json' },
-    				url: 'api/platform/assets',
+    				url: 'api/platform/assets/pages',
     				autoUpload: true,
     				removeAfterUpload: true
     			});
@@ -107,6 +111,9 @@
     }
 
     blade.isDirty = function () {
+        if (!angular.isUndefined(blade.currentEntity) && !blade.isFile()) {
+            blade.currentEntity.content = "---\n" + blade.metadata.trim() + "\n---\n" + blade.body.trim();
+        }
     	var retVal = !angular.equals(blade.currentEntity, blade.origEntity);
 
     	if (!angular.isUndefined($scope.formScope)) {
@@ -151,7 +158,7 @@
         	}
 
             pages.checkName({ storeId: blade.choosenStoreId, pageName: blade.currentEntity.name, language: blade.currentEntity.language }, function (data) {
-            	if (Boolean(data.result)) {
+                if (Boolean(data.result)) {
                     pages.update({ storeId: blade.choosenStoreId }, blade.currentEntity, function () {
                         blade.origEntity = angular.copy(blade.currentEntity);
                         blade.newPage = false;
@@ -183,6 +190,8 @@
                 blade.subtitle = 'Edit page';
                 blade.newPage = false;
                 blade.parentBlade.initialize();
+                blade.isLoading = false,
+                blade.origEntity = angular.copy(blade.currentEntity);
             },
             function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
         }
@@ -266,20 +275,6 @@
             case 'de-DE':
                 return 'de';
         }
-    };
-
-    // Codemirror configuration
-    $scope.editorOptions = {
-        lineWrapping: true,
-        lineNumbers: true,
-        extraKeys: { "Ctrl-Q": function (cm) { cm.foldCode(cm.getCursor()); } },
-        foldGutter: true,
-        gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
-        onLoad: function (_editor) {
-            codemirrorEditor = _editor;
-        },
-        //mode: 'xml'
-        mode: 'htmlmixed'
     };
 
     blade.getBladeStyle = function () {
