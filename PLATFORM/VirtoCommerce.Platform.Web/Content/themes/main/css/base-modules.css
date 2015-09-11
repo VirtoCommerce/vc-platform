@@ -4398,6 +4398,7 @@ button.btn
 
 .md-editor .btn-toolbar .md-controls
 {
+    display: none;
     float: right;
     margin: 3px 10px 0 0;
 }

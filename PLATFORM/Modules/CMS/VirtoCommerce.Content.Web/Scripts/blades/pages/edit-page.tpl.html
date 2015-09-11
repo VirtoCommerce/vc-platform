@@ -71,17 +71,32 @@
 </div>
 
 <div class="blade-content __large-wide" ng-if="!blade.isByteContent">
-	<div class="blade-inner" style="padding: 0">
+	<div class="blade-inner">
 		<div class="inner-block">
-			<form class="form" style="padding: 0" name="formScope">
-                <textarea ng-model='blade.body' rows="30" markdownedit markdown-hidden-buttons="cmdQuote,cmdPreview"></textarea>
-
-				<!--<div class="form-group">
-					<div class="form-input __expanded">
-						<ui-codemirror required ng-model="blade.currentEntity.content" ui-codemirror-opts="editorOptions"></ui-codemirror>
-					</div>
-				</div>-->
-			</form>
+            <div class="tabs" va-tabs>
+                <div class="tabs-elements">
+                    <div class="tab-item __selected">Markdown</div>
+                    <div class="tab-item">Metadata</div>
+                    <div class="tab-item">Preview</div>
+                </div>
+                <div class="tab-cnt __opened">
+                    <form class="form" name="formScope">
+                        <textarea ng-model='blade.body' rows="30" markdownedit markdown-hidden-buttons="cmdQuote,cmdPreview"></textarea>
+                    </form>
+                </div>
+                <div class="tab-cnt">
+                    <form class="form">
+                        <div class="form-group">
+                            <div class="form-input">
+                                <textarea cols="30" rows="30" ng-model="blade.metadata" placeholder="Enter metadata"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="tab-cnt">
+                    <markdown bind-from='blade.body'></markdown>
+                </div>
+            </div>
 		</div>
 	</div>
 </div>

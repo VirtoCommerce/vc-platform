@@ -20,18 +20,18 @@ namespace Authorize.Net
 
         public override void PostInitialize()
         {
-            var settings = _container.Resolve<ISettingsManager>().GetModuleSettings("Authorize.Net");
+            //var settings = _container.Resolve<ISettingsManager>().GetModuleSettings("Authorize.Net");
 
-            Func<AuthorizeNetMethod> authorizeNetPaymentMethodFactory = () => new AuthorizeNetMethod
-            {
-                Name = "Authorize.Net payment gateway",
-                Description = "Authorize.Net payment gateway integration",
-                LogoUrl = "https://upload.wikimedia.org/wikipedia/en/1/17/Authorizenet_logo.png",
-                Settings = settings,
-                IsActive = true
-            };
+            //Func<AuthorizeNetMethod> authorizeNetPaymentMethodFactory = () => new AuthorizeNetMethod
+            //{
+            //    Name = "Authorize.Net payment gateway",
+            //    Description = "Authorize.Net payment gateway integration",
+            //    LogoUrl = "https://upload.wikimedia.org/wikipedia/en/1/17/Authorizenet_logo.png",
+            //    Settings = settings,
+            //    IsActive = false
+            //};
 
-            _container.Resolve<IPaymentMethodsService>().RegisterPaymentMethod(authorizeNetPaymentMethodFactory);
+            //_container.Resolve<IPaymentMethodsService>().RegisterPaymentMethod(authorizeNetPaymentMethodFactory);
         }
 
         #endregion

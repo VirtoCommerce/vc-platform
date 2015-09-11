@@ -37,7 +37,7 @@
 				blade.currentEntity.language = blade.defaultStoreLanguage;
 				blade.isByteContent = blade.isFile();
 				blade.isLoading = false;
-				blade.currentEntity.content = "---\n---\n"
+				blade.currentEntity.content = "---\n\n---\n"
 				blade.origEntity = angular.copy(blade.currentEntity);
 
 				var parts = blade.currentEntity.content.split('---');
