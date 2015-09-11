@@ -9,7 +9,7 @@ using VirtoCommerce.Platform.Core.DynamicProperties;
 
 namespace VirtoCommerce.Domain.Quote.Model
 {
-	public class QuoteRequest : AuditableEntity, IHaveTaxDetalization, ISupportCancellation, IHasDynamicProperties
+	public class QuoteRequest : AuditableEntity, IHaveTaxDetalization, ISupportCancellation, IHasDynamicProperties, ILanguageSupport
 	{
 		public string Number { get; set; }
 		public string StoreId { get; set; }
@@ -24,28 +24,38 @@ namespace VirtoCommerce.Domain.Quote.Model
 		public string EmployeeName { get; set; }
 
 		public DateTime? ExpirationDate { get; set; }
+		public DateTime? ReminderDate { get; set; }
 
-		public bool NotifyCustomer { get; set; } 
+		public bool EnableNotification { get; set; } 
 		public bool IsLocked { get; set; }
 		public string Status { get; set; }
 
 		public string Comment { get; set; }
+		public string InnerComment { get; set; }
 		public CurrencyCodes Currency { get; set; }
 
-		public string LanguageCode { get; set; }
-
+		/// <summary>
+		/// Resulting total including tax, shipment and discount
+		/// </summary>
 		public decimal Total { get; set; }
+		/// <summary>
+		/// Subtotal of items excluding tax, shipment and discount
+		/// </summary>
 		public decimal SubTotal { get; set; }
 		public decimal ShippingTotal { get; set; }
-		public decimal HandlingTotal { get; set; }
 		public decimal DiscountTotal { get; set; }
 		public decimal TaxTotal { get; set; }
 
 		public string Coupon { get; set; }
 
+		public ShipmentMethod ShipmentMethod { get; set; }
 		public ICollection<Address> Addresses { get; set; }
 		public ICollection<QuoteItem> Items { get; set; }
 		public ICollection<QuoteAttachment> Attachments { get; set; }
+
+		#region ILanguageSupport Members
+		public string LanguageCode { get; set; }
+		#endregion
 
 		#region IHaveTaxDetalization Members
 		public ICollection<TaxDetail> TaxDetails { get; set; }

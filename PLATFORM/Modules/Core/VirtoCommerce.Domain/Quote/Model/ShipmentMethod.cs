@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Platform.Core.Common;
 
-namespace VirtoCommerce.Domain.Cart.Model
+namespace VirtoCommerce.Domain.Quote.Model
 {
 	public class ShipmentMethod : ValueObject<ShipmentMethod>
 	{
@@ -15,6 +15,5 @@ namespace VirtoCommerce.Domain.Cart.Model
 		public string LogoUrl { get; set; }
 		public CurrencyCodes Currency { get; set; }
 		public decimal Price { get; set; }
-		public ICollection<Discount> Discounts { get; set; }
 	}
 }

@@ -32,6 +32,6 @@ namespace VirtoCommerce.Domain.Quote.Model
 
 		public string ImageUrl { get; set; }
 
-		public ICollection<TierPrice> TierPrices { get; set; }
+		public ICollection<TierPrice> ProposalPrices { get; set; }
 	}
 }
