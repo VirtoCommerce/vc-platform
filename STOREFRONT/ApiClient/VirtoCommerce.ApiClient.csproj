@@ -107,6 +107,8 @@
     <Compile Include="DataContracts\Quotes\QuoteAttachment.cs" />
     <Compile Include="DataContracts\Quotes\QuoteItem.cs" />
     <Compile Include="DataContracts\Quotes\QuoteRequest.cs" />
+    <Compile Include="DataContracts\Quotes\QuoteRequestSearchCriteria.cs" />
+    <Compile Include="DataContracts\Quotes\QuoteRequestSearchResult.cs" />
     <Compile Include="DataContracts\Quotes\QuoteRequestTotals.cs" />
     <Compile Include="DataContracts\Quotes\ShipmentMethod.cs" />
     <Compile Include="DataContracts\Quotes\TierPrice.cs" />
@@ -134,6 +136,7 @@
     <Compile Include="Extensions\ThemeClientExtensions.cs" />
     <Compile Include="ListClient.cs" />
     <Compile Include="PageClient.cs" />
+    <Compile Include="QuoteClient.cs" />
     <Compile Include="ThemeClient.cs" />
     <Compile Include="DataContracts\Association.cs" />
     <Compile Include="DataContracts\BrowseQuery.cs" />
