@@ -42,8 +42,8 @@ namespace VirtoCommerce.QuoteModule.Data.Services
                 foreach(var quote in retVal)
                 {
                     _dynamicPropertyService.LoadDynamicPropertyValues(quote);
+                    _eventPublisher.Publish(new QuoteRequestChangeEvent(EntryState.Unchanged, quote, quote));
                 }
-
                 return retVal;
             }
 		}

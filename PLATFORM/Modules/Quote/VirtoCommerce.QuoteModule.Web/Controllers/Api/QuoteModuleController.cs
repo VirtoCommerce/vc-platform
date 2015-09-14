@@ -51,12 +51,13 @@ namespace VirtoCommerce.QuoteModule.Web.Controllers.Api
         [Route("{id}")]
         public IHttpActionResult GetById(string id)
         {
-            var retVal = _quoteRequestService.GetByIds(new[] { id }).FirstOrDefault();
-            if (retVal == null )
+            var quote = _quoteRequestService.GetByIds(new[] { id }).FirstOrDefault();
+            if (quote == null )
             {
                 return NotFound();
             }
-            return Ok(retVal.ToWebModel());
+            var retVal = quote.ToWebModel();
+            return Ok(retVal);
         }
 
 
