@@ -77,6 +77,17 @@ namespace VirtoCommerce.QuoteModule.Data.Repositories
 
 		}
 		#region IQuoteRepository Members
+		public QuoteRequestEntity[] GetQuoteRequestByIds(params string[] ids)
+		{
+			var retVal = QuoteRequests.Include(x => x.Addresses)
+									  .Include(x => x.Attachments)
+									  .Include(x => x.Items.Select(y => y.ProposalPrices))
+									  .Where(x => ids.Contains(x.Id)).ToArray();
+			return retVal;
+
+		}
+	
+
 		public IQueryable<AddressEntity> Addresses
 		{
 			get

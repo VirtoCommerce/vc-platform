@@ -34,18 +34,6 @@ namespace VirtoCommerce.Domain.Quote.Model
 		public string InnerComment { get; set; }
 		public CurrencyCodes Currency { get; set; }
 
-		/// <summary>
-		/// Resulting total including tax, shipment and discount
-		/// </summary>
-		public decimal Total { get; set; }
-		/// <summary>
-		/// Subtotal of items excluding tax, shipment and discount
-		/// </summary>
-		public decimal SubTotal { get; set; }
-		public decimal ShippingTotal { get; set; }
-		public decimal DiscountTotal { get; set; }
-		public decimal TaxTotal { get; set; }
-
 		public string Coupon { get; set; }
 
 		public ShipmentMethod ShipmentMethod { get; set; }

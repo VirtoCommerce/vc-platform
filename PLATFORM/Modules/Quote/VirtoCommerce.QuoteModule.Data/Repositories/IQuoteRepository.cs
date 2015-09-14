@@ -14,5 +14,7 @@ namespace VirtoCommerce.QuoteModule.Data.Repositories
 		IQueryable<AddressEntity> Addresses { get; }
 		IQueryable<AttachmentEntity> Attachments { get; }
 		IQueryable<QuoteItemEntity> QuoteItems { get; }
+
+		QuoteRequestEntity[] GetQuoteRequestByIds(params string[] ids);
 	}
 }
