@@ -72,7 +72,6 @@
 
 	blade.openBlade = function (asset, data) {
 		blade.selectedAssetId = asset.id;
-		closeChildrenBlades();
 
 		if (asset.contentType === 'text/html' || asset.contentType === 'application/json' || asset.contentType === 'application/javascript') {
 			var newBlade = {
@@ -124,8 +123,6 @@
     }
 
 	blade.openBladeNew = function(data) {
-		closeChildrenBlades();
-
 		var folder = blade.getFolder(data);
 		var contentType = folder.defaultContentType;
 		var name = folder.defaultItemName;

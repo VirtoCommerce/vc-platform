@@ -28,8 +28,13 @@
                     blade.origEntity = angular.copy(blade.currentEntity);
 
                     var parts = blade.currentEntity.content.split('---');
-                    blade.body = parts[2].trim();
-                    blade.metadata = parts[1].trim();
+                    if (parts.length > 2) {
+                        blade.body = parts[2].trim();
+                        blade.metadata = parts[1].trim();
+                    }
+                    else {
+                        blade.body = parts[0];
+                    }
                 },
                 function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
             }
@@ -112,7 +117,12 @@
 
     blade.isDirty = function () {
         if (!angular.isUndefined(blade.currentEntity) && !blade.isFile()) {
-            blade.currentEntity.content = "---\n" + blade.metadata.trim() + "\n---\n" + blade.body.trim();
+            if (blade.currentEntity.content.indexOf('---\n') !== -1 || blade.metadata !== '') {
+                blade.currentEntity.content = '---\n' + blade.metadata.trim() + '\n---\n' + blade.body.trim();
+            }
+            else {
+                blade.currentEntity.content = blade.body;
+            }
         }
     	var retVal = !angular.equals(blade.currentEntity, blade.origEntity);
 
@@ -235,14 +245,15 @@
             var dialog = {
                 id: "confirmCurrentBladeClose",
                 title: "Save changes",
-                message: "The page has been modified. Do you want to save changes?",
-                callback: function (needSave) {
-                    if (needSave) {
-                        $scope.saveChanges();
-                    }
-                    closeCallback();
+                message: "The page has been modified. Do you want to save changes?"
+            };
+
+            dialog.callback = function (needSave) {
+                if (needSave) {
+                    $scope.saveChanges();
                 }
-            }
+                closeCallback();
+            };
             dialogService.showConfirmationDialog(dialog);
         }
         else {
