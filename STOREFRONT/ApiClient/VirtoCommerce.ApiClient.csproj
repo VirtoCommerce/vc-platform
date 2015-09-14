@@ -81,6 +81,8 @@
     <Compile Include="DataContracts\CustomerService\Address.cs" />
     <Compile Include="DataContracts\CustomerService\ContactPropertyValue.cs" />
     <Compile Include="DataContracts\CustomerService\CustomerSearchResult.cs" />
+    <Compile Include="DataContracts\DynamicObjectProperty.cs" />
+    <Compile Include="DataContracts\DynamicPropertyObjectValue.cs" />
     <Compile Include="DataContracts\Inventory.cs" />
     <Compile Include="DataContracts\InventoryStatus.cs" />
     <Compile Include="DataContracts\Lists\Link.cs" />
@@ -101,6 +103,13 @@
     <Compile Include="DataContracts\PostProcessPaymentResult.cs" />
     <Compile Include="DataContracts\Price.cs" />
     <Compile Include="DataContracts\ProcessPaymentResult.cs" />
+    <Compile Include="DataContracts\Quotes\Address.cs" />
+    <Compile Include="DataContracts\Quotes\QuoteAttachment.cs" />
+    <Compile Include="DataContracts\Quotes\QuoteItem.cs" />
+    <Compile Include="DataContracts\Quotes\QuoteRequest.cs" />
+    <Compile Include="DataContracts\Quotes\QuoteRequestTotals.cs" />
+    <Compile Include="DataContracts\Quotes\ShipmentMethod.cs" />
+    <Compile Include="DataContracts\Quotes\TierPrice.cs" />
     <Compile Include="DataContracts\Security\IdentityResult.cs" />
     <Compile Include="DataContracts\Security\SecurityMessage.cs" />
     <Compile Include="DataContracts\Security\SignInStatus.cs" />

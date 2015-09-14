@@ -21,8 +21,8 @@ namespace VirtoCommerce.QuoteModule.Data.Converters
 
 			var retVal = new coreModel.QuoteItem();
 			retVal.InjectFrom(dbEntity);
-
-			retVal.ProposalPrices = dbEntity.ProposalPrices.Select(x => x.ToCoreModel()).ToList();
+            retVal.Currency = (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), dbEntity.Currency);
+            retVal.ProposalPrices = dbEntity.ProposalPrices.Select(x => x.ToCoreModel()).ToList();
 
 			return retVal;
 		}
@@ -35,8 +35,8 @@ namespace VirtoCommerce.QuoteModule.Data.Converters
 
 			var retVal = new dataModel.QuoteItemEntity();
 			retVal.InjectFrom(quoteItem);
-
-			if (quoteItem.ProposalPrices != null)
+            retVal.Currency = quoteItem.Currency.ToString();
+            if (quoteItem.ProposalPrices != null)
 			{
 				retVal.ProposalPrices = new ObservableCollection<dataModel.TierPriceEntity>(quoteItem.ProposalPrices.Select(x => x.ToDataModel()));
 			}

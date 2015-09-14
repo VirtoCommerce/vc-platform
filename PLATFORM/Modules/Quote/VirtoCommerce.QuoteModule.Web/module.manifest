@@ -34,7 +34,7 @@
 			<setting>
 				<name>Quotes.ExportImport.Description</name>
 				<valueType>string</valueType>
-				<defaultValue>Export/Import RFQ</defaultValue>
+				<defaultValue>Export/Import Request for quotes (RFQs)</defaultValue>
 				<title>Export/Import description</title>
 				<description>Module description in platform export/import wizard</description>
 			</setting>

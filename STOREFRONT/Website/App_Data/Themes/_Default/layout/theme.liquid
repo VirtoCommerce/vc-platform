@@ -159,7 +159,7 @@
 
             <a href="{{ shop.simplified_url }}/cart" class="header-cart-btn cart-toggle">
               <span class="icon icon-cart"></span>
-              {{ 'layout.cart.cart' | t }} <span id="cartCount" {% if cart == nil or cart.item_count == 0 %}class="hidden-count"{% endif %}>{{ cart.item_count }}</span>
+              {{ 'layout.cart.cart' | t }} <span id="cartCount" {% if cart.item_count == 0 %}class="hidden-count"{% endif %}>{{ cart.item_count }}</span>
             </a>
           </div>
       </div>

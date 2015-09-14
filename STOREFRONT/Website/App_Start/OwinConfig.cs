@@ -190,9 +190,12 @@ namespace VirtoCommerce.Web
                     ctx.Pages = new PageCollection();
                     ctx.Forms = commerceService.GetForms();
 
+                    var cart = await commerceService.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
 
-                    var cart =
-                        await commerceService.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
+                    if (cart == null)
+                    {
+                        cart = new Cart(SiteContext.Current.StoreId, SiteContext.Current.CustomerId, SiteContext.Current.Shop.Currency, SiteContext.Current.Language);
+                    }
 
                     ctx.Cart = cart;
 
@@ -206,7 +209,18 @@ namespace VirtoCommerce.Web
 
                             if (anonymousCart != null)
                             {
-                                ctx.Cart = await commerceService.MergeCartsAsync(anonymousCart);
+                                ctx.Cart.MergeCartWith(anonymousCart);
+
+                                if (ctx.Cart.IsTransient)
+                                {
+                                    await commerceService.CreateCartAsync(ctx.Cart);
+                                }
+                                else
+                                {
+                                    await commerceService.SaveChangesAsync(ctx.Cart);
+                                }
+
+                                await commerceService.DeleteCartAsync(anonymousCart.Key);
                             }
                         }
 
