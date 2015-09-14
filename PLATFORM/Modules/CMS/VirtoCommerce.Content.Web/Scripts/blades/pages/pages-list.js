@@ -147,7 +147,7 @@
     }
 
     blade.checkPreviousStep = function () {
-        blade.selectedStep = 1;
+        blade.selectedStep = 0;
         blade.stepsClick();
     }
 
