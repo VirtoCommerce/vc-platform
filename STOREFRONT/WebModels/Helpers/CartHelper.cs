@@ -35,41 +35,16 @@ namespace VirtoCommerce.Web.Models.Helpers
 
             var lineItem = product.AsLineItem();
 
-            var cart = this.ShoppingCart;
+            ShoppingCart.AddLineItem(lineItem);
 
-            if (cart == null)
+            if (ShoppingCart.IsTransient)
             {
-                var dtoCart = new ApiClient.DataContracts.Cart.ShoppingCart
-                {
-                    CreatedBy = SiteContext.Current.CustomerId,
-                    CreatedDate = DateTime.UtcNow,
-                    Currency = SiteContext.Current.Shop.Currency,
-                    CustomerId = SiteContext.Current.CustomerId,
-                    CustomerName =
-                        SiteContext.Current.Customer != null
-                            ? SiteContext.Current.Customer.Name
-                            : null,
-                    LanguageCode = SiteContext.Current.Language,
-                    Name = "default",
-                    StoreId = SiteContext.Current.StoreId
-                };
-
-                await _commerceService.CreateCartAsync(dtoCart);
-                cart =
-                    await _commerceService.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
-            }
-
-            var existingItem = cart.Items.FirstOrDefault(i => i.ProductId == lineItem.ProductId);
-            if (existingItem != null)
-            {
-                existingItem.Quantity += lineItem.Quantity;
+                await _commerceService.CreateCartAsync(ShoppingCart);
             }
             else
             {
-                cart.Items.Add(lineItem);
+                await _commerceService.SaveChangesAsync(ShoppingCart);
             }
-
-            await this._commerceService.SaveChangesAsync(cart);
 
             return lineItem;
         }
