@@ -297,61 +297,13 @@ namespace VirtoCommerce.Web.Models.Services
             return new CountryOptionTags(countries).ToString();
         }
 
-        public async Task<Cart> CreateCartAsync(ShoppingCart dtoCart)
+        public async Task<Cart> CreateCartAsync(Cart cart)
         {
-            await _cartClient.CreateCartAsync(dtoCart);
+            await _cartClient.CreateCartAsync(cart.AsServiceModel());
 
-            dtoCart = await _cartClient.GetCartAsync(dtoCart.StoreId, dtoCart.CustomerId);
+            var dtoCart = await _cartClient.GetCartAsync(cart.StoreId, cart.CustomerId);
 
             return dtoCart != null ? dtoCart.AsWebModel() : null;
-        }
-
-        public async Task<Cart> MergeCartsAsync(Cart anonymousCart)
-        {
-            var customerCart = SiteContext.Current.Cart;
-
-            if (customerCart == null)
-            {
-                var dtoCart = new ApiClient.DataContracts.Cart.ShoppingCart
-                {
-                    CreatedBy = SiteContext.Current.CustomerId,
-                    CreatedDate = DateTime.UtcNow,
-                    Currency = SiteContext.Current.Shop.Currency,
-                    CustomerId = SiteContext.Current.CustomerId,
-                    CustomerName =
-        SiteContext.Current.Customer != null
-            ? SiteContext.Current.Customer.Name
-            : null,
-                    LanguageCode = SiteContext.Current.Language,
-                    Name = "default",
-                    StoreId = SiteContext.Current.StoreId
-                };
-
-                await CreateCartAsync(dtoCart);
-                customerCart =
-                    await GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
-            }
-
-            foreach (var anonymousLineItem in anonymousCart.Items)
-            {
-                var customerLineItem = customerCart.Items
-                    .FirstOrDefault(i => i.Handle == anonymousLineItem.Handle);
-
-                if (customerLineItem != null)
-                {
-                    customerLineItem.Quantity += anonymousLineItem.Quantity;
-                }
-                else
-                {
-                    anonymousLineItem.Id = null;
-                    customerCart.Items.Add(anonymousLineItem);
-                }
-            }
-
-            var cart = await SaveChangesAsync(customerCart);
-            await DeleteCartAsync(anonymousCart.Key);
-
-            return cart;
         }
 
         public async Task DeleteCartAsync(string cartId)
@@ -602,7 +554,7 @@ namespace VirtoCommerce.Web.Models.Services
             var promoContext = new PromotionEvaluationContext
             {
                 CustomerId = context.CustomerId,
-                CartTotal = context.Cart != null ? context.Cart.TotalPrice : 0M,
+                CartTotal = context.Cart.TotalPrice,
                 Currency = context.Shop.Currency,
                 PromoEntries = new List<ProductPromoEntry>
                 {
@@ -645,7 +597,7 @@ namespace VirtoCommerce.Web.Models.Services
             var promoContext = new PromotionEvaluationContext
             {
                 CustomerId = context.CustomerId,
-                CartTotal = context.Cart != null ? context.Cart.TotalPrice : 0M,
+                CartTotal = context.Cart.TotalPrice,
                 Currency = context.Shop.Currency,
                 PromoEntries = new List<ProductPromoEntry>
                 {
@@ -800,7 +752,7 @@ namespace VirtoCommerce.Web.Models.Services
 
         public async Task<Cart> SaveChangesAsync(Cart cart)
         {
-            var model = await this._cartClient.UpdateCurrentCartAsync(cart.AsServiceModel(SiteContext.Current.Shop.Currency));
+            var model = await this._cartClient.UpdateCurrentCartAsync(cart.AsServiceModel());
             return model.AsWebModel();
         }
 
@@ -828,7 +780,7 @@ namespace VirtoCommerce.Web.Models.Services
             var promoContext = new PromotionEvaluationContext
             {
                 CustomerId = context.CustomerId,
-                CartTotal = context.Cart != null ? context.Cart.TotalPrice : 0M,
+                CartTotal = context.Cart.TotalPrice,
                 Currency = context.Shop.Currency,
                 IsRegisteredUser = context.Customer != null,
                 StoreId = context.StoreId

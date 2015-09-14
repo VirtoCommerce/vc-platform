@@ -13,10 +13,17 @@ namespace VirtoCommerce.Web.Convertors
     public static class CartConverters
     {
         #region Public Methods and Operators
-        public static Data.ShoppingCart AsServiceModel(this Cart cart, string currency)
+        public static Data.ShoppingCart AsServiceModel(this Cart cart)
         {
             var ret = new Data.ShoppingCart { Id = cart.Key };
-            ret.Currency = currency;
+            ret.CreatedBy = cart.CreatedBy;
+            ret.CreatedDate = cart.CreatedAt;
+            ret.Currency = cart.Currency;
+            ret.CustomerId = cart.CustomerId;
+            ret.CustomerName = cart.CustomerName;
+            ret.LanguageCode = cart.Language;
+            ret.Name = cart.Name;
+            ret.StoreId = cart.StoreId;
 
             if (cart.Items != null && cart.Items.Any())
             {
@@ -56,12 +63,19 @@ namespace VirtoCommerce.Web.Convertors
 
         public static Cart AsWebModel(this Data.ShoppingCart cart)
         {
-            var ret = new Cart { Key = cart.Id };
+            var ret = new Cart(cart.StoreId, cart.CustomerId, cart.Currency, cart.LanguageCode);
+
+            ret.CreatedAt = cart.CreatedDate;
+            ret.CreatedBy = cart.CreatedBy;
 
             if (cart.Items != null && cart.Items.Any())
             {
                 ret.Items.AddRange(cart.Items.Select(x => x.AsWebModel()));
             }
+
+            ret.Key = cart.Id;
+            ret.Name = cart.Name;
+            ret.Note = cart.Note;
 
             return ret;
         }

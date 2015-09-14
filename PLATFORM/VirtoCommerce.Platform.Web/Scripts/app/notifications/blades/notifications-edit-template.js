@@ -45,12 +45,13 @@
 	blade.updateTemplate = function () {
 		blade.isLoading = true;
 		notifications.updateTemplate({}, blade.currentEntity, function () {
+		    blade.isLoading = false;
+		    blade.origEntity = _.clone(blade.currentEntity);
 			if (!blade.isNew) {
-				blade.isLoading = false;
-				blade.origEntity = _.clone(blade.currentEntity);
 				blade.parentBlade.initialize();
 			}
 			else {
+			    blade.isNew = false;
 				if (!blade.isFirst) {
 					blade.parentBlade.initialize();
 					bladeNavigationService.closeBlade(blade);
@@ -205,6 +206,26 @@
 		}
 		return retVal;
 	}
+
+	blade.onClose = function (closeCallback) {
+	    if (blade.canSave()) {
+	        var dialog = {
+	            id: "confirmCurrentBladeClose",
+	            title: "Save changes",
+	            message: "The notification template has been modified. Do you want to save changes?",
+	            callback: function (needSave) {
+	                if (needSave) {
+	                    blade.updateTemplate();
+	                }
+	                closeCallback();
+	            }
+	        }
+	        dialogService.showConfirmationDialog(dialog);
+	    }
+	    else {
+	        closeCallback();
+	    }
+	};
 
 	blade.getLanguages = function () {
 		blade.languages = ['ru-RU', 'en-US', 'fr-FR', 'de-DE'];

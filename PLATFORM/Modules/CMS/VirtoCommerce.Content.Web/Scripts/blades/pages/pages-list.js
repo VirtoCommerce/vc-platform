@@ -37,7 +37,6 @@
 
     blade.openBlade = function (data) {
         $scope.selectedNodeId = data.pageName;
-        closeChildrenBlades();
 
         var newBlade = {
             id: 'editPageBlade',
@@ -55,7 +54,6 @@
 
     blade.openBladeNew = function (isBytes) {
         $scope.selectedNodeId = null;
-        closeChildrenBlades();
 
         var path = '';
         if (blade.isPages()) {
