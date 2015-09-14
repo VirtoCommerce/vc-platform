@@ -16,6 +16,29 @@
                     if (codemirrorEditor) {
                         codemirrorEditor.refresh();
                         codemirrorEditor.focus();
+
+                        $scope.blade.toolbarCommands.push(
+                            {
+                                name: "Undo", icon: 'fa fa-rotate-left',
+                                executeMethod: function () {
+                                    codemirrorEditor.undo();
+                                },
+                                canExecuteMethod: function () {
+                                    var history = codemirrorEditor.historySize();
+                                    return history.undo > 1;
+                                }
+                            });
+                        $scope.blade.toolbarCommands.push(
+                            {
+                                name: "Redo", icon: 'fa fa-rotate-right',
+                                executeMethod: function () {
+                                    codemirrorEditor.redo();
+                                },
+                                canExecuteMethod: function () {
+                                    var history = codemirrorEditor.historySize();
+                                    return history.redo > 0;
+                                }
+                            });
                     }
                     blade.origEntity = angular.copy(blade.currentEntity);
                 }, 1);

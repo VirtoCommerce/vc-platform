@@ -3,13 +3,25 @@
     $scope.selectedNodeId = null;
 
     var blade = $scope.blade;
-    blade.steps = ['Pages'];
+
+    blade.isPages = function () {
+        return blade.type === 'pages';
+    }
+
+    blade.steps = blade.isPages() ? ['Pages'] : ['Blogs'];
     blade.selectedStep = 0;
 
     blade.initialize = function () {
         blade.isLoading = true;
         pages.getFolders({ storeId: blade.storeId }, function (data) {
             blade.isLoading = false;
+            if (blade.isPages()) {
+                data.folders = _.reject(data.folders, function (folder) { return folder.folderName === 'blogs' });
+            }
+            else {
+                data = _.find(data.folders, function (folder) { return folder.folderName === 'blogs' });
+            }
+
             blade.pagesCatalog = data;
             blade.currentPageCatalog = data;
 
@@ -17,7 +29,8 @@
                 blade.currentPageCatalog = _.find(blade.currentPageCatalog.folders, function (folder) { return folder.folderName === blade.steps[i] });
             }
 
-            blade.parentBlade.refresh(blade.storeId, 'pages');
+            blade.parentBlade.refresh(blade.storeId, blade.type);
+            blade.defaultButtons();
         },
 	    function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
     }
@@ -25,11 +38,6 @@
     blade.openBlade = function (data) {
         $scope.selectedNodeId = data.pageName;
         closeChildrenBlades();
-
-        //var add = '';
-        //if (blade.steps.length > 1) {
-        //    add = _.last(blade.steps) + '/';
-        //}
 
         var newBlade = {
             id: 'editPageBlade',
@@ -50,8 +58,15 @@
         closeChildrenBlades();
 
         var path = '';
-        if (blade.steps.length > 1) {
-            path = blade.steps.slice(1).join('/') + '/';
+        if (blade.isPages()) {
+            if (blade.steps.length > 1) {
+                path = blade.steps.slice(1).join('/') + '/';
+            }
+        }
+        else {
+            var steps = angular.copy(blade.steps);
+            steps[0] = 'blogs';
+            path = steps.join('/') + '/';
         }
 
         if (!isBytes) {
@@ -116,7 +131,7 @@
             blade.defaultButtons();
         }
 
-        if (blade.currentPageCatalog.folderName !== 'blogs' && _.find(blade.steps, function (step) { return step === 'blogs'; }) !== undefined) {
+        if (blade.currentPageCatalog.folderName !== 'blogs' && _.find(blade.steps, function (step) { return step === 'Blogs'; }) !== undefined) {
             $scope.blade.toolbarCommands.push(
             {
                 name: "Manage blog", icon: 'fa fa-edit',
@@ -132,7 +147,7 @@
     }
 
     blade.checkPreviousStep = function () {
-        blade.selectedStep = 1;
+        blade.selectedStep = 0;
         blade.stepsClick();
     }
 
@@ -164,7 +179,7 @@
             blade.defaultButtons();
         }
 
-        if (blade.currentPageCatalog.folderName !== 'blogs' && _.find(blade.steps, function (step) { return step === 'blogs'; }) !== undefined) {
+        if (blade.currentPageCatalog.folderName !== 'blogs' && _.find(blade.steps, function (step) { return step === 'Blogs'; }) !== undefined) {
             $scope.blade.toolbarCommands.push(
             {
                 name: "Manage blog", icon: 'fa fa-edit',
@@ -232,30 +247,45 @@
     }
 
     blade.defaultButtons = function () {
-        $scope.blade.toolbarCommands = [
-            {
-                name: "Add page", icon: 'fa fa-plus',
-                executeMethod: function () {
-                    blade.openBladeNew(false);
+        if (blade.currentPageCatalog.folderName === 'blogs') {
+            $scope.blade.toolbarCommands = [
+                {
+                    name: "Add blog", icon: 'fa fa-plus',
+                    executeMethod: function () {
+                        blade.openBlogNew(true, { name: undefined });
+                    },
+                    canExecuteMethod: function () {
+                        return true;
+                    },
+                    permission: 'content:manage'
+                }
+            ];
+        }
+        else {
+            $scope.blade.toolbarCommands = [
+                {
+                    name: "Add page", icon: 'fa fa-plus',
+                    executeMethod: function () {
+                        blade.openBladeNew(false);
+                    },
+                    canExecuteMethod: function () {
+                        return true;
+                    },
+                    permission: 'content:manage'
                 },
-                canExecuteMethod: function () {
-                    return true;
-                },
-                permission: 'content:manage'
-            },
-		    {
-		        name: "Add file", icon: 'fa fa-plus',
-		        executeMethod: function () {
-		            blade.openBladeNew(true);
-		        },
-		        canExecuteMethod: function () {
-		            return true;
-		        },
-		        permission: 'content:manage'
-		    }
-        ];
+                {
+                    name: "Add file", icon: 'fa fa-plus',
+                    executeMethod: function () {
+                        blade.openBladeNew(true);
+                    },
+                    canExecuteMethod: function () {
+                        return true;
+                    },
+                    permission: 'content:manage'
+                }
+            ];
+        }
     }
-    blade.defaultButtons();
 
     blade.initialize();
 }]);

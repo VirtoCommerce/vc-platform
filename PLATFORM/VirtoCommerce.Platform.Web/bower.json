@@ -26,7 +26,8 @@
     "ng-focus-on": "0.2.2",
     "ng-context-menu": "1.0.1",
     "modernizr": "2.8.3",
-    "underscore": "1.8.3"
+    "underscore": "1.8.3",
+    "markdown-editpreview-ng": "1.0.0-rc3"
   },
   "resolutions": {
     "angular": "1.4.4"
