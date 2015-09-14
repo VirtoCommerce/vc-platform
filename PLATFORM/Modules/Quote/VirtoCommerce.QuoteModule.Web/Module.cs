@@ -43,6 +43,8 @@ namespace VirtoCommerce.QuoteModule.Web
             var extensionManager = new DefaultPricingExtensionManagerImpl();
             _container.RegisterInstance<IPricingExtensionManager>(extensionManager);
 
+            _container.RegisterType<IQuoteTotalsCalculator, DefaultQuoteTotalsCalculator>();
+
             _container.RegisterType<IQuoteRepository>(new InjectionFactory(c => new QuoteRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor(), new ChangeLogInterceptor(_container.Resolve<Func<IPlatformRepository>>(), ChangeLogPolicy.Historical, new[] { typeof(dataModel.QuoteRequestEntity).Name }))));
             _container.RegisterType<IQuoteRequestService, QuoteRequestServiceImpl>();
 

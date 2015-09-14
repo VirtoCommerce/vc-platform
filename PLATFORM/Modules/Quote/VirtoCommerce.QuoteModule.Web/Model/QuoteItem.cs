@@ -16,15 +16,15 @@ namespace VirtoCommerce.QuoteModule.Web.Model
         public CurrencyCodes Currency { get; set; }
 
         /// <summary>
-        /// Price with tax and without dicount
+        /// Base catalog price
         /// </summary>
-        public decimal BasePrice { get; set; }
+        public decimal ListPrice { get; set; }
         /// <summary>
-        /// Price with tax and discount
+        /// Sale price for buyer
         /// </summary>
-        public decimal Price { get; set; }
+        public decimal SalePrice { get; set; }
 
-		public string ProductId { get; set; }
+        public string ProductId { get; set; }
 		public CatalogProduct Product { get; set; }
 
 		public string CatalogId { get; set; }
@@ -36,10 +36,11 @@ namespace VirtoCommerce.QuoteModule.Web.Model
 
 		public string ImageUrl { get; set; }
 
+        public string TaxType { get; set; }
         /// <summary>
         /// Selected proposal tier price
         /// </summary>
-        public TierPrice SelectedPrice { get; set; }
+        public TierPrice SelectedTierPrice { get; set; }
         /// <summary>
         /// Proposal tier prices
         /// </summary>

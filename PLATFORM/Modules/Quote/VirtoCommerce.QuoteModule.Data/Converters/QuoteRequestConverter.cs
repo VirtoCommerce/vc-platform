@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using coreModel = VirtoCommerce.Domain.Quote.Model;
+using cartCoreModel = VirtoCommerce.Domain.Cart.Model;
 using dataModel = VirtoCommerce.QuoteModule.Data.Model;
 using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Data.Common.ConventionInjections;
@@ -35,8 +36,31 @@ namespace VirtoCommerce.QuoteModule.Data.Converters
 			return retVal;
 		}
 
+        public static cartCoreModel.ShoppingCart ToCartModel(this coreModel.QuoteRequest quoteRequest)
+        {
+            var retVal = new cartCoreModel.ShoppingCart();
+            retVal.InjectFrom(quoteRequest);
+            retVal.Currency = quoteRequest.Currency;
+            if (quoteRequest.Items != null)
+            {
+                retVal.Items = quoteRequest.Items.Select(x => x.ToCartModel()).ToList();
+            }
 
-		public static dataModel.QuoteRequestEntity ToDataModel(this coreModel.QuoteRequest quoteRequest)
+            if(quoteRequest.ShipmentMethod != null)
+            {
+                var shipment = new cartCoreModel.Shipment
+                {
+                    Currency = quoteRequest.Currency,
+                    ShipmentMethodCode = quoteRequest.ShipmentMethod.ShipmentMethodCode,
+                    ShipmentMethodOption = quoteRequest.ShipmentMethod.OptionName                     
+                };
+                retVal.Shipments = new List<cartCoreModel.Shipment>(new[] { shipment });
+            }
+
+            return retVal;
+        }
+
+        public static dataModel.QuoteRequestEntity ToDataModel(this coreModel.QuoteRequest quoteRequest)
 		{
 			if (quoteRequest == null)
 				throw new ArgumentNullException("quoteRequest");

@@ -23,9 +23,11 @@ namespace VirtoCommerce.QuoteModule.Web.Controllers.Api
     public class QuoteModuleController : ApiController
     {
         private readonly IQuoteRequestService _quoteRequestService;
-		public QuoteModuleController(IQuoteRequestService quoteRequestService)
+        private readonly IQuoteTotalsCalculator _totalsCalculator;
+		public QuoteModuleController(IQuoteRequestService quoteRequestService, IQuoteTotalsCalculator totalsCalculator)
         {
             _quoteRequestService = quoteRequestService;
+            _totalsCalculator = totalsCalculator;
         }
 
 		/// <summary>
@@ -56,6 +58,7 @@ namespace VirtoCommerce.QuoteModule.Web.Controllers.Api
             {
                 return NotFound();
             }
+            quote.Totals = _totalsCalculator.CalculateTotals(quote);
             var retVal = quote.ToWebModel();
             return Ok(retVal);
         }
@@ -80,13 +83,15 @@ namespace VirtoCommerce.QuoteModule.Web.Controllers.Api
 		/// Calculate totals
 		/// </summary>
 		/// <remarks>Return totals for selected tier prices</remarks>
-		/// <param name="id">RFQ id</param>
+		/// <param name="quoteRequest">RFQ</param>
         [HttpPut]
         [ResponseType(typeof(webModel.QuoteRequest))]
         [Route("recalculate")]
         public IHttpActionResult CalculateTotals(webModel.QuoteRequest quoteRequest)
         {
-            return Ok(quoteRequest);
+            var coreQuote = quoteRequest.ToCoreModel();
+            coreQuote.Totals = _totalsCalculator.CalculateTotals(coreQuote);
+            return Ok(coreQuote.ToWebModel());
          
         }
 

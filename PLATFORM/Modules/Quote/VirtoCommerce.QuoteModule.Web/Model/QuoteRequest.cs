@@ -75,6 +75,15 @@ namespace VirtoCommerce.QuoteModule.Web.Model
 		public string Coupon { get; set; }
 
         /// <summary>
+        /// Manual sub total for quote request
+        /// </summary>
+        public decimal ManualSubTotal { get; set; }
+        /// <summary>
+        /// Relative manual discount amount for quote request in percent
+        /// </summary>
+        public decimal ManualRelDiscountAmount { get; set; }
+
+        /// <summary>
         /// Predefined shipment method used for delivery order created from current RFQ
         /// </summary>
 		public ShipmentMethod ShipmentMethod { get; set; }

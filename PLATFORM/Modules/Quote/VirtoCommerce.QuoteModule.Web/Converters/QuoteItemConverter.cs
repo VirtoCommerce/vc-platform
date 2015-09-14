@@ -21,7 +21,10 @@ namespace VirtoCommerce.QuoteModule.Web.Converters
             {
                 retVal.ProposalPrices = quoteItem.ProposalPrices.Select(x=>x.ToWebModel()).ToList();
             }
-
+            if(quoteItem.SelectedTierPrice != null)
+            {
+                retVal.SelectedTierPrice = quoteItem.SelectedTierPrice.ToWebModel();
+            }
             return retVal;
         }
 
@@ -34,6 +37,10 @@ namespace VirtoCommerce.QuoteModule.Web.Converters
             if (quoteItem.ProposalPrices != null)
             {
                 retVal.ProposalPrices = quoteItem.ProposalPrices.Select(x => x.ToCoreModel()).ToList();
+            }
+            if (quoteItem.SelectedTierPrice != null)
+            {
+                retVal.SelectedTierPrice = quoteItem.SelectedTierPrice.ToCoreModel();
             }
             return retVal;
         }

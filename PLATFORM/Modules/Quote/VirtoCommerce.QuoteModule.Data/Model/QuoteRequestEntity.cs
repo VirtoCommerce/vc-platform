@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -77,9 +78,12 @@ namespace VirtoCommerce.QuoteModule.Data.Model
 		[StringLength(2048)]
 		public string CancelReason { get; set; }
 
+        [Column(TypeName = "Money")]
+        public decimal ManualSubTotal { get; set; }
+        public decimal ManualRelDiscountAmount { get; set; }
 
-		#region Navigation properties
-		public ObservableCollection<AddressEntity> Addresses { get; set; }
+        #region Navigation properties
+        public ObservableCollection<AddressEntity> Addresses { get; set; }
 		public ICollection<QuoteItemEntity> Items { get; set; }
 		public ICollection<AttachmentEntity> Attachments { get; set; } 
 		#endregion

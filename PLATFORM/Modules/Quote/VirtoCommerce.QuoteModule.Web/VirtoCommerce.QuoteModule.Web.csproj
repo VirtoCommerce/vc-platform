@@ -112,6 +112,7 @@
     <Compile Include="Binders\SearchCriteriaBinder.cs" />
     <Compile Include="Controllers\Api\QuoteModuleController.cs" />
     <Compile Include="Converters\QuoteAttachmentConverter.cs" />
+    <Compile Include="Converters\QuoteRequestTotalsConverter.cs" />
     <Compile Include="Converters\TierPriceConverter.cs" />
     <Compile Include="Converters\QuoteItemConverter.cs" />
     <Compile Include="Converters\QuoteRequestConverter.cs" />

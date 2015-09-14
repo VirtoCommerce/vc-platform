@@ -24,7 +24,7 @@ namespace VirtoCommerce.QuoteModule.Data.Services
 		private readonly IDynamicPropertyService _dynamicPropertyService;
 		private readonly IEventPublisher<QuoteRequestChangeEvent> _eventPublisher;
 
-		public QuoteRequestServiceImpl(Func<IQuoteRepository> quoteRepositoryFactory, IUniqueNumberGenerator uniqueNumberGenerator, IDynamicPropertyService dynamicPropertyService, IEventPublisher<QuoteRequestChangeEvent> eventPublisher)
+        public QuoteRequestServiceImpl(Func<IQuoteRepository> quoteRepositoryFactory, IUniqueNumberGenerator uniqueNumberGenerator, IDynamicPropertyService dynamicPropertyService, IEventPublisher<QuoteRequestChangeEvent> eventPublisher)
 		{
 			_repositoryFactory = quoteRepositoryFactory;
 			_uniqueNumberGenerator = uniqueNumberGenerator;

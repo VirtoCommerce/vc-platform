@@ -10,6 +10,6 @@ namespace VirtoCommerce.QuoteModule.Web.Model
 	public class TierPrice 
 	{
 		public decimal Price { get; set; }
-		public int Quantity { get; set; }
+		public long Quantity { get; set; }
 	}
 }

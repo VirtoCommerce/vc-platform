@@ -33,6 +33,10 @@ namespace VirtoCommerce.QuoteModule.Web.Converters
             {
                 retVal.DynamicProperties = quoteRequest.DynamicProperties;
             }
+            if(quoteRequest.Totals != null)
+            {
+                retVal.Totals = quoteRequest.Totals.ToWebModel();
+            }
 
             return retVal;
 		}
@@ -59,7 +63,10 @@ namespace VirtoCommerce.QuoteModule.Web.Converters
             {
                 retVal.DynamicProperties = quoteRequest.DynamicProperties;
             }
-
+            if (quoteRequest.Totals != null)
+            {
+                retVal.Totals = quoteRequest.Totals.ToCoreModel();
+            }
             return retVal;
 		}
 

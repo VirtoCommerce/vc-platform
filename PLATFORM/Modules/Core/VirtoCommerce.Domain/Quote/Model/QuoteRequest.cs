@@ -36,6 +36,17 @@ namespace VirtoCommerce.Domain.Quote.Model
 
 		public string Coupon { get; set; }
 
+        /// <summary>
+        /// Manual sub total for quote request
+        /// </summary>
+        public decimal ManualSubTotal { get; set; }
+        /// <summary>
+        /// Relative manual discount amount for quote request in percent
+        /// </summary>
+        public decimal ManualRelDiscountAmount { get; set; }
+
+        public QuoteRequestTotals Totals { get; set; }
+
 		public ShipmentMethod ShipmentMethod { get; set; }
 		public ICollection<Address> Addresses { get; set; }
 		public ICollection<QuoteItem> Items { get; set; }

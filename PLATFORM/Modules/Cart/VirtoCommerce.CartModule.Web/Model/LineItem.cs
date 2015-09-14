@@ -24,9 +24,9 @@ namespace VirtoCommerce.CartModule.Web.Model
         public string CategoryId { get; set; }
 
         /// <summary>
-        /// Gets or sets the value of product code
+        /// Gets or sets the value of product SKU
         /// </summary>
-        public string ProductCode { get; set; }
+        public string Sku { get; set; }
 
         /// <summary>
         /// Gets or sets the value of line item name

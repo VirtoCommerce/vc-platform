@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using coreModel = VirtoCommerce.Domain.Quote.Model;
 using dataModel = VirtoCommerce.QuoteModule.Data.Model;
+using cartCoreModel = VirtoCommerce.Domain.Cart.Model;
 using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Data.Common.ConventionInjections;
 using System.Collections.ObjectModel;
@@ -27,8 +28,20 @@ namespace VirtoCommerce.QuoteModule.Data.Converters
 			return retVal;
 		}
 
+        public static cartCoreModel.LineItem ToCartModel(this coreModel.QuoteItem quoteItem)
+        {
+            var retVal = new cartCoreModel.LineItem();
+            retVal.InjectFrom(quoteItem);
+            retVal.Sku = quoteItem.Sku;
+            if (quoteItem.SelectedTierPrice != null)
+            {
+                retVal.PlacedPrice = quoteItem.SelectedTierPrice.Price;
+                retVal.Quantity = (int)quoteItem.SelectedTierPrice.Quantity;
+             }
+            return retVal;
+        }
 
-		public static dataModel.QuoteItemEntity ToDataModel(this coreModel.QuoteItem quoteItem)
+        public static dataModel.QuoteItemEntity ToDataModel(this coreModel.QuoteItem quoteItem)
 		{
 			if (quoteItem == null)
 				throw new ArgumentNullException("quoteItem");

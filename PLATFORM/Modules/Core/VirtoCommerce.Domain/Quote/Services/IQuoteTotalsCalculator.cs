@@ -9,6 +9,6 @@ namespace VirtoCommerce.Domain.Quote.Services
 {
 	public interface IQuoteTotalsCalculator
 	{
-		void CalculateTotals(QuoteRequest quote);
+		QuoteRequestTotals CalculateTotals(QuoteRequest quote);
 	}
 }
