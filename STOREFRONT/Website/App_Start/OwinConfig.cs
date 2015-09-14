@@ -193,27 +193,6 @@ namespace VirtoCommerce.Web
 
                     var cart =
                         await commerceService.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
-                    if (cart == null)
-                    {
-                        var dtoCart = new ApiClient.DataContracts.Cart.ShoppingCart
-                        {
-                            CreatedBy = ctx.CustomerId,
-                            CreatedDate = DateTime.UtcNow,
-                            Currency = shop.Currency,
-                            CustomerId = ctx.CustomerId,
-                            CustomerName =
-                                ctx.Customer != null
-                                    ? ctx.Customer.Name
-                                    : null,
-                            LanguageCode = ctx.Language,
-                            Name = "default",
-                            StoreId = shop.StoreId
-                        };
-
-                        await commerceService.CreateCartAsync(dtoCart);
-                        cart =
-                            await commerceService.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
-                    }
 
                     ctx.Cart = cart;
 

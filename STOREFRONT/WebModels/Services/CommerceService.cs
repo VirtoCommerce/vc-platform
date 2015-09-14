@@ -310,6 +310,28 @@ namespace VirtoCommerce.Web.Models.Services
         {
             var customerCart = SiteContext.Current.Cart;
 
+            if (customerCart == null)
+            {
+                var dtoCart = new ApiClient.DataContracts.Cart.ShoppingCart
+                {
+                    CreatedBy = SiteContext.Current.CustomerId,
+                    CreatedDate = DateTime.UtcNow,
+                    Currency = SiteContext.Current.Shop.Currency,
+                    CustomerId = SiteContext.Current.CustomerId,
+                    CustomerName =
+        SiteContext.Current.Customer != null
+            ? SiteContext.Current.Customer.Name
+            : null,
+                    LanguageCode = SiteContext.Current.Language,
+                    Name = "default",
+                    StoreId = SiteContext.Current.StoreId
+                };
+
+                await CreateCartAsync(dtoCart);
+                customerCart =
+                    await GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
+            }
+
             foreach (var anonymousLineItem in anonymousCart.Items)
             {
                 var customerLineItem = customerCart.Items
@@ -580,7 +602,7 @@ namespace VirtoCommerce.Web.Models.Services
             var promoContext = new PromotionEvaluationContext
             {
                 CustomerId = context.CustomerId,
-                CartTotal = context.Cart.TotalPrice,
+                CartTotal = context.Cart != null ? context.Cart.TotalPrice : 0M,
                 Currency = context.Shop.Currency,
                 PromoEntries = new List<ProductPromoEntry>
                 {
@@ -623,7 +645,7 @@ namespace VirtoCommerce.Web.Models.Services
             var promoContext = new PromotionEvaluationContext
             {
                 CustomerId = context.CustomerId,
-                CartTotal = context.Cart.TotalPrice,
+                CartTotal = context.Cart != null ? context.Cart.TotalPrice : 0M,
                 Currency = context.Shop.Currency,
                 PromoEntries = new List<ProductPromoEntry>
                 {
@@ -806,7 +828,7 @@ namespace VirtoCommerce.Web.Models.Services
             var promoContext = new PromotionEvaluationContext
             {
                 CustomerId = context.CustomerId,
-                CartTotal = context.Cart.TotalPrice,
+                CartTotal = context.Cart != null ? context.Cart.TotalPrice : 0M,
                 Currency = context.Shop.Currency,
                 IsRegisteredUser = context.Customer != null,
                 StoreId = context.StoreId

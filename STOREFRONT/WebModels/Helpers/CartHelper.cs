@@ -1,4 +1,5 @@
-﻿    #region
+﻿#region
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using VirtoCommerce.Web.Convertors;
@@ -35,6 +36,28 @@ namespace VirtoCommerce.Web.Models.Helpers
             var lineItem = product.AsLineItem();
 
             var cart = this.ShoppingCart;
+
+            if (cart == null)
+            {
+                var dtoCart = new ApiClient.DataContracts.Cart.ShoppingCart
+                {
+                    CreatedBy = SiteContext.Current.CustomerId,
+                    CreatedDate = DateTime.UtcNow,
+                    Currency = SiteContext.Current.Shop.Currency,
+                    CustomerId = SiteContext.Current.CustomerId,
+                    CustomerName =
+                        SiteContext.Current.Customer != null
+                            ? SiteContext.Current.Customer.Name
+                            : null,
+                    LanguageCode = SiteContext.Current.Language,
+                    Name = "default",
+                    StoreId = SiteContext.Current.StoreId
+                };
+
+                await _commerceService.CreateCartAsync(dtoCart);
+                cart =
+                    await _commerceService.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
+            }
 
             var existingItem = cart.Items.FirstOrDefault(i => i.ProductId == lineItem.ProductId);
             if (existingItem != null)
