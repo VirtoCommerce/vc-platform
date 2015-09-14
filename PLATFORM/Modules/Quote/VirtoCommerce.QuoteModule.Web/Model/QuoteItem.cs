@@ -14,10 +14,15 @@ namespace VirtoCommerce.QuoteModule.Web.Model
 	{
         [JsonConverter(typeof(StringEnumConverter))]
         public CurrencyCodes Currency { get; set; }
-	
-		public decimal BasePrice { get; set; }
-	
-		public decimal Price { get; set; }
+
+        /// <summary>
+        /// Price with tax and without dicount
+        /// </summary>
+        public decimal BasePrice { get; set; }
+        /// <summary>
+        /// Price with tax and discount
+        /// </summary>
+        public decimal Price { get; set; }
 
 		public string ProductId { get; set; }
 		public CatalogProduct Product { get; set; }
@@ -31,7 +36,13 @@ namespace VirtoCommerce.QuoteModule.Web.Model
 
 		public string ImageUrl { get; set; }
 
+        /// <summary>
+        /// Selected proposal tier price
+        /// </summary>
         public TierPrice SelectedPrice { get; set; }
+        /// <summary>
+        /// Proposal tier prices
+        /// </summary>
 		public ICollection<TierPrice> ProposalPrices { get; set; }
 	}
 }
