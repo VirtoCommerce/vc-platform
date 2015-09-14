@@ -27,8 +27,8 @@ namespace VirtoCommerce.QuoteModule.Data.Converters
 				OptionName = dbEntity.ShipmentMethodOption,
 				ShipmentMethodCode = dbEntity.ShipmentMethodCode
 			};
-
-			retVal.Addresses = dbEntity.Addresses.Select(x => x.ToCoreModel()).ToList();
+            retVal.Currency = (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), dbEntity.Currency);
+            retVal.Addresses = dbEntity.Addresses.Select(x => x.ToCoreModel()).ToList();
 			retVal.Attachments = dbEntity.Attachments.Select(x => x.ToCoreModel()).ToList();
 			retVal.Items = dbEntity.Items.Select(x => x.ToCoreModel()).ToList();
 			
@@ -49,8 +49,8 @@ namespace VirtoCommerce.QuoteModule.Data.Converters
 				retVal.ShipmentMethodCode = quoteRequest.ShipmentMethod.ShipmentMethodCode;
 				retVal.ShipmentMethodOption = quoteRequest.ShipmentMethod.OptionName;
 			}
-
-			if (quoteRequest.Addresses != null)
+            retVal.Currency = quoteRequest.Currency.ToString();
+            if (quoteRequest.Addresses != null)
 			{
 				retVal.Addresses = new ObservableCollection<dataModel.AddressEntity>(quoteRequest.Addresses.Select(x => x.ToDataModel()));
 			}
