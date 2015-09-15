@@ -8062,63 +8062,66 @@ input.ui-grid-filter-input[type="text"]
 /* Tabs */
 .tabs-elements
 {
-    border-bottom: 2px solid #43b0e6;
     margin: 0 -20px;
-    padding: 15px 20px 0;
+    padding: 18px 0 0;
     overflow: hidden;
     position: relative;
 }
 
     .tabs .tab-item
     {
-        background: #fff;
+        background: #dee9f0;
+        border-top: 1px solid #dee9f0;
         color: #43b0e6;
         cursor: pointer;
         float: left;
         font-size: 14px;
         font-weight: 600;
-        height: 30px;
+        height: 34px;
         line-height: 26px;
-        margin: 0 1%;
         position: relative;
         top: 2px;
         text-align: center;
 
-        -webkit-box-shadow: 0 0 0 2px #dee9f0;
-                box-shadow: 0 0 0 2px #dee9f0;
+        -webkit-box-sizing: border-box;
+                box-sizing: border-box;
+    }
+
+    .tabs .tab-item + .tab-item
+    {
+        border-left: 1px solid #fff;
     }
 
     .tabs .tab-item.__selected
     {
-        background: #43b0e6;
-        color: #fff;
-
-        -webkit-box-shadow: 0 0 0 2px #43b0e6;
-                box-shadow: 0 0 0 2px #43b0e6;
+        background: #fff;
+        border-bottom: 2px solid #fff;
+        line-height: 30px;
+        top: 0;
     }
 
     .tabs .tab-item:nth-last-child(2),
     .tabs .tab-item:nth-last-child(2) ~ .tab-item
     {
-        width: 48%;
+        width: 50%;
     }
 
     .tabs .tab-item:nth-last-child(3),
     .tabs .tab-item:nth-last-child(3) ~ .tab-item
     {
-        width: 31%;
+        width: 33.3333%;
     }
 
     .tabs .tab-item:nth-last-child(4),
     .tabs .tab-item:nth-last-child(4) ~ .tab-item
     {
-        width: 23%;
+        width: 25%;
     }
 
     .tabs .tab-item:nth-last-child(5),
     .tabs .tab-item:nth-last-child(5) ~ .tab-item
     {
-        width: 18%;
+        width: 20%;
     }
 
     .tabs .tab-cnt

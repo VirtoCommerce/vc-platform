@@ -4370,6 +4370,32 @@ button.btn
     margin: -1px -20px 0;
 }
 
+.md-editor.md-fullscreen-mode
+{
+    background: #ffffff !important;
+    border: 0 none !important;
+    height: 100%;
+    left: 0;
+    margin: 0;
+    padding: 60px 30px 15px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 99999;
+
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+}
+
+.md-editor.active
+{
+    border-color: #66afe9;
+    outline: 0 none;
+
+    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(102, 175, 233, 0.6);
+            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(102, 175, 233, 0.6);
+}
+
 .md-editor textarea
 {
     background: none;
@@ -4407,6 +4433,12 @@ button.btn
     padding: 0 10px;
 }
 
+.md-editor .btn-toolbar .btn-group .btn.hidden
+{
+    display: none !important;
+    visibility: hidden !important;
+}
+
 .md-editor .btn-toolbar .btn-group .btn + .btn
 {
     border-left: 1px solid rgba(255,255,255,.35);
@@ -4415,6 +4447,47 @@ button.btn
 .md-fullscreen-controls
 {
     display: none;
+}
+
+.md-editor.md-fullscreen-mode .md-header
+{
+    background: none;
+    position: fixed;
+    text-align: center;
+    top: 20px;
+    width: 100%;
+}
+
+.md-editor.md-fullscreen-mode .btn-group
+{
+    display: inline-block;
+    float: none;
+}
+
+.md-editor.md-fullscreen-mode .md-fullscreen-controls
+{
+    display: block;
+    position: absolute;
+    right: 20px;
+    text-align: right;
+    top: 20px;
+    z-index: 1002;
+}
+
+.md-editor.md-fullscreen-mode .md-fullscreen-controls a
+{
+    clear: right;
+    color: #b3b3b3;
+    height: 30px;
+    margin: 10px;
+    text-align: center;
+    width: 30px;
+}
+
+.md-editor.md-fullscreen-mode .md-input,
+.md-editor.md-fullscreen-mode .md-preview
+{
+    padding: 20px 20px 20px 120px !important;
 }
 
 
@@ -7989,63 +8062,66 @@ input.ui-grid-filter-input[type="text"]
 /* Tabs */
 .tabs-elements
 {
-    border-bottom: 2px solid #43b0e6;
     margin: 0 -20px;
-    padding: 15px 20px 0;
+    padding: 18px 0 0;
     overflow: hidden;
     position: relative;
 }
 
     .tabs .tab-item
     {
-        background: #fff;
+        background: #dee9f0;
+        border-top: 1px solid #dee9f0;
         color: #43b0e6;
         cursor: pointer;
         float: left;
         font-size: 14px;
         font-weight: 600;
-        height: 30px;
+        height: 34px;
         line-height: 26px;
-        margin: 0 1%;
         position: relative;
         top: 2px;
         text-align: center;
 
-        -webkit-box-shadow: 0 0 0 2px #dee9f0;
-                box-shadow: 0 0 0 2px #dee9f0;
+        -webkit-box-sizing: border-box;
+                box-sizing: border-box;
+    }
+
+    .tabs .tab-item + .tab-item
+    {
+        border-left: 1px solid #fff;
     }
 
     .tabs .tab-item.__selected
     {
-        background: #43b0e6;
-        color: #fff;
-
-        -webkit-box-shadow: 0 0 0 2px #43b0e6;
-                box-shadow: 0 0 0 2px #43b0e6;
+        background: #fff;
+        border-bottom: 2px solid #fff;
+        line-height: 30px;
+        top: 0;
     }
 
     .tabs .tab-item:nth-last-child(2),
     .tabs .tab-item:nth-last-child(2) ~ .tab-item
     {
-        width: 48%;
+        width: 50%;
     }
 
     .tabs .tab-item:nth-last-child(3),
     .tabs .tab-item:nth-last-child(3) ~ .tab-item
     {
-        width: 31%;
+        width: 33.3333%;
     }
 
     .tabs .tab-item:nth-last-child(4),
     .tabs .tab-item:nth-last-child(4) ~ .tab-item
     {
-        width: 23%;
+        width: 25%;
     }
 
     .tabs .tab-item:nth-last-child(5),
     .tabs .tab-item:nth-last-child(5) ~ .tab-item
     {
-        width: 18%;
+        width: 20%;
     }
 
     .tabs .tab-cnt
@@ -8059,3 +8135,22 @@ input.ui-grid-filter-input[type="text"]
     {
         display: block;
     }
+
+        .tab-cnt h1,
+        .tab-cnt h2,
+        .tab-cnt h3
+        {
+            margin: 20px 0;
+        }
+
+        .tab-cnt p,
+        .tab-cnt ul,
+        .tab-cnt ol
+        {
+            margin: 0 0 10px;
+        }
+
+        .tab-cnt img
+        {
+            margin: 10px 0;
+        }
