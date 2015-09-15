@@ -43,11 +43,36 @@ namespace VirtoCommerce.QuoteModule.Web.Controllers.Api
             return Ok(retVal);
         }
 
-		/// <summary>
-		/// Get RFQ by id
-		/// </summary>
-		/// <remarks>Return a single RFQ</remarks>
-		/// <param name="id">RFQ id</param>
+        /// <summary>
+        /// Get current RFQ for customer in specified store 
+        /// </summary>
+        /// <param name="storeId">Store id</param>
+        /// <param name="customerId">Customer id</param>
+ 		[HttpGet]
+        [ResponseType(typeof(webModel.QuoteRequest))]
+        [Route("{storeId}/{customerId}/current")]
+        public IHttpActionResult GetCurrentQuote(string storeId, string customerId)
+        {
+            var criteria = new coreModel.QuoteRequestSearchCriteria
+            {
+                CustomerId = customerId,
+                StoreId = storeId
+            };
+
+            var searchResult = _quoteRequestService.Search(criteria);
+            var retVal = searchResult.QuoteRequests.FirstOrDefault();
+            if (retVal == null)
+            {
+                return NotFound();
+            }
+            return Ok(retVal.ToWebModel());
+        }
+
+        /// <summary>
+        /// Get RFQ by id
+        /// </summary>
+        /// <remarks>Return a single RFQ</remarks>
+        /// <param name="id">RFQ id</param>
         [HttpGet]
         [ResponseType(typeof(webModel.QuoteRequest))]
         [Route("{id}")]
@@ -63,6 +88,20 @@ namespace VirtoCommerce.QuoteModule.Web.Controllers.Api
             return Ok(retVal);
         }
 
+        /// <summary>
+        ///  Create new RFQ
+        /// </summary>
+        /// <param name="quoteRequest">RFQ</param>
+        [HttpPost]
+        [ResponseType(typeof(webModel.QuoteRequest))]
+        [Route("")]
+        [CheckPermission(Permission = PredefinedPermissions.Manage)]
+        public IHttpActionResult Create(webModel.QuoteRequest quoteRequest)
+        {
+            var coreQuote = quoteRequest.ToCoreModel();
+            var retVal = _quoteRequestService.SaveChanges(new coreModel.QuoteRequest[] { coreQuote }).First();
+            return Ok(retVal);
+        }
 
         /// <summary>
         ///  Update a existing RFQ

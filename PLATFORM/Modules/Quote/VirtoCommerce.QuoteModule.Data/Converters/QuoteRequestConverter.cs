@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using coreModel = VirtoCommerce.Domain.Quote.Model;
 using cartCoreModel = VirtoCommerce.Domain.Cart.Model;
+using taxCoreModel = VirtoCommerce.Domain.Tax.Model;
 using dataModel = VirtoCommerce.QuoteModule.Data.Model;
 using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Data.Common.ConventionInjections;
@@ -35,6 +36,29 @@ namespace VirtoCommerce.QuoteModule.Data.Converters
 			
 			return retVal;
 		}
+
+        public static taxCoreModel.TaxRequest ToTaxRequest(this coreModel.QuoteRequest quoteRequest)
+        {
+            var retVal = new taxCoreModel.TaxRequest();
+            retVal.Id = quoteRequest.Id;
+            retVal.Code = quoteRequest.Number;
+            retVal.Currency = quoteRequest.Currency;
+            retVal.Address = quoteRequest.Addresses.FirstOrDefault();
+            retVal.Type = quoteRequest.GetType().Name;
+            foreach(var quoteItem in quoteRequest.Items)
+            {
+                var line = new taxCoreModel.TaxLine
+                {
+                    Id = quoteItem.Id,
+                    Code = quoteItem.Sku,
+                    Name = quoteItem.Name,
+                    TaxType = quoteItem.TaxType,
+                    Amount = quoteItem.SelectedTierPrice.Price * quoteItem.SelectedTierPrice.Quantity
+                };
+                retVal.Lines.Add(line);
+            }
+            return retVal;
+        }
 
         public static cartCoreModel.ShoppingCart ToCartModel(this coreModel.QuoteRequest quoteRequest)
         {

@@ -7,6 +7,7 @@ using VirtoCommerce.Domain.Quote.Model;
 using VirtoCommerce.Domain.Quote.Services;
 using VirtoCommerce.Domain.Shipping.Model;
 using VirtoCommerce.Domain.Store.Services;
+using VirtoCommerce.Domain.Tax.Model;
 using VirtoCommerce.QuoteModule.Data.Converters;
 
 namespace VirtoCommerce.QuoteModule.Data.Services
@@ -37,9 +38,16 @@ namespace VirtoCommerce.QuoteModule.Data.Services
                                                     .FirstOrDefault();
                     retVal.ShippingTotal = rate != null ? rate.Rate : 0m;
                 }
-            }
 
-            //Calculate tax total
+                //Calculate taxes
+                var taxProvider = store.TaxProviders.Where(x => x.IsActive).OrderBy(x => x.Priority).FirstOrDefault();
+                if(taxProvider != null)
+                {
+                    var taxRequest = quote.ToTaxRequest();
+                    var taxEvalContext = new TaxEvaluationContext(taxRequest);
+                    retVal.TaxTotal = taxProvider.CalculateRates(taxEvalContext).Select(x=>x.Rate).DefaultIfEmpty(0).Sum(x => x);
+                }
+            }
 
             //Calculate subtotal
             var items = quote.Items.Where(x => x.SelectedTierPrice != null);

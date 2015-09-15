@@ -37,7 +37,8 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
                             }
                             else
                             {
-                                setting.Value = setting.DefaultValue;
+                                var globalSetting = settingManager.GetSettingByName(setting.Name);
+                                setting.Value = globalSetting != null ? globalSetting.Value : setting.DefaultValue;
                                 resultSettings.Add(setting);
                             }
                         }
