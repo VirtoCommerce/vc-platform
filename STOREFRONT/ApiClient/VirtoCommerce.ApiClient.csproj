@@ -122,6 +122,7 @@
     <Compile Include="Extensions\ListClientExtensions.cs" />
     <Compile Include="Extensions\MarketingClientExtension.cs" />
     <Compile Include="Extensions\PageClientExtensions.cs" />
+    <Compile Include="Extensions\QuoteClientExtension.cs" />
     <Compile Include="MarketingClient.cs" />
     <Compile Include="PriceClient.cs" />
     <Compile Include="CustomerServiceClient.cs" />
