@@ -2,6 +2,7 @@
 using VirtoCommerce.Domain.Commerce.Model;
 using VirtoCommerce.Domain.Payment.Model;
 using VirtoCommerce.Domain.Shipping.Model;
+using VirtoCommerce.Domain.Tax.Model;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.Settings;
@@ -33,6 +34,7 @@ namespace VirtoCommerce.Domain.Store.Model
         public ICollection<string> Languages { get; set; }
         public ICollection<CurrencyCodes> Currencies { get; set; }
 
+        public ICollection<TaxProvider> TaxProviders { get; set; }
         public ICollection<PaymentMethod> PaymentMethods { get; set; }
         public ICollection<ShippingMethod> ShippingMethods { get; set; }
         public ICollection<SeoInfo> SeoInfos { get; set; }

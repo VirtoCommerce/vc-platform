@@ -84,6 +84,8 @@ namespace VirtoCommerce.StoreModule.Web.Model
 
         public ICollection<ShippingMethod> ShippingMethods { get; set; }
 
+        public ICollection<TaxProvider> TaxProviders { get; set; }
+
         public ICollection<SeoInfo> SeoInfos { get; set; }
 
     }

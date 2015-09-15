@@ -18,14 +18,14 @@ namespace VirtoCommerce.Domain.Shipping.Services
 			return _shippingMethods.Select(x => x()).ToArray();
 		}
 
-		public void RegisterShippingMethod(Func<Model.ShippingMethod> methodGetter)
+		public void RegisterShippingMethod(Func<Model.ShippingMethod> methodFactory)
 		{
-			if (methodGetter == null)
+			if (methodFactory == null)
 			{
-				throw new ArgumentNullException("methodGetter");
+				throw new ArgumentNullException("methodFactory");
 			}
 
-			_shippingMethods.Add(methodGetter);
+			_shippingMethods.Add(methodFactory);
 		}
 
 		#endregion

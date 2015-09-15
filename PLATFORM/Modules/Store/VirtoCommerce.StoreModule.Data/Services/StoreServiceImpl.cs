@@ -7,6 +7,7 @@ using VirtoCommerce.Domain.Commerce.Services;
 using VirtoCommerce.Domain.Payment.Services;
 using VirtoCommerce.Domain.Shipping.Services;
 using VirtoCommerce.Domain.Store.Services;
+using VirtoCommerce.Domain.Tax.Services;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
@@ -26,10 +27,11 @@ namespace VirtoCommerce.StoreModule.Data.Services
         private readonly IDynamicPropertyService _dynamicPropertyService;
         private readonly IShippingService _shippingService;
         private readonly IPaymentMethodsService _paymentService;
+        private readonly ITaxService _taxService;
 		private readonly CacheManager _cacheManager;
 
 		public StoreServiceImpl(Func<IStoreRepository> repositoryFactory, ICommerceService commerceService, ISettingsManager settingManager, 
-							    IDynamicPropertyService dynamicPropertyService, IShippingService shippingService, IPaymentMethodsService paymentService, CacheManager cacheManager)
+							    IDynamicPropertyService dynamicPropertyService, IShippingService shippingService, IPaymentMethodsService paymentService, ITaxService taxService, CacheManager cacheManager)
         {
             _repositoryFactory = repositoryFactory;
             _commerceService = commerceService;
@@ -38,6 +40,7 @@ namespace VirtoCommerce.StoreModule.Data.Services
             _shippingService = shippingService;
             _paymentService = paymentService;
 			_cacheManager = cacheManager;
+            _taxService = taxService;
         }
 
         #region IStoreService Members
@@ -55,7 +58,7 @@ namespace VirtoCommerce.StoreModule.Data.Services
 						if (entity != null)
 						{
 							//Load original typed shipping method and populate it  personalized information from db
-							retVal = entity.ToCoreModel(_shippingService.GetAllShippingMethods(), _paymentService.GetAllPaymentMethods());
+							retVal = entity.ToCoreModel(_shippingService.GetAllShippingMethods(), _paymentService.GetAllPaymentMethods(), _taxService.GetAllTaxProviders());
 
 							var fulfillmentCenters = _commerceService.GetAllFulfillmentCenters().ToList();
 							retVal.ReturnsFulfillmentCenter = fulfillmentCenters.FirstOrDefault(x => x.Id == entity.ReturnsFulfillmentCenterId);

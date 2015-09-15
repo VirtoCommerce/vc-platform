@@ -18,7 +18,8 @@ namespace VirtoCommerce.StoreModule.Data.Model
 			Currencies = new NullCollection<StoreCurrency>();
 			PaymentMethods = new NullCollection<StorePaymentMethod>();
 			ShippingMethods = new NullCollection<StoreShippingMethod>();
-		}
+            TaxProviders = new NullCollection<StoreTaxProvider>();
+        }
 
 		[Required]
 		[StringLength(128)]
@@ -77,9 +78,10 @@ namespace VirtoCommerce.StoreModule.Data.Model
 
 		public virtual ObservableCollection<StorePaymentMethod> PaymentMethods { get; set; }
 		public virtual ObservableCollection<StoreShippingMethod> ShippingMethods { get; set; }
-		#endregion
+        public virtual ObservableCollection<StoreTaxProvider> TaxProviders { get; set; }
+        #endregion
 
-		public static ValidationResult ValidateStoreId(string value, ValidationContext context)
+        public static ValidationResult ValidateStoreId(string value, ValidationContext context)
 		{
 			if (string.IsNullOrEmpty(value))
 			{

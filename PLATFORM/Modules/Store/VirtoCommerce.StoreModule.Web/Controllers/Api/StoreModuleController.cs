@@ -5,6 +5,7 @@ using System.Web.Http.Description;
 using VirtoCommerce.Domain.Payment.Services;
 using VirtoCommerce.Domain.Shipping.Services;
 using VirtoCommerce.Domain.Store.Services;
+using VirtoCommerce.Domain.Tax.Services;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.StoreModule.Web.Converters;
 using coreModel = VirtoCommerce.Domain.Store.Model;
@@ -19,12 +20,14 @@ namespace VirtoCommerce.StoreModule.Web.Controllers.Api
 		private readonly IStoreService _storeService;
 		private readonly IShippingService _shippingService;
 		private readonly IPaymentMethodsService _paymentService;
-		public StoreModuleController(IStoreService storeService, IShippingService shippingService, IPaymentMethodsService paymentService)
+        private readonly ITaxService _taxService;
+		public StoreModuleController(IStoreService storeService, IShippingService shippingService, IPaymentMethodsService paymentService, ITaxService taxService)
 		{
 			_storeService = storeService;
 			_shippingService = shippingService;
 			_paymentService = paymentService;
-		}
+            _taxService = taxService;
+        }
 
 		/// <summary>
 		/// Get all stores
@@ -69,7 +72,7 @@ namespace VirtoCommerce.StoreModule.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public IHttpActionResult Create(webModel.Store store)
 		{
-			var coreStore = store.ToCoreModel(_shippingService.GetAllShippingMethods(), _paymentService.GetAllPaymentMethods());
+			var coreStore = store.ToCoreModel(_shippingService.GetAllShippingMethods(), _paymentService.GetAllPaymentMethods(), _taxService.GetAllTaxProviders());
 			var retVal = _storeService.Create(coreStore);
 			return Ok(retVal.ToWebModel());
 		}
@@ -84,7 +87,7 @@ namespace VirtoCommerce.StoreModule.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public IHttpActionResult Update(webModel.Store store)
 		{
-			var coreStore = store.ToCoreModel(_shippingService.GetAllShippingMethods(), _paymentService.GetAllPaymentMethods());
+			var coreStore = store.ToCoreModel(_shippingService.GetAllShippingMethods(), _paymentService.GetAllPaymentMethods(), _taxService.GetAllTaxProviders());
 			_storeService.Update(new coreModel.Store[] { coreStore });
 			return StatusCode(HttpStatusCode.NoContent);
 		}

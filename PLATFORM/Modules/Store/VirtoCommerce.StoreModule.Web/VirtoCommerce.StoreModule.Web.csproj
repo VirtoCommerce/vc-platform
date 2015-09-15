@@ -164,6 +164,7 @@
     <Compile Include="Controllers\PredefinedPermissions.cs" />
     <Compile Include="Converters\FulfillmentConverter.cs" />
     <Compile Include="Converters\PaymentMethodConverter.cs" />
+    <Compile Include="Converters\TaxProviderConverter.cs" />
     <Compile Include="Converters\ShippingMethodConverter.cs" />
     <Compile Include="Converters\StoreConverter.cs" />
     <Compile Include="Converters\SettingConverter.cs" />
@@ -173,6 +174,7 @@
     <Compile Include="Model\ShippingMethod.cs" />
     <Compile Include="Model\Store.cs" />
     <Compile Include="Model\Setting.cs" />
+    <Compile Include="Model\TaxProvider.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

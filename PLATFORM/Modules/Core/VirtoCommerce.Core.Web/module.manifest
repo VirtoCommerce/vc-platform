@@ -75,6 +75,20 @@
 				<title>Export/Import description</title>
 				<description>Module description in platform export/import wizard</description>
 			</setting>
+			<setting>
+				<name>VirtoCommerce.Core.FixedRateShippingMethod.Rate</name>
+				<valueType>decimal</valueType>
+				<defaultValue>0.00</defaultValue>
+				<title>Fixed shipping rate</title>
+				<description>Fixed shipping rate</description>
+			</setting>
+			<setting>
+				<name>VirtoCommerce.Core.FixedTaxRateProvider.Rate</name>
+				<valueType>decimal</valueType>
+				<defaultValue>0.00</defaultValue>
+				<title>Fixed tax rate</title>
+				<description>Fixed tax rate</description>
+			</setting>
 		</group>
 	</settings>
 	<permissions>

@@ -3,6 +3,7 @@ using System.Linq;
 using Omu.ValueInjecter;
 using VirtoCommerce.Domain.Payment.Model;
 using VirtoCommerce.Domain.Shipping.Model;
+using VirtoCommerce.Domain.Tax.Model;
 using coreModel = VirtoCommerce.Domain.Store.Model;
 using webModel = VirtoCommerce.StoreModule.Web.Model;
 
@@ -23,6 +24,8 @@ namespace VirtoCommerce.StoreModule.Web.Converters
                 retVal.ShippingMethods = store.ShippingMethods.Select(x => x.ToWebModel()).ToList();
             if (store.PaymentMethods != null)
                 retVal.PaymentMethods = store.PaymentMethods.Select(x => x.ToWebModel()).ToList();
+            if (store.TaxProviders != null)
+                retVal.TaxProviders = store.TaxProviders.Select(x => x.ToWebModel()).ToList();
 
             if (store.Languages != null)
                 retVal.Languages = store.Languages;
@@ -36,7 +39,7 @@ namespace VirtoCommerce.StoreModule.Web.Converters
 			return retVal;
         }
 
-        public static coreModel.Store ToCoreModel(this webModel.Store store, ShippingMethod[] shippingMethods, PaymentMethod[] paymentMethods)
+        public static coreModel.Store ToCoreModel(this webModel.Store store, ShippingMethod[] shippingMethods, PaymentMethod[] paymentMethods, TaxProvider[] taxProviders)
         {
             var retVal = new coreModel.Store();
             retVal.InjectFrom(store);
@@ -67,6 +70,19 @@ namespace VirtoCommerce.StoreModule.Web.Converters
                     if (webPaymentMethod != null)
                     {
                         retVal.PaymentMethods.Add(webPaymentMethod.ToCoreModel(paymentMethod));
+                    }
+                }
+            }
+
+            if (store.TaxProviders != null)
+            {
+                retVal.TaxProviders = new List<TaxProvider>();
+                foreach (var taxProvider in taxProviders)
+                {
+                    var webTaxProvider = store.TaxProviders.FirstOrDefault(x => x.Code == taxProvider.Code);
+                    if (webTaxProvider != null)
+                    {
+                        retVal.TaxProviders.Add(webTaxProvider.ToCoreModel(taxProvider));
                     }
                 }
             }

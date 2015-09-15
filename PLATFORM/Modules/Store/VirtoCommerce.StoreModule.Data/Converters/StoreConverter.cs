@@ -12,6 +12,7 @@ using VirtoCommerce.Platform.Data.Common;
 using VirtoCommerce.Platform.Data.Common.ConventionInjections;
 using VirtoCommerce.Domain.Shipping.Model;
 using VirtoCommerce.Domain.Payment.Model;
+using VirtoCommerce.Domain.Tax.Model;
 
 namespace VirtoCommerce.StoreModule.Data.Converters
 {
@@ -22,7 +23,7 @@ namespace VirtoCommerce.StoreModule.Data.Converters
 		/// </summary>
 		/// <param name="catalogBase"></param>
 		/// <returns></returns>
-		public static coreModel.Store ToCoreModel(this dataModel.Store dbStore, ShippingMethod[] shippingMethods, PaymentMethod[] paymentMethods)
+		public static coreModel.Store ToCoreModel(this dataModel.Store dbStore, ShippingMethod[] shippingMethods, PaymentMethod[] paymentMethods, TaxProvider[] taxProviders)
 		{
 			if (dbStore == null)
 				throw new ArgumentNullException("dbStore");
@@ -61,8 +62,18 @@ namespace VirtoCommerce.StoreModule.Data.Converters
 					shippingMethod.InjectFrom(dbStoredShippingMethod);
 				}
 			}
-		
-			return retVal;
+
+            //Tax providers need return only contains in registered
+            retVal.TaxProviders = taxProviders;
+            foreach (var taxProvider in taxProviders)
+            {
+                var dbStoredTaxProvider = dbStore.TaxProviders.FirstOrDefault(x => x.Code == taxProvider.Code);
+                if (dbStoredTaxProvider != null)
+                {
+                    taxProvider.InjectFrom(dbStoredTaxProvider);
+                }
+            }
+            return retVal;
 
 		}
 
@@ -115,7 +126,11 @@ namespace VirtoCommerce.StoreModule.Data.Converters
 			{
 				retVal.PaymentMethods = new ObservableCollection<dataModel.StorePaymentMethod>(store.PaymentMethods.Select(x => x.ToDataModel()));
 			}
-			return retVal;
+            if (store.TaxProviders != null)
+            {
+                retVal.TaxProviders = new ObservableCollection<dataModel.StoreTaxProvider>(store.TaxProviders.Select(x => x.ToDataModel()));
+            }
+            return retVal;
 		}
 
 		/// <summary>
@@ -161,7 +176,13 @@ namespace VirtoCommerce.StoreModule.Data.Converters
 				source.ShippingMethods.Patch(target.ShippingMethods, shippingComparer,
 									  (sourceMethod, targetMethod) => sourceMethod.Patch(targetMethod));
 			}
-		}
+            if (!source.TaxProviders.IsNullCollection())
+            {
+                var shippingComparer = AnonymousComparer.Create((dataModel.StoreTaxProvider x) => x.Code);
+                source.TaxProviders.Patch(target.TaxProviders, shippingComparer,
+                                      (sourceProvider, targetProvider) => sourceProvider.Patch(targetProvider));
+            }
+        }
 		
 		
 	}

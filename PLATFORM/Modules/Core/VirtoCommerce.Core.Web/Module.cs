@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Data.Entity;
+using System.Linq;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.CoreModule.Data.Repositories;
 using VirtoCommerce.CoreModule.Data.Shipping;
@@ -13,7 +13,8 @@ using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.CoreModule.Data.Payment;
-
+using VirtoCommerce.Domain.Tax.Services;
+using VirtoCommerce.CoreModule.Data.Tax;
 
 namespace VirtoCommerce.CoreModule.Web
 {
@@ -53,6 +54,10 @@ namespace VirtoCommerce.CoreModule.Web
 
             #endregion
 
+            #region Tax service
+            var taxService = new TaxServiceImpl();
+            _container.RegisterInstance<ITaxService>(taxService);
+            #endregion
             #region Shipping service
             var shippingService = new ShippingServiceImpl();
             _container.RegisterInstance<IShippingService>(shippingService);
@@ -68,15 +73,23 @@ namespace VirtoCommerce.CoreModule.Web
         {
             var settingManager = _container.Resolve<ISettingsManager>();
             var shippingService = _container.Resolve<IShippingService>();
+            var taxService = _container.Resolve<ITaxService>();
 			var paymentService = _container.Resolve<IPaymentMethodsService>();
+            var moduleSettings = settingManager.GetModuleSettings("VirtoCommerce.Core");
+            taxService.RegisterTaxProvider(() => new FixedTaxRateProvider(moduleSettings.First(x => x.Name == "VirtoCommerce.Core.FixedTaxRateProvider.Rate"))
+            {
+                Name = "fixed tax rate",
+                Description = "Fixed percent tax rate",
+                LogoUrl = "http://virtocommerce.com/Content/images/logo.jpg"
+            });
 
-            shippingService.RegisterShippingMethod(() => new FixedRateShippingMethod(new SettingEntry[] { new SettingEntry { Name = "Rate", ValueType = SettingValueType.Decimal, DefaultValue = "0" } })
+            shippingService.RegisterShippingMethod(() => new FixedRateShippingMethod(moduleSettings.First(x=>x.Name == "VirtoCommerce.Core.FixedRateShippingMethod.Rate"))
                 {
                     Name = "fixed rate",
                     Description = "Fixed rate shipping method",
-                    LogoUrl = "http://somelogo.com/logo.png"
+                    LogoUrl = "http://virtocommerce.com/Content/images/logo.jpg"
 
-                });
+            });
 
 			paymentService.RegisterPaymentMethod(() => new DefaultManualPaymentMethod()
 				{

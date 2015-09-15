@@ -80,6 +80,7 @@
     <Compile Include="Services\SequenceUniqueNumberGeneratorServiceImpl.cs" />
     <Compile Include="Services\TimeBasedNumberGeneratorImpl.cs" />
     <Compile Include="Shipping\FixedRateShipmentMethod.cs" />
+    <Compile Include="Tax\FixedTaxRateProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj">
