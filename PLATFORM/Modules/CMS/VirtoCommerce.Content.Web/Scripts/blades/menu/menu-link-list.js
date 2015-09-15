@@ -188,6 +188,26 @@
         dialogService.showConfirmationDialog(dialog);
     }
 
+    blade.onClose = function (closeCallback) {
+        if (canSave()) {
+            var dialog = {
+                id: "confirmCurrentBladeClose",
+                title: "Save changes",
+                message: "The menu link list has been modified. Do you want to save changes?",
+                callback: function (needSave) {
+                    if (needSave) {
+                        blade.saveChanges();
+                    }
+                    closeCallback();
+                }
+            }
+            dialogService.showConfirmationDialog(dialog);
+        }
+        else {
+            closeCallback();
+        }
+    };
+
     blade.selectItem = function (id) {
         if (_.contains(blade.selectedItemIds, id)) {
             blade.selectedItemIds = _.reject(blade.selectedItemIds, function (linkId) {

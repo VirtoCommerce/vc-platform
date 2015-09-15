@@ -27,4 +27,5 @@ namespace VirtoCommerce.Domain.Commerce.Model
 		public string Phone { get; set; }
 		public string Email { get; set; }
 	}
+
 }

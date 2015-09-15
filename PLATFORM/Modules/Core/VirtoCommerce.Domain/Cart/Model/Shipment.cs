@@ -11,7 +11,8 @@ namespace VirtoCommerce.Domain.Cart.Model
 	public class Shipment : Entity, IHaveTaxDetalization
 	{
 		public string ShipmentMethodCode { get; set; }
-		public string  WarehouseLocation { get; set; }
+        public string ShipmentMethodOption { get; set; }
+        public string  WarehouseLocation { get; set; }
 
 		public CurrencyCodes Currency { get; set; }
 		public decimal? VolumetricWeight { get; set; }

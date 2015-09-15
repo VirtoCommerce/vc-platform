@@ -21,7 +21,10 @@ namespace VirtoCommerce.CartModule.Data.Model
 
 		[StringLength(64)]
 		public string ShipmentMethodCode { get; set; }
-		[StringLength(64)]
+        [StringLength(64)]
+        public string ShipmentMethodOption { get; set; }
+
+        [StringLength(64)]
 		public string FulfilmentCenterId { get; set; }
 		[Required]
 		[StringLength(3)]

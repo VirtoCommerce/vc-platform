@@ -190,29 +190,11 @@ namespace VirtoCommerce.Web
                     ctx.Pages = new PageCollection();
                     ctx.Forms = commerceService.GetForms();
 
+                    var cart = await commerceService.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
 
-                    var cart =
-                        await commerceService.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
                     if (cart == null)
                     {
-                        var dtoCart = new ApiClient.DataContracts.Cart.ShoppingCart
-                        {
-                            CreatedBy = ctx.CustomerId,
-                            CreatedDate = DateTime.UtcNow,
-                            Currency = shop.Currency,
-                            CustomerId = ctx.CustomerId,
-                            CustomerName =
-                                ctx.Customer != null
-                                    ? ctx.Customer.Name
-                                    : null,
-                            LanguageCode = ctx.Language,
-                            Name = "default",
-                            StoreId = shop.StoreId
-                        };
-
-                        await commerceService.CreateCartAsync(dtoCart);
-                        cart =
-                            await commerceService.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
+                        cart = new Cart(SiteContext.Current.StoreId, SiteContext.Current.CustomerId, SiteContext.Current.Shop.Currency, SiteContext.Current.Language);
                     }
 
                     ctx.Cart = cart;
@@ -227,7 +209,18 @@ namespace VirtoCommerce.Web
 
                             if (anonymousCart != null)
                             {
-                                ctx.Cart = await commerceService.MergeCartsAsync(anonymousCart);
+                                ctx.Cart.MergeCartWith(anonymousCart);
+
+                                if (ctx.Cart.IsTransient)
+                                {
+                                    await commerceService.CreateCartAsync(ctx.Cart);
+                                }
+                                else
+                                {
+                                    await commerceService.SaveChangesAsync(ctx.Cart);
+                                }
+
+                                await commerceService.DeleteCartAsync(anonymousCart.Key);
                             }
                         }
 

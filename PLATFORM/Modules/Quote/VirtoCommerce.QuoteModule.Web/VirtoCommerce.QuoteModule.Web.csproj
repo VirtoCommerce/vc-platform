@@ -105,19 +105,31 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\quote.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Binders\SearchCriteriaBinder.cs" />
+    <Compile Include="Controllers\Api\QuoteModuleController.cs" />
+    <Compile Include="Converters\QuoteAttachmentConverter.cs" />
+    <Compile Include="Converters\QuoteRequestTotalsConverter.cs" />
+    <Compile Include="Converters\TierPriceConverter.cs" />
+    <Compile Include="Converters\QuoteItemConverter.cs" />
+    <Compile Include="Converters\QuoteRequestConverter.cs" />
+    <Compile Include="Converters\AddressConverter.cs" />
+    <Compile Include="ExportImport\QuoteExportImport.cs" />
+    <Compile Include="Model\Address.cs" />
+    <Compile Include="Model\QuoteAttachment.cs" />
+    <Compile Include="Model\QuoteItem.cs" />
+    <Compile Include="Model\QuoteRequest.cs" />
+    <Compile Include="Model\QuoteRequestTotals.cs" />
+    <Compile Include="Model\ShipmentMethod.cs" />
+    <Compile Include="Model\TierPrice.cs" />
     <Compile Include="Module.cs" />
+    <Compile Include="PredefinedPermissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Controllers\Api\" />
-    <Folder Include="Converters\" />
-    <Folder Include="ExportImport\" />
-    <Folder Include="Model\" />
-    <Folder Include="Scripts\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\..\..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj">
       <Project>{f7c9313b-522e-4619-abc9-8c7d4600d6b5}</Project>
@@ -138,6 +150,10 @@
     <ProjectReference Include="..\..\Pricing\VirtoCommerce.PricingModule.Data\VirtoCommerce.PricingModule.Data.csproj">
       <Project>{eadf6315-2743-49d4-aabe-1fc10beaa461}</Project>
       <Name>VirtoCommerce.PricingModule.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VirtoCommerce.QuoteModule.Data\VirtoCommerce.QuoteModule.Data.csproj">
+      <Project>{afa99193-5eb2-44bd-984e-a0ffea24f60a}</Project>
+      <Name>VirtoCommerce.QuoteModule.Data</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

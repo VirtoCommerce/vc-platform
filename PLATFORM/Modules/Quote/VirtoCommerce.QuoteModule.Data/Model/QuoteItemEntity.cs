@@ -22,9 +22,9 @@ namespace VirtoCommerce.QuoteModule.Data.Model
 		public string Currency { get; set; }
 
 		[Column(TypeName = "Money")]
-		public decimal BasePrice { get; set; }
+		public decimal ListPrice { get; set; }
 		[Column(TypeName = "Money")]
-		public decimal Price { get; set; }
+		public decimal SalePrice { get; set; }
 
 		[Required]
 		[StringLength(64)]
@@ -45,9 +45,12 @@ namespace VirtoCommerce.QuoteModule.Data.Model
 		[StringLength(1028)]
 		public string ImageUrl { get; set; }
 
-		#region Navigation Properties
+        [StringLength(64)]
+        public string TaxType { get; set; }
 
-		public virtual QuoteRequestEntity QuoteRequest { get; set; }
+        #region Navigation Properties
+
+        public virtual QuoteRequestEntity QuoteRequest { get; set; }
 		public string QuoteRequestId { get; set; }
 
 		public virtual ObservableCollection<TierPriceEntity> ProposalPrices { get; set; }

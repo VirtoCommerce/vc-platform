@@ -11,16 +11,17 @@ namespace VirtoCommerce.Domain.Quote.Model
 	public class QuoteItem : AuditableEntity
 	{
 		public CurrencyCodes Currency { get; set; }
-		/// <summary>
-		/// Price with tax and without discount
-		/// </summary>
-		public decimal BasePrice { get; set; }
-		/// <summary>
-		/// Price with tax and discount
-		/// </summary>
-		public decimal Price { get; set; }
+        /// <summary>
+        /// Base catalog price
+        /// </summary>
+        public decimal ListPrice { get; set; }
+        /// <summary>
+        /// Sale price for buyer
+        /// </summary>
+        public decimal SalePrice { get; set; }
 
-		public string ProductId { get; set; }
+        public string Sku { get; set; }
+        public string ProductId { get; set; }
 		public CatalogProduct Product { get; set; }
 
 		public string CatalogId { get; set; }
@@ -31,6 +32,26 @@ namespace VirtoCommerce.Domain.Quote.Model
 		public string Comment { get; set; }
 
 		public string ImageUrl { get; set; }
+
+        public string TaxType { get; set; }
+
+        private TierPrice _selectedTierPrice;
+        public TierPrice SelectedTierPrice
+        {
+            get
+            {
+                if(_selectedTierPrice == null && ProposalPrices != null)
+                {
+                    _selectedTierPrice = ProposalPrices.FirstOrDefault();
+                }
+                return _selectedTierPrice;
+            }
+
+            set
+            {
+                _selectedTierPrice = value;
+            }
+        }
 
 		public ICollection<TierPrice> ProposalPrices { get; set; }
 	}

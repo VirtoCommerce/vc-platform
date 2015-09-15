@@ -216,6 +216,7 @@
     <Compile Include="Quote\Model\QuoteRequest.cs" />
     <Compile Include="Quote\Model\QuoteRequestSearchCriteria.cs" />
     <Compile Include="Quote\Model\QuoteRequestSearchResult.cs" />
+    <Compile Include="Quote\Model\QuoteRequestTotals.cs" />
     <Compile Include="Quote\Model\ShipmentMethod.cs" />
     <Compile Include="Quote\Model\TierPrice.cs" />
     <Compile Include="Quote\Services\IQuoteRequestService.cs" />
