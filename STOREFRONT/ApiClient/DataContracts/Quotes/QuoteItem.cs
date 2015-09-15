@@ -6,11 +6,9 @@ namespace VirtoCommerce.ApiClient.DataContracts.Quotes
     {
         public string Id { get; set; }
 
-        public string Currency { get; set; }
+        public decimal ListPrice { get; set; }
 
-        public decimal BasePrice { get; set; }
-
-        public decimal Price { get; set; }
+        public decimal SalePrice { get; set; }
 
         public string ProductId { get; set; }
 
@@ -26,7 +24,9 @@ namespace VirtoCommerce.ApiClient.DataContracts.Quotes
 
         public string ImageUrl { get; set; }
 
-        public TierPrice SelectedPrice { get; set; }
+        public string TaxType { get; set; }
+
+        public TierPrice SelectedTierPrice { get; set; }
 
         public ICollection<TierPrice> ProposalPrices { get; set; }
     }

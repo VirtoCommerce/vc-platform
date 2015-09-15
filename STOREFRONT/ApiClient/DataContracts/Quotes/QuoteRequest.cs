@@ -47,6 +47,10 @@ namespace VirtoCommerce.ApiClient.DataContracts.Quotes
 
         public string Coupon { get; set; }
 
+        public decimal ManualSubTotal { get; set; }
+
+        public decimal ManualRelDiscountAmount { get; set; }
+
         public ShipmentMethod ShipmentMethod { get; set; }
 
         public ICollection<Address> Addresses { get; set; }
@@ -68,6 +72,5 @@ namespace VirtoCommerce.ApiClient.DataContracts.Quotes
         public string ObjectType { get; set; }
 
         public ICollection<DynamicObjectProperty> DynamicProperties { get; set; }
-
     }
 }
