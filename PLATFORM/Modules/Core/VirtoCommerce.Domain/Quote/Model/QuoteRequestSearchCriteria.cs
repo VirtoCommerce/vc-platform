@@ -18,8 +18,9 @@ namespace VirtoCommerce.Domain.Quote.Model
 		public string StoreId { get; set; }
 		public DateTime? StartDate { get; set; }
 		public DateTime? EndDate { get; set; }
-
-		public int Start { get; set; }
+        public string Status { get; set; }
+        public string Tag { get; set; }
+ 		public int Start { get; set; }
 		public int Count { get; set; }
 	}
 }

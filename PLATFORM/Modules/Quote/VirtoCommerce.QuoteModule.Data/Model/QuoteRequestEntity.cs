@@ -58,7 +58,12 @@ namespace VirtoCommerce.QuoteModule.Data.Model
 		public string Comment { get; set; }
 		public string InnerComment { get; set; }
 
-		[Required]
+        [StringLength(128)]
+        public string Tag { get; set; }
+
+        public bool IsSubmitted { get; set; }
+      
+        [Required]
 		[StringLength(3)]
 		public string Currency { get; set; }
 

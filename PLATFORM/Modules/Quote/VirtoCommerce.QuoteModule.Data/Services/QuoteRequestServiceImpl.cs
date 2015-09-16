@@ -7,6 +7,7 @@ using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Domain.Quote.Events;
 using VirtoCommerce.Domain.Quote.Model;
 using VirtoCommerce.Domain.Quote.Services;
+using VirtoCommerce.Platform.Core.ChangeLog;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.Events;
@@ -23,13 +24,15 @@ namespace VirtoCommerce.QuoteModule.Data.Services
 		private readonly IUniqueNumberGenerator _uniqueNumberGenerator;
 		private readonly IDynamicPropertyService _dynamicPropertyService;
 		private readonly IEventPublisher<QuoteRequestChangeEvent> _eventPublisher;
+        private readonly IChangeLogService _changeLogService;
 
-        public QuoteRequestServiceImpl(Func<IQuoteRepository> quoteRepositoryFactory, IUniqueNumberGenerator uniqueNumberGenerator, IDynamicPropertyService dynamicPropertyService, IEventPublisher<QuoteRequestChangeEvent> eventPublisher)
+        public QuoteRequestServiceImpl(Func<IQuoteRepository> quoteRepositoryFactory, IUniqueNumberGenerator uniqueNumberGenerator, IDynamicPropertyService dynamicPropertyService, IEventPublisher<QuoteRequestChangeEvent> eventPublisher, IChangeLogService changeLogService)
 		{
 			_repositoryFactory = quoteRepositoryFactory;
 			_uniqueNumberGenerator = uniqueNumberGenerator;
 			_dynamicPropertyService = dynamicPropertyService;
 			_eventPublisher = eventPublisher;
+            _changeLogService = changeLogService;
         }
 
 		#region IQuoteRequestService Members
@@ -38,10 +41,11 @@ namespace VirtoCommerce.QuoteModule.Data.Services
 		{
             using (var repository = _repositoryFactory())
             {
-                var retVal = repository.GetQuoteRequestByIds(ids).Select(x => x.ToCoreModel());
+                var retVal = repository.GetQuoteRequestByIds(ids).Select(x => x.ToCoreModel()).ToArray();
                 foreach(var quote in retVal)
                 {
                     _dynamicPropertyService.LoadDynamicPropertyValues(quote);
+                    _changeLogService.LoadChangeLogs(quote);
                     _eventPublisher.Publish(new QuoteRequestChangeEvent(EntryState.Unchanged, quote, quote));
                 }
                 return retVal;
@@ -121,7 +125,14 @@ namespace VirtoCommerce.QuoteModule.Data.Services
                 {
                     query = query.Where(x => x.Number.Contains(criteria.Keyword));
                 }
-
+                if(criteria.Tag != null)
+                {
+                    query = query.Where(x => x.Tag == criteria.Tag);
+                }
+                if (criteria.Status != null)
+                {
+                    query = query.Where(x => x.Status == criteria.Status);
+                }
                 retVal = new QuoteRequestSearchResult
                 {
                     TotalCount = query.Count(),
@@ -152,6 +163,7 @@ namespace VirtoCommerce.QuoteModule.Data.Services
         } 
 		#endregion
 
+   
 		private void EnsureThatQuoteHasNumber(QuoteRequest[] quoteRequests)
 		{
 			foreach (var quoteRequest in quoteRequests)

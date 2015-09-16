@@ -25,7 +25,8 @@ namespace VirtoCommerce.QuoteModule.Web.Controllers.Api
 			var result = new coreModel.QuoteRequestSearchCriteria();
 
 			result.Keyword = qs["q"].EmptyToNull();
-				
+            result.Status = qs["status"].EmptyToNull();
+            result.Tag = qs["tag"].EmptyToNull();	
 			result.StoreId = qs["site"].EmptyToNull();
 			result.CustomerId = qs["customer"].EmptyToNull();
 			result.Count = qs["count"].TryParse(20);

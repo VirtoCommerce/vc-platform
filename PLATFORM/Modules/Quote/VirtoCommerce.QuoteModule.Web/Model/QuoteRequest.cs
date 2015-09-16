@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using VirtoCommerce.Domain.Commerce.Model;
+using VirtoCommerce.Platform.Core.ChangeLog;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
 
@@ -55,6 +56,15 @@ namespace VirtoCommerce.QuoteModule.Web.Model
         /// </summary>
 		public bool IsLocked { get; set; }
 		public string Status { get; set; }
+        /// <summary>
+        /// Tag for auxiliary information
+        /// </summary>
+        public string Tag { get; set; }
+
+        /// <summary>
+        /// Flag checked if proposal submitted to buyer
+        /// </summary>
+        public bool IsSubmitted { get; set; }
 
         /// <summary>
         /// Public comment visible for customer 
@@ -108,6 +118,8 @@ namespace VirtoCommerce.QuoteModule.Web.Model
         /// </summary>
 		public string ObjectType { get; set; }
 		public ICollection<DynamicObjectProperty> DynamicProperties { get; set; }
-	
-	}
+
+        public ICollection<OperationLog> OperationsLog { get; set; }
+
+    }
 }

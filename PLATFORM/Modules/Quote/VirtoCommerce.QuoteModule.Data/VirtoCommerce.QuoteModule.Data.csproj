@@ -69,12 +69,17 @@
     <Compile Include="Migrations\201509141549134_ManualTotal.Designer.cs">
       <DependentUpon>201509141549134_ManualTotal.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201509161439413_ExtraFields.cs" />
+    <Compile Include="Migrations\201509161439413_ExtraFields.Designer.cs">
+      <DependentUpon>201509161439413_ExtraFields.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\AddressEntity.cs" />
     <Compile Include="Model\AttachmentEntity.cs" />
     <Compile Include="Model\QuoteItemEntity.cs" />
     <Compile Include="Model\QuoteRequestEntity.cs" />
     <Compile Include="Model\TierPriceEntity.cs" />
+    <Compile Include="Observers\LogQuoteChangesObserver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\IQuoteRepository.cs" />
     <Compile Include="Repositories\QuoteRepositoryImpl.cs" />
@@ -99,7 +104,9 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Interceptors\" />
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201509110838465_Initial.resx">
       <DependentUpon>201509110838465_Initial.cs</DependentUpon>
@@ -109,6 +116,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201509141549134_ManualTotal.resx">
       <DependentUpon>201509141549134_ManualTotal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201509161439413_ExtraFields.resx">
+      <DependentUpon>201509161439413_ExtraFields.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

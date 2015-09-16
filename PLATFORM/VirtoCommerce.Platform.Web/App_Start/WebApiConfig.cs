@@ -1,6 +1,7 @@
 ﻿using System.Web.Http;
 using System.Web.Http.OData.Extensions;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using VirtoCommerce.Platform.Core.Security;
 
 namespace VirtoCommerce.Platform.Web
@@ -22,7 +23,7 @@ namespace VirtoCommerce.Platform.Web
             formatter.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
             //formatter.SerializerSettings.DefaultValueHandling = DefaultValueHandling.Ignore;
             formatter.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
-
+            formatter.SerializerSettings.Converters.Add(new StringEnumConverter { CamelCaseText = true });
             //config.Formatters.JsonFormatter.SerializerSettings.
             // Uncomment the following line of code to enable query support for actions with an IQueryable or IQueryable<T> return type.
             // To avoid processing unexpected or malicious queries, use the validation settings on QueryableAttribute to validate incoming queries.

@@ -250,6 +250,10 @@
     <Compile Include="Repositories\Migrations\201507131402088_DynamicProperties.Designer.cs">
       <DependentUpon>201507131402088_DynamicProperties.cs</DependentUpon>
     </Compile>
+    <Compile Include="Repositories\Migrations\201509161444352_DetailField.cs" />
+    <Compile Include="Repositories\Migrations\201509161444352_DetailField.Designer.cs">
+      <DependentUpon>201509161444352_DetailField.cs</DependentUpon>
+    </Compile>
     <Compile Include="Repositories\Migrations\Configuration.cs" />
     <Compile Include="Repositories\PlatformDatabaseInitializer.cs" />
     <Compile Include="Repositories\PlatformRepository.cs" />
@@ -341,6 +345,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Repositories\Migrations\201507131402088_DynamicProperties.resx">
       <DependentUpon>201507131402088_DynamicProperties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Repositories\Migrations\201509161444352_DetailField.resx">
+      <DependentUpon>201509161444352_DetailField.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Security\Identity\Migrations\201411101625303_InitialCreate.resx">
       <DependentUpon>201411101625303_InitialCreate.cs</DependentUpon>

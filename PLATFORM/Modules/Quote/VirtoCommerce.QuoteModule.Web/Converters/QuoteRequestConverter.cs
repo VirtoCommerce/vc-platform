@@ -37,7 +37,8 @@ namespace VirtoCommerce.QuoteModule.Web.Converters
             {
                 retVal.Totals = quoteRequest.Totals.ToWebModel();
             }
-
+        
+            retVal.OperationsLog = quoteRequest.OperationsLog;
             return retVal;
 		}
 
@@ -67,6 +68,7 @@ namespace VirtoCommerce.QuoteModule.Web.Converters
             {
                 retVal.Totals = quoteRequest.Totals.ToCoreModel();
             }
+            retVal.OperationsLog = quoteRequest.OperationsLog;
             return retVal;
 		}
 

@@ -4,14 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Domain.Commerce.Model;
+using VirtoCommerce.Platform.Core.ChangeLog;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
 
 namespace VirtoCommerce.Domain.Quote.Model
 {
-	public class QuoteRequest : AuditableEntity, IHaveTaxDetalization, ISupportCancellation, IHasDynamicProperties, ILanguageSupport
-	{
-		public string Number { get; set; }
+	public class QuoteRequest : AuditableEntity, IHaveTaxDetalization, ISupportCancellation, IHasDynamicProperties, ILanguageSupport, IHasChangesHistory
+    {
+ 		public string Number { get; set; }
 		public string StoreId { get; set; }
 		public string ChannelId { get; set; }
 		public bool IsAnonymous { get; set; }
@@ -30,6 +31,13 @@ namespace VirtoCommerce.Domain.Quote.Model
 		public bool IsLocked { get; set; }
 		public string Status { get; set; }
 
+        public string Tag { get; set; }
+
+        /// <summary>
+        /// Flag checked if proposal submitted to buyer
+        /// </summary>
+        public bool IsSubmitted { get; set; }
+     
 		public string Comment { get; set; }
 		public string InnerComment { get; set; }
 		public CurrencyCodes Currency { get; set; }
@@ -52,8 +60,12 @@ namespace VirtoCommerce.Domain.Quote.Model
 		public ICollection<QuoteItem> Items { get; set; }
 		public ICollection<QuoteAttachment> Attachments { get; set; }
 
-		#region ILanguageSupport Members
-		public string LanguageCode { get; set; }
+        #region IHasChangesHistory Members
+        public ICollection<OperationLog> OperationsLog { get; set; } 
+        #endregion
+
+        #region ILanguageSupport Members
+        public string LanguageCode { get; set; }
 		#endregion
 
 		#region IHaveTaxDetalization Members

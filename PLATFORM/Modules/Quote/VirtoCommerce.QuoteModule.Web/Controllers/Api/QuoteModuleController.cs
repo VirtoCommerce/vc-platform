@@ -43,31 +43,7 @@ namespace VirtoCommerce.QuoteModule.Web.Controllers.Api
             return Ok(retVal);
         }
 
-        /// <summary>
-        /// Get current RFQ for customer in specified store 
-        /// </summary>
-        /// <param name="storeId">Store id</param>
-        /// <param name="customerId">Customer id</param>
- 		[HttpGet]
-        [ResponseType(typeof(webModel.QuoteRequest))]
-        [Route("{storeId}/{customerId}/current")]
-        public IHttpActionResult GetCurrentQuote(string storeId, string customerId)
-        {
-            var criteria = new coreModel.QuoteRequestSearchCriteria
-            {
-                CustomerId = customerId,
-                StoreId = storeId
-            };
-
-            var searchResult = _quoteRequestService.Search(criteria);
-            var retVal = searchResult.QuoteRequests.FirstOrDefault();
-            if (retVal == null)
-            {
-                return NotFound();
-            }
-            return Ok(retVal.ToWebModel());
-        }
-
+       
         /// <summary>
         /// Get RFQ by id
         /// </summary>

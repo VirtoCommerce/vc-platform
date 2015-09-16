@@ -11,6 +11,7 @@ using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Platform.Data.Repositories;
+using VirtoCommerce.QuoteModule.Data.Observers;
 using VirtoCommerce.QuoteModule.Data.Repositories;
 using VirtoCommerce.QuoteModule.Data.Services;
 using VirtoCommerce.QuoteModule.Web.ExportImport;
@@ -45,10 +46,12 @@ namespace VirtoCommerce.QuoteModule.Web
 
             _container.RegisterType<IQuoteTotalsCalculator, DefaultQuoteTotalsCalculator>();
 
-            _container.RegisterType<IQuoteRepository>(new InjectionFactory(c => new QuoteRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor(), new ChangeLogInterceptor(_container.Resolve<Func<IPlatformRepository>>(), ChangeLogPolicy.Historical, new[] { typeof(dataModel.QuoteRequestEntity).Name }))));
+            _container.RegisterType<IQuoteRepository>(new InjectionFactory(c => new QuoteRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor())));
             _container.RegisterType<IQuoteRequestService, QuoteRequestServiceImpl>();
 
             _container.RegisterType<IEventPublisher<QuoteRequestChangeEvent>, EventPublisher<QuoteRequestChangeEvent>>();
+            //Log quote request changes
+            _container.RegisterType<IObserver<QuoteRequestChangeEvent>, LogQuoteChangesObserver>("LogQuoteChangesObserver");
         }
 
 

@@ -20,6 +20,10 @@ namespace VirtoCommerce.Platform.Data.Model
 		[Required]
 		[StringLength(20)]
 		public string OperationType { get; set; }
-	}
+
+        
+        [StringLength(1024)]
+        public string Detail { get; set; }
+    }
 
 }
