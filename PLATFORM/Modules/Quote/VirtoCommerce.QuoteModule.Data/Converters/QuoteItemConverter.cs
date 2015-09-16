@@ -64,7 +64,7 @@ namespace VirtoCommerce.QuoteModule.Data.Converters
 
 			if (!source.ProposalPrices.IsNullCollection())
 			{
-                var tierPriceComparer = AnonymousComparer.Create((dataModel.TierPriceEntity x) => x.Quantity + "-" + x.Quantity);
+                var tierPriceComparer = AnonymousComparer.Create((dataModel.TierPriceEntity x) => x.Quantity + "-" + x.Price);
                 source.ProposalPrices.Patch(target.ProposalPrices, tierPriceComparer, (sourceTierPrice, targetTierPrice) => { return; });
 			}
 		}

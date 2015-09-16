@@ -89,8 +89,8 @@ namespace VirtoCommerce.QuoteModule.Data.Model
 
         #region Navigation properties
         public ObservableCollection<AddressEntity> Addresses { get; set; }
-		public ICollection<QuoteItemEntity> Items { get; set; }
-		public ICollection<AttachmentEntity> Attachments { get; set; } 
+		public ObservableCollection<QuoteItemEntity> Items { get; set; }
+		public ObservableCollection<AttachmentEntity> Attachments { get; set; } 
 		#endregion
 	}
 }
