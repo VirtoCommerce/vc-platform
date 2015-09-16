@@ -3,7 +3,7 @@
         <p class="form-count">Count: <span class="count">{{totalItems}}</span></p>
     </div>
 </div>
-<div class="blade-content __large-wide">
+<div class="blade-content __xxlarge-wide">
     <div class="blade-inner">
         <div class="inner-block">
             <form name="quoteForm" novalidate></form>
@@ -17,14 +17,14 @@
                                     <span class="check"></span>
                                 </label>
                             </th>
-                            <th class="table-col">Pic</th>
+                            <th class="table-col __product-img">Pic</th>
                             <th class="table-col">SKU</th>
                             <th class="table-col">Comment with product</th>
-                            <th class="table-col">List price</th>
-                            <th class="table-col">Sale price</th>
-                            <th class="table-col">Qty</th>
-                            <th class="table-col">Proposed price</th>
-                            <th class="table-col">Margin (GP)</th>
+                            <th class="table-col" width="5%">List price</th>
+                            <th class="table-col" width="5%">Sale price</th>
+                            <th class="table-col" width="5%">Qty</th>
+                            <th class="table-col" width="13%">Proposed price</th>
+                            <th class="table-col" width="5%">Margin (GP)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -56,31 +56,33 @@
                                 <span>{{data.salePrice}}</span>
                             </td>
                             <td class="table-col">
+                                <a class="list-link" ng-click="addProposalTier(data.proposalPrices)">Add</a>
                                 <div ng-repeat="p in data.proposalPrices | orderBy:['quantity','price']" class="form-input __mini __number">
                                     <input va-number required ng-model="p.quantity" min="1" step="1" ng-change="recalculate()">
                                 </div>
                                 <!--<div ng-repeat="p in data.proposalPrices | orderBy:['quantity','price']" style="height: 34px;">
                                     <span>{{p.quantity}}</span>
                                 </div>-->
-                                <a href class="list-link" ng-click="addProposalTier(data.proposalPrices)">Add</a>
                             </td>
-                            <td class="table-col" style="vertical-align: top">
+                            <td class="table-col">
+                                <a class="list-link">Remove</a>
                                 <div ng-repeat="p in data.proposalPrices | orderBy:['quantity','price']">
-                                    <div class="form-control __radio">
+                                    <div class="form-control __radio __inline">
                                         <label class="form-label">
                                             <input type="radio" ng-model="data.selectedTierPrice" ng-value="p" ng-change="recalculate()">
                                             <span class="check"></span>
                                             <!--<span class="name">Green</span>-->
                                         </label>
                                     </div>
-                                    <div class="form-input __mini">
+                                    <div class="form-input __mini __inline">
                                         <input money required ng-model="p.price" ng-change="recalculate()">
                                     </div>
                                 </div>
                             </td>
                             <td class="table-col">
-                                <div ng-repeat="p in data.proposalPrices | orderBy:['quantity','price']" style="height: 34px;">
-                                    <span>{{getMargin(data, p)}} %</span>
+                                <div class="table-space"></div>
+                                <div class="form-input" ng-repeat="p in data.proposalPrices | orderBy:['quantity','price']">
+                                    <p class="form-text">{{getMargin(data, p)}} %</p>
                                 </div>
                             </td>
                         </tr>
@@ -93,63 +95,63 @@
                             <td class="table-head" colspan="3">
                                 <span>Total {{blade.currentEntity.items.length}} product(s)</span>
                             </td>
-                            <td class="table-head">Subtotal:</td>
-                            <td class="table-head">{{totals.listPrice}}</td>
-                            <td class="table-head">{{blade.currentEntity.totals.originalSubTotalExlTax}}</td>
-                            <td class="table-head">{{totals.quantity}}</td>
-                            <td class="table-head">{{blade.currentEntity.totals.subTotalExlTax}}</td>
-                            <td class="table-head">{{totals.margin}}</td>
+                            <td class="table-col">Subtotal:</td>
+                            <td class="table-col">{{totals.listPrice}}</td>
+                            <td class="table-col">{{blade.currentEntity.totals.originalSubTotalExlTax}}</td>
+                            <td class="table-col">{{totals.quantity}}</td>
+                            <td class="table-col">{{blade.currentEntity.totals.subTotalExlTax}}</td>
+                            <td class="table-col">{{totals.margin}}</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
 
-            <table class="table __collapsed __order-info">
-                <tr class="table-item">
-                    <td class="table-col">{{totals.isDiscountAbsolute ? 'Relative discount, %' : 'New subtotal, ' + blade.currentEntity.currency}}</td>
-                    <td class="table-col">
-                        <div class="form-input __mini">
-                            <input money required ng-model="blade.currentEntity.manualSubTotal" ng-change="recalculate()" ng-hide="!totals.isDiscountAbsolute">
-                            <input money required ng-model="blade.currentEntity.manualRelDiscountAmount" ng-change="recalculate()" ng-hide="totals.isDiscountAbsolute">
-                        </div>
-                        <!--<span>{{totals.isDiscountAbsolute ? '%' : blade.currentEntity.currency}}</span>-->
-                        <a href class="list-link" ng-click="totals.isDiscountAbsolute=!totals.isDiscountAbsolute">{{totals.isDiscountAbsolute ? 'Set new subtotal': 'Set discount percentage'}}</a>
-                    </td>
-                </tr>
-                <tr class="table-item">
-                    <td class="table-col">Sub Total (placed)</td>
-                    <td class="table-col __price">{{blade.currentEntity.totals.originalSubTotalExlTax | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
-                </tr>
-                <tr class="table-item">
-                    <td class="table-col">Adjustment Quote</td>
-                    <td class="table-col __price">{{blade.currentEntity.totals.adjustmentQuoteExlTax | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
-                </tr>
-                <tr class="table-item">
-                    <td class="table-col">Sub Total</td>
-                    <td class="table-col __price">{{blade.currentEntity.totals.subTotalExlTax | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
-                </tr>
-                <tr class="table-item">
-                    <td class="table-col">Shipping</td>
-                    <td class="table-col __price">{{blade.currentEntity.totals.shippingTotal | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
-                </tr>
-                <tr class="table-item">
-                    <td class="table-col">Discount</td>
-                    <td class="table-col __price">{{blade.currentEntity.totals.discountTotal | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
-                </tr>
-                <tr class="table-item __total">
-                    <td class="table-col">Grand Total</td>
-                    <td class="table-col __price">{{blade.currentEntity.totals.grandTotalExlTax | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
-                </tr>
-                <tr class="table-item">
-                    <td class="table-col">Taxes</td>
-                    <td class="table-col __price">{{blade.currentEntity.totals.taxTotal | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
-                </tr>
-                <tr class="table-item __total">
-                    <td class="table-col">Grand Total (Incl. Taxes)</td>
-                    <td class="table-col __price">{{blade.currentEntity.totals.grandTotalInclTax | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
-                </tr>
-            </table>
-            <button class="btn" ng-click="confirm()">Submit proposal</button>
+            <div class="order-discount">
+                <div class="order-t">{{totals.isDiscountAbsolute ? 'Relative discount, %' : 'New subtotal, ' + blade.currentEntity.currency}}</div>
+                <div class="form-input __mini __inline">
+                    <input money required ng-model="blade.currentEntity.manualSubTotal" ng-change="recalculate()" ng-hide="!totals.isDiscountAbsolute">
+                    <input money required ng-model="blade.currentEntity.manualRelDiscountAmount" ng-change="recalculate()" ng-hide="totals.isDiscountAbsolute">
+                </div>
+                <button class="btn" ng-click="totals.isDiscountAbsolute=!totals.isDiscountAbsolute">{{totals.isDiscountAbsolute ? 'Set new subtotal': 'Set discount percentage'}}</button>
+            </div>
+
+            <div class="order-info">
+                <table class="table __collapsed">
+                    <tr class="table-item">
+                        <td class="table-col">Sub Total (placed)</td>
+                        <td class="table-col __price">{{blade.currentEntity.totals.originalSubTotalExlTax | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
+                    </tr>
+                    <tr class="table-item">
+                        <td class="table-col">Adjustment Quote</td>
+                        <td class="table-col __price">{{blade.currentEntity.totals.adjustmentQuoteExlTax | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
+                    </tr>
+                    <tr class="table-item">
+                        <td class="table-col">Sub Total</td>
+                        <td class="table-col __price">{{blade.currentEntity.totals.subTotalExlTax | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
+                    </tr>
+                    <tr class="table-item">
+                        <td class="table-col">Shipping</td>
+                        <td class="table-col __price">{{blade.currentEntity.totals.shippingTotal | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
+                    </tr>
+                    <tr class="table-item">
+                        <td class="table-col">Discount</td>
+                        <td class="table-col __price">{{blade.currentEntity.totals.discountTotal | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
+                    </tr>
+                    <tr class="table-item __total">
+                        <td class="table-col">Grand Total</td>
+                        <td class="table-col __price">{{blade.currentEntity.totals.grandTotalExlTax | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
+                    </tr>
+                    <tr class="table-item">
+                        <td class="table-col">Taxes</td>
+                        <td class="table-col __price">{{blade.currentEntity.totals.taxTotal | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
+                    </tr>
+                    <tr class="table-item __total">
+                        <td class="table-col">Grand Total (Incl. Taxes)</td>
+                        <td class="table-col __price">{{blade.currentEntity.totals.grandTotalInclTax | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
+                    </tr>
+                </table>
+                <button class="btn" ng-click="confirm()">Submit proposal</button>
+            </div>
         </div>
     </div>
 </div>
