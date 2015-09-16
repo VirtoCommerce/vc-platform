@@ -34,12 +34,18 @@
     }
 
 /* Order info */
-.table.__order-info
+.order-info,
+.__order-info
 {
     float: right;
     margin: 0 10px 0 0;
     min-width: inherit;
     width: 45%;
+}
+
+.order-info .table
+{
+    margin: 0 0 15px;
 }
 
 .table.__collapsed .table-col
@@ -100,4 +106,21 @@
     .order-status .reason
     {
         font-size: 12px;
+    }
+
+.order-discount
+{
+    float: left;
+    width: 45%;
+}
+
+    .order-discount .order-t
+    {
+        margin: 0 0 10px;
+    }
+
+    .order-discount .btn
+    {
+        height: 34px;
+        vertical-align: middle;
     }

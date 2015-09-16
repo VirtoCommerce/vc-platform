@@ -3742,6 +3742,17 @@ fieldset + fieldset
             width: 68px;
         }
 
+        .form-input.__inline
+        {
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .table-col .form-input.__mini
+        {
+            margin: 5px 0 0;
+        }
+
         .form-input input,
         .form-input select,
         .form-input .form-text
@@ -3966,6 +3977,16 @@ fieldset + fieldset
             line-height: 34px;
         }
 
+        .table-col .form-input .form-text
+        {
+            margin: 5px 0 0;
+        }
+
+        .table-col .table-space
+        {
+            height: 17px;
+        }
+
             .form-input .btn-ico
             {
                 color: #43b0e6;
@@ -4014,6 +4035,7 @@ fieldset + fieldset
         height: 12px;
         position: relative;
         top: -2px;
+        vertical-align: middle;
         width: 12px;
     }
 
@@ -4021,6 +4043,13 @@ fieldset + fieldset
     {
         min-height: 12px;
         position: relative;
+    }
+
+    .form-control.__inline
+    {
+        display: inline-block;
+        margin: 0 20px 0 0;
+        vertical-align: middle;
     }
 
     .form-control.__checkbox,
@@ -7356,6 +7385,11 @@ tags-input .tags .tag-item .remove-button
         width: 810px;
     }
 
+    .blade .blade-content.__xxlarge-wide
+    {
+        width: 940px;
+    }
+
     .blade .blade-content.__tree
     {
         width: 340px;
@@ -7451,6 +7485,11 @@ tags-input .tags .tag-item .remove-button
         .blade-content.__large-wide .inner-block
         {
             width: 640px;
+        }
+
+        .blade-content.__xxlarge-wide .inner-block
+        {
+            width: 900px;
         }
 
         .blade-content.__tree .inner-block

@@ -1,46 +1,63 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <module>
-    <id>VirtoCommerce.Quote</id>
-    <version>2.4.0</version>
-    <platformVersion>2.4.0</platformVersion>
-    <dependencies>
-        <dependency id="VirtoCommerce.Core" version="2.4.0" />
-    </dependencies>
+  <id>VirtoCommerce.Quote</id>
+  <version>2.4.0</version>
+  <platformVersion>2.4.0</platformVersion>
+  <dependencies>
+    <dependency id="VirtoCommerce.Core" version="2.4.0" />
+  </dependencies>
 
-    <title>Quote module</title>
-    <description>Quoter enables business users to execute quote requests online. Once initiated, an online conversation takes place with internal users who interact with the business user’s request. The internal user can set prices for quantity breaks or discounts. The quote is then made available to the business user online. The business user can accept the quote and place the order, continue the conversation, or reject the quote. </description>
-    <authors>
-        <author>Virto Commerce</author>
-    </authors>
-    <owners>
-        <owner>Virto Commerce</owner>
-    </owners>
-    <projectUrl>http://virtocommerce.com/</projectUrl>
+  <title>Quote module</title>
+  <description>Quoter enables business users to execute quote requests online. Once initiated, an online conversation takes place with internal users who interact with the business user’s request. The internal user can set prices for quantity breaks or discounts. The quote is then made available to the business user online. The business user can accept the quote and place the order, continue the conversation, or reject the quote. </description>
+  <authors>
+    <author>Virto Commerce</author>
+  </authors>
+  <owners>
+    <owner>Virto Commerce</owner>
+  </owners>
+  <projectUrl>http://virtocommerce.com/</projectUrl>
   <iconUrl>Modules/$(VirtoCommerce.Core)/Content/logoVC.png</iconUrl>
-    <releaseNotes>First version.</releaseNotes>
-    <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
-    <tags>b2b quotes</tags>
+  <releaseNotes>First version.</releaseNotes>
+  <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
+  <tags>b2b quotes</tags>
 
-    <assemblyFile>VirtoCommerce.QuoteModule.Web.dll</assemblyFile>
-    <moduleType>VirtoCommerce.QuoteModule.Web.Module, VirtoCommerce.QuoteModule.Web</moduleType>
-    <!--<styles>
+  <assemblyFile>VirtoCommerce.QuoteModule.Web.dll</assemblyFile>
+  <moduleType>VirtoCommerce.QuoteModule.Web.Module, VirtoCommerce.QuoteModule.Web</moduleType>
+  <!--<styles>
     <directory virtualPath="$/Content/css" searchPattern="*.css" searchSubdirectories="true" />
   </styles>-->
-    <scripts>
-        <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
-    </scripts>
-	<settings>
-		<group name="Quotes|General">
-			<setting>
-				<name>Quotes.ExportImport.Description</name>
-				<valueType>string</valueType>
-				<defaultValue>Export/Import Request for quotes (RFQs)</defaultValue>
-				<title>Export/Import description</title>
-				<description>Module description in platform export/import wizard</description>
-			</setting>
-		</group>
-	</settings>
-    <permissions>
-
-    </permissions>
+  <scripts>
+    <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
+  </scripts>
+  <settings>
+    <group name="Quotes|General">
+      <setting>
+        <name>Quotes.Status</name>
+        <valueType>string</valueType>
+        <defaultValue>New</defaultValue>
+        <title>States</title>
+        <description>States that a quote can be in</description>
+        <isArray>true</isArray>
+        <arrayValues>
+          <value>New</value>
+          <value>Processing</value>
+          <value>Proposal sent</value>
+          <value>Ordered</value>
+        </arrayValues>
+      </setting>
+      <setting>
+        <name>Quotes.ExportImport.Description</name>
+        <valueType>string</valueType>
+        <defaultValue>Export/Import Request for quotes (RFQs)</defaultValue>
+        <title>Export/Import description</title>
+        <description>Module description in platform export/import wizard</description>
+      </setting>
+    </group>
+  </settings>
+  <permissions>
+    <group name="Quote">
+      <permission id="quote:query" name="Browse quotes" description="Permission to open quotes menu and browse data."/>
+      <permission id="quote:manage" name="Manage quotes" description="Permission to manage quotes information."/>
+    </group>
+  </permissions>
 </module>

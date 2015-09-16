@@ -1,0 +1,110 @@
+﻿<div class="blade-content __medium-wide">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div class="order-status canceled" ng-if="blade.currentEntity.status">
+                <div class="status" ng-bind="blade.currentEntity.status"></div>
+                <div class="reason" ng-bind="blade.currentEntity.cancelReason" ng-if="blade.currentEntity.isCancelled"></div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">On hold</label>
+                <div class="form-input">
+                    <label class="form-label __switch">
+                        <input type="checkbox" ng-model="blade.currentEntity.isOnHold" />
+                        <span class="switch"></span>
+                    </label>
+                </div>
+            </div>
+            <form class="form" name="detailForm">
+                <div class="columns">
+                    <div class="column">
+                        <div class="form-group">
+                            <label class="form-label">Status</label>
+                            <div class="form-input">
+                                <ui-select ng-model="blade.currentEntity.status" required>
+                                    <ui-select-match placeholder="Select...">{{$select.selected}}</ui-select-match>
+                                    <ui-select-choices repeat="x in quoteStatuses | filter: $select.search">
+                                        <span ng-bind-html="x | highlight: $select.search"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="form-group">
+                            <label class="form-label">RFQ from</label>
+                            <div class="form-input">
+                                <ui-select ng-model="blade.currentEntity.storeId" required>
+                                    <ui-select-match placeholder="Select a store">{{$select.selected.name}}</ui-select-match>
+                                    <ui-select-choices repeat="store.id as store in stores | filter: { name: $select.search }">
+                                        <span ng-bind-html="store.name | highlight: $select.search"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="columns">
+                    <div class="column">
+                        <div class="form-group">
+                            <label class="form-label">Expiry date</label>
+                            <div class="form-input __calendar">
+                                <input placeholder="Choose date" ng-model="blade.item.expiration" datepicker-popup="shortDate" is-open="datepickers.exp" close-text="Close" />
+                                <button class="btn" type="button" ng-click="open($event,'exp')">
+                                    <i class="btn-ico fa fa-calendar"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="form-group">
+                            <label class="form-label">Last updated</label>
+                            <div class="form-input">
+                                <div class="form-text">{{blade.currentEntity.modifiedDate | date:'short'}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="columns clearfix">
+                    <div class="column">
+                        <div class="form-group">
+                            <label class="form-label">Reminder date</label>
+                            <div class="form-input __calendar">
+                                <input placeholder="Choose date" ng-model="blade.item.reminderDate" datepicker-popup="shortDate" is-open="datepickers.rmd" close-text="Close" />
+                                <button class="btn" type="button" ng-click="open($event,'rmd')">
+                                    <i class="btn-ico fa fa-calendar"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="form-group">
+                            <label class="form-label">Assigned to</label>
+                            <div class="form-input">
+                                <ui-select ng-model="blade.currentEntity.employeeId">
+                                    <ui-select-match placeholder="Select...">{{$select.selected.userName}}</ui-select-match>
+                                    <ui-select-choices repeat="x.id as x in employees | filter: { userName: $select.search }">
+                                        <span ng-bind-html="x.userName | highlight: $select.search"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" ng-init="setForm(detailForm)">
+                    <label class="form-label">General comment</label>
+                    <div class="form-input">
+                        <textarea class="form-control" ng-model="blade.currentEntity.comment" placeholder="Public comment"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Internal comment</label>
+                    <div class="form-input">
+                        <textarea class="form-control" ng-model="blade.currentEntity.innerComment" placeholder="Internal comment"></textarea>
+                    </div>
+                </div>
+            </form>
+
+            <va-widget-container group="quoteDetail" blade="blade" gridster-opts="{width: 526}"></va-widget-container>
+        </div>
+    </div>
+</div>

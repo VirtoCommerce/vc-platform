@@ -35,7 +35,7 @@ angular.module(moduleName, ['virtoCommerce.catalogModule', 'virtoCommerce.pricin
           path: 'browse/orders',
           icon: 'fa fa-file-text',
           title: 'Orders',
-          priority: 99,
+          priority: 90,
           action: function () { $state.go('workspace.orderModule'); },
           permission: 'order:query'
       };

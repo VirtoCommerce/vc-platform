@@ -96,7 +96,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <Content Include="module.manifest" />
+    <Content Include="module.manifest">
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -106,6 +108,18 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\quote.js" />
+    <Content Include="Scripts\blades\quote-items.js" />
+    <Content Include="Scripts\blades\quote-items.tpl.html" />
+    <Content Include="Scripts\blades\quote-detail.js" />
+    <Content Include="Scripts\blades\quote-detail.tpl.html" />
+    <Content Include="Scripts\blades\quotes-list.js" />
+    <Content Include="Scripts\blades\quotes-list.tpl.html" />
+    <Content Include="Scripts\dialogs\cancelQuote-dialog.tpl.html" />
+    <Content Include="Scripts\resources\quotes.js" />
+    <Content Include="Scripts\widgets\quote-items-widget.js" />
+    <Content Include="Scripts\widgets\quote-items-widget.tpl.html" />
+    <Content Include="Scripts\widgets\quote-address-widget.js" />
+    <Content Include="Scripts\widgets\quote-address-widget.tpl.html" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -126,10 +140,9 @@
     <Compile Include="Model\ShipmentMethod.cs" />
     <Compile Include="Model\TierPrice.cs" />
     <Compile Include="Module.cs" />
-    <Compile Include="PredefinedPermissions.cs" />
+    <Compile Include="Controllers\PredefinedPermissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\..\..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj">
       <Project>{f7c9313b-522e-4619-abc9-8c7d4600d6b5}</Project>
