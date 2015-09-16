@@ -352,7 +352,7 @@
     <Content Include="Content\themes\main\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="gulpfile.js" />
     <Content Include="Scripts\allPackages.js" />
-    <Content Include="Scripts\allStyles.css" />
+    <Content Include="Content\allStyles.css" />
     <Content Include="Scripts\app\dynamicProperties\blades\dynamicProperty-detail.js" />
     <Content Include="Scripts\app\dynamicProperties\blades\dynamicProperty-detail.tpl.html" />
     <Content Include="Scripts\app\dynamicProperties\blades\dynamicObject-list.js" />
