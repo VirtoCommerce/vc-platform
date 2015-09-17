@@ -58,6 +58,10 @@ namespace VirtoCommerce.Web.Services
                 return null;
             }
 
+
+            // url format is /blogs/{blogname}/article, we going to extract blog name first
+           // var vals = items.Select(x => x.Url.Substring(0, x.Url.LastIndexOf("/")));
+            // items
             // TODO: remove hard coded news blog
             var blog = new Blog() { Id = "news", Handle = "news", Url = "/blogs/news", Title = "News", Articles = items.Select(x=>x.AsArticleWebModel()).ToArray()};
             return new[] { blog };
