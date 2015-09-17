@@ -22,8 +22,8 @@ angular.module(moduleName, [])
                           isClosingDisabled: true
                       };
                       bladeNavigationService.showBlade(blade);
-                  	 //Need for isolate and prevent conflict module css to another modules 
-                  	 //it value included in bladeContainer as ng-class='moduleName'
+                      //Need for isolate and prevent conflict module css to another modules 
+                      //it value included in bladeContainer as ng-class='moduleName'
                       $scope.moduleName = "vc-quote";
                   }
               ]
@@ -44,14 +44,20 @@ angular.module(moduleName, [])
       mainMenuService.addMenuItem(menuItem);
 
       //Register widgets in quote details
-      //widgetService.registerWidget({
-      //    size: [2, 1],
-      //    controller: 'virtoCommerce.quoteModule.quoteAddressWidgetController',
-      //    template: 'Modules/$(VirtoCommerce.quote)/Scripts/widgets/quote-address-widget.tpl.html'
-      //}, 'quoteDetail');
       widgetService.registerWidget({
+          size: [2, 1],
+          controller: 'virtoCommerce.quoteModule.quoteAddressWidgetController',
+          template: 'Modules/$(VirtoCommerce.Quote)/Scripts/widgets/quote-address-widget.tpl.html'
+      }, 'quoteDetail');
+      widgetService.registerWidget({
+          size: [2, 1],
           controller: 'virtoCommerce.quoteModule.quoteItemsWidgetController',
-          template: 'Modules/$(VirtoCommerce.quote)/Scripts/widgets/quote-items-widget.tpl.html'
+          template: 'Modules/$(VirtoCommerce.Quote)/Scripts/widgets/quote-totals-widget.tpl.html'
+          //template: 'Modules/$(VirtoCommerce.Quote)/Scripts/widgets/quote-items-widget.tpl.html'
+      }, 'quoteDetail');
+      widgetService.registerWidget({
+          controller: 'virtoCommerce.quoteModule.quoteAssetWidgetController',
+          template: 'Modules/$(VirtoCommerce.Quote)/Scripts/widgets/quote-asset-widget.tpl.html'
       }, 'quoteDetail');
   }])
 ;

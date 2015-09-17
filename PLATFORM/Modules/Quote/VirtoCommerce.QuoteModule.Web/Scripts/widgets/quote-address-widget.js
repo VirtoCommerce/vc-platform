@@ -1,41 +1,23 @@
 ﻿angular.module('virtoCommerce.quoteModule')
 .controller('virtoCommerce.quoteModule.quoteAddressWidgetController', ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
-	$scope.currentBlade = $scope.widget.blade;
-	$scope.operation = {};
-	$scope.openBlade = function () {
-	
-		var deliveryAddress = $scope.operation.deliveryAddress;
-		if (!deliveryAddress) {
-			deliveryAddress = { isNew: true };
-		};
-		var newBlade = {
-		    id: 'quoteAddresses',
-			title: 'Manage delivery address',
-			currentEntity: deliveryAddress,
-			controller: 'virtoCommerce.coreModule.common.coreAddressDetailController',
-			template: 'Modules/$(VirtoCommerce.Core)/Scripts/common/blades/address-detail.tpl.html',
-			deleteFn : function(address)
-			{
-				$scope.operation.deliveryAddress = null
-			},
-			confirmChangesFn : function(address)
-			{
-				$scope.operation.deliveryAddress = address;
-				address.isNew = false;
-			}
-		};
-		bladeNavigationService.showBlade(newBlade, $scope.blade);
-	};
+    var blade = $scope.blade;
 
-	$scope.getAddressName = function (address) {
+    $scope.openBlade = function () {
+        var newBlade = {
+            id: 'quoteAddresses',
+            currentEntities: blade.currentEntity.addresses,
+            title: blade.title,
+            subtitle: 'Manage addresses',
+            controller: 'virtoCommerce.coreModule.common.coreAddressListController',
+            template: 'Modules/$(VirtoCommerce.Core)/Scripts/common/blades/address-list.tpl.html'
+        };
+        bladeNavigationService.showBlade(newBlade, blade);
+    };
 
-		if (address) {
-			retVal = [address.countryCode, address.regionName, address.city, address.line1].join(",");
-		}
-		return null;
-	};
-
-	$scope.$watch('widget.blade.currentEntity', function (operation) {
-		$scope.operation = operation;
-	});
+    $scope.$watch('blade.currentEntity', function (data) {
+        if (data) {
+            // todo: search for default address
+            $scope.address = data.addresses.length > 0 ? data.addresses[0] : null;
+        }
+    });
 }]);

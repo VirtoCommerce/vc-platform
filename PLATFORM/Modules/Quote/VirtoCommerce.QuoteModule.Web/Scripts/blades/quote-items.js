@@ -23,20 +23,22 @@
                     var price = _.find(prices, function (x) { return x.currency == blade.currentEntity.currency; });
 
                     var newLineItem =
-					{
-					    productId: data.id,
-					    catalogId: data.catalogId,
-					    categoryId: data.categoryId,
-					    name: data.name,
-					    imageUrl: data.imgSrc,
-					    quantity: 1,
-					    listPrice: price ? price.sale : 0,
-					    salePrice: price ? price.sale : 0,
-					    tax: 0,
-					    discountAmount: 0,
-					    currency: blade.currentEntity.currency,
-					    proposalPrices:[]
-					};
+                    {
+                        productId: data.id,
+                        catalogId: data.catalogId,
+                        categoryId: data.categoryId,
+                        name: data.name,
+                        imageUrl: data.imgSrc,
+                        taxType: data.taxType,
+                        quantity: 1,
+                        listPrice: (price && price.list) ? price.list : 0,
+                        salePrice: (price && price.sale) ? price.sale : 0,
+                        tax: 0,
+                        discountAmount: 0,
+                        currency: blade.currentEntity.currency
+                    };
+                    newLineItem.proposalPrices = [{ quantity: 1, price: newLineItem.salePrice }];
+                    newLineItem.selectedTierPrice = newLineItem.proposalPrices[0];
                     blade.currentEntity.items.push(newLineItem);
                 },
                 function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
@@ -104,7 +106,7 @@
         bladeNavigationService.showBlade(newBlade, blade);
     }
 
-    blade.headIcon = 'fa-file-text';
+    blade.headIcon = 'fa-file-text-o';
 
     blade.toolbarCommands = [
         {
@@ -150,11 +152,19 @@
             bladeNavigationService.setError('Error ' + error.status, blade);
         });
     };
-    $scope.addProposalTier = function (tiers) {
-        tiers.push({});
+
+    $scope.addProposalTier = function (item) {
+        item.proposalPrices.push({ quantity: 1, price: item.salePrice });
+    };
+
+    $scope.deleteProposalTier = function (item) {
+        var idx;
+        if (item.selectedTierPrice && (idx = item.proposalPrices.indexOf(item.selectedTierPrice)) >= 0) {
+            item.proposalPrices.splice(idx, 1);
+        }
     };
 
     $scope.getMargin = function (item, proposal) {
-        return 0;
+        return Math.round((proposal.price - item.salePrice) / proposal.price * 100);
     };
 }]);

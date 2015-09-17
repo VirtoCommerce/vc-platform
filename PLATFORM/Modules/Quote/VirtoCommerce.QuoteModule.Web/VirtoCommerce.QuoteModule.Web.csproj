@@ -108,6 +108,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\blades\quote-assets.js" />
+    <Content Include="Scripts\blades\quote-assets.tpl.html" />
     <Content Include="Scripts\quote.js" />
     <Content Include="Scripts\blades\quote-items.js" />
     <Content Include="Scripts\blades\quote-items.tpl.html" />
@@ -117,6 +119,9 @@
     <Content Include="Scripts\blades\quotes-list.tpl.html" />
     <Content Include="Scripts\dialogs\cancelQuote-dialog.tpl.html" />
     <Content Include="Scripts\resources\quotes.js" />
+    <Content Include="Scripts\widgets\quote-totals-widget.tpl.html" />
+    <Content Include="Scripts\widgets\quote-asset-widget.js" />
+    <Content Include="Scripts\widgets\quote-asset-widget.tpl.html" />
     <Content Include="Scripts\widgets\quote-items-widget.js" />
     <Content Include="Scripts\widgets\quote-items-widget.tpl.html" />
     <Content Include="Scripts\widgets\quote-address-widget.js" />

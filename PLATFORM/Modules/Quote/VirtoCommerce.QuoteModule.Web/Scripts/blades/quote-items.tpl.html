@@ -87,7 +87,7 @@
                                 <span>{{data.salePrice}}</span>
                             </td>
                             <td class="table-col">
-                                <a class="list-link" ng-click="addProposalTier(data.proposalPrices)">Add</a>
+                                <a class="list-link" ng-click="addProposalTier(data)">Add</a>
                                 <div ng-repeat="p in data.proposalPrices | orderBy:['quantity','price']" class="form-input __mini __number">
                                     <input va-number required ng-model="p.quantity" min="1" step="1" ng-change="recalculate()">
                                 </div>
@@ -96,7 +96,7 @@
                                 </div>-->
                             </td>
                             <td class="table-col">
-                                <a class="list-link">Remove</a>
+                                <a class="list-link" ng-click="deleteProposalTier(data)">Remove</a>
                                 <div ng-repeat="p in data.proposalPrices | orderBy:['quantity','price']">
                                     <div class="form-control __radio __inline">
                                         <label class="form-label">
