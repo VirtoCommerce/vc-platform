@@ -34,8 +34,8 @@
     }
 
 /* Order info */
-.order-info,
-.__order-info
+.vc-order .order-info,
+.vc-order .__order-info
 {
     float: right;
     margin: 0 10px 0 0;
@@ -43,39 +43,35 @@
     width: 45%;
 }
 
-.order-info .table
+.vc-order .order-info .table
 {
     margin: 0 0 15px;
 }
 
-.table.__collapsed .table-col
+.vc-order .table.__collapsed .table-col
 {
     padding: 5px;
 }
 
-.table .table-col.__price
+.table-col.__price
 {
     text-align: right;
     width: 40%;
 }
 
-.table .table-item.__total .table-col
+.vc-order .table .table-item.__total .table-col
 {
     border-bottom: none;
     font-size: 20px;
 }
 
-.form-group.__order-currency
-{
-    
-}
 
-    .form-group.__order-currency .form-input
-    {
-        display: inline-block;
-        margin: 0 0 0 5px;
-        width: 100px;
-    }
+.vc-order .form-group.__order-currency .form-input
+{
+    display: inline-block;
+    margin: 0 0 0 5px;
+    width: 100px;
+}
 
 
 .table .table-col.__total
@@ -87,7 +83,7 @@
 }
 
 /* Order status */
-.order-status
+.vc-order .order-status
 {
     background: #43b0e6;
     border-bottom: 1px solid #dedede;
@@ -96,31 +92,14 @@
     padding: 10px 20px;
 }
 
-    .order-status .status
+    .vc-order .order-status .status
     {
         font-size: 15px;
         font-weight: 500;
         margin: 0 0 5px;
     }
 
-    .order-status .reason
+    .vc-order .order-status .reason
     {
         font-size: 12px;
-    }
-
-.order-discount
-{
-    float: left;
-    width: 45%;
-}
-
-    .order-discount .order-t
-    {
-        margin: 0 0 10px;
-    }
-
-    .order-discount .btn
-    {
-        height: 34px;
-        vertical-align: middle;
     }

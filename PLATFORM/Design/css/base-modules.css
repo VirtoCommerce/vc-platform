@@ -7214,6 +7214,11 @@ tags-input .tags .tag-item .remove-button
                     box-sizing: border-box;
         }
 
+        .blade-container .blade-static.__quote
+        {
+            height: 230px;
+        }
+
             .blade-static.__collapsed .breadcrumbs
             {
                 padding: 13px 20px;
@@ -7305,6 +7310,11 @@ tags-input .tags .tag-item .remove-button
         .blade-static + .blade-content
         {
             height: calc(100% - 70px);
+        }
+
+        .blade-static.__quote + .blade-content
+        {
+            height: calc(100% - 230px);
         }
 
         .blade-static.__expanded + .blade-content

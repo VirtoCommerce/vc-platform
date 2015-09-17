@@ -96,6 +96,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <Content Include="Content\css\quoteModule.css" />
     <Content Include="module.manifest">
       <SubType>Designer</SubType>
     </Content>

@@ -1,4 +1,40 @@
-﻿<div class="blade-content __xxlarge-wide">
+﻿<div class="blade-static __bottom __quote">
+    <table class="table __collapsed">
+        <tr class="table-item">
+            <td class="table-col">Sub Total (placed)</td>
+            <td class="table-col __price">{{blade.currentEntity.totals.originalSubTotalExlTax | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
+        </tr>
+        <tr class="table-item">
+            <td class="table-col">Adjustment Quote</td>
+            <td class="table-col __price">{{blade.currentEntity.totals.adjustmentQuoteExlTax | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
+        </tr>
+        <tr class="table-item">
+            <td class="table-col">Sub Total</td>
+            <td class="table-col __price">{{blade.currentEntity.totals.subTotalExlTax | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
+        </tr>
+        <tr class="table-item">
+            <td class="table-col">Shipping</td>
+            <td class="table-col __price">{{blade.currentEntity.totals.shippingTotal | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
+        </tr>
+        <tr class="table-item">
+            <td class="table-col">Discount</td>
+            <td class="table-col __price">{{blade.currentEntity.totals.discountTotal | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
+        </tr>
+        <tr class="table-item __total">
+            <td class="table-col">Grand Total</td>
+            <td class="table-col __price">{{blade.currentEntity.totals.grandTotalExlTax | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
+        </tr>
+        <tr class="table-item">
+            <td class="table-col">Taxes</td>
+            <td class="table-col __price">{{blade.currentEntity.totals.taxTotal | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
+        </tr>
+        <tr class="table-item __total">
+            <td class="table-col">Grand Total (Incl. Taxes)</td>
+            <td class="table-col __price">{{blade.currentEntity.totals.grandTotalInclTax | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
+        </tr>
+    </table>
+</div>
+<div class="blade-content __xxlarge-wide">
     <div class="blade-inner">
         <div class="inner-block">
             <form name="quoteForm" novalidate></form>
@@ -90,50 +126,13 @@
                 </table>
             </div>
 
-            <div class="order-discount">
-                <div class="order-t">{{totals.isDiscountAbsolute ? 'Relative discount, %' : 'New subtotal, ' + blade.currentEntity.currency}}</div>
+            <div class="quote-discount">
+                <div class="quote-t">{{totals.isDiscountAbsolute ? 'Relative discount, %' : 'New subtotal, ' + blade.currentEntity.currency}}</div>
                 <div class="form-input __mini __inline">
                     <input money required ng-model="blade.currentEntity.manualSubTotal" ng-change="recalculate()" ng-hide="!totals.isDiscountAbsolute">
                     <input money required ng-model="blade.currentEntity.manualRelDiscountAmount" ng-change="recalculate()" ng-hide="totals.isDiscountAbsolute">
                 </div>
                 <button class="btn" ng-click="totals.isDiscountAbsolute=!totals.isDiscountAbsolute">{{totals.isDiscountAbsolute ? 'Set new subtotal': 'Set discount percentage'}}</button>
-            </div>
-
-            <div class="order-info">
-                <table class="table __collapsed">
-                    <tr class="table-item">
-                        <td class="table-col">Sub Total (placed)</td>
-                        <td class="table-col __price">{{blade.currentEntity.totals.originalSubTotalExlTax | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
-                    </tr>
-                    <tr class="table-item">
-                        <td class="table-col">Adjustment Quote</td>
-                        <td class="table-col __price">{{blade.currentEntity.totals.adjustmentQuoteExlTax | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
-                    </tr>
-                    <tr class="table-item">
-                        <td class="table-col">Sub Total</td>
-                        <td class="table-col __price">{{blade.currentEntity.totals.subTotalExlTax | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
-                    </tr>
-                    <tr class="table-item">
-                        <td class="table-col">Shipping</td>
-                        <td class="table-col __price">{{blade.currentEntity.totals.shippingTotal | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
-                    </tr>
-                    <tr class="table-item">
-                        <td class="table-col">Discount</td>
-                        <td class="table-col __price">{{blade.currentEntity.totals.discountTotal | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
-                    </tr>
-                    <tr class="table-item __total">
-                        <td class="table-col">Grand Total</td>
-                        <td class="table-col __price">{{blade.currentEntity.totals.grandTotalExlTax | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
-                    </tr>
-                    <tr class="table-item">
-                        <td class="table-col">Taxes</td>
-                        <td class="table-col __price">{{blade.currentEntity.totals.taxTotal | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
-                    </tr>
-                    <tr class="table-item __total">
-                        <td class="table-col">Grand Total (Incl. Taxes)</td>
-                        <td class="table-col __price">{{blade.currentEntity.totals.grandTotalInclTax | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
-                    </tr>
-                </table>
             </div>
         </div>
     </div>
