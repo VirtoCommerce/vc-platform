@@ -30,10 +30,12 @@
 					    name: data.name,
 					    imageUrl: data.imgSrc,
 					    quantity: 1,
-					    price: price ? price.sale : 0,
+					    listPrice: price ? price.sale : 0,
+					    salePrice: price ? price.sale : 0,
 					    tax: 0,
 					    discountAmount: 0,
-					    currency: blade.currentEntity.currency
+					    currency: blade.currentEntity.currency,
+					    proposalPrices:[]
 					};
                     blade.currentEntity.items.push(newLineItem);
                 },

@@ -1,9 +1,4 @@
-﻿<div class="blade-static">
-    <div class="form-group">
-        <p class="form-count">Count: <span class="count">{{totalItems}}</span></p>
-    </div>
-</div>
-<div class="blade-content __xxlarge-wide">
+﻿<div class="blade-content __xxlarge-wide">
     <div class="blade-inner">
         <div class="inner-block">
             <form name="quoteForm" novalidate></form>
@@ -91,17 +86,6 @@
                                 {{data.name}}
                             </td>
                         </tr>
-                        <tr class="table-item">
-                            <td class="table-head" colspan="3">
-                                <span>Total {{blade.currentEntity.items.length}} product(s)</span>
-                            </td>
-                            <td class="table-col">Subtotal:</td>
-                            <td class="table-col">{{totals.listPrice}}</td>
-                            <td class="table-col">{{blade.currentEntity.totals.originalSubTotalExlTax}}</td>
-                            <td class="table-col">{{totals.quantity}}</td>
-                            <td class="table-col">{{blade.currentEntity.totals.subTotalExlTax}}</td>
-                            <td class="table-col">{{totals.margin}}</td>
-                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -150,7 +134,6 @@
                         <td class="table-col __price">{{blade.currentEntity.totals.grandTotalInclTax | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
                     </tr>
                 </table>
-                <button class="btn" ng-click="confirm()">Submit proposal</button>
             </div>
         </div>
     </div>
