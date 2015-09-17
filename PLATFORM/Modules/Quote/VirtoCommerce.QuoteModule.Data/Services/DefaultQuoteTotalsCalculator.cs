@@ -24,28 +24,31 @@ namespace VirtoCommerce.QuoteModule.Data.Services
         {
             var retVal = new QuoteRequestTotals();
             var cartFromQuote = quote.ToCartModel();
+            var store = _storeService.GetById(quote.StoreId);
 
-            if (quote.StoreId != null)
+            if (store != null)
             {
                 //Calculate shipment total
-                var evalContext = new ShippingEvaluationContext(cartFromQuote);
-                var store = _storeService.GetById(quote.StoreId);
-                if (store != null && quote.ShipmentMethod != null)
+                //firts try to get manual amount
+                retVal.ShippingTotal = quote.ManualShippingTotal;
+                if (retVal.ShippingTotal == 0 && quote.ShipmentMethod != null)
                 {
+                    //calculate total by using shipment gateways
+                    var evalContext = new ShippingEvaluationContext(cartFromQuote);
+
                     var rate = store.ShippingMethods.Where(x => x.IsActive && x.Code == quote.ShipmentMethod.ShipmentMethodCode)
                                                     .SelectMany(x => x.CalculateRates(evalContext))
                                                     .Where(x => quote.ShipmentMethod.OptionName != null ? quote.ShipmentMethod.OptionName == x.OptionName : true)
                                                     .FirstOrDefault();
                     retVal.ShippingTotal = rate != null ? rate.Rate : 0m;
                 }
-
                 //Calculate taxes
                 var taxProvider = store.TaxProviders.Where(x => x.IsActive).OrderBy(x => x.Priority).FirstOrDefault();
-                if(taxProvider != null)
+                if (taxProvider != null)
                 {
                     var taxRequest = quote.ToTaxRequest();
                     var taxEvalContext = new TaxEvaluationContext(taxRequest);
-                    retVal.TaxTotal = taxProvider.CalculateRates(taxEvalContext).Select(x=>x.Rate).DefaultIfEmpty(0).Sum(x => x);
+                    retVal.TaxTotal = taxProvider.CalculateRates(taxEvalContext).Select(x => x.Rate).DefaultIfEmpty(0).Sum(x => x);
                 }
             }
 

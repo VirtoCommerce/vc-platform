@@ -51,7 +51,7 @@ namespace VirtoCommerce.QuoteModule.Data.Observers
                 }
                 if (origQuote.IsSubmitted != modifiedQuote.IsSubmitted)
                 {
-                    operationLog.Detail += modifiedQuote.IsSubmitted ? "submit proposal " : "submit quote request ";
+                    operationLog.Detail += modifiedQuote.IsSubmitted ? "submit proposal to buyer" : "submit quote request from buyer";
                 }
                 if(origQuote.IsLocked != modifiedQuote.IsLocked)
                 {

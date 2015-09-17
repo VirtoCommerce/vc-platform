@@ -18,7 +18,7 @@
                 <div class="columns">
                     <div class="column">
                         <div class="form-group">
-                            <label class="form-label">Status</label>
+                            <label class="form-label">Status <a href="" ng-click="openDictionarySettingManagement()" va-permission="platform:setting:manage"><i class="form-ico fa fa-pencil"></i></a></label>
                             <div class="form-input">
                                 <ui-select ng-model="blade.currentEntity.status" required>
                                     <ui-select-match placeholder="Select...">{{$select.selected}}</ui-select-match>
@@ -46,6 +46,34 @@
                 <div class="columns">
                     <div class="column">
                         <div class="form-group">
+                            <label class="form-label">Customer</label>
+                            <div class="form-input">{{blade.currentEntity.customerName}}</div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="form-group">
+                            <label class="form-label">Customer organization</label>
+                            <div class="form-input">{{blade.currentEntity.organizationName}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="columns">
+                    <div class="column">
+                        <div class="form-group">
+                            <label class="form-label">Currency</label>
+                            <div class="form-input">{{blade.currentEntity.currency}}</div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="form-group">
+                            <label class="form-label">Created</label>
+                            <div class="form-input" am-time-ago="blade.currentEntity.createdDate"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="columns">
+                    <div class="column">
+                        <div class="form-group">
                             <label class="form-label">Expiry date</label>
                             <div class="form-input __calendar">
                                 <input placeholder="Choose date" ng-model="blade.item.expiration" datepicker-popup="shortDate" is-open="datepickers.exp" close-text="Close" />
@@ -59,12 +87,12 @@
                         <div class="form-group">
                             <label class="form-label">Last updated</label>
                             <div class="form-input">
-                                <div class="form-text">{{blade.currentEntity.modifiedDate | date:'short'}}</div>
+                                <div class="form-text" am-time-ago="blade.currentEntity.modifiedDate"></div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="columns clearfix">
+                <div class="columns">
                     <div class="column">
                         <div class="form-group">
                             <label class="form-label">Reminder date</label>
@@ -90,6 +118,27 @@
                         </div>
                     </div>
                 </div>
+                <div class="columns clearfix">
+                    <div class="column">
+                        <div class="form-group">
+                            <label class="form-label">Shipping method</label>
+                            <div class="form-input">
+                                <ui-select ng-model="blade.currentEntity.shipmentMethod">
+                                    <ui-select-match placeholder="Select...">{{$select.selected.name}}</ui-select-match>
+                                    <ui-select-choices repeat="x in shippingMethods | filter: { name: $select.search }">
+                                        <span ng-bind-html="x.name | highlight: $select.search"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="form-group">
+
+                        </div>
+                    </div>
+                </div>
+
                 <div class="form-group" ng-init="setForm(detailForm)">
                     <label class="form-label">General comment</label>
                     <div class="form-input">

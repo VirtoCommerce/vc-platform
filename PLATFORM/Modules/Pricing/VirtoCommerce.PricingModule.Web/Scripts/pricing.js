@@ -23,6 +23,8 @@ angular.module(moduleName, [])
                           isClosingDisabled: true
                       };
                       bladeNavigationService.showBlade(blade);
+                  	  //Need for isolate and prevent conflict module css to naother modules 
+                      $scope.moduleName = "vc-pricing";
                   }
               ]
           });
