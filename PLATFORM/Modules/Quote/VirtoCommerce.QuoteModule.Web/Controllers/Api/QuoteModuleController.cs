@@ -15,6 +15,9 @@ using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Domain.Quote.Services;
 using VirtoCommerce.QuoteModule.Web.Converters;
+using VirtoCommerce.Domain.Store.Services;
+using VirtoCommerce.Domain.Shipping.Model;
+using VirtoCommerce.QuoteModule.Data.Converters;
 
 namespace VirtoCommerce.QuoteModule.Web.Controllers.Api
 {
@@ -24,16 +27,18 @@ namespace VirtoCommerce.QuoteModule.Web.Controllers.Api
     {
         private readonly IQuoteRequestService _quoteRequestService;
         private readonly IQuoteTotalsCalculator _totalsCalculator;
-		public QuoteModuleController(IQuoteRequestService quoteRequestService, IQuoteTotalsCalculator totalsCalculator)
+        private readonly IStoreService _storeService;
+        public QuoteModuleController(IQuoteRequestService quoteRequestService, IQuoteTotalsCalculator totalsCalculator, IStoreService storeService)
         {
             _quoteRequestService = quoteRequestService;
             _totalsCalculator = totalsCalculator;
+            _storeService = storeService;
         }
 
-		/// <summary>
-		/// Search RFQ by given criteria
-		/// </summary>
-		/// <param name="criteria">criteria</param>
+        /// <summary>
+        /// Search RFQ by given criteria
+        /// </summary>
+        /// <param name="criteria">criteria</param>
         [HttpGet]
         [ResponseType(typeof(coreModel.QuoteRequestSearchResult))]
         [Route("")]
@@ -43,7 +48,7 @@ namespace VirtoCommerce.QuoteModule.Web.Controllers.Api
             return Ok(retVal);
         }
 
-       
+
         /// <summary>
         /// Get RFQ by id
         /// </summary>
@@ -55,7 +60,7 @@ namespace VirtoCommerce.QuoteModule.Web.Controllers.Api
         public IHttpActionResult GetById(string id)
         {
             var quote = _quoteRequestService.GetByIds(new[] { id }).FirstOrDefault();
-            if (quote == null )
+            if (quote == null)
             {
                 return NotFound();
             }
@@ -87,9 +92,9 @@ namespace VirtoCommerce.QuoteModule.Web.Controllers.Api
         [ResponseType(typeof(void))]
         [Route("")]
         [CheckPermission(Permission = PredefinedPermissions.Manage)]
-		public IHttpActionResult Update(webModel.QuoteRequest quoteRequest)
+        public IHttpActionResult Update(webModel.QuoteRequest quoteRequest)
         {
-			var coreQuote = quoteRequest.ToCoreModel();
+            var coreQuote = quoteRequest.ToCoreModel();
             _quoteRequestService.SaveChanges(new coreModel.QuoteRequest[] { coreQuote });
             return StatusCode(HttpStatusCode.NoContent);
         }
@@ -107,7 +112,42 @@ namespace VirtoCommerce.QuoteModule.Web.Controllers.Api
             var coreQuote = quoteRequest.ToCoreModel();
             coreQuote.Totals = _totalsCalculator.CalculateTotals(coreQuote);
             return Ok(coreQuote.ToWebModel());
-         
+
+        }
+
+        /// <summary>
+		/// Get available shipping methods with prices for quote requests
+		/// </summary>
+		/// <param name="quoteRequest">RFQ</param>
+        [HttpGet]
+        [ResponseType(typeof(webModel.ShipmentMethod[]))]
+        [Route("{id}/shipmentmethods")]
+        public IHttpActionResult GetShipmentMethods(string id)
+        {
+            var quote = _quoteRequestService.GetByIds(id).FirstOrDefault();
+            if (quote != null)
+            {
+                var store = _storeService.GetById(quote.StoreId);
+
+                if (store != null)
+                {
+                    var cartFromQuote = quote.ToCartModel();
+                    var evalContext = new ShippingEvaluationContext(cartFromQuote);
+                    var rates = store.ShippingMethods.Where(x => x.IsActive).SelectMany(x => x.CalculateRates(evalContext)).ToArray();
+                    var retVal = rates.Select(x => new webModel.ShipmentMethod
+                    {
+                        Currency = x.Currency,
+                        Name = x.ShippingMethod.Name,
+                        Price = x.Rate,
+                        OptionName = x.OptionName,
+                        ShipmentMethodCode = x.ShippingMethod.Code,
+                        LogoUrl = x.ShippingMethod.LogoUrl
+                    }).ToArray();
+
+                    return Ok(retVal);
+                }
+            }
+            return NotFound();
         }
 
     }

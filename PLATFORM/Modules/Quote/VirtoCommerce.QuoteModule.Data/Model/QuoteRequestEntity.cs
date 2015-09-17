@@ -86,6 +86,8 @@ namespace VirtoCommerce.QuoteModule.Data.Model
         [Column(TypeName = "Money")]
         public decimal ManualSubTotal { get; set; }
         public decimal ManualRelDiscountAmount { get; set; }
+        [Column(TypeName = "Money")]
+        public decimal ManualShippingTotal { get; set; }
 
         #region Navigation properties
         public ObservableCollection<AddressEntity> Addresses { get; set; }

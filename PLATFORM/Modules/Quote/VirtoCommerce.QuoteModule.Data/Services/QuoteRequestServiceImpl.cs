@@ -37,7 +37,7 @@ namespace VirtoCommerce.QuoteModule.Data.Services
 
 		#region IQuoteRequestService Members
 
-		public IEnumerable<QuoteRequest> GetByIds(string[] ids)
+		public IEnumerable<QuoteRequest> GetByIds(params string[] ids)
 		{
             using (var repository = _repositoryFactory())
             {
