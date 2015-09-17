@@ -12,7 +12,7 @@ namespace VirtoCommerce.ApiClient.DataContracts.Cart
 
         public string CategoryId { get; set; }
 
-        public string ProductCode { get; set; }
+        public string Sku { get; set; }
 
         public string Name { get; set; }
 

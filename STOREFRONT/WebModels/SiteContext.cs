@@ -320,6 +320,19 @@ namespace VirtoCommerce.Web
             }
         }
 
+        public QuoteRequest QuoteRequest
+        {
+            get
+            {
+                object retValue;
+                return _storage.TryGetValue("quote_request", out retValue) ? retValue as QuoteRequest : null;
+            }
+            set
+            {
+                Set("quote_request", value);
+            }
+        }
+
         public IEnumerable<Shop> Shops
         {
             get

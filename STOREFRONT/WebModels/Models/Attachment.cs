@@ -1,6 +1,8 @@
-﻿namespace VirtoCommerce.ApiClient.DataContracts.Quotes
+﻿using DotLiquid;
+
+namespace VirtoCommerce.Web.Models
 {
-    public class QuoteAttachment
+    public class Attachment : Drop
     {
         public string Name { get; set; }
 

@@ -37,6 +37,10 @@ namespace VirtoCommerce.ApiClient.DataContracts.Quotes
 
         public string Status { get; set; }
 
+        public string Tag { get; set; }
+
+        public bool IsSubmitted { get; set; }
+
         public string Comment { get; set; }
 
         public string InnerComment { get; set; }
@@ -57,7 +61,7 @@ namespace VirtoCommerce.ApiClient.DataContracts.Quotes
 
         public ICollection<QuoteItem> Items { get; set; }
 
-        public ICollection<QuoteAttachment> Attachments { get; set; }
+        public ICollection<Attachment> Attachments { get; set; }
 
         public string LanguageCode { get; set; }
 

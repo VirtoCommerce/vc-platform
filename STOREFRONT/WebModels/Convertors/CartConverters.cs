@@ -43,7 +43,7 @@ namespace VirtoCommerce.Web.Convertors
             var ret = new Data.CartItem
                       {
                           Id = item.Id,
-                          ProductCode = item.Handle,
+                          Sku = item.Sku,
                           ProductId = item.ProductId,
                           Name = item.Title,
                           PlacedPrice = item.Price,
@@ -314,13 +314,13 @@ namespace VirtoCommerce.Web.Convertors
             var ret = new LineItem
                       {
                           Id = item.Id,
-                          Handle = item.ProductCode,
+                          Handle = item.Sku,
                           ProductId = item.ProductId,
                           Title = item.Name,
                           Price = item.PlacedPrice,
                           Quantity = item.Quantity,
                           RequiresShipping = item.RequiredShipping,
-                          Sku = item.ProductCode,
+                          Sku = item.Sku,
                           VariantId = item.ProductId,
                           Image = item.ImageUrl,
                           Variant = variant,
