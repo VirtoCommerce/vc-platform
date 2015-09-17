@@ -1,4 +1,5 @@
 ﻿#region
+using System;
 using System.Collections.Generic;
 
 #endregion
@@ -11,6 +12,8 @@ namespace VirtoCommerce.Web.Views.Contents
         public string Content { get; set; }
 
         public string ContentType { get; set; }
+
+        public DateTime LastWriteTimeUtc { get; set; }
 
         public IDictionary<string, dynamic> Settings { get; set; }
         #endregion
