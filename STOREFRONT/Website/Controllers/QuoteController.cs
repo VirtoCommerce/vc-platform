@@ -26,20 +26,20 @@ namespace VirtoCommerce.Web.Controllers
 
             var quoteItem = product.ToQuoteItem();
 
-            Context.QuoteRequest.AddItem(quoteItem);
+            Context.ActualQuoteRequest.AddItem(quoteItem);
 
-            Context.QuoteRequest = await QuoteService.UpdateQuoteRequestAsync(Context.QuoteRequest);
+            Context.ActualQuoteRequest = await QuoteService.UpdateQuoteRequestAsync(Context.ActualQuoteRequest);
 
-            return Json(Context.QuoteRequest);
+            return Json(Context.ActualQuoteRequest);
         }
 
         [HttpGet]
         [Route("remove")]
         public async Task<ActionResult> RemoveItem(string id)
         {
-            Context.QuoteRequest.RemoveItem(id);
+            Context.ActualQuoteRequest.RemoveItem(id);
 
-            Context.QuoteRequest = await QuoteService.UpdateQuoteRequestAsync(Context.QuoteRequest);
+            Context.ActualQuoteRequest = await QuoteService.UpdateQuoteRequestAsync(Context.ActualQuoteRequest);
 
             return RedirectToAction("Index");
         }
@@ -48,15 +48,15 @@ namespace VirtoCommerce.Web.Controllers
         [Route("submit")]
         public async Task<ActionResult> Submit(QuoteRequest model)
         {
-            Context.QuoteRequest.Comment = model.Comment;
-            Context.QuoteRequest.FirstName = model.FirstName;
-            Context.QuoteRequest.Language = model.LastName;
-            Context.QuoteRequest.Tag = null;
-            Context.QuoteRequest.IsSubmitted = true;
+            Context.ActualQuoteRequest.Comment = model.Comment;
+            Context.ActualQuoteRequest.FirstName = model.FirstName;
+            Context.ActualQuoteRequest.Language = model.LastName;
+            Context.ActualQuoteRequest.Tag = null;
+            Context.ActualQuoteRequest.IsSubmitted = true;
 
             foreach (var quoteItem in model.Items)
             {
-                var existingQuoteItem = Context.QuoteRequest.Items.FirstOrDefault(i => i.Id == quoteItem.Id);
+                var existingQuoteItem = Context.ActualQuoteRequest.Items.FirstOrDefault(i => i.Id == quoteItem.Id);
 
                 existingQuoteItem.Comment = quoteItem.Comment;
 
@@ -73,10 +73,11 @@ namespace VirtoCommerce.Web.Controllers
 
             if (!User.Identity.IsAuthenticated)
             {
-                return Json(new { redirectUrl = VirtualPathUtility.ToAbsolute("~/account/login") });
+                string returnUrl = VirtualPathUtility.ToAbsolute("~/quote");
+                return Json(new { redirectUrl = VirtualPathUtility.ToAbsolute("~/account/login?returnUrl=" + returnUrl) });
             }
 
-            Context.QuoteRequest = await QuoteService.UpdateQuoteRequestAsync(Context.QuoteRequest);
+            Context.ActualQuoteRequest = await QuoteService.UpdateQuoteRequestAsync(Context.ActualQuoteRequest);
 
             return Json(new { redirectUrl = VirtualPathUtility.ToAbsolute("~/") });
         }

@@ -200,12 +200,12 @@ namespace VirtoCommerce.Web
 
                     ctx.Cart = cart;
 
-                    ctx.QuoteRequest = await _quoteService.GetCurrentQuoteRequestAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
-                    if (ctx.QuoteRequest == null)
+                    ctx.ActualQuoteRequest = await _quoteService.GetCurrentQuoteRequestAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
+                    if (ctx.ActualQuoteRequest == null)
                     {
-                        ctx.QuoteRequest = new QuoteRequest(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
-                        ctx.QuoteRequest.Currency = ctx.Shop.Currency;
-                        ctx.QuoteRequest.Tag = "actual";
+                        ctx.ActualQuoteRequest = new QuoteRequest(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
+                        ctx.ActualQuoteRequest.Currency = ctx.Shop.Currency;
+                        ctx.ActualQuoteRequest.Tag = "actual";
                     }
 
                     if (context.Authentication.User.Identity.IsAuthenticated)
@@ -236,9 +236,9 @@ namespace VirtoCommerce.Web
 
                             if (anonymousQuote != null)
                             {
-                                ctx.QuoteRequest.MergeQuoteWith(anonymousQuote);
+                                ctx.ActualQuoteRequest.MergeQuoteWith(anonymousQuote);
 
-                                await _quoteService.UpdateQuoteRequestAsync(ctx.QuoteRequest);
+                                await _quoteService.UpdateQuoteRequestAsync(ctx.ActualQuoteRequest);
 
                                 // TODO: Anonymous quote should be deleted
                             }

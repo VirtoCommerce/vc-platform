@@ -34,6 +34,7 @@ namespace VirtoCommerce.Web.Convertors
             quoteRequestModel.CancelReason = quoteRequest.CancelReason;
             quoteRequestModel.Comment = quoteRequest.Comment;
             quoteRequestModel.Coupon = quoteRequest.Coupon;
+            quoteRequestModel.CreatedAt = quoteRequest.CreatedDate;
             quoteRequestModel.Currency = quoteRequest.Currency;
             quoteRequestModel.ExpirationDate = quoteRequest.ExpirationDate;
             quoteRequestModel.Id = quoteRequest.Id;
@@ -61,6 +62,18 @@ namespace VirtoCommerce.Web.Convertors
                 {
                     quoteRequestModel.TaxLines.Add(taxDetail.ToViewModel());
                 }
+            }
+
+            if (quoteRequest.Totals != null)
+            {
+                quoteRequestModel.Totals.AdjustmentQuoteExlTax = quoteRequest.Totals.AdjustmentQuoteExlTax;
+                quoteRequestModel.Totals.DiscountTotal = quoteRequest.Totals.DiscountTotal;
+                quoteRequestModel.Totals.GrandTotalExlTax = quoteRequest.Totals.GrandTotalExlTax;
+                quoteRequestModel.Totals.GrandTotalInclTax = quoteRequest.Totals.GrandTotalInclTax;
+                quoteRequestModel.Totals.OriginalSubTotalExlTax = quoteRequest.Totals.OriginalSubTotalExlTax;
+                quoteRequestModel.Totals.ShippingTotal = quoteRequest.Totals.ShippingTotal;
+                quoteRequestModel.Totals.SubTotalExlTax = quoteRequest.Totals.SubTotalExlTax;
+                quoteRequestModel.Totals.TaxTotal = quoteRequest.Totals.TaxTotal;
             }
 
             return quoteRequestModel;

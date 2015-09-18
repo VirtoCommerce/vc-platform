@@ -16,12 +16,15 @@ namespace VirtoCommerce.Web.Models
             Attachments = new List<Attachment>();
             Items = new List<QuoteItem>();
             TaxLines = new List<TaxLine>();
+            Totals = new QuoteTotals();
 
             CustomerId = customerId;
             StoreId = storeId;
         }
 
         public string Id { get; set; }
+
+        public DateTime CreatedAt { get; set; }
 
         public string Number { get; set; }
 
@@ -66,6 +69,8 @@ namespace VirtoCommerce.Web.Models
         public string Tag { get; set; }
 
         public bool IsSubmitted { get; set; }
+
+        public QuoteTotals Totals { get; set; }
 
         public int ItemsCount
         {

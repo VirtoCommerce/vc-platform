@@ -7,6 +7,8 @@ namespace VirtoCommerce.ApiClient.DataContracts.Quotes
     {
         public string Id { get; set; }
 
+        public DateTime CreatedDate { get; set; }
+
         public string Number { get; set; }
 
         public string StoreId { get; set; }

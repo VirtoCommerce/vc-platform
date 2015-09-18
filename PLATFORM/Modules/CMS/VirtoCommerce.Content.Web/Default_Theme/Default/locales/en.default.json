@@ -86,9 +86,6 @@
                 "title": "Remarks",
                 "text": "Do you have a general remark with this Quote Request?"
             }
-        },
-        "customer": {
-            "title":  "My quote requests"
         }
     },
     "collections": {
@@ -206,6 +203,16 @@
             "total": "Total",
             "fulfilled_on": "Fulfilled on {{ date }}",
             "subtotal": "Subtotal"
+        },
+        "quotes": {
+            "title": "Quote requests",
+            "none": "You haven't submit any quote requests yet.",
+            "quote_number": "Number",
+            "date": "Date",
+            "total": "Total"
+        },
+        "quote": {
+            "title": "Quote request {{ number }}"
         },
         "recover_password": {
             "title": "Reset your password",

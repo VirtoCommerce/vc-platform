@@ -715,6 +715,15 @@ namespace VirtoCommerce.Web.Controllers
             return View("customers/quotes");
         }
 
+        [HttpGet]
+        [Route("quote/{number}")]
+        public async Task<ActionResult> Quote(string number)
+        {
+            Context.QuoteRequest = await QuoteService.GetByNumberAsync(Context.StoreId, Context.CustomerId, number);
+
+            return View("customers/quote");
+        }
+
         internal class ChallengeResult : HttpUnauthorizedResult
         {
             public string LoginProvider { get; set; }

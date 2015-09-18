@@ -88,5 +88,36 @@ namespace VirtoCommerce.Web.Models.Services
 
             return quoteRequests;
         }
+
+        public async Task<QuoteRequest> GetByNumberAsync(string storeId, string customerId, string number)
+        {
+            var searchCriteria = new DataContracts.Quotes.QuoteRequestSearchCriteria
+            {
+                Count = 1,
+                CustomerId = customerId,
+                Start = 0,
+                StoreId = storeId,
+                Keyword = number
+            };
+
+            QuoteRequest quoteRequestModel = null;
+
+            var quoteResponse = await _quoteClient.SearchAsync(searchCriteria);
+
+            if (quoteResponse != null)
+            {
+                var quoteRequest = quoteResponse.QuoteRequests.FirstOrDefault();
+                if (quoteRequest != null)
+                {
+                    var detailedQuoteRequest = await _quoteClient.GetByIdAsync(quoteRequest.Id);
+                    if (detailedQuoteRequest != null)
+                    {
+                        quoteRequestModel = detailedQuoteRequest.ToViewModel();
+                    }
+                }
+            }
+
+            return quoteRequestModel;
+        }
     }
 }
