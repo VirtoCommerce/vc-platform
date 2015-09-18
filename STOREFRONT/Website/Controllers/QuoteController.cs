@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Mvc;
 using VirtoCommerce.Web.Convertors;
 using VirtoCommerce.Web.Models;
@@ -70,9 +71,14 @@ namespace VirtoCommerce.Web.Controllers
                 }
             }
 
+            if (!User.Identity.IsAuthenticated)
+            {
+                return Json(new { redirectUrl = VirtualPathUtility.ToAbsolute("~/account/login") });
+            }
+
             Context.QuoteRequest = await QuoteService.UpdateQuoteRequestAsync(Context.QuoteRequest);
 
-            return Json(Context.QuoteRequest);
+            return Json(new { redirectUrl = VirtualPathUtility.ToAbsolute("~/") });
         }
     }
 }

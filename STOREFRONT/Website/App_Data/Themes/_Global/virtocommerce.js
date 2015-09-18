@@ -169,7 +169,7 @@ $(function () {
             url: VirtoCommerce.url("/quote/submit"),
             data: quoteRequest,
             success: function (jsonResult) {
-                window.location.href = VirtoCommerce.url("/");
+                window.location.href = jsonResult.redirect_url;
             }
         });
     });

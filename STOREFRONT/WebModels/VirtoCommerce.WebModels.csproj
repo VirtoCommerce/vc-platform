@@ -167,6 +167,7 @@
     <Compile Include="Models\PropertiesDrop.cs" />
     <Compile Include="Models\QuoteItem.cs" />
     <Compile Include="Models\QuoteRequest.cs" />
+    <Compile Include="Models\QuoteRequestSearchCriteria.cs" />
     <Compile Include="Models\Storage\DownloadLink.cs" />
     <Compile Include="Models\Storage\ProductDownloadLinks.cs" />
     <Compile Include="Models\Tagging\SelectedTagCollection.cs" />

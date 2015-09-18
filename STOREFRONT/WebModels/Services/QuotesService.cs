@@ -64,5 +64,29 @@ namespace VirtoCommerce.Web.Models.Services
 
             return quoteRequestModel;
         }
+
+        public async Task<ItemCollection<QuoteRequest>> SearchAsync(QuoteRequestSearchCriteria criteria)
+        {
+            var searchCriteria = new DataContracts.Quotes.QuoteRequestSearchCriteria
+            {
+                Count = criteria.Take,
+                CustomerId = criteria.CustomerId,
+                Start = criteria.Skip,
+                Status = criteria.Status,
+                StoreId = criteria.StoreId,
+                Tag = criteria.Tag
+            };
+
+            var quotesResponse = await _quoteClient.SearchAsync(searchCriteria);
+
+            ItemCollection<QuoteRequest> quoteRequests = null;
+
+            if (quotesResponse != null)
+            {
+                quoteRequests = new ItemCollection<QuoteRequest>(quotesResponse.QuoteRequests.Select(qr => qr.ToViewModel()));
+            }
+
+            return quoteRequests;
+        }
     }
 }

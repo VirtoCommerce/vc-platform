@@ -85,6 +85,7 @@ namespace VirtoCommerce.Web.Models
 
         public QuoteRequest AddItem(QuoteItem quoteItem)
         {
+            quoteItem.Id = null;
             Items.Add(quoteItem);
 
             return this;
@@ -95,6 +96,16 @@ namespace VirtoCommerce.Web.Models
             var quoteItem = Items.FirstOrDefault(i => i.Id == id);
 
             Items.Remove(quoteItem);
+
+            return this;
+        }
+
+        public QuoteRequest MergeQuoteWith(QuoteRequest anotherQuote)
+        {
+            foreach (var anotherQuoteItem in anotherQuote.Items)
+            {
+                AddItem(anotherQuoteItem);
+            }
 
             return this;
         }

@@ -79,13 +79,16 @@
             "first_name": "First name",
             "last_name": "Last name",
             "request_shipping_quote": "Request a shippinh quote",
+            "submit_quote": "Submit quote request",
+            "update_quote": "Update quote",
+            "remove": "Remove",
             "remarks": {
                 "title": "Remarks",
                 "text": "Do you have a general remark with this Quote Request?"
-            },
-            "submit_quote": "Submit quote request",
-            "update_quote": "Update quote",
-            "remove": "Remove"
+            }
+        },
+        "customer": {
+            "title":  "My quote requests"
         }
     },
     "collections": {
