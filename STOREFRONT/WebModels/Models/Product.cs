@@ -192,6 +192,9 @@ namespace VirtoCommerce.Web.Models
         [DataMember]
         public string Vendor { get; set; }
 
+        [DataMember]
+        public bool IsQuotable { get; set; }
+
         #region Public Methods and Operators
         public override string ToString()
         {

@@ -11,7 +11,7 @@ namespace VirtoCommerce.Domain.Quote.Services
 	{
 		QuoteRequestSearchResult Search(QuoteRequestSearchCriteria criteria);
 
-        IEnumerable<QuoteRequest> GetByIds(string[] ids);
+        IEnumerable<QuoteRequest> GetByIds(params string[] ids);
 		IEnumerable<QuoteRequest> SaveChanges(QuoteRequest[] quoteRequests);
 		void Delete(string[] ids);
 	}

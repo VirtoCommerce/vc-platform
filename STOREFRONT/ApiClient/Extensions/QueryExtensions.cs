@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Linq;
 using System.Web;
 using VirtoCommerce.ApiClient.DataContracts;
+using VirtoCommerce.ApiClient.DataContracts.Quotes;
 
 #endregion
 
@@ -75,6 +76,52 @@ namespace VirtoCommerce.ApiClient.Extensions
             {
                 var parameters = additionalParameters.ToPropertyDictionary();
                 parts.AddRange(parameters.Select(parameter => String.Format("{0}={1}", parameter.Key, parameter.Value)));
+            }
+
+            return string.Join("&", parts);
+        }
+
+        public static string GetQueryString(this QuoteRequestSearchCriteria criteria)
+        {
+            var parts = new List<string>();
+
+            parts.Add("count=" + criteria.Count);
+
+            if (!string.IsNullOrEmpty(criteria.CustomerId))
+            {
+                parts.Add("customer=" + criteria.CustomerId);
+            }
+
+            if (criteria.EndDate.HasValue)
+            {
+                parts.Add("endDate=" + criteria.EndDate.Value);
+            }
+
+            if (!string.IsNullOrEmpty(criteria.Keyword))
+            {
+                parts.Add("q=" + criteria.Keyword);
+            }
+
+            parts.Add("start=" + criteria.Start);
+
+            if (criteria.StartDate.HasValue)
+            {
+                parts.Add("startDate=" + criteria.StartDate.Value);
+            }
+
+            if (!string.IsNullOrEmpty(criteria.Status))
+            {
+                parts.Add("status=" + criteria.Status);
+            }
+
+            if (!string.IsNullOrEmpty(criteria.StoreId))
+            {
+                parts.Add("site=" + criteria.StoreId);
+            }
+
+            if (!string.IsNullOrEmpty(criteria.Tag))
+            {
+                parts.Add("tag=" + criteria.Tag);
             }
 
             return string.Join("&", parts);

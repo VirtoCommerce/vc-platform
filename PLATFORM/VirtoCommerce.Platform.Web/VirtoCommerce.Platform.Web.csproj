@@ -353,6 +353,10 @@
     <Content Include="gulpfile.js" />
     <Content Include="Scripts\allPackages.js" />
     <Content Include="Content\allStyles.css" />
+    <Content Include="Scripts\app\changeLog\blades\operation-list.js" />
+    <Content Include="Scripts\app\changeLog\blades\operation-list.tpl.html" />
+    <Content Include="Scripts\app\changeLog\widgets\operations-widget.js" />
+    <Content Include="Scripts\app\changeLog\widgets\operations-widget.tpl.html" />
     <Content Include="Scripts\app\dynamicProperties\blades\dynamicProperty-detail.js" />
     <Content Include="Scripts\app\dynamicProperties\blades\dynamicProperty-detail.tpl.html" />
     <Content Include="Scripts\app\dynamicProperties\blades\dynamicObject-list.js" />

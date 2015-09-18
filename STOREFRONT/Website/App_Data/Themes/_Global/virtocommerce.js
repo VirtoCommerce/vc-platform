@@ -75,4 +75,84 @@ VirtoCommerce.renderDynamicContent = function () {
 
 $(function () {
     VirtoCommerce.renderDynamicContent();
+
+    $("#addToQuote").on("click", function () {
+        $.ajax({
+            type: "POST",
+            url: VirtoCommerce.url("/quote/add"),
+            data: {
+                variantId: $("#productSelect").val()
+            },
+            success: function (jsonResult) {
+                window.location.href = VirtoCommerce.url("/quote");
+            }
+        });
+    });
+
+    $("body").delegate(".cart-row.quote .js-qty .js--add", "click", function () {
+        var id = $(this).data("id");
+        var quantityInput = $(this).parents(".js-qty").find("input");
+        var quantity = parseInt(quantityInput.val()) + 1;
+        quantityInput.val(quantity);
+    });
+
+    $("body").delegate(".cart-row.quote .js-qty .js--minus", "click", function () {
+        var id = $(this).data("id");
+        var quantityInput = $(this).parents(".js-qty").find("input");
+        var quantity = parseInt(quantityInput.val()) - 1;
+        if (quantity >= 1) {
+            quantityInput.val(quantity);
+        }
+    });
+
+    $(".add-tier").on("click", function (event) {
+        event.preventDefault();
+
+        var tierHtml = "<div class=\"js-qty\">";
+        tierHtml += "<input class=\"js--num\" pattern=\"[0-9]*\" type=\"text\" value=\"1\" />";
+        tierHtml += "<span class=\"js--qty-adjuster js--add\">+</span>";
+        tierHtml += "<span class=\"js--qty-adjuster js--minus\">-</span>";
+        tierHtml += "</div>";
+
+        var qtyCount = $(this).parents(".grid-item").find(".js-qty").length - 1;
+        var predLastQty = $(this).parents(".grid-item").find(".js-qty:eq(" + (qtyCount - 1) + ")");
+
+        predLastQty.after(tierHtml);
+    });
+
+    $(".ublock button").on("click", function () {
+        var quoteRequest = {
+            Id: $("#quote_request_id").val(),
+            Comment: $("#quote_request_comment").val(),
+            Email: $("#quote_request_email").val(),
+            FirstName: $("#quote_request_first_name").val(),
+            LastName: $("#quote_request_last_name").val(),
+            Items: []
+        };
+        $.each($(".cart-row.quote"), function () {
+            var itemElement = $(this);
+            var quoteItem = {
+                Id: itemElement.data("id"),
+                Comment: itemElement.find(".quote_item_comment").val(),
+                ProposalPrices: []
+            };
+
+            $.each(itemElement.find(".js--num"), function () {
+                var tierPrice = {
+                    Quantity: $(this).val(),
+                    Price: 0
+                };
+
+                quoteItem.ProposalPrices.push(tierPrice);
+            });
+
+            quoteRequest.Items.push(quoteItem);
+        });
+
+        $.ajax({
+            type: "POST",
+            url: VirtoCommerce.url("/quote/submit"),
+            data: quoteRequest
+        });
+    });
 });

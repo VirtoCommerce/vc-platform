@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using VirtoCommerce.ApiClient.DataContracts.Quotes;
+using VirtoCommerce.ApiClient.Extensions;
 using VirtoCommerce.ApiClient.Utilities;
 
 namespace VirtoCommerce.ApiClient
@@ -20,7 +21,7 @@ namespace VirtoCommerce.ApiClient
 
         public async Task<QuoteRequestSearchResult> SearchAsync(QuoteRequestSearchCriteria searchCriteria)
         {
-            var requestUrl = CreateRequestUri(RelativePaths.QuoteRequests);
+            var requestUrl = CreateRequestUri(RelativePaths.QuoteRequests, searchCriteria.GetQueryString());
 
             var response = await GetAsync<QuoteRequestSearchResult>(requestUrl).ConfigureAwait(false);
 
@@ -30,15 +31,6 @@ namespace VirtoCommerce.ApiClient
         public async Task<QuoteRequest> GetByIdAsync(string id)
         {
             var requestUrl = CreateRequestUri(string.Format(RelativePaths.QuoteRequest, id));
-
-            var response = await GetAsync<QuoteRequest>(requestUrl).ConfigureAwait(false);
-
-            return response;
-        }
-
-        public async Task<QuoteRequest> GetCurrentRequestAsync(string storeId, string customerId)
-        {
-            var requestUrl = CreateRequestUri(string.Format(RelativePaths.CurrentQuoteRequest, storeId, customerId));
 
             var response = await GetAsync<QuoteRequest>(requestUrl).ConfigureAwait(false);
 
@@ -75,8 +67,6 @@ namespace VirtoCommerce.ApiClient
         protected class RelativePaths
         {
             public const string QuoteRequests = "quote/requests";
-
-            public const string CurrentQuoteRequest = "quote/requests/{0}/{1}/current";
 
             public const string QuoteRequest = "quote/requests/{0}";
 

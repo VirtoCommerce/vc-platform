@@ -1,0 +1,22 @@
+.vc-quote .quote-discount .quote-t
+{
+    margin: 0 0 10px;
+}
+
+.vc-quote .quote-discount .btn
+{
+    height: 34px;
+    vertical-align: middle;
+}
+
+.vc-quote .table.__collapsed .table-col
+{
+    padding: 3px;
+    font-size: 12px;
+}
+
+.vc-quote .table .table-item.__total .table-col
+{
+    background: #dee9f0;
+    font-size: 12px;
+}

@@ -17,5 +17,9 @@ namespace VirtoCommerce.ApiClient.DataContracts.Quotes
         public int Start { get; set; }
 
         public int Count { get; set; }
+
+        public string Status { get; set; }
+
+        public string Tag { get; set; }
     }
 }

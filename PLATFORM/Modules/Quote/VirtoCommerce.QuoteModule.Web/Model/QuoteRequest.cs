@@ -85,6 +85,10 @@ namespace VirtoCommerce.QuoteModule.Web.Model
 		public string Coupon { get; set; }
 
         /// <summary>
+        /// Manual shipping total for quote request
+        /// </summary>
+        public decimal ManualShippingTotal { get; set; }
+        /// <summary>
         /// Manual sub total for quote request
         /// </summary>
         public decimal ManualSubTotal { get; set; }

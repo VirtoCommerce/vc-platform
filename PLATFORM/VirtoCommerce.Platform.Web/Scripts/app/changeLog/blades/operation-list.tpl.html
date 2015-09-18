@@ -1,0 +1,24 @@
+﻿<div class="blade-content __medium-wide">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div class="table-wrapper">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="table-col __product-name">Login</th>
+                            <th class="table-col __product-code">Details</th>
+                            <th class="table-col __product-code">Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="table-item" ng-repeat="data in blade.currentEntities | orderBy: createdDate:true track by data.id">
+                            <td class="table-col">{{data.createdBy}}</td>
+                            <td class="table-col">{{data.detail}}</td>
+                            <td class="table-col" am-time-ago="data.createdDate"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
