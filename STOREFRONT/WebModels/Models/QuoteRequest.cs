@@ -7,6 +7,10 @@ namespace VirtoCommerce.Web.Models
 {
     public class QuoteRequest : Drop
     {
+        public QuoteRequest()
+        {
+        }
+
         public QuoteRequest(string storeId, string customerId)
         {
             Attachments = new List<Attachment>();

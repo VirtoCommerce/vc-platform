@@ -19,7 +19,7 @@ namespace VirtoCommerce.Web.Controllers
 
         [HttpPost]
         [Route("add")]
-        public async Task AddItem(string variantId)
+        public async Task<ActionResult> AddItem(string variantId)
         {
             var product = await Service.GetProductAsync(Context, variantId);
 
@@ -28,6 +28,8 @@ namespace VirtoCommerce.Web.Controllers
             Context.QuoteRequest.AddItem(quoteItem);
 
             Context.QuoteRequest = await QuoteService.UpdateQuoteRequestAsync(Context.QuoteRequest);
+
+            return Json(Context.QuoteRequest);
         }
 
         [HttpGet]
@@ -43,13 +45,15 @@ namespace VirtoCommerce.Web.Controllers
 
         [HttpPost]
         [Route("submit")]
-        public async Task<ActionResult> CreateOrder(QuoteRequest quoteRequest)
+        public async Task<ActionResult> Submit(QuoteRequest model)
         {
-            Context.QuoteRequest.Comment = quoteRequest.Comment;
-            Context.QuoteRequest.FirstName = quoteRequest.FirstName;
-            Context.QuoteRequest.Language = quoteRequest.LastName;
+            Context.QuoteRequest.Comment = model.Comment;
+            Context.QuoteRequest.FirstName = model.FirstName;
+            Context.QuoteRequest.Language = model.LastName;
+            Context.QuoteRequest.Tag = null;
+            Context.QuoteRequest.IsSubmitted = true;
 
-            foreach (var quoteItem in quoteRequest.Items)
+            foreach (var quoteItem in model.Items)
             {
                 var existingQuoteItem = Context.QuoteRequest.Items.FirstOrDefault(i => i.Id == quoteItem.Id);
 
@@ -68,7 +72,7 @@ namespace VirtoCommerce.Web.Controllers
 
             Context.QuoteRequest = await QuoteService.UpdateQuoteRequestAsync(Context.QuoteRequest);
 
-            return null;
+            return Json(Context.QuoteRequest);
         }
     }
 }

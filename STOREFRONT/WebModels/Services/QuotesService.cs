@@ -54,15 +54,12 @@ namespace VirtoCommerce.Web.Models.Services
             if (quoteRequestModel.IsTransient)
             {
                 quoteRequest = await _quoteClient.CreateAsync(quoteRequest);
+                quoteRequestModel = quoteRequest.ToViewModel();
             }
             else
             {
-                quoteRequest = await _quoteClient.UpdateAsync(quoteRequest);
-            }
-
-            if (quoteRequest != null)
-            {
-                quoteRequestModel = quoteRequest.ToViewModel();
+                await _quoteClient.UpdateAsync(quoteRequest);
+                quoteRequestModel = await GetCurrentQuoteRequestAsync(quoteRequest.StoreId, quoteRequest.CustomerId);
             }
 
             return quoteRequestModel;

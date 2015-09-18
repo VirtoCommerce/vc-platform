@@ -84,7 +84,15 @@ $(function () {
                 variantId: $("#productSelect").val()
             },
             success: function (jsonResult) {
-                window.location.href = VirtoCommerce.url("/quote");
+                if (jsonResult) {
+                    var quoteCount = $("#quoteCount");
+                    quoteCount.text(jsonResult.items_count);
+                    if (jsonResult.items_count > 0) {
+                        quoteCount.removeClass("hidden-count");
+                    } else {
+                        quoteCount.addClass("hidden-count");
+                    }
+                }
             }
         });
     });
@@ -139,7 +147,7 @@ $(function () {
 
             $.each(itemElement.find(".js--num"), function () {
                 var tierPrice = {
-                    Quantity: $(this).val(),
+                    Quantity: parseInt($(this).val()),
                     Price: 0
                 };
 
@@ -152,7 +160,10 @@ $(function () {
         $.ajax({
             type: "POST",
             url: VirtoCommerce.url("/quote/submit"),
-            data: quoteRequest
+            data: quoteRequest,
+            success: function (jsonResult) {
+                window.location.href = VirtoCommerce.url("/");
+            }
         });
     });
 });
