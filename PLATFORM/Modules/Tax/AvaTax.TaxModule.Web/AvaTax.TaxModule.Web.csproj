@@ -145,6 +145,7 @@
     <Compile Include="Logging\AvalaraLogger.cs" />
     <Compile Include="Observers\CalculateTaxAdjustmentObserver.cs" />
     <Compile Include="Observers\CancelOrderTaxesObserver.cs" />
+    <Compile Include="Providers\AvaTaxRateProvider.cs" />
     <Compile Include="Services\AvaTaxSettings.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Observers\CalculateCartTaxesObserver.cs" />
