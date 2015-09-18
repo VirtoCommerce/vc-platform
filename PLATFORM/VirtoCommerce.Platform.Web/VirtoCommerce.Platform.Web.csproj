@@ -422,6 +422,7 @@
     <Content Include="Scripts\app\security\blades\account-api-list.tpl.html" />
     <Content Include="Scripts\app\security\blades\account-resetPassword.tpl.html" />
     <Content Include="Scripts\app\security\blades\account-resetPassword.js" />
+    <Content Include="Scripts\common\directives\smartFloat.js" />
     <Content Include="Scripts\common\directives\vaTabs.js" />
     <Content Include="Scripts\common\templates\ok.tpl.html" />
     <Content Include="Scripts\common\templates\home.tpl.html" />
