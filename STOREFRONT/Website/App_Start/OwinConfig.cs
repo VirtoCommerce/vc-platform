@@ -63,6 +63,7 @@ namespace VirtoCommerce.Web
 
         private static readonly CustomerService _customerServce = new CustomerService();
         private static readonly CommerceService _commerceServce = CommerceService.Create();
+        private static readonly QuotesService _quoteService = new QuotesService();
 
         #region Constructors and Destructors
         public SiteContextDataOwinMiddleware(OwinMiddleware next)
@@ -225,6 +226,14 @@ namespace VirtoCommerce.Web
                         }
 
                         context.Response.Cookies.Delete(AnonymousCookie);
+                    }
+
+                    ctx.QuoteRequest = await _quoteService.GetCurrentQuoteRequestAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
+
+                    if (ctx.QuoteRequest == null)
+                    {
+                        ctx.QuoteRequest = new QuoteRequest(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
+                        ctx.QuoteRequest.Tag = "actual";
                     }
 
                     ctx.PriceLists =

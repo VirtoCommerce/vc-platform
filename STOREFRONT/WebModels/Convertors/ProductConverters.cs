@@ -61,6 +61,7 @@ namespace VirtoCommerce.Web.Convertors
             productModel.Id = product.Id;
             productModel.Images = product.Images != null ?
                 new ItemCollection<Image>(product.Images.Select(i => i.AsWebModel(product.Name, product.Id))) : null;
+            productModel.IsQuotable = true; // TODO
             productModel.FeaturedImage = primaryImage != null ?
                 primaryImage.AsWebModel(primaryImage.Name, product.Id) : null;
             productModel.Keywords = keywords;

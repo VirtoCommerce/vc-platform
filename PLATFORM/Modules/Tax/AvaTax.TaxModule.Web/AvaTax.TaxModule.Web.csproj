@@ -131,10 +131,12 @@
     <Compile Include="AvaTaxClasses\JsonTaxSvc.cs" />
     <Compile Include="AvaTaxClasses\TaxSvc.cs" />
     <Compile Include="AvaTaxClasses\ValidateResult.cs" />
+    <Compile Include="AvaTaxRateProvider.cs" />
     <Compile Include="Controller\AvaTaxController.cs" />
     <Compile Include="Converters\CustomerAddressConverter.cs" />
     <Compile Include="Converters\CustomerOrderCancelConverter.cs" />
     <Compile Include="Converters\CustomerOrderAdjustementConverter.cs" />
+    <Compile Include="Converters\TaxRequestConverter.cs" />
     <Compile Include="Converters\ShoppingCartConverter.cs" />
     <Compile Include="Converters\CustomerOrderConverter.cs" />
     <Compile Include="Logging\BaseLogContext.cs" />
@@ -145,6 +147,7 @@
     <Compile Include="Logging\AvalaraLogger.cs" />
     <Compile Include="Observers\CalculateTaxAdjustmentObserver.cs" />
     <Compile Include="Observers\CancelOrderTaxesObserver.cs" />
+    <Compile Include="Providers\AvaTaxRateProvider.cs" />
     <Compile Include="Services\AvaTaxSettings.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Observers\CalculateCartTaxesObserver.cs" />

@@ -15,6 +15,7 @@ namespace VirtoCommerce.Web.Controllers
     {
         private CustomerService _customerService;
         private SecurityService _securityService;
+        private QuotesService _quoteService;
         private CommerceService _service;
 
         #region Properties
@@ -31,6 +32,14 @@ namespace VirtoCommerce.Web.Controllers
             get
             {
                 return this._customerService ?? (this._customerService = new CustomerService());
+            }
+        }
+
+        protected QuotesService QuoteService
+        {
+            get
+            {
+                return _quoteService ?? (_quoteService = new QuotesService());
             }
         }
 

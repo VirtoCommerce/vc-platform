@@ -119,7 +119,7 @@ namespace VirtoCommerce.Web.Views.Contents
             var rawItem = this.CreateRawItem(path);
 
             /// if a 'date' property is found in markdown file header, that date will be used instead of the date in the file name
-            var date = DateTime.Now;
+            var date = rawItem.LastWriteTimeUtc;
             if (rawItem.Settings.ContainsKey("date"))
                 DateTime.TryParse((string)rawItem.Settings["date"], out date);
 
@@ -131,11 +131,13 @@ namespace VirtoCommerce.Web.Views.Contents
                     var content = templateEngine.Process(rawItem.Content, rawItem.Settings);
                     var page = new ContentItem { Content = content };
 
+                    var relativePath = this.EvaluateLink(context, path);
                     page.SetHeaderSettings(rawItem.Settings);
                     page.Settings = rawItem.Settings;
                     page.Url = rawItem.Settings.ContainsKey("permalink")
                         ? rawItem.Settings["permalink"]
-                        : this.EvaluateLink(context, path);
+                        : relativePath;
+                    page.FileName = relativePath;
                     page.Date = date;
                     return page;
                 }
@@ -161,11 +163,13 @@ namespace VirtoCommerce.Web.Views.Contents
 
         private RawContentItem CreateRawItem(string file)
         {
-            var contents = this.SafeReadContents(file);
+            FileInfoBase info;
+            var contents = this.SafeReadContents(file, out info);
             var header = contents.YamlHeader();
 
             var page = new RawContentItem { Content = this.RenderContent(file, contents, header) };
 
+            page.LastWriteTimeUtc = info.LastWriteTimeUtc;
             page.Settings = header;
 
             return page;
@@ -210,7 +214,7 @@ namespace VirtoCommerce.Web.Views.Contents
                     .Where(x => extensions.Contains(x.Extension));
                 items.AddRange(
                     files.Select(file => CreateContentItem(context, file.FullName))
-                        .Where(post => post != null));
+                        .Where(post => post != null).OrderByDescending(x=>x.Date));
             }
             return items;
         }
@@ -241,15 +245,16 @@ namespace VirtoCommerce.Web.Views.Contents
             return html;
         }
 
-        private string SafeReadContents(string file)
+        private string SafeReadContents(string file, out FileInfoBase fileInfo)
         {
             try
             {
+                fileInfo = this._fileSystem.FileInfo.FromFileName(file);
                 return this._fileSystem.File.ReadAllText(file);
             }
             catch (IOException)
             {
-                var fileInfo = this._fileSystem.FileInfo.FromFileName(file);
+                fileInfo = this._fileSystem.FileInfo.FromFileName(file);
                 var tempFile = Path.Combine(Path.GetTempPath(), fileInfo.Name);
                 try
                 {

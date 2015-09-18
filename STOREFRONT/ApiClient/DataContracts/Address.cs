@@ -1,8 +1,8 @@
-﻿namespace VirtoCommerce.ApiClient.DataContracts.Quotes
+﻿namespace VirtoCommerce.ApiClient.DataContracts
 {
     public class Address
     {
-        public string AddressType { get; set; }
+        public AddressType AddressType { get; set; }
 
         public string Organization { get; set; }
 

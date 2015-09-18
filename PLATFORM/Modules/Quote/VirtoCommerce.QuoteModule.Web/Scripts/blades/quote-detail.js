@@ -15,7 +15,7 @@
 
         function initializeBlade(data) {
             blade.currentEntityId = data.id;
-            blade.title = data.name;
+            blade.title = data.number;
 
             blade.currentEntity = angular.copy(data);
             blade.origEntity = data;
@@ -26,15 +26,15 @@
             return !angular.equals(blade.currentEntity, blade.origEntity);
         };
 
-        $scope.saveChanges = function () {
+        function saveChanges() {
             blade.isLoading = true;
-            
+
             quotes.update({}, blade.currentEntity, function (data) {
                 blade.refresh(true);
             }, function (error) {
                 bladeNavigationService.setError('Error ' + error.status, blade);
             });
-        };
+        }
 
         function deleteEntry() {
             var dialog = {
@@ -45,7 +45,9 @@
                     if (remove) {
                         blade.isLoading = true;
 
-                        quotes.remove({ ids: blade.currentEntityId }, function () {
+                        quotes.remove({
+                            ids: blade.currentEntityId
+                        }, function () {
                             $scope.bladeClose();
                             blade.parentBlade.refresh();
                         }, function (error) {
@@ -71,7 +73,7 @@
                 };
                 dialog.callback = function (needSave) {
                     if (needSave) {
-                        $scope.saveChanges();
+                        saveChanges();
                     }
                     closeCallback();
                 };
@@ -91,17 +93,17 @@
         blade.headIcon = 'fa-file-text-o';
 
         blade.toolbarCommands = [
-            {
-                name: "Save",
-                icon: 'fa fa-save',
-                executeMethod: function () {
-                    $scope.saveChanges();
-                },
-                canExecuteMethod: function () {
-                    return isDirty() && $scope.formScope && $scope.formScope.$valid;
-                },
-                permission: 'quote:manage'
+        {
+            name: "Save",
+            icon: 'fa fa-save',
+            executeMethod: function () {
+                saveChanges();
             },
+            canExecuteMethod: function () {
+                return isDirty() && $scope.formScope && $scope.formScope.$valid;
+            },
+            permission: 'quote:manage'
+        },
             {
                 name: "Reset",
                 icon: 'fa fa-undo',
@@ -114,15 +116,26 @@
                 permission: 'quote:manage'
             },
             {
+                name: "Submit proposal", icon: 'fa fa-check-square-o',
+                executeMethod: function () {
+                    blade.currentEntity.isSubmitted = true;
+                    // saveChanges();
+                },
+                canExecuteMethod: function () {
+                    return blade.currentEntity && !blade.currentEntity.isSubmitted;
+                },
+                permission: 'quote:manage'
+            },
+            {
                 name: "Cancel document", icon: 'fa fa-remove',
                 executeMethod: function () {
                     var dialog = {
                         id: "confirmCancelOperation",
                         callback: function (reason) {
                             if (reason) {
-                                $scope.blade.currentEntity.cancelReason = reason;
-                                $scope.blade.currentEntity.isCancelled = true;
-                                $scope.blade.currentEntity.status = 'Canceled';
+                                blade.currentEntity.cancelReason = reason;
+                                blade.currentEntity.isCancelled = true;
+                                blade.currentEntity.status = 'Canceled';
                                 saveChanges();
                             }
                         }
@@ -130,7 +143,7 @@
                     dialogService.showDialog(dialog, 'Modules/$(VirtoCommerce.Quote)/Scripts/dialogs/cancelQuote-dialog.tpl.html', 'virtoCommerce.quoteModule.confirmCancelDialogController');
                 },
                 canExecuteMethod: function () {
-                    return $scope.blade.currentEntity && !$scope.blade.currentEntity.isCancelled;
+                    return blade.currentEntity && !blade.currentEntity.isCancelled;
                 },
                 permission: 'quote:manage'
             },
@@ -146,6 +159,21 @@
             }
         ];
 
+        $scope.openDictionarySettingManagement = function () {
+            var newBlade = {
+                id: 'settingDetailChild',
+                isApiSave: true,
+                currentEntityId: 'Quotes.Status',
+                title: 'Quote statuses',
+                parentRefresh: function (data) {
+                    $scope.quoteStatuses = data;
+                },
+                controller: 'platformWebApp.settingDictionaryController',
+                template: '$(Platform)/Scripts/app/settings/blades/setting-dictionary.tpl.html'
+            };
+            bladeNavigationService.showBlade(newBlade, blade);
+        };
+
         // datepicker
         $scope.datepickers = {}
         $scope.open = function ($event, which) {
@@ -157,9 +185,8 @@
         blade.refresh(false);
 
         $scope.quoteStatuses = settings.getValues({ id: 'Quotes.Status' });
-        //$scope.languages = settings.getValues({ id: 'VirtoCommerce.Core.General.Languages' });
-        //$scope.currencies = settings.getValues({ id: 'VirtoCommerce.Core.General.Currencies' });
         $scope.stores = stores.query();
+        $scope.shippingMethods = quotes.getShippingMethods({ id: blade.currentEntityId });
         accounts.search({
             takeCount: 1000
         }, function (data) {
