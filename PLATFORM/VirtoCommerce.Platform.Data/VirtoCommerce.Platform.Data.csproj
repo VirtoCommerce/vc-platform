@@ -196,6 +196,7 @@
     <Compile Include="Model\RoleAssignmentEntity.cs" />
     <Compile Include="Model\RoleEntity.cs" />
     <Compile Include="Model\RolePermissionEntity.cs" />
+    <Compile Include="Model\RoleScopeEntity.cs" />
     <Compile Include="Model\SettingEntity.cs" />
     <Compile Include="Model\SettingValueEntity.cs" />
     <Compile Include="Notifications\DefaultEmailNotificationSendingGateway.cs" />
@@ -254,6 +255,10 @@
     <Compile Include="Repositories\Migrations\201509161444352_DetailField.Designer.cs">
       <DependentUpon>201509161444352_DetailField.cs</DependentUpon>
     </Compile>
+    <Compile Include="Repositories\Migrations\201509181228103_RoleScope.cs" />
+    <Compile Include="Repositories\Migrations\201509181228103_RoleScope.Designer.cs">
+      <DependentUpon>201509181228103_RoleScope.cs</DependentUpon>
+    </Compile>
     <Compile Include="Repositories\Migrations\Configuration.cs" />
     <Compile Include="Repositories\PlatformDatabaseInitializer.cs" />
     <Compile Include="Repositories\PlatformRepository.cs" />
@@ -277,6 +282,10 @@
     <Compile Include="Security\Converters\ApiAccountConverter.cs" />
     <Compile Include="Security\Converters\ApplicationUserConverter.cs" />
     <Compile Include="Security\Converters\IdentityResultConverter.cs" />
+    <Compile Include="Security\Converters\PermissionConverter.cs" />
+    <Compile Include="Security\Converters\RoleAssignmentConverter.cs" />
+    <Compile Include="Security\Converters\RoleConverter.cs" />
+    <Compile Include="Security\Converters\RoleScopeConverter.cs" />
     <Compile Include="Security\Identity\ApplicationClaimsIdentityProvider.cs" />
     <Compile Include="Security\Identity\ApplicationSignInManager.cs" />
     <Compile Include="Security\Identity\ApplicationUser.cs" />
@@ -293,7 +302,6 @@
     <Compile Include="Security\Identity\SecurityDbContext.cs" />
     <Compile Include="Security\PermissionService.cs" />
     <Compile Include="Security\RoleManagementService.cs" />
-    <Compile Include="Security\SecurityConverters.cs" />
     <Compile Include="Security\SecurityOptions.cs" />
     <Compile Include="Security\SecurityService.cs" />
     <Compile Include="Settings\Converters\ModuleConverter.cs" />
@@ -348,6 +356,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Repositories\Migrations\201509161444352_DetailField.resx">
       <DependentUpon>201509161444352_DetailField.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Repositories\Migrations\201509181228103_RoleScope.resx">
+      <DependentUpon>201509181228103_RoleScope.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Security\Identity\Migrations\201411101625303_InitialCreate.resx">
       <DependentUpon>201411101625303_InitialCreate.cs</DependentUpon>

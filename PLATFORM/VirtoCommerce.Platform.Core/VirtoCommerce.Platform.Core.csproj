@@ -245,6 +245,7 @@
     <Compile Include="Security\Role.cs" />
     <Compile Include="Security\RoleSearchRequest.cs" />
     <Compile Include="Security\RoleSearchResponse.cs" />
+    <Compile Include="Security\RoleScope.cs" />
     <Compile Include="Security\SecurityResult.cs" />
     <Compile Include="Security\UserDetails.cs" />
     <Compile Include="Security\ApplicationUserLogin.cs" />

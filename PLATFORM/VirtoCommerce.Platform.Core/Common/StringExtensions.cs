@@ -247,5 +247,15 @@ namespace VirtoCommerce.Platform.Core.Common
             catch { }
             return result;
         }
+
+        public static string[] LeftJoin(this string[] left, string[] right, string delimiter)
+        {
+            if (right == null)
+            {
+                right = new string[] { };
+            }
+
+            return left.Join(right.DefaultIfEmpty(String.Empty), x => true, y => true, (x, y) => String.Join(delimiter, new[] { x, y }.Where(z => !String.IsNullOrEmpty(z)))).ToArray();
+        }
     }
 }

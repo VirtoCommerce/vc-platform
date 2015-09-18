@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Data.Model
@@ -11,6 +12,8 @@ namespace VirtoCommerce.Platform.Data.Model
 			RoleAssignments = new NullCollection<RoleAssignmentEntity>();
         }
 
+        [Required]
+        [StringLength(128)]
         public string Name { get; set; }
         public string Description { get; set; }
 

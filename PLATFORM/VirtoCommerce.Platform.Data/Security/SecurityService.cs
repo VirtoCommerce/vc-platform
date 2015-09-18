@@ -8,6 +8,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Model;
 using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.Platform.Data.Security.Converters;
@@ -15,7 +16,7 @@ using VirtoCommerce.Platform.Data.Security.Identity;
 
 namespace VirtoCommerce.Platform.Data.Security
 {
-    public class SecurityService : ISecurityService
+    public class SecurityService : ServiceBase, ISecurityService
     {
         private readonly Func<IPlatformRepository> _platformRepository;
         private readonly Func<ApplicationUserManager> _userManagerFactory;
@@ -69,48 +70,33 @@ namespace VirtoCommerce.Platform.Data.Security
         public async Task<SecurityResult> CreateAsync(ApplicationUserExtended user)
         {
             IdentityResult result = null;
-
-            if (user != null)
+            if (user == null)
             {
-                var dbUser = user.ToDataModel();
-
-                using (var userManager = _userManagerFactory())
+                throw new ArgumentNullException("user");
+            }
+            //Update ASP.NET indentity user
+            using (var userManager = _userManagerFactory())
+            {
+                var dbUser = user.ToIdentityModel();
+                if (string.IsNullOrEmpty(user.Password))
                 {
-                    if (string.IsNullOrEmpty(user.Password))
-                    {
-                        result = await userManager.CreateAsync(dbUser);
-                    }
-                    else
-                    {
-                        result = await userManager.CreateAsync(dbUser, user.Password);
-                    }
-
+                    result = await userManager.CreateAsync(dbUser);
                 }
-                if (result.Succeeded)
+                else
                 {
-                    using (var repository = _platformRepository())
-                    {
-                        var account = new AccountEntity
-                        {
-                            Id = dbUser.Id,
-                            UserName = user.UserName,
-                            MemberId = user.MemberId,
-                            AccountState = AccountState.Approved,
-                            RegisterType = (RegisterType)user.UserType,
-                            StoreId = user.StoreId
-                        };
+                    result = await userManager.CreateAsync(dbUser, user.Password);
+                }
+            }
 
-                        if (user.Roles != null)
-                        {
-                            foreach (var role in user.Roles)
-                            {
-                                account.RoleAssignments.Add(new RoleAssignmentEntity { RoleId = role.Id, AccountId = account.Id });
-                            }
-                        }
+            if (result.Succeeded)
+            {
+                using (var repository = _platformRepository())
+                {
+                    var dbAcount = user.ToDataModel();
+                    dbAcount.AccountState = AccountState.Approved;
 
-                        repository.Add(account);
-                        repository.UnitOfWork.Commit();
-                    }
+                    repository.Add(dbAcount);
+                    repository.UnitOfWork.Commit();
                 }
             }
 
@@ -121,55 +107,45 @@ namespace VirtoCommerce.Platform.Data.Security
         {
             SecurityResult result = null;
 
-            if (user != null)
+            if (user == null)
             {
-                using (var userManager = _userManagerFactory())
+                throw new ArgumentNullException("user");
+            }
+
+            //Update ASP.NET indentity user
+            using (var userManager = _userManagerFactory())
+            {
+                var dbUser = await userManager.FindByIdAsync(user.Id);
+                result = ValidateUser(dbUser);
+                if (result.Succeeded)
                 {
-                    var dbUser = await userManager.FindByIdAsync(user.Id);
+                    //Update ASP.NET indentity user
+                    user.Patch(dbUser);
+                    var identityResult = await userManager.UpdateAsync(dbUser);
+                    result = identityResult.ToCoreModel();
+                }
+            }
 
-                    result = ValidateUser(dbUser);
-                    if (result.Succeeded)
+            if (result.Succeeded)
+            {
+                //Update platform security user
+                using (var repository = _platformRepository())
+                {
+                    var targetDbAcount = repository.GetAccountByName(user.UserName, UserDetails.Full);
+
+                    if (targetDbAcount == null)
                     {
-                        dbUser.CopyFrom(user);
-                        var identityResult = await userManager.UpdateAsync(dbUser);
-
-                        result = identityResult.ToCoreModel();
-                        if (result.Succeeded)
+                        result = new SecurityResult { Errors = new[] { "Account not found." } };
+                    }
+                    else
+                    {
+                        var changedDbAccount = user.ToDataModel();
+                        using (var changeTracker = GetChangeTracker(repository))
                         {
-                            using (var repository = _platformRepository())
-                            {
-                                var account = repository.GetAccountByName(user.UserName, UserDetails.Full);
+                            changeTracker.Attach(targetDbAcount);
 
-                                if (account == null)
-                                {
-                                    result = new SecurityResult { Errors = new[] { "Account not found." } };
-                                }
-                                else
-                                {
-                                    account.RegisterType = (RegisterType)user.UserType;
-                                    account.AccountState = (AccountState)user.UserState;
-                                    account.MemberId = user.MemberId;
-                                    account.StoreId = user.StoreId;
-
-                                    if (user.ApiAccounts != null)
-                                    {
-                                        var sourceCollection = new ObservableCollection<ApiAccountEntity>(user.ApiAccounts.Select(x => x.ToEntity()));
-                                        var comparer = AnonymousComparer.Create((ApiAccountEntity x) => x.Id);
-                                        account.ApiAccounts.ObserveCollection(x => repository.Add(x), x => repository.Remove(x));
-                                        sourceCollection.Patch(account.ApiAccounts, comparer, (sourceItem, targetItem) => sourceItem.Patch(targetItem));
-                                    }
-
-                                    if (user.Roles != null)
-                                    {
-                                        var sourceCollection = new ObservableCollection<RoleAssignmentEntity>(user.Roles.Select(r => new RoleAssignmentEntity { RoleId = r.Id }));
-                                        var comparer = AnonymousComparer.Create((RoleAssignmentEntity x) => x.RoleId);
-                                        account.RoleAssignments.ObserveCollection(x => repository.Add(x), ra => repository.Remove(ra));
-                                        sourceCollection.Patch(account.RoleAssignments, comparer, (sourceItem, targetItem) => sourceItem.Patch(targetItem));
-                                    }
-
-                                    repository.UnitOfWork.Commit();
-                                }
-                            }
+                            changedDbAccount.Patch(targetDbAcount);
+                            repository.UnitOfWork.Commit();
                         }
                     }
                 }
@@ -347,35 +323,10 @@ namespace VirtoCommerce.Platform.Data.Security
 
             if (applicationUser != null)
             {
-                result = new ApplicationUserExtended();
-                result.InjectFrom(applicationUser);
-
                 using (var repository = _platformRepository())
                 {
                     var user = repository.GetAccountByName(applicationUser.UserName, detailsLevel);
-
-                    if (user != null)
-                    {
-                        result.InjectFrom(user);
-
-                        result.UserState = (UserState)user.AccountState;
-                        result.UserType = (UserType)user.RegisterType;
-
-                        if (detailsLevel == UserDetails.Full || detailsLevel == UserDetails.Export)
-                        {
-                            var roles = user.RoleAssignments.Select(x => x.Role).ToArray();
-                            result.Roles = roles.Select(r => r.ToCoreModel()).ToArray();
-
-                            var permissionIds = roles
-                                    .SelectMany(x => x.RolePermissions)
-                                    .Select(x => x.PermissionId)
-                                    .Distinct()
-                                    .ToArray();
-
-                            result.Permissions = permissionIds;
-                            result.ApiAccounts = user.ApiAccounts.Select(x => x.ToCoreModel()).ToArray();
-                        }
-                    }
+                    result = applicationUser.ToCoreModel(user);
                 }
 
                 if (detailsLevel != UserDetails.Export)
@@ -384,7 +335,6 @@ namespace VirtoCommerce.Platform.Data.Security
                     result.SecurityStamp = null;
                 }
             }
-
             return result;
         }
     }

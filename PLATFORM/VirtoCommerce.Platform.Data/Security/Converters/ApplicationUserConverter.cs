@@ -1,64 +1,99 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Omu.ValueInjecter;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Data.Common.ConventionInjections;
+using VirtoCommerce.Platform.Data.Model;
 using VirtoCommerce.Platform.Data.Security.Identity;
 
 namespace VirtoCommerce.Platform.Data.Security.Converters
 {
     public static class ApplicationUserConverter
     {
-        public static ApplicationUser ToDataModel(this ApplicationUserExtended user)
+        public static ApplicationUserExtended ToCoreModel(this ApplicationUser applicationUser, AccountEntity dbEntity)
         {
-            var dbUser = new ApplicationUser();
-            dbUser.CopyFrom(user);
-            return dbUser;
+            var retVal = new ApplicationUserExtended();
+            retVal = new ApplicationUserExtended();
+            retVal.InjectFrom(applicationUser);
+            retVal.InjectFrom(dbEntity);
+            retVal.UserState = (UserState)dbEntity.AccountState;
+            retVal.UserType = (UserType)dbEntity.RegisterType;
+
+            retVal.Roles = dbEntity.RoleAssignments.Select(x => x.ToCoreModel()).ToArray();
+            retVal.Permissions = retVal.Roles.SelectMany(x => x.GetPermissonFullQualifiedNames()).Distinct().ToArray();
+            retVal.ApiAccounts = dbEntity.ApiAccounts.Select(x => x.ToCoreModel()).ToArray();
+
+            return retVal;
         }
 
-        public static void CopyFrom(this ApplicationUser dbUser, ApplicationUserExtended user)
+        public static ApplicationUser ToIdentityModel(this ApplicationUserExtended user)
         {
-            // Backup old values
-            var id = dbUser.Id;
-            var passwordHash = dbUser.PasswordHash;
-            var securityStamp = dbUser.SecurityStamp;
+            var retVal = new ApplicationUser();
+            user.Patch(retVal);
+            return retVal;
+        }
 
-            dbUser.InjectFrom(user);
+        public static AccountEntity ToDataModel(this ApplicationUserExtended user)
+        {
+            var retVal = new AccountEntity();
+            retVal.InjectFrom(user);
 
-            // Restore old values
-            if (user.Id == null)
-                dbUser.Id = id;
+            retVal.RegisterType = (RegisterType)user.UserType;
+            retVal.AccountState = (AccountState)user.UserState;
 
-            if (user.PasswordHash == null)
-                dbUser.PasswordHash = passwordHash;
+            if(user.Roles != null)
+            {
+                retVal.RoleAssignments = new ObservableCollection<RoleAssignmentEntity>(user.Roles.Select(x => x.ToAssignmentDataModel()));
+            }
+            if(user.ApiAccounts != null)
+            {
+                retVal.ApiAccounts = new ObservableCollection<ApiAccountEntity>(user.ApiAccounts.Select(x => x.ToDataModel()));
+            }
+            return retVal;     
+        }
 
-            if (user.SecurityStamp == null)
-                dbUser.SecurityStamp = securityStamp;
+        public static void Patch(this AccountEntity source, AccountEntity target)
+        {
+            var patchInjection = new PatchInjection<AccountEntity>(x => x.RegisterType, x => x.AccountState, x => x.MemberId,
+                                                                   x => x.StoreId);
+            target.InjectFrom(patchInjection, source);
+
+            if (!source.ApiAccounts.IsNullCollection())
+            {
+                source.ApiAccounts.Patch(target.ApiAccounts, (sourceItem, targetItem) => sourceItem.Patch(targetItem));
+            }
+            if (!source.RoleAssignments.IsNullCollection())
+            {
+                source.RoleAssignments.Patch(target.RoleAssignments, (sourceItem, targetItem) => sourceItem.Patch(targetItem));
+            }
+        }
+
+        public static void Patch(this ApplicationUserExtended user, ApplicationUser dbUser)
+        {
+            var patchInjection = new PatchInjection<ApplicationUser>(x => x.Id, x => x.PasswordHash, x => x.SecurityStamp,
+                                                                     x => x.UserName, x => x.Email, x => x.PhoneNumber);
+            dbUser.InjectFrom(patchInjection, user);
 
             // Copy logins
             if (user.Logins != null)
             {
-                foreach (var login in user.Logins)
+                var changedLogins = user.Logins.Select(x => new IdentityUserLogin
                 {
-                    var userLogin = dbUser.Logins.FirstOrDefault(l => l.LoginProvider == login.LoginProvider);
-                    if (userLogin != null)
-                    {
-                        userLogin.ProviderKey = login.ProviderKey;
-                    }
-                    else
-                    {
-                        dbUser.Logins.Add(new IdentityUserLogin
-                        {
-                            LoginProvider = login.LoginProvider,
-                            ProviderKey = login.ProviderKey,
-                            UserId = dbUser.Id
-                        });
-                    }
-                }
+                    LoginProvider = x.LoginProvider,
+                    ProviderKey = x.ProviderKey,
+                    UserId = dbUser.Id
+                }).ToList();
+
+                var comparer = AnonymousComparer.Create((IdentityUserLogin x) => x.LoginProvider);
+                dbUser.Logins.Patch(changedLogins, comparer, (sourceItem, targetItem) => { targetItem.ProviderKey = sourceItem.ProviderKey; });
             }
+        
         }
     }
 }

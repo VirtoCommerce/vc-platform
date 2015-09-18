@@ -125,21 +125,7 @@ namespace VirtoCommerce.Platform.Data.Repositories
             modelBuilder.Entity<PermissionEntity>("PlatformPermission", "Id");
             modelBuilder.Entity<RoleAssignmentEntity>("PlatformRoleAssignment", "Id");
             modelBuilder.Entity<RolePermissionEntity>("PlatformRolePermission", "Id");
-
-            // Properties
-            modelBuilder.Entity<AccountEntity>().Property(x => x.StoreId).HasMaxLength(128);
-            modelBuilder.Entity<AccountEntity>().Property(x => x.MemberId).HasMaxLength(64);
-            modelBuilder.Entity<AccountEntity>().Property(x => x.UserName).IsRequired().HasMaxLength(128);
-
-            modelBuilder.Entity<ApiAccountEntity>().Property(x => x.Name).HasMaxLength(128);
-            modelBuilder.Entity<ApiAccountEntity>().Property(x => x.AppId).IsRequired().HasMaxLength(128)
-                .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_AppId") { IsUnique = true }));
-
-            modelBuilder.Entity<RoleEntity>().Property(x => x.Name).IsRequired().HasMaxLength(128);
-
-            modelBuilder.Entity<PermissionEntity>().Property(x => x.Name).IsRequired().HasMaxLength(256);
-
-            modelBuilder.Entity<RoleAssignmentEntity>().Property(x => x.OrganizationId).HasMaxLength(64);
+            modelBuilder.Entity<RoleScopeEntity>("PlatformRoleScope", "Id");
 
             // Relations
             modelBuilder.Entity<ApiAccountEntity>()
@@ -167,6 +153,11 @@ namespace VirtoCommerce.Platform.Data.Repositories
                 .WithMany(x => x.RolePermissions)
                 .HasForeignKey(x => x.RoleId);
 
+
+            modelBuilder.Entity<RoleScopeEntity>()
+                .HasRequired(x => x.RoleAssignment)
+                .WithMany(x => x.Scopes)
+                .HasForeignKey(x => x.RoleAssignmentId);
             #endregion
 
             #region Notifications
@@ -218,6 +209,7 @@ namespace VirtoCommerce.Platform.Data.Repositories
             {
                 query = query
                     .Include(a => a.RoleAssignments.Select(ra => ra.Role.RolePermissions.Select(rp => rp.Permission)))
+                    .Include(a => a.RoleAssignments.Select(ra => ra.Scopes))
                     .Include(a => a.ApiAccounts);
             }
 

@@ -19,7 +19,7 @@ namespace VirtoCommerce.Platform.Data.Security.Converters
             return result;
         }
 
-        public static dataModel.ApiAccountEntity ToEntity(this ApiAccount model)
+        public static dataModel.ApiAccountEntity ToDataModel(this ApiAccount model)
         {
             var result = new dataModel.ApiAccountEntity();
             result.InjectFrom(model);

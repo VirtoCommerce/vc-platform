@@ -4,6 +4,7 @@ using System.Linq;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Repositories;
+using VirtoCommerce.Platform.Data.Security.Converters;
 
 namespace VirtoCommerce.Platform.Data.Security
 {
