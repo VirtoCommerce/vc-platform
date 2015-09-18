@@ -14,7 +14,7 @@
         }
 
         function initializeBlade(data) {
-            blade.currentEntityId = data.id;
+            initializeToolbar(data);
             blade.title = data.number;
 
             blade.currentEntity = angular.copy(data);
@@ -24,13 +24,22 @@
 
         function isDirty() {
             return !angular.equals(blade.currentEntity, blade.origEntity);
-        };
+        }
 
         function saveChanges() {
             blade.isLoading = true;
 
-            quotes.update({}, blade.currentEntity, function (data) {
+            quotes.update({}, blade.currentEntity, function () {
                 blade.refresh(true);
+            }, function (error) {
+                bladeNavigationService.setError('Error ' + error.status, blade);
+            });
+        }
+
+        blade.recalculate = function () {
+            quotes.recalculate({}, blade.currentEntity, function (data) {
+                blade.currentEntity.totals = data.totals;
+                bladeNavigationService.setError(null, blade);
             }, function (error) {
                 bladeNavigationService.setError('Error ' + error.status, blade);
             });
@@ -65,7 +74,7 @@
 
         blade.onClose = function (closeCallback) {
             closeChildrenBlades();
-            if (isDirty()) {
+            if (isDirty() && !blade.origEntity.isSubmitted) {
                 var dialog = {
                     id: "confirmCurrentBladeClose",
                     title: "Save changes",
@@ -92,72 +101,77 @@
 
         blade.headIcon = 'fa-file-text-o';
 
-        blade.toolbarCommands = [
-        {
-            name: "Save",
-            icon: 'fa fa-save',
-            executeMethod: function () {
-                saveChanges();
-            },
-            canExecuteMethod: function () {
-                return isDirty() && $scope.formScope && $scope.formScope.$valid;
-            },
-            permission: 'quote:manage'
-        },
-            {
-                name: "Reset",
-                icon: 'fa fa-undo',
-                executeMethod: function () {
-                    angular.copy(blade.origEntity, blade.currentEntity);
+        function initializeToolbar(currentEntity) {
+            var optionalCommands = currentEntity.isSubmitted ? [] : [
+                {
+                    name: "Save",
+                    icon: 'fa fa-save',
+                    executeMethod: function () {
+                        saveChanges();
+                    },
+                    canExecuteMethod: function () {
+                        return isDirty() && $scope.formScope && $scope.formScope.$valid;
+                    },
+                    permission: 'quote:manage'
                 },
-                canExecuteMethod: function () {
-                    return isDirty();
+                {
+                    name: "Reset",
+                    icon: 'fa fa-undo',
+                    executeMethod: function () {
+                        angular.copy(blade.origEntity, blade.currentEntity);
+                    },
+                    canExecuteMethod: function () {
+                        return isDirty();
+                    },
+                    permission: 'quote:manage'
+                }
+            ];
+
+            blade.toolbarCommands = optionalCommands.concat([
+                {
+                    name: "Submit proposal", icon: 'fa fa-check-square-o',
+                    executeMethod: function () {
+                        blade.currentEntity.isSubmitted = true;
+                        // saveChanges();
+                    },
+                    canExecuteMethod: function () {
+                        return blade.currentEntity && !blade.currentEntity.isSubmitted;
+                    },
+                    permission: 'quote:manage'
                 },
-                permission: 'quote:manage'
-            },
-            {
-                name: "Submit proposal", icon: 'fa fa-check-square-o',
-                executeMethod: function () {
-                    blade.currentEntity.isSubmitted = true;
-                    // saveChanges();
-                },
-                canExecuteMethod: function () {
-                    return blade.currentEntity && !blade.currentEntity.isSubmitted;
-                },
-                permission: 'quote:manage'
-            },
-            {
-                name: "Cancel document", icon: 'fa fa-remove',
-                executeMethod: function () {
-                    var dialog = {
-                        id: "confirmCancelOperation",
-                        callback: function (reason) {
-                            if (reason) {
-                                blade.currentEntity.cancelReason = reason;
-                                blade.currentEntity.isCancelled = true;
-                                blade.currentEntity.status = 'Canceled';
-                                saveChanges();
+                {
+                    name: "Cancel document", icon: 'fa fa-remove',
+                    executeMethod: function () {
+                        var dialog = {
+                            id: "confirmCancelOperation",
+                            callback: function (reason) {
+                                if (reason) {
+                                    blade.currentEntity.cancelReason = reason;
+                                    blade.currentEntity.isCancelled = true;
+                                    blade.currentEntity.status = 'Canceled';
+                                    saveChanges();
+                                }
                             }
-                        }
-                    };
-                    dialogService.showDialog(dialog, 'Modules/$(VirtoCommerce.Quote)/Scripts/dialogs/cancelQuote-dialog.tpl.html', 'virtoCommerce.quoteModule.confirmCancelDialogController');
+                        };
+                        dialogService.showDialog(dialog, 'Modules/$(VirtoCommerce.Quote)/Scripts/dialogs/cancelQuote-dialog.tpl.html', 'virtoCommerce.quoteModule.confirmCancelDialogController');
+                    },
+                    canExecuteMethod: function () {
+                        return blade.currentEntity && !blade.currentEntity.isCancelled;
+                    },
+                    permission: 'quote:manage'
                 },
-                canExecuteMethod: function () {
-                    return blade.currentEntity && !blade.currentEntity.isCancelled;
-                },
-                permission: 'quote:manage'
-            },
-            {
-                name: "Delete", icon: 'fa fa-trash-o',
-                executeMethod: function () {
-                    deleteEntry();
-                },
-                canExecuteMethod: function () {
-                    return !isDirty();
-                },
-                permission: 'quote:manage'
-            }
-        ];
+                {
+                    name: "Delete", icon: 'fa fa-trash-o',
+                    executeMethod: function () {
+                        deleteEntry();
+                    },
+                    canExecuteMethod: function () {
+                        return !isDirty();
+                    },
+                    permission: 'quote:manage'
+                }
+            ]);
+        }
 
         $scope.openDictionarySettingManagement = function () {
             var newBlade = {
@@ -184,9 +198,13 @@
 
         blade.refresh(false);
 
-        $scope.quoteStatuses = settings.getValues({ id: 'Quotes.Status' });
+        $scope.quoteStatuses = settings.getValues({
+            id: 'Quotes.Status'
+        });
         $scope.stores = stores.query();
-        $scope.shippingMethods = quotes.getShippingMethods({ id: blade.currentEntityId });
+        $scope.shippingMethods = quotes.getShippingMethods({
+            id: blade.currentEntityId
+        });
         accounts.search({
             takeCount: 1000
         }, function (data) {

@@ -134,7 +134,10 @@
                     </div>
                     <div class="column">
                         <div class="form-group">
-
+                            <label class="form-label">Manual shipping total, {{blade.currentEntity.currency}}</label>
+                            <div class="form-input">
+                                <input money ng-model="blade.currentEntity.manualShippingTotal" ng-change="blade.recalculate()">
+                            </div>
                         </div>
                     </div>
                 </div>

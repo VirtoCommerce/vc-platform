@@ -29,6 +29,14 @@
             <p>{{ product.content | strip_html | truncatewords: 30 }}</p>
           {% endif %}
         </div>
+        {% comment %}
+        {% if product.variants.size == 1 %}
+            <button class="btn" type="button">{{ 'products.general.add_to_cart' | t }}</button>
+            {% if product.is_quotable %}
+                <button class="btn" type="button">{{ 'products.general.add_to_quote' | t }}</button>
+            {% endif %}
+        {% endif %}
+        {% endcomment %}
       </div>
       <div class="grid-item large--one-fifth medium--two-thirds">
         <div class="product-item--price text-center">

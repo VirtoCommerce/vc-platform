@@ -54,18 +54,39 @@ namespace VirtoCommerce.Web.Models.Services
             if (quoteRequestModel.IsTransient)
             {
                 quoteRequest = await _quoteClient.CreateAsync(quoteRequest);
+                quoteRequestModel = quoteRequest.ToViewModel();
             }
             else
             {
-                quoteRequest = await _quoteClient.UpdateAsync(quoteRequest);
-            }
-
-            if (quoteRequest != null)
-            {
-                quoteRequestModel = quoteRequest.ToViewModel();
+                await _quoteClient.UpdateAsync(quoteRequest);
+                quoteRequestModel = await GetCurrentQuoteRequestAsync(quoteRequest.StoreId, quoteRequest.CustomerId);
             }
 
             return quoteRequestModel;
+        }
+
+        public async Task<ItemCollection<QuoteRequest>> SearchAsync(QuoteRequestSearchCriteria criteria)
+        {
+            var searchCriteria = new DataContracts.Quotes.QuoteRequestSearchCriteria
+            {
+                Count = criteria.Take,
+                CustomerId = criteria.CustomerId,
+                Start = criteria.Skip,
+                Status = criteria.Status,
+                StoreId = criteria.StoreId,
+                Tag = criteria.Tag
+            };
+
+            var quotesResponse = await _quoteClient.SearchAsync(searchCriteria);
+
+            ItemCollection<QuoteRequest> quoteRequests = null;
+
+            if (quotesResponse != null)
+            {
+                quoteRequests = new ItemCollection<QuoteRequest>(quotesResponse.QuoteRequests.Select(qr => qr.ToViewModel()));
+            }
+
+            return quoteRequests;
         }
     }
 }

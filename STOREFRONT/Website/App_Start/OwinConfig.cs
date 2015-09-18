@@ -200,6 +200,14 @@ namespace VirtoCommerce.Web
 
                     ctx.Cart = cart;
 
+                    ctx.QuoteRequest = await _quoteService.GetCurrentQuoteRequestAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
+                    if (ctx.QuoteRequest == null)
+                    {
+                        ctx.QuoteRequest = new QuoteRequest(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
+                        ctx.QuoteRequest.Currency = ctx.Shop.Currency;
+                        ctx.QuoteRequest.Tag = "actual";
+                    }
+
                     if (context.Authentication.User.Identity.IsAuthenticated)
                     {
                         var anonymousCookie = context.Request.Cookies[AnonymousCookie];
@@ -223,17 +231,20 @@ namespace VirtoCommerce.Web
 
                                 await commerceService.DeleteCartAsync(anonymousCart.Key);
                             }
+
+                            var anonymousQuote = await _quoteService.GetCurrentQuoteRequestAsync(ctx.StoreId, anonymousCookie);
+
+                            if (anonymousQuote != null)
+                            {
+                                ctx.QuoteRequest.MergeQuoteWith(anonymousQuote);
+
+                                await _quoteService.UpdateQuoteRequestAsync(ctx.QuoteRequest);
+
+                                // TODO: Anonymous quote should be deleted
+                            }
                         }
 
                         context.Response.Cookies.Delete(AnonymousCookie);
-                    }
-
-                    ctx.QuoteRequest = await _quoteService.GetCurrentQuoteRequestAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
-
-                    if (ctx.QuoteRequest == null)
-                    {
-                        ctx.QuoteRequest = new QuoteRequest(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
-                        ctx.QuoteRequest.Tag = "actual";
                     }
 
                     ctx.PriceLists =

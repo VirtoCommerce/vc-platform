@@ -46,13 +46,11 @@ namespace VirtoCommerce.ApiClient
             return response;
         }
 
-        public async Task<QuoteRequest> UpdateAsync(QuoteRequest quoteRequest)
+        public async Task UpdateAsync(QuoteRequest quoteRequest)
         {
             var requestUrl = CreateRequestUri(RelativePaths.QuoteRequests);
 
-            var response = await SendAsync<QuoteRequest, QuoteRequest>(requestUrl, HttpMethod.Put, quoteRequest).ConfigureAwait(false);
-
-            return response;
+            await SendAsync<QuoteRequest, QuoteRequest>(requestUrl, HttpMethod.Put, quoteRequest).ConfigureAwait(false);
         }
 
         public async Task<QuoteRequest> RecalculateAsync(QuoteRequest quoteRequest)

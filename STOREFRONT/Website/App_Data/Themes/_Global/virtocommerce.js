@@ -84,7 +84,15 @@ $(function () {
                 variantId: $("#productSelect").val()
             },
             success: function (jsonResult) {
-                window.location.href = VirtoCommerce.url("/quote");
+                if (jsonResult) {
+                    var quoteCount = $("#quoteCount");
+                    quoteCount.text(jsonResult.items_count);
+                    if (jsonResult.items_count > 0) {
+                        quoteCount.removeClass("hidden-count");
+                    } else {
+                        quoteCount.addClass("hidden-count");
+                    }
+                }
             }
         });
     });
@@ -109,15 +117,22 @@ $(function () {
         event.preventDefault();
 
         var tierHtml = "<div class=\"js-qty\">";
+        tierHtml += "<div class=\"js-qty--inner\">";
         tierHtml += "<input class=\"js--num\" pattern=\"[0-9]*\" type=\"text\" value=\"1\" />";
         tierHtml += "<span class=\"js--qty-adjuster js--add\">+</span>";
         tierHtml += "<span class=\"js--qty-adjuster js--minus\">-</span>";
+        tierHtml += "</div>";
+        tierHtml += "<a class=\"link-action\">Remove</a>";
         tierHtml += "</div>";
 
         var qtyCount = $(this).parents(".grid-item").find(".js-qty").length - 1;
         var predLastQty = $(this).parents(".grid-item").find(".js-qty:eq(" + (qtyCount - 1) + ")");
 
         predLastQty.after(tierHtml);
+    });
+
+    $("body").delegate(".js-qty .link-action", "click", function () {
+        $(this).parents(".js-qty").remove();
     });
 
     $(".ublock button").on("click", function () {
@@ -139,7 +154,7 @@ $(function () {
 
             $.each(itemElement.find(".js--num"), function () {
                 var tierPrice = {
-                    Quantity: $(this).val(),
+                    Quantity: parseInt($(this).val()),
                     Price: 0
                 };
 
@@ -152,7 +167,10 @@ $(function () {
         $.ajax({
             type: "POST",
             url: VirtoCommerce.url("/quote/submit"),
-            data: quoteRequest
+            data: quoteRequest,
+            success: function (jsonResult) {
+                window.location.href = jsonResult.redirect_url;
+            }
         });
     });
 });
