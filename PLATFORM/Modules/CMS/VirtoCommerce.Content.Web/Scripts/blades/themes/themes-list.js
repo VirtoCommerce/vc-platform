@@ -102,10 +102,10 @@
 		}
 
 		if (blade.currentEntities.length > 1) {
-			dialog.message = "Are you sure want to delete " + blade.choosenTheme.name + "?";
+			dialog.message = "Are you sure you want to delete " + blade.choosenTheme.name + "?";
 		}
 		else {
-			dialog.message = "This theme is last. If you delete theme you can broke your storefront. Are you sure want to delete " + blade.choosenTheme.name + "?";
+			dialog.message = "This theme is the last one. If you delete it, you could break your storefront. Are you sure you want to delete " + blade.choosenTheme.name + "?";
 		}
 
 		dialogService.showConfirmationDialog(dialog);

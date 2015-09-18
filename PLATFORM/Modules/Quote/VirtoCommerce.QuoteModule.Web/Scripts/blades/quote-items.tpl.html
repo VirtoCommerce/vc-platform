@@ -127,12 +127,12 @@
             </div>
 
             <div class="quote-discount">
-                <div class="quote-t">{{totals.isDiscountAbsolute ? 'Relative discount, %' : 'New subtotal, ' + blade.currentEntity.currency}}</div>
+                <div class="quote-t">{{totals.isDiscountAbsolute ? 'New subtotal, ' + blade.currentEntity.currency : 'Relative discount, %'}}</div>
                 <div class="form-input __mini __inline">
                     <input money required ng-model="blade.currentEntity.manualSubTotal" ng-change="recalculate()" ng-hide="!totals.isDiscountAbsolute">
                     <input money required ng-model="blade.currentEntity.manualRelDiscountAmount" ng-change="recalculate()" ng-hide="totals.isDiscountAbsolute">
                 </div>
-                <button class="btn" ng-click="totals.isDiscountAbsolute=!totals.isDiscountAbsolute">{{totals.isDiscountAbsolute ? 'Set new subtotal': 'Set discount percentage'}}</button>
+                <button class="btn" ng-click="blade.currentEntity.manualSubTotal=blade.currentEntity.manualRelDiscountAmount=0;totals.isDiscountAbsolute=!totals.isDiscountAbsolute">{{totals.isDiscountAbsolute ? 'Enter relative discount': 'Enter new subtotal'}}</button>
             </div>
         </div>
     </div>

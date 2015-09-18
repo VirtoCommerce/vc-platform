@@ -2,8 +2,10 @@
 .controller('virtoCommerce.quoteModule.quoteItemsController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'virtoCommerce.quoteModule.quotes', 'virtoCommerce.catalogModule.items', 'virtoCommerce.pricingModule.prices', function ($scope, bladeNavigationService, dialogService, quotes, items, prices) {
     var blade = $scope.blade;
 
-    $scope.totals = {};
-    //$scope.totalItems = blade.currentEntity.items.length;
+    // set initial values to totals 
+    $scope.totals = {
+        isDiscountAbsolute: blade.currentEntity.manualSubTotal > 0
+    };
 
     // adjust item.selectedTierPrice reference
     _.each(blade.currentEntity.items, function (item) {
@@ -145,12 +147,7 @@
     };
 
     $scope.recalculate = function () {
-        quotes.recalculate({}, blade.currentEntity, function (data) {
-            blade.currentEntity.totals = data.totals;
-            bladeNavigationService.setError(null, blade);
-        }, function (error) {
-            bladeNavigationService.setError('Error ' + error.status, blade);
-        });
+        blade.recalculateFn();
     };
 
     $scope.addProposalTier = function (item) {
