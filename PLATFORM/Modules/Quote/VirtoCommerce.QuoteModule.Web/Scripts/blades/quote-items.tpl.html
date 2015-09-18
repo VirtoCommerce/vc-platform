@@ -134,6 +134,29 @@
                 </div>
                 <button class="btn" ng-click="blade.currentEntity.manualSubTotal=blade.currentEntity.manualRelDiscountAmount=0;totals.isDiscountAbsolute=!totals.isDiscountAbsolute">{{totals.isDiscountAbsolute ? 'Enter relative discount': 'Enter new subtotal'}}</button>
             </div>
+            <div class="columns clearfix">
+                <div class="column">
+                    <div class="form-group">
+                        <label class="form-label">Shipping method</label>
+                        <div class="form-input">
+                            <ui-select ng-model="blade.currentEntity.shipmentMethod" ng-change="recalculate()">
+                                <ui-select-match placeholder="Select...">{{$select.selected.name}} - {{$select.selected.price}} {{$select.selected.currency}}</ui-select-match>
+                                <ui-select-choices repeat="x in blade.shippingMethods | filter: { name: $select.search }">
+                                    <span ng-bind-html="x.name +' - '+ x.price+' '+ x.currency | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="form-group">
+                        <label class="form-label">Manual shipping total, {{blade.currentEntity.currency}}</label>
+                        <div class="form-input">
+                            <input money ng-model="blade.currentEntity.manualShippingTotal" ng-change="recalculate()">
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

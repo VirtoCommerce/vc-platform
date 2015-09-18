@@ -202,7 +202,7 @@
             id: 'Quotes.Status'
         });
         $scope.stores = stores.query();
-        $scope.shippingMethods = quotes.getShippingMethods({
+        blade.shippingMethods = quotes.getShippingMethods({
             id: blade.currentEntityId
         });
         accounts.search({
