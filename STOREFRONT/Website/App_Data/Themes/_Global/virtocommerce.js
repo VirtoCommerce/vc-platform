@@ -117,15 +117,22 @@ $(function () {
         event.preventDefault();
 
         var tierHtml = "<div class=\"js-qty\">";
+        tierHtml += "<div class=\"js-qty--inner\">";
         tierHtml += "<input class=\"js--num\" pattern=\"[0-9]*\" type=\"text\" value=\"1\" />";
         tierHtml += "<span class=\"js--qty-adjuster js--add\">+</span>";
         tierHtml += "<span class=\"js--qty-adjuster js--minus\">-</span>";
+        tierHtml += "</div>";
+        tierHtml += "<a class=\"link-action\">Remove</a>";
         tierHtml += "</div>";
 
         var qtyCount = $(this).parents(".grid-item").find(".js-qty").length - 1;
         var predLastQty = $(this).parents(".grid-item").find(".js-qty:eq(" + (qtyCount - 1) + ")");
 
         predLastQty.after(tierHtml);
+    });
+
+    $("body").delegate(".js-qty .link-action", "click", function () {
+        $(this).parents(".js-qty").remove();
     });
 
     $(".ublock button").on("click", function () {

@@ -52,9 +52,14 @@
                             <div class="grid-item one-half medium-down--one-third text-right">
                                 {% for tier_price in item.proposal_prices %}
                                     <div class="js-qty">
-                                        <input class="js--num" pattern="[0-9]*" type="text" value="{{ tier_price.quantity }}" />
-                                        <span class="js--qty-adjuster js--add" data-id="{{ item.id }}">+</span>
-                                        <span class="js--qty-adjuster js--minus" data-id="{{ item.id }}">-</span>
+                                        <div class="js-qty--inner">
+                                            <input class="js--num" pattern="[0-9]*" type="text" value="{{ tier_price.quantity }}" />
+                                            <span class="js--qty-adjuster js--add" data-id="{{ item.id }}">+</span>
+                                            <span class="js--qty-adjuster js--minus" data-id="{{ item.id }}">-</span>
+                                        </div>
+                                        {% if forloop.index > 1 %}
+                                            <a class="link-action">{{ 'quotes.general.remove' | t }}</a>
+                                        {% endif %}
                                     </div>
                                 {% endfor %}
                                 <div class="js-qty">
