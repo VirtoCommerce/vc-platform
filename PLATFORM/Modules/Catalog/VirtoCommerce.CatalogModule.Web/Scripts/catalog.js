@@ -26,6 +26,7 @@ angular.module(catalogsModuleName, [
                           isClosingDisabled: true
                       };
                       bladeNavigationService.showBlade(blade);
+                      $scope.moduleName = 'vc-catalog';
                   }
               ]
           });
