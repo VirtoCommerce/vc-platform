@@ -123,10 +123,11 @@ namespace VirtoCommerce.QuoteModule.Data.Converters
 			if (target == null)
 				throw new ArgumentNullException("target");
 
+            target.Tag = source.Tag;
 			var patchInjection = new PatchInjection<dataModel.QuoteRequestEntity>(x => x.CancelledDate, x => x.CancelReason, x => x.ChannelId, x => x.Comment, x => x.InnerComment,
 																				  x => x.IsLocked, x => x.IsCancelled, x => x.LanguageCode, x => x.OrganizationId, x => x.OrganizationName, x => x.ReminderDate,
 																				  x => x.Status, x => x.StoreId, x => x.StoreName, x => x.ShipmentMethodCode, x => x.ShipmentMethodOption, x => x.EmployeeId, x => x.EmployeeName, 
-                                                                                  x => x.Currency, x=>x.Tag, x=>x.ManualShippingTotal, x=>x.ManualRelDiscountAmount, x=>x.ManualSubTotal, x=>x.IsSubmitted);
+                                                                                  x => x.Currency, x=>x.ManualShippingTotal, x=>x.ManualRelDiscountAmount, x=>x.ManualSubTotal, x=>x.IsSubmitted);
 			target.InjectFrom(patchInjection, source);
 
 			if (!source.Addresses.IsNullCollection())
