@@ -10,8 +10,8 @@
                             <textarea ng-model="data.value" ng-if="data.valueType==='LongText'"></textarea>
                             <input ng-model="data.value" ng-if="data.valueType==='ShortText'" />
                             <input ng-model="data.value" type="password" ng-if="data.valueType==='SecureString'">
-                            <input va-number ng-model="data.value" type="text" min="0" step="1" ng-if="data.valueType==='Integer'">
-                            <input  ng-model="data.value" type="number" ng-if="data.valueType==='Decimal'">
+                            <input smart-float ng-model="data.value" type="text" num-type="integer" ng-if="data.valueType==='Integer'">
+                            <input smart-float ng-model="data.value" type="text" num-type="float" ng-if="data.valueType==='Decimal'">
                             <label class="form-label __switch" ng-if="data.valueType==='Boolean'">
                                 <input type="checkbox" ng-model="data.value" />
                                 <span class="switch"></span>
