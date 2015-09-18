@@ -109,6 +109,9 @@ namespace VirtoCommerce.Web.Models
         }
 
         [DataMember]
+        public ItemCollection<QuoteRequest> Quotes { get; set; }
+
+        [DataMember]
         public int OrdersCount
         {
             get

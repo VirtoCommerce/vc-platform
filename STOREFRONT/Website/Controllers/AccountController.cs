@@ -698,6 +698,23 @@ namespace VirtoCommerce.Web.Controllers
             return View("error");
         }
 
+        [HttpGet]
+        public async Task<ActionResult> Quotes(int? p)
+        {
+            var searchCriteria = new QuoteRequestSearchCriteria
+            {
+                CustomerId = Context.CustomerId,
+                Skip = ((p ?? 1) - 1) * 20,
+                StoreId = Context.StoreId,
+                Tag = null,
+                Take = 20
+            };
+
+            Context.Customer.Quotes = await QuoteService.SearchAsync(searchCriteria);
+
+            return View("customers/quotes");
+        }
+
         internal class ChallengeResult : HttpUnauthorizedResult
         {
             public string LoginProvider { get; set; }
