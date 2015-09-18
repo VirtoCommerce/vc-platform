@@ -65,6 +65,10 @@ angular.module(moduleName, [
           template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/storeShippingWidget.tpl.html'
       }, 'storeDetail');
       widgetService.registerWidget({
+          controller: 'virtoCommerce.storeModule.storeTaxingWidgetController',
+          template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/storeTaxingWidget.tpl.html'
+      }, 'storeDetail');
+      widgetService.registerWidget({
           controller: 'virtoCommerce.storeModule.storeNotificationsWidgetController',
           template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/storeNotificationsWidget.tpl.html'
       }, 'storeDetail');
@@ -87,6 +91,7 @@ angular.module(moduleName, [
       };
       toolbarService.register(resetCommand, 'virtoCommerce.storeModule.paymentMethodDetailController');
       toolbarService.register(resetCommand, 'virtoCommerce.storeModule.shippingMethodDetailController');
+      toolbarService.register(resetCommand, 'virtoCommerce.storeModule.taxProviderDetailController');
 
       var settingsCommand = {
           name: "Settings", icon: 'fa fa-wrench',
@@ -105,6 +110,7 @@ angular.module(moduleName, [
       };
       toolbarService.register(settingsCommand, 'virtoCommerce.storeModule.paymentMethodDetailController');
       toolbarService.register(settingsCommand, 'virtoCommerce.storeModule.shippingMethodDetailController');
+      toolbarService.register(settingsCommand, 'virtoCommerce.storeModule.taxProviderDetailController');
 
       //var settingsWidget = {
       //    controller: 'platformWebApp.entitySettingsWidgetController',

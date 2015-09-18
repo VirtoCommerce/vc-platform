@@ -120,12 +120,16 @@
     <Content Include="Scripts\blades\paymentMethod-detail.js" />
     <Content Include="Scripts\blades\seo-detail.js" />
     <Content Include="Scripts\blades\seo-detail.tpl.html" />
+    <Content Include="Scripts\blades\taxProvider-detail.js" />
     <Content Include="Scripts\blades\shippingMethod-detail.js" />
     <Content Include="Scripts\blades\paymentMethod-detail.tpl.html" />
+    <Content Include="Scripts\blades\taxProvider-detail.tpl.html" />
     <Content Include="Scripts\blades\shippingMethod-detail.tpl.html" />
     <Content Include="Scripts\blades\paymentMethod-list.js" />
+    <Content Include="Scripts\blades\taxProvider-list.js" />
     <Content Include="Scripts\blades\shippingMethod-list.js" />
     <Content Include="Scripts\blades\paymentMethod-list.tpl.html" />
+    <Content Include="Scripts\blades\taxProvider-list.tpl.html" />
     <Content Include="Scripts\blades\shippingMethod-list.tpl.html" />
     <Content Include="Scripts\blades\stores-list.js" />
     <Content Include="Scripts\blades\stores-list.tpl.html" />
@@ -148,7 +152,9 @@
     <Content Include="Scripts\widgets\storePaymentsWidget.tpl.html" />
     <Content Include="Scripts\widgets\storeSettingsWidget.tpl.html" />
     <Content Include="Scripts\widgets\storeAdvancedWidget.tpl.html" />
+    <Content Include="Scripts\widgets\storeTaxingWidget.js" />
     <Content Include="Scripts\widgets\storeShippingWidget.js" />
+    <Content Include="Scripts\widgets\storeTaxingWidget.tpl.html" />
     <Content Include="Scripts\widgets\storeShippingWidget.tpl.html" />
     <Content Include="Scripts\wizards\newStore\new-store-wizard.tpl.html" />
     <Content Include="Scripts\blades\store-detail.tpl.html" />
