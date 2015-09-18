@@ -1,7 +1,7 @@
 ﻿'use strict';
 
 angular.module('platformWebApp')
-    .directive('smartFloat', ['$filter', function ($filter) {
+    .directive('smartFloat', ['$filter', '$compile', function ($filter, $compile) {
         var INTEGER_REGEXP = /^\-?\d+$/; //Integer number
         var FLOAT_REGEXP_1 = /^[-+]?\$?\d+.(\d{3})*(,\d*)$/; //Numbers like: 1.123,56
         var FLOAT_REGEXP_2 = /^[-+]?\$?\d+,(\d{3})*(.\d*)$/; //Numbers like: 1,123.56
