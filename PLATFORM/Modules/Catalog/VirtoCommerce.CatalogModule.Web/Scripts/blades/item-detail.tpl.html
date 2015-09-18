@@ -60,7 +60,7 @@
                             <div class="form-group">
                                 <label class="form-label">Min. quantity</label>
                                 <div class="form-input __number">
-                                    <input va-number ng-model="blade.item.minQuantity" min="1" step="1">
+                                    <input smart-float num-type="integer" ng-model="blade.item.minQuantity">
                                 </div>
                             </div>
                         </div>
@@ -68,7 +68,7 @@
                             <div class="form-group">
                                 <label class="form-label">Max. quantity</label>
                                 <div class="form-input __number">
-                                    <input va-number ng-model="blade.item.maxQuantity" min="0" step="1">
+                                    <input smart-float num-type="integer" ng-model="blade.item.maxQuantity">
                                 </div>
                             </div>
                         </div>
@@ -93,7 +93,7 @@
                             <div class="form-group">
                                 <label class="form-label">Max. number of downloads</label>
                                 <div class="form-input __number">
-                                    <input va-number ng-model="blade.item.maxNumberOfDownload" min="0" step="1">
+                                    <input smart-float num-type="integer" ng-model="blade.item.maxNumberOfDownload">
                                 </div>
                             </div>
                         </div>
