@@ -5,6 +5,7 @@
 			id: 'quoteItems',
 			title: $scope.blade.title + ' line items',
 			subtitle: 'Edit line items',
+			recalculateFn: $scope.blade.recalculate,
 			currentEntity: $scope.blade.currentEntity,
 			controller: 'virtoCommerce.quoteModule.quoteItemsController',
 			template: 'Modules/$(VirtoCommerce.Quote)/Scripts/blades/quote-items.tpl.html'
