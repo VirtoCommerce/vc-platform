@@ -1,11 +1,16 @@
 ﻿angular.module('virtoCommerce.quoteModule')
-.controller('virtoCommerce.quoteModule.quoteDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.quoteModule.quotes', 'virtoCommerce.storeModule.stores', 'platformWebApp.settings', 'platformWebApp.dialogService', 'platformWebApp.accounts',
-    function ($scope, bladeNavigationService, quotes, stores, settings, dialogService, accounts) {
+.controller('virtoCommerce.quoteModule.quoteDetailController', ['$scope', '$timeout', 'platformWebApp.bladeNavigationService', 'virtoCommerce.quoteModule.quotes', 'virtoCommerce.storeModule.stores', 'platformWebApp.settings', 'platformWebApp.dialogService', 'platformWebApp.accounts',
+    function ($scope, $timeout, bladeNavigationService, quotes, stores, settings, dialogService, accounts) {
         var blade = $scope.blade;
 
         blade.refresh = function (parentRefresh) {
             quotes.get({ id: blade.currentEntityId }, function (data) {
                 initializeBlade(data);
+                _.once(function () {
+                    $timeout(function () {
+                        blade.openItemsBlade();
+                    }, 0, false);
+                })();
                 if (parentRefresh) {
                     blade.parentBlade.refresh();
                 }
@@ -16,6 +21,12 @@
         function initializeBlade(data) {
             initializeToolbar(data);
             blade.title = data.number;
+            if (data.status) {
+                blade.title += " - " + data.status;
+                if (data.isCancelled) {
+                    blade.title += ", " + data.cancelReason;
+                }
+            }
 
             blade.currentEntity = angular.copy(data);
             blade.origEntity = data;
@@ -35,6 +46,20 @@
                 bladeNavigationService.setError('Error ' + error.status, blade);
             });
         }
+
+        blade.openItemsBlade = function () {
+            var newBlade = {
+                id: 'quoteItems',
+                title: blade.title + ' line items',
+                subtitle: 'Edit line items',
+                recalculateFn: blade.recalculate,
+                shippingMethods: blade.shippingMethods,
+                currentEntity: blade.currentEntity,
+                controller: 'virtoCommerce.quoteModule.quoteItemsController',
+                template: 'Modules/$(VirtoCommerce.Quote)/Scripts/blades/quote-items.tpl.html'
+            };
+            bladeNavigationService.showBlade(newBlade, blade);
+        };
 
         blade.recalculate = function () {
             quotes.recalculate({}, blade.currentEntity, function (data) {
