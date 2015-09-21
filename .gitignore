@@ -161,7 +161,8 @@ $RECYCLE.BIN/
 /STOREFRONT/Website/App_Data/Themes/SampleStore/Default
 /STOREFRONT/Website/App_Data/Themes/AppleStore/Default
 /STOREFRONT/Website/App_Data/Pages
-/STOREFRONT/Website/App_Data/Themes
+/STOREFRONT/Website/App_Data/Themes/*
+!/STOREFRONT/Website/App_Data/Themes/_**
 .vs/
 /PLATFORM/VirtoCommerce.Platform.Web/client_packages
 /PLATFORM/VirtoCommerce.Platform.Web/node_modules
