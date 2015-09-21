@@ -31,8 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DotLiquid">
-      <HintPath>..\Shared\DotLiquid.dll</HintPath>
+    <Reference Include="DotLiquid, Version=1.0.0.0, Culture=neutral, PublicKeyToken=82e46016ecf9f07c, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotLiquid.VirtoCommerce.1.8.1\lib\NET45\DotLiquid.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
@@ -92,6 +93,7 @@
     <Compile Include="Convertors\QuoteRequestConverter.cs" />
     <Compile Include="Convertors\ShippingMethodConverter.cs" />
     <Compile Include="Convertors\TaxLineConverter.cs" />
+    <Compile Include="Exceptions\SaasCompileException.cs" />
     <Compile Include="Models\Attachment.cs" />
     <Compile Include="Models\Cms\Article.cs" />
     <Compile Include="Models\Banners\Banner.cs" />

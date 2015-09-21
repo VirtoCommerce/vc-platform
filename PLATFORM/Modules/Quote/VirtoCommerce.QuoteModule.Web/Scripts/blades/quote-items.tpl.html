@@ -49,7 +49,6 @@
                                 </label>
                             </th>
                             <th class="table-col __product-img">Pic</th>
-                            <th class="table-col">SKU</th>
                             <th class="table-col">Comment with product</th>
                             <th class="table-col" width="5%">List price</th>
                             <th class="table-col" width="5%">Sale price</th>
@@ -73,11 +72,8 @@
                                 </div>
                             </td>
                             <td class="table-col">
-                                <span>{{data.sku}}</span>
-                            </td>
-                            <td class="table-col">
                                 <div class="form-input">
-                                    <textarea></textarea>
+                                    <textarea ng-model="data.comment" placeholder="Enter comment"></textarea>
                                 </div>
                             </td>
                             <td class="table-col">
@@ -106,7 +102,7 @@
                                         </label>
                                     </div>
                                     <div class="form-input __mini __inline">
-                                        <input money required ng-model="p.price" ng-change="recalculate()">
+                                        <input money required ng-model="p.price" ng-change="recalculate()" focus-on="focusIndex{{$index}}">
                                     </div>
                                 </div>
                             </td>
@@ -118,8 +114,8 @@
                             </td>
                         </tr>
                         <tr ng-repeat-end class="table-item" ng-class="{'__selected': data.id === selectedNodeId}" ng-click='selectItem(data)'>
-                            <td class="table-head" colspan="9" ng-click="openItemDetail(data)">
-                                {{data.name}}
+                            <td class="table-head" colspan="8" ng-click="openItemDetail(data)">
+                                <span>SKU: {{data.sku}}. Product: {{data.name}}</span>
                             </td>
                         </tr>
                     </tbody>
