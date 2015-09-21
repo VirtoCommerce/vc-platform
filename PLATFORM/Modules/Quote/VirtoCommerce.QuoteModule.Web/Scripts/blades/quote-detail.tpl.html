@@ -1,7 +1,7 @@
 ﻿<div class="blade-content __medium-wide">
     <div class="blade-inner">
         <div class="inner-block">
-            <div class="order-status canceled" ng-if="blade.currentEntity.status">
+            <div class="quote-status canceled" ng-if="blade.currentEntity.status">
                 <div class="status" ng-bind="blade.currentEntity.status"></div>
                 <div class="reason" ng-bind="blade.currentEntity.cancelReason" ng-if="blade.currentEntity.isCancelled"></div>
             </div>
@@ -15,8 +15,18 @@
                 </div>
             </div>
             <form class="form" name="detailForm">
-                <div class="columns">
+                <div class="clearfix">
                     <div class="column">
+                        <ul class="list __info">
+                            <li class="list-item">
+                                <div class="list-t">Customer</div>
+                                <div class="list-descr">{{blade.currentEntity.customerName}}</div>
+                            </li>
+                            <li class="list-item">
+                                <div class="list-t">Customer organization</div>
+                                <div class="list-descr">{{blade.currentEntity.organizationName}}</div>
+                            </li>
+                        </ul>
                         <div class="form-group">
                             <label class="form-label">Status <a href="" ng-click="openDictionarySettingManagement()" va-permission="platform:setting:manage"><i class="form-ico fa fa-pencil"></i></a></label>
                             <div class="form-input">
@@ -28,8 +38,38 @@
                                 </ui-select>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label class="form-label">Expiry date</label>
+                            <div class="form-input __calendar">
+                                <input placeholder="Choose date" ng-model="blade.currentEntity.expirationDate" datepicker-popup="shortDate" is-open="datepickers.exp" close-text="Close" />
+                                <button class="btn" type="button" ng-click="open($event,'exp')">
+                                    <i class="btn-ico fa fa-calendar"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Assigned to</label>
+                            <div class="form-input">
+                                <ui-select ng-model="blade.currentEntity.employeeId">
+                                    <ui-select-match placeholder="Select...">{{$select.selected.userName}}</ui-select-match>
+                                    <ui-select-choices repeat="x.id as x in employees | filter: { userName: $select.search }">
+                                        <span ng-bind-html="x.userName | highlight: $select.search"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
                     </div>
                     <div class="column">
+                        <ul class="list __info">
+                            <li class="list-item">
+                                <div class="list-t">Created</div>
+                                <div class="list-descr">{{blade.currentEntity.createdDate}}</div>
+                            </li>
+                            <li class="list-item">
+                                <div class="list-t">Last updated</div>
+                                <div class="list-descr">{{blade.currentEntity.modifiedDate}}</div>
+                            </li>
+                        </ul>
                         <div class="form-group">
                             <label class="form-label">RFQ from</label>
                             <div class="form-input">
@@ -41,59 +81,6 @@
                                 </ui-select>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="columns">
-                    <div class="column">
-                        <div class="form-group">
-                            <label class="form-label">Customer</label>
-                            <div class="form-input">{{blade.currentEntity.customerName}}</div>
-                        </div>
-                    </div>
-                    <div class="column">
-                        <div class="form-group">
-                            <label class="form-label">Customer organization</label>
-                            <div class="form-input">{{blade.currentEntity.organizationName}}</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="columns">
-                    <div class="column">
-                        <div class="form-group">
-                            <label class="form-label">Currency</label>
-                            <div class="form-input">{{blade.currentEntity.currency}}</div>
-                        </div>
-                    </div>
-                    <div class="column">
-                        <div class="form-group">
-                            <label class="form-label">Created</label>
-                            <div class="form-input" am-time-ago="blade.currentEntity.createdDate"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="columns">
-                    <div class="column">
-                        <div class="form-group">
-                            <label class="form-label">Expiry date</label>
-                            <div class="form-input __calendar">
-                                <input placeholder="Choose date" ng-model="blade.currentEntity.expirationDate" datepicker-popup="shortDate" is-open="datepickers.exp" close-text="Close" />
-                                <button class="btn" type="button" ng-click="open($event,'exp')">
-                                    <i class="btn-ico fa fa-calendar"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="column">
-                        <div class="form-group">
-                            <label class="form-label">Last updated</label>
-                            <div class="form-input">
-                                <div class="form-text" am-time-ago="blade.currentEntity.modifiedDate"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="columns clearfix">
-                    <div class="column">
                         <div class="form-group">
                             <label class="form-label">Reminder date</label>
                             <div class="form-input __calendar">
@@ -101,19 +88,6 @@
                                 <button class="btn" type="button" ng-click="open($event,'rmd')">
                                     <i class="btn-ico fa fa-calendar"></i>
                                 </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="column">
-                        <div class="form-group">
-                            <label class="form-label">Assigned to</label>
-                            <div class="form-input">
-                                <ui-select ng-model="blade.currentEntity.employeeId">
-                                    <ui-select-match placeholder="Select...">{{$select.selected.userName}}</ui-select-match>
-                                    <ui-select-choices repeat="x.id as x in employees | filter: { userName: $select.search }">
-                                        <span ng-bind-html="x.userName | highlight: $select.search"></span>
-                                    </ui-select-choices>
-                                </ui-select>
                             </div>
                         </div>
                     </div>

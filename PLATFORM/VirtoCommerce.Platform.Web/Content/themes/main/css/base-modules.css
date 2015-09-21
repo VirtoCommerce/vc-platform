@@ -3621,7 +3621,6 @@ fieldset + fieldset
         display: block;
         font-size: 24px;
         font-weight: 300;
-        margin: 0 0 15px;
         padding: 0 0 5px;
         width: 100%;
     }
@@ -7240,7 +7239,7 @@ tags-input .tags .tag-item .remove-button
 
             .blade-static .column .form-group
             {
-                margin: 0 10px 0 0;
+                margin: 5px 10px 0 0;
                 padding: 0;
             }
 
