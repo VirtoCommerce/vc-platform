@@ -179,6 +179,9 @@ namespace VirtoCommerce.Web.Views.Engines.Liquid.Tags
 
             var pageCount = Math.Ceiling((double)length / this._pageSize);
 
+            if (_pageSize == 0)
+                pageCount = 1;
+
             var helper = this.Url;
 
             var previousLink = helper.SetParameter("page", this._currentPage - 1);

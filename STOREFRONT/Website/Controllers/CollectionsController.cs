@@ -17,7 +17,7 @@ namespace VirtoCommerce.Web.Controllers
         [Route("all/{tags?}")]
         public async Task<ActionResult> AllAsync(
             string tags,
-            string view = "grid",
+            string view = "",
             int page = 1,
             string sort_by = "manual")
         {
@@ -28,9 +28,9 @@ namespace VirtoCommerce.Web.Controllers
             this.Context.Set("current_tags", this.ParseTags(tags));
 
             var template = "collection";
-            if (view == "list")
+            if (!string.IsNullOrEmpty(view))
             {
-                template += ".list";
+                template = String.Format("{0}.{1}", template, view);
             }
 
             return View(template);
@@ -40,7 +40,7 @@ namespace VirtoCommerce.Web.Controllers
         public async Task<ActionResult> GetCollectionAsync(
             string category,
             string tags,
-            string view = "grid",
+            string view = "",
             int page = 1,
             string sort_by = "manual")
         {
@@ -49,9 +49,9 @@ namespace VirtoCommerce.Web.Controllers
             this.Context.Set("current_tags", this.ParseTags(tags));
 
             var template = "collection";
-            if (view == "list")
+            if (!string.IsNullOrEmpty(view))
             {
-                template += ".list";
+                template = String.Format("{0}.{1}", template, view);
             }
 
             return View(template);
@@ -60,7 +60,7 @@ namespace VirtoCommerce.Web.Controllers
         public async Task<ActionResult> GetCollectionByKeywordAsync(
             string category,
             string tags,
-            string view = "grid",
+            string view = "",
             int page = 1,
             string sort_by = "manual")
         {
@@ -77,9 +77,9 @@ namespace VirtoCommerce.Web.Controllers
             this.Context.Set("current_tags", this.ParseTags(tags));
 
             var template = "collection";
-            if (view == "list")
+            if (!string.IsNullOrEmpty(view))
             {
-                template += ".list";
+                template = String.Format("{0}.{1}", template, view);
             }
 
             return View(template);
@@ -106,27 +106,6 @@ namespace VirtoCommerce.Web.Controllers
             var tagsArray = tags.Split(new[] { ',' });
             return new SelectedTagCollection(tagsArray);
         }
-
-        /*
-        private IEnumerable<Tag> ParseTags(string tags, TagCollection allTags)
-        {
-            if (String.IsNullOrEmpty(tags))
-            {
-                return null;
-            }
-
-            if (allTags == null || !allTags.Any())
-            {
-                return null;
-            }
-
-            var tagsArray = tags.Split(new[] { ',' });
-
-            return allTags.Root.Where(x => tagsArray.Contains(x.Id));
-        }
-         * */
         #endregion
     }
-
-
 }

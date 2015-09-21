@@ -46,6 +46,7 @@ namespace VirtoCommerce.Web.Models
         {
             get
             {
+                this.LoadProducts();
                 return this._allTags;
             }
             set
@@ -109,11 +110,11 @@ namespace VirtoCommerce.Web.Models
         {
             get
             {
-                return this._allTags;
+                return this.AllTags;
             }
             set
             {
-                this._allTags = value;
+                this.AllTags = value;
             }
         }
 

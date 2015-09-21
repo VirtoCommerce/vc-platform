@@ -14,6 +14,7 @@ using VirtoCommerce.Web.Views.Engines.Liquid;
 using VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine;
 using VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine.FileSystems;
 using Tag = VirtoCommerce.Web.Models.Tagging.Tag;
+using VirtoCommerce.Web.Filters;
 
 #endregion
 
@@ -27,6 +28,9 @@ namespace VirtoCommerce.Web
             Liquid.UseRubyDateFormat = true;
             Template.RegisterTag<Form>("form");
             Template.RegisterSafeType(typeof(Tag), o => { return o; });
+
+            // Register custom contains condition
+            Condition.Operators["contains"] = (left, right) => (left is ILiquidContains) ? ((ILiquidContains)left).Contains(right) : ((left is string) ? ((string)left).Contains((string)right) : false);
 
             var filters = new[] { typeof(ModelFilters), typeof(TranslationFilter) };
             var themesPath = ConfigurationManager.AppSettings["ThemeCacheFolder"];

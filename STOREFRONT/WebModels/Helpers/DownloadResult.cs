@@ -99,13 +99,6 @@ namespace VirtoCommerce.Web.Models.Helpers
                 ? context.HttpContext.Request.MapPath(this.VirtualPath)
                 : context.HttpContext.Request.MapPath(this.VirtualPath, this.VirtualBasePath, false);
 
-            if (!String.IsNullOrEmpty(this.FileDownloadName))
-            {
-                context.HttpContext.Response.AddHeader(
-                    "content-disposition",
-                    "attachment; filename=" + this.FileDownloadName);
-            }
-
             if (!String.IsNullOrEmpty(this.ContentType))
             {
                 context.HttpContext.Response.ContentType = this.ContentType;
@@ -121,6 +114,13 @@ namespace VirtoCommerce.Web.Models.Helpers
                         context.HttpContext.Response.ContentType = ExtensionMapper.GetContentType(fileExt);
                     }
                 }
+            }
+
+            if (!String.IsNullOrEmpty(this.FileDownloadName))
+            {
+                context.HttpContext.Response.AddHeader(
+                    "content-disposition",
+                    "attachment; filename=" + this.FileDownloadName);
             }
 
             try
