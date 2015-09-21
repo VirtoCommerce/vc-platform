@@ -724,6 +724,15 @@ namespace VirtoCommerce.Web.Controllers
             return View("customers/quote");
         }
 
+        [HttpPost]
+        [Route("quote/confirm")]
+        public async Task<ActionResult> ConfirmQuote(QuoteRequest model)
+        {
+
+
+            return null;
+        }
+
         internal class ChallengeResult : HttpUnauthorizedResult
         {
             public string LoginProvider { get; set; }

@@ -173,4 +173,33 @@ $(function () {
             }
         });
     });
+
+    $("#btn-checkout-quote-request").on("click", function () {
+        var quoteRequest = {
+            Items: []
+        };
+        $.each($(".cart-row.quote"), function () {
+            var itemElement = $(this);
+            var selectedPriceElement = itemElement.find("input[type='radio']:checked");
+            var quoteItem = {
+                Id: itemElement.data("id"),
+                SelectedTierPrice: {
+                    Quantity: selectedPriceElement.data("quantity"),
+                    Price: selectedPriceElement.val()
+                }
+            };
+            quoteRequest.Items.push(quoteItem);
+        });
+
+        $.ajax({
+            type: "POST",
+            url: VirtoCommerce.url("/account/quote/confirm"),
+            data: quoteRequest,
+            success: function (jsonResponse) {
+                if (jsonResponse) {
+
+                }
+            }
+        });
+    });
 });

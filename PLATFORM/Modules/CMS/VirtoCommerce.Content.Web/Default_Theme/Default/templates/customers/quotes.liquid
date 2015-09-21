@@ -10,6 +10,7 @@
                     <tr>
                         <th>{{ 'customer.quotes.quote_number' | t }}</th>
                         <th>{{ 'customer.quotes.date' | t }}</th>
+                        <th>{{ 'customer.quotes.status' | t }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -19,6 +20,7 @@
                                 <a href="{{ shop.simplified_url }}/account/quote/{{ quote.number }}">{{ quote.number }}</a>
                             </td>
                             <td>{{ quote.created_at }}</td>
+                            <td>{{ quote.status }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>

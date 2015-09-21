@@ -209,10 +209,14 @@
             "none": "You haven't submit any quote requests yet.",
             "quote_number": "Number",
             "date": "Date",
-            "total": "Total"
+            "total": "Total",
+            "status": "Status"
         },
         "quote": {
-            "title": "Quote request {{ number }}"
+            "title": "Quote request {{ number }}",
+            "comment": "About this quote:",
+            "date": "Quote request date:",
+            "status": "Quote status:"
         },
         "recover_password": {
             "title": "Reset your password",
