@@ -58,10 +58,12 @@ namespace VirtoCommerce.Web.Models.Filters
             return String.Format("<a href=\"{0}\" id=\"customer_login_link\">{1}</a>", path, input);
         }
 
+        /* sasha: this doesn't work in templates when integers are used for minus
         public static decimal Minus(decimal input, decimal parameter)
         {
             return input - parameter;
         }
+        */
 
         public static string CustomerLogoutLink(string input)
         {
