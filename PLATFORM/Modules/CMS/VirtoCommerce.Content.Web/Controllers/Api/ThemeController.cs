@@ -16,6 +16,7 @@ using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Content.Web.Converters;
 using VirtoCommerce.Content.Web.Models;
+using VirtoCommerce.Platform.Core.PushNotifications;
 
 #endregion
 
@@ -30,10 +31,10 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		private readonly string _pathForMultipart;
 		private readonly string _pathForFiles;
 		private readonly string _defaultThemePath;
-		#endregion
+        #endregion
 
-		#region Constructors and Destructors
-		public ThemeController(Func<string, IThemeService> factory, ISettingsManager manager, string pathForMultipart, string pathForFiles, string defaultThemePath)
+        #region Constructors and Destructors
+        public ThemeController(Func<string, IThemeService> factory, ISettingsManager manager, string pathForMultipart, string pathForFiles, string defaultThemePath)
 		{
 			if (factory == null)
 			{
@@ -59,7 +60,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 			_pathForFiles = pathForFiles;
 			_defaultThemePath = defaultThemePath;
 
-			var themeService = factory.Invoke(chosenRepository);
+            var themeService = factory.Invoke(chosenRepository);
 			this._themeService = themeService;
 		}
 		#endregion
@@ -202,12 +203,26 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		[CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public IHttpActionResult CreateNewTheme(string storeId, string themeFileUrl, string themeName)
 		{
-			using (var webClient = new WebClient())
+            using (var webClient = new WebClient())
 			{
 				var filePath = string.Format("~/App_Data/Uploads/{0}.zip", Guid.NewGuid().ToString());
 				var fullFilePath = HostingEnvironment.MapPath(filePath);
-				webClient.DownloadFile(new Uri(themeFileUrl), fullFilePath);
 
+                try
+                {
+                    webClient.DownloadFile(new Uri(themeFileUrl), fullFilePath);
+                }
+                catch(WebException ex)
+                {
+                    var response = ex.Response as HttpWebResponse;
+                    if (response != null && response.StatusCode == HttpStatusCode.NotFound)
+                    {
+                        throw new HttpResponseException(new HttpResponseMessage(response.StatusCode)
+                        {
+                            ReasonPhrase = ex.Message
+                        });
+                    }
+                }
 				using (ZipArchive archive = ZipFile.OpenRead(fullFilePath))
 				{
 					_themeService.UploadTheme(storeId, themeName, archive);
