@@ -80,7 +80,7 @@ namespace VirtoCommerce.Content.Web.ExportImport
 		{
 			foreach (var item in backup)
 			{
-				_pagesService.SavePage(GetStoreIdForPage(item), item);
+				_pagesService.SavePage(GetStoreIdForPage(item.FullPath), item);
 			}
 		}
 
@@ -88,23 +88,44 @@ namespace VirtoCommerce.Content.Web.ExportImport
 		{
 			foreach (var item in backup)
 			{
-				_themeService.SaveThemeAsset(GetStoreIdForThemeAsset(item), GetThemeIdForThemeAsset(item), item);
+				_themeService.SaveThemeAsset(GetStoreIdForThemeAsset(item.Path), GetThemeIdForThemeAsset(item.Path), item);
 			}
 		}
 
-        private string GetStoreIdForPage(coreModels.Page page)
+        private string GetStoreIdForPage(string path)
 		{
-			return page.FullPath.Split(new char[] { '/' })[0];
+            var pathSteps = path.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+
+            if (pathSteps.Length == 0)
+            {
+                throw new NullReferenceException("path is incorrect");
+            }
+
+            return pathSteps[0];
 		}
 
-        private string GetThemeIdForThemeAsset(coreModels.ThemeAsset themeAsset)
+        private string GetThemeIdForThemeAsset(string path)
 		{
-			return themeAsset.Path.Split(new char[] { '/' })[1];
+            var pathSteps = path.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+
+            if (pathSteps.Length < 2)
+            {
+                throw new NullReferenceException("path is incorrect");
+            }
+
+            return pathSteps[1];
 		}
 
-        private string GetStoreIdForThemeAsset(coreModels.ThemeAsset themeAsset)
+        private string GetStoreIdForThemeAsset(string path)
 		{
-			return themeAsset.Path.Split(new char[] { '/' })[0];
+            var pathSteps = path.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+
+            if(pathSteps.Length == 0)
+            {
+                throw new NullReferenceException("path is incorrect");
+            }
+
+            return pathSteps[0];
 		}
 
 		private BackupObject GetBackupObject(Action<ExportImportProgressInfo> progressCallback, bool handleBynaryData)
