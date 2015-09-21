@@ -16,10 +16,9 @@ namespace VirtoCommerce.Platform.Data.Security.Converters
             var result = new Role();
             result.InjectFrom(source);
   
-            if (source.RolePermissions != null)
-            {
-                result.Permissions = source.RolePermissions.Select(rp => rp.Permission.ToCoreModel()).ToArray();
-            }
+           result.Permissions = source.RolePermissions.Select(rp => rp.Permission.ToCoreModel()).ToArray();
+           result.Scopes = source.Scopes.Select(x => x.Scope).ToArray();
+
             return result;
         }
 
@@ -41,6 +40,10 @@ namespace VirtoCommerce.Platform.Data.Security.Converters
             {
                 result.RolePermissions = new ObservableCollection<dataModel.RolePermissionEntity>(source.Permissions.Select(p => new dataModel.RolePermissionEntity { PermissionId = p.Id }));
             }
+            if (source.Scopes != null)
+            {
+                result.Scopes = new ObservableCollection<dataModel.RoleScopeEntity>(source.Scopes.Select(x => new dataModel.RoleScopeEntity { Scope = x }));
+            }
             return result;
         }
 
@@ -48,10 +51,6 @@ namespace VirtoCommerce.Platform.Data.Security.Converters
         {
             var result = new dataModel.RoleAssignmentEntity();
             result.RoleId = source.Id;
-            if (source.Scopes != null)
-            {
-                result.Scopes = new ObservableCollection<dataModel.RoleScopeEntity>(source.Scopes.Select(x => x.ToDataModel()));
-            }
             return result;
         }
 
@@ -67,6 +66,12 @@ namespace VirtoCommerce.Platform.Data.Security.Converters
             {
                 var comparer = AnonymousComparer.Create((dataModel.RolePermissionEntity rp) => rp.PermissionId);
                 source.RolePermissions.Patch(target.RolePermissions, comparer, (sourceItem, targetItem) => { });
+            }
+
+            if (!source.Scopes.IsNullCollection())
+            {
+                var comparer = AnonymousComparer.Create((dataModel.RoleScopeEntity x) => x.Scope);
+                source.Scopes.Patch(target.Scopes, comparer, (sourceItem, targetItem) => { });
             }
         }
     }

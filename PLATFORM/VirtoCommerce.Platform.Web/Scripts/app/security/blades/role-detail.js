@@ -1,6 +1,35 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.roleDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.roles', 'platformWebApp.dialogService', function ($scope, bladeNavigationService, roles, dialogService) {
+.controller('platformWebApp.roleDetailController', ['$q', '$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.roles', 'platformWebApp.dialogService', 'platformWebApp.securityRoleScopeService', function ($q, $scope, bladeNavigationService, roles, dialogService, securityRoleScopeService) {
     var promise = roles.queryPermissions().$promise;
+    $scope.blade.allScopes = [];
+    $scope.blade.filteredScopes = [];
+
+    var scopeGetters = [];
+    angular.forEach(securityRoleScopeService.allScopeGetters, function (scopeGetter) {
+		//load all scopes
+    	$q.when(scopeGetter()).then(function (result) {
+    		$scope.blade.filteredScopes = $scope.blade.allScopes = $scope.blade.allScopes.concat(result);
+    		if($scope.blade.currentEntity && $scope.blade.currentEntity.permissions)
+    		{
+    			filterScopes($scope.blade.currentEntity.permissions);
+    		}
+    	});
+    });
+	
+	//need filter scopes by permission module name (first part of permission name)
+    function filterScopes(permissions) {
+    	if(permissions)
+    	{
+    		var prefixes = _.uniq(_.map(permissions, function (x) { return x.id.split(":")[0]; }));
+    		$scope.blade.filteredScopes = _.filter($scope.blade.allScopes, function (x) { return _.contains(prefixes, x.split(":")[0]); });
+    	}
+    };
+	//Need watch to role permissions for filter avail scopes
+    $scope.$watch('blade.currentEntity.permissions', function () {
+    	if ($scope.blade.currentEntity && $scope.blade.currentEntity.permissions) {
+    		filterScopes($scope.blade.currentEntity.permissions);
+    	}
+    });
 
     $scope.blade.refresh = function (parentRefresh) {
         if ($scope.blade.isNew) {

@@ -11,15 +11,12 @@ namespace VirtoCommerce.Platform.Data.Model
     public class RoleScopeEntity : Entity
     {
         [Required]
-        [StringLength(128)]
+        [StringLength(1024)]
         public string Scope { get; set; }
-        [Required]
-        [StringLength(128)]
-        public string Type { get; set; }
-
+     
         #region Navigation properties
-        public string RoleAssignmentId { get; set; }
-        public RoleAssignmentEntity RoleAssignment { get; set; } 
+        public string RoleId { get; set; }
+        public RoleEntity Role { get; set; } 
         #endregion
     }
 }

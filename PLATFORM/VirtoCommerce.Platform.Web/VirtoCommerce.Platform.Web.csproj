@@ -414,6 +414,9 @@
     <Content Include="Scripts\app\packaging\blades\modules-list.tpl.html" />
     <Content Include="Scripts\app\packaging\notifications\history.tpl.html" />
     <Content Include="Scripts\app\packaging\notifications\menu.tpl.html" />
+    <Content Include="Scripts\app\security\directives\permission.js" />
+    <Content Include="Scripts\app\security\services\auth.js" />
+    <Content Include="Scripts\app\security\services\roleScopes.js" />
     <Content Include="Scripts\app\settings\blades\entitySetting-list.js" />
     <Content Include="Scripts\app\settings\blades\entitySetting-list.tpl.html" />
     <Content Include="Scripts\app\settings\widgets\entitySettingsWidget.js" />
@@ -513,7 +516,6 @@
     <Content Include="Scripts\common\objCompare.js" />
     <Content Include="Scripts\common\templates\ok-cancel.tpl.html" />
     <Content Include="Scripts\common\templates\ok-cancel2.tpl.html" />
-    <Content Include="Scripts\app\security\auth\auth.js" />
     <Content Include="Scripts\app\security\blades\account-changePassword.js" />
     <Content Include="Scripts\app\security\blades\account-changePassword.tpl.html" />
     <Content Include="Scripts\app\security\blades\account-api.tpl.html" />

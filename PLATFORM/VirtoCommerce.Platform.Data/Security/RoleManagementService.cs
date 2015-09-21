@@ -54,9 +54,7 @@ namespace VirtoCommerce.Platform.Data.Security
 
             using (var repository = _platformRepository())
             {
-                var role = repository.Roles
-                    .Include(r => r.RolePermissions.Select(rp => rp.Permission))
-                    .FirstOrDefault(r => r.Id == roleId);
+                var role = repository.GetRoleById(roleId);
 
                 if (role != null)
                 {
@@ -93,10 +91,8 @@ namespace VirtoCommerce.Platform.Data.Security
             using (var repository = _platformRepository())
 			using(var changeTracker = GetChangeTracker(repository))
             {
-				AddOrUpdatePermissions(repository, role.Permissions);
+			    var targetEntry = repository.GetRoleById(role.Id);
 
-                var targetEntry = repository.Roles.Include(r => r.RolePermissions)
-											.FirstOrDefault(r => r.Id == role.Id);
 				if (targetEntry == null)
 				{
 					repository.Add(sourceEntry);
@@ -106,8 +102,6 @@ namespace VirtoCommerce.Platform.Data.Security
 					changeTracker.Attach(targetEntry);
 					sourceEntry.Patch(targetEntry);
 				}
-                
-
                 CommitChanges(repository);
             }
 
@@ -116,29 +110,6 @@ namespace VirtoCommerce.Platform.Data.Security
         }
 
         #endregion
-    
-		private static void AddOrUpdatePermissions(IPlatformRepository repository, Permission[] permissions)
-        {
-            if (permissions != null)
-            {
-                var permissionIds = permissions.Select(p => p.Id).ToArray();
-                var existingPermissions = repository.Permissions.Where(p => permissionIds.Contains(p.Id)).ToArray();
-
-                foreach (var permission in permissions)
-                {
-                    var sourceEntry = permission.ToDataModel();
-                    var targetEntry = existingPermissions.FirstOrDefault(p => string.Equals(p.Id, permission.Id, StringComparison.OrdinalIgnoreCase));
-
-                    if (targetEntry == null)
-                    {
-                        repository.Add(sourceEntry);
-                    }
-                    else
-                    {
-                        sourceEntry.Patch(targetEntry);
-                    }
-                }
-            }
-        }
+  
     }
 }

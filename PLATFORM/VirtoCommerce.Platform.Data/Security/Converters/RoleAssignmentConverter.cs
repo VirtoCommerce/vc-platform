@@ -13,8 +13,7 @@ namespace VirtoCommerce.Platform.Data.Security.Converters
         public static Role ToCoreModel(this dataModel.RoleAssignmentEntity entity)
         {
             var result = entity.Role.ToCoreModel();
-            result.Scopes = entity.Scopes.Select(x => new RoleScope { Scope = x.Scope, Type = x.Type }).ToArray();
-
+       
             return result;
         }
 
@@ -26,11 +25,6 @@ namespace VirtoCommerce.Platform.Data.Security.Converters
             var patchInjection = new PatchInjection<dataModel.RoleAssignmentEntity>(x => x.RoleId, x => x.AccountId);
             target.InjectFrom(patchInjection, source);
 
-            if (!source.Scopes.IsNullCollection())
-            {
-                var comparer = AnonymousComparer.Create((dataModel.RoleScopeEntity x) => x.Scope + "-" + x.Type);
-                source.Scopes.Patch(target.Scopes, comparer, (sourceItem, targetItem) => { });
-            }
         }
     }
 }

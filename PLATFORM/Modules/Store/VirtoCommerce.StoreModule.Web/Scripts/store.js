@@ -31,7 +31,7 @@ angular.module(moduleName, [
   }]
 )
 .run(
-  ['platformWebApp.toolbarService', 'platformWebApp.bladeNavigationService', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', function (toolbarService, bladeNavigationService, mainMenuService, widgetService, $state) {
+  ['platformWebApp.toolbarService', 'platformWebApp.bladeNavigationService', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', 'platformWebApp.securityRoleScopeService', 'virtoCommerce.storeModule.stores', function (toolbarService, bladeNavigationService, mainMenuService, widgetService, $state, securityRoleScopeService, stores) {
       //Register module in main menu
       var menuItem = {
           path: 'browse/store',
@@ -42,6 +42,16 @@ angular.module(moduleName, [
           permission: 'store:query'
       };
       mainMenuService.addMenuItem(menuItem);
+
+  	 //Register security scope types used for object ACL definition
+      var getScopesFn = function () {
+      	return stores.query({}).$promise.then(function (result) {
+      		var scopes = _.map(result, function (x) { return "store:name:" + x.name; });
+      		scopes.push("store:createdBy:{{userId}}");
+      		return scopes;
+      	});
+      };
+      securityRoleScopeService.registerScopeGetter(getScopesFn);
 
       //Register widgets in store details
       widgetService.registerWidget({
@@ -112,11 +122,6 @@ angular.module(moduleName, [
       toolbarService.register(settingsCommand, 'virtoCommerce.storeModule.shippingMethodDetailController');
       toolbarService.register(settingsCommand, 'virtoCommerce.storeModule.taxProviderDetailController');
 
-      //var settingsWidget = {
-      //    controller: 'platformWebApp.entitySettingsWidgetController',
-      //    template: '$(Platform)/Scripts/app/settings/widgets/entitySettingsWidget.tpl.html'
-      //};
-      //widgetService.registerWidget(settingsWidget, 'shippingMethodDetail');
-      //widgetService.registerWidget(settingsWidget, 'paymentMethodDetail');
+     
   }])
 ;

@@ -155,9 +155,9 @@ namespace VirtoCommerce.Platform.Data.Repositories
 
 
             modelBuilder.Entity<RoleScopeEntity>()
-                .HasRequired(x => x.RoleAssignment)
+                .HasRequired(x => x.Role)
                 .WithMany(x => x.Scopes)
-                .HasForeignKey(x => x.RoleAssignmentId);
+                .HasForeignKey(x => x.RoleId);
             #endregion
 
             #region Notifications
@@ -201,6 +201,13 @@ namespace VirtoCommerce.Platform.Data.Repositories
         public IQueryable<RolePermissionEntity> RolePermissions { get { return GetAsQueryable<RolePermissionEntity>(); } }
         public IQueryable<OperationLogEntity> OperationLogs { get { return GetAsQueryable<OperationLogEntity>(); } }
 
+        public RoleEntity GetRoleById(string roleId)
+        {
+            return Roles.Include(x => x.RolePermissions.Select(y=>y.Permission))
+                        .Include(x => x.Scopes)
+                        .FirstOrDefault(x => x.Id == roleId);
+        }
+
         public AccountEntity GetAccountByName(string userName, UserDetails detailsLevel)
         {
             var query = Accounts;
@@ -209,7 +216,7 @@ namespace VirtoCommerce.Platform.Data.Repositories
             {
                 query = query
                     .Include(a => a.RoleAssignments.Select(ra => ra.Role.RolePermissions.Select(rp => rp.Permission)))
-                    .Include(a => a.RoleAssignments.Select(ra => ra.Scopes))
+                    .Include(a => a.RoleAssignments.Select(ra => ra.Role.Scopes))
                     .Include(a => a.ApiAccounts);
             }
 

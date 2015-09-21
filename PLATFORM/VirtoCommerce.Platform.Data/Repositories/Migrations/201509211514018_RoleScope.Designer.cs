@@ -13,7 +13,7 @@ namespace VirtoCommerce.Platform.Data.Repositories.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201509181228103_RoleScope"; }
+            get { return "201509211514018_RoleScope"; }
         }
         
         string IMigrationMetadata.Source

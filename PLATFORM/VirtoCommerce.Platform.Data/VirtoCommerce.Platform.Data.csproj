@@ -255,9 +255,9 @@
     <Compile Include="Repositories\Migrations\201509161444352_DetailField.Designer.cs">
       <DependentUpon>201509161444352_DetailField.cs</DependentUpon>
     </Compile>
-    <Compile Include="Repositories\Migrations\201509181228103_RoleScope.cs" />
-    <Compile Include="Repositories\Migrations\201509181228103_RoleScope.Designer.cs">
-      <DependentUpon>201509181228103_RoleScope.cs</DependentUpon>
+    <Compile Include="Repositories\Migrations\201509211514018_RoleScope.cs" />
+    <Compile Include="Repositories\Migrations\201509211514018_RoleScope.Designer.cs">
+      <DependentUpon>201509211514018_RoleScope.cs</DependentUpon>
     </Compile>
     <Compile Include="Repositories\Migrations\Configuration.cs" />
     <Compile Include="Repositories\PlatformDatabaseInitializer.cs" />
@@ -285,7 +285,6 @@
     <Compile Include="Security\Converters\PermissionConverter.cs" />
     <Compile Include="Security\Converters\RoleAssignmentConverter.cs" />
     <Compile Include="Security\Converters\RoleConverter.cs" />
-    <Compile Include="Security\Converters\RoleScopeConverter.cs" />
     <Compile Include="Security\Identity\ApplicationClaimsIdentityProvider.cs" />
     <Compile Include="Security\Identity\ApplicationSignInManager.cs" />
     <Compile Include="Security\Identity\ApplicationUser.cs" />
@@ -357,8 +356,8 @@
     <EmbeddedResource Include="Repositories\Migrations\201509161444352_DetailField.resx">
       <DependentUpon>201509161444352_DetailField.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Repositories\Migrations\201509181228103_RoleScope.resx">
-      <DependentUpon>201509181228103_RoleScope.cs</DependentUpon>
+    <EmbeddedResource Include="Repositories\Migrations\201509211514018_RoleScope.resx">
+      <DependentUpon>201509211514018_RoleScope.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Security\Identity\Migrations\201411101625303_InitialCreate.resx">
       <DependentUpon>201411101625303_InitialCreate.cs</DependentUpon>

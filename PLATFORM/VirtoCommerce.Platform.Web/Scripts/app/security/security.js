@@ -53,7 +53,7 @@
 	        ]
 	    });
 	}])
-    .run(['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', function ($rootScope, mainMenuService, widgetService, $state) {
+    .run(['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', 'platformWebApp.securityRoleScopeService', 'platformWebApp.authService', function ($rootScope, mainMenuService, widgetService, $state, securityRoleScopeService, authService) {
         //Register module in main menu
         var menuItem = {
             path: 'configuration/security',

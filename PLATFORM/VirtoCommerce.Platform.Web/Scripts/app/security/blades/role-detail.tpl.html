@@ -16,6 +16,14 @@
                     </div>
                 </div>
             </form>
+            <div class="form-input">
+                <ui-select multiple ng-model="blade.currentEntity.scopes">
+                    <ui-select-match placeholder="Select value">{{$item}}</ui-select-match>
+                    <ui-select-choices repeat="x in blade.filteredScopes | filter: $select.search">
+                        <span ng-bind-html="x | highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
             <div class="sub-t">Assigned permissions</div>
             <div class="table-wrapper">
                 <table class="table">

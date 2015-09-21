@@ -25,9 +25,9 @@
 ];
 
 angular.module('platformWebApp', AppDependencies).
-  controller('platformWebApp.appCtrl', ['$scope', '$window', '$state', 'platformWebApp.pushNotificationService', function ($scope, $window, $state, eventService) {
+  controller('platformWebApp.appCtrl', ['$scope', '$window', '$state', 'platformWebApp.pushNotificationService', function ($scope, $window, $state, pushNotificationService) {
       $scope.platformVersion = $window.platformVersion;
-      eventService.run();
+      pushNotificationService.run();
 
       $scope.curentStateName = function () {
           return $state.current.name;
@@ -74,7 +74,7 @@ angular.module('platformWebApp', AppDependencies).
 )
 .run(
   ['$rootScope', '$state', '$stateParams', 'platformWebApp.authService', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', '$animate', '$templateCache', 'gridsterConfig', 'taOptions',
-    function ($rootScope, $state, $stateParams, authService, mainMenuService, eventService, $animate, $templateCache, gridsterConfig, taOptions) {
+    function ($rootScope, $state, $stateParams, authService, mainMenuService, pushNotificationService, $animate, $templateCache, gridsterConfig, taOptions) {
         //Disable animation
         $animate.enabled(false);
       
@@ -112,7 +112,7 @@ angular.module('platformWebApp', AppDependencies).
 
         $rootScope.$on('httpError', function (event, rejection) {
             if (!(rejection.config.url.indexOf('api/platform/notification') + 1)) {
-                eventService.error({ title: 'HTTP error', description: rejection.status + ' — ' + rejection.statusText, extendedData: rejection.data });
+                pushNotificationService.error({ title: 'HTTP error', description: rejection.status + ' — ' + rejection.statusText, extendedData: rejection.data });
             }
         });
 

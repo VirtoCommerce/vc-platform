@@ -24,6 +24,7 @@ namespace VirtoCommerce.Platform.Data.Repositories
 		IQueryable<NotificationEntity> Notifications { get; }
 		IQueryable<NotificationTemplateEntity> NotificationTemplates { get; }
 
+        RoleEntity GetRoleById(string id);
 		AccountEntity GetAccountByName(string userName, UserDetails detailsLevel);
 		NotificationTemplateEntity GetNotificationTemplateByNotification(string notificationTypeId, string objectId, string objectTypeId, string language);
 		DynamicPropertyDictionaryItemEntity[] GetDynamicPropertyDictionaryItems(string propertyId);

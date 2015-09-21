@@ -9,7 +9,7 @@ namespace VirtoCommerce.Platform.Core.Security
         public string Name { get; set; }
         public string Description { get; set; }
         public Permission[] Permissions { get; set; }
-        public RoleScope[] Scopes { get; set; }
+        public string[] Scopes { get; set; }
 
         /// <summary>
         /// Generate permission:scope type:scope string will used in check permissions by string
@@ -22,8 +22,7 @@ namespace VirtoCommerce.Platform.Core.Security
                 if (Permissions != null)
                 {
                     var permissionStr = Permissions.Select(x => x.Id).ToArray();
-                    var sopesStr = Scopes != null ? Scopes.Select(x => String.Format("{0}:{1}", x.Type, x.Scope)).ToArray() : null;
-                    return permissionStr.LeftJoin(sopesStr, ":");
+                    return permissionStr.LeftJoin(Scopes, ":");
                 }
             }
             return Enumerable.Empty<string>();
