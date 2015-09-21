@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('virtoCommerce.marketingModule.addContentItemsController', ['$scope', 'virtoCommerce.marketingModule.dynamicContent.contentItems', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function ($scope, marketing_dynamicContents_res_contentItems, bladeNavigationService, dialogService) {
+.controller('virtoCommerce.marketingModule.addContentItemsController', ['$scope', 'virtoCommerce.marketingModule.dynamicContent.contentItems', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.dynamicProperties.dictionaryItemsApi', function ($scope, marketing_dynamicContents_res_contentItems, bladeNavigationService, dialogService, dictionaryItemsApi) {
     $scope.setForm = function (form) {
         $scope.formScope = form;
     }
@@ -104,6 +104,10 @@
             },
             function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); blade.isLoading = false; });
         }
+    }
+
+    $scope.getDictionaryValues = function (property, callback) {
+        dictionaryItemsApi.query({ id: property.objectType, propertyId: property.id }, callback);
     }
 
     $scope.blade.headIcon = 'fa-inbox';

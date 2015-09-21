@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.propertyValueListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.settings', function ($scope, bladeNavigationService, dialogService, settings) {
+.controller('platformWebApp.propertyValueListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.settings', 'platformWebApp.dynamicProperties.dictionaryItemsApi', function ($scope, bladeNavigationService, dialogService, settings, dictionaryItemsApi) {
     var blade = $scope.blade;
     blade.headIcon = 'fa-plus-square-o';
     blade.title = "Properties values";
@@ -96,6 +96,10 @@
 		    }
 		}
     ];
+
+    $scope.getDictionaryValues = function (property, callback) {
+        dictionaryItemsApi.query({ id: property.objectType, propertyId: property.id }, callback);
+    }
 
     $scope.blade.refresh();
 }]);

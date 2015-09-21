@@ -30,12 +30,21 @@
                 </div>
             </div>
             <form class="form" name="detailForm">
-                <div class="form-group" ng-init="setForm(detailForm)">
-                    <label class="form-label">Description</label>
-                    <div class="form-input">
-                        <textarea class="form-control" ng-model="blade.currentEntity.description" placeholder="Enter description"></textarea>
+                <fieldset>
+                    <div class="form-group" ng-init="setForm(detailForm)">
+                        <label class="form-label">Description</label>
+                        <div class="form-input">
+                            <textarea class="form-control" ng-model="blade.currentEntity.description" placeholder="Enter description"></textarea>
+                        </div>
                     </div>
-                </div>
+                </fieldset>
+                <fieldset>
+                    <legend>Settings</legend>
+                    <div class="form-group" ng-repeat="data in blade.currentEntity.settings" title="{{data.description}}">
+                        <label class="form-label">{{data.title}}</label>
+                        <va-generic-value-input ng-model="data" ng-if="!data.isArray" get-dictionary-values="getDictionaryValues" />
+                    </div>
+                </fieldset>
             </form>
 
             <!--gridster-opts="{width: 526}"-->

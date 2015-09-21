@@ -1,20 +1,54 @@
 ﻿<div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
-            <div class="sub-t __border">Summary</div>
             <form class="form" name="formScope">
-                <div class="form-group" ng-init="setForm(formScope)">
-                    <label class="form-label">Name</label>
-                    <div class="form-input">
-                        <input ng-model="blade.currentEntity.name" placeholder="Enter name" focus-on required>
+                <fieldset>
+                    <legend>Summary</legend>
+                    <div class="form-group" ng-init="setForm(formScope)">
+                        <label class="form-label">Name</label>
+                        <div class="form-input">
+                            <input ng-model="blade.currentEntity.name" placeholder="Enter name" focus-on required>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Description</label>
-                    <div class="form-input">
-                        <textarea class="form-control" cols="30" rows="3" ng-model="blade.currentEntity.description" placeholder="Enter description"></textarea>
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <div class="form-input">
+                            <textarea class="form-control" cols="30" rows="3" ng-model="blade.currentEntity.description" placeholder="Enter description"></textarea>
+                        </div>
                     </div>
-                </div>
+                </fieldset>
+                <fieldset>
+                    <legend>Bounded scopes</legend>
+                    <div class="form-group">
+                        <label class="form-label">Scope type</label>
+                        <div class="form-input">
+                            <select></select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Scope</label>
+                        <div class="form-input">
+                            <select></select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <a class="clear text-mini __link">Clear all</a>
+                        <ul class="list __inline __chosen">
+                            <li class="list-item">
+                                <a class="list-remove">×</a>
+                                <span class="list-name">ContentPlace\HomePage\HomePageSlider</span>
+                            </li>
+                            <li class="list-item">
+                                <a class="list-remove">×</a>
+                                <span class="list-name">ContentPlace\HomePage\HomePageSlider</span>
+                            </li>
+                            <li class="list-item">
+                                <a class="list-remove">×</a>
+                                <span class="list-name">ContentPlace\HomePage\HomePageSlider</span>
+                            </li>
+                        </ul>
+                    </div>
+                </fieldset>
             </form>
             <div class="sub-t">Assigned permissions</div>
             <div class="table-wrapper">
