@@ -8,7 +8,13 @@
                    placeholder="Enter short text">
         </div>
     </script>
-
+    <script type="text/ng-template" id="dSecureString.html">
+        <div class="form-input">
+            <input ng-required="currentEntity.property.isRequired"
+                   ng-model="context.currentPropValues[0].value"
+                   type="password" placeholder="Enter secret text">
+        </div>
+    </script>
     <script type="text/ng-template" id="dLongText.html">
         <div class="form-input">
             <textarea ng-required="currentEntity.property.isRequired"
