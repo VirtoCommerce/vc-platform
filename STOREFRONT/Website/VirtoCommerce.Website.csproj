@@ -45,8 +45,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="DotLiquid, Version=1.0.0.0, Culture=neutral, PublicKeyToken=82e46016ecf9f07c, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Shared\DotLiquid.dll</HintPath>
+      <HintPath>..\packages\DotLiquid.VirtoCommerce.1.8.1\lib\NET45\DotLiquid.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="LibSassNetProxy">
       <HintPath>..\Shared\LibSassNetProxy.dll</HintPath>

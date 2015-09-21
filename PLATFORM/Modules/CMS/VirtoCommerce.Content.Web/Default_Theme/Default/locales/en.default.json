@@ -78,7 +78,7 @@
             "email": "E-mail address",
             "first_name": "First name",
             "last_name": "Last name",
-            "request_shipping_quote": "Request a shippinh quote",
+            "request_shipping_quote": "Request a shipping quote",
             "submit_quote": "Submit quote request",
             "update_quote": "Update quote",
             "remove": "Remove",
@@ -86,9 +86,6 @@
                 "title": "Remarks",
                 "text": "Do you have a general remark with this Quote Request?"
             }
-        },
-        "customer": {
-            "title":  "My quote requests"
         }
     },
     "collections": {
@@ -206,6 +203,20 @@
             "total": "Total",
             "fulfilled_on": "Fulfilled on {{ date }}",
             "subtotal": "Subtotal"
+        },
+        "quotes": {
+            "title": "Quote requests",
+            "none": "You haven't submit any quote requests yet.",
+            "quote_number": "Number",
+            "date": "Date",
+            "total": "Total",
+            "status": "Status"
+        },
+        "quote": {
+            "title": "Quote request {{ number }}",
+            "comment": "About this quote:",
+            "date": "Quote request date:",
+            "status": "Quote status:"
         },
         "recover_password": {
             "title": "Reset your password",

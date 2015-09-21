@@ -160,7 +160,7 @@
             <a href="{{ shop.simplified_url }}/quote" class="header-cart-btn cart-toggle">
                 <span class="fa fa-calculator"></span>
                 {{ 'layout.quotes.quotes' | t }}
-                <span id="quoteCount"{% if quote_request.items_count == 0 %} class="hidden-count"{% endif %}">{{ quote_request.items_count }}</span>
+                <span id="quoteCount"{% if actual_quote_request.items_count == 0 %} class="hidden-count"{% endif %}">{{ actual_quote_request.items_count }}</span>
             </a>
 
             <a href="{{ shop.simplified_url }}/cart" class="header-cart-btn cart-toggle" id="btn-cart-toggle">

@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.quoteModule')
-.controller('virtoCommerce.quoteModule.quoteItemsController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'virtoCommerce.quoteModule.quotes', 'virtoCommerce.catalogModule.items', 'virtoCommerce.pricingModule.prices', function ($scope, bladeNavigationService, dialogService, quotes, items, prices) {
+.controller('virtoCommerce.quoteModule.quoteItemsController', ['$scope', 'focus', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'virtoCommerce.quoteModule.quotes', 'virtoCommerce.catalogModule.items', 'virtoCommerce.pricingModule.prices', function ($scope, focus, bladeNavigationService, dialogService, quotes, items, prices) {
     var blade = $scope.blade;
 
     // set initial values to totals 
@@ -39,7 +39,7 @@
                         discountAmount: 0,
                         currency: blade.currentEntity.currency
                     };
-                    newLineItem.proposalPrices = [{ quantity: 1, price: newLineItem.salePrice }];
+                    newLineItem.proposalPrices = [{ quantity: 1, price: 0 }];
                     newLineItem.selectedTierPrice = newLineItem.proposalPrices[0];
                     blade.currentEntity.items.push(newLineItem);
                 },
@@ -151,7 +151,8 @@
     };
 
     $scope.addProposalTier = function (item) {
-        item.proposalPrices.push({ quantity: 1, price: item.salePrice });
+        item.proposalPrices.push({ quantity: 1, price: 0 });
+        focus('focusIndex0');
     };
 
     $scope.deleteProposalTier = function (item) {
@@ -162,6 +163,10 @@
     };
 
     $scope.getMargin = function (item, proposal) {
-        return Math.round((proposal.price - item.salePrice) / proposal.price * 100);
+        if (proposal.price && item.salePrice) {
+            return Math.round((proposal.price - item.salePrice) / proposal.price * 100);
+        } else {
+            return '';
+        }
     };
 }]);

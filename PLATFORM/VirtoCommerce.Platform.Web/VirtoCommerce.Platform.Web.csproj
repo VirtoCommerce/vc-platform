@@ -369,8 +369,8 @@
     <Content Include="Scripts\app\dynamicProperties\blades\property-dictionary.tpl.html" />
     <Content Include="Scripts\app\dynamicProperties\blades\property-valueType.js" />
     <Content Include="Scripts\app\dynamicProperties\blades\property-valueType.tpl.html" />
-    <Content Include="Scripts\app\dynamicProperties\directives\dynamicProperty.js" />
-    <Content Include="Scripts\app\dynamicProperties\directives\dynamicProperty.tpl.html" />
+    <Content Include="Scripts\common\directives\genericValueInput.js" />
+    <Content Include="Scripts\common\directives\genericValueInput.tpl.html" />
     <Content Include="Scripts\app\dynamicProperties\dynamicProperties.js" />
     <Content Include="Scripts\app\dynamicProperties\resources\dynamicPropertiesApi.js" />
     <Content Include="Scripts\app\dynamicProperties\widgets\dynamicPropertyWidget.js" />
@@ -419,8 +419,6 @@
     <Content Include="Scripts\app\security\services\roleScopes.js" />
     <Content Include="Scripts\app\settings\blades\entitySetting-list.js" />
     <Content Include="Scripts\app\settings\blades\entitySetting-list.tpl.html" />
-    <Content Include="Scripts\app\settings\widgets\entitySettingsWidget.js" />
-    <Content Include="Scripts\app\settings\widgets\entitySettingsWidget.tpl.html" />
     <Content Include="Scripts\app\security\blades\account-api-list.js" />
     <Content Include="Scripts\app\security\blades\account-api-list.tpl.html" />
     <Content Include="Scripts\app\security\blades\account-resetPassword.tpl.html" />

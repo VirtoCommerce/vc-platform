@@ -66,7 +66,7 @@
                                         <input required ng-model="data.value" type="text" />
                                     </div>
                                     <div class="form-input __number" ng-if="pb.currentEntity.valueType === 'Number'">
-                                        <input va-number required ng-model="data.value" step="1">
+                                        <input smart-float num-type="float" required ng-model="data.value">
                                     </div>
                                     <ul role="menu" class="menu __context" id="pd_menu_{{$index}}">
                                         <li class="menu-item" ng-click='delete($index)'>

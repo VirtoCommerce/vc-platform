@@ -8,7 +8,13 @@
                    placeholder="Enter short text">
         </div>
     </script>
-
+    <script type="text/ng-template" id="dSecureString.html">
+        <div class="form-input">
+            <input ng-required="currentEntity.property.isRequired"
+                   ng-model="context.currentPropValues[0].value"
+                   type="password" placeholder="Enter secret text">
+        </div>
+    </script>
     <script type="text/ng-template" id="dLongText.html">
         <div class="form-input">
             <textarea ng-required="currentEntity.property.isRequired"
@@ -25,7 +31,7 @@
 
     <script type="text/ng-template" id="dInteger.html">
         <div class="form-input __number">
-            <input va-number step="1"
+            <input smart-float num-type="integer"
                    ng-required="currentEntity.property.isRequired"
                    ng-model="context.currentPropValues[0].value"
                    placeholder="Enter integer number" />
@@ -34,7 +40,7 @@
 
     <script type="text/ng-template" id="dDecimal.html">
         <div class="form-input __number">
-            <input va-number step="0.01"
+            <input smart-float num-type="float"
                    ng-required="currentEntity.property.isRequired"
                    ng-model="context.currentPropValues[0].value"
                    placeholder="Enter decimal number" />

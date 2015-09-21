@@ -1,13 +1,16 @@
 ﻿angular.module('platformWebApp')
-.directive('vaDynamicProperty', ['$compile', '$templateCache', '$http', 'platformWebApp.objCompareService', 'platformWebApp.dynamicProperties.dictionaryItemsApi', function ($compile, $templateCache, $http, objComparer, dictionaryItemsApi) {
+.directive('vaGenericValueInput', ['$compile', '$templateCache', '$http', 'platformWebApp.objCompareService', function ($compile, $templateCache, $http, objComparer) {
 
     return {
         restrict: 'E',
         require: 'ngModel',
         replace: true,
         transclude: true,
-        templateUrl: '$(Platform)/Scripts/app/dynamicProperties/directives/dynamicProperty.tpl.html',
-        scope: { languages: "=" },
+        templateUrl: '$(Platform)/Scripts/common/directives/genericValueInput.tpl.html',
+        scope: {
+            languages: "=",
+            getDictionaryValues: "&"
+        },
         link: function (scope, element, attr, ngModelController, linker) {
 
             scope.currentEntity = ngModelController.$modelValue;
@@ -15,67 +18,66 @@
             scope.context = {};
             scope.context.currentPropValues = [];
             scope.context.allDictionaryValues = [];
-       
+
             scope.$watch('context.currentPropValues', function (newValue, oldValue) {
                 //reflect only real changes
-            	if (newValue.length != scope.currentEntity.values.length || !objComparer.equal(newValue, scope.currentEntity.values)) {
-                	if (scope.currentEntity.isDictionary) {
-                		scope.currentEntity.values = _.map(newValue, function (x) { return { value: x } });
-                	}
-					else if (scope.currentEntity.isArray && scope.currentEntity.isMultilingual && !scope.currentEntity.isDictionary)
-                	{
-                		//ungrouping values for multilingual array properties
-                		scope.currentEntity.values = [];
-                		angular.forEach(newValue, function (x) {
-                			var values = _.map(x.values, function (y) { return { locale: x.locale, value: y.value }; });
-                			scope.currentEntity.values = scope.currentEntity.values.concat(values);
-                		});
-                	}
-                	else {
-                		scope.currentEntity.values = newValue;
-                	}
+                if (newValue.length != scope.currentEntity.values.length || !objComparer.equal(newValue, scope.currentEntity.values)) {
+                    if (scope.currentEntity.isDictionary) {
+                        scope.currentEntity.values = _.map(newValue, function (x) { return { value: x } });
+                    }
+                    else if (scope.currentEntity.isArray && scope.currentEntity.isMultilingual && !scope.currentEntity.isDictionary) {
+                        //ungrouping values for multilingual array properties
+                        scope.currentEntity.values = [];
+                        angular.forEach(newValue, function (x) {
+                            var values = _.map(x.values, function (y) { return { locale: x.locale, value: y.value }; });
+                            scope.currentEntity.values = scope.currentEntity.values.concat(values);
+                        });
+                    }
+                    else {
+                        scope.currentEntity.values = newValue;
+                    }
                     ngModelController.$setViewValue(scope.currentEntity);
-      
+
                 }
             }, true);
 
             scope.$watch('languages', function (languages) {
-            	if (scope.currentEntity.isMultilingual && !scope.currentEntity.isDictionary) {
-            		initLanguagesValuesMap(scope.currentEntity, languages);
-            	}
+                if (scope.currentEntity.isMultilingual && !scope.currentEntity.isDictionary) {
+                    initLanguagesValuesMap(scope.currentEntity, languages);
+                }
             });
 
             ngModelController.$render = function () {
-            	scope.currentEntity = ngModelController.$modelValue;
+                scope.currentEntity = ngModelController.$modelValue;
 
-            	scope.context.currentPropValues = angular.copy(scope.currentEntity.values);
-            	if (needAddEmptyValue(scope.currentEntity, scope.context.currentPropValues)) {
-            		scope.context.currentPropValues.push({ value: null });
-            	}
+                scope.context.currentPropValues = angular.copy(scope.currentEntity.values);
+                if (needAddEmptyValue(scope.currentEntity, scope.context.currentPropValues)) {
+                    scope.context.currentPropValues.push({ value: null });
+                }
 
-            	if (scope.currentEntity.isDictionary) {
-            		loadDictionaryValues(scope.currentEntity);
-            	}
+                if (scope.currentEntity.isDictionary) {
+                    scope.getDictionaryValues()(scope.currentEntity, setDictionaryValues);
+                }
 
-				//Group values for multilingual array properties
-            	if (scope.currentEntity.isMultilingual && scope.currentEntity.isArray && !scope.currentEntity.isDictionary) {
+                //Group values for multilingual array properties
+                if (scope.currentEntity.isMultilingual && scope.currentEntity.isArray && !scope.currentEntity.isDictionary) {
 
-            		var groupByLocaleObj = _.groupBy(scope.context.currentPropValues, 'locale');
-            		scope.context.currentPropValues = [];
-            		for (var key in groupByLocaleObj) {
-            			if (groupByLocaleObj.hasOwnProperty(key)) {
-            				scope.context.currentPropValues.push({ locale: key, values: groupByLocaleObj[key] });
-            			}
-            		}
-	           	}
-            	changeValueTemplate();
+                    var groupByLocaleObj = _.groupBy(scope.context.currentPropValues, 'locale');
+                    scope.context.currentPropValues = [];
+                    for (var key in groupByLocaleObj) {
+                        if (groupByLocaleObj.hasOwnProperty(key)) {
+                            scope.context.currentPropValues.push({ locale: key, values: groupByLocaleObj[key] });
+                        }
+                    }
+                }
+                changeValueTemplate();
             };
 
             var difference = function (one, two) {
                 var containsEquals = function (obj, target) {
                     if (obj == null) return false;
                     return _.any(obj, function (value) {
-                    	return value.value == target.value || angular.equals(value.values, target.values);
+                        return value.value == target.value || angular.equals(value.values, target.values);
                     });
                 };
                 return _.filter(one, function (value) { return !containsEquals(two, value); });
@@ -87,39 +89,34 @@
 
             function initLanguagesValuesMap(property, languages) {
                 //Group values by language 
-            	angular.forEach(languages, function (language) {
+                angular.forEach(languages, function (language) {
                     //Currently select values
-                	var currentPropValues = _.filter(scope.context.currentPropValues, function (x) { return x.locale == language; });
+                    var currentPropValues = _.filter(scope.context.currentPropValues, function (x) { return x.locale == language; });
                     //need add empty value for single  value type
-                	if (currentPropValues.length == 0) {
-                		scope.context.currentPropValues.push({ value: null, locale: language });
+                    if (currentPropValues.length == 0) {
+                        scope.context.currentPropValues.push({ value: null, locale: language });
                     }
                 });
             };
 
 
-            function loadDictionaryValues(property) {
-            	var selectedValues = property.values;
-            	dictionaryItemsApi.query({ id: property.objectType, propertyId: property.id }, function (result) {
-                    scope.context.allDictionaryValues = [];
-                    scope.context.currentPropValues = [];
+            function setDictionaryValues(allDictionaryValues) {
+                var selectedValues = scope.currentEntity.values;
+                scope.context.allDictionaryValues = [];
+                scope.context.currentPropValues = [];
 
-                    angular.forEach(result, function (dictValue) {
-                        //Need to select already selected values. Dictionary values have same type as standard values.
-                        dictValue.selected = angular.isDefined(_.find(selectedValues, function (x) { return x.value.id == dictValue.id }));
-                        scope.context.allDictionaryValues.push(dictValue);
-                        if (dictValue.selected) {
-                            //add selected value
-                            scope.context.currentPropValues.push(dictValue);
-                        }
-                    });
-                    return result;
+                angular.forEach(allDictionaryValues, function (dictValue) {
+                    scope.context.allDictionaryValues.push(dictValue);
+                    //Need to select already selected values. Dictionary values have same type as standard values.
+                    if (_.any(selectedValues, function (x) { return x.value.id == dictValue.id })) {
+                        //add selected value
+                        scope.context.currentPropValues.push(dictValue);
+                    }
                 });
-
-            };
+            }
 
             function getTemplateName(property) {
-            	var result = 'd' + property.valueType;
+                var result = 'd' + property.valueType;
 
                 if (property.isDictionary) {
                     result += '-dictionary';

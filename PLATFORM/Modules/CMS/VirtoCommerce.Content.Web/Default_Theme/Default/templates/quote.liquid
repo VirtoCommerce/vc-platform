@@ -1,35 +1,35 @@
-﻿{% if quote_request.items_count > 0 %}
+﻿{% if actual_quote_request.items_count > 0 %}
     <form action="{{ shop.simplified_url }}/quotes" method="post" novalidate>
-        <input id="quote_request_id" type="hidden" value="{{ quote_request.id }}" />
+        <input id="quote_request_id" type="hidden" value="{{ actual_quote_request.id }}" />
         <h1 class="h2">{{ 'quotes.general.title' | t }}</h1>
         <div class="grid">
             <div class="grid-item large--one-half">
                 <div class="ublock">
                     <h4>{{ 'quotes.general.remarks.title' | t }}</h4>
                     <p>{{ 'quotes.general.remarks.text' | t }}</p>
-                    <textarea id="quote_request_comment" name="quote_request[comment]">{{ quote_request_item.comment }}</textarea>
+                    <textarea id="quote_request_comment" name="quote_request[comment]">{{ actual_quote_request_item.comment }}</textarea>
                 </div>
             </div>
             <div class="grid-item large--one-half">
                 <div class="ublock">
                     <label>{{ 'quotes.general.email' | t }}</label>
-                    <input id="quote_request_email" name="quote_request[email]" type="text" value="{{ quote_request.email }}" />
+                    <input id="quote_request_email" name="quote_request[email]" type="text" value="{{ actual_quote_request.email }}" />
                     <div class="grid">
                         <div class="grid-item large--one-half">
                             <label>{{ 'quotes.general.first_name' | t }}</label>
-                            <input id="quote_request_first_name" name="quote_request[first_name]" type="text" value="{{ quote_request.first_name }}" />
+                            <input id="quote_request_first_name" name="quote_request[first_name]" type="text" value="{{ actual_quote_request.first_name }}" />
                         </div>
                         <div class="grid-item large--one-half">
                             <label>{{ 'quotes.general.last_name' | t }}</label>
-                            <input id="quote_request_last_name" name="quote_request[last_name]" type="text" value="{{ quote_request.last_name }}" />
+                            <input id="quote_request_last_name" name="quote_request[last_name]" type="text" value="{{ actual_quote_request.last_name }}" />
                         </div>
                     </div>
-                    <input id="quote_request_request_shipping_quote" name="quote_request[request_shipping_quote]" type="checkbox" {% if quote_request.request_shipping_quote %}checked{% endif %} />
+                    <input id="quote_request_request_shipping_quote" name="quote_request[request_shipping_quote]" type="checkbox" {% if actual_quote_request.request_shipping_quote %}checked{% endif %} />
                     <label class="inline">{{ 'quotes.general.request_shipping_quote' | t }}</label>
                 </div>
             </div>
         </div>
-        {% for item in quote_request.items %}
+        {% for item in actual_quote_request.items %}
             <div class="cart-row quote" data-id="{{ item.id }}">
                 <div class="grid">
                     <div class="grid-item large--seven-twelfths">

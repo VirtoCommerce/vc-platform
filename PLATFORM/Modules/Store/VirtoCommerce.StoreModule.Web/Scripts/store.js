@@ -103,25 +103,6 @@ angular.module(moduleName, [
       toolbarService.register(resetCommand, 'virtoCommerce.storeModule.shippingMethodDetailController');
       toolbarService.register(resetCommand, 'virtoCommerce.storeModule.taxProviderDetailController');
 
-      var settingsCommand = {
-          name: "Settings", icon: 'fa fa-wrench',
-          executeMethod: function (blade) {
-              var newBlade = {
-                  id: 'entitySettingList',
-                  controller: 'platformWebApp.entitySettingListController',
-                  template: '$(Platform)/Scripts/app/settings/blades/entitySetting-list.tpl.html'
-              };
-              bladeNavigationService.showBlade(newBlade, blade);
-          },
-          canExecuteMethod: function () {
-              return true;
-          },
-          index: 1
-      };
-      toolbarService.register(settingsCommand, 'virtoCommerce.storeModule.paymentMethodDetailController');
-      toolbarService.register(settingsCommand, 'virtoCommerce.storeModule.shippingMethodDetailController');
-      toolbarService.register(settingsCommand, 'virtoCommerce.storeModule.taxProviderDetailController');
-
-     
+   
   }])
 ;
