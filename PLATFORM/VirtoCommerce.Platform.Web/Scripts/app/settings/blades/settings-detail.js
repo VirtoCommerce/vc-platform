@@ -34,7 +34,7 @@
 
         selectedSettings = _.where(results, { valueType: 'Boolean' });
         _.forEach(selectedSettings, function (setting) {
-            setting.value = setting.value.toLowerCase() === 'true';
+            setting.value = setting.value && setting.value.toLowerCase() === 'true';
             if (setting.allowedValues) {
                 setting.allowedValues = _.map(setting.allowedValues, function (value) { return value.toLowerCase() === 'true'; });
             }
@@ -48,9 +48,19 @@
         });
 
         _.each(results, function (setting) {
+            // set group names to show.
             if (setting.groupName) {
                 var paths = setting.groupName.split('|');
-                setting.groupName = paths[paths.length - 1];
+                setting.groupName = paths.pop();
+            }
+
+            // transform to va-generic-value-input suitable structure
+            setting.isDictionary = _.any(setting.allowedValues);
+            setting.values = setting.isDictionary ? [{ value: { id: setting.value, name: setting.value } }] : [{ id: setting.value, value: setting.value }];
+            if (setting.allowedValues) {
+                setting.allowedValues = _.map(setting.allowedValues, function (x) {
+                    return { id: x, name: x };
+                });
             }
         });
 
@@ -85,6 +95,11 @@
     function saveChanges() {
         $scope.blade.isLoading = true;
         var objects = _.flatten(_.map($scope.blade.currentEntities, _.values));
+        objects = _.map(objects, function (x) {
+            x.value = x.isDictionary ? x.values[0].value.id : x.values[0].value;
+            x.values = undefined;
+            return x;
+        });
 
         var selectedSettings = _.where(objects, { isArray: true });
         _.forEach(selectedSettings, function (setting) {
@@ -105,7 +120,7 @@
             bladeNavigationService.setError('Error ' + error.status, $scope.blade);
         });
     };
-    
+
     $scope.blade.headIcon = 'fa-wrench';
     $scope.blade.toolbarCommands = [
         {
@@ -149,6 +164,10 @@
             closeCallback();
         }
     };
+
+    $scope.getDictionaryValues = function (setting, callback) {
+        callback(setting.allowedValues);
+    }
 
     // actions on load
     $scope.blade.refresh();

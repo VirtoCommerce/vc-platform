@@ -72,7 +72,7 @@
 <script type="text/ng-template" id="expression-ConditionAtNumItemsInCart.html">
     <a class="__link" left-click-menu data-target="exactly_menu{{element1.id}}">{{element1.exactly | boolToValue:'exactly':'at least'}}</a>
     <div class="form-input __mini __number">
-        <input va-number required ng-model="element1.numItem" min="0" step="1">
+        <input smart-float num-type="integer" required ng-model="element1.numItem">
     </div>items are in shopping cart excluding
 
     <ul class="menu __context" role="menu" id="exactly_menu{{element1.id}}">
@@ -83,7 +83,7 @@
 <script type="text/ng-template" id="expression-ConditionAtNumItemsInCategoryAreInCart.html">
     <a class="__link" left-click-menu data-target="exactly_menu{{element1.id}}">{{element1.exactly | boolToValue:'exactly':'at least'}}</a>
     <div class="form-input __mini __number">
-        <input va-number required ng-model="element1.numItem" min="0" step="1">
+        <input smart-float num-type="integer" required ng-model="element1.numItem">
     </div>items of category
     <a class="__link" ng-click="openCategorySelectWizard(element)">{{element.categoryName?element.categoryName: 'select category' }}</a>
     are in shopping cart excluding
@@ -95,7 +95,7 @@
 <script type="text/ng-template" id="expression-ConditionAtNumItemsOfEntryAreInCart.html">
     <a class="__link" left-click-menu data-target="exactly_menu{{element1.id}}">{{element1.exactly | boolToValue:'exactly':'at least'}}</a>
     <div class="form-input __mini __number">
-        <input va-number required ng-model="element1.numItem" min="0" step="1">
+        <input smart-float num-type="integer" required ng-model="element1.numItem">
     </div>items of entry
     <a class="__link" ng-click="openItemSelectWizard(element)">{{element.productId?element.productName: 'select entry' }}</a>
     are in shopping cart
@@ -117,20 +117,20 @@
 <script type="text/ng-template" id="expression-RewardCartGetOfRelSubtotal.html">
     Get
     <div class="form-input __mini __number">
-        <input va-number required ng-model="element1.amount" min="0" step="1">
+        <input smart-float num-type="float" required ng-model="element1.amount">
     </div> % off cart subtotal
 </script>
 <script type="text/ng-template" id="expression-RewardItemGetFreeNumItemOfProduct.html">
     Get
     <div class="form-input __mini __number">
-        <input va-number required ng-model="element1.numItem" min="0" step="1">
+        <input smart-float num-type="integer" required ng-model="element1.numItem">
     </div>free items of product
     <a class="__link" ng-click="openItemSelectWizard(element1)">{{element1.productName?element1.productName: 'select product' }}</a>
 </script>
 <script type="text/ng-template" id="expression-RewardItemGiftNumItem.html">
     Gift
     <div class="form-input __mini __number">
-        <input va-number required ng-model="element1.quantity" min="0" step="1">
+        <input smart-float num-type="integer" required ng-model="element1.quantity">
     </div>of product
     <a class="__link" ng-click="openItemSelectWizard(element1)">{{element1.productName?element1.productName: 'select product' }}</a> where:
     <table>
@@ -182,7 +182,7 @@
 <script type="text/ng-template" id="expression-RewardItemGetOfRel.html">
     Get
     <div class="form-input __mini __number">
-        <input va-number required ng-model="element1.amount" min="0" step="1">
+        <input smart-float num-type="float" required ng-model="element1.amount">
     </div>% off
     <a class="__link" ng-click="openItemSelectWizard(element1)">{{element1.productName?element1.productName: 'select product' }}</a>
 </script>
@@ -192,17 +192,17 @@
         <input money required ng-model="element1.amount">
     </div>off
     <div class="form-input __mini __number">
-        <input va-number required ng-model="element1.numItem" min="0" step="1">
+        <input smart-float num-type="integer" required ng-model="element1.numItem">
     </div>items of entry
     <a class="__link" ng-click="openItemSelectWizard(element1)">{{element1.productName?element1.productName: 'select entry' }}</a>
 </script>
 <script type="text/ng-template" id="expression-RewardItemGetOfRelForNum.html">
     Get
     <div class="form-input __mini __number">
-        <input va-number required ng-model="element1.amount" min="0" step="1">
+        <input smart-float num-type="float" required ng-model="element1.amount">
     </div>% off
     <div class="form-input __mini __number">
-        <input va-number required ng-model="element1.numItem" min="0" step="1">
+        <input smart-float num-type="integer" required ng-model="element1.numItem">
     </div>items of entry
     <a class="__link" ng-click="openItemSelectWizard(element1)">{{element1.productName?element1.productName: 'select entry' }}</a>
 </script>
@@ -219,7 +219,7 @@
 <script type="text/ng-template" id="expression-RewardShippingGetOfRelShippingMethod.html">
     Get
     <div class="form-input __mini __number">
-        <input va-number required ng-model="element1.amount" min="0" step="1">
+        <input smart-float num-type="float" required ng-model="element1.amount">
     </div>% off shipping
     <a class="__link" left-click-menu data-target="pshp_menu{{$index}}">{{element1.shippingMethod ? element1.shippingMethod : 'select shipping'}}</a>
     <ul class="menu __context" role="menu" id="pshp_menu{{$index}}">
@@ -340,7 +340,7 @@
     Shopper age is
     <a class="__link" left-click-menu data-target="compareCondition_menu{{element1.id}}">{{element1.compareCondition | compareConditionToText}}</a>
     <div class="form-input __mini __number">
-        <input va-number required ng-model="element1.value" min="1" step="1">
+        <input smart-float num-type="integer" required ng-model="element1.value">
     </div>
     <ul class="menu __context" role="menu" id="compareCondition_menu{{element1.id}}">
         <li class="menu-item" ng-click='element1.compareCondition="IsMatching";'>matching</li>

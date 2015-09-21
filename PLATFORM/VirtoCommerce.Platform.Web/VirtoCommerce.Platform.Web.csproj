@@ -369,8 +369,8 @@
     <Content Include="Scripts\app\dynamicProperties\blades\property-dictionary.tpl.html" />
     <Content Include="Scripts\app\dynamicProperties\blades\property-valueType.js" />
     <Content Include="Scripts\app\dynamicProperties\blades\property-valueType.tpl.html" />
-    <Content Include="Scripts\app\dynamicProperties\directives\dynamicProperty.js" />
-    <Content Include="Scripts\app\dynamicProperties\directives\dynamicProperty.tpl.html" />
+    <Content Include="Scripts\common\directives\genericValueInput.js" />
+    <Content Include="Scripts\common\directives\genericValueInput.tpl.html" />
     <Content Include="Scripts\app\dynamicProperties\dynamicProperties.js" />
     <Content Include="Scripts\app\dynamicProperties\resources\dynamicPropertiesApi.js" />
     <Content Include="Scripts\app\dynamicProperties\widgets\dynamicPropertyWidget.js" />
