@@ -181,6 +181,8 @@ namespace VirtoCommerce.Web.Models
                 this.Tags = new TagCollection(values);
             }
 
+            this.AllProductsCount = response.TotalCount;
+
             this.Products = response;
         }
 
