@@ -51,8 +51,6 @@ namespace VirtoCommerce.Web.Controllers
             Context.ActualQuoteRequest.Comment = model.Comment;
             Context.ActualQuoteRequest.FirstName = model.FirstName;
             Context.ActualQuoteRequest.Language = model.LastName;
-            Context.ActualQuoteRequest.Tag = null;
-            Context.ActualQuoteRequest.IsSubmitted = true;
 
             foreach (var quoteItem in model.Items)
             {
@@ -71,13 +69,18 @@ namespace VirtoCommerce.Web.Controllers
                 }
             }
 
+            if (User.Identity.IsAuthenticated)
+            {
+                Context.ActualQuoteRequest.Tag = null;
+            }
+
+            await QuoteService.UpdateQuoteRequestAsync(Context.ActualQuoteRequest);
+
             if (!User.Identity.IsAuthenticated)
             {
                 string returnUrl = VirtualPathUtility.ToAbsolute("~/quote");
                 return Json(new { redirectUrl = VirtualPathUtility.ToAbsolute("~/account/login?returnUrl=" + returnUrl) });
             }
-
-            Context.ActualQuoteRequest = await QuoteService.UpdateQuoteRequestAsync(Context.ActualQuoteRequest);
 
             return Json(new { redirectUrl = VirtualPathUtility.ToAbsolute("~/") });
         }
