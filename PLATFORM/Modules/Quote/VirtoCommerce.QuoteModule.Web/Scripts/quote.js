@@ -60,6 +60,10 @@ angular.module(moduleName, [])
           template: 'Modules/$(VirtoCommerce.Quote)/Scripts/widgets/quote-asset-widget.tpl.html'
       }, 'quoteDetail');
       widgetService.registerWidget({
+          controller: 'platformWebApp.dynamicPropertyWidgetController',
+          template: '$(Platform)/Scripts/app/dynamicProperties/widgets/dynamicPropertyWidget.tpl.html'
+      }, 'quoteDetail');
+      widgetService.registerWidget({
           controller: 'platformWebApp.changeLog.operationsWidgetController',
           template: '$(Platform)/Scripts/app/changeLog/widgets/operations-widget.tpl.html'
       }, 'quoteDetail');
