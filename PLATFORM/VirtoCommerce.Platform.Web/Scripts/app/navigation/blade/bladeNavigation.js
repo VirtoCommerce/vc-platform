@@ -50,7 +50,8 @@ angular.module('platformWebApp')
 
             var mainContent = $('.cnt');
             var blade = $(element).parent('.blade');
-            var offset = parseInt(blade.offset().left + mainContent.scrollLeft() + blade.width() + 125 - mainContent[0].clientWidth);
+            var pblade = blade.prev();
+            var offset = parseInt(blade.offset().left + (pblade.width() / 2));
 
             if (!scope.blade.disableOpenAnimation) {
                 blade.css('margin-left', '-' + blade.width() + 'px').addClass('__animate');
