@@ -83,13 +83,13 @@
                             <th class="table-col">Comment with product</th>
                             <th class="table-col" width="5%">List price</th>
                             <th class="table-col" width="5%">Sale price</th>
-                            <th class="table-col" width="5%">Qty</th>
+                            <th class="table-col" width="5%">Quantity</th>
                             <th class="table-col" width="13%">Proposed price</th>
                             <th class="table-col" width="10%">Margin (GP)</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="table-item" ng-repeat-start="data in blade.currentEntity.items" ng-class="{'__selected': data.id === selectedNodeId}" ng-click='selectItem(data)'>
+                        <tr class="table-item" ng-repeat-start="data in blade.currentEntity.items" ng-click='selectItem(data)'>
                             <td class="table-col">
                                 <label class="form-control __checkbox">
                                     <input type="checkbox" ng-model="data.$selected">
@@ -146,7 +146,7 @@
                         </tr>
                         <tr ng-repeat-end class="table-item" ng-class="{'__selected': data.id === selectedNodeId}" ng-click='selectItem(data)'>
                             <td class="table-head" colspan="8" ng-click="openItemDetail(data)">
-                                <span>SKU: {{data.sku}}. Product: {{data.name}}</span>
+                                <span>SKU: {{data.product.code}}. Product: {{data.name}}</span>
                             </td>
                         </tr>
                     </tbody>
