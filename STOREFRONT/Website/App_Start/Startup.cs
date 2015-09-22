@@ -30,6 +30,7 @@ namespace VirtoCommerce.Web
                 {
                     AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
                     LoginPath = new PathString("/Account/Login"),
+                    CookieName = "VirtoCommerce.Storefront",
                     //Provider =
                     //    new CookieAuthenticationProvider
                     //    {
