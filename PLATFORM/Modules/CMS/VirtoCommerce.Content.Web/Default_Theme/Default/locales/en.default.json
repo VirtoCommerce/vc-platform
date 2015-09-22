@@ -72,7 +72,7 @@
     },
     "quotes": {
         "general": {
-            "empty": "You have no any quote requests.",
+            "empty": "You have no quote requests.",
             "continue_browsing_html": "Continue browsing <a href=\"collections/all\">here</a>.",
             "title": "Quotes",
             "email": "E-mail address",
