@@ -202,4 +202,36 @@ $(function () {
             }
         });
     });
+
+    $(".proposal-price-radio").on("change", function () {
+        var quoteRequest = {
+            Number: $("#quote-request-number").data("number"),
+            Items: []
+        };
+        $.each($(".cart-row.quote"), function () {
+            var selectedProposalPrice = $(this).find(".proposal-price-radio:checked");
+            var quoteItem = {
+                Id: $(this).data("id"),
+                SelectedTierPrice: {
+                    Quantity: selectedProposalPrice.data("quantity"),
+                    Price: selectedProposalPrice.val()
+                }
+            };
+            quoteRequest.Items.push(quoteItem);
+        });
+        recalculateQuoteRequestTotals(quoteRequest);
+    });
 });
+
+var recalculateQuoteRequestTotals = function (quoteRequest) {
+    $.ajax({
+        type: "POST",
+        url: VirtoCommerce.url("/quote/recalculate"),
+        data: quoteRequest,
+        success: function (jsonResponse) {
+            $("#quote-subtotal").text(jsonResponse.totals.sub_total_exl_tax);
+            $("#quote-tax-total").text(jsonResponse.totals.tax_total);
+            $("#quote-grand-total").text(jsonResponse.totals.grand_total_incl_tax);
+        }
+    });
+}

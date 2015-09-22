@@ -45,6 +45,23 @@ namespace VirtoCommerce.Web.Controllers
         }
 
         [HttpPost]
+        [Route("recalculate")]
+        public async Task<ActionResult> Recalculate(QuoteRequest model)
+        {
+            Context.QuoteRequest = await QuoteService.GetByNumberAsync(Context.StoreId, Context.CustomerId, model.Number);
+
+            foreach (var modelQuoteItem in model.Items)
+            {
+                var quoteItem = Context.QuoteRequest.Items.FirstOrDefault(i => i.Id == modelQuoteItem.Id);
+                quoteItem.SelectedTierPrice = modelQuoteItem.SelectedTierPrice;
+            }
+
+            Context.QuoteRequest = await QuoteService.RecalculateAsync(Context.QuoteRequest);
+
+            return Json(Context.QuoteRequest);
+        }
+
+        [HttpPost]
         [Route("submit")]
         public async Task<ActionResult> Submit(QuoteRequest model)
         {

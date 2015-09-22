@@ -72,13 +72,13 @@
     },
     "quotes": {
         "general": {
-            "empty": "You have no quote requests.",
+            "empty": "You have no any quote requests.",
             "continue_browsing_html": "Continue browsing <a href=\"collections/all\">here</a>.",
             "title": "Quotes",
             "email": "E-mail address",
             "first_name": "First name",
             "last_name": "Last name",
-            "request_shipping_quote": "Request a shipping quote",
+            "request_shipping_quote": "Request a shippinh quote",
             "submit_quote": "Submit quote request",
             "update_quote": "Update quote",
             "remove": "Remove",

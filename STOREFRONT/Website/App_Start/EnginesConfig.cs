@@ -30,7 +30,7 @@ namespace VirtoCommerce.Web
             Template.RegisterSafeType(typeof(Tag), o => { return o; });
 
             // Register custom contains condition
-            Condition.Operators["contains"] = (left, right) => (left is ILiquidContains) ? ((ILiquidContains)left).Contains(right) : ((left is string) ? ((string)left).Contains((string)right) : false);
+            Condition.Operators["contains"] = (left, right) => (left is ILiquidContains) ? ((ILiquidContains)left).Contains(right) : ((left is string) ? ((string)left).Contains(right as string != null ? right as string : string.Empty) : false);
 
             //Condition.Operators["contains"] = (left, right) => (left is ILiquidContains) ? ((ILiquidContains)left).Contains(right) : ((left is string) ? !(right == null || left == null) ? false : ((string)left).Contains((string)right) : false);
 

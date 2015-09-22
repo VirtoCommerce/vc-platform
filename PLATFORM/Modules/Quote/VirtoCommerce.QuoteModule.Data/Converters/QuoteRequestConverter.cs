@@ -43,7 +43,7 @@ namespace VirtoCommerce.QuoteModule.Data.Converters
             retVal.Id = quoteRequest.Id;
             retVal.Code = quoteRequest.Number;
             retVal.Currency = quoteRequest.Currency;
-            retVal.Address = quoteRequest.Addresses.FirstOrDefault();
+            retVal.Address = quoteRequest.Addresses != null ? quoteRequest.Addresses.FirstOrDefault() : null;
             retVal.Type = quoteRequest.GetType().Name;
             foreach(var quoteItem in quoteRequest.Items)
             {

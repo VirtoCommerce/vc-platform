@@ -54,6 +54,16 @@ namespace VirtoCommerce.Web.Convertors
             }
 
             quoteItemModel.SalePrice = quoteItem.SalePrice;
+
+            if (quoteItem.SelectedTierPrice != null)
+            {
+                quoteItemModel.SelectedTierPrice = new TierPrice
+                {
+                    Quantity = quoteItem.SelectedTierPrice.Quantity,
+                    Price = quoteItem.SelectedTierPrice.Price
+                };
+            }
+
             quoteItemModel.Title = quoteItem.Name;
 
             return quoteItemModel;
@@ -80,6 +90,15 @@ namespace VirtoCommerce.Web.Convertors
                     Price = proposalPriceModel.Price,
                     Quantity = proposalPriceModel.Quantity
                 });
+            }
+
+            if (quoteItemModel.SelectedTierPrice != null)
+            {
+                quoteItem.SelectedTierPrice = new DataContracts.Quotes.TierPrice
+                {
+                    Quantity = quoteItemModel.SelectedTierPrice.Quantity,
+                    Price = quoteItemModel.SelectedTierPrice.Price
+                };
             }
 
             quoteItem.SalePrice = quoteItemModel.SalePrice;

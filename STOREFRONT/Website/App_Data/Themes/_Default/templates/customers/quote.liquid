@@ -3,7 +3,7 @@
 <hr class="hr--small" />
 <div class="grid">
     <div class="grid-item medium-down--one-whole">
-        <h4 id="quote-request-number" data-number="{{ quote_request.number }}">{{ 'customer.quote.title' | t: number: quote_request.number }}</h4>
+        <h4>{{ 'customer.quote.title' | t: number: quote_request.number }}</h4>
         {% if quote_request.comment.size > 0 %}
             <p>
                 {{ 'customer.quote.comment' | t }} <b>{{ quote_request.comment }}</b>
@@ -78,7 +78,7 @@
                             <div class="grid-item one-third medium-down--one-third text-right">
                                 {% for proposal_price in quote_item.proposal_prices %}
                                     <div class="js-qty">
-                                        <input class="proposal-price-radio" {% if quote_item.selected_tier_price.quantity == proposal_price.quantity %}checked="checked"{% endif %} data-quantity="{{ proposal_price.quantity }}" name="{{ quote_item.id }}_selected_price" type="radio" value="{{ proposal_price.price }}" />
+                                        <input data-quantity="{{ proposal_price.quantity }}" name="{{ quote_item.id }}_selected_price" type="radio" value="{{ proposal_price.price }}" />
                                         {{ proposal_price.price | money }}
                                     </div>
                                 {% endfor %}
@@ -94,19 +94,19 @@
                     <div class="cart-total">
                         Subtotal
                         <span class="h1 cart-subtotal--price">
-                            <small id="quote-subtotal">{{ quote_request.totals.sub_total_exl_tax | money }}</small>
+                            <small>{{ quote_request.totals.sub_total_exl_tax | money }}</small>
                         </span>
                     </div>
                     <div class="cart-total">
                         Tax
                         <span class="h1 cart-subtotal--price">
-                            <small id="quote-tax-total">{{ quote_request.totals.tax_total | money }}</small>
+                            <small>{{ quote_request.totals.tax_total | money }}</small>
                         </span>
                     </div>
                     <div class="cart-total">
                         Grand total
                         <span class="h1 cart-subtotal--price">
-                            <small id="quote-grand-total">{{ quote_request.totals.grand_total_incl_tax | money }}</small>
+                            <small>{{ quote_request.totals.grand_total_incl_tax | money }}</small>
                         </span>
                     </div>
                 </div>
