@@ -259,6 +259,10 @@
     <Compile Include="Repositories\Migrations\201509211514018_RoleScope.Designer.cs">
       <DependentUpon>201509211514018_RoleScope.cs</DependentUpon>
     </Compile>
+    <Compile Include="Repositories\Migrations\201509221500078_PermissionBoundedScopeFlag.cs" />
+    <Compile Include="Repositories\Migrations\201509221500078_PermissionBoundedScopeFlag.Designer.cs">
+      <DependentUpon>201509221500078_PermissionBoundedScopeFlag.cs</DependentUpon>
+    </Compile>
     <Compile Include="Repositories\Migrations\Configuration.cs" />
     <Compile Include="Repositories\PlatformDatabaseInitializer.cs" />
     <Compile Include="Repositories\PlatformRepository.cs" />
@@ -285,6 +289,7 @@
     <Compile Include="Security\Converters\PermissionConverter.cs" />
     <Compile Include="Security\Converters\RoleAssignmentConverter.cs" />
     <Compile Include="Security\Converters\RoleConverter.cs" />
+    <Compile Include="Security\Converters\RolePermissionConverter.cs" />
     <Compile Include="Security\Identity\ApplicationClaimsIdentityProvider.cs" />
     <Compile Include="Security\Identity\ApplicationSignInManager.cs" />
     <Compile Include="Security\Identity\ApplicationUser.cs" />
@@ -358,6 +363,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Repositories\Migrations\201509211514018_RoleScope.resx">
       <DependentUpon>201509211514018_RoleScope.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Repositories\Migrations\201509221500078_PermissionBoundedScopeFlag.resx">
+      <DependentUpon>201509221500078_PermissionBoundedScopeFlag.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Security\Identity\Migrations\201411101625303_InitialCreate.resx">
       <DependentUpon>201411101625303_InitialCreate.cs</DependentUpon>

@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.storeModule')
-.controller('virtoCommerce.storeModule.storeSettingsListController', ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
+.controller('virtoCommerce.storeModule.storeSettingsListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.authService', function ($scope, bladeNavigationService, authService) {
     $scope.openBlade = function (data) {
         var newBlade = {
             id: 'storeSetting',
@@ -7,7 +7,8 @@
             title: $scope.blade.title,
             subtitle: 'Edit store setting',
             controller: 'virtoCommerce.storeModule.storeSettingDetailController',
-            template: 'Modules/$(VirtoCommerce.Store)/Scripts/blades/store-setting-detail.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Store)/Scripts/blades/store-setting-detail.tpl.html',
+            securityScopes: $scope.blade.securityScopes
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     }

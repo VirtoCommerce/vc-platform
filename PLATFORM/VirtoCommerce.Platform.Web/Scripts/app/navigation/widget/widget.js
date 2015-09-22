@@ -41,15 +41,18 @@
         }
     }
 }])
-.directive('vaWidget', ['$compile', 'platformWebApp.widgetService', function ($compile, widgetService) {
-    return {
-        terminal: true,
-        priority: 1000,
-        link: function (scope, element, attr) {
-            element.attr('ng-controller', scope.widget.controller);
-            element.attr('ng-model', 'widget');
-            element.removeAttr("va-widget");
-            $compile(element)(scope);
+.directive('vaWidget', ['$compile', 'platformWebApp.widgetService', 'platformWebApp.authService', function ($compile, widgetService, authService) {
+	return {
+		link: function (scope, element, attr) {
+
+			if(!scope.widget.permission || authService.checkPermission(scope.widget.permission))
+			{
+				element.attr('ng-controller', scope.widget.controller);
+				element.attr('ng-model', 'widget');
+				element.removeAttr("va-widget");
+				$compile(element)(scope);
+			}
+		
         }
     }
 }]);

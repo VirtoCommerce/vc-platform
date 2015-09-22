@@ -6,7 +6,7 @@ namespace VirtoCommerce.Platform.Data.Model
     {
         public string RoleId { get; set; }
         public string PermissionId { get; set; }
-
+        public bool ScopeBounded { get; set; }
         public RoleEntity Role { get; set; }
         public PermissionEntity Permission { get; set; }
     }

@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.storeModule')
-.controller('virtoCommerce.storeModule.seoDetailController', ['$scope', 'virtoCommerce.storeModule.stores', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', function ($scope, stores, dialogService, bladeNavigationService) {
+.controller('virtoCommerce.storeModule.seoDetailController', ['$scope', 'virtoCommerce.storeModule.stores', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'platformWebApp.authService', function ($scope, stores, dialogService, bladeNavigationService, authService) {
     var blade = $scope.blade;
 
     function initializeBlade(parentEntity) {
@@ -54,7 +54,7 @@
     }
 
     function isDirty() {
-        return !angular.equals($scope.seoInfos, blade.origItem);
+    	return authService.checkPermission('store:manage', blade.securityScopes) && !angular.equals($scope.seoInfos, blade.origItem);
     };
 
     blade.onClose = function (closeCallback) {

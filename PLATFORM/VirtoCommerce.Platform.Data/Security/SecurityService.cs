@@ -78,6 +78,7 @@ namespace VirtoCommerce.Platform.Data.Security
             using (var userManager = _userManagerFactory())
             {
                 var dbUser = user.ToIdentityModel();
+                user.Id = dbUser.Id;
                 if (string.IsNullOrEmpty(user.Password))
                 {
                     result = await userManager.CreateAsync(dbUser);

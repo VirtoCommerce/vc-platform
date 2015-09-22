@@ -16,7 +16,7 @@ namespace VirtoCommerce.Platform.Data.Security.Converters
             var result = new Role();
             result.InjectFrom(source);
   
-           result.Permissions = source.RolePermissions.Select(rp => rp.Permission.ToCoreModel()).ToArray();
+           result.Permissions = source.RolePermissions.Select(rp => rp.ToCoreModel()).ToArray();
            result.Scopes = source.Scopes.Select(x => x.Scope).ToArray();
 
             return result;
@@ -38,7 +38,7 @@ namespace VirtoCommerce.Platform.Data.Security.Converters
 
             if (source.Permissions != null)
             {
-                result.RolePermissions = new ObservableCollection<dataModel.RolePermissionEntity>(source.Permissions.Select(p => new dataModel.RolePermissionEntity { PermissionId = p.Id }));
+                result.RolePermissions = new ObservableCollection<dataModel.RolePermissionEntity>(source.Permissions.Select(x=> x.ToRolePemissionDataModel()));
             }
             if (source.Scopes != null)
             {
@@ -65,7 +65,7 @@ namespace VirtoCommerce.Platform.Data.Security.Converters
             if (!source.RolePermissions.IsNullCollection())
             {
                 var comparer = AnonymousComparer.Create((dataModel.RolePermissionEntity rp) => rp.PermissionId);
-                source.RolePermissions.Patch(target.RolePermissions, comparer, (sourceItem, targetItem) => { });
+                source.RolePermissions.Patch(target.RolePermissions, comparer, (sourceItem, targetItem) => sourceItem.Patch(targetItem));
             }
 
             if (!source.Scopes.IsNullCollection())

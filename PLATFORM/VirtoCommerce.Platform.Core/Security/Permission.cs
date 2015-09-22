@@ -6,6 +6,10 @@
         public string Name { get; set; }
         public string Description { get; set; }
         /// <summary>
+        /// Flag used to define that permission has a bounded scope (used only within role)
+        /// </summary>
+        public bool ScopeBounded { get; set; }
+        /// <summary>
         /// Id of the module which has registered this permission.
         /// </summary>
         public string ModuleId { get; set; }

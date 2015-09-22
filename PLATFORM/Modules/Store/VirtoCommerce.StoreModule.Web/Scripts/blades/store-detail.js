@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.storeModule')
-.controller('virtoCommerce.storeModule.storeDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.storeModule.stores', 'virtoCommerce.catalogModule.catalogs', 'platformWebApp.settings', 'platformWebApp.dialogService', function ($scope, bladeNavigationService, stores, catalogs, settings, dialogService) {
+.controller('virtoCommerce.storeModule.storeDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.storeModule.stores', 'virtoCommerce.catalogModule.catalogs', 'platformWebApp.settings', 'platformWebApp.dialogService', 'platformWebApp.authService', function ($scope, bladeNavigationService, stores, catalogs, settings, dialogService, authService) {
     var blade = $scope.blade;
 
     blade.refresh = function (parentRefresh) {
@@ -22,10 +22,13 @@
         blade.currentEntity = angular.copy(data);
         blade.origEntity = data;
         blade.isLoading = false;
+
+    	//sets security scopes for scope bounded ACL
+        blade.securityScopes = ['store:name:' + blade.currentEntity.name, 'store:createdBy:' + blade.currentEntity.createdBy].join();
     };
 
     function isDirty() {
-        return !angular.equals(blade.currentEntity, blade.origEntity);
+    	return  authService.checkPermission('store:manage', blade.securityScopes) && !angular.equals(blade.currentEntity, blade.origEntity);
     };
 
     $scope.saveChanges = function () {

@@ -20,7 +20,8 @@ angular.module(moduleName, [])
 
 	widgetService.registerWidget({
 		controller: 'virtoCommerce.contentModule.themesWidgetController',
-		template: 'Modules/$(VirtoCommerce.Content)/Scripts/widgets/themesWidget.tpl.html'
+		template: 'Modules/$(VirtoCommerce.Content)/Scripts/widgets/themesWidget.tpl.html',
+		permission: 'content:query'
 	}, 'storeDetail');
 }])
 .config(['$stateProvider', function ($stateProvider) {

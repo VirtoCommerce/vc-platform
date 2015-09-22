@@ -73,7 +73,7 @@
 
         angular.copy($scope.blade.currentEntity, $scope.blade.origEntity);
 
-        roles.update({}, $scope.blade.currentEntity, function (data) {
+        roles.update($scope.blade.currentEntity, function (data) {
             if ($scope.blade.isNew) {
                 $scope.blade.parentBlade.refresh();
                 $scope.blade.parentBlade.selectNode(data);
@@ -112,11 +112,17 @@
     };
 
     function closeChildrenBlades() {
-        angular.forEach($scope.blade.childrenBlades.slice(), function (child) {
+    	angular.forEach($scope.blade.childrenBlades.slice(), function (child) {
             bladeNavigationService.closeBlade(child);
         });
     }
 
+    $scope.checkAll = function (selected) {
+    	angular.forEach($scope.blade.currentEntity.permissions, function (item) {
+    		item.scopeBounded = selected;
+    	});
+    };
+   
     $scope.blade.headIcon = 'fa-key';
 
     function initializeToolbar() {

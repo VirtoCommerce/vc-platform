@@ -43,11 +43,10 @@ angular.module(moduleName, [
       };
       mainMenuService.addMenuItem(menuItem);
 
-  	 //Register security scope types used for object ACL definition
+  	 //Register security scope types used for scope bounded ACL definition
       var getScopesFn = function () {
       	return stores.query({}).$promise.then(function (result) {
       		var scopes = _.map(result, function (x) { return "store:name:" + x.name; });
-      		scopes.push("store:createdBy:{{userId}}");
       		return scopes;
       	});
       };

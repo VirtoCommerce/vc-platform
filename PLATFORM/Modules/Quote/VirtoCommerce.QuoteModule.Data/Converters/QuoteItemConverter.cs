@@ -62,7 +62,10 @@ namespace VirtoCommerce.QuoteModule.Data.Converters
 			if (target == null)
 				throw new ArgumentNullException("target");
 
-			if (!source.ProposalPrices.IsNullCollection())
+            var patchInjection = new PatchInjection<dataModel.QuoteItemEntity>(x => x.Comment);
+            target.InjectFrom(patchInjection, source);
+
+            if (!source.ProposalPrices.IsNullCollection())
 			{
                 var tierPriceComparer = AnonymousComparer.Create((dataModel.TierPriceEntity x) => x.Quantity + "-" + x.Price);
                 source.ProposalPrices.Patch(target.ProposalPrices, tierPriceComparer, (sourceTierPrice, targetTierPrice) => { return; });

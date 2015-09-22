@@ -106,12 +106,23 @@
         notifyMenu.incremented = true;
     });
 
-   function innerNotification(notification) {
+	//http://sampsonblog.com/749/simple-throttle-function
+    function throttle(callback, limit) {
+    	var wait = false;                 // Initially, we're not waiting
+    	return function () {              // We return a throttled function
+    		if (!wait) {                  // If we're not waiting
+    			callback.call();          // Execute users function
+    			wait = true;              // Prevent future invocations
+    			setTimeout(function () {  // After a period of time
+    				wait = false;         // And allow future invocations
+    			}, limit);
+    		}
+    	}
+    };
 
-        //Group notification by text
-        notifications.upsert(notification, function (data, status, headers, config) {
-        }, function (error) {
-        });
+    function innerNotification(notification) {
+    	throttle( function() { notifications.upsert(notification) }, 500);
+      
     };
 
     function markAllAsRead() {
@@ -124,6 +135,7 @@
         });
 
     };
+
 
     var retVal = {
         run: function () {

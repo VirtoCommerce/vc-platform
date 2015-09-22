@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.factory('platformWebApp.authService', ['$http', '$rootScope', '$cookieStore', '$state', function ($http, $rootScope, $cookieStore, $state) {
+.factory('platformWebApp.authService', ['$http', '$rootScope', '$cookieStore', '$state', '$interpolate', function ($http, $rootScope, $cookieStore, $state, $interpolate) {
 	var serviceBase = 'api/platform/security/';
 	var authContext = {
 		userId : null,
@@ -31,13 +31,23 @@
 		});
 	};
 
-	authContext.checkPermission = function (permission) {
+	authContext.checkPermission = function (permission, securityScopes) {
 		//first check admin permission
 		// var hasPermission = $.inArray('admin', authContext.permissions) > -1;
 		var hasPermission = authContext.userType == 'Administrator';
 		if (!hasPermission) {
 			permission = permission.trim();
+			//first check global permissions
 			hasPermission = $.inArray(permission, authContext.permissions) > -1;
+			if (!hasPermission && securityScopes)
+			{	
+				//Check permissions in scope
+				hasPermission = _.some(securityScopes.split(','), function (x) {
+					var permissionWithScope = permission + ":" + x;
+					console.log(permissionWithScope);
+					return $.inArray(permissionWithScope, authContext.permissions) > -1;
+				});
+			}
 		}
 		return hasPermission;
 	};
@@ -49,6 +59,13 @@
 		authContext.fullName = results.userLogin;
 		authContext.isAuthenticated = results.userName != null;
 		authContext.userType = results.userType;
+		//Interpolate permissions to replace some template to real value
+		if (authContext.permissions)
+		{
+			authContext.permissions = _.map(authContext.permissions, function (x) {
+				return $interpolate(x)(authContext);
+			});
+		}
 		$rootScope.$broadcast('loginStatusChanged', authContext);
 	}
 	return authContext;

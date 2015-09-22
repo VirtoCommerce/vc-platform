@@ -110,6 +110,7 @@ angular.module('platformWebApp', AppDependencies).
             $state.go('loginDialog');
         });
 
+		//server error  handling
         $rootScope.$on('httpError', function (event, rejection) {
             if (!(rejection.config.url.indexOf('api/platform/notification') + 1)) {
                 pushNotificationService.error({ title: 'HTTP error', description: rejection.status + ' — ' + rejection.statusText, extendedData: rejection.data });

@@ -1,18 +1,19 @@
 ﻿angular.module('platformWebApp')
-.directive('vaPermission', ['platformWebApp.authService', function (authService) {
+.directive('vaPermission', ['platformWebApp.authService', '$compile', function (authService, $compile) {
 	return {
 		link: function (scope, element, attrs) {
+
 			if (attrs.vaPermission) {
 				var permissionValue = attrs.vaPermission.trim();
-				var notPermissionFlag = permissionValue[0] === '!';
-				if (notPermissionFlag) {
-					permissionValue = permissionValue.slice(1).trim();
-				}
-
-				function toggleVisibilityBasedOnPermission() {
-					var hasPermission = authService.checkPermission(permissionValue);
-
-					if (hasPermission && !notPermissionFlag || !hasPermission && notPermissionFlag)
+				attrs.$observe('securityScopes', function (value) {
+					if (value) {
+						toggleVisibilityBasedOnPermission(value);
+					}
+				});
+			
+				function toggleVisibilityBasedOnPermission(securityScopes) {
+					var hasPermission = authService.checkPermission(permissionValue, securityScopes);
+					if (hasPermission)
 						element.show();
 					else
 						element.hide();
