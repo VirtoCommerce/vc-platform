@@ -169,15 +169,17 @@
                         "virtualApplications": [
                             {
                                 "virtualPath": "/",
-                                "physicalPath": "[concat('site\\wwwroot\\', variables(parameters('deployApplications')).rootDir)]"
+                                "physicalPath": "[concat('site\\wwwroot\\', variables(parameters('deployApplications')).rootDir)]",
+                                "virtualDirectories": [
+                                    {
+                                        "virtualPath": "/assets",
+                                        "physicalPath": "site\\wwwroot\\admin\\App_Data\\Assets"
+                                    }
+                                ]
                             },
                             {
                                 "virtualPath": "/admin",
                                 "physicalPath": "site\\wwwroot\\admin"
-                            },
-                            {
-                                "virtualPath": "/assets",
-                                "physicalPath": "site\\wwwroot\\admin\\App_Data\\Assets"
                             }
                         ]
                     }
