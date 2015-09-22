@@ -36,6 +36,7 @@ namespace VirtoCommerce.Web.Models
 
         public string MoneyFormat { get; set; }
 
+        public string MoneyWithCurrencyFormat { get { return MoneyFormat; } }
         public string Name { get; set; }
 
         public string SecureUrl { get; set; }
