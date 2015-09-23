@@ -77,6 +77,10 @@
     <Compile Include="Migrations\201509171029169_ManualShippingTotal.Designer.cs">
       <DependentUpon>201509171029169_ManualShippingTotal.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201509231419381_SkuForQuoteItem.cs" />
+    <Compile Include="Migrations\201509231419381_SkuForQuoteItem.Designer.cs">
+      <DependentUpon>201509231419381_SkuForQuoteItem.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\AddressEntity.cs" />
     <Compile Include="Model\AttachmentEntity.cs" />
@@ -126,6 +130,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201509171029169_ManualShippingTotal.resx">
       <DependentUpon>201509171029169_ManualShippingTotal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201509231419381_SkuForQuoteItem.resx">
+      <DependentUpon>201509231419381_SkuForQuoteItem.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

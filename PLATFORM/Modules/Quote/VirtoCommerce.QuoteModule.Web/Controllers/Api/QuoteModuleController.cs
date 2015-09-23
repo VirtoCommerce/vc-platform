@@ -150,5 +150,18 @@ namespace VirtoCommerce.QuoteModule.Web.Controllers.Api
             return NotFound();
         }
 
+        /// <summary>
+        /// Deletes the specified quotes by id.
+        /// </summary>
+        /// <param name="ids">The quotes ids.</param>
+        [HttpDelete]
+        [ResponseType(typeof(void))]
+        [Route("")]
+        [CheckPermission(Permission = PredefinedPermissions.Manage)]
+        public IHttpActionResult Delete([FromUri] string[] ids)
+        {
+            _quoteRequestService.Delete(ids);
+            return StatusCode(HttpStatusCode.NoContent);
+        }
     }
 }

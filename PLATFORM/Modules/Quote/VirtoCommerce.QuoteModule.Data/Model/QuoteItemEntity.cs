@@ -29,7 +29,11 @@ namespace VirtoCommerce.QuoteModule.Data.Model
 		[Required]
 		[StringLength(64)]
 		public string ProductId { get; set; }
-		[Required]
+        [Required]
+        [StringLength(64)]
+        public string Sku { get; set; }
+
+        [Required]
 		[StringLength(64)]
 		public string CatalogId { get; set; }
 

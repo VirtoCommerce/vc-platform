@@ -58,13 +58,16 @@ namespace VirtoCommerce.QuoteModule.Data.Services
             {
                 retVal.OriginalSubTotalExlTax = items.Sum(x => x.SalePrice * x.SelectedTierPrice.Quantity);
                 retVal.SubTotalExlTax = items.Sum(x => x.SelectedTierPrice.Price * x.SelectedTierPrice.Quantity);
-                if (quote.ManualRelDiscountAmount > 0)
+                if (quote.ManualSubTotal > 0)
                 {
-                    retVal.SubTotalExlTax = quote.ManualRelDiscountAmount;
+                    retVal.DiscountTotal = retVal.SubTotalExlTax - quote.ManualSubTotal;
+                    retVal.SubTotalExlTax = quote.ManualSubTotal;
                 }
                 else if (quote.ManualRelDiscountAmount > 0)
                 {
-                    retVal.SubTotalExlTax = retVal.SubTotalExlTax - retVal.SubTotalExlTax * quote.ManualRelDiscountAmount;
+                    retVal.DiscountTotal = retVal.SubTotalExlTax * (quote.ManualRelDiscountAmount > 1 ? quote.ManualRelDiscountAmount * 0.01m : quote.ManualRelDiscountAmount);
+                    retVal.SubTotalExlTax = retVal.SubTotalExlTax - retVal.DiscountTotal;
+
                 }
             }
 
