@@ -312,7 +312,7 @@ namespace VirtoCommerce.Web.Models.Filters
         /// <returns></returns>
         public static string Date(object input, string format)
         {
-            if (!String.IsNullOrEmpty(format))
+            if (!String.IsNullOrEmpty(format) && !format.Contains("%")) // special formats that can be defined in settings
             {
                 var loc = String.Format("date_formats.{0}", format);
                 var newFormat = TranslationFilter.T(loc);

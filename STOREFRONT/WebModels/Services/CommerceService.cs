@@ -231,11 +231,21 @@ namespace VirtoCommerce.Web.Models.Services
             return webReviews;
         }
 
-        public async Task<Collection> GetAllCollectionAsync(SiteContext context, string sort = "")
+        /*
+        public Collection GetAllCollection(string sort = "")
         {
-            var collections = await this.GetCollectionsAsync(context, sort);
-            return collections.First();
+            var urlTemplate = VirtualPathUtility.ToAbsolute("~/collections/{0}");
+            var collection = new Collection()
+            {
+                Id = "All",
+                Url = string.Format(urlTemplate, "All"),
+                DefaultSortBy = "manual",
+                SortBy = sort
+            };
+
+            return collection;
         }
+        */
 
         public async Task<Collection> GetCollectionAsync(SiteContext context, string handle, string sort = "")
         {

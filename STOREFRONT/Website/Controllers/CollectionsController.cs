@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using VirtoCommerce.Web.Extensions;
+using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Models.Tagging;
 
 #endregion
@@ -21,16 +22,16 @@ namespace VirtoCommerce.Web.Controllers
             int page = 1,
             string sort_by = "manual")
         {
-            var collections = await this.Service.GetCollectionsAsync(SiteContext.Current, sort_by);
+            var collection = new Collection() { Id = "All", SortBy = sort_by  };
 
-            this.Context.Set("Collection", collections.Any() ? collections.First() : null);
+            this.Context.Set("Collection", collection);
             this.Context.Set("current_page", page);
             this.Context.Set("current_tags", this.ParseTags(tags));
 
             var template = "collection";
             if (!string.IsNullOrEmpty(view))
             {
-                template = String.Format("{0}.{1}", template, view);
+                template = string.Format("{0}.{1}", template, view);
             }
 
             return View(template);
@@ -57,7 +58,7 @@ namespace VirtoCommerce.Web.Controllers
             var template = "collection";
             if (!string.IsNullOrEmpty(view))
             {
-                template = String.Format("{0}.{1}", template, view);
+                template = string.Format("{0}.{1}", template, view);
             }
 
             return View(template);
@@ -100,8 +101,6 @@ namespace VirtoCommerce.Web.Controllers
         [Route("", Order = 2)]
         public async Task<ActionResult> IndexAsync(string tags, int page = 1, string sort_by = "manual")
         {
-            //await Task.FromResult<object>(null);
-            //Context.Set("current_tags", ParseTags(tags));
             var result = await Task.FromResult("list-collections");
             return View(result);
         }

@@ -28,6 +28,11 @@ namespace VirtoCommerce.Web.Models
         private ItemCollection<Product> _products;
         private bool _productsLoaded;
 
+        public Collection()
+        {
+            DefaultSortBy = "manual";
+        }
+
         #region Public Properties
         public int AllProductsCount
         {
@@ -146,9 +151,6 @@ namespace VirtoCommerce.Web.Models
                 // add the rest that don't have "_" as tags, will sort them out on the server api
                 tagsArray.AddRange(tagsMultiArray.Where(x => x.Length == 1).Select(x => new Tuple<string, string>("tags", x[0])));
 
-//                var tagsArray =
-//                    tags.Select(t => t.Split(new[] { '_' })).Select(x => new Tuple<string, string>(x[0], x[1]));
-
                 foreach (var tagsGroup in tagsArray.GroupBy(x => x.Item1))
                 {
                     filters.Add(tagsGroup.Key, tagsGroup.Select(g => g.Item2).ToArray());
@@ -180,7 +182,7 @@ namespace VirtoCommerce.Web.Models
                 }
             }
 
-            var searchQuery = new BrowseQuery() { SortProperty = sortProperty, SortDirection = sortDirection, Filters = filters, Skip = from, Take = pageSize.Value, Outline = this.BuildSearchOutline() };
+            var searchQuery = new BrowseQuery() { SortProperty = sortProperty, SortDirection = sortDirection, Filters = filters, Skip = from, Take = pageSize.Value, Outline = Id == "All" ? "" : this.BuildSearchOutline() };
             var response =
                 Task.Run(() => service.SearchAsync<Product>(context, 
                     searchQuery, this, responseGroups: ItemResponseGroups.ItemSmall | ItemResponseGroups.Variations)).Result;
