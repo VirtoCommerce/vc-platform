@@ -6756,7 +6756,7 @@ tags-input .tags .tag-item .remove-button
     {
         display: inline-block;
         height: 100%;
-        padding-right: 30%;
+        padding-right: 90px;
         word-spacing: -4px;
     }
 
@@ -6806,7 +6806,6 @@ tags-input .tags .tag-item .remove-button
     {
         background: #333;
         height: 130px;
-        min-width: 300px;
         padding: 25px 0 5px;
         position: relative;
 
