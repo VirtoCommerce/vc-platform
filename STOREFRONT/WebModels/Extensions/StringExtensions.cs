@@ -63,6 +63,25 @@ namespace VirtoCommerce.Web.Extensions
                 url.Scheme, url.Host, port, VirtualPathUtility.ToAbsolute(relativeUrl));
         }
 
+        public static bool IsActiveUrl(this string relativeUrl)
+        {
+            if (string.IsNullOrEmpty(relativeUrl))
+                return false;
+
+            if (HttpContext.Current == null)
+                return false;
+
+            if (relativeUrl.StartsWith("~/"))
+                relativeUrl = relativeUrl.TrimStart("~");
+
+            var url = HttpContext.Current.Request.Url;
+
+            if (url.PathAndQuery.StartsWith(relativeUrl))
+                return true;
+
+            return false;
+        }
+
         private static UrlHelper GetUrlHelper()
         {
             var httpContext = HttpContext.Current;

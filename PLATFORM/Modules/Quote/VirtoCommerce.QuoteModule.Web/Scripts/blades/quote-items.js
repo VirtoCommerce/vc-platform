@@ -14,7 +14,6 @@
         }
     });
 
-    var selectedNode = null;
     var selectedProducts = [];
     blade.isLoading = false;
 
@@ -27,6 +26,7 @@
                     var newLineItem =
                     {
                         productId: data.id,
+                        product: { code: data.code },
                         catalogId: data.catalogId,
                         categoryId: data.categoryId,
                         name: data.name,
@@ -39,7 +39,7 @@
                         discountAmount: 0,
                         currency: blade.currentEntity.currency
                     };
-                    newLineItem.proposalPrices = [{ quantity: 1, price: 0 }];
+                    newLineItem.proposalPrices = [{ quantity: 1, price: undefined }];
                     newLineItem.selectedTierPrice = newLineItem.proposalPrices[0];
                     blade.currentEntity.items.push(newLineItem);
                 },
@@ -47,17 +47,8 @@
             },
             function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
         });
-    };
+    }
 
-    //$scope.openItemDynamicProperties = function (item) {
-    //    var newBlade = {
-    //        id: "dynamicPropertiesList",
-    //        currentEntity: item,
-    //        controller: 'platformWebApp.propertyValueListController',
-    //        template: '$(Platform)/Scripts/app/dynamicProperties/blades/propertyValue-list.tpl.html'
-    //    };
-    //    bladeNavigationService.showBlade(newBlade, blade);
-    //};
 
     $scope.openItemDetail = function (item) {
         var newBlade = {
@@ -136,8 +127,7 @@
     ];
 
     $scope.selectItem = function (node) {
-        selectedNode = node;
-        $scope.selectedNodeId = selectedNode.id;
+        $scope.selectedNodeId = node.id;
     };
 
     $scope.checkAll = function (selected) {
@@ -151,20 +141,21 @@
     };
 
     $scope.addProposalTier = function (item) {
-        item.proposalPrices.push({ quantity: 1, price: 0 });
+        item.proposalPrices.push({ quantity: 1, price: undefined });
         focus('focusIndex0');
     };
 
     $scope.deleteProposalTier = function (item) {
         var idx;
-        if (item.selectedTierPrice && (idx = item.proposalPrices.indexOf(item.selectedTierPrice)) >= 0) {
+        if (item.selectedTierPrice && item.proposalPrices.length > 1 && (idx = item.proposalPrices.indexOf(item.selectedTierPrice)) >= 0) {
             item.proposalPrices.splice(idx, 1);
         }
     };
 
     $scope.getMargin = function (item, proposal) {
-        if (proposal.price && item.salePrice) {
-            return Math.round((proposal.price - item.salePrice) / proposal.price * 100);
+        if (proposal.price && (item.listPrice || item.salePrice)) {
+            var itemPrice = item.salePrice ? item.salePrice : item.listPrice;
+            return Math.round((proposal.price - itemPrice) / proposal.price * 100);
         } else {
             return '';
         }

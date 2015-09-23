@@ -119,5 +119,19 @@ namespace VirtoCommerce.Web.Models.Services
 
             return quoteRequestModel;
         }
+
+        public async Task<QuoteRequest> RecalculateAsync(QuoteRequest quoteRequestModel)
+        {
+            var quoteRequest = quoteRequestModel.ToServiceModel();
+
+            var apiResponse = await _quoteClient.RecalculateAsync(quoteRequest);
+
+            if (apiResponse != null)
+            {
+                quoteRequestModel = apiResponse.ToViewModel();
+            }
+
+            return quoteRequestModel;
+        }
     }
 }

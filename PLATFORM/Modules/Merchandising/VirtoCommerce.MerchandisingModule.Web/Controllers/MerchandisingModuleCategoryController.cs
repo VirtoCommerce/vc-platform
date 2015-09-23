@@ -145,7 +145,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
                 Count = int.MaxValue,
                 HideDirectLinedCategories = true,
                 ResponseGroup = moduleModel.ResponseGroup.WithCategories,
-                GetAllCategories = string.IsNullOrEmpty(parentId)
+                GetAllCategories = false //string.IsNullOrEmpty(parentId)
             };
             var result = this._searchService.Search(criteria);
             var categories = result.Categories.Where(x => x.IsActive ?? true);

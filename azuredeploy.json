@@ -153,6 +153,11 @@
                                 "Name": "VirtoCommerceBaseUrl",
                                 "ConnectionString": "[concat('http://', parameters('siteName'), '.azurewebsites.net/admin/api/')]",
                                 "Type": 3
+                            },
+                            {
+                                "Name": "AssetsConnectionString",
+                                "ConnectionString": "[concat('provider=LocalStorage;rootPath=~/App_Data/Assets;publicUrl=http://', parameters('siteName'), '.azurewebsites.net/assets')]",
+                                "Type": 3
                             }
                         ],
                         "appSettings": [
@@ -164,7 +169,13 @@
                         "virtualApplications": [
                             {
                                 "virtualPath": "/",
-                                "physicalPath": "[concat('site\\wwwroot\\', variables(parameters('deployApplications')).rootDir)]"
+                                "physicalPath": "[concat('site\\wwwroot\\', variables(parameters('deployApplications')).rootDir)]",
+                                "virtualDirectories": [
+                                    {
+                                        "virtualPath": "/assets",
+                                        "physicalPath": "site\\wwwroot\\admin\\App_Data\\Assets"
+                                    }
+                                ]
                             },
                             {
                                 "virtualPath": "/admin",

@@ -1,0 +1,92 @@
+﻿{% if actual_quote_request.items_count > 0 %}
+    <form action="{{ shop.simplified_url }}/quotes" method="post" novalidate>
+        <input id="quote_request_id" type="hidden" value="{{ actual_quote_request.id }}" />
+        <h1 class="h2">{{ 'quotes.general.title' | t }}</h1>
+        <div class="grid">
+            <div class="grid-item large--one-half">
+                <div class="ublock">
+                    <h4>{{ 'quotes.general.remarks.title' | t }}</h4>
+                    <p>{{ 'quotes.general.remarks.text' | t }}</p>
+                    <textarea id="quote_request_comment" name="quote_request[comment]">{{ actual_quote_request_item.comment }}</textarea>
+                </div>
+            </div>
+            <div class="grid-item large--one-half">
+                <div class="ublock">
+                    <label>{{ 'quotes.general.email' | t }}</label>
+                    <input id="quote_request_email" name="quote_request[email]" type="text" value="{{ actual_quote_request.email }}" />
+                    <div class="grid">
+                        <div class="grid-item large--one-half">
+                            <label>{{ 'quotes.general.first_name' | t }}</label>
+                            <input id="quote_request_first_name" name="quote_request[first_name]" type="text" value="{{ actual_quote_request.first_name }}" />
+                        </div>
+                        <div class="grid-item large--one-half">
+                            <label>{{ 'quotes.general.last_name' | t }}</label>
+                            <input id="quote_request_last_name" name="quote_request[last_name]" type="text" value="{{ actual_quote_request.last_name }}" />
+                        </div>
+                    </div>
+                    <input id="quote_request_request_shipping_quote" name="quote_request[request_shipping_quote]" type="checkbox" {% if actual_quote_request.request_shipping_quote %}checked{% endif %} />
+                    <label class="inline">{{ 'quotes.general.request_shipping_quote' | t }}</label>
+                </div>
+            </div>
+        </div>
+        {% for item in actual_quote_request.items %}
+            <div class="cart-row quote" data-id="{{ item.id }}">
+                <div class="grid">
+                    <div class="grid-item large--seven-twelfths">
+                        <div class="grid">
+                            <div class="grid-item one-third large--one-quarter">
+                                <a class="cart-image" href="">
+                                    <img alt="{{ item.title }}" src="{{ item.image_url }}" title="{{ item.title }}" />
+                                </a>
+                            </div>
+                            <div class="grid-item one-third">
+                                <a href="">{{ item.title }}</a>
+                            </div>
+                            <div class="grid-item one-third">
+                                <textarea class="quote_item_comment">{{ item.comment }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid-item large--five-twelfths medium--two-thirds push--medium--one-third">
+                        <div class="grid">
+                            <div class="grid-item one-half medium-down--one-third text-right">
+                                {% for tier_price in item.proposal_prices %}
+                                    <div class="js-qty">
+                                        <div class="js-qty--inner">
+                                            <input class="js--num" pattern="[0-9]*" type="text" value="{{ tier_price.quantity }}" />
+                                            <span class="js--qty-adjuster js--add" data-id="{{ item.id }}">+</span>
+                                            <span class="js--qty-adjuster js--minus" data-id="{{ item.id }}">-</span>
+                                        </div>
+                                        {% if forloop.index > 1 %}
+                                            <a class="link-action">{{ 'quotes.general.remove' | t }}</a>
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                                <div class="js-qty">
+                                    <a class="add-tier" style="cursor: pointer;">Add tier</a>
+                                </div>
+                            </div>
+                            <div class="grid-item one-third medium-down--one-third medium-down--text-left text-right">
+                                <span class="h2">
+                                    <small>{{ item.list_price | money }}</small>
+                                </span>
+                            </div>
+                            <div class="grid-item one-sixth medium-down--one-third text-right">
+                                <a class="icon-fallback-text btn-secondary remove" data-id="{{ item.id }}" href="{{shop.simplified_url}}/quote/remove?id={{item.id}}">
+                                    <span aria-hidden="true" class="icon icon-x"></span>
+                                    <span class="fallback-text">{{ 'quotes.general.remove' | t }}</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        <div class="ublock text-right">
+            <button class="btn" type="button">{{ 'quotes.general.submit_quote' | t }}</button>
+        </div>
+    </form>
+{% else %}
+    <h2>{{ 'quotes.general.empty' | t }}</h2>
+    <p>{{ 'quotes.general.continue_browsing_html' | t }}</p>
+{% endif %}

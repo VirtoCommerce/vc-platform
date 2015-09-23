@@ -64,6 +64,15 @@ namespace VirtoCommerce.Web.Models.Tagging
             return this.ToString();
         }
 
+
+        public override bool Equals(object obj)
+        {
+            if(obj is string)
+            {
+                return this.Value.Equals((string)obj);
+            }
+            return base.Equals(obj);
+        }
         #endregion
     }
 

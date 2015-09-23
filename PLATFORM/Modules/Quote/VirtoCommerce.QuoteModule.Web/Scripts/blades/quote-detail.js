@@ -21,12 +21,7 @@
         function initializeBlade(data) {
             initializeToolbar(data);
             blade.title = data.number;
-            if (data.status) {
-                blade.title += " - " + data.status;
-                if (data.isCancelled) {
-                    blade.title += ", " + data.cancelReason;
-                }
-            }
+
 
             blade.currentEntity = angular.copy(data);
             blade.origEntity = data;

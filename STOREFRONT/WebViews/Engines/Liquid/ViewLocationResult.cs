@@ -43,7 +43,7 @@ namespace VirtoCommerce.Web.Views.Engines.Liquid
         {
             get
             {
-                if (_contents == null || this.IsStale())
+                if ((_contents == null || this.IsStale()) && SearchedLocations == null) // if search location is not null, that means we didn't find file in the first place
                 {
                     _contents = ContentsReader.Invoke().ReadToEnd();
                 }

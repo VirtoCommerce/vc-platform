@@ -46,6 +46,7 @@ namespace VirtoCommerce.Web.Models
         {
             get
             {
+                this.LoadProducts();
                 return this._allTags;
             }
             set
@@ -109,11 +110,11 @@ namespace VirtoCommerce.Web.Models
         {
             get
             {
-                return this._allTags;
+                return this.AllTags;
             }
             set
             {
-                this._allTags = value;
+                this.AllTags = value;
             }
         }
 
@@ -134,8 +135,19 @@ namespace VirtoCommerce.Web.Models
             var filters = new Dictionary<string, string[]>();
             if (tags != null && tags.Any())
             {
-                var tagsArray =
-                    tags.Select(t => t.Split(new[] { '_' })).Select(x => new Tuple<string, string>(x[0], x[1]));
+                // split tags to field=value using "_", if there is no "_", then simply add them to "tags"=values
+                var tagsMultiArray = tags.Select(t => t.Split(new[] { '_' }));
+
+                var tagsArray = new List<Tuple<string, string>>();
+
+                // add tags that have "_"
+                tagsArray.AddRange(tagsMultiArray.Where(x=>x.Length > 1).Select(x => new Tuple<string, string>(x[0], x[1])));
+
+                // add the rest that don't have "_" as tags, will sort them out on the server api
+                tagsArray.AddRange(tagsMultiArray.Where(x => x.Length == 1).Select(x => new Tuple<string, string>("tags", x[0])));
+
+//                var tagsArray =
+//                    tags.Select(t => t.Split(new[] { '_' })).Select(x => new Tuple<string, string>(x[0], x[1]));
 
                 foreach (var tagsGroup in tagsArray.GroupBy(x => x.Item1))
                 {
@@ -179,6 +191,8 @@ namespace VirtoCommerce.Web.Models
                 var values = response.Facets.SelectMany(f => f.Values.Select(v => v.AsWebModel(f.Field)));
                 this.Tags = new TagCollection(values);
             }
+
+            this.AllProductsCount = response.TotalCount;
 
             this.Products = response;
         }

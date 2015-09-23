@@ -94,6 +94,7 @@
     <Compile Include="Convertors\ShippingMethodConverter.cs" />
     <Compile Include="Convertors\TaxLineConverter.cs" />
     <Compile Include="Exceptions\SaasCompileException.cs" />
+    <Compile Include="Filters\ILiquidContains.cs" />
     <Compile Include="Models\Attachment.cs" />
     <Compile Include="Models\Cms\Article.cs" />
     <Compile Include="Models\Banners\Banner.cs" />

@@ -13,7 +13,7 @@ namespace VirtoCommerce.Web.Controllers
         //[OutputCache(CacheProfile = "HomeProfile")]
         public ActionResult Index()
         {
-            return this.View();
+            return this.View("index");
         }
         #endregion
     }

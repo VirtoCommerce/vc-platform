@@ -45,14 +45,29 @@ namespace VirtoCommerce.Web.Controllers
         }
 
         [HttpPost]
+        [Route("recalculate")]
+        public async Task<ActionResult> Recalculate(QuoteRequest model)
+        {
+            Context.QuoteRequest = await QuoteService.GetByNumberAsync(Context.StoreId, Context.CustomerId, model.Number);
+
+            foreach (var modelQuoteItem in model.Items)
+            {
+                var quoteItem = Context.QuoteRequest.Items.FirstOrDefault(i => i.Id == modelQuoteItem.Id);
+                quoteItem.SelectedTierPrice = modelQuoteItem.SelectedTierPrice;
+            }
+
+            Context.QuoteRequest = await QuoteService.RecalculateAsync(Context.QuoteRequest);
+
+            return Json(Context.QuoteRequest);
+        }
+
+        [HttpPost]
         [Route("submit")]
         public async Task<ActionResult> Submit(QuoteRequest model)
         {
             Context.ActualQuoteRequest.Comment = model.Comment;
             Context.ActualQuoteRequest.FirstName = model.FirstName;
             Context.ActualQuoteRequest.Language = model.LastName;
-            Context.ActualQuoteRequest.Tag = null;
-            Context.ActualQuoteRequest.IsSubmitted = true;
 
             foreach (var quoteItem in model.Items)
             {
@@ -71,13 +86,18 @@ namespace VirtoCommerce.Web.Controllers
                 }
             }
 
+            if (User.Identity.IsAuthenticated)
+            {
+                Context.ActualQuoteRequest.Tag = null;
+            }
+
+            await QuoteService.UpdateQuoteRequestAsync(Context.ActualQuoteRequest);
+
             if (!User.Identity.IsAuthenticated)
             {
                 string returnUrl = VirtualPathUtility.ToAbsolute("~/quote");
                 return Json(new { redirectUrl = VirtualPathUtility.ToAbsolute("~/account/login?returnUrl=" + returnUrl) });
             }
-
-            Context.ActualQuoteRequest = await QuoteService.UpdateQuoteRequestAsync(Context.ActualQuoteRequest);
 
             return Json(new { redirectUrl = VirtualPathUtility.ToAbsolute("~/") });
         }
