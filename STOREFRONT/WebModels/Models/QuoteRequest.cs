@@ -32,6 +32,8 @@ namespace VirtoCommerce.Web.Models
 
         public string CustomerId { get; set; }
 
+        public string CustomerName { get; set; }
+
         public DateTime? ExpirationDate { get; set; }
 
         public bool IsLocked { get; set; }

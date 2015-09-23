@@ -724,6 +724,20 @@ namespace VirtoCommerce.Web.Controllers
             return View("customers/quote");
         }
 
+        [HttpGet]
+        [Route("quote/edit/{number}")]
+        public async Task<ActionResult> EditQuote(string number)
+        {
+            var quoteRequest = await QuoteService.GetByNumberAsync(Context.StoreId, Context.CustomerId, number);
+
+            Context.ActualQuoteRequest = quoteRequest;
+            Context.ActualQuoteRequest.Tag = "actual";
+
+            await QuoteService.UpdateQuoteRequestAsync(Context.ActualQuoteRequest);
+
+            return RedirectToAction("Index", "Quote");
+        }
+
         [HttpPost]
         [Route("quote/checkout")]
         public async Task<ActionResult> ConfirmQuote(QuoteRequest model)

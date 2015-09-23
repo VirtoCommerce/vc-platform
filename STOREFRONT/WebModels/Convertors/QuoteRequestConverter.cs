@@ -36,6 +36,7 @@ namespace VirtoCommerce.Web.Convertors
             quoteRequestModel.Coupon = quoteRequest.Coupon;
             quoteRequestModel.CreatedAt = quoteRequest.CreatedDate;
             quoteRequestModel.Currency = quoteRequest.Currency;
+            quoteRequestModel.CustomerName = quoteRequest.CustomerName;
             quoteRequestModel.ExpirationDate = quoteRequest.ExpirationDate;
             quoteRequestModel.Id = quoteRequest.Id;
             quoteRequestModel.IsCancelled = quoteRequest.IsCancelled;
@@ -110,6 +111,7 @@ namespace VirtoCommerce.Web.Convertors
             quoteRequest.Coupon = quoteRequestModel.Coupon;
             quoteRequest.Currency = quoteRequestModel.Currency;
             quoteRequest.CustomerId = quoteRequestModel.CustomerId;
+            quoteRequest.CustomerName = quoteRequestModel.CustomerName;
             quoteRequest.ExpirationDate = quoteRequestModel.ExpirationDate;
             quoteRequest.Id = quoteRequestModel.Id;
             quoteRequest.IsCancelled = quoteRequestModel.IsCancelled;

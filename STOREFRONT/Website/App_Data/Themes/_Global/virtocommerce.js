@@ -192,6 +192,10 @@ $(function () {
         var quoteRequest = getQuoteRequest();
         recalculateQuoteRequestTotals(quoteRequest);
     });
+
+    $("#btn-edit-quote-request").on("click", function () {
+
+    });
 });
 
 var getQuoteRequest = function () {
