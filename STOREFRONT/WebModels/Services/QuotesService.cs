@@ -133,5 +133,10 @@ namespace VirtoCommerce.Web.Models.Services
 
             return quoteRequestModel;
         }
+
+        public async Task DeleteAsync(string quoteRequestId)
+        {
+            await _quoteClient.DeleteAsync(new[] { quoteRequestId });
+        }
     }
 }

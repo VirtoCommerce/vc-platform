@@ -240,7 +240,7 @@ namespace VirtoCommerce.Web
 
                                 await _quoteService.UpdateQuoteRequestAsync(ctx.ActualQuoteRequest);
 
-                                // TODO: Anonymous quote should be deleted
+                                await _quoteService.DeleteAsync(anonymousQuote.Id);
                             }
                         }
 
