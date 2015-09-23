@@ -1,6 +1,6 @@
 ﻿angular.module('virtoCommerce.orderModule')
-.controller('virtoCommerce.orderModule.customerOrderListController', ['$scope', 'virtoCommerce.orderModule.order_res_customerOrders', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService',
-function ($scope, order_res_customerOrders, bladeNavigationService, dialogService) {
+.controller('virtoCommerce.orderModule.customerOrderListController', ['$scope', 'virtoCommerce.orderModule.order_res_customerOrders', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService','platformWebApp.authService', 'virtoCommerce.orderModule.order_res_stores',
+function ($scope, order_res_customerOrders, bladeNavigationService, dialogService, authService, order_res_stores) {
     //pagination settings
     $scope.pageSettings = {};
     $scope.pageSettings.totalItems = 0;
@@ -16,29 +16,54 @@ function ($scope, order_res_customerOrders, bladeNavigationService, dialogServic
     $scope.blade.refresh = function () {
         $scope.blade.isLoading = true;
 
-        order_res_customerOrders.search({
-            keyword: $scope.filter.searchKeyword,
-            start: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
-            count: $scope.pageSettings.itemsPerPageCount
-        }, function (data) {
-            $scope.blade.isLoading = false;
-            $scope.selectedAll = false;
+        var criteria = {
+        	keyword: $scope.filter.searchKeyword,
+        	start: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
+        	count: $scope.pageSettings.itemsPerPageCount
+        };
+		//Need filtered orders related to user rights
+        if (authService.checkPermission('order:manage')) {
+        	searchOrders(criteria);
+        }
+        else {
 
-            $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
-            $scope.objects = data.customerOrders;
+        	order_res_stores.query({}, function (result) {
+        		criteria.stores = [];
+        		angular.forEach(result, function (x) {
+        			if (authService.checkPermission('order:manage', 'order:store:' + x.id)) {
+        				criteria.stores.push(x.id);
+        			}
+        		});
+        		if (authService.checkPermission('order:manage', 'order:employee:' + authService.userId)) {
+        			criteria.employee = authService.userId;
+        		}
+        		searchOrders(criteria);
+        	});
+        }
 
-            if (selectedNode != null) {
-                //select the node in the new list
-                angular.forEach(data.customerOrders, function (node) {
-                    if (selectedNode.id === node.id) {
-                        selectedNode = node;
-                    }
-                });
-            }
-        },
-		 function (error) {
-		 	bladeNavigationService.setError('Error ' + error.status, $scope.blade);
-		 });
+    };
+
+    function searchOrders(criteria)
+    {
+    	order_res_customerOrders.search(criteria, function (data) {
+    		$scope.blade.isLoading = false;
+    		$scope.selectedAll = false;
+
+    		$scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
+    		$scope.objects = data.customerOrders;
+
+    		if (selectedNode != null) {
+    			//select the node in the new list
+    			angular.forEach(data.customerOrders, function (node) {
+    				if (selectedNode.id === node.id) {
+    					selectedNode = node;
+    				}
+    			});
+    		}
+    	},
+	   function (error) {
+	   	bladeNavigationService.setError('Error ' + error.status, $scope.blade);
+	   });
     };
 
     $scope.$watch('pageSettings.currentPage', function (newPage) {

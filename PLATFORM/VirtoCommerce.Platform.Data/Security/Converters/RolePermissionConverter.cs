@@ -17,6 +17,7 @@ namespace VirtoCommerce.Platform.Data.Security.Converters
             var result = new Permission();
             result.InjectFrom(source.Permission);
             result.ScopeBounded = source.ScopeBounded;
+          
             return result;
         }
 
@@ -24,7 +25,7 @@ namespace VirtoCommerce.Platform.Data.Security.Converters
         public static dataModel.RolePermissionEntity ToRolePemissionDataModel(this Permission source)
         {
             var result = new dataModel.RolePermissionEntity();
-            result.InjectFrom(source);
+            result.ScopeBounded = source.ScopeBounded;
             result.PermissionId = source.Id;
             return result;
         }

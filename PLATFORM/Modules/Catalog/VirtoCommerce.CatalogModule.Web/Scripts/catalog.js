@@ -34,7 +34,8 @@ angular.module(catalogsModuleName, [
   ]
 )
 .run(
-  ['platformWebApp.authService', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', 'platformWebApp.pushNotificationTemplateResolver', 'platformWebApp.bladeNavigationService', 'virtoCommerce.catalogModule.catalogImportService', 'virtoCommerce.catalogModule.catalogExportService', function (authService, mainMenuService, widgetService, $state, pushNotificationTemplateResolver, bladeNavigationService, catalogImportService, catalogExportService) {
+  ['platformWebApp.authService', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', 'platformWebApp.pushNotificationTemplateResolver', 'platformWebApp.bladeNavigationService', 'virtoCommerce.catalogModule.catalogImportService', 'virtoCommerce.catalogModule.catalogExportService', 'platformWebApp.securityRoleScopeService', 'virtoCommerce.catalogModule.catalogs',
+	function (authService, mainMenuService, widgetService, $state, pushNotificationTemplateResolver, bladeNavigationService, catalogImportService, catalogExportService, securityRoleScopeService, catalogs) {
       //Register module in main menu
       var menuItem = {
           path: 'browse/catalog',
@@ -45,6 +46,16 @@ angular.module(catalogsModuleName, [
           permission: 'catalog:query'
       };
       mainMenuService.addMenuItem(menuItem);
+
+		//Register security scope types used for scope bounded ACL definition
+      var getScopesFn = function () {
+      	return catalogs.getCatalogs().$promise.then(function (result) {
+      		//Scope for each  catalog
+      		var scopes = _.map(result, function (x) { return "catalog:name:" + x.name; });
+      		return scopes;
+      	});
+      };
+      securityRoleScopeService.registerScopeGetter(getScopesFn);
 
       //NOTIFICATIONS
       //Export

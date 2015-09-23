@@ -16,7 +16,7 @@ namespace VirtoCommerce.OrderModule.Web.Converters
             retVal.Currency = payment.Currency;
 
 
-            retVal.ChildrenOperations = payment.GetFlatObjectsListWithInterface<coreModel.IOperation>().Select(x => x.ToWebModel()).ToList();
+            retVal.ChildrenOperations = payment.GetFlatObjectsListWithInterface<coreModel.IOperation>().Except(new[] { payment }).Select(x => x.ToWebModel()).ToList();
 
             if (payment.DynamicProperties != null)
                 retVal.DynamicProperties = payment.DynamicProperties;

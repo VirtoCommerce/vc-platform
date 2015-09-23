@@ -32,7 +32,7 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 			if (customerOrder.Addresses != null)
 				retVal.Addresses = customerOrder.Addresses.Select(x => x.ToWebModel()).ToList();
 
-			retVal.ChildrenOperations = customerOrder.GetFlatObjectsListWithInterface<coreModel.IOperation>().Select(x => x.ToWebModel()).ToList();
+			retVal.ChildrenOperations = customerOrder.GetFlatObjectsListWithInterface<coreModel.IOperation>().Except(new[] { customerOrder }).Select(x => x.ToWebModel()).ToList();
 			retVal.TaxDetails = customerOrder.TaxDetails;
 
             if (customerOrder.DynamicProperties != null)

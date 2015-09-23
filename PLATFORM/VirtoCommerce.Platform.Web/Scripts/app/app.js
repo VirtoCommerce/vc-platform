@@ -111,11 +111,11 @@ angular.module('platformWebApp', AppDependencies).
         });
 
 		//server error  handling
-        $rootScope.$on('httpError', function (event, rejection) {
-            if (!(rejection.config.url.indexOf('api/platform/notification') + 1)) {
-                pushNotificationService.error({ title: 'HTTP error', description: rejection.status + ' — ' + rejection.statusText, extendedData: rejection.data });
-            }
-        });
+        //$rootScope.$on('httpError', function (event, rejection) {
+        //    if (!(rejection.config.url.indexOf('api/platform/notification') + 1)) {
+        //        pushNotificationService.error({ title: 'HTTP error', description: rejection.status + ' — ' + rejection.statusText, extendedData: rejection.data });
+        //    }
+        //});
 
         $rootScope.$on('loginStatusChanged', function (event, authContext) {
             if (authContext.isAuthenticated) {

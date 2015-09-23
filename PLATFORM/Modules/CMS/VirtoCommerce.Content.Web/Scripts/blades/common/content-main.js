@@ -1,5 +1,6 @@
 ﻿angular.module('virtoCommerce.contentModule')
-.controller('virtoCommerce.contentModule.contentMainController', ['$scope', '$stateParams', 'virtoCommerce.contentModule.menus', 'virtoCommerce.contentModule.pages', 'virtoCommerce.contentModule.themes', 'virtoCommerce.contentModule.stores', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function ($scope, $stateParams, menus, pages, themes, stores, bladeNavigationService, dialogService) {
+.controller('virtoCommerce.contentModule.contentMainController', ['$scope', '$stateParams', 'virtoCommerce.contentModule.menus', 'virtoCommerce.contentModule.pages', 'virtoCommerce.contentModule.themes', 'virtoCommerce.contentModule.stores', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.authService',
+	function ($scope, $stateParams, menus, pages, themes, stores, bladeNavigationService, dialogService, authService) {
 	$scope.selectedNodeId = null;
 
 	var blade = $scope.blade;
@@ -9,7 +10,7 @@
 		blade.isLoading = true;
 		blade.currentEntities = [];
 
-		if (!angular.isUndefined($stateParams.storeId)) {
+		if (!angular.isUndefined($stateParams.storeId) && authService.checkPermission('content:manage', 'content:store:' + $stateParams.storeId)) {
 			stores.get({ id: $stateParams.storeId }, function (data) {
 				blade.openThemes($stateParams.storeId, data.name);
 			});
@@ -17,7 +18,9 @@
 
 		stores.query({}, function (data) {
 			for (var i = 0; i < data.length; i++) {
-
+				if (!authService.checkPermission('content:manage', 'content:store:' + data[i].id)) {
+					continue;
+				}
 				stores.get({ id: data[i].id }, function (data) {
 
 					var entity = {};
@@ -56,6 +59,10 @@
 							});
 
 							blade.currentEntities.push(entity);
+							//init security scopes need for evaluate scope bounded ACL
+							//that securityScopes will be inherited all children blades (by bladeNavigationService)
+							blade.securityScopes = _.map(blade.currentEntities, function (x) { return 'content:store:' + x.store.id; }).join();
+
 							blade.isLoading = false;
 						});
 					},
@@ -63,6 +70,8 @@
 				},
 				function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
 			}
+			
+
 		}, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
 	}
 
@@ -134,7 +143,7 @@
 			title: storeName + ' themes list',
 			subtitle: 'Themes List',
 			controller: 'virtoCommerce.contentModule.themesListController',
-			template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/themes-list.tpl.html'
+			template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/themes-list.tpl.html',
 		};
 		bladeNavigationService.showBlade(newBlade, blade);
 	}
@@ -149,7 +158,7 @@
             type: 'pages',
 			subtitle: 'Pages List',
 			controller: 'virtoCommerce.contentModule.pagesListController',
-			template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/pages/pages-list.tpl.html'
+			template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/pages/pages-list.tpl.html',
 		};
 		bladeNavigationService.showBlade(newBlade, blade);
 	}
@@ -163,7 +172,7 @@
 			title: data.store.name + ' link Lists',
 			subtitle: 'Link Lists',
 			controller: 'virtoCommerce.contentModule.linkListsController',
-			template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/menu/link-lists.tpl.html'
+			template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/menu/link-lists.tpl.html',
 		};
 		bladeNavigationService.showBlade(newBlade, blade);
 	}
@@ -178,7 +187,7 @@
             type: 'blogs',
 	        subtitle: 'Blogs List',
 	        controller: 'virtoCommerce.contentModule.pagesListController',
-	        template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/pages/pages-list.tpl.html'
+	        template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/pages/pages-list.tpl.html',
 	    };
 	    bladeNavigationService.showBlade(newBlade, blade);
 	}
@@ -193,7 +202,7 @@
 			title: 'New theme asset',
 			subtitle: 'Create new theme',
 			controller: 'virtoCommerce.contentModule.addThemeController',
-			template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/add-theme.tpl.html'
+			template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/add-theme.tpl.html',
 		};
 		bladeNavigationService.showBlade(newBlade, $scope.blade);
 	}
@@ -209,7 +218,7 @@
 			title: 'Add new page',
 			subtitle: 'Create new page',
 			controller: 'virtoCommerce.contentModule.editPageController',
-			template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/pages/edit-page.tpl.html'
+			template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/pages/edit-page.tpl.html',
 		};
 		bladeNavigationService.showBlade(newBlade, $scope.blade);
 	}
@@ -224,7 +233,7 @@
 			title: 'Add new list',
 			subtitle: 'Create new list',
 			controller: 'virtoCommerce.contentModule.menuLinkListController',
-			template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/menu/menu-link-list.tpl.html'
+			template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/menu/menu-link-list.tpl.html',
 		};
 		bladeNavigationService.showBlade(newBlade, $scope.blade);
 	}
@@ -240,7 +249,7 @@
 	        title: 'Add blog',
 	        subtitle: 'Create new blog',
 	        controller: 'virtoCommerce.contentModule.editBlogController',
-	        template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/pages/edit-blog.tpl.html'
+	        template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/pages/edit-blog.tpl.html',
 	    };
 	    bladeNavigationService.showBlade(newBlade, $scope.blade);
 	}
@@ -256,7 +265,7 @@
 			title: 'Edit ' + data.defaultTheme.path,
 			subtitle: 'Theme asset list',
 			controller: 'virtoCommerce.contentModule.themeAssetListController',
-			template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/theme-asset-list.tpl.html'
+			template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/theme-asset-list.tpl.html',
 		};
 		bladeNavigationService.showBlade(newBlade, blade);
 	}

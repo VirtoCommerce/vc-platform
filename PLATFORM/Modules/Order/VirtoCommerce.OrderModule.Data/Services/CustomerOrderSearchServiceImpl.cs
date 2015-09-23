@@ -31,11 +31,14 @@ namespace VirtoCommerce.OrderModule.Data.Services
 				{
 					query = query.Where(x => x.CustomerId == criteria.CustomerId);
 				}
-				if (criteria.StoreId != null)
+				if (criteria.StoreIds != null && criteria.StoreIds.Any())
 				{
-					query = query.Where(x => x.StoreId == criteria.StoreId);
+					query = query.Where(x => criteria.StoreIds.Contains(x.StoreId));
 				}
-
+                if (criteria.EmployeeId != null)
+                {
+                    query = query.Where(x => x.EmployeeId == criteria.EmployeeId);
+                }
                 if (criteria.StartDate != null)
                 {
                     query = query.Where(x => x.CreatedDate >= criteria.StartDate);

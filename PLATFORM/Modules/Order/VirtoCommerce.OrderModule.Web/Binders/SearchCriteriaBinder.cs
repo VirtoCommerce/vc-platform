@@ -32,8 +32,9 @@ namespace VirtoCommerce.OrderModule.Web.Binders
 			{
 				result.ResponseGroup = EnumUtility.SafeParse<coreModel.ResponseGroup>(respGroup, coreModel.ResponseGroup.Default);
 			}
-			result.StoreId = qs["site"].EmptyToNull();
+			result.StoreIds = qs.GetValues("stores");
 			result.CustomerId = qs["customer"].EmptyToNull();
+            result.EmployeeId = qs["employee"].EmptyToNull();
 			result.Count = qs["count"].TryParse(20);
 			result.Start = qs["start"].TryParse(0);
 			bindingContext.Model = result;

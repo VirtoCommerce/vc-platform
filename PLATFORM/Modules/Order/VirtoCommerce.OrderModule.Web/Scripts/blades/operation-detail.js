@@ -1,6 +1,6 @@
 ﻿angular.module('virtoCommerce.orderModule')
-.controller('virtoCommerce.orderModule.operationDetailController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'virtoCommerce.orderModule.order_res_customerOrders', 'virtoCommerce.orderModule.order_res_fulfilmentCenters', 'virtoCommerce.orderModule.order_res_stores', 'virtoCommerce.orderModule.order_res_paymentGateways', 'platformWebApp.objCompareService', 'platformWebApp.settings',
-			function ($scope, dialogService, bladeNavigationService, order_res_customerOrders, order_res_fulfilmentCenters, order_res_stores, order_res_paymentGateways, objCompareService, settings) {
+.controller('virtoCommerce.orderModule.operationDetailController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'virtoCommerce.orderModule.order_res_customerOrders', 'virtoCommerce.orderModule.order_res_fulfilmentCenters', 'virtoCommerce.orderModule.order_res_stores', 'virtoCommerce.orderModule.order_res_paymentGateways', 'platformWebApp.objCompareService', 'platformWebApp.settings', 'platformWebApp.authService',
+			function ($scope, dialogService, bladeNavigationService, order_res_customerOrders, order_res_fulfilmentCenters, order_res_stores, order_res_paymentGateways, objCompareService, settings, authService) {
 
 			    $scope.blade.refresh = function (noRefresh) {
 			        $scope.blade.isLoading = true;
@@ -11,7 +11,9 @@
 
 			        if (!noRefresh) {
 			            order_res_customerOrders.get({ id: $scope.blade.customerOrder.id }, function (result) {
-			                initialize(result);
+			            	initialize(result);
+			            	//necessary for scope bounded ACL checks 
+			            	$scope.blade.securityScopes = ['order:employee:' + result.EmployeeId, 'order:store:' + result.storeId].join();
 			            },
 						function (error) {
 						    bladeNavigationService.setError('Error ' + error.status, $scope.blade);
@@ -34,6 +36,7 @@
 			            $scope.blade.origEntity = customerOrder;
 			            $scope.stores = order_res_stores.query();
 			            $scope.statuses = settings.getValues({ id: 'Order.Status' });
+						
 			        }
 			        else if (operation.operationType.toLowerCase() == 'shipment') {
 			            $scope.blade.currentEntity = _.find(copy.shipments, function (x) { return x.id == operation.id; });
@@ -54,6 +57,10 @@
 			        var retVal = false;
 			        if ($scope.blade.origEntity) {
 			            retVal = !objCompareService.equal($scope.blade.origEntity, $scope.blade.currentEntity) || $scope.blade.isNew;
+			        }
+			        if (retVal)
+			        {
+			        	retVal = authService.checkPermission('order:manage', $scope.blade.securityScopes);
 			        }
 			        return retVal;
 			    };

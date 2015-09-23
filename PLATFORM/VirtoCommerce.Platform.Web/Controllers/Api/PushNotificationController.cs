@@ -47,25 +47,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             return Ok(retVal);
         }
-
-        /// <summary>
-        /// Add new notification or update an existing one
-        /// </summary>
-        /// <param name="notify"></param>
-        /// <returns></returns>
-        [HttpPost]
-        [Route("")]
-        [ResponseType(typeof(PushNotification))]
-        public IHttpActionResult Upsert(PushNotification notify)
-        {
-			if (notify != null)
-			{
-				notify.New = true;
-				notify.Created = DateTime.UtcNow;
-				notify.Creator = User.Identity.Name;
-				_pushNotifier.Upsert(notify);
-			}
-            return Ok(notify);
-        }
+     
     }
 }

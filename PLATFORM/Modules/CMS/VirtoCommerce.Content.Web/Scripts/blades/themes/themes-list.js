@@ -162,7 +162,7 @@
 			title: 'Edit ' + blade.choosenTheme.path,
 			subtitle: 'Theme asset list',
 			controller: 'virtoCommerce.contentModule.themeAssetListController',
-			template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/theme-asset-list.tpl.html'
+			template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/theme-asset-list.tpl.html',
 		};
 		bladeNavigationService.showBlade(newBlade, blade);
 	}
@@ -215,7 +215,7 @@
 			title: 'New theme asset',
 			subtitle: 'Create new theme',
 			controller: 'virtoCommerce.contentModule.addThemeController',
-			template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/add-theme.tpl.html'
+			template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/add-theme.tpl.html',
 		};
 		bladeNavigationService.showBlade(newBlade, $scope.blade);
 	}

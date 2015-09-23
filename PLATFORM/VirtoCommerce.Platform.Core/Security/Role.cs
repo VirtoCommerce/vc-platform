@@ -25,6 +25,7 @@ namespace VirtoCommerce.Platform.Core.Security
                     var retVal = Permissions.Where(x=>!x.ScopeBounded).Select(x => x.Id).ToList();                    
                     //Add scope bounded permission with scope joined
                     retVal.AddRange(Permissions.Where(x=> x.ScopeBounded).Select(x => x.Id).LeftJoin(Scopes, ":"));
+                    return retVal;
                 }
             }
             return Enumerable.Empty<string>();

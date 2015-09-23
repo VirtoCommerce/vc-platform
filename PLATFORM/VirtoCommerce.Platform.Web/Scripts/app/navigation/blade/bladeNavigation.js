@@ -233,6 +233,11 @@ angular.module('platformWebApp')
             blade.isLoading = true;
             blade.parentBlade = parentBlade;
             blade.childrenBlades = [];
+			//copy securityscopes from parent blade
+            if (parentBlade != null)
+            {
+            	blade.securityScopes = parentBlade.securityScopes;
+            }
 
             var existingBlade = service.findBlade(blade.id);
 

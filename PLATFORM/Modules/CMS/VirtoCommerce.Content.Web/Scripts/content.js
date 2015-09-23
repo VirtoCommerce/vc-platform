@@ -6,24 +6,35 @@ if (AppDependencies != undefined) {
 }
 
 angular.module(moduleName, [])
-.run(['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', function ($rootScope, mainMenuService, widgetService, $state) {
+.run(['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', 'platformWebApp.securityRoleScopeService', 'virtoCommerce.contentModule.stores',
+	function ($rootScope, mainMenuService, widgetService, $state, securityRoleScopeService, stores) {
 
-	var menuItem = {
-		path: 'browse/content',
-		icon: 'fa fa-code',
-		title: 'Content',
-		priority: 111,
-		action: function () { $state.go('workspace.content'); },
-		permission: 'content:query'
-	};
-	mainMenuService.addMenuItem(menuItem);
+		var menuItem = {
+			path: 'browse/content',
+			icon: 'fa fa-code',
+			title: 'Content',
+			priority: 111,
+			action: function () { $state.go('workspace.content'); },
+			permission: 'content:query'
+		};
+		mainMenuService.addMenuItem(menuItem);
 
-	widgetService.registerWidget({
-		controller: 'virtoCommerce.contentModule.themesWidgetController',
-		template: 'Modules/$(VirtoCommerce.Content)/Scripts/widgets/themesWidget.tpl.html',
-		permission: 'content:query'
-	}, 'storeDetail');
-}])
+		//Register security scope types used for scope bounded ACL definition
+		var getScopesFn = function () {
+			return stores.query().$promise.then(function (result) {
+				//Scope for each store
+				var scopes = _.map(result, function (x) { return "content:store:" + x.id; });
+				return scopes;
+			});
+		};
+		securityRoleScopeService.registerScopeGetter(getScopesFn);
+
+		widgetService.registerWidget({
+			controller: 'virtoCommerce.contentModule.themesWidgetController',
+			template: 'Modules/$(VirtoCommerce.Content)/Scripts/widgets/themesWidget.tpl.html',
+			permission: 'content:query'
+		}, 'storeDetail');
+	}])
 .config(['$stateProvider', function ($stateProvider) {
 	$stateProvider
 		.state('workspace.content', {
