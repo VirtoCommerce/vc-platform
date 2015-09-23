@@ -175,53 +175,43 @@ $(function () {
     });
 
     $("#btn-checkout-quote-request").on("click", function () {
-        var quoteRequest = {
-            Items: []
-        };
-        $.each($(".cart-row.quote"), function () {
-            var itemElement = $(this);
-            var selectedPriceElement = itemElement.find("input[type='radio']:checked");
-            var quoteItem = {
-                Id: itemElement.data("id"),
-                SelectedTierPrice: {
-                    Quantity: selectedPriceElement.data("quantity"),
-                    Price: selectedPriceElement.val()
-                }
-            };
-            quoteRequest.Items.push(quoteItem);
-        });
-
+        var quoteRequest = getQuoteRequest();
         $.ajax({
             type: "POST",
-            url: VirtoCommerce.url("/account/quote/confirm"),
+            url: VirtoCommerce.url("/account/quote/checkout"),
             data: quoteRequest,
             success: function (jsonResponse) {
                 if (jsonResponse) {
-
+                    window.location.href = jsonResponse.redirect_url;
                 }
             }
         });
     });
 
     $(".proposal-price-radio").on("change", function () {
-        var quoteRequest = {
-            Number: $("#quote-request-number").data("number"),
-            Items: []
-        };
-        $.each($(".cart-row.quote"), function () {
-            var selectedProposalPrice = $(this).find(".proposal-price-radio:checked");
-            var quoteItem = {
-                Id: $(this).data("id"),
-                SelectedTierPrice: {
-                    Quantity: selectedProposalPrice.data("quantity"),
-                    Price: selectedProposalPrice.val()
-                }
-            };
-            quoteRequest.Items.push(quoteItem);
-        });
+        var quoteRequest = getQuoteRequest();
         recalculateQuoteRequestTotals(quoteRequest);
     });
 });
+
+var getQuoteRequest = function () {
+    var quoteRequest = {
+        Number: $("#quote-request-number").data("number"),
+        Items: []
+    };
+    $.each($(".cart-row.quote"), function () {
+        var selectedProposalPrice = $(this).find(".proposal-price-radio:checked");
+        var quoteItem = {
+            Id: $(this).data("id"),
+            SelectedTierPrice: {
+                Quantity: selectedProposalPrice.data("quantity"),
+                Price: selectedProposalPrice.val()
+            }
+        };
+        quoteRequest.Items.push(quoteItem);
+    });
+    return quoteRequest;
+}
 
 var recalculateQuoteRequestTotals = function (quoteRequest) {
     $.ajax({

@@ -24,6 +24,8 @@ namespace VirtoCommerce.ApiClient.DataContracts.Quotes
 
         public string ImageUrl { get; set; }
 
+        public string Sku { get; set; }
+
         public string TaxType { get; set; }
 
         public TierPrice SelectedTierPrice { get; set; }
