@@ -16,7 +16,8 @@ namespace Authorize.Net.Managers
     {
         private const string _autorizeNetApiLoginStoreSetting = "AutorizeNet.ApiLogin";
         private const string _autorizeNetTxnKeyStoreSetting = "AutorizeNet.TxnKey";
-        private const string _autorizeNetConfirmationUrlStoreSetting = "AutorizeNet.ConfirmationUrl";
+        private const string _autorizeNetConfirmationRelativeUrlStoreSetting = "AutorizeNet.ConfirmationRelativeUrl";
+        private const string _authorizeNetThankYouPageRelativeUrlStoreSetting = "AutorizeNet.ThankYouPageRelativeUrl";
         private const string _autorizeNetPaymentActionTypeStoreSetting = "AutorizeNet.PaymentActionType";
         private const string _autorizeNetModeStoreSetting = "AutorizeNet.Mode";
 
@@ -54,11 +55,20 @@ namespace Authorize.Net.Managers
             }
         }
 
-        private string ConfirmationUrl
+        private string ConfirmationRelativeUrl
         {
             get
             {
-                var retVal = GetSetting(_autorizeNetConfirmationUrlStoreSetting);
+                var retVal = GetSetting(_autorizeNetConfirmationRelativeUrlStoreSetting);
+                return retVal;
+            }
+        }
+
+        private string ThankYouPageRelativeUrl
+        {
+            get
+            {
+                var retVal = GetSetting(_authorizeNetThankYouPageRelativeUrlStoreSetting);
                 return retVal;
             }
         }
@@ -81,7 +91,6 @@ namespace Authorize.Net.Managers
             }
         }
 
-
         public override CaptureProcessPaymentResult CaptureProcessPayment(CaptureProcessPaymentEvaluationContext context)
         {
             var retVal = new CaptureProcessPaymentResult();
@@ -97,7 +106,7 @@ namespace Authorize.Net.Managers
             form.Add("x_version", GetApiVersion());
             form.Add("x_method", "CC");
             form.Add("x_currency_code", context.Payment.Currency.ToString());
-            form.Add("x_type", "PRIOR_AUTH_CAPTURE");
+            form.Add("x_type", "CAPTURE_ONLY");
 
             var orderTotal = Math.Round(context.Payment.Sum, 2);
             form.Add("x_amount", orderTotal.ToString("0.00", CultureInfo.InvariantCulture));
@@ -167,6 +176,7 @@ namespace Authorize.Net.Managers
                 retVal.OuterId = context.Payment.OuterId = transactionId;
                 context.Payment.AuthorizedDate = DateTime.UtcNow;
                 retVal.IsSuccess = true;
+                retVal.ReturnUrl = string.Format("{0}/{1}?id={2}", context.Store.Url, ThankYouPageRelativeUrl, context.Order.Id);
             }
 
             return retVal;
@@ -178,33 +188,53 @@ namespace Authorize.Net.Managers
 
             if (context.Order != null && context.Store != null && context.Payment != null)
             {
-                var confirmationUrl = string.Format("{0}/{1}?orderId={2}&", context.Store.Url, ConfirmationUrl, context.Order.Id);
+                //var confirmationUrl = string.Format("{0}/{1}/{2}", context.Store.Url, ConfirmationRelativeUrl, context.Order.Id);
 
-                var checkoutform = DPMFormGenerator.OpenForm(ApiLogin, TxnKey, context.Payment.Sum, confirmationUrl, true);
+                //var checkoutform = DPMFormGenerator.OpenForm(ApiLogin, TxnKey, context.Payment.Sum, confirmationUrl, true);
 
-                // Add a credit card number input field
-                checkoutform += string.Format("<p><div style='float:left;width:250px;'><label>Credit Card Number</label><div id = 'CreditCardNumber'>{0}</div></div>", CreateInput(true, "x_card_num", "4111111111111111", 28));
+                var sequence = new Random().Next(0, 1000).ToString();
+                var timeStamp = ((int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds).ToString();
+                var currency = context.Payment.Currency.ToString();
 
-                // Add an expiry date input field
-                checkoutform += string.Format("<div style='float:left;width:70px;'><label>Exp.</label><div id='CreditCardExpiration'>{0}</div></div>", CreateInput(true, "x_exp_date", "0116", 5));
+                var fingerprint = HmacMD5(TxnKey, ApiLogin + "^" + sequence + "^" + timeStamp + "^" + context.Payment.Sum.ToString("F", CultureInfo.InvariantCulture) + "^" + currency);
 
-                // Add a CVV input field
-                checkoutform += string.Format("<div style='float:left;width:70px;'><label>CCV</label><div id='CCV'>{0}</div></div></p>", CreateInput(true, "x_card_code", "123", 5));
-                
+                var confirmationUrl = string.Format("{0}/{1}/{2}", context.Store.Url, ConfirmationRelativeUrl, context.Order.Id);
 
-                checkoutform += CreateInput(true, "x_delim_data", "TRUE");
-                checkoutform += CreateInput(true, "x_delim_char", "|");
-                checkoutform += CreateInput(true, "x_encap_char", string.Empty);
-                checkoutform += CreateInput(true, "x_version", GetApiVersion());
+                var checkoutform = string.Empty;
+
+                checkoutform += string.Format("<form action='{0}' method='POST'>", GetAuthorizeNetUrl());
+
+                //credit cart inputs for user
+                checkoutform += string.Format("<p><div style='float:left;width:250px;'><label>Credit Card Number</label><div id = 'CreditCardNumber'>{0}</div></div>", CreateInput(false, "x_card_num", "5555555555554444", 28));
+                checkoutform += string.Format("<div style='float:left;width:70px;'><label>Exp.</label><div id='CreditCardExpiration'>{0}</div></div>", CreateInput(false, "x_exp_date", "0216", 5));
+                checkoutform += string.Format("<div style='float:left;width:70px;'><label>CCV</label><div id='CCV'>{0}</div></div></p>", CreateInput(false, "x_card_code", "345", 5));
+
+                //
+                checkoutform += CreateInput(true, "x_login", ApiLogin);
                 checkoutform += CreateInput(true, "x_invoice_num", context.Order.Id);
-                checkoutform += CreateInput(true, "x_po_num", context.Order.Id);
-                checkoutform += CreateInput(true, "x_method", "CC");
-                checkoutform += CreateInput(true, "x_currency_code", context.Payment.Currency.ToString());
+                checkoutform += CreateInput(true, "x_po_num", context.Order.Number);
+                checkoutform += CreateInput(true, "x_relay_response", "TRUE");
+                checkoutform += CreateInput(true, "x_relay_url", confirmationUrl);
 
-                checkoutform += GetAuthOrCapture();
+                ///Fingerprint and params for it
+                checkoutform += CreateInput(true, "x_fp_sequence", sequence);
+                checkoutform += CreateInput(true, "x_fp_timestamp", timeStamp);
+                checkoutform += CreateInput(true, "x_fp_hash", fingerprint);
+                checkoutform += CreateInput(true, "x_currency_code", currency);
+                checkoutform += CreateInput(true, "x_amount", context.Payment.Sum.ToString("F", CultureInfo.InvariantCulture));
+
+
+                //checkoutform += CreateInput(true, "x_delim_data", "TRUE");
+                //checkoutform += CreateInput(true, "x_delim_char", "|");
+                //checkoutform += CreateInput(true, "x_encap_char", string.Empty);
+                //checkoutform += CreateInput(true, "x_version", GetApiVersion());
+                //checkoutform += CreateInput(true, "x_method", "CC");
+                //checkoutform += CreateInput(true, "x_market_type", "0");
+
+                //checkoutform += GetAuthOrCapture();
 
                 // Add a Submit button
-                checkoutform += "<div style='clear:both'></div><p><input type='submit' class='submit' value='Order with DPM!' /></p>";
+                checkoutform += "<div style='clear:both'></div><p><input type='submit' class='submit' value='Order with DPM!' /></p></form>";
 
                 checkoutform = checkoutform + DPMFormGenerator.EndForm();
 
@@ -294,11 +324,11 @@ namespace Authorize.Net.Managers
             var retVal = string.Empty;
             if(isHidden)
             {
-                retVal = string.Format("<input type='hidden' name='x_card_code' id='{0}' value='{1}' />", inputName, inputValue);
+                retVal = string.Format("<input type='hidden' name='{0}' id='{0}' value='{1}' />", inputName, inputValue);
             }
             else
             {
-                retVal = string.Format("<input type='text' size='{0}' maxlength='{0}' name='{1}' id='x_card_code' value='{2}' />", maxLength, inputName, inputValue);
+                retVal = string.Format("<input type='text' size='{0}' maxlength='{0}' name='{1}' id='{1}' value='{2}' />", maxLength, inputName, inputValue);
             }
 
             return retVal;
@@ -333,6 +363,27 @@ namespace Authorize.Net.Managers
             }
 
             return res;
+        }
+
+        private string HmacMD5(string key, string value)
+        {
+            byte[] encKey = (new ASCIIEncoding()).GetBytes(key);
+            byte[] encData = (new ASCIIEncoding()).GetBytes(value);
+
+            // create a HMACMD5 object with the key set
+            HMACMD5 myhmacMD5 = new HMACMD5(encKey);
+
+            // calculate the hash (returns a byte array)
+            byte[] hash = myhmacMD5.ComputeHash(encData);
+
+            // loop through the byte array and add append each piece to a string to obtain a hash string
+            string fingerprint = string.Empty;
+            for (int i = 0; i < hash.Length; i++)
+            {
+                fingerprint += hash[i].ToString("x").PadLeft(2, '0');
+            }
+
+            return fingerprint;
         }
 
         private string GetAuthorizeNetUrl()
