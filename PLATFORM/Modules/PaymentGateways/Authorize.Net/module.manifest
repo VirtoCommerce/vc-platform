@@ -56,11 +56,17 @@
         <description>Mode of Authorize.Net payment gateway (test or real)</description>
       </setting>
       <setting>
-        <name>AutorizeNet.ConfirmationUrl</name>
+        <name>AutorizeNet.ConfirmationRelativeUrl</name>
         <valueType>string</valueType>
-        <defaultValue>checkout/externalpaymentcallback</defaultValue>
-        <title>Confirmation Url</title>
-        <description>Authorize Confirmation Url</description>
+        <defaultValue>admin/api/payments/an/registerpayment</defaultValue>
+        <title>Confirmation relative url</title>
+        <description>Authorize Net payment confirmation relative url</description>
+      </setting>
+      <setting>
+          <name>AuthorizeNet.ThankYouPageRelativeUrl</name>
+          <defaultValue>thanks</defaultValue>
+          <title>Thank you page relative url</title>
+          <description>Storefront thank you page relative url</description>
       </setting>
       <setting>
         <name>AutorizeNet.PaymentActionType</name>

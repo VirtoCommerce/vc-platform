@@ -123,6 +123,7 @@
     <Content Include="Default_Theme\Default\assets\respond.min.js" />
     <Content Include="Default_Theme\Default\assets\slide_1.jpg" />
     <Content Include="Default_Theme\Default\assets\slide_2.jpg" />
+    <Content Include="gulpfile.js" />
     <Content Include="module.manifest" />
     <Content Include="packages.config">
       <SubType>Designer</SubType>
@@ -199,6 +200,8 @@
     <Content Include="Default_Theme\Default\templates\customers\reset_password.liquid" />
     <Content Include="Default_Theme\Default\assets\flexslider.css.liquid" />
     <Content Include="Default_Theme\Default\templates\quote.liquid" />
+    <Content Include=".bowerrc" />
+    <Content Include="bower.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -231,6 +234,7 @@
     <Content Include="Scripts\blades\themes\theme-asset-list.tpl.html" />
     <Content Include="Scripts\blades\themes\themes-list.js" />
     <Content Include="Scripts\blades\themes\themes-list.tpl.html" />
+    <Content Include="Scripts\common\uiKitHtmlEditor.js" />
     <Content Include="Scripts\content.js" />
     <Content Include="Scripts\resources\contentResource.js" />
     <Content Include="Scripts\widgets\menuWidget.js" />

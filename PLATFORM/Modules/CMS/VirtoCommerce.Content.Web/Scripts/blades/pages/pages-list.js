@@ -38,18 +38,34 @@
     blade.openBlade = function (data) {
         $scope.selectedNodeId = data.pageName;
 
-        var newBlade = {
-            id: 'editPageBlade',
-            choosenStoreId: blade.storeId,
-            choosenPageName: data.id,
-            choosenPageLanguage: data.language,
-            newPage: false,
-            title: 'Edit ' + data.name,
-            subtitle: 'Page edit',
-            controller: 'virtoCommerce.contentModule.editPageController',
-            template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/pages/edit-page.tpl.html'
-        };
-        bladeNavigationService.showBlade(newBlade, blade);
+        pages.getPage({ storeId: blade.storeId, language: data.language, pageName: data.id }, function (page) {
+            var parts = page.content.split('---');
+            var body = '';
+            var metadata = '';
+            if (parts.length > 2) {
+                body = parts[2].trim();
+                metadata = parts[1].trim();
+            }
+            else {
+                body = parts[0];
+            }
+
+            var newBlade = {
+                id: 'editPageBlade',
+                choosenStoreId: blade.storeId,
+                choosenPageName: data.id,
+                choosenPageLanguage: data.language,
+                newPage: false,
+                body: body,
+                metadata: metadata,
+                title: 'Edit ' + data.name,
+                subtitle: 'Page edit',
+                controller: 'virtoCommerce.contentModule.editPageController',
+                template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/pages/edit-page.tpl.html'
+            };
+
+            bladeNavigationService.showBlade(newBlade, blade);
+        });
     }
 
     blade.openBladeNew = function (isBytes) {
@@ -73,6 +89,8 @@
                 choosenStoreId: blade.storeId,
                 currentEntity: { name: path + 'new_page.md', content: null, contentType: 'text/html', language: null, storeId: blade.storeId },
                 newPage: true,
+                body: '',
+                metadata: '',
                 title: 'Add new page',
                 subtitle: 'Create new page',
                 controller: 'virtoCommerce.contentModule.editPageController',

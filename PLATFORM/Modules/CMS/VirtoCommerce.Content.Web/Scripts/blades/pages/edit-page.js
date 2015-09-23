@@ -1,8 +1,8 @@
 ﻿angular.module('virtoCommerce.contentModule')
 .controller('virtoCommerce.contentModule.editPageController', ['$scope', 'platformWebApp.dialogService', 'virtoCommerce.contentModule.stores', 'virtoCommerce.contentModule.pages', '$timeout', 'platformWebApp.bladeNavigationService', 'FileUploader', function ($scope, dialogService, pagesStores, pages, $timeout, bladeNavigationService, FileUploader) {
     var blade = $scope.blade;
-    blade.body = '';
-    blade.metadata = '';
+    //blade.body = '';
+    //blade.metadata = '';
 
     blade.initialize = function () {
         pagesStores.get({ id: blade.choosenStoreId }, function (data) {
@@ -98,7 +98,20 @@
     		$scope.blade.toolbarCommands.push(
 				{
 				    name: "Reset page", icon: 'fa fa-undo',
-					executeMethod: function () { angular.copy(blade.origEntity, blade.currentEntity); }, canExecuteMethod: function () { return blade.isDirty(); }, permission: 'content:manage'
+				    executeMethod: function () {
+				        angular.copy(blade.origEntity, blade.currentEntity);
+				        var parts = blade.currentEntity.content.split('---');
+				        if (parts.length > 2) {
+				            blade.body = parts[2].trim();
+				            blade.metadata = parts[1].trim();
+				        }
+				        else {
+				            blade.body = parts[0];
+				        }
+				        $scope.$broadcast('resetContent', { body: blade.body });
+				    },
+				    canExecuteMethod: function () { return blade.isDirty(); },
+				    permission: 'content:manage'
 				});
     		$scope.blade.toolbarCommands.push(
 				{

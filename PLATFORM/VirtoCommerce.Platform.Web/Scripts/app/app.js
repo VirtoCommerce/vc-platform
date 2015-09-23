@@ -20,8 +20,7 @@
   //'ui.grid.selection',
   'ui.codemirror',
   'focusOn',
-  'ngTagsInput',
-  'codemwnci.markdown-edit-preview'
+  'ngTagsInput'
 ];
 
 angular.module('platformWebApp', AppDependencies).
