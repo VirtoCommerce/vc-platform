@@ -36,6 +36,8 @@ namespace VirtoCommerce.QuoteModule.Web.Model
 
 		public string ImageUrl { get; set; }
 
+        public string Sku { get; set; }
+
         public string TaxType { get; set; }
         /// <summary>
         /// Selected proposal tier price

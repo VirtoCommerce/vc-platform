@@ -21,9 +21,8 @@ namespace VirtoCommerce.Web.Convertors
             quoteItemModel.ListPrice = price;
             quoteItemModel.ProductId = productModel.Id;
             quoteItemModel.SalePrice = price;
-
             quoteItemModel.ProposalPrices.Add(new TierPrice { Quantity = 1, Price = price });
-
+            quoteItemModel.Sku = productModel.SelectedOrFirstAvailableVariant.Sku;
             quoteItemModel.Title = productModel.Title;
 
             return quoteItemModel;
@@ -64,6 +63,7 @@ namespace VirtoCommerce.Web.Convertors
                 };
             }
 
+            quoteItemModel.Sku = quoteItem.Sku;
             quoteItemModel.Title = quoteItem.Name;
 
             return quoteItemModel;
@@ -102,9 +102,24 @@ namespace VirtoCommerce.Web.Convertors
             }
 
             quoteItem.SalePrice = quoteItemModel.SalePrice;
+            quoteItem.Sku = quoteItemModel.Sku;
             quoteItem.TaxType = null; // TODO
 
             return quoteItem;
+        }
+
+        public static LineItem AsLineItemModel(this QuoteItem quoteItemModel)
+        {
+            var lineItemModel = new LineItem();
+
+            lineItemModel.Image = quoteItemModel.ImageUrl;
+            lineItemModel.Price = quoteItemModel.SelectedTierPrice.Price;
+            lineItemModel.ProductId = quoteItemModel.ProductId;
+            lineItemModel.Quantity = quoteItemModel.SelectedTierPrice.Quantity;
+            lineItemModel.Sku = quoteItemModel.Sku;
+            lineItemModel.Title = quoteItemModel.Title;
+
+            return lineItemModel;
         }
     }
 }
