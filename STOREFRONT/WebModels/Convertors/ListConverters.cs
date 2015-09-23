@@ -35,7 +35,7 @@ namespace VirtoCommerce.Web.Convertors
             linkModel.InjectFrom(link);
             linkModel.Url = link.Url.ToAbsoluteUrl();
             linkModel.Handle = link.Title;
-            linkModel.Active = link.IsActive;
+            linkModel.Active = link.Url.IsActiveUrl();
             return linkModel;
         }
         #endregion
