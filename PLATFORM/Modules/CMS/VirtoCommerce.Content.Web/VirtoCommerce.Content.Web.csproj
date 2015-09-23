@@ -102,6 +102,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\allStyles.css" />
     <Content Include="Default_Theme\Default\assets\arrow-left.svg" />
     <Content Include="Default_Theme\Default\assets\arrow-right.svg" />
     <Content Include="Default_Theme\Default\assets\arrow.svg" />
@@ -202,6 +203,7 @@
     <Content Include="Default_Theme\Default\templates\quote.liquid" />
     <Content Include=".bowerrc" />
     <Content Include="bower.json" />
+    <Content Include="package.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -212,6 +214,7 @@
   <ItemGroup>
     <Content Include="Content\css\pages.css" />
     <Content Include="Content\css\themes.css" />
+    <Content Include="Scripts\allPackages.js" />
     <Content Include="Scripts\blades\common\content-main.js" />
     <Content Include="Scripts\blades\common\content-main.tpl.html" />
     <Content Include="Scripts\blades\pages\edit-blog.js" />
