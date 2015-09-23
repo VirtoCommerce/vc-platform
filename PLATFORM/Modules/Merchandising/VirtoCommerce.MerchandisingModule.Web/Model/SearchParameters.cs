@@ -96,7 +96,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model
                     .Select(k => k.WithKey(FacetRegex.Replace(k.Key, "")))
                     .ToDictionary(x => x.Key, y => y.Value.Split(',')).ToList();
 
-            // parse facets
+            // parse filters
             var terms =
                 qsDict.Where(k => TermRegex.IsMatch(k.Key))
                     .Select(k => k.WithKey(TermRegex.Replace(k.Key, "")))

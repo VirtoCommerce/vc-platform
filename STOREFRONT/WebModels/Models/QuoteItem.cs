@@ -28,6 +28,8 @@ namespace VirtoCommerce.Web.Models
 
         public string ImageUrl { get; set; }
 
+        public string Sku { get; set; }
+
         public TierPrice SelectedTierPrice { get; set; }
 
         public ICollection<TierPrice> ProposalPrices { get; set; }

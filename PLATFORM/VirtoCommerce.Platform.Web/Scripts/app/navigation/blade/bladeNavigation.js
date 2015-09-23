@@ -49,9 +49,12 @@ angular.module('platformWebApp')
             $compile(element)(scope);
 
             var mainContent = $('.cnt');
-            var blade = $(element).parent('.blade');
-            var pblade = blade.prev();
-            var offset = parseInt(blade.offset().left + (pblade.width() / 2));
+            var blade  = $('.blade:last', mainContent);
+            var offset = parseInt(blade.offset().left);
+
+            $timeout(function () {
+                offset = parseInt(blade[0].clientWidth)
+            }, 50, false);
 
             if (!scope.blade.disableOpenAnimation) {
                 blade.css('margin-left', '-' + blade.width() + 'px').addClass('__animate');

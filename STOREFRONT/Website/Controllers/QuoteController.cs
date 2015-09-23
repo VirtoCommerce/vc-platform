@@ -89,6 +89,7 @@ namespace VirtoCommerce.Web.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 Context.ActualQuoteRequest.Tag = null;
+                Context.ActualQuoteRequest.CustomerName = Context.Customer.Name;
             }
 
             await QuoteService.UpdateQuoteRequestAsync(Context.ActualQuoteRequest);
@@ -99,7 +100,7 @@ namespace VirtoCommerce.Web.Controllers
                 return Json(new { redirectUrl = VirtualPathUtility.ToAbsolute("~/account/login?returnUrl=" + returnUrl) });
             }
 
-            return Json(new { redirectUrl = VirtualPathUtility.ToAbsolute("~/") });
+            return Json(new { redirectUrl = VirtualPathUtility.ToAbsolute("~/account/quote/" + Context.ActualQuoteRequest.Number) });
         }
     }
 }

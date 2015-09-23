@@ -166,3 +166,5 @@ $RECYCLE.BIN/
 .vs/
 /PLATFORM/VirtoCommerce.Platform.Web/client_packages
 /PLATFORM/VirtoCommerce.Platform.Web/node_modules
+/PLATFORM/Modules/CMS/VirtoCommerce.Content.Web/client_packages
+/PLATFORM/Modules/CMS/VirtoCommerce.Content.Web/node_modules

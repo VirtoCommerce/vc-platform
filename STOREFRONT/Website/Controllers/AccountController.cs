@@ -724,13 +724,47 @@ namespace VirtoCommerce.Web.Controllers
             return View("customers/quote");
         }
 
+        [HttpGet]
+        [Route("quote/edit/{number}")]
+        public async Task<ActionResult> EditQuote(string number)
+        {
+            var quoteRequest = await QuoteService.GetByNumberAsync(Context.StoreId, Context.CustomerId, number);
+
+            Context.ActualQuoteRequest = quoteRequest;
+            Context.ActualQuoteRequest.Tag = "actual";
+
+            await QuoteService.UpdateQuoteRequestAsync(Context.ActualQuoteRequest);
+
+            return RedirectToAction("Index", "Quote");
+        }
+
         [HttpPost]
-        [Route("quote/confirm")]
+        [Route("quote/checkout")]
         public async Task<ActionResult> ConfirmQuote(QuoteRequest model)
         {
+            Context.QuoteRequest = await QuoteService.GetByNumberAsync(Context.StoreId, Context.CustomerId, model.Number);
 
+            foreach (var modelQuoteItem in model.Items)
+            {
+                var quoteItem = Context.QuoteRequest.Items.FirstOrDefault(i => i.Id == modelQuoteItem.Id);
+                quoteItem.SelectedTierPrice = modelQuoteItem.SelectedTierPrice;
+            }
 
-            return null;
+            var newQuoteRequest = await QuoteService.RecalculateAsync(Context.QuoteRequest);
+            Context.QuoteRequest = newQuoteRequest;
+
+            Context.Cart.Items.Clear();
+
+            foreach (var quoteItem in Context.QuoteRequest.Items)
+            {
+                var lineItemModel = quoteItem.AsLineItemModel();
+                lineItemModel.Sku = "1"; // TODO: Sku should be added to DB table
+                Context.Cart.Items.Add(lineItemModel);
+            }
+
+            await Service.SaveChangesAsync(Context.Cart);
+
+            return Json(new { redirectUrl = VirtualPathUtility.ToAbsolute("~/checkout") });
         }
 
         internal class ChallengeResult : HttpUnauthorizedResult
