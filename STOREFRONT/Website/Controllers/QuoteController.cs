@@ -65,10 +65,7 @@ namespace VirtoCommerce.Web.Controllers
         [Route("submit")]
         public async Task<ActionResult> Submit(QuoteRequest model)
         {
-            var proposalPrices = model.Items.SelectMany(i => i.ProposalPrices);
-            var uniqueProposalPrices = proposalPrices.GroupBy(pp => pp.Quantity).Select(pp => pp.First());
-
-            if (proposalPrices.Count() != uniqueProposalPrices.Count())
+            if (!ProposalPricesUnique(model.Items))
             {
                 return Json(new { errorMessage = "Proposal prices quantities must be unique." });
             }
@@ -109,6 +106,23 @@ namespace VirtoCommerce.Web.Controllers
             }
 
             return Json(new { redirectUrl = VirtualPathUtility.ToAbsolute("~/account/quote/" + Context.ActualQuoteRequest.Number) });
+        }
+
+        private bool ProposalPricesUnique(ICollection<QuoteItem> quoteItems)
+        {
+            bool isUnique = true;
+
+            foreach (var quoteItem in quoteItems)
+            {
+                var uniqueProposalPrices = quoteItem.ProposalPrices.GroupBy(pp => pp.Quantity).Select(pp => pp.First());
+                if (quoteItem.ProposalPrices.Count != uniqueProposalPrices.Count())
+                {
+                    isUnique = false;
+                    break;
+                }
+            }
+
+            return isUnique;
         }
     }
 }
