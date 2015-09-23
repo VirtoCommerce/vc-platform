@@ -42,11 +42,17 @@ namespace VirtoCommerce.Web.Controllers
             string tags,
             string view = "",
             int page = 1,
-            string sort_by = "manual")
+            string sort_by = "manual",
+            string constraint = "")
         {
             this.Context.Set("Collection", await this.Service.GetCollectionAsync(SiteContext.Current, category));
             this.Context.Set("current_page", page);
-            this.Context.Set("current_tags", this.ParseTags(tags));
+
+            var currentTags = this.ParseTags(tags);
+            if(currentTags == null)
+                currentTags = this.ParseTags(constraint, ' ');
+
+            this.Context.Set("current_tags", currentTags);
 
             var template = "collection";
             if (!string.IsNullOrEmpty(view))
@@ -62,7 +68,8 @@ namespace VirtoCommerce.Web.Controllers
             string tags,
             string view = "",
             int page = 1,
-            string sort_by = "manual")
+            string sort_by = "manual",
+            string constraint = "")
         {
             var categoryModel = await this.Service.GetCollectionByKeywordAsync(SiteContext.Current, category, sort_by) ?? await this.Service.GetCollectionAsync(SiteContext.Current, category, sort_by);
 
@@ -74,7 +81,12 @@ namespace VirtoCommerce.Web.Controllers
 
             this.Context.Set("Collection", categoryModel);
             this.Context.Set("current_page", page);
-            this.Context.Set("current_tags", this.ParseTags(tags));
+
+            var currentTags = this.ParseTags(tags);
+            if (currentTags == null)
+                currentTags = this.ParseTags(constraint, ' ');
+
+            this.Context.Set("current_tags", currentTags);
 
             var template = "collection";
             if (!string.IsNullOrEmpty(view))
@@ -96,14 +108,14 @@ namespace VirtoCommerce.Web.Controllers
         #endregion
 
         #region Methods
-        private SelectedTagCollection ParseTags(string tags)
+        private SelectedTagCollection ParseTags(string tags, char splitter = ',')
         {
             if (String.IsNullOrEmpty(tags))
             {
                 return null;
             }
 
-            var tagsArray = tags.Split(new[] { ',' });
+            var tagsArray = tags.Split(new[] { splitter });
             return new SelectedTagCollection(tagsArray);
         }
         #endregion

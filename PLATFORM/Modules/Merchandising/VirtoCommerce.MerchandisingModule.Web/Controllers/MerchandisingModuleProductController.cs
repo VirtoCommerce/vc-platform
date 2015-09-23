@@ -250,14 +250,35 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 			// apply terms
 			if (parameters.Terms != null && parameters.Terms.Count > 0)
 			{
-				foreach (var term in parameters.Terms)
+                var filtersWithValues = filters.Where(x => (!(x is PriceRangeFilter) || ((PriceRangeFilter)x).Currency.Equals(currency, StringComparison.OrdinalIgnoreCase))).Select(x => new { Filter = x, Values = x.GetValues() });
+
+                foreach (var term in parameters.Terms)
 				{
 					var filter = filters.SingleOrDefault(x => x.Key.Equals(term.Key, StringComparison.OrdinalIgnoreCase)
 						&& (!(x is PriceRangeFilter) || ((PriceRangeFilter)x).Currency.Equals(currency, StringComparison.OrdinalIgnoreCase)));
 
-					var appliedFilter = _browseFilterService.Convert(filter, term.Value);
+                    // handle special filter term with a key = "tags", it contains just values and we need to determine which filter to use
+                    if(filter == null && term.Key == "tags")
+                    {
+                        foreach(var termValue in term.Value)
+                        {
+                            // try to find filter by value
+                            var foundFilter = filtersWithValues.First(x => x.Values.Where(y => y.Id.Equals(termValue)).Count() > 0);
 
-					criteria.Apply(appliedFilter);
+                            if (foundFilter != null)
+                            {
+                                filter = foundFilter.Filter;
+
+                                var appliedFilter = _browseFilterService.Convert(filter, term.Value);
+                                criteria.Apply(appliedFilter);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var appliedFilter = _browseFilterService.Convert(filter, term.Value);
+                        criteria.Apply(appliedFilter);
+                    }
 				}
 			}
 			#endregion
