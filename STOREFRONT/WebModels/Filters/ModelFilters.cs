@@ -327,6 +327,11 @@ namespace VirtoCommerce.Web.Models.Filters
 
             return StandardFilters.Date(input, format);
         }
+
+        public static string Camelize(string input)
+        {
+            return StandardFilters.Capitalize(input);
+        }
         #endregion
 
         #region Methods
