@@ -129,7 +129,7 @@ namespace VirtoCommerce.Web.Views.Contents
                 if (templateEngine.CanProcess(rawItem.ContentType, "html"))
                 {
                     var content = templateEngine.Process(rawItem.Content, rawItem.Settings);
-                    var page = new ContentItem { Content = content };
+                    var page = new ContentItem { FullContent = content };
 
                     var relativePath = this.EvaluateLink(context, path);
                     page.SetHeaderSettings(rawItem.Settings);

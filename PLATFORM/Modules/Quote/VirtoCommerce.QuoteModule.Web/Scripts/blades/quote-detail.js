@@ -3,14 +3,16 @@
     function ($scope, $timeout, bladeNavigationService, quotes, stores, settings, dialogService, accounts) {
         var blade = $scope.blade;
 
+        var openItemsListOnce = _.once(function () {
+            $timeout(function () {
+                blade.openItemsBlade();
+            }, 0, false);
+        });
+
         blade.refresh = function (parentRefresh) {
             quotes.get({ id: blade.currentEntityId }, function (data) {
                 initializeBlade(data);
-                _.once(function () {
-                    $timeout(function () {
-                        blade.openItemsBlade();
-                    }, 0, false);
-                })();
+                openItemsListOnce();
                 if (parentRefresh) {
                     blade.parentBlade.refresh();
                 }
@@ -22,11 +24,12 @@
             initializeToolbar(data);
             blade.title = data.number;
 
-
             blade.currentEntity = angular.copy(data);
             blade.origEntity = data;
             blade.isLoading = false;
-        };
+
+            onHoldCommand.updateName();
+        }
 
         function isDirty() {
             return !angular.equals(blade.currentEntity, blade.origEntity);
@@ -93,36 +96,51 @@
         }
 
         blade.onClose = function (closeCallback) {
-            closeChildrenBlades();
-            if (isDirty() && !blade.origEntity.isSubmitted) {
-                var dialog = {
-                    id: "confirmCurrentBladeClose",
-                    title: "Save changes",
-                    message: "The Quote has been modified. Do you want to save changes?"
-                };
-                dialog.callback = function (needSave) {
-                    if (needSave) {
-                        saveChanges();
-                    }
+            bladeNavigationService.closeChildrenBlades(blade, function () {
+                if (isDirty() && !isQuoteSubmitted(blade.origEntity)) {
+                    var dialog = {
+                        id: "confirmCurrentBladeClose",
+                        title: "Save changes",
+                        message: "The Quote has been modified. Do you want to save changes?"
+                    };
+                    dialog.callback = function (needSave) {
+                        if (needSave) {
+                            saveChanges();
+                        }
+                        closeCallback();
+                    };
+                    dialogService.showConfirmationDialog(dialog);
+                }
+                else {
                     closeCallback();
-                };
-                dialogService.showConfirmationDialog(dialog);
-            }
-            else {
-                closeCallback();
-            }
+                }
+            });
         };
 
-        function closeChildrenBlades() {
-            angular.forEach(blade.childrenBlades.slice(), function (child) {
-                bladeNavigationService.closeBlade(child);
-            });
+        function isQuoteSubmitted(currentEntity) {
+            return currentEntity.status === 'Proposal sent';
         }
 
         blade.headIcon = 'fa-file-text-o';
 
+        var onHoldCommand = {
+            updateName: function () {
+                return this.name = (blade.currentEntity && blade.currentEntity.isLocked) ? 'Place On Hold' : 'Release Hold';
+            },
+            // name: this.updateName(),
+            icon: 'fa fa-lock', // icon: 'fa fa-hand-paper-o',
+            executeMethod: function () {
+                blade.currentEntity.isLocked = !blade.currentEntity.isLocked;
+                this.updateName();
+            },
+            canExecuteMethod: function () {
+                return true;
+            },
+            permission: 'platform:security:manage'
+        };
+
         function initializeToolbar(currentEntity) {
-            var optionalCommands = currentEntity.isSubmitted ? [] : [
+            var optionalCommands = isQuoteSubmitted(currentEntity) ? [] : [
                 {
                     name: "Save",
                     icon: 'fa fa-save',
@@ -139,6 +157,7 @@
                     icon: 'fa fa-undo',
                     executeMethod: function () {
                         angular.copy(blade.origEntity, blade.currentEntity);
+                        onHoldCommand.updateName();
                     },
                     canExecuteMethod: function () {
                         return isDirty();
@@ -151,14 +170,25 @@
                 {
                     name: "Submit proposal", icon: 'fa fa-check-square-o',
                     executeMethod: function () {
-                        blade.currentEntity.isSubmitted = true;
-                        // saveChanges();
+                        var dialog = {
+                            id: "confirmDelete",
+                            title: "Proposal confirmation",
+                            message: "You can't modify Quote Request after proposal is sent. Are you sure you want to send this proposal to customer? ",
+                            callback: function (ok) {
+                                if (ok) {
+                                    blade.currentEntity.status = 'Proposal sent';
+                                    saveChanges();
+                                }
+                            }
+                        };
+                        dialogService.showConfirmationDialog(dialog);
                     },
                     canExecuteMethod: function () {
-                        return blade.currentEntity && !blade.currentEntity.isSubmitted;
+                        return blade.currentEntity && !isQuoteSubmitted(blade.origEntity);
                     },
                     permission: 'quote:manage'
                 },
+                onHoldCommand,
                 {
                     name: "Cancel document", icon: 'fa fa-remove',
                     executeMethod: function () {
@@ -218,9 +248,7 @@
 
         blade.refresh(false);
 
-        $scope.quoteStatuses = settings.getValues({
-            id: 'Quotes.Status'
-        });
+        $scope.quoteStatuses = settings.getValues({ id: 'Quotes.Status' });
         $scope.stores = stores.query();
         blade.shippingMethods = quotes.getShippingMethods({
             id: blade.currentEntityId

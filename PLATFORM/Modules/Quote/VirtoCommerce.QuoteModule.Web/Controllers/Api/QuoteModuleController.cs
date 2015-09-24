@@ -1,23 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
+using System.Web.Http.ModelBinding;
+using VirtoCommerce.Domain.Quote.Services;
+using VirtoCommerce.Domain.Shipping.Model;
+using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.QuoteModule.Data.Converters;
+using VirtoCommerce.QuoteModule.Web.Converters;
 using coreModel = VirtoCommerce.Domain.Quote.Model;
 using webModel = VirtoCommerce.QuoteModule.Web.Model;
-using System.Web.Http.ModelBinding;
-using VirtoCommerce.Platform.Core.Common;
-using VirtoCommerce.Domain.Payment.Model;
-using Omu.ValueInjecter;
-using VirtoCommerce.Platform.Core.Caching;
-using VirtoCommerce.Domain.Quote.Services;
-using VirtoCommerce.QuoteModule.Web.Converters;
-using VirtoCommerce.Domain.Store.Services;
-using VirtoCommerce.Domain.Shipping.Model;
-using VirtoCommerce.QuoteModule.Data.Converters;
 
 namespace VirtoCommerce.QuoteModule.Web.Controllers.Api
 {
@@ -59,7 +52,7 @@ namespace VirtoCommerce.QuoteModule.Web.Controllers.Api
         [Route("{id}")]
         public IHttpActionResult GetById(string id)
         {
-            var quote = _quoteRequestService.GetByIds(new[] { id }).FirstOrDefault();
+            var quote = _quoteRequestService.GetByIds(id).FirstOrDefault();
             if (quote == null)
             {
                 return NotFound();
@@ -80,7 +73,7 @@ namespace VirtoCommerce.QuoteModule.Web.Controllers.Api
         public IHttpActionResult Create(webModel.QuoteRequest quoteRequest)
         {
             var coreQuote = quoteRequest.ToCoreModel();
-            var retVal = _quoteRequestService.SaveChanges(new coreModel.QuoteRequest[] { coreQuote }).First();
+            var retVal = _quoteRequestService.SaveChanges(new[] { coreQuote }).First();
             return Ok(retVal);
         }
 
@@ -95,7 +88,7 @@ namespace VirtoCommerce.QuoteModule.Web.Controllers.Api
         public IHttpActionResult Update(webModel.QuoteRequest quoteRequest)
         {
             var coreQuote = quoteRequest.ToCoreModel();
-            _quoteRequestService.SaveChanges(new coreModel.QuoteRequest[] { coreQuote });
+            _quoteRequestService.SaveChanges(new[] { coreQuote });
             return StatusCode(HttpStatusCode.NoContent);
         }
 
@@ -118,7 +111,7 @@ namespace VirtoCommerce.QuoteModule.Web.Controllers.Api
         /// <summary>
 		/// Get available shipping methods with prices for quote requests
 		/// </summary>
-		/// <param name="quoteRequest">RFQ</param>
+		/// <param name="id">RFQ id</param>
         [HttpGet]
         [ResponseType(typeof(webModel.ShipmentMethod[]))]
         [Route("{id}/shipmentmethods")]

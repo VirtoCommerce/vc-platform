@@ -53,7 +53,7 @@ angular.module('platformWebApp')
             var offset = parseInt(blade.offset().left);
 
             $timeout(function () {
-                offset = parseInt(blade[0].clientWidth)
+                offset = parseInt(blade.width())
             }, 50, false);
 
             if (!scope.blade.disableOpenAnimation) {
