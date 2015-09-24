@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.quoteModule')
-.controller('virtoCommerce.quoteModule.quotesListController', ['$scope', 'virtoCommerce.quoteModule.quotes', 'platformWebApp.bladeNavigationService', function ($scope, quotes, bladeNavigationService) {
+.controller('virtoCommerce.quoteModule.quotesListController', ['$scope', 'virtoCommerce.quoteModule.quotes', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function ($scope, quotes, bladeNavigationService, dialogService) {
     var blade = $scope.blade;
     $scope.selectedNodeId = null;
 
@@ -41,8 +41,33 @@
             template: 'Modules/$(VirtoCommerce.Quote)/Scripts/blades/quote-detail.tpl.html'
         };
 
-        bladeNavigationService.showBlade(newBlade, $scope.blade);
+        bladeNavigationService.showBlade(newBlade, blade);
     };
+
+    function isItemsChecked() {
+        return blade.currentEntities && _.any(blade.currentEntities, function (x) { return x.$selected; });
+    }
+
+    function deleteChecked() {
+        var dialog = {
+            id: "confirmDeleteItem",
+            title: "Delete confirmation",
+            message: "Are you sure you want to delete selected Quote Requests?",
+            callback: function (remove) {
+                if (remove) {
+                    bladeNavigationService.closeChildrenBlades(blade, function () {
+                        var selection = _.where(blade.currentEntities, { $selected: true });
+                        var itemIds = _.pluck(selection, 'id');
+                        quotes.remove({ ids: itemIds },
+                            blade.refresh,
+                            function (error) { bladeNavigationService.setError('Error ' + error.status, blade); }
+                            );
+                    });
+                }
+            }
+        }
+        dialogService.showConfirmationDialog(dialog);
+    }
 
     blade.headIcon = 'fa-file-text-o';
 
@@ -55,8 +80,7 @@
             canExecuteMethod: function () {
                 return true;
             }
-        }
-        //,
+        },
         //{
         //    name: "Add", icon: 'fa fa-plus',
         //    executeMethod: function () {
@@ -67,6 +91,16 @@
         //    },
         //    permission: 'quote:manage'
         //}
+        {
+            name: "Delete", icon: 'fa fa-trash-o',
+            executeMethod: function () {
+                deleteChecked();
+            },
+            canExecuteMethod: function () {
+                return isItemsChecked();
+            },
+            permission: 'quote:manage'
+        }
     ];
 
     $scope.toggleAll = function () {
