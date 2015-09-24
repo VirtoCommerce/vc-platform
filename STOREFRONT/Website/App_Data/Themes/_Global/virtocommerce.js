@@ -97,6 +97,31 @@ $(function () {
         });
     });
 
+    $("#actual-quote-request-shipping-quote").on("change", function () {
+        var checkbox = $(this);
+        if (checkbox.is(":checked")) {
+            new Shopify.CountryProvinceSelector("actual-quote-request-shipping-address-country", "actual-quote-request-shipping-address-province", {});
+            $("#shipping-address-block").show();
+            if (!$("#actual-quote-request-same-billing-address").is(":checked")) {
+                new Shopify.CountryProvinceSelector("actual-quote-request-billing-address-country", "actual-quote-request-billing-address-province", {});
+                $("#billing-address-block").show();
+            }
+        } else {
+            $("#shipping-address-block").hide();
+            $("#billing-address-block").hide();
+        }
+    });
+
+    $("#actual-quote-request-same-billing-address").on("change", function () {
+        var checkbox = $(this);
+        if (!checkbox.is(":checked")) {
+            new Shopify.CountryProvinceSelector("actual-quote-request-billing-address-country", "actual-quote-request-billing-address-province", { });
+            $("#billing-address-block").show();
+        } else {
+            $("#billing-address-block").hide();
+        }
+    });
+
     $("body").delegate(".cart-row.quote .js-qty .js--add", "click", function () {
         var id = $(this).data("id");
         var quantityInput = $(this).parents(".js-qty").find("input");
@@ -135,13 +160,11 @@ $(function () {
         $(this).parents(".js-qty").remove();
     });
 
-    $(".ublock button").on("click", function () {
+    $("#btn-submit-quote-request").on("click", function () {
         var quoteRequest = {
-            Id: $("#quote_request_id").val(),
-            Comment: $("#quote_request_comment").val(),
-            Email: $("#quote_request_email").val(),
-            FirstName: $("#quote_request_first_name").val(),
-            LastName: $("#quote_request_last_name").val(),
+            Id: $("#actual-quote-request-id").val(),
+            Comment: $("#actual-quote-request-comment").val(),
+            Email: $("#actual-quote-request-email").val(),
             Items: []
         };
         $.each($(".cart-row.quote"), function () {
@@ -163,6 +186,37 @@ $(function () {
 
             quoteRequest.Items.push(quoteItem);
         });
+
+        if ($("#shipping-address-block").is(":visible")) {
+            quoteRequest.ShippingAddress = {
+                FirstName: $("#actual-quote-request-shipping-address-first-name").val(),
+                LastName: $("#actual-quote-request-shipping-address-last-name").val(),
+                Country: $("#actual-quote-request-shipping-address-country").val(),
+                Province: $("#actual-quote-request-shipping-address-province").val(),
+                City: $("#actual-quote-request-shipping-address-city").val(),
+                Company: $("#actual-quote-request-shipping-address-company").val(),
+                Address1: $("#actual-quote-request-shipping-address-address1").val(),
+                Address2: $("#actual-quote-request-shipping-address-address2").val(),
+                Zip: $("#actual-quote-request-shipping-address-zip").val(),
+                Phone: $("#actual-quote-request-shipping-address-phone").val()
+            };
+            if ($("#actual-quote-request-same-billing-address").is(":checked")) {
+                quoteRequest.BillingAddress = quoteRequest.ShippingAddress;
+            } else {
+                quoteRequest.BillingAddress = {
+                    FirstName: $("#actual-quote-request-billing-address-first-name").val(),
+                    LastName: $("#actual-quote-request-billing-address-last-name").val(),
+                    Country: $("#actual-quote-request-billing-address-country").val(),
+                    Province: $("#actual-quote-request-billing-address-province").val(),
+                    City: $("#actual-quote-request-billing-address-city").val(),
+                    Company: $("#actual-quote-request-billing-address-company").val(),
+                    Address1: $("#actual-quote-request-billing-address-address1").val(),
+                    Address2: $("#actual-quote-request-billing-address-address2").val(),
+                    Zip: $("#actual-quote-request-billing-address-zip").val(),
+                    Phone: $("#actual-quote-request-billing-address-phone").val()
+                };
+            }
+        }
 
         $.ajax({
             type: "POST",

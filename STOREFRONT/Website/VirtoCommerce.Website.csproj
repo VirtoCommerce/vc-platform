@@ -436,7 +436,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Pages\" />
-    <Folder Include="App_Data\Themes\Clothing\Default\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -207,6 +207,22 @@ namespace VirtoCommerce.Web
                         ctx.ActualQuoteRequest.Currency = ctx.Shop.Currency;
                         ctx.ActualQuoteRequest.Tag = "actual";
                     }
+                    else
+                    {
+                        if (ctx.Customer != null)
+                        {
+                            ctx.ActualQuoteRequest.CustomerName = ctx.Customer.Name;
+
+                            if (ctx.ActualQuoteRequest.BillingAddress == null)
+                            {
+                                ctx.ActualQuoteRequest.BillingAddress = ctx.Customer.DefaultAddress;
+                            }
+                            if (ctx.ActualQuoteRequest.ShippingAddress == null)
+                            {
+                                ctx.ActualQuoteRequest.ShippingAddress = ctx.Customer.DefaultAddress;
+                            }
+                        }
+                    }
 
                     if (context.Authentication.User.Identity.IsAuthenticated)
                     {
@@ -237,7 +253,6 @@ namespace VirtoCommerce.Web
                             if (anonymousQuote != null)
                             {
                                 ctx.ActualQuoteRequest.MergeQuoteWith(anonymousQuote);
-                                ctx.ActualQuoteRequest.CustomerName = ctx.Customer.Name;
 
                                 await _quoteService.UpdateQuoteRequestAsync(ctx.ActualQuoteRequest);
 

@@ -58,11 +58,9 @@ namespace VirtoCommerce.Web.Models
 
         public string Email { get; set; }
 
-        public string FirstName { get; set; }
+        public CustomerAddress BillingAddress { get; set; }
 
-        public string LastName { get; set; }
-
-        public bool RequestShippingQuote { get; set; }
+        public CustomerAddress ShippingAddress { get; set; }
 
         public ICollection<QuoteItem> Items { get; set; }
 
@@ -73,6 +71,56 @@ namespace VirtoCommerce.Web.Models
         public bool IsSubmitted { get; set; }
 
         public QuoteTotals Totals { get; set; }
+
+        public ICollection<string> BillingAddressErrors
+        {
+            get
+            {
+                var errors = new List<string>();
+
+                if (BillingAddress != null)
+                {
+                    errors = GetAddressErrors(BillingAddress);
+                }
+
+                return errors;
+            }
+        }
+
+        public ICollection<string> ShippingAddressErrors
+        {
+            get
+            {
+                var errors = new List<string>();
+
+                if (ShippingAddress != null)
+                {
+                    errors = GetAddressErrors(ShippingAddress);
+                }
+
+                return errors;
+            }
+        }
+
+        public bool ProposalPricesUnique
+        {
+            get
+            {
+                bool isUnique = true;
+
+                foreach (var quoteItem in Items)
+                {
+                    var uniqueProposalPrices = quoteItem.ProposalPrices.GroupBy(pp => pp.Quantity).Select(pp => pp.First());
+                    if (quoteItem.ProposalPrices.Count != uniqueProposalPrices.Count())
+                    {
+                        isUnique = false;
+                        break;
+                    }
+                }
+
+                return isUnique;
+            }
+        }
 
         public int ItemsCount
         {
@@ -115,6 +163,46 @@ namespace VirtoCommerce.Web.Models
             }
 
             return this;
+        }
+
+        private List<string> GetAddressErrors(CustomerAddress address)
+        {
+            var errors = new List<string>();
+
+            if (string.IsNullOrEmpty(address.Address1))
+            {
+                errors.Add("Field \"Address line 1\" is required");
+            }
+            if (string.IsNullOrEmpty(address.City))
+            {
+                errors.Add("Field \"City\" is required");
+            }
+            if (string.IsNullOrEmpty(address.Company))
+            {
+                errors.Add("Field \"Company\" is required");
+            }
+            if (string.IsNullOrEmpty(address.Country))
+            {
+                errors.Add("Field \"Country\" is required");
+            }
+            if (string.IsNullOrEmpty(address.FirstName))
+            {
+                errors.Add("Field \"First name\" is required");
+            }
+            if (string.IsNullOrEmpty(address.LastName))
+            {
+                errors.Add("Field \"Last name\" is required");
+            }
+            if (string.IsNullOrEmpty(address.Phone))
+            {
+                errors.Add("Field \"Phone\" is required");
+            }
+            if (string.IsNullOrEmpty(address.Zip))
+            {
+                errors.Add("Field \"Postal code\" is required");
+            }
+
+            return errors;
         }
     }
 }

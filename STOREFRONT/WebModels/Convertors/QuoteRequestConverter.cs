@@ -16,9 +16,19 @@ namespace VirtoCommerce.Web.Convertors
                 var billingAddress = quoteRequest.Addresses.FirstOrDefault(a => a.AddressType == DataContracts.AddressType.Billing);
                 if (billingAddress != null)
                 {
-                    quoteRequestModel.Email = billingAddress.Email;
-                    quoteRequestModel.FirstName = billingAddress.FirstName;
-                    quoteRequestModel.LastName = billingAddress.LastName;
+                    quoteRequestModel.BillingAddress = billingAddress.ToViewModel();
+                }
+
+                var shippingAddress = quoteRequest.Addresses.FirstOrDefault(a => a.AddressType == DataContracts.AddressType.Shipping);
+                if (shippingAddress != null)
+                {
+                    quoteRequestModel.ShippingAddress = shippingAddress.ToViewModel();
+                }
+
+                var firstAddressWithEmail = quoteRequest.Addresses.FirstOrDefault(a => !string.IsNullOrEmpty(a.Email));
+                if (firstAddressWithEmail != null)
+                {
+                    quoteRequestModel.Email = firstAddressWithEmail.Email;
                 }
             }
 
@@ -47,13 +57,13 @@ namespace VirtoCommerce.Web.Convertors
             {
                 foreach (var quoteItem in quoteRequest.Items)
                 {
-                    quoteRequestModel.Items.Add(quoteItem.ToViewModel());
+                    var quoteItemModel = quoteItem.ToViewModel();
+                    quoteRequestModel.Items.Add(quoteItemModel);
                 }
             }
 
             quoteRequestModel.Language = quoteRequest.LanguageCode;
             quoteRequestModel.Number = quoteRequest.Number;
-            quoteRequestModel.RequestShippingQuote = false; // TODO
             quoteRequestModel.Status = quoteRequest.Status;
             quoteRequestModel.Tag = quoteRequest.Tag;
 
@@ -93,16 +103,23 @@ namespace VirtoCommerce.Web.Convertors
                 }
             }
 
-            if (quoteRequestModel.RequestShippingQuote)
+            if (quoteRequestModel.BillingAddress != null || quoteRequestModel.ShippingAddress != null)
             {
                 quoteRequest.Addresses = new List<DataContracts.Address>();
-                quoteRequest.Addresses.Add(new DataContracts.Address
-                {
-                    AddressType = DataContracts.AddressType.Shipping,
-                    Email = quoteRequestModel.Email,
-                    FirstName = quoteRequestModel.FirstName,
-                    LastName = quoteRequestModel.LastName
-                });
+            }
+            if (quoteRequestModel.BillingAddress != null)
+            {
+                var billingAddress = quoteRequestModel.BillingAddress.ToServiceModel();
+                billingAddress.AddressType = DataContracts.AddressType.Billing;
+                billingAddress.Email = quoteRequestModel.Email;
+                quoteRequest.Addresses.Add(billingAddress);
+            }
+            if (quoteRequestModel.ShippingAddress != null)
+            {
+                var shippingAddress = quoteRequestModel.ShippingAddress.ToServiceModel();
+                shippingAddress.AddressType = DataContracts.AddressType.Shipping;
+                shippingAddress.Email = quoteRequestModel.Email;
+                quoteRequest.Addresses.Add(shippingAddress);
             }
 
             quoteRequest.CancelledDate = quoteRequestModel.CancelledAt;

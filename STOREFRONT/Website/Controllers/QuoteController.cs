@@ -65,14 +65,31 @@ namespace VirtoCommerce.Web.Controllers
         [Route("submit")]
         public async Task<ActionResult> Submit(QuoteRequest model)
         {
-            if (!ProposalPricesUnique(model.Items))
+            if (string.IsNullOrEmpty(model.Email))
             {
-                return Json(new { errorMessage = "Proposal prices quantities must be unique." });
+                return Json(new { errorMessage = "Field \"Email\" is required" });
+            }
+            if (model.BillingAddress != null)
+            {
+                if (model.BillingAddressErrors.Count > 0)
+                {
+                    var firstError = model.BillingAddressErrors.First();
+                    return Json(new { errorMessage = firstError });
+                }
+            }
+            if (model.ShippingAddress != null)
+            {
+                if (model.ShippingAddressErrors.Count > 0)
+                {
+                    var firstError = model.ShippingAddressErrors.First();
+                    return Json(new { errorMessage = firstError });
+                }
             }
 
             Context.ActualQuoteRequest.Comment = model.Comment;
-            Context.ActualQuoteRequest.FirstName = model.FirstName;
-            Context.ActualQuoteRequest.Language = model.LastName;
+            Context.ActualQuoteRequest.Email = model.Email;
+            Context.ActualQuoteRequest.BillingAddress = model.BillingAddress;
+            Context.ActualQuoteRequest.ShippingAddress = model.ShippingAddress;
 
             foreach (var quoteItem in model.Items)
             {
@@ -91,10 +108,14 @@ namespace VirtoCommerce.Web.Controllers
                 }
             }
 
+            if (!Context.ActualQuoteRequest.ProposalPricesUnique)
+            {
+                return Json(new { errorMessage = "Proposal prices quantities must be unique." });
+            }
+
             if (User.Identity.IsAuthenticated)
             {
                 Context.ActualQuoteRequest.Tag = null;
-                Context.ActualQuoteRequest.CustomerName = Context.Customer.Name;
             }
 
             await QuoteService.UpdateQuoteRequestAsync(Context.ActualQuoteRequest);
@@ -106,23 +127,6 @@ namespace VirtoCommerce.Web.Controllers
             }
 
             return Json(new { redirectUrl = VirtualPathUtility.ToAbsolute("~/account/quote/" + Context.ActualQuoteRequest.Number) });
-        }
-
-        private bool ProposalPricesUnique(ICollection<QuoteItem> quoteItems)
-        {
-            bool isUnique = true;
-
-            foreach (var quoteItem in quoteItems)
-            {
-                var uniqueProposalPrices = quoteItem.ProposalPrices.GroupBy(pp => pp.Quantity).Select(pp => pp.First());
-                if (quoteItem.ProposalPrices.Count != uniqueProposalPrices.Count())
-                {
-                    isUnique = false;
-                    break;
-                }
-            }
-
-            return isUnique;
         }
     }
 }

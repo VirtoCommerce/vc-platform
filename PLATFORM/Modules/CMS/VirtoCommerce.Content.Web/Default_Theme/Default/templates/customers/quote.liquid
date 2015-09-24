@@ -88,37 +88,18 @@
                 </div>
             </div>
         {% endfor %}
-        <div class="cart-row">
-            <div class="grid">
-                <div class="grid-item text-right">
-                    <div class="cart-total">
-                        Subtotal
-                        <span class="h1 cart-subtotal--price">
-                            <small id="quote-subtotal">{{ quote_request.totals.sub_total_exl_tax | money }}</small>
-                        </span>
-                    </div>
-                    <div class="cart-total">
-                        Tax
-                        <span class="h1 cart-subtotal--price">
-                            <small id="quote-tax-total">{{ quote_request.totals.tax_total | money }}</small>
-                        </span>
-                    </div>
-                    <div class="cart-total">
-                        Grand total
-                        <span class="h1 cart-subtotal--price">
-                            <small id="quote-grand-total">{{ quote_request.totals.grand_total_incl_tax | money }}</small>
-                        </span>
-                    </div>
-                </div>
-            </div>
+        <div class="cart-row" id="quote-totals">
+            {% include 'quote-totals' %}
         </div>
         <div class="cart-row" style="border-top: none;">
             <div class="grid">
                 <div class="grid-item three-thirds medium-down--one-whole">
                     <div class="cart-btn--block">
                         <a class="btn-secondary" href="{{ shop.simplified_url }}/account/quote/edit/{{ quote_request.number }}" id="btn-edit-quote-request">Edit request</a>
-                        <button class="btn-secondary" id="btn-reject-quote-proposal">Reject proposal</button>
-                        <button class="btn large--right" id="btn-checkout-quote-request">Confirm and checkout</button>
+                        {% if quote_request.is_submitted %}
+                            <button class="btn-secondary" id="btn-reject-quote-proposal">Reject proposal</button>
+                            <button class="btn large--right" id="btn-checkout-quote-request">Confirm and checkout</button>
+                        {% endif %}
                     </div>
                 </div>
             </div>
