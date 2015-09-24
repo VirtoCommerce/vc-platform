@@ -519,6 +519,11 @@ namespace VirtoCommerce.Web.Models.Services
                                {
                                    FormType = "pay_order",
                                    ActionLink = VirtualPathUtility.ToAbsolute("~/account/payorder"),
+                               },
+                               new SubmitForm
+                               {
+                                   FormType = "contact",
+                                   ActionLink = VirtualPathUtility.ToAbsolute("~/contact"),
                                }
                            };
 
