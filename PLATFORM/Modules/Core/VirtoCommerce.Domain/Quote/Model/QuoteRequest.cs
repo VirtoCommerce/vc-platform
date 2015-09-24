@@ -33,12 +33,7 @@ namespace VirtoCommerce.Domain.Quote.Model
 
         public string Tag { get; set; }
 
-        /// <summary>
-        /// Flag checked if proposal submitted to buyer
-        /// </summary>
-        public bool IsSubmitted { get; set; }
-     
-		public string Comment { get; set; }
+       	public string Comment { get; set; }
 		public string InnerComment { get; set; }
 		public CurrencyCodes Currency { get; set; }
 

@@ -62,11 +62,6 @@ namespace VirtoCommerce.QuoteModule.Web.Model
         public string Tag { get; set; }
 
         /// <summary>
-        /// Flag checked if proposal submitted to buyer
-        /// </summary>
-        public bool IsSubmitted { get; set; }
-
-        /// <summary>
         /// Public comment visible for customer 
         /// </summary>
 		public string Comment { get; set; }
