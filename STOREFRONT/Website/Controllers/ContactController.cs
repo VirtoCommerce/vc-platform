@@ -22,7 +22,9 @@ namespace VirtoCommerce.Web.Controllers
                 // TODO: add sending email to a store owner
             }
 
-            return new EmptyResult();
+            string url = Request.UrlReferrer.GetLeftPart(UriPartial.Path);
+            url += (Request.QueryString.ToString() == "") ? "?contact_posted=true" : "?" + Request.QueryString.ToString() + "&contact_posted=true";
+            return new RedirectResult(url);
         }
     }
 }

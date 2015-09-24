@@ -524,6 +524,7 @@ namespace VirtoCommerce.Web.Models.Services
                                {
                                    FormType = "contact",
                                    ActionLink = VirtualPathUtility.ToAbsolute("~/contact"),
+                                   PostedSuccessfully = HttpContext.Current != null ? !string.IsNullOrEmpty(HttpContext.Current.Request["contact_posted"]) : false,
                                }
                            };
 
