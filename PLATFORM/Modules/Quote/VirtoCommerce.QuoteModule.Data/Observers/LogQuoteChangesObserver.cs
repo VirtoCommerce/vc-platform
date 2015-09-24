@@ -49,10 +49,7 @@ namespace VirtoCommerce.QuoteModule.Data.Observers
                 {
                     operationLog.Detail += String.Format("comment changed ");
                 }
-                if (origQuote.IsSubmitted != modifiedQuote.IsSubmitted)
-                {
-                    operationLog.Detail += modifiedQuote.IsSubmitted ? "submit proposal to buyer" : "submit quote request from buyer";
-                }
+         
                 if(origQuote.IsLocked != modifiedQuote.IsLocked)
                 {
                     operationLog.Detail += modifiedQuote.IsLocked ? "lock " : "unlock ";
