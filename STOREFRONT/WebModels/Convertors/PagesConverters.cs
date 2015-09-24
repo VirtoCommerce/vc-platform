@@ -33,7 +33,6 @@ namespace VirtoCommerce.Web.Convertors
             ret.Handle = item.Url.TrimStart('/').TrimStart("blogs/");
             ret.Id = item.Url.TrimStart('/');
             ret.Excerpt = item.ContentExcerpt;
-
             return ret;
         }
     }

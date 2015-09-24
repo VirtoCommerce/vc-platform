@@ -13,6 +13,7 @@ namespace VirtoCommerce.Web.Views.Contents
 
         #region Fields
         private string excerpt;
+        private string content;
         #endregion
 
         #region Constructors and Destructors
@@ -27,7 +28,38 @@ namespace VirtoCommerce.Web.Views.Contents
 
         public IEnumerable<string> Categories { get; set; }
 
-        public string Content { get; set; }
+        /// <summary>
+        /// Contains both excerpt and body
+        /// </summary>
+        public string FullContent
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Only contains body without excerpt
+        /// </summary>
+        public string Content {
+            get
+            {
+                if (!string.IsNullOrWhiteSpace(this.content))
+                {
+                    return this.content;
+                }
+
+                if(this.FullContent.Contains("<!--excerpt-->"))
+                {
+                    return this.FullContent.Split(new[] { "<!--excerpt-->" }, StringSplitOptions.None)[1];
+                }
+
+                return this.FullContent;
+            }
+            set
+            {
+                this.content = value;
+            }
+        }
 
         public string ContentExcerpt
         {
@@ -38,7 +70,7 @@ namespace VirtoCommerce.Web.Views.Contents
                     return this.excerpt;
                 }
 
-                return this.Content.Split(new[] { "<!--excerpt-->" }, StringSplitOptions.None)[0];
+                return this.FullContent.Split(new[] { "<!--excerpt-->" }, StringSplitOptions.None)[0];
             }
             set
             {
