@@ -6806,6 +6806,7 @@ tags-input .tags .tag-item .remove-button
     {
         background: #333;
         height: 130px;
+        min-width: 300px;
         padding: 25px 0 5px;
         position: relative;
 
@@ -7495,6 +7496,11 @@ tags-input .tags .tag-item .remove-button
             width: 640px;
         }
 
+        .blade-content.__xlarge-wide .inner-block
+        {
+            width: 770px;
+        }
+
         .blade-content.__xxlarge-wide .inner-block
         {
             width: 900px;
@@ -7505,8 +7511,7 @@ tags-input .tags .tag-item .remove-button
             width: 300px;
         }
 
-        .blade-content.__code-editor .inner-block,
-        .blade-content.__xlarge-wide .inner-block
+        .blade-content.__code-editor .inner-block
         {
             width: auto;
         }

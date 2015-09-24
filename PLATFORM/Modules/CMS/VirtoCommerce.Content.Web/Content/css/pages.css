@@ -6,7 +6,7 @@
 }
 
 /* UI KIT htmleditor */
-.uk-htmleditor-navbar-nav
+.uk-htmleditor-navbar ul
 {
     margin: 0;
 }
@@ -20,6 +20,16 @@
 .uk-htmleditor-navbar-nav > li:before
 {
     content: '';
+}
+
+.uk-htmleditor-fullscreen
+{
+    left: 90px;
+}
+
+.uk-htmleditor-preview
+{
+    overflow-y: auto;
 }
 
 /* Icons */
