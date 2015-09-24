@@ -169,7 +169,13 @@ $(function () {
             url: VirtoCommerce.url("/quote/submit"),
             data: quoteRequest,
             success: function (jsonResult) {
-                window.location.href = jsonResult.redirect_url;
+                if (jsonResult) {
+                    if (jsonResult.error_message) {
+                        alert(jsonResult.error_message);
+                    } else {
+                        window.location.href = jsonResult.redirect_url;
+                    }
+                }
             }
         });
     });
@@ -191,10 +197,6 @@ $(function () {
     $(".proposal-price-radio").on("change", function () {
         var quoteRequest = getQuoteRequest();
         recalculateQuoteRequestTotals(quoteRequest);
-    });
-
-    $("#btn-edit-quote-request").on("click", function () {
-
     });
 });
 

@@ -237,10 +237,11 @@ namespace VirtoCommerce.Web
                             if (anonymousQuote != null)
                             {
                                 ctx.ActualQuoteRequest.MergeQuoteWith(anonymousQuote);
+                                ctx.ActualQuoteRequest.CustomerName = ctx.Customer.Name;
 
                                 await _quoteService.UpdateQuoteRequestAsync(ctx.ActualQuoteRequest);
 
-                                // TODO: Anonymous quote should be deleted
+                                await _quoteService.DeleteAsync(anonymousQuote.Id);
                             }
                         }
 

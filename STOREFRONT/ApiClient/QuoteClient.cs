@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using VirtoCommerce.ApiClient.DataContracts.Quotes;
@@ -60,6 +61,21 @@ namespace VirtoCommerce.ApiClient
             var response = await SendAsync<QuoteRequest, QuoteRequest>(requestUrl, HttpMethod.Put, quoteRequest).ConfigureAwait(false);
 
             return response;
+        }
+
+        public async Task DeleteAsync(string[] quoteRequestIds)
+        {
+            var ids = new List<string>();
+            foreach (var quoteRequestId in quoteRequestIds)
+            {
+                ids.Add(string.Format("ids={0}", quoteRequestId));
+            }
+
+            var queryString = string.Join("&", ids);
+
+            var requestUrl = CreateRequestUri(RelativePaths.QuoteRequests, queryString);
+
+            await SendAsync<string[]>(requestUrl, HttpMethod.Delete);
         }
 
         protected class RelativePaths

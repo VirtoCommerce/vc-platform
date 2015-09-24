@@ -24,7 +24,7 @@
     <assemblyFile>VirtoCommerce.Content.Web.dll</assemblyFile>
     <moduleType>VirtoCommerce.Content.Web.Module, VirtoCommerce.Content.Web</moduleType>
     <styles>
-        <directory virtualPath="$/Content/css" searchPattern="*.css" searchSubdirectories="true" />
+        <directory virtualPath="$/Content" searchPattern="*.css" searchSubdirectories="true" />
     </styles>
     <scripts>
         <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />

@@ -17,6 +17,20 @@ namespace VirtoCommerce.Web.Models
         }
         #endregion
 
+        private Collection _All;
+        public Collection All
+        {
+            get
+            {
+                if(_All == null)
+                {
+                    _All = new Collection() { Id = "All" };
+                }
+
+                return _All;
+            }
+        }
+
         #region Public Methods and Operators
         public override object BeforeMethod(string method)
         {
