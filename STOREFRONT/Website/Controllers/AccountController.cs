@@ -762,7 +762,14 @@ namespace VirtoCommerce.Web.Controllers
                 Context.Cart.Items.Add(lineItemModel);
             }
 
-            await Service.SaveChangesAsync(Context.Cart);
+            if (Context.Cart.IsTransient)
+            {
+                await Service.CreateCartAsync(Context.Cart);
+            }
+            else
+            {
+                await Service.SaveChangesAsync(Context.Cart);
+            }
 
             return Json(new { redirectUrl = VirtualPathUtility.ToAbsolute("~/checkout") });
         }
