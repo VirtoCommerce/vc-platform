@@ -349,7 +349,7 @@
       <Link>CustomDictionary.xml</Link>
     </CodeAnalysisDictionary>
     <Content Include="Content\angular-gridster.css" />
-    <Content Include="Content\themes\main\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\themes\main\css\font-awesome.css" />
     <Content Include="gulpfile.js" />
     <Content Include="Scripts\allPackages.js" />
     <Content Include="Content\allStyles.css" />
@@ -606,10 +606,7 @@
     <Folder Include="Views\Notifications\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\themes\main\fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="Content\themes\main\fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="Content\themes\main\fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="Content\themes\main\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Content\themes\main\fonts\fontawesome-webfont.woff2" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
