@@ -93,7 +93,21 @@ namespace VirtoCommerce.Platform.Data.Security
             {
 			    var targetEntry = repository.GetRoleById(role.Id);
 
-				if (targetEntry == null)
+                //Create not exist permissions
+                if(role.Permissions != null)
+                {
+                    var permissionIds = role.Permissions.Select(x => x.Id).ToArray();
+                    var alreadyExistPermissionIds = repository.Permissions.Where(x => permissionIds.Contains(x.Id))
+                                                            .Select(x => x.Id)
+                                                            .ToArray();
+                    var notExistPermissionIds = permissionIds.Except(alreadyExistPermissionIds).ToArray();
+                    foreach(var notExistPermissionId in notExistPermissionIds)
+                    {
+                        var permission = role.Permissions.First(x => x.Id == notExistPermissionId).ToDataModel();
+                        repository.Add(permission);
+                    }
+                }
+                if (targetEntry == null)
 				{
 					repository.Add(sourceEntry);
 				}
