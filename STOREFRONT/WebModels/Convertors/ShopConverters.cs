@@ -50,7 +50,8 @@ namespace VirtoCommerce.Web.Convertors
                            Catalog = store.Catalog,
                            PaymentMethods = paymentMethodModels,
                            Languages = store.Languages,
-                           Currencies = store.Currencies
+                           Currencies = store.Currencies,
+                           QuotesEnabled = store.EnableQuotes
                        };
 
             if (store.Seo != null)

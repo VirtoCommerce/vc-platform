@@ -200,26 +200,29 @@ namespace VirtoCommerce.Web
 
                     ctx.Cart = cart;
 
-                    ctx.ActualQuoteRequest = await _quoteService.GetCurrentQuoteRequestAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
-                    if (ctx.ActualQuoteRequest == null)
+                    if (ctx.Shop.QuotesEnabled)
                     {
-                        ctx.ActualQuoteRequest = new QuoteRequest(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
-                        ctx.ActualQuoteRequest.Currency = ctx.Shop.Currency;
-                        ctx.ActualQuoteRequest.Tag = "actual";
-                    }
-                    else
-                    {
-                        if (ctx.Customer != null)
+                        ctx.ActualQuoteRequest = await _quoteService.GetCurrentQuoteRequestAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
+                        if (ctx.ActualQuoteRequest == null)
                         {
-                            ctx.ActualQuoteRequest.CustomerName = ctx.Customer.Name;
+                            ctx.ActualQuoteRequest = new QuoteRequest(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
+                            ctx.ActualQuoteRequest.Currency = ctx.Shop.Currency;
+                            ctx.ActualQuoteRequest.Tag = "actual";
+                        }
+                        else
+                        {
+                            if (ctx.Customer != null)
+                            {
+                                ctx.ActualQuoteRequest.CustomerName = ctx.Customer.Name;
 
-                            if (ctx.ActualQuoteRequest.BillingAddress == null)
-                            {
-                                ctx.ActualQuoteRequest.BillingAddress = ctx.Customer.DefaultAddress;
-                            }
-                            if (ctx.ActualQuoteRequest.ShippingAddress == null)
-                            {
-                                ctx.ActualQuoteRequest.ShippingAddress = ctx.Customer.DefaultAddress;
+                                if (ctx.ActualQuoteRequest.BillingAddress == null)
+                                {
+                                    ctx.ActualQuoteRequest.BillingAddress = ctx.Customer.DefaultAddress;
+                                }
+                                if (ctx.ActualQuoteRequest.ShippingAddress == null)
+                                {
+                                    ctx.ActualQuoteRequest.ShippingAddress = ctx.Customer.DefaultAddress;
+                                }
                             }
                         }
                     }
@@ -248,15 +251,18 @@ namespace VirtoCommerce.Web
                                 await commerceService.DeleteCartAsync(anonymousCart.Key);
                             }
 
-                            var anonymousQuote = await _quoteService.GetCurrentQuoteRequestAsync(ctx.StoreId, anonymousCookie);
-
-                            if (anonymousQuote != null)
+                            if (ctx.Shop.QuotesEnabled)
                             {
-                                ctx.ActualQuoteRequest.MergeQuoteWith(anonymousQuote);
+                                var anonymousQuote = await _quoteService.GetCurrentQuoteRequestAsync(ctx.StoreId, anonymousCookie);
 
-                                await _quoteService.UpdateQuoteRequestAsync(ctx.ActualQuoteRequest);
+                                if (anonymousQuote != null)
+                                {
+                                    ctx.ActualQuoteRequest.MergeQuoteWith(anonymousQuote);
 
-                                await _quoteService.DeleteAsync(anonymousQuote.Id);
+                                    await _quoteService.UpdateQuoteRequestAsync(ctx.ActualQuoteRequest);
+
+                                    await _quoteService.DeleteAsync(anonymousQuote.Id);
+                                }
                             }
                         }
 
