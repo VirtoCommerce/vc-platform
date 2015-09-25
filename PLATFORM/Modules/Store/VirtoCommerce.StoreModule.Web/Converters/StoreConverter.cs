@@ -18,8 +18,7 @@ namespace VirtoCommerce.StoreModule.Web.Converters
             retVal.SeoInfos = store.SeoInfos;
             retVal.DefaultCurrency = store.DefaultCurrency;
             retVal.StoreState = store.StoreState;
-            if (store.Settings != null)
-                retVal.Settings = store.Settings.Select(x => x.ToWebModel()).ToList();
+            retVal.DynamicProperties = store.DynamicProperties;
             if (store.ShippingMethods != null)
                 retVal.ShippingMethods = store.ShippingMethods.Select(x => x.ToWebModel()).ToList();
             if (store.PaymentMethods != null)
@@ -45,8 +44,7 @@ namespace VirtoCommerce.StoreModule.Web.Converters
             retVal.InjectFrom(store);
             retVal.SeoInfos = store.SeoInfos;
             retVal.StoreState = store.StoreState;
-            if (store.Settings != null)
-                retVal.Settings = store.Settings.Select(x => x.ToCoreModel()).ToList();
+            retVal.DynamicProperties = store.DynamicProperties;
 
             if (store.ShippingMethods != null)
             {

@@ -133,10 +133,6 @@
     <Content Include="Scripts\blades\shippingMethod-list.tpl.html" />
     <Content Include="Scripts\blades\stores-list.js" />
     <Content Include="Scripts\blades\stores-list.tpl.html" />
-    <Content Include="Scripts\blades\store-setting-detail.js" />
-    <Content Include="Scripts\blades\store-setting-detail.tpl.html" />
-    <Content Include="Scripts\blades\store-settings-list.js" />
-    <Content Include="Scripts\blades\store-settings-list.tpl.html" />
     <Content Include="Scripts\blades\store-advanced.js" />
     <Content Include="Scripts\blades\store-detail.js" />
     <Content Include="Scripts\blades\store-advanced.tpl.html" />

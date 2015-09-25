@@ -26,13 +26,13 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
 			}
 
 		
-			if (store.Settings != null)
+			if (store.DynamicProperties != null)
 			{
 				retVal.Settings = new PropertyDictionary();
 
-				foreach (var propValueGroup in store.Settings.GroupBy(x => x.Name))
+				foreach (var propValueGroup in store.DynamicProperties.GroupBy(x => x.Name))
 				{
-					var val = propValueGroup.Select(g => g.Value).SingleOrDefault();
+					var val = propValueGroup.SelectMany(g => g.Values).SingleOrDefault();
 					if (val != null)
 					{
 						retVal.Settings.Add(propValueGroup.Key, val);

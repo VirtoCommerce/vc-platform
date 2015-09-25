@@ -68,14 +68,14 @@ namespace VirtoCommerce.MerchandisingModule.Web.Services
         /// <returns>Filtered browsing</returns>
         private FilteredBrowsing GetStoreBrowseFilters(Store store)
         {
-            if (store == null || store.Settings == null)
+            if (store == null || store.DynamicProperties == null)
                 return null;
 
-            var filterSetting = store.Settings.FirstOrDefault(x => x.Name == "FilteredBrowsing");
-            if (filterSetting != null && filterSetting.Value != null)
+            var filterSetting = store.DynamicProperties.FirstOrDefault(x => x.Name == "FilteredBrowsing");
+            if (filterSetting != null && filterSetting.Values != null && filterSetting.Values.Any())
             {
                 var serializer = new XmlSerializer(typeof(FilteredBrowsing));
-                var reader = new StringReader(filterSetting.Value.ToString());
+                var reader = new StringReader(filterSetting.Values.First().Value.ToString());
                 var browsing = serializer.Deserialize(reader) as FilteredBrowsing;
                 return browsing;
             }
