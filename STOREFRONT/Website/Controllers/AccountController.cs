@@ -774,6 +774,9 @@ namespace VirtoCommerce.Web.Controllers
                 Context.Cart.Items.Add(lineItemModel);
             }
 
+            Context.QuoteRequest.Status = "Accepted";
+            await QuoteService.UpdateQuoteRequestAsync(Context.QuoteRequest);
+
             if (Context.Cart.IsTransient)
             {
                 await Service.CreateCartAsync(Context.Cart);
