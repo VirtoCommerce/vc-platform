@@ -63,6 +63,7 @@ angular.module(moduleName, [
       }, 'storeDetail');
       widgetService.registerWidget({
       	controller: 'platformWebApp.dynamicPropertyWidgetController',
+		title : 'Settings',
       	template: '$(Platform)/Scripts/app/dynamicProperties/widgets/dynamicPropertyWidget.tpl.html'
       }, 'storeDetail');
       widgetService.registerWidget({
