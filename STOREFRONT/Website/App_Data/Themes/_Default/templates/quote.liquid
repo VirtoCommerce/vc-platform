@@ -1,31 +1,22 @@
 ﻿{% if actual_quote_request.items_count > 0 %}
     <form action="{{ shop.simplified_url }}/quotes" method="post" novalidate>
-        <input id="quote_request_id" type="hidden" value="{{ actual_quote_request.id }}" />
+        <input id="actual-quote-request-id" type="hidden" value="{{ actual_quote_request.id }}" />
         <h1 class="h2">{{ 'quotes.general.title' | t }}</h1>
         <div class="grid">
-            <div class="grid-item large--one-half">
+            <div class="grid-item">
+                <div class="ublock">
+                    <h4>E-mail address</h4>
+                    <input id="actual-quote-request-email" type="text" value="{{ customer.email }}" />
+                </div>
+            </div>
+        </div>
+        <div class="grid">
+            <div class="grid-item">
                 <div class="ublock">
                     <h4>{{ 'quotes.general.remarks.title' | t }}</h4>
                     <p>{{ 'quotes.general.remarks.text' | t }}</p>
-                    <textarea id="quote_request_comment" name="quote_request[comment]">{{ actual_quote_request_item.comment }}</textarea>
-                </div>
-            </div>
-            <div class="grid-item large--one-half">
-                <div class="ublock">
-                    <label>{{ 'quotes.general.email' | t }}</label>
-                    <input id="quote_request_email" name="quote_request[email]" type="text" value="{{ actual_quote_request.email }}" />
-                    <div class="grid">
-                        <div class="grid-item large--one-half">
-                            <label>{{ 'quotes.general.first_name' | t }}</label>
-                            <input id="quote_request_first_name" name="quote_request[first_name]" type="text" value="{{ actual_quote_request.first_name }}" />
-                        </div>
-                        <div class="grid-item large--one-half">
-                            <label>{{ 'quotes.general.last_name' | t }}</label>
-                            <input id="quote_request_last_name" name="quote_request[last_name]" type="text" value="{{ actual_quote_request.last_name }}" />
-                        </div>
-                    </div>
-                    <input id="quote_request_request_shipping_quote" name="quote_request[request_shipping_quote]" type="checkbox" {% if actual_quote_request.request_shipping_quote %}checked{% endif %} />
-                    <label class="inline">{{ 'quotes.general.request_shipping_quote' | t }}</label>
+                    <textarea id="actual-quote-request-comment">{{ actual_quote_request_item.comment }}</textarea>
+                    <input id="actual-quote-request-shipping-quote" type="checkbox" /> {{ 'quotes.general.request_shipping_quote' | t }}
                 </div>
             </div>
         </div>
@@ -82,8 +73,71 @@
                 </div>
             </div>
         {% endfor %}
+        <div class="grid">
+            <div class="grid-item">
+                <div class="ublock" id="shipping-address-block" style="display: none;">
+                    <div class="h3">Shipping address</div>
+                    <div class="grid">
+                        <div class="grid-item large--one-half">
+                            <label>First name</label>
+                            <input id="actual-quote-request-shipping-address-first-name" type="text" value="{{ actual_quote_request.shipping_address.first_name }}" />
+                            <label>Last name</label>
+                            <input id="actual-quote-request-shipping-address-last-name" type="text" value="{{ actual_quote_request.shipping_address.last_name }}" />
+                            <label>Country</label>
+                            <select id="actual-quote-request-shipping-address-country">{{ country_option_tags }}</select>
+                            <label>Province</label>
+                            <select data-default="{{ actual_quote_request.shipping_address.province }}" id="actual-quote-request-shipping-address-province"></select>
+                            <label>City</label>
+                            <input id="actual-quote-request-shipping-address-city" type="text" value="{{ actual_quote_request.shipping_address.city }}" />
+                        </div>
+                        <div class="grid-item large--one-half">
+                            <label>Company</label>
+                            <input id="actual-quote-request-shipping-address-company" type="text" value="{{ actual_quote_request.shipping_address.company }}" />
+                            <label>Address line 1</label>
+                            <input id="actual-quote-request-shipping-address-address1" type="text" value="{{ actual_quote_request.shipping_address.address1 }}" />
+                            <label>Address line 2</label>
+                            <input id="actual-quote-request-shipping-address-address2" type="text" value="{{ actual_quote_request.shipping_address.address2 }}" />
+                            <label>Zip/Postal code</label>
+                            <input id="actual-quote-request-shipping-address-zip" type="text" value="{{ actual_quote_request.shipping_address.zip }}" />
+                            <label>Phone</label>
+                            <input id="actual-quote-request-shipping-address-phone" type="text" value="{{ actual_quote_request.shipping_address.phone }}" />
+                        </div>
+                    </div>
+                    <input checked="checked" id="actual-quote-request-same-billing-address" type="checkbox" /> Billing Address is same as Shipping Address 
+                </div>
+                <div class="ublock" id="billing-address-block" style="display: none;">
+                    <div class="h3">Billing address</div>
+                    <div class="grid">
+                        <div class="grid-item large--one-half">
+                            <label>First name</label>
+                            <input id="actual-quote-request-billing-address-first-name" type="text" value="{{ actual_quote_request.billing_address.first_name }}" />
+                            <label>Last name</label>
+                            <input id="actual-quote-request-billing-address-last-name" type="text" value="{{ actual_quote_request.billing_address.last_name }}" />
+                            <label>Country</label>
+                            <select id="actual-quote-request-billing-address-country">{{ country_option_tags }}</select>
+                            <label>Province</label>
+                            <select data-default="{{ actual_quote_request.billing_address.province }}" id="actual-quote-request-billing-address-province"></select>
+                            <label>City</label>
+                            <input id="actual-quote-request-billing-address-city" type="text" value="{{ actual_quote_request.billing_address.city }}" />
+                        </div>
+                        <div class="grid-item large--one-half">
+                            <label>Company</label>
+                            <input id="actual-quote-request-billing-address-company" type="text" value="{{ actual_quote_request.billing_address.company }}" />
+                            <label>Address line 1</label>
+                            <input id="actual-quote-request-billing-address-address1" type="text" value="{{ actual_quote_request.billing_address.address1 }}" />
+                            <label>Address line 2</label>
+                            <input id="actual-quote-request-billing-address-address2" type="text" value="{{ actual_quote_request.billing_address.address2 }}" />
+                            <label>Zip/Postal code</label>
+                            <input id="actual-quote-request-billing-address-zip" type="text" value="{{ actual_quote_request.billing_address.zip }}" />
+                            <label>Phone</label>
+                            <input id="actual-quote-request-billing-address-phone" type="text" value="{{ actual_quote_request.billing_address.phone }}" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="ublock text-right">
-            <button class="btn" type="button">{{ 'quotes.general.submit_quote' | t }}</button>
+            <button class="btn" id="btn-submit-quote-request" type="button">{{ 'quotes.general.submit_quote' | t }}</button>
         </div>
     </form>
 {% else %}

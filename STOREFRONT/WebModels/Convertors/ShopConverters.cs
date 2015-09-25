@@ -50,9 +50,16 @@ namespace VirtoCommerce.Web.Convertors
                            Catalog = store.Catalog,
                            PaymentMethods = paymentMethodModels,
                            Languages = store.Languages,
-                           Currencies = store.Currencies,
-                           QuotesEnabled = store.EnableQuotes
+                           Currencies = store.Currencies
                        };
+
+            if (store.Settings != null)
+            {
+                if (store.Settings.ContainsKey("enableQuotes"))
+                {
+                    shop.QuotesEnabled = (store.Settings["enableQuotes"] as Newtonsoft.Json.Linq.JObject).Value<bool>("value");
+                }
+            }
 
             if (store.Seo != null)
             {

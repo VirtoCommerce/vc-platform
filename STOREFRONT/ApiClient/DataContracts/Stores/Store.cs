@@ -14,8 +14,6 @@ namespace VirtoCommerce.ApiClient.DataContracts.Stores
 
         #region Public Properties
 
-        public bool EnableQuotes { get; set; }
-
         public string Catalog { get; set; }
 
         public string Country { get; set; }
