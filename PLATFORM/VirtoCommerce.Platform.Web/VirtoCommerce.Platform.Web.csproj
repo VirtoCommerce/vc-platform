@@ -445,7 +445,6 @@
     <Content Include="Scripts\app\settings\settings.js" />
     <Content Include="Scripts\codemirror\addon\mode\overlay.js" />
     <Content Include="Scripts\codemirror\codemirror.css" />
-    <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\select.css" />
     <Content Include="Content\select2.css" />
     <Content Include="Content\Selectize\css\selectize.bootstrap2.css" />
@@ -480,9 +479,6 @@
     <Content Include="Scripts\codemirror\liquid.js" />
     <Content Include="Scripts\common\templates\create.tpl.html" />
     <Content Include="Scripts\common\directives\angular-money-directive.js" />
-    <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="Scripts\app\workspace.tpl.html" />
     <Content Include="Scripts\common\confirmDialog\notifyDialog.tpl.html" />
     <Content Include="Scripts\common\directives\autofill.js" />
