@@ -65,9 +65,7 @@ namespace VirtoCommerce.QuoteModule.Data.Services
                 }
                 else if (quote.ManualRelDiscountAmount > 0)
                 {
-                    retVal.DiscountTotal = retVal.SubTotalExlTax * (quote.ManualRelDiscountAmount > 1 ? quote.ManualRelDiscountAmount * 0.01m : quote.ManualRelDiscountAmount);
-                    retVal.SubTotalExlTax = retVal.SubTotalExlTax - retVal.DiscountTotal;
-
+                    retVal.DiscountTotal = retVal.SubTotalExlTax * quote.ManualRelDiscountAmount * 0.01m;
                 }
             }
 

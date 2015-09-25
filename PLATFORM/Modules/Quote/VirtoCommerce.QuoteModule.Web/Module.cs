@@ -4,6 +4,8 @@ using Microsoft.Practices.Unity;
 using VirtoCommerce.Domain.Pricing.Services;
 using VirtoCommerce.Domain.Quote.Events;
 using VirtoCommerce.Domain.Quote.Services;
+using VirtoCommerce.Domain.Store.Model;
+using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Modularity;
@@ -55,7 +57,22 @@ namespace VirtoCommerce.QuoteModule.Web
         }
 
 
+        public override void PostInitialize()
+        {
+            base.PostInitialize();
+            //Create EnableQuote dynamic propertiy for  Store 
+            var dynamicPropertyService = _container.Resolve<IDynamicPropertyService>();
+            var enableQuotesProperty = new DynamicProperty
+            {
+                Id = "Quote_Enable_Property",
+                Name = "EnableQuotes",
+                ObjectType = typeof(Store).FullName,
+                ValueType = DynamicPropertyValueType.Boolean,
+                CreatedBy = "Auto",
+            };
 
+            dynamicPropertyService.SaveProperties(new[] { enableQuotesProperty });
+        }
         #endregion
 
         #region ISupportExportImportModule Members

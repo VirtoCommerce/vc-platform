@@ -53,7 +53,7 @@ namespace VirtoCommerce.StoreModule.Test
                 },
                 //PaymentGateways = new string[] { "PayPal", "Clarna" },
                 StoreState = Domain.Store.Model.StoreState.Open,
-                Settings = new[] { new Setting { Name = "test", Value = "sss", ValueType = Platform.Core.Settings.SettingValueType.ShortText } }
+             
 
             };
             var result = controller.Create(store) as OkNegotiatedContentResult<Store>;
@@ -71,7 +71,7 @@ namespace VirtoCommerce.StoreModule.Test
             store.DefaultCurrency = CurrencyCodes.UYU;
             store.Currencies.Add(CurrencyCodes.UYU);
             store.Languages.Remove(store.Languages.FirstOrDefault());
-            store.Settings.Add(new Setting { Name = "setting2", Value = "1223", ValueType = Platform.Core.Settings.SettingValueType.Integer });
+           
             store.FulfillmentCenter.CountryCode = "SSS";
             store.ReturnsFulfillmentCenter = store.FulfillmentCenter;
 
