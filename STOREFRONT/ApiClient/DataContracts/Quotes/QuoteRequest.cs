@@ -41,8 +41,6 @@ namespace VirtoCommerce.ApiClient.DataContracts.Quotes
 
         public string Tag { get; set; }
 
-        public bool IsSubmitted { get; set; }
-
         public string Comment { get; set; }
 
         public string InnerComment { get; set; }
