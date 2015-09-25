@@ -53,14 +53,6 @@ namespace VirtoCommerce.Web.Convertors
                            Currencies = store.Currencies
                        };
 
-            if (store.Settings != null)
-            {
-                if (store.Settings.ContainsKey("enableQuotes"))
-                {
-                    shop.QuotesEnabled = (store.Settings["enableQuotes"] as Newtonsoft.Json.Linq.JObject).Value<bool>("value");
-                }
-            }
-
             if (store.Seo != null)
             {
                 shop.Keywords = store.Seo.Select(k => k.AsWebModel());
@@ -70,6 +62,11 @@ namespace VirtoCommerce.Web.Convertors
             {
                 var fieldsCollection = new MetafieldsCollection("global", store.Settings);
                 shop.Metafields = new MetaFieldNamespacesCollection(new[] { fieldsCollection });
+
+                if(fieldsCollection.ContainsKey("enableQuotes"))
+                {
+                    shop.QuotesEnabled = (bool)fieldsCollection["enableQuotes"];
+                }
             }
 
             return shop;
