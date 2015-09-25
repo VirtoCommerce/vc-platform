@@ -20,6 +20,7 @@
   //'ui.grid.selection',
   'ui.codemirror',
   'focusOn',
+  'textAngular',
   'ngTagsInput'
 ];
 
