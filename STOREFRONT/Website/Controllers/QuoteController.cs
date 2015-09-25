@@ -118,6 +118,8 @@ namespace VirtoCommerce.Web.Controllers
                 Context.ActualQuoteRequest.Tag = null;
             }
 
+            Context.ActualQuoteRequest.Status = "Processing";
+
             await QuoteService.UpdateQuoteRequestAsync(Context.ActualQuoteRequest);
 
             if (!User.Identity.IsAuthenticated)

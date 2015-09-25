@@ -51,7 +51,6 @@ namespace VirtoCommerce.Web.Convertors
             quoteRequestModel.Id = quoteRequest.Id;
             quoteRequestModel.IsCancelled = quoteRequest.IsCancelled;
             quoteRequestModel.IsLocked = quoteRequest.IsLocked;
-            quoteRequestModel.IsSubmitted = quoteRequest.IsSubmitted;
 
             if (quoteRequest.Items != null)
             {
@@ -133,7 +132,6 @@ namespace VirtoCommerce.Web.Convertors
             quoteRequest.Id = quoteRequestModel.Id;
             quoteRequest.IsCancelled = quoteRequestModel.IsCancelled;
             quoteRequest.IsLocked = quoteRequestModel.IsLocked;
-            quoteRequest.IsSubmitted = quoteRequestModel.IsSubmitted;
 
             quoteRequest.Items = new List<DataContracts.Quotes.QuoteItem>();
             foreach (var quoteItemModel in quoteRequestModel.Items)

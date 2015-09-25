@@ -78,7 +78,7 @@
                             <div class="grid-item one-third medium-down--one-third text-right">
                                 {% for proposal_price in quote_item.proposal_prices %}
                                     <div class="js-qty">
-                                        <input class="proposal-price-radio" {% if quote_item.selected_tier_price.quantity == proposal_price.quantity %}checked="checked"{% endif %} data-quantity="{{ proposal_price.quantity }}" name="{{ quote_item.id }}_selected_price" type="radio" value="{{ proposal_price.price }}" />
+                                        <input class="proposal-price-radio" {% if quote_request.status == 'Rejected' %}disabled="disabled"{% endif %} {% if quote_item.selected_tier_price.quantity == proposal_price.quantity %}checked="checked"{% endif %} data-quantity="{{ proposal_price.quantity }}" name="{{ quote_item.id }}_selected_price" type="radio" value="{{ proposal_price.price }}" />
                                         {{ proposal_price.price | money }}
                                     </div>
                                 {% endfor %}
@@ -95,10 +95,14 @@
             <div class="grid">
                 <div class="grid-item three-thirds medium-down--one-whole">
                     <div class="cart-btn--block">
-                        <a class="btn-secondary" href="{{ shop.simplified_url }}/account/quote/edit/{{ quote_request.number }}" id="btn-edit-quote-request">Edit request</a>
-                        {% if quote_request.is_submitted %}
-                            <button class="btn-secondary" id="btn-reject-quote-proposal">Reject proposal</button>
-                            <button class="btn large--right" id="btn-checkout-quote-request">Confirm and checkout</button>
+                        {% unless quote_request.status == 'Proposal sent' and quote_request.status == 'Rejected' %}
+                            <a class="btn-secondary" href="{{ shop.simplified_url }}/account/quote/edit/{{ quote_request.number }}" id="btn-edit-quote-request">Edit request</a>
+                        {% endunless %}
+                        {% if quote_request.status == 'Proposal sent' %}
+                            <a class="btn-secondary" href="{{ shop.simplified_url }}/account/quote/reject/{{ quote_request.number }}" id="btn-reject-quote-proposal">Reject proposal</a>
+                            {% unless quote_request.status == 'On hold' and quote_request.status == 'Rejected' and quote_request.is_cancelled %}
+                                <button class="btn large--right" id="btn-checkout-quote-request">Confirm and checkout</button>
+                            {% endunless %}
                         {% endif %}
                     </div>
                 </div>

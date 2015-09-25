@@ -738,6 +738,18 @@ namespace VirtoCommerce.Web.Controllers
             return RedirectToAction("Index", "Quote");
         }
 
+        [HttpGet]
+        [Route("quote/reject/{number}")]
+        public async Task<ActionResult> RejectQuote(string number)
+        {
+            var quoteRequest = await QuoteService.GetByNumberAsync(Context.StoreId, Context.CustomerId, number);
+            quoteRequest.Status = "Rejected";
+
+            await QuoteService.UpdateQuoteRequestAsync(quoteRequest);
+
+            return RedirectToAction("Quotes");
+        }
+
         [HttpPost]
         [Route("quote/checkout")]
         public async Task<ActionResult> ConfirmQuote(QuoteRequest model)
@@ -762,7 +774,17 @@ namespace VirtoCommerce.Web.Controllers
                 Context.Cart.Items.Add(lineItemModel);
             }
 
-            await Service.SaveChangesAsync(Context.Cart);
+            Context.QuoteRequest.Status = "Accepted";
+            await QuoteService.UpdateQuoteRequestAsync(Context.QuoteRequest);
+
+            if (Context.Cart.IsTransient)
+            {
+                await Service.CreateCartAsync(Context.Cart);
+            }
+            else
+            {
+                await Service.SaveChangesAsync(Context.Cart);
+            }
 
             return Json(new { redirectUrl = VirtualPathUtility.ToAbsolute("~/checkout") });
         }

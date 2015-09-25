@@ -68,8 +68,6 @@ namespace VirtoCommerce.Web.Models
 
         public string Tag { get; set; }
 
-        public bool IsSubmitted { get; set; }
-
         public QuoteTotals Totals { get; set; }
 
         public ICollection<string> BillingAddressErrors
