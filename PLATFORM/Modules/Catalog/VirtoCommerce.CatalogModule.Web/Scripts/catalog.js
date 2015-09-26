@@ -6,7 +6,6 @@ if (AppDependencies != undefined) {
 }
 
 angular.module(catalogsModuleName, [
-  'textAngular'
 ])
 .config(
   ['$stateProvider', function ($stateProvider) {
