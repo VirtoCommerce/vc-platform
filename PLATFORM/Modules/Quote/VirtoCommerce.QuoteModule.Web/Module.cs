@@ -71,7 +71,16 @@ namespace VirtoCommerce.QuoteModule.Web
                 CreatedBy = "Auto",
             };
 
-            dynamicPropertyService.SaveProperties(new[] { enableQuotesProperty });
+            var defaultThemeNameProperty = new DynamicProperty
+            {
+                Id = "Default_Theme_Name_Property",
+                Name = "DefaultThemeName",
+                ObjectType = typeof(Store).FullName,
+                ValueType = DynamicPropertyValueType.ShortText,
+                CreatedBy = "Auto"
+            };
+
+            dynamicPropertyService.SaveProperties(new[] { enableQuotesProperty, defaultThemeNameProperty });
         }
         #endregion
 

@@ -15,8 +15,10 @@
 		    }
 			themesStores.get({ id: blade.storeId }, function (data) {
 				blade.store = data;
-				if (_.find(blade.store.settings, function (setting) { return setting.name === 'DefaultThemeName'; }) !== undefined) {
-					blade.defaultThemeName = _.find(blade.store.settings, function (setting) { return setting.name === 'DefaultThemeName'; }).value;
+				if (_.find(blade.store.dynamicProperties, function (property) { return property.name === 'DefaultThemeName'; }) !== undefined) {
+				    var defaultThemeNameProperty = _.find(blade.store.dynamicProperties, function (property) { return property.name === 'DefaultThemeName'; });
+
+				    blade.defaultThemeName = defaultThemeNameProperty.values[0].value;
 				}
 				blade.isLoading = false;
 			},
@@ -113,15 +115,12 @@
 
 	blade.setThemeAsActive = function () {
 		blade.isLoading = true;
-		if (_.where(blade.store.settings, { name: "DefaultThemeName" }).length > 0) {
-			angular.forEach(blade.store.settings, function (value, key) {
+		if (_.where(blade.store.dynamicProperties, { name: "DefaultThemeName" }).length > 0) {
+		    angular.forEach(blade.store.dynamicProperties, function (value, key) {
 				if (value.name === "DefaultThemeName") {
-					value.value = blade.choosenTheme.name;
+				    value.values[0] = { value: blade.choosenTheme.name };
 				}
 			});
-		}
-		else {
-			blade.store.settings.push({ name: "DefaultThemeName", value: blade.choosenTheme.name, valueType: "ShortText" })
 		}
 
 		themesStores.update({ storeId: blade.storeId }, blade.store, function (data) {
