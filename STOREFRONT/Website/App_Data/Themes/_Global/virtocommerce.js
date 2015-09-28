@@ -97,7 +97,7 @@ $(function () {
         });
     });
 
-    if (typeof defaultCustomerAddress != "undefined") {
+    if (typeof defaultCustomerAddress != "undefined" && defaultCustomerAddress) {
         $("#actual-quote-request-shipping-address-first-name").val(defaultCustomerAddress.first_name);
         $("#actual-quote-request-shipping-address-last-name").val(defaultCustomerAddress.last_name);
         $("#actual-quote-request-shipping-address-country").val(defaultCustomerAddress.country);
