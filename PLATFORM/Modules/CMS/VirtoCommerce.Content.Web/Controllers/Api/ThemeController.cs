@@ -165,8 +165,10 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		{
 			if (!string.IsNullOrEmpty(asset.AssetUrl))
 			{
-				var filePath = string.Format("{0}{1}", _pathForFiles, asset.AssetUrl);
-				asset.ByteContent = File.ReadAllBytes(filePath);
+                using (var webClient = new WebClient())
+                {
+                    asset.ByteContent = webClient.DownloadData(asset.AssetUrl);
+                }
 			}
 
 			this._themeService.SaveThemeAsset(storeId, themeId, asset.ToDomainModel());

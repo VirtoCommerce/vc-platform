@@ -91,7 +91,7 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
 
         bladeNavigationService.showBlade(newBlade, blade);
     }
-    
+
     function showVirtualCatalogBlade(id, data, title) {
         var newBlade = {
             currentEntityId: id,
@@ -119,9 +119,16 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
 
         $scope.refreshItems();
     };
-    
+
 
     blade.toolbarCommands = [
+        {
+            name: "Refresh", icon: 'fa fa-refresh',
+            executeMethod: blade.refresh,
+            canExecuteMethod: function () {
+                return true;
+            }
+        },
         {
             name: "Manage", icon: 'fa fa-edit',
             executeMethod: function () {
@@ -135,7 +142,7 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
     ];
 
     if (authService.checkPermission('catalog:catalogs:manage') || authService.checkPermission('catalog:virtual_catalogs:manage')) {
-        blade.toolbarCommands.splice(0, 0, {
+        blade.toolbarCommands.splice(1, 0, {
             name: "Add",
             icon: 'fa fa-plus',
             executeMethod: function () {

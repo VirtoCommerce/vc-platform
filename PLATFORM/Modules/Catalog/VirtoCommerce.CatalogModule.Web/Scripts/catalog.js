@@ -130,34 +130,34 @@ angular.module(catalogsModuleName, [
       var itemImageWidget = {
           controller: 'virtoCommerce.catalogModule.itemImageWidgetController',
           size: [2, 2],
-          template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/itemImageWidget.tpl.html',
+	        template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/itemImageWidget.tpl.html'
       };
       widgetService.registerWidget(itemImageWidget, 'itemDetail');
       //Register item property widget
       var itemPropertyWidget = {
           controller: 'virtoCommerce.catalogModule.itemPropertyWidgetController',
-          template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/itemPropertyWidget.tpl.html',
+	        template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/itemPropertyWidget.tpl.html'
       };
       widgetService.registerWidget(itemPropertyWidget, 'itemDetail');
 
       //Register item associations widget
       var itemAssociationsWidget = {
           controller: 'virtoCommerce.catalogModule.itemAssociationsWidgetController',
-          template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/itemAssociationsWidget.tpl.html',
+	        template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/itemAssociationsWidget.tpl.html'
       };
       widgetService.registerWidget(itemAssociationsWidget, 'itemDetail');
 
       //Register item seo widget
       var itemSeoWidget = {
           controller: 'virtoCommerce.catalogModule.seoWidgetController',
-          template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/seoWidget.tpl.html',
+	        template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/seoWidget.tpl.html'
       };
       widgetService.registerWidget(itemSeoWidget, 'itemDetail');
 
       //Register item editorialReview widget
       var editorialReviewWidget = {
           controller: 'virtoCommerce.catalogModule.editorialReviewWidgetController',
-          template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/editorialReviewWidget.tpl.html',
+	        template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/editorialReviewWidget.tpl.html'
       };
       widgetService.registerWidget(editorialReviewWidget, 'itemDetail');
 
@@ -166,37 +166,36 @@ angular.module(catalogsModuleName, [
           controller: 'virtoCommerce.catalogModule.itemVariationWidgetController',
           isVisible: function (blade) { return blade.id !== 'variationDetail'; },
           size: [2, 1],
-          template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/itemVariationWidget.tpl.html',
+	        template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/itemVariationWidget.tpl.html'
       };
       widgetService.registerWidget(variationWidget, 'itemDetail');
       //Register asset widget
       var itemAssetWidget = {
           controller: 'virtoCommerce.catalogModule.itemAssetWidgetController',
-          template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/itemAssetWidget.tpl.html',
+	        template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/itemAssetWidget.tpl.html'
       };
       widgetService.registerWidget(itemAssetWidget, 'itemDetail');
 
-      //Register category property widget
+	    //Register widgets to categoryDetail
+	    widgetService.registerWidget(itemImageWidget, 'categoryDetail');
+
       var categoryPropertyWidget = {
           controller: 'virtoCommerce.catalogModule.categoryPropertyWidgetController',
-          template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/categoryPropertyWidget.tpl.html',
+	        template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/categoryPropertyWidget.tpl.html'
       };
       widgetService.registerWidget(categoryPropertyWidget, 'categoryDetail');
 
       //Register category seo widget
       var categorySeoWidget = {
           controller: 'virtoCommerce.catalogModule.seoWidgetController',
-          template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/seoWidget.tpl.html',
+	        template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/seoWidget.tpl.html'
       };
       widgetService.registerWidget(categorySeoWidget, 'categoryDetail');
-
-      widgetService.registerWidget(itemImageWidget, 'categoryDetail');
-
 
       //Register catalog widgets
       var catalogLanguagesWidget = {
           controller: 'virtoCommerce.catalogModule.catalogLanguagesWidgetController',
-          template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/catalogLanguagesWidget.tpl.html',
+	        template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/catalogLanguagesWidget.tpl.html'
       };
       widgetService.registerWidget(catalogLanguagesWidget, 'catalogDetail');
 

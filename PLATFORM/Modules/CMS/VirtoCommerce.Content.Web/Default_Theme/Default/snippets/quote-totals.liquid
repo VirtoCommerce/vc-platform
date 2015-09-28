@@ -6,6 +6,14 @@
                 <small id="quote-subtotal">{{ quote_request.totals.sub_total_exl_tax | money }}</small>
             </span>
         </div>
+        {% if quote_request.totals.discount_total > 0 %}
+            <div class="cart-total">
+                Discount
+                <span class="h1 cart-subtotal--price">
+                    <small id="quote-subtotal">{{ quote_request.totals.discount_total | money }}</small>
+                </span>
+            </div>
+        {% endif %}
         <div class="cart-total">
             Tax
             <span class="h1 cart-subtotal--price">
