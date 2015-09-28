@@ -1,7 +1,6 @@
 ﻿<div class="blade-content __medium-wide">
     <div class="blade-inner">
         <div class="inner-block">
-            <p class="note">Set the order how tax providers appear sorted in web store. Drag and drop to change the order.</p>
             <div class="table-wrapper">
                 <table class="table __normal">
                     <thead>
@@ -10,11 +9,11 @@
                             <th class="table-col" colspan="2">Tax provider</th>
                         </tr>
                     </thead>
-                    <tbody ui-sortable="sortableOptions" ng-model="blade.currentEntities">
+                    <tbody>
                         <tr class="table-item" ng-repeat="data in blade.currentEntities track by data.code" ng-class="{'__selected': data.code === selectedNodeId}">
                             <td class="table-col __product-control">
-                                <label class="form-control __checkbox">
-                                    <input type="checkbox" ng-model="data.isActive">
+                                <label class="form-label">
+                                    <input type="radio" ng-model="blade.selectedTaxProvider" ng-value="data" ng-change="radioChanged()">
                                     <span class="check"></span>
                                 </label>
                             </td>
