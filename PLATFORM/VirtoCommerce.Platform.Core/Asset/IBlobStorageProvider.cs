@@ -7,5 +7,6 @@ namespace VirtoCommerce.Platform.Core.Asset
 	{
 		string Upload(UploadStreamInfo request);
 		Stream OpenReadOnly(string blobKey);
+        void Remove(string blobKey);
 	}
 }

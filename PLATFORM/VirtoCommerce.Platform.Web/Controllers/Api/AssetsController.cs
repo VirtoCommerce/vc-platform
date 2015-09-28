@@ -63,6 +63,22 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 			return Ok(retVal.ToArray());
 		}
 
+        /// <summary>
+        /// Deletes blobs by they key.
+        /// </summary>
+        /// <remarks>Delete blob by key</remarks>
+        /// <param name="blobKey">blob key.</param>
+        /// <returns></returns>
+        [HttpDelete]
+        [ResponseType(typeof(void))]
+        [Route("")]
+        public IHttpActionResult Delete([FromUri] string blobKey)
+        {
+             _blobProvider.Remove(blobKey);
+
+            return StatusCode(HttpStatusCode.NoContent);
+        }
+
     }
 
 
