@@ -106,6 +106,20 @@
         }
     }
 
+    $scope.editDictionary = function (property) {
+        var newBlade = {
+            id: "propertyDictionary",
+            isApiSave: true,
+            currentEntity: property,
+            controller: 'platformWebApp.propertyDictionaryController',
+            template: '$(Platform)/Scripts/app/dynamicProperties/blades/property-dictionary.tpl.html',
+            onChangesConfirmedFn: function () {
+                blade.entity.dynamicProperties = angular.copy(blade.entity.dynamicProperties);
+            }
+        };
+        bladeNavigationService.showBlade(newBlade, blade);
+    };
+
     $scope.getDictionaryValues = function (property, callback) {
         dictionaryItemsApi.query({ id: property.objectType, propertyId: property.id }, callback);
     }
