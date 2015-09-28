@@ -97,6 +97,37 @@ $(function () {
         });
     });
 
+    if (typeof defaultCustomerAddress != "undefined") {
+        $("#actual-quote-request-shipping-address-first-name").val(defaultCustomerAddress.first_name);
+        $("#actual-quote-request-shipping-address-last-name").val(defaultCustomerAddress.last_name);
+        $("#actual-quote-request-shipping-address-country").val(defaultCustomerAddress.country);
+        $("#actual-quote-request-shipping-address-province").val(defaultCustomerAddress.province);
+        $("#actual-quote-request-shipping-address-city").val(defaultCustomerAddress.city);
+        $("#actual-quote-request-shipping-address-company").val(defaultCustomerAddress.company);
+        $("#actual-quote-request-shipping-address-address1").val(defaultCustomerAddress.address1);
+        $("#actual-quote-request-shipping-address-address2").val(defaultCustomerAddress.address2);
+        $("#actual-quote-request-shipping-address-zip").val(defaultCustomerAddress.zip);
+        $("#actual-quote-request-shipping-address-phone").val(defaultCustomerAddress.phone);
+
+        $("#actual-quote-request-billing-address-first-name").val(defaultCustomerAddress.first_name);
+        $("#actual-quote-request-billing-address-last-name").val(defaultCustomerAddress.last_name);
+        $("#actual-quote-request-billing-address-country").val(defaultCustomerAddress.country);
+        $("#actual-quote-request-billing-address-province").val(defaultCustomerAddress.province);
+        $("#actual-quote-request-billing-address-city").val(defaultCustomerAddress.city);
+        $("#actual-quote-request-billing-address-company").val(defaultCustomerAddress.company);
+        $("#actual-quote-request-billing-address-address1").val(defaultCustomerAddress.address1);
+        $("#actual-quote-request-billing-address-address2").val(defaultCustomerAddress.address2);
+        $("#actual-quote-request-billing-address-zip").val(defaultCustomerAddress.zip);
+        $("#actual-quote-request-billing-address-phone").val(defaultCustomerAddress.phone);
+    }
+
+    if ($("#actual-quote-request-shipping-quote").is(":checked")) {
+        $("#shipping-address-block").show();
+        if (!$("#actual-quote-request-same-billing-address").is(":checked")) {
+            $("#billing-address-block").show();
+        }
+    }
+
     $("#actual-quote-request-shipping-quote").on("change", function () {
         var checkbox = $(this);
         if (checkbox.is(":checked")) {
@@ -215,8 +246,8 @@ $(function () {
                     Zip: $("#actual-quote-request-billing-address-zip").val(),
                     Phone: $("#actual-quote-request-billing-address-phone").val()
                 };
-            }
-        }
+            };
+        };
 
         $.ajax({
             type: "POST",

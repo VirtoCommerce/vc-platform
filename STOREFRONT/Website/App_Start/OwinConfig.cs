@@ -215,14 +215,14 @@ namespace VirtoCommerce.Web
                             {
                                 ctx.ActualQuoteRequest.CustomerName = ctx.Customer.Name;
 
-                                if (ctx.ActualQuoteRequest.BillingAddress == null)
-                                {
-                                    ctx.ActualQuoteRequest.BillingAddress = ctx.Customer.DefaultAddress;
-                                }
-                                if (ctx.ActualQuoteRequest.ShippingAddress == null)
-                                {
-                                    ctx.ActualQuoteRequest.ShippingAddress = ctx.Customer.DefaultAddress;
-                                }
+                                //if (ctx.ActualQuoteRequest.BillingAddress == null)
+                                //{
+                                //    ctx.ActualQuoteRequest.BillingAddress = ctx.Customer.DefaultAddress;
+                                //}
+                                //if (ctx.ActualQuoteRequest.ShippingAddress == null)
+                                //{
+                                //    ctx.ActualQuoteRequest.ShippingAddress = ctx.Customer.DefaultAddress;
+                                //}
                             }
                         }
                     }

@@ -1,4 +1,9 @@
 ﻿{% if actual_quote_request.items_count > 0 %}
+    {% unless customer == nil %}
+        <script>
+            var defaultCustomerAddress = {% if actual_quote_request.shipping_address == nil %}{{ customer.default_address | json }}{% else %}null{% endif %};
+        </script>
+    {% endunless %}
     <form action="{{ shop.simplified_url }}/quotes" method="post" novalidate>
         <input id="actual-quote-request-id" type="hidden" value="{{ actual_quote_request.id }}" />
         <h1 class="h2">{{ 'quotes.general.title' | t }}</h1>
@@ -15,8 +20,8 @@
                 <div class="ublock">
                     <h4>{{ 'quotes.general.remarks.title' | t }}</h4>
                     <p>{{ 'quotes.general.remarks.text' | t }}</p>
-                    <textarea id="actual-quote-request-comment">{{ actual_quote_request_item.comment }}</textarea>
-                    <input id="actual-quote-request-shipping-quote" type="checkbox" /> {{ 'quotes.general.request_shipping_quote' | t }}
+                    <textarea id="actual-quote-request-comment">{{ actual_quote_request.comment }}</textarea>
+                    <input {% if actual_quote_request.shipping_required %}checked="checked"{% endif %} id="actual-quote-request-shipping-quote" type="checkbox" /> {{ 'quotes.general.request_shipping_quote' | t }}
                 </div>
             </div>
         </div>
@@ -103,7 +108,7 @@
                             <input id="actual-quote-request-shipping-address-phone" type="text" value="{{ actual_quote_request.shipping_address.phone }}" />
                         </div>
                     </div>
-                    <input checked="checked" id="actual-quote-request-same-billing-address" type="checkbox" /> Billing Address is same as Shipping Address 
+                    <input {% if actual_quote_request.billing_address_equals_shipping_address %}checked="checked"{% endif %} id="actual-quote-request-same-billing-address" type="checkbox" /> Billing Address is same as Shipping Address 
                 </div>
                 <div class="ublock" id="billing-address-block" style="display: none;">
                     <div class="h3">Billing address</div>
