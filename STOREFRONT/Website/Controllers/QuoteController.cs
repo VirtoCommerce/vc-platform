@@ -65,7 +65,7 @@ namespace VirtoCommerce.Web.Controllers
         [Route("submit")]
         public async Task<ActionResult> Submit(QuoteRequest model)
         {
-            if (string.IsNullOrEmpty(model.Email))
+            if (User.Identity.IsAuthenticated && string.IsNullOrEmpty(model.Email))
             {
                 return Json(new { errorMessage = "Field \"Email\" is required" });
             }

@@ -2,6 +2,7 @@
     <form action="{{ shop.simplified_url }}/quotes" method="post" novalidate>
         <input id="actual-quote-request-id" type="hidden" value="{{ actual_quote_request.id }}" />
         <h1 class="h2">{{ 'quotes.general.title' | t }}</h1>
+        {% unless customer == nil %}
         <div class="grid">
             <div class="grid-item">
                 <div class="ublock">
@@ -10,6 +11,7 @@
                 </div>
             </div>
         </div>
+        {% endunless %}
         <div class="grid">
             <div class="grid-item">
                 <div class="ublock">
