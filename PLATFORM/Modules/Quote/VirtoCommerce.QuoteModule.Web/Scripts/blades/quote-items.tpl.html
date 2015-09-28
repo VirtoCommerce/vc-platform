@@ -13,7 +13,7 @@
                 <label class="form-label">Shipping method</label>
                 <div class="form-input">
                     <ui-select ng-model="blade.currentEntity.shipmentMethod" ng-change="recalculate()">
-                        <ui-select-match placeholder="Select...">{{$select.selected.name}} - {{$select.selected.price}} {{$select.selected.currency}}</ui-select-match>
+                        <ui-select-match placeholder="Select..." allow-clear>{{$select.selected.name}} - {{$select.selected.price}} {{$select.selected.currency}}</ui-select-match>
                         <ui-select-choices repeat="x in blade.shippingMethods | filter: { name: $select.search }">
                             <span ng-bind-html="x.name +' - '+ x.price+' '+ x.currency | highlight: $select.search"></span>
                         </ui-select-choices>

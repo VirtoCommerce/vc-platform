@@ -1,8 +1,7 @@
 ﻿angular.module('platformWebApp')
 .controller('platformWebApp.roleDetailController', ['$q', '$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.roles', 'platformWebApp.dialogService', 'platformWebApp.securityRoleScopeService', function ($q, $scope, bladeNavigationService, roles, dialogService, securityRoleScopeService) {
 	var promise = roles.queryPermissions().$promise;
-	;
-
+	
 
 	$scope.blade.allScopes = [];
 	angular.forEach(securityRoleScopeService.allScopeGetters, function (scopeGetter) {
@@ -20,7 +19,7 @@
 		} else {
 			roles.get({ id: $scope.blade.data.id }, function (data) {
 				initializeBlade(data);
-				if (parentRefresh) {
+                if (parentRefresh && $scope.blade.parentBlade.refresh) {
 					$scope.blade.parentBlade.refresh();
 				}
 			},

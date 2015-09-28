@@ -5,16 +5,27 @@
             <div class="table-wrapper">
                 <table class="table">
                     <tbody>
-                        <tr class="table-item" ng-repeat="data in blade.currentEntity.roles track by data.id">
+                        <tr class="table-item" ng-repeat="data in blade.currentEntities track by data.id" ng-class="{'__selected': data.id === selectedNodeId}" context-menu data-target="arl_menu_{{$index}}">
                             <td class="table-col">
+                                <label class="form-control __checkbox">
+                                    <input type="checkbox" ng-model="data.$selected">
+                                    <span class="check"></span>
+                                </label>
+                            </td>
+                            <td class="table-col" ng-click='blade.selectNode(data)'>
                                 <span class="table-t">{{data.name}}</span>
                                 <span class="table-descr">{{data.description}}</span>
+                                <ul role="menu" class="menu __context" id="arl_menu_{{$index}}">
+                                    <li class="menu-item" ng-click='delete($index)'>
+                                        <i class="menu-ico fa fa-trash-o"></i> Delete
+                                    </li>
+                                </ul>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            <p class="text" ng-if="!blade.currentEntity.roles.length">No role assigned</p>
+            <p class="text" ng-if="!blade.currentEntities.length">No roles assigned.</p>
         </div>
     </div>
 </div>

@@ -42,7 +42,7 @@
                 if (remove) {
                     if ($scope.blade.deleteFn) {
                         $scope.blade.deleteFn($scope.blade.origEntity);
-                    };
+                    }
                     $scope.bladeClose();
                 }
             }

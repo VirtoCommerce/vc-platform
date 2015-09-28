@@ -22,8 +22,40 @@ namespace VirtoCommerce.Web.Convertors
             quoteItemModel.ProductId = productModel.Id;
             quoteItemModel.SalePrice = price;
             quoteItemModel.ProposalPrices.Add(new TierPrice { Quantity = 1, Price = price });
-            quoteItemModel.Sku = productModel.SelectedOrFirstAvailableVariant.Sku;
-            quoteItemModel.Title = productModel.Title;
+
+            var variant = productModel.SelectedOrFirstAvailableVariant;
+
+            quoteItemModel.Sku = variant.Sku;
+
+            var variationOptions = new Dictionary<string, string>();
+
+            if (variant.Option1 != null)
+            {
+                variationOptions.Add(productModel.Options.Skip(0).Take(1).First(), variant.Option1);
+            }
+            if (variant.Option2 != null)
+            {
+                variationOptions.Add(productModel.Options.Skip(1).Take(1).First(), variant.Option2);
+            }
+            if (variant.Option3 != null)
+            {
+                variationOptions.Add(productModel.Options.Skip(2).Take(1).First(), variant.Option3);
+            }
+
+            var stringifiedOptions = new List<string>();
+            foreach (var option in variationOptions)
+            {
+                stringifiedOptions.Add(string.Format("{0}: {1}", option.Key, option.Value));
+            }
+
+            if (variationOptions.Count > 0)
+            {
+                quoteItemModel.Title = string.Format("{0} ({1})", productModel.Title, string.Join(", ", stringifiedOptions));
+            }
+            else
+            {
+                quoteItemModel.Title = productModel.Title;
+            }
 
             return quoteItemModel;
         }

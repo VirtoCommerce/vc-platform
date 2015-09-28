@@ -770,7 +770,6 @@ namespace VirtoCommerce.Web.Controllers
             foreach (var quoteItem in Context.QuoteRequest.Items)
             {
                 var lineItemModel = quoteItem.AsLineItemModel();
-                lineItemModel.Sku = "1"; // TODO: Sku should be added to DB table
                 Context.Cart.Items.Add(lineItemModel);
             }
 
@@ -785,6 +784,12 @@ namespace VirtoCommerce.Web.Controllers
             {
                 await Service.SaveChangesAsync(Context.Cart);
             }
+
+            var checkout = await Service.GetCheckoutAsync();
+            checkout.BillingAddress = newQuoteRequest.BillingAddress;
+            checkout.ShippingAddress = newQuoteRequest.ShippingAddress;
+
+            await Service.UpdateCheckoutAsync(checkout);
 
             return Json(new { redirectUrl = VirtualPathUtility.ToAbsolute("~/checkout") });
         }

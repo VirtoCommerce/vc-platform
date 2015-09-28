@@ -70,6 +70,43 @@ namespace VirtoCommerce.Web.Models
 
         public QuoteTotals Totals { get; set; }
 
+        public bool ShippingRequired
+        {
+            get
+            {
+                return ShippingAddress != null;
+            }
+        }
+
+        public bool BillingAddressEqualsShippingAddress
+        {
+            get
+            {
+                bool isEqual = true;
+
+                if (BillingAddress != null && ShippingAddress != null)
+                {
+                    if (BillingAddress.Address1 != ShippingAddress.Address1 ||
+                        BillingAddress.Address2 != ShippingAddress.Address2 ||
+                        BillingAddress.City != ShippingAddress.City ||
+                        BillingAddress.Company != ShippingAddress.Company ||
+                        BillingAddress.Country != ShippingAddress.Country ||
+                        BillingAddress.CountryCode != ShippingAddress.CountryCode ||
+                        BillingAddress.FirstName != ShippingAddress.FirstName ||
+                        BillingAddress.LastName != ShippingAddress.LastName ||
+                        BillingAddress.Phone != ShippingAddress.Phone ||
+                        BillingAddress.Province != ShippingAddress.Province ||
+                        BillingAddress.ProvinceCode != ShippingAddress.ProvinceCode ||
+                        BillingAddress.Zip != ShippingAddress.Zip)
+                    {
+                        isEqual = false;
+                    }
+                }
+
+                return isEqual;
+            }
+        }
+
         public ICollection<string> BillingAddressErrors
         {
             get

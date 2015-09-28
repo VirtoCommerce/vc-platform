@@ -1,34 +1,35 @@
 ﻿angular.module('platformWebApp')
 .controller('platformWebApp.accountRolesController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function ($scope, bladeNavigationService, dialogService) {
-    
+    var blade = $scope.blade;
+
     function initializeBlade(data) {
-        $scope.blade.data = data;
-        $scope.blade.promise.then(function (promiseData) {
-            _.each(promiseData.roles, function (x) {
-                x.isChecked = _.some(data.roles, function (curr) { return curr.id === x.id; });
+        blade.data = data;
+        blade.promise.then(function (promiseData) {
+            var allRoles = angular.copy(promiseData.roles);
+            blade.currentEntities = _.filter(allRoles, function (x) {
+                return _.all(data.roles, function (curr) { return curr.id !== x.id; });
             });
-            
-            $scope.blade.currentEntities = promiseData.roles;
-            $scope.blade.isLoading = false;
+
+            blade.isLoading = false;
         });
     };
-   
+
     $scope.cancelChanges = function () {
-        $scope.bladeClose();
-    }
-
-    $scope.isValid = function () {
-        return true;
-    }
-
-    $scope.saveChanges = function () {
-        $scope.blade.data.roles = _.where($scope.blade.currentEntities, { isChecked: true });
-        
         $scope.bladeClose();
     };
 
-    $scope.blade.headIcon = 'fa-key';
-  
+    $scope.isValid = function () {
+        return _.any(blade.currentEntities, function (x) { return x.$selected; });
+    };
+
+    $scope.saveChanges = function () {
+        blade.data.roles = _.union(blade.data.roles, _.where(blade.currentEntities, { $selected: true }));
+
+        $scope.bladeClose();
+    };
+
+    blade.headIcon = 'fa-key';
+
     $scope.$watch('blade.parentBlade.currentEntity', initializeBlade);
 
     // on load: 
