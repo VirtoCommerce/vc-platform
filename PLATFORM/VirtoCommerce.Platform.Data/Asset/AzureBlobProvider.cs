@@ -62,6 +62,9 @@ namespace VirtoCommerce.Platform.Data.Asset
 
         public System.IO.Stream OpenReadOnly(string blobKey)
         {
+            if (string.IsNullOrEmpty(blobKey))
+                throw new ArgumentNullException("blobKey");
+
             System.IO.Stream retVal = null;
             var cloudBlob = _cloudBlobClient.GetBlobReferenceFromServer(new Uri(_cloudBlobClient.BaseUri, blobKey));
             if (cloudBlob.Exists())
@@ -77,6 +80,17 @@ namespace VirtoCommerce.Platform.Data.Asset
             return retVal;
         }
 
+        public void Remove(string blobKey)
+        {
+            if (string.IsNullOrEmpty(blobKey))
+                throw new ArgumentNullException("blobKey");
+
+            var cloudBlob = _cloudBlobClient.GetBlobReferenceFromServer(new Uri(_cloudBlobClient.BaseUri, blobKey));
+            if (cloudBlob != null)
+            {
+                cloudBlob.DeleteIfExists();
+            }
+        }
 
         #endregion
 

@@ -1,33 +1,65 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.accountRolesListController', ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
+.controller('platformWebApp.accountRolesListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function ($scope, bladeNavigationService, dialogService) {
+    var blade = $scope.blade;
 
     function initializeBlade(data) {
-        $scope.blade.currentEntity = data;
-        $scope.blade.isLoading = false;
+        blade.currentEntity = data;
+        blade.currentEntities = data.roles;
+        blade.isLoading = false;
     };
 
-    $scope.blade.onClose = function (closeCallback) {
-        closeChildrenBlades();
-        closeCallback();
+    blade.selectNode = function (node) {
+        $scope.selectedNodeId = node.id;
+
+        var newBlade = {
+            id: 'roleDetails',
+            data: node,
+            title: node.name,
+            subtitle: 'Role details',
+            controller: 'platformWebApp.roleDetailController',
+            template: '$(Platform)/Scripts/app/security/blades/role-detail.tpl.html'
+        };
+
+        bladeNavigationService.showBlade(newBlade, blade);
     };
 
-    function closeChildrenBlades() {
-        angular.forEach($scope.blade.childrenBlades.slice(), function (child) {
-            bladeNavigationService.closeBlade(child);
-        });
+    function isItemsChecked() {
+        return _.any(blade.currentEntities, function (x) { return x.$selected; });
     }
 
-    $scope.blade.headIcon = 'fa-key';
+    function deleteChecked() {
+        //var dialog = {
+        //    id: "confirmDeleteItem",
+        //    title: "Delete confirmation",
+        //    message: "Are you sure you want to delete selected Quote Requests?",
+        //    callback: function (remove) {
+        //        if (remove) {
+        _.each(blade.currentEntities.slice(), function (x) {
+            if (x.$selected) {
+                blade.currentEntities.splice(blade.currentEntities.indexOf(x), 1);
+            }
+        });
+        //        }
+        //    }
+        //}
+        //dialogService.showConfirmationDialog(dialog);
+    }
 
-    $scope.blade.toolbarCommands = [
+    $scope.delete = function (index) {
+        blade.currentEntities.splice(index, 1);
+    };
+
+    blade.headIcon = 'fa-key';
+
+    blade.toolbarCommands = [
            {
-               name: "Manage roles", icon: 'fa fa-edit',
+               name: "Assign", icon: 'fa fa-plus',
                executeMethod: function () {
                    var newBlade = {
                        id: "accountChildBladeChild",
-                       promise: $scope.blade.promise,
-                       title: $scope.blade.title,
-                       subtitle: 'Manage roles',
+                       promise: blade.promise,
+                       title: blade.title,
+                       subtitle: 'Assign roles',
                        controller: 'platformWebApp.accountRolesController',
                        template: '$(Platform)/Scripts/app/security/blades/account-roles.tpl.html'
                    };
@@ -38,10 +70,24 @@
                    return true;
                },
                permission: 'platform:security:manage'
-           }
+           },
+            {
+                name: "Remove", icon: 'fa fa-trash-o',
+                executeMethod: function () {
+                    deleteChecked();
+                },
+                canExecuteMethod: function () {
+                    return isItemsChecked();
+                },
+                permission: 'platform:security:manage'
+            }
     ];
 
     $scope.$watch('blade.parentBlade.currentEntity', initializeBlade);
+    $scope.$watch('blade.currentEntity.roles', function (data) {
+        _.each(data, function (x) { x.$selected = false });
+        blade.currentEntities = data;
+    });
 
     // on load: 
     // $scope.$watch('blade.parentBlade.currentEntity' gets fired

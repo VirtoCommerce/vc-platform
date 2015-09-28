@@ -10,7 +10,7 @@
 		blade.isLoading = true;
 		blade.currentEntities = [];
 
-		if (!angular.isUndefined($stateParams.storeId) && authService.checkPermission('content:manage', 'content:store:' + $stateParams.storeId)) {
+		if (!angular.isUndefined($stateParams.storeId) && authService.checkPermission('content:manage', 'store:' + $stateParams.storeId)) {
 			stores.get({ id: $stateParams.storeId }, function (data) {
 				blade.openThemes($stateParams.storeId, data.name);
 			});
@@ -18,7 +18,7 @@
 
 		stores.query({}, function (data) {
 			for (var i = 0; i < data.length; i++) {
-				if (!authService.checkPermission('content:manage', 'content:store:' + data[i].id)) {
+				if (!authService.checkPermission('content:manage', 'store:' + data[i].id)) {
 					continue;
 				}
 				stores.get({ id: data[i].id }, function (data) {
@@ -63,7 +63,7 @@
 							blade.currentEntities.push(entity);
 							//init security scopes need for evaluate scope bounded ACL
 							//that securityScopes will be inherited all children blades (by bladeNavigationService)
-							blade.securityScopes = _.map(blade.currentEntities, function (x) { return 'content:store:' + x.store.id; }).join();
+							blade.securityScopes = _.map(blade.currentEntities, function (x) { return 'store:' + x.store.id; }).join();
 
 							blade.isLoading = false;
 						});

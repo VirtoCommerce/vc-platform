@@ -63,18 +63,26 @@ namespace VirtoCommerce.Platform.Data.Asset
 
         }
 
-        public Stream OpenReadOnly(string assetKey)
+        public Stream OpenReadOnly(string blobKey)
         {
-            if (string.IsNullOrEmpty(assetKey))
-                throw new ArgumentNullException("assetKey");
+            if (string.IsNullOrEmpty(blobKey))
+                throw new ArgumentNullException("blobKey");
 
-            var fileName = _storagePath + "\\" + assetKey;
+            var fileName = _storagePath + "\\" + blobKey;
 
             var stream = LoadFile(fileName);
 
             return stream;
         }
 
+        public void Remove(string blobKey)
+        {
+            if (string.IsNullOrEmpty(blobKey))
+                throw new ArgumentNullException("blobKey");
+          
+            var fileName = _storagePath + "\\" + blobKey;
+            File.Delete(fileName);
+        }
         #endregion
 
         #region IBlobUrlResolver Members

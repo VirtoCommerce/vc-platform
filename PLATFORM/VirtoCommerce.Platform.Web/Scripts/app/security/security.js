@@ -65,6 +65,12 @@
         };
         mainMenuService.addMenuItem(menuItem);
 
+    	//Register security scope  userId used for scope bounded ACL definition
+        var getScopesFn = function () {
+        	return ['{{userId}}', '{{userLogin}}'];
+        };
+        securityRoleScopeService.registerScopeGetter(getScopesFn);
+
         //Register widgets
         widgetService.registerWidget({
             controller: 'platformWebApp.accountRolesWidgetController',

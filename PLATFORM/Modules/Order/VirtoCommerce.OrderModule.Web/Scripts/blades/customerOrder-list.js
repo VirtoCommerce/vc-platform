@@ -30,11 +30,11 @@ function ($scope, order_res_customerOrders, bladeNavigationService, dialogServic
         	order_res_stores.query({}, function (result) {
         		criteria.stores = [];
         		angular.forEach(result, function (x) {
-        			if (authService.checkPermission('order:manage', 'order:store:' + x.id)) {
+        			if (authService.checkPermission('order:manage', 'store:' + x.id)) {
         				criteria.stores.push(x.id);
         			}
         		});
-        		if (authService.checkPermission('order:manage', 'order:employee:' + authService.userId)) {
+        		if (authService.checkPermission('order:manage', 'currentUser:' + authService.userId)) {
         			criteria.employee = authService.userId;
         		}
         		searchOrders(criteria);

@@ -37,7 +37,7 @@
     }
 
     $scope.editDictionary = function (property) {
-        var editDictionaryBlade = {
+        var newBlade = {
             id: "propertyDictionary",
             isApiSave: true,
             currentEntity: property,
@@ -47,7 +47,7 @@
                 blade.currentEntity.dynamicProperties = angular.copy(blade.currentEntity.dynamicProperties);
             }
         };
-        bladeNavigationService.showBlade(editDictionaryBlade, blade);
+        bladeNavigationService.showBlade(newBlade, blade);
     };
 
     blade.onClose = function (closeCallback) {

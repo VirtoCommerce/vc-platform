@@ -1,29 +1,45 @@
 ﻿angular.module('platformWebApp')
 .controller('platformWebApp.newAccountWizardController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.accounts', 'platformWebApp.roles', function ($scope, bladeNavigationService, accounts, roles) {
+    var blade = $scope.blade;
     var promise = roles.get({ count: 10000 }).$promise;
 
     function initializeBlade(data) {
         promise.then(function (promiseData) {
-            $scope.blade.isLoading = false;
-            $scope.blade.currentEntities = promiseData.roles;
+            blade.isLoading = false;
+            blade.currentEntities = promiseData.roles;
         });
     };
 
+    blade.selectNode = function (node) {
+        $scope.selectedNodeId = node.id;
+
+        var newBlade = {
+            id: 'roleDetails',
+            data: node,
+            title: node.name,
+            subtitle: 'Role details',
+            controller: 'platformWebApp.roleDetailController',
+            template: '$(Platform)/Scripts/app/security/blades/role-detail.tpl.html'
+        };
+
+        bladeNavigationService.showBlade(newBlade, blade);
+    };
+
     $scope.saveChanges = function () {
-        if ($scope.blade.currentEntity.password != $scope.blade.currentEntity.newPassword2) {
-            $scope.blade.error = 'Error: passwords don\'t match!';
+        if (blade.currentEntity.password != blade.currentEntity.newPassword2) {
+            blade.error = 'Error: passwords don\'t match!';
             return;
         }
 
-        $scope.blade.isLoading = true;
-        $scope.blade.error = undefined;
-        var postData = angular.copy($scope.blade.currentEntity);
+        blade.isLoading = true;
+        blade.error = undefined;
+        var postData = angular.copy(blade.currentEntity);
         postData.newPassword2 = undefined;
-        postData.roles = _.where($scope.blade.currentEntities, { isChecked: true });
+        postData.roles = _.where(blade.currentEntities, { $selected: true });
 
         accounts.save({}, postData, function (data) {
-            $scope.blade.parentBlade.refresh();
-            $scope.blade.parentBlade.selectNode(data);
+            blade.parentBlade.refresh();
+            blade.parentBlade.selectNode(data);
         }, function (error) {
             var errText = 'Error ' + error.status;
             if (error.data && error.data.message) {
@@ -33,8 +49,8 @@
         });
     };
     
-    $scope.blade.headIcon = 'fa-key';
+    blade.headIcon = 'fa-key';
     
     // actions on load
-    initializeBlade($scope.blade.currentEntity);
+    initializeBlade(blade.currentEntity);
 }]);

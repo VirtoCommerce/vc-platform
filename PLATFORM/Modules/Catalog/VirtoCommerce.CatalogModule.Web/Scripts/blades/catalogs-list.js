@@ -12,11 +12,11 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
             blade.isLoading = false;
             //filter the catalogs in which we not have access
             $scope.objects = _.filter(results, function (x) {
-                return authService.checkPermission('catalog:catalogs:manage', 'catalog:name:' + x.name);
+                return authService.checkPermission('catalog:catalogs:manage', 'catalog:' + x.name);
             });
             //init security scopes need for evaluate scope bounded ACL
             //that securityScopes will be inherited all children blades (by bladeNavigationService)
-            blade.securityScopes = _.map($scope.objects, function (x) { return 'catalog:name:' + x.name; }).join();
+            blade.securityScopes = _.map($scope.objects, function (x) { return 'catalog:' + x.name; }).join();
 
             if (selectedNode != null) {
                 //select the node in the new list
@@ -91,7 +91,7 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
 
         bladeNavigationService.showBlade(newBlade, blade);
     }
-    
+
     function showVirtualCatalogBlade(id, data, title) {
         var newBlade = {
             currentEntityId: id,
@@ -119,9 +119,16 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
 
         $scope.refreshItems();
     };
-    
+
 
     blade.toolbarCommands = [
+        {
+            name: "Refresh", icon: 'fa fa-refresh',
+            executeMethod: blade.refresh,
+            canExecuteMethod: function () {
+                return true;
+            }
+        },
         {
             name: "Manage", icon: 'fa fa-edit',
             executeMethod: function () {
@@ -135,7 +142,7 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
     ];
 
     if (authService.checkPermission('catalog:catalogs:manage') || authService.checkPermission('catalog:virtual_catalogs:manage')) {
-        blade.toolbarCommands.splice(0, 0, {
+        blade.toolbarCommands.splice(1, 0, {
             name: "Add",
             icon: 'fa fa-plus',
             executeMethod: function () {

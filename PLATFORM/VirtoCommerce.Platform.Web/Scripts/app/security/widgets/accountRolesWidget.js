@@ -6,7 +6,7 @@
             id: "accountChildBlade",
             promise: $scope.blade.promise,
             title: $scope.blade.title,
-            subtitle: 'View roles',
+            subtitle: 'Manage roles',
             controller: 'platformWebApp.accountRolesListController',
             template: '$(Platform)/Scripts/app/security/blades/account-roles-list.tpl.html'
         };
