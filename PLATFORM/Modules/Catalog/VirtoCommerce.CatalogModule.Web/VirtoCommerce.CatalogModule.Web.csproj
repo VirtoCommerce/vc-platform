@@ -308,12 +308,14 @@
     <Content Include="Scripts\wizards\newProduct\new-product-wizard-seo-detail-step.js" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include=".bowerrc" />
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
     <Content Include="module.manifest">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="bower.json" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
