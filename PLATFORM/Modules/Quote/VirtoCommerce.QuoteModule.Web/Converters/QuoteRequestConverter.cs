@@ -27,7 +27,7 @@ namespace VirtoCommerce.QuoteModule.Web.Converters
             }
             if (quoteRequest.Items != null)
             {
-                retVal.Items = quoteRequest.Items.Select(x => x.ToWebModel()).ToList();
+                retVal.Items = quoteRequest.Items.Select(x => x.ToWebModel()).OrderBy(x=>x.Name).ToList();
             }
             if (quoteRequest.DynamicProperties != null)
             {
@@ -37,7 +37,12 @@ namespace VirtoCommerce.QuoteModule.Web.Converters
             {
                 retVal.Totals = quoteRequest.Totals.ToWebModel();
             }
-        
+            if (quoteRequest.ShipmentMethod != null)
+            {
+                retVal.ShipmentMethod = new webModel.ShipmentMethod();
+                retVal.ShipmentMethod.InjectFrom(quoteRequest.ShipmentMethod);
+                retVal.ShipmentMethod.Currency = quoteRequest.Currency;
+            }
             retVal.OperationsLog = quoteRequest.OperationsLog;
             return retVal;
 		}
@@ -67,6 +72,12 @@ namespace VirtoCommerce.QuoteModule.Web.Converters
             if (quoteRequest.Totals != null)
             {
                 retVal.Totals = quoteRequest.Totals.ToCoreModel();
+            }
+            if(quoteRequest.ShipmentMethod != null)
+            {
+                retVal.ShipmentMethod = new coreModel.ShipmentMethod();
+                retVal.ShipmentMethod.InjectFrom(quoteRequest.ShipmentMethod);
+                retVal.ShipmentMethod.Currency = quoteRequest.Currency;
             }
             retVal.OperationsLog = quoteRequest.OperationsLog;
             return retVal;

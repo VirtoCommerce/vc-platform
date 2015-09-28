@@ -51,7 +51,7 @@ namespace VirtoCommerce.CoreModule.Data.Tax
                 {
                     var rate = new TaxRate
                     {
-                        Rate = line.Amount * Rate,
+                        Rate = line.Amount * Rate * 0.01m,
                         Currency = taxEvalContext.TaxRequest.Currency,
                         TaxProvider = this,
                         Line = line

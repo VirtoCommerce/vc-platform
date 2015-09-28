@@ -19,7 +19,7 @@ namespace VirtoCommerce.QuoteModule.Web.Converters
 
             if (quoteItem.ProposalPrices != null)
             {
-                retVal.ProposalPrices = quoteItem.ProposalPrices.Select(x=>x.ToWebModel()).ToList();
+                retVal.ProposalPrices = quoteItem.ProposalPrices.Select(x=>x.ToWebModel()).OrderBy(x=>x.Quantity).ToList();
             }
             if(quoteItem.SelectedTierPrice != null)
             {

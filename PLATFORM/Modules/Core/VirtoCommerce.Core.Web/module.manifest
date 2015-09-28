@@ -86,7 +86,7 @@
 				<name>VirtoCommerce.Core.FixedTaxRateProvider.Rate</name>
 				<valueType>decimal</valueType>
 				<defaultValue>0.00</defaultValue>
-				<title>Fixed tax rate</title>
+				<title>Fixed tax rate %</title>
 				<description>Fixed tax rate</description>
 			</setting>
 		</group>

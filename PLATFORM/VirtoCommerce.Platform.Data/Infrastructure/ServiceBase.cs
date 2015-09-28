@@ -11,94 +11,101 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
 	{
         #region Settings
 
-		protected void LoadObjectSettings(ISettingsManager settingManager, object obj)
+		protected void LoadEntitySettings(ISettingsManager settingManager, Entity entity)
 		{
-            var haveSettingsObjects = obj.GetFlatObjectsListWithInterface<IHaveSettings>();
+            if (entity == null)
+            {
+                throw new ArgumentNullException("entity");
+            }
+            if (entity.IsTransient())
+            {
+                throw new ArgumentException("entity transistent");
+            }
+            var objectType = entity.GetType().Name;
+            var storedSettings = settingManager.GetObjectSettings(objectType, entity.Id);
 
-			foreach (var haveSettingsObject in haveSettingsObjects)
-			{
-				var entity = haveSettingsObject as Entity;
+            var haveSettingsObjects = entity.GetFlatObjectsListWithInterface<IHaveSettings>();
+            foreach (var haveSettingsObject in haveSettingsObjects)
+            {
+                // Replace in-memory settings with stored in database
+                if (haveSettingsObject.Settings != null)
+                {
+                    var resultSettings = new List<SettingEntry>();
 
-				if (entity != null && !entity.IsTransient())
-				{
-					var storedSettings = settingManager.GetObjectSettings(entity.GetType().Name, entity.Id);
-
-                    // Replace in-memory settings with stored in database
-					if (haveSettingsObject.Settings != null)
-					{
-						var resultSettings = new List<SettingEntry>();
-
-						foreach (var setting in haveSettingsObject.Settings)
-						{
-                            var storedSetting = storedSettings.FirstOrDefault(x => x.Name == setting.Name);
-                            if (storedSetting != null)
-                            {
-                                resultSettings.Add(storedSetting);
-                            }
-                            else
-                            {
-                                var globalSetting = settingManager.GetSettingByName(setting.Name);
-                                setting.Value = globalSetting != null ? globalSetting.Value : setting.DefaultValue;
-                                resultSettings.Add(setting);
-                            }
+                    foreach (var setting in haveSettingsObject.Settings)
+                    {
+                        //First find object setting by name 
+                        var storedSetting = storedSettings.FirstOrDefault(x => x.Name == setting.Name);
+                        if (storedSetting != null)
+                        {
+                            resultSettings.Add(storedSetting);
                         }
-						haveSettingsObject.Settings = resultSettings;
-					}
-					else
-					{
-						haveSettingsObject.Settings = storedSettings;
-					}
-				}
-			}
-		}
+                        else
+                        {
+                            //If not found take a setting value from global setting
+                            var globalSetting = settingManager.GetSettingByName(setting.Name);
+                            setting.Value = globalSetting != null ? globalSetting.Value : setting.DefaultValue;
+                            resultSettings.Add(setting);
+                        }
+                    }
+                    haveSettingsObject.Settings = resultSettings;
+                }
+                else
+                {
+                    haveSettingsObject.Settings = storedSettings;
+                }
+            }
+        }
 
-		protected void SaveObjectSettings(ISettingsManager settingManager, object obj)
-		{
-            var haveSettingsObjects = obj.GetFlatObjectsListWithInterface<IHaveSettings>();
+        protected void SaveEntitySettings(ISettingsManager settingManager, Entity entity)
+        {
+            if (entity == null)
+            {
+                throw new ArgumentNullException("entity");
+            }
+            if (entity.IsTransient())
+            {
+                throw new ArgumentException("entity transistent");
+            }
+            var objectType = entity.GetType().Name;
 
-			foreach (var haveSettingsObject in haveSettingsObjects)
-			{
-				var entity = haveSettingsObject as Entity;
+            var haveSettingsObjects = entity.GetFlatObjectsListWithInterface<IHaveSettings>();
 
-				if (entity != null && !entity.IsTransient())
-				{
-                    var objectType = entity.GetType().Name;
-					var settings = new List<SettingEntry>();
+            foreach (var haveSettingsObject in haveSettingsObjects)
+            {
+                var settings = new List<SettingEntry>();
 
-					if (haveSettingsObject.Settings != null)
-					{
-						//Save settings
-						foreach (var setting in haveSettingsObject.Settings)
-						{
-							setting.ObjectId = entity.Id;
-                            setting.ObjectType = objectType;
-							settings.Add(setting);
-						}
-					}
+                if (haveSettingsObject.Settings != null)
+                {
+                    //Save settings
+                    foreach (var setting in haveSettingsObject.Settings)
+                    {
+                        setting.ObjectId = entity.Id;
+                        setting.ObjectType = objectType;
+                        settings.Add(setting);
+                    }
+                }
+                settingManager.SaveSettings(settings.ToArray());
+            }
+        }
 
-					settingManager.SaveSettings(settings.ToArray());
-				}
-			}
-		}
-
-		protected void RemoveObjectSettings(ISettingsManager settingManager, object obj)
-		{
-            var haveSettingsObjects = obj.GetFlatObjectsListWithInterface<IHaveSettings>();
-
-			foreach (var haveSettingsObject in haveSettingsObjects)
-			{
-				var entity = haveSettingsObject as Entity;
-
-				if (entity != null && !entity.IsTransient())
-				{
-					settingManager.RemoveObjectSettings(entity.GetType().Name, entity.Id);
-				}
-			}
-		}
+        protected void RemoveEntitySettings(ISettingsManager settingManager, Entity entity)
+        {
+            if (entity == null)
+            {
+                throw new ArgumentNullException("entity");
+            }
+            if (entity.IsTransient())
+            {
+                throw new ArgumentException("entity transistent");
+            }
+            var objectType = entity.GetType().Name;
+            settingManager.RemoveObjectSettings(objectType, entity.Id);
+        }
 
         #endregion
-	
-		protected virtual void CommitChanges(IRepository repository)
+
+        protected virtual void CommitChanges(IRepository repository)
 		{
 			try
 			{
