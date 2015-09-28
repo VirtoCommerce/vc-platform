@@ -46,7 +46,7 @@ angular.module(moduleName, [
   	 //Register security scope types used for scope bounded ACL definition
       var getScopesFn = function () {
       	return stores.query({}).$promise.then(function (result) {
-      		var scopes = _.map(result, function (x) { return "store:name:" + x.name; });
+      		var scopes = _.map(result, function (x) { return "store:" + x.name; });
       		return scopes;
       	});
       };

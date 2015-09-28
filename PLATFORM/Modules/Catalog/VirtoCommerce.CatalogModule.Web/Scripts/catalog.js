@@ -50,7 +50,7 @@ angular.module(catalogsModuleName, [
       var getScopesFn = function () {
       	return catalogs.getCatalogs().$promise.then(function (result) {
       		//Scope for each  catalog
-      		var scopes = _.map(result, function (x) { return "catalog:name:" + x.name; });
+      		var scopes = _.map(result, function (x) { return "catalog:" + x.name; });
       		return scopes;
       	});
       };

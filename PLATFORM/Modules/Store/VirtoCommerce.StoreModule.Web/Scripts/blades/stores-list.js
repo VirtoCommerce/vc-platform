@@ -1,12 +1,13 @@
 ﻿angular.module('virtoCommerce.storeModule')
-.controller('virtoCommerce.storeModule.storesListController', ['$scope', 'virtoCommerce.storeModule.stores', 'platformWebApp.bladeNavigationService', function ($scope, stores, bladeNavigationService) {
+.controller('virtoCommerce.storeModule.storesListController', ['$scope', 'virtoCommerce.storeModule.stores', 'platformWebApp.bladeNavigationService', 'platformWebApp.authService', function ($scope, stores, bladeNavigationService, authService) {
     $scope.selectedNodeId = null;
 
     $scope.blade.refresh = function () {
         $scope.blade.isLoading = true;
         stores.query({}, function (data) {
-            $scope.blade.isLoading = false;
-            $scope.blade.currentEntities = data;
+        	$scope.blade.isLoading = false;
+
+        	$scope.blade.currentEntities = _.filter(data, function (x) { return authService.checkPermission('store:manage', 'store:' + x.name); });
         }, function (error) {
             bladeNavigationService.setError('Error ' + error.status, $scope.blade);
         });

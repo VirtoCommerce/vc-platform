@@ -22,7 +22,7 @@
                     <div class="form-group">
                         <ui-select multiple ng-model="blade.currentEntity.scopes">
                             <ui-select-match placeholder="Select value">{{$item}}</ui-select-match>
-                            <ui-select-choices repeat="x in blade.filteredScopes | filter: $select.search">
+                            <ui-select-choices repeat="x in blade.allScopes | filter: $select.search">
                                 <span ng-bind-html="x | highlight: $select.search"></span>
                             </ui-select-choices>
                         </ui-select>
@@ -30,7 +30,7 @@
                 </fieldset>
             </form>
             <div class="sub-t">Assigned permissions</div>
-            <p class="text">Scope bounded</p>
+            <p class="text">Сheck to restrict permissions selected scopes</p>
             <div class="table-wrapper">
                 <table class="table">
                     <tbody>

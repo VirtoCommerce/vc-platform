@@ -32,7 +32,7 @@ angular.module(moduleName, ['virtoCommerce.catalogModule', 'virtoCommerce.pricin
   }]
 )
 .run(
-  ['$rootScope', '$http', '$compile', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', '$localStorage', 'virtoCommerce.orderModule.order_res_customerOrders', 'platformWebApp.securityRoleScopeService', 'virtoCommerce.orderModule.order_res_stores', function ($rootScope, $http, $compile, mainMenuService, widgetService, $state, $localStorage, customerOrders, securityRoleScopeService, order_res_stores) {
+  ['$rootScope', '$http', '$compile', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', '$localStorage', 'virtoCommerce.orderModule.order_res_customerOrders', function ($rootScope, $http, $compile, mainMenuService, widgetService, $state, $localStorage, customerOrders) {
       //Register module in main menu
       var menuItem = {
           path: 'browse/orders',
@@ -44,18 +44,7 @@ angular.module(moduleName, ['virtoCommerce.catalogModule', 'virtoCommerce.pricin
       };
       mainMenuService.addMenuItem(menuItem);
 
-  	  //Register security scope types used for scope bounded ACL definition
-      var getScopesFn = function () {
-      	return order_res_stores.query().$promise.then(function (result) {
-			//Order for concrete stores
-      		var scopes = _.map(result, function (x) { return "order:store:" + x.id; });
-			//Orders for concrete employee
-      		scopes.push('order:employee:{{userId}}');
-      		return scopes;
-      	});      
-      };
-      securityRoleScopeService.registerScopeGetter(getScopesFn);
-
+  	
       //Register widgets
       var operationItemsWidget = {
           controller: 'virtoCommerce.orderModule.customerOrderItemsWidgetController',
