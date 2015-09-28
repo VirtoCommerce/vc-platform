@@ -47,8 +47,10 @@
 								entity.themesCount = data.length;
 								entity.themes = data;
 
-								if (_.find(entity.store.settings, function (setting) { return setting.name === 'DefaultThemeName'; }) !== undefined) {
-									entity.defaultThemeName = _.find(entity.store.settings, function (setting) { return setting.name === 'DefaultThemeName'; }).value;
+								if (_.find(entity.store.dynamicProperties, function (property) { return property.name === 'DefaultThemeName'; }) !== undefined) {
+								    var defaultThemeNameProperty = _.find(entity.store.dynamicProperties, function (property) { return property.name === 'DefaultThemeName'; });
+
+								    entity.defaultThemeName = defaultThemeNameProperty.values[0].value;
 									if (_.find(entity.themes, function (theme) { return theme.name === entity.defaultThemeName; }) !== undefined) {
 										entity.defaultTheme = _.find(entity.themes, function (theme) { return theme.name === entity.defaultThemeName; });
 									}

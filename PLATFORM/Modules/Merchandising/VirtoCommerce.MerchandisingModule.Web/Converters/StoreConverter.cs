@@ -33,9 +33,9 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
 				foreach (var propValueGroup in store.DynamicProperties.GroupBy(x => x.Name))
 				{
 					var val = propValueGroup.SelectMany(g => g.Values).SingleOrDefault();
-					if (val != null)
+					if (val != null && val.Value != null)
 					{
-						retVal.Settings.Add(propValueGroup.Key, val);
+						retVal.Settings.Add(propValueGroup.Key, val.Value);
 					}
 				}
 			}
