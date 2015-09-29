@@ -34,7 +34,7 @@
                     <legend>Choose modules to export</legend>
                     <div class="list __items">
                         <label class="list-item" ng-repeat="data in exportRequest.exportManifest.modules">
-                            <input type="checkbox" ng-model="data.isChecked" ng-checked="updateModuleSelection()">
+                            <input type="checkbox" ng-model="data.isChecked" ng-change="updateModuleSelection()">
                             <span class="switch"></span>
                             <span class="list-name">{{data.id}}</span>
                             <span class="list-descr">{{data.description}}</span>

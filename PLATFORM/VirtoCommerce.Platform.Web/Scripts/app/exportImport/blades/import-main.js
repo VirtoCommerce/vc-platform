@@ -18,7 +18,7 @@
     });
 
     $scope.canStartProcess = function () {
-    	return ($scope.importRequest.modules && $scope.importRequest.modules.length > 0) || $scope.importRequest.handleSecurity || $scope.importRequest.handleSettings || $scope.importRequest.handleBinary;
+        return ($scope.importRequest.modules && $scope.importRequest.modules.length > 0) || $scope.importRequest.handleSecurity || $scope.importRequest.handleSettings || $scope.importRequest.handleBinaryData;
     }
 
     $scope.startProcess = function () {
@@ -65,7 +65,17 @@
         	$scope.importRequest.fileUrl = asset[0].relativeUrl;
 
         	exportImportResourse.loadExportManifest({ fileUrl: $scope.importRequest.fileUrl }, function (data) {
-        		$scope.importRequest.exportManifest = data;
+                // select all available data for import
+        	    $scope.importRequest.handleSecurity = data.handleSecurity;
+        	    $scope.importRequest.handleSettings = data.handleSettings;
+        	    $scope.importRequest.handleBinaryData = data.handleBinaryData;
+
+        	    _.each(data.modules, function (x) {
+        	        x.isChecked = true;
+        	    });
+        		
+        	    $scope.importRequest.exportManifest = data;
+        	    $scope.updateModuleSelection();
           	    blade.isLoading = false;
             }, function (error) {
                 bladeNavigationService.setError('Error ' + error.status, blade);
