@@ -18,10 +18,12 @@
             scope.context = {};
             scope.context.currentPropValues = [];
             scope.context.allDictionaryValues = [];
+            var theEmptyValue = { value: null };
 
             scope.$watch('context.currentPropValues', function (newValue, oldValue) {
                 //reflect only real changes
-                if (newValue.length != scope.currentEntity.values.length || !objComparer.equal(newValue, scope.currentEntity.values)) {
+                if (!objComparer.equal(newValue, [theEmptyValue]) &&
+                   (newValue.length != scope.currentEntity.values.length || !objComparer.equal(newValue, scope.currentEntity.values))) {
                     if (scope.currentEntity.isDictionary) {
                         scope.currentEntity.values = _.map(newValue, function (x) { return { value: x } });
                     }
@@ -36,8 +38,8 @@
                     else {
                         scope.currentEntity.values = newValue;
                     }
-                    ngModelController.$setViewValue(scope.currentEntity);
 
+                    ngModelController.$setViewValue(scope.currentEntity);
                 }
             }, true);
 
@@ -52,7 +54,7 @@
 
                 scope.context.currentPropValues = angular.copy(scope.currentEntity.values);
                 if (needAddEmptyValue(scope.currentEntity, scope.context.currentPropValues)) {
-                    scope.context.currentPropValues.push({ value: null });
+                    scope.context.currentPropValues.push(angular.copy(theEmptyValue));
                 }
 
                 if (scope.currentEntity.isDictionary) {
