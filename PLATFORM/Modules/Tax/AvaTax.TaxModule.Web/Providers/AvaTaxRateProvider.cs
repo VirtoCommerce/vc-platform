@@ -20,11 +20,22 @@ namespace AvaTax.TaxModule.Web
 {
     public class AvaTaxRateProvider : TaxProvider
     {
+        #region const
+
+        private const string accountNumberPropertyName = "Avalara.Tax.Credentials.AccountNumber";
+        private const string licenseKeyPropertyName = "Avalara.Tax.Credentials.LicenseKey";
+        private const string serviceUrlPropertyName = "Avalara.Tax.Credentials.ServiceUrl";
+        private const string companyCodePropertyName = "Avalara.Tax.Credentials.CompanyCode";
+        private const string isEnabledPropertyName = "Avalara.Tax.IsEnabled";
+        private const string isValidateAddressPropertyName = "Avalara.Tax.IsValidateAddress";
+
+        #endregion
+
         private readonly AvalaraLogger _logger;
         private readonly IContactService _customerSearchService;
 
         public AvaTaxRateProvider()
-            : base("AvaTaxRate")
+            : base("AvaTaxRateProvider")
         {
         }
 
@@ -40,13 +51,7 @@ namespace AvaTax.TaxModule.Web
         {
             get
             {
-                string retVal = string.Empty;
-                var settingAccountNumber = Settings.Where(x => x.Name == "Avalara.Tax.Credentials.AccountNumber").FirstOrDefault();
-                if (settingAccountNumber != null)
-                {
-                    retVal = settingAccountNumber.Value;
-                }
-                return retVal;
+                return GetSetting(accountNumberPropertyName);
             }
         }
 
@@ -54,13 +59,7 @@ namespace AvaTax.TaxModule.Web
         {
             get
             {
-                string retVal = string.Empty;
-                var settingLicenseKey = Settings.Where(x => x.Name == "Avalara.Tax.Credentials.LicenseKey").FirstOrDefault();
-                if (settingLicenseKey != null)
-                {
-                    retVal = settingLicenseKey.Value;
-                }
-                return retVal;
+                return GetSetting(licenseKeyPropertyName);                
             }
         }
 
@@ -68,13 +67,7 @@ namespace AvaTax.TaxModule.Web
         {
             get
             {
-                string retVal = string.Empty;
-                var settingCompanyCode = Settings.Where(x => x.Name == "Avalara.Tax.Credentials.CompanyCode").FirstOrDefault();
-                if (settingCompanyCode != null)
-                {
-                    retVal = settingCompanyCode.Value;
-                }
-                return retVal;
+                return GetSetting(companyCodePropertyName);
             }
         }
 
@@ -82,13 +75,7 @@ namespace AvaTax.TaxModule.Web
         {
             get
             {
-                string retVal = string.Empty;
-                var settingServiceUrl = Settings.Where(x => x.Name == "Avalara.Tax.Credentials.ServiceUrl").FirstOrDefault();
-                if (settingServiceUrl != null)
-                {
-                    retVal = settingServiceUrl.Value;
-                }
-                return retVal;
+                return GetSetting(serviceUrlPropertyName);
             }
         }
 
@@ -96,13 +83,15 @@ namespace AvaTax.TaxModule.Web
         {
             get
             {
-                bool retVal = false;
-                var settingIsEnabled = Settings.Where(x => x.Name == "Avalara.Tax.IsEnabled").FirstOrDefault();
-                if (settingIsEnabled != null)
-                {
-                    retVal = bool.Parse(settingIsEnabled.Value);
-                }
-                return retVal;
+                return bool.Parse(GetSetting(isEnabledPropertyName));
+            }
+        }
+
+        private bool IsValidateAddressEnabled
+        {
+            get
+            {
+                return bool.Parse(GetSetting(isValidateAddressPropertyName));
             }
         }
 
@@ -149,62 +138,7 @@ namespace AvaTax.TaxModule.Web
                             throw new Exception(error);
                         }
 
-                        //reset all cart items taxes
-                        if (cart.Items.Any())
-                        {
-                            cart.Items.ForEach(x =>
-                            {
-                                x.TaxTotal = 0;
-                                x.TaxDetails = null;
-                            });
-                        }
-
-                        //reset all cart shipments taxes
-                        if (cart.Shipments.Any())
-                        {
-                            cart.Shipments.ForEach(x =>
-                            {
-                                x.TaxTotal = 0;
-                                x.TaxDetails = null;
-                            });
-                        }
-
-                        foreach (var taxLine in getTaxResult.TaxLines ?? Enumerable.Empty<AvaTaxCalcREST.TaxLine>())
-                        {
-                            var lineItem = cart.Items.FirstOrDefault(x => x.Id == taxLine.LineNo);
-                            if (lineItem != null)
-                            {
-                                lineItem.TaxTotal = taxLine.Tax;
-                                if (taxLine.TaxDetails != null && taxLine.TaxDetails.Any(td => !string.IsNullOrEmpty(td.TaxName)))
-                                {
-                                    lineItem.TaxDetails =
-                                        taxLine.TaxDetails.Where(td => !string.IsNullOrEmpty(td.TaxName)).Select(taxDetail => new domainModel.TaxDetail
-                                        {
-                                            Amount = taxDetail.Tax,
-                                            Name = taxDetail.TaxName,
-                                            Rate = taxDetail.Rate
-                                        }).ToList();
-                                }
-                            }
-                            else
-                            {
-                                var shipment = cart.Shipments.FirstOrDefault(s => s.Id != null ? s.Id.Equals(taxLine.LineNo) : s.ShipmentMethodCode.Equals(taxLine.LineNo));
-                                if (shipment != null)
-                                {
-                                    shipment.TaxTotal = taxLine.Tax;
-                                    if (taxLine.TaxDetails != null && taxLine.TaxDetails.Any(td => !string.IsNullOrEmpty(td.TaxName)))
-                                    {
-                                        shipment.TaxDetails =
-                                            taxLine.TaxDetails.Where(td => !string.IsNullOrEmpty(td.TaxName)).Select(taxDetail => new domainModel.TaxDetail
-                                            {
-                                                Amount = taxDetail.Tax,
-                                                Name = taxDetail.TaxName,
-                                                Rate = taxDetail.Rate
-                                            }).ToList();
-                                    }
-                                }
-                            }
-                        }
+                        UpdateCartTaxes(getTaxResult.TaxLines, cart);
                     }
                     else
                     {
@@ -255,63 +189,10 @@ namespace AvaTax.TaxModule.Web
                             var error = string.Join(Environment.NewLine, getTaxResult.Messages.Select(m => m.Summary));
                             throw new Exception(error);
                         }
+                        
+                        UpdateOrderTaxes(getTaxResult.TaxLines, order);
 
-                        //reset items taxes
-                        if (order.Items.Any())
-                            order.Items.ForEach(x =>
-                            {
-                                x.Tax = 0;
-                                x.TaxDetails = null;
-                            });
-
-                        //reset order shipments taxes
-                        if (order.Shipments.Any())
-                            order.Shipments.ForEach(x =>
-                            {
-                                x.Tax = 0;
-                                x.TaxDetails = null;
-                            });
-
-                        order.Tax = 0;
-
-                        foreach (var taxLine in getTaxResult.TaxLines ?? Enumerable.Empty<AvaTaxCalcREST.TaxLine>())
-                        {
-                            var lineItem = order.Items.FirstOrDefault(x => x.Id == taxLine.LineNo);
-                            if (lineItem != null)
-                            {
-                                lineItem.Tax = taxLine.Tax;
-                                if (taxLine.TaxDetails != null && taxLine.TaxDetails.Any(td => !string.IsNullOrEmpty(td.TaxName)))
-                                {
-                                    lineItem.TaxDetails =
-                                        taxLine.TaxDetails.Where(td => !string.IsNullOrEmpty(td.TaxName)).Select(taxDetail => new domainModel.TaxDetail
-                                        {
-                                            Amount = taxDetail.Tax,
-                                            Name = taxDetail.TaxName,
-                                            Rate = taxDetail.Rate
-                                        }).ToList();
-                                }
-                            }
-                            else
-                            {
-                                var shipment = order.Shipments.FirstOrDefault(s => s.Id != null ? s.Id.Equals(taxLine.LineNo) : s.ShipmentMethodCode.Equals(taxLine.LineNo));
-                                if (shipment != null)
-                                {
-                                    shipment.Tax = taxLine.Tax;
-                                    if (taxLine.TaxDetails != null && taxLine.TaxDetails.Any(td => !string.IsNullOrEmpty(td.TaxName)))
-                                    {
-                                        shipment.TaxDetails =
-                                            taxLine.TaxDetails.Where(td => !string.IsNullOrEmpty(td.TaxName)).Select(taxDetail => new domainModel.TaxDetail
-                                            {
-                                                Amount = taxDetail.Tax,
-                                                Name = taxDetail.TaxName,
-                                                Rate = taxDetail.Rate
-                                            }).ToList();
-                                    }
-                                }
-                            }
-
-                            order.Tax = getTaxResult.TotalTax;
-                        }
+                        order.Tax = getTaxResult.TotalTax;
                     }
                     else
                     {
@@ -361,7 +242,7 @@ namespace AvaTax.TaxModule.Web
                                 getTaxResult.Messages.Select(m => m.Summary));
                             throw new Exception(error);
                         }
-
+                        
                         foreach (var taxLine in getTaxResult.TaxLines ?? Enumerable.Empty<AvaTaxCalcREST.TaxLine>())
                         {
                             var lineItem = modifiedOrder.Items.FirstOrDefault(x => x.Id == taxLine.LineNo);
@@ -372,12 +253,7 @@ namespace AvaTax.TaxModule.Web
                                 {
 
                                     var taxLines =
-                                        taxLine.TaxDetails.Where(td => !string.IsNullOrEmpty(td.TaxName)).Select(taxDetail => new domainModel.TaxDetail
-                                        {
-                                            Amount = taxDetail.Tax,
-                                            Name = taxDetail.TaxName,
-                                            Rate = taxDetail.Rate
-                                        }).ToList();
+                                        taxLine.TaxDetails.Where(td => !string.IsNullOrEmpty(td.TaxName)).Select(taxDetail => taxDetail.ToDomainTaxDetail()).ToList();
 
                                     lineItem.TaxDetails = lineItem.TaxDetails == null ? taxLines : lineItem.TaxDetails.AddRange(taxLines);
                                 }
@@ -427,6 +303,102 @@ namespace AvaTax.TaxModule.Web
             })
             .OnError(_logger, AvalaraLogger.EventCodes.TaxCalculationError)
             .OnSuccess(_logger, AvalaraLogger.EventCodes.GetTaxRequestTime);
+        }
+
+        private void UpdateCartTaxes(IEnumerable<AvaTaxCalcREST.TaxLine> taxLines, ShoppingCart cart)
+        {
+            //reset all cart items taxes
+            if (cart.Items.Any())
+            {
+                cart.Items.ForEach(x =>
+                {
+                    x.TaxTotal = 0;
+                    x.TaxDetails = null;
+                });
+            }
+
+            //reset all cart shipments taxes
+            if (cart.Shipments.Any())
+            {
+                cart.Shipments.ForEach(x =>
+                {
+                    x.TaxTotal = 0;
+                    x.TaxDetails = null;
+                });
+            }
+
+            foreach (var taxLine in taxLines ?? Enumerable.Empty<AvaTaxCalcREST.TaxLine>())
+            {
+                var lineItem = cart.Items.FirstOrDefault(x => x.Id == taxLine.LineNo);
+                if (lineItem != null)
+                {
+                    lineItem.TaxTotal = taxLine.Tax;
+                    if (taxLine.TaxDetails != null && taxLine.TaxDetails.Any(td => !string.IsNullOrEmpty(td.TaxName)))
+                    {
+                        lineItem.TaxDetails =
+                            taxLine.TaxDetails.Where(td => !string.IsNullOrEmpty(td.TaxName)).Select(taxDetail => taxDetail.ToDomainTaxDetail()).ToList();
+                    }
+                }
+                else
+                {
+                    var shipment = cart.Shipments.FirstOrDefault(s => s.Id != null ? s.Id.Equals(taxLine.LineNo) : s.ShipmentMethodCode.Equals(taxLine.LineNo));
+                    if (shipment != null)
+                    {
+                        shipment.TaxTotal = taxLine.Tax;
+                        if (taxLine.TaxDetails != null && taxLine.TaxDetails.Any(td => !string.IsNullOrEmpty(td.TaxName)))
+                        {
+                            shipment.TaxDetails =
+                                taxLine.TaxDetails.Where(td => !string.IsNullOrEmpty(td.TaxName)).Select(taxDetail => taxDetail.ToDomainTaxDetail()).ToList();
+                        }
+                    }
+                }
+            }
+        }
+
+        private void UpdateOrderTaxes(IEnumerable<AvaTaxCalcREST.TaxLine> taxLines, CustomerOrder order)
+        {
+            //reset items taxes
+            if (order.Items.Any())
+                order.Items.ForEach(x =>
+                {
+                    x.Tax = 0;
+                    x.TaxDetails = null;
+                });
+
+            //reset order shipments taxes
+            if (order.Shipments.Any())
+                order.Shipments.ForEach(x =>
+                {
+                    x.Tax = 0;
+                    x.TaxDetails = null;
+                });
+
+            foreach (var taxLine in taxLines ?? Enumerable.Empty<AvaTaxCalcREST.TaxLine>())
+            {
+                var lineItem = order.Items.FirstOrDefault(x => x.Id == taxLine.LineNo);
+                if (lineItem != null)
+                {
+                    lineItem.Tax = taxLine.Tax;
+                    if (taxLine.TaxDetails != null && taxLine.TaxDetails.Any(td => !string.IsNullOrEmpty(td.TaxName)))
+                    {
+                        lineItem.TaxDetails =
+                            taxLine.TaxDetails.Where(td => !string.IsNullOrEmpty(td.TaxName)).Select(taxDetail => taxDetail.ToDomainTaxDetail()).ToList();
+                    }
+                }
+                else
+                {
+                    var shipment = order.Shipments.FirstOrDefault(s => s.Id != null ? s.Id.Equals(taxLine.LineNo) : s.ShipmentMethodCode.Equals(taxLine.LineNo));
+                    if (shipment != null)
+                    {
+                        shipment.Tax = taxLine.Tax;
+                        if (taxLine.TaxDetails != null && taxLine.TaxDetails.Any(td => !string.IsNullOrEmpty(td.TaxName)))
+                        {
+                            shipment.TaxDetails =
+                                taxLine.TaxDetails.Where(td => !string.IsNullOrEmpty(td.TaxName)).Select(taxDetail => taxDetail.ToDomainTaxDetail()).ToList();
+                        }
+                    }
+                }
+            }
         }
 
         private List<TaxRate> GetTaxRates(TaxRequest taxRequest)
@@ -482,6 +454,6 @@ namespace AvaTax.TaxModule.Web
             .OnSuccess(_logger, AvalaraLogger.EventCodes.GetSalesInvoiceRequestTime);
 
             return retVal;
-        }
+        }        
     }
 }
