@@ -6,7 +6,7 @@
     blade.subtitle = "Edit properties values";
     $scope.languages = [];
 
-    $scope.blade.refresh = function () {
+    blade.refresh = function () {
         settings.getValues({ id: 'VirtoCommerce.Core.General.Languages' }, function (data) {
             $scope.languages = data;
         });
@@ -16,7 +16,7 @@
     };
 
     function isDirty() {
-        return !angular.equals(blade.currentEntity, blade.origEntity);
+        return !angular.equals(blade.currentEntity.dynamicProperties, blade.origEntity.dynamicProperties);
     }
 
     $scope.cancelChanges = function () {
@@ -101,5 +101,5 @@
         dictionaryItemsApi.query({ id: property.objectType, propertyId: property.id }, callback);
     }
 
-    $scope.blade.refresh();
+    blade.refresh();
 }]);
