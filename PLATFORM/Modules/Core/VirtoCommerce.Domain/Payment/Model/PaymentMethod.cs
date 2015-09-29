@@ -90,8 +90,8 @@ namespace VirtoCommerce.Domain.Payment.Model
 		{
 			var setting = Settings.FirstOrDefault(s => s.Name == settingName);
 
-			if (setting == null || string.IsNullOrEmpty(setting.Value))
-				throw new NullReferenceException(string.Format("{0} setting is null or empty"));
+            if (setting == null || string.IsNullOrEmpty(setting.Value))
+                return String.Empty; //Sasha: why we throw an exception when setting not found? throw new NullReferenceException(string.Format("{0} setting is null or empty"));
 
 			return setting.Value;
 		}
