@@ -77,6 +77,7 @@ $(function () {
     VirtoCommerce.renderDynamicContent();
 
     $("#addToQuote").on("click", function () {
+        $("#quote-informer").hide("fast");
         $.ajax({
             type: "POST",
             url: VirtoCommerce.url("/quote/add"),
@@ -85,6 +86,7 @@ $(function () {
             },
             success: function (jsonResult) {
                 if (jsonResult) {
+                    $("#modal-quote").addClass("is-visible");
                     var quoteCount = $("#quoteCount");
                     quoteCount.text(jsonResult.items_count);
                     if (jsonResult.items_count > 0) {
@@ -92,9 +94,17 @@ $(function () {
                     } else {
                         quoteCount.addClass("hidden-count");
                     }
+                    var addedItemSku = $("#productSelect").val();
+                    var addedItem = jsonResult.items.getElementByVal("sku", addedItemSku);
+                    $("#quote-informer-item-title").text(addedItem.title);
+                    $("#quote-informer").show("fast");
                 }
             }
         });
+    });
+
+    $("#quote-informer-close").on("click", function () {
+        $("#quote-informer").hide("fast");
     });
 
     if (typeof defaultCustomerAddress != "undefined" && defaultCustomerAddress) {
