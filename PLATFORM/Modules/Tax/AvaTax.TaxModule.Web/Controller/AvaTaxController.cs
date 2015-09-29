@@ -8,7 +8,6 @@ using AvaTax.TaxModule.Web.Logging;
 using AvaTax.TaxModule.Web.Services;
 using AvaTaxCalcREST;
 using Common.Logging;
-using VirtoCommerce.Domain.Commerce.Model;
 using domainModel = VirtoCommerce.Domain.Commerce.Model;
 
 namespace AvaTax.TaxModule.Web.Controller
@@ -72,7 +71,7 @@ namespace AvaTax.TaxModule.Web.Controller
         [HttpPost]
         [ResponseType(typeof(bool))]
         [Route("address")]
-        public IHttpActionResult ValidateAddress(VirtoCommerce.Domain.Commerce.Model.Address address)
+        public IHttpActionResult ValidateAddress(domainModel.Address address)
         {
             IHttpActionResult retVal = BadRequest();
             LogInvoker<AvalaraLogger.TaxRequestContext>.Execute(log =>

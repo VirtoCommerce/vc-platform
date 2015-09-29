@@ -90,10 +90,10 @@ namespace VirtoCommerce.Domain.Payment.Model
 		{
 			var setting = Settings.FirstOrDefault(s => s.Name == settingName);
 
-			if (setting == null && setting.Value is string && string.IsNullOrEmpty((string)setting.Value))
-				throw new NullReferenceException(string.Format("{0} setting is not exist or null"));
+			if (setting == null || string.IsNullOrEmpty(setting.Value))
+				throw new NullReferenceException(string.Format("{0} setting is null or empty"));
 
-			return (string)setting.Value;
+			return setting.Value;
 		}
 	}
 }

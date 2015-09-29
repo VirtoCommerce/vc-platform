@@ -37,7 +37,7 @@ namespace AvaTax.TaxModule.Web.Observers
 		{
             var cart = context.ModifiedCart;
             var store = _storeService.GetById(cart.StoreId);
-            var taxProvider = store.TaxProviders.FirstOrDefault(x => x.Code == "AvaTaxRate");
+            var taxProvider = store.TaxProviders.FirstOrDefault(x => x.Code == typeof(AvaTaxRateProvider).Name);
             if (taxProvider != null && taxProvider is AvaTaxRateProvider && taxProvider.IsActive)
             {                
                 (taxProvider as AvaTaxRateProvider).CalculateCartTax(cart);
