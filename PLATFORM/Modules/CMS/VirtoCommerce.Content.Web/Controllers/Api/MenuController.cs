@@ -83,7 +83,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		[HttpPost]
 		[ResponseType(typeof(void))]
 		[Route("menu")]
-        [CheckPermission(Permission = PredefinedPermissions.Manage)]
+        [CheckPermission(Permission = PredefinedPermissions.Update)]
 		public IHttpActionResult Update(MenuLinkList list)
 		{
 			_menuService.Update(list.ToCoreModel());
@@ -97,7 +97,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		[HttpDelete]
 		[ResponseType(typeof(void))]
 		[Route("menu")]
-        [CheckPermission(Permission = PredefinedPermissions.Manage)]
+        [CheckPermission(Permission = PredefinedPermissions.Delete)]
 		public IHttpActionResult Delete(string listId)
 		{
 			_menuService.DeleteList(listId);

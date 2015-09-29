@@ -77,7 +77,7 @@
 		    canExecuteMethod: function () {
 		        return isDirty() && formScope && formScope.$valid;
 		    },
-		    permission: 'catalog:categories:manage'
+		    permission: 'catalog:update'
 		},
         {
             name: "Reset", icon: 'fa fa-undo',
@@ -87,7 +87,7 @@
             canExecuteMethod: function () {
                 return isDirty();
             },
-            permission: 'catalog:categories:manage'
+            permission: 'catalog:update'
         }
     ];
 

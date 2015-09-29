@@ -69,7 +69,7 @@ namespace VirtoCommerce.StoreModule.Web.Controllers.Api
 		[HttpPost]
 		[ResponseType(typeof(webModel.Store))]
 		[Route("")]
-        [CheckPermission(Permission = PredefinedPermissions.Manage)]
+        [CheckPermission(Permission = PredefinedPermissions.Create)]
 		public IHttpActionResult Create(webModel.Store store)
 		{
 			var coreStore = store.ToCoreModel(_shippingService.GetAllShippingMethods(), _paymentService.GetAllPaymentMethods(), _taxService.GetAllTaxProviders());
@@ -84,7 +84,7 @@ namespace VirtoCommerce.StoreModule.Web.Controllers.Api
 		[HttpPut]
 		[ResponseType(typeof(void))]
 		[Route("")]
-        [CheckPermission(Permission = PredefinedPermissions.Manage)]
+        [CheckPermission(Permission = PredefinedPermissions.Update)]
 		public IHttpActionResult Update(webModel.Store store)
 		{
 			var coreStore = store.ToCoreModel(_shippingService.GetAllShippingMethods(), _paymentService.GetAllPaymentMethods(), _taxService.GetAllTaxProviders());
@@ -99,7 +99,7 @@ namespace VirtoCommerce.StoreModule.Web.Controllers.Api
 		[HttpDelete]
 		[ResponseType(typeof(void))]
 		[Route("")]
-        [CheckPermission(Permission = PredefinedPermissions.Manage)]
+        [CheckPermission(Permission = PredefinedPermissions.Delete)]
 		public IHttpActionResult Delete([FromUri] string[] ids)
 		{
 			_storeService.Delete(ids);

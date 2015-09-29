@@ -5,7 +5,7 @@
 .controller('virtoCommerce.marketingModule.promotionExpressionsController', ['$scope', 'platformWebApp.authService', 'platformWebApp.bladeNavigationService', function ($scope, authService, bladeNavigationService) {
 
     $scope.openItemSelectWizard = function (parentElement) {
-        if (!authService.checkPermission('marketing:manage')) {
+        if (!authService.checkPermission('marketing:update')) {
             return;
         }
 
@@ -55,7 +55,7 @@
     }
 
     $scope.openCategorySelectWizard = function (parentElement) {
-        if (!authService.checkPermission('marketing:manage')) {
+        if (!authService.checkPermission('marketing:update')) {
             return;
         }
 

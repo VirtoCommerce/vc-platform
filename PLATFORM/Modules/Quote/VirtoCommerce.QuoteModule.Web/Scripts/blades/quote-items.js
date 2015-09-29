@@ -110,7 +110,7 @@
             canExecuteMethod: function () {
                 return true;
             },
-            permission: 'quote:manage'
+            permission: 'quote:update'
         },
         {
             name: "Remove", icon: 'fa fa-trash-o',
@@ -122,7 +122,7 @@
             canExecuteMethod: function () {
                 return _.any(blade.currentEntity.items, function (x) { return x.$selected; });;
             },
-            permission: 'quote:manage'
+            permission: 'quote:update'
         }
     ];
 

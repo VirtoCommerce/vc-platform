@@ -56,8 +56,11 @@
   </settings>
   <permissions>
     <group name="Quote">
-      <permission id="quote:query" name="Browse quotes" description="Permission to open quotes menu and browse data."/>
-      <permission id="quote:manage" name="Manage quotes" description="Permission to manage quotes information."/>
+      <permission id="quote:access" name="Open quotes menu" description="Permission to open quotes menu."/>      
+      <permission id="quote:create" name="Create quote" description="Permission to create new quotes."/>
+      <permission id="quote:read" name="Read quotes" description="Permission to browse and read quotes."/>
+      <permission id="quote:update" name="Update quote" description="Permission to update quotes."/>
+      <permission id="quote:delete" name="Delete quote" description="Permission to delete quotes."/>
     </group>
   </permissions>
 </module>

@@ -91,8 +91,11 @@
 	</settings>
 	<permissions>
 		<group name="Order">
-			<permission id="order:query" name="Browse orders" description="Permission to open orders menu and browse data."/>
-			<permission id="order:manage" name="Manage orders" description="Permission to manage orders."/>
-		</group>
+			<permission id="order:access" name="Open orders menu" description="Permission to open orders menu."/>
+      <permission id="order:create" name="Create order data" description="Permission to create order data."/>
+      <permission id="order:read" name="Read order data" description="Permission to browse and read order data."/>
+      <permission id="order:update" name="Update order data" description="Permission to update order data."/>
+      <permission id="order:delete" name="Delete order" description="Permission to delete orders."/>
+    </group>
 	</permissions>
 </module>

@@ -1,47 +1,50 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <module>
-	<id>VirtoCommerce.Marketing</id>
-	<version>2.4.0</version>
-	<platformVersion>2.4.0</platformVersion>
-	<dependencies>
-		<dependency id="VirtoCommerce.Core" version="2.4.0" />
-	</dependencies>
+  <id>VirtoCommerce.Marketing</id>
+  <version>2.4.0</version>
+  <platformVersion>2.4.0</platformVersion>
+  <dependencies>
+    <dependency id="VirtoCommerce.Core" version="2.4.0" />
+  </dependencies>
 
-	<title>Marketing module</title>
-	<description>Marketing system with dynamic contents and promotions management</description>
-	<authors>
-		<author>Virto Commerce</author>
-	</authors>
-	<owners>
-		<owner>Virto Commerce</owner>
-	</owners>
-	<projectUrl>http://virtocommerce.com/</projectUrl>
+  <title>Marketing module</title>
+  <description>Marketing system with dynamic contents and promotions management</description>
+  <authors>
+    <author>Virto Commerce</author>
+  </authors>
+  <owners>
+    <owner>Virto Commerce</owner>
+  </owners>
+  <projectUrl>http://virtocommerce.com/</projectUrl>
   <iconUrl>Modules/$(VirtoCommerce.Core)/Content/logoVC.png</iconUrl>
-	<releaseNotes>First version.</releaseNotes>
-	<copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
-	<tags>marketing promotion</tags>
+  <releaseNotes>First version.</releaseNotes>
+  <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
+  <tags>marketing promotion</tags>
 
-	<assemblyFile>VirtoCommerce.MarketingModule.Web.dll</assemblyFile>
-	<moduleType>VirtoCommerce.MarketingModule.Web.Module, VirtoCommerce.MarketingModule.Web</moduleType>
-	<scripts>
-		<directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
-	</scripts>
+  <assemblyFile>VirtoCommerce.MarketingModule.Web.dll</assemblyFile>
+  <moduleType>VirtoCommerce.MarketingModule.Web.Module, VirtoCommerce.MarketingModule.Web</moduleType>
+  <scripts>
+    <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
+  </scripts>
 
-	<settings>
-		<group name="Marketing|General">
-			<setting>
-				<name>Marketing.ExportImport.Description</name>
-				<valueType>string</valueType>
-				<defaultValue>Export/Import promotions and dynamic contents (places, contents, publications)</defaultValue>
-				<title>Export/Import description</title>
-				<description>Module description in platform export/import wizard</description>
-			</setting>
-		</group>
-	</settings>
-	<permissions>
-		<group name="Marketing">
-			<permission id="marketing:query" name="Browse marketing data" description="Permission to open marketing menu and browse data."/>
-			<permission id="marketing:manage" name="Manage marketing" description="Permission to manage marketing information."/>
-		</group>
-	</permissions>
+  <settings>
+    <group name="Marketing|General">
+      <setting>
+        <name>Marketing.ExportImport.Description</name>
+        <valueType>string</valueType>
+        <defaultValue>Export/Import promotions and dynamic contents (places, contents, publications)</defaultValue>
+        <title>Export/Import description</title>
+        <description>Module description in platform export/import wizard</description>
+      </setting>
+    </group>
+  </settings>
+  <permissions>
+    <group name="Marketing">
+      <permission id="marketing:access" name="Open marketing menu" description="Permission to open marketing menu."/>
+      <permission id="marketing:create" name="Create marketing data" description="Permission to create marketing data."/>
+      <permission id="marketing:read" name="Read marketing data" description="Permission to browse and read marketing data."/>
+      <permission id="marketing:update" name="Update marketing data" description="Permission to update marketing data."/>
+      <permission id="marketing:delete" name="Delete marketing data" description="Permission to delete marketing data."/>
+    </group>
+  </permissions>
 </module>

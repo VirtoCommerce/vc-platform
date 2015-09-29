@@ -1,52 +1,56 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <module>
-    <id>VirtoCommerce.Customer</id>
-    <version>2.4.0</version>
-    <platformVersion>2.4.0</platformVersion>
-    <dependencies>
-        <dependency id="VirtoCommerce.Core" version="2.4.0" />
-    </dependencies>
+  <id>VirtoCommerce.Customer</id>
+  <version>2.4.0</version>
+  <platformVersion>2.4.0</platformVersion>
+  <dependencies>
+    <dependency id="VirtoCommerce.Core" version="2.4.0" />
+  </dependencies>
 
-    <title>Customer management module</title>
-    <description>Managing customers contacts and organizations</description>
-    <authors>
-        <author>Virto Commerce</author>
-    </authors>
-    <owners>
-        <owner>Virto Commerce</owner>
-    </owners>
-    <projectUrl>http://virtocommerce.com/</projectUrl>
+  <title>Customer management module</title>
+  <description>Managing customers contacts and organizations</description>
+  <authors>
+    <author>Virto Commerce</author>
+  </authors>
+  <owners>
+    <owner>Virto Commerce</owner>
+  </owners>
+  <projectUrl>http://virtocommerce.com/</projectUrl>
   <iconUrl>Modules/$(VirtoCommerce.Core)/Content/logoVC.png</iconUrl>
-    <releaseNotes>First version.</releaseNotes>
-    <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
-    <tags>customer</tags>
+  <releaseNotes>First version.</releaseNotes>
+  <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
+  <tags>customer</tags>
 
-    <assemblyFile>VirtoCommerce.CustomerModule.Web.dll</assemblyFile>
-    <moduleType>VirtoCommerce.CustomerModule.Web.Module, VirtoCommerce.CustomerModule.Web</moduleType>
-    <!--<styles>
+  <assemblyFile>VirtoCommerce.CustomerModule.Web.dll</assemblyFile>
+  <moduleType>VirtoCommerce.CustomerModule.Web.Module, VirtoCommerce.CustomerModule.Web</moduleType>
+  <!--<styles>
     <directory virtualPath="$/Content/css" searchPattern="*.css" searchSubdirectories="true" />
   </styles>-->
-    <scripts>
-        <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
-    </scripts>
-	
-	<settings>
-		<group name="Customer|General">
-			<setting>
-				<name>Customer.ExportImport.Description</name>
-				<valueType>string</valueType>
-				<defaultValue>Export/Import contacts and organizations</defaultValue>
-				<title>Export/Import description</title>
-				<description>Module description in platform export/import wizard</description>
-			</setting>
-		</group>
-	</settings>
-	
-    <permissions>
-        <group name="Customers">
-            <permission id="customer:query" name="Browse customers" description="Permission to open customers menu and browse data."/>
-            <permission id="customer:manage" name="Manage customers" description="Permission to manage customers information."/>
-            <permission id="customer:loginOnBehalf" name="Login on behalf of a customer" description="Permission to login on behalf of a customer to Storefront."/>
-        </group>
-    </permissions>
+  <scripts>
+    <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
+  </scripts>
+
+  <settings>
+    <group name="Customer|General">
+      <setting>
+        <name>Customer.ExportImport.Description</name>
+        <valueType>string</valueType>
+        <defaultValue>Export/Import contacts and organizations</defaultValue>
+        <title>Export/Import description</title>
+        <description>Module description in platform export/import wizard</description>
+      </setting>
+    </group>
+  </settings>
+
+  <permissions>
+    <group name="Customers">
+      <permission id="customer:access" name="Open customers menu" description="Permission to open customers menu."/>
+      <permission id="customer:create" name="Create a customer" description="Permission to create a customer."/>
+      <permission id="customer:read" name="Read customer data" description="Permission to browse and read customer data."/>
+      <permission id="customer:update" name="Update customer" description="Permission to update customer data."/>
+      <permission id="customer:delete" name="Delete customer" description="Permission to delete customer data."/>
+
+      <permission id="customer:loginOnBehalf" name="Login on behalf of a customer" description="Permission to login on behalf of a customer to Storefront."/>
+    </group>
+  </permissions>
 </module>

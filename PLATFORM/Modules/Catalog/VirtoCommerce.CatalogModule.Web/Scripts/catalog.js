@@ -42,7 +42,7 @@ angular.module(catalogsModuleName, [
           title: 'Catalog',
           priority: 20,
           action: function () { $state.go('workspace.catalog'); },
-          permission: 'catalog:query'
+          permission: 'catalog:access'
       };
       mainMenuService.addMenuItem(menuItem);
 
@@ -116,12 +116,12 @@ angular.module(catalogsModuleName, [
 
       //Register dashboard widgets
       //widgetService.registerWidget({
-      //    isVisible: function () { return authService.checkPermission('catalog:query'); },
+      //    isVisible: function () { return authService.checkPermission('catalog:???'); },
       //    controller: 'virtoCommerce.catalogModule.dashboard.catalogsWidgetController',
       //    template: 'tile-count.html'
       //}, 'mainDashboard');
       //widgetService.registerWidget({
-      //    isVisible: function () { return authService.checkPermission('catalog:query'); },
+      //    isVisible: function () { return authService.checkPermission('catalog:???'); },
       //    controller: 'virtoCommerce.catalogModule.dashboard.productsWidgetController',
       //    template: 'tile-count.html'
       //}, 'mainDashboard');

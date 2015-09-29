@@ -69,7 +69,7 @@ namespace VirtoCommerce.QuoteModule.Web.Controllers.Api
         [HttpPost]
         [ResponseType(typeof(webModel.QuoteRequest))]
         [Route("")]
-        [CheckPermission(Permission = PredefinedPermissions.Manage)]
+        [CheckPermission(Permission = PredefinedPermissions.Create)]
         public IHttpActionResult Create(webModel.QuoteRequest quoteRequest)
         {
             var coreQuote = quoteRequest.ToCoreModel();
@@ -84,7 +84,7 @@ namespace VirtoCommerce.QuoteModule.Web.Controllers.Api
         [HttpPut]
         [ResponseType(typeof(void))]
         [Route("")]
-        [CheckPermission(Permission = PredefinedPermissions.Manage)]
+        [CheckPermission(Permission = PredefinedPermissions.Update)]
         public IHttpActionResult Update(webModel.QuoteRequest quoteRequest)
         {
             var coreQuote = quoteRequest.ToCoreModel();
@@ -150,7 +150,7 @@ namespace VirtoCommerce.QuoteModule.Web.Controllers.Api
         [HttpDelete]
         [ResponseType(typeof(void))]
         [Route("")]
-        [CheckPermission(Permission = PredefinedPermissions.Manage)]
+        [CheckPermission(Permission = PredefinedPermissions.Delete)]
         public IHttpActionResult Delete([FromUri] string[] ids)
         {
             _quoteRequestService.Delete(ids);

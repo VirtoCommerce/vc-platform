@@ -45,7 +45,8 @@
         	},
         	canExecuteMethod: function () {
         		return true;
-        	}
+        	},
+        	permission: 'content:create'
         },
 		{
 			name: "Set Active", icon: 'fa fa-pencil-square-o',
@@ -54,7 +55,8 @@
 			},
 			canExecuteMethod: function () {
 				return !angular.isUndefined(blade.choosenTheme) && !blade.isThemeDefault(blade.choosenTheme);
-			}
+			},
+			permission: 'content:update'
 		},
 		{
 			name: "Delete theme", icon: 'fa fa-trash-o',
@@ -63,7 +65,8 @@
 			},
 			canExecuteMethod: function () {
 				return !angular.isUndefined(blade.choosenTheme);
-			}
+			},
+			permission: 'content:delete'
 		},
 		{
 			name: "Preview theme", icon: 'fa fa-eye',
@@ -81,7 +84,8 @@
 			},
 			canExecuteMethod: function () {
 				return !angular.isUndefined(blade.choosenTheme);
-			}
+			},
+			permission: 'content:update'
 		}
 	];
 

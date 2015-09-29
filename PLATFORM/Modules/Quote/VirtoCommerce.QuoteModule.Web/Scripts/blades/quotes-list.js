@@ -89,7 +89,7 @@
         //    canExecuteMethod: function () {
         //        return true;
         //    },
-        //    permission: 'quote:manage'
+        //    permission: 'quote:create'
         //}
         {
             name: "Delete", icon: 'fa fa-trash-o',
@@ -99,7 +99,7 @@
             canExecuteMethod: function () {
                 return isItemsChecked();
             },
-            permission: 'quote:manage'
+            permission: 'quote:update'
         }
     ];
 

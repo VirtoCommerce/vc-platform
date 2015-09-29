@@ -69,7 +69,7 @@
                canExecuteMethod: function () {
                    return true;
                },
-               permission: 'platform:security:manage'
+               permission: 'platform:security:update'
            },
             {
                 name: "Remove", icon: 'fa fa-trash-o',
@@ -79,7 +79,7 @@
                 canExecuteMethod: function () {
                     return isItemsChecked();
                 },
-                permission: 'platform:security:manage'
+                permission: 'platform:security:update'
             }
     ];
 

@@ -22,7 +22,7 @@ function ($scope, order_res_customerOrders, bladeNavigationService, dialogServic
         	count: $scope.pageSettings.itemsPerPageCount
         };
 		//Need filtered orders related to user rights
-        if (authService.checkPermission('order:manage')) {
+        if (authService.checkPermission('order:update')) {
         	searchOrders(criteria);
         }
         else {
@@ -30,11 +30,11 @@ function ($scope, order_res_customerOrders, bladeNavigationService, dialogServic
         	order_res_stores.query({}, function (result) {
         		criteria.stores = [];
         		angular.forEach(result, function (x) {
-        			if (authService.checkPermission('order:manage', 'store:' + x.id)) {
+        			if (authService.checkPermission('order:update', 'store:' + x.id)) {
         				criteria.stores.push(x.id);
         			}
         		});
-        		if (authService.checkPermission('order:manage', 'currentUser:' + authService.userId)) {
+        		if (authService.checkPermission('order:update', 'currentUser:' + authService.userId)) {
         			criteria.employee = authService.userId;
         		}
         		searchOrders(criteria);
@@ -135,7 +135,6 @@ function ($scope, order_res_customerOrders, bladeNavigationService, dialogServic
                   return true;
               }
           },
-
           {
               name: "Delete", icon: 'fa fa-trash-o',
               executeMethod: function () {
@@ -144,7 +143,7 @@ function ($scope, order_res_customerOrders, bladeNavigationService, dialogServic
               canExecuteMethod: function () {
                   return isItemsChecked();
               },
-              permission: 'order:manage'
+              permission: 'order:delete'
           }
     ];
 

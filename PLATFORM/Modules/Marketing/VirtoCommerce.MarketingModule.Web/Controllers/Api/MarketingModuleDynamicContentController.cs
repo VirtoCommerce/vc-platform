@@ -50,7 +50,7 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 		[HttpPost]
 		[ResponseType(typeof(webModel.DynamicContentItem))]
 		[Route("contentitems")]
-        [CheckPermission(Permission = PredefinedPermissions.Manage)]
+        [CheckPermission(Permission = PredefinedPermissions.Create)]
 		public IHttpActionResult CreateDynamicContent(webModel.DynamicContentItem contentItem)
 		{
 			var retVal = _dynamicContentService.CreateContent(contentItem.ToCoreModel());
@@ -65,7 +65,7 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 		[HttpPut]
 		[ResponseType(typeof(void))]
 		[Route("contentitems")]
-        [CheckPermission(Permission = PredefinedPermissions.Manage)]
+        [CheckPermission(Permission = PredefinedPermissions.Update)]
 		public IHttpActionResult UpdateDynamicContent(webModel.DynamicContentItem contentItem)
 		{
 			_dynamicContentService.UpdateContents(new coreModel.DynamicContentItem[] { contentItem.ToCoreModel() });
@@ -79,7 +79,7 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 		[HttpDelete]
 		[ResponseType(typeof(void))]
 		[Route("contentitems")]
-        [CheckPermission(Permission = PredefinedPermissions.Manage)]
+        [CheckPermission(Permission = PredefinedPermissions.Delete)]
 		public IHttpActionResult DeleteDynamicContents([FromUri] string[] ids)
 		{
 			_dynamicContentService.DeleteContents(ids);
@@ -113,7 +113,7 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 		[HttpPost]
 		[ResponseType(typeof(webModel.DynamicContentPlace))]
 		[Route("contentplaces")]
-        [CheckPermission(Permission = PredefinedPermissions.Manage)]
+        [CheckPermission(Permission = PredefinedPermissions.Create)]
 		public IHttpActionResult CreateDynamicContentPlace(webModel.DynamicContentPlace contentPlace)
 		{
 			var retVal = _dynamicContentService.CreatePlace(contentPlace.ToCoreModel());
@@ -128,7 +128,7 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 		[HttpPut]
 		[ResponseType(typeof(void))]
 		[Route("contentplaces")]
-        [CheckPermission(Permission = PredefinedPermissions.Manage)]
+        [CheckPermission(Permission = PredefinedPermissions.Update)]
 		public IHttpActionResult UpdateDynamicContentPlace(webModel.DynamicContentPlace contentPlace)
 		{
 			_dynamicContentService.UpdatePlace(contentPlace.ToCoreModel());
@@ -142,7 +142,7 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 		[HttpDelete]
 		[ResponseType(typeof(void))]
 		[Route("contentplaces")]
-        [CheckPermission(Permission = PredefinedPermissions.Manage)]
+        [CheckPermission(Permission = PredefinedPermissions.Delete)]
 		public IHttpActionResult DeleteDynamicContentPlaces([FromUri] string[] ids)
 		{
 			_dynamicContentService.DeletePlaces(ids);
@@ -155,7 +155,7 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 		[HttpGet]
         [ResponseType(typeof(webModel.DynamicContentPublication))]
 		[Route("contentpublications/new")]
-		[CheckPermission(Permission = PredefinedPermissions.Manage)]
+		[CheckPermission(Permission = PredefinedPermissions.Create)]
 		public IHttpActionResult GetNewDynamicPublication()
 		{
 			var retVal = new webModel.DynamicContentPublication
@@ -194,7 +194,7 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 		[HttpPost]
 		[ResponseType(typeof(webModel.DynamicContentPublication))]
 		[Route("contentpublications")]
-        [CheckPermission(Permission = PredefinedPermissions.Manage)]
+        [CheckPermission(Permission = PredefinedPermissions.Create)]
 		public IHttpActionResult CreateDynamicContentPublication(webModel.DynamicContentPublication publication)
 		{
 			var retVal = _dynamicContentService.CreatePublication(publication.ToCoreModel());
@@ -209,7 +209,7 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 		[HttpPut]
 		[ResponseType(typeof(void))]
 		[Route("contentpublications")]
-        [CheckPermission(Permission = PredefinedPermissions.Manage)]
+        [CheckPermission(Permission = PredefinedPermissions.Update)]
 		public IHttpActionResult UpdateDynamicContentPublication(webModel.DynamicContentPublication publication)
 		{
 			_dynamicContentService.UpdatePublications(new coreModel.DynamicContentPublication[] { publication.ToCoreModel() });
@@ -223,7 +223,7 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 		[HttpDelete]
 		[ResponseType(typeof(void))]
 		[Route("contentpublications")]
-        [CheckPermission(Permission = PredefinedPermissions.Manage)]
+        [CheckPermission(Permission = PredefinedPermissions.Delete)]
 		public IHttpActionResult DeleteDynamicContentPublications([FromUri] string[] ids)
 		{
 			_dynamicContentService.DeletePublications(ids);
@@ -256,7 +256,7 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 		[HttpPost]
 		[ResponseType(typeof(webModel.DynamicContentFolder))]
 		[Route("contentfolders")]
-        [CheckPermission(Permission = PredefinedPermissions.Manage)]
+        [CheckPermission(Permission = PredefinedPermissions.Create)]
 		public IHttpActionResult CreateDynamicContentFolder(webModel.DynamicContentFolder folder)
 		{
 			var retVal = _dynamicContentService.CreateFolder(folder.ToCoreModel());
@@ -270,7 +270,7 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 		[HttpPut]
 		[ResponseType(typeof(void))]
 		[Route("contentfolders")]
-        [CheckPermission(Permission = PredefinedPermissions.Manage)]
+        [CheckPermission(Permission = PredefinedPermissions.Update)]
 		public IHttpActionResult UpdateDynamicContentFolder(webModel.DynamicContentFolder folder)
 		{
 			_dynamicContentService.UpdateFolder(folder.ToCoreModel());
@@ -284,7 +284,7 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 		[HttpDelete]
 		[ResponseType(typeof(void))]
 		[Route("contentfolders")]
-        [CheckPermission(Permission = PredefinedPermissions.Manage)]
+        [CheckPermission(Permission = PredefinedPermissions.Delete)]
 		public IHttpActionResult DeleteDynamicContentFolders([FromUri] string[] ids)
 		{
 			_dynamicContentService.DeleteFolder(ids);

@@ -37,7 +37,7 @@
             canExecuteMethod: function () {
                 return isDirty();
             },
-            permission: 'cart:manage'
+            permission: 'cart:update'
         },
         {
             name: "Reset", icon: 'fa fa-undo',
@@ -47,7 +47,7 @@
             canExecuteMethod: function () {
                 return isDirty();
             },
-            permission: 'cart:manage'
+            permission: 'cart:update'
         }
     ];
 

@@ -20,7 +20,7 @@
 				        canExecuteMethod: function () {
 				            return blade.checkDifferense();
 				        },
-				        permission: 'marketing:manage'
+				        permission: 'marketing:update'
 				    },
 				    {
 				        name: "Reset", icon: 'fa fa-undo',
@@ -30,7 +30,7 @@
 				        canExecuteMethod: function () {
 				            return blade.checkDifferense();
 				        },
-				        permission: 'marketing:manage'
+				        permission: 'marketing:update'
 				    },
 				    {
 				        name: "Delete", icon: 'fa fa-trash',
@@ -52,7 +52,7 @@
 				        canExecuteMethod: function () {
 				            return true;
 				        },
-				        permission: 'marketing:manage'
+				        permission: 'marketing:update'
 				    }
                 ];
             },

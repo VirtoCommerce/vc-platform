@@ -32,7 +32,7 @@
                     canExecuteMethod: function () {
                         return isDirty() && $scope.formScope && $scope.formScope.$valid;
                     },
-                    permission: 'pricing:manage'
+                    permission: 'pricing:update'
                 },
                 {
                     name: "Reset",
@@ -43,7 +43,7 @@
                     canExecuteMethod: function () {
                         return isDirty();
                     },
-                    permission: 'pricing:manage'
+                    permission: 'pricing:update'
                 }
             ];
         }

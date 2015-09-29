@@ -93,7 +93,7 @@
     		$scope.blade.toolbarCommands.push(
 				{
 				    name: "Save page", icon: 'fa fa-save',
-					executeMethod: function () { $scope.saveChanges(); }, canExecuteMethod: function () { return blade.isDirty(); }, permission: 'content:manage'
+					executeMethod: function () { $scope.saveChanges(); }, canExecuteMethod: function () { return blade.isDirty(); }, permission: 'content:update'
 				});
     		$scope.blade.toolbarCommands.push(
 				{
@@ -111,12 +111,12 @@
 				        $scope.$broadcast('resetContent', { body: blade.body });
 				    },
 				    canExecuteMethod: function () { return blade.isDirty(); },
-				    permission: 'content:manage'
+				    permission: 'content:update'
 				});
     		$scope.blade.toolbarCommands.push(
 				{
 				    name: "Delete page", icon: 'fa fa-trash-o',
-					executeMethod: function () { blade.deleteEntry(); }, canExecuteMethod: function () { return true; }, permission: 'content:manage'
+				    executeMethod: function () { blade.deleteEntry(); }, canExecuteMethod: function () { return true; }, permission: 'content:delete'
 				});
     		$scope.blade.toolbarCommands.push(
                 {
@@ -145,7 +145,7 @@
     		$scope.blade.toolbarCommands.push(
 				{
 				    name: "Create", icon: 'fa fa-save',
-					executeMethod: function () { $scope.saveChanges(); }, canExecuteMethod: function () { return blade.isDirty(); }, permission: 'content:manage'
+					executeMethod: function () { $scope.saveChanges(); }, canExecuteMethod: function () { return blade.isDirty(); }, permission: 'content:update'
 				});
     	}
     }

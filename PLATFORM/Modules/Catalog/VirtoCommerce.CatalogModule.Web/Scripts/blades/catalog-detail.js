@@ -96,7 +96,7 @@
                     canExecuteMethod: function () {
                         return isDirty();
                     },
-                    permission: 'catalog:catalogs:manage'
+                    permission: 'catalog:update'
                 },
                 {
                     name: "Reset", icon: 'fa fa-undo',
@@ -106,7 +106,7 @@
                     canExecuteMethod: function () {
                         return isDirty();
                     },
-                    permission: 'catalog:catalogs:manage'
+                    permission: 'catalog:update'
                 },
                 {
                     name: "Delete", icon: 'fa fa-trash-o',
@@ -135,7 +135,7 @@
                     canExecuteMethod: function () {
                         return true;
                     },
-                    permission: 'catalog:catalogs:manage'
+                    permission: 'catalog:delete'
                 }
             ];
         }

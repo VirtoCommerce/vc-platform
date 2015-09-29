@@ -127,7 +127,8 @@
             },
             canExecuteMethod: function () {
                 return isDirty() && $scope.formScope && $scope.formScope.$valid;
-            }
+            },
+            permission: 'platform:dynamic_properties:update'
         },
         {
             name: "Reset", icon: 'fa fa-undo',
@@ -136,7 +137,8 @@
             },
             canExecuteMethod: function () {
                 return isDirty();
-            }
+            },
+            permission: 'platform:dynamic_properties:update'
         },
         {
             name: "Delete", icon: 'fa fa-trash-o',
@@ -145,7 +147,8 @@
             },
             canExecuteMethod: function () {
                 return !isDirty() && !blade.isNew;
-            }
+            },
+            permission: 'platform:dynamic_properties:delete'
         }
         ];
     }
