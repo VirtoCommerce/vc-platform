@@ -45,6 +45,8 @@ namespace VirtoCommerce.Web.Convertors
         {
             var productModel = new Product();
 
+            var allImages = product.Images.Concat(new[] { product.PrimaryImage });
+
             var pathTemplate = VirtualPathUtility.ToAbsolute("~/products/{0}");
             var description = product.EditorialReviews != null ?
                 product.EditorialReviews.FirstOrDefault(er => er.ReviewType != null && er.ReviewType.Equals("quickreview", StringComparison.OrdinalIgnoreCase)) : null;
@@ -60,7 +62,7 @@ namespace VirtoCommerce.Web.Convertors
             productModel.Handle = product.Code;
             productModel.Id = product.Id;
             productModel.Images = product.Images != null ?
-                new ItemCollection<Image>(product.Images.Select(i => i.AsWebModel(product.Name, product.Id))) : null;
+                new ItemCollection<Image>(allImages.Select(i => i.AsWebModel(product.Name, product.Id))) : null;
             productModel.IsQuotable = true; // TODO
             productModel.FeaturedImage = primaryImage != null ?
                 primaryImage.AsWebModel(primaryImage.Name, product.Id) : null;

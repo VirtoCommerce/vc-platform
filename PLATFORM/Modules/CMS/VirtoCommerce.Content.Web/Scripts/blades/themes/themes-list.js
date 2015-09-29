@@ -99,7 +99,7 @@
 					blade.isLoading = true;
 					themes.deleteTheme({ storeId: blade.storeId, themeId: blade.choosenTheme.name }, function (data) {
 						blade.initialize();
-						blade.parentBlade.refresh(blade.storeId, 'themes');
+						blade.parentBlade.refresh(blade.storeId, 'defaultTheme');
 						blade.closeChildrenBlades();
 					},
                     function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
@@ -129,7 +129,8 @@
 
 		themesStores.update({ storeId: blade.storeId }, blade.store, function (data) {
 			blade.initialize();
-			blade.parentBlade.refresh(blade.storeId, 'themes');
+			blade.parentBlade.refresh(blade.storeId, 'defaultTheme');
+
 		},
         function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 	}

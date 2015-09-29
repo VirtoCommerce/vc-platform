@@ -52,7 +52,7 @@ namespace AvaTax.TaxModule.Web.Observers
                 return;
 
             var store = _storeService.GetById(order.StoreId);
-            var taxProvider = store.TaxProviders.FirstOrDefault(x => x.Code == "AvaTaxRate");
+            var taxProvider = store.TaxProviders.FirstOrDefault(x => x.Code == typeof(AvaTaxRateProvider).Name);
             if (taxProvider != null && taxProvider.IsActive)
             {                
                 (taxProvider as AvaTaxRateProvider).CalculateOrderTax(order);

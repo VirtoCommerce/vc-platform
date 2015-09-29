@@ -277,6 +277,7 @@
     <Content Include="App_Data\Themes\_Default\templates\customers\quotes.liquid" />
     <Content Include="App_Data\Themes\_Default\snippets\customer-menu.liquid" />
     <Content Include="App_Data\Themes\_Default\snippets\quote-totals.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\quote-informer.liquid" />
     <None Include="App_Data\Themes\_Global\templates\external_login_confirmation.liquid" />
     <Content Include="App_Data\Themes\_Global\templates\index.liquid" />
     <Content Include="App_Data\Themes\_Global\templates\banner.liquid" />

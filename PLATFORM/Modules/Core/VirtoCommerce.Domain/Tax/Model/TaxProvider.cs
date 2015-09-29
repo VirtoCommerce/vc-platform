@@ -38,5 +38,15 @@ namespace VirtoCommerce.Domain.Tax.Model
         public ICollection<SettingEntry> Settings { get; set; }
 
         #endregion
+
+        public string GetSetting(string settingName)
+        {
+            var setting = Settings.FirstOrDefault(s => s.Name == settingName);
+
+            if (setting == null || string.IsNullOrEmpty(setting.Value))
+                throw new NullReferenceException(string.Format("{0} setting is null or empty"));
+
+            return setting.Value;
+        }
     }
 }

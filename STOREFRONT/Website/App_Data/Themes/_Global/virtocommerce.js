@@ -77,6 +77,7 @@ $(function () {
     VirtoCommerce.renderDynamicContent();
 
     $("#addToQuote").on("click", function () {
+        $("#quote-informer").hide("fast");
         $.ajax({
             type: "POST",
             url: VirtoCommerce.url("/quote/add"),
@@ -85,6 +86,7 @@ $(function () {
             },
             success: function (jsonResult) {
                 if (jsonResult) {
+                    $("#modal-quote").addClass("is-visible");
                     var quoteCount = $("#quoteCount");
                     quoteCount.text(jsonResult.items_count);
                     if (jsonResult.items_count > 0) {
@@ -92,9 +94,17 @@ $(function () {
                     } else {
                         quoteCount.addClass("hidden-count");
                     }
+                    var addedItemSku = $("#productSelect").val();
+                    var addedItem = jsonResult.items.getElementByVal("sku", addedItemSku);
+                    $("#quote-informer-item-title").text(addedItem.title);
+                    $("#quote-informer").show("fast");
                 }
             }
         });
+    });
+
+    $("#quote-informer-close").on("click", function () {
+        $("#quote-informer").hide("fast");
     });
 
     if (typeof defaultCustomerAddress != "undefined" && defaultCustomerAddress) {
@@ -171,10 +181,12 @@ $(function () {
 
     $(".add-tier").on("click", function (event) {
         event.preventDefault();
+        var defaultTierPrice = $(this).parents(".cart-row.quote").data("default-tier-price");
 
         var tierHtml = "<div class=\"js-qty\">";
         tierHtml += "<div class=\"js-qty--inner\">";
         tierHtml += "<input class=\"js--num\" pattern=\"[0-9]*\" type=\"text\" value=\"1\" />";
+        tierHtml += "<input class=\"js--price\" type=\"hidden\" value=\"" + defaultTierPrice + "\" />";
         tierHtml += "<span class=\"js--qty-adjuster js--add\">+</span>";
         tierHtml += "<span class=\"js--qty-adjuster js--minus\">-</span>";
         tierHtml += "</div>";
@@ -188,6 +200,8 @@ $(function () {
     });
 
     $("body").delegate(".js-qty .link-action", "click", function () {
+        var proposalPriceIndex = $(this).parents(".js-qty").data("for-proposal-price");
+        $(this).parents(".grid-item").siblings(".grid-item.proposal-prices").find("[data-proposal-price='" + proposalPriceIndex + "']").remove();
         $(this).parents(".js-qty").remove();
     });
 
@@ -207,9 +221,10 @@ $(function () {
             };
 
             $.each(itemElement.find(".js--num"), function () {
-                var tierPrice = {
+                var proposalPriceElement = $(this).siblings(".js--price");
+                tierPrice = {
                     Quantity: parseInt($(this).val()),
-                    Price: 0
+                    Price: proposalPriceElement.val()
                 };
 
                 quoteItem.ProposalPrices.push(tierPrice);

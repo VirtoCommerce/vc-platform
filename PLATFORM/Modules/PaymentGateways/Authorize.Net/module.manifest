@@ -79,6 +79,12 @@
         <title>Payment action type</title>
         <description>Action type of payment</description>
       </setting>
+      <setting>
+        <name>AuthorizeNet.MD5Hash</name>
+        <valueType>string</valueType>
+        <title>MD5 hash key</title>
+        <description>Authorize Net MD5 hash key used for validate relay responce</description>
+      </setting>
     </group>
   </settings>
 </module>

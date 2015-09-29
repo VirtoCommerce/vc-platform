@@ -47,9 +47,8 @@
 								entity.themesCount = data.length;
 								entity.themes = data;
 
-								if (_.find(entity.store.dynamicProperties, function (property) { return property.name === 'DefaultThemeName'; }) !== undefined) {
-								    var defaultThemeNameProperty = _.find(entity.store.dynamicProperties, function (property) { return property.name === 'DefaultThemeName'; });
-
+								var defaultThemeNameProperty = _.find(entity.store.dynamicProperties, function (property) { return property.name === 'DefaultThemeName'; });
+								if (defaultThemeNameProperty !== undefined && defaultThemeNameProperty.values !== undefined && defaultThemeNameProperty.values.length > 0) {
 								    entity.defaultThemeName = defaultThemeNameProperty.values[0].value;
 									if (_.find(entity.themes, function (theme) { return theme.name === entity.defaultThemeName; }) !== undefined) {
 										entity.defaultTheme = _.find(entity.themes, function (theme) { return theme.name === entity.defaultThemeName; });
@@ -98,18 +97,6 @@
 				themes.get({ storeId: storeId }, function (data) {
 					entity.themesCount = data.length;
 					entity.themes = data;
-
-					stores.get({ id: storeId }, function (data) {
-						if (_.find(data.settings, function (setting) { return setting.name === 'DefaultThemeName'; }) !== undefined) {
-							entity.defaultThemeName = _.find(data.settings, function (setting) { return setting.name === 'DefaultThemeName'; }).value;
-							if (_.find(entity.themes, function (theme) { return theme.name === entity.defaultThemeName; }) !== undefined) {
-								entity.defaultTheme = _.find(entity.themes, function (theme) { return theme.name === entity.defaultThemeName; });
-							}
-							else {
-								entity.defaultThemeName = undefined;
-							}
-						}
-					}, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
 				}, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
 				break;
 
@@ -118,6 +105,38 @@
 		            entity.blogsCount = _.find(data.folders, function (folder) { return folder.folderName === "blogs" }).folders.length;
 		        }, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
 		        break;
+
+		    case 'defaultTheme':
+		        stores.get({ id: storeId }, function (data) {
+		            themes.get({ storeId: storeId }, function (themesList) {
+		                entity.themesCount = themesList.length;
+		                entity.themes = themesList;
+		           
+		                var defaultThemeNameProperty = _.find(data.dynamicProperties, function (property) { return property.name === 'DefaultThemeName'; });
+		                if (defaultThemeNameProperty !== undefined && defaultThemeNameProperty.values !== undefined && defaultThemeNameProperty.values.length > 0) {
+		                    entity.defaultThemeName = defaultThemeNameProperty.values[0].value;
+		                    var defaultTheme = _.find(entity.themes, function (theme) { return theme.name === entity.defaultThemeName; });
+		                    if (defaultTheme !== undefined) {
+		                        entity.defaultTheme = defaultTheme;
+		                    }
+		                    else {
+		                        entity.defaultThemeName = undefined;
+		                        if (_.where(data.dynamicProperties, { name: "DefaultThemeName" }).length > 0) {
+		                            angular.forEach(data.dynamicProperties, function (value, key) {
+		                                if (value.name === "DefaultThemeName") {
+		                                    value.values[0] = { value: '' };
+		                                }
+		                            });
+		                        }
+
+		                        themesStores.update({ storeId: storeId }, data, function (data) {
+		                            entity.defaultThemeName = undefined;
+		                        },
+                                function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+		                    }
+		                }
+		            }, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+		        });
 
 			default:
 				break;

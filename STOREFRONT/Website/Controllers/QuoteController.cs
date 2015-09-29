@@ -103,7 +103,7 @@ namespace VirtoCommerce.Web.Controllers
                     existingQuoteItem.ProposalPrices.Add(new TierPrice
                     {
                         Quantity = tearPrice.Quantity,
-                        Price = existingQuoteItem.ListPrice
+                        Price = tearPrice.Price
                     });
                 }
             }

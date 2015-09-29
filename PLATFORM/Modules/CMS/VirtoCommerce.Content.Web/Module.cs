@@ -12,6 +12,8 @@ using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Content.Web.ExportImport;
 using VirtoCommerce.Platform.Data.Infrastructure;
+using VirtoCommerce.Platform.Core.DynamicProperties;
+using VirtoCommerce.Domain.Store.Model;
 
 namespace VirtoCommerce.Content.Web
 {
@@ -197,6 +199,24 @@ namespace VirtoCommerce.Content.Web
             #region Sync_Initialize
             _container.RegisterType<SyncController>(new InjectionConstructor(themesFactory, pagesFactory, settingsManager));
             #endregion
+        }
+
+        public override void PostInitialize()
+        {
+            base.PostInitialize();
+            //Create EnableQuote dynamic propertiy for  Store 
+            var dynamicPropertyService = _container.Resolve<IDynamicPropertyService>();
+
+            var defaultThemeNameProperty = new DynamicProperty
+            {
+                Id = "Default_Theme_Name_Property",
+                Name = "DefaultThemeName",
+                ObjectType = typeof(Store).FullName,
+                ValueType = DynamicPropertyValueType.ShortText,
+                CreatedBy = "Auto"
+            };
+
+            dynamicPropertyService.SaveProperties(new[] { defaultThemeNameProperty });
         }
 
         public override void SetupDatabase()
