@@ -1,7 +1,7 @@
 ﻿angular.module('virtoCommerce.contentModule')
 .factory('virtoCommerce.contentModule.menus', ['$resource', function ($resource) {
 	return $resource('api/cms/:storeId/menu/', {}, {
-		get: { url: 'api/cms/:storeId/menu/', method: 'GET', isArray: true },
+	    get: { url: 'api/cms/:storeId/menu/', method: 'GET', isArray: true },
 		getList: { url: 'api/cms/:storeId/menu/:listId', method: 'GET' },
 		checkList: { url: 'api/cms/:storeId/menu/checkname', method: 'GET' },
 		update: { url: 'api/cms/:storeId/menu/', method: 'POST' },
@@ -12,7 +12,7 @@
 	return $resource('api/cms/:storeId/pages/', {}, {
 		get: { url: 'api/cms/:storeId/pages/', method: 'GET', isArray: true },
 		getFolders: { url: 'api/cms/:storeId/pages/folders', method: 'GET'},
-		getPage: { url: 'api/cms/:storeId/pages/:language/:pageName', method: 'GET' },
+		getPage: { url: 'api/cms/:storeId/pages/:language/:pageName', method: 'GET'},
 		checkName: { url: 'api/cms/:storeId/pages/checkname', method: 'GET' },
 		update: { url: 'api/cms/:storeId/pages/', method: 'POST' },
 		delete: { url: 'api/cms/:storeId/pages/', method: 'DELETE' },
