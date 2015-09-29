@@ -66,7 +66,7 @@
             canExecuteMethod: function () {
                 return true;
             },
-            permission: 'marketing:manage'
+            permission: 'marketing:create'
         }
     ];
 

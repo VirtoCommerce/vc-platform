@@ -343,7 +343,7 @@
                         deleteChecked();
                     },
                     canExecuteMethod: isItemsChecked,
-                    permission: 'catalog:items:manage'
+                    permission: 'catalog:delete'
                 },
     			{
     			    name: "Import",
@@ -360,7 +360,7 @@
     			        bladeNavigationService.showBlade(newBlade, $scope.blade);
     			    },
     			    canExecuteMethod: function () { return true; },
-    			    permission: 'catalog:items:manage'
+    			    permission: 'catalog:create'
     			},
 				{
 				    name: "Export",
@@ -388,7 +388,7 @@
                          $storage.catalogClipboardContent = _.where($scope.items, { selected: true });
                      },
                      canExecuteMethod: isItemsChecked,
-                     permission: 'catalog:items:manage'
+                     permission: 'catalog:create'
                  },
                  {
                      name: "Paste",
@@ -409,7 +409,7 @@
                      canExecuteMethod: function () {
                          return $storage.catalogClipboardContent;
                      },
-                     permission: 'catalog:items:manage'
+                     permission: 'catalog:create'
                  }
 
                 //{
@@ -449,10 +449,7 @@
                 } else if (blade.mode === 'newAssociation') {
                     $scope.blade.toolbarCommands.splice(1, 6);
                 }
-            } else if (!blade.isBrowsingLinkedCategory
-                   && (authService.checkPermission('catalog:categories:manage')
-                   || (authService.checkPermission('catalog:virtual_catalogs:manage') && blade.catalog.virtual)
-                   || (authService.checkPermission('catalog:items:manage') && !blade.catalog.virtual))) {
+            } else if (authService.checkPermission('catalog:create')) {
                 $scope.blade.toolbarCommands.splice(1, 0, {
                     name: "Add",
                     icon: 'fa fa-plus',

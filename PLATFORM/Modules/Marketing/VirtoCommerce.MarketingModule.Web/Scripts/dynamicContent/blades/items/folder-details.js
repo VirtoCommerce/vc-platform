@@ -18,7 +18,7 @@
 				    canExecuteMethod: function () {
 				        return !angular.equals(blade.originalEntity, blade.entity) && !$scope.formScope.$invalid;
 				    },
-				    permission: 'marketing:manage'
+				    permission: 'marketing:update'
 				},
 				{
 				    name: "Reset", icon: 'fa fa-undo',
@@ -28,7 +28,7 @@
 				    canExecuteMethod: function () {
 				        return !angular.equals(blade.originalEntity, blade.entity);
 				    },
-				    permission: 'marketing:manage'
+				    permission: 'marketing:update'
 				},
                 {
                 	name: "Delete", icon: 'fa fa-trash',
@@ -50,7 +50,7 @@
                     canExecuteMethod: function () {
                         return true;
                     },
-                    permission: 'marketing:manage'
+                    permission: 'marketing:update'
                 }
             ];
         }

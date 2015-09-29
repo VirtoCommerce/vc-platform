@@ -64,7 +64,7 @@
   		title: 'Export & Import',
   		priority: 10,
   		action: function () { $state.go('workspace.exportImport'); },
-  		permission: 'platform:backupAdministrator'
+  		permission: 'platform:exportImport'
   	};
   	mainMenuService.addMenuItem(menuItem);
 

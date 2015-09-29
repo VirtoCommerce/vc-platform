@@ -69,7 +69,7 @@
             canExecuteMethod: function () {
                 return isDirty(); // && formScope && formScope.$valid;
             },
-            permission: 'customer:manage'
+            permission: 'customer:update'
         },
         {
             name: "Reset", icon: 'fa fa-undo',
@@ -79,7 +79,7 @@
             canExecuteMethod: function () {
                 return isDirty();
             },
-            permission: 'customer:manage'
+            permission: 'customer:update'
         }
     ];
     // datepicker

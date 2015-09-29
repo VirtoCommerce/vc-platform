@@ -65,7 +65,7 @@
             canExecuteMethod: function () {
                 return true;
             },
-            permission: 'customer:manage'
+            permission: 'customer:update'
         },
         {
             name: "Reset", icon: 'fa fa-undo',
@@ -75,7 +75,7 @@
             canExecuteMethod: function () {
                 return isDirty();
             },
-            permission: 'customer:manage'
+            permission: 'customer:update'
         },
         {
             name: "Delete", icon: 'fa fa-trash-o',
@@ -88,7 +88,7 @@
             canExecuteMethod: function () {
                 return $scope.selectedItem;
             },
-            permission: 'customer:manage'
+            permission: 'customer:update'
         }
     ];
 

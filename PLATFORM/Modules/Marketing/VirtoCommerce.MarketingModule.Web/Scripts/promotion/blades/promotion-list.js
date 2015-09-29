@@ -124,7 +124,7 @@
             canExecuteMethod: function () {
                 return true;
             },
-            permission: 'marketing:manage'
+            permission: 'marketing:create'
         },
         {
             name: "Delete", icon: 'fa fa-trash-o',
@@ -134,7 +134,7 @@
             canExecuteMethod: function () {
                 return isItemsChecked();
             },
-            permission: 'marketing:manage'
+            permission: 'marketing:delete'
         }
     ];
 

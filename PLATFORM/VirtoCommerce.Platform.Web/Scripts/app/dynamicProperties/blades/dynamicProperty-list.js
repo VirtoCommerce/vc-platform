@@ -20,7 +20,7 @@
             currentEntity: node
         };
         openDetailsBlade(newBlade);
-    }
+    };
 
     function openDetailsBlade(node) {
         var newBlade = {
@@ -60,8 +60,9 @@
            canExecuteMethod: function () {
                return true;
            },
-           permission: 'store:manage'
+           permission: 'platform:dynamic_properties:create'
        }
     ];
+
     blade.refresh();
 }]);

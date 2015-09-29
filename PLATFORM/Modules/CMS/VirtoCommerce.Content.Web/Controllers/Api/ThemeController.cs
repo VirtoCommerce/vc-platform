@@ -113,7 +113,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		[HttpDelete]
 		[ResponseType(typeof(void))]
 		[Route("themes/{themeId}")]
-		[CheckPermission(Permission = PredefinedPermissions.Manage)]
+		[CheckPermission(Permission = PredefinedPermissions.Delete)]
 		public IHttpActionResult DeleteTheme(string storeId, string themeId)
 		{
 			this._themeService.DeleteTheme(storeId, themeId);
@@ -160,7 +160,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		[HttpPost]
 		[Route("themes/{themeId}/assets")]
 		[ResponseType(typeof(void))]
-		[CheckPermission(Permission = PredefinedPermissions.Manage)]
+		[CheckPermission(Permission = PredefinedPermissions.Update)]
 		public IHttpActionResult SaveItem(ThemeAsset asset, string storeId, string themeId)
 		{
 			if (!string.IsNullOrEmpty(asset.AssetUrl))
@@ -185,7 +185,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		[HttpDelete]
 		[Route("themes/{themeId}/assets")]
 		[ResponseType(typeof(void))]
-		[CheckPermission(Permission = PredefinedPermissions.Manage)]
+		[CheckPermission(Permission = PredefinedPermissions.Delete)]
 		public IHttpActionResult DeleteAssets(string storeId, string themeId, [FromUri]string[] assetIds)
 		{
 			this._themeService.DeleteThemeAssets(storeId, themeId, assetIds);
@@ -202,7 +202,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		[HttpGet]
 		[Route("themes/file")]
 		[ResponseType(typeof(void))]
-		[CheckPermission(Permission = PredefinedPermissions.Manage)]
+		[CheckPermission(Permission = PredefinedPermissions.Create)]
 		public IHttpActionResult CreateNewTheme(string storeId, string themeFileUrl, string themeName)
 		{
             using (var webClient = new WebClient())
@@ -243,7 +243,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		[HttpGet]
 		[Route("themes/createdefault")]
 		[ResponseType(typeof(void))]
-		[CheckPermission(Permission = PredefinedPermissions.Manage)]
+		[CheckPermission(Permission = PredefinedPermissions.Create)]
 		public IHttpActionResult CreateDefaultTheme(string storeId)
 		{
 			_themeService.CreateDefaultTheme(storeId, _defaultThemePath);

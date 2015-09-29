@@ -7,7 +7,7 @@
         stores.query({}, function (data) {
         	$scope.blade.isLoading = false;
 
-        	$scope.blade.currentEntities = _.filter(data, function (x) { return authService.checkPermission('store:manage', 'store:' + x.name); });
+        	$scope.blade.currentEntities = _.filter(data, function (x) { return authService.checkPermission('store:update', 'store:' + x.name); });
         }, function (error) {
             bladeNavigationService.setError('Error ' + error.status, $scope.blade);
         });
@@ -74,7 +74,7 @@
             canExecuteMethod: function () {
                 return true;
             },
-            permission: 'store:manage'
+            permission: 'store:create'
         }
 
     ];

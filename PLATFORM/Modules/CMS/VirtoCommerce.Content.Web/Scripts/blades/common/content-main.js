@@ -10,7 +10,7 @@
 		blade.isLoading = true;
 		blade.currentEntities = [];
 
-		if (!angular.isUndefined($stateParams.storeId) && authService.checkPermission('content:manage', 'store:' + $stateParams.storeId)) {
+		if (!angular.isUndefined($stateParams.storeId) && authService.checkPermission('content:update', 'store:' + $stateParams.storeId)) {
 			stores.get({ id: $stateParams.storeId }, function (data) {
 				blade.openThemes($stateParams.storeId, data.name);
 			});
@@ -18,7 +18,7 @@
 
 		stores.query({}, function (data) {
 			for (var i = 0; i < data.length; i++) {
-				if (!authService.checkPermission('content:manage', 'store:' + data[i].id)) {
+				if (!authService.checkPermission('content:update', 'store:' + data[i].id)) {
 					continue;
 				}
 				stores.get({ id: data[i].id }, function (data) {

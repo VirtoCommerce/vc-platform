@@ -129,7 +129,7 @@
             canExecuteMethod: function () {
                 return $scope.blade.currentEntity.operationType.toLowerCase() == 'customerorder';
             },
-            permission: 'order:manage'
+            permission: 'order:update'
         },
         {
             name: "Remove", icon: 'fa fa-trash-o',
@@ -141,7 +141,7 @@
             canExecuteMethod: function () {
                 return _.any($scope.blade.currentEntity.items, function (x) { return x.selected; });;
             },
-            permission: 'order:manage'
+            permission: 'order:update'
         }
     ];
 

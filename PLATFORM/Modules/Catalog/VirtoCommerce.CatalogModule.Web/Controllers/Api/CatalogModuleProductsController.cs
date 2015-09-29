@@ -64,7 +64,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 		[HttpGet]
 		[ResponseType(typeof(webModel.Product))]
 		[Route("~/api/catalog/{catalogId}/products/getnew")]
-		[CheckPermission(Permission = PredefinedPermissions.ItemsManage)]
+		[CheckPermission(Permission = PredefinedPermissions.Create)]
 		public IHttpActionResult GetNewProductByCatalog(string catalogId)
 		{
 			return GetNewProductByCatalogAndCategory(catalogId, null);
@@ -80,7 +80,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 		[HttpGet]
 		[ResponseType(typeof(webModel.Product))]
 		[Route("~/api/catalog/{catalogId}/categories/{categoryId}/products/getnew")]
-		[CheckPermission(Permission = PredefinedPermissions.ItemsManage)]
+		[CheckPermission(Permission = PredefinedPermissions.Create)]
 		public IHttpActionResult GetNewProductByCatalogAndCategory(string catalogId, string categoryId)
 		{
 			var retVal = new webModel.Product
@@ -117,7 +117,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         [HttpGet]
         [ResponseType(typeof(webModel.Product))]
         [Route("{productId}/getnewvariation")]
-        [CheckPermission(Permission = PredefinedPermissions.ItemsManage)]
+        [CheckPermission(Permission = PredefinedPermissions.Create)]
         public IHttpActionResult GetNewVariation(string productId)
         {
             var product = _itemsService.GetById(productId, coreModel.ItemResponseGroup.ItemLarge);
@@ -168,7 +168,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         [HttpPost]
         [ResponseType(typeof(void))]
         [Route("")]
-        [CheckPermission(Permission = PredefinedPermissions.ItemsManage)]
+        [CheckPermission(Permission = PredefinedPermissions.Update)]
         public IHttpActionResult Update(webModel.Product product)
         {
             var updatedProduct = UpdateProduct(product);
@@ -187,7 +187,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         [HttpDelete]
         [ResponseType(typeof(void))]
         [Route("")]
-        [CheckPermission(Permission = PredefinedPermissions.ItemsManage)]
+        [CheckPermission(Permission = PredefinedPermissions.Delete)]
         public IHttpActionResult Delete([FromUri] string[] ids)
         {
             _itemsService.Delete(ids);

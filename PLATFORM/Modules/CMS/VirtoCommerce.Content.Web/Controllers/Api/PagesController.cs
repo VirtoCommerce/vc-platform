@@ -131,7 +131,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		/// <param name="page">Page</param>
 		[HttpPost]
 		[Route("")]
-		[CheckPermission(Permission = PredefinedPermissions.Manage)]
+		[CheckPermission(Permission = PredefinedPermissions.Update)]
 		public IHttpActionResult SaveItem(string storeId, Page page)
 		{
 			if (!string.IsNullOrEmpty(page.FileUrl))
@@ -155,7 +155,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		/// <param name="pageNamesAndLanguges">Array of pairs name+language</param>
 		[HttpDelete]
 		[Route("")]
-		[CheckPermission(Permission = PredefinedPermissions.Manage)]
+		[CheckPermission(Permission = PredefinedPermissions.Delete)]
 		public IHttpActionResult DeleteItem(string storeId, [FromUri]string[] pageNamesAndLanguges)
 		{
 			_pagesService.DeletePage(storeId, PagesUtility.GetShortPageInfoFromString(pageNamesAndLanguges).ToArray());

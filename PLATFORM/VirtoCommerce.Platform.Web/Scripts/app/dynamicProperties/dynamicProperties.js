@@ -25,7 +25,7 @@
           title: 'Dynamic properties',
           priority: 2,
           action: function () { $state.go('workspace.dynamicProperties'); },
-          permission: 'platform:backupAdministrator'
+          permission: 'platform:dynamic_properties:access'
       };
       mainMenuService.addMenuItem(menuItem);
   }])

@@ -12,7 +12,7 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
             blade.isLoading = false;
             //filter the catalogs in which we not have access
             $scope.objects = _.filter(results, function (x) {
-                return authService.checkPermission('catalog:catalogs:manage', 'catalog:' + x.name);
+                return authService.checkPermission('catalog:read', 'catalog:' + x.name);
             });
             //init security scopes need for evaluate scope bounded ACL
             //that securityScopes will be inherited all children blades (by bladeNavigationService)
@@ -137,11 +137,11 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
             canExecuteMethod: function () {
                 return selectedNode;
             },
-            permission: 'catalog:catalogs:manage'
+            permission: 'catalog:update'
         }
     ];
 
-    if (authService.checkPermission('catalog:catalogs:manage') || authService.checkPermission('catalog:virtual_catalogs:manage')) {
+    if (authService.checkPermission('catalog:create')) {
         blade.toolbarCommands.splice(1, 0, {
             name: "Add",
             icon: 'fa fa-plus',

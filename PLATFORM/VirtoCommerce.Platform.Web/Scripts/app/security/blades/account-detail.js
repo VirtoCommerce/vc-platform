@@ -80,7 +80,7 @@
         canExecuteMethod: function () {
             return true;
         },
-        permission: 'platform:security:manage'
+        permission: 'platform:security:update'
     };
 
     $scope.blade.toolbarCommands = [
@@ -93,7 +93,7 @@
             canExecuteMethod: function () {
                 return isDirty();
             },
-            permission: 'platform:security:manage'
+            permission: 'platform:security:update'
         },
         {
             name: "Reset",
@@ -105,7 +105,7 @@
             canExecuteMethod: function () {
                 return isDirty();
             },
-            permission: 'platform:security:manage'
+            permission: 'platform:security:update'
         },
         userStateCommand,
         {
@@ -125,7 +125,7 @@
             canExecuteMethod: function () {
                 return true;
             },
-            permission: 'platform:security:manage'
+            permission: 'platform:security:update'
         }
     ];
 

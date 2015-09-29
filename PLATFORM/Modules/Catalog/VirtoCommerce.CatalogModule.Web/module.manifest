@@ -44,19 +44,11 @@
 	
   <permissions>
     <group name="Catalog">
-      <permission id="catalog:query" name="Browse catalog data" description="Permission to open catalog menu and browse data."/>
-      <permission id="catalog:items:manage" name="Manage catalog items" description="Permission to manage catalog items."/>
-      <permission id="catalog:catalogs:manage" name="Manage catalogs" description="Permission to manage catalogs."/>
-      <permission id="catalog:virtual_catalogs:manage" name="Manage virtual catalogs" description="Permission to manage virtual catalogs."/>
-      <permission id="catalog:categories:manage" name="Manage categories" description="Permission to manage catalog categories."/>
-      <!--"catalog:linked_categories:manage",
-     "catalog:catalog_import_jobs:manage",
-     "catalog:catalog_import_jobs:run",
-     "catalog:item:associations:manage",
-     "catalog:item:editorial_reviews:create_edit",
-     "catalog:item:editorial_reviews:publish",
-     "catalog:item:editorial_reviews:remove",
-     "catalog:customer_reviews:manage",-->
+      <permission id="catalog:access" name="Open catalogs menu" description="Permission to open catalogs menu."/>
+      <permission id="catalog:create" name="Create catalog related data" description="Permission to create catalog related data."/>
+      <permission id="catalog:read" name="Read catalog related data" description="Permission to browse and read catalog related data."/>
+      <permission id="catalog:update" name="Update catalog related data" description="Permission to update catalog related data."/>
+      <permission id="catalog:delete" name="Delete catalog related data" description="Permission to delete catalog related data."/>      
     </group>
   </permissions>
 </module>

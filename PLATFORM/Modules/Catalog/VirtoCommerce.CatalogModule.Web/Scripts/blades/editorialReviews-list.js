@@ -59,7 +59,7 @@
             canExecuteMethod: function () {
                 return true;
             },
-            permission: 'catalog:items:manage'
+            permission: 'catalog:update'
         }
     ];
 

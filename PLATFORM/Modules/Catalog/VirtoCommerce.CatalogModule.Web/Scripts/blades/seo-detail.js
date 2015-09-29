@@ -103,7 +103,7 @@
                 canExecuteMethod: function () {
                     return isDirty() && _.every(_.filter($scope.seoInfos, function (data) { return !data.isNew; }), isValid) && _.some($scope.seoInfos, isValid); // isValid formScope && formScope.$valid;
                 },
-                permission: 'catalog:items:manage'
+                permission: 'catalog:update'
             },
             {
                 name: "Reset", icon: 'fa fa-undo',
@@ -113,7 +113,7 @@
                 canExecuteMethod: function () {
                     return isDirty();
                 },
-                permission: 'catalog:items:manage'
+                permission: 'catalog:update'
             }
         ];
     }

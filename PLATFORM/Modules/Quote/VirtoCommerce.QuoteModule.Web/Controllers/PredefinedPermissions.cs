@@ -2,7 +2,10 @@
 {
     public static class PredefinedPermissions
     {
-        public const string Query = "quote:query";
-        public const string Manage = "quote:manage";
+        public const string Query = "quote:read",
+            Create = "quote:create",
+            Access = "quote:access",
+            Update = "quote:update",
+            Delete = "quote:delete";
     }
 }

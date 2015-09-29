@@ -158,7 +158,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         [HttpPut]
         [ResponseType(typeof(void))]
         [Route("")]
-        [CheckPermission(Permission = PredefinedPermissions.Manage)]
+        [CheckPermission(Permission = PredefinedPermissions.Update)]
 		public IHttpActionResult Update(webModel.CustomerOrder customerOrder)
         {
 			var coreOrder = customerOrder.ToCoreModel();
@@ -233,7 +233,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         [HttpDelete]
         [ResponseType(typeof(void))]
         [Route("")]
-        [CheckPermission(Permission = PredefinedPermissions.Manage)]
+        [CheckPermission(Permission = PredefinedPermissions.Delete)]
         public IHttpActionResult DeleteOrdersByIds([FromUri] string[] ids)
         {
             _customerOrderService.Delete(ids);
