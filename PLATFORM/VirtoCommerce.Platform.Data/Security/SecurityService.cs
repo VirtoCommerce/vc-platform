@@ -26,9 +26,10 @@ namespace VirtoCommerce.Platform.Data.Security
         private readonly ISecurityOptions _securityOptions;
         private readonly CacheManager _cacheManager;
         private readonly IModuleManifestProvider _manifestProvider;
+        private readonly IPermissionScopeService _permissionScopeService;
 
         public SecurityService(Func<IPlatformRepository> platformRepository, Func<ApplicationUserManager> userManagerFactory, IApiAccountProvider apiAccountProvider,
-                               ISecurityOptions securityOptions, IModuleManifestProvider manifestProvider, CacheManager cacheManager)
+                               ISecurityOptions securityOptions, IModuleManifestProvider manifestProvider, IPermissionScopeService permissionScopeService, CacheManager cacheManager)
         {
             _platformRepository = platformRepository;
             _userManagerFactory = userManagerFactory;
@@ -36,6 +37,7 @@ namespace VirtoCommerce.Platform.Data.Security
             _securityOptions = securityOptions;
             _cacheManager = cacheManager;
             _manifestProvider = manifestProvider;
+            _permissionScopeService = permissionScopeService;
         }
 
         #region ISecurityService Members
@@ -338,6 +340,7 @@ namespace VirtoCommerce.Platform.Data.Security
                         foreach (var modulePermission in group.Permissions)
                         {
                             var permission = modulePermission.ToCoreModel(module.Id, group.Name);
+                            permission.AvailableScopes = _permissionScopeService.GetPermissionScopes(permission.Id).ToList();
                             manifestPermissions.Add(permission);
                         }
                     }
@@ -391,6 +394,15 @@ namespace VirtoCommerce.Platform.Data.Security
                 {
                     var user = repository.GetAccountByName(applicationUser.UserName, detailsLevel);
                     result = applicationUser.ToCoreModel(user);
+                    //Populate available permission scopes
+                    if (result.Roles != null)
+                    {
+                        foreach (var permission in result.Roles.SelectMany(x => x.Permissions).Where(x => x != null))
+                        {
+                            permission.AvailableScopes = _permissionScopeService.GetPermissionScopes(permission.Id).ToList();
+                        }
+                    }
+
                 }
 
                 if (detailsLevel != UserDetails.Export)

@@ -7,14 +7,14 @@ using VirtoCommerce.Platform.Core.Security;
 
 namespace VirtoCommerce.Platform.Data.Security
 {
-    public class SecurityScopeService : IPermissionScopeService
+    public class PermissionScopeService : IPermissionScopeService
     {
         private List<Func<IPermissionScopeProvider>> _scopeProvidersFactory = new List<Func<IPermissionScopeProvider>>();
       
         #region ISecurityScopeService Members
-        public IEnumerable<IPermissionScopeProvider> GetAllScopeProviders()
+        public IEnumerable<PermissionScope> GetPermissionScopes(string permission)
         {
-            return _scopeProvidersFactory.Select(x => x());
+            return _scopeProvidersFactory.SelectMany(x => x().GetPermissionScopes(permission)).OfType<PermissionScope>().ToArray();
         }
 
         public void RegisterSopeProvider(Func<IPermissionScopeProvider> providerFactory)

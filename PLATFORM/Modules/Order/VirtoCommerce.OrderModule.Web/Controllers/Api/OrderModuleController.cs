@@ -28,7 +28,7 @@ using System.Web;
 namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 {
     [RoutePrefix("api/order/customerOrders")]
-    [CheckPermission(Permission = PredefinedPermissions.Query)]
+    [CheckPermission(Permission = PredefinedPermissions.Read)]
     public class OrderModuleController : ApiController
     {
         private readonly ICustomerOrderService _customerOrderService;

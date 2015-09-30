@@ -12,13 +12,13 @@ namespace VirtoCommerce.OrderModule.Web.Security
     {
         public OrderResponsibleScope()
         {
-            Scope = "order:employee";
+            Scope = "order:employee:{{userId}}";
         }
 
         public OrderResponsibleScope(CustomerOrder order)
             :this()
         {
-            Scope += ":" + order.EmployeeId;
+            Scope = "order:employee:" + order.EmployeeId;
         }
 
         public static OrderResponsibleScope TryParse(string scope)

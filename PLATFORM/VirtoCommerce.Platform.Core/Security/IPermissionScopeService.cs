@@ -8,7 +8,7 @@ namespace VirtoCommerce.Platform.Core.Security
 {
     public interface IPermissionScopeService
     {
-        IEnumerable<IPermissionScopeProvider> GetAllScopeProviders();
+        IEnumerable<PermissionScope> GetPermissionScopes(string permission);
         void RegisterSopeProvider(Func<IPermissionScopeProvider> providerFactory);
     }
 }

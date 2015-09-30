@@ -13,7 +13,7 @@
 			            order_res_customerOrders.get({ id: $scope.blade.customerOrder.id }, function (result) {
 			            	initialize(result);
 			            	//necessary for scope bounded ACL checks 
-			            	$scope.blade.securityScopes = ['order:employee:' + result.EmployeeId, 'store:' + result.storeId].join();
+			            	$scope.blade.securityScopes = result.scopes.join();
 			            },
 						function (error) {
 						    bladeNavigationService.setError('Error ' + error.status, $scope.blade);

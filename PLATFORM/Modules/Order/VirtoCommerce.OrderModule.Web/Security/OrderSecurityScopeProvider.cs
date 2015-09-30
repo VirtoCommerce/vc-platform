@@ -53,7 +53,12 @@ namespace VirtoCommerce.OrderModule.Web.Security
         #region ISecurityScopeProvider Members
         public virtual IEnumerable<PermissionScope> GetPermissionScopes(string permission)
         {
-            return new PermissionScope[] { new OrderStoreScope(), new OrderResponsibleScope() };       
+            if (permission == VirtoCommerce.OrderModule.Web.Controllers.PredefinedPermissions.Read ||
+                permission == VirtoCommerce.OrderModule.Web.Controllers.PredefinedPermissions.Update)
+            {
+                return new PermissionScope[] { new OrderStoreScope(), new OrderResponsibleScope() };
+            }
+            return Enumerable.Empty<PermissionScope>();
         }
 
         public virtual IEnumerable<string> GetEntityScopes(Entity entity)

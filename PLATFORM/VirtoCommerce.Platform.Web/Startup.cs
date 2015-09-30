@@ -389,7 +389,7 @@ namespace VirtoCommerce.Platform.Web
             #endregion
 
             #region Security
-            container.RegisterInstance<IPermissionScopeService>(new SecurityScopeService());
+            container.RegisterInstance<IPermissionScopeService>(new PermissionScopeService());
             container.RegisterType<IRoleManagementService, RoleManagementService>(new ContainerControlledLifetimeManager());
 
             var apiAccountProvider = new ApiAccountProvider(platformRepositoryFactory, cacheManager);

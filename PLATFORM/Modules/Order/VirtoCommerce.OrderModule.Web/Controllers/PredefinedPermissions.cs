@@ -2,7 +2,7 @@
 {
     public static class PredefinedPermissions
     {
-        public const string Query = "order:read",
+        public const string Read = "order:read",
             Create = "order:create",
             Access = "order:access",
             Update = "order:update",

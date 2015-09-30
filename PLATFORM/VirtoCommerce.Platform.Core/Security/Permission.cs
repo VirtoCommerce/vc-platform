@@ -19,6 +19,7 @@ namespace VirtoCommerce.Platform.Core.Security
 
         public ICollection<string> Scopes { get; set; }
 
+        public ICollection<PermissionScope> AvailableScopes { get; set; }
         /// <summary>
         /// Generate permissions string with scope combination
         /// </summary>
