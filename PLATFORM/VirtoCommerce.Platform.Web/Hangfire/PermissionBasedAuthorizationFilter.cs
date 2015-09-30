@@ -9,18 +9,18 @@ namespace VirtoCommerce.Platform.Web.Hangfire
     [CLSCompliant(false)]
     public class PermissionBasedAuthorizationFilter : CheckPermissionAttribute, IAuthorizationFilter
     {
-        private readonly IPermissionService _permissionService;
+        private readonly ISecurityService _securityService;
 
-        public PermissionBasedAuthorizationFilter(IPermissionService permissionService)
+        public PermissionBasedAuthorizationFilter(ISecurityService securityService)
         {
-            _permissionService = permissionService;
+            _securityService = securityService;
         }
 
         public bool Authorize(IDictionary<string, object> owinEnvironment)
         {
             var context = new OwinContext(owinEnvironment);
             var principal = context.Authentication.User;
-            var isAuthorized = IsAuthorized(_permissionService, principal);
+            var isAuthorized = IsAuthorized(_securityService, principal);
             return isAuthorized;
         }
     }

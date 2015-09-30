@@ -22,6 +22,8 @@ using Hangfire;
 using VirtoCommerce.Domain.Common;
 using VirtoCommerce.OrderModule.Web.BackgroundJobs;
 using VirtoCommerce.OrderModule.Data.Repositories;
+using VirtoCommerce.OrderModule.Web.Security;
+using System.Web;
 
 namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 {
@@ -35,8 +37,10 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         private readonly IStoreService _storeService;
 		private readonly CacheManager _cacheManager;
 		private readonly Func<IOrderRepository> _repositoryFactory;
+        private readonly OrderSecurityScopeProvider _orderScopeProvider;
 
-		public OrderModuleController(ICustomerOrderService customerOrderService, ICustomerOrderSearchService searchService, IStoreService storeService, IUniqueNumberGenerator numberGenerator, CacheManager cacheManager, Func<IOrderRepository> repositoryFactory)
+        public OrderModuleController(ICustomerOrderService customerOrderService, ICustomerOrderSearchService searchService, IStoreService storeService, IUniqueNumberGenerator numberGenerator, 
+                                     CacheManager cacheManager, Func<IOrderRepository> repositoryFactory, OrderSecurityScopeProvider securityScopeProvider)
         {
             _customerOrderService = customerOrderService;
             _searchService = searchService;
@@ -44,6 +48,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
             _storeService = storeService;
 			_cacheManager = cacheManager;
 			_repositoryFactory = repositoryFactory;
+            _orderScopeProvider = securityScopeProvider;
         }
 
 		/// <summary>
@@ -55,6 +60,9 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         [Route("")]
         public IHttpActionResult Search([ModelBinder(typeof(SearchCriteriaBinder))] coreModel.SearchCriteria criteria)
         {
+            //Scope bounded ACL filtration
+            _orderScopeProvider.FilterOrderSearchCriteria(HttpContext.Current.User.Identity.Name, criteria);
+
             var retVal = _searchService.Search(criteria);
             return Ok(retVal.ToWebModel());
         }
@@ -74,7 +82,12 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
             {
                 return NotFound();
             }
-            return Ok(retVal.ToWebModel());
+            var result = retVal.ToWebModel();
+            //Set scopes for UI scope bounded ACL checking
+            //TODO: need check permission view for this order
+            result.Scopes = _orderScopeProvider.GetEntityScopes(retVal).ToArray();
+            
+            return Ok(result);
         }
 
 		/// <summary>

@@ -379,7 +379,7 @@ namespace VirtoCommerce.OrderModule.Test
 		private static OrderModuleController GetCustomerOrderController()
 		{
 			var orderService = GetCustomerOrderService();
-			var controller = new OrderModuleController(orderService, null, null, new TimeBasedNumberGeneratorImpl(), null, null);
+			var controller = new OrderModuleController(orderService, null, null, new TimeBasedNumberGeneratorImpl(), null, null, null);
 			return controller;
 		}
 	}

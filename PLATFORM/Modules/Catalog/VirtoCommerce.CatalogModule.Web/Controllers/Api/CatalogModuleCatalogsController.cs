@@ -22,18 +22,18 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         private readonly ICatalogSearchService _searchService;
 		private readonly IPropertyService _propertyService;
 		private readonly ISettingsManager _settingManager;
-		private readonly IPermissionService _permissionService;
+		private readonly ISecurityService _securityService;
 
         public CatalogModuleCatalogsController(ICatalogService catalogService,
 								  ICatalogSearchService itemSearchService,
 								  ISettingsManager settingManager,
-								  IPropertyService propertyService, IPermissionService permissionService)
+								  IPropertyService propertyService, ISecurityService securityService)
         {
             _catalogService = catalogService;
             _searchService = itemSearchService;
 			_propertyService = propertyService;
 			_settingManager = settingManager;
-			_permissionService = permissionService;
+            _securityService = securityService;
         }
 
         /// <summary>
@@ -139,8 +139,8 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         [CheckPermission(Permissions = new[] { PredefinedPermissions.CatalogsManage, PredefinedPermissions.VirtualCatalogsManage })]
 		public IHttpActionResult Create(webModel.Catalog catalog)
 		{
-            if ((_permissionService.UserHasAnyPermission(RequestContext.Principal.Identity.Name, PredefinedPermissions.CatalogsManage) && !catalog.Virtual)
-                || (_permissionService.UserHasAnyPermission(RequestContext.Principal.Identity.Name, PredefinedPermissions.VirtualCatalogsManage) && catalog.Virtual))
+            if ((_securityService.UserHasAnyPermission(RequestContext.Principal.Identity.Name, null, PredefinedPermissions.CatalogsManage) && !catalog.Virtual)
+                || (_securityService.UserHasAnyPermission(RequestContext.Principal.Identity.Name, null, PredefinedPermissions.VirtualCatalogsManage) && catalog.Virtual))
             {
 			var retVal = _catalogService.Create(catalog.ToModuleModel());
 			return Ok(retVal.ToWebModel());
