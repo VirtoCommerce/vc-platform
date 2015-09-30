@@ -2963,11 +2963,10 @@ button.btn
         border: 1px solid #a1c0d4;
         color: #a1c0d4;
         display: inline-block;
-        vertical-align: middle;
         height: 30px;
         line-height: 28px;
-        margin: -5px 0 0;
         text-align: center;
+        vertical-align: top;
         width: 30px;
 
         -webkit-border-radius: 50%;
@@ -2983,8 +2982,8 @@ button.btn
     .breadcrumbs .back ~ .menu
     {
         display: inline-block;
-        margin: -7px 0 0 10px;
-        vertical-align: middle;
+        margin: 4px 0 0 10px;
+        vertical-align: top;
     }
 
     .breadcrumbs .menu-item.__divider
@@ -3354,6 +3353,11 @@ button.btn
 {
     float: left;
     width: 33.3333%;
+}
+
+.column .list.__info
+{
+    margin: 0;
 }
 
 .column .form-group
@@ -4204,7 +4208,7 @@ tags-input .tags .tag-item .remove-button
     .blade .blade-head
     {
         background: #333;
-        height: 130px;
+        height: 132px;
         min-width: 300px;
         padding: 25px 0 5px;
         position: relative;
@@ -4625,7 +4629,7 @@ tags-input .tags .tag-item .remove-button
             .blade-static.__expanded .breadcrumbs
             {
                 margin: 0 0 -15px;
-                padding: 12px 20px;
+                padding: 14px 20px;
             }
 
             .blade-static .form-group,
@@ -4681,12 +4685,12 @@ tags-input .tags .tag-item .remove-button
 
         .blade-static.__expanded
         {
-            height: 100px;
+            height: 114px;
         }
 
         .blade-static.__collapsed
         {
-            height: 50px;
+            height: 60px;
         }
 
         .blade-static.__bottom
@@ -4707,7 +4711,7 @@ tags-input .tags .tag-item .remove-button
 
         .blade-static + .blade-content
         {
-            height: calc(100% - 70px);
+            height: calc(100% - 72px);
         }
 
         .blade-static.__quote + .blade-content
@@ -4715,41 +4719,52 @@ tags-input .tags .tag-item .remove-button
             height: calc(100% - 230px);
         }
 
-        .blade-static.__expanded + .blade-content
-        {
-            height: calc(100% - 100px);
-        }
-
         .blade-static.__collapsed + .blade-content
         {
-            height: calc(100% - 50px);
+            height: calc(100% - 62px);
         }
 
+        .blade-static.__expanded + .blade-content
+        {
+            height: calc(100% - 116px);
+        }
+
+        /* Normal to normal */
         .blade-static + .blade-static.__bottom + .blade-content
         {
-            height: calc(100% - 139px);
+            height: calc(100% - 140px);
         }
 
+        /* Collapsed to normal, Normal to collapsed */
+        .blade-static.__collapsed + .blade-static.__bottom + .blade-content,
+        .blade-static + .blade-static.__bottom.__collapsed + .blade-content
+        {
+            height: calc(100% - 130px);
+        }
+        
+        /* Collapsed to collapsed */
+        .blade-static.__collapsed + .blade-static.__bottom.__collapsed + .blade-content
+        {
+            height: calc(100% - 120px);
+        }
+
+        /* Expanded to normal, Normal to expanded */
         .blade-static.__expanded + .blade-static.__bottom + .blade-content,
         .blade-static + .blade-static.__bottom.__expanded + .blade-content
         {
-            height: calc(100% - 169px);
+            height: calc(100% - 184px);
         }
 
-        .blade-static.__collapsed + .blade-static.__bottom + .blade-content,
-        .blade-static + .blade-static.__bottom.__expanded + .blade-content
-        {
-            height: calc(100% - 119px);
-        }
-
+        /* Expanded to expanded */
         .blade-static.__expanded + .blade-static.__bottom.__expanded + .blade-content
         {
-            height: calc(100% - 199px);
+            height: calc(100% - 228px);
         }
 
-        .blade-static.__collapsed + .blade-static.__bottom.__expanded + .blade-content
+        /* Collapsed to expanded, Expanded to collapsed */
+        .blade-static.__expanded + .blade-static.__bottom.__collapsed + .blade-content
         {
-            height: calc(100% - 149px);
+            height: calc(100% - 174px);
         }
 
         .blade-container .canceled + .blade-content

@@ -13,11 +13,37 @@
                                 <div class="list-t">Customer</div>
                                 <div class="list-descr">{{blade.currentEntity.customerName}}</div>
                             </li>
+                        </ul>
+                    </div>
+                    <div class="column">
+                        <ul class="list __info">
+                            <li class="list-item">
+                                <div class="list-t">Created</div>
+                                <div class="list-descr">{{blade.currentEntity.createdDate}}</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="clearfix">
+                    <div class="column">
+                        <ul class="list __info">
                             <li class="list-item">
                                 <div class="list-t">Customer organization</div>
                                 <div class="list-descr">{{blade.currentEntity.organizationName?blade.currentEntity.organizationName:'Not defined'}}</div>
                             </li>
                         </ul>
+                    </div>
+                    <div class="column">
+                        <ul class="list __info">
+                            <li class="list-item">
+                                <div class="list-t">Last updated</div>
+                                <div class="list-descr">{{blade.currentEntity.modifiedDate}}</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="clearfix">
+                    <div class="column">
                         <div class="form-group">
                             <label class="form-label">Status <a href="" ng-click="openDictionarySettingManagement()" va-permission="platform:setting:update"><i class="form-ico fa fa-pencil"></i></a></label>
                             <div class="form-input">
@@ -51,16 +77,6 @@
                         </div>
                     </div>
                     <div class="column">
-                        <ul class="list __info">
-                            <li class="list-item">
-                                <div class="list-t">Created</div>
-                                <div class="list-descr">{{blade.currentEntity.createdDate}}</div>
-                            </li>
-                            <li class="list-item">
-                                <div class="list-t">Last updated</div>
-                                <div class="list-descr">{{blade.currentEntity.modifiedDate}}</div>
-                            </li>
-                        </ul>
                         <div class="form-group">
                             <label class="form-label">RFQ from</label>
                             <div class="form-input">
