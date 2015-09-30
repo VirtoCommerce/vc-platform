@@ -39,7 +39,7 @@ angular.module(moduleName, [])
           title: 'quotes',
           priority: 95,
           action: function () { $state.go('workspace.quoteModule'); },
-          permission: 'quote:query'
+          permission: 'quote:access'
       };
       mainMenuService.addMenuItem(menuItem);
 

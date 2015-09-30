@@ -88,12 +88,8 @@ namespace VirtoCommerce.Domain.Payment.Model
 
 		public string GetSetting(string settingName)
 		{
-			var setting = Settings.FirstOrDefault(s => s.Name == settingName);
-
-			if (setting == null || string.IsNullOrEmpty(setting.Value))
-				throw new NullReferenceException(string.Format("{0} setting is null or empty"));
-
-			return setting.Value;
+			var setting = Settings.FirstOrDefault(s => s.Name == settingName);            
+			return setting != null ? setting.Value : string.Empty;
 		}
 	}
 }

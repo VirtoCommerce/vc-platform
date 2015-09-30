@@ -92,7 +92,7 @@
         	canExecuteMethod: function () {
         		return true;
         	},
-        	permission: 'content:manage'
+        	permission: 'content:create'
         }
 	];
 

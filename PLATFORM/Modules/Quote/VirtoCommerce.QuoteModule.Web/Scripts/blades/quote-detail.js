@@ -136,7 +136,7 @@
             canExecuteMethod: function () {
                 return true;
             },
-            permission: 'platform:security:manage'
+            permission: 'quote:update'
         };
 
         function initializeToolbar(currentEntity) {
@@ -150,7 +150,7 @@
                     canExecuteMethod: function () {
                         return isDirty() && $scope.formScope && $scope.formScope.$valid;
                     },
-                    permission: 'quote:manage'
+                    permission: 'quote:update'
                 },
                 {
                     name: "Reset",
@@ -162,7 +162,7 @@
                     canExecuteMethod: function () {
                         return isDirty();
                     },
-                    permission: 'quote:manage'
+                    permission: 'quote:update'
                 }
             ];
 
@@ -186,7 +186,7 @@
                     canExecuteMethod: function () {
                         return blade.currentEntity && !isQuoteSubmitted(blade.origEntity);
                     },
-                    permission: 'quote:manage'
+                    permission: 'quote:update'
                 },
                 onHoldCommand,
                 {
@@ -208,7 +208,7 @@
                     canExecuteMethod: function () {
                         return blade.currentEntity && !blade.currentEntity.isCancelled;
                     },
-                    permission: 'quote:manage'
+                    permission: 'quote:update'
                 },
                 {
                     name: "Delete", icon: 'fa fa-trash-o',
@@ -218,7 +218,7 @@
                     canExecuteMethod: function () {
                         return !isDirty();
                     },
-                    permission: 'quote:manage'
+                    permission: 'quote:delete'
                 }
             ]);
         }

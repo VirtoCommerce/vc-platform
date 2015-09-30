@@ -1,49 +1,52 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <module>
-    <id>VirtoCommerce.Pricing</id>
-    <version>2.4.0</version>
-    <platformVersion>2.4.0</platformVersion>
-    <dependencies>
-        <dependency id="VirtoCommerce.Core" version="2.4.0" />
-    </dependencies>
+  <id>VirtoCommerce.Pricing</id>
+  <version>2.4.0</version>
+  <platformVersion>2.4.0</platformVersion>
+  <dependencies>
+    <dependency id="VirtoCommerce.Core" version="2.4.0" />
+  </dependencies>
 
-    <title>Pricing module</title>
-    <description>Robust pricing management functionality based on price list and dynamic evaluation</description>
-    <authors>
-        <author>Virto Commerce</author>
-    </authors>
-    <owners>
-        <owner>Virto Commerce</owner>
-    </owners>
-    <projectUrl>http://virtocommerce.com/</projectUrl>
+  <title>Pricing module</title>
+  <description>Robust pricing management functionality based on price list and dynamic evaluation</description>
+  <authors>
+    <author>Virto Commerce</author>
+  </authors>
+  <owners>
+    <owner>Virto Commerce</owner>
+  </owners>
+  <projectUrl>http://virtocommerce.com/</projectUrl>
   <iconUrl>Modules/$(VirtoCommerce.Core)/Content/logoVC.png</iconUrl>
-    <releaseNotes>First version.</releaseNotes>
-    <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
-    <tags>price pricelist merchandise</tags>
+  <releaseNotes>First version.</releaseNotes>
+  <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
+  <tags>price pricelist merchandise</tags>
 
-    <assemblyFile>VirtoCommerce.PricingModule.Web.dll</assemblyFile>
-    <moduleType>VirtoCommerce.PricingModule.Web.Module, VirtoCommerce.PricingModule.Web</moduleType>
-    <!--<styles>
+  <assemblyFile>VirtoCommerce.PricingModule.Web.dll</assemblyFile>
+  <moduleType>VirtoCommerce.PricingModule.Web.Module, VirtoCommerce.PricingModule.Web</moduleType>
+  <!--<styles>
     <directory virtualPath="$/Content/css" searchPattern="*.css" searchSubdirectories="true" />
   </styles>-->
-    <scripts>
-        <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
-    </scripts>
-	<settings>
-		<group name="Pricing|General">
-			<setting>
-				<name>Pricing.ExportImport.Description</name>
-				<valueType>string</valueType>
-				<defaultValue>Export/Import price lists, assignments and prices</defaultValue>
-				<title>Export/Import description</title>
-				<description>Module description in platform export/import wizard</description>
-			</setting>
-		</group>
-	</settings>
-    <permissions>
-        <group name="Pricing">
-            <permission id="pricing:query" name="Browse pricing data" description="Permission to open pricing menu and browse data."/>
-            <permission id="pricing:manage" name="Manage pricing data" description="Permission to manage pricing information."/>
-        </group>
-    </permissions>
+  <scripts>
+    <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
+  </scripts>
+  <settings>
+    <group name="Pricing|General">
+      <setting>
+        <name>Pricing.ExportImport.Description</name>
+        <valueType>string</valueType>
+        <defaultValue>Export/Import price lists, assignments and prices</defaultValue>
+        <title>Export/Import description</title>
+        <description>Module description in platform export/import wizard</description>
+      </setting>
+    </group>
+  </settings>
+  <permissions>
+    <group name="Pricing">
+      <permission id="pricing:access" name="Open pricing menu" description="Permission to open pricing menu."/>
+      <permission id="pricing:create" name="Create pricing data" description="Permission to create price lists and price list assignments."/>
+      <permission id="pricing:read" name="Read pricing data" description="Permission to browse and read pricing data."/>
+      <permission id="pricing:update" name="Update pricing data" description="Permission to update pricing data."/>
+      <permission id="pricing:delete" name="Delete pricing data" description="Permission to delete pricing data."/>
+    </group>
+  </permissions>
 </module>

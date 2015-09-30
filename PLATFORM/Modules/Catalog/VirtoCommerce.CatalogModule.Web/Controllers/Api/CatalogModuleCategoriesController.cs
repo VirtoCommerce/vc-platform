@@ -16,7 +16,7 @@ using VirtoCommerce.Platform.Core.Asset;
 namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 {
     [RoutePrefix("api/catalog/categories")]
-    [CheckPermission(Permission = PredefinedPermissions.CategoriesManage)]
+    [CheckPermission(Permission = PredefinedPermissions.Query)]
     public class CatalogModuleCategoriesController : ApiController
     {
         private readonly ICatalogSearchService _searchService;

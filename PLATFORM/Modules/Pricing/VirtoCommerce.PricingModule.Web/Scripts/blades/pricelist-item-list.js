@@ -105,7 +105,7 @@
         canExecuteMethod: function () {
             return true;
         },
-        permission: 'pricing:manage'
+        permission: 'pricing:update'
     }
     ];
 

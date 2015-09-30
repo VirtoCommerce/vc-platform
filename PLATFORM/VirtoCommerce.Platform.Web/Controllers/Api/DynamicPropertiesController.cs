@@ -8,7 +8,7 @@ using VirtoCommerce.Platform.Core.Security;
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
     [RoutePrefix("api/platform/dynamic")]
-    [CheckPermission(Permission = PredefinedPermissions.DynamicPropertiesManage)]
+    [CheckPermission(Permission = PredefinedPermissions.DynamicPropertiesQuery)]
     public class DynamicPropertiesController : ApiController
     {
         private readonly IDynamicPropertyService _service;
@@ -51,6 +51,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("types/{typeName}/properties")]
         [ResponseType(typeof(DynamicProperty))]
+        [CheckPermission(Permission = PredefinedPermissions.DynamicPropertiesCreate)]
         public IHttpActionResult CreateProperty(string typeName, DynamicProperty property)
         {
             property.Id = null;
@@ -69,6 +70,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPut]
         [Route("types/{typeName}/properties/{propertyId}")]
         [ResponseType(typeof(void))]
+        [CheckPermission(Permission = PredefinedPermissions.DynamicPropertiesUpdate)]
         public IHttpActionResult UpdateProperty(string typeName, string propertyId, DynamicProperty property)
         {
             property.Id = propertyId;
@@ -87,6 +89,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpDelete]
         [Route("types/{typeName}/properties/{propertyId}")]
         [ResponseType(typeof(void))]
+        [CheckPermission(Permission = PredefinedPermissions.DynamicPropertiesDelete)]
         public IHttpActionResult DeleteProperty(string typeName, string propertyId)
         {
             _service.DeleteProperties(new[] { propertyId });
@@ -116,6 +119,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("types/{typeName}/properties/{propertyId}/dictionaryitems")]
         [ResponseType(typeof(void))]
+        [CheckPermission(Permission = PredefinedPermissions.DynamicPropertiesUpdate)]
         public IHttpActionResult SaveDictionaryItems(string typeName, string propertyId, DynamicPropertyDictionaryItem[] items)
         {
             _service.SaveDictionaryItems(propertyId, items);
@@ -132,6 +136,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpDelete]
         [Route("types/{typeName}/properties/{propertyId}/dictionaryitems")]
         [ResponseType(typeof(void))]
+        [CheckPermission(Permission = PredefinedPermissions.DynamicPropertiesUpdate)]
         public IHttpActionResult DeleteDictionaryItem(string typeName, string propertyId, [FromUri] string[] ids)
         {
             _service.DeleteDictionaryItems(ids);

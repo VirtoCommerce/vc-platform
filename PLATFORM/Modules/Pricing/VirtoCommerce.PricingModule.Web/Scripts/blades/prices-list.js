@@ -115,7 +115,7 @@
             canExecuteMethod: function () {
                 return true;
             },
-            permission: 'pricing:manage'
+            permission: 'pricing:update'
         },
         {
             name: "Save", icon: 'fa fa-save',
@@ -125,7 +125,7 @@
             canExecuteMethod: function () {
                 return isDirty() && $scope.isValid();
             },
-            permission: 'pricing:manage'
+            permission: 'pricing:update'
         },
         {
             name: "Reset", icon: 'fa fa-undo',
@@ -136,7 +136,7 @@
             canExecuteMethod: function () {
                 return isDirty();
             },
-            permission: 'pricing:manage'
+            permission: 'pricing:update'
         },
         {
             name: "Delete", icon: 'fa fa-trash-o',
@@ -149,7 +149,7 @@
             canExecuteMethod: function () {
                 return _.some($scope.blade.currentEntities, function (x) { return x._selected; });
             },
-            permission: 'pricing:manage'
+            permission: 'pricing:update'
         }
     ];
 

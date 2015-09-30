@@ -153,7 +153,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpDelete]
         [Route("roles")]
         [ResponseType(typeof(void))]
-        [CheckPermission(Permission = PredefinedPermissions.SecurityManage)]
+        [CheckPermission(Permission = PredefinedPermissions.SecurityDelete)]
         public IHttpActionResult DeleteRoles([FromUri(Name = "ids")] string[] roleIds)
         {
             if (roleIds != null)
@@ -174,7 +174,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPut]
         [Route("roles")]
         [ResponseType(typeof(Role))]
-        [CheckPermission(Permission = PredefinedPermissions.SecurityManage)]
+        [CheckPermission(Permission = PredefinedPermissions.SecurityUpdate)]
         public IHttpActionResult UpdateRole(Role role)
         {
             var result = _roleService.AddOrUpdateRole(role);
@@ -191,7 +191,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpGet]
         [Route("apiaccounts/new")]
         [ResponseType(typeof(ApiAccount))]
-        [CheckPermission(Permission = PredefinedPermissions.SecurityManage)]
+        [CheckPermission(Permission = PredefinedPermissions.SecurityUpdate)]
         public IHttpActionResult GenerateNewApiAccount(ApiAccountType type)
         {
             var result = _securityService.GenerateNewApiAccount(type);
@@ -234,7 +234,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("users/create")]
         [ResponseType(typeof(SecurityResult))]
-        [CheckPermission(Permission = PredefinedPermissions.SecurityManage)]
+        [CheckPermission(Permission = PredefinedPermissions.SecurityCreate)]
         public async Task<IHttpActionResult> CreateAsync(ApplicationUserExtended user)
         {
             ClearSecurityProperties(user);
@@ -271,7 +271,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("users/{userName}/resetpassword")]
         [ResponseType(typeof(SecurityResult))]
-        [CheckPermission(Permission = PredefinedPermissions.SecurityManage)]
+        [CheckPermission(Permission = PredefinedPermissions.SecurityUpdate)]
         public async Task<IHttpActionResult> ResetPassword(string userName, [FromBody] ResetPasswordInfo resetPassword)
         {
             var result = await _securityService.ResetPasswordAsync(userName, resetPassword.NewPassword);
@@ -285,7 +285,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPut]
         [Route("users")]
         [ResponseType(typeof(SecurityResult))]
-        [CheckPermission(Permission = PredefinedPermissions.SecurityManage)]
+        [CheckPermission(Permission = PredefinedPermissions.SecurityUpdate)]
         public async Task<IHttpActionResult> UpdateAsync(ApplicationUserExtended user)
         {
             ClearSecurityProperties(user);
@@ -300,7 +300,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpDelete]
         [Route("users")]
         [ResponseType(typeof(void))]
-        [CheckPermission(Permission = PredefinedPermissions.SecurityManage)]
+        [CheckPermission(Permission = PredefinedPermissions.SecurityDelete)]
         public async Task<IHttpActionResult> DeleteAsync([FromUri] string[] names)
         {
             await _securityService.DeleteAsync(names);

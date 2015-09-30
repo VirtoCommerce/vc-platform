@@ -82,7 +82,7 @@
             canExecuteMethod: function () {
                 return isDirty();
             },
-            permission: 'catalog:items:manage'
+            permission: 'catalog:update'
         },
         {
             name: "Reset", icon: 'fa fa-undo',
@@ -92,7 +92,7 @@
             canExecuteMethod: function () {
                 return isDirty();
             },
-            permission: 'catalog:items:manage'
+            permission: 'catalog:update'
         },
         {
             name: "Delete", icon: 'fa fa-trash-o',
@@ -102,7 +102,7 @@
             canExecuteMethod: function () {
                 return $scope.blade.parentBlade.currentEntities.indexOf($scope.blade.origEntity) >= 0 && !isDirty();
             },
-            permission: 'catalog:items:manage'
+            permission: 'catalog:update'
         }
     ];
 

@@ -99,17 +99,17 @@ function ($scope, pricelists, bladeNavigationService, dialogService) {
             canExecuteMethod: function () {
                 return true;
             },
-            permission: 'pricing:manage'
+            permission: 'pricing:create'
         },
-        {
-            name: "Clone", icon: 'fa fa-files-o',
-            executeMethod: function () {
-            },
-            canExecuteMethod: function () {
-                return false;
-            },
-            permission: 'pricing:manage'
-        },
+        //{
+        //    name: "Clone", icon: 'fa fa-files-o',
+        //    executeMethod: function () {
+        //    },
+        //    canExecuteMethod: function () {
+        //        return false;
+        //    },
+        //    permission: 'pricing:update'
+        //},
         {
             name: "Delete", icon: 'fa fa-trash-o',
             executeMethod: function () {
@@ -118,7 +118,7 @@ function ($scope, pricelists, bladeNavigationService, dialogService) {
             canExecuteMethod: function () {
                 return isItemsChecked();
             },
-            permission: 'pricing:manage'
+            permission: 'pricing:delete'
         }
     ];
 

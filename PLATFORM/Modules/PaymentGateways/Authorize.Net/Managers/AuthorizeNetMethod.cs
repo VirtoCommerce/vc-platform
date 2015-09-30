@@ -20,6 +20,7 @@ namespace Authorize.Net.Managers
         private const string _authorizeNetThankYouPageRelativeUrlStoreSetting = "AutorizeNet.ThankYouPageRelativeUrl";
         private const string _autorizeNetPaymentActionTypeStoreSetting = "AutorizeNet.PaymentActionType";
         private const string _autorizeNetModeStoreSetting = "AutorizeNet.Mode";
+        private const string _autorizeNetMD5HashStoreSetting = "AuthorizeNet.MD5Hash";
 
         public AuthorizeNetMethod() : base("AuthorizeNet") { }
 
@@ -36,6 +37,14 @@ namespace Authorize.Net.Managers
             get
             {
                 return GetSetting(_autorizeNetTxnKeyStoreSetting);
+            }
+        }
+
+        public string MD5Hash
+        {
+            get
+            {
+                return GetSetting(_autorizeNetMD5HashStoreSetting);
             }
         }
 
@@ -59,8 +68,7 @@ namespace Authorize.Net.Managers
         {
             get
             {
-                var retVal = GetSetting(_autorizeNetConfirmationRelativeUrlStoreSetting);
-                return retVal;
+                return GetSetting(_autorizeNetConfirmationRelativeUrlStoreSetting);
             }
         }
 
@@ -68,8 +76,7 @@ namespace Authorize.Net.Managers
         {
             get
             {
-                var retVal = GetSetting(_authorizeNetThankYouPageRelativeUrlStoreSetting);
-                return retVal;
+                return GetSetting(_authorizeNetThankYouPageRelativeUrlStoreSetting);
             }
         }
 
@@ -77,8 +84,7 @@ namespace Authorize.Net.Managers
         {
             get
             {
-                var retVal = GetSetting(_autorizeNetPaymentActionTypeStoreSetting);
-                return retVal;
+                return GetSetting(_autorizeNetPaymentActionTypeStoreSetting);
             }
         }
 
@@ -86,8 +92,7 @@ namespace Authorize.Net.Managers
         {
             get
             {
-                var retVal = GetSetting(_autorizeNetModeStoreSetting);
-                return retVal;
+                return GetSetting(_autorizeNetModeStoreSetting);
             }
         }
 
@@ -157,7 +162,7 @@ namespace Authorize.Net.Managers
             var method = context.Parameters["x_method"];
             var hash = context.Parameters["x_MD5_Hash"];
 
-            var hashMD5 = GetMD5Hash(TxnKey + ApiLogin + transactionId + totalPrice);
+            var hashMD5 = GetMD5Hash(MD5Hash + ApiLogin + transactionId + totalPrice);
 
             if (!string.IsNullOrEmpty(hash) && !string.IsNullOrEmpty(hashMD5) && string.Equals(hashMD5, hash, StringComparison.OrdinalIgnoreCase) && !string.IsNullOrEmpty(responseCode) && responseCode.Equals("1"))
             {
@@ -188,10 +193,6 @@ namespace Authorize.Net.Managers
 
             if (context.Order != null && context.Store != null && context.Payment != null)
             {
-                //var confirmationUrl = string.Format("{0}/{1}/{2}", context.Store.Url, ConfirmationRelativeUrl, context.Order.Id);
-
-                //var checkoutform = DPMFormGenerator.OpenForm(ApiLogin, TxnKey, context.Payment.Sum, confirmationUrl, true);
-
                 var sequence = new Random().Next(0, 1000).ToString();
                 var timeStamp = ((int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds).ToString();
                 var currency = context.Payment.Currency.ToString();
@@ -223,15 +224,7 @@ namespace Authorize.Net.Managers
                 checkoutform += CreateInput(true, "x_currency_code", currency);
                 checkoutform += CreateInput(true, "x_amount", context.Payment.Sum.ToString("F", CultureInfo.InvariantCulture));
 
-
-                //checkoutform += CreateInput(true, "x_delim_data", "TRUE");
-                //checkoutform += CreateInput(true, "x_delim_char", "|");
-                //checkoutform += CreateInput(true, "x_encap_char", string.Empty);
-                //checkoutform += CreateInput(true, "x_version", GetApiVersion());
-                //checkoutform += CreateInput(true, "x_method", "CC");
-                //checkoutform += CreateInput(true, "x_market_type", "0");
-
-                //checkoutform += GetAuthOrCapture();
+                checkoutform += GetAuthOrCapture();
 
                 // Add a Submit button
                 checkoutform += "<div style='clear:both'></div><p><input type='submit' class='submit' value='Order with DPM!' /></p></form>";
@@ -283,7 +276,7 @@ namespace Authorize.Net.Managers
         {
             var retVal = new VoidProcessPaymentResult();
 
-            if (context.Payment.PaymentStatus == PaymentStatus.Authorized)
+            if (context.Payment.PaymentStatus == PaymentStatus.Cancelled)
             {
                 var request = new VoidRequest(context.Payment.OuterId);
                 var gate = new Gateway(ApiLogin, TxnKey, true);

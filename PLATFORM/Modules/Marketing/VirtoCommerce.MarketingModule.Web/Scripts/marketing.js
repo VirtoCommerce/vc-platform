@@ -54,13 +54,13 @@ angular.module(moduleName, [])
           title: 'Marketing',
           priority: 40,
           action: function () { $state.go('workspace.marketing'); },
-          permission: 'marketing:query'
+          permission: 'marketing:access'
       };
       mainMenuService.addMenuItem(menuItem);
 
       //Register dashboard widgets
       //widgetService.registerWidget({
-      //    isVisible: function (blade) { return authService.checkPermission('marketing:query'); },
+      //    isVisible: function (blade) { return authService.checkPermission('marketing:read'); },
       //    controller: 'virtoCommerce.marketingModule.dashboard.promotionsWidgetController',
       //    template: 'tile-count.html'
       //}, 'mainDashboard');

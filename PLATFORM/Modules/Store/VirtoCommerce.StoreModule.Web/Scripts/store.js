@@ -39,7 +39,7 @@ angular.module(moduleName, [
           title: 'Stores',
           priority: 110,
           action: function () { $state.go('workspace.storeModule'); },
-          permission: 'store:query'
+          permission: 'store:access'
       };
       mainMenuService.addMenuItem(menuItem);
 
@@ -96,7 +96,7 @@ angular.module(moduleName, [
           canExecuteMethod: function (blade) {
               return !angular.equals(blade.origEntity, blade.currentEntity);
           },
-          permission: 'store:manage',
+          permission: 'store:update',
           index: 0
       };
       toolbarService.register(resetCommand, 'virtoCommerce.storeModule.paymentMethodDetailController');

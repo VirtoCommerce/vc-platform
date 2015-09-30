@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
+using System.Web.Http.Description;
 using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Domain.Order.Services;
 using VirtoCommerce.Domain.Payment.Model;
@@ -11,6 +13,7 @@ using VirtoCommerce.Domain.Store.Services;
 
 namespace Authorize.Net.Controllers
 {
+    [ApiExplorerSettings(IgnoreApi=true)]
     [RoutePrefix("api/payments/an")]
     public class AuthorizeNetController : ApiController
     {
@@ -53,7 +56,7 @@ namespace Authorize.Net.Controllers
                 var validateResult = paymentMethod.ValidatePostProcessRequest(parameters);
                 var paymentOuterId = validateResult.OuterId;
 
-                var payment = order.InPayments.FirstOrDefault(x => x.OuterId == paymentOuterId);
+                var payment = order.InPayments.FirstOrDefault(x => x.GatewayCode == "AuthorizeNet" && x.Sum == Convert.ToDecimal(parameters["x_amount"], CultureInfo.InvariantCulture));
                 if (payment == null)
                 {
                     throw new NullReferenceException("payment");

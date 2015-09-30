@@ -1,8 +1,8 @@
 ﻿angular.module('virtoCommerce.contentModule')
 .controller('virtoCommerce.contentModule.editPageController', ['$scope', 'platformWebApp.dialogService', 'virtoCommerce.contentModule.stores', 'virtoCommerce.contentModule.pages', '$timeout', 'platformWebApp.bladeNavigationService', 'FileUploader', function ($scope, dialogService, pagesStores, pages, $timeout, bladeNavigationService, FileUploader) {
     var blade = $scope.blade;
-    //blade.body = '';
-    //blade.metadata = '';
+    blade.editAsMarkdown = true;
+    blade.editAsHtml = false;
 
     blade.initialize = function () {
         pagesStores.get({ id: blade.choosenStoreId }, function (data) {
@@ -93,7 +93,7 @@
     		$scope.blade.toolbarCommands.push(
 				{
 				    name: "Save page", icon: 'fa fa-save',
-					executeMethod: function () { $scope.saveChanges(); }, canExecuteMethod: function () { return blade.isDirty(); }, permission: 'content:manage'
+					executeMethod: function () { $scope.saveChanges(); }, canExecuteMethod: function () { return blade.isDirty(); }, permission: 'content:update'
 				});
     		$scope.blade.toolbarCommands.push(
 				{
@@ -111,19 +111,41 @@
 				        $scope.$broadcast('resetContent', { body: blade.body });
 				    },
 				    canExecuteMethod: function () { return blade.isDirty(); },
-				    permission: 'content:manage'
+				    permission: 'content:update'
 				});
     		$scope.blade.toolbarCommands.push(
 				{
 				    name: "Delete page", icon: 'fa fa-trash-o',
-					executeMethod: function () { blade.deleteEntry(); }, canExecuteMethod: function () { return true; }, permission: 'content:manage'
+				    executeMethod: function () { blade.deleteEntry(); }, canExecuteMethod: function () { return true; }, permission: 'content:delete'
 				});
+    		$scope.blade.toolbarCommands.push(
+                {
+                    name: "Edit as markdown", icon: 'fa fa-code',
+                    executeMethod: function () {
+                        blade.editAsMarkdown = true;
+                        blade.editAsHtml = false;
+                        $scope.$broadcast('changeEditType', { editAsMarkdown: true, editAsHtml: false });
+                    },
+                    canExecuteMethod: function () { return !blade.editAsMarkdown; },
+                    permission: 'content:manage'
+                });
+    		$scope.blade.toolbarCommands.push(
+                {
+                    name: "Edit as html", icon: 'fa fa-code',
+                    executeMethod: function () {
+                        blade.editAsHtml = true;
+                        blade.editAsMarkdown = false;
+                        $scope.$broadcast('changeEditType', { editAsHtml: true, editAsMarkdown: false });
+                    },
+                    canExecuteMethod: function () { return !blade.editAsHtml; },
+                    permission: 'content:manage'
+                });
             }
             else {
     		$scope.blade.toolbarCommands.push(
 				{
 				    name: "Create", icon: 'fa fa-save',
-					executeMethod: function () { $scope.saveChanges(); }, canExecuteMethod: function () { return blade.isDirty(); }, permission: 'content:manage'
+					executeMethod: function () { $scope.saveChanges(); }, canExecuteMethod: function () { return blade.isDirty(); }, permission: 'content:update'
 				});
     	}
     }

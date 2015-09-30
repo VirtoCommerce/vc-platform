@@ -2,7 +2,11 @@
 {
     public static class PredefinedPermissions
     {
-        //public const string Query = "inventory:query";
-        public const string Manage = "inventory:manage";
+        //public const string Query = "inventory:read";
+        public const string
+            //Create = "inventory:create",
+            //Access = "inventory:access",
+            Update = "inventory:update";
+            //Delete = "inventory:delete";
     }
 }

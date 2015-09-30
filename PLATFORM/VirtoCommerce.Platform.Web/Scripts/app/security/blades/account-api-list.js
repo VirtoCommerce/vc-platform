@@ -51,7 +51,7 @@
            canExecuteMethod: function () {
                return true;
            },
-           permission: 'platform:security:manage'
+           permission: 'platform:security:update'
        }
     ];
 

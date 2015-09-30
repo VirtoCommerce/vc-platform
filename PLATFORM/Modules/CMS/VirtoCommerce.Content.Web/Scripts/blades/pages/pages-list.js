@@ -140,7 +140,7 @@
                     canExecuteMethod: function () {
                         return true;
                     },
-                    permission: 'content:manage'
+                    permission: 'content:create'
                 }];
         }
         else {
@@ -157,7 +157,7 @@
                 canExecuteMethod: function () {
                     return true;
                 },
-                permission: 'content:manage'
+                permission: 'content:update'
             });
         }
     }
@@ -187,7 +187,7 @@
                     canExecuteMethod: function () {
                         return true;
                     },
-                    permission: 'content:manage'
+                    permission: 'content:create'
                 }
             ];
         }
@@ -205,7 +205,7 @@
                 canExecuteMethod: function () {
                     return true;
                 },
-                permission: 'content:manage'
+                permission: 'content:update'
             });
         }
     }
@@ -273,7 +273,7 @@
                     canExecuteMethod: function () {
                         return true;
                     },
-                    permission: 'content:manage'
+                    permission: 'content:create'
                 }
             ];
         }
@@ -287,7 +287,7 @@
                     canExecuteMethod: function () {
                         return true;
                     },
-                    permission: 'content:manage'
+                    permission: 'content:create'
                 },
                 {
                     name: "Add file", icon: 'fa fa-plus',
@@ -297,7 +297,7 @@
                     canExecuteMethod: function () {
                         return true;
                     },
-                    permission: 'content:manage'
+                    permission: 'content:create'
                 }
             ];
         }

@@ -37,7 +37,7 @@ angular.module(moduleName, [])
           title: 'Shopping carts',
           priority: 99,
           action: function () { $state.go('workspace.cartModule'); },
-          permission: 'cart:query'
+          permission: 'cart:access'
       };
       mainMenuService.addMenuItem(menuItem);
   }])

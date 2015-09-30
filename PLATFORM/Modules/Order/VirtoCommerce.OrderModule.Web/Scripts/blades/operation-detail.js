@@ -60,7 +60,7 @@
 			        }
 			        if (retVal)
 			        {
-			        	retVal = authService.checkPermission('order:manage', $scope.blade.securityScopes);
+			        	retVal = authService.checkPermission('order:update', $scope.blade.securityScopes);
 			        }
 			        return retVal;
 			    };
@@ -117,7 +117,7 @@
 					    canExecuteMethod: function () {
 					        return true;
 					    },
-					    permission: 'order:manage'
+					    permission: 'order:update'
 					},
 					{
 					    name: "Save", icon: 'fa fa-save',
@@ -127,7 +127,7 @@
 					    canExecuteMethod: function () {
 					        return isDirty();
 					    },
-					    permission: 'order:manage'
+					    permission: 'order:update'
 					},
 					{
 					    name: "Reset", icon: 'fa fa-undo',
@@ -137,7 +137,7 @@
 					    canExecuteMethod: function () {
 					        return isDirty();
 					    },
-					    permission: 'order:manage'
+					    permission: 'order:update'
 					},
 					{
 					    name: "Delete", icon: 'fa fa-trash-o',
@@ -175,7 +175,7 @@
 					    canExecuteMethod: function () {
 					        return true;
 					    },
-					    permission: 'order:manage'
+					    permission: 'order:delete'
 					},
 					{
 					    name: "Cancel document", icon: 'fa fa-remove',
@@ -196,7 +196,7 @@
 					    canExecuteMethod: function () {
 					        return $scope.blade.currentEntity && !$scope.blade.currentEntity.isCancelled;
 					    },
-					    permission: 'order:manage'
+					    permission: 'order:update'
 					}
 			    ];
 

@@ -15,7 +15,7 @@ angular.module(moduleName, [])
 			title: 'Content',
 			priority: 111,
 			action: function () { $state.go('workspace.content'); },
-			permission: 'content:query'
+			permission: 'content:access'
 		};
 		mainMenuService.addMenuItem(menuItem);
 
@@ -23,7 +23,7 @@ angular.module(moduleName, [])
 		widgetService.registerWidget({
 			controller: 'virtoCommerce.contentModule.themesWidgetController',
 			template: 'Modules/$(VirtoCommerce.Content)/Scripts/widgets/themesWidget.tpl.html',
-			permission: 'content:query'
+			permission: 'content:read'
 		}, 'storeDetail');
 	}])
 .config(['$stateProvider', function ($stateProvider) {

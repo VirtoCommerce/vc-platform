@@ -108,7 +108,7 @@
             canExecuteMethod: function () {
                 return $scope.isDirty();
             },
-            permission: 'catalog:items:manage'
+            permission: 'catalog:update'
         }		
     ];
 

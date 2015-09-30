@@ -64,7 +64,7 @@
             canExecuteMethod: function () {
                 return isDirty() && isValid();
             },
-            permission: 'core:fulfillment:manage'
+            permission: 'core:fulfillment:update'
         },
         {
             name: "Reset", icon: 'fa fa-undo',
@@ -74,7 +74,7 @@
             canExecuteMethod: function () {
                 return isDirty();
             },
-            permission: 'core:fulfillment:manage'
+            permission: 'core:fulfillment:update'
         },
         {
             name: "Delete", icon: 'fa fa-trash-o',
@@ -84,7 +84,7 @@
             canExecuteMethod: function () {
                 return !isDirty();
             },
-            permission: 'core:fulfillment:manage'
+            permission: 'core:fulfillment:delete'
         }
     ];
 

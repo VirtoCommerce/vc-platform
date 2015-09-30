@@ -131,7 +131,7 @@ function ($scope, carts, bladeNavigationService, dialogService) {
               canExecuteMethod: function () {
                   return isItemsChecked();
               },
-              permission: 'cart:manage'
+              permission: 'cart:delete'
           }
     ];
 

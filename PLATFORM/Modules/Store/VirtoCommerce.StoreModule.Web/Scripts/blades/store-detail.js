@@ -28,7 +28,7 @@
     };
 
     function isDirty() {
-    	return  authService.checkPermission('store:manage', blade.securityScopes) && !angular.equals(blade.currentEntity, blade.origEntity);
+    	return  authService.checkPermission('store:update', blade.securityScopes) && !angular.equals(blade.currentEntity, blade.origEntity);
     };
 
     $scope.saveChanges = function () {
@@ -108,7 +108,7 @@
             canExecuteMethod: function () {
                 return isDirty() && $scope.formScope && $scope.formScope.$valid;
             },
-            permission: 'store:manage'
+            permission: 'store:update'
         },
         {
             name: "Reset",
@@ -119,7 +119,7 @@
             canExecuteMethod: function () {
                 return isDirty();
             },
-            permission: 'store:manage'
+            permission: 'store:update'
         },
         {
             name: "Delete", icon: 'fa fa-trash-o',
@@ -129,7 +129,7 @@
             canExecuteMethod: function () {
                 return !isDirty();
             },
-            permission: 'store:manage'
+            permission: 'store:delete'
         }
     ];
 

@@ -1,50 +1,53 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <module>
-    <id>VirtoCommerce.Inventory</id>
-    <version>2.4.0</version>
-    <platformVersion>2.4.0</platformVersion>
-    <dependencies>
-        <dependency id="VirtoCommerce.Core" version="2.4.0" />
-    </dependencies>
+  <id>VirtoCommerce.Inventory</id>
+  <version>2.4.0</version>
+  <platformVersion>2.4.0</platformVersion>
+  <dependencies>
+    <dependency id="VirtoCommerce.Core" version="2.4.0" />
+  </dependencies>
 
-    <title>Inventory module</title>
-    <description>Simplify inventory management functionality</description>
-    <authors>
-        <author>Virto Commerce</author>
-    </authors>
-    <owners>
-        <owner>Virto Commerce</owner>
-    </owners>
-    <projectUrl>http://virtocommerce.com/</projectUrl>
+  <title>Inventory module</title>
+  <description>Simplify inventory management functionality</description>
+  <authors>
+    <author>Virto Commerce</author>
+  </authors>
+  <owners>
+    <owner>Virto Commerce</owner>
+  </owners>
+  <projectUrl>http://virtocommerce.com/</projectUrl>
   <iconUrl>Modules/$(VirtoCommerce.Core)/Content/logoVC.png</iconUrl>
-    <releaseNotes>First version.</releaseNotes>
-    <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
-    <tags>order system</tags>
+  <releaseNotes>First version.</releaseNotes>
+  <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
+  <tags>order system</tags>
 
-    <assemblyFile>VirtoCommerce.InventoryModule.Web.dll</assemblyFile>
-    <moduleType>VirtoCommerce.InventoryModule.Web.Module, VirtoCommerce.InventoryModule.Web</moduleType>
-    <!--<styles>
+  <assemblyFile>VirtoCommerce.InventoryModule.Web.dll</assemblyFile>
+  <moduleType>VirtoCommerce.InventoryModule.Web.Module, VirtoCommerce.InventoryModule.Web</moduleType>
+  <!--<styles>
     <directory virtualPath="$/Content/css" searchPattern="*.css" searchSubdirectories="true" />
   </styles>-->
-    <scripts>
-        <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
-    </scripts>
+  <scripts>
+    <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
+  </scripts>
 
-	<settings>
-		<group name="Inventory|General">
-			<setting>
-				<name>Inventory.ExportImport.Description</name>
-				<valueType>string</valueType>
-				<defaultValue>Export/Import inventory information</defaultValue>
-				<title>Export/Import description</title>
-				<description>Module description in platform export/import wizard</description>
-			</setting>
-		</group>
-	</settings>
-    <permissions>
-        <group name="Inventory">
-            <!--<permission id="inventory:query" name="Browse inventory data" description="Permission to open inventory menu and browse data."/>-->
-            <permission id="inventory:manage" name="Manage inventory" description="Permission to manage inventory information."/>
-        </group>
-    </permissions>
+  <settings>
+    <group name="Inventory|General">
+      <setting>
+        <name>Inventory.ExportImport.Description</name>
+        <valueType>string</valueType>
+        <defaultValue>Export/Import inventory information</defaultValue>
+        <title>Export/Import description</title>
+        <description>Module description in platform export/import wizard</description>
+      </setting>
+    </group>
+  </settings>
+  <permissions>
+    <group name="Inventory">
+      <!--<permission id="inventory:access" name="Open inventory menu" description="Permission to open inventory menu."/>
+      <permission id="inventory:create" name="Create inventory related data" description="Permission to create inventory related data."/>
+      <permission id="inventory:read" name="Read inventory related data" description="Permission to browse and read inventory related data."/>-->
+      <permission id="inventory:update" name="Update inventory related data" description="Permission to update inventory related data."/>
+      <!--<permission id="inventory:delete" name="Delete inventory related data" description="Permission to delete inventory related data."/>-->
+    </group>
+  </permissions>
 </module>

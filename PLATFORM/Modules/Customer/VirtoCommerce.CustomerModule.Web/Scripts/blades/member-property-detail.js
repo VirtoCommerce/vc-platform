@@ -101,7 +101,7 @@
             canExecuteMethod: function () {
                 return isDirty();
             },
-            permission: 'customer:manage'
+            permission: 'customer:update'
         },
 		{
 		    name: "Delete", icon: 'fa fa-trash-o',
@@ -111,7 +111,7 @@
 		    canExecuteMethod: function () {
 		        return !(b.origEntity.isNew || isDirty());
 		    },
-		    permission: 'customer:manage'
+		    permission: 'customer:update'
 		}
     ];
 

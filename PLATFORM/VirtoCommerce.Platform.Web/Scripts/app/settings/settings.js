@@ -29,7 +29,7 @@
           title: 'Settings',
           priority: 1,
           action: function () { $state.go('workspace.modulesSettings'); },
-          permission: 'platform:setting:manage'
+          permission: 'platform:setting:access'
       };
       mainMenuService.addMenuItem(menuItem);
   }]);
