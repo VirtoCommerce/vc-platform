@@ -46,7 +46,7 @@
     <group name="Customers">
       <permission id="customer:access" name="Open customers menu" description="Permission to open customers menu."/>
       <permission id="customer:create" name="Create a customer" description="Permission to create a customer."/>
-      <permission id="customer:read" name="Read customer data" description="Permission to browse and read customer data."/>
+      <permission id="customer:read" name="View customer data" description="Permission to browse and view customer data."/>
       <permission id="customer:update" name="Update customer" description="Permission to update customer data."/>
       <permission id="customer:delete" name="Delete customer" description="Permission to delete customer data."/>
 

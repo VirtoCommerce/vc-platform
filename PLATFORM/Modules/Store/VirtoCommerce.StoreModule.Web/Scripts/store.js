@@ -31,7 +31,7 @@ angular.module(moduleName, [
   }]
 )
 .run(
-  ['platformWebApp.toolbarService', 'platformWebApp.bladeNavigationService', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', 'platformWebApp.securityRoleScopeService', 'virtoCommerce.storeModule.stores', function (toolbarService, bladeNavigationService, mainMenuService, widgetService, $state, securityRoleScopeService, stores) {
+  ['platformWebApp.toolbarService', 'platformWebApp.bladeNavigationService', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', function (toolbarService, bladeNavigationService, mainMenuService, widgetService, $state) {
       //Register module in main menu
       var menuItem = {
           path: 'browse/store',
@@ -43,16 +43,7 @@ angular.module(moduleName, [
       };
       mainMenuService.addMenuItem(menuItem);
 
-  	 //Register security scope types used for scope bounded ACL definition
-      var getScopesFn = function () {
-      	return stores.query({}).$promise.then(function (result) {
-      		var scopes = _.map(result, function (x) { return "store:" + x.name; });
-      		return scopes;
-      	});
-      };
-      securityRoleScopeService.registerScopeGetter(getScopesFn);
-
-      //Register widgets in store details
+  	  //Register widgets in store details
       widgetService.registerWidget({
           controller: 'virtoCommerce.storeModule.seoWidgetController',
           template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/seoWidget.tpl.html'

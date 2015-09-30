@@ -11,10 +11,12 @@ namespace VirtoCommerce.Platform.Data.Security
     public class RoleManagementService : ServiceBase, IRoleManagementService
     {
         private readonly Func<IPlatformRepository> _platformRepository;
+        private readonly IPermissionScopeService _permissionScopeService;
 
-        public RoleManagementService(Func<IPlatformRepository> platformRepository)
+        public RoleManagementService(Func<IPlatformRepository> platformRepository, IPermissionScopeService permissionScopeService)
         {
             _platformRepository = platformRepository;
+            _permissionScopeService = permissionScopeService;
         }
 
         #region IRoleManagementService Members
@@ -59,6 +61,13 @@ namespace VirtoCommerce.Platform.Data.Security
                 if (role != null)
                 {
                     result = role.ToCoreModel();
+                    if (result.Permissions != null)
+                    {
+                        foreach (var permission in result.Permissions)
+                        {
+                            permission.AvailableScopes = _permissionScopeService.GetPermissionScopes(permission.Id).ToList();
+                        }
+                    }
                 }
             }
 

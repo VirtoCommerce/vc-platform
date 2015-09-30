@@ -17,5 +17,8 @@ namespace VirtoCommerce.Platform.Core.Security
         Task<SecurityResult> ResetPasswordAsync(string name, string newPassword);
         Task<SecurityResult> ResetPasswordAsync(string userId, string token, string newPassword);
         Task<UserSearchResponse> SearchUsersAsync(UserSearchRequest request);
+        bool UserHasAnyPermission(string userName, string[] scopes, params string[] permissionIds);
+        Permission[] GetAllPermissions();
+
     }
 }

@@ -1,17 +1,7 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.roleDetailController', ['$q', '$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.roles', 'platformWebApp.dialogService', 'platformWebApp.securityRoleScopeService', function ($q, $scope, bladeNavigationService, roles, dialogService, securityRoleScopeService) {
+.controller('platformWebApp.roleDetailController', ['$q', '$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.roles', 'platformWebApp.dialogService', function ($q, $scope, bladeNavigationService, roles, dialogService) {
 	var promise = roles.queryPermissions().$promise;
 	
-
-	$scope.blade.allScopes = [];
-	angular.forEach(securityRoleScopeService.allScopeGetters, function (scopeGetter) {
-		//load all scopes
-		$q.when(scopeGetter()).then(function (result) {
-			$scope.blade.allScopes = $scope.blade.allScopes.concat(result);
-
-		});
-	});
-
 
 	$scope.blade.refresh = function (parentRefresh) {
 		if ($scope.blade.isNew) {
@@ -67,6 +57,18 @@
 			bladeNavigationService.setError('Error ' + error.status, $scope.blade);
 		});
 	};
+
+	$scope.selectNode = function (node) {
+		var newBlade = {
+			id: 'permissionScopes',
+			permission: node,
+			controller: 'platformWebApp.permissionScopesController',
+			template: '$(Platform)/Scripts/app/security/blades/permisson-scopes.tpl.html'
+		};
+
+		bladeNavigationService.showBlade(newBlade, $scope.blade);
+	};
+
 
 	$scope.setForm = function (form) {
 		$scope.formScope = form;

@@ -4,7 +4,7 @@ function ($injector, $scope, settings, bladeNavigationService) {
     var settingsTree;
     var blade = $scope.blade;
 
-    blade.refresh = function () {
+    blade.refresh = function (disableOpenAnimation) {
         blade.isLoading = true;
 
         settings.query({}, function (results) {
@@ -49,13 +49,13 @@ function ($injector, $scope, settings, bladeNavigationService) {
 
             // open previous settings detail blade if possible
             if ($scope.selectedNodeId) {
-                $scope.selectNode({ groupName: $scope.selectedNodeId });
+                $scope.selectNode({ groupName: $scope.selectedNodeId }, disableOpenAnimation);
             }
         },
         function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
     };
 
-    $scope.selectNode = function (node) {
+    $scope.selectNode = function (node, disableOpenAnimation) {
         bladeNavigationService.closeChildrenBlades(blade, function () {
             $scope.selectedNodeId = node.groupName;
             if (node.children) {
@@ -69,6 +69,7 @@ function ($injector, $scope, settings, bladeNavigationService) {
                     id: 'settingsSection',
                     data: selectedSettings,
                     title: 'Setting values',
+                    disableOpenAnimation: disableOpenAnimation,
                     controller: 'platformWebApp.settingsDetailController',
                     template: '$(Platform)/Scripts/app/settings/blades/settings-detail.tpl.html'
                 };
