@@ -77,7 +77,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         /// <param name="tags">Array of tags</param>
         /// <param name="language">Culture name (devault value is "en-us")</param>
 	    [HttpGet]
-        [ResponseType(typeof(webModel.ResponseCollection<webModel.DynamicContentItemGroup>))]
+        [ResponseType(typeof(webModel.DynamicContentItemGroupResponseCollection))]
         [ArrayInput(ParameterName = "placeHolders")]
         [ClientCache(Duration = 5)]
         [Route("contentitems")]
@@ -116,7 +116,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
                 }
             }
 
-            var retVal = new webModel.ResponseCollection<webModel.DynamicContentItemGroup>
+            var retVal = new webModel.DynamicContentItemGroupResponseCollection
             {
                 Items = groups,
                 TotalCount = groups.Count()
