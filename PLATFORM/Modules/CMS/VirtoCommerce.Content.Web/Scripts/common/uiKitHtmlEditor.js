@@ -8,13 +8,15 @@
         link: function (scope, element, attrs, ngModel) {
             $(element).html(scope.ngModel);
 
-            UIkit.htmleditor($('textarea[ui-kit-html-editor]'), { mode: 'tab', toolbar: ['bold', 'italic', 'strike', 'link', 'image', 'blockquote', 'listUl', 'listOl'], markdown: true });
+            UIkit.htmleditor($('textarea[ui-kit-html-editor]'), { mode: 'tab', toolbar: ['bold', 'italic', 'strike', 'link', 'image', 'blockquote', 'listUl', 'listOl'] });
 
             var editor = $('.CodeMirror')[0].CodeMirror;
 
             editor.on('change', function () {
                 ngModel = editor.getValue();
             });
+
+            editor.setOption("mode", "gfm");
 
             scope.$on('resetContent', function (event, arg) {
                 var editor = $('.CodeMirror')[0].CodeMirror;

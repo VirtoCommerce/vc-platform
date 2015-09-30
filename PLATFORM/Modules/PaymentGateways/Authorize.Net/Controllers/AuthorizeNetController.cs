@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
+using System.Web.Http.Description;
 using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Domain.Order.Services;
 using VirtoCommerce.Domain.Payment.Model;
@@ -12,6 +13,7 @@ using VirtoCommerce.Domain.Store.Services;
 
 namespace Authorize.Net.Controllers
 {
+    [ApiExplorerSettings(IgnoreApi=true)]
     [RoutePrefix("api/payments/an")]
     public class AuthorizeNetController : ApiController
     {
