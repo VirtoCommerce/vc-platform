@@ -71,7 +71,10 @@ namespace VirtoCommerce.Content.Data.Services
 				}
 
 				item.Path = FixPath(GetPageMainPath(storeId, language), item.Path);
-				item.ContentType = ContentTypeUtility.GetContentType(item.Name, item.ByteContent);
+                if (string.IsNullOrEmpty(item.ContentType))
+                {
+                    item.ContentType = ContentTypeUtility.GetContentType(item.Name, item.ByteContent);
+                }
 
 				return item.AsPage();
 			}
