@@ -53,7 +53,7 @@
 	        ]
 	    });
 	}])
-    .run(['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', 'platformWebApp.securityRoleScopeService', 'platformWebApp.authService', function ($rootScope, mainMenuService, widgetService, $state, securityRoleScopeService, authService) {
+    .run(['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state',  'platformWebApp.authService', function ($rootScope, mainMenuService, widgetService, $state, authService) {
         //Register module in main menu
         var menuItem = {
             path: 'configuration/security',
@@ -64,12 +64,6 @@
             permission: 'platform:security:access'
         };
         mainMenuService.addMenuItem(menuItem);
-
-    	//Register security scope  userId used for scope bounded ACL definition
-        var getScopesFn = function () {
-        	return ['{{userId}}', '{{userLogin}}'];
-        };
-        securityRoleScopeService.registerScopeGetter(getScopesFn);
 
         //Register widgets
         widgetService.registerWidget({

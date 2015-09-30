@@ -17,7 +17,7 @@ namespace VirtoCommerce.CatalogModule.Test
         [TestMethod]
         public void WorkingWithCatalogPropertyTest()
         {
-            var catalogController = new CatalogModuleCatalogsController(GetCatalogService(), GetSearchService(), null, GetPropertyService(), GetPermissionService());
+            var catalogController = new CatalogModuleCatalogsController(GetCatalogService(), GetSearchService(), null, GetPropertyService(), null);
             var categoryController = new CatalogModuleCategoriesController(GetSearchService(), GetCategoryService(), GetPropertyService(), GetCatalogService(), null);
             var propertyController = new CatalogModulePropertiesController(GetPropertyService(), GetCategoryService(), GetCatalogService());
             var productController = new CatalogModuleProductsController(GetItemService(), GetPropertyService(), null, null, null);
@@ -55,7 +55,7 @@ namespace VirtoCommerce.CatalogModule.Test
         public void VirtualCatalogWorkingTest()
         {
 
-            var catalogController = new CatalogModuleCatalogsController(GetCatalogService(), GetSearchService(), null, GetPropertyService(), GetPermissionService());
+            var catalogController = new CatalogModuleCatalogsController(GetCatalogService(), GetSearchService(), null, GetPropertyService(), null);
             var categoryController = new CatalogModuleCategoriesController(GetSearchService(), GetCategoryService(), GetPropertyService(), GetCatalogService(), null);
             var listEntryController = new CatalogModuleListEntryController(GetSearchService(), GetCategoryService(), GetItemService(), null);
 
@@ -130,11 +130,7 @@ namespace VirtoCommerce.CatalogModule.Test
             return new CatalogSearchServiceImpl(GetRepository, GetItemService(), GetCatalogService(), GetCategoryService(), null);
         }
 
-        private IPermissionService GetPermissionService()
-        {
-            return new TestPermissionService();
-        }
-
+     
         private IPropertyService GetPropertyService()
         {
             return new PropertyServiceImpl(() => { return GetRepository(); });
@@ -164,26 +160,6 @@ namespace VirtoCommerce.CatalogModule.Test
 
 
 
-		internal class TestPermissionService : IPermissionService
-		{
-			#region Implementation of IPermissionService
-
-			public bool UserHasAnyPermission(string userName, params string[] permissionIds)
-			{
-				return true;
-			}
-
-			public Permission[] GetAllPermissions()
-			{
-				throw new System.NotImplementedException();
-			}
-
-			public string[] GetUserPermissionIds(string userName)
-			{
-				throw new System.NotImplementedException();
-			}
-
-			#endregion
-		}
+		
     }
 }

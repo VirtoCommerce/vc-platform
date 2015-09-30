@@ -236,9 +236,10 @@
     <Compile Include="Security\ApiAccountType.cs" />
     <Compile Include="Security\ApplicationUserExtended.cs" />
     <Compile Include="Security\CheckPermissionAttribute.cs" />
-    <Compile Include="Security\IPermissionService.cs" />
     <Compile Include="Security\IRoleManagementService.cs" />
     <Compile Include="Security\ISecurityOptions.cs" />
+    <Compile Include="Security\IPermissionScopeProvider.cs" />
+    <Compile Include="Security\IPermissionScopeService.cs" />
     <Compile Include="Security\ISecurityService.cs" />
     <Compile Include="Security\Permission.cs" />
     <Compile Include="Security\PredefinedPermissions.cs" />
@@ -246,6 +247,7 @@
     <Compile Include="Security\RoleSearchRequest.cs" />
     <Compile Include="Security\RoleSearchResponse.cs" />
     <Compile Include="Security\SecurityResult.cs" />
+    <Compile Include="Security\PermissionScope.cs" />
     <Compile Include="Security\UserDetails.cs" />
     <Compile Include="Security\ApplicationUserLogin.cs" />
     <Compile Include="Security\UserSearchRequest.cs" />

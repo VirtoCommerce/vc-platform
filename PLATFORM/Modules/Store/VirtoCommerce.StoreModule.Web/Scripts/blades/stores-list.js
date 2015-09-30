@@ -7,7 +7,7 @@
         stores.query({}, function (data) {
         	$scope.blade.isLoading = false;
 
-        	$scope.blade.currentEntities = _.filter(data, function (x) { return authService.checkPermission('store:update', 'store:' + x.name); });
+        	$scope.blade.currentEntities = data;
         }, function (error) {
             bladeNavigationService.setError('Error ' + error.status, $scope.blade);
         });

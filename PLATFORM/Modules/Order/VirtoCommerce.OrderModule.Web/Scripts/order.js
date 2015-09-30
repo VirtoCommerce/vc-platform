@@ -32,7 +32,8 @@ angular.module(moduleName, ['virtoCommerce.catalogModule', 'virtoCommerce.pricin
   }]
 )
 .run(
-  ['$rootScope', '$http', '$compile', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', '$localStorage', 'virtoCommerce.orderModule.order_res_customerOrders', function ($rootScope, $http, $compile, mainMenuService, widgetService, $state, $localStorage, customerOrders) {
+  ['$rootScope', '$http', '$compile', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', '$localStorage', 'virtoCommerce.orderModule.order_res_customerOrders', 'platformWebApp.permissionScopeResolver',
+	function ($rootScope, $http, $compile, mainMenuService, widgetService, $state, $localStorage, customerOrders, scopeResolver) {
       //Register module in main menu
       var menuItem = {
           path: 'browse/orders',
@@ -159,6 +160,21 @@ angular.module(moduleName, ['virtoCommerce.catalogModule', 'virtoCommerce.pricin
           // compile the response, which will put stuff into the cache
           $compile(response.data);
       });
+
+
+		//Register permission scopes templates used for scope bounded definition in role management ui
+      var orderStoreScope = {
+      	type: 'orderStoreScope',
+      	title: 'Only for orders in selected stores',
+      	selectFn: function (scope, callback) { callback([ scope.scope + ':apple']); },
+      };
+      scopeResolver.register(orderStoreScope);
+      var responsibleOrderScope = {
+      	type: 'orderResponsibleScope',
+      	title: 'Only for order responsible',
+      	selectFn: function (scope, callback) { callback(scope.scope); }
+      };
+      scopeResolver.register(responsibleOrderScope);
 
       $rootScope.$on('loginStatusChanged', function (event, authContext) {
           if (authContext.isAuthenticated) {

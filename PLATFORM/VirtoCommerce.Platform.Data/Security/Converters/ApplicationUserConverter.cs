@@ -26,7 +26,7 @@ namespace VirtoCommerce.Platform.Data.Security.Converters
             retVal.UserType = (UserType)dbEntity.RegisterType;
 
             retVal.Roles = dbEntity.RoleAssignments.Select(x => x.ToCoreModel()).ToArray();
-            retVal.Permissions = retVal.Roles.SelectMany(x => x.GetPermissonFullQualifiedNames()).Distinct().ToArray();
+            retVal.Permissions = retVal.Roles.SelectMany(x => x.Permissions).SelectMany(x=> x.GetPermissionWithScopeCombinationNames()).Distinct().ToArray();
             retVal.ApiAccounts = dbEntity.ApiAccounts.Select(x => x.ToCoreModel()).ToArray();
 
             return retVal;

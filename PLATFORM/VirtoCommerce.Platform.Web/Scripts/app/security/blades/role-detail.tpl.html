@@ -17,20 +17,9 @@
                         </div>
                     </div>
                 </fieldset>
-                <fieldset>
-                    <legend>Bounded scopes</legend>
-                    <div class="form-group">
-                        <ui-select multiple ng-model="blade.currentEntity.scopes">
-                            <ui-select-match placeholder="Select value">{{$item}}</ui-select-match>
-                            <ui-select-choices repeat="x in blade.allScopes | filter: $select.search">
-                                <span ng-bind-html="x | highlight: $select.search"></span>
-                            </ui-select-choices>
-                        </ui-select>
-                    </div>                  
-                </fieldset>
+              
             </form>
             <div class="sub-t">Assigned permissions</div>
-            <p class="text">Сheck to restrict permissions selected scopes</p>
             <div class="table-wrapper">
                 <table class="table">
                     <tbody>
@@ -50,7 +39,7 @@
                                     <span class="check"></span>
                                 </label>
                             </td>
-                            <td class="table-col">
+                            <td class="table-col"  ng-click='selectNode(data)'>
                                 <span class="table-t">{{data.name}}</span>
                                 <span class="table-descr">{{data.description}}</span>
                             </td>
