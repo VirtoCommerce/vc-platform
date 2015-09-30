@@ -196,7 +196,7 @@
     <Compile Include="Model\RoleAssignmentEntity.cs" />
     <Compile Include="Model\RoleEntity.cs" />
     <Compile Include="Model\RolePermissionEntity.cs" />
-    <Compile Include="Model\RoleScopeEntity.cs" />
+    <Compile Include="Model\PermissionScopeEntity.cs" />
     <Compile Include="Model\SettingEntity.cs" />
     <Compile Include="Model\SettingValueEntity.cs" />
     <Compile Include="Notifications\DefaultEmailNotificationSendingGateway.cs" />
@@ -263,6 +263,10 @@
     <Compile Include="Repositories\Migrations\201509221500078_PermissionBoundedScopeFlag.Designer.cs">
       <DependentUpon>201509221500078_PermissionBoundedScopeFlag.cs</DependentUpon>
     </Compile>
+    <Compile Include="Repositories\Migrations\201509291431544_PermissionScope.cs" />
+    <Compile Include="Repositories\Migrations\201509291431544_PermissionScope.Designer.cs">
+      <DependentUpon>201509291431544_PermissionScope.cs</DependentUpon>
+    </Compile>
     <Compile Include="Repositories\Migrations\Configuration.cs" />
     <Compile Include="Repositories\PlatformDatabaseInitializer.cs" />
     <Compile Include="Repositories\PlatformRepository.cs" />
@@ -304,9 +308,9 @@
     </Compile>
     <Compile Include="Security\Identity\Migrations\Configuration.cs" />
     <Compile Include="Security\Identity\SecurityDbContext.cs" />
-    <Compile Include="Security\PermissionService.cs" />
     <Compile Include="Security\RoleManagementService.cs" />
     <Compile Include="Security\SecurityOptions.cs" />
+    <Compile Include="Security\PermissionScopeService.cs" />
     <Compile Include="Security\SecurityService.cs" />
     <Compile Include="Settings\Converters\ModuleConverter.cs" />
     <Compile Include="Settings\Converters\SettingConverter.cs" />
@@ -366,6 +370,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Repositories\Migrations\201509221500078_PermissionBoundedScopeFlag.resx">
       <DependentUpon>201509221500078_PermissionBoundedScopeFlag.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Repositories\Migrations\201509291431544_PermissionScope.resx">
+      <DependentUpon>201509291431544_PermissionScope.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Security\Identity\Migrations\201411101625303_InitialCreate.resx">
       <DependentUpon>201411101625303_InitialCreate.cs</DependentUpon>

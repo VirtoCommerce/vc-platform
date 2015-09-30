@@ -8,15 +8,15 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Data.Model
 {
-    public class RoleScopeEntity : Entity
+    public class PermissionScopeEntity : Entity
     {
         [Required]
         [StringLength(1024)]
         public string Scope { get; set; }
      
         #region Navigation properties
-        public string RoleId { get; set; }
-        public RoleEntity Role { get; set; } 
+        public string RolePermissionId { get; set; }
+        public RolePermissionEntity RolePermission { get; set; } 
         #endregion
     }
 }

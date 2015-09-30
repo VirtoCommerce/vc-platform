@@ -53,6 +53,10 @@ namespace VirtoCommerce.OrderModule.Web.Model
 		/// </summary>
 		public ICollection<TaxDetail> TaxDetails { get; set; }
 		#endregion
+        /// <summary>
+        /// Security permission scopes used for security check on UI
+        /// </summary>
+        public string[] Scopes { get; set; }
 
        
 	}

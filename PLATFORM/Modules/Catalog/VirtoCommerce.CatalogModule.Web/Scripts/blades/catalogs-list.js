@@ -11,16 +11,11 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
         catalogs.getCatalogs({}, function (results) {
             blade.isLoading = false;
             //filter the catalogs in which we not have access
-            $scope.objects = _.filter(results, function (x) {
-                return authService.checkPermission('catalog:read', 'catalog:' + x.name);
-            });
-            //init security scopes need for evaluate scope bounded ACL
-            //that securityScopes will be inherited all children blades (by bladeNavigationService)
-            blade.securityScopes = _.map($scope.objects, function (x) { return 'catalog:' + x.name; }).join();
-
+            $scope.objects = results;
+         
             if (selectedNode != null) {
                 //select the node in the new list
-                angular.forEach($scope.objects, function (node) {
+            	angular.forEach(results, function (node) {
                     if (selectedNode.id === node.id) {
                         selectedNode = node;
                     }
