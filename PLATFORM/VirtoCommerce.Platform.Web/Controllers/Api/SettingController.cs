@@ -72,7 +72,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("")]
         [ResponseType(typeof(void))]
-        [CheckPermission(Permission = PredefinedPermissions.SettingManage)]
+        [CheckPermission(Permission = PredefinedPermissions.SettingUpdate)]
         public IHttpActionResult Update(webModel.Setting[] settings)
         {
             _settingsManager.SaveSettings(settings.Select(x => x.ToModuleModel()).ToArray());

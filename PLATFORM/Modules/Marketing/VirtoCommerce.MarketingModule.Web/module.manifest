@@ -42,7 +42,7 @@
     <group name="Marketing">
       <permission id="marketing:access" name="Open marketing menu" description="Permission to open marketing menu."/>
       <permission id="marketing:create" name="Create marketing data" description="Permission to create marketing data."/>
-      <permission id="marketing:read" name="Read marketing data" description="Permission to browse and read marketing data."/>
+      <permission id="marketing:read" name="View marketing data" description="Permission to browse and view marketing data."/>
       <permission id="marketing:update" name="Update marketing data" description="Permission to update marketing data."/>
       <permission id="marketing:delete" name="Delete marketing data" description="Permission to delete marketing data."/>
     </group>

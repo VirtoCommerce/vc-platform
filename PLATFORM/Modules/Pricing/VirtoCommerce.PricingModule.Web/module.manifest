@@ -44,7 +44,7 @@
     <group name="Pricing">
       <permission id="pricing:access" name="Open pricing menu" description="Permission to open pricing menu."/>
       <permission id="pricing:create" name="Create pricing data" description="Permission to create price lists and price list assignments."/>
-      <permission id="pricing:read" name="Read pricing data" description="Permission to browse and read pricing data."/>
+      <permission id="pricing:read" name="View pricing data" description="Permission to browse and view pricing data."/>
       <permission id="pricing:update" name="Update pricing data" description="Permission to update pricing data."/>
       <permission id="pricing:delete" name="Delete pricing data" description="Permission to delete pricing data."/>
     </group>
