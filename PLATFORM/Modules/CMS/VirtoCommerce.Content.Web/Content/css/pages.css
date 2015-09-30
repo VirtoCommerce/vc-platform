@@ -32,6 +32,16 @@
     overflow-y: auto;
 }
 
+.uk-htmleditor-navbar-nav > li > a
+{
+    font-weight: 600;
+}
+
+.uk-htmleditor-navbar-flip .uk-htmleditor-navbar-nav > li > a
+{
+    font-weight: normal;
+}
+
 /* Icons */
 [class*="uk-icon-"] {
     display: inline-block;
