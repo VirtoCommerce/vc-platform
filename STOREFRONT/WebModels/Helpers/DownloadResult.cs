@@ -95,6 +95,9 @@ namespace VirtoCommerce.Web.Models.Helpers
         /// </param>
         public override void ExecuteResult(ControllerContext context)
         {
+            if (context.HttpContext.Response.IsRequestBeingRedirected) // do nothing for redirects
+                return;
+
             var filePath = String.IsNullOrEmpty(this.VirtualBasePath)
                 ? context.HttpContext.Request.MapPath(this.VirtualPath)
                 : context.HttpContext.Request.MapPath(this.VirtualPath, this.VirtualBasePath, false);
