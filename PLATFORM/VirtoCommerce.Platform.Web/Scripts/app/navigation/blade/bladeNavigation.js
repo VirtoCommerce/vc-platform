@@ -49,7 +49,7 @@ angular.module('platformWebApp')
             $compile(element)(scope);
 
             var mainContent = $('.cnt');
-            var blade  = $('.blade:last', mainContent);
+            var blade = $('.blade:last', mainContent);
             var offset = parseInt(blade.offset().left);
 
             $timeout(function () {
@@ -183,7 +183,7 @@ angular.module('platformWebApp')
                         }
                     }
                     if (angular.isFunction(callback)) {
-                        $timeout(callback);
+                        $timeout(callback, 60);
                     };
                 };
 
@@ -236,10 +236,9 @@ angular.module('platformWebApp')
             blade.isLoading = true;
             blade.parentBlade = parentBlade;
             blade.childrenBlades = [];
-			//copy securityscopes from parent blade
-            if (parentBlade != null)
-            {
-            	blade.securityScopes = parentBlade.securityScopes;
+            //copy securityscopes from parent blade
+            if (parentBlade != null) {
+                blade.securityScopes = parentBlade.securityScopes;
             }
 
             var existingBlade = service.findBlade(blade.id);
