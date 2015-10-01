@@ -47,7 +47,7 @@ namespace VirtoCommerce.Platform.Data.Notifications
 					{
 						ParameterName = property.Name,
 						ParameterDescription = attributes.Length > 0 ? ((NotificationParameterAttribute)(attributes[0])).Description : string.Empty,
-						ParameterCodeInView = GetLiquidCodeOfParameter(property.Name, property.PropertyType is IDictionary)
+						ParameterCodeInView = GetLiquidCodeOfParameter(property.Name, property.PropertyType == typeof(IDictionary))
 					});
 				}
 			}
