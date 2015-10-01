@@ -1,5 +1,6 @@
 ﻿using DotLiquid;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -46,7 +47,7 @@ namespace VirtoCommerce.Platform.Data.Notifications
 					{
 						ParameterName = property.Name,
 						ParameterDescription = attributes.Length > 0 ? ((NotificationParameterAttribute)(attributes[0])).Description : string.Empty,
-						ParameterCodeInView = GetLiquidCodeOfParameter(property.Name)
+						ParameterCodeInView = GetLiquidCodeOfParameter(property.Name, property.PropertyType is IDictionary)
 					});
 				}
 			}
@@ -54,7 +55,7 @@ namespace VirtoCommerce.Platform.Data.Notifications
 			return retVal.ToArray();
 		}
 
-		private string GetLiquidCodeOfParameter(string name)
+		private string GetLiquidCodeOfParameter(string name, bool isDictionary)
 		{
 			var retVal = string.Empty;
 
@@ -64,7 +65,7 @@ namespace VirtoCommerce.Platform.Data.Notifications
 
 			if(regex.Split(name).Length > 0)
 			{
-				retVal = "{{ " + name.ToLower() + " }}";
+				retVal = "{{ " + name.ToLower() + (isDictionary ? ".parameterName }}" : " }}");
 			}
 
 			return retVal;

@@ -25,42 +25,47 @@
 					<div class="column">
 						<fieldset ng-if="blade.isNew">
 							<legend>Language</legend>
+                            <div class=" form-group" ng-if="blade.isNew" style="margin-top:0">
+                                <div class="form-input">
+                                    <ui-select ng-model="blade.currentEntity.language">
+                                        <ui-select-match placeholder="Select..."><span class="flag flag-{{blade.getFlag($select.selected)}}"></span> {{$select.selected}}</ui-select-match>
+                                        <ui-select-choices repeat="x in blade.languages">
+                                            <span class="flag flag-{{blade.getFlag(x)}}"></span>
+                                            <span ng-bind-html="x"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </div>
 						</fieldset>
-						<div class=" form-group" ng-if="blade.isNew" style="margin-top:-16px;">
-							<div class="form-input">
-								<ui-select ng-model="blade.currentEntity.language">
-									<ui-select-match placeholder="Select..."><span class="flag flag-{{blade.getFlag($select.selected)}}"></span> {{$select.selected}}</ui-select-match>
-									<ui-select-choices repeat="x in blade.languages">
-										<span class="flag flag-{{blade.getFlag(x)}}"></span>
-										<span ng-bind-html="x"></span>
-									</ui-select-choices>
-								</ui-select>
-							</div>
-						</div>
 					</div>
 					<div class="column"></div>
 				</div>
 
 				<fieldset style="margin-top:20px;" ng-if="blade.isNew">
 					<legend>Subject</legend>
+                    <div class="form-group" style="margin-top:0">
+                        <div class="form-input">
+                            <ui-codemirror ng-model="blade.currentEntity.subject" ui-codemirror-opts="editorOptions"></ui-codemirror>
+                        </div>
+                    </div>
 				</fieldset>
 				<fieldset ng-if="!blade.isNew">
 					<legend>Subject</legend>
+                    <div class="form-group" style="margin-top:0">
+                        <div class="form-input">
+                            <ui-codemirror ng-model="blade.currentEntity.subject" ui-codemirror-opts="editorOptions"></ui-codemirror>
+                        </div>
+                    </div>
 				</fieldset>
-				<div class="form-group" style="margin-top:-15px;">
-					<div class="form-input">
-						<ui-codemirror ng-model="blade.currentEntity.subject" ui-codemirror-opts="editorOptions"></ui-codemirror>
-					</div>
-				</div>
 
 				<fieldset style="margin-top:20px;">
 					<legend>Body</legend>
+                    <div class="form-group" style="margin-top:0">
+                        <div class="form-input">
+                            <ui-codemirror required ng-model="blade.currentEntity.body" ui-codemirror-opts="editorOptions"></ui-codemirror>
+                        </div>
+                    </div>
 				</fieldset>
-				<div class="form-group" style="margin-top:-15px;">
-					<div class="form-input">
-						<ui-codemirror required ng-model="blade.currentEntity.body" ui-codemirror-opts="editorOptions"></ui-codemirror>
-					</div>
-				</div>
 			</form>
 		</div>
 	</div>

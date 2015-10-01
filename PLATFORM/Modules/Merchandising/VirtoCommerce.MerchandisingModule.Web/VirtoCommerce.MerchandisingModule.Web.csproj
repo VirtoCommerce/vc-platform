@@ -107,6 +107,7 @@
     <Compile Include="Controllers\MerchandisingModuleStoreController.cs" />
     <Compile Include="Controllers\MerchandisingModulePriceController.cs" />
     <Compile Include="Controllers\MerchandisingModuleProductController.cs" />
+    <Compile Include="Controllers\MerchandisingNotificationController.cs" />
     <Compile Include="Converters\AssetConverter.cs" />
     <Compile Include="Converters\AssociationConverter.cs" />
     <Compile Include="Converters\CategoryConverter.cs" />
@@ -127,6 +128,7 @@
     <Compile Include="Model\DynamicContentItemGroupResponseCollection.cs" />
     <Compile Include="Model\Image.cs" />
     <Compile Include="Model\Inventory.cs" />
+    <Compile Include="Model\Notificaitons\DynamicMerchandisingNotification.cs" />
     <Compile Include="Model\PaymentMethod.cs" />
     <Compile Include="Model\Price.cs" />
     <Compile Include="Model\Association.cs" />

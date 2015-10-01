@@ -5,6 +5,8 @@ using VirtoCommerce.MerchandisingModule.Web.Services;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Settings;
+using VirtoCommerce.Platform.Core.Notifications;
+using VirtoCommerce.MerchandisingModule.Web.Model.Notificaitons;
 
 namespace VirtoCommerce.MerchandisingModule.Web
 {
@@ -34,6 +36,20 @@ namespace VirtoCommerce.MerchandisingModule.Web
 				new CacheSettings("MP", TimeSpan.FromMinutes(settingsManager.GetValue("MerchandisingModule.Caching.Timeout", 5)))
 			};
             cacheManager.AddCacheSettings(cacheSettings);
+
+            var notificationManager = _container.Resolve<INotificationManager>();
+
+            notificationManager.RegisterNotificationType(() => new DynamicMerchandisingNotification(_container.Resolve<IEmailNotificationSendingGateway>())
+            {
+                DisplayName = "Sending custom form from storefront",
+                Description = "This notification sends by email to client when he complite some form on storefront, for example contact us form",
+                NotificationTemplate = new NotificationTemplate
+                {
+                    Body = "",
+                    Subject = "",
+                    Language = "en-US"
+                }
+            });
 
         }
 
