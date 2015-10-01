@@ -1,6 +1,6 @@
-﻿namespace VirtoCommerce.OrderModule.Web.Controllers
+﻿namespace VirtoCommerce.OrderModule.Web.Security
 {
-    public static class PredefinedPermissions
+    public static class OrderPredefinedPermissions
     {
         public const string Read = "order:read",
             Create = "order:create",

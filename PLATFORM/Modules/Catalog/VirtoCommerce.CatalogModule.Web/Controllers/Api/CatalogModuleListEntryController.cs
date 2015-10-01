@@ -10,7 +10,7 @@ using VirtoCommerce.CatalogModule.Web.Converters;
 using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Platform.Core.Asset;
 using VirtoCommerce.Platform.Core.Security;
-using moduleModel = VirtoCommerce.Domain.Catalog.Model;
+using coreModel = VirtoCommerce.Domain.Catalog.Model;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
 using VirtoCommerce.Platform.Core.Common;
 
@@ -110,13 +110,74 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         }
 
 
-        private void InnerUpdateLinks(webModel.ListEntryLink[] links, Action<moduleModel.ILinkSupport, moduleModel.CategoryLink> action)
+        /// <summary>
+        /// Move categories or products to another location.
+        /// </summary>
+        /// <param name="moveInfo">Move operation details</param>
+        [HttpPost]
+        [Route("move")]
+        [ResponseType(typeof(void))]
+        public IHttpActionResult Move(webModel.MoveInfo moveInfo)
         {
-            var changedObjects = new List<moduleModel.ILinkSupport>();
+            var categories = new List<coreModel.Category>();
+            //Move  categories
+            foreach(var listEntryCategory in moveInfo.ListEntries.Where(x=>String.Equals(x.Type, webModel.ListEntryCategory.TypeName, StringComparison.InvariantCultureIgnoreCase)))
+            {
+                var category = _categoryService.GetById(listEntryCategory.Id);
+                if (category.CatalogId != moveInfo.Catalog)
+                {
+                    category.CatalogId = moveInfo.Catalog;
+                }
+                if (category.ParentId != moveInfo.Category)
+                {
+                    category.ParentId = moveInfo.Category;
+                }
+                categories.Add(category);
+            };
+
+            var products = new List<coreModel.CatalogProduct>();
+            //Move products
+            foreach (var listEntryProduct in moveInfo.ListEntries.Where(x => String.Equals(x.Type, webModel.ListEntryProduct.TypeName, StringComparison.InvariantCultureIgnoreCase)))
+            {
+                var product = _itemService.GetById(listEntryProduct.Id, Domain.Catalog.Model.ItemResponseGroup.ItemLarge);
+                if (product.CatalogId != moveInfo.Catalog)
+                {
+                    product.CatalogId = moveInfo.Catalog;
+                    foreach(var variation in product.Variations)
+                    {
+                        variation.CatalogId = moveInfo.Catalog;
+                    }
+                    
+                }
+                if (product.CategoryId != moveInfo.Category)
+                {
+                    product.CategoryId = moveInfo.Category;
+                    foreach (var variation in product.Variations)
+                    {
+                        variation.CategoryId = moveInfo.Category;
+                    }
+                }
+                products.Add(product);
+            };
+
+            if(categories.Any())
+            {
+                _categoryService.Update(categories.ToArray());
+            }
+            if(products.Any())
+            {
+                _itemService.Update(products.ToArray());
+            }
+            return Ok();
+        }
+
+        private void InnerUpdateLinks(webModel.ListEntryLink[] links, Action<coreModel.ILinkSupport, coreModel.CategoryLink> action)
+        {
+            var changedObjects = new List<coreModel.ILinkSupport>();
             foreach (var link in links)
             {
-                moduleModel.ILinkSupport changedObject;
-                var newlink = new moduleModel.CategoryLink
+                coreModel.ILinkSupport changedObject;
+                var newlink = new coreModel.CategoryLink
                 {
                     CategoryId = link.CategoryId,
                     CatalogId = link.CatalogId
@@ -128,14 +189,14 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                 }
                 else
                 {
-                    changedObject = _itemService.GetById(link.ListEntryId, moduleModel.ItemResponseGroup.ItemLarge);
+                    changedObject = _itemService.GetById(link.ListEntryId, coreModel.ItemResponseGroup.ItemLarge);
                 }
                 action(changedObject, newlink);
                 changedObjects.Add(changedObject);
             }
 
-            _categoryService.Update(changedObjects.OfType<moduleModel.Category>().ToArray());
-            _itemService.Update(changedObjects.OfType<moduleModel.CatalogProduct>().ToArray());
+            _categoryService.Update(changedObjects.OfType<coreModel.Category>().ToArray());
+            _itemService.Update(changedObjects.OfType<coreModel.CatalogProduct>().ToArray());
         }
 
     }

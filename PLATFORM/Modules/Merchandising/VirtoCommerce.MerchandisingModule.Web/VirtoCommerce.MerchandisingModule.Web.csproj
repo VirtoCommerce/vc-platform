@@ -99,7 +99,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Binders\SearchParameterBinder.cs" />
     <Compile Include="Binders\CatalogItemSearchCriteriaBinder.cs" />
     <Compile Include="Controllers\MerchandisingModuleReviewController.cs" />
     <Compile Include="Controllers\MerchandisingModuleMarketingController.cs" />
@@ -142,7 +141,7 @@
     <Compile Include="Model\PromotionReward.cs" />
     <Compile Include="Model\Review.cs" />
     <Compile Include="Model\ReviewComment.cs" />
-    <Compile Include="Model\SearchParameters.cs" />
+    <Compile Include="Model\ProductSearchRequest.cs" />
     <Compile Include="Model\SeoKeyword.cs" />
     <Compile Include="Model\Store.cs" />
     <Compile Include="Model\StringKeyValues.cs" />

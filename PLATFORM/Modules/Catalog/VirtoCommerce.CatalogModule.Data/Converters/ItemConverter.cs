@@ -288,12 +288,14 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			if (source.MaxQuantity != null)
 				target.MaxQuantity = source.MaxQuantity.Value;
 
-			var patchInjectionPolicy = new PatchInjection<dataModel.Item>(x => x.CategoryId, x => x.Name, x => x.Code, x => x.ManufacturerPartNumber, x => x.Gtin, x => x.ProductType,
+			var patchInjectionPolicy = new PatchInjection<dataModel.Item>(x => x.Name, x => x.Code, x => x.ManufacturerPartNumber, x => x.Gtin, x => x.ProductType,
 																		  x => x.WeightUnit, x => x.Weight, x => x.MeasureUnit, x => x.Height, x => x.Length, x => x.Width, x => x.EnableReview, x => x.MaxNumberOfDownload,
 																		  x => x.DownloadExpiration, x => x.DownloadType, x => x.HasUserAgreement, x => x.ShippingType, x => x.TaxType, x => x.Vendor);
-			var dbSource = source.ToDataModel();
+            
+            var dbSource = source.ToDataModel();
 			target.InjectFrom(patchInjectionPolicy, dbSource);
-
+            target.CatalogId = dbSource.CatalogId;
+            target.CategoryId = dbSource.CategoryId;
 			#region Assets
 			if (!dbSource.Assets.IsNullCollection())
 			{

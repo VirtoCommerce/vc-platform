@@ -10,30 +10,30 @@ using VirtoCommerce.Platform.Core.Security;
 
 namespace VirtoCommerce.OrderModule.Web.Security
 {
-    public class OrderSecurityScopeProvider : IPermissionScopeProvider
+    public class OrderPermissionScopeProvider : IPermissionScopeProvider
     {
         private readonly ISecurityService _securityService;
 
-        public OrderSecurityScopeProvider(ISecurityService securityService)
+        public OrderPermissionScopeProvider(ISecurityService securityService)
         {
             _securityService = securityService;
         }
         /// <summary>
         /// Filter order search criteria to corespond user right
         /// </summary>
-        /// <param name="userId"></param>
+        /// <param name="userName"></param>
         /// <param name="criteria"></param>
         /// <returns></returns>
-        public virtual SearchCriteria FilterOrderSearchCriteria(string userId, SearchCriteria criteria)
+        public virtual SearchCriteria FilterOrderSearchCriteria(string userName, SearchCriteria criteria)
         {
         
-            if(!_securityService.UserHasAnyPermission(userId, null, "order:view"))
+            if(!_securityService.UserHasAnyPermission(userName, null, OrderPredefinedPermissions.Read))
             {
                 //Get user by Id
-                var user = _securityService.FindByIdAsync(userId, UserDetails.Full).Result;
-                var orderModuleViewScopes = user.Roles.SelectMany(x => x.Permissions)
-                                            .Where(x => x.Name.StartsWith("order:view:"))
-                                             .SelectMany(x => x.Scopes);
+                var orderModuleViewScopes = _securityService.GetUserPermissions(userName)
+                                                      .Where(x => x.Id.StartsWith(OrderPredefinedPermissions.Read))
+                                                      .SelectMany(x => x.Scopes);
+            
                 //Check user has a scopes
                 //Stores
                 criteria.StoreIds = orderModuleViewScopes.Select(x=> OrderStoreScope.TryParse(x))
@@ -42,9 +42,9 @@ namespace VirtoCommerce.OrderModule.Web.Security
                                                          .Where(x => !String.IsNullOrEmpty(x))
                                                          .ToArray();
                 //employee id
-                if(orderModuleViewScopes.Any(x=> OrderStoreScope.TryParse(x) != null))
+                if(orderModuleViewScopes.Any(x=> OrderResponsibleScope.TryParse(x) != null))
                 {
-                    criteria.EmployeeId = userId;
+                    criteria.EmployeeId = userName;
                 }
             }
             return criteria;
@@ -53,8 +53,8 @@ namespace VirtoCommerce.OrderModule.Web.Security
         #region ISecurityScopeProvider Members
         public virtual IEnumerable<PermissionScope> GetPermissionScopes(string permission)
         {
-            if (permission == VirtoCommerce.OrderModule.Web.Controllers.PredefinedPermissions.Read ||
-                permission == VirtoCommerce.OrderModule.Web.Controllers.PredefinedPermissions.Update)
+            if (permission == OrderPredefinedPermissions.Read ||
+                permission == OrderPredefinedPermissions.Update)
             {
                 return new PermissionScope[] { new OrderStoreScope(), new OrderResponsibleScope() };
             }

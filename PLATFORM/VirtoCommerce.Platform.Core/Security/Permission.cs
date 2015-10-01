@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Core.Security
 {
-    public class Permission
+    public class Permission : Entity
     {
-        public string Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         /// <summary>
@@ -26,10 +26,13 @@ namespace VirtoCommerce.Platform.Core.Security
         public IEnumerable<string> GetPermissionWithScopeCombinationNames()
         {
             var retVal = new List<string>();
-            retVal.Add(Name);
-            if(Scopes != null)
+            if(Scopes != null && Scopes.Any())
             {
-                retVal.AddRange(Scopes.Select(x => Name + ":" + x));
+                retVal.AddRange(Scopes.Select(x => Id + ":" + x));
+            }
+            else
+            {
+                retVal.Add(Id);
             }
             return retVal;
         }

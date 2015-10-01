@@ -158,11 +158,12 @@
     <Compile Include="Model\EventNotifications\JobNotificationBase.cs" />
     <Compile Include="Model\ListEntryLink.cs" />
     <Compile Include="ExportImport\CsvProductPropertyMap.cs" />
+    <Compile Include="Model\PasteInfo.cs" />
     <Compile Include="Model\ProductAssociation.cs" />
     <Compile Include="Model\PropertyDictionaryValue.cs" />
     <Compile Include="Model\Language.cs" />
     <Compile Include="Model\ListEntryCategory.cs" />
-    <Compile Include="Model\ListEntryBase.cs" />
+    <Compile Include="Model\ListEntry.cs" />
     <Compile Include="Model\Category.cs" />
     <Compile Include="Model\Product.cs" />
     <Compile Include="Model\ItemsSearchResult.cs" />
@@ -344,7 +345,9 @@
       <Name>VirtoCommerce.CatalogModule.Data</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Security\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

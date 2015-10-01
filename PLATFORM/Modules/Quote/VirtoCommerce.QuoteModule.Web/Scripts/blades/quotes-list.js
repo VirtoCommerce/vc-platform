@@ -109,5 +109,7 @@
         });
     };
 
-    blade.refresh();
+    $scope.$watch('pageSettings.currentPage', blade.refresh);
+    //No need to call this because page 'pageSettings.currentPage' is watched!!! It would trigger subsequent duplicated req...
+    //blade.refresh();
 }]);

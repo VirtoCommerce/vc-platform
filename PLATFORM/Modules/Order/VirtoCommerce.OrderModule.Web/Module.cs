@@ -90,7 +90,7 @@ namespace VirtoCommerce.OrderModule.Web
             });
 
             var securityScopeService = _container.Resolve<IPermissionScopeService>();
-            securityScopeService.RegisterSopeProvider(() => new OrderSecurityScopeProvider(_container.Resolve<ISecurityService>()));
+            securityScopeService.RegisterSopeProvider(() => new OrderPermissionScopeProvider(_container.Resolve<ISecurityService>()));
         }
 
         #endregion

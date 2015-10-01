@@ -107,7 +107,9 @@ angular.module('platformWebApp', AppDependencies).
 
 
         $rootScope.$on('unauthorized', function (event, rejection) {
-            $state.go('loginDialog');
+        	if (!authService.isAuthenticated) {
+        		$state.go('loginDialog');
+        	}
         });
 
 		//server error  handling
