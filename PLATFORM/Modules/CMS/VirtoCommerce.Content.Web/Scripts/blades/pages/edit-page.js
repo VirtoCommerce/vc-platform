@@ -25,6 +25,11 @@
                     	}
                     }
 
+                    var pathParts = blade.currentEntity.name.split('/');
+                    var pageNameWithExtension = pathParts[pathParts.length - 1];
+                    var pageName = pageNameWithExtension.split('.')[0];
+                    blade.currentEntity.pageName = pageName;
+
                     blade.origEntity = angular.copy(blade.currentEntity);
 
                     var parts = blade.currentEntity.content.split('---');
@@ -228,17 +233,29 @@
             function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
         }
         else {
-            pages.update({ storeId: blade.choosenStoreId }, blade.currentEntity, function () {
-                blade.choosenPageName = blade.currentEntity.name;
-                blade.choosenPageLanguage = blade.currentEntity.language;
-                blade.title = blade.currentEntity.name;
-                blade.subtitle = 'Edit page';
-                blade.newPage = false;
-                blade.parentBlade.initialize();
-                blade.isLoading = false,
-                blade.origEntity = angular.copy(blade.currentEntity);
-            },
-            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+            if (blade.origEntity.pageName !== blade.currentEntity.pageName) {
+                pages.delete({ storeId: blade.choosenStoreId, pageNamesAndLanguges: blade.choosenPageLanguage + '^' + blade.choosenPageName }, function () {
+                    var pathParts = blade.currentEntity.name.split('/');
+                    var pageNameWithExtension = pathParts[pathParts.length - 1];
+                    var parts = pageNameWithExtension.split('.');
+
+                    blade.currentEntity.name = blade.currentEntity.id = pathParts.slice(0, pathParts.length - 1).join('/') + "/" + blade.currentEntity.pageName;
+                    if (parts.length > 1) {
+                        blade.currentEntity.name += "." + parts[parts.length - 1];
+                        blade.currentEntity.id += "." + parts[parts.length - 1];
+                    }
+
+                    blade.update();
+                }, function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+            }
+            else if (blade.origEntity.language !== blade.currentEntity.language) {
+                pages.delete({ storeId: blade.choosenStoreId, pageNamesAndLanguges: blade.choosenPageLanguage + '^' + blade.choosenPageName }, function () {
+                    blade.update();
+                }, function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+            }
+            else {
+                blade.update();
+            }
         }
     };
 
@@ -323,10 +340,18 @@
         }
     };
 
-    blade.getBladeStyle = function () {
-        var value = $(window).width() - 550;
-
-        return 'width:' + value + 'px';
+    blade.update = function () {
+        pages.update({ storeId: blade.choosenStoreId }, blade.currentEntity, function () {
+            blade.choosenPageName = blade.currentEntity.name;
+            blade.choosenPageLanguage = blade.currentEntity.language;
+            blade.title = blade.currentEntity.name;
+            blade.subtitle = 'Edit page';
+            blade.newPage = false;
+            blade.parentBlade.initialize();
+            blade.isLoading = false,
+            blade.origEntity = angular.copy(blade.currentEntity);
+        },
+        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
     }
 
     blade.initialize();

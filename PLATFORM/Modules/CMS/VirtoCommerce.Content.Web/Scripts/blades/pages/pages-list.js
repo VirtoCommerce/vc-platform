@@ -87,7 +87,7 @@
             var newBlade = {
                 id: 'addPageBlade',
                 choosenStoreId: blade.storeId,
-                currentEntity: { name: path + 'new_page.md', content: null, contentType: 'text/html', language: null, storeId: blade.storeId },
+                currentEntity: { name: path + 'new_page.md', pageName: 'new_page', content: null, contentType: 'text/html', language: null, storeId: blade.storeId },
                 newPage: true,
                 body: '',
                 metadata: '',
@@ -103,7 +103,7 @@
                 id: 'addPageBlade',
                 choosenStoreId: blade.storeId,
                 path: path,
-                currentEntity: { name: path + 'new_file', content: null, contentType: null, language: null, storeId: blade.storeId },
+                currentEntity: { name: path + 'new_file', pageName: 'new_file', content: null, contentType: null, language: null, storeId: blade.storeId },
                 newPage: true,
                 title: 'Add new file',
                 subtitle: 'Create new file',
