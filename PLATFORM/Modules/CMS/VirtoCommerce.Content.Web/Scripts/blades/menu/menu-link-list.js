@@ -118,6 +118,7 @@
                 	blade.parentBlade.initialize();
                 	blade.newList = false;
                 	blade.isLoading = false;
+                	blade.origEntity = angular.copy(blade.currentEntity);
                 },
                 function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
             }
