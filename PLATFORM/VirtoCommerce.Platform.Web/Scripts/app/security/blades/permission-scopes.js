@@ -1,46 +1,57 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.permissionScopesController', ['$q', '$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.permissionScopeResolver',  function ($q, $scope, bladeNavigationService, dialogService, permissionScopeResolver) {
+.controller('platformWebApp.permissionScopesController', ['$q', '$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.permissionScopeResolver', function ($q, $scope, bladeNavigationService, dialogService, permissionScopeResolver) {
+    var blade = $scope.blade;
+    
+    function initializeBlade() {
+        var tmpScopes = [];
+        _.each(blade.permission.availableScopes, function (x) {
+            var resolvedScope = permissionScopeResolver.resolve(x.type);
+            if (resolvedScope) {
+                resolvedScope.scopeOriginal = x.scope;
 
-	$scope.blade.isLoading = false;
-	$scope.availableScopes = _.filter(_.map($scope.blade.permission.availableScopes, function (x) {
-		var resolvedScope = permissionScopeResolver.resolve(x.type);
-		if(resolvedScope)
-		{
-			resolvedScope.origScope = x;
-		}
-		return resolvedScope;
-	}), function (x) { return angular.isDefined(x) && x != null; });
+                resolvedScope.scopes = resolvedScope.hasConstantConfiguration ?
+                    [x.scope] :
+                    _.filter(blade.permission.scopes, function (y) {
+                        return y.lastIndexOf(resolvedScope.scopeOriginal, 0) === 0;
+                    });
 
-	
-	$scope.blade.selectNode = function (node) {
-	
-		if (node.selectFn)
-		{
-			node.selectFn(node, function (choosedScopes) {
-				node.choosedScopes = choosedScopes;
-			});
-		}
-	};
+                resolvedScope.$selected = _.any(blade.permission.scopes, function (y) { return y.lastIndexOf(resolvedScope.scopeOriginal, 0) === 0; });
+                tmpScopes.push(resolvedScope);
+            }
+        });
+        $scope.availableScopes = tmpScopes;
+        blade.isLoading = false;
+    }
 
-	$scope.cancelChanges = function () {
-		$scope.bladeClose();
-	};
+    blade.selectNode = function (node) {
+        if (node.selectFn) {
+            $scope.selectedNodeId = node.type;
+            node.selectFn(blade, function (scopes) {
+                node.scopes = scopes;
+                node.$selected = true;
+            });
+        } else {
+            $scope.selectedNodeId = undefined;
+            node.$selected = !node.$selected;
+        }
+    };
 
-	$scope.isValid = function () {
-		return true;
-	};
+    $scope.cancelChanges = function () {
+        $scope.bladeClose();
+    };
 
-	$scope.saveChanges = function () {
-		$scope.blade.permission.scopes = _.flatten(_.map(_.where($scope.availableScopes, { $selected: true }), function (x) {
-			if(!x.choosedScopes)
-			{
-				return x.origScope.scope;
-			}
-			return x.choosedScopes;
-		}));
-		$scope.bladeClose();
-	};
+    $scope.isValid = function () {
+        return true;
+    };
 
-	$scope.blade.headIcon = 'fa-key';
+    $scope.saveChanges = function () {
+        blade.permission.scopes = _.flatten(_.map(_.where($scope.availableScopes, { $selected: true }), function (x) {
+            return x.scopes ? x.scopes : x.scopeOriginal;
+        }));
 
+        $scope.bladeClose();
+    };
+
+    blade.headIcon = 'fa-key';
+    initializeBlade();
 }]);
