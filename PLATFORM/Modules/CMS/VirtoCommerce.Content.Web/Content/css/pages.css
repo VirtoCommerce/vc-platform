@@ -42,6 +42,34 @@
     font-weight: normal;
 }
 
+.uk-htmleditor-content
+{
+    font-size: 14px;
+}
+
+.uk-htmleditor-content code
+{
+    background: #ecf7fc;
+    border: 1px solid #dee9f0;
+    font-family: Consolas;
+    font-size: 13px;
+    padding: 10px;
+}
+
+.uk-htmleditor-content blockquote
+{
+    background: #fbfdfe;
+    border-color: #43b0e6;
+    border-style: solid;
+    border-width: 1px 1px 1px 5px;
+    padding: 10px 10px 10px 40px;
+}
+
+.uk-htmleditor-content blockquote p
+{
+    margin: 0;
+}
+
 /* Icons */
 [class*="uk-icon-"] {
     display: inline-block;
