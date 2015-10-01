@@ -44,7 +44,6 @@
 				//Check permissions in scope
 				hasPermission = _.some(securityScopes.split(','), function (x) {
 					var permissionWithScope = permission + ":" + x;
-					console.log(permissionWithScope);
 					return $.inArray(permissionWithScope, authContext.permissions) > -1;
 				});
 			}

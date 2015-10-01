@@ -19,6 +19,7 @@ namespace VirtoCommerce.Platform.Core.Security
         Task<UserSearchResponse> SearchUsersAsync(UserSearchRequest request);
         bool UserHasAnyPermission(string userName, string[] scopes, params string[] permissionIds);
         Permission[] GetAllPermissions();
+        Permission[] GetUserPermissions(string userName);
 
     }
 }

@@ -321,6 +321,17 @@ namespace VirtoCommerce.Platform.Data.Security
             }
             return retVal;
         }
+
+        public Permission[] GetUserPermissions(string userName)
+        {
+            var user = Task.Run(async () => await FindByNameAsync(userName, UserDetails.Full)).Result;
+            var retVal = Enumerable.Empty<Permission>().ToArray();
+            if(user != null)
+            {
+                retVal = user.Roles.SelectMany(x => x.Permissions).Distinct().ToArray();
+            }
+            return retVal;
+        }
         #endregion
 
 

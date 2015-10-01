@@ -28,7 +28,6 @@ using System.Web;
 namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 {
     [RoutePrefix("api/order/customerOrders")]
-    [CheckPermission(Permission = PredefinedPermissions.Read)]
     public class OrderModuleController : ApiController
     {
         private readonly ICustomerOrderService _customerOrderService;
@@ -37,11 +36,12 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         private readonly IStoreService _storeService;
 		private readonly CacheManager _cacheManager;
 		private readonly Func<IOrderRepository> _repositoryFactory;
-        private readonly OrderSecurityScopeProvider _orderScopeProvider;
+        private readonly OrderPermissionScopeProvider _orderScopeProvider;
+        private readonly ISecurityService _securityService;
         private static object _lockObject = new object();
 
         public OrderModuleController(ICustomerOrderService customerOrderService, ICustomerOrderSearchService searchService, IStoreService storeService, IUniqueNumberGenerator numberGenerator, 
-                                     CacheManager cacheManager, Func<IOrderRepository> repositoryFactory, OrderSecurityScopeProvider securityScopeProvider)
+                                     CacheManager cacheManager, Func<IOrderRepository> repositoryFactory, OrderPermissionScopeProvider securityScopeProvider, ISecurityService securityService)
         {
             _customerOrderService = customerOrderService;
             _searchService = searchService;
@@ -50,6 +50,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 			_cacheManager = cacheManager;
 			_repositoryFactory = repositoryFactory;
             _orderScopeProvider = securityScopeProvider;
+            _securityService = securityService;
         }
 
 		/// <summary>
@@ -61,7 +62,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         [Route("")]
         public IHttpActionResult Search([ModelBinder(typeof(SearchCriteriaBinder))] coreModel.SearchCriteria criteria)
         {
-            //Scope bounded ACL filtration
+            //Scope bound ACL filtration
             _orderScopeProvider.FilterOrderSearchCriteria(HttpContext.Current.User.Identity.Name, criteria);
 
             var retVal = _searchService.Search(criteria);
@@ -83,11 +84,17 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
             {
                 return NotFound();
             }
+            //Scope bound security check
+            var scopes = _orderScopeProvider.GetEntityScopes(retVal).ToArray();
+            if (!_securityService.UserHasAnyPermission(User.Identity.Name, scopes, OrderPredefinedPermissions.Read))
+            {
+                throw new HttpResponseException(HttpStatusCode.Unauthorized);
+            }
+
             var result = retVal.ToWebModel();
             //Set scopes for UI scope bounded ACL checking
-            //TODO: need check permission view for this order
-            result.Scopes = _orderScopeProvider.GetEntityScopes(retVal).ToArray();
-            
+            result.Scopes = scopes;
+
             return Ok(result);
         }
 
@@ -98,7 +105,8 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         [HttpPost]
         [ResponseType(typeof(webModel.CustomerOrder))]
         [Route("{id}")]
-		public IHttpActionResult CreateOrderFromCart(string id)
+        [CheckPermission(Permission = OrderPredefinedPermissions.Create)]
+        public IHttpActionResult CreateOrderFromCart(string id)
         {
 			var retVal = _customerOrderService.CreateByShoppingCart(id);
             return Ok(retVal.ToWebModel());
@@ -159,6 +167,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 		[HttpPost]
         [ResponseType(typeof(webModel.CustomerOrder))]
         [Route("")]
+        [CheckPermission(Permission = OrderPredefinedPermissions.Create)]
         public IHttpActionResult CreateOrder(webModel.CustomerOrder customerOrder)
         {
             var retVal = _customerOrderService.Create(customerOrder.ToCoreModel());
@@ -172,10 +181,17 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         [HttpPut]
         [ResponseType(typeof(void))]
         [Route("")]
-        [CheckPermission(Permission = PredefinedPermissions.Update)]
 		public IHttpActionResult Update(webModel.CustomerOrder customerOrder)
         {
 			var coreOrder = customerOrder.ToCoreModel();
+
+            //Check scope bound permission
+            var scopes = _orderScopeProvider.GetEntityScopes(coreOrder).ToArray();
+            if (!_securityService.UserHasAnyPermission(User.Identity.Name, scopes, OrderPredefinedPermissions.Read))
+            {
+                throw new HttpResponseException(HttpStatusCode.Unauthorized);
+            }
+
             _customerOrderService.Update(new coreModel.CustomerOrder[] { coreOrder });
             return StatusCode(HttpStatusCode.NoContent);
         }
@@ -247,7 +263,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         [HttpDelete]
         [ResponseType(typeof(void))]
         [Route("")]
-        [CheckPermission(Permission = PredefinedPermissions.Delete)]
+        [CheckPermission(Permission = OrderPredefinedPermissions.Delete)]
         public IHttpActionResult DeleteOrdersByIds([FromUri] string[] ids)
         {
             _customerOrderService.Delete(ids);

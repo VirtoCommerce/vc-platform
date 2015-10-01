@@ -12,9 +12,9 @@ namespace VirtoCommerce.Platform.Core.Security
         /// <summary>
         /// Return all supported scope for given permission used in role permission configuration 
         /// </summary>
-        /// <param name="permissions"></param>
+        /// <param name="permission"></param>
         /// <returns></returns>
-        IEnumerable<PermissionScope> GetPermissionScopes(string permissions);
+        IEnumerable<PermissionScope> GetPermissionScopes(string permission);
         /// <summary>
         /// Return resulting list of scope string for entity may be used for permissions check
         /// </summary>

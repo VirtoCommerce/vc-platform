@@ -111,7 +111,7 @@
     <Compile Include="BackgroundJobs\CollectOrderStatisticJob.cs" />
     <Compile Include="Binders\SearchCriteriaBinder.cs" />
     <Compile Include="Controllers\Api\OrderModuleController.cs" />
-    <Compile Include="Controllers\PredefinedPermissions.cs" />
+    <Compile Include="Security\OrderPredefinedPermissions.cs" />
     <Compile Include="Converters\AddressConverter.cs" />
     <Compile Include="Converters\CustomerOrderConverter.cs" />
     <Compile Include="Converters\LineItemConverter.cs" />
@@ -144,7 +144,7 @@
       <DependentUpon>OrderNotificationResource.resx</DependentUpon>
     </Compile>
     <Compile Include="Security\OrderResponsibleScope.cs" />
-    <Compile Include="Security\OrderSecurityScopeProvider.cs" />
+    <Compile Include="Security\OrderPermissionScopeProvider.cs" />
     <Compile Include="Security\OrderStoreScope.cs" />
     <Content Include="Scripts\blades\store-scope-pick.js" />
     <Content Include="Scripts\blades\store-scope-pick.tpl.html" />
