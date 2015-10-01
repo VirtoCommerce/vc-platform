@@ -263,7 +263,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
                         foreach (var termValue in term.Value)
                         {
                             // try to find filter by value
-                            var foundFilter = filtersWithValues.First(x => x.Values.Where(y => y.Id.Equals(termValue)).Count() > 0);
+                            var foundFilter = filtersWithValues.FirstOrDefault(x => x.Values.Where(y => y.Id.Equals(termValue)).Count() > 0);
 
                             if (foundFilter != null)
                             {

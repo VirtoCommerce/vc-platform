@@ -6,7 +6,11 @@
             <div class="table-wrapper">
                 <table class="table">
                     <tbody>
-                        <tr class="table-item" ng-repeat="data in availableScopes track by data.type" ng-class="{'__selected': data.id === selectedNodeId}">
+                        <tr>
+                            <th class="table-col">Selected</th>
+                            <th class="table-col">Scope name and parameters</th>
+                        </tr>
+                        <tr class="table-item" ng-repeat="data in availableScopes track by data.type" ng-class="{'__selected': data.type === selectedNodeId}">
                             <td class="table-col">
                                 <label class="form-control __checkbox">
                                     <input type="checkbox" ng-model="data.$selected">
@@ -15,7 +19,7 @@
                             </td>
                             <td class="table-col" ng-click='blade.selectNode(data)'>
                                 <span class="table-t">{{data.title}}</span>
-                                <span class="table-descr">{{data.choosedScopes}}</span>
+                                <span class="table-descr">{{data.scopes}}</span>
                             </td>
                         </tr>
                     </tbody>

@@ -17,7 +17,7 @@
                         </div>
                     </div>
                 </fieldset>
-              
+
             </form>
             <div class="sub-t">Assigned permissions</div>
             <div class="table-wrapper">
@@ -25,23 +25,24 @@
                     <tbody>
                         <tr>
                             <th class="table-col">
-                                <label class="form-control __checkbox" >
+                                <label class="form-control __checkbox">
                                     <input type="checkbox" ng-model="selectedAll" ng-change="checkAll(selectedAll)">
                                     <span class="check"></span>
                                 </label>
                             </th>
                             <th class="table-col">Name</th>
                         </tr>
-                        <tr class="table-item" ng-repeat="data in blade.currentEntity.permissions track by data.id">
+                        <tr class="table-item" ng-repeat="data in blade.currentEntity.permissions track by data.id" ng-class="{'__selected': data.id === selectedNodeId}">
                             <td class="table-col">
                                 <label class="form-control __checkbox">
-                                    <input type="checkbox"  ng-model="data.scopeBounded">
+                                    <input type="checkbox" ng-model="data.$selected">
                                     <span class="check"></span>
                                 </label>
                             </td>
-                            <td class="table-col"  ng-click='selectNode(data)'>
+                            <td class="table-col" ng-click='selectNode(data)'>
                                 <span class="table-t">{{data.name}}</span>
                                 <span class="table-descr">{{data.description}}</span>
+                                <span class="table-descr" ng-if="data.availableScopes.length">Scopes: {{data.scopes}}</span>
                             </td>
                         </tr>
                     </tbody>
