@@ -6,7 +6,7 @@
     blade.refresh = function (parentRefresh) {
         if (blade.isNew) {
             initializeBlade({});
-        } else {
+        } else {            
             roles.get({ id: blade.data.id }, function (data) {
                 initializeBlade(data);
                 if (parentRefresh && blade.parentBlade.refresh) {
@@ -18,6 +18,7 @@
     }
 
     function initializeBlade(data) {
+        blade.selectedAll = false;
         blade.currentEntity = angular.copy(data);
         blade.origEntity = data;
 
@@ -28,7 +29,7 @@
             });
         } else {
             blade.isLoading = false;
-        }
+        }        
     };
 
     function isDirty() {
@@ -104,10 +105,27 @@
         });
     }
 
-    $scope.checkAll = function (selected) {
+    $scope.toggleAll = function () {
         angular.forEach(blade.currentEntity.permissions, function (item) {
-            item.$selected = selected;
+            item.$selected = blade.selectedAll;
         });
+    };
+
+    function isItemsChecked() {
+        return blade.currentEntity && _.any(blade.currentEntity.permissions, function (x) { return x.$selected; });
+    }
+
+    function deleteChecked() {
+        _.each(blade.currentEntity.permissions.slice(), function (x) {
+            if (x.$selected) {
+                blade.currentEntity.permissions.splice(blade.currentEntity.permissions.indexOf(x), 1);
+            }
+        });
+        blade.selectedAll = false;
+    }
+
+    $scope.delete = function (index) {
+        blade.currentEntity.permissions.splice(index, 1);
     };
 
     blade.headIcon = 'fa-key';
@@ -138,21 +156,31 @@
                     permission: 'platform:security:update'
                 },
                 {
-                    name: "Manage permissions", icon: 'fa fa-edit',
+                    name: "Assign", icon: 'fa fa-plus',
                     executeMethod: function () {
                         var newBlade = {
                             id: 'listItemChildChild',
                             promise: promise,
                             title: blade.title,
-                            subtitle: 'Manage permissions',
+                            subtitle: 'Assign permissions',
                             controller: 'platformWebApp.rolePermissionsController',
                             template: '$(Platform)/Scripts/app/security/blades/role-permissions.tpl.html'
                         };
 
-                        bladeNavigationService.showBlade(newBlade, blade);
+                        bladeNavigationService.showBlade(newBlade, $scope.blade);
                     },
                     canExecuteMethod: function () {
                         return true;
+                    },
+                    permission: 'platform:security:update'
+                },
+                {
+                    name: "Remove", icon: 'fa fa-trash-o',
+                    executeMethod: function () {
+                        deleteChecked();
+                    },
+                    canExecuteMethod: function () {
+                        return isItemsChecked();
                     },
                     permission: 'platform:security:update'
                 }

@@ -1,15 +1,17 @@
 ﻿angular.module('platformWebApp')
 .controller('platformWebApp.rolePermissionsController', ['$scope', 'platformWebApp.dialogService', function ($scope, dialogService) {
+    var blade = $scope.blade;
+    var allPermissions;
 
     function initializeBlade(data) {
-        $scope.blade.data = data;
-        $scope.blade.promise.then(function (promiseData) {
-            _.each(promiseData, function (x) {
-                x.isChecked = _.some(data.permissions, function (curr) { return curr.id === x.id; });
+        blade.data = data;
+        blade.promise.then(function (promiseData) {
+            allPermissions = _.filter(angular.copy(promiseData), function (x) {
+                return _.all(data.permissions, function (curr) { return curr.id !== x.id; });
             });
-
-            $scope.blade.currentEntities = _.groupBy(promiseData, 'groupName');
-            $scope.blade.isLoading = false;
+            
+            blade.currentEntities = _.groupBy(allPermissions, 'groupName');
+            blade.isLoading = false;
         });
     };
 
@@ -18,17 +20,18 @@
     }
 
     $scope.isValid = function () {
-        return true;
+        return _.any(allPermissions, function (x) { return x.$selected; });
     }
 
     $scope.saveChanges = function () {
-        var values = _.flatten(_.values($scope.blade.currentEntities), true);
-        $scope.blade.data.permissions = _.where(values, { isChecked: true });
+        var selection = _.where(allPermissions, { $selected: true })
+        _.each(selection, function (x) { x.$selected = false });
+        blade.data.permissions = _.union(blade.data.permissions, selection);
 
         $scope.bladeClose();
     };
 
-    $scope.blade.headIcon = 'fa-key';
+    blade.headIcon = 'fa-key';
 
     $scope.$watch('blade.parentBlade.currentEntity', initializeBlade);
 
