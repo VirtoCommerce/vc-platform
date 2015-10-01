@@ -69,7 +69,7 @@ namespace VirtoCommerce.Web.Models.Tagging
         {
             if(obj is string)
             {
-                return this.Value.Equals((string)obj);
+                return this.Value.Equals((string)obj) || this.Label.Equals((string)obj);
             }
             return base.Equals(obj);
         }
