@@ -93,7 +93,7 @@
     <group name="Core">
       <!--<permission id="core:fulfillment:access" name="Manage fulfillment centers" description="Permission to manage fulfillment centers."/>-->
       <permission id="core:fulfillment:create" name="Create fulfillment center" description="Permission to create fulfillment center."/>
-      <permission id="core:fulfillment:read" name="Read fulfillment center data" description="Permission to read fulfillment centers data."/>
+      <permission id="core:fulfillment:read" name="View fulfillment center data" description="Permission to browse and view fulfillment centers."/>
       <permission id="core:fulfillment:update" name="Update fulfillment center" description="Permission to update fulfillment centers."/>
       <permission id="core:fulfillment:delete" name="Delete fulfillment center" description="Permission to delete fulfillment centers."/>
     </group>

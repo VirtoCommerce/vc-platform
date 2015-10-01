@@ -76,7 +76,7 @@
     <group name="Store">
       <permission id="store:access" name="Open stores menu" description="Permission to open stores menu."/>
       <permission id="store:create" name="Create a store" description="Permission to create a store."/>
-      <permission id="store:read" name="Read store data" description="Permission to browse and read store data."/>
+      <permission id="store:read" name="View store data" description="Permission to browse and view store data."/>
       <permission id="store:update" name="Update store" description="Permission to update stores."/>
       <permission id="store:delete" name="Delete store" description="Permission to delete stores."/>
     </group>

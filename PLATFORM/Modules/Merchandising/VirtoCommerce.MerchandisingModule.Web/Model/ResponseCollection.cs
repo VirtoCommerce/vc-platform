@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Model
 {
-    public class ResponseCollection<T>
+    public abstract class ResponseCollection<T>
     {
         public ResponseCollection()
         {

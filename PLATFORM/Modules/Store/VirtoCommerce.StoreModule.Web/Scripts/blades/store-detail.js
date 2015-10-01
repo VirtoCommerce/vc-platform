@@ -24,7 +24,9 @@
         blade.isLoading = false;
 
     	//sets security scopes for scope bounded ACL
-        blade.securityScopes = 'store:' + blade.currentEntity.name;
+        if (angular.IsArray(blade.currentEntity.scopes)) {
+        	blade.securityScopes = blade.currentEntity.scopes.join();
+        }
     };
 
     function isDirty() {

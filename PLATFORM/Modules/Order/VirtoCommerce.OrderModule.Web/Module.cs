@@ -20,6 +20,9 @@ using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.OrderModule.Data.Notifications;
 using VirtoCommerce.OrderModule.Web.Resources;
 using VirtoCommerce.Platform.Core.Settings;
+using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.OrderModule.Web.Security;
+using VirtoCommerce.Domain.Store.Services;
 
 namespace VirtoCommerce.OrderModule.Web
 {
@@ -85,6 +88,9 @@ namespace VirtoCommerce.OrderModule.Web
                     Language = "en-US"
                 }
             });
+
+            var securityScopeService = _container.Resolve<IPermissionScopeService>();
+            securityScopeService.RegisterSopeProvider(() => new OrderSecurityScopeProvider(_container.Resolve<ISecurityService>()));
         }
 
         #endregion

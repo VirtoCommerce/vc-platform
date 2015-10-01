@@ -125,7 +125,7 @@ namespace VirtoCommerce.Platform.Data.Repositories
             modelBuilder.Entity<PermissionEntity>("PlatformPermission", "Id");
             modelBuilder.Entity<RoleAssignmentEntity>("PlatformRoleAssignment", "Id");
             modelBuilder.Entity<RolePermissionEntity>("PlatformRolePermission", "Id");
-            modelBuilder.Entity<RoleScopeEntity>("PlatformRoleScope", "Id");
+            modelBuilder.Entity<PermissionScopeEntity>("PlatformPermissionScope", "Id");
 
             // Relations
             modelBuilder.Entity<ApiAccountEntity>()
@@ -154,10 +154,10 @@ namespace VirtoCommerce.Platform.Data.Repositories
                 .HasForeignKey(x => x.RoleId);
 
 
-            modelBuilder.Entity<RoleScopeEntity>()
-                .HasRequired(x => x.Role)
+            modelBuilder.Entity<PermissionScopeEntity>()
+                .HasRequired(x => x.RolePermission)
                 .WithMany(x => x.Scopes)
-                .HasForeignKey(x => x.RoleId);
+                .HasForeignKey(x => x.RolePermissionId);
             #endregion
 
             #region Notifications
@@ -203,8 +203,8 @@ namespace VirtoCommerce.Platform.Data.Repositories
 
         public RoleEntity GetRoleById(string roleId)
         {
-            return Roles.Include(x => x.RolePermissions.Select(y=>y.Permission))
-                        .Include(x => x.Scopes)
+            return Roles.Include(x => x.RolePermissions.Select(y => y.Permission))
+                        .Include(x => x.RolePermissions.Select(y => y.Scopes))
                         .FirstOrDefault(x => x.Id == roleId);
         }
 
@@ -216,7 +216,7 @@ namespace VirtoCommerce.Platform.Data.Repositories
             {
                 query = query
                     .Include(a => a.RoleAssignments.Select(ra => ra.Role.RolePermissions.Select(rp => rp.Permission)))
-                    .Include(a => a.RoleAssignments.Select(ra => ra.Role.Scopes))
+                    .Include(a => a.RoleAssignments.Select(ra => ra.Role.RolePermissions.Select(rp => rp.Scopes)))
                     .Include(a => a.ApiAccounts);
             }
 

@@ -290,6 +290,7 @@
     <Compile Include="Model\ExportImport\PushNotifications\SampleDataImportPushNotification.cs" />
     <Compile Include="Model\ExportImport\SampleDataInfo.cs" />
     <Compile Include="Model\Notifications\RenderNotificationContentResult.cs" />
+    <Compile Include="Model\Notifications\StringKeyValue.cs" />
     <Compile Include="Model\Packaging\ModuleAction.cs" />
     <Compile Include="Model\Packaging\ModuleBackgroundJobOptions.cs" />
     <Compile Include="Model\Packaging\ModulePushNotification.cs" />
@@ -369,6 +370,9 @@
     <Content Include="Scripts\app\dynamicProperties\blades\property-dictionary.tpl.html" />
     <Content Include="Scripts\app\dynamicProperties\blades\property-valueType.js" />
     <Content Include="Scripts\app\dynamicProperties\blades\property-valueType.tpl.html" />
+    <Content Include="Scripts\app\security\blades\permission-scopes.js" />
+    <Content Include="Scripts\app\security\blades\permisson-scopes.tpl.html" />
+    <Content Include="Scripts\app\security\services\permissionScopeResolver.js" />
     <Content Include="Scripts\codemirror\gfm.js" />
     <Content Include="Scripts\codemirror\markdown.js" />
     <Content Include="Scripts\codemirror\overlay.js" />
@@ -419,7 +423,6 @@
     <Content Include="Scripts\app\packaging\notifications\menu.tpl.html" />
     <Content Include="Scripts\app\security\directives\permission.js" />
     <Content Include="Scripts\app\security\services\auth.js" />
-    <Content Include="Scripts\app\security\services\roleScopes.js" />
     <Content Include="Scripts\app\settings\blades\entitySetting-list.js" />
     <Content Include="Scripts\app\settings\blades\entitySetting-list.tpl.html" />
     <Content Include="Scripts\app\security\blades\account-api-list.js" />

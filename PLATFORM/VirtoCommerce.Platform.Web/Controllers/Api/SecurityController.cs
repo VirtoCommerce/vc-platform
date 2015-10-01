@@ -20,18 +20,16 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     {
         private readonly Func<IAuthenticationManager> _authenticationManagerFactory;
         private readonly Func<ApplicationSignInManager> _signInManagerFactory;
-        private readonly IPermissionService _permissionService;
         private readonly IRoleManagementService _roleService;
         private readonly ISecurityService _securityService;
 
         /// <summary>
         /// </summary>
         public SecurityController(Func<ApplicationSignInManager> signInManagerFactory, Func<IAuthenticationManager> authManagerFactory,
-            IPermissionService permissionService, IRoleManagementService roleService, ISecurityService securityService)
+                                  IRoleManagementService roleService, ISecurityService securityService)
         {
             _signInManagerFactory = signInManagerFactory;
             _authenticationManagerFactory = authManagerFactory;
-            _permissionService = permissionService;
             _roleService = roleService;
             _securityService = securityService;
         }
@@ -91,7 +89,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.SecurityQuery)]
         public IHttpActionResult GetPermissions()
         {
-            var result = _permissionService.GetAllPermissions()
+            var result = _securityService.GetAllPermissions()
                 .OrderBy(p => p.GroupName)
                 .ThenBy(p => p.Name)
                 .ToArray();

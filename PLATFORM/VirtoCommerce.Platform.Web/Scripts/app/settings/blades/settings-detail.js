@@ -114,7 +114,7 @@
                 $scope.blade.refresh();
             } else {
                 $scope.blade.origEntity = $scope.blade.currentEntities;
-                $scope.blade.parentBlade.refresh();
+                $scope.blade.parentBlade.refresh(true);
             }
         }, function (error) {
             bladeNavigationService.setError('Error ' + error.status, $scope.blade);

@@ -42,7 +42,7 @@ namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
 
             if (value is string)
             {
-                return value.ToString();
+                return value.ToString().ToLower();
             }
 
             if (value is decimal)
