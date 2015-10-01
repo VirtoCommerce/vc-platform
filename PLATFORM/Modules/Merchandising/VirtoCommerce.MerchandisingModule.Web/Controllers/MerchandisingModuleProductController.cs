@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Description;
-using System.Web.Http.ModelBinding;
 using VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Domain.Commerce.Model;
@@ -13,14 +12,13 @@ using VirtoCommerce.Domain.Search.Filters;
 using VirtoCommerce.Domain.Search.Model;
 using VirtoCommerce.Domain.Search.Services;
 using VirtoCommerce.Domain.Store.Services;
-using VirtoCommerce.MerchandisingModule.Web.Binders;
 using VirtoCommerce.MerchandisingModule.Web.Converters;
 using VirtoCommerce.MerchandisingModule.Web.Model;
+using VirtoCommerce.MerchandisingModule.Web.Services;
 using VirtoCommerce.Platform.Core.Asset;
+using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
 using coreModel = VirtoCommerce.Domain.Catalog.Model;
-using VirtoCommerce.MerchandisingModule.Web.Services;
-using VirtoCommerce.Platform.Core.Caching;
 using storeModel = VirtoCommerce.Domain.Store.Model;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Controllers
@@ -197,43 +195,37 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         /// <summary>
         /// Search for store products
         /// </summary>
-        /// <param name="store">Store id</param>
-        /// <param name="priceLists">Array of pricelists ids</param>
-        /// <param name="parameters">Search parameters</param>
-        /// <param name="responseGroup">Response detalization scale (default value is ItemMedium)</param>
-        /// <param name="outline">Product category outline</param>
-        /// <param name="language">Culture name (default value is "en-us")</param>
-        /// <param name="currency">Currency (default value is "USD")</param>
+        /// <param name="request">Search parameters</param>
         [HttpGet]
-        [ArrayInput(ParameterName = "priceLists")]
         [ClientCache(Duration = 30)]
-        [Route("Search")]
+        [Route("search")]
         [ResponseType(typeof(ProductSearchResult))]
-        public IHttpActionResult Search(string store, string[] priceLists, [ModelBinder(typeof(SearchParametersBinder))] SearchParameters parameters,
-                                        [FromUri] coreModel.ItemResponseGroup responseGroup = coreModel.ItemResponseGroup.ItemMedium,
-                                        [FromUri] string outline = "", string language = "en-us", string currency = "USD")
+        public IHttpActionResult Search([FromUri] ProductSearchRequest request)
         {
-            var context = new Dictionary<string, object>
-                          {
-                              { "StoreId", store },
-                          };
+            request = request ?? new ProductSearchRequest();
+            request.Normalize();
 
-            var fullLoadedStore = GetStoreById(store);
+            var context = new Dictionary<string, object>
+            {
+                { "StoreId", request.Store },
+            };
+
+            var fullLoadedStore = GetStoreById(request.Store);
             if (fullLoadedStore == null)
             {
-                throw new NullReferenceException(store + " not found");
+                throw new NullReferenceException(request.Store + " not found");
             }
 
             var catalog = fullLoadedStore.Catalog;
 
             string categoryId = null;
 
-            var criteria = new CatalogIndexedSearchCriteria { Locale = language, Catalog = catalog.ToLowerInvariant() };
+            var criteria = new CatalogIndexedSearchCriteria { Locale = request.Language, Catalog = catalog.ToLowerInvariant() };
 
-            if (!string.IsNullOrWhiteSpace(outline))
+            if (!string.IsNullOrWhiteSpace(request.Outline))
             {
-                criteria.Outlines.Add(String.Format("{0}/{1}*", catalog, outline));
-                categoryId = outline.Split(new[] { '/' }).Last();
+                criteria.Outlines.Add(string.Format("{0}/{1}*", catalog, request.Outline));
+                categoryId = request.Outline.Split(new[] { '/' }).Last();
                 context.Add("CategoryId", categoryId);
             }
 
@@ -248,35 +240,39 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
             }
 
             // apply terms
-            if (parameters.Terms != null && parameters.Terms.Length > 0)
+            var terms = ParseKeyValues(request.Terms);
+            if (terms.Any())
             {
-                var filtersWithValues = filters.Where(x => (!(x is PriceRangeFilter) || ((PriceRangeFilter)x).Currency.Equals(currency, StringComparison.OrdinalIgnoreCase))).Select(x => new { Filter = x, Values = x.GetValues() });
+                var filtersWithValues = filters
+                    .Where(x => (!(x is PriceRangeFilter) || ((PriceRangeFilter)x).Currency.Equals(request.Currency, StringComparison.OrdinalIgnoreCase)))
+                    .Select(x => new { Filter = x, Values = x.GetValues() })
+                    .ToList();
 
-                foreach (var term in parameters.Terms)
+                foreach (var term in terms)
                 {
                     var filter = filters.SingleOrDefault(x => x.Key.Equals(term.Key, StringComparison.OrdinalIgnoreCase)
-                        && (!(x is PriceRangeFilter) || ((PriceRangeFilter)x).Currency.Equals(currency, StringComparison.OrdinalIgnoreCase)));
+                        && (!(x is PriceRangeFilter) || ((PriceRangeFilter)x).Currency.Equals(request.Currency, StringComparison.OrdinalIgnoreCase)));
 
                     // handle special filter term with a key = "tags", it contains just values and we need to determine which filter to use
                     if (filter == null && term.Key == "tags")
                     {
-                        foreach (var termValue in term.Value)
+                        foreach (var termValue in term.Values)
                         {
                             // try to find filter by value
-                            var foundFilter = filtersWithValues.FirstOrDefault(x => x.Values.Where(y => y.Id.Equals(termValue)).Count() > 0);
+                            var foundFilter = filtersWithValues.FirstOrDefault(x => x.Values.Any(y => y.Id.Equals(termValue)));
 
                             if (foundFilter != null)
                             {
                                 filter = foundFilter.Filter;
 
-                                var appliedFilter = _browseFilterService.Convert(filter, term.Value);
+                                var appliedFilter = _browseFilterService.Convert(filter, term.Values);
                                 criteria.Apply(appliedFilter);
                             }
                         }
                     }
                     else
                     {
-                        var appliedFilter = _browseFilterService.Convert(filter, term.Value);
+                        var appliedFilter = _browseFilterService.Convert(filter, term.Values);
                         criteria.Apply(appliedFilter);
                     }
                 }
@@ -285,39 +281,36 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 
             #region Facets
             // apply facet filters
-            var facets = parameters.Facets;
-            if (facets.Length != 0)
+            var facets = ParseKeyValues(request.Facets);
+            foreach (var facet in facets)
             {
-                foreach (var key in facets.Select(f => f.Key))
-                {
-                    var filter = filters.SingleOrDefault(
-                        x => x.Key.Equals(key, StringComparison.OrdinalIgnoreCase)
-                            && (!(x is PriceRangeFilter)
-                                || ((PriceRangeFilter)x).Currency.Equals(currency, StringComparison.OrdinalIgnoreCase)));
+                var filter = filters.SingleOrDefault(
+                    x => x.Key.Equals(facet.Key, StringComparison.OrdinalIgnoreCase)
+                        && (!(x is PriceRangeFilter)
+                            || ((PriceRangeFilter)x).Currency.Equals(request.Currency, StringComparison.OrdinalIgnoreCase)));
 
-                    var appliedFilter = _browseFilterService.Convert(filter, facets.FirstOrDefault(f => f.Key == key).Value);
-                    criteria.Apply(appliedFilter);
-                }
+                var appliedFilter = _browseFilterService.Convert(filter, facet.Values);
+                criteria.Apply(appliedFilter);
             }
             #endregion
 
             //criteria.ClassTypes.Add("Product");
-            criteria.RecordsToRetrieve = parameters.PageSize == 0 ? 10 : parameters.PageSize;
-            criteria.StartingRecord = parameters.StartingRecord;
-            criteria.Pricelists = priceLists;
-            criteria.Currency = currency;
-            criteria.StartDateFrom = parameters.StartDateFrom;
-            criteria.SearchPhrase = parameters.FreeSearch;
+            criteria.RecordsToRetrieve = request.Take <= 0 ? 10 : request.Take;
+            criteria.StartingRecord = request.Skip;
+            criteria.Pricelists = request.Pricelists;
+            criteria.Currency = request.Currency;
+            criteria.StartDateFrom = request.StartDateFrom;
+            criteria.SearchPhrase = request.SearchPhrase;
 
             #region sorting
 
-            if (!string.IsNullOrEmpty(parameters.Sort))
+            if (!string.IsNullOrEmpty(request.Sort))
             {
-                var isDescending = "desc".Equals(parameters.SortOrder, StringComparison.OrdinalIgnoreCase);
+                var isDescending = "desc".Equals(request.SortOrder, StringComparison.OrdinalIgnoreCase);
 
                 SearchSort sortObject = null;
 
-                switch (parameters.Sort.ToLowerInvariant())
+                switch (request.Sort.ToLowerInvariant())
                 {
                     case "price":
                         if (criteria.Pricelists != null)
@@ -363,15 +356,36 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
             #endregion
 
             //Load ALL products 
-            var searchResults = _browseService.SearchItems(criteria, responseGroup);
+            var searchResults = _browseService.SearchItems(criteria, request.ResponseGroup);
 
             // populate inventory
-            if ((responseGroup & ItemResponseGroup.ItemProperties) == ItemResponseGroup.ItemProperties)
+            if ((request.ResponseGroup & ItemResponseGroup.ItemProperties) == ItemResponseGroup.ItemProperties)
             {
                 PopulateInventory(fullLoadedStore.FulfillmentCenter, searchResults.Items);
             }
 
             return Ok(searchResults);
+        }
+
+        private static List<StringKeyValues> ParseKeyValues(string[] items)
+        {
+            var result = new List<StringKeyValues>();
+
+            if (items != null)
+            {
+                var nameValueDelimeter = new[] { ':' };
+                var valuesDelimeter = new[] { ',' };
+
+                result.AddRange(items
+                    .Select(item => item.Split(nameValueDelimeter, 2))
+                    .Where(item => item.Length == 2)
+                    .Select(item => new StringKeyValues { Key = item[0], Values = item[1].Split(valuesDelimeter, StringSplitOptions.RemoveEmptyEntries) })
+                    .GroupBy(item => item.Key)
+                    .Select(g => new StringKeyValues { Key = g.Key, Values = g.SelectMany(i => i.Values).Distinct().ToArray() })
+                    );
+            }
+
+            return result;
         }
 
         private storeModel.Store GetStoreById(string storeId)
