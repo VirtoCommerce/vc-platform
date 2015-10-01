@@ -19,19 +19,19 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model
         /// <summary>
         /// The facet regex
         /// </summary>
-        private static readonly Regex FacetRegex = new Regex("^f_", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex _facetRegex = new Regex("^f_", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         /// <summary>
         /// Used to apply facet filtering
         /// </summary>
-        private static readonly Regex TermRegex = new Regex("^t_", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex _termRegex = new Regex("^t_", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SearchParameters" /> class.
         /// </summary>
         public SearchParameters()
         {
-			Facets = new List<KeyValuePair<string, string[]>>();
+            Facets = new StringKeyValues[0];
             PageSize = 0;
             StartingRecord = 0;
         }
@@ -40,7 +40,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model
         /// Gets or sets the facets
         /// </summary>
         /// <value>The facets</value>
-        public List<KeyValuePair<string, string[]>> Facets { get; set; }
+        public StringKeyValues[] Facets { get; set; }
 
         /// <summary>
         /// Gets or sets the free search
@@ -80,38 +80,40 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model
         /// <summary>
         /// Gets or sets search terms collection
         /// </summary>
-		public List<KeyValuePair<string, string[]>> Terms { get; set; }
+		public StringKeyValues[] Terms { get; set; }
 
         public static bool TryParse(string s, out SearchParameters result)
         {
-            result = null;
-
             var qs = HttpUtility.ParseQueryString(s);
 
             var qsDict = NvToDict(qs);
 
             // parse facets
             var facets =
-                qsDict.Where(k => FacetRegex.IsMatch(k.Key))
-                    .Select(k => k.WithKey(FacetRegex.Replace(k.Key, "")))
-                    .ToDictionary(x => x.Key, y => y.Value.Split(',')).ToList();
+                qsDict.Where(k => _facetRegex.IsMatch(k.Key))
+                    .Select(k => k.WithKey(_facetRegex.Replace(k.Key, "")))
+                    .ToDictionary(x => x.Key, y => y.Value.Split(','))
+                    .Select(p => new StringKeyValues { Key = p.Key, Value = p.Value })
+                    .ToArray();
 
             // parse filters
             var terms =
-                qsDict.Where(k => TermRegex.IsMatch(k.Key))
-                    .Select(k => k.WithKey(TermRegex.Replace(k.Key, "")))
-					.ToDictionary(x => x.Key, y => y.Value.Split(',')).ToList();
+                qsDict.Where(k => _termRegex.IsMatch(k.Key))
+                    .Select(k => k.WithKey(_termRegex.Replace(k.Key, "")))
+                    .ToDictionary(x => x.Key, y => y.Value.Split(','))
+                    .Select(p => new StringKeyValues { Key = p.Key, Value = p.Value })
+                    .ToArray();
 
             var sp = new SearchParameters
-                     {
-                         FreeSearch = qs["q"].EmptyToNull(),
-                         StartingRecord = qs["skip"].TryParse(0),
-                         PageSize = qs["take"].TryParse(10),
-                         Sort = qs["sort"].EmptyToNull(),
-                         SortOrder = qs["sortorder"].EmptyToNull(),
-                         Facets = facets,
-                         Terms = terms
-                     };
+            {
+                FreeSearch = qs["q"].EmptyToNull(),
+                StartingRecord = qs["skip"].TryParse(0),
+                PageSize = qs["take"].TryParse(10),
+                Sort = qs["sort"].EmptyToNull(),
+                SortOrder = qs["sortorder"].EmptyToNull(),
+                Facets = facets,
+                Terms = terms
+            };
             if (!string.IsNullOrEmpty(sp.FreeSearch))
             {
                 sp.FreeSearch = sp.FreeSearch.EscapeSearchTerm();
@@ -135,12 +137,12 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model
         public override string ToString()
         {
             var builder = new StringBuilder();
-            builder.Append(this.FreeSearch);
-            builder.Append(this.StartingRecord);
-            builder.Append(this.PageSize);
-            builder.Append(this.Sort);
+            builder.Append(FreeSearch);
+            builder.Append(StartingRecord);
+            builder.Append(PageSize);
+            builder.Append(Sort);
 
-            foreach (var facet in this.Facets)
+            foreach (var facet in Facets)
             {
                 builder.Append(facet);
             }

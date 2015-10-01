@@ -122,7 +122,9 @@
     <Compile Include="Converters\StoreConverter.cs" />
     <Compile Include="Extensions\ItemServiceExtensions.cs" />
     <Compile Include="Model\Asset.cs" />
+    <Compile Include="Model\CategoryResponseCollection.cs" />
     <Compile Include="Model\DynamicContentItemGroup.cs" />
+    <Compile Include="Model\DynamicContentItemGroupResponseCollection.cs" />
     <Compile Include="Model\Image.cs" />
     <Compile Include="Model\Inventory.cs" />
     <Compile Include="Model\PaymentMethod.cs" />
@@ -141,6 +143,7 @@
     <Compile Include="Model\SearchParameters.cs" />
     <Compile Include="Model\SeoKeyword.cs" />
     <Compile Include="Model\Store.cs" />
+    <Compile Include="Model\StringKeyValues.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Model\CatalogItem.cs" />
     <Compile Include="Model\Category.cs" />
