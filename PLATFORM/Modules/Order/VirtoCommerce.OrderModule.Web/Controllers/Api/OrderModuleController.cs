@@ -38,6 +38,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 		private readonly CacheManager _cacheManager;
 		private readonly Func<IOrderRepository> _repositoryFactory;
         private readonly OrderSecurityScopeProvider _orderScopeProvider;
+        private static object _lockObject = new object();
 
         public OrderModuleController(ICustomerOrderService customerOrderService, ICustomerOrderSearchService searchService, IStoreService storeService, IUniqueNumberGenerator numberGenerator, 
                                      CacheManager cacheManager, Func<IOrderRepository> repositoryFactory, OrderSecurityScopeProvider securityScopeProvider)
@@ -302,18 +303,22 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         [OverrideAuthorization]
 		public IHttpActionResult GetDashboardStatistics([FromUri]DateTime? start = null, [FromUri]DateTime? end = null)
 		{
-			start = start ?? DateTime.UtcNow.AddYears(-1);
+            webModel.DashboardStatisticsResult retVal = null;
+            start = start ?? DateTime.UtcNow.AddYears(-1);
 			end = end ?? DateTime.UtcNow;
 			var cacheKey = CacheKey.Create("Statistic", start.Value.ToString("yyyy-MM-dd"), end.Value.ToString("yyyy-MM-dd"));
-			var retVal = _cacheManager.Get(cacheKey, () =>
-			{
+            lock(_lockObject)
+            {
+                retVal = _cacheManager.Get(cacheKey, () =>
+                {
 
-				var collectStaticJob = new CollectOrderStatisticJob(_repositoryFactory, _cacheManager);
-				return collectStaticJob.CollectStatistics(start.Value, end.Value);
+                    var collectStaticJob = new CollectOrderStatisticJob(_repositoryFactory, _cacheManager);
+                    return collectStaticJob.CollectStatistics(start.Value, end.Value);
 
-			});
-			return Ok(retVal);
-		}
+                });
+            }
+            return Ok(retVal);
+        }
 
     }
 }

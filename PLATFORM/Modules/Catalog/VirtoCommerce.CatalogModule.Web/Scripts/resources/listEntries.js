@@ -5,7 +5,7 @@
         listitemssearch: { url: 'api/catalog/listentries' },
         createlinks: { method: 'POST', url: 'api/catalog/listentrylinks' },
         deletelinks: { method: 'POST', url: 'api/catalog/listentrylinks/delete' },
-        paste: { method: 'POST', url: 'api/catalog/listentries/paste' }
+        move: { method: 'POST', url: 'api/catalog/listentries/move' }
     });
 }]);
 

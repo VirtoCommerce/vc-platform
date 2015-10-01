@@ -9,9 +9,9 @@ namespace VirtoCommerce.CatalogModule.Web.Model
     /// <summary>
     /// Base class for all entries used in catalog categories browsing.
     /// </summary>
-	public abstract class ListEntryBase
+	public class ListEntry
 	{
-		public ListEntryBase(string typeName)
+		public ListEntry(string typeName)
 		{
 			Type = typeName;
 		}

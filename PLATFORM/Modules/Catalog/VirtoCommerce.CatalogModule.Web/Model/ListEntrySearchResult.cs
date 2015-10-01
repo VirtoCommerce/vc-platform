@@ -13,7 +13,7 @@ namespace VirtoCommerce.CatalogModule.Web.Model
 	{
 		public ListEntrySearchResult()
 		{
-			ListEntries = new List<ListEntryBase>();
+			ListEntries = new List<ListEntry>();
 		}
         /// <summary>
         /// Gets or sets the total entries count matching the search criteria.
@@ -30,6 +30,6 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         /// <value>
         /// The list entries.
         /// </value>
-		public ICollection<ListEntryBase> ListEntries { get; set; }
+		public ICollection<ListEntry> ListEntries { get; set; }
 	}
 }

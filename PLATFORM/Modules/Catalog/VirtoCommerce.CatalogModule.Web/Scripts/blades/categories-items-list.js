@@ -382,8 +382,8 @@
 				},
                  /// hiding some UI functionality until it's fully implemented. Need to release
                  {
-                     name: "Copy",
-                     icon: 'fa fa-files-o',
+                     name: "Cut",
+                     icon: 'fa fa-cut',
                      executeMethod: function () {
                          $storage.catalogClipboardContent = _.where($scope.items, { selected: true });
                      },
@@ -395,7 +395,7 @@
                      icon: 'fa fa-clipboard',
                      executeMethod: function () {
                          blade.isLoading = true;
-                         listEntries.paste({
+                         listEntries.move({
                              catalog: blade.catalogId,
                              category: blade.categoryId,
                              listEntries: $storage.catalogClipboardContent
