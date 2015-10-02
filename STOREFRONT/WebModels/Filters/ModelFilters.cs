@@ -111,10 +111,12 @@ namespace VirtoCommerce.Web.Models.Filters
             return AssetUrl("~/global/assets/", input.ToString());
         }
 
+        /* sasha: there is already a method to strip html, this is not good enough method
         public static string StripHtml(string input)
         {
             return HttpUtility.HtmlDecode(input);
         }
+        */
 
         public static string GlobalAssetUrl(string input)
         {

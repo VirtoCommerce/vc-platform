@@ -220,7 +220,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 
             string categoryId = null;
 
-            var criteria = new CatalogIndexedSearchCriteria { Locale = request.Language, Catalog = catalog.ToLowerInvariant() };
+            var criteria = new CatalogIndexedSearchCriteria { Locale = request.Language, Catalog = catalog.ToLowerInvariant(), IsFuzzySearch = true };
 
             if (!string.IsNullOrWhiteSpace(request.Outline))
             {
