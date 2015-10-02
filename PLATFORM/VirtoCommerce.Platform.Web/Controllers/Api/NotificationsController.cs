@@ -162,14 +162,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             foreach (var param in parameters)
             {
                 var property = notification.GetType().GetProperty(param.Key);
-                if (property.PropertyType ==  typeof(IDictionary))
-                {
-                    property.SetValue(notification, param.Value.Split(new[] { '&' }, StringSplitOptions.RemoveEmptyEntries).Select(part => part.Split('=')).Where(pair => pair.Length > 1).ToDictionary(split => split[0], split => split[1]));
-                }
-                else
-                {
-                    property.SetValue(notification, param.Value);
-                }
+                property.SetValue(notification, param.Value);
             }
             _eventTemplateResolver.ResolveTemplate(notification);
 

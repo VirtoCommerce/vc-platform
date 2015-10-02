@@ -128,6 +128,7 @@
     <Compile Include="Model\Image.cs" />
     <Compile Include="Model\Inventory.cs" />
     <Compile Include="Model\Notificaitons\DynamicMerchandisingNotification.cs" />
+    <Compile Include="Model\Notificaitons\SendDynamicMerchandisingNotificationRequest.cs" />
     <Compile Include="Model\PaymentMethod.cs" />
     <Compile Include="Model\Price.cs" />
     <Compile Include="Model\Association.cs" />

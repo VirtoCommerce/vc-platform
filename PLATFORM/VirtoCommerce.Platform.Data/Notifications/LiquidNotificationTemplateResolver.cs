@@ -47,7 +47,7 @@ namespace VirtoCommerce.Platform.Data.Notifications
 					{
 						ParameterName = property.Name,
 						ParameterDescription = attributes.Length > 0 ? ((NotificationParameterAttribute)(attributes[0])).Description : string.Empty,
-						ParameterCodeInView = GetLiquidCodeOfParameter(property.Name, property.PropertyType == typeof(IDictionary))
+						ParameterCodeInView = GetLiquidCodeOfParameter(property.Name)
 					});
 				}
 			}
@@ -55,7 +55,7 @@ namespace VirtoCommerce.Platform.Data.Notifications
 			return retVal.ToArray();
 		}
 
-		private string GetLiquidCodeOfParameter(string name, bool isDictionary)
+		private string GetLiquidCodeOfParameter(string name)
 		{
 			var retVal = string.Empty;
 
@@ -65,7 +65,7 @@ namespace VirtoCommerce.Platform.Data.Notifications
 
 			if(regex.Split(name).Length > 0)
 			{
-				retVal = "{{ " + name.ToLower() + (isDictionary ? ".parameterName }}" : " }}");
+				retVal = "{{ " + name.ToLower() + " }}";
 			}
 
 			return retVal;
