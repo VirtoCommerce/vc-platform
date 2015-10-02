@@ -18,27 +18,27 @@
 
                     if (!blade.isFile()) {
                         blade.origEntity = angular.copy(blade.currentEntity);
+
+                        var pathParts = blade.currentEntity.name.split('/');
+                        var pageNameWithExtension = pathParts[pathParts.length - 1];
+                        var pageName = pageNameWithExtension.split('.')[0];
+                        blade.currentEntity.pageName = pageName;
+
+                        blade.origEntity = angular.copy(blade.currentEntity);
+
+                        var parts = blade.currentEntity.content.split('---');
+                        if (parts.length > 2) {
+                            blade.body = parts[2].trim();
+                            blade.metadata = parts[1].trim();
+                        }
+                        else {
+                            blade.body = parts[0];
+                        }
                     }
                     else {
                     	if (blade.isImage()) {
                     		blade.image = "data:" + blade.currentEntity.contentType + ";base64," + blade.currentEntity.byteContent;
                     	}
-                    }
-
-                    var pathParts = blade.currentEntity.name.split('/');
-                    var pageNameWithExtension = pathParts[pathParts.length - 1];
-                    var pageName = pageNameWithExtension.split('.')[0];
-                    blade.currentEntity.pageName = pageName;
-
-                    blade.origEntity = angular.copy(blade.currentEntity);
-
-                    var parts = blade.currentEntity.content.split('---');
-                    if (parts.length > 2) {
-                        blade.body = parts[2].trim();
-                        blade.metadata = parts[1].trim();
-                    }
-                    else {
-                        blade.body = parts[0];
                     }
                 },
                 function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
@@ -209,6 +209,8 @@
 
             pages.checkName({ storeId: blade.choosenStoreId, pageName: blade.currentEntity.name, language: blade.currentEntity.language }, function (data) {
                 if (Boolean(data.result)) {
+                    blade.setNewName();
+
                     pages.update({ storeId: blade.choosenStoreId }, blade.currentEntity, function () {
                         blade.origEntity = angular.copy(blade.currentEntity);
                         blade.newPage = false;
@@ -235,16 +237,7 @@
         else {
             if (blade.origEntity.pageName !== blade.currentEntity.pageName) {
                 pages.delete({ storeId: blade.choosenStoreId, pageNamesAndLanguges: blade.choosenPageLanguage + '^' + blade.choosenPageName }, function () {
-                    var pathParts = blade.currentEntity.name.split('/');
-                    var pageNameWithExtension = pathParts[pathParts.length - 1];
-                    var parts = pageNameWithExtension.split('.');
-
-                    blade.currentEntity.name = blade.currentEntity.id = pathParts.slice(0, pathParts.length - 1).join('/') + "/" + blade.currentEntity.pageName;
-                    if (parts.length > 1) {
-                        blade.currentEntity.name += "." + parts[parts.length - 1];
-                        blade.currentEntity.id += "." + parts[parts.length - 1];
-                    }
-
+                    blade.setNewName();
                     blade.update();
                 }, function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
             }
@@ -270,7 +263,7 @@
 
                     pages.delete({ storeId: blade.choosenStoreId, pageNamesAndLanguges: blade.choosenPageLanguage + '^' + blade.choosenPageName }, function () {
                         $scope.bladeClose();
-                        blade.initialize();
+                        blade.parentBlade.initialize();
                     },
                     function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
                 }
@@ -352,6 +345,18 @@
             blade.origEntity = angular.copy(blade.currentEntity);
         },
         function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+    }
+
+    blade.setNewName = function () {
+        var pathParts = blade.currentEntity.name.split('/');
+        var pageNameWithExtension = pathParts[pathParts.length - 1];
+        var parts = pageNameWithExtension.split('.');
+
+        blade.currentEntity.name = blade.currentEntity.id = pathParts.slice(0, pathParts.length - 1).join('/') + (pathParts.length > 1 ? '/' : '') + blade.currentEntity.pageName;
+        if (parts.length > 1) {
+            blade.currentEntity.name += "." + parts[parts.length - 1];
+            blade.currentEntity.id += "." + parts[parts.length - 1];
+        }
     }
 
     blade.initialize();
