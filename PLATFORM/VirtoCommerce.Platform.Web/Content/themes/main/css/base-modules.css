@@ -1168,8 +1168,8 @@ fieldset + fieldset
 
         .form-input textarea
         {
-            height: 110px;
-            max-height: 110px;
+            height: 310px;
+            max-height: 310px;
             max-width: 100%;
             min-height: 110px;
             min-width: 100%;

@@ -207,10 +207,10 @@ namespace VirtoCommerce.SearchModule.Data.Services
                         doc.Add(new DocumentField(propValue.PropertyName, propValue.Value, new[] { IndexStore.Yes, IndexType.Analyzed }));
                         break;
                     case PropertyValueType.LongText:
-                        doc.Add(new DocumentField(propValue.PropertyName, propValue.Value.ToString().ToLower(), new[] { IndexStore.Yes, IndexType.Analyzed }));
+                        doc.Add(new DocumentField(propValue.PropertyName, propValue.Value.ToString().ToLowerInvariant(), new[] { IndexStore.Yes, IndexType.Analyzed }));
                         break;
-                    case PropertyValueType.ShortText: // do not tokenize small values as they will be used for lookups
-                        doc.Add(new DocumentField(propValue.PropertyName, propValue.Value.ToString().ToLower(), new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
+                    case PropertyValueType.ShortText: // do not tokenize small values as they will be used for lookups and filters
+                        doc.Add(new DocumentField(propValue.PropertyName, propValue.Value.ToString().ToLowerInvariant(), new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
                         break;
                 }
             }

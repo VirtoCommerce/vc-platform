@@ -22,6 +22,7 @@ namespace VirtoCommerce.Web.Models.Filters
     public class ModelFilters
     {
         private static readonly Regex TagSyntax = R.B(R.Q(@"([A-Za-z0-9]+)_([A-Za-z0-9].+)"));
+        private static readonly Regex WordReplaceSyntax = R.B(R.Q(@"[^\w-]"));
 
         private static readonly Lazy<CultureInfo[]> _cultures = new Lazy<CultureInfo[]>(
             CreateCultures,
@@ -256,7 +257,7 @@ namespace VirtoCommerce.Web.Models.Filters
                     tagName,
                     count == 0 ? "" : String.Format(" ({0})", count));
             }
-            return String.Format(
+            return string.Format(
                 "<a title=\"Show products matching tag {0}\" href=\"{1}{0}\">{0}</a>",
                 tag,
                 relativeUri.LocalPath);
@@ -272,7 +273,7 @@ namespace VirtoCommerce.Web.Models.Filters
             var relativeUri = HttpContext.Current.Request.Url;
             var url = UpdateWithTags(context, relativeUri, String.Format("{0}_{1}", field, val));
 
-            return String.Format(
+            return string.Format(
                 "<a title=\"Show products matching tag {1}\" href=\"{0}\">{1}{2}</a>",
                 url,
                 tagName,
@@ -331,6 +332,15 @@ namespace VirtoCommerce.Web.Models.Filters
         public static string Camelize(string input)
         {
             return StandardFilters.Capitalize(input);
+        }
+
+        public static string Handleize(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+                return input;
+
+            var replacedString = WordReplaceSyntax.Replace(input.ToLower().Replace(" ", "-"), "");
+            return replacedString;
         }
         #endregion
 

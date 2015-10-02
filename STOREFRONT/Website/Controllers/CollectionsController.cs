@@ -109,12 +109,33 @@ namespace VirtoCommerce.Web.Controllers
         #region Methods
         private SelectedTagCollection ParseTags(string tags, char splitter = ',')
         {
-            if (String.IsNullOrEmpty(tags))
+            if (string.IsNullOrEmpty(tags))
             {
                 return null;
             }
 
             var tagsArray = tags.Split(new[] { splitter });
+
+            // convert values to more appropriate to display values
+
+            /*
+            if (allTags != null)
+            {
+                for (int index = 0; index < tagsArray.Length; index++)
+                {
+                    var val = tagsArray[index];
+                    foreach (var item in allTags.Root)
+                    {
+                        if (item.Equals(val))
+                        {
+                            val = item.Label;
+                        }
+                    }
+                    tagsArray[index] = val;
+                }
+            }
+            */
+
             return new SelectedTagCollection(tagsArray);
         }
         #endregion

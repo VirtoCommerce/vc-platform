@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using VirtoCommerce.Web.Filters;
+using VirtoCommerce.Web.Models.Filters;
 
 namespace VirtoCommerce.Web.Models.Tagging
 {
@@ -36,7 +37,8 @@ namespace VirtoCommerce.Web.Models.Tagging
                     return Root.Any(x => x.Equals(tag.Id));
                 }
 
-                return Root.Any(x => x.Equals(value.ToString()));
+                return Root.Any(x => x.Equals(
+                    value.ToString()) || x.Equals(ModelFilters.Handleize(value.ToString())));
             }
 
             return false;
