@@ -78,6 +78,8 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
         /// <param name="orderId">customer order id</param>
         [HttpGet]
         [Route("paymentcallback")]
+        [ResponseType(typeof(PostProcessPaymentResult))]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IHttpActionResult PostProcessPayment(string orderId)
         {
             var order = _customerOrderService.GetById(orderId, CustomerOrderResponseGroup.Full);
@@ -119,7 +121,6 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
                 {
                     _customerOrderService.Update(new CustomerOrder[] { order });
                 }
-
 
                 return Ok(retVal);
             }
