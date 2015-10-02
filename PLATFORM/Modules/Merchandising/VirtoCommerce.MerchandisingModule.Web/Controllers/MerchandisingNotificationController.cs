@@ -39,7 +39,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 
             notification.Recipient = !string.IsNullOrEmpty(store.Email) ? store.Email : store.AdminEmail;
             notification.IsActive = true;
-            notification.Type = request.Type;
+            notification.FormType = request.Type;
             notification.Fields = request.Fields;
 
             _notificationManager.ScheduleSendNotification(notification);

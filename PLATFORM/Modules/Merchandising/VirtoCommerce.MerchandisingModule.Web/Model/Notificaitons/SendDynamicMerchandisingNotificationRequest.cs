@@ -7,7 +7,7 @@ using System.Web;
 namespace VirtoCommerce.MerchandisingModule.Web.Model.Notificaitons
 {
     public class SendDynamicMerchandisingNotificationRequest
-    {
+    { 
         public string Type { get; set; }
         public IDictionary Fields { get; set; }
         public string StoreId { get; set; }
