@@ -13,7 +13,7 @@ namespace VirtoCommerce.Web.Convertors
 
             var variantModel = productModel.Variants.First();
 
-            decimal price = (decimal)variantModel.Price / 100;
+            decimal price = variantModel.Price;
 
             quoteItemModel.CatalogId = "fake";
             quoteItemModel.CategoryId = "fake";

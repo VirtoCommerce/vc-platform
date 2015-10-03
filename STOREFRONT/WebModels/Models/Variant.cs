@@ -4,6 +4,8 @@ using System.Linq;
 using System.Runtime.Serialization;
 using DotLiquid;
 using System;
+using Newtonsoft.Json;
+using VirtoCommerce.Web.Helpers;
 
 #endregion
 
@@ -43,7 +45,8 @@ namespace VirtoCommerce.Web.Models
         public string Barcode { get; set; }
 
         [DataMember]
-        public int CompareAtPrice { get; set; }
+        [JsonConverter(typeof(DecimalPriceConverter))]
+        public decimal CompareAtPrice { get; set; }
 
         [DataMember]
         public string Id { get; set; }
@@ -103,7 +106,8 @@ namespace VirtoCommerce.Web.Models
         }
 
         [DataMember]
-        public int Price { get; set; }
+        [JsonConverter(typeof(DecimalPriceConverter))]
+        public decimal Price { get; set; }
 
         [DataMember]
         public bool Selected { get; set; }
@@ -125,33 +129,5 @@ namespace VirtoCommerce.Web.Models
 
         [DataMember]
         public string WeightInUnit { get; set; }
-
-        #region Public Methods and Operators
-        public override object BeforeMethod(string method)
-        {
-            /*
-            if (method.StartsWith("option", StringComparison.OrdinalIgnoreCase))
-            {
-                if (Options == null || !Options.Any())
-                {
-                    return null;
-                }
-
-                int index;
-                if (Int32.TryParse(method.Substring(6), out index))
-                {
-                    if (Options.Length > index)
-                    {
-                        return Options[index];
-                    }
-                }
-            }
-             * */
-
-            return base.BeforeMethod(method);
-        }
-
-
-        #endregion
-    }
+     }
 }

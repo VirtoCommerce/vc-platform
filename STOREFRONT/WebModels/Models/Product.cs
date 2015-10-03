@@ -4,6 +4,8 @@ using System.Linq;
 using System.Runtime.Serialization;
 using DotLiquid;
 using System;
+using VirtoCommerce.Web.Helpers;
+using Newtonsoft.Json;
 #endregion
 
 namespace VirtoCommerce.Web.Models
@@ -30,29 +32,32 @@ namespace VirtoCommerce.Web.Models
         public Collections Collections { get; set; }
 
         [DataMember]
+        [JsonConverter(typeof(DecimalPriceConverter))]
         public decimal CompareAtPrice
         {
             get
             {
-                return (decimal)SelectedOrFirstAvailableVariant.CompareAtPrice / 100;
+                return SelectedOrFirstAvailableVariant.CompareAtPrice;
             }
         }
 
         [DataMember]
+        [JsonConverter(typeof(DecimalPriceConverter))]
         public decimal CompareAtPriceMax
         {
             get
             {
-                return (decimal)Variants.Max(v => v.CompareAtPrice) / 100;
+                return Variants.Max(v => v.CompareAtPrice);
             }
         }
 
         [DataMember]
+        [JsonConverter(typeof(DecimalPriceConverter))]
         public decimal CompareAtPriceMin
         {
             get
             {
-                return (decimal)Variants.Min(v => v.CompareAtPrice) / 100;
+                return (decimal)Variants.Min(v => v.CompareAtPrice);
             }
         }
 
@@ -114,29 +119,32 @@ namespace VirtoCommerce.Web.Models
         public string[] Options { get; set; }
 
         [DataMember]
+        [JsonConverter(typeof(DecimalPriceConverter))]
         public decimal Price
         {
             get
             {
-                return (decimal)SelectedOrFirstAvailableVariant.Price / 100;
+                return SelectedOrFirstAvailableVariant.Price;
             }
         }
 
         [DataMember]
+        [JsonConverter(typeof(DecimalPriceConverter))]
         public decimal PriceMax
         {
             get
             {
-                return (decimal)Variants.Max(v => v.Price) / 100;
+                return Variants.Max(v => v.Price);
             }
         }
 
         [DataMember]
+        [JsonConverter(typeof(DecimalPriceConverter))]
         public decimal PriceMin
         {
             get
             {
-                return (decimal)Variants.Min(v => v.Price) / 100;
+                return Variants.Min(v => v.Price);
             }
         }
 
