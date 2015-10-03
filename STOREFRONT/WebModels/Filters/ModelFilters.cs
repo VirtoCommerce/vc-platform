@@ -22,7 +22,9 @@ namespace VirtoCommerce.Web.Models.Filters
     public class ModelFilters
     {
         private static readonly Regex TagSyntax = R.B(R.Q(@"([A-Za-z0-9]+)_([A-Za-z0-9].+)"));
-        private static readonly Regex WordReplaceSyntax = R.B(R.Q(@"[^\w-]"));
+        private static readonly Regex WordReplaceSyntax = R.B(R.Q(@"[^\w\s-]"));
+        private static readonly Regex WordReplaceSyntax2 = R.B(R.Q(@"[\s-]+"));
+        //private static readonly Regex WordReplaceSyntax = R.B(R.Q(@"[^a-z0-9]+/i"));
 
         private static readonly Lazy<CultureInfo[]> _cultures = new Lazy<CultureInfo[]>(
             CreateCultures,
@@ -87,7 +89,24 @@ namespace VirtoCommerce.Web.Models.Filters
                 return null;
             }
 
-            decimal val = Convert.ToDecimal(input, CultureInfo.GetCultureInfo("en-US"));
+            decimal val;
+
+            if (input is int)
+            {
+                var inputString = ((int)input).ToString("D3");
+                var parsedDecimal = String.Format(
+                    "{0}{1}{2}",
+                    inputString.Substring(0, inputString.Length - 2),
+                    CultureInfo.GetCultureInfo("en-US").NumberFormat.CurrencyDecimalSeparator,
+                    inputString.Substring(inputString.Length - 2));
+                val = decimal.Parse(parsedDecimal);
+            }
+            else
+            {
+                val = (decimal)input;
+            }
+
+            //decimal val = Convert.ToDecimal(input, CultureInfo.GetCultureInfo("en-US"));
 
             string currency = SiteContext.Current.Shop.Currency;
 
@@ -341,7 +360,9 @@ namespace VirtoCommerce.Web.Models.Filters
             if (string.IsNullOrEmpty(input))
                 return input;
 
-            var replacedString = WordReplaceSyntax.Replace(input.ToLower().Replace(" ", "-"), "");
+            // TODO: combine into one regex
+            var replacedString = WordReplaceSyntax.Replace(input.ToLower(), ""); // remove special characters
+            replacedString = WordReplaceSyntax2.Replace(replacedString, "-"); // add "-" instead of spaces
             return replacedString;
         }
         #endregion
