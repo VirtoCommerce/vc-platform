@@ -322,6 +322,9 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
             webModel.DashboardStatisticsResult retVal = null;
             start = start ?? DateTime.UtcNow.AddYears(-1);
 			end = end ?? DateTime.UtcNow;
+
+            // Hack: to compinsate for incorrect Local dates to UTC
+            end = end.Value.AddDays(2);
 			var cacheKey = CacheKey.Create("Statistic", start.Value.ToString("yyyy-MM-dd"), end.Value.ToString("yyyy-MM-dd"));
             lock(_lockObject)
             {
