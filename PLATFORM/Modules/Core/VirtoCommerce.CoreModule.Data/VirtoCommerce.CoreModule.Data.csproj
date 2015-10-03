@@ -75,7 +75,7 @@
     <Compile Include="Payment\DefaultManualPaymentMethod.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\CommerceRepositoryImpl.cs" />
-    <Compile Include="Repositories\IСommerceRepository.cs" />
+    <Compile Include="Repositories\ICommerceRepository.cs" />
     <Compile Include="Services\CommerceServiceImpl.cs" />
     <Compile Include="Services\SequenceUniqueNumberGeneratorServiceImpl.cs" />
     <Compile Include="Services\TimeBasedNumberGeneratorImpl.cs" />
