@@ -8,8 +8,8 @@
         updateTemplate: { method: 'POST', url: 'api/platform/notification/template' },
         deleteTemplate: { method: 'DELETE', url: 'api/platform/notification/template/:id' },
         prepareTestData: { method: 'GET', url: 'api/platform/notification/template/:type/getTestingParameters', isArray: true },
-        resolveNotification: { method: 'POST', url: 'api/platform/notification/template/:type/:objectId/:objectTypeId/:language/rendernotificationcontent' },
-        sendNotification: { method: 'POST', url: 'api/platform/notification/template/:type/:objectId/:objectTypeId/:language/sendnotification' },
+        resolveNotification: { method: 'POST', url: 'api/platform/notification/template/rendernotificationcontent' },
+        sendNotification: { method: 'POST', url: 'api/platform/notification/template/sendnotification' },
         getNotificationJournalList: { method: 'GET', url: 'api/platform/notification/journal/:objectId/:objectTypeId' },
         getNotificationJournalDetails: { method: 'GET', url: 'api/platform/notification/notification/:id' },
         stopSendingNotifications: { method: 'POST', url: 'api/platform/notification/stopnotifications' }
