@@ -58,7 +58,7 @@
                         <div class="form-group">
                             <label class="form-label">Expiry date</label>
                             <div class="form-input __calendar">
-                                <input placeholder="Choose date" ng-model="blade.currentEntity.expirationDate" datepicker-popup="shortDate" is-open="datepickers.exp" close-text="Close" />
+                                <input placeholder="Choose date" ng-model="blade.currentEntity.expirationDate" datepicker-popup="shortDate" is-open="datepickers.exp" close-text="Close" min-date="today" />
                                 <button class="btn" type="button" ng-click="open($event,'exp')">
                                     <i class="btn-ico fa fa-calendar"></i>
                                 </button>
@@ -91,7 +91,7 @@
                         <div class="form-group">
                             <label class="form-label">Reminder date</label>
                             <div class="form-input __calendar">
-                                <input placeholder="Choose date" ng-model="blade.currentEntity.reminderDate" datepicker-popup="shortDate" is-open="datepickers.rmd" close-text="Close" />
+                                <input placeholder="Choose date" ng-model="blade.currentEntity.reminderDate" datepicker-popup="shortDate" is-open="datepickers.rmd" close-text="Close" min-date="today"/>
                                 <button class="btn" type="button" ng-click="open($event,'rmd')">
                                     <i class="btn-ico fa fa-calendar"></i>
                                 </button>
