@@ -18,6 +18,10 @@
                             </button>
                         </div>
                     </div>
+                    <div ng-show="uploader.isUploading">
+                        <div class="sub-t">Upload progress</div>
+                        <div class="progress-bar __aqua" ng-style="{'width': uploader.progress + '%'}" style="width: 0%;"></div>
+                    </div>
                 </fieldset>
             </form>
             <div class="sub-t" ng-if="importRequest.exportManifest">Import data information</div>
