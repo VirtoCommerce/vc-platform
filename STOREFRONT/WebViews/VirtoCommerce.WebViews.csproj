@@ -32,7 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DotLiquid, Version=1.0.0.0, Culture=neutral, PublicKeyToken=82e46016ecf9f07c, processorArchitecture=MSIL">
-      <HintPath>..\packages\DotLiquid.VirtoCommerce.1.8.1\lib\NET45\DotLiquid.dll</HintPath>
+      <HintPath>..\packages\DotLiquid.VirtoCommerce.1.8.2\lib\NET45\DotLiquid.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="MarkdownDeep">
