@@ -42,7 +42,7 @@
                             <td class="table-col" ng-click='selectNode(data)'>
                                 <span class="table-t">{{data.name}}</span>
                                 <span class="table-descr">{{data.description}}</span>
-                                <span class="table-descr" ng-if="data.availableScopes.length">Assigned scopes: {{data.assignedScopes.length}}</span>
+                                <span class="table-descr alt-description" ng-if="data.availableScopes.length">Assigned scopes: {{data.assignedScopes.length}}</span>
                                 <ul role="menu" class="menu __context" id="rd_menu_{{$index}}">
                                     <li class="menu-item" ng-click='delete($index)'>
                                         <i class="menu-ico fa fa-trash-o"></i> Delete
