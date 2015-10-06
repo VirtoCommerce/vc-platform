@@ -5,7 +5,7 @@
             $scope.bladeClose(function () {
                 var categoryListBlade = $scope.blade.parentBlade;
                 categoryListBlade.setSelectedItem(data);
-                categoryListBlade.showCategoryBlade(data.id, data, data.name);
+                categoryListBlade.showCategoryBlade(data);
                 categoryListBlade.refresh();
             });
         },
