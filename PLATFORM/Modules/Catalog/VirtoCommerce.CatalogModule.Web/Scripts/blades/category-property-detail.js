@@ -73,7 +73,7 @@
             id: 'editCategoryProperty',
             currentEntityId: prop.id,
             title: 'Edit category property',
-            subtitle: 'enter property information',
+            subtitle: 'Enter property information',
             controller: 'virtoCommerce.catalogModule.propertyDetailController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/property-detail.tpl.html'
         };
@@ -120,7 +120,7 @@
 		      		id: 'editCategoryProperty',
 		      		categoryId: $scope.blade.currentEntity.id,
 		      		title: 'New category property',
-		      		subtitle: 'enter property information',
+		      		subtitle: 'Enter property information',
 		      		controller: 'virtoCommerce.catalogModule.propertyDetailController',
 		      		template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/property-detail.tpl.html'
 		      	};

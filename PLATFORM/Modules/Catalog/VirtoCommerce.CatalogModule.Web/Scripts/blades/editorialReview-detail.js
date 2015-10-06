@@ -29,7 +29,7 @@
     };
 
     $scope.blade.onClose = function (closeCallback) {
-        if (isDirty()) {
+        if (isDirty() && $scope.currentEntity.content) {
             var dialog = {
                 id: "confirmCurrentBladeClose",
                 title: "Save changes",
@@ -80,7 +80,7 @@
                 saveChanges();
             },
             canExecuteMethod: function () {
-                return isDirty();
+                return isDirty() && $scope.currentEntity.content;
             },
             permission: 'catalog:update'
         },

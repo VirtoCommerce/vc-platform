@@ -2,7 +2,7 @@
 .controller('virtoCommerce.catalogModule.newProductWizardPropertiesController', ['$scope', 'virtoCommerce.catalogModule.properties', 'platformWebApp.bladeNavigationService', function ($scope, properties, bladeNavigationService) {
     $scope.blade.isLoading = false;
     $scope.blade.item = angular.copy($scope.blade.item);
-   
+
     $scope.saveChanges = function () {
         $scope.blade.parentBlade.item.properties = $scope.blade.item.properties;
         $scope.bladeClose();
@@ -13,9 +13,11 @@
         var foundProp = _.findWhere($scope.blade.item.properties, { id: prop.id });
         if (foundProp != undefined) {
             var idx = $scope.blade.item.properties.indexOf(foundProp);
-            //must copy values
-            prop.values = foundProp.values;
-            $scope.blade.item.properties.splice(idx, 1, prop);
+            // update property but leave current values. Need to change reference
+            var values = foundProp.values;
+            foundProp = angular.copy(prop);
+            foundProp.values = values;
+            $scope.blade.item.properties.splice(idx, 1, foundProp);            
         } else {
             $scope.blade.item.properties.push(prop);
         }
@@ -27,7 +29,7 @@
             id: 'editCategoryProperty',
             currentEntityId: prop.id,
             title: 'Edit category property',
-            subtitle: 'enter property information',
+            subtitle: 'Enter property information',
             controller: 'virtoCommerce.catalogModule.propertyDetailController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/property-detail.tpl.html'
         };

@@ -74,7 +74,7 @@
             currentEntityId: prop.id,
             catalogId: $scope.blade.currentEntity.id,
             title: 'Edit catalog property',
-            subtitle: 'enter property information',
+            subtitle: 'Enter property information',
             controller: 'virtoCommerce.catalogModule.propertyDetailController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/property-detail.tpl.html'
         };
@@ -121,7 +121,7 @@
 		              id: 'editCatalogProperty',
 		              catalogId: $scope.blade.currentEntity.id,
 		              title: 'New catalog property',
-		              subtitle: 'enter property information',
+		              subtitle: 'Enter property information',
 		              controller: 'virtoCommerce.catalogModule.propertyDetailController',
 		              template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/property-detail.tpl.html'
 		          };
