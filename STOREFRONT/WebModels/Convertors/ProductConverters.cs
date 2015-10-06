@@ -85,7 +85,7 @@ namespace VirtoCommerce.Web.Convertors
             // form url
             // "/products/code" or "/en-us/store/collection/outline" 
             // specify SEO based url
-            var urlHelper = GetUrlHelper();
+            var urlHelper = UrlHelperExtensions.GetUrlHelper();
             var url = String.Empty;
             if (urlHelper != null && collection != null && productModel.Keywords != null && productModel.Keywords.Any())
             {
@@ -269,22 +269,5 @@ namespace VirtoCommerce.Web.Convertors
             return variationOptions.ToArray();
         }
         #endregion
-
-        private static UrlHelper GetUrlHelper()
-        {
-            var httpContext = HttpContext.Current;
-            if (httpContext == null)
-            {
-                return null;
-            }
-
-            var httpContextBase = new HttpContextWrapper(httpContext);
-            var routeData = new RouteData();
-            var requestContext = new RequestContext(httpContextBase, routeData);
-
-            var urlHelper = new UrlHelper(requestContext);
-            return urlHelper;
-
-        }
     }
 }

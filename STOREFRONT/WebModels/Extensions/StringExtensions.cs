@@ -59,7 +59,7 @@ namespace VirtoCommerce.Web.Extensions
             var url = HttpContext.Current.Request.Url;
             var port = url.Port != 80 || (url.Scheme == "https" && url.Port == 443) ? (":" + url.Port) : String.Empty;
 
-            return String.Format("{0}://{1}{2}{3}",
+            return string.Format("{0}://{1}{2}{3}",
                 url.Scheme, url.Host, port, VirtualPathUtility.ToAbsolute(relativeUrl));
         }
 
@@ -76,27 +76,10 @@ namespace VirtoCommerce.Web.Extensions
 
             var url = HttpContext.Current.Request.Url;
 
-            if (url.PathAndQuery.StartsWith(relativeUrl))
+            if (url.PathAndQuery.StartsWith(relativeUrl) && relativeUrl != "/")
                 return true;
 
             return false;
-        }
-
-        private static UrlHelper GetUrlHelper()
-        {
-            var httpContext = HttpContext.Current;
-            if (httpContext == null)
-            {
-                return null;
-            }
-
-            var httpContextBase = new HttpContextWrapper(httpContext);
-            var routeData = new RouteData();
-            var requestContext = new RequestContext(httpContextBase, routeData);
-
-            var urlHelper = new UrlHelper(requestContext);
-            return urlHelper;
-
         }
         #endregion
     }
