@@ -287,15 +287,19 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 				target.MinQuantity = source.MinQuantity.Value;
 			if (source.MaxQuantity != null)
 				target.MaxQuantity = source.MaxQuantity.Value;
+            //Handle three valuable states (null, empty and have value states) for case when need reset catalog or category
+            if (source.CatalogId == String.Empty)
+                 target.CatalogId = null;
+            if (source.CategoryId == String.Empty)
+                target.CategoryId = null;
 
-			var patchInjectionPolicy = new PatchInjection<dataModel.Item>(x => x.Name, x => x.Code, x => x.ManufacturerPartNumber, x => x.Gtin, x => x.ProductType,
-																		  x => x.WeightUnit, x => x.Weight, x => x.MeasureUnit, x => x.Height, x => x.Length, x => x.Width, x => x.EnableReview, x => x.MaxNumberOfDownload,
-																		  x => x.DownloadExpiration, x => x.DownloadType, x => x.HasUserAgreement, x => x.ShippingType, x => x.TaxType, x => x.Vendor);
-            
+            var patchInjectionPolicy = new PatchInjection<dataModel.Item>(x => x.Name, x => x.Code, x => x.ManufacturerPartNumber, x => x.Gtin, x => x.ProductType,
+                                                                          x => x.WeightUnit, x => x.Weight, x => x.MeasureUnit, x => x.Height, x => x.Length, x => x.Width, x => x.EnableReview, x => x.MaxNumberOfDownload,
+                                                                          x => x.DownloadExpiration, x => x.DownloadType, x => x.HasUserAgreement, x => x.ShippingType, x => x.TaxType, x => x.Vendor, x => x.CatalogId, x => x.CategoryId);
+
             var dbSource = source.ToDataModel();
 			target.InjectFrom(patchInjectionPolicy, dbSource);
-            target.CatalogId = dbSource.CatalogId;
-            target.CategoryId = dbSource.CategoryId;
+
 			#region Assets
 			if (!dbSource.Assets.IsNullCollection())
 			{

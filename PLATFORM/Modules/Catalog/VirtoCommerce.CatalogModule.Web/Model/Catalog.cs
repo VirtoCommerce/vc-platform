@@ -54,5 +54,7 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         /// The properties.
         /// </value>
 		public List<Property> Properties { get; set; }
+
+        public string[] SecurityScopes { get; set; }
     }
 }

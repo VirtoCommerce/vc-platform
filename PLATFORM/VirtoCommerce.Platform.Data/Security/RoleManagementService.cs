@@ -3,6 +3,7 @@ using System.Data.Entity;
 using System.Linq;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Infrastructure;
+using VirtoCommerce.Platform.Data.Model;
 using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.Platform.Data.Security.Converters;
 
@@ -44,7 +45,8 @@ namespace VirtoCommerce.Platform.Data.Security
                     .Include(r => r.RolePermissions.Select(rp => rp.Permission))
                     .ToArray();
 
-                result.Roles = roles.Select(r => r.ToCoreModel()).ToArray();
+                var roleAllPermissionScopes =
+                result.Roles = roles.Select(r => r.ToCoreModel(_permissionScopeService)).ToArray();
             }
 
             return result;
@@ -60,12 +62,12 @@ namespace VirtoCommerce.Platform.Data.Security
 
                 if (role != null)
                 {
-                    result = role.ToCoreModel();
+                    result = role.ToCoreModel(_permissionScopeService);
                     if (result.Permissions != null)
                     {
                         foreach (var permission in result.Permissions)
                         {
-                            permission.AvailableScopes = _permissionScopeService.GetPermissionScopes(permission.Id).ToList();
+                            permission.AvailableScopes = _permissionScopeService.GetAvailablePermissionScopes(permission.Id).ToList();
                         }
                     }
                 }
@@ -133,6 +135,7 @@ namespace VirtoCommerce.Platform.Data.Security
         }
 
         #endregion
-  
+        
+
     }
 }

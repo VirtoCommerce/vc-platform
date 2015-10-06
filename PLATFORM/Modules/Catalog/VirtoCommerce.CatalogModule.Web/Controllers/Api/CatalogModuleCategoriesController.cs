@@ -12,12 +12,12 @@ using coreModel = VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Domain.Commerce.Model;
 using VirtoCommerce.Platform.Core.Asset;
+using VirtoCommerce.CatalogModule.Web.Security;
 
 namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 {
     [RoutePrefix("api/catalog/categories")]
-    [CheckPermission(Permission = PredefinedPermissions.Query)]
-    public class CatalogModuleCategoriesController : ApiController
+    public class CatalogModuleCategoriesController : CatalogBaseController
     {
         private readonly ICatalogSearchService _searchService;
         private readonly ICategoryService _categoryService;
@@ -25,9 +25,9 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         private readonly ICatalogService _catalogService;
 		private readonly IBlobUrlResolver _blobUrlResolver;
 
-        public CatalogModuleCategoriesController(ICatalogSearchService searchService,
-                                    ICategoryService categoryService,
-									IPropertyService propertyService, ICatalogService catalogService, IBlobUrlResolver blobUrlResolver)
+        public CatalogModuleCategoriesController(ICatalogSearchService searchService, ICategoryService categoryService, IPropertyService propertyService, 
+                                                 ICatalogService catalogService, IBlobUrlResolver blobUrlResolver, ISecurityService securityService, IPermissionScopeService permissionScopeService)
+            :base(securityService, permissionScopeService)
         {
             _searchService = searchService;
             _categoryService = categoryService;
@@ -48,12 +48,17 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         {
             var category = _categoryService.GetById(id);
 
+            base.CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Read, category);
+
             if (category == null)
             {
                 return NotFound();
             }
             var allCategoryProperties = _propertyService.GetCategoryProperties(id);
             var retVal = category.ToWebModel(_blobUrlResolver, allCategoryProperties);
+
+            retVal.SecurityScopes = base.GetObjectPermissionScopeStrings(category);
+
             return Ok(retVal);
         }
 
@@ -77,6 +82,9 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 				IsActive = true
             };
 
+            base.CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Create, retVal.ToModuleModel());
+            retVal.SecurityScopes = base.GetObjectPermissionScopeStrings(retVal.ToModuleModel());
+
             return Ok(retVal);
         }
 
@@ -89,7 +97,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         [HttpPost]
         [ResponseType(typeof(void))]
         [Route("")]
-        public IHttpActionResult Post(webModel.Category category)
+        public IHttpActionResult CreateOrUpdateCategory(webModel.Category category)
         {
             var coreCategory = category.ToModuleModel();
             if (coreCategory.Id == null)
@@ -105,12 +113,16 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 					}
 				}
 
-				var retVal = _categoryService.Create(coreCategory).ToWebModel(_blobUrlResolver);
+                base.CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Create, coreCategory);
+
+                var retVal = _categoryService.Create(coreCategory).ToWebModel(_blobUrlResolver);
 				retVal.Catalog = null;
 				return Ok(retVal);
 			}
             else
             {
+                base.CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Update, coreCategory);
+
                 _categoryService.Update(new[] { coreCategory });
                 return StatusCode(HttpStatusCode.NoContent);
             }
@@ -126,6 +138,9 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         [Route("")]
         public IHttpActionResult Delete([FromUri]string[] ids)
         {
+            var categories = ids.Select(x => _categoryService.GetById(x)).ToArray();
+            base.CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Delete, categories);
+
             _categoryService.Delete(ids);
             return StatusCode(HttpStatusCode.NoContent);
         }

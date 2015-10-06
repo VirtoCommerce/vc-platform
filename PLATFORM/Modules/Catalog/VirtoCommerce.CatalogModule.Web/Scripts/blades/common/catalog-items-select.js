@@ -15,7 +15,8 @@
     $scope.options = angular.extend({
         showCheckingMultiple: true,
         allowCheckingItem: true,
-        allowCheckingCategory: false
+        allowCheckingCategory: false,
+    	selectedItemIds: []
     }, $scope.blade.options);
 
     $scope.selectedAll = false;
@@ -45,7 +46,13 @@
 			    if ($scope.selectedItem != null) {
 			        $scope.selectedItem = _.find($scope.items, function (x) { return $scope.selectedItem.id == x.id });
 			    }
-
+				//check already selected elements
+			    if ($scope.options.selectedItemIds)
+			    {
+			    	_.each($scope.items, function (x) {
+			    		x.selected = _.some($scope.options.selectedItemIds, function (y) { return y == x.id; })
+			    	});
+			    }
 			    //Set navigation breadcrumbs
 			    setBreadcrumbs();
 
@@ -169,6 +176,14 @@
         if ($scope.options.checkItemFn) {
             $scope.options.checkItemFn(listItem, listItem.selected);
         };
+        if (listItem.selected)
+        {
+        	$scope.options.selectedItemIds.push(listItem.id);
+        }
+        else
+        {
+        	$scope.options.selectedItemIds = _.without($scope.options.selectedItemIds, listItem.id);
+        }
     }
 
     $scope.toggleAll = function () {

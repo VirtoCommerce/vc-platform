@@ -91,6 +91,7 @@
     <Compile Include="Asset\UploadStreamInfo.cs" />
     <Compile Include="ChangeLog\IHasChangesHistory.cs" />
     <Compile Include="Common\ConfigManagerExtensions.cs" />
+    <Compile Include="Common\ObservableChangeTracker.cs" />
     <Compile Include="Common\PlatformVersion.cs" />
     <Compile Include="Common\SemanticVersion.cs" />
     <Compile Include="Common\SerializationExtension.cs" />
@@ -147,7 +148,6 @@
     <Compile Include="Common\MimeTypeResolver.cs" />
     <Compile Include="Common\NullCollection.cs" />
     <Compile Include="Common\ObjectExtension.cs" />
-    <Compile Include="Common\ObservableChangeTracker.cs" />
     <Compile Include="Common\PredicateBuilder.cs" />
     <Compile Include="Common\ReflectionUtility.cs" />
     <Compile Include="Common\StringExtensions.cs" />
@@ -236,10 +236,9 @@
     <Compile Include="Security\ApiAccountType.cs" />
     <Compile Include="Security\ApplicationUserExtended.cs" />
     <Compile Include="Security\CheckPermissionAttribute.cs" />
+    <Compile Include="Security\IPermissionScopeService.cs" />
     <Compile Include="Security\IRoleManagementService.cs" />
     <Compile Include="Security\ISecurityOptions.cs" />
-    <Compile Include="Security\IPermissionScopeProvider.cs" />
-    <Compile Include="Security\IPermissionScopeService.cs" />
     <Compile Include="Security\ISecurityService.cs" />
     <Compile Include="Security\Permission.cs" />
     <Compile Include="Security\PredefinedPermissions.cs" />

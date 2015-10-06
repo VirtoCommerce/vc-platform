@@ -164,7 +164,7 @@ angular.module(moduleName, ['virtoCommerce.catalogModule', 'virtoCommerce.pricin
 
 	    //Register permission scopes templates used for scope bounded definition in role management ui
 	    var orderStoreScope = {
-	        type: 'orderStoreScope',
+	    	type: 'OrderStoreScope',
 	        title: 'Only for orders in selected stores',
 	        selectFn: function (blade, callback) {
 	            var newBlade = {
@@ -181,9 +181,8 @@ angular.module(moduleName, ['virtoCommerce.catalogModule', 'virtoCommerce.pricin
 	    };
 	    scopeResolver.register(orderStoreScope);
 	    var responsibleOrderScope = {
-	        type: 'orderResponsibleScope',
-	        title: 'Only for order responsible',
-	        hasConstantConfiguration: true
+	    	type: 'OrderResponsibleScope',
+	    	title: 'Only for order responsible',
 	    };
 	    scopeResolver.register(responsibleOrderScope);
 

@@ -16,6 +16,7 @@
         $scope.blade.origEntity = data;
         $scope.blade.title = data.name;
         $scope.blade.isLoading = false;
+        $scope.blade.securityScopes = data.securityScopes;
     };
 
     $scope.codeValidator = function (value) {

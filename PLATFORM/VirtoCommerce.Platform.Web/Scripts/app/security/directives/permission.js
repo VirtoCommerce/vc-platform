@@ -5,7 +5,9 @@
 
 			if (attrs.vaPermission) {
 				var permissionValue = attrs.vaPermission.trim();
-				attrs.$observe('securityScopes', function (value) {
+			
+				//modelObject is a scope property of the parent/current scope
+				scope.$watch(attrs.securityScopes, function (value) {
 					if (value) {
 						toggleVisibilityBasedOnPermission(value);
 					}

@@ -14,7 +14,9 @@ namespace VirtoCommerce.Domain.Catalog.Model
         public ResponseGroup ResponseGroup { get; set; }
         public string Keyword { get; set; }
         public string CategoryId { get; set; }
+        public string[] CategoriesIds { get; set; }
         public string CatalogId { get; set; }
+        public string[] CatalogsIds { get; set; }
 		public string Code { get; set; }
 		public string SeoKeyword { get; set; }
 		//Hides direct linked categories in virtual category displayed only linked category content without itself

@@ -110,7 +110,7 @@
                     subtitle: 'Category details',
                     controller: 'virtoCommerce.catalogModule.categoryDetailController',
                     template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/category-detail.tpl.html',
-                };
+                 };
                 bladeNavigationService.showBlade(newBlade, blade);
             };
 
@@ -334,7 +334,8 @@
                     },
                     canExecuteMethod: function () {
                         return $scope.selectedItem || isItemsChecked();
-                    }
+                    },
+                    permission: 'catalog:read'
                 },
                 {
                     name: "Delete",
@@ -360,7 +361,7 @@
     			        bladeNavigationService.showBlade(newBlade, $scope.blade);
     			    },
     			    canExecuteMethod: function () { return true; },
-    			    permission: 'catalog:create'
+    			    permission: 'catalog:import'
     			},
 				{
 				    name: "Export",
@@ -378,7 +379,8 @@
 				        };
 				        bladeNavigationService.showBlade(newBlade, $scope.blade);
 				    },
-				    canExecuteMethod: function () { return true; }
+				    canExecuteMethod: function () { return true; },
+				    permission: 'catalog:export'
 				},
                  /// hiding some UI functionality until it's fully implemented. Need to release
                  {

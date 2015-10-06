@@ -17,7 +17,7 @@ namespace VirtoCommerce.Platform.Core.Security
         /// </summary>
         public string GroupName { get; set; }
 
-        public ICollection<string> Scopes { get; set; }
+        public ICollection<PermissionScope> AssignedScopes { get; set; }
 
         public ICollection<PermissionScope> AvailableScopes { get; set; }
         /// <summary>
@@ -26,9 +26,9 @@ namespace VirtoCommerce.Platform.Core.Security
         public IEnumerable<string> GetPermissionWithScopeCombinationNames()
         {
             var retVal = new List<string>();
-            if(Scopes != null && Scopes.Any())
+            if(AssignedScopes != null && AssignedScopes.Any())
             {
-                retVal.AddRange(Scopes.Select(x => Id + ":" + x));
+                retVal.AddRange(AssignedScopes.Select(x => Id + ":" + x.ToString()));
             }
             else
             {

@@ -1,9 +1,9 @@
-﻿angular.module('virtoCommerce.orderModule')
-.controller('virtoCommerce.orderModule.storeScopePickController', ['$scope', 'virtoCommerce.storeModule.stores', function ($scope, stores) {
+﻿angular.module('virtoCommerce.catalogModule')
+.controller('virtoCommerce.catalogModule.catalogScopePickController', ['$scope', 'virtoCommerce.catalogModule.catalogs', function ($scope, catalogs) {
     var blade = $scope.blade;
 
     function initializeBlade() {
-        stores.query({}, function (data) {
+    	catalogs.query({}, function (data) {
             blade.isLoading = false;
             
             _.each(blade.currentEntity.assignedScopes, function (x) {

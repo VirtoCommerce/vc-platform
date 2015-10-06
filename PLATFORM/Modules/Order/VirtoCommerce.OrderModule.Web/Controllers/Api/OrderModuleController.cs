@@ -36,12 +36,12 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         private readonly IStoreService _storeService;
 		private readonly CacheManager _cacheManager;
 		private readonly Func<IOrderRepository> _repositoryFactory;
-        private readonly OrderPermissionScopeProvider _orderScopeProvider;
         private readonly ISecurityService _securityService;
+        private readonly IPermissionScopeService _permissionScopeService;
         private static object _lockObject = new object();
 
         public OrderModuleController(ICustomerOrderService customerOrderService, ICustomerOrderSearchService searchService, IStoreService storeService, IUniqueNumberGenerator numberGenerator, 
-                                     CacheManager cacheManager, Func<IOrderRepository> repositoryFactory, OrderPermissionScopeProvider securityScopeProvider, ISecurityService securityService)
+                                     CacheManager cacheManager, Func<IOrderRepository> repositoryFactory, IPermissionScopeService permissionScopeService, ISecurityService securityService)
         {
             _customerOrderService = customerOrderService;
             _searchService = searchService;
@@ -49,8 +49,8 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
             _storeService = storeService;
 			_cacheManager = cacheManager;
 			_repositoryFactory = repositoryFactory;
-            _orderScopeProvider = securityScopeProvider;
             _securityService = securityService;
+            _permissionScopeService = permissionScopeService;
         }
 
 		/// <summary>
@@ -63,7 +63,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         public IHttpActionResult Search([ModelBinder(typeof(SearchCriteriaBinder))] coreModel.SearchCriteria criteria)
         {
             //Scope bound ACL filtration
-            _orderScopeProvider.FilterOrderSearchCriteria(HttpContext.Current.User.Identity.Name, criteria);
+            criteria = FilterOrderSearchCriteria(HttpContext.Current.User.Identity.Name, criteria);
 
             var retVal = _searchService.Search(criteria);
             return Ok(retVal.ToWebModel());
@@ -85,7 +85,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
                 return NotFound();
             }
             //Scope bound security check
-            var scopes = _orderScopeProvider.GetEntityScopes(retVal).ToArray();
+            var scopes = _permissionScopeService.GetObjectPermissionScopeStrings(retVal).ToArray();
             if (!_securityService.UserHasAnyPermission(User.Identity.Name, scopes, OrderPredefinedPermissions.Read))
             {
                 throw new HttpResponseException(HttpStatusCode.Unauthorized);
@@ -186,7 +186,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 			var coreOrder = customerOrder.ToCoreModel();
 
             //Check scope bound permission
-            var scopes = _orderScopeProvider.GetEntityScopes(coreOrder).ToArray();
+            var scopes = _permissionScopeService.GetObjectPermissionScopeStrings(coreOrder).ToArray();
             if (!_securityService.UserHasAnyPermission(User.Identity.Name, scopes, OrderPredefinedPermissions.Read))
             {
                 throw new HttpResponseException(HttpStatusCode.Unauthorized);
@@ -334,6 +334,33 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
                 });
             }
             return Ok(retVal);
+        }
+
+        private coreModel.SearchCriteria FilterOrderSearchCriteria(string userName, coreModel.SearchCriteria criteria)
+        {
+
+            if (!_securityService.UserHasAnyPermission(userName, null, OrderPredefinedPermissions.Read))
+            {
+                //Get defined user 'read' permission scopes
+                var readPermissionScopes = _securityService.GetUserPermissions(userName)
+                                                      .Where(x => x.Id.StartsWith(OrderPredefinedPermissions.Read))
+                                                      .SelectMany(x => x.AssignedScopes);
+
+                //Check user has a scopes
+                //Stores
+                criteria.StoreIds = readPermissionScopes.OfType<OrderStoreScope>()
+                                                         .Select(x => x.Scope)
+                                                         .Where(x => !String.IsNullOrEmpty(x))
+                                                         .ToArray();
+
+                var responsibleScope = readPermissionScopes.OfType<OrderResponsibleScope>().FirstOrDefault();
+                //employee id
+                if (responsibleScope != null)
+                {
+                    criteria.EmployeeId = userName;
+                }
+            }
+            return criteria;
         }
 
     }

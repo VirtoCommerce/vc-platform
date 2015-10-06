@@ -5,42 +5,34 @@ using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Domain.Store.Model;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 
 namespace VirtoCommerce.OrderModule.Web.Security
 {
+    /// <summary>
+    /// Scope bounded by order store
+    /// </summary>
     public class OrderStoreScope : PermissionScope
     {
-
-        public OrderStoreScope()
+        public override bool IsScopeAvailableForPermission(string permission)
         {
-            Scope = "order:store";
+            return (permission == OrderPredefinedPermissions.Read ||
+                permission == OrderPredefinedPermissions.Update);
         }
 
-        public OrderStoreScope(CustomerOrder order)
-            :this()
+        public override IEnumerable<string> GetEntityScopeStrings(object obj)
         {
-            Scope += ":" + order.StoreId;
-        }
-        private OrderStoreScope(string storeId)
-        {
-            StoreId = storeId;
-        }
-
-        public string StoreId { get; set; }
-
-        public static OrderStoreScope TryParse(string scope)
-        {
-            if (scope.StartsWith("order:store:"))
+            if (obj == null)
             {
-                return new OrderStoreScope(scope.Substring("order:store:".Length));
+                throw new ArgumentNullException("obj");
             }
-            return null;
-        }
-
-        public override string ToString()
-        {
-            return Scope;
+            var customerOrder = obj as CustomerOrder;
+            if (customerOrder != null)
+            {
+                return new[] { base.Type + ":" + customerOrder.StoreId };
+            }
+            return Enumerable.Empty<string>();
         }
     }
 }

@@ -24,6 +24,7 @@
         blade.currentEntity = angular.copy(data);
         blade.origEntity = data;
         blade.isLoading = false;
+        blade.securityScopes = data.securityScopes;
     };
 
     function isDirty() {

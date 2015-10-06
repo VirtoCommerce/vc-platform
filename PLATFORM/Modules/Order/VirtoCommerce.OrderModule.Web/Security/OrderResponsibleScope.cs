@@ -4,36 +4,39 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Domain.Order.Model;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 
 namespace VirtoCommerce.OrderModule.Web.Security
 {
+    /// <summary>
+    /// Scope bounded by order responsible
+    /// </summary>
     public class OrderResponsibleScope : PermissionScope
     {
         public OrderResponsibleScope()
         {
-            Scope = "order:employee:{{userId}}";
+            Scope = "{{userId}}";
         }
 
-        public OrderResponsibleScope(CustomerOrder order)
-            :this()
+        public override bool IsScopeAvailableForPermission(string permission)
         {
-            Scope = "order:employee:" + order.EmployeeId;
+            return (permission == OrderPredefinedPermissions.Read ||
+                permission == OrderPredefinedPermissions.Update);
         }
 
-        public static OrderResponsibleScope TryParse(string scope)
+        public override IEnumerable<string> GetEntityScopeStrings(object obj)
         {
-            if (scope.StartsWith("order:employee:"))
+            if (obj == null)
             {
-                return new OrderResponsibleScope();
+                throw new ArgumentNullException("obj");
             }
-            return null;
+            var customerOrder = obj as CustomerOrder;
+            if (customerOrder != null)
+            {
+                return new[] { base.Type + ":" + customerOrder.EmployeeId };
+            }
+            return Enumerable.Empty<string>();
         }
-
-        public override string ToString()
-        {
-            return Scope;
-        }
-
     }
 }

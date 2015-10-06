@@ -115,13 +115,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Binders\ListEntrySearchCriteriaBinder.cs" />
+    <Compile Include="Controllers\Api\CatalogBaseController.cs" />
     <Compile Include="Controllers\Api\CatalogModuleCatalogsController.cs" />
     <Compile Include="Controllers\Api\CatalogModuleCategoriesController.cs" />
     <Compile Include="Controllers\Api\CatalogModuleExportImportController.cs" />
     <Compile Include="Controllers\Api\CatalogModuleProductsController.cs" />
     <Compile Include="Controllers\Api\CatalogModuleListEntryController.cs" />
     <Compile Include="Controllers\Api\CatalogModulePropertiesController.cs" />
-    <Compile Include="Controllers\PredefinedPermissions.cs" />
+    <Compile Include="Security\CatalogPredefinedPermissions.cs" />
     <Compile Include="Converters\AssetConverter.cs" />
     <Compile Include="Converters\AssociationConverter.cs" />
     <Compile Include="Converters\CatalogConverter.cs" />
@@ -179,6 +180,8 @@
     <Compile Include="Model\ListEntrySearchCriteria.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Security\SelectedCatalogScope.cs" />
+    <Compile Include="Security\SelectedCategoryScope.cs" />
     <Content Include="Content\css\catalog.css" />
     <Content Include="Scripts\blades\import\catalog-CSV-import.js" />
     <Content Include="Scripts\blades\import\catalog-CSV-import.tpl.html" />
@@ -193,6 +196,8 @@
     <Content Include="Scripts\blades\import\importers-list.tpl.html" />
     <Content Include="Scripts\blades\item-property-detail.tpl.html" />
     <Content Include="Scripts\blades\item-property-detail.js" />
+    <Content Include="Scripts\blades\catalog-scope-pick.js" />
+    <Content Include="Scripts\blades\catalog-scope-pick.tpl.html" />
     <Content Include="Scripts\dialogs\deleteCategoryItem-dialog.tpl.html" />
     <Content Include="Scripts\dialogs\deleteCatalog-dialog.tpl.html" />
     <Content Include="Scripts\resources\export.js" />
@@ -345,9 +350,7 @@
       <Name>VirtoCommerce.CatalogModule.Data</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Security\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

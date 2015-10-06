@@ -300,11 +300,11 @@ namespace VirtoCommerce.Platform.Data.Security
                 CacheKey.Create(CacheGroups.Security, "AllPermissions"),
                 LoadAllPermissions);
         }
-
+    
         public bool UserHasAnyPermission(string userName, string[] scopes, params string[] permissionIds)
         {
             var user = Task.Run(async () => await FindByNameAsync(userName, UserDetails.Full)).Result;
-            if(user.UserType == UserType.Administrator)
+            if (user.UserType == UserType.Administrator)
             {
                 return true;
             }
@@ -313,9 +313,9 @@ namespace VirtoCommerce.Platform.Data.Security
                 return true;
             }
             var retVal = user.UserState == UserState.Approved;
-            if(retVal)
+            if (retVal)
             {
-                var fqUserPermissions = user.Roles.SelectMany(x => x.Permissions).SelectMany(x=>x.GetPermissionWithScopeCombinationNames()).Distinct();
+                var fqUserPermissions = user.Roles.SelectMany(x => x.Permissions).SelectMany(x => x.GetPermissionWithScopeCombinationNames()).Distinct();
                 var fqCheckPermissions = permissionIds.Concat(permissionIds.LeftJoin(scopes, ":"));
                 retVal = fqUserPermissions.Intersect(fqCheckPermissions, StringComparer.OrdinalIgnoreCase).Any();
             }
@@ -351,7 +351,7 @@ namespace VirtoCommerce.Platform.Data.Security
                         foreach (var modulePermission in group.Permissions)
                         {
                             var permission = modulePermission.ToCoreModel(module.Id, group.Name);
-                            permission.AvailableScopes = _permissionScopeService.GetPermissionScopes(permission.Id).ToList();
+                            permission.AvailableScopes = _permissionScopeService.GetAvailablePermissionScopes(permission.Id).ToList();
                             manifestPermissions.Add(permission);
                         }
                     }
@@ -404,13 +404,13 @@ namespace VirtoCommerce.Platform.Data.Security
                 using (var repository = _platformRepository())
                 {
                     var user = repository.GetAccountByName(applicationUser.UserName, detailsLevel);
-                    result = applicationUser.ToCoreModel(user);
+                    result = applicationUser.ToCoreModel(user, _permissionScopeService);
                     //Populate available permission scopes
                     if (result.Roles != null)
                     {
                         foreach (var permission in result.Roles.SelectMany(x => x.Permissions).Where(x => x != null))
                         {
-                            permission.AvailableScopes = _permissionScopeService.GetPermissionScopes(permission.Id).ToList();
+                            permission.AvailableScopes = _permissionScopeService.GetAvailablePermissionScopes(permission.Id).ToList();
                         }
                     }
 
@@ -424,5 +424,7 @@ namespace VirtoCommerce.Platform.Data.Security
             }
             return result;
         }
+
+   
     }
 }

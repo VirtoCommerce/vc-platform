@@ -25,7 +25,7 @@
 
     	//sets security scopes for scope bounded ACL
         if (blade.currentEntity && blade.currentEntity.scopes && angular.IsArray(blade.currentEntity.scopes)) {
-        	blade.securityScopes = blade.currentEntity.scopes.join();
+        	blade.securityScopes = blade.currentEntity.scopes;
         }
     };
 
