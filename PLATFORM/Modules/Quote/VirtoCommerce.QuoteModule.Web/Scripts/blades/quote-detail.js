@@ -240,6 +240,7 @@
 
         // datepicker
         $scope.datepickers = {}
+        $scope.today = new Date();
         $scope.open = function ($event, which) {
             $event.preventDefault();
             $event.stopPropagation();

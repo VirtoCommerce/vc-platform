@@ -96,17 +96,16 @@
 
                 $scope.selectedItem = listItem;
                 if (listItem.type === 'category') {
-                    blade.showCategoryBlade(listItem.id, null, listItem.name);
+                    blade.showCategoryBlade(listItem);
                 }
                 // else do nothing as item is opened on selecting it.
             };
 
-            blade.showCategoryBlade = function (id, data, title) {
+            blade.showCategoryBlade = function (listItem) {
                 var newBlade = {
                     id: "listCategoryDetail",
-                    currentEntityId: id,
-                    currentEntity: data,
-                    title: title,
+                    currentEntityId: listItem.id,
+                    title: listItem.name,
                     subtitle: 'Category details',
                     controller: 'virtoCommerce.catalogModule.categoryDetailController',
                     template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/category-detail.tpl.html',

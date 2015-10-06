@@ -10,7 +10,7 @@ using VirtoCommerce.Platform.Core.Notifications;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 {
-    [RoutePrefix("api/mp/{storeId}/{language}")]
+    [RoutePrefix("api/mp/notification")]
     public class MerchandisingNotificationController : ApiController
     {
         private readonly INotificationManager _notificationManager;
@@ -23,32 +23,24 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         }
 
         [HttpPost]
-        [Route("notification")]
+        [Route("")]
         [ResponseType(typeof(void))]
-        public IHttpActionResult SendNotification(string storeId, string language)
+        public IHttpActionResult SendNotification(SendDynamicMerchandisingNotificationRequest request)
         {
-            var store = _storeService.GetById(storeId);
+            var store = _storeService.GetById(request.StoreId);
 
             if (store == null)
-                throw new NullReferenceException(string.Format("no store with this id = {0}", storeId));
+                throw new NullReferenceException(string.Format("no store with this id = {0}", request.StoreId));
 
             if (string.IsNullOrEmpty(store.Email) && string.IsNullOrEmpty(store.AdminEmail))
-                throw new NullReferenceException(string.Format("set email or admin email for store with id = {0}", storeId));
+                throw new NullReferenceException(string.Format("set email or admin email for store with id = {0}", request.StoreId));
 
-            var notification = _notificationManager.GetNewNotification<DynamicMerchandisingNotification>(storeId, "Store", language);
+            var notification = _notificationManager.GetNewNotification<DynamicMerchandisingNotification>(request.StoreId, "Store", request.Language);
 
-            notification.FormType = HttpContext.Current.Request.Form["formtype"];
             notification.Recipient = !string.IsNullOrEmpty(store.Email) ? store.Email : store.AdminEmail;
             notification.IsActive = true;
-
-            var form = HttpContext.Current.Request.Form;
-            var dict = new Dictionary<string, string>();
-            foreach(var key in form.AllKeys)
-            {
-                dict.Add(key, form[key]);
-            }
-
-            notification.Fields = dict;
+            notification.FormType = request.Type;
+            notification.Fields = request.Fields;
 
             _notificationManager.ScheduleSendNotification(notification);
 

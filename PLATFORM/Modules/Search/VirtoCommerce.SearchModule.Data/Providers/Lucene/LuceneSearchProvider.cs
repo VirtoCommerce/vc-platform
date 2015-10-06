@@ -372,7 +372,7 @@ namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
 
                     var indexWriter = new IndexWriter(
                         localDirectory,
-                        new KeywordAnalyzer(),
+                        new StandardAnalyzer(u.Version.LUCENE_30),
                         isNew,
                         IndexWriter.MaxFieldLength.LIMITED);
 

@@ -236,11 +236,11 @@ namespace VirtoCommerce.Web.Views.Contents
 
                 //html = contentTransformers.Aggregate(html, (current, contentTransformer) => contentTransformer.Transform(current));
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 //Tracing.Info(String.Format("Error ({0}) converting {1}", e.Message, file));
                 //Tracing.Debug(e.ToString());
-                html = String.Format("<p><b>Error converting markdown</b></p><pre>{0}</pre>", contents);
+                html = String.Format("<p><b>Error converting markdown: {0}</b></p><pre>{1}</pre>", e.Message, contents);
             }
             return html;
         }

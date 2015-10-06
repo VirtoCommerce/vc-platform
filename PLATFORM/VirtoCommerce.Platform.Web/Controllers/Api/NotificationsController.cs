@@ -144,27 +144,24 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// Get rendered notification content
         /// </summary>
         /// <remarks>
-        /// Method returns rendered content, that based on notification template. Template for rendering choosen by type, objectId, objectTypeId, language.
+        /// Method returns rendered content, that based on notification template. Template for rendering chosen by type, objectId, objectTypeId, language.
         /// Parameters for template may be prepared by the method of getTestingParameters.
         /// </remarks>
-        /// <param name="parameters">Notification special parameters</param>
-        /// <param name="type">Notification type</param>
-        /// <param name="objectId">Object id</param>
-        /// <param name="objectTypeId">Object type id</param>
-        /// <param name="language">Locale</param>
+        /// <param name="request">Test notification request</param>
         [HttpPost]
         [ResponseType(typeof(webModels.RenderNotificationContentResult))]
-        [Route("template/{type}/{objectId}/{objectTypeId}/{language}/rendernotificationcontent")]
-        public IHttpActionResult RenderNotificationContent([FromBody]webModels.StringKeyValue[] parameters, string type, string objectId, string objectTypeId, string language)
+        [Route("template/rendernotificationcontent")]
+        public IHttpActionResult RenderNotificationContent(webModels.TestNotificationRequest request)
         {
             var retVal = new webModels.RenderNotificationContentResult();
-            var notification = _notificationManager.GetNewNotification(type, objectId, objectTypeId, language);
-            foreach (var param in parameters)
+            var notification = _notificationManager.GetNewNotification(request.Type, request.ObjectId, request.ObjectTypeId, request.Language);
+            foreach (var param in request.NotificationParameters)
             {
                 var property = notification.GetType().GetProperty(param.Key);
-                if (property.PropertyType ==  typeof(IDictionary))
+                var jObject = param.Value as Newtonsoft.Json.Linq.JObject;
+                if (jObject != null)
                 {
-                    property.SetValue(notification, param.Value.Split(new[] { '&' }, StringSplitOptions.RemoveEmptyEntries).Select(part => part.Split('=')).Where(pair => pair.Length > 1).ToDictionary(split => split[0], split => split[1]));
+                    property.SetValue(notification, jObject.ToObject<Dictionary<string, string>>());
                 }
                 else
                 {
@@ -187,21 +184,25 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// Parameters for template may be prepared by the method of getTestingParameters. Method returns string. If sending finished with success status
         /// this string is empty, otherwise string contains error message.
         /// </remarks>
-        /// <param name="parameters">Notification special parameters</param>
-        /// <param name="type">Notification type</param>
-        /// <param name="objectId">Object id</param>
-        /// <param name="objectTypeId">Object type id</param>
-        /// <param name="language">Locale</param>
+        /// <param name="request">Test notification request</param>
         [HttpPost]
         [ResponseType(typeof(string))]
-        [Route("template/{type}/{objectId}/{objectTypeId}/{language}/sendnotification")]
-        public IHttpActionResult SendNotification([FromBody]webModels.StringKeyValue[] parameters, string type, string objectId, string objectTypeId, string language)
+        [Route("template/sendnotification")]
+        public IHttpActionResult SendNotification(webModels.TestNotificationRequest request)
         {
-            var notification = _notificationManager.GetNewNotification(type, objectId, objectTypeId, language);
-            foreach (var param in parameters)
+            var notification = _notificationManager.GetNewNotification(request.Type, request.ObjectId, request.ObjectTypeId, request.Language);
+            foreach (var param in request.NotificationParameters)
             {
                 var property = notification.GetType().GetProperty(param.Key);
-                property.SetValue(notification, param.Value);
+                var jObject = param.Value as Newtonsoft.Json.Linq.JObject;
+                if (jObject != null)
+                {
+                    property.SetValue(notification, jObject.ToObject<Dictionary<string, string>>());
+                }
+                else
+                {
+                    property.SetValue(notification, param.Value);
+                }
             }
             var result = _notificationManager.SendNotification(notification);
 

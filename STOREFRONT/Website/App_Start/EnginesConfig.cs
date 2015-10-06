@@ -15,6 +15,7 @@ using VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine;
 using VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine.FileSystems;
 using Tag = VirtoCommerce.Web.Models.Tagging.Tag;
 using VirtoCommerce.Web.Filters;
+using System.Collections;
 
 #endregion
 
@@ -30,7 +31,7 @@ namespace VirtoCommerce.Web
             Template.RegisterSafeType(typeof(Tag), o => { return o; });
 
             // Register custom contains condition
-            Condition.Operators["contains"] = (left, right) => (left is ILiquidContains) ? ((ILiquidContains)left).Contains(right) : ((left is string) ? ((string)left).Contains(right as string != null ? right as string : string.Empty) : false);
+            Condition.Operators["contains"] = (left, right) => ContainsMethod(left, right);
 
             //Condition.Operators["contains"] = (left, right) => (left is ILiquidContains) ? ((ILiquidContains)left).Contains(right) : ((left is string) ? !(right == null || left == null) ? false : ((string)left).Contains((string)right) : false);
 
@@ -41,6 +42,28 @@ namespace VirtoCommerce.Web
             engines.Add(new DotLiquidViewEngine(new DotLiquidFileSystemFactory(viewLocator), viewLocator, viewParser, filters));
         }
         #endregion
+
+        public static bool ContainsMethod(object left, object right)
+        {
+            //return (left is ILiquidContains) ? ((ILiquidContains)left).Contains(right) : ((left is string) ? ((string)left).Contains(right as string != null ? right as string : string.Empty) : false);
+
+            if (left is ILiquidContains)
+            {
+                return ((ILiquidContains)left).Contains(right);
+            }
+
+            if(left is string)
+            {
+                return right != null && ((string)left).Contains(right as string);
+            }
+
+            if(left is IList)
+            {
+                return ((IList)left).Contains(right);
+            }
+
+            return false;          
+        }
     }
 
     public class DotLiquidFileSystemFactory : IFileSystemFactory

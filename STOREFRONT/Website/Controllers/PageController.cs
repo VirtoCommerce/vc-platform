@@ -13,12 +13,9 @@ using VirtoCommerce.Web.Services;
 
 namespace VirtoCommerce.Web.Controllers
 {
-    //[RoutePrefix("pages")]
     public class PageController : StoreControllerBase
     {
         #region Public Methods and Operators
-        //[Route("{page}")]
-        // GET: Pages
         public async Task<ActionResult> DisplayPageAsync(string page)
         {
             var context = SiteContext.Current;

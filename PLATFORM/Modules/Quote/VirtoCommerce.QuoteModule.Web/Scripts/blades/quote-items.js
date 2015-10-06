@@ -140,9 +140,9 @@
         blade.recalculateFn();
     };
 
-    $scope.addProposalTier = function (item) {
+    $scope.addProposalTier = function (item, uiIndex) {
         item.proposalPrices.push({ quantity: 1, price: undefined });
-        focus('focusIndex0');
+        focus('focusIndex' + uiIndex);
     };
 
     $scope.deleteProposalTier = function (item) {

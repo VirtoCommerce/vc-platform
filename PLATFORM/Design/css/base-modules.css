@@ -1180,9 +1180,9 @@ fieldset + fieldset
 
         .form-input textarea.__small
         {
-            height: 60px;
-            max-height: 60px;
-            min-height: 60px;
+            height: 55px;
+            max-height: 55px;
+            min-height: 55px;
         }
 
         .form-input textarea.__large
@@ -1190,6 +1190,13 @@ fieldset + fieldset
             height: 220px;
             max-height: 220px;
             min-height: 220px;
+        }
+
+        .form-input textarea.__xlarge
+        {
+            height: 330px;
+            max-height: 330px;
+            min-height: 330px;
         }
 
         .form-input.__langs input,
