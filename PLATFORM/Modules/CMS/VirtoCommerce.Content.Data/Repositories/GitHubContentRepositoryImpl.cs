@@ -26,12 +26,7 @@ namespace VirtoCommerce.Content.Data.Repositories
         {
             this._client = new GitHubClient(new ProductHeaderValue(productHeaderValue), new Uri("https://github.com/"))
             {
-                Credentials
-                                   =
-                                   new Credentials
-                                   (
-                                   login,
-                                   password)
+                Credentials = new Credentials(login, password)
             };
 
             this._repositoryName = repositoryName;
@@ -92,7 +87,21 @@ namespace VirtoCommerce.Content.Data.Repositories
         {
             var fullPath = GetFullPath(path);
 
-            var result = Task.Run(() => this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, fullPath)).Result;
+            IReadOnlyList<RepositoryContent> result = null;
+
+            try
+            {
+                result = Task.Run(() => this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, fullPath)).Result;
+            }
+            catch (AggregateException ex)
+            {
+                if (ex.InnerExceptions.Count == 1 && ex.InnerExceptions[0] is NotFoundException)
+                {
+                    return Enumerable.Empty<ContentItem>();
+                }
+
+                throw;
+            }
 
             var items = result.Where(s => s.Type == ContentType.Dir || s.Type == ContentType.File);
 
@@ -196,9 +205,14 @@ namespace VirtoCommerce.Content.Data.Repositories
 
                 return existingItems.SingleOrDefault();
             }
-            catch (NotFoundException)
+            catch (AggregateException ex)
             {
-                return null;
+                if (ex.InnerExceptions.Count == 1 && ex.InnerExceptions[0] is NotFoundException)
+                {
+                    return null;
+                }
+
+                throw;
             }
         }
 

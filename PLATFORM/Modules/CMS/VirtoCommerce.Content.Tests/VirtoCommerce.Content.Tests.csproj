@@ -89,9 +89,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="DatabaseRepositoryTest.cs" />
-    <Compile Include="FileSystemRepositoryTest.cs" />
-    <Compile Include="GitHubRepositoryTest.cs" />
+    <Compile Include="ContentRepositoryScenarios.cs" />
     <Compile Include="MenuTests\MenuRepositoryTests.cs" />
     <Compile Include="MenuTests\MenuServiceTests.cs" />
     <Compile Include="PagesTests\DatabasePagesTests.cs" />
