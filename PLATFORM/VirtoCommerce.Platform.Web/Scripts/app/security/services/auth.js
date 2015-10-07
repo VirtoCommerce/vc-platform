@@ -34,7 +34,7 @@
 	authContext.checkPermission = function (permission, securityScopes) {
 		//first check admin permission
 		// var hasPermission = $.inArray('admin', authContext.permissions) > -1;
-		var hasPermission = authContext.userType == 'Administrator';
+		var hasPermission = authContext.isAdministrator;
 		if (!hasPermission) {
 			permission = permission.trim();
 			//first check global permissions
@@ -62,6 +62,7 @@
 		authContext.fullName = results.userLogin;
 		authContext.isAuthenticated = results.userName != null;
 		authContext.userType = results.userType;
+		authContext.isAdministrator = results.isAdministrator;
 		//Interpolate permissions to replace some template to real value
 		if (authContext.permissions)
 		{

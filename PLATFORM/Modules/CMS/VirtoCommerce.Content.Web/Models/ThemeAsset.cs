@@ -29,5 +29,7 @@ namespace VirtoCommerce.Content.Web.Models
         /// Theme asset last update date
         /// </summary>
         public DateTime Updated { get; set; }
+
+        public string[] SecurityScopes { get; set; }
     }
 }

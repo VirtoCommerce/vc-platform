@@ -303,7 +303,24 @@ namespace VirtoCommerce.Platform.Web
                                     Description = "Take count for sending job"
                                 }
                             }
-                        }
+                        },
+                         new ModuleSettingsGroup
+                        {
+                            Name = "Platform|Security",
+                            Settings = new []
+                            {
+                                new ModuleSetting
+                                {
+                                    Name = "VirtoCommerce.Platform.Security.AccountTypes",
+                                    ValueType = ModuleSetting.TypeString,
+                                    Title = "Account types",
+                                    Description = "Dictionary for possible account types",
+                                    IsArray = true,
+                                    ArrayValues = Enum.GetNames(typeof(AccountType)),
+                                    DefaultValue = AccountType.Manager.ToString()
+                                }
+                            }
+                        }                     
                     }
                 }
             };

@@ -181,7 +181,6 @@
     <Compile Include="Infrastructure\ServiceBase.cs" />
     <Compile Include="Infrastructure\SetupDatabaseInitializer.cs" />
     <Compile Include="Model\AccountEntity.cs" />
-    <Compile Include="Model\AccountState.cs" />
     <Compile Include="Model\ApiAccountEntity.cs" />
     <Compile Include="Model\DynamicPropertyDictionaryItemEntity.cs" />
     <Compile Include="Model\DynamicPropertyEntity.cs" />
@@ -270,6 +269,10 @@
     <Compile Include="Repositories\Migrations\201510050938282_LabelForScope.cs" />
     <Compile Include="Repositories\Migrations\201510050938282_LabelForScope.Designer.cs">
       <DependentUpon>201510050938282_LabelForScope.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Repositories\Migrations\201510071245053_AccountEntityEnumPropChanges.cs" />
+    <Compile Include="Repositories\Migrations\201510071245053_AccountEntityEnumPropChanges.Designer.cs">
+      <DependentUpon>201510071245053_AccountEntityEnumPropChanges.cs</DependentUpon>
     </Compile>
     <Compile Include="Repositories\Migrations\Configuration.cs" />
     <Compile Include="Repositories\PlatformDatabaseInitializer.cs" />
@@ -381,6 +384,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Repositories\Migrations\201510050938282_LabelForScope.resx">
       <DependentUpon>201510050938282_LabelForScope.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Repositories\Migrations\201510071245053_AccountEntityEnumPropChanges.resx">
+      <DependentUpon>201510071245053_AccountEntityEnumPropChanges.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Security\Identity\Migrations\201411101625303_InitialCreate.resx">
       <DependentUpon>201411101625303_InitialCreate.cs</DependentUpon>

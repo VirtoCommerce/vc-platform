@@ -25,5 +25,7 @@
 		public bool IsActive { get; set; }
 
 		public string MenuLinkListId { get; set; }
-	}
+
+        public string[] SecurityScopes { get; set; }
+    }
 }

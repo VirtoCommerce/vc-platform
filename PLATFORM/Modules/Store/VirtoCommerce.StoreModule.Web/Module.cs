@@ -6,12 +6,14 @@ using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.StoreModule.Data.Repositories;
 using VirtoCommerce.StoreModule.Data.Services;
 using VirtoCommerce.StoreModule.Web.ExportImport;
+using VirtoCommerce.StoreModule.Web.Security;
 
 namespace VirtoCommerce.StoreModule.Web
 {
@@ -50,6 +52,10 @@ namespace VirtoCommerce.StoreModule.Web
 				new CacheSettings("StoreModule", TimeSpan.FromHours(1))
 			};
 			cacheManager.AddCacheSettings(cacheSettings);
+
+            //Register bounded security scope types
+            var securityScopeService = _container.Resolve<IPermissionScopeService>();
+            securityScopeService.RegisterSope(() => new StoreSelectedScope());
         }
         #endregion
 

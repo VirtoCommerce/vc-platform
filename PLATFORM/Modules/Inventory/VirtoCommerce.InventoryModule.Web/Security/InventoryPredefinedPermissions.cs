@@ -1,6 +1,6 @@
-﻿namespace VirtoCommerce.InventoryModule.Web.Controllers
+﻿namespace VirtoCommerce.InventoryModule.Web.Security
 {
-    public static class PredefinedPermissions
+    public static class InventoryPredefinedPermissions
     {
         //public const string Query = "inventory:read";
         public const string

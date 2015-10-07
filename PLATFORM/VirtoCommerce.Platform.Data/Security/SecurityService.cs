@@ -104,7 +104,7 @@ namespace VirtoCommerce.Platform.Data.Security
                 using (var repository = _platformRepository())
                 {
                     var dbAcount = user.ToDataModel();
-                    dbAcount.AccountState = AccountState.Approved;
+                    dbAcount.AccountState = AccountState.Approved.ToString();
 
                     repository.Add(dbAcount);
                     repository.UnitOfWork.Commit();
@@ -256,15 +256,19 @@ namespace VirtoCommerce.Platform.Data.Security
             request = request ?? new UserSearchRequest();
             var result = new UserSearchResponse();
 
-            using (var userManager = _userManagerFactory())
+            using (var repository = _platformRepository() )
             {
-                var query = userManager.Users;
+                var query = repository.Accounts;
 
                 if (request.Keyword != null)
                 {
                     query = query.Where(u => u.UserName.Contains(request.Keyword));
                 }
 
+                if(request.AccountTypes != null && request.AccountTypes.Any())
+                {
+                    query = query.Where(x => request.AccountTypes.Contains(x.UserType));
+                }
                 result.TotalCount = query.Count();
 
                 var users = query.OrderBy(x => x.UserName)
@@ -304,15 +308,12 @@ namespace VirtoCommerce.Platform.Data.Security
         public bool UserHasAnyPermission(string userName, string[] scopes, params string[] permissionIds)
         {
             var user = Task.Run(async () => await FindByNameAsync(userName, UserDetails.Full)).Result;
-            if (user.UserType == UserType.Administrator)
+            if (user.IsAdministrator)
             {
                 return true;
             }
-            if (user.UserType == UserType.SiteAdministrator && permissionIds.Contains(PredefinedPermissions.SecurityCallApi, StringComparer.OrdinalIgnoreCase))
-            {
-                return true;
-            }
-            var retVal = user.UserState == UserState.Approved;
+           
+            var retVal = user.UserState == Core.Security.AccountState.Approved;
             if (retVal)
             {
                 var fqUserPermissions = user.Roles.SelectMany(x => x.Permissions).SelectMany(x => x.GetPermissionWithScopeCombinationNames()).Distinct();

@@ -15,6 +15,7 @@ using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Domain.Payment.Model;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.CoreModule.Web.Security;
 
 namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 {
@@ -51,7 +52,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
         [HttpGet]
         [ResponseType(typeof(webModel.FulfillmentCenter))]
         [Route("fulfillment/centers/{id}")]
-        [CheckPermission(Permission = PredefinedPermissions.Query)]
+        [CheckPermission(Permission = CommercePredefinedPermissions.Read)]
         public IHttpActionResult GetFulfillmentCenter(string id)
         {
             var retVal = _commerceService.GetAllFulfillmentCenters().First(x => x.Id == id);
@@ -65,7 +66,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
         [HttpPut]
         [ResponseType(typeof(webModel.FulfillmentCenter))]
         [Route("fulfillment/centers")]
-        [CheckPermission(Permissions = new[] { PredefinedPermissions.Create, PredefinedPermissions.Update })]
+        [CheckPermission(Permissions = new[] { CommercePredefinedPermissions.Create, CommercePredefinedPermissions.Update })]
         public IHttpActionResult UpdateFulfillmentCenter(webModel.FulfillmentCenter center)
         {
             var retVal = _commerceService.UpsertFulfillmentCenter(center.ToCoreModel());

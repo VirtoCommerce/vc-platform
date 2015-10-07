@@ -202,6 +202,7 @@ namespace VirtoCommerce.Web.Views.Engines.Liquid.Tags
                                 ? new Part() { IsLink = true, Title = "Next &raquo;", Url = nextLink }
                                 : null,
                         size = length,
+                        items = length,
                         current_offset = (this._currentPage - 1) * this._pageSize,
                         current_page = this._currentPage,
                         page_size = this._pageSize

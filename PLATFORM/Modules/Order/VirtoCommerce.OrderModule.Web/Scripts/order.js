@@ -32,8 +32,8 @@ angular.module(moduleName, ['virtoCommerce.catalogModule', 'virtoCommerce.pricin
   }]
 )
 .run(
-  ['$rootScope', '$http', '$compile', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', 'platformWebApp.bladeNavigationService', '$state', '$localStorage', 'virtoCommerce.orderModule.order_res_customerOrders', 'platformWebApp.permissionScopeResolver',
-	function ($rootScope, $http, $compile, mainMenuService, widgetService, bladeNavigationService, $state, $localStorage, customerOrders, scopeResolver) {
+  ['$rootScope', '$http', '$compile', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', 'platformWebApp.bladeNavigationService', '$state', '$localStorage', 'virtoCommerce.orderModule.order_res_customerOrders', 'platformWebApp.permissionScopeResolver', 'virtoCommerce.storeModule.stores',
+	function ($rootScope, $http, $compile, mainMenuService, widgetService, bladeNavigationService, $state, $localStorage, customerOrders, scopeResolver, stores) {
 	    //Register module in main menu
 	    var menuItem = {
 	        path: 'browse/orders',
@@ -164,7 +164,7 @@ angular.module(moduleName, ['virtoCommerce.catalogModule', 'virtoCommerce.pricin
 
 	    //Register permission scopes templates used for scope bounded definition in role management ui
 	    var orderStoreScope = {
-	    	type: 'OrderStoreScope',
+	        type: 'OrderStoreScope',
 	        title: 'Only for orders in selected stores',
 	        selectFn: function (blade, callback) {
 	            var newBlade = {
@@ -173,16 +173,17 @@ angular.module(moduleName, ['virtoCommerce.catalogModule', 'virtoCommerce.pricin
 	                subtitle: 'Select stores',
 	                currentEntity: this,
 	                onChangesConfirmedFn: callback,
-	                controller: 'virtoCommerce.orderModule.storeScopePickController',
-	                template: 'Modules/$(VirtoCommerce.Orders)/Scripts/blades/store-scope-pick.tpl.html'
+	                dataPromise: stores.query().$promise,
+	                controller: 'platformWebApp.security.scopeValuePickFromSimpleListController',
+	                template: '$(Platform)/Scripts/app/security/blades/common/scope-value-pick-from-simple-list.tpl.html'
 	            };
 	            bladeNavigationService.showBlade(newBlade, blade);
 	        }
 	    };
 	    scopeResolver.register(orderStoreScope);
 	    var responsibleOrderScope = {
-	    	type: 'OrderResponsibleScope',
-	    	title: 'Only for order responsible',
+	        type: 'OrderResponsibleScope',
+	        title: 'Only for order responsible',
 	    };
 	    scopeResolver.register(responsibleOrderScope);
 

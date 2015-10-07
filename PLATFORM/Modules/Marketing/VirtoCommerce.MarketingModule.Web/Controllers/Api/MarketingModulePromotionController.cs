@@ -8,6 +8,7 @@ using VirtoCommerce.Domain.Marketing.Model;
 using VirtoCommerce.Domain.Marketing.Services;
 using VirtoCommerce.MarketingModule.Data.Promotions;
 using VirtoCommerce.MarketingModule.Web.Converters;
+using VirtoCommerce.MarketingModule.Web.Security;
 using VirtoCommerce.Platform.Core.Security;
 using coreModel = VirtoCommerce.Domain.Marketing.Model;
 using webModel = VirtoCommerce.MarketingModule.Web.Model;
@@ -15,7 +16,7 @@ using webModel = VirtoCommerce.MarketingModule.Web.Model;
 namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 {
 	[RoutePrefix("api/marketing/promotions")]
-    [CheckPermission(Permission = PredefinedPermissions.Query)]
+    [CheckPermission(Permission = MarketingPredefinedPermissions.Read)]
     public class MarketingModulePromotionController : ApiController
     {
 		private readonly IMarketingExtensionManager _marketingExtensionManager;
@@ -53,7 +54,7 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
         [HttpGet]
         [ResponseType(typeof(webModel.Promotion))]
         [Route("new")]
-        [CheckPermission(Permission = PredefinedPermissions.Create)]
+        [CheckPermission(Permission = MarketingPredefinedPermissions.Create)]
         public IHttpActionResult GetNewDynamicPromotion()
         {
             var retVal = new webModel.Promotion
@@ -72,7 +73,7 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 		[HttpPost]
 		[ResponseType(typeof(webModel.Promotion))]
 		[Route("")]
-        [CheckPermission(Permission = PredefinedPermissions.Create)]
+        [CheckPermission(Permission = MarketingPredefinedPermissions.Create)]
 		public IHttpActionResult CreatePromotion(webModel.Promotion promotion)
 		{
 			var retVal = _promotionService.CreatePromotion(promotion.ToCoreModel());
@@ -87,7 +88,7 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 		[HttpPut]
 		[ResponseType(typeof(void))]
 		[Route("")]
-        [CheckPermission(Permission = PredefinedPermissions.Update)]
+        [CheckPermission(Permission = MarketingPredefinedPermissions.Update)]
 		public IHttpActionResult UpdatePromotions(webModel.Promotion promotion)
 		{
 			_promotionService.UpdatePromotions(new coreModel.Promotion[] { promotion.ToCoreModel() });
@@ -101,7 +102,7 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 		[HttpDelete]
 		[ResponseType(typeof(void))]
 		[Route("")]
-        [CheckPermission(Permission = PredefinedPermissions.Delete)]
+        [CheckPermission(Permission = MarketingPredefinedPermissions.Delete)]
 		public IHttpActionResult DeletePromotions([FromUri] string[] ids)
 		{
 			_promotionService.DeletePromotions(ids);

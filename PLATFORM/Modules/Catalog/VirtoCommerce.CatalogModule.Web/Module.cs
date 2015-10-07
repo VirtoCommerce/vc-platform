@@ -67,8 +67,8 @@ namespace VirtoCommerce.CatalogModule.Web
         public override void PostInitialize()
         {
             var securityScopeService = _container.Resolve<IPermissionScopeService>();
-            securityScopeService.RegisterSope(() => new SelectedCatalogScope());
-            securityScopeService.RegisterSope(() => new SelectedCategoryScope(_container.Resolve<ICategoryService>()));
+            securityScopeService.RegisterSope(() => new CatalogSelectedScope());
+            securityScopeService.RegisterSope(() => new CatalogSelectedCategoryScope(_container.Resolve<ICategoryService>()));
         }
         #endregion
 

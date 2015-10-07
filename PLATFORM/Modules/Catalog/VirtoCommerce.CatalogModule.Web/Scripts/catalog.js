@@ -33,8 +33,8 @@ angular.module(catalogsModuleName, [
   ]
 )
 .run(
-  ['platformWebApp.authService', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', 'platformWebApp.pushNotificationTemplateResolver', 'platformWebApp.bladeNavigationService', 'virtoCommerce.catalogModule.catalogImportService', 'virtoCommerce.catalogModule.catalogExportService', 'platformWebApp.permissionScopeResolver',
-	function (authService, mainMenuService, widgetService, $state, pushNotificationTemplateResolver, bladeNavigationService, catalogImportService, catalogExportService, scopeResolver) {
+  ['platformWebApp.authService', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', 'platformWebApp.pushNotificationTemplateResolver', 'platformWebApp.bladeNavigationService', 'virtoCommerce.catalogModule.catalogImportService', 'virtoCommerce.catalogModule.catalogExportService', 'platformWebApp.permissionScopeResolver', 'virtoCommerce.catalogModule.catalogs',
+	function (authService, mainMenuService, widgetService, $state, pushNotificationTemplateResolver, bladeNavigationService, catalogImportService, catalogExportService, scopeResolver, catalogs) {
       //Register module in main menu
       var menuItem = {
           path: 'browse/catalog',
@@ -218,7 +218,7 @@ angular.module(catalogsModuleName, [
 		//Register permission scopes templates used for scope bounded definition in role management ui
 
       var catalogSelectScope = {
-      	type: 'SelectedCatalogScope',
+      	type: 'CatalogSelectedScope',
       	title: 'Only for selected catalogs',
       	selectFn: function (blade, callback) {
       		var newBlade = {
@@ -227,8 +227,9 @@ angular.module(catalogsModuleName, [
       			subtitle: 'Select catalogs',
       			currentEntity: this,
       			onChangesConfirmedFn: callback,
-      			controller: 'virtoCommerce.catalogModule.catalogScopePickController',
-      			template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/catalog-scope-pick.tpl.html'
+      			dataPromise: catalogs.query().$promise,
+      			controller: 'platformWebApp.security.scopeValuePickFromSimpleListController',
+      			template: '$(Platform)/Scripts/app/security/blades/common/scope-value-pick-from-simple-list.tpl.html'
       		};
       		bladeNavigationService.showBlade(newBlade, blade);
       	}
@@ -236,7 +237,7 @@ angular.module(catalogsModuleName, [
       scopeResolver.register(catalogSelectScope);
 
       var categorySelectScope = {
-      	type : 'SelectedCategoryScope',
+      	type: 'CatalogSelectedCategoryScope',
       	title: 'Only for selected categories',
       	selectFn: function (blade, callback) {
       		var selectedListItems = _.map(this.assignedScopes, function (x) { return { id: x.scope, name: x.label }; });

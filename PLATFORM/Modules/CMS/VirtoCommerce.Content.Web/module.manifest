@@ -108,11 +108,11 @@
   </settings>
   <permissions>
     <group name="Content">
-      <permission id="content:access" name="Open store content menu" description="Permission to open store content menu."/>
-      <permission id="content:create" name="Create store content data" description="Permission to create store content data."/>
-      <permission id="content:read" name="View store content data" description="Permission to browse and view store content data."/>
-      <permission id="content:update" name="Update store content data" description="Permission to update store content data."/>
-      <permission id="content:delete" name="Delete store content data" description="Permission to delete store content data."/>
+      <permission id="content:access" name="Open store content menu" description=""/>
+      <permission id="content:create" name="Create store content data" description=""/>
+      <permission id="content:read" name="View store content data" description=""/>
+      <permission id="content:update" name="Update store content data" description=""/>
+      <permission id="content:delete" name="Delete store content data" description=""/>
     </group>
   </permissions>
 </module>

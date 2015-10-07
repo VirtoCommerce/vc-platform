@@ -13,10 +13,14 @@ namespace VirtoCommerce.Platform.Core.Security
         public string StoreId { get; set; }
         public string MemberId { get; set; }
         public string Icon { get; set; }
+
+        public bool IsAdministrator { get; set; }
+
+        public string UserType { get; set; }
+
         [JsonConverter(typeof(StringEnumConverter))]
-        public UserType UserType { get; set; }
-        [JsonConverter(typeof(StringEnumConverter))]
-        public UserState UserState { get; set; }
+        public AccountState UserState { get; set; }
+
         public string Password { get; set; }
 
         public string PasswordHash { get; set; }

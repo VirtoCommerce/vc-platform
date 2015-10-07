@@ -18,8 +18,11 @@ namespace VirtoCommerce.Platform.Data.Model
         [Required]
         [StringLength(128)]
         public string UserName { get; set; }
-        public RegisterType RegisterType { get; set; }
-        public AccountState AccountState { get; set; }
+        public bool IsAdministrator { get; set; }
+        [StringLength(128)]
+        public string UserType { get; set; }
+        [StringLength(128)]
+        public string AccountState { get; set; }
 
 		public virtual ObservableCollection<RoleAssignmentEntity> RoleAssignments { get; set; }
 		public virtual ObservableCollection<ApiAccountEntity> ApiAccounts { get; set; }
