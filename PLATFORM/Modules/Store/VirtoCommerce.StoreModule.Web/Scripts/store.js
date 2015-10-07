@@ -31,8 +31,8 @@ angular.module(moduleName, [
   }]
 )
 .run(
-  ['platformWebApp.toolbarService', 'platformWebApp.bladeNavigationService', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', 'platformWebApp.permissionScopeResolver',
-	function (toolbarService, bladeNavigationService, mainMenuService, widgetService, $state, scopeResolver) {
+  ['platformWebApp.toolbarService', 'platformWebApp.bladeNavigationService', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', 'platformWebApp.permissionScopeResolver', 'virtoCommerce.storeModule.stores',
+	function (toolbarService, bladeNavigationService, mainMenuService, widgetService, $state, scopeResolver, stores) {
       //Register module in main menu
       var menuItem = {
           path: 'browse/store',
@@ -106,8 +106,9 @@ angular.module(moduleName, [
       			subtitle: 'Select stores',
       			currentEntity: this,
       			onChangesConfirmedFn: callback,
-      			controller: 'virtoCommerce.storeModule.storeScopePickController',
-      			template: 'Modules/$(VirtoCommerce.Store)/Scripts/blades/store-scope-pick.tpl.html'
+      			dataPromise: stores.query().$promise,
+      			controller: 'platformWebApp.security.scopeValuePickFromSimpleListController',
+      			template: '$(Platform)/Scripts/app/security/blades/common/scope-value-pick-from-simple-list.tpl.html'
       		};
       		bladeNavigationService.showBlade(newBlade, blade);
       	}

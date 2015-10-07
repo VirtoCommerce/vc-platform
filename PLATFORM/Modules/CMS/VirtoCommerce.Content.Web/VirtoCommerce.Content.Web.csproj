@@ -219,8 +219,6 @@
     <Content Include="Scripts\blades\common\content-main.tpl.html" />
     <Content Include="Scripts\blades\pages\edit-blog.js" />
     <Content Include="Scripts\blades\pages\edit-blog.tpl.html" />
-    <Content Include="Scripts\blades\store-scope-pick.js" />
-    <Content Include="Scripts\blades\store-scope-pick.tpl.html" />
     <Content Include="Scripts\blades\themes\add-theme.js" />
     <Content Include="Scripts\blades\themes\add-theme.tpl.html" />
     <Content Include="Scripts\blades\themes\edit-asset.js" />

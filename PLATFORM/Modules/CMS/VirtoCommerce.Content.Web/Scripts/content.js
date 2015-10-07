@@ -6,8 +6,8 @@ if (AppDependencies != undefined) {
 }
 
 angular.module(moduleName, [])
-.run(['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.permissionScopeResolver', 
-	function ($rootScope, mainMenuService, widgetService, $state, bladeNavigationService, scopeResolver) {
+.run(['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.permissionScopeResolver', 'virtoCommerce.storeModule.stores',
+	function ($rootScope, mainMenuService, widgetService, $state, bladeNavigationService, scopeResolver, stores) {
 
 		var menuItem = {
 			path: 'browse/content',
@@ -37,8 +37,9 @@ angular.module(moduleName, [])
 					subtitle: 'Select stores',
 					currentEntity: this,
 					onChangesConfirmedFn: callback,
-					controller: 'virtoCommerce.contentModule.storeScopePickController',
-					template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/store-scope-pick.tpl.html'
+					dataPromise: stores.query().$promise,
+					controller: 'platformWebApp.security.scopeValuePickFromSimpleListController',
+					template: '$(Platform)/Scripts/app/security/blades/common/scope-value-pick-from-simple-list.tpl.html'
 				};
 				bladeNavigationService.showBlade(newBlade, blade);
 			}

@@ -227,9 +227,9 @@ angular.module(catalogsModuleName, [
       			subtitle: 'Select catalogs',
       			currentEntity: this,
       			onChangesConfirmedFn: callback,
-	                dataPromise: catalogs.query().$promise,
-	                controller: 'platformWebApp.security.scopeValuePickFromSimpleListController',
-	                template: '$(Platform)/Scripts/app/security/blades/common/scope-value-pick-from-simple-list.tpl.html'
+      			dataPromise: catalogs.query().$promise,
+      			controller: 'platformWebApp.security.scopeValuePickFromSimpleListController',
+      			template: '$(Platform)/Scripts/app/security/blades/common/scope-value-pick-from-simple-list.tpl.html'
       		};
       		bladeNavigationService.showBlade(newBlade, blade);
       	}
