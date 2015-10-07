@@ -255,9 +255,10 @@
             id: blade.currentEntityId
         });
         accounts.search({
-            takeCount: 1000
+        	takeCount: 100,
+			accountTypes: [ 'Manager', 'Administrator' ]
         }, function (data) {
-            $scope.employees = data.users; // filter??
+            $scope.employees = data.users; 
         }, function (error) {
             bladeNavigationService.setError('Error ' + error.status, blade);
         });

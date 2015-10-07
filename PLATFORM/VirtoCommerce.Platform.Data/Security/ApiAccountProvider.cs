@@ -54,7 +54,7 @@ namespace VirtoCommerce.Platform.Data.Security
             using (var repository = _platformRepository())
             {
                 var apiAccount = repository.ApiAccounts.FirstOrDefault(c => c.ApiAccountType == type && c.AppId == appId &&
-                    c.IsActive && c.Account.AccountState == AccountState.Approved);
+                    c.IsActive && String.Equals(c.Account.AccountState, AccountState.Approved.ToString(), StringComparison.InvariantCultureIgnoreCase));
                 return apiAccount;
             }
         }

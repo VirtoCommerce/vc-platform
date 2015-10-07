@@ -251,8 +251,8 @@
     <Compile Include="Security\ApplicationUserLogin.cs" />
     <Compile Include="Security\UserSearchRequest.cs" />
     <Compile Include="Security\UserSearchResponse.cs" />
-    <Compile Include="Security\UserState.cs" />
-    <Compile Include="Security\UserType.cs" />
+    <Compile Include="Security\AccountState.cs" />
+    <Compile Include="Security\AccountType.cs" />
     <Compile Include="Settings\IHaveSettings.cs" />
     <Compile Include="Settings\ISettingsManager.cs" />
     <Compile Include="Settings\ModuleDescriptor.cs" />

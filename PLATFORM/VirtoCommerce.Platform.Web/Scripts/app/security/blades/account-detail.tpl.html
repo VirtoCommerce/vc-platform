@@ -6,15 +6,26 @@
                 <label class="form-label">Is administrator</label>
                 <div class="form-input">
                     <label class="form-label __switch">
-                        <input type="checkbox" ng-model="blade.currentEntity.userType" ng-true-value="'Administrator'" ng-false-value="'SiteAdministrator'" />
+                        <input type="checkbox" ng-model="blade.currentEntity.isAdministrator" />
                         <span class="switch"></span>
                     </label>
                 </div>
             </div>
             <ul class="list __info">
                 <li class="list-item">
-                    <div class="list-t">Account type</div>
-                    <div class="list-descr">{{blade.currentEntity.userType}}</div>
+                    <div class="list-t">Account type
+                        <a href="" ng-click="openAccountTypeSettingManagement()">
+                            <i class="form-ico fa fa-pencil"></i>
+                        </a>
+                    </div>
+                    <div class="form-input">
+                        <ui-select ng-model="blade.currentEntity.userType">
+                            <ui-select-match placeholder="Select ...">{{$select.selected}}</ui-select-match>
+                            <ui-select-choices repeat="x as x in accountTypes | filter: $select.search ">
+                                <span ng-bind-html="x | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
                 </li>
                 <li class="list-item">
                     <div class="list-t">Login</div>

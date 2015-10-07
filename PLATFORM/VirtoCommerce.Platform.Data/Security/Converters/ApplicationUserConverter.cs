@@ -22,9 +22,8 @@ namespace VirtoCommerce.Platform.Data.Security.Converters
             retVal = new ApplicationUserExtended();
             retVal.InjectFrom(applicationUser);
             retVal.InjectFrom(dbEntity);
-            retVal.UserState = (UserState)dbEntity.AccountState;
-            retVal.UserType = (UserType)dbEntity.RegisterType;
-
+            retVal.UserState = EnumUtility.SafeParse<Core.Security.AccountState>( dbEntity.AccountState, Core.Security.AccountState.Approved);
+ 
             retVal.Roles = dbEntity.RoleAssignments.Select(x => x.Role.ToCoreModel(scopeService)).ToArray();
             retVal.Permissions = retVal.Roles.SelectMany(x => x.Permissions).SelectMany(x=> x.GetPermissionWithScopeCombinationNames()).Distinct().ToArray();
             retVal.ApiAccounts = dbEntity.ApiAccounts.Select(x => x.ToCoreModel()).ToArray();
@@ -44,8 +43,7 @@ namespace VirtoCommerce.Platform.Data.Security.Converters
             var retVal = new AccountEntity();
             retVal.InjectFrom(user);
 
-            retVal.RegisterType = (RegisterType)user.UserType;
-            retVal.AccountState = (AccountState)user.UserState;
+            retVal.AccountState = user.UserState.ToString();
 
             if(user.Roles != null)
             {
@@ -60,7 +58,7 @@ namespace VirtoCommerce.Platform.Data.Security.Converters
 
         public static void Patch(this AccountEntity source, AccountEntity target)
         {
-            var patchInjection = new PatchInjection<AccountEntity>(x => x.RegisterType, x => x.AccountState, x => x.MemberId,
+            var patchInjection = new PatchInjection<AccountEntity>(x => x.UserType, x => x.AccountState, x => x.MemberId,
                                                                    x => x.StoreId);
             target.InjectFrom(patchInjection, source);
 
