@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Hosting;
 using System.Web.Http;
 using System.Web.Http.Description;
@@ -25,15 +26,42 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _tempPath = HostingEnvironment.MapPath("~/App_Data/Uploads/");
         }
 
-		/// <summary>
-		/// Upload assets to the folder
-		/// </summary>
-		/// <remarks>
-		/// Request body can contain multiple files.
-		/// </remarks>
-		/// <param name="folder">Folder name.</param>
-		/// <returns></returns>
-		[HttpPost]
+        [HttpPost]
+        [Route("{folder}")]
+        [ResponseType(typeof(webModel.BlobInfo))]
+        public IHttpActionResult UploadAssetFromUrl(string folder, [FromUri]string url)
+        {
+            using (var client = new WebClient())
+            {
+                var uploadInfo = new UploadStreamInfo
+                {
+                    FileByteStream = client.OpenRead(url),
+                    FolderName = folder,
+                    FileName = HttpUtility.UrlDecode(System.IO.Path.GetFileName(url))
+                };
+
+                var key = _blobProvider.Upload(uploadInfo);
+                var retVal = new webModel.BlobInfo
+                {
+
+                    Name = uploadInfo.FileName,
+                    RelativeUrl = key,
+                    Url = _urlResolver.GetAbsoluteUrl(key)
+                };
+                return Ok(retVal);
+            }
+
+        }
+
+        /// <summary>
+        /// Upload assets to the folder
+        /// </summary>
+        /// <remarks>
+        /// Request body can contain multiple files.
+        /// </remarks>
+        /// <param name="folder">Folder name.</param>
+        /// <returns></returns>
+        [HttpPost]
 		[Route("{folder}")]
 		[ResponseType(typeof(webModel.BlobInfo[]))]
 		public async Task<IHttpActionResult> UploadAsset(string folder)

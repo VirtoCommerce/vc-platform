@@ -354,6 +354,7 @@
     <Content Include="gulpfile.js" />
     <Content Include="Scripts\allPackages.js" />
     <Content Include="Content\allStyles.css" />
+    <Content Include="Scripts\app\assets\resources\assets.js" />
     <Content Include="Scripts\app\changeLog\blades\operation-list.js" />
     <Content Include="Scripts\app\changeLog\blades\operation-list.tpl.html" />
     <Content Include="Scripts\app\changeLog\widgets\operations-widget.js" />
