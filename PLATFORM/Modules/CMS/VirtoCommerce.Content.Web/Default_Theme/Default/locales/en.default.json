@@ -13,7 +13,7 @@
         },
         "breadcrumbs": {
             "home": "Home",
-            "home_link_title": "Back to the frontpage"
+            "home_link_title": "Back to the front page"
         },
         "forms": {
             "post_error": "Sorry, looks like something went wrong. Please correct the following and submit again:",
@@ -72,7 +72,7 @@
     },
     "quotes": {
         "general": {
-            "empty": "You have no any quote requests.",
+            "empty": "You have no quote requests.",
             "continue_browsing_html": "Continue browsing <a href=\"collections/all\">here</a>.",
             "title": "Quotes",
             "email": "E-mail address",
@@ -189,7 +189,7 @@
         "order": {
             "title": "Order {{ name }}",
             "placed_on_date_html": "Placed on {{ date }}",
-            "cancelled_on": "Order Cancelled on {{ date }}",
+            "cancelled_on": "Order Canceled on {{ date }}",
             "cancel_reason": "Reason",
             "billing_address": "Billing Address",
             "payment_status": "Payment Status",
@@ -208,7 +208,7 @@
         },
         "quotes": {
             "title": "Quote requests",
-            "none": "You haven't submit any quote requests yet.",
+            "none": "You haven't submitted any quote requests yet.",
             "quote_number": "Number",
             "date": "Date",
             "total": "Total",
