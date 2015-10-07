@@ -70,37 +70,30 @@
 
     <group name="CMS Content|GitHub">
       <setting>
-        <name>VirtoCommerce.Content.GitHub.Login</name>
+        <name>VirtoCommerce.Content.GitHub.Token</name>
         <valueType>string</valueType>
-        <defaultValue>qwerty</defaultValue>
-        <title>Github User Login</title>
-        <description>Github user login for connect to github repository</description>
-      </setting>
-      <setting>
-        <name>VirtoCommerce.Content.GitHub.Password</name>
-        <valueType>string</valueType>
-        <defaultValue>qwerty</defaultValue>
-        <title>Github User Password</title>
-        <description>Github user password for connect to github repository</description>
+        <defaultValue></defaultValue>
+        <title>Github Access Token</title>
+        <description>Github access token used to connect to github repository</description>
       </setting>
       <setting>
         <name>VirtoCommerce.Content.GitHub.ProductHeaderValue</name>
         <valueType>string</valueType>
-        <defaultValue>qwerty</defaultValue>
+        <defaultValue>Virto Commerce</defaultValue>
         <title>Github Product Header Value</title>
         <description>Github product header value</description>
       </setting>
       <setting>
         <name>VirtoCommerce.Content.GitHub.OwnerName</name>
         <valueType>string</valueType>
-        <defaultValue>qwerty</defaultValue>
+        <defaultValue></defaultValue>
         <title>Github Repository Owner Name</title>
         <description>Github repository owner name</description>
       </setting>
       <setting>
         <name>VirtoCommerce.Content.GitHub.RepositoryName</name>
         <valueType>string</valueType>
-        <defaultValue>qwerty</defaultValue>
+        <defaultValue></defaultValue>
         <title>Github Repository Name</title>
         <description>Github repository name</description>
       </setting>

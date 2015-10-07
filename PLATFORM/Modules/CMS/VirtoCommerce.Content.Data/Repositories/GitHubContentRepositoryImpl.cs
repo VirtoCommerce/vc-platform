@@ -17,8 +17,7 @@ namespace VirtoCommerce.Content.Data.Repositories
         private readonly string _mainPath;
 
         public GitHubContentRepositoryImpl(
-            string login,
-            string password,
+            string token,
             string productHeaderValue,
             string ownerName,
             string repositoryName,
@@ -26,7 +25,7 @@ namespace VirtoCommerce.Content.Data.Repositories
         {
             this._client = new GitHubClient(new ProductHeaderValue(productHeaderValue), new Uri("https://github.com/"))
             {
-                Credentials = new Credentials(login, password)
+                Credentials = new Credentials(token)
             };
 
             this._repositoryName = repositoryName;

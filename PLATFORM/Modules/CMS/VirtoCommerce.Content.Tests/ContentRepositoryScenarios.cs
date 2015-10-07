@@ -23,8 +23,7 @@ namespace VirtoCommerce.Content.Tests
             if (repositoryType == "GitHub")
             {
                 var repository = new GitHubContentRepositoryImpl(
-                    login: "VirtoCommerceTest",
-                    password: "v1rtocommerce",
+                    token: " 59575aed67fa0e4a5a960cc9cc99f75b90d72d08",
                     productHeaderValue: "VirtoCommerce",
                     ownerName: "VirtoCommerce",
                     repositoryName: "test-repository",

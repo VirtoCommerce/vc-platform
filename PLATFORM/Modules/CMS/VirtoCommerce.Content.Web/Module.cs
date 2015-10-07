@@ -50,11 +50,8 @@ namespace VirtoCommerce.Content.Web
 
             var settingsManager = _container.Resolve<ISettingsManager>();
 
-            var githubLogin =
-                settingsManager.GetValue("VirtoCommerce.Content.GitHub.Login", string.Empty);
-
-            var githubPassword =
-                settingsManager.GetValue("VirtoCommerce.Content.GitHub.Password", string.Empty);
+            var githubToken =
+                settingsManager.GetValue("VirtoCommerce.Content.GitHub.Token", string.Empty);
 
             var githubProductHeaderValue =
                 settingsManager.GetValue("VirtoCommerce.Content.GitHub.ProductHeaderValue", string.Empty);
@@ -82,8 +79,7 @@ namespace VirtoCommerce.Content.Web
                     case "GitHub":
                         return new ThemeServiceImpl(() =>
                             new GitHubContentRepositoryImpl(
-                                githubLogin,
-                                githubPassword,
+                                githubToken,
                                 githubProductHeaderValue,
                                 githubOwnerName,
                                 githubRepositoryName,
@@ -165,8 +161,7 @@ namespace VirtoCommerce.Content.Web
                     case "GitHub":
 						return new PagesServiceImpl(() =>
                             new GitHubContentRepositoryImpl(
-                                githubLogin,
-                                githubPassword,
+                                githubToken,
                                 githubProductHeaderValue,
                                 githubOwnerName,
                                 githubRepositoryName,
