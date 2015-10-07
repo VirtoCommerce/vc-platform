@@ -3,7 +3,6 @@
     var blade = $scope.blade;
 
     function initializeBlade(data) {
-        blade.currentEntityId = data.id;
         blade.title = data.name;
 
         _.each(data.settings, function (setting) {
@@ -33,7 +32,7 @@
             return x;
         });
 
-        angular.copy(blade.currentEntity, blade.origEntity);
+        angular.copy(blade.currentEntity, blade.data);
         $scope.bladeClose();
     };
 
@@ -47,5 +46,5 @@
 
     blade.headIcon = 'fa-archive';
 
-    initializeBlade(blade.origEntity);
+    initializeBlade(angular.copy(blade.data));
 }]);

@@ -19,18 +19,21 @@
         blade.currentEntityId = data.id;
         blade.title = data.name;
 
+        data.shippingMethods.sort(function (a, b) { return a.priority > b.priority; });
+        data.paymentMethods.sort(function (a, b) { return a.priority > b.priority; });
+
         blade.currentEntity = angular.copy(data);
         blade.origEntity = data;
         blade.isLoading = false;
 
-    	//sets security scopes for scope bounded ACL
+        //sets security scopes for scope bounded ACL
         if (blade.currentEntity && blade.currentEntity.securityScopes && angular.isArray(blade.currentEntity.securityScopes)) {
-        	blade.securityScopes = blade.currentEntity.securityScopes;
+            blade.securityScopes = blade.currentEntity.securityScopes;
         }
     };
 
     function isDirty() {
-    	return  authService.checkPermission('store:update', blade.securityScopes) && !angular.equals(blade.currentEntity, blade.origEntity);
+        return authService.checkPermission('store:update', blade.securityScopes) && !angular.equals(blade.currentEntity, blade.origEntity);
     };
 
     $scope.saveChanges = function () {
