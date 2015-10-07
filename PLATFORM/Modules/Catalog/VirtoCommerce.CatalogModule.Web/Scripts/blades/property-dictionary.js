@@ -89,6 +89,8 @@
         $scope.selectedItem = undefined;
     };
 
+    $scope.blade.headIcon = 'fa-book';
+
     $scope.blade.toolbarCommands = [
      {
          name: "Delete", icon: 'fa fa-trash-o',

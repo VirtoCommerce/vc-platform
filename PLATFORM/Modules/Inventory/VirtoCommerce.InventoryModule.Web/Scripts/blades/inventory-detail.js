@@ -60,6 +60,8 @@
         }
     };
 
+    $scope.blade.headIcon = 'fa-cubes';
+
     $scope.blade.toolbarCommands = [
         {
             name: "Save", icon: 'fa fa-save',

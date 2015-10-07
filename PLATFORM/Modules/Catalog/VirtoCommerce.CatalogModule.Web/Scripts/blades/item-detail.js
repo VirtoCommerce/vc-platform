@@ -81,7 +81,7 @@
         formScope = form;
     }
 
-    blade.headIcon = blade.productType === 'Digital' ? 'fa fa-file-archive-o' : 'fa fa-truck';
+    blade.headIcon = blade.productType === 'Digital' ? 'fa-file-zip-o' : 'fa-dropbox';
 
     blade.toolbarCommands = [
 	 {

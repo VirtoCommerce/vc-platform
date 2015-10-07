@@ -348,9 +348,13 @@ a:hover,
 {
 	0%
 	{
+		background-color: none;
+	}
+	10%
+	{
 		background-color: #43b0e6;
 	}
-	80%
+	90%
 	{
 		background-color: #43b0e6;
 	}
@@ -364,9 +368,13 @@ a:hover,
 {
 	0%
 	{
+		background-color: none;
+	}
+	10%
+	{
 		background-color: #43b0e6;
 	}
-	80%
+	90%
 	{
 		background-color: #43b0e6;
 	}

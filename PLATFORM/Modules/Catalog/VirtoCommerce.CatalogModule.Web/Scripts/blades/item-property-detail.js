@@ -94,6 +94,7 @@
     }
 
     if (!b.isNew) {
+        b.headIcon = 'fa-gear';
         b.toolbarCommands = [
             {
                 name: "Reset", icon: 'fa fa-undo',

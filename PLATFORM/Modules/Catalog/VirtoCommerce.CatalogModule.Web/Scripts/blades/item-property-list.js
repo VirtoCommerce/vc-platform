@@ -103,6 +103,8 @@
         formScope = form;
     }
 
+    blade.headIcon = 'fa-gear';
+
     blade.toolbarCommands = [
 		{
 		    name: "Save", icon: 'fa fa-save',

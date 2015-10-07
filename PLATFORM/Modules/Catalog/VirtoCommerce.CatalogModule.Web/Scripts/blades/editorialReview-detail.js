@@ -73,6 +73,8 @@
         dialogService.showConfirmationDialog(dialog);
     }
 
+    $scope.blade.headIcon = 'fa-comments';
+
     $scope.blade.toolbarCommands = [
         {
             name: "Save", icon: 'fa fa-save',

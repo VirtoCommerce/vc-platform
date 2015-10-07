@@ -98,6 +98,8 @@
         window.prompt("Copy to clipboard: Ctrl+C, Enter", data.url);
     }
 
+    $scope.blade.headIcon = 'fa-chain';
+
     $scope.blade.toolbarCommands = [
 
         {

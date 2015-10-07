@@ -7,5 +7,7 @@
         $scope.bladeClose();
     };
 
+    $scope.blade.headIcon = 'fa-gear';
+
     $scope.blade.isLoading = false;
 }]);

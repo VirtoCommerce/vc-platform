@@ -137,6 +137,8 @@
         formScope = form;
     }
 
+    $scope.blade.headIcon = 'fa-gear';
+
     $scope.blade.toolbarCommands = [
 		{
 		    name: "Save", icon: 'fa fa-save',

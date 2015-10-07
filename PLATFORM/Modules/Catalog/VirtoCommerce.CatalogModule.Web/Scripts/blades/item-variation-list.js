@@ -39,6 +39,8 @@
         });
     }
 
+    blade.headIcon = 'fa-dropbox';
+
     blade.toolbarCommands = [
         {
             name: "Refresh", icon: 'fa fa-refresh',

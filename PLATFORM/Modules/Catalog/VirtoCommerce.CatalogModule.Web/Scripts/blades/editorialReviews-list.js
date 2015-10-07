@@ -50,6 +50,8 @@
         $scope.openBlade(data);
     }
 
+    $scope.blade.headIcon = 'fa-comments';
+
     $scope.blade.toolbarCommands = [
         {
             name: "Add", icon: 'fa fa-plus',

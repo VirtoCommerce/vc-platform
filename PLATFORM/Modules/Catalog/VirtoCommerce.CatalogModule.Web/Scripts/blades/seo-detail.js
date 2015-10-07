@@ -94,6 +94,7 @@
     }
 
     if (!blade.isNew) {
+        blade.headIcon = 'fa-globe';
         blade.toolbarCommands = [
             {
                 name: "Save", icon: 'fa fa-save',

@@ -129,6 +129,8 @@
         });
     };
 
+    blade.headIcon = 'fa-image';
+
     blade.toolbarCommands = [
         {
             name: "Save", icon: 'fa fa-save',

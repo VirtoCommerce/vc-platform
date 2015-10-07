@@ -45,6 +45,8 @@
         });
     }
 
+    $scope.blade.headIcon = 'fa-cubes';
+
     $scope.blade.toolbarCommands = [
         {
             name: "Refresh", icon: 'fa fa-refresh',
