@@ -145,8 +145,6 @@
     </Compile>
     <Compile Include="Security\OrderResponsibleScope.cs" />
     <Compile Include="Security\OrderStoreScope.cs" />
-    <Content Include="Scripts\blades\store-scope-pick.js" />
-    <Content Include="Scripts\blades\store-scope-pick.tpl.html" />
     <Content Include="Scripts\blades\shipment-items.tpl.html" />
     <Content Include="Scripts\blades\shipment-items.js" />
     <Content Include="Scripts\blades\operation-comment.js" />

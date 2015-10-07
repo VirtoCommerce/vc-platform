@@ -196,8 +196,6 @@
     <Content Include="Scripts\blades\import\importers-list.tpl.html" />
     <Content Include="Scripts\blades\item-property-detail.tpl.html" />
     <Content Include="Scripts\blades\item-property-detail.js" />
-    <Content Include="Scripts\blades\catalog-scope-pick.js" />
-    <Content Include="Scripts\blades\catalog-scope-pick.tpl.html" />
     <Content Include="Scripts\dialogs\deleteCategoryItem-dialog.tpl.html" />
     <Content Include="Scripts\dialogs\deleteCatalog-dialog.tpl.html" />
     <Content Include="Scripts\resources\export.js" />
