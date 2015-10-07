@@ -19,14 +19,15 @@ namespace VirtoCommerce.Web.Views.Contents
         #region Constructors and Destructors
         public ContentItem()
         {
-            this.Categories = Enumerable.Empty<string>();
+            this.Categories = new List<string>();
+            this.Tags = new List<string>();
         }
         #endregion
 
         #region Public Properties
         public string Author { get; set; }
 
-        public IEnumerable<string> Categories { get; set; }
+        public List<string> Categories { get; set; }
 
         /// <summary>
         /// Contains both excerpt and body
@@ -97,6 +98,8 @@ namespace VirtoCommerce.Web.Views.Contents
         public string Title { get; set; }
 
         public string Url { get; set; }
+
+        public List<string> Tags { get; set; }
         #endregion
 
         #region Public Methods and Operators
@@ -108,15 +111,18 @@ namespace VirtoCommerce.Web.Views.Contents
                 {
                     case "categories":
                     case "category":
-                    {
-                        var categories = ((string)setting.Value).Split(
-                            new[] { "," },
-                            StringSplitOptions.RemoveEmptyEntries);
+                        {
+                            if (setting.Value is IEnumerable<string>)
+                            {
+                                Categories.AddRange((IEnumerable<string>)setting.Value);
+                            }
+                            else
+                            {
+                                Categories.Add((string)setting.Value);
+                            }
 
-                        this.Categories = categories.Select(x => x.Trim()).OrderBy(x => x);
-
-                        break;
-                    }
+                            break;
+                        }
                     case "title":
                     {
                         this.Title = (string)setting.Value;
@@ -155,17 +161,21 @@ namespace VirtoCommerce.Web.Views.Contents
                         break;
                     }
                     case "tags":
-                    case "keywords":
                     {
-                        Keywords = (string)setting.Value;
+                            if (setting.Value is IEnumerable<string>)
+                            {
+                                Tags.AddRange((IEnumerable<string>)setting.Value);
+                            }
+                            else
+                            {
+                                Tags.Add((string)setting.Value);
+                            }
+
                         break;
                     }
                 }
             }
         }
-
-        
-
         #endregion
     }
 }

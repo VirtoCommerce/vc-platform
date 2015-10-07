@@ -152,8 +152,16 @@ namespace VirtoCommerce.Web.Views.Contents
             var configPath = Path.Combine(sourceFolder, "config.yml");
             if (this._fileSystem.File.Exists(configPath))
             {
-                config =
+                try
+                {
+                    config =
                     (Dictionary<string, object>)this._fileSystem.File.ReadAllText(configPath).YamlHeader(true);
+                }
+                catch (ArgumentException ex)
+                {
+                    throw new ApplicationException(String.Format("{0}", "config.xml"), ex);
+                }
+                
             }
 
             var context = new SiteStaticContentContext() { SourceFolder = sourceFolder, Config = config };
@@ -165,7 +173,17 @@ namespace VirtoCommerce.Web.Views.Contents
         {
             FileInfoBase info;
             var contents = this.SafeReadContents(file, out info);
-            var header = contents.YamlHeader();
+
+            IDictionary<string, object> header = null;
+
+            try
+            {
+                header = contents.YamlHeader();
+            }
+            catch(Exception ex)
+            {
+                throw new ApplicationException(String.Format("{0}", file), ex);
+            }
 
             var page = new RawContentItem { Content = this.RenderContent(file, contents, header) };
 
