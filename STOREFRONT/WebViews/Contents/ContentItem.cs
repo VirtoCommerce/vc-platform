@@ -71,7 +71,10 @@ namespace VirtoCommerce.Web.Views.Contents
                     return this.excerpt;
                 }
 
-                return this.FullContent.Split(new[] { "<!--excerpt-->" }, StringSplitOptions.None)[0];
+                if(FullContent.Contains("<!--excerpt-->"))
+                    return this.FullContent.Split(new[] { "<!--excerpt-->" }, StringSplitOptions.None)[0];
+
+                return String.Empty;
             }
             set
             {
