@@ -3,6 +3,8 @@
 using System;
 using System.Globalization;
 using System.Web;
+using System.Web.Mvc;
+using System.Web.Routing;
 
 #endregion
 
@@ -57,7 +59,8 @@ namespace VirtoCommerce.Web.Extensions
             var url = HttpContext.Current.Request.Url;
             var port = url.Port != 80 || (url.Scheme == "https" && url.Port == 443) ? (":" + url.Port) : String.Empty;
 
-            return $"{url.Scheme}://{url.Host}{port}{VirtualPathUtility.ToAbsolute(relativeUrl)}";
+            return string.Format("{0}://{1}{2}{3}",
+                url.Scheme, url.Host, port, VirtualPathUtility.ToAbsolute(relativeUrl));
         }
 
         public static bool IsActiveUrl(this string relativeUrl)

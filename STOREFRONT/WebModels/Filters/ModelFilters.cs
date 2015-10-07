@@ -1,5 +1,6 @@
 ﻿#region
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -8,6 +9,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using DotLiquid;
 using DotLiquid.Util;
+using VirtoCommerce.Web.Views.Engines.Liquid;
 using VirtoCommerce.Web.Views.Engines.Liquid.Extensions;
 using VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine.Extensions;
 using System.Threading;
@@ -42,19 +44,21 @@ namespace VirtoCommerce.Web.Models.Filters
 
         public static string EditCustomerAddressLink(string input, string id)
         {
-            return $"<a href=\"#\" onclick=\"Shopify.CustomerAddress.toggleForm({id});return false\">{input}</a>";
+            return string.Format(
+                "<a href=\"#\" onclick=\"Shopify.CustomerAddress.toggleForm({0});return false\">{1}</a>", id, input);
         }
 
         public static string DeleteCustomerAddressLink(string input, string id)
         {
-            return $"<a href=\"#\" onclick=\"Shopify.CustomerAddress.destroy({id}, 'Are you sure you wish to delete this address?');return false\">{input}</a>";
+            return string.Format(
+                "<a href=\"#\" onclick=\"Shopify.CustomerAddress.destroy({0}, 'Are you sure you wish to delete this address?');return false\">{1}</a>", id, input);
         }
 
         public static string CustomerLoginLink(string input)
         {
             var path = VirtualPathUtility.ToAbsolute("~/account/login");
 
-            return $"<a href=\"{path}\" id=\"customer_login_link\">{input}</a>";
+            return String.Format("<a href=\"{0}\" id=\"customer_login_link\">{1}</a>", path, input);
         }
 
         /* sasha: this doesn't work in templates when integers are used for minus
@@ -68,14 +72,14 @@ namespace VirtoCommerce.Web.Models.Filters
         {
             var path = VirtualPathUtility.ToAbsolute("~/account/logoff");
 
-            return $"<a href=\"{path}\" id=\"customer_logout_link\">{input}</a>";
+            return String.Format("<a href=\"{0}\" id=\"customer_logout_link\">{1}</a>", path, input);
         }
 
         public static string CustomerRegisterLink(string input)
         {
             var path = VirtualPathUtility.ToAbsolute("~/account/register");
 
-            return $"<a href=\"{path}\" id=\"customer_register_link\">{input}</a>";
+            return String.Format("<a href=\"{0}\" id=\"customer_register_link\">{1}</a>", path, input);
         }
 
         public static string Money(object input)
@@ -90,8 +94,11 @@ namespace VirtoCommerce.Web.Models.Filters
             if (input is int)
             {
                 var inputString = ((int)input).ToString("D3");
-                var parsedDecimal =
-                    $"{inputString.Substring(0, inputString.Length - 2)}{CultureInfo.GetCultureInfo("en-US").NumberFormat.CurrencyDecimalSeparator}{inputString.Substring(inputString.Length - 2)}";
+                var parsedDecimal = String.Format(
+                    "{0}{1}{2}",
+                    inputString.Substring(0, inputString.Length - 2),
+                    CultureInfo.GetCultureInfo("en-US").NumberFormat.CurrencyDecimalSeparator,
+                    inputString.Substring(inputString.Length - 2));
                 val = decimal.Parse(parsedDecimal);
             }
             else
@@ -115,7 +122,7 @@ namespace VirtoCommerce.Web.Models.Filters
                 return null;
             }
 
-            return AssetUrl(input.EndsWith(".jpeg") ? "~/images/" : "~/themes/assets/", $"{input}?theme={SiteContext.Current.Theme}");
+            return AssetUrl(input.EndsWith(".jpeg") ? "~/images/" : "~/themes/assets/", String.Format("{0}?theme={1}", input, SiteContext.Current.Theme));
         }
 
         public static string ShopifyAssetUrl(object input)
@@ -144,7 +151,7 @@ namespace VirtoCommerce.Web.Models.Filters
 
             var urlHelper = new UrlHelper(requestContext);
 
-            return urlHelper.Content($"~/global/assets/{input}");
+            return urlHelper.Content(String.Format("~/global/assets/{0}", input));
         }
 
         #region Public Methods and Operators
@@ -160,17 +167,17 @@ namespace VirtoCommerce.Web.Models.Filters
 
         public static string LinkTo(string input, string link, string title = "")
         {
-            if (string.IsNullOrEmpty(link))
+            if (String.IsNullOrEmpty(link))
             {
                 link = VirtualPathUtility.ToAbsolute("~/");
             }
 
-            return $"<a href=\"{link}\" title=\"{title}\">{input}</a>";
+            return String.Format("<a href=\"{0}\" title=\"{1}\">{2}</a>", link, title, input);
         }
 
         public static string LinkToSwitchLanguage(Context context, object input)
         {
-            var url = VirtualPathUtility.ToAbsolute($"~/{input}");
+            var url = VirtualPathUtility.ToAbsolute(String.Format("~/{0}", input));
             return url;
         }
 
@@ -184,7 +191,7 @@ namespace VirtoCommerce.Web.Models.Filters
             var relativeUri = HttpContext.Current.Request.Url;
             if (tag == null)
             {
-                return string.Format("<a title=\"Remove all tags\" href=\"{1}\">{0}</a>", input, relativeUri.LocalPath);
+                return String.Format("<a title=\"Remove all tags\" href=\"{1}\">{0}</a>", input, relativeUri.LocalPath);
             }
 
             if (tag is Tag)
@@ -205,13 +212,13 @@ namespace VirtoCommerce.Web.Models.Filters
                     count = Int32.Parse(match.Groups[3].Value);
                 }
 
-                var url = UpdateWithTags(context, relativeUri, $"{field}_{tagName}", true);
+                var url = UpdateWithTags(context, relativeUri, String.Format("{0}_{1}", field, tagName), true);
 
-                return string.Format(
+                return String.Format(
                     "<a title=\"Remove tag {1}\" href=\"{0}\">{1}{2}</a>",
                     url,
                     input,
-                    count == 0 ? "" : $" ({count})");
+                    count == 0 ? "" : String.Format(" ({0})", count));
             }
 
             return input.ToString();
@@ -225,13 +232,13 @@ namespace VirtoCommerce.Web.Models.Filters
             var count = tag.Count;
 
             var relativeUri = HttpContext.Current.Request.Url;
-            var url = UpdateWithTags(context, relativeUri, $"{field}_{val}", true);
+            var url = UpdateWithTags(context, relativeUri, String.Format("{0}_{1}", field, val), true);
 
-            return string.Format(
+            return String.Format(
                 "<a title=\"Remove tag {1}\" href=\"{0}\">{1}{2}</a>",
                 url,
                 tagName,
-                count == 0 ? "" : $" ({count})");
+                count == 0 ? "" : String.Format(" ({0})", count));
         }
 
         public static string LinkToTag(Context context, object input, object tag)
@@ -240,7 +247,7 @@ namespace VirtoCommerce.Web.Models.Filters
 
             if (tag == null)
             {
-                return string.Format("<a title=\"Remove all tags\" href=\"{1}\">{0}</a>", input, relativeUri.LocalPath);
+                return String.Format("<a title=\"Remove all tags\" href=\"{1}\">{0}</a>", input, relativeUri.LocalPath);
             }
 
             if (tag is Tag)
@@ -263,13 +270,13 @@ namespace VirtoCommerce.Web.Models.Filters
                     count = Int32.Parse(match.Groups[3].Value);
                 }
 
-                var url = UpdateWithTags(context, relativeUri, $"{field}_{tagName}");
+                var url = UpdateWithTags(context, relativeUri, String.Format("{0}_{1}", field, tagName));
 
-                return string.Format(
+                return String.Format(
                     "<a title=\"Show products matching tag {1}\" href=\"{0}\">{1}{2}</a>",
                     url,
                     tagName,
-                    count == 0 ? "" : $" ({count})");
+                    count == 0 ? "" : String.Format(" ({0})", count));
             }
             return string.Format(
                 "<a title=\"Show products matching tag {0}\" href=\"{1}{0}\">{0}</a>",
@@ -285,18 +292,18 @@ namespace VirtoCommerce.Web.Models.Filters
             var count = tag.Count;
 
             var relativeUri = HttpContext.Current.Request.Url;
-            var url = UpdateWithTags(context, relativeUri, $"{field}_{val}");
+            var url = UpdateWithTags(context, relativeUri, String.Format("{0}_{1}", field, val));
 
             return string.Format(
                 "<a title=\"Show products matching tag {1}\" href=\"{0}\">{1}{2}</a>",
                 url,
                 tagName,
-                count == 0 ? "" : $" ({count})");
+                count == 0 ? "" : String.Format(" ({0})", count));
         }
 
         public static string PaymentTypeImgUrl(string input)
         {
-            return GetImageUrl(AssetUrl($"cc-{input}.png"));
+            return GetImageUrl(AssetUrl(String.Format("cc-{0}.png", input)));
         }
 
         public static string ProductImgUrl(object input, string type)
@@ -306,14 +313,14 @@ namespace VirtoCommerce.Web.Models.Filters
 
         public static string Within(string input, object collection)
         {
-            var url = string.Empty;
+            var url = String.Empty;
             if (input.StartsWith("/products/"))
             {
-                url = VirtualPathUtility.ToAbsolute($"~{collection}{input}");
+                url = VirtualPathUtility.ToAbsolute(String.Format("~{0}{1}", collection, input));
             }
             else // URL already includes category and full site path
             {
-                url = VirtualPathUtility.ToAbsolute($"~/{input}");
+                url = VirtualPathUtility.ToAbsolute(String.Format("~/{0}", input));
             }
 
             return url;
@@ -327,9 +334,9 @@ namespace VirtoCommerce.Web.Models.Filters
         /// <returns></returns>
         public static string Date(object input, string format)
         {
-            if (!string.IsNullOrEmpty(format) && !format.Contains("%")) // special formats that can be defined in settings
+            if (!String.IsNullOrEmpty(format) && !format.Contains("%")) // special formats that can be defined in settings
             {
-                var loc = $"date_formats.{format}";
+                var loc = String.Format("date_formats.{0}", format);
                 var newFormat = TranslationFilter.T(loc);
                 if (newFormat != loc)
                     format = newFormat;
@@ -380,12 +387,12 @@ namespace VirtoCommerce.Web.Models.Filters
 
             var urlHelper = new UrlHelper(requestContext);
 
-            return urlHelper.ContentAbsolute($"{prefix}{input}");
+            return urlHelper.ContentAbsolute(String.Format("{0}{1}", prefix, input));
         }
 
         private static string GetImageTag(string src, string alt, string css)
         {
-            return $"<img src=\"{src}\" alt=\"{alt}\" class=\"{css}\" />";
+            return String.Format("<img src=\"{0}\" alt=\"{1}\" class=\"{2}\" />", src, alt, css);
         }
 
         private static string GetImageUrl(object input)

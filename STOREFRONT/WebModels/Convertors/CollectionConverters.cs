@@ -32,9 +32,9 @@ namespace VirtoCommerce.Web.Convertors
                 collection.Image = category.Image.AsWebModel(category.Image.Name, category.Id);
             }
 
-            collection.Keywords = category.Seo?.Select(k => k.AsWebModel());
+            collection.Keywords = category.Seo != null ? category.Seo.Select(k => k.AsWebModel()) : null;
             collection.NextProduct = null; // TODO
-            collection.Parents = category.Parents?.Select(p => p.AsWebModel());
+            collection.Parents = category.Parents != null ? category.Parents.Select(p => p.AsWebModel()) : null;
             collection.PreviousProduct = null; // TODO
             collection.TemplateSuffix = null; // TODO
             collection.Title = category.Name;

@@ -9,7 +9,6 @@ using Omu.ValueInjecter;
 using VirtoCommerce.ApiClient.Extensions;
 using VirtoCommerce.Web.Extensions;
 using VirtoCommerce.Web.Models;
-using static System.String;
 using Data = VirtoCommerce.ApiClient.DataContracts;
 
 namespace VirtoCommerce.Web.Convertors
@@ -27,8 +26,8 @@ namespace VirtoCommerce.Web.Convertors
                                VariantId = variant.Id,
                                Handle = product.Handle,
                                Price = variant.Price,
-                               RequiresShipping = IsNullOrEmpty(product.Type) ||
-                                    !IsNullOrEmpty(product.Type) && product.Type.Equals("Physical", StringComparison.OrdinalIgnoreCase),
+                               RequiresShipping = String.IsNullOrEmpty(product.Type) ||
+                                    !String.IsNullOrEmpty(product.Type) && product.Type.Equals("Physical", StringComparison.OrdinalIgnoreCase),
                                Quantity = 1,
                                Sku = variant.Sku,
                                Url = product.Url,
@@ -74,7 +73,7 @@ namespace VirtoCommerce.Web.Convertors
             productModel.TemplateSuffix = null; // TODO
             productModel.Title = product.Name;
             productModel.Type = product.ProductType;
-            productModel.Url = Format(pathTemplate, product.Code);
+            productModel.Url = string.Format(pathTemplate, product.Code);
             productModel.Vendor = fieldsCollection.ContainsKey("brand") ? fieldsCollection["brand"] as string : null;
             productModel.TaxType = product.TaxType;
 
@@ -87,22 +86,22 @@ namespace VirtoCommerce.Web.Convertors
             // "/products/code" or "/en-us/store/collection/outline" 
             // specify SEO based url
             var urlHelper = UrlHelperExtensions.GetUrlHelper();
-            var url = Empty;
+            var url = String.Empty;
             if (urlHelper != null && collection != null && productModel.Keywords != null && productModel.Keywords.Any())
             {
                 var keyword = productModel.Keywords.SeoKeyword(Thread.CurrentThread.CurrentUICulture.Name);
                 if (keyword != null)
                 {
                     url = urlHelper.ItemUrl(keyword.Keyword, collection == null ? "" : collection.Outline);
-                    if (!IsNullOrEmpty(url))
+                    if (!String.IsNullOrEmpty(url))
                         productModel.Url = url;
                 }
             }
 
-            if (IsNullOrEmpty(url) && urlHelper != null && collection != null)
+            if (String.IsNullOrEmpty(url) && urlHelper != null && collection != null)
             {
                 url = urlHelper.ItemUrl(productModel.Handle, collection == null ? "" : collection.Outline);
-                if (!IsNullOrEmpty(url))
+                if (!String.IsNullOrEmpty(url))
                     productModel.Url = url;
             }
 
@@ -154,7 +153,7 @@ namespace VirtoCommerce.Web.Convertors
             variantModel.CompareAtPrice = price != null ? (price.Sale.HasValue ? price.Sale.Value : price.List) : 0;
             //variantModel.Id = variation.Id;
             variantModel.Id = variation.Code;
-            variantModel.Image = variationImage?.AsWebModel(variation.Name, variation.MainProductId);
+            variantModel.Image = variationImage != null ? variationImage.AsWebModel(variation.Name, variation.MainProductId) : null;
 
             PopulateInventory(ref variantModel, variation);
             variantModel.Options = GetOptionValues(options, variation.VariationProperties);
@@ -175,7 +174,7 @@ namespace VirtoCommerce.Web.Convertors
             variantModel.Selected = variantlUrlParameter != null;
             variantModel.Sku = variation.Properties.ContainsKey("sku") ? variation.Properties["sku"] as string : variation.Code;
             variantModel.Title = variation.Name;
-            variantModel.Url = Format(pathTemplate, variation.MainProductId, variation.Id);
+            variantModel.Url = string.Format(pathTemplate, variation.MainProductId, variation.Id);
             variantModel.Weight = variation.Weight.HasValue ? variation.Weight.Value : 0;
             variantModel.WeightInUnit = null; // TODO
             variantModel.WeightUnit = variation.WeightUnit;
