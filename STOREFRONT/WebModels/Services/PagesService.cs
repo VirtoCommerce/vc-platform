@@ -66,7 +66,7 @@ namespace VirtoCommerce.Web.Services
             {
                 var prefix = string.Format("/blogs/{0}", segment);
                 var articles = items.Where(x=>x.FileName.StartsWith(prefix)).Select(x => x.AsArticleWebModel());
-                var blog = new Blog() { Id = segment, Handle = segment, Url = prefix, Title = segment, Articles = articles.ToArray() };
+                var blog = new Blog() { Id = segment, Handle = segment, Url = prefix, Title = segment, AllArticles = articles.ToArray() };
                 blogs.Add(blog);
             }
 

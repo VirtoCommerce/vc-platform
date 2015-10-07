@@ -1,11 +1,11 @@
-﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.catalogScopePickController', ['$scope', 'virtoCommerce.catalogModule.catalogs', function ($scope, catalogs) {
+﻿angular.module('platformWebApp')
+.controller('platformWebApp.security.scopeValuePickFromSimpleListController', ['$scope', function ($scope) {
     var blade = $scope.blade;
 
     function initializeBlade() {
-    	catalogs.query({}, function (data) {
+        blade.dataPromise.then(function (data) {
             blade.isLoading = false;
-            
+
             _.each(blade.currentEntity.assignedScopes, function (x) {
                 var store = _.find(data, function (y) { return x.scope === y.id; });
                 if (store) {
@@ -29,7 +29,7 @@
 
     $scope.saveChanges = function () {
         var selection = _.map(_.where(blade.currentEntities, { $selected: true }), function (x) {
-          	return angular.extend({ scope: x.id, label: x.name }, blade.currentEntity.scopeOriginal);
+            return angular.extend({ scope: x.id, label: x.name }, blade.currentEntity.scopeOriginal);
         });
         blade.onChangesConfirmedFn(selection);
         $scope.bladeClose();

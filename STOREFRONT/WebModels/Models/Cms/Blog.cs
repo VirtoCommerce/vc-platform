@@ -1,4 +1,6 @@
 ﻿using DotLiquid;
+using System.Linq;
+using VirtoCommerce.Web.Views.Engines.Liquid.Extensions;
 using Tag = VirtoCommerce.Web.Models.Tagging.Tag;
 
 namespace VirtoCommerce.Web.Models.Cms
@@ -6,7 +8,7 @@ namespace VirtoCommerce.Web.Models.Cms
     public class Blog : Drop
     {
         private ItemCollection<Tag> _allTags;
-        //private ItemCollection<Article> _articles;
+        private ItemCollection<Article> _Articles;
 
         public ItemCollection<Tag> AllTags
         {
@@ -32,13 +34,30 @@ namespace VirtoCommerce.Web.Models.Cms
             }
         }
 
-        public Article[] Articles { get; set; }
+        public ItemCollection<Article> Articles
+        {
+            get
+            {
+                var pageSize = this.Context == null ? 20 : this.Context["paginate.page_size"].ToInt(20);
+                var skip = this.Context == null ? 0 : this.Context["paginate.current_offset"].ToInt();
+
+                if(AllArticles != null && AllArticles.Count() > 0)
+                {
+                    _Articles = new ItemCollection<Article>(AllArticles.Skip(skip).Take(pageSize).ToArray());
+                    _Articles.TotalCount = AllArticles.Count();
+                }
+
+                return _Articles;
+            }
+        }
+
+        public Article[] AllArticles { get; set; }
 
         public int ArticlesCount
         {
             get
             {
-                return this.Articles == null ? 0 : this.Articles.Length;
+                return this.AllArticles == null ? 0 : this.AllArticles.Length;
             }
         }
 

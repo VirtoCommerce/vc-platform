@@ -98,6 +98,7 @@
     <Compile Include="Contents\PublishingService.cs" />
     <Compile Include="Contents\ShouldProcess.cs" />
     <Compile Include="Contents\SiteStaticContentContext.cs" />
+    <Compile Include="Contents\Yaml.cs" />
     <Compile Include="Engines\Liquid\CommerceFilters.cs" />
     <Compile Include="Engines\Liquid\Extensions\HttpContextExtensions.cs" />
     <Compile Include="Engines\Liquid\Extensions\ObjectExtensions.cs" />
