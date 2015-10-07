@@ -1,8 +1,8 @@
-﻿namespace VirtoCommerce.MarketingModule.Web.Controllers
+﻿namespace VirtoCommerce.MarketingModule.Web.Security
 {
-    public static class PredefinedPermissions
+    public static class MarketingPredefinedPermissions
     {
-        public const string Query = "marketing:read",
+        public const string Read = "marketing:read",
             Create = "marketing:create",
             Access = "marketing:access",
             Update = "marketing:update",

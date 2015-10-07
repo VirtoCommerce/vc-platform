@@ -1,8 +1,8 @@
-﻿namespace VirtoCommerce.Content.Web.Controllers
+﻿namespace VirtoCommerce.Content.Web.Security
 {
-    public static class PredefinedPermissions
+    public static class ContentPredefinedPermissions
     {
-        public const string Query = "content:read",
+        public const string Read = "content:read",
             Create = "content:create",
             Access = "content:access",
             Update = "content:update",

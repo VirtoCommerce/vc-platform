@@ -9,10 +9,10 @@ using VirtoCommerce.Platform.Core.Security;
 
 namespace VirtoCommerce.CatalogModule.Web.Security
 {
-    public class SelectedCategoryScope : PermissionScope
+    public class CatalogSelectedCategoryScope : PermissionScope
     {
         private readonly ICategoryService _categoryService;
-        public SelectedCategoryScope(ICategoryService categoryService)
+        public CatalogSelectedCategoryScope(ICategoryService categoryService)
         {
             _categoryService = categoryService;
         }

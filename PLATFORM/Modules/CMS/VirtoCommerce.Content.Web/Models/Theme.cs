@@ -21,5 +21,7 @@ namespace VirtoCommerce.Content.Web.Models
 		/// Last modified date of any element in theme
 		/// </summary>
 		public DateTime Modified { get; set; }
-	}
+
+        public string[] SecurityScopes { get; set; }
+    }
 }

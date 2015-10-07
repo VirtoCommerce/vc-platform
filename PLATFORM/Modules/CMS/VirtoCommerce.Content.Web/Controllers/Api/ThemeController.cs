@@ -17,15 +17,15 @@ using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Content.Web.Converters;
 using VirtoCommerce.Content.Web.Models;
 using VirtoCommerce.Platform.Core.PushNotifications;
+using VirtoCommerce.Content.Web.Security;
 
 #endregion
 
 namespace VirtoCommerce.Content.Web.Controllers.Api
 {
 	[RoutePrefix("api/cms/{storeId}")]
-	[CheckPermission(Permission = PredefinedPermissions.Query)]
-	public class ThemeController : ApiController
-	{
+	public class ThemeController : ContentBaseController
+    {
 		#region Fields
 		private readonly IThemeService _themeService;
 		private readonly string _pathForMultipart;
@@ -34,7 +34,9 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
         #endregion
 
         #region Constructors and Destructors
-        public ThemeController(Func<string, IThemeService> factory, ISettingsManager manager, string pathForMultipart, string pathForFiles, string defaultThemePath)
+        public ThemeController(Func<string, IThemeService> factory, ISettingsManager manager, ISecurityService securityService, IPermissionScopeService permissionScopeService,
+                               string pathForMultipart, string pathForFiles, string defaultThemePath)
+            : base(securityService, permissionScopeService)
 		{
 			if (factory == null)
 			{
@@ -78,10 +80,13 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		[Route("themes/{themeId}/assets/{*assetId}")]
 		public IHttpActionResult GetThemeAsset(string assetId, string storeId, string themeId)
 		{
+            base.CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Read, new ContentScopeObject { StoreId = storeId });
 			var item = this._themeService.GetThemeAsset(storeId, themeId, assetId);
 			if (item != null)
 			{
-				return this.Ok(item.ToWebModel());
+                var retVal = item.ToWebModel();
+                retVal.SecurityScopes = base.GetObjectPermissionScopeStrings(new ContentScopeObject { StoreId = storeId });
+				return this.Ok(retVal);
 			}
 
 			return NotFound();
@@ -99,9 +104,17 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		[Route("themes/{themeId}/assets")]
 		public IHttpActionResult SearchThemeAssets(string storeId, string themeId, [FromUri]GetThemeAssetsCriteria criteria)
 		{
-			var items = this._themeService.GetThemeAssets(storeId, themeId, criteria.ToCoreModel());
+            base.CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Read, new ContentScopeObject { StoreId = storeId });
 
-			return this.Ok(items.OrderBy(x => x.Updated).Select(s => s.ToWebModel()).ToArray());
+            var items = this._themeService.GetThemeAssets(storeId, themeId, criteria.ToCoreModel());
+
+			return this.Ok(items.OrderBy(x => x.Updated).Select(s =>
+            {
+                var result = s.ToWebModel();
+                result.SecurityScopes = base.GetObjectPermissionScopeStrings(new ContentScopeObject { StoreId = storeId });
+                return result;
+
+            }).ToArray());
 		}
 
 		/// <summary>
@@ -113,10 +126,11 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		[HttpDelete]
 		[ResponseType(typeof(void))]
 		[Route("themes/{themeId}")]
-		[CheckPermission(Permission = PredefinedPermissions.Delete)]
 		public IHttpActionResult DeleteTheme(string storeId, string themeId)
 		{
-			this._themeService.DeleteTheme(storeId, themeId);
+            base.CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Delete, new ContentScopeObject { StoreId = storeId });
+
+            this._themeService.DeleteTheme(storeId, themeId);
 
 			return this.Ok();
 		}
@@ -132,7 +146,9 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		[Route("themes/{themeId}/folders")]
 		public IHttpActionResult GetThemeAssets(string storeId, string themeId)
 		{
-			var items = this._themeService.GetThemeAssets(storeId, themeId, null);
+            base.CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Read, new ContentScopeObject { StoreId = storeId });
+
+            var items = this._themeService.GetThemeAssets(storeId, themeId, null);
 
 			return this.Ok(items.ToWebModel());
 		}
@@ -146,7 +162,9 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		[Route("themes")]
 		public IHttpActionResult GetThemes(string storeId)
 		{
-			var items = this._themeService.GetThemes(storeId);
+            base.CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Read, new ContentScopeObject { StoreId = storeId });
+
+            var items = this._themeService.GetThemes(storeId);
 			return this.Ok(items.Select(s => s.ToWebModel()).ToArray());
 		}
 
@@ -160,10 +178,11 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		[HttpPost]
 		[Route("themes/{themeId}/assets")]
 		[ResponseType(typeof(void))]
-		[CheckPermission(Permission = PredefinedPermissions.Update)]
 		public IHttpActionResult SaveItem(ThemeAsset asset, string storeId, string themeId)
 		{
-			if (!string.IsNullOrEmpty(asset.AssetUrl))
+            base.CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Update, new ContentScopeObject { StoreId = storeId });
+
+            if (!string.IsNullOrEmpty(asset.AssetUrl))
 			{
                 using (var webClient = new WebClient())
                 {
@@ -185,10 +204,11 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		[HttpDelete]
 		[Route("themes/{themeId}/assets")]
 		[ResponseType(typeof(void))]
-		[CheckPermission(Permission = PredefinedPermissions.Delete)]
 		public IHttpActionResult DeleteAssets(string storeId, string themeId, [FromUri]string[] assetIds)
 		{
-			this._themeService.DeleteThemeAssets(storeId, themeId, assetIds);
+            base.CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Delete, new ContentScopeObject { StoreId = storeId });
+
+            this._themeService.DeleteThemeAssets(storeId, themeId, assetIds);
 			return this.Ok();
 		}
 
@@ -202,9 +222,11 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		[HttpGet]
 		[Route("themes/file")]
 		[ResponseType(typeof(void))]
-		[CheckPermission(Permission = PredefinedPermissions.Create)]
+		[CheckPermission(Permission = ContentPredefinedPermissions.Create)]
 		public IHttpActionResult CreateNewTheme(string storeId, string themeFileUrl, string themeName)
 		{
+            base.CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Create, new ContentScopeObject { StoreId = storeId });
+
             using (var webClient = new WebClient())
 			{
 				var filePath = string.Format("~/App_Data/Uploads/{0}.zip", Guid.NewGuid().ToString());
@@ -243,10 +265,11 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		[HttpGet]
 		[Route("themes/createdefault")]
 		[ResponseType(typeof(void))]
-		[CheckPermission(Permission = PredefinedPermissions.Create)]
 		public IHttpActionResult CreateDefaultTheme(string storeId)
 		{
-			_themeService.CreateDefaultTheme(storeId, _defaultThemePath);
+            base.CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Create, new ContentScopeObject { StoreId = storeId });
+
+            _themeService.CreateDefaultTheme(storeId, _defaultThemePath);
 			
 			return Ok();
 		}

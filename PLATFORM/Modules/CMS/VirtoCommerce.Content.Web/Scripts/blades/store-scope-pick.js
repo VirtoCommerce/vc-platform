@@ -1,9 +1,9 @@
-﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.catalogScopePickController', ['$scope', 'virtoCommerce.catalogModule.catalogs', function ($scope, catalogs) {
+﻿angular.module('virtoCommerce.contentModule')
+.controller('virtoCommerce.contentModule.storeScopePickController', ['$scope', 'virtoCommerce.storeModule.stores', function ($scope, stores) {
     var blade = $scope.blade;
 
     function initializeBlade() {
-    	catalogs.query({}, function (data) {
+        stores.query({}, function (data) {
             blade.isLoading = false;
             
             _.each(blade.currentEntity.assignedScopes, function (x) {
@@ -24,7 +24,7 @@
     };
 
     $scope.isValid = function () {
-    	return true;
+        return _.any(blade.currentEntities, function (x) { return x.$selected; });
     };
 
     $scope.saveChanges = function () {

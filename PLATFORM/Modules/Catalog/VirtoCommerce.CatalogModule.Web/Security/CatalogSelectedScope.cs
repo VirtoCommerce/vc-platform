@@ -9,7 +9,7 @@ using VirtoCommerce.Platform.Core.Security;
 
 namespace VirtoCommerce.CatalogModule.Web.Security
 {
-    public class SelectedCatalogScope : PermissionScope
+    public class CatalogSelectedScope : PermissionScope
     {
 
         public override bool IsScopeAvailableForPermission(string permission)

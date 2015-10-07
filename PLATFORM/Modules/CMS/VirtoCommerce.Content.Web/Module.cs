@@ -14,6 +14,8 @@ using VirtoCommerce.Content.Web.ExportImport;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Domain.Store.Model;
+using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Content.Web.Security;
 
 namespace VirtoCommerce.Content.Web
 {
@@ -145,7 +147,9 @@ namespace VirtoCommerce.Content.Web
             var modulePath = options.GetModuleDirectoryPath("VirtoCommerce.Content");
             var themePath = Path.Combine(modulePath, "Default_Theme");
 
-            _container.RegisterType<ThemeController>(new InjectionConstructor(themesFactory, settingsManager, uploadPath, uploadPathFiles, themePath));
+            _container.RegisterType<ThemeController>(new InjectionConstructor(themesFactory, settingsManager, _container.Resolve<ISecurityService>(), 
+                                                                             _container.Resolve<IPermissionScopeService>(),
+                                                                              uploadPath, uploadPathFiles, themePath));
 
             #endregion
 
@@ -192,7 +196,8 @@ namespace VirtoCommerce.Content.Web
                 Directory.CreateDirectory(fileSystemMainPath);
             }
 
-            _container.RegisterType<PagesController>(new InjectionConstructor(pagesFactory, settingsManager));
+            _container.RegisterType<PagesController>(new InjectionConstructor(pagesFactory, settingsManager, _container.Resolve<ISecurityService>(),
+                                                                             _container.Resolve<IPermissionScopeService>()));
 
             #endregion
 
@@ -217,6 +222,10 @@ namespace VirtoCommerce.Content.Web
             };
 
             dynamicPropertyService.SaveProperties(new[] { defaultThemeNameProperty });
+
+            //Register bounded security scope types
+            var securityScopeService = _container.Resolve<IPermissionScopeService>();
+            securityScopeService.RegisterSope(() => new ContentSelectedStoreScope());
         }
 
         public override void SetupDatabase()

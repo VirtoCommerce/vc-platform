@@ -215,10 +215,10 @@ angular.module(catalogsModuleName, [
 
 
 	  //Security scopes
-		//Register permission scopes templates used for scope bounded definition in role management ui
+	  //Register permission scopes templates used for scope bounded definition in role management ui
 
       var catalogSelectScope = {
-      	type: 'SelectedCatalogScope',
+      	type: 'CatalogSelectedScope',
       	title: 'Only for selected catalogs',
       	selectFn: function (blade, callback) {
       		var newBlade = {
@@ -236,7 +236,7 @@ angular.module(catalogsModuleName, [
       scopeResolver.register(catalogSelectScope);
 
       var categorySelectScope = {
-      	type : 'SelectedCategoryScope',
+      	type: 'CatalogSelectedCategoryScope',
       	title: 'Only for selected categories',
       	selectFn: function (blade, callback) {
       		var selectedListItems = _.map(this.assignedScopes, function (x) { return { id: x.scope, name: x.label }; });

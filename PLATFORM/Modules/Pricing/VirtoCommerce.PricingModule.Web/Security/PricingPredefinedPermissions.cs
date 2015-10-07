@@ -1,8 +1,8 @@
-﻿namespace VirtoCommerce.PricingModule.Web.Controllers
+﻿namespace VirtoCommerce.PricingModule.Web.Security
 {
-    public static class PredefinedPermissions
+    public static class PricingPredefinedPermissions
     {
-        public const string Query = "pricing:read",
+        public const string Read = "pricing:read",
             Create = "pricing:create",
             Access = "pricing:access",
             Update = "pricing:update",

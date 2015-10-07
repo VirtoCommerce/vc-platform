@@ -31,7 +31,7 @@ namespace VirtoCommerce.Platform.Data.Security.Converters
             result.PermissionId = source.Id;
             if (source.AssignedScopes != null)
             {
-                result.Scopes = new ObservableCollection<dataModel.PermissionScopeEntity>(source.AssignedScopes.Select(x => x.ToDataModel()));
+                result.Scopes = new ObservableCollection<dataModel.PermissionScopeEntity>(source.AssignedScopes.Where(x=>!String.IsNullOrEmpty(x.Scope)).Select(x => x.ToDataModel()));
             }
             return result;
         }

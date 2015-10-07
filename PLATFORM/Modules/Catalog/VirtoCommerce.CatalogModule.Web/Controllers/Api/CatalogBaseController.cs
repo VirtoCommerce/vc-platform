@@ -54,11 +54,11 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                                                       .SelectMany(x => x.AssignedScopes);
 
                 //Filter by selected catalog
-                criteria.CatalogsIds = readPermissionScopes.OfType<SelectedCatalogScope>()
+                criteria.CatalogsIds = readPermissionScopes.OfType<CatalogSelectedScope>()
                                                          .Select(x => x.Scope)
                                                          .Where(x => !String.IsNullOrEmpty(x)).ToArray();
                 //Filter by selected category
-                criteria.CategoriesIds = readPermissionScopes.OfType<SelectedCategoryScope>()
+                criteria.CategoriesIds = readPermissionScopes.OfType<CatalogSelectedCategoryScope>()
                                                         .Select(x => x.Scope)
                                                         .Where(x => !String.IsNullOrEmpty(x)).ToArray();
             }
