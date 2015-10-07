@@ -43,11 +43,7 @@
   </settings>
   <permissions>
     <group name="Inventory">
-      <!--<permission id="inventory:access" name="Open inventory menu" description="Permission to open inventory menu."/>
-      <permission id="inventory:create" name="Create inventory related data" description="Permission to create inventory related data."/>
-      <permission id="inventory:read" name="View inventory related data" description="Permission to browse and view inventory related data."/>-->
-      <permission id="inventory:update" name="Update inventory related data" description="Permission to update inventory related data."/>
-      <!--<permission id="inventory:delete" name="Delete inventory related data" description="Permission to delete inventory related data."/>-->
+        <permission id="inventory:update" name="Update inventory related data" description="Permission to update inventory related data."/>
     </group>
   </permissions>
 </module>

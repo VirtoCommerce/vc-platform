@@ -1,27 +1,23 @@
-﻿using System.Net;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Web.Http;
+using System.Web.Http.Description;
+using VirtoCommerce.Content.Data.Services;
+using VirtoCommerce.Content.Web.Converters;
+using VirtoCommerce.Content.Web.Models;
+using VirtoCommerce.Content.Web.Security;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
+using VirtoCommerce.Web.Utilities;
 
 namespace VirtoCommerce.Content.Web.Controllers.Api
 {
-    #region
-
-    using System;
-    using System.Linq;
-    using System.Web.Http;
-    using System.Web.Http.Description;
-    using VirtoCommerce.Content.Data.Services;
-    using VirtoCommerce.Content.Web.Models;
-    using VirtoCommerce.Content.Web.Converters;
-    using System.Collections.Generic;
-    using VirtoCommerce.Web.Utilities;
-
-    #endregion
 
     [RoutePrefix("api/cms/{storeId}/pages")]
-    [CheckPermission(Permission = PredefinedPermissions.Query)]
-    public class PagesController : ApiController
+    public class PagesController : ContentBaseController
     {
         #region Fields
 
@@ -31,7 +27,9 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 
         #region Constructors and Destructors
 
-        public PagesController(Func<string, IPagesService> serviceFactory, ISettingsManager settingsManager)
+        public PagesController(Func<string, IPagesService> serviceFactory, ISettingsManager settingsManager, 
+                                ISecurityService securityService, IPermissionScopeService permissionScopeService)
+            :base(securityService, permissionScopeService)
         {
             if (serviceFactory == null)
             {
@@ -65,6 +63,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
         [Route("")]
         public IHttpActionResult GetPages(string storeId, [FromUri]GetPagesCriteria criteria)
         {
+            base.CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Read, new ContentScopeObject { StoreId = storeId });
             var items = _pagesService.GetPages(storeId, criteria.ToCoreModel()).Select(s => s.ToWebModel());
             return Ok(items);
         }
@@ -78,6 +77,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
         [Route("folders")]
         public IHttpActionResult GetFolders(string storeId)
         {
+            base.CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Read, new ContentScopeObject { StoreId = storeId });
             var items = _pagesService.GetPages(storeId, null);
 
             return Ok(items.ToWebModel());
@@ -98,6 +98,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
         [Route("{language}/{*pageName}")]
         public IHttpActionResult GetPage(string storeId, string language, string pageName)
         {
+            base.CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Read, new ContentScopeObject { StoreId = storeId });
             var item = _pagesService.GetPage(storeId, pageName, language);
             if (item == null)
             {
@@ -119,6 +120,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
         [Route("checkname")]
         public IHttpActionResult CheckName(string storeId, [FromUri]string pageName, [FromUri]string language)
         {
+            base.CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Read, new ContentScopeObject { StoreId = storeId });
             var result = _pagesService.CheckList(storeId, pageName, language);
             var response = new CheckNameResult { Result = result };
             return Ok(response);
@@ -132,9 +134,10 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
         [HttpPost]
         [Route("")]
         [ResponseType(typeof(void))]
-        [CheckPermission(Permission = PredefinedPermissions.Update)]
         public IHttpActionResult SaveItem(string storeId, Page page)
         {
+            base.CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Update, new ContentScopeObject { StoreId = storeId });
+
             if (!string.IsNullOrEmpty(page.FileUrl))
             {
                 using (var webClient = new WebClient())
@@ -157,9 +160,10 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
         [HttpDelete]
         [Route("")]
         [ResponseType(typeof(void))]
-        [CheckPermission(Permission = PredefinedPermissions.Delete)]
         public IHttpActionResult DeleteItem(string storeId, [FromUri]string[] pageNamesAndLanguges)
         {
+            base.CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Delete, new ContentScopeObject { StoreId = storeId });
+
             _pagesService.DeletePage(storeId, PagesUtility.GetShortPageInfoFromString(pageNamesAndLanguges).ToArray());
             return StatusCode(HttpStatusCode.NoContent);
         }
@@ -169,6 +173,8 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
         [Route("blog/{blogName}")]
         public IHttpActionResult CreateBlog(string storeId, string blogName)
         {
+            base.CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Create, new ContentScopeObject { StoreId = storeId });
+
             var page = GetDefaultBlog(blogName);
             _pagesService.SavePage(storeId, page.ToCoreModel());
             return StatusCode(HttpStatusCode.NoContent);
@@ -179,6 +185,8 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
         [Route("blog/{blogName}")]
         public IHttpActionResult DeleteBlog(string storeId, string blogName)
         {
+            base.CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Delete, new ContentScopeObject { StoreId = storeId });
+
             _pagesService.DeleteBlog(storeId, blogName);
             return StatusCode(HttpStatusCode.NoContent);
         }
@@ -188,6 +196,8 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
         [Route("blog/{blogName}/{oldBlogName}")]
         public IHttpActionResult UpdateBlog(string storeId, string blogName, string oldBlogName)
         {
+            base.CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Update, new ContentScopeObject { StoreId = storeId });
+
             _pagesService.UpdateBlog(storeId, blogName, oldBlogName);
             return StatusCode(HttpStatusCode.NoContent);
         }

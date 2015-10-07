@@ -119,7 +119,7 @@
     </Compile>
     <Compile Include="Controllers\Api\MarketingModuleController.cs" />
     <Compile Include="Controllers\Api\MarketingModulePromotionController.cs" />
-    <Compile Include="Controllers\PredefinedPermissions.cs" />
+    <Compile Include="Security\MarketingPredefinedPermissions.cs" />
     <Compile Include="Converters\ContentFolderConverter.cs" />
     <Compile Include="Converters\ContentPlaceConverter.cs" />
     <Compile Include="Converters\ContentPublicationConverter.cs" />

@@ -163,7 +163,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\Api\StoreModuleController.cs" />
-    <Compile Include="Controllers\PredefinedPermissions.cs" />
+    <Compile Include="Security\StorePredefinedPermissions.cs" />
     <Compile Include="Converters\FulfillmentConverter.cs" />
     <Compile Include="Converters\PaymentMethodConverter.cs" />
     <Compile Include="Converters\TaxProviderConverter.cs" />
@@ -179,6 +179,7 @@
     <Compile Include="Model\TaxProvider.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Security\StoreSelectedScope.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj">

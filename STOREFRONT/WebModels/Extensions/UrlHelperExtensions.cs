@@ -1,5 +1,6 @@
 ﻿#region
 
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 
@@ -71,5 +72,22 @@ namespace VirtoCommerce.Web.Extensions
             return helper.RouteUrl("category", routeValues);
         }
         #endregion
+
+        public static UrlHelper GetUrlHelper()
+        {
+            var httpContext = HttpContext.Current;
+            if (httpContext == null)
+            {
+                return null;
+            }
+
+            var httpContextBase = new HttpContextWrapper(httpContext);
+            var routeData = new RouteData();
+            var requestContext = new RequestContext(httpContextBase, routeData);
+
+            var urlHelper = new UrlHelper(requestContext);
+            return urlHelper;
+
+        }
     }
 }

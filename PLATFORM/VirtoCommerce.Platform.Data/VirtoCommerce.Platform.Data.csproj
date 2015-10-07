@@ -267,6 +267,10 @@
     <Compile Include="Repositories\Migrations\201509291431544_PermissionScope.Designer.cs">
       <DependentUpon>201509291431544_PermissionScope.cs</DependentUpon>
     </Compile>
+    <Compile Include="Repositories\Migrations\201510050938282_LabelForScope.cs" />
+    <Compile Include="Repositories\Migrations\201510050938282_LabelForScope.Designer.cs">
+      <DependentUpon>201510050938282_LabelForScope.cs</DependentUpon>
+    </Compile>
     <Compile Include="Repositories\Migrations\Configuration.cs" />
     <Compile Include="Repositories\PlatformDatabaseInitializer.cs" />
     <Compile Include="Repositories\PlatformRepository.cs" />
@@ -291,6 +295,7 @@
     <Compile Include="Security\Converters\ApplicationUserConverter.cs" />
     <Compile Include="Security\Converters\IdentityResultConverter.cs" />
     <Compile Include="Security\Converters\PermissionConverter.cs" />
+    <Compile Include="Security\Converters\PermissionScopeConverter.cs" />
     <Compile Include="Security\Converters\RoleAssignmentConverter.cs" />
     <Compile Include="Security\Converters\RoleConverter.cs" />
     <Compile Include="Security\Converters\RolePermissionConverter.cs" />
@@ -373,6 +378,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Repositories\Migrations\201509291431544_PermissionScope.resx">
       <DependentUpon>201509291431544_PermissionScope.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Repositories\Migrations\201510050938282_LabelForScope.resx">
+      <DependentUpon>201510050938282_LabelForScope.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Security\Identity\Migrations\201411101625303_InitialCreate.resx">
       <DependentUpon>201411101625303_InitialCreate.cs</DependentUpon>

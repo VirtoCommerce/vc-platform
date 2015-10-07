@@ -89,5 +89,7 @@ namespace VirtoCommerce.StoreModule.Web.Model
 
         public ICollection<SeoInfo> SeoInfos { get; set; }
 
+        public string[] SecurityScopes { get; set; }
+
     }
 }

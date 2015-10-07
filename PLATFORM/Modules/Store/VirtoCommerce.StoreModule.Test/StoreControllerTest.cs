@@ -106,7 +106,7 @@ namespace VirtoCommerce.StoreModule.Test
             var dynamicPropertyService = new DynamicPropertyService(platformRepositoryFactory);
             var storeService = new StoreServiceImpl(repositoryFactory, GetCommerceService(), null, dynamicPropertyService, null, null, null, null);
 
-            var controller = new StoreModuleController(storeService, null, null, null);
+            var controller = new StoreModuleController(storeService, null, null, null, null, null);
             return controller;
         }
     }

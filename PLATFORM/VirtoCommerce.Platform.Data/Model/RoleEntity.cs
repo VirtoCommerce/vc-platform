@@ -9,7 +9,6 @@ namespace VirtoCommerce.Platform.Data.Model
         public RoleEntity()
         {
             RolePermissions = new NullCollection<RolePermissionEntity>();
-			RoleAssignments = new NullCollection<RoleAssignmentEntity>();
         }
 
         [Required]
@@ -18,6 +17,5 @@ namespace VirtoCommerce.Platform.Data.Model
         public string Description { get; set; }
 
         public virtual ObservableCollection<RolePermissionEntity> RolePermissions { get; set; }
-		public virtual ObservableCollection<RoleAssignmentEntity> RoleAssignments { get; set; }
     }
 }

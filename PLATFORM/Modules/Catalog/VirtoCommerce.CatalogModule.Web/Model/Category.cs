@@ -102,5 +102,7 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         /// The images.
         /// </value>
 		public ICollection<Image> Images { get; set; }
+
+        public string[] SecurityScopes { get; set; }
     }
 }

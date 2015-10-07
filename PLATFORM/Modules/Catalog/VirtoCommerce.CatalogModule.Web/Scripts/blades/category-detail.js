@@ -13,10 +13,11 @@
     };
 
     function initializeBlade(data) {
-        blade.currentEntity = angular.copy(data);
-        blade.origEntity = data;
-        blade.title = data.name;
-        blade.isLoading = false;
+        $scope.blade.currentEntity = angular.copy(data);
+        $scope.blade.origEntity = data;
+        $scope.blade.title = data.name;
+        $scope.blade.isLoading = false;
+        $scope.blade.securityScopes = data.securityScopes;
     };
 
     $scope.codeValidator = function (value) {
@@ -68,7 +69,7 @@
     $scope.setForm = function (form) {
         formScope = form;
     }
-
+    
     blade.toolbarCommands = [
 		{
 		    name: "Save", icon: 'fa fa-save',

@@ -60,6 +60,7 @@
                 }
                 initializeDictionaryValues(dictionaryValues);
             } else {
+                $scope.newValue.alias = $scope.newValue.value;
                 dictionaryValues.push($scope.newValue);
             }
             resetNewValue($scope.newValue.languageCode);

@@ -55,7 +55,8 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
                 catalogId: (selectedNode != null) ? selectedNode.id : null,
                 catalog: selectedNode,
                 controller: 'virtoCommerce.catalogModule.categoriesItemsListController',
-                template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/categories-items-list.tpl.html'
+                template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/categories-items-list.tpl.html',
+                securityScopes: selectedNode.securityScopes
             };
 
             bladeNavigationService.showBlade(newBlade, blade);
@@ -81,7 +82,7 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
             subtitle: 'Catalog details',
             deleteFn: onAfterCatalogDeleted,
             controller: 'virtoCommerce.catalogModule.catalogDetailController',
-            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/catalog-detail.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/catalog-detail.tpl.html',
         };
 
         bladeNavigationService.showBlade(newBlade, blade);
@@ -96,7 +97,7 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
             deleteFn: onAfterCatalogDeleted,
             id: 'catalogEdit',
             controller: 'virtoCommerce.catalogModule.virtualCatalogDetailController',
-            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/catalog-detail.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/catalog-detail.tpl.html',
         };
 
         bladeNavigationService.showBlade(newBlade, blade);

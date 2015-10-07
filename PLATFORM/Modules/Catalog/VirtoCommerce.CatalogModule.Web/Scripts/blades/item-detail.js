@@ -11,6 +11,7 @@
         return items.get({ id: blade.itemId }, function (data) {
             blade.itemId = data.id;
             blade.title = data.code;
+            blade.securityScopes = data.securityScopes;
             if (!data.productType) {
                 data.productType = 'Physical';
             }

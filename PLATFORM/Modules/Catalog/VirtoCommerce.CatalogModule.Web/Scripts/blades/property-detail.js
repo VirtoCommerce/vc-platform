@@ -3,9 +3,7 @@
     var b = $scope.blade;
     var formScope;
     b.origEntity = {};
-
-    // b.currentEntity = {};
-
+    
     $scope.currentChild = undefined;
 
     b.refresh = function (parentRefresh) {

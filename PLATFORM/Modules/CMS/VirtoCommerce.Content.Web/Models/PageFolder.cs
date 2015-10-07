@@ -26,5 +26,7 @@ namespace VirtoCommerce.Content.Web.Models
         /// Collection of folders
         /// </summary>
         public Collection<PageFolder> Folders { get { return _folders ?? (_folders = new Collection<PageFolder>()); } }
-	}
+
+        public string[] SecurityScopes { get; set; }
+    }
 }

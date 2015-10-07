@@ -1,8 +1,8 @@
-﻿namespace VirtoCommerce.CoreModule.Web.Controllers
+﻿namespace VirtoCommerce.CoreModule.Web.Security
 {
-    public static class PredefinedPermissions
+    public static class CommercePredefinedPermissions
     {
-        public const string Query = "core:fulfillment:read",
+        public const string Read = "core:fulfillment:read",
             Create = "core:fulfillment:create",
             //Access = "core:fulfillment:access",
             Update = "core:fulfillment:update",

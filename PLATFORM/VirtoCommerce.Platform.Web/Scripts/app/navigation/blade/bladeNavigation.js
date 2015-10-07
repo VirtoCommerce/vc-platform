@@ -237,8 +237,16 @@ angular.module('platformWebApp')
             blade.parentBlade = parentBlade;
             blade.childrenBlades = [];
             //copy securityscopes from parent blade
-            if (parentBlade != null) {
-                blade.securityScopes = parentBlade.securityScopes;
+            if (parentBlade != null && parentBlade.securityScopes) {
+				//need merge scopes
+            	if (angular.isArray(blade.securityScopes) && angular.isArray(parentBlade.securityScopes))
+            	{
+            		blade.securityScopes = parentBlade.securityScopes.concat(blade.securityScopes);
+            	}
+            	else
+            	{
+            		blade.securityScopes = parentBlade.securityScopes;
+            	}
             }
 
             var existingBlade = service.findBlade(blade.id);

@@ -35,11 +35,12 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 			using (var repository = _catalogRepositoryFactory())
 			{
 				var dbCatalogBase = repository.GetCatalogById(catalogId);
-
-				var dbProperties = repository.GetCatalogProperties(dbCatalogBase);
-				var properties = dbProperties.Select(x => x.ToCoreModel(dbCatalogBase.ToCoreModel(), null)).ToArray();
-				retVal = dbCatalogBase.ToCoreModel(properties);
-
+                if (dbCatalogBase != null)
+                {
+                    var dbProperties = repository.GetCatalogProperties(dbCatalogBase);
+                    var properties = dbProperties.Select(x => x.ToCoreModel(dbCatalogBase.ToCoreModel(), null)).ToArray();
+                    retVal = dbCatalogBase.ToCoreModel(properties);
+                }
 			}
 			return retVal;
 		}

@@ -31,7 +31,8 @@ angular.module(moduleName, [
   }]
 )
 .run(
-  ['platformWebApp.toolbarService', 'platformWebApp.bladeNavigationService', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', function (toolbarService, bladeNavigationService, mainMenuService, widgetService, $state) {
+  ['platformWebApp.toolbarService', 'platformWebApp.bladeNavigationService', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', 'platformWebApp.permissionScopeResolver', 'virtoCommerce.storeModule.stores',
+	function (toolbarService, bladeNavigationService, mainMenuService, widgetService, $state, scopeResolver, stores) {
       //Register module in main menu
       var menuItem = {
           path: 'browse/store',
@@ -94,6 +95,24 @@ angular.module(moduleName, [
       toolbarService.register(resetCommand, 'virtoCommerce.storeModule.shippingMethodDetailController');
       toolbarService.register(resetCommand, 'virtoCommerce.storeModule.taxProviderDetailController');
 
-   
+  	//Register permission scopes templates used for scope bounded definition in role management ui
+      var selectedStoreScope = {
+      	type: 'StoreSelectedScope',
+      	title: 'Only for selected stores',
+      	selectFn: function (blade, callback) {
+      		var newBlade = {
+      			id: 'store-pick',
+      			title: this.title,
+      			subtitle: 'Select stores',
+      			currentEntity: this,
+      			onChangesConfirmedFn: callback,
+      			dataPromise: stores.query().$promise,
+      			controller: 'platformWebApp.security.scopeValuePickFromSimpleListController',
+      			template: '$(Platform)/Scripts/app/security/blades/common/scope-value-pick-from-simple-list.tpl.html'
+      		};
+      		bladeNavigationService.showBlade(newBlade, blade);
+      	}
+      };
+      scopeResolver.register(selectedStoreScope);
   }])
 ;

@@ -40,11 +40,11 @@
   </settings>
   <permissions>
     <group name="Marketing">
-      <permission id="marketing:access" name="Open marketing menu" description="Permission to open marketing menu."/>
-      <permission id="marketing:create" name="Create marketing data" description="Permission to create marketing data."/>
-      <permission id="marketing:read" name="View marketing data" description="Permission to browse and view marketing data."/>
-      <permission id="marketing:update" name="Update marketing data" description="Permission to update marketing data."/>
-      <permission id="marketing:delete" name="Delete marketing data" description="Permission to delete marketing data."/>
+      <permission id="marketing:access" name="Open marketing menu" description=""/>
+      <permission id="marketing:create" name="Create marketing data" description=""/>
+      <permission id="marketing:read" name="View marketing data" description=""/>
+      <permission id="marketing:update" name="Update marketing data" description=""/>
+      <permission id="marketing:delete" name="Delete marketing data" description=""/>
     </group>
   </permissions>
 </module>

@@ -2,9 +2,11 @@
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VirtoCommerce.Platform.Core.DynamicProperties;
+using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.DynamicProperties;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Platform.Data.Repositories;
+using VirtoCommerce.Platform.Data.Security;
 
 namespace VirtoCommerce.Platform.Tests
 {
@@ -22,6 +24,15 @@ namespace VirtoCommerce.Platform.Tests
     [TestClass]
     public class DynamicPropertyTests
     {
+        [TestMethod]
+        public void dddd()
+        {
+            var service = GetRoleManagementService();
+            var role = service.GetRole("335fc4b9b4024fc587eeb4aec5166cc7");
+            role.Permissions = new Permission [] { };
+            service.AddOrUpdateRole(role);
+        }
+
         [TestMethod]
         public void GetObjectTypes()
         {
@@ -274,6 +285,10 @@ namespace VirtoCommerce.Platform.Tests
         private IDynamicPropertyService GetDynamicPropertyService()
         {
             return new DynamicPropertyService(() => new PlatformRepository("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor()));
+        }
+        private IRoleManagementService GetRoleManagementService()
+        {
+            return new RoleManagementService(() => new PlatformRepository("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor()), new PermissionScopeService());
         }
     }
 }

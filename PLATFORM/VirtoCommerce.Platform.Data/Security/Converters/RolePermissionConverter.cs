@@ -12,11 +12,15 @@ namespace VirtoCommerce.Platform.Data.Security.Converters
 {
     public static class RolePermissionConverter
     {
-        public static Permission ToCoreModel(this dataModel.RolePermissionEntity source)
+        public static Permission ToCoreModel(this dataModel.RolePermissionEntity source, IPermissionScopeService scopeService)
         {
             var result = new Permission();
             result.InjectFrom(source.Permission);
-            result.Scopes = source.Scopes.Select(x => x.Scope).ToArray();
+            result.AssignedScopes = source.Scopes.Select(x => new { source = x, target = scopeService.GetScopeByTypeName(x.Type) })
+                                                  .Where(x=> x.target != null)
+                                                  .Select(x=> x.source.ToCoreModel(x.target))
+                                                  .ToArray();
+            result.AvailableScopes = scopeService.GetAvailablePermissionScopes(result.Id).ToArray();
             return result;
         }
 
@@ -25,9 +29,9 @@ namespace VirtoCommerce.Platform.Data.Security.Converters
         {
             var result = new dataModel.RolePermissionEntity();
             result.PermissionId = source.Id;
-            if (source.Scopes != null)
+            if (source.AssignedScopes != null)
             {
-                result.Scopes = new ObservableCollection<dataModel.PermissionScopeEntity>(source.Scopes.Select(x => new dataModel.PermissionScopeEntity { Scope = x }));
+                result.Scopes = new ObservableCollection<dataModel.PermissionScopeEntity>(source.AssignedScopes.Where(x=>!String.IsNullOrEmpty(x.Scope)).Select(x => x.ToDataModel()));
             }
             return result;
         }

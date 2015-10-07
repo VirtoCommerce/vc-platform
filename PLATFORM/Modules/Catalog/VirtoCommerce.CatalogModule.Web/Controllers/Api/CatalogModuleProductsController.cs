@@ -13,11 +13,12 @@ using coreModel = VirtoCommerce.Domain.Catalog.Model;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Domain.Commerce.Model;
+using VirtoCommerce.CatalogModule.Web.Security;
 
 namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 {
     [RoutePrefix("api/catalog/products")]
-    public class CatalogModuleProductsController : ApiController
+    public class CatalogModuleProductsController : CatalogBaseController
     {
         private readonly IItemService _itemsService;
         private readonly IPropertyService _propertyService;
@@ -25,7 +26,9 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         private readonly ICatalogService _catalogService;
         private readonly ISkuGenerator _skuGenerator;
 
-        public CatalogModuleProductsController(IItemService itemsService, IPropertyService propertyService, IBlobUrlResolver blobUrlResolver, ICatalogService catalogService, ISkuGenerator skuGenerator)
+        public CatalogModuleProductsController(IItemService itemsService, IPropertyService propertyService, IBlobUrlResolver blobUrlResolver, 
+                                               ICatalogService catalogService, ISkuGenerator skuGenerator, ISecurityService securityService, IPermissionScopeService permissionScopeService)
+            :base(securityService, permissionScopeService)
         {
             _itemsService = itemsService;
             _propertyService = propertyService;
@@ -50,9 +53,11 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                 return NotFound();
             }
 
+            base.CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Read, item);
+
             var properties = GetAllCatalogProperies(item.CatalogId, item.CategoryId);
             var retVal = item.ToWebModel(_blobUrlResolver, properties);
-
+            retVal.SecurityScopes = base.GetObjectPermissionScopeStrings(item);
             return Ok(retVal);
         }
 
@@ -64,10 +69,11 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 		[HttpGet]
 		[ResponseType(typeof(webModel.Product))]
 		[Route("~/api/catalog/{catalogId}/products/getnew")]
-		[CheckPermission(Permission = PredefinedPermissions.Create)]
 		public IHttpActionResult GetNewProductByCatalog(string catalogId)
 		{
-			return GetNewProductByCatalogAndCategory(catalogId, null);
+            base.CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Create, new coreModel.Catalog { Id = catalogId });
+
+            return GetNewProductByCatalogAndCategory(catalogId, null);
 		}
 
 
@@ -80,7 +86,6 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 		[HttpGet]
 		[ResponseType(typeof(webModel.Product))]
 		[Route("~/api/catalog/{catalogId}/categories/{categoryId}/products/getnew")]
-		[CheckPermission(Permission = PredefinedPermissions.Create)]
 		public IHttpActionResult GetNewProductByCatalogAndCategory(string catalogId, string categoryId)
 		{
 			var retVal = new webModel.Product
@@ -91,7 +96,10 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 
 			};
 
-			if (catalogId != null)
+            base.CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Create, retVal.ToModuleModel(_blobUrlResolver));
+
+
+            if (catalogId != null)
 			{
 				var properites = GetAllCatalogProperies(catalogId, categoryId);
 				retVal.Properties = properites.Select(x => x.ToWebModel()).ToList();
@@ -117,7 +125,6 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         [HttpGet]
         [ResponseType(typeof(webModel.Product))]
         [Route("{productId}/getnewvariation")]
-        [CheckPermission(Permission = PredefinedPermissions.Create)]
         public IHttpActionResult GetNewVariation(string productId)
         {
             var product = _itemsService.GetById(productId, coreModel.ItemResponseGroup.ItemLarge);
@@ -125,6 +132,9 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             {
                 return NotFound();
             }
+
+            base.CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Create, product);
+
 
             var properties = GetAllCatalogProperies(product.CatalogId, product.CategoryId);
             var mainWebProduct = product.ToWebModel(_blobUrlResolver, properties);
@@ -168,7 +178,6 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         [HttpPost]
         [ResponseType(typeof(void))]
         [Route("")]
-        [CheckPermission(Permission = PredefinedPermissions.Update)]
         public IHttpActionResult Update(webModel.Product product)
         {
             var updatedProduct = UpdateProduct(product);
@@ -187,9 +196,11 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         [HttpDelete]
         [ResponseType(typeof(void))]
         [Route("")]
-        [CheckPermission(Permission = PredefinedPermissions.Delete)]
         public IHttpActionResult Delete([FromUri] string[] ids)
         {
+            var products = _itemsService.GetByIds(ids, Domain.Catalog.Model.ItemResponseGroup.ItemInfo);
+            base.CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Delete, products);
+
             _itemsService.Delete(ids);
             return StatusCode(HttpStatusCode.NoContent);
         }
@@ -231,11 +242,14 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                         moduleProduct.SeoInfos = new SeoInfo[] { seoInfo };
                     }
                 }
+
+                base.CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Create, moduleProduct);
                 return _itemsService.Create(moduleProduct);
             }
             else
             {
-                _itemsService.Update(new[] { moduleProduct });
+                base.CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Update, moduleProduct);
+               _itemsService.Update(new[] { moduleProduct });
             }
 
             return null;

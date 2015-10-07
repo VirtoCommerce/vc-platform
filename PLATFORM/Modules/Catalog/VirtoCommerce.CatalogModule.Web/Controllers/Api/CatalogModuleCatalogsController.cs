@@ -12,28 +12,26 @@ using Microsoft.Practices.Unity;
 using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.CatalogModule.Data.Repositories;
 using VirtoCommerce.Platform.Core.Settings;
+using VirtoCommerce.CatalogModule.Web.Security;
 
 namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 {
 	[RoutePrefix("api/catalog/catalogs")]
-    public class CatalogModuleCatalogsController : ApiController
+    public class CatalogModuleCatalogsController : CatalogBaseController
     {
         private readonly ICatalogService _catalogService;
         private readonly ICatalogSearchService _searchService;
 		private readonly IPropertyService _propertyService;
 		private readonly ISettingsManager _settingManager;
-		private readonly ISecurityService _securityService;
 
-        public CatalogModuleCatalogsController(ICatalogService catalogService,
-								  ICatalogSearchService itemSearchService,
-								  ISettingsManager settingManager,
-								  IPropertyService propertyService, ISecurityService securityService)
+        public CatalogModuleCatalogsController(ICatalogService catalogService, ICatalogSearchService itemSearchService,
+								  ISettingsManager settingManager, IPropertyService propertyService, ISecurityService securityService, IPermissionScopeService permissionScopeService)
+            :base(securityService, permissionScopeService)
         {
             _catalogService = catalogService;
             _searchService = itemSearchService;
 			_propertyService = propertyService;
 			_settingManager = settingManager;
-            _securityService = securityService;
         }
 
         /// <summary>
@@ -49,9 +47,16 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             {
                 ResponseGroup = moduleModel.ResponseGroup.WithCatalogs
             };
+            criteria = base.ChangeCriteriaToCurentUserPermissions(criteria);
             var serviceResult = _searchService.Search(criteria);
-            var retVal = serviceResult.Catalogs.Select(x => x.ToWebModel()).ToArray();
-            return Ok(retVal);
+            var retVal = new List<webModel.Catalog>();
+            foreach (var catalog in serviceResult.Catalogs)
+            {
+                var webCatalog = catalog.ToWebModel();
+                webCatalog.SecurityScopes = base.GetObjectPermissionScopeStrings(catalog);
+                retVal.Add(webCatalog);
+            }
+            return Ok(retVal.ToArray());
         }
 
         /// <summary>
@@ -62,7 +67,6 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 		[HttpGet]
         [ResponseType(typeof(webModel.Catalog))]
 		[Route("{id}")]
-        [CheckPermission(Permission = PredefinedPermissions.Query)]
         public IHttpActionResult Get(string id)
         {
             var catalog = _catalogService.GetById(id);
@@ -70,8 +74,14 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             {
                 return NotFound();
             }
+            base.CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Read, catalog);
+
 			var allCatalogProperties = _propertyService.GetCatalogProperties(id);
-			return Ok(catalog.ToWebModel(allCatalogProperties));
+            var retVal = catalog.ToWebModel(allCatalogProperties);
+
+            retVal.SecurityScopes = base.GetObjectPermissionScopeStrings(retVal);
+
+            return Ok(retVal);
         }
 
         /// <summary>
@@ -81,7 +91,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         [HttpGet]
         [ResponseType(typeof(webModel.Catalog))]
 		[Route("getnew")]
-        [CheckPermission(Permission = PredefinedPermissions.Create)]
+        [CheckPermission(Permission = CatalogPredefinedPermissions.Create)]
         public IHttpActionResult GetNewCatalog()
         {
             var retVal = new webModel.Catalog
@@ -97,7 +107,8 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                 }
             };
 
-            //retVal = _catalogService.Create(retVal.ToModuleModel()).ToWebModel();
+            retVal.SecurityScopes = base.GetObjectPermissionScopeStrings(retVal);
+
             return Ok(retVal);
         }
 
@@ -107,7 +118,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         [HttpGet]
         [ResponseType(typeof(webModel.Catalog))]
 		[Route("getnewvirtual")]
-        [CheckPermission(Permission = PredefinedPermissions.Create)]
+        [CheckPermission(Permission = CatalogPredefinedPermissions.Create)]
         public IHttpActionResult GetNewVirtualCatalog()
         {
             var retVal = new webModel.Catalog
@@ -123,7 +134,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                     }
                 }
             };
-            //retVal = _catalogService.Create(retVal.ToModuleModel()).ToWebModel();
+            retVal.SecurityScopes = base.GetObjectPermissionScopeStrings(retVal);
             return Ok(retVal);
         }
 
@@ -136,19 +147,14 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 		[HttpPost]
 		[ResponseType(typeof(webModel.Catalog))]
 		[Route("")]
-        [CheckPermission(Permissions = new[] { PredefinedPermissions.Create })]
+        [CheckPermission(Permission = CatalogPredefinedPermissions.Create)]
 		public IHttpActionResult Create(webModel.Catalog catalog)
 		{
-            //          if ((_permissionService.UserHasAnyPermission(RequestContext.Principal.Identity.Name, PredefinedPermissions.CatalogsManage) && !catalog.Virtual)
-            //              || (_permissionService.UserHasAnyPermission(RequestContext.Principal.Identity.Name, PredefinedPermissions.VirtualCatalogsManage) && catalog.Virtual))
-            //          {
-			var retVal = _catalogService.Create(catalog.ToModuleModel());
-			return Ok(retVal.ToWebModel());
-            //}
-            //          else
-            //          {
-            //              throw new UnauthorizedAccessException();
-            //          }
+ 			var newCatalog = _catalogService.Create(catalog.ToModuleModel());
+            var retVal = newCatalog.ToWebModel();
+            //Need for UI permission checks
+            retVal.SecurityScopes = base.GetObjectPermissionScopeStrings(newCatalog);
+            return Ok(retVal);
         }
         
         /// <summary>
@@ -159,10 +165,9 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 		[HttpPut]
         [ResponseType(typeof(void))]
 		[Route("")]
-        [CheckPermission(Permissions = new[] { PredefinedPermissions.Update })]
         public IHttpActionResult Update(webModel.Catalog catalog)
         {
-			UpdateCatalog(catalog);
+            UpdateCatalog(catalog);
             return StatusCode(HttpStatusCode.NoContent);
         }
       
@@ -176,9 +181,11 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 		[HttpDelete]
         [ResponseType(typeof(void))]
 		[Route("{id}")]
-        [CheckPermission(Permissions = new[] { PredefinedPermissions.Delete })]
         public IHttpActionResult Delete(string id)
         {
+            var catalog = _catalogService.GetById(id);
+            base.CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Delete, catalog);
+
             _catalogService.Delete(new string[] { id });
             return StatusCode(HttpStatusCode.NoContent);
         }
@@ -186,6 +193,9 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         private void UpdateCatalog(webModel.Catalog catalog)
         {
             var moduleCatalog = catalog.ToModuleModel();
+
+            base.CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Update, catalog);
+
             _catalogService.Update(new moduleModel.Catalog[] { moduleCatalog });
         }
 

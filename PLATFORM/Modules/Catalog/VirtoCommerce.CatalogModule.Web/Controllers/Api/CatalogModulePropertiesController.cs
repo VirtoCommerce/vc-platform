@@ -9,19 +9,20 @@ using VirtoCommerce.Platform.Core.Security;
 using moduleModel = VirtoCommerce.Domain.Catalog.Model;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
 using VirtoCommerce.Domain.Catalog.Services;
+using VirtoCommerce.CatalogModule.Web.Security;
 
 namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 {
 	[RoutePrefix("api/catalog/properties")]
-    [CheckPermission(Permission = PredefinedPermissions.Query)]
-    public class CatalogModulePropertiesController : ApiController
+    public class CatalogModulePropertiesController : CatalogBaseController
     {
         private readonly IPropertyService _propertyService;
 		private readonly ICategoryService _categoryService;
 		private readonly ICatalogService _catalogService;
 
-		public CatalogModulePropertiesController(IPropertyService propertyService,
-									ICategoryService categoryService, ICatalogService catalogService)
+		public CatalogModulePropertiesController(IPropertyService propertyService, ICategoryService categoryService, ICatalogService catalogService, 
+                                                 ISecurityService securityService, IPermissionScopeService permissionScopeService)
+            :base(securityService, permissionScopeService)
         {
             _propertyService = propertyService;
 			_categoryService = categoryService;
@@ -73,6 +74,8 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 			{
 				return NotFound();
 			}
+            base.CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Read, property);
+
 			var retVal = property.ToWebModel();
 		    retVal.IsManageable = true;
 			return Ok(retVal);
@@ -103,7 +106,9 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 				DisplayNames = catalog.Languages.Select(x => new moduleModel.PropertyDisplayName { LanguageCode = x.LanguageCode }).ToList()
 			};
 
-			return Ok(retVal);
+            base.CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Create, retVal.ToModuleModel());
+
+            return Ok(retVal);
 		}
 
 
@@ -132,7 +137,9 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 				Attributes = new List<webModel.PropertyAttribute>(),
 				DisplayNames = category.Catalog.Languages.Select(x => new moduleModel.PropertyDisplayName { LanguageCode = x.LanguageCode }).ToList()
 			};
-		
+
+            base.CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Create, retVal.ToModuleModel());
+
             return Ok(retVal);
         }
 
@@ -145,17 +152,21 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         [HttpPost]
 		[Route("")]
         [ResponseType(typeof(void))]
-		public IHttpActionResult Post(webModel.Property property)
+		public IHttpActionResult CreateOrUpdateProperty(webModel.Property property)
         {
 			var moduleProperty = property.ToModuleModel();
 		
 			if (property.IsNew)
 			{
-				_propertyService.Create(moduleProperty);
+                base.CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Create, moduleProperty);
+
+                _propertyService.Create(moduleProperty);
 			}
 			else
 			{
-				_propertyService.Update(new moduleModel.Property[] { moduleProperty });
+                base.CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Update, moduleProperty);
+
+                _propertyService.Update(new moduleModel.Property[] { moduleProperty });
 			}
 
 		    return StatusCode(HttpStatusCode.NoContent);
@@ -172,6 +183,10 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         [ResponseType(typeof(void))]
         public IHttpActionResult Delete(string id)
         {
+            var property = _propertyService.GetById(id);
+
+            base.CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Delete, property);
+
             _propertyService.Delete(new [] { id });
             return StatusCode(HttpStatusCode.NoContent);
         }

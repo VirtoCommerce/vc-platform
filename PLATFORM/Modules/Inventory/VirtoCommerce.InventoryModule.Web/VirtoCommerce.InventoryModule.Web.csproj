@@ -117,7 +117,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\Api\InventoryModuleController.cs" />
-    <Compile Include="Controllers\PredefinedPermissions.cs" />
+    <Compile Include="Security\InventoryPredefinedPermissions.cs" />
     <Compile Include="Converters\FulfillmentCenterConverter.cs" />
     <Compile Include="Converters\InventoryConverter.cs" />
     <Compile Include="ExportImport\InventoryExportImport.cs" />

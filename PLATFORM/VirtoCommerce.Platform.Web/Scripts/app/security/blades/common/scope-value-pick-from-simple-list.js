@@ -1,13 +1,13 @@
-﻿angular.module('virtoCommerce.orderModule')
-.controller('virtoCommerce.orderModule.storeScopePickController', ['$scope', 'virtoCommerce.storeModule.stores', function ($scope, stores) {
+﻿angular.module('platformWebApp')
+.controller('platformWebApp.security.scopeValuePickFromSimpleListController', ['$scope', function ($scope) {
     var blade = $scope.blade;
 
     function initializeBlade() {
-        stores.query({}, function (data) {
+        blade.dataPromise.then(function (data) {
             blade.isLoading = false;
-            
-            _.each(blade.currentEntity.scopes, function (x) {
-                var store = _.find(data, function (y) { return x === blade.currentEntity.scopeOriginal + ':' + y.id; });
+
+            _.each(blade.currentEntity.assignedScopes, function (x) {
+                var store = _.find(data, function (y) { return x.scope === y.id; });
                 if (store) {
                     store.$selected = true;
                 }
@@ -24,12 +24,12 @@
     };
 
     $scope.isValid = function () {
-        return _.any(blade.currentEntities, function (x) { return x.$selected; });
+    	return true;
     };
 
     $scope.saveChanges = function () {
         var selection = _.map(_.where(blade.currentEntities, { $selected: true }), function (x) {
-            return blade.currentEntity.scopeOriginal + ':' + x.id;
+            return angular.extend({ scope: x.id, label: x.name }, blade.currentEntity.scopeOriginal);
         });
         blade.onChangesConfirmedFn(selection);
         $scope.bladeClose();

@@ -9,10 +9,12 @@ using VirtoCommerce.MarketingModule.Web.Converters;
 using VirtoCommerce.Platform.Core.Security;
 using webModel = VirtoCommerce.MarketingModule.Web.Model;
 using coreModel = VirtoCommerce.Domain.Marketing.Model;
+using VirtoCommerce.MarketingModule.Web.Security;
+
 namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 {
 	[RoutePrefix("api/marketing")]
-    [CheckPermission(Permission = PredefinedPermissions.Query)]
+    [CheckPermission(Permission = MarketingPredefinedPermissions.Read)]
     public class MarketingModuleController : ApiController
     {
 		private readonly IMarketingSearchService _marketingSearchService;

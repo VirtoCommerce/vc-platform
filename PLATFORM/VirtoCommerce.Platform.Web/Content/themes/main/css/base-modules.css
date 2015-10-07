@@ -17,6 +17,11 @@
     margin: 0 0 20px;
 }
 
+.alt-description
+{
+    color: #43b0e6 !important;
+}
+
 /* Scroll bar */
 *::-webkit-scrollbar
 {
@@ -5626,5 +5631,4 @@ input.ui-grid-filter-input[type="text"]
         .tab-cnt img
         {
             margin: 10px 0;
-        }
         }

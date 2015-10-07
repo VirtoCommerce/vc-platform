@@ -11,16 +11,14 @@ namespace VirtoCommerce.Platform.Data.Security.Converters
 {
     public static class RoleConverter
     {
-        public static Role ToCoreModel(this dataModel.RoleEntity source)
+        public static Role ToCoreModel(this dataModel.RoleEntity source, IPermissionScopeService scopeService)
         {
             var result = new Role();
             result.InjectFrom(source);
   
-           result.Permissions = source.RolePermissions.Select(rp => rp.ToCoreModel()).ToArray();
-
+           result.Permissions = source.RolePermissions.Select(rp => rp.ToCoreModel(scopeService)).ToArray();
             return result;
         }
-
 
         public static dataModel.RoleEntity ToDataModel(this Role source)
         {

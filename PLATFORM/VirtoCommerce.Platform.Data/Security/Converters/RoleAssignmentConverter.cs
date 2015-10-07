@@ -10,13 +10,7 @@ namespace VirtoCommerce.Platform.Data.Security.Converters
 {
     public static class RoleAssignmentConverter
     {
-        public static Role ToCoreModel(this dataModel.RoleAssignmentEntity entity)
-        {
-            var result = entity.Role.ToCoreModel();
        
-            return result;
-        }
-
         public static void Patch(this dataModel.RoleAssignmentEntity source, dataModel.RoleAssignmentEntity target)
         {
             if (target == null)

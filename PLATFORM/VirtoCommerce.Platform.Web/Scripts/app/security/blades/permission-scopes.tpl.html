@@ -12,14 +12,14 @@
                         </tr>
                         <tr class="table-item" ng-repeat="data in availableScopes track by data.type" ng-class="{'__selected': data.type === selectedNodeId}">
                             <td class="table-col">
-                                <label class="form-control __checkbox">
+                                <label class="form-control __checkbox" ng-click="blade.selectNode(data, !data.$selected)">
                                     <input type="checkbox" ng-model="data.$selected">
                                     <span class="check"></span>
                                 </label>
                             </td>
-                            <td class="table-col" ng-click='blade.selectNode(data)'>
+                            <td class="table-col"  ng-click="blade.selectNode(data, true)">
                                 <span class="table-t">{{data.title}}</span>
-                                <span class="table-descr">{{data.scopes}}</span>
+                                <span class="table-descr alt-description">{{data.assignedScopesLabels.length > 0 ? data.assignedScopesLabels.join() : 'none'}}</span>
                             </td>
                         </tr>
                     </tbody>

@@ -16,7 +16,7 @@ namespace VirtoCommerce.Platform.Data.Security.Converters
 {
     public static class ApplicationUserConverter
     {
-        public static ApplicationUserExtended ToCoreModel(this ApplicationUser applicationUser, AccountEntity dbEntity)
+        public static ApplicationUserExtended ToCoreModel(this ApplicationUser applicationUser, AccountEntity dbEntity, IPermissionScopeService scopeService)
         {
             var retVal = new ApplicationUserExtended();
             retVal = new ApplicationUserExtended();
@@ -25,7 +25,7 @@ namespace VirtoCommerce.Platform.Data.Security.Converters
             retVal.UserState = (UserState)dbEntity.AccountState;
             retVal.UserType = (UserType)dbEntity.RegisterType;
 
-            retVal.Roles = dbEntity.RoleAssignments.Select(x => x.ToCoreModel()).ToArray();
+            retVal.Roles = dbEntity.RoleAssignments.Select(x => x.Role.ToCoreModel(scopeService)).ToArray();
             retVal.Permissions = retVal.Roles.SelectMany(x => x.Permissions).SelectMany(x=> x.GetPermissionWithScopeCombinationNames()).Distinct().ToArray();
             retVal.ApiAccounts = dbEntity.ApiAccounts.Select(x => x.ToCoreModel()).ToArray();
 

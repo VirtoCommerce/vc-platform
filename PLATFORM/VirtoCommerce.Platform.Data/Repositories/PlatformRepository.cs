@@ -136,28 +136,28 @@ namespace VirtoCommerce.Platform.Data.Repositories
             modelBuilder.Entity<RoleAssignmentEntity>()
                 .HasRequired(x => x.Account)
                 .WithMany(x => x.RoleAssignments)
-                .HasForeignKey(x => x.AccountId);
+                .HasForeignKey(x => x.AccountId).WillCascadeOnDelete(true);
 
             modelBuilder.Entity<RoleAssignmentEntity>()
                 .HasRequired(x => x.Role)
-                .WithMany(x => x.RoleAssignments)
+                .WithMany()
                 .HasForeignKey(x => x.RoleId);
 
             modelBuilder.Entity<RolePermissionEntity>()
                 .HasRequired(x => x.Permission)
                 .WithMany(x => x.RolePermissions)
-                .HasForeignKey(x => x.PermissionId);
+                .HasForeignKey(x => x.PermissionId).WillCascadeOnDelete(true);
 
             modelBuilder.Entity<RolePermissionEntity>()
                 .HasRequired(x => x.Role)
                 .WithMany(x => x.RolePermissions)
-                .HasForeignKey(x => x.RoleId);
+                .HasForeignKey(x => x.RoleId).WillCascadeOnDelete(true);
 
 
             modelBuilder.Entity<PermissionScopeEntity>()
                 .HasRequired(x => x.RolePermission)
                 .WithMany(x => x.Scopes)
-                .HasForeignKey(x => x.RolePermissionId);
+                .HasForeignKey(x => x.RolePermissionId).WillCascadeOnDelete(true);
             #endregion
 
             #region Notifications
