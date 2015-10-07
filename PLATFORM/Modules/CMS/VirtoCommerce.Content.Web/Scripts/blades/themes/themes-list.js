@@ -18,7 +18,9 @@
 				if (_.find(blade.store.dynamicProperties, function (property) { return property.name === 'DefaultThemeName'; }) !== undefined) {
 				    var defaultThemeNameProperty = _.find(blade.store.dynamicProperties, function (property) { return property.name === 'DefaultThemeName'; });
 
-				    blade.defaultThemeName = defaultThemeNameProperty.values[0].value;
+				    if (defaultThemeNameProperty !== undefined && defaultThemeNameProperty.values !== undefined && defaultThemeNameProperty.values.length > 0) {
+				        blade.defaultThemeName = defaultThemeNameProperty.values[0].value;
+				    }
 				}
 				blade.isLoading = false;
 			},
