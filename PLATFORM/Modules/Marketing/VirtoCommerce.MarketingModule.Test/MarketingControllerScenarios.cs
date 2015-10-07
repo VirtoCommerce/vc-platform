@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Linq;
 using System.Web.Http.Results;
 using VirtoCommerce.Domain.Marketing.Model;
@@ -16,15 +17,20 @@ using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using Xunit;
 using webModel = VirtoCommerce.MarketingModule.Web.Model;
 using VirtoCommerce.Domain.Common;
+using VirtoCommerce.MarketingModule.Data.Migrations;
+using VirtoCommerce.Platform.Data.Infrastructure;
 
 namespace VirtoCommerce.MarketingModule.Test
 {
     public class MarketingControllerScenarios : FunctionalTestBase
 	{
-		[Fact]
-		public void Test()
+        public const string DatabaseName = "MarketingTests";
+
+        [Fact]
+        [Trait("Category", "CI")]
+        public void Can_create_marketing_contentitem()
 		{
-			var repository = new MarketingRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor());
+			var repository = this.GetRepository();
 			var contentItem = new dataModel.DynamicContentItem()
 			{
 				Name = "ss",
@@ -32,11 +38,11 @@ namespace VirtoCommerce.MarketingModule.Test
 	
 			repository.Add(contentItem);
 			repository.UnitOfWork.Commit();
-
 		}
 		
 		[Fact]
-		public void CreateStandartDynamicPromotionThroughtApi()
+        [Trait("Category", "CI")]
+        public void Can_careate_marketing_dynamicpromotion_using_api()
 		{
 			var marketingController = GetMarketingController(GetPromotionExtensionManager());
 
@@ -75,21 +81,20 @@ namespace VirtoCommerce.MarketingModule.Test
 			var marketingEval = new DefaultPromotionEvaluatorImpl(GetMarketingService());
 			var context = GetPromotionEvaluationContext();
 			var result = marketingEval.EvaluatePromotion(context);
-		
 		}
 
-
 		[Fact]
-		public void ExtendPromotionExpressionTreeAndCreateNewDynamicPromotionWithCustomExpression()
+        [Trait("Category", "CI")]
+        public void Can_extend_marketing_promotion_expressiontree_and_create_new_dynamicpromotion()
 		{
 			var extensionManager = GetPromotionExtensionManager();
+
 			//Register custom dynamic expression in main expression tree now it should be availabe for ui in expression builder
 			var blockExpression = extensionManager.PromotionDynamicExpressionTree as DynamicExpression;
 		    var blockCatalogCondition = blockExpression.FindChildrenExpression<BlockCatalogCondition>();
 			blockCatalogCondition.AvailableChildren.Add(new ConditionItemWithTag());
 
 			var marketingController = GetMarketingController(extensionManager);
-
 
 			//Create custom promotion
 			webModel.Promotion promotion = null;
@@ -125,7 +130,6 @@ namespace VirtoCommerce.MarketingModule.Test
 			var context = GetPromotionEvaluationContext();
 			context.PromoEntries.First().Attributes["tag"] = "#FOOTBAL";
 			var result = marketingEval.EvaluatePromotion(context);
-
 		}
 
 
@@ -142,7 +146,7 @@ namespace VirtoCommerce.MarketingModule.Test
 		private static PromotionEvaluationContext GetPromotionEvaluationContext()
 		{
 			var context = new PromotionEvaluationContext();
-			context.CartPromoEntries = context.PromoEntries = new ProductPromoEntry[]
+			context.CartPromoEntries = context.PromoEntries = new []
 			{
 					new ProductPromoEntry
 					{
@@ -175,28 +179,28 @@ namespace VirtoCommerce.MarketingModule.Test
 			return context;
 		}
 
-		private static IPromotionService GetMarketingService()
+		private IPromotionService GetMarketingService()
 		{
-			Func<IMarketingRepository> foundationRepositoryFactory = () => new MarketingRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor());
+			Func<IMarketingRepository> foundationRepositoryFactory = () => GetRepository();
 			var promotionExtensionManager = new DefaultMarketingExtensionManagerImpl();
 			var retVal = new PromotionServiceImpl(foundationRepositoryFactory, promotionExtensionManager);
 			return retVal;
 		}
 
-		private static MarketingModulePromotionController GetMarketingController(IMarketingExtensionManager extensionManager)
+		private MarketingModulePromotionController GetMarketingController(IMarketingExtensionManager extensionManager)
 		{
 			var retVal = new MarketingModulePromotionController(GetMarketingService(), extensionManager);
 			return retVal;
 		}
 
-		private static IMarketingExtensionManager GetPromotionExtensionManager()
+		private IMarketingExtensionManager GetPromotionExtensionManager()
 		{
 			var retVal = new DefaultMarketingExtensionManagerImpl();
 			retVal.PromotionDynamicExpressionTree = GetDynamicExpression();
 			return retVal;
 		}
 
-		private static PromoDynamicExpressionTree GetDynamicExpression()
+		private PromoDynamicExpressionTree GetDynamicExpression()
 		{
 			var customerConditionBlock = new BlockCustomerCondition();
 			customerConditionBlock.AvailableChildren = new DynamicExpression[] { new ConditionIsEveryone(), new ConditionIsFirstTimeBuyer(), 
@@ -224,5 +228,28 @@ namespace VirtoCommerce.MarketingModule.Test
 			return retVal;
 
 		}
-	}
+
+        protected IMarketingRepository GetRepository()
+        {
+            EnsureDatabaseInitialized(() => new MarketingRepositoryImpl(DatabaseName), () => Database.SetInitializer(new SetupDatabaseInitializer<MarketingRepositoryImpl, Configuration>()));
+            return new MarketingRepositoryImpl(DatabaseName, new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor());
+        }
+
+
+        public void Dispose()
+        {
+            try
+            {
+                // Ensure LocalDb databases are deleted after use so that LocalDb doesn't throw if
+                // the temp location in which they are stored is later cleaned.
+                using (var context = new MarketingRepositoryImpl(DatabaseName))
+                {
+                    context.Database.Delete();
+                }
+            }
+            finally
+            {
+            }
+        }
+    }
 }
