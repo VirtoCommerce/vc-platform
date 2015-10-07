@@ -236,7 +236,7 @@ namespace VirtoCommerce.MarketingModule.Test
         }
 
 
-        public void Dispose()
+        public override void Dispose()
         {
             try
             {

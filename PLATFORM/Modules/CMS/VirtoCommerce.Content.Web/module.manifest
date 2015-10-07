@@ -45,9 +45,9 @@
         <name>VirtoCommerce.Content.MainProperties.PagesRepositoryType</name>
         <valueType>string</valueType>
         <allowedValues>
-          <!--<value>GitHub</value>-->
           <value>Database</value>
           <value>File system</value>
+          <value>GitHub</value>
         </allowedValues>
         <defaultValue>Database</defaultValue>
         <title>Pages repository type</title>
@@ -58,9 +58,9 @@
         <name>VirtoCommerce.Content.MainProperties.ThemesRepositoryType</name>
         <valueType>string</valueType>
         <allowedValues>
-          <!--<value>GitHub</value>-->
           <value>Database</value>
           <value>File system</value>
+          <value>GitHub</value>
         </allowedValues>
         <defaultValue>Database</defaultValue>
         <title>Themes repository type</title>
