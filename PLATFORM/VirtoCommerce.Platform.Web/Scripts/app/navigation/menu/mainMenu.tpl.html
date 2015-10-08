@@ -32,8 +32,8 @@
         <ng-include src='currentMenuItem.headerTemplate'> </ng-include>
         <div class="dropdown-content">
             <ul class="list">
-                <li class="list-item" ng-repeat="menuItem in currentMenuItem.children" ng-click="selectMenuItem(menuItem)">
-                    <a class="list-link {{menuItem.icon == 'fa fa-user' ? '__customers' : ''}}" ng-if="!menuItem.template" href="" va-permission="{{menuItem.permission}}">
+                <li class="list-item" ng-repeat="menuItem in currentMenuItem.children" ng-click="selectMenuItem(menuItem)" va-permission="{{menuItem.permission}}">
+                    <a class="list-link {{menuItem.icon == 'fa fa-user' ? '__customers' : ''}}" ng-if="!menuItem.template" href="">
                         <i class="list-ico" ng-class="menuItem.icon">
                             <i ng-if="menuItem.icon == 'fa fa-user'"></i>
                         </i>
