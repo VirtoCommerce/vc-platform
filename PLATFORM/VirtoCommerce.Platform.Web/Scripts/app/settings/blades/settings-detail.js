@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.settingsDetailController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.objCompareService', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', function ($scope, dialogService, objCompareService, bladeNavigationService, settings) {
+.controller('platformWebApp.settingsDetailController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.settings.helper', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', function ($scope, dialogService, settingsHelper, bladeNavigationService, settings) {
 
     $scope.blade.refresh = function () {
         if ($scope.blade.moduleId) {
@@ -15,37 +15,7 @@
     }
 
     function initializeBlade(results) {
-        // parse values as they all are strings
-        var selectedSettings = _.where(results, { valueType: 'Integer' });
-        _.forEach(selectedSettings, function (setting) {
-            setting.value = parseInt(setting.value, 10);
-            if (setting.allowedValues) {
-                setting.allowedValues = _.map(setting.allowedValues, function (value) { return parseInt(value, 10); });
-            }
-        });
-
-        selectedSettings = _.where(results, { valueType: 'Decimal' });
-        _.forEach(selectedSettings, function (setting) {
-            setting.value = parseFloat(setting.value);
-            if (setting.allowedValues) {
-                setting.allowedValues = _.map(setting.allowedValues, function (value) { return parseFloat(value); });
-            }
-        });
-
-        selectedSettings = _.where(results, { valueType: 'Boolean' });
-        _.forEach(selectedSettings, function (setting) {
-            setting.value = setting.value && setting.value.toLowerCase() === 'true';
-            if (setting.allowedValues) {
-                setting.allowedValues = _.map(setting.allowedValues, function (value) { return value.toLowerCase() === 'true'; });
-            }
-        });
-
-        selectedSettings = _.where(results, { isArray: true });
-        _.forEach(selectedSettings, function (setting) {
-            if (setting.arrayValues) {
-                setting.arrayValues = _.map(setting.arrayValues, function (x) { return { value: x }; });
-            }
-        });
+        settingsHelper.fixValues(results);
 
         _.each(results, function (setting) {
             // set group names to show.

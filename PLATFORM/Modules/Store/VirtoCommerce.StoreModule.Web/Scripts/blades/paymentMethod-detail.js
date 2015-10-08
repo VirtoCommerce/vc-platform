@@ -26,10 +26,13 @@
     };
 
     $scope.saveChanges = function () {
-        blade.currentEntity.settings = _.map(blade.currentEntity.settings, function (x) {
+        _.each(blade.currentEntity.settings, function (x) {
             x.value = x.isDictionary ? x.values[0].value.id : x.values[0].value;
             x.values = undefined;
-            return x;
+            
+            if (x.allowedValues) {
+                x.allowedValues = _.pluck(x.allowedValues, 'name');
+            }
         });
 
         angular.copy(blade.currentEntity, blade.data);
