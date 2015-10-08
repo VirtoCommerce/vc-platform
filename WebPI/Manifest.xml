@@ -1,0 +1,11 @@
+<MSDeploy.iisApp>
+    <iisapp path="wwwroot" />
+
+    <setAcl path="wwwroot/App_Data" setAclAccess="Read, Write, Modify" />
+    <setAcl path="wwwroot/Areas/Admin/App_Data" setAclAccess="Read, Write, Modify" />
+    <setAcl path="wwwroot/Areas/Admin/Assets" setAclAccess="Read, Write, Modify" />
+    <setAcl path="wwwroot/Areas/Admin/Modules" setAclAccess="Read, Write, Modify" />
+
+    <dbFullSql path="installSQL1.sql" transacted="false" />
+    <dbFullSql path="installSQL2.sql" transacted="false" />
+</MSDeploy.iisApp>

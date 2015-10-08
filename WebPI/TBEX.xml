@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<WebPlatform>
+  <Links>
+    <AddLink InDashboard="True" InLearn="True">
+      <Title>Getting Started with VirtoCommerce</Title>
+      <Description>Welcome the Virto Commerce Community! Please read this to get started.</Description>
+      <Uri>http://virtocommerce.com/community-edition</Uri>
+      <ImageUri>http://virtocommerce.com/logo</ImageUri>
+    </AddLink>
+    <AddLink InDashboard="True" InLearn="True">
+      <Title>Open Commerce Manager (Admin)</Title>
+      <Description>Open Commerce Manager application to manage your store.</Description>
+      <Uri>/admin</Uri>
+      <ImageUri>http://virtocommerce.com/logo</ImageUri>
+    </AddLink>
+	<AddLink InDashboard="True" InLearn="True">
+      <Title>Developer Guide</Title>
+      <Description>To learn more about customizing and developing using Virto Commerce, view our Developer Guide.</Description>
+      <Uri>http://docs.virtocommerce.com/display/vc1userguide/Home</Uri>
+      <ImageUri>http://virtocommerce.com/logo</ImageUri>
+    </AddLink>
+	<AddLink InDashboard="True" InLearn="True">
+      <Title>User Guide</Title>
+      <Description>Want to learn more how to use our software, visit our User Guide.</Description>
+      <Uri>http://docs.virtocommerce.com/display/vc1userguide/Home</Uri>
+      <ImageUri>http://virtocommerce.com/logo</ImageUri>
+    </AddLink>
+	<AddLink InDashboard="True" InLearn="True">
+      <Title>Virto Commerce Support Forums</Title>
+      <Description>If you have questions, suggestions or any issues, head over to our forums.</Description>
+      <Uri>http://help.virtocommerce.com/support/discussions</Uri>
+      <ImageUri>http://virtocommerce.com/logo</ImageUri>
+    </AddLink>	
+  </Links>
+  <Ribbon>
+    <AddRibbonButton>
+      <Label>Admin</Label> 
+      <Uri>/admin</Uri>
+      <ImageUri>http://virtocommerce.com/logo</ImageUri> 
+     </AddRibbonButton>
+    <AddRibbonButton>
+      <Label>Support</Label> 
+      <Uri>http://help.virtocommerce.com/support/discussions</Uri>
+      <ImageUri>http://virtocommerce.com/logo</ImageUri> 
+     </AddRibbonButton>
+  </Ribbon>
+  <PathProtection>
+  </PathProtection>
+</WebPlatform>
