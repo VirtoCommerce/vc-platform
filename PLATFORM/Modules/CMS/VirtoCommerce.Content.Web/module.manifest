@@ -79,7 +79,7 @@
       <setting>
         <name>VirtoCommerce.Content.GitHub.ProductHeaderValue</name>
         <valueType>string</valueType>
-        <defaultValue>Virto Commerce</defaultValue>
+        <defaultValue>VirtoCommerce</defaultValue>
         <title>Github Product Header Value</title>
         <description>Github product header value</description>
       </setting>
