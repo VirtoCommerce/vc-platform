@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Content.Data.Models;
 using VirtoCommerce.Content.Data.Converters;
+using VirtoCommerce.Platform.Core.Common;
+using System.IO;
 
 namespace VirtoCommerce.Content.Data.Repositories
 {
@@ -14,6 +16,7 @@ namespace VirtoCommerce.Content.Data.Repositories
         private readonly GitHubClient _client;
         private readonly string _ownerName;
         private readonly string _repositoryName;
+        private readonly string _branchName = "master";
         private readonly string _mainPath;
 
         public GitHubContentRepositoryImpl(
@@ -59,34 +62,22 @@ namespace VirtoCommerce.Content.Data.Repositories
 
         public IEnumerable<Theme> GetThemes(string storePath)
         {
-            var fullPath = GetFullPath(storePath);
+            var children = this.GetTreeChildren(storePath);
 
-            var result = GetAllContents(fullPath);
-
-            if (result == null)
+            // return nothing if there is not result
+            if (children == null)
             {
-                return Enumerable.Empty<Models.Theme>();
+                return Enumerable.Empty<Theme>();
             }
 
-            var themes = result.Where(s => s.Type == ContentType.Dir);
+            var list = new List<Theme>();
 
-            List<Theme> list = new List<Theme>();
-
-            foreach (var theme in themes)
+            foreach (var theme in children)
             {
-                var commits = Task.Run(() => this._client.
-                    Repository.
-                    Commits.
-                    GetAll(this._ownerName, this._repositoryName, new CommitRequest { Path = theme.Path })).Result;
-
-                var commit = commits.First();
-                var date = commit.Commit.Committer.Date;
-
                 list.Add(new Theme
                 {
-                    Name = theme.Name,
-                    ThemePath = FixPath(theme.Path),
-                    ModifiedDate = date.DateTime
+                    Name = Path.GetFileNameWithoutExtension(theme.Path),
+                    ThemePath = FixPath(theme.Path)
                 });
             }
 
@@ -95,44 +86,22 @@ namespace VirtoCommerce.Content.Data.Repositories
 
         public IEnumerable<ContentItem> GetContentItems(string path, GetThemeAssetsCriteria criteria)
         {
-            var fullPath = GetFullPath(path);
+            var blobs = GetBlobsRecursive(path);
 
-            var result = GetAllContents(fullPath);
-
-            if (result == null)
+            // return nothing if there is not result
+            if (blobs == null)
             {
                 return Enumerable.Empty<Models.ContentItem>();
             }
 
-            var items = result.Where(s => s.Type == ContentType.Dir || s.Type == ContentType.File);
+            var files = new List<Models.ContentItem>();
 
-            var directories = items.Where(s => s.Type == ContentType.Dir).Select(s => s.Path);
-            var files = items.Where(s => s.Type == ContentType.File).Select(file => file.ToContentItem()).ToList();
-
-            var directoriesQueue = new Queue<string>();
-
-            foreach (var directory in directories)
-            {
-                directoriesQueue.Enqueue(directory);
-            }
-
-            while (directoriesQueue.Count > 0)
-            {
-                var directory = directoriesQueue.Dequeue();
-                result = GetAllContents(directory);
-
-                var results = result.Where(s => s.Type == ContentType.Dir || s.Type == ContentType.File);
-
-                var newDirectories = results.Where(s => s.Type == ContentType.Dir).Select(s => s.Path);
-                var newFiles = results.Where(s => s.Type == ContentType.File).Select(file => file.ToContentItem());
-
-                foreach (var newDirectory in newDirectories)
+            Parallel.ForEach(
+                blobs,
+                file =>
                 {
-                    directoriesQueue.Enqueue(newDirectory);
-                }
-
-                files.AddRange(newFiles);
-            }
+                    files.Add(file.ToContentItem());
+                });
 
             foreach (var file in files)
             {
@@ -193,30 +162,6 @@ namespace VirtoCommerce.Content.Data.Repositories
             }
         }
 
-        private RepositoryContent GetItem(string path)
-        {
-            try
-            {
-                var existingItems =
-                    Task.Run(() => this._client.Repository.Content.GetAllContents(this._ownerName, this._repositoryName, path)).Result;
-                if (existingItems.Count == 0)
-                {
-                    return null;
-                }
-
-                return existingItems.SingleOrDefault();
-            }
-            catch (AggregateException ex)
-            {
-                if (ex.InnerExceptions.Count == 1 && ex.InnerExceptions[0] is NotFoundException)
-                {
-                    return null;
-                }
-
-                throw;
-            }
-        }
-
         private string GetFullPath(string path)
         {
             return string.Format("{0}{1}", _mainPath, path);
@@ -256,29 +201,21 @@ namespace VirtoCommerce.Content.Data.Repositories
 
         public IEnumerable<Models.ContentPage> GetPages(string path)
         {
-            var retVal = new List<Models.ContentPage>();
-            var result = GetAllContents(GetFullPath(path));
+            var blobs = GetBlobsRecursive(path);
 
-            if (result == null)
+            // return nothing if there is not result
+            if (blobs == null)
             {
                 return Enumerable.Empty<Models.ContentPage>();
             }
 
-            var files = result.Where(s => s.Type == ContentType.File);
+            var retVal = new List<Models.ContentPage>();
 
             Parallel.ForEach(
-                files,
+                blobs,
                 file =>
                 {
-                    var commits = this._client.
-                        Repository.
-                        Commits.
-                        GetAll(this._ownerName, this._repositoryName, new CommitRequest { Path = file.Path }).Result;
-
-                    var commit = commits.First();
-                    var date = commit.Commit.Committer.Date;
-
-                    retVal.Add(file.ToShortModel(date.DateTime));
+                    retVal.Add(file.ToShortModel());
                 });
 
             return retVal;
@@ -338,7 +275,89 @@ namespace VirtoCommerce.Content.Data.Repositories
             GC.SuppressFinalize(this);
         }
 
-        #region Private methods
+        #region Private GitHub methods
+        private RepositoryContent GetItem(string path)
+        {
+            try
+            {
+                var existingItems =
+                    Task.Run(() => this._client.Repository.Content.GetAllContents(this._ownerName, this._repositoryName, path)).Result;
+                if (existingItems.Count == 0)
+                {
+                    return null;
+                }
+
+                return existingItems.SingleOrDefault();
+            }
+            catch (AggregateException ex)
+            {
+                if (ex.InnerExceptions.Count == 1 && ex.InnerExceptions[0] is NotFoundException)
+                {
+                    return null;
+                }
+
+                throw;
+            }
+        }
+
+        public IEnumerable<TreeItem> GetBlobsRecursive(string path)
+        {
+            // try to get contents of the path first
+            var result = GetAllContents(GetFullPath(path));
+
+            // return nothing if there is not result
+            if (result == null || result.Count == 0)
+            {
+                return null;
+            }
+
+            var sha1 = result[0].Sha;
+
+            var retVal = new List<Models.ContentPage>();
+
+            /*
+            // get all branches first
+            var branch = this._client.Repository.GetBranch(_ownerName, _repositoryName, _branchName).Result;
+
+            if (branch == null) // branch doesn't exist
+                return null;
+
+            // get the root of latest commit, which will point to the root tree nide
+            var sha1 = branch.Commit.Sha;
+                            */
+
+            // get list of all sub trees
+            var trees = this._client.GitDatabase.Tree.GetRecursive(_ownerName, this._repositoryName, sha1).Result;
+
+            // get all blob entries
+            var blobs = trees.Tree.Where(x => x.Type == TreeType.Blob);
+
+            return blobs;
+        }
+
+        public IEnumerable<TreeItem> GetTreeChildren(string path)
+        {
+            // try to get contents of the path first
+            var result = GetAllContents(GetFullPath(path));
+
+            // return nothing if there is not result
+            if (result == null || result.Count == 0)
+            {
+                return null;
+            }
+
+            var sha1 = result[0].Sha;
+
+            var retVal = new List<Models.ContentPage>();
+
+            // get list of all sub trees
+            var tree = this._client.GitDatabase.Tree.Get(_ownerName, this._repositoryName, sha1).Result;
+
+            // get all blob entries
+            var children = tree.Tree.Where(x => x.Type == TreeType.Tree);
+
+            return children;
+        }
 
         private IReadOnlyList<RepositoryContent> GetAllContents(string path)
         {

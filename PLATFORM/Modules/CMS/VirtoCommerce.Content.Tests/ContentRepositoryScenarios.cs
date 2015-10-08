@@ -171,6 +171,31 @@ namespace VirtoCommerce.Content.Tests
             //Assert.Equal(0, pages.ToArray().Length);
         }
 
+        [Theory, InlineData("GitHub")]
+        [Trait("Category", "CI")]
+        public void Can_create_and_query_pages(string repositoryType)
+        {
+            var repository = GetRepository(repositoryType);
+
+            //create pages
+            repository.SavePage("Content_Test_Store/en-US/test_pages/test_page_1.html", new ContentPage
+            {
+                ByteContent = Encoding.UTF8.GetBytes("<a></a>"),
+                ContentType = "text/html",
+                CreatedDate = DateTime.UtcNow,
+                Language = "en-US",
+                Name = "test_page_1.html",
+                Path = "Content_Test_Store/en-US/test_pages/test_page_1.html",
+                Id = "Content_Test_Store/en-US/test_pages/test_page_1.html"
+            });
+
+            var pages = repository.GetPages("Content_Test_Store/", null);
+            Assert.NotNull(pages);
+            Assert.Equal(1, pages.Count());
+
+            repository.DeletePage("Content_Test_Store/en-US/test_pages/test_page_1.html");
+        }
+
         public override void Dispose()
         {
             try
