@@ -33,7 +33,7 @@ namespace VirtoCommerce.Content.Tests
             }
             else if (repositoryType == "Database")
             {
-                EnsureDatabaseInitialized(() => new DatabaseContentRepositoryImpl(DatabaseName), () => Database.SetInitializer(new SetupDatabaseInitializer<DatabaseContentRepositoryImpl, Configuration>()));
+                EnsureDatabaseInitialized(() => new DatabaseContentRepositoryImpl(DatabaseName));
                 return new DatabaseContentRepositoryImpl(DatabaseName, new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor());
             }
             else if (repositoryType == "FileSystem")
@@ -120,7 +120,7 @@ namespace VirtoCommerce.Content.Tests
             Assert.Equal(items.Count(), 0);
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             try
             {
