@@ -18,7 +18,6 @@ namespace VirtoCommerce.Platform.Data.Settings.Converters
 		{
 			var result = new SettingEntry();
 			result.InjectFrom(entity);
-            result.Title = entity.Name;
             result.ValueType = (SettingValueType)Enum.Parse(typeof(SettingValueType), entity.SettingValueType);
 			var existingValues = entity.SettingValues.Select(x => x.ToString(CultureInfo.InvariantCulture)).ToArray();
 
