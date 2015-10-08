@@ -1,31 +1,33 @@
 ﻿<div class="blade-static __bottom __quote">
     <div class="clearfix">
         <div class="column">
-            <div class="quote-discount">
-                <div class="quote-t">{{totals.isDiscountAbsolute ? 'New subtotal, ' + blade.currentEntity.currency : 'Relative discount, %'}}</div>
-                <div class="form-input __mini __inline">
-                    <input money required ng-model="blade.currentEntity.manualSubTotal" ng-change="recalculate()" ng-hide="!totals.isDiscountAbsolute">
-                    <input money required ng-model="blade.currentEntity.manualRelDiscountAmount" ng-change="recalculate()" ng-hide="totals.isDiscountAbsolute">
+            <fieldset ng-disabled="blade.isLocked()">
+                <div class="quote-discount">
+                    <div class="quote-t">{{totals.isDiscountAbsolute ? 'New subtotal, ' + blade.currentEntity.currency : 'Relative discount, %'}}</div>
+                    <div class="form-input __mini __inline">
+                        <input money required ng-model="blade.currentEntity.manualSubTotal" ng-change="recalculate()" ng-hide="!totals.isDiscountAbsolute">
+                        <input money required ng-model="blade.currentEntity.manualRelDiscountAmount" ng-change="recalculate()" ng-hide="totals.isDiscountAbsolute">
+                    </div>
+                    <button class="btn" ng-click="blade.currentEntity.manualSubTotal=blade.currentEntity.manualRelDiscountAmount=0;totals.isDiscountAbsolute=!totals.isDiscountAbsolute">{{totals.isDiscountAbsolute ? 'Enter relative discount': 'Enter new subtotal'}}</button>
                 </div>
-                <button class="btn" ng-click="blade.currentEntity.manualSubTotal=blade.currentEntity.manualRelDiscountAmount=0;totals.isDiscountAbsolute=!totals.isDiscountAbsolute">{{totals.isDiscountAbsolute ? 'Enter relative discount': 'Enter new subtotal'}}</button>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Shipping method</label>
-                <div class="form-input">
-                    <ui-select ng-model="blade.currentEntity.shipmentMethod" ng-change="recalculate()">
-                        <ui-select-match placeholder="Select..." allow-clear>{{$select.selected.name}} - {{$select.selected.price}} {{$select.selected.currency}}</ui-select-match>
-                        <ui-select-choices repeat="x in blade.shippingMethods | filter: { name: $select.search }">
-                            <span ng-bind-html="x.name +' - '+ x.price+' '+ x.currency | highlight: $select.search"></span>
-                        </ui-select-choices>
-                    </ui-select>
+                <div class="form-group">
+                    <label class="form-label">Shipping method</label>
+                    <div class="form-input">
+                        <ui-select ng-model="blade.currentEntity.shipmentMethod" ng-change="recalculate()">
+                            <ui-select-match placeholder="Select..." allow-clear>{{$select.selected.name}} - {{$select.selected.price}} {{$select.selected.currency}}</ui-select-match>
+                            <ui-select-choices repeat="x in blade.shippingMethods | filter: { name: $select.search }">
+                                <span ng-bind-html="x.name +' - '+ x.price+' '+ x.currency | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Manual shipping total, {{blade.currentEntity.currency}}</label>
-                <div class="form-input">
-                    <input money ng-model="blade.currentEntity.manualShippingTotal" ng-change="recalculate()">
+                <div class="form-group">
+                    <label class="form-label">Manual shipping total, {{blade.currentEntity.currency}}</label>
+                    <div class="form-input">
+                        <input money ng-model="blade.currentEntity.manualShippingTotal" ng-change="recalculate()">
+                    </div>
                 </div>
-            </div>
+            </fieldset>
         </div>
         <div class="column">
             <table class="table __collapsed">
@@ -68,86 +70,87 @@
 <div class="blade-content __xxlarge-wide">
     <div class="blade-inner">
         <div class="inner-block">
-            <form name="quoteForm" novalidate></form>
-            <div class="table-wrapper">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th class="table-col __product-control">
-                                <label class="form-control __checkbox">
-                                    <input type="checkbox" ng-model="blade.selectedAll" ng-change="checkAll(blade.selectedAll)" />
-                                    <span class="check"></span>
-                                </label>
-                            </th>
-                            <th class="table-col __product-img">Pic</th>
-                            <th class="table-col">Comment with product</th>
-                            <th class="table-col" width="5%">List price</th>
-                            <th class="table-col" width="5%">Sale price</th>
-                            <th class="table-col" width="5%">Quantity</th>
-                            <th class="table-col" width="13%">Proposed price</th>
-                            <th class="table-col" width="10%">Margin (GP)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="table-item" ng-repeat-start="data in blade.currentEntity.items" ng-click='selectItem(data)'>
-                            <td class="table-col">
-                                <label class="form-control __checkbox">
-                                    <input type="checkbox" ng-model="data.$selected">
-                                    <span class="check"></span>
-                                </label>
-                            </td>
-                            <td class="table-col">
-                                <div class="product-img">
-                                    <div class="image" style="background-image: url({{data.imageUrl}})" ng-if="data.imageUrl" ng-click="openItemDetail(data)"></div>
-                                    <i class="table-ico fa fa-image" ng-if="!data.imageUrl" />
-                                </div>
-                            </td>
-                            <td class="table-col">
-                                <div class="form-input">
-                                    <textarea ng-model="data.comment" placeholder="Enter comment"></textarea>
-                                </div>
-                            </td>
-                            <td class="table-col">
-                                <span>{{data.listPrice}}</span>
-                            </td>
-                            <td class="table-col">
-                                <span>{{data.salePrice}}</span>
-                            </td>
-                            <td class="table-col">
-                                <a class="list-link" ng-click="addProposalTier(data, $index)">Add</a>
-                                <div ng-repeat="p in data.proposalPrices | orderBy:['quantity','price']" class="form-input __mini __number">
-                                    <input smart-float num-type="integer" required ng-model="p.quantity" ng-change="recalculate()">
-                                </div>
-                            </td>
-                            <td class="table-col">
-                                <a class="list-link" ng-click="deleteProposalTier(data)">Remove</a>
-                                <div ng-repeat="p in data.proposalPrices | orderBy:['quantity','price']">
-                                    <div class="form-control __radio __inline">
-                                        <label class="form-label">
-                                            <input type="radio" ng-model="data.selectedTierPrice" ng-value="p" ng-change="recalculate()">
-                                            <span class="check"></span>
-                                        </label>
+            <fieldset ng-disabled="blade.isLocked()">
+                <div class="table-wrapper">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="table-col __product-control">
+                                    <label class="form-control __checkbox">
+                                        <input type="checkbox" ng-model="blade.selectedAll" ng-change="checkAll(blade.selectedAll)" />
+                                        <span class="check"></span>
+                                    </label>
+                                </th>
+                                <th class="table-col __product-img">Pic</th>
+                                <th class="table-col">Comment with product</th>
+                                <th class="table-col" width="5%">List price</th>
+                                <th class="table-col" width="5%">Sale price</th>
+                                <th class="table-col" width="5%">Quantity</th>
+                                <th class="table-col" width="13%">Proposed price</th>
+                                <th class="table-col" width="10%">Margin (GP)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-item" ng-repeat-start="data in blade.currentEntity.items" ng-click='selectItem(data)'>
+                                <td class="table-col">
+                                    <label class="form-control __checkbox">
+                                        <input type="checkbox" ng-model="data.$selected">
+                                        <span class="check"></span>
+                                    </label>
+                                </td>
+                                <td class="table-col">
+                                    <div class="product-img">
+                                        <div class="image" style="background-image: url({{data.imageUrl}})" ng-if="data.imageUrl" ng-click="openItemDetail(data)"></div>
+                                        <i class="table-ico fa fa-image" ng-if="!data.imageUrl" />
                                     </div>
-                                    <div class="form-input __mini __inline">
-                                        <input money required ng-model="p.price" ng-change="recalculate()" focus-on="focusIndex{{$parent.$index}}">
+                                </td>
+                                <td class="table-col">
+                                    <div class="form-input">
+                                        <textarea ng-model="data.comment" placeholder="Enter comment"></textarea>
                                     </div>
-                                </div>
-                            </td>
-                            <td class="table-col">
-                                <div class="table-space"></div>
-                                <div class="form-input" ng-repeat="p in data.proposalPrices | orderBy:['quantity','price']">
-                                    <p class="form-text">{{getMargin(data, p)}} %</p>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr ng-repeat-end class="table-item" ng-class="{'__selected': data.id === selectedNodeId}" ng-click='selectItem(data)'>
-                            <td class="table-head" colspan="8" ng-click="openItemDetail(data)">
-                                <span>SKU: {{data.product.code}}. Product: {{data.name}}</span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                                </td>
+                                <td class="table-col">
+                                    <span>{{data.listPrice}}</span>
+                                </td>
+                                <td class="table-col">
+                                    <span>{{data.salePrice}}</span>
+                                </td>
+                                <td class="table-col">
+                                    <a class="list-link" ng-click="addProposalTier(data, $index)">Add</a>
+                                    <div ng-repeat="p in data.proposalPrices | orderBy:['quantity','price']" class="form-input __mini __number">
+                                        <input smart-float num-type="integer" required ng-model="p.quantity" ng-change="recalculate()">
+                                    </div>
+                                </td>
+                                <td class="table-col">
+                                    <a class="list-link" ng-click="deleteProposalTier(data)">Remove</a>
+                                    <div ng-repeat="p in data.proposalPrices | orderBy:['quantity','price']">
+                                        <div class="form-control __radio __inline">
+                                            <label class="form-label">
+                                                <input type="radio" ng-model="data.selectedTierPrice" ng-value="p" ng-change="recalculate()">
+                                                <span class="check"></span>
+                                            </label>
+                                        </div>
+                                        <div class="form-input __mini __inline">
+                                            <input money required ng-model="p.price" ng-change="recalculate()" focus-on="focusIndex{{$parent.$index}}">
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="table-col">
+                                    <div class="table-space"></div>
+                                    <div class="form-input" ng-repeat="p in data.proposalPrices | orderBy:['quantity','price']">
+                                        <p class="form-text">{{getMargin(data, p)}} %</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr ng-repeat-end class="table-item" ng-class="{'__selected': data.id === selectedNodeId}" ng-click='selectItem(data)'>
+                                <td class="table-head" colspan="8" ng-click="openItemDetail(data)">
+                                    <span>SKU: {{data.product.code}}. Product: {{data.name}}</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </fieldset>
         </div>
     </div>
 </div>

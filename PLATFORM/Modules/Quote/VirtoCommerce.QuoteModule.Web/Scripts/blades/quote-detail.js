@@ -21,7 +21,6 @@
         }
 
         function initializeBlade(data) {
-            initializeToolbar(data);
             blade.title = data.number;
 
             blade.currentEntity = angular.copy(data);
@@ -53,6 +52,7 @@
                 recalculateFn: blade.recalculate,
                 shippingMethods: blade.shippingMethods,
                 currentEntity: blade.currentEntity,
+                isLocked: blade.isLocked,
                 controller: 'virtoCommerce.quoteModule.quoteItemsController',
                 template: 'Modules/$(VirtoCommerce.Quote)/Scripts/blades/quote-items.tpl.html'
             };
@@ -97,7 +97,7 @@
 
         blade.onClose = function (closeCallback) {
             bladeNavigationService.closeChildrenBlades(blade, function () {
-                if (isDirty() && !isQuoteSubmitted(blade.origEntity)) {
+                if (isDirty() && !blade.isLocked()) {
                     var dialog = {
                         id: "confirmCurrentBladeClose",
                         title: "Save changes",
@@ -116,22 +116,32 @@
                 }
             });
         };
-
-        function isQuoteSubmitted(currentEntity) {
-            return currentEntity.status === 'Proposal sent';
-        }
+        
+        blade.isLocked = function () {
+            return blade.currentEntity && blade.currentEntity.isLocked;
+        };
 
         blade.headIcon = 'fa-file-text-o';
 
         var onHoldCommand = {
             updateName: function () {
-                return this.name = (blade.currentEntity && blade.currentEntity.isLocked) ? 'Place On Hold' : 'Release Hold';
+                return this.name = (blade.currentEntity && blade.currentEntity.isLocked) ? 'Release Hold' : 'Place On Hold';
             },
             // name: this.updateName(),
             icon: 'fa fa-lock', // icon: 'fa fa-hand-paper-o',
             executeMethod: function () {
-                blade.currentEntity.isLocked = !blade.currentEntity.isLocked;
-                this.updateName();
+                var dialog = {
+                    id: "confirmDialog",
+                    title: "On Hold confirmation",
+                    message: "Are you sure you want to " + (blade.currentEntity.isLocked ? 'release Hold from' : 'place On Hold') + " this quote? ",
+                    callback: function (ok) {
+                        if (ok) {
+                            blade.currentEntity.isLocked = !blade.currentEntity.isLocked;
+                            saveChanges();
+                        }
+                    }
+                };
+                dialogService.showConfirmationDialog(dialog);
             },
             canExecuteMethod: function () {
                 return true;
@@ -139,89 +149,84 @@
             permission: 'quote:update'
         };
 
-        function initializeToolbar(currentEntity) {
-            var optionalCommands = isQuoteSubmitted(currentEntity) ? [] : [
-                {
-                    name: "Save",
-                    icon: 'fa fa-save',
-                    executeMethod: function () {
-                        saveChanges();
-                    },
-                    canExecuteMethod: function () {
-                        return isDirty() && $scope.formScope && $scope.formScope.$valid;
-                    },
-                    permission: 'quote:update'
+        blade.toolbarCommands = [
+            {
+                name: "Save",
+                icon: 'fa fa-save',
+                executeMethod: function () {
+                    saveChanges();
                 },
-                {
-                    name: "Reset",
-                    icon: 'fa fa-undo',
-                    executeMethod: function () {
-                        angular.copy(blade.origEntity, blade.currentEntity);
-                        onHoldCommand.updateName();
-                    },
-                    canExecuteMethod: function () {
-                        return isDirty();
-                    },
-                    permission: 'quote:update'
-                }
-            ];
-
-            blade.toolbarCommands = optionalCommands.concat([
-                {
-                    name: "Submit proposal", icon: 'fa fa-check-square-o',
-                    executeMethod: function () {
-                        var dialog = {
-                            id: "confirmDelete",
-                            title: "Proposal confirmation",
-                            message: "You can't modify Quote Request after proposal is sent. Are you sure you want to send this proposal to customer? ",
-                            callback: function (ok) {
-                                if (ok) {
-                                    blade.currentEntity.status = 'Proposal sent';
-                                    saveChanges();
-                                }
+                canExecuteMethod: function () {
+                    return isDirty() && $scope.formScope && $scope.formScope.$valid && !blade.isLocked();
+                },
+                permission: 'quote:update'
+            },
+            {
+                name: "Reset",
+                icon: 'fa fa-undo',
+                executeMethod: function () {
+                    angular.copy(blade.origEntity, blade.currentEntity);
+                    onHoldCommand.updateName();
+                },
+                canExecuteMethod: function () {
+                    return isDirty();
+                },
+                permission: 'quote:update'
+            },
+            {
+                name: "Submit proposal", icon: 'fa fa-check-square-o',
+                executeMethod: function () {
+                    var dialog = {
+                        id: "confirmDelete",
+                        title: "Proposal confirmation",
+                        message: "Only limited modifications are available after proposal is sent. Are you sure you want to send this proposal to customer? ",
+                        callback: function (ok) {
+                            if (ok) {
+                                blade.currentEntity.status = 'Proposal sent';
+                                saveChanges();
                             }
-                        };
-                        dialogService.showConfirmationDialog(dialog);
-                    },
-                    canExecuteMethod: function () {
-                        return blade.currentEntity && !isQuoteSubmitted(blade.origEntity);
-                    },
-                    permission: 'quote:update'
+                        }
+                    };
+                    dialogService.showConfirmationDialog(dialog);
                 },
-                onHoldCommand,
-                {
-                    name: "Cancel document", icon: 'fa fa-remove',
-                    executeMethod: function () {
-                        var dialog = {
-                            id: "confirmCancelOperation",
-                            callback: function (reason) {
-                                if (reason) {
-                                    blade.currentEntity.cancelReason = reason;
-                                    blade.currentEntity.isCancelled = true;
-                                    blade.currentEntity.status = 'Canceled';
-                                    saveChanges();
-                                }
+                canExecuteMethod: function () {
+                    return blade.origEntity && blade.origEntity.status !== 'Proposal sent';
+                },
+                permission: 'quote:update'
+            },
+            onHoldCommand,
+            {
+                name: "Cancel document", icon: 'fa fa-remove',
+                executeMethod: function () {
+                    var dialog = {
+                        id: "confirmCancelOperation",
+                        callback: function (reason) {
+                            if (reason) {
+                                blade.currentEntity.cancelReason = reason;
+                                blade.currentEntity.isCancelled = true;
+                                blade.currentEntity.status = 'Canceled';
+                                saveChanges();
                             }
-                        };
-                        dialogService.showDialog(dialog, 'Modules/$(VirtoCommerce.Quote)/Scripts/dialogs/cancelQuote-dialog.tpl.html', 'virtoCommerce.quoteModule.confirmCancelDialogController');
-                    },
-                    canExecuteMethod: function () {
-                        return blade.currentEntity && !blade.currentEntity.isCancelled;
-                    },
-                    permission: 'quote:update'
+                        }
+                    };
+                    dialogService.showDialog(dialog, 'Modules/$(VirtoCommerce.Quote)/Scripts/dialogs/cancelQuote-dialog.tpl.html', 'virtoCommerce.quoteModule.confirmCancelDialogController');
                 },
-                {
-                    name: "Delete", icon: 'fa fa-trash-o',
-                    executeMethod: function () {
-                        deleteEntry();
-                    },
-                    canExecuteMethod: function () {
-                        return !isDirty();
-                    },
-                    permission: 'quote:delete'
-                }
-            ]);
-        }
+                canExecuteMethod: function () {
+                    return blade.currentEntity && !blade.currentEntity.isCancelled;
+                },
+                permission: 'quote:update'
+            },
+            {
+                name: "Delete", icon: 'fa fa-trash-o',
+                executeMethod: function () {
+                    deleteEntry();
+                },
+                canExecuteMethod: function () {
+                    return !isDirty();
+                },
+                permission: 'quote:delete'
+            }
+        ];
 
         $scope.openDictionarySettingManagement = function () {
             var newBlade = {
@@ -255,10 +260,10 @@
             id: blade.currentEntityId
         });
         accounts.search({
-        	takeCount: 100,
-			accountTypes: [ 'Manager', 'Administrator' ]
+            takeCount: 100,
+            accountTypes: ['Manager', 'Administrator']
         }, function (data) {
-            $scope.employees = data.users; 
+            $scope.employees = data.users;
         }, function (error) {
             bladeNavigationService.setError('Error ' + error.status, blade);
         });
