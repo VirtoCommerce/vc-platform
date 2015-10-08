@@ -160,15 +160,6 @@
             scope.datepickers = {
                 DateTime: false
             }
-
-            scope.showWeeks = true;
-            scope.toggleWeeks = function () {
-                scope.showWeeks = !scope.showWeeks;
-            };
-
-            scope.clear = function () {
-                scope.currentEntity.valueType = null;
-            };
             scope.today = new Date();
 
             scope.open = function ($event, which) {

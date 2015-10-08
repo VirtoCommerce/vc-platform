@@ -230,15 +230,6 @@
     $scope.datepickers = {
         bd: false
     }
-
-    $scope.showWeeks = true;
-    $scope.toggleWeeks = function () {
-        $scope.showWeeks = !$scope.showWeeks;
-    };
-
-    $scope.clear = function () {
-        blade.currentEntity.birthDate = null;
-    };
     $scope.today = new Date();
 
     $scope.open = function ($event, which) {

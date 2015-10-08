@@ -85,55 +85,16 @@
         }
     ];
     // datepicker
-    //$scope.today = function () {
-    //    $scope.dt = new Date();
-    //};
-    //$scope.today();
-
-    //$scope.clear = function () {
-    //    $scope.dt = null;
-    //};
-    //$scope.open = function ($event) {
-    //    $event.preventDefault();
-    //    $event.stopPropagation();
-
-    //    $scope.opened = true;
-    //};
-    //$scope.dateOptions = {
-    //    formatYear: 'yy',
-    //    startingDay: 1
-    //};
     $scope.datepickers = {
         pod: false,
         bod: false
     }
-    $scope.formData = {};
-    $scope.today = function () {
-        $scope.formData.pod = new Date();
-
-        // ***** Q1  *****
-        $scope.formData.bod = new Date();
-    };
-    $scope.today();
-
-    $scope.showWeeks = true;
-    $scope.toggleWeeks = function () {
-        $scope.showWeeks = !$scope.showWeeks;
-    };
-
-    $scope.clear = function () {
-        $scope.dt = null;
-    };
-
+            
     // Disable weekend selection
     $scope.disabled = function (date, mode) {
         return (mode === 'day' && (date.getDay() === 0 || date.getDay() === 6));
     };
 
-    //$scope.toggleMin = function () {
-    //    $scope.minDate = ($scope.minDate) ? null : new Date();
-    //};
-    //$scope.toggleMin();
     $scope.today = new Date();
 
     $scope.open = function ($event, which) {

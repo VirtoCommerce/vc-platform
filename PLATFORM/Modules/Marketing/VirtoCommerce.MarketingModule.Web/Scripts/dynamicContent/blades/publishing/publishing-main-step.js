@@ -195,15 +195,6 @@
         endDate: false,
         startDate: false,
     }
-
-    $scope.showWeeks = true;
-    $scope.toggleWeeks = function () {
-        $scope.showWeeks = !$scope.showWeeks;
-    };
-
-    $scope.clear = function () {
-        $scope.blade.currentEntity.birthDate = null;
-    };
     $scope.today = new Date();
 
     $scope.open = function ($event, which) {

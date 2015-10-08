@@ -119,11 +119,6 @@
         end: false
     }
 
-    $scope.showWeeks = true;
-    $scope.toggleWeeks = function () {
-        $scope.showWeeks = !$scope.showWeeks;
-    };
-
     $scope.open = function ($event, which) {
         $event.preventDefault();
         $event.stopPropagation();
