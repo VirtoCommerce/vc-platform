@@ -8,7 +8,7 @@ $(function () {
     });
 
     WebAdmin.NavbarDropdownClose.on('click', function(){
-        WebAdmin.NavbarItem.removeClass('__active');
+        WebAdmin.NavbarItem.removeClass('__selected');
         WebAdmin.NavbarDropdown.removeClass('__opened');
     });
 
@@ -185,7 +185,7 @@ $(function () {
         if (!$('.nav-bar').is(event.target) && !$('.nav-bar').has(event.target).length) {
             if(WebAdmin.NavbarFlag) {
                 WebAdmin.NavbarDropdown.removeClass('__opened');
-                WebAdmin.NavbarItem.removeClass('__active');
+                WebAdmin.NavbarItem.removeClass('__selected');
             }
 
             WebAdmin.NavbarFlag = false;
@@ -228,13 +228,13 @@ var WebAdmin = {
     NavbarActiveMenuItem: function(self) {
         var name = $('.name', self);
 
-        if (self.hasClass('__active')) {
-            self.removeClass('__active');
+        if (self.hasClass('__selected')) {
+            self.removeClass('__selected');
             this.NavbarDropdown.removeClass('__opened');
         }
         else {
-            this.NavbarItem.removeClass('__active');
-            self.addClass('__active');
+            this.NavbarItem.removeClass('__selected');
+            self.addClass('__selected');
             this.NavbarDropdown.addClass('__opened');
         }
 

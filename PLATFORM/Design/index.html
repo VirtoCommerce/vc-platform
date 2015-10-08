@@ -39,9 +39,10 @@
                         Home
                     </a>
                 </li>
-                <li class="menu-item">
+                <li class="menu-item __notify">
                     <a class="menu-link" href="#">
                         <span class="menu-ico fa fa-bell-o"></span>
+                        <span class="menu-count">5</span>
                         Notifications
                     </a>
                 </li>
@@ -4741,6 +4742,20 @@
     <script>
         $(function () {
             $('select').chosen();
+
+            animateNotify();
+
+            setInterval(function () {
+                animateNotify();
+            }, 30000);
+
+            function animateNotify() {
+                $('.__notify').addClass('__animated');
+
+                setTimeout(function () {
+                    $('.__notify').removeClass('__animated');
+                }, 3000);
+            }
 
             $('.__new-blade').on('click', function () {
                 var blade = $(this).parents('.blade'),

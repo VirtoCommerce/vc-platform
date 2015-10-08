@@ -19,7 +19,7 @@
 
 .alt-description
 {
-    color: #43b0e6 !important;
+	color: #43b0e6 !important;
 }
 
 /* Scroll bar */
@@ -583,6 +583,7 @@ ol
         {
             color: #999;
             font-size: 12px;
+            margin: 5px 0 0;
         }
 
         .list.__info .list-link
@@ -3845,6 +3846,7 @@ tags-input .tags .tag-item .remove-button
                 display: block;
                 font-size: 13px;
                 padding: 15px 0;
+                position: relative;
             }
 
         .nav-bar .menu-item.__done
@@ -3862,12 +3864,6 @@ tags-input .tags .tag-item .remove-button
                 cursor: pointer;
             }
 
-            .nav-bar .menu-link.__counted,
-            .nav-bar .menu-link.__animated
-            {
-                position: relative;
-            }
-
             .nav-bar .menu-link:hover
             {
                 color: #43b0e6;
@@ -3879,16 +3875,16 @@ tags-input .tags .tag-item .remove-button
                 color: #43b0e6;
             }
 
-            .nav-bar .__selected .menu-link.__animated,
-            .nav-bar .menu-link.__animated
+            .nav-bar .__selected.__animated .menu-link,
+            .nav-bar .__animated .menu-link
             {
                 color: #fff;
 
-                -webkit-animation: notify ease 1 2s;
-                        animation: notify ease 1 2s;
+                -webkit-animation: notify ease 1 3s;
+                        animation: notify ease 1 3s;
             }
 
-            .nav-bar .menu-link.__animated:hover
+            .nav-bar .__animated .menu-link:hover
             {
                 color: #fff;
             }
@@ -3901,36 +3897,26 @@ tags-input .tags .tag-item .remove-button
                     margin: 0 0 10px;
                 }
 
-                .nav-bar .__counted .menu-ico
+                .nav-bar .menu-count
                 {
-                    font-size: 34px;
-                    position: relative;
-                    top: -10px;
-                }
-
-                .nav-bar .__counted .menu-count
-                {
-                    color: #4c4c4c;
-                    font-size: 14px;
-                    font-weight: 500;
-                    left: 50%;
+                    background: #fff;
+                    color: #333;
+                    height: 18px;
+                    font-size: 11px;
+                    line-height: 18px;
+                    min-width: 18px;
                     position: absolute;
-                    top: 11px;
-                    
-                    -webkit-transform: translateX(-50%);
-                            transform: translateX(-50%);
+                    right: 8px;
+                    top: 8px;
+
+                    -webkit-border-radius: 50%;
+                            border-radius: 50%;
                 }
 
-                .nav-bar .__counted:hover .menu-count,
-                .nav-bar .__selected .__counted .menu-count
+                .nav-bar .__animated .menu-ico
                 {
-                    color: #fff;
-                }
-
-                .nav-bar .__animated .menu-count,
-                .nav-bar .__counted.__animated .menu-count
-                {
-                    color: #4c4c4c;
+                    -webkit-animation: bell ease 1s;
+                            animation: bell ease 1s;
                 }
 
     /* Dropdown - dropdown menu navigation */
