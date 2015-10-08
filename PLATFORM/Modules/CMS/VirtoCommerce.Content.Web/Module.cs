@@ -16,6 +16,7 @@ using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Domain.Store.Model;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Content.Web.Security;
+using VirtoCommerce.Domain.Store.Services;
 
 namespace VirtoCommerce.Content.Web
 {
@@ -50,11 +51,8 @@ namespace VirtoCommerce.Content.Web
 
             var settingsManager = _container.Resolve<ISettingsManager>();
 
-            var githubLogin =
-                settingsManager.GetValue("VirtoCommerce.Content.GitHub.Login", string.Empty);
-
-            var githubPassword =
-                settingsManager.GetValue("VirtoCommerce.Content.GitHub.Password", string.Empty);
+            var githubToken =
+                settingsManager.GetValue("VirtoCommerce.Content.GitHub.Token", string.Empty);
 
             var githubProductHeaderValue =
                 settingsManager.GetValue("VirtoCommerce.Content.GitHub.ProductHeaderValue", string.Empty);
@@ -82,8 +80,7 @@ namespace VirtoCommerce.Content.Web
                     case "GitHub":
                         return new ThemeServiceImpl(() =>
                             new GitHubContentRepositoryImpl(
-                                githubLogin,
-                                githubPassword,
+                                githubToken,
                                 githubProductHeaderValue,
                                 githubOwnerName,
                                 githubRepositoryName,
@@ -155,7 +152,7 @@ namespace VirtoCommerce.Content.Web
 
             #region Pages_Initialize
 
-            var pagesGithubMainPath = "/Pages/";
+            var pagesGithubMainPath = "Pages/";
             var pagesFileSystemMainPath = HostingEnvironment.MapPath("~/App_Data/Pages/");
 
             Func<string, IPagesService> pagesFactory = (x) =>
@@ -165,8 +162,7 @@ namespace VirtoCommerce.Content.Web
                     case "GitHub":
 						return new PagesServiceImpl(() =>
                             new GitHubContentRepositoryImpl(
-                                githubLogin,
-                                githubPassword,
+                                githubToken,
                                 githubProductHeaderValue,
                                 githubOwnerName,
                                 githubRepositoryName,
@@ -188,8 +184,8 @@ namespace VirtoCommerce.Content.Web
             };
 
 			var chosenPagesRepositoryName = settingsManager.GetValue("VirtoCommerce.Content.MainProperties.PagesRepositoryType", string.Empty);
-			var currentPagesService = pagesFactory(chosenThemeRepositoryName);
-			_container.RegisterInstance<IPagesService>(currentPagesService);
+			var currentPagesService = pagesFactory(chosenPagesRepositoryName);
+			_container.RegisterInstance(currentPagesService);
 
             if (!Directory.Exists(fileSystemMainPath))
             {
@@ -198,6 +194,9 @@ namespace VirtoCommerce.Content.Web
 
             _container.RegisterType<PagesController>(new InjectionConstructor(pagesFactory, settingsManager, _container.Resolve<ISecurityService>(),
                                                                              _container.Resolve<IPermissionScopeService>()));
+
+            _container.RegisterType<ContentExportImport>(new InjectionConstructor(_container.Resolve<IMenuService>(), themesFactory, pagesFactory, _container.Resolve<IStoreService>(), settingsManager));
+
 
             #endregion
 

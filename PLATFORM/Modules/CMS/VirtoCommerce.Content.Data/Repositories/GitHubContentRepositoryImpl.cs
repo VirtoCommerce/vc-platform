@@ -17,8 +17,7 @@ namespace VirtoCommerce.Content.Data.Repositories
         private readonly string _mainPath;
 
         public GitHubContentRepositoryImpl(
-            string login,
-            string password,
+            string token,
             string productHeaderValue,
             string ownerName,
             string repositoryName,
@@ -26,12 +25,7 @@ namespace VirtoCommerce.Content.Data.Repositories
         {
             this._client = new GitHubClient(new ProductHeaderValue(productHeaderValue), new Uri("https://github.com/"))
             {
-                Credentials
-                                   =
-                                   new Credentials
-                                   (
-                                   login,
-                                   password)
+                Credentials = new Credentials(token)
             };
 
             this._repositoryName = repositoryName;
@@ -45,7 +39,7 @@ namespace VirtoCommerce.Content.Data.Repositories
             var fullPath = GetFullPath(path);
 
             var retVal = new ContentItem();
-            var result = Task.Run(() => this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, fullPath)).Result;
+            var result = Task.Run(() => this._client.Repository.Content.GetAllContents(this._ownerName, this._repositoryName, fullPath)).Result;
 
             var item = result.SingleOrDefault();
             if (item != null)
@@ -61,7 +55,20 @@ namespace VirtoCommerce.Content.Data.Repositories
         {
             var fullPath = GetFullPath(storePath);
 
-            var result = Task.Run(() => this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, fullPath)).Result;
+            IReadOnlyList<RepositoryContent> result = null;
+            try
+            {
+                result = Task.Run(() => this._client.Repository.Content.GetAllContents(this._ownerName, this._repositoryName, fullPath)).Result;
+            }
+            catch (AggregateException ex)
+            {
+                if (ex.InnerExceptions.Count == 1 && ex.InnerExceptions[0] is NotFoundException)
+                {
+                    return Enumerable.Empty<Theme>();
+                }
+
+                throw;
+            }
 
             var themes = result.Where(s => s.Type == ContentType.Dir);
 
@@ -92,7 +99,21 @@ namespace VirtoCommerce.Content.Data.Repositories
         {
             var fullPath = GetFullPath(path);
 
-            var result = Task.Run(() => this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, fullPath)).Result;
+            IReadOnlyList<RepositoryContent> result = null;
+
+            try
+            {
+                result = Task.Run(() => this._client.Repository.Content.GetAllContents(this._ownerName, this._repositoryName, fullPath)).Result;
+            }
+            catch (AggregateException ex)
+            {
+                if (ex.InnerExceptions.Count == 1 && ex.InnerExceptions[0] is NotFoundException)
+                {
+                    return Enumerable.Empty<ContentItem>();
+                }
+
+                throw;
+            }
 
             var items = result.Where(s => s.Type == ContentType.Dir || s.Type == ContentType.File);
 
@@ -109,7 +130,7 @@ namespace VirtoCommerce.Content.Data.Repositories
             while (directoriesQueue.Count > 0)
             {
                 var directory = directoriesQueue.Dequeue();
-                result = Task.Run(() => this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, directory)).Result;
+                result = Task.Run(() => this._client.Repository.Content.GetAllContents(this._ownerName, this._repositoryName, directory)).Result;
 
                 var results = result.Where(s => s.Type == ContentType.Dir || s.Type == ContentType.File);
 
@@ -188,7 +209,7 @@ namespace VirtoCommerce.Content.Data.Repositories
             try
             {
                 var existingItems =
-                    Task.Run(() => this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, path)).Result;
+                    Task.Run(() => this._client.Repository.Content.GetAllContents(this._ownerName, this._repositoryName, path)).Result;
                 if (existingItems.Count == 0)
                 {
                     return null;
@@ -196,9 +217,14 @@ namespace VirtoCommerce.Content.Data.Repositories
 
                 return existingItems.SingleOrDefault();
             }
-            catch (NotFoundException)
+            catch (AggregateException ex)
             {
-                return null;
+                if (ex.InnerExceptions.Count == 1 && ex.InnerExceptions[0] is NotFoundException)
+                {
+                    return null;
+                }
+
+                throw;
             }
         }
 
@@ -222,7 +248,7 @@ namespace VirtoCommerce.Content.Data.Repositories
             var fullPath = GetFullPath(path);
 
             var retVal = new Models.ContentPage();
-            var result = this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, fullPath).Result;
+            var result = this._client.Repository.Content.GetAllContents(this._ownerName, this._repositoryName, fullPath).Result;
 
             var item = result.SingleOrDefault();
             if (item != null)
@@ -239,7 +265,21 @@ namespace VirtoCommerce.Content.Data.Repositories
 
             var fullPath = GetFullPath(path);
 
-            var result = this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, fullPath).Result;
+            IReadOnlyList<RepositoryContent> result = null;
+
+            try
+            {
+                result = this._client.Repository.Content.GetAllContents(this._ownerName, this._repositoryName, fullPath).Result;
+            }
+            catch (AggregateException ex)
+            {
+                if (ex.InnerExceptions.Count == 1 && ex.InnerExceptions[0] is NotFoundException)
+                {
+                    return Enumerable.Empty<Models.ContentPage>();
+                }
+
+                throw;
+            }
 
             var files = result.Where(s => s.Type == ContentType.File);
 
@@ -305,7 +345,7 @@ namespace VirtoCommerce.Content.Data.Repositories
 
         public IEnumerable<ContentPage> GetPages(string path, GetPagesCriteria criteria)
         {
-            throw new NotImplementedException();
+            return GetPages(path);
         }
 
         public void Dispose()

@@ -95,7 +95,7 @@ namespace VirtoCommerce.Platform.Tests.Bases
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
-        public void Dispose()
+        public virtual void Dispose()
         {
             AppDomain.CurrentDomain.SetData("DataDirectory", _previousDataDirectory);
         }

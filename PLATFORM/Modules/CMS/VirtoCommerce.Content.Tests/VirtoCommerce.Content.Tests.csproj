@@ -55,9 +55,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="Octokit, Version=0.6.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\packages\Octokit.0.6.2\lib\net45\Octokit.dll</HintPath>
+    <Reference Include="Octokit, Version=0.16.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Octokit.0.16.0\lib\net45\Octokit.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -89,9 +89,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="DatabaseRepositoryTest.cs" />
-    <Compile Include="FileSystemRepositoryTest.cs" />
-    <Compile Include="GitHubRepositoryTest.cs" />
+    <Compile Include="ContentRepositoryScenarios.cs" />
     <Compile Include="MenuTests\MenuRepositoryTests.cs" />
     <Compile Include="MenuTests\MenuServiceTests.cs" />
     <Compile Include="PagesTests\DatabasePagesTests.cs" />

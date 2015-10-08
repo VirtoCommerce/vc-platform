@@ -6,111 +6,113 @@
                 <div class="reason" ng-bind="blade.currentEntity.cancelReason" ng-if="blade.currentEntity.isCancelled"></div>
             </div>
             <form class="form" name="detailForm">
-                <div class="clearfix">
-                    <div class="column">
-                        <ul class="list __info">
-                            <li class="list-item">
-                                <div class="list-t">Customer</div>
-                                <div class="list-descr">{{blade.currentEntity.customerName}}</div>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="column">
-                        <ul class="list __info">
-                            <li class="list-item">
-                                <div class="list-t">Created</div>
-                                <div class="list-descr">{{blade.currentEntity.createdDate}}</div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="clearfix">
-                    <div class="column">
-                        <ul class="list __info">
-                            <li class="list-item">
-                                <div class="list-t">Customer organization</div>
-                                <div class="list-descr">{{blade.currentEntity.organizationName?blade.currentEntity.organizationName:'Not defined'}}</div>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="column">
-                        <ul class="list __info">
-                            <li class="list-item">
-                                <div class="list-t">Last updated</div>
-                                <div class="list-descr">{{blade.currentEntity.modifiedDate}}</div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="clearfix">
-                    <div class="column">
-                        <div class="form-group">
-                            <label class="form-label">Status <a href="" ng-click="openDictionarySettingManagement()" va-permission="platform:setting:update"><i class="form-ico fa fa-pencil"></i></a></label>
-                            <div class="form-input">
-                                <ui-select ng-model="blade.currentEntity.status" required>
-                                    <ui-select-match placeholder="Select...">{{$select.selected}}</ui-select-match>
-                                    <ui-select-choices repeat="x in quoteStatuses | filter: $select.search">
-                                        <span ng-bind-html="x | highlight: $select.search"></span>
-                                    </ui-select-choices>
-                                </ui-select>
-                            </div>
+                <fieldset ng-disabled="blade.isLocked()">
+                    <div class="clearfix">
+                        <div class="column">
+                            <ul class="list __info">
+                                <li class="list-item">
+                                    <div class="list-t">Customer</div>
+                                    <div class="list-descr">{{blade.currentEntity.customerName}}</div>
+                                </li>
+                            </ul>
                         </div>
-                        <div class="form-group">
-                            <label class="form-label">Expiry date</label>
-                            <div class="form-input __calendar">
-                                <input placeholder="Choose date" ng-model="blade.currentEntity.expirationDate" datepicker-popup="shortDate" is-open="datepickers.exp" close-text="Close" min-date="today" />
-                                <button class="btn" type="button" ng-click="open($event,'exp')">
-                                    <i class="btn-ico fa fa-calendar"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Assigned to</label>
-                            <div class="form-input">
-                                <ui-select ng-model="blade.currentEntity.employeeId">
-                                    <ui-select-match placeholder="Select...">{{$select.selected.userName}}</ui-select-match>
-                                    <ui-select-choices repeat="x.id as x in employees | filter: { userName: $select.search }">
-                                        <span ng-bind-html="x.userName | highlight: $select.search"></span>
-                                    </ui-select-choices>
-                                </ui-select>
-                            </div>
+                        <div class="column">
+                            <ul class="list __info">
+                                <li class="list-item">
+                                    <div class="list-t">Created</div>
+                                    <div class="list-descr">{{blade.currentEntity.createdDate}}</div>
+                                </li>
+                            </ul>
                         </div>
                     </div>
-                    <div class="column">
-                        <div class="form-group">
-                            <label class="form-label">RFQ from</label>
-                            <div class="form-input">
-                                <ui-select ng-model="blade.currentEntity.storeId" required>
-                                    <ui-select-match placeholder="Select a store">{{$select.selected.name}}</ui-select-match>
-                                    <ui-select-choices repeat="store.id as store in stores | filter: { name: $select.search }">
-                                        <span ng-bind-html="store.name | highlight: $select.search"></span>
-                                    </ui-select-choices>
-                                </ui-select>
-                            </div>
+                    <div class="clearfix">
+                        <div class="column">
+                            <ul class="list __info">
+                                <li class="list-item">
+                                    <div class="list-t">Customer organization</div>
+                                    <div class="list-descr">{{blade.currentEntity.organizationName?blade.currentEntity.organizationName:'Not defined'}}</div>
+                                </li>
+                            </ul>
                         </div>
-                        <div class="form-group">
-                            <label class="form-label">Reminder date</label>
-                            <div class="form-input __calendar">
-                                <input placeholder="Choose date" ng-model="blade.currentEntity.reminderDate" datepicker-popup="shortDate" is-open="datepickers.rmd" close-text="Close" min-date="today"/>
-                                <button class="btn" type="button" ng-click="open($event,'rmd')">
-                                    <i class="btn-ico fa fa-calendar"></i>
-                                </button>
-                            </div>
+                        <div class="column">
+                            <ul class="list __info">
+                                <li class="list-item">
+                                    <div class="list-t">Last updated</div>
+                                    <div class="list-descr">{{blade.currentEntity.modifiedDate}}</div>
+                                </li>
+                            </ul>
                         </div>
                     </div>
-                </div>
-                <div class="form-group" ng-init="setForm(detailForm)">
-                    <label class="form-label">General comment</label>
-                    <div class="form-input">
-                        <textarea class="form-control" ng-model="blade.currentEntity.comment" placeholder="Public comment"></textarea>
+                    <div class="clearfix">
+                        <div class="column">
+                            <div class="form-group">
+                                <label class="form-label">Status <a href="" ng-click="openDictionarySettingManagement()" va-permission="platform:setting:update"><i class="form-ico fa fa-pencil"></i></a></label>
+                                <div class="form-input">
+                                    <ui-select ng-model="blade.currentEntity.status" required ng-disabled="blade.isLocked()">
+                                        <ui-select-match placeholder="Select...">{{$select.selected}}</ui-select-match>
+                                        <ui-select-choices repeat="x in quoteStatuses | filter: $select.search">
+                                            <span ng-bind-html="x | highlight: $select.search"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Expiry date</label>
+                                <div class="form-input __calendar">
+                                    <input placeholder="Choose date" ng-model="blade.currentEntity.expirationDate" datepicker-popup="shortDate" is-open="datepickers.exp" close-text="Close" min-date="today" />
+                                    <button class="btn" type="button" ng-click="open($event,'exp')">
+                                        <i class="btn-ico fa fa-calendar"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Assigned to</label>
+                                <div class="form-input">
+                                    <ui-select ng-model="blade.currentEntity.employeeId" ng-disabled="blade.isLocked()">
+                                        <ui-select-match placeholder="Select...">{{$select.selected.userName}}</ui-select-match>
+                                        <ui-select-choices repeat="x.id as x in employees | filter: { userName: $select.search }">
+                                            <span ng-bind-html="x.userName | highlight: $select.search"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column">
+                            <div class="form-group">
+                                <label class="form-label">RFQ from</label>
+                                <div class="form-input">
+                                    <ui-select ng-model="blade.currentEntity.storeId" required ng-disabled="blade.isLocked()">
+                                        <ui-select-match placeholder="Select a store">{{$select.selected.name}}</ui-select-match>
+                                        <ui-select-choices repeat="store.id as store in stores | filter: { name: $select.search }">
+                                            <span ng-bind-html="store.name | highlight: $select.search"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Reminder date</label>
+                                <div class="form-input __calendar">
+                                    <input placeholder="Choose date" ng-model="blade.currentEntity.reminderDate" datepicker-popup="shortDate" is-open="datepickers.rmd" close-text="Close" min-date="today" />
+                                    <button class="btn" type="button" ng-click="open($event,'rmd')">
+                                        <i class="btn-ico fa fa-calendar"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Internal comment</label>
-                    <div class="form-input">
-                        <textarea class="form-control" ng-model="blade.currentEntity.innerComment" placeholder="Internal comment"></textarea>
+                    <div class="form-group" ng-init="setForm(detailForm)">
+                        <label class="form-label">General comment</label>
+                        <div class="form-input">
+                            <textarea class="form-control" ng-model="blade.currentEntity.comment" placeholder="Public comment"></textarea>
+                        </div>
                     </div>
-                </div>
+                    <div class="form-group">
+                        <label class="form-label">Internal comment</label>
+                        <div class="form-input">
+                            <textarea class="form-control" ng-model="blade.currentEntity.innerComment" placeholder="Internal comment"></textarea>
+                        </div>
+                    </div>
+                </fieldset>
             </form>
 
             <va-widget-container group="quoteDetail" blade="blade" gridster-opts="{width: 526}"></va-widget-container>

@@ -12,7 +12,7 @@ namespace VirtoCommerce.Platform.Tests.Bases
         {
             get
             {
-                return "VC" + Guid.NewGuid().ToString("N");
+                return "VCMigrationsTest";
             }
         }
 

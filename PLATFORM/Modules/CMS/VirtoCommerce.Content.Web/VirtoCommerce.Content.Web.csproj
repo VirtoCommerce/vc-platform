@@ -66,8 +66,9 @@
       <HintPath>..\..\..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Octokit">
-      <HintPath>..\..\..\packages\Octokit.0.6.2\lib\net45\Octokit.dll</HintPath>
+    <Reference Include="Octokit, Version=0.16.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Octokit.0.16.0\lib\net45\Octokit.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Omu.ValueInjecter, Version=2.3.3.0, Culture=neutral, PublicKeyToken=c7694541b0ac80e4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

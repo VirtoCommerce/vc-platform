@@ -7,10 +7,6 @@
         blade.isLoading = false;
 
         blade.selectedTaxProvider = _.findWhere(data, { isActive: true });
-
-        //blade.currentEntities.sort(function (a, b) {
-        //    return a.priority > b.priority;
-        //});
     };
 
     $scope.selectNode = function (node) {
@@ -18,7 +14,7 @@
 
         var newBlade = {
             id: 'taxProviderList',
-            origEntity: node,
+            data: node,
             title: blade.title,
             subtitle: 'Edit tax provider',
             controller: 'virtoCommerce.storeModule.taxProviderDetailController',
@@ -35,9 +31,7 @@
 
     blade.headIcon = 'fa-archive';
 
-    $scope.$watch('blade.parentBlade.currentEntity.taxProviders', function (currentEntities) {
-        initializeBlade(currentEntities);
-    });
+    $scope.$watch('blade.parentBlade.currentEntity.taxProviders', initializeBlade);
 
     // actions on load
     // $scope.$watch('blade.parentBlade.currentEntity.taxProviders' gets fired
