@@ -40,8 +40,9 @@
                 </fieldset>
                 <fieldset>
                     <legend>Settings</legend>
-                    <div class="form-group" ng-repeat="data in blade.currentEntity.settings" title="{{data.description}}">
+                    <div class="form-group" ng-repeat="data in blade.currentEntity.settings">
                         <label class="form-label">{{data.title}}</label>
+                        <label class="form-label">{{data.description}}</label>
                         <va-generic-value-input ng-model="data" ng-if="!data.isArray" get-dictionary-values="getDictionaryValues" />
                     </div>
                 </fieldset>
