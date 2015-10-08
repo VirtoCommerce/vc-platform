@@ -229,18 +229,12 @@ namespace VirtoCommerce.MarketingModule.Test
 
 		}
 
-        IMarketingRepository _MarketingRepository = null;
         protected IMarketingRepository GetRepository()
         {
-            if (_MarketingRepository != null)
-                return _MarketingRepository;
-
             var repository = new MarketingRepositoryImpl(DatabaseName, new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor());
-            EnsureDatabaseInitialized(() => repository, () => Database.SetInitializer(new SetupDatabaseInitializer<MarketingRepositoryImpl, Configuration>()));
-            _MarketingRepository = repository;
-            return _MarketingRepository;
+            EnsureDatabaseInitialized(() => new MarketingRepositoryImpl(DatabaseName), () => Database.SetInitializer(new SetupDatabaseInitializer<MarketingRepositoryImpl, Configuration>()));
+            return repository;
         }
-
 
         public override void Dispose()
         {
