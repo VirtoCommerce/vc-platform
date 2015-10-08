@@ -9,6 +9,7 @@ using VirtoCommerce.Platform.Core.ExportImport;
 using Microsoft.Practices.ObjectBuilder2;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Domain.Store.Services;
+using VirtoCommerce.Platform.Core.Settings;
 using System.Threading.Tasks;
 using Omu.ValueInjecter;
 
@@ -25,15 +26,24 @@ namespace VirtoCommerce.Content.Web.ExportImport
 	{
 		private readonly IMenuService _menuService;
 		private readonly IStoreService _storeService;
-		private readonly IThemeService _themeService;
+		private readonly IThemeService _themeService;  
 		private readonly IPagesService _pagesService;
 
-		public ContentExportImport(IMenuService menuService, IThemeService themeService, IPagesService pagesService, IStoreService storeService)
+		public ContentExportImport(IMenuService menuService, Func<string, IThemeService> themeServiceFactory, Func<string, IPagesService> pagesServiceFactory, IStoreService storeService, ISettingsManager settingsManager)
 		{
 			_menuService = menuService;
 			_storeService = storeService;
-			_themeService = themeService;
-			_pagesService = pagesService;
+
+            var pagesChosenRepository = settingsManager.GetValue(
+                "VirtoCommerce.Content.MainProperties.PagesRepositoryType",
+                string.Empty);
+
+            var themeChosenRepository = settingsManager.GetValue(
+                "VirtoCommerce.Content.MainProperties.ThemesRepositoryType",
+                string.Empty);
+
+            _pagesService = pagesServiceFactory.Invoke(pagesChosenRepository);
+		    _themeService = themeServiceFactory.Invoke(themeChosenRepository);
 		}
 
 		public void DoExport(Stream backupStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)

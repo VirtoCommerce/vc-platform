@@ -16,6 +16,7 @@ using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Domain.Store.Model;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Content.Web.Security;
+using VirtoCommerce.Domain.Store.Services;
 
 namespace VirtoCommerce.Content.Web
 {
@@ -183,8 +184,8 @@ namespace VirtoCommerce.Content.Web
             };
 
 			var chosenPagesRepositoryName = settingsManager.GetValue("VirtoCommerce.Content.MainProperties.PagesRepositoryType", string.Empty);
-			var currentPagesService = pagesFactory(chosenThemeRepositoryName);
-			_container.RegisterInstance<IPagesService>(currentPagesService);
+			var currentPagesService = pagesFactory(chosenPagesRepositoryName);
+			_container.RegisterInstance(currentPagesService);
 
             if (!Directory.Exists(fileSystemMainPath))
             {
@@ -193,6 +194,9 @@ namespace VirtoCommerce.Content.Web
 
             _container.RegisterType<PagesController>(new InjectionConstructor(pagesFactory, settingsManager, _container.Resolve<ISecurityService>(),
                                                                              _container.Resolve<IPermissionScopeService>()));
+
+            _container.RegisterType<ContentExportImport>(new InjectionConstructor(_container.Resolve<IMenuService>(), themesFactory, pagesFactory, _container.Resolve<IStoreService>(), settingsManager));
+
 
             #endregion
 
