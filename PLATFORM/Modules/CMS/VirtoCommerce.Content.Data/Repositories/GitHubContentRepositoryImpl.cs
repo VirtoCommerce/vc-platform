@@ -55,7 +55,20 @@ namespace VirtoCommerce.Content.Data.Repositories
         {
             var fullPath = GetFullPath(storePath);
 
-            var result = Task.Run(() => this._client.Repository.Content.GetAllContents(this._ownerName, this._repositoryName, fullPath)).Result;
+            IReadOnlyList<RepositoryContent> result = null;
+            try
+            {
+                result = Task.Run(() => this._client.Repository.Content.GetAllContents(this._ownerName, this._repositoryName, fullPath)).Result;
+            }
+            catch (AggregateException ex)
+            {
+                if (ex.InnerExceptions.Count == 1 && ex.InnerExceptions[0] is NotFoundException)
+                {
+                    return Enumerable.Empty<Theme>();
+                }
+
+                throw;
+            }
 
             var themes = result.Where(s => s.Type == ContentType.Dir);
 
@@ -252,7 +265,21 @@ namespace VirtoCommerce.Content.Data.Repositories
 
             var fullPath = GetFullPath(path);
 
-            var result = this._client.Repository.Content.GetAllContents(this._ownerName, this._repositoryName, fullPath).Result;
+            IReadOnlyList<RepositoryContent> result = null;
+
+            try
+            {
+                result = this._client.Repository.Content.GetAllContents(this._ownerName, this._repositoryName, fullPath).Result;
+            }
+            catch (AggregateException ex)
+            {
+                if (ex.InnerExceptions.Count == 1 && ex.InnerExceptions[0] is NotFoundException)
+                {
+                    return Enumerable.Empty<Models.ContentPage>();
+                }
+
+                throw;
+            }
 
             var files = result.Where(s => s.Type == ContentType.File);
 
@@ -318,7 +345,7 @@ namespace VirtoCommerce.Content.Data.Repositories
 
         public IEnumerable<ContentPage> GetPages(string path, GetPagesCriteria criteria)
         {
-            throw new NotImplementedException();
+            return GetPages(path);
         }
 
         public void Dispose()

@@ -152,7 +152,7 @@ namespace VirtoCommerce.Content.Web
 
             #region Pages_Initialize
 
-            var pagesGithubMainPath = "/Pages/";
+            var pagesGithubMainPath = "Pages/";
             var pagesFileSystemMainPath = HostingEnvironment.MapPath("~/App_Data/Pages/");
 
             Func<string, IPagesService> pagesFactory = (x) =>
