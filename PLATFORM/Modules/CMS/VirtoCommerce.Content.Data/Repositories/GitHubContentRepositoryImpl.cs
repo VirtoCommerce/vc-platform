@@ -39,7 +39,7 @@ namespace VirtoCommerce.Content.Data.Repositories
             var fullPath = GetFullPath(path);
 
             var retVal = new ContentItem();
-            var result = Task.Run(() => this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, fullPath)).Result;
+            var result = Task.Run(() => this._client.Repository.Content.GetAllContents(this._ownerName, this._repositoryName, fullPath)).Result;
 
             var item = result.SingleOrDefault();
             if (item != null)
@@ -55,7 +55,7 @@ namespace VirtoCommerce.Content.Data.Repositories
         {
             var fullPath = GetFullPath(storePath);
 
-            var result = Task.Run(() => this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, fullPath)).Result;
+            var result = Task.Run(() => this._client.Repository.Content.GetAllContents(this._ownerName, this._repositoryName, fullPath)).Result;
 
             var themes = result.Where(s => s.Type == ContentType.Dir);
 
@@ -90,7 +90,7 @@ namespace VirtoCommerce.Content.Data.Repositories
 
             try
             {
-                result = Task.Run(() => this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, fullPath)).Result;
+                result = Task.Run(() => this._client.Repository.Content.GetAllContents(this._ownerName, this._repositoryName, fullPath)).Result;
             }
             catch (AggregateException ex)
             {
@@ -117,7 +117,7 @@ namespace VirtoCommerce.Content.Data.Repositories
             while (directoriesQueue.Count > 0)
             {
                 var directory = directoriesQueue.Dequeue();
-                result = Task.Run(() => this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, directory)).Result;
+                result = Task.Run(() => this._client.Repository.Content.GetAllContents(this._ownerName, this._repositoryName, directory)).Result;
 
                 var results = result.Where(s => s.Type == ContentType.Dir || s.Type == ContentType.File);
 
@@ -196,7 +196,7 @@ namespace VirtoCommerce.Content.Data.Repositories
             try
             {
                 var existingItems =
-                    Task.Run(() => this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, path)).Result;
+                    Task.Run(() => this._client.Repository.Content.GetAllContents(this._ownerName, this._repositoryName, path)).Result;
                 if (existingItems.Count == 0)
                 {
                     return null;
@@ -235,7 +235,7 @@ namespace VirtoCommerce.Content.Data.Repositories
             var fullPath = GetFullPath(path);
 
             var retVal = new Models.ContentPage();
-            var result = this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, fullPath).Result;
+            var result = this._client.Repository.Content.GetAllContents(this._ownerName, this._repositoryName, fullPath).Result;
 
             var item = result.SingleOrDefault();
             if (item != null)
@@ -252,7 +252,7 @@ namespace VirtoCommerce.Content.Data.Repositories
 
             var fullPath = GetFullPath(path);
 
-            var result = this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, fullPath).Result;
+            var result = this._client.Repository.Content.GetAllContents(this._ownerName, this._repositoryName, fullPath).Result;
 
             var files = result.Where(s => s.Type == ContentType.File);
 
