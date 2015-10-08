@@ -42,7 +42,7 @@ namespace VirtoCommerce.MarketingModule.Test
 		
 		[Fact]
         [Trait("Category", "CI")]
-        public void Can_careate_marketing_dynamicpromotion_using_api()
+        public void Can_create_marketing_dynamicpromotion_using_api()
 		{
 			var marketingController = GetMarketingController(GetPromotionExtensionManager());
 
