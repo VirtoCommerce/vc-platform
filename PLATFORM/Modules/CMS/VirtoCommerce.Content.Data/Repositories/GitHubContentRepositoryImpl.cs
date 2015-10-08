@@ -39,7 +39,13 @@ namespace VirtoCommerce.Content.Data.Repositories
             var fullPath = GetFullPath(path);
 
             var retVal = new ContentItem();
-            var result = Task.Run(() => this._client.Repository.Content.GetAllContents(this._ownerName, this._repositoryName, fullPath)).Result;
+
+            var result = GetAllContents(fullPath);
+
+            if (result == null)
+            {
+                return null;
+            }
 
             var item = result.SingleOrDefault();
             if (item != null)
@@ -55,19 +61,11 @@ namespace VirtoCommerce.Content.Data.Repositories
         {
             var fullPath = GetFullPath(storePath);
 
-            IReadOnlyList<RepositoryContent> result = null;
-            try
-            {
-                result = Task.Run(() => this._client.Repository.Content.GetAllContents(this._ownerName, this._repositoryName, fullPath)).Result;
-            }
-            catch (AggregateException ex)
-            {
-                if (ex.InnerExceptions.Count == 1 && ex.InnerExceptions[0] is NotFoundException)
-                {
-                    return Enumerable.Empty<Theme>();
-                }
+            var result = GetAllContents(fullPath);
 
-                throw;
+            if (result == null)
+            {
+                return Enumerable.Empty<Models.Theme>();
             }
 
             var themes = result.Where(s => s.Type == ContentType.Dir);
@@ -99,20 +97,11 @@ namespace VirtoCommerce.Content.Data.Repositories
         {
             var fullPath = GetFullPath(path);
 
-            IReadOnlyList<RepositoryContent> result = null;
+            var result = GetAllContents(fullPath);
 
-            try
+            if (result == null)
             {
-                result = Task.Run(() => this._client.Repository.Content.GetAllContents(this._ownerName, this._repositoryName, fullPath)).Result;
-            }
-            catch (AggregateException ex)
-            {
-                if (ex.InnerExceptions.Count == 1 && ex.InnerExceptions[0] is NotFoundException)
-                {
-                    return Enumerable.Empty<ContentItem>();
-                }
-
-                throw;
+                return Enumerable.Empty<Models.ContentItem>();
             }
 
             var items = result.Where(s => s.Type == ContentType.Dir || s.Type == ContentType.File);
@@ -130,7 +119,7 @@ namespace VirtoCommerce.Content.Data.Repositories
             while (directoriesQueue.Count > 0)
             {
                 var directory = directoriesQueue.Dequeue();
-                result = Task.Run(() => this._client.Repository.Content.GetAllContents(this._ownerName, this._repositoryName, directory)).Result;
+                result = GetAllContents(directory);
 
                 var results = result.Where(s => s.Type == ContentType.Dir || s.Type == ContentType.File);
 
@@ -177,7 +166,7 @@ namespace VirtoCommerce.Content.Data.Repositories
                         this._ownerName,
                         this._repositoryName,
                         fullPath,
-                        new CreateFileRequest("Updating file from admin", Encoding.UTF8.GetString(item.ByteContent)))).Result;
+                        new CreateFileRequest(string.Format("Create {0}", path), Encoding.UTF8.GetString(item.ByteContent)))).Result;
             }
             else // update existing
             {
@@ -185,7 +174,7 @@ namespace VirtoCommerce.Content.Data.Repositories
                         this._ownerName,
                         this._repositoryName,
                         fullPath,
-                        new UpdateFileRequest("Updating file from admin", Encoding.UTF8.GetString(item.ByteContent), existingItem.Sha)).Result;
+                        new UpdateFileRequest(string.Format("Update {0}", path), Encoding.UTF8.GetString(item.ByteContent), existingItem.Sha)).Result;
             }
         }
 
@@ -200,7 +189,7 @@ namespace VirtoCommerce.Content.Data.Repositories
                     this._ownerName,
                     this._repositoryName,
                     fullPath,
-                    new DeleteFileRequest("Updating file from admin", existingItem.Sha)).Wait();
+                    new DeleteFileRequest(string.Format("Delete {0}", path), existingItem.Sha)).Wait();
             }
         }
 
@@ -248,7 +237,13 @@ namespace VirtoCommerce.Content.Data.Repositories
             var fullPath = GetFullPath(path);
 
             var retVal = new Models.ContentPage();
-            var result = this._client.Repository.Content.GetAllContents(this._ownerName, this._repositoryName, fullPath).Result;
+
+            var result = GetAllContents(fullPath);
+
+            if (result == null)
+            {
+                return null;
+            }
 
             var item = result.SingleOrDefault();
             if (item != null)
@@ -262,39 +257,29 @@ namespace VirtoCommerce.Content.Data.Repositories
         public IEnumerable<Models.ContentPage> GetPages(string path)
         {
             var retVal = new List<Models.ContentPage>();
+            var result = GetAllContents(GetFullPath(path));
 
-            var fullPath = GetFullPath(path);
-
-            IReadOnlyList<RepositoryContent> result = null;
-
-            try
+            if (result == null)
             {
-                result = this._client.Repository.Content.GetAllContents(this._ownerName, this._repositoryName, fullPath).Result;
-            }
-            catch (AggregateException ex)
-            {
-                if (ex.InnerExceptions.Count == 1 && ex.InnerExceptions[0] is NotFoundException)
-                {
-                    return Enumerable.Empty<Models.ContentPage>();
-                }
-
-                throw;
+                return Enumerable.Empty<Models.ContentPage>();
             }
 
             var files = result.Where(s => s.Type == ContentType.File);
 
-            Parallel.ForEach(files, file =>
-            {
-                var commits = this._client.
-                    Repository.
-                    Commits.
-                    GetAll(this._ownerName, this._repositoryName, new CommitRequest { Path = file.Path }).Result;
+            Parallel.ForEach(
+                files,
+                file =>
+                {
+                    var commits = this._client.
+                        Repository.
+                        Commits.
+                        GetAll(this._ownerName, this._repositoryName, new CommitRequest { Path = file.Path }).Result;
 
-                var commit = commits.First();
-                var date = commit.Commit.Committer.Date;
+                    var commit = commits.First();
+                    var date = commit.Commit.Committer.Date;
 
-                retVal.Add(file.ToShortModel(date.DateTime));
-            });
+                    retVal.Add(file.ToShortModel(date.DateTime));
+                });
 
             return retVal;
         }
@@ -314,7 +299,7 @@ namespace VirtoCommerce.Content.Data.Repositories
                         this._ownerName,
                         this._repositoryName,
                         fullPath,
-                        new CreateFileRequest("Updating file from admin", Encoding.UTF8.GetString(page.ByteContent))).Result;
+                        new CreateFileRequest(string.Format("Create {0}", path), Encoding.UTF8.GetString(page.ByteContent))).Result;
             }
             else // update existing
             {
@@ -323,7 +308,7 @@ namespace VirtoCommerce.Content.Data.Repositories
                         this._ownerName,
                         this._repositoryName,
                         fullPath,
-                        new UpdateFileRequest("Updating file from admin", Encoding.UTF8.GetString(page.ByteContent), existingItem.Sha)).Result;
+                        new UpdateFileRequest(string.Format("Update {0}", path), Encoding.UTF8.GetString(page.ByteContent), existingItem.Sha)).Result;
             }
         }
 
@@ -338,7 +323,7 @@ namespace VirtoCommerce.Content.Data.Repositories
                     this._ownerName,
                     this._repositoryName,
                     fullPath,
-                    new DeleteFileRequest("Updating file from admin", existingItem.Sha)).Wait();
+                    new DeleteFileRequest(string.Format("Delete {0}", path), existingItem.Sha)).Wait();
             }
         }
 
@@ -352,5 +337,30 @@ namespace VirtoCommerce.Content.Data.Repositories
         {
             GC.SuppressFinalize(this);
         }
+
+        #region Private methods
+
+        private IReadOnlyList<RepositoryContent> GetAllContents(string path)
+        {
+            IReadOnlyList<RepositoryContent> result = null;
+
+            try
+            {
+                result = this._client.Repository.Content.GetAllContents(this._ownerName, this._repositoryName, path).Result;
+            }
+            catch (AggregateException ex)
+            {
+                if (ex.InnerExceptions.Count == 1 && ex.InnerExceptions[0] is NotFoundException)
+                {
+                    return null;
+                }
+
+                throw;
+            }
+
+            return result;
+        }
+        
+        #endregion
     }
 }
