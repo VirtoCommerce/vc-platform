@@ -113,7 +113,8 @@ namespace VirtoCommerce.Content.Data.Repositories
                 Parallel.ForEach(files, file =>
                 {
                     var fullFile = GetContentItem(file.Path);
-                    file.ByteContent = fullFile.ByteContent;
+                    if(fullFile != null)
+                        file.ByteContent = fullFile.ByteContent;
                 });
             }
 
