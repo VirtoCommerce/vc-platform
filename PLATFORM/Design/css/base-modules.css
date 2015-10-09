@@ -1369,11 +1369,11 @@ fieldset + fieldset
             color: #4c4c4c;
             height: 34px;
             line-height: 1;
+            min-width: 45px;
             padding: 0;
             position: absolute;
             right: 0;
             top: 0;
-            width: 45px;
         }
 
         .form-input .btn,
@@ -3880,8 +3880,8 @@ tags-input .tags .tag-item .remove-button
             {
                 color: #fff;
 
-                -webkit-animation: notify ease 1 3s;
-                        animation: notify ease 1 3s;
+                -webkit-animation: notify ease 1 1.5s;
+                        animation: notify ease 1 1.5s;
             }
 
             .nav-bar .__animated .menu-link:hover
@@ -3915,8 +3915,8 @@ tags-input .tags .tag-item .remove-button
 
                 .nav-bar .__animated .menu-ico
                 {
-                    -webkit-animation: bell ease 1s;
-                            animation: bell ease 1s;
+                    -webkit-animation: bell ease-in-out 1s .5s;
+                            animation: bell ease-in-out 1s .5s;
                 }
 
     /* Dropdown - dropdown menu navigation */
