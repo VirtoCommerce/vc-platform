@@ -139,11 +139,11 @@ namespace VirtoCommerce.Content.Data.Repositories
             }
             else // update existing
             {
-                var response = this._client.Repository.Content.UpdateFile(
+                var response = Task.Run(() => this._client.Repository.Content.UpdateFile(
                         this._ownerName,
                         this._repositoryName,
                         fullPath,
-                        new UpdateFileRequest(string.Format("Update {0}", path), Encoding.UTF8.GetString(item.ByteContent), existingItem.Sha)).Result;
+                        new UpdateFileRequest(string.Format("Update {0}", path), Encoding.UTF8.GetString(item.ByteContent), existingItem.Sha))).Result;
             }
         }
 
@@ -232,20 +232,20 @@ namespace VirtoCommerce.Content.Data.Repositories
             if (existingItem == null) // create new
             {
                 var response =
-                    this._client.Repository.Content.CreateFile(
+                    Task.Run(() => this._client.Repository.Content.CreateFile(
                         this._ownerName,
                         this._repositoryName,
                         fullPath,
-                        new CreateFileRequest(string.Format("Create {0}", path), Encoding.UTF8.GetString(page.ByteContent))).Result;
+                        new CreateFileRequest(string.Format("Create {0}", path), Encoding.UTF8.GetString(page.ByteContent)))).Result;
             }
             else // update existing
             {
                 var response =
-                    this._client.Repository.Content.UpdateFile(
+                    Task.Run(() => this._client.Repository.Content.UpdateFile(
                         this._ownerName,
                         this._repositoryName,
                         fullPath,
-                        new UpdateFileRequest(string.Format("Update {0}", path), Encoding.UTF8.GetString(page.ByteContent), existingItem.Sha)).Result;
+                        new UpdateFileRequest(string.Format("Update {0}", path), Encoding.UTF8.GetString(page.ByteContent), existingItem.Sha))).Result;
             }
         }
 
@@ -327,7 +327,7 @@ namespace VirtoCommerce.Content.Data.Repositories
                             */
 
             // get list of all sub trees
-            var trees = this._client.GitDatabase.Tree.GetRecursive(_ownerName, this._repositoryName, sha1).Result;
+            var trees = Task.Run(() => this._client.GitDatabase.Tree.GetRecursive(_ownerName, this._repositoryName, sha1)).Result;
 
             // get all blob entries
             var blobs = trees.Tree.Where(x => x.Type == TreeType.Blob);
@@ -351,7 +351,7 @@ namespace VirtoCommerce.Content.Data.Repositories
             var retVal = new List<Models.ContentPage>();
 
             // get list of all sub trees
-            var tree = this._client.GitDatabase.Tree.Get(_ownerName, this._repositoryName, sha1).Result;
+            var tree = Task.Run(() => this._client.GitDatabase.Tree.Get(_ownerName, this._repositoryName, sha1)).Result;
 
             // get all blob entries
             var children = tree.Tree.Where(x => x.Type == TreeType.Tree);
@@ -365,7 +365,8 @@ namespace VirtoCommerce.Content.Data.Repositories
 
             try
             {
-                result = this._client.Repository.Content.GetAllContents(this._ownerName, this._repositoryName, path).Result;
+                result = Task.Run(() => this._client.Repository.Content.GetAllContents(this._ownerName, this._repositoryName, path)).Result;
+                //result = this._client.Repository.Content.GetAllContents(this._ownerName, this._repositoryName, path).Result;
             }
             catch (AggregateException ex)
             {

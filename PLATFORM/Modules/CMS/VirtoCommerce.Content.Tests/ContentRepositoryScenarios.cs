@@ -189,11 +189,22 @@ namespace VirtoCommerce.Content.Tests
                 Id = "Content_Test_Store/en-US/test_pages/test_page_1.html"
             });
 
+            var fakePpages = repository.GetPages("Clothing/Themes/", null);
             var pages = repository.GetPages("Content_Test_Store/", null);
             Assert.NotNull(pages);
             Assert.Equal(1, pages.Count());
 
             repository.DeletePage("Content_Test_Store/en-US/test_pages/test_page_1.html");
+        }
+
+        [Theory, InlineData("GitHub")]
+        [Trait("Category", "CI")]
+        public void Can_query_themes(string repositoryType)
+        {
+            var repository = GetRepository(repositoryType);
+
+            //create pages
+            var allthemes = repository.GetThemes("Clothing/");
         }
 
         public override void Dispose()
