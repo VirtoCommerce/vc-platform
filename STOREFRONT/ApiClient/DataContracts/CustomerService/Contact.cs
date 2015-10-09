@@ -21,8 +21,8 @@ namespace VirtoCommerce.ApiClient.DataContracts.CustomerService
         public DateTime? ModifiedDate { get; set; }
         public string PreferredCommunication { get; set; }
         public string PreferredDelivery { get; set; }
-
-        public ContactProperty[] DynamicProperties { get; set; }
+        //Temporary comment because json serializator throw exception
+        //public ContactProperty[] DynamicProperties { get; set; }
         public string Salutation { get; set; }
         public string TaxpayerId { get; set; }
         public string TimeZone { get; set; }

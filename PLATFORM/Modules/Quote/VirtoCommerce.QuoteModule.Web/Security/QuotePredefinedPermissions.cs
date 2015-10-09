@@ -1,8 +1,8 @@
-﻿namespace VirtoCommerce.QuoteModule.Web.Controllers
+﻿namespace VirtoCommerce.QuoteModule.Web.Security
 {
-    public static class PredefinedPermissions
+    public static class QuotePredefinedPermissions
     {
-        public const string Query = "quote:read",
+        public const string Read = "quote:read",
             Create = "quote:create",
             Access = "quote:access",
             Update = "quote:update",
