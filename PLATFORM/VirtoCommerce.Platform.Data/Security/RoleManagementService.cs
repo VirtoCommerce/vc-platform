@@ -43,6 +43,7 @@ namespace VirtoCommerce.Platform.Data.Security
                     .Skip(request.SkipCount)
                     .Take(request.TakeCount)
                     .Include(r => r.RolePermissions.Select(rp => rp.Permission))
+                    .Include(r => r.RolePermissions.Select(rp => rp.Scopes))
                     .ToArray();
 
                 var roleAllPermissionScopes =
