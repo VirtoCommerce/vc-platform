@@ -281,7 +281,10 @@ namespace VirtoCommerce.Platform.Data.Security
                 foreach (var user in users)
                 {
                     var extendedUser = await FindByNameAsync(user.UserName, UserDetails.Reduced);
-                    extendedUsers.Add(extendedUser);
+                    if (extendedUser != null)
+                    {
+                        extendedUsers.Add(extendedUser);
+                    }
                 }
 
                 result.Users = extendedUsers.ToArray();
