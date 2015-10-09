@@ -12,7 +12,7 @@ angular.module(moduleName, [
 
       var rebuildIndexCommand = {
           name: "Rebuild Index",
-          icon: 'fa fa-refresh',
+          icon: 'fa fa-recycle',
           index: 4,
           executeMethod: function (blade) {
               var dialog = {

@@ -4747,14 +4747,14 @@
 
             setInterval(function () {
                 animateNotify();
-            }, 30000);
+            }, 5000);
 
             function animateNotify() {
                 $('.__notify').addClass('__animated');
 
                 setTimeout(function () {
                     $('.__notify').removeClass('__animated');
-                }, 3000);
+                }, 1500);
             }
 
             $('.__new-blade').on('click', function () {

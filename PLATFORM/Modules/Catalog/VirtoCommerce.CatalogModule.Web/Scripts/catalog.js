@@ -156,7 +156,7 @@ angular.module(catalogsModuleName, [
       var variationWidget = {
           controller: 'virtoCommerce.catalogModule.itemVariationWidgetController',
           isVisible: function (blade) { return blade.id !== 'variationDetail'; },
-          size: [2, 1],
+          size: [1, 1],
 	        template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/itemVariationWidget.tpl.html'
       };
       widgetService.registerWidget(variationWidget, 'itemDetail');

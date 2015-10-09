@@ -1369,11 +1369,11 @@ fieldset + fieldset
             color: #4c4c4c;
             height: 34px;
             line-height: 1;
+            min-width: 45px;
             padding: 0;
             position: absolute;
             right: 0;
             top: 0;
-            width: 45px;
         }
 
         .form-input .btn,
