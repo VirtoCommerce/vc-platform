@@ -22,7 +22,7 @@
                             </th>
                             <th class="table-col">Quote #</th>
                             <th class="table-col">Status</th>
-                            <th class="table-col">Items</th>
+                            <th class="table-col">Items count</th>
                             <th class="table-col">Customer</th>
                             <th class="table-col __date">Created</th>
                         </tr>
@@ -42,7 +42,7 @@
                                 <span>{{data.status}}</span>
                             </td>
                             <td class="table-col" ng-click='selectNode(data)'>
-                                <span>{{data.items.length}} items</span>
+                                <span>{{data.items.length}}</span>
                             </td>
                             <td class="table-col" ng-click='selectNode(data)'>
                                 <span>{{data.customerName}}</span>

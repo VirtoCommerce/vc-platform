@@ -26,6 +26,7 @@ namespace VirtoCommerce.Web.Controllers
 
             var quoteItem = product.ToQuoteItem();
 
+            Context.ActualQuoteRequest.Status = "New";
             Context.ActualQuoteRequest.AddItem(quoteItem);
 
             Context.ActualQuoteRequest = await QuoteService.UpdateQuoteRequestAsync(Context.ActualQuoteRequest);
@@ -85,7 +86,8 @@ namespace VirtoCommerce.Web.Controllers
                     return Json(new { errorMessage = firstError });
                 }
             }
-
+            Context.ActualQuoteRequest.CustomerId = User.Identity.Name;
+            Context.ActualQuoteRequest.CustomerName = Context.Customer.Name;
             Context.ActualQuoteRequest.Comment = model.Comment;
             Context.ActualQuoteRequest.Email = model.Email;
             Context.ActualQuoteRequest.BillingAddress = model.BillingAddress;
@@ -103,7 +105,7 @@ namespace VirtoCommerce.Web.Controllers
                     existingQuoteItem.ProposalPrices.Add(new TierPrice
                     {
                         Quantity = tearPrice.Quantity,
-                        Price = tearPrice.Price
+                        Price = existingQuoteItem.SalePrice == 0 ? existingQuoteItem.ListPrice : existingQuoteItem.SalePrice
                     });
                 }
             }
