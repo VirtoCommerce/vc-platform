@@ -9,13 +9,14 @@ using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.QuoteModule.Data.Converters;
 using VirtoCommerce.QuoteModule.Web.Converters;
+using VirtoCommerce.QuoteModule.Web.Security;
 using coreModel = VirtoCommerce.Domain.Quote.Model;
 using webModel = VirtoCommerce.QuoteModule.Web.Model;
 
 namespace VirtoCommerce.QuoteModule.Web.Controllers.Api
 {
     [RoutePrefix("api/quote/requests")]
-    [CheckPermission(Permission = PredefinedPermissions.Query)]
+    [CheckPermission(Permission = QuotePredefinedPermissions.Read)]
     public class QuoteModuleController : ApiController
     {
         private readonly IQuoteRequestService _quoteRequestService;
@@ -69,7 +70,7 @@ namespace VirtoCommerce.QuoteModule.Web.Controllers.Api
         [HttpPost]
         [ResponseType(typeof(webModel.QuoteRequest))]
         [Route("")]
-        [CheckPermission(Permission = PredefinedPermissions.Create)]
+        [CheckPermission(Permission = QuotePredefinedPermissions.Create)]
         public IHttpActionResult Create(webModel.QuoteRequest quoteRequest)
         {
             var coreQuote = quoteRequest.ToCoreModel();
@@ -84,7 +85,7 @@ namespace VirtoCommerce.QuoteModule.Web.Controllers.Api
         [HttpPut]
         [ResponseType(typeof(void))]
         [Route("")]
-        [CheckPermission(Permission = PredefinedPermissions.Update)]
+        [CheckPermission(Permission = QuotePredefinedPermissions.Update)]
         public IHttpActionResult Update(webModel.QuoteRequest quoteRequest)
         {
             var coreQuote = quoteRequest.ToCoreModel();
@@ -150,7 +151,7 @@ namespace VirtoCommerce.QuoteModule.Web.Controllers.Api
         [HttpDelete]
         [ResponseType(typeof(void))]
         [Route("")]
-        [CheckPermission(Permission = PredefinedPermissions.Delete)]
+        [CheckPermission(Permission = QuotePredefinedPermissions.Delete)]
         public IHttpActionResult Delete([FromUri] string[] ids)
         {
             _quoteRequestService.Delete(ids);

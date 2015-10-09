@@ -133,16 +133,18 @@ namespace VirtoCommerce.QuoteModule.Data.Services
                 {
                     query = query.Where(x => x.Status == criteria.Status);
                 }
+                var ids = query.OrderByDescending(x => x.CreatedDate)
+                               .Skip(criteria.Start)
+                               .Take(criteria.Count)
+                               .Select(x => x.Id)
+                               .ToArray();
+
                 retVal = new QuoteRequestSearchResult
                 {
                     TotalCount = query.Count(),
-                    QuoteRequests = query.OrderByDescending(x => x.CreatedDate)
-                                      .Skip(criteria.Start)
-                                      .Take(criteria.Count)
-                                      .ToArray()
-                                      .Select(x => x.ToCoreModel())
-                                      .ToList()
+                    QuoteRequests = GetByIds(ids).ToList()
                 };
+
             }
             return retVal;
         }
