@@ -11,7 +11,7 @@
                 <li class="list-item" ng-repeat="sampleData in sampleDataInfos track by $index" ng-click="selectItem(sampleData)">
                     <i class="list-ico fa fa-folder"></i>
                     <span class="list-name">{{sampleData.name}}</span>
-                    <span class="list-descr">{{sampleData.description + " " + sampleData.size}}</span>
+                    <span class="list-descr">{{sampleData.description + " " + sampleData.PlatformVersion + " " + sampleData.size}}</span>
                 </li>
             </ul>
         </form>
