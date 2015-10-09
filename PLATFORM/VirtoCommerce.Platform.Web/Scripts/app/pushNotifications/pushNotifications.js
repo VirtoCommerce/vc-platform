@@ -85,7 +85,7 @@
         var menuItem = {
         	parent: notifyMenu,
         	path: 'pushNotifications/notifications',
-        	icon: 'fa fa-comment',
+        	icon: 'fa fa-bell-o',
         	title: data.title,
         	priority: 2,
         	permission: '',
