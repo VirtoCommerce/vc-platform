@@ -11,23 +11,36 @@ namespace VirtoCommerce.Content.Data.Converters
 {
 	public static class ContentPageConverter
 	{
-		public static ContentPage ToShortModel(this RepositoryContent repositoryContent, DateTime modifiedDate)
+		public static ContentPage ToShortModel(this TreeItem treeItem)
 		{
-			var retVal = new ContentPage();
+		    var retVal = new ContentPage
+		                 {
+		                     Name = Path.GetFileNameWithoutExtension(treeItem.Path),
+		                     Language = GetLanguageFromFullPath(treeItem.Path)
+		                 };
 
-			retVal.Name = Path.GetFileNameWithoutExtension(repositoryContent.Name);
-			retVal.ModifiedDate = modifiedDate;
-			retVal.Language = GetLanguageFromFullPath(repositoryContent.Path);
 
-			return retVal;
+		    return retVal;
 		}
 
-		public static ContentPage ToPageModel(this RepositoryContent repositoryContent)
-		{
-			var retVal = new ContentPage();
+        public static ContentPage ToShortModel(this RepositoryContent repositoryContent, DateTime modifiedDate)
+        {
+            var retVal = new ContentPage
+            {
+                Name = Path.GetFileNameWithoutExtension(repositoryContent.Name),
+                ModifiedDate = modifiedDate,
+                Language = GetLanguageFromFullPath(repositoryContent.Path)
+            };
 
-			retVal.Name = Path.GetFileNameWithoutExtension(repositoryContent.Name);
-			if (!string.IsNullOrEmpty(repositoryContent.Content))
+
+            return retVal;
+        }
+
+        public static ContentPage ToPageModel(this RepositoryContent repositoryContent)
+		{
+		    var retVal = new ContentPage { Name = Path.GetFileNameWithoutExtension(repositoryContent.Name) };
+
+		    if (!string.IsNullOrEmpty(repositoryContent.Content))
 			{
 				retVal.ByteContent = Encoding.UTF8.GetBytes(repositoryContent.Content);
 			}

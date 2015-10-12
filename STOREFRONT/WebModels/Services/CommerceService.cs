@@ -231,11 +231,21 @@ namespace VirtoCommerce.Web.Models.Services
             return webReviews;
         }
 
-        public async Task<Collection> GetAllCollectionAsync(SiteContext context, string sort = "")
+        /*
+        public Collection GetAllCollection(string sort = "")
         {
-            var collections = await this.GetCollectionsAsync(context, sort);
-            return collections.First();
+            var urlTemplate = VirtualPathUtility.ToAbsolute("~/collections/{0}");
+            var collection = new Collection()
+            {
+                Id = "All",
+                Url = string.Format(urlTemplate, "All"),
+                DefaultSortBy = "manual",
+                SortBy = sort
+            };
+
+            return collection;
         }
+        */
 
         public async Task<Collection> GetCollectionAsync(SiteContext context, string handle, string sort = "")
         {
@@ -297,39 +307,13 @@ namespace VirtoCommerce.Web.Models.Services
             return new CountryOptionTags(countries).ToString();
         }
 
-        public async Task<Cart> CreateCartAsync(ShoppingCart dtoCart)
+        public async Task<Cart> CreateCartAsync(Cart cart)
         {
-            await _cartClient.CreateCartAsync(dtoCart);
+            await _cartClient.CreateCartAsync(cart.AsServiceModel());
 
-            dtoCart = await _cartClient.GetCartAsync(dtoCart.StoreId, dtoCart.CustomerId);
+            var dtoCart = await _cartClient.GetCartAsync(cart.StoreId, cart.CustomerId);
 
             return dtoCart != null ? dtoCart.AsWebModel() : null;
-        }
-
-        public async Task<Cart> MergeCartsAsync(Cart anonymousCart)
-        {
-            var customerCart = SiteContext.Current.Cart;
-
-            foreach (var anonymousLineItem in anonymousCart.Items)
-            {
-                var customerLineItem = customerCart.Items
-                    .FirstOrDefault(i => i.Handle == anonymousLineItem.Handle);
-
-                if (customerLineItem != null)
-                {
-                    customerLineItem.Quantity += anonymousLineItem.Quantity;
-                }
-                else
-                {
-                    anonymousLineItem.Id = null;
-                    customerCart.Items.Add(anonymousLineItem);
-                }
-            }
-
-            var cart = await SaveChangesAsync(customerCart);
-            await DeleteCartAsync(anonymousCart.Key);
-
-            return cart;
         }
 
         public async Task DeleteCartAsync(string cartId)
@@ -535,6 +519,12 @@ namespace VirtoCommerce.Web.Models.Services
                                {
                                    FormType = "pay_order",
                                    ActionLink = VirtualPathUtility.ToAbsolute("~/account/payorder"),
+                               },
+                               new SubmitForm
+                               {
+                                   FormType = "contact",
+                                   ActionLink = VirtualPathUtility.ToAbsolute("~/contact"),
+                                   PostedSuccessfully = HttpContext.Current != null ? !string.IsNullOrEmpty(HttpContext.Current.Request["contact_posted"]) : false,
                                }
                            };
 
@@ -778,7 +768,7 @@ namespace VirtoCommerce.Web.Models.Services
 
         public async Task<Cart> SaveChangesAsync(Cart cart)
         {
-            var model = await this._cartClient.UpdateCurrentCartAsync(cart.AsServiceModel(SiteContext.Current.Shop.Currency));
+            var model = await this._cartClient.UpdateCurrentCartAsync(cart.AsServiceModel());
             return model.AsWebModel();
         }
 

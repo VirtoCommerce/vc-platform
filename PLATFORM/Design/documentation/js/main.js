@@ -65,7 +65,7 @@ $(function (){
 
     $('section').each(function () {
         var self = $(this),
-            example = self.find('.example:not(.__bg)');
+            example = self.find('.example:not(.__bg), .example:not(.__tabs)');
 
         example.before('<a class="preview-blade"><i class="fa fa-eye"></i>Preview in blade</a>');
     });
@@ -115,6 +115,37 @@ $(function (){
 
         $('body').append('<div class="popup-overlay"><div class="overlay-cnt"><div class="popup"><div class="t">Blade example</div></div></div></div>');
         $('.popup').append(html);
+    });
+
+    $('body').delegate('.add-tab', 'click', function () {
+        var self = $(this).parent().find('.tabs'),
+            tabItemCounts = self.find('.tab-item').length;
+
+        if(tabItemCounts < 5) {
+            $('.tabs-elements', self).append('<div class="tab-item">Tab ' + (tabItemCounts + 1) + '</div>');
+            var clone = $('.tab-cnt:first', self).clone();
+            clone.removeClass('__opened');
+            $('.sub-t.__border', clone).text('Text ' + (tabItemCounts + 1));
+            $('.text', clone).text('Example text ' + (tabItemCounts + 1));
+            self.append(clone);
+        }
+    });
+
+    $('body').delegate('.remove-tab', 'click', function () {
+        var self = $(this).parent().find('.tabs'),
+            tabItemCounts = self.find('.tab-item').length;
+
+            console.log(self)
+
+        if(tabItemCounts > 2) {
+            
+            if($('.tab-item', self).hasClass('__selected')) {
+                $('.tab-item:first', self).addClass('__selected');
+                $('.tab-cnt:first', self).addClass('__opened');
+            };
+
+            $('.tab-item:last, .tab-cnt:last', self).remove();
+        }
     });
 
     $('button').attr('type', 'button');
@@ -186,6 +217,7 @@ $(function (){
             'tree_v',
             'tree_h',
             'widgets',
+            'tabs',
             'blade_constructor'
         ];
      
@@ -220,6 +252,9 @@ $(function (){
                 margin: 40
             },
             widgets: {
+                margin: 40
+            },
+            tabs: {
                 margin: 40
             },
             blade_constructor: {

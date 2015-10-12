@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.storeModule')
-.controller('virtoCommerce.storeModule.seoDetailController', ['$scope', 'virtoCommerce.storeModule.stores', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', function ($scope, stores, dialogService, bladeNavigationService) {
+.controller('virtoCommerce.storeModule.seoDetailController', ['$scope', 'virtoCommerce.storeModule.stores', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'platformWebApp.authService', function ($scope, stores, dialogService, bladeNavigationService, authService) {
     var blade = $scope.blade;
 
     function initializeBlade(parentEntity) {
@@ -54,7 +54,7 @@
     }
 
     function isDirty() {
-        return !angular.equals($scope.seoInfos, blade.origItem);
+    	return authService.checkPermission('store:update', blade.securityScopes) && !angular.equals($scope.seoInfos, blade.origItem);
     };
 
     blade.onClose = function (closeCallback) {
@@ -92,7 +92,7 @@
                 canExecuteMethod: function () {
                     return isDirty() && _.every(_.filter($scope.seoInfos, function (data) { return !data.isNew; }), isValid) && _.some($scope.seoInfos, isValid); // isValid formScope && formScope.$valid;
                 },
-                permission: 'store:manage'
+                permission: 'store:update'
             },
             {
                 name: "Reset", icon: 'fa fa-undo',
@@ -102,7 +102,7 @@
                 canExecuteMethod: function () {
                     return isDirty();
                 },
-                permission: 'store:manage'
+                permission: 'store:update'
             }
         ];
     }

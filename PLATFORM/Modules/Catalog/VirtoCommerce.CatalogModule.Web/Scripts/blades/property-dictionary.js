@@ -60,6 +60,7 @@
                 }
                 initializeDictionaryValues(dictionaryValues);
             } else {
+                $scope.newValue.alias = $scope.newValue.value;
                 dictionaryValues.push($scope.newValue);
             }
             resetNewValue($scope.newValue.languageCode);
@@ -87,6 +88,8 @@
         initializeDictionaryValues(dictionaryValues);
         $scope.selectedItem = undefined;
     };
+
+    $scope.blade.headIcon = 'fa-book';
 
     $scope.blade.toolbarCommands = [
      {

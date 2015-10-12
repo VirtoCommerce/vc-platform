@@ -35,7 +35,7 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 				retVal.DiscountAmount = shipment.Discount.DiscountAmount;
 			}
 
-			retVal.ChildrenOperations = shipment.GetFlatObjectsListWithInterface<coreModel.IOperation>().Select(x => x.ToWebModel()).ToList();
+			retVal.ChildrenOperations = shipment.GetFlatObjectsListWithInterface<coreModel.IOperation>().Except(new[] { shipment }).Select(x => x.ToWebModel()).ToList();
 
 			retVal.TaxDetails = shipment.TaxDetails;
 

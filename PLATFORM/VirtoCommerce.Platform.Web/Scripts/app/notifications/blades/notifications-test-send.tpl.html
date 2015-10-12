@@ -15,7 +15,7 @@
 				<div class="form-group" ng-repeat="data in blade.sendingInfo">
 					<label class="form-label">{{data}}</label>
 					<div class="form-input">
-						<input ng-model="blade.obj[data]" type="text" required="" placeholder="Enter {{data}}" class="form-control">
+						<input ng-model="blade.obj.notificationParameters[data]" type="text" required="" placeholder="Enter {{data}}" class="form-control">
 					</div>
 				</div>
 
@@ -23,12 +23,33 @@
 					<legend>Enter test data</legend>
 				</fieldset>
 
-				<div class="form-group" ng-repeat="data in blade.currentParams">
-					<label class="form-label">{{data.parameterDescription}}</label>
-					<div class="form-input">
-						<input ng-model="blade.obj[data.parameterName]" type="text" required="" placeholder="Enter {{data.parameterName}}" class="form-control">
-					</div>
-				</div>
+                <div class="form-group" ng-repeat="data in blade.currentParams">
+                    <label class="form-label">
+                        {{data.parameterDescription}}
+                        <a ng-if="data.isDictionary" ng-click="blade.add(data.parameterName)">
+                            <i class="form-ico fa fa-plus"></i>
+                        </a>
+                    </label>
+                    <div class="columns clearfix" ng-if="data.isDictionary" ng-repeat="param in blade.obj.notificationParameters[data.parameterName] track by $index">
+                        <div class="column">
+                            <div class="form-group">
+                                <div class="form-input">
+                                    <input ng-model="param.name" type="text" required="" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column">
+                            <div class="form-group">
+                                <div class="form-input">
+                                    <input ng-model="param.value" type="text" required="" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-input" ng-if="!data.isDictionary">
+                        <input ng-model="blade.obj.notificationParameters[data.parameterName]" type="text" required="" placeholder="Enter {{data.parameterName}}" class="form-control">
+                    </div>
+                </div>
 			</form>
 		</div>
 	</div>

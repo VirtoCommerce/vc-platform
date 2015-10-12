@@ -1,11 +1,11 @@
-﻿<div class="blade-static __expanded" ng-if="blade.newPage">
+﻿<div class="blade-static __expanded">
 	<form class="form" name="pageForm">
 		<div class="columns clearfix">
 			<div class="column">
 				<div class="form-group" ng-init="setForm(pageForm)">
 					<label class="form-label">Name</label>
 					<div class="form-input">
-						<input focus-on="" required class="form-control" ng-model="blade.currentEntity.name" placeholder="Enter page name" />
+						<input focus-on="" required class="form-control" ng-model="blade.currentEntity.pageName" placeholder="Enter page name" />
 					</div>
 				</div>
 			</div>
@@ -25,12 +25,6 @@
 			</div>
 		</div>
 	</form>
-</div>
-
-<div class="blade-static __collapsed" ng-if="!blade.newPage">
-	<div class="form-group">
-		<label>{{blade.currentEntity.name}}</label> | <span class="flag flag-{{blade.getFlag(blade.currentEntity.language)}}"></span> <label>{{blade.currentEntity.language}}</label> | Liquid Documentation
-	</div>
 </div>
 
 <div class="blade-content __large-wide" ng-if="blade.isByteContent">
@@ -56,7 +50,7 @@
 				</form>
 
 				<div ng-show="uploader.isUploading">
-					<div class="sub-t">Progress:</div>
+					<div class="sub-t">Progress</div>
 					<div class="progress-bar __aqua" ng-style="{'width': uploader.progress + '%'}"></div>
 				</div>
 
@@ -70,16 +64,29 @@
 	</div>
 </div>
 
-<div class="blade-content __code-editor" style="{{blade.getBladeStyle()}}" ng-if="!blade.isByteContent">
-	<div class="blade-inner" style="padding: 0">
+<div class="blade-content __xxlarge-wide" ng-if="!blade.isByteContent">
+	<div class="blade-inner">
 		<div class="inner-block">
-			<form class="form" style="padding: 0" name="formScope">
-				<div class="form-group">
-					<div class="form-input __expanded">
-						<ui-codemirror required ng-model="blade.currentEntity.content" ui-codemirror-opts="editorOptions"></ui-codemirror>
-					</div>
-				</div>
-			</form>
+            <div class="tabs" va-tabs>
+                <div class="tabs-elements">
+                    <div class="tab-item __selected">Markdown</div>
+                    <div class="tab-item">Metadata</div>
+                </div>
+                <div class="tab-cnt __opened">
+                    <form class="form" name="formScope" id="pagesEditForm">
+                        <textarea ui-kit-html-editor ng-model="blade.body"></textarea>
+                    </form>
+                </div>
+                <div class="tab-cnt">
+                    <form class="form">
+                        <div class="form-group">
+                            <div class="form-input">
+                                <textarea cols="30" rows="30" ng-model="blade.metadata" placeholder="Enter metadata"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
 		</div>
 	</div>
 </div>

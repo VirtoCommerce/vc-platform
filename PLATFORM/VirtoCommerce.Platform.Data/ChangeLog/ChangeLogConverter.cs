@@ -27,12 +27,12 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
 			return retVal;
 		}
 
-		public static void Patch(this OperationLog source, OperationLog target)
+		public static void Patch(this OperationLogEntity source, OperationLogEntity target)
 		{
 			if (target == null)
 				throw new ArgumentNullException("target");
 
-			var patchInjection = new PatchInjection<OperationLog>(x => x.ModifiedBy, x => x.ModifiedDate);
+			var patchInjection = new PatchInjection<OperationLogEntity>(x => x.ModifiedBy, x => x.ModifiedDate, x=>x.Detail);
 			target.InjectFrom(patchInjection, source);
 		}
 

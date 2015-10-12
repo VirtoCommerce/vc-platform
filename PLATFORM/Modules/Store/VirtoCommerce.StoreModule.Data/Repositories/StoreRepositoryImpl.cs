@@ -33,8 +33,9 @@ namespace VirtoCommerce.StoreModule.Data.Repositories
 			MapEntity<StoreLanguage>(modelBuilder, toTable: "StoreLanguage");
 			MapEntity<StorePaymentMethod>(modelBuilder, toTable: "StorePaymentMethod");
 			MapEntity<StoreShippingMethod>(modelBuilder, toTable: "StoreShippingMethod");
+            MapEntity<StoreTaxProvider>(modelBuilder, toTable: "StoreTaxProvider");
 
-			modelBuilder.Entity<StoreShippingMethod>().HasRequired(x => x.Store)
+            modelBuilder.Entity<StoreShippingMethod>().HasRequired(x => x.Store)
 								   .WithMany(x => x.ShippingMethods)
 								   .HasForeignKey(x => x.StoreId).WillCascadeOnDelete(true);
 
@@ -42,19 +43,24 @@ namespace VirtoCommerce.StoreModule.Data.Repositories
 							   .WithMany(x => x.PaymentMethods)
 							   .HasForeignKey(x => x.StoreId).WillCascadeOnDelete(true);
 
+            modelBuilder.Entity<StoreTaxProvider>().HasRequired(x => x.Store)
+                                 .WithMany(x => x.TaxProviders)
+                                 .HasForeignKey(x => x.StoreId).WillCascadeOnDelete(true);
 
-			base.OnModelCreating(modelBuilder);
+
+            base.OnModelCreating(modelBuilder);
 		}
 
 		#region IStoreRepository Members
 
 		public Store GetStoreById(string id)
 		{
-			var retVal = Stores.Where(x => x.Id == id).Include(x => x.Languages)
-														 .Include(x => x.Currencies)
-														 .Include(x => x.PaymentMethods)
-														 .Include(x => x.ShippingMethods);
-			return retVal.FirstOrDefault();
+            var retVal = Stores.Where(x => x.Id == id).Include(x => x.Languages)
+                                                         .Include(x => x.Currencies)
+                                                         .Include(x => x.PaymentMethods)
+                                                         .Include(x => x.ShippingMethods)
+                                                         .Include(x => x.TaxProviders);
+            return retVal.FirstOrDefault();
 		}
 
 		public IQueryable<Store> Stores

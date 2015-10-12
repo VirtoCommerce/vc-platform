@@ -96,21 +96,20 @@
 
                 $scope.selectedItem = listItem;
                 if (listItem.type === 'category') {
-                    blade.showCategoryBlade(listItem.id, null, listItem.name);
+                    blade.showCategoryBlade(listItem);
                 }
                 // else do nothing as item is opened on selecting it.
             };
 
-            blade.showCategoryBlade = function (id, data, title) {
+            blade.showCategoryBlade = function (listItem) {
                 var newBlade = {
                     id: "listCategoryDetail",
-                    currentEntityId: id,
-                    currentEntity: data,
-                    title: title,
+                    currentEntityId: listItem.id,
+                    title: listItem.name,
                     subtitle: 'Category details',
                     controller: 'virtoCommerce.catalogModule.categoryDetailController',
                     template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/category-detail.tpl.html',
-                };
+                 };
                 bladeNavigationService.showBlade(newBlade, blade);
             };
 
@@ -334,7 +333,8 @@
                     },
                     canExecuteMethod: function () {
                         return $scope.selectedItem || isItemsChecked();
-                    }
+                    },
+                    permission: 'catalog:read'
                 },
                 {
                     name: "Delete",
@@ -343,7 +343,7 @@
                         deleteChecked();
                     },
                     canExecuteMethod: isItemsChecked,
-                    permission: 'catalog:items:manage'
+                    permission: 'catalog:delete'
                 },
     			{
     			    name: "Import",
@@ -360,7 +360,7 @@
     			        bladeNavigationService.showBlade(newBlade, $scope.blade);
     			    },
     			    canExecuteMethod: function () { return true; },
-    			    permission: 'catalog:items:manage'
+    			    permission: 'catalog:import'
     			},
 				{
 				    name: "Export",
@@ -378,24 +378,25 @@
 				        };
 				        bladeNavigationService.showBlade(newBlade, $scope.blade);
 				    },
-				    canExecuteMethod: function () { return true; }
+				    canExecuteMethod: function () { return true; },
+				    permission: 'catalog:export'
 				},
                  /// hiding some UI functionality until it's fully implemented. Need to release
                  {
-                     name: "Copy",
-                     icon: 'fa fa-files-o',
+                     name: "Cut",
+                     icon: 'fa fa-cut',
                      executeMethod: function () {
                          $storage.catalogClipboardContent = _.where($scope.items, { selected: true });
                      },
                      canExecuteMethod: isItemsChecked,
-                     permission: 'catalog:items:manage'
+                     permission: 'catalog:create'
                  },
                  {
                      name: "Paste",
                      icon: 'fa fa-clipboard',
                      executeMethod: function () {
                          blade.isLoading = true;
-                         listEntries.paste({
+                         listEntries.move({
                              catalog: blade.catalogId,
                              category: blade.categoryId,
                              listEntries: $storage.catalogClipboardContent
@@ -409,7 +410,7 @@
                      canExecuteMethod: function () {
                          return $storage.catalogClipboardContent;
                      },
-                     permission: 'catalog:items:manage'
+                     permission: 'catalog:create'
                  }
 
                 //{
@@ -449,10 +450,7 @@
                 } else if (blade.mode === 'newAssociation') {
                     $scope.blade.toolbarCommands.splice(1, 6);
                 }
-            } else if (!blade.isBrowsingLinkedCategory
-                   && (authService.checkPermission('catalog:categories:manage')
-                   || (authService.checkPermission('catalog:virtual_catalogs:manage') && blade.catalog.virtual)
-                   || (authService.checkPermission('catalog:items:manage') && !blade.catalog.virtual))) {
+            } else if (authService.checkPermission('catalog:create')) {
                 $scope.blade.toolbarCommands.splice(1, 0, {
                     name: "Add",
                     icon: 'fa fa-plus',

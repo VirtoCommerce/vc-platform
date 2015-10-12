@@ -31,7 +31,8 @@ angular.module(moduleName, [
   }]
 )
 .run(
-  ['platformWebApp.toolbarService', 'platformWebApp.bladeNavigationService', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', function (toolbarService, bladeNavigationService, mainMenuService, widgetService, $state) {
+  ['platformWebApp.toolbarService', 'platformWebApp.bladeNavigationService', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', 'platformWebApp.permissionScopeResolver', 'virtoCommerce.storeModule.stores',
+	function (toolbarService, bladeNavigationService, mainMenuService, widgetService, $state, scopeResolver, stores) {
       //Register module in main menu
       var menuItem = {
           path: 'browse/store',
@@ -39,11 +40,11 @@ angular.module(moduleName, [
           title: 'Stores',
           priority: 110,
           action: function () { $state.go('workspace.storeModule'); },
-          permission: 'store:query'
+          permission: 'store:access'
       };
       mainMenuService.addMenuItem(menuItem);
 
-      //Register widgets in store details
+  	  //Register widgets in store details
       widgetService.registerWidget({
           controller: 'virtoCommerce.storeModule.seoWidgetController',
           template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/seoWidget.tpl.html'
@@ -53,8 +54,9 @@ angular.module(moduleName, [
           template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/storeAdvancedWidget.tpl.html'
       }, 'storeDetail');
       widgetService.registerWidget({
-          controller: 'virtoCommerce.storeModule.storeSettingsWidgetController',
-          template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/storeSettingsWidget.tpl.html'
+      	controller: 'platformWebApp.dynamicPropertyWidgetController',
+		title : 'Settings',
+      	template: '$(Platform)/Scripts/app/dynamicProperties/widgets/dynamicPropertyWidget.tpl.html'
       }, 'storeDetail');
       widgetService.registerWidget({
           controller: 'virtoCommerce.storeModule.storePaymentsWidgetController',
@@ -63,6 +65,10 @@ angular.module(moduleName, [
       widgetService.registerWidget({
           controller: 'virtoCommerce.storeModule.storeShippingWidgetController',
           template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/storeShippingWidget.tpl.html'
+      }, 'storeDetail');
+      widgetService.registerWidget({
+          controller: 'virtoCommerce.storeModule.storeTaxingWidgetController',
+          template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/storeTaxingWidget.tpl.html'
       }, 'storeDetail');
       widgetService.registerWidget({
           controller: 'virtoCommerce.storeModule.storeNotificationsWidgetController',
@@ -82,35 +88,31 @@ angular.module(moduleName, [
           canExecuteMethod: function (blade) {
               return !angular.equals(blade.origEntity, blade.currentEntity);
           },
-          permission: 'store:manage',
+          permission: 'store:update',
           index: 0
       };
       toolbarService.register(resetCommand, 'virtoCommerce.storeModule.paymentMethodDetailController');
       toolbarService.register(resetCommand, 'virtoCommerce.storeModule.shippingMethodDetailController');
+      toolbarService.register(resetCommand, 'virtoCommerce.storeModule.taxProviderDetailController');
 
-      var settingsCommand = {
-          name: "Settings", icon: 'fa fa-wrench',
-          executeMethod: function (blade) {
-              var newBlade = {
-                  id: 'entitySettingList',
-                  controller: 'platformWebApp.entitySettingListController',
-                  template: '$(Platform)/Scripts/app/settings/blades/entitySetting-list.tpl.html'
-              };
-              bladeNavigationService.showBlade(newBlade, blade);
-          },
-          canExecuteMethod: function () {
-              return true;
-          },
-          index: 1
+  	//Register permission scopes templates used for scope bounded definition in role management ui
+      var selectedStoreScope = {
+      	type: 'StoreSelectedScope',
+      	title: 'Only for selected stores',
+      	selectFn: function (blade, callback) {
+      		var newBlade = {
+      			id: 'store-pick',
+      			title: this.title,
+      			subtitle: 'Select stores',
+      			currentEntity: this,
+      			onChangesConfirmedFn: callback,
+      			dataPromise: stores.query().$promise,
+      			controller: 'platformWebApp.security.scopeValuePickFromSimpleListController',
+      			template: '$(Platform)/Scripts/app/security/blades/common/scope-value-pick-from-simple-list.tpl.html'
+      		};
+      		bladeNavigationService.showBlade(newBlade, blade);
+      	}
       };
-      toolbarService.register(settingsCommand, 'virtoCommerce.storeModule.paymentMethodDetailController');
-      toolbarService.register(settingsCommand, 'virtoCommerce.storeModule.shippingMethodDetailController');
-
-      //var settingsWidget = {
-      //    controller: 'platformWebApp.entitySettingsWidgetController',
-      //    template: '$(Platform)/Scripts/app/settings/widgets/entitySettingsWidget.tpl.html'
-      //};
-      //widgetService.registerWidget(settingsWidget, 'shippingMethodDetail');
-      //widgetService.registerWidget(settingsWidget, 'paymentMethodDetail');
+      scopeResolver.register(selectedStoreScope);
   }])
 ;

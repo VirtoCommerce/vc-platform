@@ -23,7 +23,7 @@
 				canExecuteMethod: function () {
 					return isDirty();
 				},
-				permission: 'content:manage'
+				permission: 'content:update'
 			},
 			{
 				name: "Reset", icon: 'fa fa-undo',
@@ -33,7 +33,7 @@
 				canExecuteMethod: function () {
 					return isDirty();
 				},
-				permission: 'content:manage'
+				permission: 'content:update'
 			},
 			{
 				name: "Delete", icon: 'fa fa-trash-o',
@@ -43,7 +43,7 @@
 				canExecuteMethod: function () {
 					return !isDirty();
 				},
-				permission: 'content:manage'
+				permission: 'content:delete'
 			}];
 		}
 		else {
@@ -59,7 +59,7 @@
 				canExecuteMethod: function () {
 					return isDirty() && isCanSave();
 				},
-				permission: 'content:manage'
+				permission: 'content:update'
 			}];
 
 			blade.isLoading = false;
@@ -134,7 +134,7 @@
 
 	function isCanSave() {
 		if (!angular.isUndefined(blade.currentEntity)) {
-			if (!angular.isUndefined(blade.currentEntity.id) && !angular.isUndefined(blade.currentEntity.content)) {
+		    if (!angular.isUndefined(blade.currentEntity.id) && !angular.isUndefined(blade.currentEntity.assetUrl)) {
 				return true;
 			}
 			return false;
@@ -149,19 +149,19 @@
 		var uploader = $scope.uploader = new FileUploader({
 			scope: $scope,
 			headers: { Accept: 'application/json' },
-			url: 'api/cms/Apple/themes/' + blade.choosenStoreId + '/assets/file/assets',
+			url: "api/platform/assets/file",
 			autoUpload: true,
 			removeAfterUpload: true
 		});
 
 		uploader.onSuccessItem = function (fileItem, image, status, headers) {
-			blade.currentEntity.content = image.content;
-			blade.currentEntity.assetUrl = image.name;
-			blade.currentEntity.contentType = image.contentType;
+			//blade.currentEntity.content = image.content;
+		    blade.currentEntity.assetUrl = image[0].url;
+			blade.currentEntity.contentType = image[0].mimeType;
 
 			if (blade.newAsset) {
-				blade.currentEntity.name = image.name;
-				blade.currentEntity.id = blade.choosenFolder + '/' + image.name;
+			    blade.currentEntity.name = image[0].name;
+			    blade.currentEntity.id = blade.choosenFolder + '/' + image[0].name;
 			}
 		};
 	}

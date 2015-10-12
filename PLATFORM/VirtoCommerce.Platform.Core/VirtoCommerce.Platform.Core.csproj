@@ -89,7 +89,9 @@
     <Compile Include="Asset\IBlobUrlResolver.cs" />
     <Compile Include="Asset\IBlobStorageProvider.cs" />
     <Compile Include="Asset\UploadStreamInfo.cs" />
+    <Compile Include="ChangeLog\IHasChangesHistory.cs" />
     <Compile Include="Common\ConfigManagerExtensions.cs" />
+    <Compile Include="Common\ObservableChangeTracker.cs" />
     <Compile Include="Common\PlatformVersion.cs" />
     <Compile Include="Common\SemanticVersion.cs" />
     <Compile Include="Common\SerializationExtension.cs" />
@@ -146,7 +148,6 @@
     <Compile Include="Common\MimeTypeResolver.cs" />
     <Compile Include="Common\NullCollection.cs" />
     <Compile Include="Common\ObjectExtension.cs" />
-    <Compile Include="Common\ObservableChangeTracker.cs" />
     <Compile Include="Common\PredicateBuilder.cs" />
     <Compile Include="Common\ReflectionUtility.cs" />
     <Compile Include="Common\StringExtensions.cs" />
@@ -235,7 +236,7 @@
     <Compile Include="Security\ApiAccountType.cs" />
     <Compile Include="Security\ApplicationUserExtended.cs" />
     <Compile Include="Security\CheckPermissionAttribute.cs" />
-    <Compile Include="Security\IPermissionService.cs" />
+    <Compile Include="Security\IPermissionScopeService.cs" />
     <Compile Include="Security\IRoleManagementService.cs" />
     <Compile Include="Security\ISecurityOptions.cs" />
     <Compile Include="Security\ISecurityService.cs" />
@@ -245,12 +246,13 @@
     <Compile Include="Security\RoleSearchRequest.cs" />
     <Compile Include="Security\RoleSearchResponse.cs" />
     <Compile Include="Security\SecurityResult.cs" />
+    <Compile Include="Security\PermissionScope.cs" />
     <Compile Include="Security\UserDetails.cs" />
     <Compile Include="Security\ApplicationUserLogin.cs" />
     <Compile Include="Security\UserSearchRequest.cs" />
     <Compile Include="Security\UserSearchResponse.cs" />
-    <Compile Include="Security\UserState.cs" />
-    <Compile Include="Security\UserType.cs" />
+    <Compile Include="Security\AccountState.cs" />
+    <Compile Include="Security\AccountType.cs" />
     <Compile Include="Settings\IHaveSettings.cs" />
     <Compile Include="Settings\ISettingsManager.cs" />
     <Compile Include="Settings\ModuleDescriptor.cs" />

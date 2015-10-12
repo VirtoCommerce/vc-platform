@@ -31,7 +31,7 @@ namespace VirtoCommerce.Domain.Search.Model
         /// <value>The default sort order.</value>
         public static SearchSort DefaultSortOrder { get { return new SearchSort("__sort", false); } }
 
-        private bool _isFuzzySearch;
+        private bool _isFuzzySearch = true;
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is fuzzy search.

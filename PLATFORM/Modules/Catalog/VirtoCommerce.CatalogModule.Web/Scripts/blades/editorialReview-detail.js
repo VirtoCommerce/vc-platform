@@ -29,7 +29,7 @@
     };
 
     $scope.blade.onClose = function (closeCallback) {
-        if (isDirty()) {
+        if (isDirty() && $scope.currentEntity.content) {
             var dialog = {
                 id: "confirmCurrentBladeClose",
                 title: "Save changes",
@@ -73,6 +73,8 @@
         dialogService.showConfirmationDialog(dialog);
     }
 
+    $scope.blade.headIcon = 'fa-comments';
+
     $scope.blade.toolbarCommands = [
         {
             name: "Save", icon: 'fa fa-save',
@@ -80,9 +82,9 @@
                 saveChanges();
             },
             canExecuteMethod: function () {
-                return isDirty();
+                return isDirty() && $scope.currentEntity.content;
             },
-            permission: 'catalog:items:manage'
+            permission: 'catalog:update'
         },
         {
             name: "Reset", icon: 'fa fa-undo',
@@ -92,7 +94,7 @@
             canExecuteMethod: function () {
                 return isDirty();
             },
-            permission: 'catalog:items:manage'
+            permission: 'catalog:update'
         },
         {
             name: "Delete", icon: 'fa fa-trash-o',
@@ -102,7 +104,7 @@
             canExecuteMethod: function () {
                 return $scope.blade.parentBlade.currentEntities.indexOf($scope.blade.origEntity) >= 0 && !isDirty();
             },
-            permission: 'catalog:items:manage'
+            permission: 'catalog:update'
         }
     ];
 

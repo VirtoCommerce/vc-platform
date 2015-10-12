@@ -6,8 +6,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Omu.ValueInjecter;
+using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Model;
 using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.Platform.Data.Security.Converters;
@@ -15,21 +18,29 @@ using VirtoCommerce.Platform.Data.Security.Identity;
 
 namespace VirtoCommerce.Platform.Data.Security
 {
-    public class SecurityService : ISecurityService
+    public class SecurityService : ServiceBase, ISecurityService
     {
         private readonly Func<IPlatformRepository> _platformRepository;
         private readonly Func<ApplicationUserManager> _userManagerFactory;
         private readonly IApiAccountProvider _apiAccountProvider;
         private readonly ISecurityOptions _securityOptions;
+        private readonly CacheManager _cacheManager;
+        private readonly IModuleManifestProvider _manifestProvider;
+        private readonly IPermissionScopeService _permissionScopeService;
 
-        public SecurityService(Func<IPlatformRepository> platformRepository, Func<ApplicationUserManager> userManagerFactory, IApiAccountProvider apiAccountProvider, ISecurityOptions securityOptions)
+        public SecurityService(Func<IPlatformRepository> platformRepository, Func<ApplicationUserManager> userManagerFactory, IApiAccountProvider apiAccountProvider,
+                               ISecurityOptions securityOptions, IModuleManifestProvider manifestProvider, IPermissionScopeService permissionScopeService, CacheManager cacheManager)
         {
             _platformRepository = platformRepository;
             _userManagerFactory = userManagerFactory;
             _apiAccountProvider = apiAccountProvider;
             _securityOptions = securityOptions;
+            _cacheManager = cacheManager;
+            _manifestProvider = manifestProvider;
+            _permissionScopeService = permissionScopeService;
         }
 
+        #region ISecurityService Members
         public async Task<ApplicationUserExtended> FindByNameAsync(string userName, UserDetails detailsLevel)
         {
             using (var userManager = _userManagerFactory())
@@ -69,48 +80,34 @@ namespace VirtoCommerce.Platform.Data.Security
         public async Task<SecurityResult> CreateAsync(ApplicationUserExtended user)
         {
             IdentityResult result = null;
-
-            if (user != null)
+            if (user == null)
             {
-                var dbUser = user.ToDataModel();
-
-                using (var userManager = _userManagerFactory())
+                throw new ArgumentNullException("user");
+            }
+            //Update ASP.NET indentity user
+            using (var userManager = _userManagerFactory())
+            {
+                var dbUser = user.ToIdentityModel();
+                user.Id = dbUser.Id;
+                if (string.IsNullOrEmpty(user.Password))
                 {
-                    if (string.IsNullOrEmpty(user.Password))
-                    {
-                        result = await userManager.CreateAsync(dbUser);
-                    }
-                    else
-                    {
-                        result = await userManager.CreateAsync(dbUser, user.Password);
-                    }
-
+                    result = await userManager.CreateAsync(dbUser);
                 }
-                if (result.Succeeded)
+                else
                 {
-                    using (var repository = _platformRepository())
-                    {
-                        var account = new AccountEntity
-                        {
-                            Id = dbUser.Id,
-                            UserName = user.UserName,
-                            MemberId = user.MemberId,
-                            AccountState = AccountState.Approved,
-                            RegisterType = (RegisterType)user.UserType,
-                            StoreId = user.StoreId
-                        };
+                    result = await userManager.CreateAsync(dbUser, user.Password);
+                }
+            }
 
-                        if (user.Roles != null)
-                        {
-                            foreach (var role in user.Roles)
-                            {
-                                account.RoleAssignments.Add(new RoleAssignmentEntity { RoleId = role.Id, AccountId = account.Id });
-                            }
-                        }
+            if (result.Succeeded)
+            {
+                using (var repository = _platformRepository())
+                {
+                    var dbAcount = user.ToDataModel();
+                    dbAcount.AccountState = AccountState.Approved.ToString();
 
-                        repository.Add(account);
-                        repository.UnitOfWork.Commit();
-                    }
+                    repository.Add(dbAcount);
+                    repository.UnitOfWork.Commit();
                 }
             }
 
@@ -121,55 +118,45 @@ namespace VirtoCommerce.Platform.Data.Security
         {
             SecurityResult result = null;
 
-            if (user != null)
+            if (user == null)
             {
-                using (var userManager = _userManagerFactory())
+                throw new ArgumentNullException("user");
+            }
+
+            //Update ASP.NET indentity user
+            using (var userManager = _userManagerFactory())
+            {
+                var dbUser = await userManager.FindByIdAsync(user.Id);
+                result = ValidateUser(dbUser);
+                if (result.Succeeded)
                 {
-                    var dbUser = await userManager.FindByIdAsync(user.Id);
+                    //Update ASP.NET indentity user
+                    user.Patch(dbUser);
+                    var identityResult = await userManager.UpdateAsync(dbUser);
+                    result = identityResult.ToCoreModel();
+                }
+            }
 
-                    result = ValidateUser(dbUser);
-                    if (result.Succeeded)
+            if (result.Succeeded)
+            {
+                //Update platform security user
+                using (var repository = _platformRepository())
+                {
+                    var targetDbAcount = repository.GetAccountByName(user.UserName, UserDetails.Full);
+
+                    if (targetDbAcount == null)
                     {
-                        dbUser.CopyFrom(user);
-                        var identityResult = await userManager.UpdateAsync(dbUser);
-
-                        result = identityResult.ToCoreModel();
-                        if (result.Succeeded)
+                        result = new SecurityResult { Errors = new[] { "Account not found." } };
+                    }
+                    else
+                    {
+                        var changedDbAccount = user.ToDataModel();
+                        using (var changeTracker = GetChangeTracker(repository))
                         {
-                            using (var repository = _platformRepository())
-                            {
-                                var account = repository.GetAccountByName(user.UserName, UserDetails.Full);
+                            changeTracker.Attach(targetDbAcount);
 
-                                if (account == null)
-                                {
-                                    result = new SecurityResult { Errors = new[] { "Account not found." } };
-                                }
-                                else
-                                {
-                                    account.RegisterType = (RegisterType)user.UserType;
-                                    account.AccountState = (AccountState)user.UserState;
-                                    account.MemberId = user.MemberId;
-                                    account.StoreId = user.StoreId;
-
-                                    if (user.ApiAccounts != null)
-                                    {
-                                        var sourceCollection = new ObservableCollection<ApiAccountEntity>(user.ApiAccounts.Select(x => x.ToEntity()));
-                                        var comparer = AnonymousComparer.Create((ApiAccountEntity x) => x.Id);
-                                        account.ApiAccounts.ObserveCollection(x => repository.Add(x), x => repository.Remove(x));
-                                        sourceCollection.Patch(account.ApiAccounts, comparer, (sourceItem, targetItem) => sourceItem.Patch(targetItem));
-                                    }
-
-                                    if (user.Roles != null)
-                                    {
-                                        var sourceCollection = new ObservableCollection<RoleAssignmentEntity>(user.Roles.Select(r => new RoleAssignmentEntity { RoleId = r.Id }));
-                                        var comparer = AnonymousComparer.Create((RoleAssignmentEntity x) => x.RoleId);
-                                        account.RoleAssignments.ObserveCollection(x => repository.Add(x), ra => repository.Remove(ra));
-                                        sourceCollection.Patch(account.RoleAssignments, comparer, (sourceItem, targetItem) => sourceItem.Patch(targetItem));
-                                    }
-
-                                    repository.UnitOfWork.Commit();
-                                }
-                            }
+                            changedDbAccount.Patch(targetDbAcount);
+                            repository.UnitOfWork.Commit();
                         }
                     }
                 }
@@ -269,15 +256,19 @@ namespace VirtoCommerce.Platform.Data.Security
             request = request ?? new UserSearchRequest();
             var result = new UserSearchResponse();
 
-            using (var userManager = _userManagerFactory())
+            using (var repository = _platformRepository() )
             {
-                var query = userManager.Users;
+                var query = repository.Accounts;
 
                 if (request.Keyword != null)
                 {
                     query = query.Where(u => u.UserName.Contains(request.Keyword));
                 }
 
+                if(request.AccountTypes != null && request.AccountTypes.Any())
+                {
+                    query = query.Where(x => request.AccountTypes.Contains(x.UserType));
+                }
                 result.TotalCount = query.Count();
 
                 var users = query.OrderBy(x => x.UserName)
@@ -290,7 +281,10 @@ namespace VirtoCommerce.Platform.Data.Security
                 foreach (var user in users)
                 {
                     var extendedUser = await FindByNameAsync(user.UserName, UserDetails.Reduced);
-                    extendedUsers.Add(extendedUser);
+                    if (extendedUser != null)
+                    {
+                        extendedUsers.Add(extendedUser);
+                    }
                 }
 
                 result.Users = extendedUsers.ToArray();
@@ -307,6 +301,70 @@ namespace VirtoCommerce.Platform.Data.Security
             }
         }
 
+        public Permission[] GetAllPermissions()
+        {
+            return _cacheManager.Get(
+                CacheKey.Create(CacheGroups.Security, "AllPermissions"),
+                LoadAllPermissions);
+        }
+    
+        public bool UserHasAnyPermission(string userName, string[] scopes, params string[] permissionIds)
+        {
+            var user = Task.Run(async () => await FindByNameAsync(userName, UserDetails.Full)).Result;
+            if (user.IsAdministrator)
+            {
+                return true;
+            }
+           
+            var retVal = user.UserState == Core.Security.AccountState.Approved;
+            if (retVal)
+            {
+                var fqUserPermissions = user.Roles.SelectMany(x => x.Permissions).SelectMany(x => x.GetPermissionWithScopeCombinationNames()).Distinct();
+                var fqCheckPermissions = permissionIds.Concat(permissionIds.LeftJoin(scopes, ":"));
+                retVal = fqUserPermissions.Intersect(fqCheckPermissions, StringComparer.OrdinalIgnoreCase).Any();
+            }
+            return retVal;
+        }
+
+        public Permission[] GetUserPermissions(string userName)
+        {
+            var user = Task.Run(async () => await FindByNameAsync(userName, UserDetails.Full)).Result;
+            var retVal = Enumerable.Empty<Permission>().ToArray();
+            if(user != null)
+            {
+                retVal = user.Roles.SelectMany(x => x.Permissions).Distinct().ToArray();
+            }
+            return retVal;
+        }
+        #endregion
+
+
+        private Permission[] LoadAllPermissions()
+        {
+            var manifestPermissions = new List<Permission>();
+
+            var manifestsWithPermissions = _manifestProvider.GetModuleManifests().Values
+                .Where(m => m.Permissions != null);
+
+            foreach (var module in manifestsWithPermissions)
+            {
+                foreach (var group in module.Permissions)
+                {
+                    if (group.Permissions != null)
+                    {
+                        foreach (var modulePermission in group.Permissions)
+                        {
+                            var permission = modulePermission.ToCoreModel(module.Id, group.Name);
+                            permission.AvailableScopes = _permissionScopeService.GetAvailablePermissionScopes(permission.Id).ToList();
+                            manifestPermissions.Add(permission);
+                        }
+                    }
+                }
+            }
+
+            var allPermissions = PredefinedPermissions.Permissions.Union(manifestPermissions).ToArray();
+            return allPermissions;
+        }
 
         private SecurityResult ValidateUser(ApplicationUser dbUser)
         {
@@ -347,35 +405,19 @@ namespace VirtoCommerce.Platform.Data.Security
 
             if (applicationUser != null)
             {
-                result = new ApplicationUserExtended();
-                result.InjectFrom(applicationUser);
-
                 using (var repository = _platformRepository())
                 {
                     var user = repository.GetAccountByName(applicationUser.UserName, detailsLevel);
-
-                    if (user != null)
+                    result = applicationUser.ToCoreModel(user, _permissionScopeService);
+                    //Populate available permission scopes
+                    if (result.Roles != null)
                     {
-                        result.InjectFrom(user);
-
-                        result.UserState = (UserState)user.AccountState;
-                        result.UserType = (UserType)user.RegisterType;
-
-                        if (detailsLevel == UserDetails.Full || detailsLevel == UserDetails.Export)
+                        foreach (var permission in result.Roles.SelectMany(x => x.Permissions).Where(x => x != null))
                         {
-                            var roles = user.RoleAssignments.Select(x => x.Role).ToArray();
-                            result.Roles = roles.Select(r => r.ToCoreModel()).ToArray();
-
-                            var permissionIds = roles
-                                    .SelectMany(x => x.RolePermissions)
-                                    .Select(x => x.PermissionId)
-                                    .Distinct()
-                                    .ToArray();
-
-                            result.Permissions = permissionIds;
-                            result.ApiAccounts = user.ApiAccounts.Select(x => x.ToCoreModel()).ToArray();
+                            permission.AvailableScopes = _permissionScopeService.GetAvailablePermissionScopes(permission.Id).ToList();
                         }
                     }
+
                 }
 
                 if (detailsLevel != UserDetails.Export)
@@ -384,8 +426,9 @@ namespace VirtoCommerce.Platform.Data.Security
                     result.SecurityStamp = null;
                 }
             }
-
             return result;
         }
+
+   
     }
 }

@@ -39,6 +39,8 @@
         });
     }
 
+    $scope.blade.headIcon = 'fa-usd';
+
     $scope.blade.toolbarCommands = [
         {
             name: "Refresh", icon: 'fa fa-refresh',

@@ -12,6 +12,11 @@ using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Content.Web.ExportImport;
 using VirtoCommerce.Platform.Data.Infrastructure;
+using VirtoCommerce.Platform.Core.DynamicProperties;
+using VirtoCommerce.Domain.Store.Model;
+using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Content.Web.Security;
+using VirtoCommerce.Domain.Store.Services;
 
 namespace VirtoCommerce.Content.Web
 {
@@ -46,11 +51,8 @@ namespace VirtoCommerce.Content.Web
 
             var settingsManager = _container.Resolve<ISettingsManager>();
 
-            var githubLogin =
-                settingsManager.GetValue("VirtoCommerce.Content.GitHub.Login", string.Empty);
-
-            var githubPassword =
-                settingsManager.GetValue("VirtoCommerce.Content.GitHub.Password", string.Empty);
+            var githubToken =
+                settingsManager.GetValue("VirtoCommerce.Content.GitHub.Token", string.Empty);
 
             var githubProductHeaderValue =
                 settingsManager.GetValue("VirtoCommerce.Content.GitHub.ProductHeaderValue", string.Empty);
@@ -78,8 +80,7 @@ namespace VirtoCommerce.Content.Web
                     case "GitHub":
                         return new ThemeServiceImpl(() =>
                             new GitHubContentRepositoryImpl(
-                                githubLogin,
-                                githubPassword,
+                                githubToken,
                                 githubProductHeaderValue,
                                 githubOwnerName,
                                 githubRepositoryName,
@@ -143,13 +144,15 @@ namespace VirtoCommerce.Content.Web
             var modulePath = options.GetModuleDirectoryPath("VirtoCommerce.Content");
             var themePath = Path.Combine(modulePath, "Default_Theme");
 
-            _container.RegisterType<ThemeController>(new InjectionConstructor(themesFactory, settingsManager, uploadPath, uploadPathFiles, themePath));
+            _container.RegisterType<ThemeController>(new InjectionConstructor(themesFactory, settingsManager, _container.Resolve<ISecurityService>(), 
+                                                                             _container.Resolve<IPermissionScopeService>(),
+                                                                              uploadPath, uploadPathFiles, themePath));
 
             #endregion
 
             #region Pages_Initialize
 
-            var pagesGithubMainPath = "/Pages/";
+            var pagesGithubMainPath = "Pages/";
             var pagesFileSystemMainPath = HostingEnvironment.MapPath("~/App_Data/Pages/");
 
             Func<string, IPagesService> pagesFactory = (x) =>
@@ -159,8 +162,7 @@ namespace VirtoCommerce.Content.Web
                     case "GitHub":
 						return new PagesServiceImpl(() =>
                             new GitHubContentRepositoryImpl(
-                                githubLogin,
-                                githubPassword,
+                                githubToken,
                                 githubProductHeaderValue,
                                 githubOwnerName,
                                 githubRepositoryName,
@@ -182,21 +184,47 @@ namespace VirtoCommerce.Content.Web
             };
 
 			var chosenPagesRepositoryName = settingsManager.GetValue("VirtoCommerce.Content.MainProperties.PagesRepositoryType", string.Empty);
-			var currentPagesService = pagesFactory(chosenThemeRepositoryName);
-			_container.RegisterInstance<IPagesService>(currentPagesService);
+			var currentPagesService = pagesFactory(chosenPagesRepositoryName);
+			_container.RegisterInstance(currentPagesService);
 
             if (!Directory.Exists(fileSystemMainPath))
             {
                 Directory.CreateDirectory(fileSystemMainPath);
             }
 
-            _container.RegisterType<PagesController>(new InjectionConstructor(pagesFactory, settingsManager));
+            _container.RegisterType<PagesController>(new InjectionConstructor(pagesFactory, settingsManager, _container.Resolve<ISecurityService>(),
+                                                                             _container.Resolve<IPermissionScopeService>()));
+
+            _container.RegisterType<ContentExportImport>(new InjectionConstructor(_container.Resolve<IMenuService>(), themesFactory, pagesFactory, _container.Resolve<IStoreService>(), settingsManager));
+
 
             #endregion
 
             #region Sync_Initialize
             _container.RegisterType<SyncController>(new InjectionConstructor(themesFactory, pagesFactory, settingsManager));
             #endregion
+        }
+
+        public override void PostInitialize()
+        {
+            base.PostInitialize();
+            //Create EnableQuote dynamic propertiy for  Store 
+            var dynamicPropertyService = _container.Resolve<IDynamicPropertyService>();
+
+            var defaultThemeNameProperty = new DynamicProperty
+            {
+                Id = "Default_Theme_Name_Property",
+                Name = "DefaultThemeName",
+                ObjectType = typeof(Store).FullName,
+                ValueType = DynamicPropertyValueType.ShortText,
+                CreatedBy = "Auto"
+            };
+
+            dynamicPropertyService.SaveProperties(new[] { defaultThemeNameProperty });
+
+            //Register bounded security scope types
+            var securityScopeService = _container.Resolve<IPermissionScopeService>();
+            securityScopeService.RegisterSope(() => new ContentSelectedStoreScope());
         }
 
         public override void SetupDatabase()

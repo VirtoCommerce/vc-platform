@@ -131,10 +131,13 @@
     <Compile Include="AvaTaxClasses\JsonTaxSvc.cs" />
     <Compile Include="AvaTaxClasses\TaxSvc.cs" />
     <Compile Include="AvaTaxClasses\ValidateResult.cs" />
+    <Compile Include="Converters\TaxDetailConverter.cs" />
+    <Compile Include="Providers\AvaTaxRateProvider.cs" />
     <Compile Include="Controller\AvaTaxController.cs" />
     <Compile Include="Converters\CustomerAddressConverter.cs" />
     <Compile Include="Converters\CustomerOrderCancelConverter.cs" />
     <Compile Include="Converters\CustomerOrderAdjustementConverter.cs" />
+    <Compile Include="Converters\TaxRequestConverter.cs" />
     <Compile Include="Converters\ShoppingCartConverter.cs" />
     <Compile Include="Converters\CustomerOrderConverter.cs" />
     <Compile Include="Logging\BaseLogContext.cs" />

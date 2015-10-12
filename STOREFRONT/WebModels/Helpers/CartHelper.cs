@@ -1,4 +1,5 @@
-﻿    #region
+﻿#region
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using VirtoCommerce.Web.Convertors;
@@ -34,19 +35,16 @@ namespace VirtoCommerce.Web.Models.Helpers
 
             var lineItem = product.AsLineItem();
 
-            var cart = this.ShoppingCart;
+            ShoppingCart.AddLineItem(lineItem);
 
-            var existingItem = cart.Items.FirstOrDefault(i => i.ProductId == lineItem.ProductId);
-            if (existingItem != null)
+            if (ShoppingCart.IsTransient)
             {
-                existingItem.Quantity += lineItem.Quantity;
+                await _commerceService.CreateCartAsync(ShoppingCart);
             }
             else
             {
-                cart.Items.Add(lineItem);
+                await _commerceService.SaveChangesAsync(ShoppingCart);
             }
-
-            await this._commerceService.SaveChangesAsync(cart);
 
             return lineItem;
         }

@@ -1,0 +1,14 @@
+﻿<div class="blade-static __bottom" ng-include="'$(Platform)/Scripts/common/templates/ok-cancel.tpl.html'"></div>
+<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <ul class="list __items">
+                <label class="list-item" ng-repeat="data in blade.currentEntities">
+                    <input type="checkbox" ng-model="data.$selected">
+                    <span class="switch"></span>
+                    <span class="list-t">{{data.name}}</span>
+                </label>
+            </ul>
+        </div>
+    </div>
+</div>

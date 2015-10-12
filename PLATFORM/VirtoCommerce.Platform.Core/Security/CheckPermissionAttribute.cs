@@ -65,21 +65,21 @@ namespace VirtoCommerce.Platform.Core.Security
 
             if (isAuthorized && _permissions.Length > 0)
             {
-                var permissionService = actionContext.ControllerContext.Configuration.DependencyResolver.GetService(typeof(IPermissionService)) as IPermissionService;
+                var securityService = actionContext.ControllerContext.Configuration.DependencyResolver.GetService(typeof(ISecurityService)) as ISecurityService;
                 var principal = actionContext.RequestContext.Principal;
-                isAuthorized = IsAuthorized(permissionService, principal);
+                isAuthorized = IsAuthorized(securityService, principal);
             }
 
             return isAuthorized;
         }
 
-        protected bool IsAuthorized(IPermissionService permissionService, IPrincipal principal)
+        protected bool IsAuthorized(ISecurityService securityService, IPrincipal principal)
         {
             var isAuthorized = false;
 
-            if (permissionService != null && principal != null)
+            if (securityService != null && principal != null)
             {
-                isAuthorized = permissionService.UserHasAnyPermission(principal.Identity.Name, _permissions);
+                isAuthorized = securityService.UserHasAnyPermission(principal.Identity.Name, null, _permissions);
             }
 
             return isAuthorized;

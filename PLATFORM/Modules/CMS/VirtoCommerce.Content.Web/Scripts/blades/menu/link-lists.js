@@ -16,7 +16,6 @@
 
 	blade.openBlade = function (data) {
 		$scope.selectedNodeId = data.id;
-		closeChildrenBlades();
 
 		var newBlade = {
 			id: 'editMenuLinkListBlade',
@@ -33,7 +32,6 @@
 
 	function openBladeNew() {
 		$scope.selectedNodeId = null;
-		closeChildrenBlades();
 
 		var newBlade = {
 			id: 'addMenuLinkListBlade',
@@ -94,7 +92,7 @@
         	canExecuteMethod: function () {
         		return true;
         	},
-        	permission: 'content:manage'
+        	permission: 'content:create'
         }
 	];
 

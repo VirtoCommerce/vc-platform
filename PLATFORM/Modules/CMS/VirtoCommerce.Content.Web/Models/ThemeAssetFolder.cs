@@ -15,5 +15,7 @@ namespace VirtoCommerce.Content.Web.Models
 
 		private Collection<ThemeAsset> _assets;
 		public Collection<ThemeAsset> Assets { get { return _assets ?? (_assets = new Collection<ThemeAsset>()); } }
-	}
+
+        public string[] SecurityScopes { get; set; }
+    }
 }

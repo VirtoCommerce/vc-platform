@@ -18,5 +18,10 @@ namespace VirtoCommerce.Platform.Web.Model.Notifications
 		/// Code template for notification parameter for template resolver
 		/// </summary>
 		public string ParameterCodeInView { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool IsDictionary { get; set; }
 	}
 }

@@ -13,6 +13,7 @@ namespace VirtoCommerce.Web.Models.Cms
         public Article()
         {
             this.User = new ArticleUser();
+            this.Comments = new Comment[] { };
         }
         #endregion
 

@@ -1,67 +1,84 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.roleDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.roles', 'platformWebApp.dialogService', function ($scope, bladeNavigationService, roles, dialogService) {
+.controller('platformWebApp.roleDetailController', ['$q', '$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.roles', 'platformWebApp.dialogService', function ($q, $scope, bladeNavigationService, roles, dialogService) {
+    var blade = $scope.blade;
     var promise = roles.queryPermissions().$promise;
 
-    $scope.blade.refresh = function (parentRefresh) {
-        if ($scope.blade.isNew) {
+    blade.refresh = function (parentRefresh) {
+        if (blade.isNew) {
             initializeBlade({});
-        } else {
-            roles.get({ id: $scope.blade.data.id }, function (data) {
+        } else {            
+            roles.get({ id: blade.data.id }, function (data) {
                 initializeBlade(data);
-                if (parentRefresh) {
-                    $scope.blade.parentBlade.refresh();
+                if (parentRefresh && blade.parentBlade.refresh) {
+                    blade.parentBlade.refresh();
                 }
             },
-            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+            function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
         }
     }
 
     function initializeBlade(data) {
-        $scope.blade.currentEntity = angular.copy(data);
-        $scope.blade.origEntity = data;
+        blade.selectedAll = false;
+        blade.currentEntity = angular.copy(data);
+        blade.origEntity = data;
 
-        if ($scope.blade.isNew) {
+        if (blade.isNew) {
             promise.then(function (promiseData) {
-                $scope.blade.isLoading = false;
-                $scope.blade.currentEntities = _.groupBy(promiseData, 'groupName');
+                blade.isLoading = false;
+                blade.currentEntities = _.groupBy(promiseData, 'groupName');
             });
         } else {
-            $scope.blade.isLoading = false;
-        }
+            blade.isLoading = false;
+        }        
     };
 
     function isDirty() {
-        return !angular.equals($scope.blade.currentEntity, $scope.blade.origEntity);
+        return !angular.equals(blade.currentEntity, blade.origEntity);
     };
 
     $scope.saveChanges = function () {
-        $scope.blade.isLoading = true;
+        blade.isLoading = true;
 
-        if ($scope.blade.isNew) {
-            var values = _.flatten(_.values($scope.blade.currentEntities), true);
-            $scope.blade.currentEntity.permissions = _.where(values, { isChecked: true });
+        if (blade.isNew) {
+            var values = _.flatten(_.values(blade.currentEntities), true);
+            blade.currentEntity.permissions = _.where(values, { isChecked: true });
         }
 
-        angular.copy($scope.blade.currentEntity, $scope.blade.origEntity);
+        angular.copy(blade.currentEntity, blade.origEntity);
 
-        roles.update({}, $scope.blade.currentEntity, function (data) {
-            if ($scope.blade.isNew) {
-                $scope.blade.parentBlade.refresh();
-                $scope.blade.parentBlade.selectNode(data);
+        roles.update(blade.currentEntity, function (data) {
+            if (blade.isNew) {
+                blade.parentBlade.refresh();
+                blade.parentBlade.selectNode(data);
             } else {
-                $scope.blade.refresh(true);
+                blade.refresh(true);
             }
-            $scope.blade.refresh(true);
+            blade.refresh(true);
         }, function (error) {
-            bladeNavigationService.setError('Error ' + error.status, $scope.blade);
+            bladeNavigationService.setError('Error ' + error.status, blade);
         });
+    };
+
+    $scope.selectNode = function (node) {
+        if (_.any(node.availableScopes)) {
+            $scope.selectedNodeId = node.id;
+            var newBlade = {
+                id: 'permissionScopes',
+                permission: node,
+                title: node.name,
+                subtitle: 'Configure permission scopes',
+                controller: 'platformWebApp.permissionScopesController',
+                template: '$(Platform)/Scripts/app/security/blades/permission-scopes.tpl.html'
+            };
+            bladeNavigationService.showBlade(newBlade, blade);
+        }
     };
 
     $scope.setForm = function (form) {
         $scope.formScope = form;
     }
 
-    $scope.blade.onClose = function (closeCallback) {
+    blade.onClose = function (closeCallback) {
         closeChildrenBlades();
         if (isDirty()) {
             var dialog = {
@@ -83,16 +100,39 @@
     };
 
     function closeChildrenBlades() {
-        angular.forEach($scope.blade.childrenBlades.slice(), function (child) {
+        angular.forEach(blade.childrenBlades.slice(), function (child) {
             bladeNavigationService.closeBlade(child);
         });
     }
 
-    $scope.blade.headIcon = 'fa-key';
+    $scope.toggleAll = function () {
+        angular.forEach(blade.currentEntity.permissions, function (item) {
+            item.$selected = blade.selectedAll;
+        });
+    };
+
+    function isItemsChecked() {
+        return blade.currentEntity && _.any(blade.currentEntity.permissions, function (x) { return x.$selected; });
+    }
+
+    function deleteChecked() {
+        _.each(blade.currentEntity.permissions.slice(), function (x) {
+            if (x.$selected) {
+                blade.currentEntity.permissions.splice(blade.currentEntity.permissions.indexOf(x), 1);
+            }
+        });
+        blade.selectedAll = false;
+    }
+
+    $scope.delete = function (index) {
+        blade.currentEntity.permissions.splice(index, 1);
+    };
+
+    blade.headIcon = 'fa-key';
 
     function initializeToolbar() {
-        if (!$scope.blade.isNew) {
-            $scope.blade.toolbarCommands = [
+        if (!blade.isNew) {
+            blade.toolbarCommands = [
                 {
                     name: "Save",
                     icon: 'fa fa-save',
@@ -102,27 +142,27 @@
                     canExecuteMethod: function () {
                         return isDirty() && $scope.formScope && $scope.formScope.$valid;
                     },
-                    permission: 'platform:security:manage'
+                    permission: 'platform:security:update'
                 },
                 {
                     name: "Reset",
                     icon: 'fa fa-undo',
                     executeMethod: function () {
-                        angular.copy($scope.blade.origEntity, $scope.blade.currentEntity);
+                        angular.copy(blade.origEntity, blade.currentEntity);
                     },
                     canExecuteMethod: function () {
                         return isDirty();
                     },
-                    permission: 'platform:security:manage'
+                    permission: 'platform:security:update'
                 },
                 {
-                    name: "Manage permissions", icon: 'fa fa-edit',
+                    name: "Assign", icon: 'fa fa-plus',
                     executeMethod: function () {
                         var newBlade = {
                             id: 'listItemChildChild',
                             promise: promise,
-                            title: $scope.blade.title,
-                            subtitle: 'Manage permissions',
+                            title: blade.title,
+                            subtitle: 'Assign permissions',
                             controller: 'platformWebApp.rolePermissionsController',
                             template: '$(Platform)/Scripts/app/security/blades/role-permissions.tpl.html'
                         };
@@ -132,7 +172,17 @@
                     canExecuteMethod: function () {
                         return true;
                     },
-                    permission: 'platform:security:manage'
+                    permission: 'platform:security:update'
+                },
+                {
+                    name: "Remove", icon: 'fa fa-trash-o',
+                    executeMethod: function () {
+                        deleteChecked();
+                    },
+                    canExecuteMethod: function () {
+                        return isItemsChecked();
+                    },
+                    permission: 'platform:security:update'
                 }
             ];
         }
@@ -142,5 +192,5 @@
 
     // actions on load
     initializeToolbar();
-    $scope.blade.refresh(false);
+    blade.refresh(false);
 }]);

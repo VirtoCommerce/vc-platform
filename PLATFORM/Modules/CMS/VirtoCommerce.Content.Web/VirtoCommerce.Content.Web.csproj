@@ -66,8 +66,9 @@
       <HintPath>..\..\..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Octokit">
-      <HintPath>..\..\..\packages\Octokit.0.6.2\lib\net45\Octokit.dll</HintPath>
+    <Reference Include="Octokit, Version=0.16.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Octokit.0.16.0\lib\net45\Octokit.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Omu.ValueInjecter, Version=2.3.3.0, Culture=neutral, PublicKeyToken=c7694541b0ac80e4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -102,6 +103,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\allStyles.css" />
     <Content Include="Default_Theme\Default\assets\arrow-left.svg" />
     <Content Include="Default_Theme\Default\assets\arrow-right.svg" />
     <Content Include="Default_Theme\Default\assets\arrow.svg" />
@@ -123,6 +125,7 @@
     <Content Include="Default_Theme\Default\assets\respond.min.js" />
     <Content Include="Default_Theme\Default\assets\slide_1.jpg" />
     <Content Include="Default_Theme\Default\assets\slide_2.jpg" />
+    <Content Include="gulpfile.js" />
     <Content Include="module.manifest" />
     <Content Include="packages.config">
       <SubType>Designer</SubType>
@@ -198,6 +201,10 @@
     <Content Include="Default_Theme\Default\templates\customers\register.liquid" />
     <Content Include="Default_Theme\Default\templates\customers\reset_password.liquid" />
     <Content Include="Default_Theme\Default\assets\flexslider.css.liquid" />
+    <Content Include="Default_Theme\Default\templates\quote.liquid" />
+    <Content Include=".bowerrc" />
+    <Content Include="bower.json" />
+    <Content Include="package.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -208,6 +215,7 @@
   <ItemGroup>
     <Content Include="Content\css\pages.css" />
     <Content Include="Content\css\themes.css" />
+    <Content Include="Scripts\allPackages.js" />
     <Content Include="Scripts\blades\common\content-main.js" />
     <Content Include="Scripts\blades\common\content-main.tpl.html" />
     <Content Include="Scripts\blades\pages\edit-blog.js" />
@@ -230,6 +238,7 @@
     <Content Include="Scripts\blades\themes\theme-asset-list.tpl.html" />
     <Content Include="Scripts\blades\themes\themes-list.js" />
     <Content Include="Scripts\blades\themes\themes-list.tpl.html" />
+    <Content Include="Scripts\common\uiKitHtmlEditor.js" />
     <Content Include="Scripts\content.js" />
     <Content Include="Scripts\resources\contentResource.js" />
     <Content Include="Scripts\widgets\menuWidget.js" />
@@ -241,11 +250,12 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\Api\ContentBaseController.cs" />
     <Compile Include="Controllers\Api\MenuController.cs" />
     <Compile Include="Controllers\Api\PagesController.cs" />
     <Compile Include="Controllers\Api\SyncController.cs" />
     <Compile Include="Controllers\Api\ThemeController.cs" />
-    <Compile Include="Controllers\PredefinedPermissions.cs" />
+    <Compile Include="Security\ContentPredefinedPermissions.cs" />
     <Compile Include="Converters\GetPagesCriteriaConverter.cs" />
     <Compile Include="Converters\GetThemeAssetsCriteriaConverter.cs" />
     <Compile Include="Converters\MenuLinkConverter.cs" />
@@ -272,6 +282,8 @@
     <Compile Include="Models\ThemeAssetFolder.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Security\ContentScopeObject.cs" />
+    <Compile Include="Security\ContentSelectedStoreScope.cs" />
     <Compile Include="Utilities\PagesUtility.cs" />
   </ItemGroup>
   <ItemGroup />

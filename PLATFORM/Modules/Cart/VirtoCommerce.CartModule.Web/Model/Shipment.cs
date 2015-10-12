@@ -12,7 +12,10 @@ namespace VirtoCommerce.CartModule.Web.Model
         /// Gets or sets the value of shipping method code
         /// </summary>
         public string ShipmentMethodCode { get; set; }
-
+        /// <summary>
+        /// Gets or sets the value of shipping method option
+        /// </summary>
+        public string ShipmentMethodOption { get; set; }
         /// <summary>
         /// Gets or sets the value of fulfillment center id
         /// </summary>

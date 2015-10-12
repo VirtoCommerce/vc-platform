@@ -24,6 +24,7 @@ using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Platform.Data.Repositories;
 using coreModel = VirtoCommerce.Domain.Order.Model;
 using webModel = VirtoCommerce.OrderModule.Web.Model;
+using VirtoCommerce.Domain.Commerce.Model;
 
 namespace VirtoCommerce.OrderModule.Test
 {
@@ -225,7 +226,7 @@ namespace VirtoCommerce.OrderModule.Test
 				Addresses = new webModel.Address[]
 				{
 					new webModel.Address {	
-					AddressType = coreModel.AddressType.Shipping, 
+					AddressType = AddressType.Shipping, 
 					City = "london",
 					Phone = "+68787687",
 					PostalCode = "22222",
@@ -378,7 +379,7 @@ namespace VirtoCommerce.OrderModule.Test
 		private static OrderModuleController GetCustomerOrderController()
 		{
 			var orderService = GetCustomerOrderService();
-			var controller = new OrderModuleController(orderService, null, null, new TimeBasedNumberGeneratorImpl(), null, null);
+			var controller = new OrderModuleController(orderService, null, null, new TimeBasedNumberGeneratorImpl(), null, null, null, null);
 			return controller;
 		}
 	}

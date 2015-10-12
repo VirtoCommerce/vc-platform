@@ -44,29 +44,12 @@ namespace VirtoCommerce.Web.Convertors
             var outline = collection.BuildOutline(Thread.CurrentThread.CurrentUICulture.Name).Select(x => x.Value);
             if (outline.Any())
             {
-                var urlHelper = GetUrlHelper();
+                var urlHelper = UrlHelperExtensions.GetUrlHelper();
                 collection.Outline = string.Join("/", outline);
                 collection.Url = urlHelper.CategoryUrl(collection.Outline);
             }
 
             return collection;
-        }
-
-        private static UrlHelper GetUrlHelper()
-        {
-            var httpContext = HttpContext.Current;
-            if (httpContext == null)
-            {
-                return null;
-            }
-
-            var httpContextBase = new HttpContextWrapper(httpContext);
-            var routeData = new RouteData();
-            var requestContext = new RequestContext(httpContextBase, routeData);
-
-            var urlHelper = new UrlHelper(requestContext);
-            return urlHelper;
-
         }
     }
 }

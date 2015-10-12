@@ -9,10 +9,10 @@
                             {{property.name}}
                             <a href="" ng-click="editDictionary(property)" ng-show="property.isDictionary"><i class="form-ico fa fa-pencil"></i></a>
                         </label>
-                        <va-dynamic-property ng-model="property" languages="languages" />
+                        <va-generic-value-input ng-model="property" languages="languages" get-dictionary-values="getDictionaryValues" />
                     </div>
 
-                    <div class="text" ng-if="blade.currentEntity.dynamicProperties.length == 0">None</div>
+                    <div class="text" ng-if="blade.currentEntity.dynamicProperties.length == 0">This entity doesn't have any dynamic properties yet. Click "Manage type properties" and create some properties. Close and reopen current entity view to get dynamic properties loaded.</div>
                 </fieldset>
             </form>
         </div>

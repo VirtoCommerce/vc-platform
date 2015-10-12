@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('virtoCommerce.marketingModule.addContentItemsController', ['$scope', 'virtoCommerce.marketingModule.dynamicContent.contentItems', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function ($scope, marketing_dynamicContents_res_contentItems, bladeNavigationService, dialogService) {
+.controller('virtoCommerce.marketingModule.addContentItemsController', ['$scope', 'virtoCommerce.marketingModule.dynamicContent.contentItems', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.dynamicProperties.dictionaryItemsApi', function ($scope, marketing_dynamicContents_res_contentItems, bladeNavigationService, dialogService, dictionaryItemsApi) {
     $scope.setForm = function (form) {
         $scope.formScope = form;
     }
@@ -19,7 +19,7 @@
 				    canExecuteMethod: function () {
 				        return !angular.equals(blade.originalEntity, blade.entity) && !$scope.formScope.$invalid;
 				    },
-				    permission: 'marketing:manage'
+				    permission: 'marketing:update'
 				},
                 {
                     name: "Reset", icon: 'fa fa-undo',
@@ -29,7 +29,7 @@
                     canExecuteMethod: function () {
                         return !angular.equals(blade.originalEntity, blade.entity);
                     },
-                    permission: 'marketing:manage'
+                    permission: 'marketing:update'
                 },
 				{
 				    name: "Delete", icon: 'fa fa-trash',
@@ -50,7 +50,7 @@
 				    canExecuteMethod: function () {
 				        return true;
 				    },
-				    permission: 'marketing:manage'
+				    permission: 'marketing:update'
 				}
             ];
         }
@@ -104,6 +104,24 @@
             },
             function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); blade.isLoading = false; });
         }
+    }
+
+    $scope.editDictionary = function (property) {
+        var newBlade = {
+            id: "propertyDictionary",
+            isApiSave: true,
+            currentEntity: property,
+            controller: 'platformWebApp.propertyDictionaryController',
+            template: '$(Platform)/Scripts/app/dynamicProperties/blades/property-dictionary.tpl.html',
+            onChangesConfirmedFn: function () {
+                blade.entity.dynamicProperties = angular.copy(blade.entity.dynamicProperties);
+            }
+        };
+        bladeNavigationService.showBlade(newBlade, blade);
+    };
+
+    $scope.getDictionaryValues = function (property, callback) {
+        dictionaryItemsApi.query({ id: property.objectType, propertyId: property.id }, callback);
     }
 
     $scope.blade.headIcon = 'fa-inbox';

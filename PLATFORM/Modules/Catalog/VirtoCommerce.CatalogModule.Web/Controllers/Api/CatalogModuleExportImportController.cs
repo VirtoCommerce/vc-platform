@@ -11,12 +11,14 @@ using Omu.ValueInjecter;
 using VirtoCommerce.CatalogModule.Web.ExportImport;
 using VirtoCommerce.CatalogModule.Web.Model;
 using VirtoCommerce.CatalogModule.Web.Model.EventNotifications;
+using VirtoCommerce.CatalogModule.Web.Security;
 using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Platform.Core.Asset;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Core.PushNotifications;
+using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Common;
 using coreModel = VirtoCommerce.Domain.Catalog.Model;
@@ -24,8 +26,8 @@ using coreModel = VirtoCommerce.Domain.Catalog.Model;
 namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 {
 	[RoutePrefix("api/catalog")]
-	public class CatalogModuleExportImportController : ApiController
-	{
+	public class CatalogModuleExportImportController : CatalogBaseController
+    {
 		private readonly ICatalogService _catalogService;
 		private readonly IPushNotificationManager _notifier;
 		private readonly ISettingsManager _settingsManager;
@@ -34,8 +36,11 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 		private readonly CsvCatalogImporter _csvImporter;
 		private readonly IBlobUrlResolver _blobUrlResolver;
 
-		public CatalogModuleExportImportController(ICatalogService catalogService, IPushNotificationManager pushNotificationManager, ISettingsManager settingsManager, IBlobStorageProvider blobStorageProvider, IBlobUrlResolver blobUrlResolver, CsvCatalogExporter csvExporter, CsvCatalogImporter csvImporter)
-		{
+		public CatalogModuleExportImportController(ICatalogService catalogService, IPushNotificationManager pushNotificationManager, ISettingsManager settingsManager, 
+                                                   IBlobStorageProvider blobStorageProvider, IBlobUrlResolver blobUrlResolver, 
+                                                   CsvCatalogExporter csvExporter, CsvCatalogImporter csvImporter, ISecurityService securityService, IPermissionScopeService permissionScopeService)
+            :base(securityService, permissionScopeService)
+        {
 			_catalogService = catalogService;
 			_notifier = pushNotificationManager;
 			_settingsManager = settingsManager;
@@ -55,6 +60,8 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 		[Route("export")]
 		public IHttpActionResult DoExport(CsvExportInfo exportInfo)
 		{
+            base.CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Export, exportInfo);
+
 			var notification = new ExportNotification(CurrentPrincipal.GetCurrentUserName())
 			{
 				Title = "Catalog export task",
@@ -110,7 +117,9 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 		[Route("import")]
 		public IHttpActionResult DoImport(CsvImportInfo importInfo)
 		{
-			var notification = new ImportNotification(CurrentPrincipal.GetCurrentUserName())
+            base.CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Import, importInfo);
+
+            var notification = new ImportNotification(CurrentPrincipal.GetCurrentUserName())
 			{
 				Title = "Import catalog from CSV",
 				Description = "starting import...."

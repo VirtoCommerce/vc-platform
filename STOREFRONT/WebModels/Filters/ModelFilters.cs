@@ -22,6 +22,9 @@ namespace VirtoCommerce.Web.Models.Filters
     public class ModelFilters
     {
         private static readonly Regex TagSyntax = R.B(R.Q(@"([A-Za-z0-9]+)_([A-Za-z0-9].+)"));
+        private static readonly Regex WordReplaceSyntax = R.B(R.Q(@"[^\w\s-]"));
+        private static readonly Regex WordReplaceSyntax2 = R.B(R.Q(@"[\s-]+"));
+        //private static readonly Regex WordReplaceSyntax = R.B(R.Q(@"[^a-z0-9]+/i"));
 
         private static readonly Lazy<CultureInfo[]> _cultures = new Lazy<CultureInfo[]>(
             CreateCultures,
@@ -58,10 +61,12 @@ namespace VirtoCommerce.Web.Models.Filters
             return String.Format("<a href=\"{0}\" id=\"customer_login_link\">{1}</a>", path, input);
         }
 
+        /* sasha: this doesn't work in templates when integers are used for minus
         public static decimal Minus(decimal input, decimal parameter)
         {
             return input - parameter;
         }
+        */
 
         public static string CustomerLogoutLink(string input)
         {
@@ -84,7 +89,24 @@ namespace VirtoCommerce.Web.Models.Filters
                 return null;
             }
 
-            decimal val = Convert.ToDecimal(input, CultureInfo.GetCultureInfo("en-US"));
+            decimal val;
+
+            if (input is int)
+            {
+                var inputString = ((int)input).ToString("D3");
+                var parsedDecimal = String.Format(
+                    "{0}{1}{2}",
+                    inputString.Substring(0, inputString.Length - 2),
+                    CultureInfo.GetCultureInfo("en-US").NumberFormat.CurrencyDecimalSeparator,
+                    inputString.Substring(inputString.Length - 2));
+                val = decimal.Parse(parsedDecimal);
+            }
+            else
+            {
+                val = (decimal)input;
+            }
+
+            //decimal val = Convert.ToDecimal(input, CultureInfo.GetCultureInfo("en-US"));
 
             string currency = SiteContext.Current.Shop.Currency;
 
@@ -108,10 +130,12 @@ namespace VirtoCommerce.Web.Models.Filters
             return AssetUrl("~/global/assets/", input.ToString());
         }
 
+        /* sasha: there is already a method to strip html, this is not good enough method
         public static string StripHtml(string input)
         {
             return HttpUtility.HtmlDecode(input);
         }
+        */
 
         public static string GlobalAssetUrl(string input)
         {
@@ -254,7 +278,7 @@ namespace VirtoCommerce.Web.Models.Filters
                     tagName,
                     count == 0 ? "" : String.Format(" ({0})", count));
             }
-            return String.Format(
+            return string.Format(
                 "<a title=\"Show products matching tag {0}\" href=\"{1}{0}\">{0}</a>",
                 tag,
                 relativeUri.LocalPath);
@@ -270,7 +294,7 @@ namespace VirtoCommerce.Web.Models.Filters
             var relativeUri = HttpContext.Current.Request.Url;
             var url = UpdateWithTags(context, relativeUri, String.Format("{0}_{1}", field, val));
 
-            return String.Format(
+            return string.Format(
                 "<a title=\"Show products matching tag {1}\" href=\"{0}\">{1}{2}</a>",
                 url,
                 tagName,
@@ -310,7 +334,7 @@ namespace VirtoCommerce.Web.Models.Filters
         /// <returns></returns>
         public static string Date(object input, string format)
         {
-            if (!String.IsNullOrEmpty(format))
+            if (!String.IsNullOrEmpty(format) && !format.Contains("%")) // special formats that can be defined in settings
             {
                 var loc = String.Format("date_formats.{0}", format);
                 var newFormat = TranslationFilter.T(loc);
@@ -324,6 +348,22 @@ namespace VirtoCommerce.Web.Models.Filters
             }
 
             return StandardFilters.Date(input, format);
+        }
+
+        public static string Camelize(string input)
+        {
+            return StandardFilters.Capitalize(input);
+        }
+
+        public static string Handleize(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+                return input;
+
+            // TODO: combine into one regex
+            var replacedString = WordReplaceSyntax.Replace(input.ToLower(), ""); // remove special characters
+            replacedString = WordReplaceSyntax2.Replace(replacedString, "-"); // add "-" instead of spaces
+            return replacedString;
         }
         #endregion
 

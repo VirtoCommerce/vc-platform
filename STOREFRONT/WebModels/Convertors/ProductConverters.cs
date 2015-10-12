@@ -25,7 +25,7 @@ namespace VirtoCommerce.Web.Convertors
                                ProductId = product.Id,
                                VariantId = variant.Id,
                                Handle = product.Handle,
-                               Price = (decimal)variant.Price / 100,
+                               Price = variant.Price,
                                RequiresShipping = String.IsNullOrEmpty(product.Type) ||
                                     !String.IsNullOrEmpty(product.Type) && product.Type.Equals("Physical", StringComparison.OrdinalIgnoreCase),
                                Quantity = 1,
@@ -45,6 +45,8 @@ namespace VirtoCommerce.Web.Convertors
         {
             var productModel = new Product();
 
+            var allImages = product.Images.Concat(new[] { product.PrimaryImage });
+
             var pathTemplate = VirtualPathUtility.ToAbsolute("~/products/{0}");
             var description = product.EditorialReviews != null ?
                 product.EditorialReviews.FirstOrDefault(er => er.ReviewType != null && er.ReviewType.Equals("quickreview", StringComparison.OrdinalIgnoreCase)) : null;
@@ -60,7 +62,8 @@ namespace VirtoCommerce.Web.Convertors
             productModel.Handle = product.Code;
             productModel.Id = product.Id;
             productModel.Images = product.Images != null ?
-                new ItemCollection<Image>(product.Images.Select(i => i.AsWebModel(product.Name, product.Id))) : null;
+                new ItemCollection<Image>(allImages.Select(i => i.AsWebModel(product.Name, product.Id))) : null;
+            productModel.IsQuotable = true; // TODO
             productModel.FeaturedImage = primaryImage != null ?
                 primaryImage.AsWebModel(primaryImage.Name, product.Id) : null;
             productModel.Keywords = keywords;
@@ -82,7 +85,7 @@ namespace VirtoCommerce.Web.Convertors
             // form url
             // "/products/code" or "/en-us/store/collection/outline" 
             // specify SEO based url
-            var urlHelper = GetUrlHelper();
+            var urlHelper = UrlHelperExtensions.GetUrlHelper();
             var url = String.Empty;
             if (urlHelper != null && collection != null && productModel.Keywords != null && productModel.Keywords.Any())
             {
@@ -147,7 +150,7 @@ namespace VirtoCommerce.Web.Convertors
             var reward = rewards.FirstOrDefault();
 
             variantModel.Barcode = null; // TODO
-            variantModel.CompareAtPrice = (int)((price != null ? (price.Sale.HasValue ? price.Sale.Value : price.List) : 0M) * 100);
+            variantModel.CompareAtPrice = price != null ? (price.Sale.HasValue ? price.Sale.Value : price.List) : 0;
             //variantModel.Id = variation.Id;
             variantModel.Id = variation.Code;
             variantModel.Image = variationImage != null ? variationImage.AsWebModel(variation.Name, variation.MainProductId) : null;
@@ -155,16 +158,16 @@ namespace VirtoCommerce.Web.Convertors
             PopulateInventory(ref variantModel, variation);
             variantModel.Options = GetOptionValues(options, variation.VariationProperties);
 
-            variantModel.Price = (int)((price != null ? (price.Sale.HasValue ? price.Sale.Value : price.List) : 0M) * 100);
+            variantModel.Price = price != null ? (price.Sale.HasValue ? price.Sale.Value : price.List) : 0;
             if (reward != null)
             {
                 if (reward.AmountType.Equals("absolute", StringComparison.OrdinalIgnoreCase))
                 {
-                    variantModel.Price -= (int)(reward.Amount * 100);
+                    variantModel.Price -= reward.Amount;
                 }
                 if (reward.AmountType.Equals("relative", StringComparison.OrdinalIgnoreCase))
                 {
-                    variantModel.Price -= (int)(variantModel.Price * reward.Amount / 100);
+                    variantModel.Price -= variantModel.Price * reward.Amount / 100;
                 }
             }
 
@@ -266,22 +269,5 @@ namespace VirtoCommerce.Web.Convertors
             return variationOptions.ToArray();
         }
         #endregion
-
-        private static UrlHelper GetUrlHelper()
-        {
-            var httpContext = HttpContext.Current;
-            if (httpContext == null)
-            {
-                return null;
-            }
-
-            var httpContextBase = new HttpContextWrapper(httpContext);
-            var routeData = new RouteData();
-            var requestContext = new RequestContext(httpContextBase, routeData);
-
-            var urlHelper = new UrlHelper(requestContext);
-            return urlHelper;
-
-        }
     }
 }

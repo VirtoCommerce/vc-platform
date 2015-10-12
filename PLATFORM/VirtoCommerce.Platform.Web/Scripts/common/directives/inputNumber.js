@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('platformWebApp')
-    .directive('vaNumber', function ($compile, $timeout) {
+    .directive('vaNumber', ['$compile', function ($compile) {
         return {
             restrict: 'A',
             scope: {
@@ -15,7 +15,7 @@ angular.module('platformWebApp')
 
                 el.after($compile(scope.html)(scope));
 
-                el.on('keyup', function() {
+                el.on('keyup', function () {
                     var sum = ctrl.$modelValue;
 
                     el.val(sum);
@@ -25,7 +25,7 @@ angular.module('platformWebApp')
                     var sum = parseFloat(ctrl.$modelValue) || (scope.min > 0 ? scope.min : 0),
                         step = parseFloat(scope.step);
 
-                    if(type == 'up') {
+                    if (type == 'up') {
                         sum += step;
 
                         if (sum > scope.max) {
@@ -46,11 +46,11 @@ angular.module('platformWebApp')
 
                 //It need for support only numeric input
                 ctrl.$parsers.push(function (inputValue) {
-                	var floatValue = parseFloat(inputValue) || (scope.min > 0 ? scope.min : 0);
+                    var floatValue = parseFloat(inputValue) || (scope.min > 0 ? scope.min : 0);
 
-                	return floatValue;
+                    return floatValue;
                 });
             }
         };
-    })
+    }])
 ;

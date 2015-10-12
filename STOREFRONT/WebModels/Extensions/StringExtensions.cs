@@ -59,25 +59,27 @@ namespace VirtoCommerce.Web.Extensions
             var url = HttpContext.Current.Request.Url;
             var port = url.Port != 80 || (url.Scheme == "https" && url.Port == 443) ? (":" + url.Port) : String.Empty;
 
-            return String.Format("{0}://{1}{2}{3}",
+            return string.Format("{0}://{1}{2}{3}",
                 url.Scheme, url.Host, port, VirtualPathUtility.ToAbsolute(relativeUrl));
         }
 
-        private static UrlHelper GetUrlHelper()
+        public static bool IsActiveUrl(this string relativeUrl)
         {
-            var httpContext = HttpContext.Current;
-            if (httpContext == null)
-            {
-                return null;
-            }
+            if (string.IsNullOrEmpty(relativeUrl))
+                return false;
 
-            var httpContextBase = new HttpContextWrapper(httpContext);
-            var routeData = new RouteData();
-            var requestContext = new RequestContext(httpContextBase, routeData);
+            if (HttpContext.Current == null)
+                return false;
 
-            var urlHelper = new UrlHelper(requestContext);
-            return urlHelper;
+            if (relativeUrl.StartsWith("~/"))
+                relativeUrl = relativeUrl.TrimStart("~");
 
+            var url = HttpContext.Current.Request.Url;
+
+            if (url.PathAndQuery.StartsWith(relativeUrl) && relativeUrl != "/")
+                return true;
+
+            return false;
         }
         #endregion
     }

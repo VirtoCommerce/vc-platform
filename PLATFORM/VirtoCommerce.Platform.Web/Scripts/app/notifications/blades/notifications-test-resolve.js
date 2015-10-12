@@ -14,10 +14,15 @@
 			blade.isLoading = false;
 
 			blade.currentParams = data;
-			if (!angular.isUndefined($localStorage.notificationTestResolve) && $localStorage.notificationTestResolve.length > 0) {
-				blade.obj = {};
-				for (var i = 0; i < $localStorage.notificationTestResolve.length; i++) {
-					blade.obj[$localStorage.notificationTestResolve[i].key] = $localStorage.notificationTestResolve[i].value;
+			if (!angular.isUndefined($localStorage.notificationTestResolve)) {
+			    blade.obj = { notificationParameters: {} };
+			    for (var i = 0; i < blade.currentParams.length; i++) {
+			        if (blade.currentParams[i].isDictionary) {
+			            blade.obj.notificationParameters[blade.currentParams[i].parameterName] = [ { name: '', value: '' } ];
+			        }
+			        else {
+			            blade.obj.notificationParameters[blade.currentParams[i].parameterName] = $localStorage.notificationTestResolve[blade.currentParams[i].parameterName];
+			        }
 				}
 			}
 		}, function (error) {
@@ -27,14 +32,30 @@
 
 	blade.test = function () {
 		blade.isLoading = true;
-		blade.params = [];
+
+		$localStorage.notificationTestResolve = blade.obj.notificationParameters;
+		blade.obj["Type"] = blade.notificationType;
+		blade.obj["ObjectId"] = blade.objectId;
+		blade.obj["ObjectTypeId"] = blade.objectTypeId;
+		blade.obj["Language"] = blade.language;
+        
+        //prepare params for sending
+		var params = {};
+		var preparedParams = {};
 		for (var i = 0; i < blade.currentParams.length; i++) {
-			blade.params.push({ key: blade.currentParams[i].parameterName, value: blade.obj[blade.currentParams[i].parameterName] });
+		    if (blade.currentParams[i].isDictionary) {
+		        params = {};
+		        preparedParams[blade.currentParams[i].parameterName] = blade.obj.notificationParameters[blade.currentParams[i].parameterName];
+		        var notParam = blade.obj.notificationParameters[blade.currentParams[i].parameterName];
+		        for (var j = 0; j < notParam.length; j++) {
+		            params[notParam[j].name] = notParam[j].value;
+		        }
+		        blade.obj.notificationParameters[blade.currentParams[i].parameterName] = params;
+		    }
 		}
 
-		$localStorage.notificationTestResolve = blade.params;
-
-		notifications.resolveNotification({ type: blade.notificationType, objectId: blade.objectId, objectTypeId: blade.objectTypeId, language: blade.language }, blade.params, function (notification) {
+        //send params
+	    notifications.resolveNotification({}, blade.obj, function (notification) {
 			blade.isLoading = false;
 
 			var newBlade = {
@@ -46,10 +67,21 @@
 			};
 
 			bladeNavigationService.showBlade(newBlade, blade);
+
+            //revert params
+			for(var i = 0; i < blade.currentParams.length; i++){
+			    if (blade.currentParams[i].isDictionary) {
+			        blade.obj.notificationParameters[blade.currentParams[i].parameterName] = preparedParams[blade.currentParams[i].parameterName];
+			    }
+			}
 		}, function (error) {
 			bladeNavigationService.setError('Error ' + error.status, blade);
 		});
 	};
+
+	blade.add = function (paramName) {
+	    blade.obj.notificationParameters[paramName].push({ name: '', value: '' });
+	}
 
 	blade.headIcon = 'fa-play';
 

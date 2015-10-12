@@ -53,7 +53,7 @@ namespace VirtoCommerce.StoreModule.Test
                 },
                 //PaymentGateways = new string[] { "PayPal", "Clarna" },
                 StoreState = Domain.Store.Model.StoreState.Open,
-                Settings = new[] { new Setting { Name = "test", Value = "sss", ValueType = Platform.Core.Settings.SettingValueType.ShortText } }
+             
 
             };
             var result = controller.Create(store) as OkNegotiatedContentResult<Store>;
@@ -71,7 +71,7 @@ namespace VirtoCommerce.StoreModule.Test
             store.DefaultCurrency = CurrencyCodes.UYU;
             store.Currencies.Add(CurrencyCodes.UYU);
             store.Languages.Remove(store.Languages.FirstOrDefault());
-            store.Settings.Add(new Setting { Name = "setting2", Value = "1223", ValueType = Platform.Core.Settings.SettingValueType.Integer });
+           
             store.FulfillmentCenter.CountryCode = "SSS";
             store.ReturnsFulfillmentCenter = store.FulfillmentCenter;
 
@@ -104,9 +104,9 @@ namespace VirtoCommerce.StoreModule.Test
             Func<IStoreRepository> repositoryFactory = () => new StoreRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor());
 
             var dynamicPropertyService = new DynamicPropertyService(platformRepositoryFactory);
-            var storeService = new StoreServiceImpl(repositoryFactory, GetCommerceService(), null, dynamicPropertyService, null, null, null);
+            var storeService = new StoreServiceImpl(repositoryFactory, GetCommerceService(), null, dynamicPropertyService, null, null, null, null);
 
-            var controller = new StoreModuleController(storeService, null, null);
+            var controller = new StoreModuleController(storeService, null, null, null, null, null);
             return controller;
         }
     }

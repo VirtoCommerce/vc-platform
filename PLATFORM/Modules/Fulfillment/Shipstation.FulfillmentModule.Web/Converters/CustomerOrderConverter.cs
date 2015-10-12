@@ -3,7 +3,7 @@ using Microsoft.Practices.ObjectBuilder2;
 using Shipstation.FulfillmentModule.Web.Models.Order;
 using System;
 using System.Linq;
-using AddressType = VirtoCommerce.Domain.Order.Model.AddressType;
+using AddressType = VirtoCommerce.Domain.Commerce.Model.AddressType;
 
 namespace Shipstation.FulfillmentModule.Web.Converters
 {

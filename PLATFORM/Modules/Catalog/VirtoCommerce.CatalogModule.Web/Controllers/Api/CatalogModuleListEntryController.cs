@@ -10,15 +10,15 @@ using VirtoCommerce.CatalogModule.Web.Converters;
 using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Platform.Core.Asset;
 using VirtoCommerce.Platform.Core.Security;
-using moduleModel = VirtoCommerce.Domain.Catalog.Model;
+using coreModel = VirtoCommerce.Domain.Catalog.Model;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.CatalogModule.Web.Security;
 
 namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 {
     [RoutePrefix("api/catalog/listentries")]
-    [CheckPermission(Permission = PredefinedPermissions.Query)]
-    public class CatalogModuleListEntryController : ApiController
+    public class CatalogModuleListEntryController : CatalogBaseController
     {
         private readonly ICatalogSearchService _searchService;
         private readonly ICategoryService _categoryService;
@@ -27,7 +27,8 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 
         public CatalogModuleListEntryController(ICatalogSearchService searchService,
                                    ICategoryService categoryService,
-                                   IItemService itemService, IBlobUrlResolver blobUrlResolver)
+                                   IItemService itemService, IBlobUrlResolver blobUrlResolver, ISecurityService securityService, IPermissionScopeService permissionScopeService)
+            :base(securityService, permissionScopeService)
         {
             _searchService = searchService;
             _categoryService = categoryService;
@@ -46,7 +47,9 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         [ResponseType(typeof(webModel.ListEntrySearchResult))]
         public IHttpActionResult ListItemsSearch([ModelBinder(typeof(ListEntrySearchCriteriaBinder))]webModel.ListEntrySearchCriteria criteria)
         {
-            var serviceResult = _searchService.Search(criteria.ToModuleModel());
+            //Filter search criteria to the corresponding user permissions 
+            var searchCriteria = base.ChangeCriteriaToCurentUserPermissions(criteria.ToModuleModel());
+            var serviceResult = _searchService.Search(searchCriteria);
 
             var retVal = new webModel.ListEntrySearchResult();
 
@@ -77,6 +80,9 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         [ResponseType(typeof(void))]
         public IHttpActionResult CreateLinks(webModel.ListEntryLink[] links)
         {
+            //Scope bound security check
+            base.CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Create, links);
+           
             InnerUpdateLinks(links, (x, y) => x.Links.Add(y));
             return StatusCode(HttpStatusCode.NoContent);
         }
@@ -105,18 +111,87 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         [ResponseType(typeof(void))]
         public IHttpActionResult DeleteLinks(webModel.ListEntryLink[] links)
         {
+            //Scope bound security check
+            base.CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Delete, links);
+
             InnerUpdateLinks(links, (x, y) => x.Links.Remove(y));
             return StatusCode(HttpStatusCode.NoContent);
         }
 
 
-        private void InnerUpdateLinks(webModel.ListEntryLink[] links, Action<moduleModel.ILinkSupport, moduleModel.CategoryLink> action)
+        /// <summary>
+        /// Move categories or products to another location.
+        /// </summary>
+        /// <param name="moveInfo">Move operation details</param>
+        [HttpPost]
+        [Route("move")]
+        [ResponseType(typeof(void))]
+        public IHttpActionResult Move(webModel.MoveInfo moveInfo)
         {
-            var changedObjects = new List<moduleModel.ILinkSupport>();
+            var categories = new List<coreModel.Category>();
+         
+            //Move  categories
+            foreach (var listEntryCategory in moveInfo.ListEntries.Where(x=>String.Equals(x.Type, webModel.ListEntryCategory.TypeName, StringComparison.InvariantCultureIgnoreCase)))
+            {
+                var category = _categoryService.GetById(listEntryCategory.Id);
+                if (category.CatalogId != moveInfo.Catalog)
+                {
+                    category.CatalogId = moveInfo.Catalog ?? String.Empty;
+                }
+                if (category.ParentId != moveInfo.Category)
+                {
+                    category.ParentId = moveInfo.Category ?? String.Empty;
+                }
+                categories.Add(category);
+            };
+
+            var products = new List<coreModel.CatalogProduct>();
+            //Move products
+            foreach (var listEntryProduct in moveInfo.ListEntries.Where(x => String.Equals(x.Type, webModel.ListEntryProduct.TypeName, StringComparison.InvariantCultureIgnoreCase)))
+            {
+                var product = _itemService.GetById(listEntryProduct.Id, Domain.Catalog.Model.ItemResponseGroup.ItemLarge);
+                if (product.CatalogId != moveInfo.Catalog)
+                {
+                    product.CatalogId = moveInfo.Catalog ?? String.Empty;
+                    foreach (var variation in product.Variations)
+                    {
+                        variation.CatalogId = moveInfo.Catalog ?? String.Empty;
+                    }
+                    
+                }
+                if (product.CategoryId != moveInfo.Category)
+                {
+                    product.CategoryId = moveInfo.Category ?? String.Empty;
+                    foreach (var variation in product.Variations)
+                    {
+                        variation.CategoryId = moveInfo.Category ?? String.Empty;
+                    }
+                }
+                products.Add(product);
+            };
+
+            //Scope bound security check
+            base.CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Create, categories);
+            base.CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Create, products);
+
+            if (categories.Any())
+            {
+                _categoryService.Update(categories.ToArray());
+            }
+            if(products.Any())
+            {
+                _itemService.Update(products.ToArray());
+            }
+            return Ok();
+        }
+
+        private void InnerUpdateLinks(webModel.ListEntryLink[] links, Action<coreModel.ILinkSupport, coreModel.CategoryLink> action)
+        {
+            var changedObjects = new List<coreModel.ILinkSupport>();
             foreach (var link in links)
             {
-                moduleModel.ILinkSupport changedObject;
-                var newlink = new moduleModel.CategoryLink
+                coreModel.ILinkSupport changedObject;
+                var newlink = new coreModel.CategoryLink
                 {
                     CategoryId = link.CategoryId,
                     CatalogId = link.CatalogId
@@ -128,15 +203,16 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                 }
                 else
                 {
-                    changedObject = _itemService.GetById(link.ListEntryId, moduleModel.ItemResponseGroup.ItemLarge);
+                    changedObject = _itemService.GetById(link.ListEntryId, coreModel.ItemResponseGroup.ItemLarge);
                 }
                 action(changedObject, newlink);
                 changedObjects.Add(changedObject);
             }
 
-            _categoryService.Update(changedObjects.OfType<moduleModel.Category>().ToArray());
-            _itemService.Update(changedObjects.OfType<moduleModel.CatalogProduct>().ToArray());
+            _categoryService.Update(changedObjects.OfType<coreModel.Category>().ToArray());
+            _itemService.Update(changedObjects.OfType<coreModel.CatalogProduct>().ToArray());
         }
+
 
     }
 }

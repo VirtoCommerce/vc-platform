@@ -268,7 +268,7 @@
             canExecuteMethod: function () {
                 return true;
             },
-            permission: 'customer:manage'
+            permission: 'customer:create'
         },
         {
             name: "Manage", icon: 'fa fa-edit',
@@ -279,7 +279,7 @@
             canExecuteMethod: function () {
                 return selectedNode || isItemsChecked();
             },
-            permission: 'customer:manage'
+            permission: 'customer:update'
         },
         {
             name: "Delete", icon: 'fa fa-trash-o',
@@ -289,7 +289,7 @@
             canExecuteMethod: function () {
                 return isItemsChecked();
             },
-            permission: 'customer:manage'
+            permission: 'customer:delete'
         }
     ];
 

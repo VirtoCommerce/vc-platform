@@ -119,7 +119,7 @@ namespace VirtoCommerce.Web.Views.Contents
             var rawItem = this.CreateRawItem(path);
 
             /// if a 'date' property is found in markdown file header, that date will be used instead of the date in the file name
-            var date = DateTime.Now;
+            var date = rawItem.LastWriteTimeUtc;
             if (rawItem.Settings.ContainsKey("date"))
                 DateTime.TryParse((string)rawItem.Settings["date"], out date);
 
@@ -129,13 +129,15 @@ namespace VirtoCommerce.Web.Views.Contents
                 if (templateEngine.CanProcess(rawItem.ContentType, "html"))
                 {
                     var content = templateEngine.Process(rawItem.Content, rawItem.Settings);
-                    var page = new ContentItem { Content = content };
+                    var page = new ContentItem { FullContent = content };
 
+                    var relativePath = this.EvaluateLink(context, path);
                     page.SetHeaderSettings(rawItem.Settings);
                     page.Settings = rawItem.Settings;
                     page.Url = rawItem.Settings.ContainsKey("permalink")
                         ? rawItem.Settings["permalink"]
-                        : this.EvaluateLink(context, path);
+                        : relativePath;
+                    page.FileName = relativePath;
                     page.Date = date;
                     return page;
                 }
@@ -150,8 +152,16 @@ namespace VirtoCommerce.Web.Views.Contents
             var configPath = Path.Combine(sourceFolder, "config.yml");
             if (this._fileSystem.File.Exists(configPath))
             {
-                config =
+                try
+                {
+                    config =
                     (Dictionary<string, object>)this._fileSystem.File.ReadAllText(configPath).YamlHeader(true);
+                }
+                catch (ArgumentException ex)
+                {
+                    throw new ApplicationException(String.Format("{0}", "config.xml"), ex);
+                }
+                
             }
 
             var context = new SiteStaticContentContext() { SourceFolder = sourceFolder, Config = config };
@@ -161,11 +171,23 @@ namespace VirtoCommerce.Web.Views.Contents
 
         private RawContentItem CreateRawItem(string file)
         {
-            var contents = this.SafeReadContents(file);
-            var header = contents.YamlHeader();
+            FileInfoBase info;
+            var contents = this.SafeReadContents(file, out info);
+
+            IDictionary<string, object> header = null;
+
+            try
+            {
+                header = contents.YamlHeader();
+            }
+            catch(Exception ex)
+            {
+                throw new ApplicationException(String.Format("{0}", file), ex);
+            }
 
             var page = new RawContentItem { Content = this.RenderContent(file, contents, header) };
 
+            page.LastWriteTimeUtc = info.LastWriteTimeUtc;
             page.Settings = header;
 
             return page;
@@ -210,7 +232,7 @@ namespace VirtoCommerce.Web.Views.Contents
                     .Where(x => extensions.Contains(x.Extension));
                 items.AddRange(
                     files.Select(file => CreateContentItem(context, file.FullName))
-                        .Where(post => post != null));
+                        .Where(post => post != null).OrderByDescending(x=>x.Date));
             }
             return items;
         }
@@ -232,24 +254,25 @@ namespace VirtoCommerce.Web.Views.Contents
 
                 //html = contentTransformers.Aggregate(html, (current, contentTransformer) => contentTransformer.Transform(current));
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 //Tracing.Info(String.Format("Error ({0}) converting {1}", e.Message, file));
                 //Tracing.Debug(e.ToString());
-                html = String.Format("<p><b>Error converting markdown</b></p><pre>{0}</pre>", contents);
+                html = String.Format("<p><b>Error converting markdown: {0}</b></p><pre>{1}</pre>", e.Message, contents);
             }
             return html;
         }
 
-        private string SafeReadContents(string file)
+        private string SafeReadContents(string file, out FileInfoBase fileInfo)
         {
             try
             {
+                fileInfo = this._fileSystem.FileInfo.FromFileName(file);
                 return this._fileSystem.File.ReadAllText(file);
             }
             catch (IOException)
             {
-                var fileInfo = this._fileSystem.FileInfo.FromFileName(file);
+                fileInfo = this._fileSystem.FileInfo.FromFileName(file);
                 var tempFile = Path.Combine(Path.GetTempPath(), fileInfo.Name);
                 try
                 {

@@ -37,7 +37,7 @@ namespace VirtoCommerce.Web.Convertors
                            Email = "support@no-email.com",
                            Description = store.Description,
                            Currency = store.DefaultCurrency,
-                           Url = store.Url ?? String.Format("~/{0}/{1}", store.DefaultLanguage, store.Id).ToAbsoluteUrl(),
+                           Url = String.IsNullOrEmpty(store.Url) ? String.Format("~/{0}/{1}", store.DefaultLanguage, store.Id).ToAbsoluteUrl() : store.Url,
                            SimplifiedUrl = "~/".ToAbsoluteUrl().Trim('/'),
                            SecureUrl = store.SecureUrl,
                            DefaultUrl = store.SecureUrl ?? store.Url,
@@ -62,6 +62,11 @@ namespace VirtoCommerce.Web.Convertors
             {
                 var fieldsCollection = new MetafieldsCollection("global", store.Settings);
                 shop.Metafields = new MetaFieldNamespacesCollection(new[] { fieldsCollection });
+
+                if(fieldsCollection.ContainsKey("enableQuotes"))
+                {
+                    shop.QuotesEnabled = (bool)fieldsCollection["enableQuotes"];
+                }
             }
 
             return shop;

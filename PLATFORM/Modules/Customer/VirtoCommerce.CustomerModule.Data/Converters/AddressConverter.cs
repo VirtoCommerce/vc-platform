@@ -13,19 +13,19 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 {
     public static class AddressConverter
     {
-        public static coreModel.Address ToCoreModel(this dataModel.Address entity)
+        public static Domain.Commerce.Model.Address ToCoreModel(this dataModel.Address entity)
         {
             if (entity == null)
                 throw new ArgumentNullException("entity");
 
-            var retVal = new coreModel.Address();
+            var retVal = new Domain.Commerce.Model.Address();
             retVal.InjectFrom(entity);
 			retVal.Phone = entity.DaytimePhoneNumber;
 
             return retVal;
         }
 
-        public static dataModel.Address ToDataModel(this coreModel.Address address)
+        public static dataModel.Address ToDataModel(this Domain.Commerce.Model.Address address)
         {
             if (address == null)
                 throw new ArgumentNullException("address");

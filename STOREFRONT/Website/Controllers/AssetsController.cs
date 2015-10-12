@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using DotLiquid;
 using LibSassNetProxy;
 using VirtoCommerce.Web.Models.Helpers;
+using VirtoCommerce.Web.Exceptions;
 
 namespace VirtoCommerce.Web.Controllers
 {
@@ -120,7 +121,17 @@ namespace VirtoCommerce.Web.Controllers
 
             var str = RenderPartialViewToString(this, id.Replace("scss.css", "scss"), Settings);
 
-            var compiledContent = _compiler.Compile(str);
+
+            string compiledContent = String.Empty;
+
+            try
+            {
+                compiledContent = _compiler.Compile(str);
+            }
+            catch(Exception ex)
+            {
+                throw new SaasCompileException(id, str, ex);
+            }
 
             var rootVirtual = String.Format("~/App_Data/Themes/{0}", Context.Theme.Path);
             var rootPath = Server.MapPath(rootVirtual);

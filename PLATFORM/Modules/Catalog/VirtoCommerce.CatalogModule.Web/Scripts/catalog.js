@@ -6,7 +6,6 @@ if (AppDependencies != undefined) {
 }
 
 angular.module(catalogsModuleName, [
-  'textAngular'
 ])
 .config(
   ['$stateProvider', function ($stateProvider) {
@@ -26,6 +25,7 @@ angular.module(catalogsModuleName, [
                           isClosingDisabled: true
                       };
                       bladeNavigationService.showBlade(blade);
+                      $scope.moduleName = 'vc-catalog';
                   }
               ]
           });
@@ -33,7 +33,8 @@ angular.module(catalogsModuleName, [
   ]
 )
 .run(
-  ['platformWebApp.authService', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', 'platformWebApp.pushNotificationTemplateResolver', 'platformWebApp.bladeNavigationService', 'virtoCommerce.catalogModule.catalogImportService', 'virtoCommerce.catalogModule.catalogExportService', function (authService, mainMenuService, widgetService, $state, pushNotificationTemplateResolver, bladeNavigationService, catalogImportService, catalogExportService) {
+  ['platformWebApp.authService', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', 'platformWebApp.pushNotificationTemplateResolver', 'platformWebApp.bladeNavigationService', 'virtoCommerce.catalogModule.catalogImportService', 'virtoCommerce.catalogModule.catalogExportService', 'platformWebApp.permissionScopeResolver', 'virtoCommerce.catalogModule.catalogs',
+	function (authService, mainMenuService, widgetService, $state, pushNotificationTemplateResolver, bladeNavigationService, catalogImportService, catalogExportService, scopeResolver, catalogs) {
       //Register module in main menu
       var menuItem = {
           path: 'browse/catalog',
@@ -41,10 +42,11 @@ angular.module(catalogsModuleName, [
           title: 'Catalog',
           priority: 20,
           action: function () { $state.go('workspace.catalog'); },
-          permission: 'catalog:query'
+          permission: 'catalog:access'
       };
       mainMenuService.addMenuItem(menuItem);
 
+	
       //NOTIFICATIONS
       //Export
       var menuExportTemplate =
@@ -105,12 +107,12 @@ angular.module(catalogsModuleName, [
 
       //Register dashboard widgets
       //widgetService.registerWidget({
-      //    isVisible: function () { return authService.checkPermission('catalog:query'); },
+      //    isVisible: function () { return authService.checkPermission('catalog:???'); },
       //    controller: 'virtoCommerce.catalogModule.dashboard.catalogsWidgetController',
       //    template: 'tile-count.html'
       //}, 'mainDashboard');
       //widgetService.registerWidget({
-      //    isVisible: function () { return authService.checkPermission('catalog:query'); },
+      //    isVisible: function () { return authService.checkPermission('catalog:???'); },
       //    controller: 'virtoCommerce.catalogModule.dashboard.productsWidgetController',
       //    template: 'tile-count.html'
       //}, 'mainDashboard');
@@ -119,34 +121,34 @@ angular.module(catalogsModuleName, [
       var itemImageWidget = {
           controller: 'virtoCommerce.catalogModule.itemImageWidgetController',
           size: [2, 2],
-          template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/itemImageWidget.tpl.html',
+	        template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/itemImageWidget.tpl.html'
       };
       widgetService.registerWidget(itemImageWidget, 'itemDetail');
       //Register item property widget
       var itemPropertyWidget = {
           controller: 'virtoCommerce.catalogModule.itemPropertyWidgetController',
-          template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/itemPropertyWidget.tpl.html',
+	        template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/itemPropertyWidget.tpl.html'
       };
       widgetService.registerWidget(itemPropertyWidget, 'itemDetail');
 
       //Register item associations widget
       var itemAssociationsWidget = {
           controller: 'virtoCommerce.catalogModule.itemAssociationsWidgetController',
-          template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/itemAssociationsWidget.tpl.html',
+	        template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/itemAssociationsWidget.tpl.html'
       };
       widgetService.registerWidget(itemAssociationsWidget, 'itemDetail');
 
       //Register item seo widget
       var itemSeoWidget = {
           controller: 'virtoCommerce.catalogModule.seoWidgetController',
-          template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/seoWidget.tpl.html',
+	        template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/seoWidget.tpl.html'
       };
       widgetService.registerWidget(itemSeoWidget, 'itemDetail');
 
       //Register item editorialReview widget
       var editorialReviewWidget = {
           controller: 'virtoCommerce.catalogModule.editorialReviewWidgetController',
-          template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/editorialReviewWidget.tpl.html',
+	        template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/editorialReviewWidget.tpl.html'
       };
       widgetService.registerWidget(editorialReviewWidget, 'itemDetail');
 
@@ -154,38 +156,37 @@ angular.module(catalogsModuleName, [
       var variationWidget = {
           controller: 'virtoCommerce.catalogModule.itemVariationWidgetController',
           isVisible: function (blade) { return blade.id !== 'variationDetail'; },
-          size: [2, 1],
-          template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/itemVariationWidget.tpl.html',
+          size: [1, 1],
+	        template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/itemVariationWidget.tpl.html'
       };
       widgetService.registerWidget(variationWidget, 'itemDetail');
       //Register asset widget
       var itemAssetWidget = {
           controller: 'virtoCommerce.catalogModule.itemAssetWidgetController',
-          template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/itemAssetWidget.tpl.html',
+	        template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/itemAssetWidget.tpl.html'
       };
       widgetService.registerWidget(itemAssetWidget, 'itemDetail');
 
-      //Register category property widget
+	    //Register widgets to categoryDetail
+	    widgetService.registerWidget(itemImageWidget, 'categoryDetail');
+
       var categoryPropertyWidget = {
           controller: 'virtoCommerce.catalogModule.categoryPropertyWidgetController',
-          template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/categoryPropertyWidget.tpl.html',
+	        template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/categoryPropertyWidget.tpl.html'
       };
       widgetService.registerWidget(categoryPropertyWidget, 'categoryDetail');
 
       //Register category seo widget
       var categorySeoWidget = {
           controller: 'virtoCommerce.catalogModule.seoWidgetController',
-          template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/seoWidget.tpl.html',
+	        template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/seoWidget.tpl.html'
       };
       widgetService.registerWidget(categorySeoWidget, 'categoryDetail');
-
-      widgetService.registerWidget(itemImageWidget, 'categoryDetail');
-
 
       //Register catalog widgets
       var catalogLanguagesWidget = {
           controller: 'virtoCommerce.catalogModule.catalogLanguagesWidgetController',
-          template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/catalogLanguagesWidget.tpl.html',
+	        template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/catalogLanguagesWidget.tpl.html'
       };
       widgetService.registerWidget(catalogLanguagesWidget, 'catalogDetail');
 
@@ -211,4 +212,77 @@ angular.module(catalogsModuleName, [
           controller: 'virtoCommerce.catalogModule.catalogCSVexportController',
           template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/export/catalog-CSV-export.tpl.html'
       });
+
+
+	  //Security scopes
+		//Register permission scopes templates used for scope bounded definition in role management ui
+
+      var catalogSelectScope = {
+      	type: 'CatalogSelectedScope',
+      	title: 'Only for selected catalogs',
+      	selectFn: function (blade, callback) {
+      		var newBlade = {
+      			id: 'catalog-pick',
+      			title: this.title,
+      			subtitle: 'Select catalogs',
+      			currentEntity: this,
+      			onChangesConfirmedFn: callback,
+      			dataPromise: catalogs.query().$promise,
+      			controller: 'platformWebApp.security.scopeValuePickFromSimpleListController',
+      			template: '$(Platform)/Scripts/app/security/blades/common/scope-value-pick-from-simple-list.tpl.html'
+      		};
+      		bladeNavigationService.showBlade(newBlade, blade);
+      	}
+      };
+      scopeResolver.register(catalogSelectScope);
+
+      var categorySelectScope = {
+      	type: 'CatalogSelectedCategoryScope',
+      	title: 'Only for selected categories',
+      	selectFn: function (blade, callback) {
+      		var selectedListItems = _.map(this.assignedScopes, function (x) { return { id: x.scope, name: x.label }; });
+      		var options = {
+      			showCheckingMultiple: false,
+      			allowCheckingItem: false,
+      			allowCheckingCategory: true,
+      			selectedItemIds: _.map(this.assignedScopes, function (x) { return x.scope; }),
+      			checkItemFn: function (listItem, isSelected) {
+      				if (isSelected) {
+      					if (_.all(selectedListItems, function (x) { return x.id != listItem.id; })) {
+      						selectedListItems.push(listItem);
+      					}
+      				}
+      				else {
+      					selectedListItems = _.reject(selectedListItems, function (x) { return x.id == listItem.id; });
+      				}
+      			}
+      		};
+      		var scopeOriginal = this.scopeOriginal;
+      		var newBlade = {
+      			id: "CatalogItemsSelect",
+      			title: "Select categories",
+      			controller: 'virtoCommerce.catalogModule.catalogItemSelectController',
+      			template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/common/catalog-items-select.tpl.html',
+      			options: options,
+      			breadcrumbs: [],
+      			toolbarCommands: [
+				  {
+				  	name: "Confirm", icon: 'fa fa-plus',
+				  	executeMethod: function (blade) {
+				  		var scopes = _.map(selectedListItems, function (x) {
+				  			return angular.extend({ scope: x.id, label: x.name }, scopeOriginal);
+				  		});
+				  		callback(scopes);
+				  		bladeNavigationService.closeBlade(blade);
+
+				  	},
+				  	canExecuteMethod: function () {
+				  		return selectedListItems.length > 0;
+				  	}
+				  }]
+      		};
+      		bladeNavigationService.showBlade(newBlade, blade);
+      	}
+      };
+      scopeResolver.register(categorySelectScope);
   }]);

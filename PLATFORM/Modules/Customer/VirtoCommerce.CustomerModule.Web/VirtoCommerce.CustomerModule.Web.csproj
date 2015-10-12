@@ -137,7 +137,7 @@
   <ItemGroup>
     <Compile Include="Binders\SearchCriteriaBinder.cs" />
     <Compile Include="Controllers\Api\CustomerModuleController.cs" />
-    <Compile Include="Controllers\PredefinedPermissions.cs" />
+    <Compile Include="Security\CustomerPredefinedPermissions.cs" />
     <Compile Include="Converters\AddressConverter.cs" />
     <Compile Include="Converters\ContactConverter.cs" />
     <Compile Include="Converters\NoteConverter.cs" />

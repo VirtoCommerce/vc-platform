@@ -15,6 +15,7 @@ namespace VirtoCommerce.Web.Controllers
     {
         private CustomerService _customerService;
         private SecurityService _securityService;
+        private QuotesService _quoteService;
         private CommerceService _service;
 
         #region Properties
@@ -31,6 +32,14 @@ namespace VirtoCommerce.Web.Controllers
             get
             {
                 return this._customerService ?? (this._customerService = new CustomerService());
+            }
+        }
+
+        protected QuotesService QuoteService
+        {
+            get
+            {
+                return _quoteService ?? (_quoteService = new QuotesService());
             }
         }
 
@@ -54,13 +63,15 @@ namespace VirtoCommerce.Web.Controllers
         #region Methods
         protected override ViewResult View(string viewName, string masterName, object model)
         {
-            this.Context.Template = viewName;
+            if(viewName != null)
+                this.Context.Template = viewName;
             return base.View(viewName, masterName, model ?? this.Context);
         }
 
         protected override PartialViewResult PartialView(string viewName, object model)
         {
-            this.Context.Template = viewName;
+            if (viewName != null)
+                this.Context.Template = viewName;
             return base.PartialView(viewName, model ?? this.Context);
         }
 

@@ -74,7 +74,7 @@
             currentEntityId: prop.id,
             catalogId: $scope.blade.currentEntity.id,
             title: 'Edit catalog property',
-            subtitle: 'enter property information',
+            subtitle: 'Enter property information',
             controller: 'virtoCommerce.catalogModule.propertyDetailController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/property-detail.tpl.html'
         };
@@ -102,7 +102,7 @@
 		    canExecuteMethod: function () {
 		        return isDirty() && formScope && formScope.$valid;
 		    },
-		    permission: 'catalog:catalogs:manage'
+		    permission: 'catalog:update'
 		},
         {
             name: "Reset", icon: 'fa fa-undo',
@@ -112,7 +112,7 @@
             canExecuteMethod: function () {
                 return isDirty();
             },
-            permission: 'catalog:catalogs:manage'
+            permission: 'catalog:update'
         },
 		  {
 		      name: "Add property", icon: 'fa fa-plus',
@@ -121,7 +121,7 @@
 		              id: 'editCatalogProperty',
 		              catalogId: $scope.blade.currentEntity.id,
 		              title: 'New catalog property',
-		              subtitle: 'enter property information',
+		              subtitle: 'Enter property information',
 		              controller: 'virtoCommerce.catalogModule.propertyDetailController',
 		              template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/property-detail.tpl.html'
 		          };
@@ -131,7 +131,7 @@
 		      canExecuteMethod: function () {
 		          return true;
 		      },
-		      permission: 'catalog:catalogs:manage'
+		      permission: 'catalog:update'
 		  }
     ];
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 
 namespace VirtoCommerce.Platform.Core.Common
 {
@@ -25,14 +26,18 @@ namespace VirtoCommerce.Platform.Core.Common
             var entity = obj as Entity;
             if (entity == null)
                 return false;
-
+ 
             if (Object.ReferenceEquals(this, obj))
                 return true;
+
+            if (GetRealObjectType(this) != GetRealObjectType(obj))
+                return false;
 
 			if (IsTransient())
 				return false;
 
-            return entity.Id == Id;
+           return entity.Id == Id;
+       
         }
 
         /// <summary>
@@ -66,5 +71,16 @@ namespace VirtoCommerce.Platform.Core.Common
         }
 
         #endregion
+
+        private Type GetRealObjectType(object obj)
+        {
+            var retVal = obj.GetType();
+            //because can be compared two object with same id and 'types' but one of it is EF dynamic proxy type)
+            if (retVal.BaseType != null && retVal.Namespace == "System.Data.Entity.DynamicProxies")
+            {
+                retVal = retVal.BaseType;
+            }
+            return retVal;
+        }
     }
 }

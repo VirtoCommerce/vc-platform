@@ -5,7 +5,7 @@ namespace VirtoCommerce.CatalogModule.Web.Model
     /// <summary>
     /// Category ListEntry record.
     /// </summary>
-    public class ListEntryCategory : ListEntryBase
+    public class ListEntryCategory : ListEntry
     {
         public static string TypeName = "category";
 

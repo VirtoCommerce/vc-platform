@@ -1,12 +1,12 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.propertyValueListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.settings', function ($scope, bladeNavigationService, dialogService, settings) {
+.controller('platformWebApp.propertyValueListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.settings', 'platformWebApp.dynamicProperties.dictionaryItemsApi', function ($scope, bladeNavigationService, dialogService, settings, dictionaryItemsApi) {
     var blade = $scope.blade;
     blade.headIcon = 'fa-plus-square-o';
     blade.title = "Properties values";
     blade.subtitle = "Edit properties values";
     $scope.languages = [];
 
-    $scope.blade.refresh = function () {
+    blade.refresh = function () {
         settings.getValues({ id: 'VirtoCommerce.Core.General.Languages' }, function (data) {
             $scope.languages = data;
         });
@@ -16,7 +16,7 @@
     };
 
     function isDirty() {
-        return !angular.equals(blade.currentEntity, blade.origEntity);
+        return !angular.equals(blade.currentEntity.dynamicProperties, blade.origEntity.dynamicProperties);
     }
 
     $scope.cancelChanges = function () {
@@ -37,7 +37,7 @@
     }
 
     $scope.editDictionary = function (property) {
-        var editDictionaryBlade = {
+        var newBlade = {
             id: "propertyDictionary",
             isApiSave: true,
             currentEntity: property,
@@ -47,7 +47,7 @@
                 blade.currentEntity.dynamicProperties = angular.copy(blade.currentEntity.dynamicProperties);
             }
         };
-        bladeNavigationService.showBlade(editDictionaryBlade, blade);
+        bladeNavigationService.showBlade(newBlade, blade);
     };
 
     blade.onClose = function (closeCallback) {
@@ -97,5 +97,9 @@
 		}
     ];
 
-    $scope.blade.refresh();
+    $scope.getDictionaryValues = function (property, callback) {
+        dictionaryItemsApi.query({ id: property.objectType, propertyId: property.id }, callback);
+    }
+
+    blade.refresh();
 }]);

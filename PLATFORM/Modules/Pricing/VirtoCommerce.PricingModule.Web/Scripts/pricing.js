@@ -23,6 +23,8 @@ angular.module(moduleName, [])
                           isClosingDisabled: true
                       };
                       bladeNavigationService.showBlade(blade);
+                  	  //Need for isolate and prevent conflict module css to naother modules 
+                      $scope.moduleName = "vc-pricing";
                   }
               ]
           });
@@ -37,13 +39,13 @@ angular.module(moduleName, [])
           title: 'Pricing',
           priority: 30,
           action: function () { $state.go('workspace.pricingModule'); },
-          permission: 'pricing:query'
+          permission: 'pricing:access'
       };
       mainMenuService.addMenuItem(menuItem);
 
       //Register item prices widget
       var itemPricesWidget = {
-          isVisible: function (blade) { return authService.checkPermission('pricing:query'); },
+          isVisible: function (blade) { return authService.checkPermission('pricing:read'); },
           controller: 'virtoCommerce.pricingModule.itemPricesWidgetController',
           size: [2, 1],
           template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/widgets/itemPricesWidget.tpl.html',

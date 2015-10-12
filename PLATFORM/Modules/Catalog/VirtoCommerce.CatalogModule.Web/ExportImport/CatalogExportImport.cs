@@ -71,13 +71,17 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 
 			progressInfo.Description = String.Format("{0} categories importing...", backupObject.Categories.Count());
 			progressCallback(progressInfo);
-			//Categories should be sorted right way (because it have a hierarchy structure and links to virtual categories)
-			backupObject.Categories = backupObject.Categories.Where(x => x.Links == null || !x.Links.Any())
-															.OrderBy(x => x.Parents != null ? x.Parents.Count() : 0)
-															.Concat(backupObject.Categories.Where(x => x.Links != null && x.Links.Any()))
-															.ToList();
-			backupObject.Products = backupObject.Products.OrderBy(x => x.MainProductId).ToList();
-			UpdateCategories(originalObject.Categories, backupObject.Categories);
+			//Categories should be sorted right way 
+            //first need to create virtual categories
+			var orderedCategories = backupObject.Categories.Where(x=>x.Catalog.Virtual)
+                                                             .OrderBy(x => x.Parents != null ? x.Parents.Count() : 0)
+															 .ToList();
+            //second need to create physical categories
+            orderedCategories.AddRange(backupObject.Categories.Where(x => !x.Catalog.Virtual)
+                                                             .OrderBy(x => x.Parents != null ? x.Parents.Count() : 0));
+
+            backupObject.Products = backupObject.Products.OrderBy(x => x.MainProductId).ToList();
+			UpdateCategories(originalObject.Categories, orderedCategories);
 			UpdateProperties(originalObject.Properties, backupObject.Properties);
 
 			//Binary data

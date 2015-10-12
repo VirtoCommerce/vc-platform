@@ -1,4 +1,5 @@
 ﻿using Octokit;
+using System.IO;
 using System.Text;
 using VirtoCommerce.Content.Data.Models;
 
@@ -27,6 +28,17 @@ namespace VirtoCommerce.Content.Data.Converters
 			return retVal;
 		}
 
-		#endregion
-	}
+        public static ContentItem ToContentItem(this TreeItem treeItem)
+        {
+            var retVal = new ContentItem
+                     {
+                         Name = Path.GetFileNameWithoutExtension(treeItem.Path),
+                         Path = treeItem.Path
+                     };
+
+            return retVal;
+        }
+
+        #endregion
+    }
 }

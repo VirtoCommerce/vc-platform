@@ -15,7 +15,8 @@ namespace VirtoCommerce.Domain.Order.Model
 		public ResponseGroup ResponseGroup { get; set; }
 		public string Keyword { get; set; }
 		public string CustomerId { get; set; }
-		public string StoreId { get; set; }
+        public string EmployeeId { get; set; }
+        public string[] StoreIds { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
 

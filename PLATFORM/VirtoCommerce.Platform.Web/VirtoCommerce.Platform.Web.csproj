@@ -290,6 +290,7 @@
     <Compile Include="Model\ExportImport\PushNotifications\SampleDataImportPushNotification.cs" />
     <Compile Include="Model\ExportImport\SampleDataInfo.cs" />
     <Compile Include="Model\Notifications\RenderNotificationContentResult.cs" />
+    <Compile Include="Model\Notifications\RenderNotificationRequest.cs" />
     <Compile Include="Model\Packaging\ModuleAction.cs" />
     <Compile Include="Model\Packaging\ModuleBackgroundJobOptions.cs" />
     <Compile Include="Model\Packaging\ModulePushNotification.cs" />
@@ -349,9 +350,15 @@
       <Link>CustomDictionary.xml</Link>
     </CodeAnalysisDictionary>
     <Content Include="Content\angular-gridster.css" />
+    <Content Include="Content\themes\main\css\font-awesome.css" />
     <Content Include="gulpfile.js" />
     <Content Include="Scripts\allPackages.js" />
-    <Content Include="Scripts\allStyles.css" />
+    <Content Include="Content\allStyles.css" />
+    <Content Include="Scripts\app\assets\resources\assets.js" />
+    <Content Include="Scripts\app\changeLog\blades\operation-list.js" />
+    <Content Include="Scripts\app\changeLog\blades\operation-list.tpl.html" />
+    <Content Include="Scripts\app\changeLog\widgets\operations-widget.js" />
+    <Content Include="Scripts\app\changeLog\widgets\operations-widget.tpl.html" />
     <Content Include="Scripts\app\dynamicProperties\blades\dynamicProperty-detail.js" />
     <Content Include="Scripts\app\dynamicProperties\blades\dynamicProperty-detail.tpl.html" />
     <Content Include="Scripts\app\dynamicProperties\blades\dynamicObject-list.js" />
@@ -364,8 +371,16 @@
     <Content Include="Scripts\app\dynamicProperties\blades\property-dictionary.tpl.html" />
     <Content Include="Scripts\app\dynamicProperties\blades\property-valueType.js" />
     <Content Include="Scripts\app\dynamicProperties\blades\property-valueType.tpl.html" />
-    <Content Include="Scripts\app\dynamicProperties\directives\dynamicProperty.js" />
-    <Content Include="Scripts\app\dynamicProperties\directives\dynamicProperty.tpl.html" />
+    <Content Include="Scripts\app\security\blades\common\scope-value-pick-from-simple-list.js" />
+    <Content Include="Scripts\app\security\blades\common\scope-value-pick-from-simple-list.tpl.html" />
+    <Content Include="Scripts\app\security\blades\permission-scopes.js" />
+    <Content Include="Scripts\app\security\blades\permission-scopes.tpl.html" />
+    <Content Include="Scripts\app\security\services\permissionScopeResolver.js" />
+    <Content Include="Scripts\codemirror\gfm.js" />
+    <Content Include="Scripts\codemirror\markdown.js" />
+    <Content Include="Scripts\codemirror\overlay.js" />
+    <Content Include="Scripts\common\directives\genericValueInput.js" />
+    <Content Include="Scripts\common\directives\genericValueInput.tpl.html" />
     <Content Include="Scripts\app\dynamicProperties\dynamicProperties.js" />
     <Content Include="Scripts\app\dynamicProperties\resources\dynamicPropertiesApi.js" />
     <Content Include="Scripts\app\dynamicProperties\widgets\dynamicPropertyWidget.js" />
@@ -409,14 +424,16 @@
     <Content Include="Scripts\app\packaging\blades\modules-list.tpl.html" />
     <Content Include="Scripts\app\packaging\notifications\history.tpl.html" />
     <Content Include="Scripts\app\packaging\notifications\menu.tpl.html" />
+    <Content Include="Scripts\app\security\directives\permission.js" />
+    <Content Include="Scripts\app\security\services\auth.js" />
     <Content Include="Scripts\app\settings\blades\entitySetting-list.js" />
     <Content Include="Scripts\app\settings\blades\entitySetting-list.tpl.html" />
-    <Content Include="Scripts\app\settings\widgets\entitySettingsWidget.js" />
-    <Content Include="Scripts\app\settings\widgets\entitySettingsWidget.tpl.html" />
     <Content Include="Scripts\app\security\blades\account-api-list.js" />
     <Content Include="Scripts\app\security\blades\account-api-list.tpl.html" />
     <Content Include="Scripts\app\security\blades\account-resetPassword.tpl.html" />
     <Content Include="Scripts\app\security\blades\account-resetPassword.js" />
+    <Content Include="Scripts\common\directives\smartFloat.js" />
+    <Content Include="Scripts\common\directives\vaTabs.js" />
     <Content Include="Scripts\common\templates\ok.tpl.html" />
     <Content Include="Scripts\common\templates\home.tpl.html" />
     <Content Include="Scripts\app\packaging\packaging.js" />
@@ -434,7 +451,6 @@
     <Content Include="Scripts\app\settings\settings.js" />
     <Content Include="Scripts\codemirror\addon\mode\overlay.js" />
     <Content Include="Scripts\codemirror\codemirror.css" />
-    <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\select.css" />
     <Content Include="Content\select2.css" />
     <Content Include="Content\Selectize\css\selectize.bootstrap2.css" />
@@ -469,10 +485,6 @@
     <Content Include="Scripts\codemirror\liquid.js" />
     <Content Include="Scripts\common\templates\create.tpl.html" />
     <Content Include="Scripts\common\directives\angular-money-directive.js" />
-    <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="Scripts\app\dashboard\mainTilesList.js" />
     <Content Include="Scripts\app\workspace.tpl.html" />
     <Content Include="Scripts\common\confirmDialog\notifyDialog.tpl.html" />
     <Content Include="Scripts\common\directives\autofill.js" />
@@ -506,7 +518,6 @@
     <Content Include="Scripts\common\objCompare.js" />
     <Content Include="Scripts\common\templates\ok-cancel.tpl.html" />
     <Content Include="Scripts\common\templates\ok-cancel2.tpl.html" />
-    <Content Include="Scripts\app\security\auth\auth.js" />
     <Content Include="Scripts\app\security\blades\account-changePassword.js" />
     <Content Include="Scripts\app\security\blades\account-changePassword.tpl.html" />
     <Content Include="Scripts\app\security\blades\account-api.tpl.html" />
@@ -597,6 +608,7 @@
     <Folder Include="Views\Notifications\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\themes\main\fonts\fontawesome-webfont.woff2" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>

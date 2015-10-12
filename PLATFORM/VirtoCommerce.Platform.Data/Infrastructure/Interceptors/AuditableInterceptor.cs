@@ -16,18 +16,19 @@ namespace VirtoCommerce.Platform.Data.Infrastructure.Interceptors
 			base.OnBeforeInsert(entry, item);
 
 			var currentTime = DateTime.UtcNow;
-
-			item.CreatedDate =  currentTime;
-			item.ModifiedDate = currentTime;
-			item.CreatedBy = item.ModifiedBy = CurrentPrincipal.GetCurrentUserName();
-		}
+            var currentUser = CurrentPrincipal.GetCurrentUserName(); 
+            item.CreatedDate = item.CreatedDate == default(DateTime) ? currentTime : item.CreatedDate;
+            item.ModifiedDate = item.ModifiedDate ?? currentTime;
+            item.CreatedBy = item.CreatedBy ?? currentUser;
+            item.ModifiedBy = item.ModifiedBy ?? currentUser;
+        }
 
 		public override void OnBeforeUpdate(DbEntityEntry entry, IAuditable item)
 		{
 			base.OnBeforeUpdate(entry, item);
 			var currentTime = DateTime.UtcNow;
 			item.ModifiedDate = currentTime;
-			item.CreatedBy = CurrentPrincipal.GetCurrentUserName();
+			item.ModifiedBy = CurrentPrincipal.GetCurrentUserName();
 		}
 
 		public override void OnAfterInsert(DbEntityEntry entry, IAuditable item)

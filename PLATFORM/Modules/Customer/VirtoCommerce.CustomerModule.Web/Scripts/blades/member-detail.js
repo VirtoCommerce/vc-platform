@@ -56,7 +56,7 @@
                                        canExecuteMethod: function () {
                                            return true;
                                        },
-                                       permission: 'platform:security:manage'
+                                       permission: 'platform:security:update'
                                    },
                                    {
                                        name: "Change password",
@@ -75,7 +75,7 @@
                                        canExecuteMethod: function () {
                                            return true;
                                        },
-                                       permission: 'platform:security:manage'
+                                       permission: 'platform:security:update'
                                    });
                             }
 
@@ -208,7 +208,7 @@
             canExecuteMethod: function () {
                 return isDirty() && $scope.formScope && $scope.formScope.$valid;
             },
-            permission: 'customer:manage'
+            permission: 'customer:update'
         },
         {
             name: "Reset",
@@ -222,7 +222,7 @@
             canExecuteMethod: function () {
                 return isDirty();
             },
-            permission: 'customer:manage'
+            permission: 'customer:update'
         }
     ];
 
@@ -230,15 +230,6 @@
     $scope.datepickers = {
         bd: false
     }
-
-    $scope.showWeeks = true;
-    $scope.toggleWeeks = function () {
-        $scope.showWeeks = !$scope.showWeeks;
-    };
-
-    $scope.clear = function () {
-        blade.currentEntity.birthDate = null;
-    };
     $scope.today = new Date();
 
     $scope.open = function ($event, which) {

@@ -698,6 +698,102 @@ namespace VirtoCommerce.Web.Controllers
             return View("error");
         }
 
+        [HttpGet]
+        public async Task<ActionResult> Quotes(int? p)
+        {
+            var searchCriteria = new QuoteRequestSearchCriteria
+            {
+                CustomerId = Context.CustomerId,
+                Skip = ((p ?? 1) - 1) * 20,
+                StoreId = Context.StoreId,
+                Tag = null,
+                Take = 20
+            };
+
+            Context.Customer.Quotes = await QuoteService.SearchAsync(searchCriteria);
+
+            return View("customers/quotes");
+        }
+
+        [HttpGet]
+        [Route("quote/{number}")]
+        public async Task<ActionResult> Quote(string number)
+        {
+            Context.QuoteRequest = await QuoteService.GetByNumberAsync(Context.StoreId, Context.CustomerId, number);
+
+            return View("customers/quote");
+        }
+
+        [HttpGet]
+        [Route("quote/edit/{number}")]
+        public async Task<ActionResult> EditQuote(string number)
+        {
+            var quoteRequest = await QuoteService.GetByNumberAsync(Context.StoreId, Context.CustomerId, number);
+
+            Context.ActualQuoteRequest = quoteRequest;
+            Context.ActualQuoteRequest.Tag = "actual";
+
+            await QuoteService.UpdateQuoteRequestAsync(Context.ActualQuoteRequest);
+
+            return RedirectToAction("Index", "Quote");
+        }
+
+        [HttpGet]
+        [Route("quote/reject/{number}")]
+        public async Task<ActionResult> RejectQuote(string number)
+        {
+            var quoteRequest = await QuoteService.GetByNumberAsync(Context.StoreId, Context.CustomerId, number);
+            quoteRequest.Status = "Rejected";
+
+            await QuoteService.UpdateQuoteRequestAsync(quoteRequest);
+
+            return RedirectToAction("Quotes");
+        }
+
+        [HttpPost]
+        [Route("quote/checkout")]
+        public async Task<ActionResult> ConfirmQuote(QuoteRequest model)
+        {
+            Context.QuoteRequest = await QuoteService.GetByNumberAsync(Context.StoreId, Context.CustomerId, model.Number);
+
+            foreach (var modelQuoteItem in model.Items)
+            {
+                var quoteItem = Context.QuoteRequest.Items.FirstOrDefault(i => i.Id == modelQuoteItem.Id);
+                quoteItem.SelectedTierPrice = modelQuoteItem.SelectedTierPrice;
+            }
+
+            var newQuoteRequest = await QuoteService.RecalculateAsync(Context.QuoteRequest);
+            Context.QuoteRequest = newQuoteRequest;
+
+            Context.Cart.Items.Clear();
+
+            foreach (var quoteItem in Context.QuoteRequest.Items)
+            {
+                var lineItemModel = quoteItem.AsLineItemModel();
+                Context.Cart.Items.Add(lineItemModel);
+            }
+
+            Context.QuoteRequest.Status = "Accepted";
+            await QuoteService.UpdateQuoteRequestAsync(Context.QuoteRequest);
+
+            if (Context.Cart.IsTransient)
+            {
+                await Service.CreateCartAsync(Context.Cart);
+            }
+            else
+            {
+                await Service.SaveChangesAsync(Context.Cart);
+            }
+
+            var checkout = await Service.GetCheckoutAsync();
+            checkout.BillingAddress = newQuoteRequest.BillingAddress;
+            checkout.ShippingAddress = newQuoteRequest.ShippingAddress;
+
+            await Service.UpdateCheckoutAsync(checkout);
+
+            return Json(new { redirectUrl = VirtualPathUtility.ToAbsolute("~/checkout") });
+        }
+
         internal class ChallengeResult : HttpUnauthorizedResult
         {
             public string LoginProvider { get; set; }

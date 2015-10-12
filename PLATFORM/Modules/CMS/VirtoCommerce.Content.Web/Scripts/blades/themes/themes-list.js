@@ -15,8 +15,12 @@
 		    }
 			themesStores.get({ id: blade.storeId }, function (data) {
 				blade.store = data;
-				if (_.find(blade.store.settings, function (setting) { return setting.name === 'DefaultThemeName'; }) !== undefined) {
-					blade.defaultThemeName = _.find(blade.store.settings, function (setting) { return setting.name === 'DefaultThemeName'; }).value;
+				if (_.find(blade.store.dynamicProperties, function (property) { return property.name === 'DefaultThemeName'; }) !== undefined) {
+				    var defaultThemeNameProperty = _.find(blade.store.dynamicProperties, function (property) { return property.name === 'DefaultThemeName'; });
+
+				    if (defaultThemeNameProperty !== undefined && defaultThemeNameProperty.values !== undefined && defaultThemeNameProperty.values.length > 0) {
+				        blade.defaultThemeName = defaultThemeNameProperty.values[0].value;
+				    }
 				}
 				blade.isLoading = false;
 			},
@@ -43,7 +47,8 @@
         	},
         	canExecuteMethod: function () {
         		return true;
-        	}
+        	},
+        	permission: 'content:create'
         },
 		{
 			name: "Set Active", icon: 'fa fa-pencil-square-o',
@@ -52,7 +57,8 @@
 			},
 			canExecuteMethod: function () {
 				return !angular.isUndefined(blade.choosenTheme) && !blade.isThemeDefault(blade.choosenTheme);
-			}
+			},
+			permission: 'content:update'
 		},
 		{
 			name: "Delete theme", icon: 'fa fa-trash-o',
@@ -61,7 +67,8 @@
 			},
 			canExecuteMethod: function () {
 				return !angular.isUndefined(blade.choosenTheme);
-			}
+			},
+			permission: 'content:delete'
 		},
 		{
 			name: "Preview theme", icon: 'fa fa-eye',
@@ -79,7 +86,8 @@
 			},
 			canExecuteMethod: function () {
 				return !angular.isUndefined(blade.choosenTheme);
-			}
+			},
+			permission: 'content:update'
 		}
 	];
 
@@ -93,7 +101,7 @@
 					blade.isLoading = true;
 					themes.deleteTheme({ storeId: blade.storeId, themeId: blade.choosenTheme.name }, function (data) {
 						blade.initialize();
-						blade.parentBlade.refresh(blade.storeId, 'themes');
+						blade.parentBlade.refresh(blade.storeId, 'defaultTheme');
 						blade.closeChildrenBlades();
 					},
                     function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
@@ -102,10 +110,10 @@
 		}
 
 		if (blade.currentEntities.length > 1) {
-			dialog.message = "Are you sure want to delete " + blade.choosenTheme.name + "?";
+			dialog.message = "Are you sure you want to delete " + blade.choosenTheme.name + "?";
 		}
 		else {
-			dialog.message = "This theme is last. If you delete theme you can broke your storefront. Are you sure want to delete " + blade.choosenTheme.name + "?";
+			dialog.message = "This theme is the last one. If you delete it, you could break your storefront. Are you sure you want to delete " + blade.choosenTheme.name + "?";
 		}
 
 		dialogService.showConfirmationDialog(dialog);
@@ -113,20 +121,18 @@
 
 	blade.setThemeAsActive = function () {
 		blade.isLoading = true;
-		if (_.where(blade.store.settings, { name: "DefaultThemeName" }).length > 0) {
-			angular.forEach(blade.store.settings, function (value, key) {
+		if (_.where(blade.store.dynamicProperties, { name: "DefaultThemeName" }).length > 0) {
+		    angular.forEach(blade.store.dynamicProperties, function (value, key) {
 				if (value.name === "DefaultThemeName") {
-					value.value = blade.choosenTheme.name;
+				    value.values[0] = { value: blade.choosenTheme.name };
 				}
 			});
-		}
-		else {
-			blade.store.settings.push({ name: "DefaultThemeName", value: blade.choosenTheme.name, valueType: "ShortText" })
 		}
 
 		themesStores.update({ storeId: blade.storeId }, blade.store, function (data) {
 			blade.initialize();
-			blade.parentBlade.refresh(blade.storeId, 'themes');
+			blade.parentBlade.refresh(blade.storeId, 'defaultTheme');
+
 		},
         function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 	}
@@ -162,7 +168,7 @@
 			title: 'Edit ' + blade.choosenTheme.path,
 			subtitle: 'Theme asset list',
 			controller: 'virtoCommerce.contentModule.themeAssetListController',
-			template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/theme-asset-list.tpl.html'
+			template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/theme-asset-list.tpl.html',
 		};
 		bladeNavigationService.showBlade(newBlade, blade);
 	}
@@ -215,7 +221,7 @@
 			title: 'New theme asset',
 			subtitle: 'Create new theme',
 			controller: 'virtoCommerce.contentModule.addThemeController',
-			template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/add-theme.tpl.html'
+			template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/add-theme.tpl.html',
 		};
 		bladeNavigationService.showBlade(newBlade, $scope.blade);
 	}

@@ -1,30 +1,18 @@
 ﻿using System;
 using System.Linq;
-using AvaTax.TaxModule.Web.Converters;
-using AvaTax.TaxModule.Web.Logging;
-using AvaTax.TaxModule.Web.Services;
-using AvaTaxCalcREST;
-using Common.Logging;
 using VirtoCommerce.Domain.Cart.Events;
-using VirtoCommerce.Domain.Customer.Model;
-using VirtoCommerce.Domain.Customer.Services;
 using VirtoCommerce.Platform.Core.Common;
-using domainModel = VirtoCommerce.Domain.Commerce.Model;
-using Microsoft.Practices.ObjectBuilder2;
+using VirtoCommerce.Domain.Store.Services;
 
 namespace AvaTax.TaxModule.Web.Observers
 {
     public class CalculateCartTaxesObserver : IObserver<CartChangeEvent>
 	{
-        private readonly ITaxSettings _taxSettings;
-        private readonly IContactService _customerSearchService;
-        private readonly AvalaraLogger _logger;
+        private readonly IStoreService _storeService;
 
-        public CalculateCartTaxesObserver(ITaxSettings taxSettings, IContactService customerSearchService, ILog log)
+        public CalculateCartTaxesObserver(IStoreService storeService)
         {
-            _taxSettings = taxSettings;
-            _customerSearchService = customerSearchService;
-            _logger = new AvalaraLogger(log);
+            _storeService = storeService;
         }
 
 		#region IObserver<ShoppingCart> Members
@@ -47,105 +35,13 @@ namespace AvaTax.TaxModule.Web.Observers
 
 		private void CalculateCustomerOrderTaxes(CartChangeEvent context)
 		{
-            LogInvoker<AvalaraLogger.TaxRequestContext>.Execute(log =>
-                {
-		            if (_taxSettings.IsEnabled && !string.IsNullOrEmpty(_taxSettings.Username) && !string.IsNullOrEmpty(_taxSettings.Password)
-                        && !string.IsNullOrEmpty(_taxSettings.ServiceUrl)
-                        && !string.IsNullOrEmpty(_taxSettings.CompanyCode))
-		            {
-                        var cart = context.ModifiedCart;
-		                Contact contact = null;
-                        if (cart.CustomerId != null)
-		                    contact = _customerSearchService.GetById(cart.CustomerId);
-
-                        var request = cart.ToAvaTaxRequest(_taxSettings.CompanyCode, contact);
-                        if (request != null)
-                        {
-                            log.docCode = request.DocCode;
-                            log.customerCode = request.CustomerCode;
-                            log.docType = request.DocType.ToString();
-                            log.amount = (double)cart.Total;
-                    
-                            var taxSvc = new JsonTaxSvc(_taxSettings.Username, _taxSettings.Password, _taxSettings.ServiceUrl);
-                            var getTaxResult = taxSvc.GetTax(request);
-
-                            if (!getTaxResult.ResultCode.Equals(SeverityLevel.Success))
-                            {
-                                //if tax calculation failed create exception with provided error info
-                                var error = string.Join(Environment.NewLine,
-                                    getTaxResult.Messages.Select(m => m.Summary));
-                                throw new Exception(error);
-                            }
-
-                                //reset all cart items taxes
-                                if (cart.Items.Any())
-                                {
-                                    cart.Items.ForEach(x =>
-                                    {
-                                        x.TaxTotal = 0;
-                                        x.TaxDetails = null;
-                                    });
-                                }
-
-                                //reset all cart shipments taxes
-                                if (cart.Shipments.Any())
-                                {
-                                    cart.Shipments.ForEach(x =>
-                                    {
-                                        x.TaxTotal = 0;
-                                        x.TaxDetails = null;
-                                    });
-                                }
-
-                                foreach (var taxLine in getTaxResult.TaxLines ?? Enumerable.Empty<TaxLine>())
-                                {
-                                    var lineItem = cart.Items.FirstOrDefault(x => x.Id == taxLine.LineNo);
-                                    if (lineItem != null)
-                                    {
-                                        lineItem.TaxTotal = taxLine.Tax;
-                                        if (taxLine.TaxDetails != null && taxLine.TaxDetails.Any(td => !string.IsNullOrEmpty(td.TaxName)))
-                                        {
-                                            lineItem.TaxDetails =
-                                                taxLine.TaxDetails.Where(td => !string.IsNullOrEmpty(td.TaxName)).Select(taxDetail => new domainModel.TaxDetail
-                                                {
-                                                    Amount = taxDetail.Tax,
-                                                    Name = taxDetail.TaxName,
-                                                    Rate = taxDetail.Rate
-                                                }).ToList();
-                                        }
-                                    }
-                                    else
-                                    {
-                                        var shipment = cart.Shipments.FirstOrDefault(s => s.Id != null ? s.Id.Equals(taxLine.LineNo) : s.ShipmentMethodCode.Equals(taxLine.LineNo));
-                                        if (shipment != null)
-                                        {
-                                            shipment.TaxTotal = taxLine.Tax;
-                                            if (taxLine.TaxDetails != null && taxLine.TaxDetails.Any(td => !string.IsNullOrEmpty(td.TaxName)))
-                                            {
-                                                shipment.TaxDetails =
-                                                    taxLine.TaxDetails.Where(td => !string.IsNullOrEmpty(td.TaxName)).Select(taxDetail => new domainModel.TaxDetail
-                                                    {
-                                                        Amount = taxDetail.Tax,
-                                                        Name = taxDetail.TaxName,
-                                                        Rate = taxDetail.Rate
-                                                    }).ToList();
-                                            }
-                                        }
-                                    }
-                                }
-                        }
-                        else
-                        {
-                            throw new Exception("Failed to create get tax request");
-                        }
-                    }
-                    else
-                    {
-                        throw new Exception("Tax calculation disabled or credentials not provided");
-                    }
-                })
-                .OnError(_logger, AvalaraLogger.EventCodes.TaxCalculationError)
-                .OnSuccess(_logger, AvalaraLogger.EventCodes.GetTaxRequestTime);
+            var cart = context.ModifiedCart;
+            var store = _storeService.GetById(cart.StoreId);
+            var taxProvider = store.TaxProviders.FirstOrDefault(x => x.Code == typeof(AvaTaxRateProvider).Name);
+            if (taxProvider != null && taxProvider is AvaTaxRateProvider && taxProvider.IsActive)
+            {                
+                (taxProvider as AvaTaxRateProvider).CalculateCartTax(cart);
+            }            
 		}
     }
 }

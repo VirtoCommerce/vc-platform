@@ -7,7 +7,7 @@
             currentEntityId: $scope.blade.currentEntityId,
             title: $scope.blade.title,
             currentResource: ($scope.blade.currentEntity && angular.isDefined($scope.blade.currentEntity.virtual)) ? categories : items,
-            permission: ($scope.blade.currentEntity && angular.isDefined($scope.blade.currentEntity.virtual)) ? 'catalog:categories:manage' : 'catalog:items:manage',
+            permission: 'catalog:update',
             subtitle: 'Manage images',
             controller: 'virtoCommerce.catalogModule.imagesController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/images.tpl.html'

@@ -8,6 +8,7 @@ using System.Web;
 using DotLiquid;
 using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Models.Cms;
+using VirtoCommerce.Web.Models.Lists;
 
 #endregion
 
@@ -203,12 +204,12 @@ namespace VirtoCommerce.Web
             }
         }
 
-        public dynamic Linklists
+        public LinkLists Linklists
         {
             get
             {
                 object retValue;
-                return this._storage.TryGetValue("Linklists", out retValue) ? retValue : null;
+                return this._storage.TryGetValue("Linklists", out retValue) ? retValue as LinkLists : null;
             }
             set
             {
@@ -317,6 +318,32 @@ namespace VirtoCommerce.Web
             set
             {
                 this.Set("shop", value);
+            }
+        }
+
+        public QuoteRequest ActualQuoteRequest
+        {
+            get
+            {
+                object retValue;
+                return _storage.TryGetValue("actual_quote_request", out retValue) ? retValue as QuoteRequest : null;
+            }
+            set
+            {
+                Set("actual_quote_request", value);
+            }
+        }
+
+        public QuoteRequest QuoteRequest
+        {
+            get
+            {
+                object retValue;
+                return _storage.TryGetValue("quote_request", out retValue) ? retValue as QuoteRequest : null;
+            }
+            set
+            {
+                Set("quote_request", value);
             }
         }
 

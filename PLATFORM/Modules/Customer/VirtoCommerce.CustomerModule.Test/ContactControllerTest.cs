@@ -6,12 +6,11 @@ using VirtoCommerce.CustomerModule.Data.Repositories;
 using VirtoCommerce.CustomerModule.Data.Services;
 using VirtoCommerce.CustomerModule.Web.Controllers.Api;
 using VirtoCommerce.CustomerModule.Web.Model;
-using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Data.DynamicProperties;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Platform.Data.Repositories;
-using coreModel = VirtoCommerce.Domain.Customer.Model;
 using webModel = VirtoCommerce.CustomerModule.Web.Model;
+using VirtoCommerce.Domain.Commerce.Model;
 
 namespace VirtoCommerce.CustomerModule.Test
 {
@@ -71,7 +70,7 @@ namespace VirtoCommerce.CustomerModule.Test
 				{
 					new webModel.Address {	
 					Name = "some name",	 
-					AddressType = coreModel.AddressType.Shipping, 
+					AddressType = AddressType.Shipping, 
 					City = "london",
 					Phone = "+68787687",
 					PostalCode = "22222",

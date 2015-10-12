@@ -1,6 +1,7 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.accountDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.accounts', 'platformWebApp.roles', 'platformWebApp.dialogService', function ($scope, bladeNavigationService, accounts, roles, dialogService) {
+.controller('platformWebApp.accountDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.accounts', 'platformWebApp.roles', 'platformWebApp.dialogService', 'platformWebApp.settings', function ($scope, bladeNavigationService, accounts, roles, dialogService, settings) {
     $scope.blade.promise = roles.get({ count: 10000 }).$promise;
+    $scope.accountTypes = [];
 
     $scope.blade.refresh = function (parentRefresh) {
         accounts.get({ id: $scope.blade.data.userName }, function (data) {
@@ -16,12 +17,27 @@
         $scope.blade.currentEntity = angular.copy(data);
         $scope.blade.origEntity = data;
         $scope.blade.isLoading = false;
-
+        $scope.accountTypes = settings.getValues({ id: 'VirtoCommerce.Platform.Security.AccountTypes' });
         userStateCommand.updateName();
     };
 
     function isDirty() {
         return !angular.equals($scope.blade.currentEntity, $scope.blade.origEntity);
+    };
+
+    $scope.openAccountTypeSettingManagement = function () {
+    	var newBlade = {
+    		id: 'accountTypesDictionary',
+    		isApiSave: true,
+    		currentEntityId: 'VirtoCommerce.Platform.Security.AccountTypes',
+    		// parentWidget: $scope.widget,
+    		title: 'Account types',
+    		parentRefresh: function (data) { $scope.accountTypes = data; },
+    		controller: 'platformWebApp.settingDictionaryController',
+    		template: '$(Platform)/Scripts/app/settings/blades/setting-dictionary.tpl.html'
+    	};
+    	bladeNavigationService.showBlade(newBlade, $scope.blade);
+   
     };
 
     $scope.saveChanges = function () {
@@ -80,7 +96,7 @@
         canExecuteMethod: function () {
             return true;
         },
-        permission: 'platform:security:manage'
+        permission: 'platform:security:update'
     };
 
     $scope.blade.toolbarCommands = [
@@ -93,7 +109,7 @@
             canExecuteMethod: function () {
                 return isDirty();
             },
-            permission: 'platform:security:manage'
+            permission: 'platform:security:update'
         },
         {
             name: "Reset",
@@ -105,7 +121,7 @@
             canExecuteMethod: function () {
                 return isDirty();
             },
-            permission: 'platform:security:manage'
+            permission: 'platform:security:update'
         },
         userStateCommand,
         {
@@ -125,7 +141,7 @@
             canExecuteMethod: function () {
                 return true;
             },
-            permission: 'platform:security:manage'
+            permission: 'platform:security:update'
         }
     ];
 

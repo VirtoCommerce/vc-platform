@@ -67,7 +67,6 @@ namespace VirtoCommerce.Platform.Data.Notifications
 
 		private void ResolveTemplate(Core.Notifications.Notification notification)
 		{
-			GetNewNotification(notification.GetType().Name, notification.ObjectId, notification.ObjectTypeId, notification.Language);
 			_resolver.ResolveTemplate(notification);
 		}
 

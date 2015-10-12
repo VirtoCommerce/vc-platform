@@ -3,17 +3,21 @@ using System.Data.Entity;
 using System.Linq;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Infrastructure;
+using VirtoCommerce.Platform.Data.Model;
 using VirtoCommerce.Platform.Data.Repositories;
+using VirtoCommerce.Platform.Data.Security.Converters;
 
 namespace VirtoCommerce.Platform.Data.Security
 {
     public class RoleManagementService : ServiceBase, IRoleManagementService
     {
         private readonly Func<IPlatformRepository> _platformRepository;
+        private readonly IPermissionScopeService _permissionScopeService;
 
-        public RoleManagementService(Func<IPlatformRepository> platformRepository)
+        public RoleManagementService(Func<IPlatformRepository> platformRepository, IPermissionScopeService permissionScopeService)
         {
             _platformRepository = platformRepository;
+            _permissionScopeService = permissionScopeService;
         }
 
         #region IRoleManagementService Members
@@ -39,9 +43,11 @@ namespace VirtoCommerce.Platform.Data.Security
                     .Skip(request.SkipCount)
                     .Take(request.TakeCount)
                     .Include(r => r.RolePermissions.Select(rp => rp.Permission))
+                    .Include(r => r.RolePermissions.Select(rp => rp.Scopes))
                     .ToArray();
 
-                result.Roles = roles.Select(r => r.ToCoreModel()).ToArray();
+                var roleAllPermissionScopes =
+                result.Roles = roles.Select(r => r.ToCoreModel(_permissionScopeService)).ToArray();
             }
 
             return result;
@@ -53,13 +59,18 @@ namespace VirtoCommerce.Platform.Data.Security
 
             using (var repository = _platformRepository())
             {
-                var role = repository.Roles
-                    .Include(r => r.RolePermissions.Select(rp => rp.Permission))
-                    .FirstOrDefault(r => r.Id == roleId);
+                var role = repository.GetRoleById(roleId);
 
                 if (role != null)
                 {
-                    result = role.ToCoreModel();
+                    result = role.ToCoreModel(_permissionScopeService);
+                    if (result.Permissions != null)
+                    {
+                        foreach (var permission in result.Permissions)
+                        {
+                            permission.AvailableScopes = _permissionScopeService.GetAvailablePermissionScopes(permission.Id).ToList();
+                        }
+                    }
                 }
             }
 
@@ -92,11 +103,23 @@ namespace VirtoCommerce.Platform.Data.Security
             using (var repository = _platformRepository())
 			using(var changeTracker = GetChangeTracker(repository))
             {
-				AddOrUpdatePermissions(repository, role.Permissions);
+			    var targetEntry = repository.GetRoleById(role.Id);
 
-                var targetEntry = repository.Roles.Include(r => r.RolePermissions)
-											.FirstOrDefault(r => r.Id == role.Id);
-				if (targetEntry == null)
+                //Create not exist permissions
+                if(role.Permissions != null)
+                {
+                    var permissionIds = role.Permissions.Select(x => x.Id).ToArray();
+                    var alreadyExistPermissionIds = repository.Permissions.Where(x => permissionIds.Contains(x.Id))
+                                                            .Select(x => x.Id)
+                                                            .ToArray();
+                    var notExistPermissionIds = permissionIds.Except(alreadyExistPermissionIds).ToArray();
+                    foreach(var notExistPermissionId in notExistPermissionIds)
+                    {
+                        var permission = role.Permissions.First(x => x.Id == notExistPermissionId).ToDataModel();
+                        repository.Add(permission);
+                    }
+                }
+                if (targetEntry == null)
 				{
 					repository.Add(sourceEntry);
 				}
@@ -105,8 +128,6 @@ namespace VirtoCommerce.Platform.Data.Security
 					changeTracker.Attach(targetEntry);
 					sourceEntry.Patch(targetEntry);
 				}
-                
-
                 CommitChanges(repository);
             }
 
@@ -115,29 +136,7 @@ namespace VirtoCommerce.Platform.Data.Security
         }
 
         #endregion
-    
-		private static void AddOrUpdatePermissions(IPlatformRepository repository, Permission[] permissions)
-        {
-            if (permissions != null)
-            {
-                var permissionIds = permissions.Select(p => p.Id).ToArray();
-                var existingPermissions = repository.Permissions.Where(p => permissionIds.Contains(p.Id)).ToArray();
+        
 
-                foreach (var permission in permissions)
-                {
-                    var sourceEntry = permission.ToDataModel();
-                    var targetEntry = existingPermissions.FirstOrDefault(p => string.Equals(p.Id, permission.Id, StringComparison.OrdinalIgnoreCase));
-
-                    if (targetEntry == null)
-                    {
-                        repository.Add(sourceEntry);
-                    }
-                    else
-                    {
-                        sourceEntry.Patch(targetEntry);
-                    }
-                }
-            }
-        }
     }
 }

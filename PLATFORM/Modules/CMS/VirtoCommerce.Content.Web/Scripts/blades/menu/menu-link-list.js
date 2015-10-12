@@ -21,7 +21,7 @@
                     canExecuteMethod: function () {
                         return true;
                     },
-                    permission: 'content:manage'
+                    permission: 'content:update'
                 },
 				{
 				    name: "Save list", icon: 'fa fa-save',
@@ -31,7 +31,7 @@
 				    canExecuteMethod: function () {
 				        return canSave();
 				    },
-				    permission: 'content:manage'
+				    permission: 'content:update'
 				}];
 
                 blade.isLoading = false;
@@ -54,7 +54,7 @@
                         canExecuteMethod: function () {
                             return true;
                         },
-                        permission: 'content:manage'
+                        permission: 'content:update'
                     },
 					{
 					    name: "Save list", icon: 'fa fa-save',
@@ -64,7 +64,7 @@
 					    canExecuteMethod: function () {
 					        return canSave();
 					    },
-					    permission: 'content:manage'
+					    permission: 'content:update'
 					},
 					{
 					    name: "Reset list", icon: 'fa fa-undo',
@@ -74,7 +74,7 @@
 					    canExecuteMethod: function () {
 					        return !angular.equals(blade.origEntity, blade.currentEntity);
 					    },
-					    permission: 'content:manage'
+					    permission: 'content:update'
 					},
 					{
 					    name: "Delete list", icon: 'fa fa-trash-o',
@@ -84,7 +84,7 @@
 					    canExecuteMethod: function () {
 					        return true;
 					    },
-					    permission: 'content:manage'
+					    permission: 'content:delete'
 					},
 					{
 					    name: "Delete links", icon: 'fa fa-trash-o',
@@ -94,7 +94,7 @@
 					    canExecuteMethod: function () {
 					        return blade.selectedItemIds.length > 0;
 					    },
-					    permission: 'content:manage'
+					    permission: 'content:delete'
 					}];
                 },
                 function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
@@ -118,6 +118,7 @@
                 	blade.parentBlade.initialize();
                 	blade.newList = false;
                 	blade.isLoading = false;
+                	blade.origEntity = angular.copy(blade.currentEntity);
                 },
                 function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
             }
@@ -187,6 +188,26 @@
         }
         dialogService.showConfirmationDialog(dialog);
     }
+
+    blade.onClose = function (closeCallback) {
+        if (canSave()) {
+            var dialog = {
+                id: "confirmCurrentBladeClose",
+                title: "Save changes",
+                message: "The menu link list has been modified. Do you want to save changes?",
+                callback: function (needSave) {
+                    if (needSave) {
+                        blade.saveChanges();
+                    }
+                    closeCallback();
+                }
+            }
+            dialogService.showConfirmationDialog(dialog);
+        }
+        else {
+            closeCallback();
+        }
+    };
 
     blade.selectItem = function (id) {
         if (_.contains(blade.selectedItemIds, id)) {

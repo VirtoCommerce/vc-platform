@@ -99,7 +99,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Binders\SearchParameterBinder.cs" />
     <Compile Include="Binders\CatalogItemSearchCriteriaBinder.cs" />
     <Compile Include="Controllers\MerchandisingModuleReviewController.cs" />
     <Compile Include="Controllers\MerchandisingModuleMarketingController.cs" />
@@ -107,6 +106,7 @@
     <Compile Include="Controllers\MerchandisingModuleStoreController.cs" />
     <Compile Include="Controllers\MerchandisingModulePriceController.cs" />
     <Compile Include="Controllers\MerchandisingModuleProductController.cs" />
+    <Compile Include="Controllers\MerchandisingNotificationController.cs" />
     <Compile Include="Converters\AssetConverter.cs" />
     <Compile Include="Converters\AssociationConverter.cs" />
     <Compile Include="Converters\CategoryConverter.cs" />
@@ -122,9 +122,13 @@
     <Compile Include="Converters\StoreConverter.cs" />
     <Compile Include="Extensions\ItemServiceExtensions.cs" />
     <Compile Include="Model\Asset.cs" />
+    <Compile Include="Model\CategoryResponseCollection.cs" />
     <Compile Include="Model\DynamicContentItemGroup.cs" />
+    <Compile Include="Model\DynamicContentItemGroupResponseCollection.cs" />
     <Compile Include="Model\Image.cs" />
     <Compile Include="Model\Inventory.cs" />
+    <Compile Include="Model\Notificaitons\DynamicMerchandisingNotification.cs" />
+    <Compile Include="Model\Notificaitons\SendDynamicMerchandisingNotificationRequest.cs" />
     <Compile Include="Model\PaymentMethod.cs" />
     <Compile Include="Model\Price.cs" />
     <Compile Include="Model\Association.cs" />
@@ -138,9 +142,10 @@
     <Compile Include="Model\PromotionReward.cs" />
     <Compile Include="Model\Review.cs" />
     <Compile Include="Model\ReviewComment.cs" />
-    <Compile Include="Model\SearchParameters.cs" />
+    <Compile Include="Model\ProductSearchRequest.cs" />
     <Compile Include="Model\SeoKeyword.cs" />
     <Compile Include="Model\Store.cs" />
+    <Compile Include="Model\StringKeyValues.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Model\CatalogItem.cs" />
     <Compile Include="Model\Category.cs" />

@@ -49,8 +49,12 @@ angular.module('platformWebApp')
             $compile(element)(scope);
 
             var mainContent = $('.cnt');
-            var blade = $(element).parent('.blade');
-            var offset = parseInt(blade.offset().left + mainContent.scrollLeft() + blade.width() + 125 - mainContent[0].clientWidth);
+            var blade = $('.blade:last', mainContent);
+            var offset = parseInt(blade.offset().left);
+
+            $timeout(function () {
+                offset = parseInt(blade.width())
+            }, 50, false);
 
             if (!scope.blade.disableOpenAnimation) {
                 blade.css('margin-left', '-' + blade.width() + 'px').addClass('__animate');
@@ -179,7 +183,7 @@ angular.module('platformWebApp')
                         }
                     }
                     if (angular.isFunction(callback)) {
-                        $timeout(callback);
+                        $timeout(callback, 60);
                     };
                 };
 
@@ -232,6 +236,18 @@ angular.module('platformWebApp')
             blade.isLoading = true;
             blade.parentBlade = parentBlade;
             blade.childrenBlades = [];
+            //copy securityscopes from parent blade
+            if (parentBlade != null && parentBlade.securityScopes) {
+				//need merge scopes
+            	if (angular.isArray(blade.securityScopes) && angular.isArray(parentBlade.securityScopes))
+            	{
+            		blade.securityScopes = parentBlade.securityScopes.concat(blade.securityScopes);
+            	}
+            	else
+            	{
+            		blade.securityScopes = parentBlade.securityScopes;
+            	}
+            }
 
             var existingBlade = service.findBlade(blade.id);
 

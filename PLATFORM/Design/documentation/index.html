@@ -172,6 +172,9 @@
                         <li class="menu-item" data-type="widgets">
                             <a class="menu-link">Widgets</a>
                         </li>
+                        <li class="menu-item" data-type="tabs">
+                            <a class="menu-link">Tabs</a>
+                        </li>
                     </ul>
                 </div>  
                 <div class="content" ng-controller="TestController">
@@ -380,6 +383,12 @@
                                     <label class="form-label">Form textarea large</label>
                                     <div class="form-input">
                                         <textarea class="__large" cols="30" rows="10"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Form textarea xlarge</label>
+                                    <div class="form-input">
+                                        <textarea class="__xlarge" cols="30" rows="10"></textarea>
                                     </div>
                                 </div>
                             </form>    
@@ -1368,6 +1377,83 @@
                         <pre class="code" data-src="templates/widgets/name-count.html"></pre>
                         <div class="note">Example using title and icon template</div>
                         <pre class="code" data-src="templates/widgets/name-icon.html"></pre>
+                    </section>
+                    <section>
+                        <h1 class="title" id="tabs">Tabs</h1>
+                        <div class="example __tabs">
+                            <a class="add-tab">
+                                Add tab
+                            </a>
+                            <a class="remove-tab">
+                                Remove tab
+                            </a>
+                            <div class="tabs" va-tabs>
+                                <div class="tabs-elements">
+                                    <div class="tab-item __selected">Tab 1</div>
+                                    <div class="tab-item">Tab 2</div>
+                                    <div class="tab-item">Tab 3</div>
+                                </div>
+                                <div class="tab-cnt __opened">
+                                    <div class="sub-t __border">Text 1</div>
+                                    <div class="sub-t">Typography</div>
+                                    <p class="text">Example text 1</p>
+                                    <p class="text-mini __error">Warning</p>
+                                    <div class="sub-t">Forms</div>
+                                    <div class="form">
+                                        <div class="form-group">
+                                            <div class="form-input">
+                                                <input type="text">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <button class="btn">
+                                                Button
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-cnt">
+                                    <div class="sub-t __border">Text 2</div>
+                                    <div class="sub-t">Typography</div>
+                                    <p class="text">Example text 2</p>
+                                    <p class="text-mini __error">Warning</p>
+                                    <div class="sub-t">Forms</div>
+                                    <div class="form">
+                                        <div class="form-group">
+                                            <div class="form-input">
+                                                <input type="text">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <button class="btn">
+                                                Button
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-cnt">
+                                    <div class="sub-t __border">Text 3</div>
+                                    <div class="sub-t">Typography</div>
+                                    <p class="text">Example text 3</p>
+                                    <p class="text-mini __error">Warning</p>
+                                    <div class="sub-t">Forms</div>
+                                    <div class="form">
+                                        <div class="form-group">
+                                            <div class="form-input">
+                                                <input type="text">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <button class="btn">
+                                                Button
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="note"><span class="exmpl">&lt;div class="tab-cnt"&gt;</span> can include any content</div>
+                        <pre class="code" data-src="templates/tabs/index.html"></pre>
                     </section>
                 </div>  
             </article>

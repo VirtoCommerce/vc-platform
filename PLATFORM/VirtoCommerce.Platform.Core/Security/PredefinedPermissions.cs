@@ -2,14 +2,25 @@
 {
     public static class PredefinedPermissions
     {
-        public const string ModuleQuery = "platform:module:query";
-        public const string ModuleManage = "platform:module:manage";
-        public const string SettingManage = "platform:setting:manage";
-        public const string DynamicPropertiesManage = "platform:dynamic_properties:manage";
-        public const string SecurityQuery = "platform:security:query";
-        public const string SecurityManage = "platform:security:manage";
+        public const string ModuleQuery = "platform:module:read",
+            ModuleAccess = "platform:module:access",
+            ModuleManage = "platform:module:manage";
+        public const string SettingQuery = "platform:setting:read",
+            SettingAccess = "platform:setting:access",
+            SettingUpdate = "platform:setting:update";
+        public const string DynamicPropertiesQuery = "platform:dynamic_properties:read",
+            DynamicPropertiesCreate = "platform:dynamic_properties:create",
+            DynamicPropertiesAccess = "platform:dynamic_properties:access",
+            DynamicPropertiesUpdate = "platform:dynamic_properties:update",
+            DynamicPropertiesDelete = "platform:dynamic_properties:delete";
+        public const string SecurityQuery = "platform:security:read",
+            SecurityCreate = "platform:security:create",
+            SecurityAccess = "platform:security:access",
+            SecurityUpdate = "platform:security:update",
+            SecurityDelete = "platform:security:delete";
         public const string SecurityCallApi = "security:call_api";
-        public const string BackgroundJobsManage = "background_jobs:manage";
+        public const string BackgroundJobsManage = "background_jobs:manage",
+                PlatformExportImport = "platform:exportImport";
 
         public static Permission[] Permissions { get; private set; }
 
@@ -20,8 +31,16 @@
                 new Permission
                 {
                     Id = ModuleQuery,
-                    Name = "Browse modules",
-                    Description = "Permission to open modules menu and browse data.",
+                    Name = "View modules data",
+                    Description = "Permission to browse and view modules.",
+                    ModuleId = "VirtoCommerce.Platform",
+                    GroupName = "Modules"
+                },
+                new Permission
+                {
+                    Id = ModuleAccess,
+                    Name = "Open modules menu",
+                    Description = "Permission to open modules menu.",
                     ModuleId = "VirtoCommerce.Platform",
                     GroupName = "Modules"
                 },
@@ -35,33 +54,105 @@
                 },
                 new Permission
                 {
-                    Id = SettingManage,
-                    Name = "Manage settings",
-                    Description = "Permission to manage settings.",
+                    Id = SettingAccess,
+                    Name = "Open settings menu",
+                    Description = "Permission to open settings menu.",
                     ModuleId = "VirtoCommerce.Platform",
                     GroupName = "Settings"
                 },
                 new Permission
                 {
-                    Id = DynamicPropertiesManage,
-                    Name = "Manage dynamic properties",
-                    Description = "Permission to manage dynamic properties.",
+                    Id = SettingQuery,
+                    Name = "View settings",
+                    Description = "Permission to browse and view settings data.",
                     ModuleId = "VirtoCommerce.Platform",
                     GroupName = "Settings"
                 },
                 new Permission
                 {
-                    Id = SecurityQuery,
-                    Name = "Browse security data",
-                    Description = "Permission to open security menu and view roles and users data.",
+                    Id = SettingUpdate,
+                    Name = "Update dynamic property",
+                    Description = "Permission to update settings data.",
+                    ModuleId = "VirtoCommerce.Platform",
+                    GroupName = "Settings"
+                },
+                new Permission
+                {
+                    Id = DynamicPropertiesAccess,
+                    Name = "Open dynamic properties menu",
+                    Description = "Permission to open dynamic properties menu.",
+                    ModuleId = "VirtoCommerce.Platform",
+                    GroupName = "Settings"
+                },
+                new Permission
+                {
+                    Id = DynamicPropertiesCreate,
+                    Name = "Create a dynamic property",
+                    Description = "Permission to create a dynamic property.",
+                    ModuleId = "VirtoCommerce.Platform",
+                    GroupName = "Settings"
+                },
+                new Permission
+                {
+                    Id = DynamicPropertiesDelete,
+                    Name = "Delete dynamic property",
+                    Description = "Permission to delete dynamic property.",
+                    ModuleId = "VirtoCommerce.Platform",
+                    GroupName = "Settings"
+                },
+                new Permission
+                {
+                    Id = DynamicPropertiesQuery,
+                    Name = "View dynamic properties data",
+                    Description = "Permission to browse and view dynamic properties data.",
+                    ModuleId = "VirtoCommerce.Platform",
+                    GroupName = "Settings"
+                },
+                new Permission
+                {
+                    Id = DynamicPropertiesUpdate,
+                    Name = "Update dynamic property",
+                    Description = "Permission to update dynamic properties data.",
+                    ModuleId = "VirtoCommerce.Platform",
+                    GroupName = "Settings"
+                },
+                new Permission
+                {
+                    Id = SecurityAccess,
+                    Name = "Open security menu",
+                    Description = "Permission to open security menu.",
                     ModuleId = "VirtoCommerce.Platform",
                     GroupName = "Security"
                 },
                 new Permission
                 {
-                    Id = SecurityManage,
-                    Name = "Manage security data",
-                    Description = "Permission to open manage roles and users.",
+                    Id = SecurityCreate,
+                    Name = "Create accounts and roles",
+                    Description = "Permission to create security accounts and roles.",
+                    ModuleId = "VirtoCommerce.Platform",
+                    GroupName = "Security"
+                },
+                new Permission
+                {
+                    Id = SecurityDelete,
+                    Name = "Delete accounts and roles",
+                    Description = "Permission to delete accounts and roles.",
+                    ModuleId = "VirtoCommerce.Platform",
+                    GroupName = "Security"
+                },
+                new Permission
+                {
+                    Id = SecurityQuery,
+                    Name = "View security data",
+                    Description = "Permission to browse and view security data.",
+                    ModuleId = "VirtoCommerce.Platform",
+                    GroupName = "Security"
+                },
+                new Permission
+                {
+                    Id = SecurityUpdate,
+                    Name = "Update accounts and roles",
+                    Description = "Permission to update accounts and roles.",
                     ModuleId = "VirtoCommerce.Platform",
                     GroupName = "Security"
                 },

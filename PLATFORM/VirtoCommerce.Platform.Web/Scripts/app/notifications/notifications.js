@@ -35,7 +35,7 @@ angular.module(moduleName)
   		title: 'Notifications',
   		priority: 7,
   		action: function () { $state.go('workspace.notifications'); },
-  		//permission: 'platform:module:query'
+  		//permission: 'platform:???'
   	};
   	mainMenuService.addMenuItem(menuItem);
   }])

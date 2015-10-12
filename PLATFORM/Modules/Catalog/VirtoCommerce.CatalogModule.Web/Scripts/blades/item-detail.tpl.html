@@ -14,7 +14,7 @@
                 <div class="form-group">
                     <label class="form-label">Name</label>
                     <div class="form-input">
-                        <textarea ng-class="{'error': detailForm.itemName.$invalid && !detailForm.itemName.$pristine}" cols="30" rows="2" ng-model="blade.item.name" name="itemName" placeholder="Enter item name"></textarea>
+                        <textarea class="__small" ng-class="{'error': detailForm.itemName.$invalid && !detailForm.itemName.$pristine}" cols="30" rows="2" ng-model="blade.item.name" name="itemName" placeholder="Enter item name"></textarea>
                     </div>
                 </div>
                 <div class="form-group">
@@ -52,6 +52,17 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="column" ng-if="blade.item.productType=='Digital'">
+                            <div class="form-group">
+                                <div class="form-control __checkbox">
+                                    <label class="form-label">
+                                        <input type="checkbox" ng-model="blade.item.hasUserAgreement">
+                                        <span class="check"></span>
+                                        <span class="name">Has user agreement</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group" ng-if="blade.item.productType!=='Digital'">
@@ -60,7 +71,7 @@
                             <div class="form-group">
                                 <label class="form-label">Min. quantity</label>
                                 <div class="form-input __number">
-                                    <input va-number ng-model="blade.item.minQuantity" min="1" step="1">
+                                    <input smart-float num-type="integer" ng-model="blade.item.minQuantity">
                                 </div>
                             </div>
                         </div>
@@ -68,13 +79,13 @@
                             <div class="form-group">
                                 <label class="form-label">Max. quantity</label>
                                 <div class="form-input __number">
-                                    <input va-number ng-model="blade.item.maxQuantity" min="0" step="1">
+                                    <input smart-float num-type="integer" ng-model="blade.item.maxQuantity">
                                 </div>
                             </div>
                         </div>
                         <div class="column">
                             <div class="form-group">
-                                <label class="form-label">Tax type <a href="" ng-click="openDictionarySettingManagement()" va-permission="platform:setting:manage"><i class="form-ico fa fa-pencil"></i></a></label>
+                                <label class="form-label">Tax type <a href="" ng-click="openDictionarySettingManagement()" va-permission="platform:setting:update"><i class="form-ico fa fa-pencil"></i></a></label>
                                 <div class="form-input">
                                     <ui-select ng-model="blade.item.taxType">
                                         <ui-select-match allow-clear="true" placeholder="Select...">{{$select.selected}}</ui-select-match>
@@ -93,7 +104,7 @@
                             <div class="form-group">
                                 <label class="form-label">Max. number of downloads</label>
                                 <div class="form-input __number">
-                                    <input va-number ng-model="blade.item.maxNumberOfDownload" min="0" step="1">
+                                    <input smart-float num-type="integer" ng-model="blade.item.maxNumberOfDownload">
                                 </div>
                             </div>
                         </div>
@@ -127,18 +138,7 @@
                         </div>
                         <div class="column">
                             <div class="form-group">
-                                <div class="form-control __checkbox">
-                                    <label class="form-label">
-                                        <input type="checkbox" ng-model="blade.item.hasUserAgreement">
-                                        <span class="check"></span>
-                                        <span class="name">Has user agreement</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="column">
-                            <div class="form-group">
-                                <label class="form-label">Tax type <a href="" ng-click="openDictionarySettingManagement()" va-permission="platform:setting:manage"><i class="form-ico fa fa-pencil"></i></a></label>
+                                <label class="form-label">Tax type <a href="" ng-click="openDictionarySettingManagement()" va-permission="platform:setting:update"><i class="form-ico fa fa-pencil"></i></a></label>
                                 <div class="form-input">
                                     <ui-select ng-model="blade.item.taxType">
                                         <ui-select-match allow-clear="true" placeholder="Select...">{{$select.selected}}</ui-select-match>

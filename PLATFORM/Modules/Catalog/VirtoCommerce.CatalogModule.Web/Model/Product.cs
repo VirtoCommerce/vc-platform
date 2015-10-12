@@ -291,5 +291,7 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         /// The associations.
         /// </value>
 		public ICollection<ProductAssociation> Associations { get; set; }
+
+        public string[] SecurityScopes { get; set; }
     }
 }

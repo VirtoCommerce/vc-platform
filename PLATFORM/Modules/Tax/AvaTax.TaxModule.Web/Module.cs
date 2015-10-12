@@ -1,19 +1,15 @@
 ﻿using System;
-using System.Configuration;
-using System.IO;
 using AvaTax.TaxModule.Web.Controller;
 using AvaTax.TaxModule.Web.Observers;
 using AvaTax.TaxModule.Web.Services;
-using System.Diagnostics.Tracing;
-using AvaTax.TaxModule.Web.Logging;
 using Common.Logging;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.Domain.Cart.Events;
 using VirtoCommerce.Domain.Order.Events;
-using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Settings;
-using VirtoCommerce.Platform.Data.Asset;
+using VirtoCommerce.Domain.Tax.Services;
+using VirtoCommerce.Domain.Customer.Services;
 
 namespace AvaTax.TaxModule.Web
 {
@@ -43,9 +39,7 @@ namespace AvaTax.TaxModule.Web
 
             var logManager = _container.Resolve<ILog>();
 
-            _container.RegisterType<AvaTaxController>
-                (new InjectionConstructor(
-                    avalaraTax, logManager));
+            _container.RegisterType<AvaTaxController>(new InjectionConstructor(avalaraTax, logManager));
 
             _container.RegisterInstance<ITaxSettings>(avalaraTax);
 
@@ -61,7 +55,21 @@ namespace AvaTax.TaxModule.Web
             //Subscribe to order changes. Adjust taxes   
             _container.RegisterType<IObserver<OrderChangeEvent>, CalculateTaxAdjustmentObserver>("CalculateTaxAdjustmentObserver");
         }
-        
+
+        public override void PostInitialize()
+        {
+            var settingManager = _container.Resolve<ISettingsManager>();
+            var taxService = _container.Resolve<ITaxService>();
+            var moduleSettings = settingManager.GetModuleSettings("Avalara.Tax");
+            taxService.RegisterTaxProvider(() => new AvaTaxRateProvider(_container.Resolve<IContactService>(), _container.Resolve<ILog>(), moduleSettings)
+            {
+                Name = "Avalara taxes",
+                Description = "Avalara service integration",
+                LogoUrl = "Modules/$(Avalara.Tax)/Content/400.png"
+            });
+
+         
+        }
         #endregion
     }
 }

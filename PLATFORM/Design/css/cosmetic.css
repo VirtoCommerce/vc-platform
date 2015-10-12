@@ -348,9 +348,13 @@ a:hover,
 {
 	0%
 	{
+		background-color: none;
+	}
+	30%
+	{
 		background-color: #43b0e6;
 	}
-	80%
+	90%
 	{
 		background-color: #43b0e6;
 	}
@@ -364,14 +368,72 @@ a:hover,
 {
 	0%
 	{
+		background-color: none;
+	}
+	30%
+	{
 		background-color: #43b0e6;
 	}
-	80%
+	90%
 	{
 		background-color: #43b0e6;
 	}
 	100%
 	{
 		background-color: none;
+	}
+}
+
+@-webkit-keyframes bell
+{
+	0%,
+	100%
+	{
+		-webkit-transform: rotate(0);
+	}
+
+	10%,
+	30%,
+	50%,
+	70%,
+	90%
+	{
+		-webkit-transform: rotate(-7deg);
+	}
+
+	0%,
+	20%,
+	40%,
+	60%,
+	80%,
+	100%
+	{
+		-webkit-transform: rotate(7deg);
+	}
+}
+
+@keyframes bell
+{
+	0%,
+	100%
+	{
+		transform: rotate(0);
+	}
+
+	10%,
+	30%,
+	50%,
+	70%,
+	90%
+	{
+		transform: rotate(-7deg);
+	}
+
+	20%,
+	40%,
+	60%,
+	80%
+	{
+		transform: rotate(7deg);
 	}
 }

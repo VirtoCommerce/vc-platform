@@ -34,11 +34,13 @@ namespace SwashbuckleModule.Web
             var assembly = Assembly.GetExecutingAssembly();
             var xmlRelativePaths = new[] { moduleInitializerOptions.VirtualRoot + "/App_Data/Modules", moduleInitializerOptions.VirtualRoot + "/bin" };
             Func<PopulateTagsFilter> tagsFilterFactory = () => new PopulateTagsFilter(_container.Resolve<IPackageService>(), _container.Resolve<ISettingsManager>());
+            Func<ISwaggerProvider, ISwaggerProvider> providerFactory = (defaultProvider) => new CachedSwaggerProviderWrapper(defaultProvider, _container.Resolve<CacheManager>());
+
             GlobalConfiguration.Configuration.
                  EnableSwagger(moduleInitializerOptions.RoutPrefix + "docs/{apiVersion}",
                  c =>
                  {
-                     c.SwaggerProviderResolver((apiExplorer, jsonSettings, versions, options) => new CachedSwaggerProviderWrapper(new SwaggerGenerator(apiExplorer, jsonSettings, versions, options), _container.Resolve<CacheManager>()));
+                     c.CustomProvider(providerFactory);
                      foreach (var xmlRelativePath in xmlRelativePaths)
                      {
                          var xmlFilesPaths = GetXmlFilesPaths(xmlRelativePath);
@@ -47,6 +49,7 @@ namespace SwashbuckleModule.Web
                              c.IncludeXmlComments(path);
                          }
                      }
+                     c.MapType<object>(() => new Schema { type = "object" });
                      c.IgnoreObsoleteProperties();
                      c.UseFullTypeNameInSchemaIds();
                      c.DescribeAllEnumsAsStrings();

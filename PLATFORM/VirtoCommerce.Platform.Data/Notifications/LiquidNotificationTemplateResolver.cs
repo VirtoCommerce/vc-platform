@@ -1,5 +1,6 @@
 ﻿using DotLiquid;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -46,8 +47,9 @@ namespace VirtoCommerce.Platform.Data.Notifications
 					{
 						ParameterName = property.Name,
 						ParameterDescription = attributes.Length > 0 ? ((NotificationParameterAttribute)(attributes[0])).Description : string.Empty,
-						ParameterCodeInView = GetLiquidCodeOfParameter(property.Name)
-					});
+						ParameterCodeInView = GetLiquidCodeOfParameter(property.Name),
+                        IsDictionary = property.PropertyType.IsAssignableFrom(typeof(IDictionary))
+                    });
 				}
 			}
 

@@ -36,13 +36,13 @@ angular.module(moduleName, [])
       //    title: 'inventorys',
       //    priority: 110,
       //    action: function () { $state.go('workspace.inventoryModule'); },
-      //    permission: 'inventory:manage'
+      //    permission: 'inventory:update'
       //};
       //mainMenuService.addMenuItem(menuItem);
 
       //Register widgets in catalog item details
       widgetService.registerWidget({
-          isVisible: function (blade) { return blade.productType !== 'Digital' && authService.checkPermission('inventory:manage'); },
+          isVisible: function (blade) { return blade.productType !== 'Digital' && authService.checkPermission('inventory:update'); },
           controller: 'virtoCommerce.inventoryModule.inventoryWidgetController',
           template: 'Modules/$(VirtoCommerce.Inventory)/Scripts/widgets/inventoryWidget.tpl.html'
       }, 'itemDetail');

@@ -6,23 +6,46 @@ if (AppDependencies != undefined) {
 }
 
 angular.module(moduleName, [])
-.run(['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', function ($rootScope, mainMenuService, widgetService, $state) {
+.run(['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.permissionScopeResolver', 'virtoCommerce.storeModule.stores',
+	function ($rootScope, mainMenuService, widgetService, $state, bladeNavigationService, scopeResolver, stores) {
 
-	var menuItem = {
-		path: 'browse/content',
-		icon: 'fa fa-code',
-		title: 'Content',
-		priority: 111,
-		action: function () { $state.go('workspace.content'); },
-		permission: 'content:query'
-	};
-	mainMenuService.addMenuItem(menuItem);
+		var menuItem = {
+			path: 'browse/content',
+			icon: 'fa fa-code',
+			title: 'Content',
+			priority: 111,
+			action: function () { $state.go('workspace.content'); },
+			permission: 'content:access'
+		};
+		mainMenuService.addMenuItem(menuItem);
 
-	widgetService.registerWidget({
-		controller: 'virtoCommerce.contentModule.themesWidgetController',
-		template: 'Modules/$(VirtoCommerce.Content)/Scripts/widgets/themesWidget.tpl.html'
-	}, 'storeDetail');
-}])
+		
+		widgetService.registerWidget({
+			controller: 'virtoCommerce.contentModule.themesWidgetController',
+			template: 'Modules/$(VirtoCommerce.Content)/Scripts/widgets/themesWidget.tpl.html',
+			permission: 'content:read'
+		}, 'storeDetail');
+
+		//Register permission scopes templates used for scope bounded definition in role management ui
+		var selectedStoreScope = {
+			type: 'ContentSelectedStoreScope',
+			title: 'Only for selected stores',
+			selectFn: function (blade, callback) {
+				var newBlade = {
+					id: 'store-pick',
+					title: this.title,
+					subtitle: 'Select stores',
+					currentEntity: this,
+					onChangesConfirmedFn: callback,
+					dataPromise: stores.query().$promise,
+					controller: 'platformWebApp.security.scopeValuePickFromSimpleListController',
+					template: '$(Platform)/Scripts/app/security/blades/common/scope-value-pick-from-simple-list.tpl.html'
+				};
+				bladeNavigationService.showBlade(newBlade, blade);
+			}
+		};
+		scopeResolver.register(selectedStoreScope);
+	}])
 .config(['$stateProvider', function ($stateProvider) {
 	$stateProvider
 		.state('workspace.content', {

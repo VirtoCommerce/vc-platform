@@ -9,7 +9,8 @@
             isNew: blade.isNew,
             title: blade.title,
             controller: 'virtoCommerce.storeModule.seoDetailController',
-            template: 'Modules/$(VirtoCommerce.Store)/Scripts/blades/seo-detail.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Store)/Scripts/blades/seo-detail.tpl.html',
+            securityScopes: blade.securityScopes
         };
 
         bladeNavigationService.showBlade(newBlade, blade);

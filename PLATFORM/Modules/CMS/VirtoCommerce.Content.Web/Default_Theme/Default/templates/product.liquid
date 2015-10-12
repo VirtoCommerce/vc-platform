@@ -1,5 +1,5 @@
 {% include 'breadcrumb' %}
-
+{% include 'quote-informer' %}
 <div class="grid" itemscope itemtype="http://schema.org/Product">
   <meta itemprop="url" content="{{ shop.url }}{{ product.url }}">
   <meta itemprop="image" content="{{ product.featured_image.src | img_url: 'grande' }}">
@@ -95,6 +95,13 @@
           <span class="icon icon-cart"></span>
           <span id="addToCartText">{{ 'products.product.add_to_cart' | t }}</span>
         </button>
+
+        {% if shop.quotes_enabled and product.is_quotable %}
+            <button class="btn" id="addToQuote" type="button">
+                <span class="fa fa-calculator"></span> 
+                {{ 'products.general.add_to_quote' | t }}
+            </button>
+        {% endif %}
 
         <span id="variantQuantity" class="variant-quantity"></span>
       </form>

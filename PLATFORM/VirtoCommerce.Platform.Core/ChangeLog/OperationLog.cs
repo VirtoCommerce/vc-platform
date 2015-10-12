@@ -14,5 +14,7 @@ namespace VirtoCommerce.Platform.Core.ChangeLog
 		public string ObjectId { get; set; }
 
 		public EntryState OperationType { get; set; }
+
+        public string Detail { get; set; }
 	}
 }

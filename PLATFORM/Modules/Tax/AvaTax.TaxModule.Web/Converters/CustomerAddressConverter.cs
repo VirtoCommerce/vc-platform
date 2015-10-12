@@ -4,7 +4,7 @@ namespace AvaTax.TaxModule.Web.Converters
 {
     public static class CustomerAddressConverter
     {
-        public static Address ToValidateAddressRequest(this VirtoCommerce.Domain.Customer.Model.Address address, string companyCode)
+        public static Address ToValidateAddressRequest(this VirtoCommerce.Domain.Commerce.Model.Address address, string companyCode)
         {
             var retVal = new Address()
             {

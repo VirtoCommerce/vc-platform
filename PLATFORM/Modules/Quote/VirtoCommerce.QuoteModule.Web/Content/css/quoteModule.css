@@ -1,0 +1,44 @@
+.vc-quote .quote-discount .quote-t
+{
+    margin: 0 0 10px;
+}
+
+.vc-quote .quote-discount .btn
+{
+    height: 34px;
+    vertical-align: middle;
+}
+
+.vc-quote .table.__collapsed .table-col
+{
+    padding: 3px;
+    font-size: 12px;
+}
+
+.vc-quote .table .table-item.__total .table-col
+{
+    background: #dee9f0;
+    font-size: 12px;
+}
+
+/* Quote status */
+.vc-quote .quote-status
+{
+    background: #43b0e6;
+    border-bottom: 1px solid #dedede;
+    color: #fff;
+    margin: 0 -20px;
+    padding: 10px 20px;
+}
+
+    .vc-quote .quote-status .status
+    {
+        font-size: 15px;
+        font-weight: 500;
+        margin: 0 0 5px;
+    }
+
+    .vc-quote .quote-status .reason
+    {
+        font-size: 12px;
+    }

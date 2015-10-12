@@ -30,6 +30,8 @@
         $scope.selectedItem = listItem;
     };
 
+    $scope.blade.headIcon = 'fa-gear';
+
     $scope.blade.toolbarCommands = [
      {
          name: "Delete", icon: 'fa fa-trash-o',

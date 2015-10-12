@@ -39,6 +39,8 @@
         });
     }
 
+    blade.headIcon = 'fa-dropbox';
+
     blade.toolbarCommands = [
         {
             name: "Refresh", icon: 'fa fa-refresh',
@@ -68,7 +70,7 @@
                  function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 	         },
 	         canExecuteMethod: function () { return true; },
-	         permission: 'catalog:items:manage'
+	         permission: 'catalog:create'
 	     },
           {
               name: "Delete", icon: 'fa fa-trash-o',
@@ -100,7 +102,8 @@
                       retVal = _.any(blade.item.variations, function (x) { return x.selected; });
                   }
                   return retVal;
-              }
+              },
+              permission: 'catalog:delete'
           }
     ];
 

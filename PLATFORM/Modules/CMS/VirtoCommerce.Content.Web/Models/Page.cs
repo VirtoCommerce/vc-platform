@@ -33,5 +33,8 @@ namespace VirtoCommerce.Content.Web.Models
 		public DateTime ModifiedDate { get; set; }
 
 		public string FileUrl { get; set; }
-	}
+
+        public string[] SecurityScopes { get; set; }
+
+    }
 }

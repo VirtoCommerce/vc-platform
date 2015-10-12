@@ -58,9 +58,19 @@ namespace VirtoCommerce.Web.Services
                 return null;
             }
 
-            // TODO: remove hard coded news blog
-            var blog = new Blog() { Id = "news", Handle = "news", Url = "/blogs/news", Title = "News", Articles = items.Select(x=>x.AsArticleWebModel()).ToArray()};
-            return new[] { blog };
+            // segment posts by blogs
+            var segments = items.Select(x => x.FileName.Split('/')[2]).Distinct();
+
+            var blogs = new List<Blog>();
+            foreach(var segment in segments)
+            {
+                var prefix = string.Format("/blogs/{0}", segment);
+                var articles = items.Where(x=>x.FileName.StartsWith(prefix)).Select(x => x.AsArticleWebModel());
+                var blog = new Blog() { Id = segment, Handle = segment, Url = prefix, Title = segment, AllArticles = articles.ToArray() };
+                blogs.Add(blog);
+            }
+
+            return blogs;
         }
 
         #endregion

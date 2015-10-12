@@ -195,9 +195,9 @@ namespace Paypal.DirectPayments.Managers
 			retVal.CVV2 = context.BankCardInfo.BankCardCVV2;
             retVal.CardOwner = new PayerInfoType();
 
-            if (context.Order.Addresses.Any(x => x.AddressType == VirtoCommerce.Domain.Order.Model.AddressType.Billing))
+            if (context.Order.Addresses.Any(x => x.AddressType == VirtoCommerce.Domain.Commerce.Model.AddressType.Billing))
             {
-                var billingAddress = context.Order.Addresses.FirstOrDefault(x => x.AddressType == VirtoCommerce.Domain.Order.Model.AddressType.Billing);
+                var billingAddress = context.Order.Addresses.FirstOrDefault(x => x.AddressType == VirtoCommerce.Domain.Commerce.Model.AddressType.Billing);
                 retVal.CardOwner.PayerCountry = GetPaypalCountryCodeType(billingAddress.CountryCode);
 
                 retVal.CardOwner.Address = new PayPal.PayPalAPIInterfaceService.Model.AddressType();

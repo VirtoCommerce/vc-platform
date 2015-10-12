@@ -103,6 +103,8 @@
         formScope = form;
     }
 
+    blade.headIcon = 'fa-gear';
+
     blade.toolbarCommands = [
 		{
 		    name: "Save", icon: 'fa fa-save',
@@ -112,7 +114,7 @@
 		    canExecuteMethod: function () {
 		        return isDirty() && formScope && formScope.$valid;
 		    },
-		    permission: 'catalog:items:manage'
+		    permission: 'catalog:update'
 		},
         {
             name: "Reset", icon: 'fa fa-undo',
@@ -122,7 +124,7 @@
             canExecuteMethod: function () {
                 return isDirty();
             },
-            permission: 'catalog:items:manage'
+            permission: 'catalog:update'
         },
 		{
 		    name: "Add property", icon: 'fa fa-plus',
@@ -138,7 +140,7 @@
 		        });
 		    },
 		    canExecuteMethod: function () { return true; },
-		    permission: 'catalog:items:manage'
+		    permission: 'catalog:update'
 		}
     ];
 

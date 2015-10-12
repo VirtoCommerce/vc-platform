@@ -72,22 +72,6 @@ namespace VirtoCommerce.Web.Services
 
             _lastUpdated = latest != null ? (DateTime?)latest.LastWriteTimeUtc : null;
             return _lastUpdated;
-            /*
-            var directory = new DirectoryInfo(BaseDirectory);
-
-            if (!directory.Exists)
-            {
-                directory.Create();
-                return null;
-            }
-
-            var latest =
-    directory.GetFiles("*.*", SearchOption.AllDirectories)
-        .OrderByDescending(f => f.LastWriteTimeUtc)
-        .FirstOrDefault();
-
-            return latest != null ? (DateTime?)latest.LastWriteTimeUtc : null;
-             * */
         }
 
         public bool ApplyUpdates(FileAsset[] items)

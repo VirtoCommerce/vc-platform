@@ -9,6 +9,7 @@ using VirtoCommerce.Platform.Core.ExportImport;
 using Microsoft.Practices.ObjectBuilder2;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Domain.Store.Services;
+using VirtoCommerce.Platform.Core.Settings;
 using System.Threading.Tasks;
 using Omu.ValueInjecter;
 
@@ -25,15 +26,24 @@ namespace VirtoCommerce.Content.Web.ExportImport
 	{
 		private readonly IMenuService _menuService;
 		private readonly IStoreService _storeService;
-		private readonly IThemeService _themeService;
+		private readonly IThemeService _themeService;  
 		private readonly IPagesService _pagesService;
 
-		public ContentExportImport(IMenuService menuService, IThemeService themeService, IPagesService pagesService, IStoreService storeService)
+		public ContentExportImport(IMenuService menuService, Func<string, IThemeService> themeServiceFactory, Func<string, IPagesService> pagesServiceFactory, IStoreService storeService, ISettingsManager settingsManager)
 		{
 			_menuService = menuService;
 			_storeService = storeService;
-			_themeService = themeService;
-			_pagesService = pagesService;
+
+            var pagesChosenRepository = settingsManager.GetValue(
+                "VirtoCommerce.Content.MainProperties.PagesRepositoryType",
+                string.Empty);
+
+            var themeChosenRepository = settingsManager.GetValue(
+                "VirtoCommerce.Content.MainProperties.ThemesRepositoryType",
+                string.Empty);
+
+            _pagesService = pagesServiceFactory.Invoke(pagesChosenRepository);
+		    _themeService = themeServiceFactory.Invoke(themeChosenRepository);
 		}
 
 		public void DoExport(Stream backupStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
@@ -80,7 +90,7 @@ namespace VirtoCommerce.Content.Web.ExportImport
 		{
 			foreach (var item in backup)
 			{
-				_pagesService.SavePage(GetStoreIdForPage(item), item);
+				_pagesService.SavePage(GetStoreIdForPage(item.FullPath), item);
 			}
 		}
 
@@ -88,23 +98,44 @@ namespace VirtoCommerce.Content.Web.ExportImport
 		{
 			foreach (var item in backup)
 			{
-				_themeService.SaveThemeAsset(GetStoreIdForThemeAsset(item), GetThemeIdForThemeAsset(item), item);
+				_themeService.SaveThemeAsset(GetStoreIdForThemeAsset(item.Path), GetThemeIdForThemeAsset(item.Path), item);
 			}
 		}
 
-        private string GetStoreIdForPage(coreModels.Page page)
+        private string GetStoreIdForPage(string path)
 		{
-			return page.FullPath.Split(new char[] { '/' })[0];
+            var pathSteps = path.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+
+            if (pathSteps.Length == 0)
+            {
+                throw new NullReferenceException("path is incorrect");
+            }
+
+            return pathSteps[0];
 		}
 
-        private string GetThemeIdForThemeAsset(coreModels.ThemeAsset themeAsset)
+        private string GetThemeIdForThemeAsset(string path)
 		{
-			return themeAsset.Path.Split(new char[] { '/' })[1];
+            var pathSteps = path.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+
+            if (pathSteps.Length < 2)
+            {
+                throw new NullReferenceException("path is incorrect");
+            }
+
+            return pathSteps[1];
 		}
 
-        private string GetStoreIdForThemeAsset(coreModels.ThemeAsset themeAsset)
+        private string GetStoreIdForThemeAsset(string path)
 		{
-			return themeAsset.Path.Split(new char[] { '/' })[0];
+            var pathSteps = path.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+
+            if(pathSteps.Length == 0)
+            {
+                throw new NullReferenceException("path is incorrect");
+            }
+
+            return pathSteps[0];
 		}
 
 		private BackupObject GetBackupObject(Action<ExportImportProgressInfo> progressCallback, bool handleBynaryData)

@@ -5,12 +5,10 @@ using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-
 #endregion
 
 namespace VirtoCommerce.Web.Views.Engines.Liquid.Extensions
 {
-
     public static class UrlHelperExtensions
     {
         #region Public Methods and Operators

@@ -21,7 +21,7 @@ namespace VirtoCommerce.Platform.Web
 
             bundles.Add(
                 new BetterStyleBundle(Startup.VirtualRoot + "/css/core").IncludeAndFixRoot(
-                    "~/Scripts/allStyles.css",
+                    "~/Content/allStyles.css",
                     "~/Scripts/codemirror/codemirror.css",
                     "~/Scripts/codemirror/fold/foldgutter.css",
                     "~/Scripts/codemirror/liquid.css",
@@ -33,6 +33,7 @@ namespace VirtoCommerce.Platform.Web
                     "~/Content/Selectize/css/selectize.default.css",
                     //Theme UI
                     "~/Content/themes/main/css/reset.css",
+                    "~/Content/themes/main/css/font-awesome.css",
                     "~/Content/themes/main/css/base-modules.css",
                     "~/Content/themes/main/css/project-modules.css",
                     "~/Content/themes/main/css/cosmetic.css"

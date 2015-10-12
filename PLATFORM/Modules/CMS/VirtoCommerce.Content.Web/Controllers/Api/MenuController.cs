@@ -7,19 +7,20 @@ using System.Web.Http.Description;
 using VirtoCommerce.Content.Data.Services;
 using VirtoCommerce.Content.Web.Converters;
 using VirtoCommerce.Content.Web.Models;
+using VirtoCommerce.Content.Web.Security;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 
 namespace VirtoCommerce.Content.Web.Controllers.Api
 {
 	[RoutePrefix("api/cms/{storeId}")]
-    [CheckPermission(Permission = PredefinedPermissions.Query)]
-	public class MenuController : ApiController
+	public class MenuController : ContentBaseController
 	{
 		private readonly IMenuService _menuService;
 
-		public MenuController(IMenuService menuService)
-		{
+		public MenuController(IMenuService menuService, ISecurityService securityService, IPermissionScopeService permissionScopeService)
+            :base(securityService, permissionScopeService)
+        {
 			if (menuService == null)
 				throw new ArgumentNullException("menuService");
 
@@ -36,7 +37,9 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		[Route("menu")]
 		public IHttpActionResult GetLists(string storeId)
 		{
-		    var lists = _menuService.GetListsByStoreId(storeId);
+            base.CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Read, new ContentScopeObject { StoreId = storeId });
+
+            var lists = _menuService.GetListsByStoreId(storeId);
 		    if (lists.Any())
 		    {
 		        return this.Ok(lists.Select(s => s.ToWebModel()));
@@ -54,7 +57,9 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		[Route("menu/{listId}")]
 		public IHttpActionResult GetList(string storeId, string listId)
 		{
-			var item = _menuService.GetListById(listId).ToWebModel();
+            base.CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Read, new ContentScopeObject { StoreId = storeId });
+
+            var item = _menuService.GetListById(listId).ToWebModel();
 			return Ok(item);
 		}
 
@@ -71,7 +76,9 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		[Route("menu/checkname")]
 		public IHttpActionResult CheckName(string storeId, string name, string language, string id = "")
 		{
-			var retVal = _menuService.CheckList(storeId, name, language, id);
+            base.CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Read, new ContentScopeObject { StoreId = storeId });
+
+            var retVal = _menuService.CheckList(storeId, name, language, id);
 			var response = new CheckNameResult { Result = retVal };
 			return Ok(response);
 		}
@@ -83,10 +90,11 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		[HttpPost]
 		[ResponseType(typeof(void))]
 		[Route("menu")]
-        [CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public IHttpActionResult Update(MenuLinkList list)
 		{
-			_menuService.Update(list.ToCoreModel());
+            base.CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Update, new ContentScopeObject { StoreId = list.StoreId });
+
+            _menuService.Update(list.ToCoreModel());
             return StatusCode(HttpStatusCode.NoContent);
 		}
 
@@ -97,10 +105,13 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		[HttpDelete]
 		[ResponseType(typeof(void))]
 		[Route("menu")]
-        [CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public IHttpActionResult Delete(string listId)
 		{
-			_menuService.DeleteList(listId);
+            var list = _menuService.GetListById(listId).ToWebModel();
+
+            base.CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Delete, new ContentScopeObject { StoreId = list.StoreId });
+
+            _menuService.DeleteList(listId);
             return StatusCode(HttpStatusCode.NoContent);
 		}
 

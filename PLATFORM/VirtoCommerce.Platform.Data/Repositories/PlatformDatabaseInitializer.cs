@@ -20,16 +20,18 @@ namespace VirtoCommerce.Platform.Data.Repositories
             {
                 Id = "1eb2fa8ac6574541afdb525833dadb46",
                 UserName = "admin",
-                RegisterType = RegisterType.Administrator,
-                AccountState = AccountState.Approved,
+                IsAdministrator = true,
+                UserType = AccountType.Administrator.ToString(),
+                AccountState = AccountState.Approved.ToString(),
             });
 
             var frontendAccount = new AccountEntity
             {
                 Id = "9b605a3096ba4cc8bc0b8d80c397c59f",
                 UserName = "frontend",
-                RegisterType = RegisterType.Administrator,
-                AccountState = AccountState.Approved,
+                IsAdministrator = true,
+                UserType = AccountType.Administrator.ToString(),
+                AccountState = AccountState.Approved.ToString(),
             };
             frontendAccount.ApiAccounts.Add(new ApiAccountEntity
             {

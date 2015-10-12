@@ -42,7 +42,7 @@
                 if (remove) {
                     if ($scope.blade.deleteFn) {
                         $scope.blade.deleteFn($scope.blade.origEntity);
-                    };
+                    }
                     $scope.bladeClose();
                 }
             }
@@ -61,7 +61,7 @@
             canExecuteMethod: function () {
                 return true;
             },
-            permission: 'platform:security:manage'
+            permission: 'platform:security:update'
         },
         {
             name: "Reset",
@@ -72,7 +72,7 @@
             canExecuteMethod: function () {
                 return isDirty();
             },
-            permission: 'platform:security:manage'
+            permission: 'platform:security:update'
         },
         {
             name: "Delete", icon: 'fa fa-trash-o',
@@ -82,7 +82,7 @@
             canExecuteMethod: function () {
                 return !isDirty() && !$scope.blade.isNew;
             },
-            permission: 'platform:security:manage'
+            permission: 'platform:security:update'
         }
     ];
 

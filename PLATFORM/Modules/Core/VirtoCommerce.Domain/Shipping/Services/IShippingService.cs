@@ -10,6 +10,6 @@ namespace VirtoCommerce.Domain.Shipping.Services
 	public interface IShippingService
 	{
 		ShippingMethod[] GetAllShippingMethods();
-		void RegisterShippingMethod(Func<ShippingMethod> methodGetter);
+		void RegisterShippingMethod(Func<ShippingMethod> methodFactory);
 	}
 }

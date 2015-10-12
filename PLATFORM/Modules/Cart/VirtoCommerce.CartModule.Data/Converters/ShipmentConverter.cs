@@ -23,7 +23,6 @@ namespace VirtoCommerce.CartModule.Data.Converters
 			retVal.InjectFrom(entity);
 			
 			retVal.Currency = (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), entity.Currency);
-
 			if (entity.Addresses != null && entity.Addresses.Any())
 			{
 				retVal.DeliveryAddress = entity.Addresses.First().ToCoreModel();

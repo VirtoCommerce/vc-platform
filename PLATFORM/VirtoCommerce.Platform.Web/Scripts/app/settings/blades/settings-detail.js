@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.settingsDetailController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.objCompareService', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', function ($scope, dialogService, objCompareService, bladeNavigationService, settings) {
+.controller('platformWebApp.settingsDetailController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.settings.helper', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', function ($scope, dialogService, settingsHelper, bladeNavigationService, settings) {
 
     $scope.blade.refresh = function () {
         if ($scope.blade.moduleId) {
@@ -15,42 +15,22 @@
     }
 
     function initializeBlade(results) {
-        // parse values as they all are strings
-        var selectedSettings = _.where(results, { valueType: 'Integer' });
-        _.forEach(selectedSettings, function (setting) {
-            setting.value = parseInt(setting.value, 10);
-            if (setting.allowedValues) {
-                setting.allowedValues = _.map(setting.allowedValues, function (value) { return parseInt(value, 10); });
-            }
-        });
-
-        selectedSettings = _.where(results, { valueType: 'Decimal' });
-        _.forEach(selectedSettings, function (setting) {
-            setting.value = parseFloat(setting.value);
-            if (setting.allowedValues) {
-                setting.allowedValues = _.map(setting.allowedValues, function (value) { return parseFloat(value); });
-            }
-        });
-
-        selectedSettings = _.where(results, { valueType: 'Boolean' });
-        _.forEach(selectedSettings, function (setting) {
-            setting.value = setting.value.toLowerCase() === 'true';
-            if (setting.allowedValues) {
-                setting.allowedValues = _.map(setting.allowedValues, function (value) { return value.toLowerCase() === 'true'; });
-            }
-        });
-
-        selectedSettings = _.where(results, { isArray: true });
-        _.forEach(selectedSettings, function (setting) {
-            if (setting.arrayValues) {
-                setting.arrayValues = _.map(setting.arrayValues, function (x) { return { value: x }; });
-            }
-        });
+        settingsHelper.fixValues(results);
 
         _.each(results, function (setting) {
+            // set group names to show.
             if (setting.groupName) {
                 var paths = setting.groupName.split('|');
-                setting.groupName = paths[paths.length - 1];
+                setting.groupName = paths.pop();
+            }
+
+            // transform to va-generic-value-input suitable structure
+            setting.isDictionary = _.any(setting.allowedValues);
+            setting.values = setting.isDictionary ? [{ value: { id: setting.value, name: setting.value } }] : [{ id: setting.value, value: setting.value }];
+            if (setting.allowedValues) {
+                setting.allowedValues = _.map(setting.allowedValues, function (x) {
+                    return { id: x, name: x };
+                });
             }
         });
 
@@ -85,6 +65,11 @@
     function saveChanges() {
         $scope.blade.isLoading = true;
         var objects = _.flatten(_.map($scope.blade.currentEntities, _.values));
+        objects = _.map(objects, function (x) {
+            x.value = x.isDictionary ? x.values[0].value.id : x.values[0].value;
+            x.values = undefined;
+            return x;
+        });
 
         var selectedSettings = _.where(objects, { isArray: true });
         _.forEach(selectedSettings, function (setting) {
@@ -99,13 +84,13 @@
                 $scope.blade.refresh();
             } else {
                 $scope.blade.origEntity = $scope.blade.currentEntities;
-                $scope.blade.parentBlade.refresh();
+                $scope.blade.parentBlade.refresh(true);
             }
         }, function (error) {
             bladeNavigationService.setError('Error ' + error.status, $scope.blade);
         });
     };
-    
+
     $scope.blade.headIcon = 'fa-wrench';
     $scope.blade.toolbarCommands = [
         {
@@ -116,7 +101,7 @@
             canExecuteMethod: function () {
                 return isDirty() && formScope && formScope.$valid;
             },
-            permission: 'platform:setting:manage'
+            permission: 'platform:setting:update'
         },
         {
             name: "Reset", icon: 'fa fa-undo',
@@ -126,7 +111,7 @@
             canExecuteMethod: function () {
                 return isDirty();
             },
-            permission: 'platform:setting:manage'
+            permission: 'platform:setting:update'
         }
     ];
 
@@ -149,6 +134,10 @@
             closeCallback();
         }
     };
+
+    $scope.getDictionaryValues = function (setting, callback) {
+        callback(setting.allowedValues);
+    }
 
     // actions on load
     $scope.blade.refresh();

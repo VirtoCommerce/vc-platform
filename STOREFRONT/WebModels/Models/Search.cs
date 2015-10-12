@@ -16,15 +16,17 @@ namespace VirtoCommerce.Web.Models
     [DataContract]
     public class Search : Drop
     {
-        //private bool _productsLoaded = false;
+        private bool _ResultsLoaded = false;
         #region Constructors and Destructors
         public Search()
         {
-            this.Performed = true;
         }
         #endregion
 
         #region Public Properties
+        /// <summary>
+        /// Indicates that search request has been submitted successfully.
+        /// </summary>
         public bool Performed { get; set; }
 
         private ItemCollection<object> _Results = null;
@@ -55,7 +57,7 @@ namespace VirtoCommerce.Web.Models
         #region Methods
         private void LoadSearchResults()
         {
-            if (!this.Performed)
+            if (this._ResultsLoaded)
             {
                 return;
             }
@@ -71,7 +73,7 @@ namespace VirtoCommerce.Web.Models
             var response = Task.Run(() => service.SearchAsync<object>(siteContext, searchQuery)).Result;
             this.Results = response;
 
-            this.Performed = false;
+            this._ResultsLoaded = true;
         }
         #endregion
     }

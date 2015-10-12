@@ -1,7 +1,8 @@
 ﻿angular.module('virtoCommerce.contentModule')
 .controller('virtoCommerce.contentModule.editPageController', ['$scope', 'platformWebApp.dialogService', 'virtoCommerce.contentModule.stores', 'virtoCommerce.contentModule.pages', '$timeout', 'platformWebApp.bladeNavigationService', 'FileUploader', function ($scope, dialogService, pagesStores, pages, $timeout, bladeNavigationService, FileUploader) {
     var blade = $scope.blade;
-    var codemirrorEditor;
+    blade.editAsMarkdown = true;
+    blade.editAsHtml = false;
 
     blade.initialize = function () {
         pagesStores.get({ id: blade.choosenStoreId }, function (data) {
@@ -16,21 +17,29 @@
                     blade.isByteContent = blade.isFile();
 
                     if (!blade.isFile()) {
-                    $timeout(function () {
-                        if (codemirrorEditor) {
-                            codemirrorEditor.refresh();
-                            codemirrorEditor.focus();
-                        }
                         blade.origEntity = angular.copy(blade.currentEntity);
-                    }, 1);
+
+                        var pathParts = blade.currentEntity.name.split('/');
+                        var pageNameWithExtension = pathParts[pathParts.length - 1];
+                        var pageName = pageNameWithExtension.split('.')[0];
+                        blade.currentEntity.pageName = pageName;
+
+                        blade.origEntity = angular.copy(blade.currentEntity);
+
+                        var parts = blade.currentEntity.content.split('---');
+                        if (parts.length > 2) {
+                            blade.body = parts[2].trim();
+                            blade.metadata = parts[1].trim();
+                        }
+                        else {
+                            blade.body = parts[0];
+                        }
                     }
                     else {
                     	if (blade.isImage()) {
                     		blade.image = "data:" + blade.currentEntity.contentType + ";base64," + blade.currentEntity.byteContent;
                     	}
                     }
-
-                    blade.origEntity = angular.copy(blade.currentEntity);
                 },
                 function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
             }
@@ -38,8 +47,13 @@
 				blade.currentEntity.language = blade.defaultStoreLanguage;
 				blade.isByteContent = blade.isFile();
 				blade.isLoading = false;
+				blade.currentEntity.content = "---\n\n---\n"
 				blade.origEntity = angular.copy(blade.currentEntity);
-			}
+
+				var parts = blade.currentEntity.content.split('---');
+				blade.body = parts[2].trim();
+				blade.metadata = parts[1].trim();
+            }
 
             blade.initializeUploader();
             blade.initializeButtons();
@@ -54,7 +68,7 @@
     			var uploader = $scope.uploader = new FileUploader({
     				scope: $scope,
     				headers: { Accept: 'application/json' },
-    				url: 'api/platform/assets',
+    				url: 'api/platform/assets/pages',
     				autoUpload: true,
     				removeAfterUpload: true
     			});
@@ -84,29 +98,72 @@
     		$scope.blade.toolbarCommands.push(
 				{
 				    name: "Save page", icon: 'fa fa-save',
-					executeMethod: function () { $scope.saveChanges(); }, canExecuteMethod: function () { return blade.isDirty(); }, permission: 'content:manage'
+					executeMethod: function () { $scope.saveChanges(); }, canExecuteMethod: function () { return blade.isDirty(); }, permission: 'content:update'
 				});
     		$scope.blade.toolbarCommands.push(
 				{
 				    name: "Reset page", icon: 'fa fa-undo',
-					executeMethod: function () { angular.copy(blade.origEntity, blade.currentEntity); }, canExecuteMethod: function () { return blade.isDirty(); }, permission: 'content:manage'
+				    executeMethod: function () {
+				        angular.copy(blade.origEntity, blade.currentEntity);
+				        var parts = blade.currentEntity.content.split('---');
+				        if (parts.length > 2) {
+				            blade.body = parts[2].trim();
+				            blade.metadata = parts[1].trim();
+				        }
+				        else {
+				            blade.body = parts[0];
+				        }
+				        $scope.$broadcast('resetContent', { body: blade.body });
+				    },
+				    canExecuteMethod: function () { return blade.isDirty(); },
+				    permission: 'content:update'
 				});
     		$scope.blade.toolbarCommands.push(
 				{
 				    name: "Delete page", icon: 'fa fa-trash-o',
-					executeMethod: function () { blade.deleteEntry(); }, canExecuteMethod: function () { return true; }, permission: 'content:manage'
+				    executeMethod: function () { blade.deleteEntry(); }, canExecuteMethod: function () { return true; }, permission: 'content:delete'
 				});
+    		$scope.blade.toolbarCommands.push(
+                {
+                    name: "Edit as markdown", icon: 'fa fa-code',
+                    executeMethod: function () {
+                        blade.editAsMarkdown = true;
+                        blade.editAsHtml = false;
+                        $scope.$broadcast('changeEditType', { editAsMarkdown: true, editAsHtml: false });
+                    },
+                    canExecuteMethod: function () { return !blade.editAsMarkdown; },
+                    permission: 'content:manage'
+                });
+    		$scope.blade.toolbarCommands.push(
+                {
+                    name: "Edit as html", icon: 'fa fa-code',
+                    executeMethod: function () {
+                        blade.editAsHtml = true;
+                        blade.editAsMarkdown = false;
+                        $scope.$broadcast('changeEditType', { editAsHtml: true, editAsMarkdown: false });
+                    },
+                    canExecuteMethod: function () { return !blade.editAsHtml; },
+                    permission: 'content:manage'
+                });
             }
             else {
     		$scope.blade.toolbarCommands.push(
 				{
 				    name: "Create", icon: 'fa fa-save',
-					executeMethod: function () { $scope.saveChanges(); }, canExecuteMethod: function () { return blade.isDirty(); }, permission: 'content:manage'
+					executeMethod: function () { $scope.saveChanges(); }, canExecuteMethod: function () { return blade.isDirty(); }, permission: 'content:update'
 				});
     	}
     }
 
     blade.isDirty = function () {
+        if (!angular.isUndefined(blade.currentEntity) && !blade.isFile()) {
+            if (blade.currentEntity.content.indexOf('---\n') !== -1 || blade.metadata !== '') {
+                blade.currentEntity.content = '---\n' + blade.metadata.trim() + '\n---\n' + blade.body.trim();
+            }
+            else {
+                blade.currentEntity.content = blade.body;
+            }
+        }
     	var retVal = !angular.equals(blade.currentEntity, blade.origEntity);
 
     	if (!angular.isUndefined($scope.formScope)) {
@@ -151,7 +208,9 @@
         	}
 
             pages.checkName({ storeId: blade.choosenStoreId, pageName: blade.currentEntity.name, language: blade.currentEntity.language }, function (data) {
-            	if (Boolean(data.result)) {
+                if (Boolean(data.result)) {
+                    blade.setNewName();
+
                     pages.update({ storeId: blade.choosenStoreId }, blade.currentEntity, function () {
                         blade.origEntity = angular.copy(blade.currentEntity);
                         blade.newPage = false;
@@ -176,15 +235,20 @@
             function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
         }
         else {
-            pages.update({ storeId: blade.choosenStoreId }, blade.currentEntity, function () {
-                blade.choosenPageName = blade.currentEntity.name;
-                blade.choosenPageLanguage = blade.currentEntity.language;
-                blade.title = blade.currentEntity.name;
-                blade.subtitle = 'Edit page';
-                blade.newPage = false;
-                blade.parentBlade.initialize();
-            },
-            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+            if (blade.origEntity.pageName !== blade.currentEntity.pageName) {
+                pages.delete({ storeId: blade.choosenStoreId, pageNamesAndLanguges: blade.choosenPageLanguage + '^' + blade.choosenPageName }, function () {
+                    blade.setNewName();
+                    blade.update();
+                }, function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+            }
+            else if (blade.origEntity.language !== blade.currentEntity.language) {
+                pages.delete({ storeId: blade.choosenStoreId, pageNamesAndLanguges: blade.choosenPageLanguage + '^' + blade.choosenPageName }, function () {
+                    blade.update();
+                }, function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+            }
+            else {
+                blade.update();
+            }
         }
     };
 
@@ -199,7 +263,7 @@
 
                     pages.delete({ storeId: blade.choosenStoreId, pageNamesAndLanguges: blade.choosenPageLanguage + '^' + blade.choosenPageName }, function () {
                         $scope.bladeClose();
-                        blade.initialize();
+                        blade.parentBlade.initialize();
                     },
                     function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
                 }
@@ -226,14 +290,15 @@
             var dialog = {
                 id: "confirmCurrentBladeClose",
                 title: "Save changes",
-                message: "The page has been modified. Do you want to save changes?",
-                callback: function (needSave) {
-                    if (needSave) {
-                        $scope.saveChanges();
-                    }
-                    closeCallback();
+                message: "The page has been modified. Do you want to save changes?"
+            };
+
+            dialog.callback = function (needSave) {
+                if (needSave) {
+                    $scope.saveChanges();
                 }
-            }
+                closeCallback();
+            };
             dialogService.showConfirmationDialog(dialog);
         }
         else {
@@ -268,24 +333,30 @@
         }
     };
 
-    // Codemirror configuration
-    $scope.editorOptions = {
-        lineWrapping: true,
-        lineNumbers: true,
-        extraKeys: { "Ctrl-Q": function (cm) { cm.foldCode(cm.getCursor()); } },
-        foldGutter: true,
-        gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
-        onLoad: function (_editor) {
-            codemirrorEditor = _editor;
+    blade.update = function () {
+        pages.update({ storeId: blade.choosenStoreId }, blade.currentEntity, function () {
+            blade.choosenPageName = blade.currentEntity.name;
+            blade.choosenPageLanguage = blade.currentEntity.language;
+            blade.title = blade.currentEntity.name;
+            blade.subtitle = 'Edit page';
+            blade.newPage = false;
+            blade.parentBlade.initialize();
+            blade.isLoading = false,
+            blade.origEntity = angular.copy(blade.currentEntity);
         },
-        //mode: 'xml'
-        mode: 'htmlmixed'
-    };
+        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+    }
 
-    blade.getBladeStyle = function () {
-        var value = $(window).width() - 550;
+    blade.setNewName = function () {
+        var pathParts = blade.currentEntity.name.split('/');
+        var pageNameWithExtension = pathParts[pathParts.length - 1];
+        var parts = pageNameWithExtension.split('.');
 
-        return 'width:' + value + 'px';
+        blade.currentEntity.name = blade.currentEntity.id = pathParts.slice(0, pathParts.length - 1).join('/') + (pathParts.length > 1 ? '/' : '') + blade.currentEntity.pageName;
+        if (parts.length > 1) {
+            blade.currentEntity.name += "." + parts[parts.length - 1];
+            blade.currentEntity.id += "." + parts[parts.length - 1];
+        }
     }
 
     blade.initialize();

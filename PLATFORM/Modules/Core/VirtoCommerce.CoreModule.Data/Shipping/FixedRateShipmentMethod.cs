@@ -16,7 +16,7 @@ namespace VirtoCommerce.CoreModule.Data.Shipping
 		{
 		}
 
-		public FixedRateShippingMethod(ICollection<SettingEntry> settings)
+		public FixedRateShippingMethod(params SettingEntry[] settings)
 			: base("FixedRate")
 		{
 			Settings = settings;
@@ -27,7 +27,7 @@ namespace VirtoCommerce.CoreModule.Data.Shipping
 			get
 			{
 				decimal retVal = 0;
-                var settingRate = Settings.Where(x => x.Name == "Rate").FirstOrDefault();
+                var settingRate = Settings.Where(x => x.Name == "VirtoCommerce.Core.FixedRateShippingMethod.Rate").FirstOrDefault();
 				if(settingRate != null)
 				{
 					retVal = Decimal.Parse(settingRate.Value, CultureInfo.InvariantCulture);

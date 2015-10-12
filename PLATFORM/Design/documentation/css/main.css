@@ -333,7 +333,16 @@ p
             position: relative;
         }
 
-            .preview-blade .fa
+        .content .add-tab,
+        .content .remove-tab
+        {
+            display: inline-block;
+            margin: 0 5px 0 0;
+        }
+
+            .preview-blade .fa,
+            .add-tab .fa,
+            .remove-tab .fa
             {
                 font-size: 16px;
                 margin: 0 5px 0 0;
@@ -391,6 +400,11 @@ p
             .popup .image
             {
                 height: auto;
+            }
+
+            .popup .add-tab
+            {
+                margin: 0 5px 0 0;
             }
 
 .footer

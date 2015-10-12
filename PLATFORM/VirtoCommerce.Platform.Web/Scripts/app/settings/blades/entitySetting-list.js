@@ -92,7 +92,7 @@
             canExecuteMethod: function () {
                 return isDirty();
             },
-            permission: 'platform:setting:manage'
+            permission: 'platform:setting:update'
         }
     ];
 

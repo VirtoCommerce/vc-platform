@@ -31,9 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DotLiquid, Version=1.8.0.0, Culture=neutral, PublicKeyToken=82e46016ecf9f07c, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Shared\DotLiquid.dll</HintPath>
+    <Reference Include="DotLiquid, Version=1.0.0.0, Culture=neutral, PublicKeyToken=82e46016ecf9f07c, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotLiquid.VirtoCommerce.1.8.2\lib\NET45\DotLiquid.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="MarkdownDeep">
       <HintPath>..\packages\MarkdownDeep.NET.1.5\lib\.NetFramework 3.5\MarkdownDeep.dll</HintPath>
@@ -98,6 +98,7 @@
     <Compile Include="Contents\PublishingService.cs" />
     <Compile Include="Contents\ShouldProcess.cs" />
     <Compile Include="Contents\SiteStaticContentContext.cs" />
+    <Compile Include="Contents\Yaml.cs" />
     <Compile Include="Engines\Liquid\CommerceFilters.cs" />
     <Compile Include="Engines\Liquid\Extensions\HttpContextExtensions.cs" />
     <Compile Include="Engines\Liquid\Extensions\ObjectExtensions.cs" />
@@ -126,7 +127,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ApiClient\VirtoCommerce.ApiClient.csproj">

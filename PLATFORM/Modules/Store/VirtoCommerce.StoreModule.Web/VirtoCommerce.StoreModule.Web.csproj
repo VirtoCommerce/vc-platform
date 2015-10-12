@@ -120,19 +120,19 @@
     <Content Include="Scripts\blades\paymentMethod-detail.js" />
     <Content Include="Scripts\blades\seo-detail.js" />
     <Content Include="Scripts\blades\seo-detail.tpl.html" />
+    <Content Include="Scripts\blades\taxProvider-detail.js" />
     <Content Include="Scripts\blades\shippingMethod-detail.js" />
     <Content Include="Scripts\blades\paymentMethod-detail.tpl.html" />
+    <Content Include="Scripts\blades\taxProvider-detail.tpl.html" />
     <Content Include="Scripts\blades\shippingMethod-detail.tpl.html" />
     <Content Include="Scripts\blades\paymentMethod-list.js" />
+    <Content Include="Scripts\blades\taxProvider-list.js" />
     <Content Include="Scripts\blades\shippingMethod-list.js" />
     <Content Include="Scripts\blades\paymentMethod-list.tpl.html" />
+    <Content Include="Scripts\blades\taxProvider-list.tpl.html" />
     <Content Include="Scripts\blades\shippingMethod-list.tpl.html" />
     <Content Include="Scripts\blades\stores-list.js" />
     <Content Include="Scripts\blades\stores-list.tpl.html" />
-    <Content Include="Scripts\blades\store-setting-detail.js" />
-    <Content Include="Scripts\blades\store-setting-detail.tpl.html" />
-    <Content Include="Scripts\blades\store-settings-list.js" />
-    <Content Include="Scripts\blades\store-settings-list.tpl.html" />
     <Content Include="Scripts\blades\store-advanced.js" />
     <Content Include="Scripts\blades\store-detail.js" />
     <Content Include="Scripts\blades\store-advanced.tpl.html" />
@@ -148,7 +148,9 @@
     <Content Include="Scripts\widgets\storePaymentsWidget.tpl.html" />
     <Content Include="Scripts\widgets\storeSettingsWidget.tpl.html" />
     <Content Include="Scripts\widgets\storeAdvancedWidget.tpl.html" />
+    <Content Include="Scripts\widgets\storeTaxingWidget.js" />
     <Content Include="Scripts\widgets\storeShippingWidget.js" />
+    <Content Include="Scripts\widgets\storeTaxingWidget.tpl.html" />
     <Content Include="Scripts\widgets\storeShippingWidget.tpl.html" />
     <Content Include="Scripts\wizards\newStore\new-store-wizard.tpl.html" />
     <Content Include="Scripts\blades\store-detail.tpl.html" />
@@ -161,9 +163,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\Api\StoreModuleController.cs" />
-    <Compile Include="Controllers\PredefinedPermissions.cs" />
+    <Compile Include="Security\StorePredefinedPermissions.cs" />
     <Compile Include="Converters\FulfillmentConverter.cs" />
     <Compile Include="Converters\PaymentMethodConverter.cs" />
+    <Compile Include="Converters\TaxProviderConverter.cs" />
     <Compile Include="Converters\ShippingMethodConverter.cs" />
     <Compile Include="Converters\StoreConverter.cs" />
     <Compile Include="Converters\SettingConverter.cs" />
@@ -173,8 +176,10 @@
     <Compile Include="Model\ShippingMethod.cs" />
     <Compile Include="Model\Store.cs" />
     <Compile Include="Model\Setting.cs" />
+    <Compile Include="Model\TaxProvider.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Security\StoreSelectedScope.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj">

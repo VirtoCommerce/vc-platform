@@ -303,7 +303,24 @@ namespace VirtoCommerce.Platform.Web
                                     Description = "Take count for sending job"
                                 }
                             }
-                        }
+                        },
+                         new ModuleSettingsGroup
+                        {
+                            Name = "Platform|Security",
+                            Settings = new []
+                            {
+                                new ModuleSetting
+                                {
+                                    Name = "VirtoCommerce.Platform.Security.AccountTypes",
+                                    ValueType = ModuleSetting.TypeString,
+                                    Title = "Account types",
+                                    Description = "Dictionary for possible account types",
+                                    IsArray = true,
+                                    ArrayValues = Enum.GetNames(typeof(AccountType)),
+                                    DefaultValue = AccountType.Manager.ToString()
+                                }
+                            }
+                        }                     
                     }
                 }
             };
@@ -389,10 +406,7 @@ namespace VirtoCommerce.Platform.Web
             #endregion
 
             #region Security
-
-            var permissionService = new PermissionService(platformRepositoryFactory, manifestProvider, cacheManager);
-            container.RegisterInstance<IPermissionService>(permissionService);
-
+            container.RegisterInstance<IPermissionScopeService>(new PermissionScopeService());
             container.RegisterType<IRoleManagementService, RoleManagementService>(new ContainerControlledLifetimeManager());
 
             var apiAccountProvider = new ApiAccountProvider(platformRepositoryFactory, cacheManager);

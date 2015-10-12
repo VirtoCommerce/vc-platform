@@ -31,8 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DotLiquid">
-      <HintPath>..\Shared\DotLiquid.dll</HintPath>
+    <Reference Include="DotLiquid, Version=1.0.0.0, Culture=neutral, PublicKeyToken=82e46016ecf9f07c, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotLiquid.VirtoCommerce.1.8.2\lib\NET45\DotLiquid.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
@@ -85,7 +86,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Convertors\AddressConverter.cs" />
+    <Compile Include="Convertors\AttachmentConverter.cs" />
     <Compile Include="Convertors\PagesConverters.cs" />
+    <Compile Include="Convertors\QuoteItemConverter.cs" />
+    <Compile Include="Convertors\QuoteRequestConverter.cs" />
+    <Compile Include="Convertors\ShippingMethodConverter.cs" />
+    <Compile Include="Convertors\TaxLineConverter.cs" />
+    <Compile Include="Exceptions\SaasCompileException.cs" />
+    <Compile Include="Filters\ILiquidContains.cs" />
+    <Compile Include="Helpers\DecimalPriceConverter.cs" />
+    <Compile Include="Models\Attachment.cs" />
     <Compile Include="Models\Cms\Article.cs" />
     <Compile Include="Models\Banners\Banner.cs" />
     <Compile Include="Models\Banners\BannerCollection.cs" />
@@ -132,6 +143,7 @@
     <Compile Include="Models\Forms\ForgotPasswordFormModel.cs" />
     <Compile Include="Models\Forms\LoginFormModel.cs" />
     <Compile Include="Models\Forms\NewAddressFormModel.cs" />
+    <Compile Include="Models\Forms\ContactFormModel.cs" />
     <Compile Include="Models\Forms\PayOrderFormModel.cs" />
     <Compile Include="Models\Forms\RegisterFormModel.cs" />
     <Compile Include="Models\Forms\ResetPasswordFormModel.cs" />
@@ -158,10 +170,15 @@
     <Compile Include="Models\Price.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\PropertiesDrop.cs" />
+    <Compile Include="Models\QuoteItem.cs" />
+    <Compile Include="Models\QuoteRequest.cs" />
+    <Compile Include="Models\QuoteRequestSearchCriteria.cs" />
+    <Compile Include="Models\QuoteTotals.cs" />
     <Compile Include="Models\Storage\DownloadLink.cs" />
     <Compile Include="Models\Storage\ProductDownloadLinks.cs" />
     <Compile Include="Models\Tagging\SelectedTagCollection.cs" />
     <Compile Include="Models\Tagging\TagCollection.cs" />
+    <Compile Include="Models\TierPrice.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\Review.cs" />
     <Compile Include="Routing\CanonicalizedAttribute.cs" />
@@ -196,6 +213,7 @@
     <Compile Include="Services\FileThemeViewLocator.cs" />
     <Compile Include="Services\LiquidTemplateParser.cs" />
     <Compile Include="Services\PagesService.cs" />
+    <Compile Include="Services\QuotesService.cs" />
     <Compile Include="Services\SecurityService.cs" />
     <Compile Include="Models\Settings.cs" />
     <Compile Include="Models\ShippingMethod.cs" />

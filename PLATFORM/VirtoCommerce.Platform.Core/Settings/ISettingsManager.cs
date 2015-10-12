@@ -4,8 +4,21 @@ namespace VirtoCommerce.Platform.Core.Settings
     public interface ISettingsManager
     {
         ModuleDescriptor[] GetModules();
-		SettingEntry[] GetObjectSettings(string objectType, string objectId);
-		void RemoveObjectSettings(string objectType, string objectId);
+        /// <summary>
+        /// Deep load and populate settings values for entity and all nested objects 
+        /// </summary>
+        /// <param name="entity"></param>
+		void LoadEntitySettingsValues(Entity entity);
+        /// <summary>
+        /// Deep save entity and all nested objects settings values
+        /// </summary>
+        /// <param name="entity"></param>
+        void SaveEntitySettingsValues(Entity entity);
+        /// <summary>
+        /// Deep remove entity and all nested objects settings values
+        /// </summary>
+        /// <param name="entity"></param>
+		void RemoveEntitySettings(Entity entity);
 		SettingEntry GetSettingByName(string name);
 		SettingEntry[] GetModuleSettings(string moduleId);
 		void SaveSettings(SettingEntry[] settings);

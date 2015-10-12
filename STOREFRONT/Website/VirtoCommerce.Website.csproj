@@ -45,8 +45,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="DotLiquid, Version=1.0.0.0, Culture=neutral, PublicKeyToken=82e46016ecf9f07c, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Shared\DotLiquid.dll</HintPath>
+      <HintPath>..\packages\DotLiquid.VirtoCommerce.1.8.2\lib\NET45\DotLiquid.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="LibSassNetProxy">
       <HintPath>..\Shared\LibSassNetProxy.dll</HintPath>
@@ -193,9 +193,11 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AssetsController.cs" />
+    <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\DownloadController.cs" />
     <Compile Include="Controllers\ErrorsController.cs" />
     <Compile Include="Controllers\BlogController.cs" />
+    <Compile Include="Controllers\QuoteController.cs" />
     <Compile Include="Controllers\StoreControllerBase.cs" />
     <Compile Include="Controllers\CartController.cs" />
     <Compile Include="Controllers\CheckoutController.cs" />
@@ -270,6 +272,12 @@
     <Content Include="App_Data\Themes\_Global\Snippets\error_popup.liquid" />
     <Content Include="App_Data\Themes\_Global\templates\bank_card_form.liquid" />
     <Content Include="App_Data\Themes\_Default\assets\flexslider.css.liquid" />
+    <Content Include="App_Data\Themes\_Default\templates\quote.liquid" />
+    <Content Include="App_Data\Themes\_Default\templates\customers\quote.liquid" />
+    <Content Include="App_Data\Themes\_Default\templates\customers\quotes.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\customer-menu.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\quote-totals.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\quote-informer.liquid" />
     <None Include="App_Data\Themes\_Global\templates\external_login_confirmation.liquid" />
     <Content Include="App_Data\Themes\_Global\templates\index.liquid" />
     <Content Include="App_Data\Themes\_Global\templates\banner.liquid" />

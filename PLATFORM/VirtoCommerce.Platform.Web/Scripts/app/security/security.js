@@ -53,7 +53,7 @@
 	        ]
 	    });
 	}])
-    .run(['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', function ($rootScope, mainMenuService, widgetService, $state) {
+    .run(['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state',  'platformWebApp.authService', function ($rootScope, mainMenuService, widgetService, $state, authService) {
         //Register module in main menu
         var menuItem = {
             path: 'configuration/security',
@@ -61,7 +61,7 @@
             title: 'Security',
             priority: 5,
             action: function () { $state.go('workspace.securityModule'); },
-            permission: 'platform:security:query'
+            permission: 'platform:security:access'
         };
         mainMenuService.addMenuItem(menuItem);
 

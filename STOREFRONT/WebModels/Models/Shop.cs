@@ -12,6 +12,8 @@ namespace VirtoCommerce.Web.Models
             this.Checkout = new Checkout();
         }
 
+        public bool QuotesEnabled { get; set; }
+
         public string Currency { get; set; }
 
         public bool CustomerAccountsEnabled { get; set; }
@@ -36,6 +38,7 @@ namespace VirtoCommerce.Web.Models
 
         public string MoneyFormat { get; set; }
 
+        public string MoneyWithCurrencyFormat { get { return MoneyFormat; } }
         public string Name { get; set; }
 
         public string SecureUrl { get; set; }

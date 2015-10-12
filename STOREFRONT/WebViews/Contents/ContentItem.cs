@@ -13,21 +13,54 @@ namespace VirtoCommerce.Web.Views.Contents
 
         #region Fields
         private string excerpt;
+        private string content;
         #endregion
 
         #region Constructors and Destructors
         public ContentItem()
         {
-            this.Categories = Enumerable.Empty<string>();
+            this.Categories = new List<string>();
+            this.Tags = new List<string>();
         }
         #endregion
 
         #region Public Properties
         public string Author { get; set; }
 
-        public IEnumerable<string> Categories { get; set; }
+        public List<string> Categories { get; set; }
 
-        public string Content { get; set; }
+        /// <summary>
+        /// Contains both excerpt and body
+        /// </summary>
+        public string FullContent
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Only contains body without excerpt
+        /// </summary>
+        public string Content {
+            get
+            {
+                if (!string.IsNullOrWhiteSpace(this.content))
+                {
+                    return this.content;
+                }
+
+                if(this.FullContent.Contains("<!--excerpt-->"))
+                {
+                    return this.FullContent.Split(new[] { "<!--excerpt-->" }, StringSplitOptions.None)[1];
+                }
+
+                return this.FullContent;
+            }
+            set
+            {
+                this.content = value;
+            }
+        }
 
         public string ContentExcerpt
         {
@@ -38,7 +71,10 @@ namespace VirtoCommerce.Web.Views.Contents
                     return this.excerpt;
                 }
 
-                return this.Content.Split(new[] { "<!--excerpt-->" }, StringSplitOptions.None)[0];
+                if(FullContent.Contains("<!--excerpt-->"))
+                    return this.FullContent.Split(new[] { "<!--excerpt-->" }, StringSplitOptions.None)[0];
+
+                return String.Empty;
             }
             set
             {
@@ -65,6 +101,8 @@ namespace VirtoCommerce.Web.Views.Contents
         public string Title { get; set; }
 
         public string Url { get; set; }
+
+        public List<string> Tags { get; set; }
         #endregion
 
         #region Public Methods and Operators
@@ -76,15 +114,18 @@ namespace VirtoCommerce.Web.Views.Contents
                 {
                     case "categories":
                     case "category":
-                    {
-                        var categories = ((string)setting.Value).Split(
-                            new[] { "," },
-                            StringSplitOptions.RemoveEmptyEntries);
+                        {
+                            if (setting.Value is IEnumerable<string>)
+                            {
+                                Categories.AddRange((IEnumerable<string>)setting.Value);
+                            }
+                            else
+                            {
+                                Categories.Add((string)setting.Value);
+                            }
 
-                        this.Categories = categories.Select(x => x.Trim()).OrderBy(x => x);
-
-                        break;
-                    }
+                            break;
+                        }
                     case "title":
                     {
                         this.Title = (string)setting.Value;
@@ -123,17 +164,21 @@ namespace VirtoCommerce.Web.Views.Contents
                         break;
                     }
                     case "tags":
-                    case "keywords":
                     {
-                        Keywords = (string)setting.Value;
+                            if (setting.Value is IEnumerable<string>)
+                            {
+                                Tags.AddRange((IEnumerable<string>)setting.Value);
+                            }
+                            else
+                            {
+                                Tags.Add((string)setting.Value);
+                            }
+
                         break;
                     }
                 }
             }
         }
-
-        
-
         #endregion
     }
 }

@@ -6,11 +6,8 @@
                     <i class="list-ico fa" ng-class="data.virtual ? 'fa-cloud' : 'fa-folder'"></i>
                     <span class="list-name">{{data.name + (data.virtual ? ' (virtual)' : '')}}</span>
                     <ul class="menu __context" role="menu" id="cl_menu{{$index}}">
-                        <li class="menu-item" ng-click='editCatalog(data)' va-permission="catalog:catalogs:manage">
+                        <li class="menu-item" ng-click='editCatalog(data)' va-permission="catalog:read" security-scopes="data.securityScopes">
                             <i class="menu-ico fa fa-edit"></i> Manage
-                        </li>
-                        <li class="menu-item" ng-click='deleteCatalog(data)' va-permission="catalog:catalogs:manage">
-                            <i class="menu-ico fa fa-trash-o"></i> Delete
                         </li>
                     </ul>
                 </li>

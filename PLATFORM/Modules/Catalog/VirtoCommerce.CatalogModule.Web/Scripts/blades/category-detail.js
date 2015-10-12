@@ -1,14 +1,15 @@
 ﻿angular.module('virtoCommerce.catalogModule')
 .controller('virtoCommerce.catalogModule.categoryDetailController', ['$rootScope', '$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', 'virtoCommerce.catalogModule.categories', 'platformWebApp.dialogService', function ($rootScope, $scope, bladeNavigationService, settings, categories, dialogService) {
+    var blade = $scope.blade;
 
-    $scope.blade.refresh = function (parentRefresh) {
-        return categories.get({ id: $scope.blade.currentEntityId }, function (data) {
+    blade.refresh = function (parentRefresh) {
+        return categories.get({ id: blade.currentEntityId }, function (data) {
             initializeBlade(data);
             if (parentRefresh) {
-                $scope.blade.parentBlade.refresh();
+                blade.parentBlade.refresh();
             }
         },
-        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+        function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
     };
 
     function initializeBlade(data) {
@@ -16,6 +17,7 @@
         $scope.blade.origEntity = data;
         $scope.blade.title = data.name;
         $scope.blade.isLoading = false;
+        $scope.blade.securityScopes = data.securityScopes;
     };
 
     $scope.codeValidator = function (value) {
@@ -24,18 +26,18 @@
     };
 
     function isDirty() {
-        return !angular.equals($scope.blade.currentEntity, $scope.blade.origEntity);
+        return !angular.equals(blade.currentEntity, blade.origEntity);
     };
 
     function saveChanges() {
-        $scope.blade.isLoading = true;
-        categories.update({}, $scope.blade.currentEntity, function (data, headers) {
-            $scope.blade.refresh(true);
+        blade.isLoading = true;
+        categories.update({}, blade.currentEntity, function (data, headers) {
+            blade.refresh(true);
         },
-        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+        function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
     };
 
-    $scope.blade.onClose = function (closeCallback) {
+    blade.onClose = function (closeCallback) {
         closeChildrenBlades();
 
         if (isDirty()) {
@@ -58,7 +60,7 @@
     };
 
     function closeChildrenBlades() {
-        angular.forEach($scope.blade.childrenBlades.slice(), function (child) {
+        angular.forEach(blade.childrenBlades.slice(), function (child) {
             bladeNavigationService.closeBlade(child);
         });
     }
@@ -68,7 +70,7 @@
         formScope = form;
     }
     
-    $scope.blade.toolbarCommands = [
+    blade.toolbarCommands = [
 		{
 		    name: "Save", icon: 'fa fa-save',
 		    executeMethod: function () {
@@ -77,17 +79,17 @@
 		    canExecuteMethod: function () {
 		        return isDirty() && formScope && formScope.$valid;
 		    },
-		    permission: 'catalog:categories:manage'
+		    permission: 'catalog:update'
 		},
         {
             name: "Reset", icon: 'fa fa-undo',
             executeMethod: function () {
-                angular.copy($scope.blade.origEntity, $scope.blade.currentEntity);
+                angular.copy(blade.origEntity, blade.currentEntity);
             },
             canExecuteMethod: function () {
                 return isDirty();
             },
-            permission: 'catalog:categories:manage'
+            permission: 'catalog:update'
         }
     ];
 
@@ -97,18 +99,13 @@
             isApiSave: true,
             currentEntityId: 'VirtoCommerce.Core.General.TaxTypes',
             title: 'Tax types',
-            parentRefresh: function(data) { $scope.taxTypes = data; },
+            parentRefresh: function (data) { $scope.taxTypes = data; },
             controller: 'platformWebApp.settingDictionaryController',
             template: '$(Platform)/Scripts/app/settings/blades/setting-dictionary.tpl.html'
         };
-        bladeNavigationService.showBlade(newBlade, $scope.blade);
+        bladeNavigationService.showBlade(newBlade, blade);
     };
 
-    if ($scope.blade.currentEntity) {
-        initializeBlade($scope.blade.currentEntity);
-    } else {
-        $scope.blade.refresh();
-    }
-
+    blade.refresh();
     $scope.taxTypes = settings.getValues({ id: 'VirtoCommerce.Core.General.TaxTypes' });
 }]);

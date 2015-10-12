@@ -4,10 +4,6 @@
     function initializeBlade(data) {
         $scope.blade.currentEntities = data;
         $scope.blade.isLoading = false;
-
-        $scope.blade.currentEntities.sort(function (a, b) {
-            return a.priority > b.priority;
-        });
     };
 
     $scope.selectNode = function (node) {
@@ -15,7 +11,7 @@
 
         var newBlade = {
             id: 'paymentMethodList',
-            origEntity: node,
+            data: node,
             title: $scope.blade.title,
             subtitle: 'Edit payment method',
             controller: 'virtoCommerce.storeModule.paymentMethodDetailController',
@@ -36,9 +32,7 @@
 
     $scope.blade.headIcon = 'fa-archive';
 
-    $scope.$watch('blade.parentBlade.currentEntity.paymentMethods', function (currentEntities) {
-        initializeBlade(currentEntities);
-    });
+    $scope.$watch('blade.parentBlade.currentEntity.paymentMethods', initializeBlade);
 
     // actions on load
     // $scope.$watch('blade.parentBlade.currentEntity.paymentMethods' gets fired

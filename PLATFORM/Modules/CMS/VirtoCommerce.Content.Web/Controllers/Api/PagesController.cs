@@ -1,172 +1,180 @@
-﻿using System.Net;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Web.Http;
+using System.Web.Http.Description;
+using VirtoCommerce.Content.Data.Services;
+using VirtoCommerce.Content.Web.Converters;
+using VirtoCommerce.Content.Web.Models;
+using VirtoCommerce.Content.Web.Security;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
+using VirtoCommerce.Web.Utilities;
 
 namespace VirtoCommerce.Content.Web.Controllers.Api
 {
-	#region
 
-	using System;
-	using System.Linq;
-	using System.Web.Http;
-	using System.Web.Http.Description;
-	using VirtoCommerce.Content.Data.Services;
-	using VirtoCommerce.Content.Web.Models;
-	using VirtoCommerce.Content.Web.Converters;
-	using System.Collections.Generic;
-	using VirtoCommerce.Web.Utilities;
+    [RoutePrefix("api/cms/{storeId}/pages")]
+    public class PagesController : ContentBaseController
+    {
+        #region Fields
 
-	#endregion
+        private IPagesService _pagesService;
 
-	[RoutePrefix("api/cms/{storeId}/pages")]
-	[CheckPermission(Permission = PredefinedPermissions.Query)]
-	public class PagesController : ApiController
-	{
-		#region Fields
+        #endregion
 
-		private IPagesService _pagesService;
+        #region Constructors and Destructors
 
-		#endregion
+        public PagesController(Func<string, IPagesService> serviceFactory, ISettingsManager settingsManager, 
+                                ISecurityService securityService, IPermissionScopeService permissionScopeService)
+            :base(securityService, permissionScopeService)
+        {
+            if (serviceFactory == null)
+            {
+                throw new ArgumentNullException("serviceFactory");
+            }
 
-		#region Constructors and Destructors
+            if (settingsManager == null)
+            {
+                throw new ArgumentNullException("settingsManager");
+            }
 
-		public PagesController(Func<string, IPagesService> serviceFactory, ISettingsManager settingsManager)
-		{
-			if (serviceFactory == null)
-			{
-				throw new ArgumentNullException("serviceFactory");
-			}
+            var chosenRepository = settingsManager.GetValue(
+                "VirtoCommerce.Content.MainProperties.PagesRepositoryType",
+                string.Empty);
 
-			if (settingsManager == null)
-			{
-				throw new ArgumentNullException("settingsManager");
-			}
+            var pagesService = serviceFactory.Invoke(chosenRepository);
 
-			var chosenRepository = settingsManager.GetValue(
-				"VirtoCommerce.Content.MainProperties.PagesRepositoryType",
-				string.Empty);
+            _pagesService = pagesService;
+        }
 
-			var pagesService = serviceFactory.Invoke(chosenRepository);
+        #endregion
 
-			_pagesService = pagesService;
-		}
+        /// <summary>
+        /// Search pages
+        /// </summary>
+        /// <remarks>Get all pages by store and criteria</remarks>
+        /// <param name="storeId">Store Id</param>
+        /// <param name="criteria">Searching pages criteria</param>
+        [HttpGet]
+        [ResponseType(typeof(IEnumerable<Page>))]
+        [Route("")]
+        public IHttpActionResult GetPages(string storeId, [FromUri]GetPagesCriteria criteria)
+        {
+            base.CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Read, new ContentScopeObject { StoreId = storeId });
+            var items = _pagesService.GetPages(storeId, criteria.ToCoreModel()).Select(s => s.ToWebModel());
+            return Ok(items);
+        }
 
-		#endregion
+        /// <summary>
+        /// Get pages folders by store id
+        /// </summary>
+        /// <param name="storeId">Store Id</param>
+        [HttpGet]
+        [ResponseType(typeof(GetPagesResult))]
+        [Route("folders")]
+        public IHttpActionResult GetFolders(string storeId)
+        {
+            base.CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Read, new ContentScopeObject { StoreId = storeId });
+            var items = _pagesService.GetPages(storeId, null);
 
-		/// <summary>
-		/// Search pages
-		/// </summary>
-		/// <remarks>Get all pages by store and criteria</remarks>
-		/// <param name="storeId">Store Id</param>
-		/// <param name="criteria">Searching pages criteria</param>
-		[HttpGet]
-		[ResponseType(typeof(IEnumerable<Page>))]
-		[Route("")]
-		public IHttpActionResult GetPages(string storeId, [FromUri]GetPagesCriteria criteria)
-		{
-			var items = _pagesService.GetPages(storeId, criteria.ToCoreModel()).Select(s => s.ToWebModel());
-			return Ok(items);
-		}
+            return Ok(items.ToWebModel());
+        }
 
-		/// <summary>
-		/// Get pages folders by store id
-		/// </summary>
-		/// <param name="storeId">Store Id</param>
-		[HttpGet]
-		[ResponseType(typeof(GetPagesResult))]
-		[Route("folders")]
-		public IHttpActionResult GetFolders(string storeId)
-		{
-			var items = _pagesService.GetPages(storeId, null);
+        /// <summary>
+        /// Get page
+        /// </summary>
+        /// <remarks>Get page by store and name+language pair.</remarks>
+        /// <param name="storeId">Store Id</param>
+        /// <param name="language">Page language</param>
+        /// <param name="pageName">Page name</param>
+        /// <response code="404">Page not found</response>
+        /// <response code="200">Page returned OK</response>
+        [HttpGet]
+        [ResponseType(typeof(Page))]
+        [ClientCache(Duration = 30)]
+        [Route("{language}/{*pageName}")]
+        public IHttpActionResult GetPage(string storeId, string language, string pageName)
+        {
+            base.CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Read, new ContentScopeObject { StoreId = storeId });
+            var item = _pagesService.GetPage(storeId, pageName, language);
+            if (item == null)
+            {
+                return NotFound();
+            }
 
-			return Ok(items.ToWebModel());
-		}
+            return Ok(item.ToWebModel());
+        }
 
-		/// <summary>
-		/// Get page
-		/// </summary>
-		/// <remarks>Get page by store and name+language pair.</remarks>
-		/// <param name="storeId">Store Id</param>
-		/// <param name="language">Page language</param>
-		/// <param name="pageName">Page name</param>
-		/// <response code="404">Page not found</response>
-		/// <response code="200">Page returned OK</response>
-		[HttpGet]
-		[ResponseType(typeof(Page))]
-		[ClientCache(Duration = 30)]
-		[Route("{language}/{*pageName}")]
-		public IHttpActionResult GetPage(string storeId, string language, string pageName)
-		{
-			var item = _pagesService.GetPage(storeId, pageName, language);
-			if (item == null)
-			{
-				return NotFound();
-			}
+        /// <summary>
+        /// Check page name
+        /// </summary>
+        /// <remarks>Check page pair name+language for store</remarks>
+        /// <param name="storeId">Store Id</param>
+        /// <param name="language">Page language</param>
+        /// <param name="pageName">Page name</param>
+        [HttpGet]
+        [ResponseType(typeof(CheckNameResult))]
+        [Route("checkname")]
+        public IHttpActionResult CheckName(string storeId, [FromUri]string pageName, [FromUri]string language)
+        {
+            base.CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Read, new ContentScopeObject { StoreId = storeId });
+            var result = _pagesService.CheckList(storeId, pageName, language);
+            var response = new CheckNameResult { Result = result };
+            return Ok(response);
+        }
 
-			return Ok(item.ToWebModel());
-		}
+        /// <summary>
+        /// Save page
+        /// </summary>
+        /// <param name="storeId">Store Id</param>
+        /// <param name="page">Page</param>
+        [HttpPost]
+        [Route("")]
+        [ResponseType(typeof(void))]
+        public IHttpActionResult SaveItem(string storeId, Page page)
+        {
+            base.CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Update, new ContentScopeObject { StoreId = storeId });
 
-		/// <summary>
-		/// Check page name
-		/// </summary>
-		/// <remarks>Check page pair name+language for store</remarks>
-		/// <param name="storeId">Store Id</param>
-		/// <param name="language">Page language</param>
-		/// <param name="pageName">Page name</param>
-		[HttpGet]
-		[ResponseType(typeof(CheckNameResult))]
-		[Route("checkname")]
-		public IHttpActionResult CheckName(string storeId, [FromUri]string pageName, [FromUri]string language)
-		{
-			var result = _pagesService.CheckList(storeId, pageName, language);
-			var response = new CheckNameResult { Result = result };
-			return Ok(response);
-		}
+            if (!string.IsNullOrEmpty(page.FileUrl))
+            {
+                using (var webClient = new WebClient())
+                {
+                    var byteContent = webClient.DownloadData(page.FileUrl);
+                    page.ByteContent = byteContent;
+                }
+            }
 
-		/// <summary>
-		/// Save page
-		/// </summary>
-		/// <param name="storeId">Store Id</param>
-		/// <param name="page">Page</param>
-		[HttpPost]
-		[Route("")]
-		[CheckPermission(Permission = PredefinedPermissions.Manage)]
-		public IHttpActionResult SaveItem(string storeId, Page page)
-		{
-			if (!string.IsNullOrEmpty(page.FileUrl))
-			{
-				using(var webClient = new WebClient())
-				{
-					var byteContent = webClient.DownloadData(page.FileUrl);
-					page.ByteContent = byteContent;
-				}
-			}
+            _pagesService.SavePage(storeId, page.ToCoreModel());
+            return StatusCode(HttpStatusCode.NoContent);
+        }
 
-			_pagesService.SavePage(storeId, page.ToCoreModel());
-			return Ok();
-		}
+        /// <summary>
+        /// Delete page
+        /// </summary>
+        /// <remarks>Delete pages with name+language pairs, that defined in pageNamesAndLanguges uri parameter</remarks>
+        /// <param name="storeId">Store Id</param>
+        /// <param name="pageNamesAndLanguges">Array of pairs name+language</param>
+        [HttpDelete]
+        [Route("")]
+        [ResponseType(typeof(void))]
+        public IHttpActionResult DeleteItem(string storeId, [FromUri]string[] pageNamesAndLanguges)
+        {
+            base.CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Delete, new ContentScopeObject { StoreId = storeId });
 
-		/// <summary>
-		/// Delete page
-		/// </summary>
-		/// <remarks>Delete pages with name+language pairs, that defined in pageNamesAndLanguges uri parameter</remarks>
-		/// <param name="storeId">Store Id</param>
-		/// <param name="pageNamesAndLanguges">Array of pairs name+language</param>
-		[HttpDelete]
-		[Route("")]
-		[CheckPermission(Permission = PredefinedPermissions.Manage)]
-		public IHttpActionResult DeleteItem(string storeId, [FromUri]string[] pageNamesAndLanguges)
-		{
-			_pagesService.DeletePage(storeId, PagesUtility.GetShortPageInfoFromString(pageNamesAndLanguges).ToArray());
-			return Ok();
-		}
+            _pagesService.DeletePage(storeId, PagesUtility.GetShortPageInfoFromString(pageNamesAndLanguges).ToArray());
+            return StatusCode(HttpStatusCode.NoContent);
+        }
 
         [HttpPost]
         [ResponseType(typeof(void))]
         [Route("blog/{blogName}")]
         public IHttpActionResult CreateBlog(string storeId, string blogName)
         {
+            base.CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Create, new ContentScopeObject { StoreId = storeId });
+
             var page = GetDefaultBlog(blogName);
             _pagesService.SavePage(storeId, page.ToCoreModel());
             return StatusCode(HttpStatusCode.NoContent);
@@ -177,6 +185,8 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
         [Route("blog/{blogName}")]
         public IHttpActionResult DeleteBlog(string storeId, string blogName)
         {
+            base.CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Delete, new ContentScopeObject { StoreId = storeId });
+
             _pagesService.DeleteBlog(storeId, blogName);
             return StatusCode(HttpStatusCode.NoContent);
         }
@@ -186,6 +196,8 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
         [Route("blog/{blogName}/{oldBlogName}")]
         public IHttpActionResult UpdateBlog(string storeId, string blogName, string oldBlogName)
         {
+            base.CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Update, new ContentScopeObject { StoreId = storeId });
+
             _pagesService.UpdateBlog(storeId, blogName, oldBlogName);
             return StatusCode(HttpStatusCode.NoContent);
         }
@@ -205,5 +217,5 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 
             return retVal;
         }
-	}
+    }
 }

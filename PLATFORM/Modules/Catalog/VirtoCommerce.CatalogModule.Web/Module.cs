@@ -6,9 +6,11 @@ using VirtoCommerce.CatalogModule.Data.Model;
 using VirtoCommerce.CatalogModule.Data.Repositories;
 using VirtoCommerce.CatalogModule.Data.Services;
 using VirtoCommerce.CatalogModule.Web.ExportImport;
+using VirtoCommerce.CatalogModule.Web.Security;
 using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
@@ -60,15 +62,19 @@ namespace VirtoCommerce.CatalogModule.Web
 			_container.RegisterType<ISkuGenerator, DefaultSkuGenerator>();
 
             #endregion
-
-      
         }
 
+        public override void PostInitialize()
+        {
+            var securityScopeService = _container.Resolve<IPermissionScopeService>();
+            securityScopeService.RegisterSope(() => new CatalogSelectedScope());
+            securityScopeService.RegisterSope(() => new CatalogSelectedCategoryScope(_container.Resolve<ICategoryService>()));
+        }
         #endregion
 
-		#region ISupportExportImportModule Members
+            #region ISupportExportImportModule Members
 
-		public void DoExport(Stream outStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
+        public void DoExport(Stream outStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
 		{
             var exportJob = _container.Resolve<CatalogExportImport>();
 			exportJob.DoExport(outStream, manifest, progressCallback);

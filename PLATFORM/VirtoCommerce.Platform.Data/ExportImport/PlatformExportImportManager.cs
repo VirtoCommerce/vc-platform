@@ -220,7 +220,11 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 
                 foreach (var user in usersResult.Users)
                 {
-                    platformExportObj.Users.Add(_securityService.FindByIdAsync(user.Id, UserDetails.Export).Result);
+                    var userExt = _securityService.FindByIdAsync(user.Id, UserDetails.Export).Result;
+                    if (userExt != null)
+                    {
+                        platformExportObj.Users.Add(userExt);
+                    }
                 }
             }
 

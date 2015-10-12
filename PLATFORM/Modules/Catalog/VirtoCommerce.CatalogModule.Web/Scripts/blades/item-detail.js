@@ -11,6 +11,7 @@
         return items.get({ id: blade.itemId }, function (data) {
             blade.itemId = data.id;
             blade.title = data.code;
+            blade.securityScopes = data.securityScopes;
             if (!data.productType) {
                 data.productType = 'Physical';
             }
@@ -80,7 +81,7 @@
         formScope = form;
     }
 
-    blade.headIcon = blade.productType === 'Digital' ? 'fa fa-file-archive-o' : 'fa fa-truck';
+    blade.headIcon = blade.productType === 'Digital' ? 'fa-file-zip-o' : 'fa-dropbox';
 
     blade.toolbarCommands = [
 	 {
@@ -91,7 +92,7 @@
 	     canExecuteMethod: function () {
 	         return isDirty() && formScope && formScope.$valid;
 	     },
-	     permission: 'catalog:items:manage'
+	     permission: 'catalog:update'
 	 },
         {
             name: "Reset", icon: 'fa fa-undo',
@@ -102,7 +103,7 @@
             canExecuteMethod: function () {
                 return isDirty();
             },
-            permission: 'catalog:items:manage'
+            permission: 'catalog:update'
         }
     ];
 

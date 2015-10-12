@@ -3,9 +3,7 @@
     var b = $scope.blade;
     var formScope;
     b.origEntity = {};
-
-    // b.currentEntity = {};
-
+    
     $scope.currentChild = undefined;
 
     b.refresh = function (parentRefresh) {
@@ -138,6 +136,8 @@
     $scope.setForm = function (form) {
         formScope = form;
     }
+
+    $scope.blade.headIcon = 'fa-gear';
 
     $scope.blade.toolbarCommands = [
 		{

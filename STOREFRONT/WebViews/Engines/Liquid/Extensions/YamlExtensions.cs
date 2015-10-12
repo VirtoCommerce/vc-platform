@@ -60,6 +60,7 @@ namespace VirtoCommerce.Web.Views.Engines.Liquid.Extensions
             }
 
             var yaml = new YamlStream();
+            
             yaml.Load(input);
 
             if (yaml.Documents.Count == 0)

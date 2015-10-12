@@ -1,0 +1,40 @@
+﻿<Project DefaultTargets="CleanBefore;Copy;Pack;CleanAfter" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ArtifactsDirectory>$(MSBuildProjectDirectory)\..\artifacts</ArtifactsDirectory>
+        <MSBuildCommunityTasksPath>$(MSBuildProjectDirectory)\..\PLATFORM\.build</MSBuildCommunityTasksPath>
+    </PropertyGroup>
+
+    <Import Project="$(MSBuildCommunityTasksPath)\MSBuild.Community.Tasks.targets" />
+
+    <Target Name="CleanBefore">
+        <RemoveDir Condition="Exists('$(MSBuildProjectDirectory)\wwwroot')" Directories="$(MSBuildProjectDirectory)\wwwroot" />
+    </Target>
+
+    <Target Name="CleanAfter">
+        <RemoveDir Condition="Exists('$(MSBuildProjectDirectory)\wwwroot')" Directories="$(MSBuildProjectDirectory)\wwwroot" />
+    </Target>
+
+    <Target Name="Copy">
+        <ItemGroup>
+            <Config Include="$(MSBuildProjectDirectory)\Web.config" />
+            <Store Include="$(ArtifactsDirectory)\wwwroot\store\**\*.*" Exclude="$(ArtifactsDirectory)\wwwroot\store\Web.config;$(ArtifactsDirectory)\wwwroot\store\Web.Debug.config;$(ArtifactsDirectory)\wwwroot\store\Web.Release.config" />
+            <Admin Include="$(ArtifactsDirectory)\wwwroot\admin\**\*.*" Exclude="$(ArtifactsDirectory)\wwwroot\admin\Web.config;$(ArtifactsDirectory)\wwwroot\admin\Web.Debug.config;$(ArtifactsDirectory)\wwwroot\admin\Web.Release.config" />
+        </ItemGroup>
+
+        <Copy SourceFiles="@(Config)" DestinationFolder="$(MSBuildProjectDirectory)\wwwroot" />
+        <Copy SourceFiles="@(Store)" DestinationFiles="@(Store->'$(MSBuildProjectDirectory)\wwwroot\%(RecursiveDir)%(Filename)%(Extension)')" />
+        <Copy SourceFiles="@(Admin)" DestinationFiles="@(Admin->'$(MSBuildProjectDirectory)\wwwroot\Areas\Admin\%(RecursiveDir)%(Filename)%(Extension)')" />
+    </Target>
+
+    <Target Name="Pack">
+        <ItemGroup>
+            <Link Include="$(MSBuildProjectDirectory)\wwwroot" />
+            <Link Include="$(MSBuildProjectDirectory)\installSQL1.sql" />
+            <Link Include="$(MSBuildProjectDirectory)\installSQL2.sql" />
+            <Link Include="$(MSBuildProjectDirectory)\Manifest.xml" />
+            <Link Include="$(MSBuildProjectDirectory)\Parameters.xml" />
+            <Link Include="$(MSBuildProjectDirectory)\TBEX.xml" />
+        </ItemGroup>
+        <Zip Files="@(Link)" WorkingDirectory="$(MSBuildProjectDirectory)" ZipFileName="$(ArtifactsDirectory)\VirtoCommerce.WebPI.zip" ZipLevel="9" />
+    </Target>
+</Project>

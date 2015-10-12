@@ -95,16 +95,12 @@ namespace VirtoCommerce.Web.Models.Helpers
         /// </param>
         public override void ExecuteResult(ControllerContext context)
         {
+            if (context.HttpContext.Response.IsRequestBeingRedirected) // do nothing for redirects
+                return;
+
             var filePath = String.IsNullOrEmpty(this.VirtualBasePath)
                 ? context.HttpContext.Request.MapPath(this.VirtualPath)
                 : context.HttpContext.Request.MapPath(this.VirtualPath, this.VirtualBasePath, false);
-
-            if (!String.IsNullOrEmpty(this.FileDownloadName))
-            {
-                context.HttpContext.Response.AddHeader(
-                    "content-disposition",
-                    "attachment; filename=" + this.FileDownloadName);
-            }
 
             if (!String.IsNullOrEmpty(this.ContentType))
             {
@@ -121,6 +117,13 @@ namespace VirtoCommerce.Web.Models.Helpers
                         context.HttpContext.Response.ContentType = ExtensionMapper.GetContentType(fileExt);
                     }
                 }
+            }
+
+            if (!String.IsNullOrEmpty(this.FileDownloadName))
+            {
+                context.HttpContext.Response.AddHeader(
+                    "content-disposition",
+                    "attachment; filename=" + this.FileDownloadName);
             }
 
             try

@@ -99,7 +99,7 @@ function ($scope, assignments, bladeNavigationService, dialogService) {
             canExecuteMethod: function () {
                 return true;
             },
-            permission: 'pricing:manage'
+            permission: 'pricing:create'
         },
         {
             name: "Delete", icon: 'fa fa-trash-o',
@@ -109,7 +109,7 @@ function ($scope, assignments, bladeNavigationService, dialogService) {
             canExecuteMethod: function () {
                 return isItemsChecked();
             },
-            permission: 'pricing:manage'
+            permission: 'pricing:delete'
         }
     ];
 

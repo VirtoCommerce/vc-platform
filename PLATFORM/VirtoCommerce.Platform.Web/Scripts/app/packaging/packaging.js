@@ -29,7 +29,7 @@
           title: 'Modules',
           priority: 6,
           action: function () { $state.go('workspace.packaging'); },
-          permission: 'platform:module:query'
+          permission: 'platform:module:access'
       };
       mainMenuService.addMenuItem(menuItem);
 

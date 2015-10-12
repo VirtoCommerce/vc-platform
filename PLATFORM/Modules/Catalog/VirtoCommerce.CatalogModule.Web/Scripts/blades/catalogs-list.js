@@ -10,12 +10,12 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
 
         catalogs.getCatalogs({}, function (results) {
             blade.isLoading = false;
-
+            //filter the catalogs in which we not have access
             $scope.objects = results;
-
+         
             if (selectedNode != null) {
                 //select the node in the new list
-                angular.forEach(results, function (node) {
+            	angular.forEach(results, function (node) {
                     if (selectedNode.id === node.id) {
                         selectedNode = node;
                     }
@@ -55,7 +55,8 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
                 catalogId: (selectedNode != null) ? selectedNode.id : null,
                 catalog: selectedNode,
                 controller: 'virtoCommerce.catalogModule.categoriesItemsListController',
-                template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/categories-items-list.tpl.html'
+                template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/categories-items-list.tpl.html',
+                securityScopes: selectedNode.securityScopes
             };
 
             bladeNavigationService.showBlade(newBlade, blade);
@@ -72,41 +73,20 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
         preventCategoryListingOnce = true;
     };
 
-    $scope.deleteCatalog = function (node) {
-        var dialog = {
-            id: "confirmDelete",
-            name: node.name,
-            callback: function (remove) {
-                if (remove) {
-                    blade.isLoading = true;
-                    catalogs.delete({ id: node.id }, function () {
-                        blade.refresh();
-                        $scope.refreshItems();
-                    }, function (error) {
-                        bladeNavigationService.setError('Error ' + error.status, blade);
-                    });
-                }
-            }
-        };
-        dialogService.showDialog(dialog, 'Modules/$(VirtoCommerce.Catalog)/Scripts/dialogs/deleteCatalog-dialog.tpl.html', 'platformWebApp.confirmDialogController');
-
-        preventCategoryListingOnce = true;
-    };
-
-
     function showCatalogBlade(id, data, title) {
         var newBlade = {
             currentEntityId: id,
             currentEntity: data,
             title: title,
             id: 'catalogEdit',
-            subtitle: 'edit catalog',
+            subtitle: 'Catalog details',
+            deleteFn: onAfterCatalogDeleted,
             controller: 'virtoCommerce.catalogModule.catalogDetailController',
-            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/catalog-detail.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/catalog-detail.tpl.html',
         };
 
         bladeNavigationService.showBlade(newBlade, blade);
-    };
+    }
 
     function showVirtualCatalogBlade(id, data, title) {
         var newBlade = {
@@ -114,13 +94,20 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
             currentEntity: data,
             title: title,
             subtitle: 'Virtual catalog details',
+            deleteFn: onAfterCatalogDeleted,
             id: 'catalogEdit',
             controller: 'virtoCommerce.catalogModule.virtualCatalogDetailController',
-            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/catalog-detail.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/catalog-detail.tpl.html',
         };
 
         bladeNavigationService.showBlade(newBlade, blade);
-    };
+    }
+
+    function onAfterCatalogDeleted() {
+        selectedNode = undefined;
+        $scope.selectedNodeId = undefined;
+        blade.refresh();
+    }
 
     $scope.selectNode = function (node) {
         selectedNode = node;
@@ -130,8 +117,14 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
     };
 
 
-
     blade.toolbarCommands = [
+        {
+            name: "Refresh", icon: 'fa fa-refresh',
+            executeMethod: blade.refresh,
+            canExecuteMethod: function () {
+                return true;
+            }
+        },
         {
             name: "Manage", icon: 'fa fa-edit',
             executeMethod: function () {
@@ -140,26 +133,18 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
             canExecuteMethod: function () {
                 return selectedNode;
             },
-            permission: 'catalog:catalogs:manage'
-        },
-
-      {
-          name: "Delete", icon: 'fa fa-trash-o',
-          executeMethod: function () {
-              $scope.deleteCatalog(selectedNode);
-          },
-          canExecuteMethod: function () {
-              return selectedNode;
-          },
-          permission: 'catalog:catalogs:manage'
-      }
+            permission: 'catalog:update'
+        }
     ];
 
-    if (authService.checkPermission('catalog:catalogs:manage') || authService.checkPermission('catalog:virtual_catalogs:manage')) {
-        blade.toolbarCommands.splice(0, 0, {
+    if (authService.checkPermission('catalog:create')) {
+        blade.toolbarCommands.splice(1, 0, {
             name: "Add",
             icon: 'fa fa-plus',
             executeMethod: function () {
+                selectedNode = undefined;
+                $scope.selectedNodeId = undefined;
+
                 var newBlade = {
                     id: 'listItemChild',
                     title: 'New catalog',

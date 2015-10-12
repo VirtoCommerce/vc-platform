@@ -181,7 +181,6 @@
     <Compile Include="Infrastructure\ServiceBase.cs" />
     <Compile Include="Infrastructure\SetupDatabaseInitializer.cs" />
     <Compile Include="Model\AccountEntity.cs" />
-    <Compile Include="Model\AccountState.cs" />
     <Compile Include="Model\ApiAccountEntity.cs" />
     <Compile Include="Model\DynamicPropertyDictionaryItemEntity.cs" />
     <Compile Include="Model\DynamicPropertyEntity.cs" />
@@ -196,6 +195,7 @@
     <Compile Include="Model\RoleAssignmentEntity.cs" />
     <Compile Include="Model\RoleEntity.cs" />
     <Compile Include="Model\RolePermissionEntity.cs" />
+    <Compile Include="Model\PermissionScopeEntity.cs" />
     <Compile Include="Model\SettingEntity.cs" />
     <Compile Include="Model\SettingValueEntity.cs" />
     <Compile Include="Notifications\DefaultEmailNotificationSendingGateway.cs" />
@@ -250,6 +250,30 @@
     <Compile Include="Repositories\Migrations\201507131402088_DynamicProperties.Designer.cs">
       <DependentUpon>201507131402088_DynamicProperties.cs</DependentUpon>
     </Compile>
+    <Compile Include="Repositories\Migrations\201509161444352_DetailField.cs" />
+    <Compile Include="Repositories\Migrations\201509161444352_DetailField.Designer.cs">
+      <DependentUpon>201509161444352_DetailField.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Repositories\Migrations\201509211514018_RoleScope.cs" />
+    <Compile Include="Repositories\Migrations\201509211514018_RoleScope.Designer.cs">
+      <DependentUpon>201509211514018_RoleScope.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Repositories\Migrations\201509221500078_PermissionBoundedScopeFlag.cs" />
+    <Compile Include="Repositories\Migrations\201509221500078_PermissionBoundedScopeFlag.Designer.cs">
+      <DependentUpon>201509221500078_PermissionBoundedScopeFlag.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Repositories\Migrations\201509291431544_PermissionScope.cs" />
+    <Compile Include="Repositories\Migrations\201509291431544_PermissionScope.Designer.cs">
+      <DependentUpon>201509291431544_PermissionScope.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Repositories\Migrations\201510050938282_LabelForScope.cs" />
+    <Compile Include="Repositories\Migrations\201510050938282_LabelForScope.Designer.cs">
+      <DependentUpon>201510050938282_LabelForScope.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Repositories\Migrations\201510071245053_AccountEntityEnumPropChanges.cs" />
+    <Compile Include="Repositories\Migrations\201510071245053_AccountEntityEnumPropChanges.Designer.cs">
+      <DependentUpon>201510071245053_AccountEntityEnumPropChanges.cs</DependentUpon>
+    </Compile>
     <Compile Include="Repositories\Migrations\Configuration.cs" />
     <Compile Include="Repositories\PlatformDatabaseInitializer.cs" />
     <Compile Include="Repositories\PlatformRepository.cs" />
@@ -273,6 +297,11 @@
     <Compile Include="Security\Converters\ApiAccountConverter.cs" />
     <Compile Include="Security\Converters\ApplicationUserConverter.cs" />
     <Compile Include="Security\Converters\IdentityResultConverter.cs" />
+    <Compile Include="Security\Converters\PermissionConverter.cs" />
+    <Compile Include="Security\Converters\PermissionScopeConverter.cs" />
+    <Compile Include="Security\Converters\RoleAssignmentConverter.cs" />
+    <Compile Include="Security\Converters\RoleConverter.cs" />
+    <Compile Include="Security\Converters\RolePermissionConverter.cs" />
     <Compile Include="Security\Identity\ApplicationClaimsIdentityProvider.cs" />
     <Compile Include="Security\Identity\ApplicationSignInManager.cs" />
     <Compile Include="Security\Identity\ApplicationUser.cs" />
@@ -287,10 +316,9 @@
     </Compile>
     <Compile Include="Security\Identity\Migrations\Configuration.cs" />
     <Compile Include="Security\Identity\SecurityDbContext.cs" />
-    <Compile Include="Security\PermissionService.cs" />
     <Compile Include="Security\RoleManagementService.cs" />
-    <Compile Include="Security\SecurityConverters.cs" />
     <Compile Include="Security\SecurityOptions.cs" />
+    <Compile Include="Security\PermissionScopeService.cs" />
     <Compile Include="Security\SecurityService.cs" />
     <Compile Include="Settings\Converters\ModuleConverter.cs" />
     <Compile Include="Settings\Converters\SettingConverter.cs" />
@@ -341,6 +369,24 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Repositories\Migrations\201507131402088_DynamicProperties.resx">
       <DependentUpon>201507131402088_DynamicProperties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Repositories\Migrations\201509161444352_DetailField.resx">
+      <DependentUpon>201509161444352_DetailField.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Repositories\Migrations\201509211514018_RoleScope.resx">
+      <DependentUpon>201509211514018_RoleScope.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Repositories\Migrations\201509221500078_PermissionBoundedScopeFlag.resx">
+      <DependentUpon>201509221500078_PermissionBoundedScopeFlag.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Repositories\Migrations\201509291431544_PermissionScope.resx">
+      <DependentUpon>201509291431544_PermissionScope.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Repositories\Migrations\201510050938282_LabelForScope.resx">
+      <DependentUpon>201510050938282_LabelForScope.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Repositories\Migrations\201510071245053_AccountEntityEnumPropChanges.resx">
+      <DependentUpon>201510071245053_AccountEntityEnumPropChanges.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Security\Identity\Migrations\201411101625303_InitialCreate.resx">
       <DependentUpon>201411101625303_InitialCreate.cs</DependentUpon>

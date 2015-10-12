@@ -1,0 +1,30 @@
+﻿<div class="grid">
+    <div class="grid-item text-right">
+        <div class="cart-total">
+            Subtotal
+            <span class="h1 cart-subtotal--price">
+                <small id="quote-subtotal">{{ quote_request.totals.sub_total_exl_tax | money }}</small>
+            </span>
+        </div>
+        {% if quote_request.totals.discount_total > 0 %}
+            <div class="cart-total">
+                Discount
+                <span class="h1 cart-subtotal--price">
+                    <small id="quote-subtotal">{{ quote_request.totals.discount_total | money }}</small>
+                </span>
+            </div>
+        {% endif %}
+        <div class="cart-total">
+            Tax
+            <span class="h1 cart-subtotal--price">
+                <small id="quote-tax-total">{{ quote_request.totals.tax_total | money }}</small>
+            </span>
+        </div>
+        <div class="cart-total">
+            Grand total
+            <span class="h1 cart-subtotal--price">
+                <small id="quote-grand-total">{{ quote_request.totals.grand_total_incl_tax | money }}</small>
+            </span>
+        </div>
+    </div>
+</div>

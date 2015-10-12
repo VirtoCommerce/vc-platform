@@ -119,7 +119,7 @@
                         $scope.saveChanges();
                     },
                     canExecuteMethod: $scope.isValid,
-                    permission: 'marketing:manage'
+                    permission: 'marketing:update'
                 },
                 {
                     name: "Reset",
@@ -130,7 +130,7 @@
                     canExecuteMethod: function () {
                         return isDirty();
                     },
-                    permission: 'marketing:manage'
+                    permission: 'marketing:update'
                 }
             ];
         }

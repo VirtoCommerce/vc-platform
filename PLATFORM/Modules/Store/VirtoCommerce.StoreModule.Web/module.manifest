@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <module>
   <id>VirtoCommerce.Store</id>
-  <version>2.4.0</version>
-  <platformVersion>2.4.0</platformVersion>
+  <version>2.5.0</version>
+  <platformVersion>2.5.0</platformVersion>
   <dependencies>
-    <dependency id="VirtoCommerce.Core" version="2.4.0" />
+    <dependency id="VirtoCommerce.Core" version="2.5.0" />
     <!--using catalog api, seo UI? -->
-    <dependency id="VirtoCommerce.Catalog" version="2.4.0" />
+    <dependency id="VirtoCommerce.Catalog" version="2.5.0" />
   </dependencies>
 
   <title>Store module</title>
@@ -74,8 +74,11 @@
   </settings>
   <permissions>
     <group name="Store">
-      <permission id="store:query" name="Browse stores" description="Permission to open stores menu and browse data."/>
-      <permission id="store:manage" name="Manage stores" description="Permission to manage stores information."/>
+      <permission id="store:access" name="Open stores menu"/>
+      <permission id="store:create" name="Create a store"/>
+      <permission id="store:read" name="View store data"/>
+      <permission id="store:update" name="Update store"/>
+      <permission id="store:delete" name="Delete store"/>
     </group>
   </permissions>
 </module>

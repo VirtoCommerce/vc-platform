@@ -20,5 +20,7 @@ namespace VirtoCommerce.Content.Web.Models
 		public string Language { get; set; }
 
 		public ICollection<MenuLink> MenuLinks { get; set; }
+
+        public string[] SecurityScopes { get; set; }
 	}
 }

@@ -11,10 +11,10 @@
 
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="ui-grid/ui-grid-unstable.css">
+    <link rel="stylesheet" href="css/font-awesome.css">
     <link rel="stylesheet" href="css/base-modules.css">
     <link rel="stylesheet" href="css/project-modules.css">
     <link rel="stylesheet" href="css/cosmetic.css">
-    <link rel="stylesheet" href="css/modules/catalog.css">
     <link rel="stylesheet" href="css/modules/order.css">
     <link rel="stylesheet" href="css/modules/dynamic-expression.css">
     <link rel="stylesheet" href="chosen/chosen.css">
@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="css/angular-gridster.css">
 
 </head>
-<body>
+<body ng-app="app">
 
     <div id="layout">
         <nav class="nav-bar">
@@ -38,9 +38,10 @@
                         Home
                     </a>
                 </li>
-                <li class="menu-item">
+                <li class="menu-item __notify">
                     <a class="menu-link" href="#">
-                        <span class="menu-ico fa fa-comments"></span>
+                        <span class="menu-ico fa fa-bell-o"></span>
+                        <span class="menu-count">5</span>
                         Notifications
                     </a>
                 </li>
@@ -128,7 +129,7 @@
                         </div>
                     </header>
                     <div class="dashboard-area">
-                        <div class="dashboard-inner" ng-controller="gridsterController">
+                        <div class="dashboard-inner">
                             <script type="text/ng-template" id="tmp1.html">
                                 <div class="gridster-cnt">
                                     <div class="cnt-inner">
@@ -4620,6 +4621,112 @@
                         </div>
                     </div>
                 </div>
+                <div class="blade">
+                    <header class="blade-head">
+                        <div class="blade-status"></div>
+                        <div class="blade-nav">
+                            <ul class="menu __inline">
+                                <li class="menu-item __minimize">
+                                    Minimize
+                                </li>
+                                <li class="menu-item __maximize">
+                                    Maximize
+                                </li>
+                                <li class="menu-item __close">
+                                    Close
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="blade-toolbar">
+                            <ul class="menu __inline">
+                                <li class="menu-item">
+                                    <button class="menu-btn __add-tab">
+                                        <i class="menu-ico fa fa-plus"></i>
+                                        Add tab
+                                    </button>
+                                </li>
+                                <li class="menu-item">
+                                    <button class="menu-btn __remove-tab">
+                                        <i class="menu-ico fa fa-minus"></i>
+                                        Remove tab
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </header>
+                    <div class="blade-container">
+                        <div class="blade-content __medium-wide">
+                            <div class="blade-inner">
+                                <div class="inner-block">
+                                    <div class="tabs" va-tabs>
+                                        <div class="tabs-elements">
+                                            <div class="tab-item __selected">Tab 1</div>
+                                            <div class="tab-item">Tab 2</div>
+                                            <div class="tab-item">Tab 3</div>
+                                        </div>
+                                        <div class="tab-cnt __opened">
+                                            <div class="sub-t __border">Text 1</div>
+                                            <div class="sub-t">Typography</div>
+                                            <p class="text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias cumque nisi nulla, rerum doloribus officia. Modi ex cum omnis animi consequuntur porro quibusdam mollitia! Tenetur incidunt ea, soluta commodi assumenda hic eius corporis explicabo sit, eveniet minima quia fuga aspernatur placeat itaque, illum iure rerum magnam. Illum architecto sequi, aut.</p>
+                                            <p class="text-mini __error">Warning</p>
+                                            <div class="sub-t">Forms</div>
+                                            <div class="form">
+                                                <div class="form-group">
+                                                    <div class="form-input">
+                                                        <input type="text">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <button class="btn">
+                                                        Button
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-cnt">
+                                            <div class="sub-t __border">Text 2</div>
+                                            <div class="sub-t">Typography</div>
+                                            <p class="text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias cumque nisi nulla, rerum doloribus officia. Modi ex cum omnis animi consequuntur porro quibusdam mollitia! Tenetur incidunt ea, soluta commodi assumenda hic eius corporis explicabo sit, eveniet minima quia fuga aspernatur placeat itaque, illum iure rerum magnam. Illum architecto sequi, aut.</p>
+                                            <p class="text-mini __error">Warning</p>
+                                            <div class="sub-t">Forms</div>
+                                            <div class="form">
+                                                <div class="form-group">
+                                                    <div class="form-input">
+                                                        <input type="text">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <button class="btn">
+                                                        Button
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-cnt">
+                                            <div class="sub-t __border">Text 3</div>
+                                            <div class="sub-t">Typography</div>
+                                            <p class="text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias cumque nisi nulla, rerum doloribus officia. Modi ex cum omnis animi consequuntur porro quibusdam mollitia! Tenetur incidunt ea, soluta commodi assumenda hic eius corporis explicabo sit, eveniet minima quia fuga aspernatur placeat itaque, illum iure rerum magnam. Illum architecto sequi, aut.</p>
+                                            <p class="text-mini __error">Warning</p>
+                                            <div class="sub-t">Forms</div>
+                                            <div class="form">
+                                                <div class="form-group">
+                                                    <div class="form-input">
+                                                        <input type="text">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <button class="btn">
+                                                        Button
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </article>
     </div>
@@ -4628,15 +4735,26 @@
     <script src="js/jquery/jquery.min.js"></script>
     <script src="js/jquery/jquery.mousewheel.js"></script>
     <script src="chosen/chosen.jquery.min.js"></script>
-    <script src="js/angular-gridster.js"></script>
-    <script src="js/ng-google-chart.js"></script>
     <script src="js/main.js"></script>
     <script src="js/app.js"></script>
 
-    <script src="https://www.google.com/jsapi"></script>
     <script>
         $(function () {
             $('select').chosen();
+
+            animateNotify();
+
+            setInterval(function () {
+                animateNotify();
+            }, 5000);
+
+            function animateNotify() {
+                $('.__notify').addClass('__animated');
+
+                setTimeout(function () {
+                    $('.__notify').removeClass('__animated');
+                }, 1500);
+            }
 
             $('.__new-blade').on('click', function () {
                 var blade = $(this).parents('.blade'),
@@ -4679,6 +4797,31 @@
                     $(this).remove();
                 });
             });
+
+            $('.__add-tab').on('click', function () {
+                var tabItemCounts = $('.tabs .tab-item').length;
+
+                if(tabItemCounts < 5) {
+                    $('.tabs-elements').append('<div class="tab-item">Tab ' + (tabItemCounts + 1) + '</div>');
+                    var clone = $('.tab-cnt:first').clone();
+                    clone.removeClass('__opened');
+                    $('.sub-t.__border', clone).text('Text ' + (tabItemCounts + 1));
+                    $('.tabs').append(clone);
+                }
+            });
+
+            $('.__remove-tab').on('click', function () {
+                var tabItemCounts = $('.tabs .tab-item').length;
+
+                if(tabItemCounts > 2) {
+                    if($('.tab-item').hasClass('__selected')) {
+                        $('.tab-item:first').addClass('__selected');
+                        $('.tab-cnt:first').addClass('__opened');
+                    };
+
+                    $('.tabs .tab-item:last, .tab-cnt:last').remove();
+                }
+            });
         });
 
         $(window).ready(function () {
@@ -4702,121 +4845,7 @@
         });
 
     </script>
-    <script>
-        google.load('visualization', '1', { packages: ['corechart', 'bar'] });
-        google.setOnLoadCallback(drawBasic);
-
-        function drawBasic() {
-
-            var data = new google.visualization.DataTable();
-            data.addColumn('timeofday', 'Time of Day');
-            data.addColumn('number', 'Motivation Level');
-
-            data.addRows([
-              [{ v: [8, 0, 0], f: '8 am' }, 1],
-              [{ v: [9, 0, 0], f: '9 am' }, 2],
-              [{ v: [10, 0, 0], f: '10 am' }, 3],
-              [{ v: [11, 0, 0], f: '11 am' }, 4],
-              [{ v: [12, 0, 0], f: '12 pm' }, 5],
-              [{ v: [13, 0, 0], f: '1 pm' }, 6],
-              [{ v: [14, 0, 0], f: '2 pm' }, 7],
-              [{ v: [15, 0, 0], f: '3 pm' }, 8],
-              [{ v: [16, 0, 0], f: '4 pm' }, 9],
-              [{ v: [17, 0, 0], f: '5 pm' }, 10],
-            ]);
-
-            var options = {
-                title: 'Motivation Level Throughout the Day',
-                hAxis: {
-                    title: 'Time of Day',
-                    format: 'h:mm a',
-                    viewWindow: {
-                        min: [7, 30, 0],
-                        max: [17, 30, 0]
-                    }
-                },
-                vAxis: {
-                    title: 'Rating (scale of 1-10)'
-                }
-            };
-
-            var chart = new google.visualization.ColumnChart(
-              document.getElementById('chart_div'));
-
-            chart.draw(data, options);
-        }
-    </script>
-
-    <script>
-        google.load('visualization', '1', { packages: ['corechart', 'line'] });
-        google.setOnLoadCallback(drawBasic);
-
-        function drawBasic() {
-
-            var data = new google.visualization.DataTable();
-            data.addColumn('number', 'X');
-            data.addColumn('number', 'Dogs');
-
-            data.addRows([
-              [0, 0], [1, 10], [2, 23], [3, 17], [4, 18], [5, 9],
-              [6, 11], [7, 27], [8, 33], [9, 40], [10, 32], [11, 35],
-              [12, 30], [13, 40], [14, 42], [15, 47], [16, 44], [17, 48],
-              [18, 52], [19, 54], [20, 42], [21, 55], [22, 56], [23, 57],
-              [24, 60], [25, 50], [26, 52], [27, 51], [28, 49], [29, 53],
-              [30, 55], [31, 60], [32, 61], [33, 59], [34, 62], [35, 65],
-              [36, 62], [37, 58], [38, 55], [39, 61], [40, 64], [41, 65],
-              [42, 63], [43, 66], [44, 67], [45, 69], [46, 69], [47, 70],
-              [48, 72], [49, 68], [50, 66], [51, 65], [52, 67], [53, 70],
-              [54, 71], [55, 72], [56, 73], [57, 75], [58, 70], [59, 68],
-              [60, 64], [61, 60], [62, 65], [63, 67], [64, 68], [65, 69],
-              [66, 70], [67, 72], [68, 75], [69, 80]
-            ]);
-
-            var options = {
-                hAxis: {
-                    title: 'Time'
-                },
-                vAxis: {
-                    title: 'Popularity'
-                }
-            };
-
-            var chart = new google.visualization.LineChart(document.getElementById('chart_div_2'));
-
-            chart.draw(data, options);
-        }
-    </script>
-
-    <script>
-        google.load('visualization', '1', { packages: ['corechart', 'bar'] });
-        google.setOnLoadCallback(drawStacked);
-
-        function drawStacked() {
-            var data = google.visualization.arrayToDataTable([
-              ['City', '2010 Population', '2000 Population'],
-              ['New York City, NY', 8175000, 8008000],
-              ['Los Angeles, CA', 3792000, 3694000],
-              ['Chicago, IL', 2695000, 2896000],
-              ['Houston, TX', 2099000, 1953000],
-              ['Philadelphia, PA', 1526000, 1517000]
-            ]);
-
-            var options = {
-                title: 'Population of Largest U.S. Cities',
-                chartArea: { width: '50%' },
-                isStacked: true,
-                hAxis: {
-                    title: 'Total Population',
-                    minValue: 0,
-                },
-                vAxis: {
-                    title: 'City'
-                }
-            };
-            var chart = new google.visualization.BarChart(document.getElementById('chart_div_3'));
-            chart.draw(data, options);
-        }
-    </script>
+    
 
 </body>
 </html>

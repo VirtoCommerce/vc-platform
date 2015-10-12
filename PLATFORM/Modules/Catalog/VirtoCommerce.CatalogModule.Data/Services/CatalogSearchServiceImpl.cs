@@ -160,7 +160,11 @@ namespace VirtoCommerce.CatalogModule.Data.Services
         {
             using (var repository = _catalogRepositoryFactory())
             {
-                var catalogIds = repository.Catalogs.Select(x => x.Id).ToArray();
+                var catalogIds = criteria.CatalogsIds;
+                if (catalogIds == null)
+                {
+                    catalogIds = repository.Catalogs.Select(x => x.Id).ToArray();
+                }
                 var catalogs = new ConcurrentBag<coreModel.Catalog>();
                 var parallelOptions = new ParallelOptions
                 {

@@ -22,11 +22,12 @@ using Hangfire;
 using VirtoCommerce.Domain.Common;
 using VirtoCommerce.OrderModule.Web.BackgroundJobs;
 using VirtoCommerce.OrderModule.Data.Repositories;
+using VirtoCommerce.OrderModule.Web.Security;
+using System.Web;
 
 namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 {
     [RoutePrefix("api/order/customerOrders")]
-    [CheckPermission(Permission = PredefinedPermissions.Query)]
     public class OrderModuleController : ApiController
     {
         private readonly ICustomerOrderService _customerOrderService;
@@ -35,8 +36,12 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         private readonly IStoreService _storeService;
 		private readonly CacheManager _cacheManager;
 		private readonly Func<IOrderRepository> _repositoryFactory;
+        private readonly ISecurityService _securityService;
+        private readonly IPermissionScopeService _permissionScopeService;
+        private static object _lockObject = new object();
 
-		public OrderModuleController(ICustomerOrderService customerOrderService, ICustomerOrderSearchService searchService, IStoreService storeService, IUniqueNumberGenerator numberGenerator, CacheManager cacheManager, Func<IOrderRepository> repositoryFactory)
+        public OrderModuleController(ICustomerOrderService customerOrderService, ICustomerOrderSearchService searchService, IStoreService storeService, IUniqueNumberGenerator numberGenerator, 
+                                     CacheManager cacheManager, Func<IOrderRepository> repositoryFactory, IPermissionScopeService permissionScopeService, ISecurityService securityService)
         {
             _customerOrderService = customerOrderService;
             _searchService = searchService;
@@ -44,6 +49,8 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
             _storeService = storeService;
 			_cacheManager = cacheManager;
 			_repositoryFactory = repositoryFactory;
+            _securityService = securityService;
+            _permissionScopeService = permissionScopeService;
         }
 
 		/// <summary>
@@ -55,6 +62,9 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         [Route("")]
         public IHttpActionResult Search([ModelBinder(typeof(SearchCriteriaBinder))] coreModel.SearchCriteria criteria)
         {
+            //Scope bound ACL filtration
+            criteria = FilterOrderSearchCriteria(HttpContext.Current.User.Identity.Name, criteria);
+
             var retVal = _searchService.Search(criteria);
             return Ok(retVal.ToWebModel());
         }
@@ -74,7 +84,18 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
             {
                 return NotFound();
             }
-            return Ok(retVal.ToWebModel());
+            //Scope bound security check
+            var scopes = _permissionScopeService.GetObjectPermissionScopeStrings(retVal).ToArray();
+            if (!_securityService.UserHasAnyPermission(User.Identity.Name, scopes, OrderPredefinedPermissions.Read))
+            {
+                throw new HttpResponseException(HttpStatusCode.Unauthorized);
+            }
+
+            var result = retVal.ToWebModel();
+            //Set scopes for UI scope bounded ACL checking
+            result.Scopes = scopes;
+
+            return Ok(result);
         }
 
 		/// <summary>
@@ -84,7 +105,8 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         [HttpPost]
         [ResponseType(typeof(webModel.CustomerOrder))]
         [Route("{id}")]
-		public IHttpActionResult CreateOrderFromCart(string id)
+        [CheckPermission(Permission = OrderPredefinedPermissions.Create)]
+        public IHttpActionResult CreateOrderFromCart(string id)
         {
 			var retVal = _customerOrderService.CreateByShoppingCart(id);
             return Ok(retVal.ToWebModel());
@@ -145,6 +167,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 		[HttpPost]
         [ResponseType(typeof(webModel.CustomerOrder))]
         [Route("")]
+        [CheckPermission(Permission = OrderPredefinedPermissions.Create)]
         public IHttpActionResult CreateOrder(webModel.CustomerOrder customerOrder)
         {
             var retVal = _customerOrderService.Create(customerOrder.ToCoreModel());
@@ -158,10 +181,17 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         [HttpPut]
         [ResponseType(typeof(void))]
         [Route("")]
-        [CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public IHttpActionResult Update(webModel.CustomerOrder customerOrder)
         {
 			var coreOrder = customerOrder.ToCoreModel();
+
+            //Check scope bound permission
+            var scopes = _permissionScopeService.GetObjectPermissionScopeStrings(coreOrder).ToArray();
+            if (!_securityService.UserHasAnyPermission(User.Identity.Name, scopes, OrderPredefinedPermissions.Read))
+            {
+                throw new HttpResponseException(HttpStatusCode.Unauthorized);
+            }
+
             _customerOrderService.Update(new coreModel.CustomerOrder[] { coreOrder });
             return StatusCode(HttpStatusCode.NoContent);
         }
@@ -233,7 +263,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         [HttpDelete]
         [ResponseType(typeof(void))]
         [Route("")]
-        [CheckPermission(Permission = PredefinedPermissions.Manage)]
+        [CheckPermission(Permission = OrderPredefinedPermissions.Delete)]
         public IHttpActionResult DeleteOrdersByIds([FromUri] string[] ids)
         {
             _customerOrderService.Delete(ids);
@@ -289,18 +319,52 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         [OverrideAuthorization]
 		public IHttpActionResult GetDashboardStatistics([FromUri]DateTime? start = null, [FromUri]DateTime? end = null)
 		{
-			start = start ?? DateTime.UtcNow.AddYears(-1);
+            webModel.DashboardStatisticsResult retVal = null;
+            start = start ?? DateTime.UtcNow.AddYears(-1);
 			end = end ?? DateTime.UtcNow;
+
+            // Hack: to compinsate for incorrect Local dates to UTC
+            end = end.Value.AddDays(2);
 			var cacheKey = CacheKey.Create("Statistic", start.Value.ToString("yyyy-MM-dd"), end.Value.ToString("yyyy-MM-dd"));
-			var retVal = _cacheManager.Get(cacheKey, () =>
-			{
+            lock(_lockObject)
+            {
+                retVal = _cacheManager.Get(cacheKey, () =>
+                {
 
-				var collectStaticJob = new CollectOrderStatisticJob(_repositoryFactory, _cacheManager);
-				return collectStaticJob.CollectStatistics(start.Value, end.Value);
+                    var collectStaticJob = new CollectOrderStatisticJob(_repositoryFactory, _cacheManager);
+                    return collectStaticJob.CollectStatistics(start.Value, end.Value);
 
-			});
-			return Ok(retVal);
-		}
+                });
+            }
+            return Ok(retVal);
+        }
+
+        private coreModel.SearchCriteria FilterOrderSearchCriteria(string userName, coreModel.SearchCriteria criteria)
+        {
+
+            if (!_securityService.UserHasAnyPermission(userName, null, OrderPredefinedPermissions.Read))
+            {
+                //Get defined user 'read' permission scopes
+                var readPermissionScopes = _securityService.GetUserPermissions(userName)
+                                                      .Where(x => x.Id.StartsWith(OrderPredefinedPermissions.Read))
+                                                      .SelectMany(x => x.AssignedScopes);
+
+                //Check user has a scopes
+                //Stores
+                criteria.StoreIds = readPermissionScopes.OfType<OrderStoreScope>()
+                                                         .Select(x => x.Scope)
+                                                         .Where(x => !String.IsNullOrEmpty(x))
+                                                         .ToArray();
+
+                var responsibleScope = readPermissionScopes.OfType<OrderResponsibleScope>().FirstOrDefault();
+                //employee id
+                if (responsibleScope != null)
+                {
+                    criteria.EmployeeId = userName;
+                }
+            }
+            return criteria;
+        }
 
     }
 }
