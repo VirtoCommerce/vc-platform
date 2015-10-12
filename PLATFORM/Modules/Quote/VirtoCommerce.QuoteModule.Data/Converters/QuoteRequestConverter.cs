@@ -23,12 +23,14 @@ namespace VirtoCommerce.QuoteModule.Data.Converters
 
 			var retVal = new coreModel.QuoteRequest();
 			retVal.InjectFrom(dbEntity);
-
-			retVal.ShipmentMethod = new Domain.Quote.Model.ShipmentMethod
-			{
-				OptionName = dbEntity.ShipmentMethodOption,
-				ShipmentMethodCode = dbEntity.ShipmentMethodCode
-			};
+            if (dbEntity.ShipmentMethodCode != null)
+            {
+                retVal.ShipmentMethod = new Domain.Quote.Model.ShipmentMethod
+                {
+                    OptionName = dbEntity.ShipmentMethodOption,
+                    ShipmentMethodCode = dbEntity.ShipmentMethodCode
+                };
+            }
             retVal.Currency = (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), dbEntity.Currency);
             retVal.Addresses = dbEntity.Addresses.Select(x => x.ToCoreModel()).ToList();
 			retVal.Attachments = dbEntity.Attachments.Select(x => x.ToCoreModel()).ToList();

@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <module>
     <id>Zendesk.Helpdesk</id>
-    <version>2.4.0</version>
-    <platformVersion>2.4.0</platformVersion>
+    <version>2.5.0</version>
+    <platformVersion>2.5.0</platformVersion>
     <dependencies>
-        <dependency id="VirtoCommerce.Core" version="2.4.0" />
+        <dependency id="VirtoCommerce.Core" version="2.5.0" />
     </dependencies>
 
     <title>Zendesk helpdesk</title>

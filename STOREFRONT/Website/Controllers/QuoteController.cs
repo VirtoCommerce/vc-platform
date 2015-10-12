@@ -86,7 +86,7 @@ namespace VirtoCommerce.Web.Controllers
                     return Json(new { errorMessage = firstError });
                 }
             }
-            Context.ActualQuoteRequest.CustomerId = User.Identity.Name;
+            Context.ActualQuoteRequest.CustomerId = Context.CustomerId;
             Context.ActualQuoteRequest.CustomerName = Context.Customer.Name;
             Context.ActualQuoteRequest.Comment = model.Comment;
             Context.ActualQuoteRequest.Email = model.Email;
