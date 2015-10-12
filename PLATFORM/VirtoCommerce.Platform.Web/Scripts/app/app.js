@@ -20,13 +20,14 @@
   //'ui.grid.selection',
   'ui.codemirror',
   'focusOn',
+  'textAngular',
   'ngTagsInput'
 ];
 
 angular.module('platformWebApp', AppDependencies).
-  controller('platformWebApp.appCtrl', ['$scope', '$window', '$state', 'platformWebApp.pushNotificationService', function ($scope, $window, $state, eventService) {
+  controller('platformWebApp.appCtrl', ['$scope', '$window', '$state', 'platformWebApp.pushNotificationService', function ($scope, $window, $state, pushNotificationService) {
       $scope.platformVersion = $window.platformVersion;
-      eventService.run();
+      pushNotificationService.run();
 
       $scope.curentStateName = function () {
           return $state.current.name;
@@ -57,26 +58,26 @@ angular.module('platformWebApp', AppDependencies).
     return httpErrorInterceptor;
 }])
 .config(
-  ['$stateProvider', '$httpProvider', 'uiSelectConfig', function ($stateProvider, $httpProvider, uiSelectConfig) {
-  	$stateProvider.state('workspace', {
-  		url: '/workspace',
-  		templateUrl: '$(Platform)/Scripts/app/workspace.tpl.html'
+  ['$stateProvider', '$httpProvider', 'uiSelectConfig', 'datepickerConfig', function ($stateProvider, $httpProvider, uiSelectConfig, datepickerConfig) {
+      $stateProvider.state('workspace', {
+          url: '/workspace',
+          templateUrl: '$(Platform)/Scripts/app/workspace.tpl.html'
       });
 
-      //Add interseptor
+      //Add interceptor
       $httpProvider.interceptors.push('platformWebApp.httpErrorInterceptor');
       //ui-select set selectize as default theme
       uiSelectConfig.theme = 'select2';
 
-  }
-  ]
-)
+      datepickerConfig.showWeeks = false;
+  }])
+
 .run(
   ['$rootScope', '$state', '$stateParams', 'platformWebApp.authService', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', '$animate', '$templateCache', 'gridsterConfig', 'taOptions',
-    function ($rootScope, $state, $stateParams, authService, mainMenuService, eventService, $animate, $templateCache, gridsterConfig, taOptions) {
+    function ($rootScope, $state, $stateParams, authService, mainMenuService, pushNotificationService, $animate, $templateCache, gridsterConfig, taOptions) {
         //Disable animation
         $animate.enabled(false);
-      
+
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
         var homeMenuItem = {
@@ -106,14 +107,17 @@ angular.module('platformWebApp', AppDependencies).
 
 
         $rootScope.$on('unauthorized', function (event, rejection) {
-            $state.go('loginDialog');
-        });
-
-        $rootScope.$on('httpError', function (event, rejection) {
-            if (!(rejection.config.url.indexOf('api/platform/notification') + 1)) {
-                eventService.error({ title: 'HTTP error', description: rejection.status + ' — ' + rejection.statusText, extendedData: rejection.data });
+            if (!authService.isAuthenticated) {
+                $state.go('loginDialog');
             }
         });
+
+        //server error  handling
+        //$rootScope.$on('httpError', function (event, rejection) {
+        //    if (!(rejection.config.url.indexOf('api/platform/notification') + 1)) {
+        //        pushNotificationService.error({ title: 'HTTP error', description: rejection.status + ' — ' + rejection.statusText, extendedData: rejection.data });
+        //    }
+        //});
 
         $rootScope.$on('loginStatusChanged', function (event, authContext) {
             if (authContext.isAuthenticated) {
