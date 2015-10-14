@@ -98,6 +98,7 @@
 
 .vc-catalog .gallery-img
 {
+    background: #fff;
     cursor: pointer;
     height: 50px;
     line-height: 42px;

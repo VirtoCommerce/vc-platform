@@ -15,7 +15,6 @@
     <link rel="stylesheet" href="css/base-modules.css">
     <link rel="stylesheet" href="css/project-modules.css">
     <link rel="stylesheet" href="css/cosmetic.css">
-    <link rel="stylesheet" href="css/modules/catalog.css">
     <link rel="stylesheet" href="css/modules/order.css">
     <link rel="stylesheet" href="css/modules/dynamic-expression.css">
     <link rel="stylesheet" href="chosen/chosen.css">
@@ -4728,8 +4727,60 @@
                         </div>
                     </div>
                 </div>
+                <div class="blade vc-catalog">
+                    <header class="blade-head">
+                        <div class="blade-status"></div>
+                        <div class="blade-nav">
+                            <ul class="menu __inline">
+                                <li class="menu-item __minimize">
+                                    Minimize
+                                </li>
+                                <li class="menu-item __maximize">
+                                    Maximize
+                                </li>
+                                <li class="menu-item __close">
+                                    Close
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="blade-toolbar">
+                            <ul class="menu __inline">
+                                <li class="menu-item">
+                                    <button class="menu-btn __gallery">
+                                        <i class="menu-ico fa fa-image"></i>
+                                        Gallery
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </header>
+                    <div class="blade-container">
+                        <div class="blade-content __medium-wide">
+                            <div class="blade-inner">
+                                <div class="inner-block">
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </article>
+    </div>
+
+    <div class="gallery-tpl">
+        <div class="popup-cnt">
+            <div class="gallery">
+                <a class="control ctrl-l"><i class="fa fa-chevron-left"></i></a>
+                <a class="control ctrl-r"><i class="fa fa-chevron-right"></i></a>
+                <ul class="list __slides">
+                    <li class="list-item"><img class="list-img" src="http://digit.ru/images/39581/57/395815771.jpg" alt="" /></li>
+                    <li class="list-item"><img class="list-img" src="http://ultramo.ru/sites/default/files/img/skupka-planshetov-7.png" alt="" /></li>
+                    <li class="list-item"><img class="list-img" src="http://mobiat.ru/image/data/photo/planshety.jpg" alt="" /></li>
+                    <li class="list-item"><img class="list-img" src="http://api.sonymobile.com/files/xperia-tablet-z-hero-black-select-1280x840-dd73f7239211249463fa93b1d09dfb1e.png" alt="" /></li>
+                </ul>
+            </div>
+        </div>
     </div>
 
     <script src="http://code.angularjs.org/1.3.3/angular.js"></script>
@@ -4737,6 +4788,7 @@
     <script src="js/jquery/jquery.mousewheel.js"></script>
     <script src="chosen/chosen.jquery.min.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/gallery.js"></script>
     <script src="js/app.js"></script>
 
     <script>
@@ -4747,7 +4799,7 @@
 
             setInterval(function () {
                 animateNotify();
-            }, 5000);
+            }, 20000);
 
             function animateNotify() {
                 $('.__notify').addClass('__animated');
@@ -4756,6 +4808,38 @@
                     $('.__notify').removeClass('__animated');
                 }, 1500);
             }
+
+            var html =  $('.gallery-tpl').html();
+
+            $('.__gallery').on('click', function () {
+                $('.gallery-tpl').remove();
+
+                $('body').prepend('<div class="overlay"></div>');
+
+                setTimeout(function () {
+                    $('.overlay').addClass('__loaded');
+
+                    $('.overlay').append('<div class="overlay-cnt"><div class="popup"><div class="popup-close"><i class="fa fa-close"></i></div></div></div>');
+
+                    setTimeout(function () {
+                        $('.popup').css('transform', 'scale(1)');
+
+                        $('.popup').append(html);
+
+                        Gallery.init();
+                    }, 200);
+                }, 100);
+            });
+
+            $('body').delegate('.popup-close', 'click', function () {
+                Gallery.closePopup();
+            });
+
+            $(document).on('click', function (e) {
+                if(!$('.__gallery, .popup').is(e.target) && !$('.__gallery, .popup').has(e.target).length) {
+                    Gallery.closePopup();
+                }
+            });
 
             $('.__new-blade').on('click', function () {
                 var blade = $(this).parents('.blade'),

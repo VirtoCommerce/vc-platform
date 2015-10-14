@@ -55,7 +55,7 @@
 
     function initialize() {
         if (!$scope.uploader) {
-            // Creates a uploader
+            // create the uploader
             var uploader = $scope.uploader = new FileUploader({
                 scope: $scope,
                 headers: { Accept: 'application/json' },

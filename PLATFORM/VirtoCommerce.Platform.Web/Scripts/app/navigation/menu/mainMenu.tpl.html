@@ -1,6 +1,6 @@
 ﻿<nav class="nav-bar">
     <ul class="menu bar">
-        <li class="menu-item" ng-class="{'__selected': currentMenuItem === menuItem && showSubMenu}" ng-repeat="menuItem in menuItems | filter: {parent: null}" ng-click="selectMenuItem(menuItem)">
+        <li class="menu-item" ng-class="{'__selected': currentMenuItem === menuItem && showSubMenu, '__animated': menuItem.incremented}" ng-repeat="menuItem in menuItems | filter: {parent: null}" ng-click="selectMenuItem(menuItem)">
             <a class="menu-link" ng-if="!menuItem.template" href="" va-permission="{{menuItem.permission}}">
                 <span class="menu-ico" ng-class="menuItem.icon"></span>
                 <span class="name">{{menuItem.title}}</span>

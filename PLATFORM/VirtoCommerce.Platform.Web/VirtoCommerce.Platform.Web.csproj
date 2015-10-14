@@ -354,7 +354,12 @@
     <Content Include="gulpfile.js" />
     <Content Include="Scripts\allPackages.js" />
     <Content Include="Content\allStyles.css" />
-    <Content Include="Scripts\app\assets\resources\assets.js" />
+    <Content Include="Scripts\app\assets\blades\asset-list.js" />
+    <Content Include="Scripts\app\assets\blades\asset-list.tpl.html" />
+    <Content Include="Scripts\app\assets\assets.js" />
+    <Content Include="Scripts\app\assets\blades\asset-upload.js" />
+    <Content Include="Scripts\app\assets\blades\asset-upload.tpl.html" />
+    <Content Include="Scripts\app\assets\resources\assetApi.js" />
     <Content Include="Scripts\app\changeLog\blades\operation-list.js" />
     <Content Include="Scripts\app\changeLog\blades\operation-list.tpl.html" />
     <Content Include="Scripts\app\changeLog\widgets\operations-widget.js" />
@@ -492,7 +497,6 @@
     <Content Include="Scripts\common\directives\htmlTooltip.js" />
     <Content Include="Scripts\common\confirmDialog\confirmDialog.tpl.html" />
     <Content Include="Scripts\common\confirmDialog\confirmDialog.js" />
-    <Content Include="Scripts\common\directives\angular-moment.js" />
     <Content Include="Scripts\common\directives\inputNumber.js" />
     <Content Include="Scripts\common\directives\showBigImage.js" />
     <Content Include="Scripts\common\directives\left-click-menu.js" />
