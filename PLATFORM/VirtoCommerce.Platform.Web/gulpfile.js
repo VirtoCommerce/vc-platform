@@ -49,5 +49,4 @@ gulp.task('fontawesomeFonts', function () {
 });
 gulp.task('fontawesomePackage', ['fontawesomeCss', 'fontawesomeFonts']);
 
-
-gulp.task('packAll', ['packJavaScript', 'packCss', 'copyMainFonts', 'fontawesomePackage']);
+gulp.task('packAll', ['packJavaScript', 'packCss', 'copyMainFonts']);

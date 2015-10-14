@@ -27,8 +27,7 @@
     		assets.uploadFromUrl({ folder: 'catalog', url: blade.newExternalImageUrl }, function (data) {
     			blade.currentEntity.images.push(data);
     			blade.newExternalImageUrl = undefined;
-    		});
-       
+    		});       
         }
     };
 
@@ -63,7 +62,7 @@
 
     function initialize() {
         if (!$scope.uploader && authService.checkPermission(blade.permission)) {
-            // Creates an uploader
+            // create the uploader
             var uploader = $scope.uploader = new FileUploader({
                 scope: $scope,
                 headers: { Accept: 'application/json' },
