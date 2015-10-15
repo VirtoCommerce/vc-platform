@@ -101,9 +101,6 @@
       <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.2.0\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb">
-      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.2.0\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Data.Edm">
       <HintPath>..\packages\Microsoft.Data.Edm.5.6.0\lib\net40\Microsoft.Data.Edm.dll</HintPath>
@@ -456,17 +453,7 @@
     <Content Include="Scripts\app\settings\settings.js" />
     <Content Include="Scripts\codemirror\addon\mode\overlay.js" />
     <Content Include="Scripts\codemirror\codemirror.css" />
-    <Content Include="Content\select.css" />
     <Content Include="Content\select2.css" />
-    <Content Include="Content\Selectize\css\selectize.bootstrap2.css" />
-    <Content Include="Content\Selectize\css\selectize.bootstrap3.css" />
-    <Content Include="Content\Selectize\css\selectize.css" />
-    <Content Include="Content\Selectize\css\selectize.default.css" />
-    <Content Include="Content\Selectize\css\selectize.legacy.css" />
-    <Content Include="Content\Selectize\js\selectize.js" />
-    <Content Include="Content\Selectize\js\selectize.min.js" />
-    <Content Include="Content\Selectize\js\standalone\selectize.js" />
-    <Content Include="Content\Selectize\js\standalone\selectize.min.js" />
     <Content Include="Content\themes\base\images\spinner.gif" />
     <Content Include="Content\themes\main\css\base-modules.css" />
     <Content Include="Content\themes\main\css\cosmetic.css" />
@@ -565,15 +552,6 @@
     <Content Include="Content\themes\main\fonts\fontawesome-webfont.ttf" />
     <Content Include="Content\themes\main\fonts\fontawesome-webfont.woff" />
     <Content Include="Content\themes\main\fonts\FontAwesome.otf" />
-    <Content Include="Content\Selectize\less\selectize.less" />
-    <Content Include="Content\Selectize\less\selectize.legacy.less" />
-    <Content Include="Content\Selectize\less\selectize.default.less" />
-    <Content Include="Content\Selectize\less\selectize.bootstrap3.less" />
-    <Content Include="Content\Selectize\less\selectize.bootstrap2.less" />
-    <Content Include="Content\Selectize\less\plugins\remove_button.less" />
-    <Content Include="Content\Selectize\less\plugins\optgroup_columns.less" />
-    <Content Include="Content\Selectize\less\plugins\dropdown_header.less" />
-    <Content Include="Content\Selectize\less\plugins\drag_drop.less" />
     <Content Include=".bowerrc" />
     <Content Include="bower.json" />
     <Content Include="package.json" />

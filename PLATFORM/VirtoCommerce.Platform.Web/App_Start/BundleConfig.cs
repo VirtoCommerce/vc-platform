@@ -25,12 +25,9 @@ namespace VirtoCommerce.Platform.Web
                     "~/Scripts/codemirror/codemirror.css",
                     "~/Scripts/codemirror/fold/foldgutter.css",
                     "~/Scripts/codemirror/liquid.css",
-                    "~/Content/select.css",
-                    "~/Content/angular-gridster.css",
+                    // "~/Content/angular-gridster.css", // customized style
                     //SELECT2
-                    "~/Content/select2.css",
-                    //Selectize
-                    "~/Content/Selectize/css/selectize.default.css",
+                    "~/Content/select2.css", // used in selectors
                     //Theme UI
                     "~/Content/themes/main/css/reset.css",
                     "~/Content/themes/main/css/font-awesome.css",
