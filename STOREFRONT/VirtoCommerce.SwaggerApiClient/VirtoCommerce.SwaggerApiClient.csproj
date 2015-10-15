@@ -67,6 +67,8 @@
     <Compile Include="Client\ApiClient.cs" />
     <Compile Include="Client\ApiException.cs" />
     <Compile Include="Client\Configuration.cs" />
+    <Compile Include="HmacApiClient.cs" />
+    <Compile Include="HmacUtility.cs" />
     <Compile Include="Model\VirtoCommerceCartModuleWebModelAddress.cs" />
     <Compile Include="Model\VirtoCommerceCartModuleWebModelCoupon.cs" />
     <Compile Include="Model\VirtoCommerceCartModuleWebModelDiscount.cs" />

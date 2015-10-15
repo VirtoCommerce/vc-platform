@@ -2,7 +2,7 @@
 using System.Security.Cryptography;
 using VirtoCommerce.SwaggerApiClient.Client;
 
-namespace VirtoCommerce.Storefront
+namespace VirtoCommerce.SwaggerApiClient
 {
     public class HmacApiClient : ApiClient
     {
