@@ -239,6 +239,11 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             get { return GetAsQueryable<dataModel.CategoryItemRelation>(); }
         }
 
+        public IQueryable<dataModel.AssociationGroup> AssociationGroups
+        {
+            get { return GetAsQueryable<dataModel.AssociationGroup>(); }
+        }
+
         public IQueryable<dataModel.Association> Associations
         {
             get { return GetAsQueryable<dataModel.Association>(); }
@@ -328,7 +333,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             }
             if ((respGroup & coreModel.ItemResponseGroup.ItemAssociations) == coreModel.ItemResponseGroup.ItemAssociations)
             {
-                var associations = Associations.Where(x => itemIds.Contains(x.ItemId)).ToArray();
+                var associations = AssociationGroups.Include(x=>x.Associations).Where(x => itemIds.Contains(x.ItemId)).ToArray();
             }
             if ((respGroup & coreModel.ItemResponseGroup.Variations) == coreModel.ItemResponseGroup.Variations)
             {
