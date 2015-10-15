@@ -4,7 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace VirtoCommerce.Storefront
+namespace VirtoCommerce.SwaggerApiClient
 {
     public static class HmacUtility
     {
