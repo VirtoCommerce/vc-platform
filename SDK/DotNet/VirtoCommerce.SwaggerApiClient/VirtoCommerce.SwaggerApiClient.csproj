@@ -51,6 +51,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\..\PLATFORM\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Api\CatalogModuleApi.cs" />
     <Compile Include="Api\CMSContentModuleApi.cs" />
     <Compile Include="Api\CommerceCoreModuleApi.cs" />
@@ -267,6 +270,9 @@
   <ItemGroup>
     <None Include="codegen-config.json" />
     <None Include="packages.config" />
+    <None Include="VirtoCommerce.SwaggerApiClient.nuspec">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

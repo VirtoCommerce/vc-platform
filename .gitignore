@@ -169,3 +169,4 @@ $RECYCLE.BIN/
 /PLATFORM/Modules/CMS/VirtoCommerce.Content.Web/client_packages
 /PLATFORM/Modules/CMS/VirtoCommerce.Content.Web/node_modules
 /WebPI/wwwroot
+*.nupkg
