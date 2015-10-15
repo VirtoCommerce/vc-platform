@@ -16,7 +16,8 @@ namespace VirtoCommerce.Content.Data.Converters
 		    var retVal = new ContentPage
 		                 {
 		                     Name = Path.GetFileNameWithoutExtension(treeItem.Path),
-		                     Language = GetLanguageFromFullPath(treeItem.Path)
+		                     Language = GetLanguageFromFullPath(treeItem.Path),
+                             Path = treeItem.Path
 		                 };
 
 
