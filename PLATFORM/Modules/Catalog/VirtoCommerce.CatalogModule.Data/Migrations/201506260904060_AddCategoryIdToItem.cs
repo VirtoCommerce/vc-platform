@@ -10,7 +10,7 @@ namespace VirtoCommerce.CatalogModule.Data.Migrations
             AddColumn("dbo.Item", "CategoryId", c => c.String(maxLength: 128));
             CreateIndex("dbo.Item", "CategoryId");
             AddForeignKey("dbo.Item", "CategoryId", "dbo.Category", "Id");
-			Sql("UPDATE Item SET  Item.CategoryId = CIR.CategoryId FROM  Item  INNER JOIN  CategoryItemRelation CIR ON Item.id = CIR.ItemId");
+			Sql("UPDATE Item SET  Item.CategoryId = CIR.CategoryId FROM  Item  INNER JOIN  CategoryItemRelation CIR ON Item.Id = CIR.ItemId");
         }
         
         public override void Down()
