@@ -9,9 +9,6 @@ namespace VirtoCommerce.Content.Tests
 {
     public class ContentRepositoryScenarios2 : FunctionalTestBase
     {
-        public const string DatabaseName = "ContentTests";
-        private string _githubMainPath = "Themes2/";
-
         protected IContentRepository2 GetRepository(string repositoryType)
         {
             if (repositoryType == "GitHub")
@@ -21,7 +18,7 @@ namespace VirtoCommerce.Content.Tests
                     productHeaderValue: "VirtoCommerce",
                     ownerName: "VirtoCommerce",
                     repositoryName: "test-repository",
-                    mainPath: _githubMainPath);
+                    mainPath: "repository2/");
 
                 return repository;
             }

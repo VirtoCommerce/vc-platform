@@ -32,8 +32,25 @@ namespace VirtoCommerce.Platform.Tests.Helpers
 
             ConnectionString = string.Format(ConnectionStringFormat, name, Guid.NewGuid().ToString("N"));
             ProviderName = "System.Data.SqlClient";
-            Info = CreateInfoContext(new SqlConnection(ConnectionString));
+            //Info = CreateInfoContext(new SqlConnection(ConnectionString));
         }
+
+        #region Overrides of TestDatabase
+
+        public override InfoContext Info
+        {
+            get
+            {
+                if (base.Info == null)
+                {
+                    base.Info = CreateInfoContext(new SqlConnection(ConnectionString));
+                }
+
+                return base.Info;
+            }
+        }
+
+        #endregion
 
         /*
         public override void EnsureDatabase()
