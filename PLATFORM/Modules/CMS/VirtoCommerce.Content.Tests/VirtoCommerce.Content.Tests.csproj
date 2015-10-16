@@ -89,6 +89,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="ContentRepositoryScenarios2.cs" />
     <Compile Include="ContentRepositoryScenarios.cs" />
     <Compile Include="MenuTests\MenuRepositoryTests.cs" />
     <Compile Include="MenuTests\MenuServiceTests.cs" />

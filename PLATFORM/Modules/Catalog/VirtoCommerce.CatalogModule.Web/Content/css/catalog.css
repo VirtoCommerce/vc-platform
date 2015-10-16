@@ -92,6 +92,7 @@
     position: absolute;
     top: 0;
     width: 40px;
+    z-index: 50;
 
     filter: alpha(opacity=0);
 

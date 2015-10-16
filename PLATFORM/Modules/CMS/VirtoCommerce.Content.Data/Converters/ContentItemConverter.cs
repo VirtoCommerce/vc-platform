@@ -28,6 +28,20 @@ namespace VirtoCommerce.Content.Data.Converters
 			return retVal;
 		}
 
+        public static ContentItem ToContentItem(this RepositoryContentInfo repositoryContent)
+        {
+            ContentItem retVal = null;
+
+            if (repositoryContent.Type == ContentType.File)
+            {
+                retVal = new ContentItem();
+                retVal.Name = repositoryContent.Name;
+                retVal.Path = repositoryContent.Path;
+            }
+
+            return retVal;
+        }
+
         public static ContentItem ToContentItem(this TreeItem treeItem)
         {
             var retVal = new ContentItem

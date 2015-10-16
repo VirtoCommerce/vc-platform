@@ -82,8 +82,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\DatabaseContentRepositoryImpl.cs" />
     <Compile Include="Repositories\FileSystemContentRepositoryImpl.cs" />
+    <Compile Include="Repositories\GitHubContentRepositoryImpl2.cs" />
     <Compile Include="Repositories\GitHubContentRepositoryImpl.cs" />
     <Compile Include="Repositories\IContentRepository.cs" />
+    <Compile Include="Repositories\IContentRepository2.cs" />
     <Compile Include="Repositories\IMenuRepository.cs" />
     <Compile Include="Services\IMenuService.cs" />
     <Compile Include="Services\IPagesService.cs" />
