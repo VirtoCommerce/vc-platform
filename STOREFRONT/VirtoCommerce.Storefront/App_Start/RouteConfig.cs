@@ -11,10 +11,18 @@ namespace VirtoCommerce.Storefront
     {
         public static void RegisterRoutes(RouteCollection routes)
         {
+            routes.IgnoreRoute("favicon.ico");
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+            routes.MapMvcAttributeRoutes();
+            //routes.MapSeoRoutes(); // maps seo defined on product, category and store levels in virto commerce
 
             routes.MapRoute(
-                name: "Default",
+              name: "Storefront_Error",
+              url: "Error/{code}",
+              defaults: new { controller = "Error", action = "Index", code = 500 });
+
+            routes.MapRoute(
+                name: "Storefront_Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
             );
