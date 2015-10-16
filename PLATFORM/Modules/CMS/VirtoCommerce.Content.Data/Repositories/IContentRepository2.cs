@@ -50,9 +50,9 @@ namespace VirtoCommerce.Content.Data.Repositories
 
     public class ContentChangeSet
     {
-        public ContentItemInfo[] Items { get; }
+        public ContentItemInfo[] Items { get; private set; }
 
-        public string CommitId { get; }
+        public string CommitId { get; private set; }
 
         public ContentChangeSet(string commitId, ContentItemInfo[] contentItems)
         {
