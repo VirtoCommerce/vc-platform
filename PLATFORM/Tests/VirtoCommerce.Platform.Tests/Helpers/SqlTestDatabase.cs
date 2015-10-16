@@ -31,7 +31,7 @@ namespace VirtoCommerce.Platform.Tests.Helpers
                 connectionStringFormat = setting.ConnectionString;
             }
 
-            ConnectionString = string.Format(connectionStringFormat, name, Guid.NewGuid().ToString("N"));
+            ConnectionString = string.Format(connectionStringFormat, name, name);
             ProviderName = "System.Data.SqlClient";
             //Info = CreateInfoContext(new SqlConnection(ConnectionString));
         }
