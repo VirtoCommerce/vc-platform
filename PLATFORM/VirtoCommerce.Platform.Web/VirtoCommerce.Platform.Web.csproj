@@ -286,7 +286,9 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="BackgroundJobs\SendNotificationsJobs.cs" />
+    <Compile Include="Converters\Asset\AssetSearchResultConverter.cs" />
     <Compile Include="Converters\ExportImport\ExportImportRequestConverter.cs" />
+    <Compile Include="Model\Asset\AssetListItem.cs" />
     <Compile Include="Model\ExportImport\PushNotifications\SampleDataImportPushNotification.cs" />
     <Compile Include="Model\ExportImport\SampleDataInfo.cs" />
     <Compile Include="Model\Notifications\RenderNotificationContentResult.cs" />

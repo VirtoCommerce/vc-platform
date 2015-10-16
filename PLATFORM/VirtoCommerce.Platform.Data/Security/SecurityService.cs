@@ -311,6 +311,11 @@ namespace VirtoCommerce.Platform.Data.Security
         public bool UserHasAnyPermission(string userName, string[] scopes, params string[] permissionIds)
         {
             var user = Task.Run(async () => await FindByNameAsync(userName, UserDetails.Full)).Result;
+            if(user == null)
+            {
+                return false;
+            }
+
             if (user.IsAdministrator)
             {
                 return true;

@@ -18,7 +18,16 @@ namespace VirtoCommerce.Platform.Core.Common
 				.ToDictionary(x => x[0], x => x.Length == 2 ? x[1] : string.Empty, StringComparer.OrdinalIgnoreCase);
 		}
 
-		public static Decimal TryParse(this string u, Decimal defaultValue)
+        public static bool IsAbsoluteUrl(this string url)
+        {
+            if (!Uri.IsWellFormedUriString(url, UriKind.RelativeOrAbsolute))
+            {
+                throw new ArgumentException("URL was in an invalid format", "url");
+            }
+            return Uri.IsWellFormedUriString(url, UriKind.Absolute);
+        }
+
+        public static Decimal TryParse(this string u, Decimal defaultValue)
 		{
 			var retVal = defaultValue;
 

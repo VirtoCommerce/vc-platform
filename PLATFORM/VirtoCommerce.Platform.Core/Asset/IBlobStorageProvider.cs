@@ -5,8 +5,11 @@ namespace VirtoCommerce.Platform.Core.Asset
 {
 	public interface IBlobStorageProvider
 	{
-		string Upload(UploadStreamInfo request);
-		Stream OpenReadOnly(string blobKey);
-        void Remove(string blobKey);
+        BlobSearchResult Search(string folderUrl);
+        void CreateFolder(BlobFolder folder);
+
+        string Upload(UploadStreamInfo request);
+		Stream OpenReadOnly(string url);
+        void Remove(string[] urls);
 	}
 }
