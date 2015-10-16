@@ -64,11 +64,11 @@
     };
 
     dialogService.showConfirmationDialog = function (dialog) {
-        dialogService.showDialog(dialog, '$(Platform)/Scripts/common/confirmDialog/confirmDialog.tpl.html', 'platformWebApp.confirmDialogController');
+        dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/confirmDialog.tpl.html', 'platformWebApp.confirmDialogController');
     };
 
     dialogService.showNotificationDialog = function (dialog) {
-        dialogService.showDialog(dialog, '$(Platform)/Scripts/common/confirmDialog/notifyDialog.tpl.html', 'platformWebApp.confirmDialogController');
+        dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/notifyDialog.tpl.html', 'platformWebApp.confirmDialogController');
     };
 
     return dialogService;

@@ -478,12 +478,12 @@
     <Content Include="Scripts\common\templates\create.tpl.html" />
     <Content Include="Scripts\common\directives\angular-money-directive.js" />
     <Content Include="Scripts\app\workspace.tpl.html" />
-    <Content Include="Scripts\common\confirmDialog\notifyDialog.tpl.html" />
+    <Content Include="Scripts\common\dialogs\notifyDialog.tpl.html" />
     <Content Include="Scripts\common\directives\autofill.js" />
     <Content Include="Scripts\common\directives\dynamic.js" />
     <Content Include="Scripts\common\directives\htmlTooltip.js" />
-    <Content Include="Scripts\common\confirmDialog\confirmDialog.tpl.html" />
-    <Content Include="Scripts\common\confirmDialog\confirmDialog.js" />
+    <Content Include="Scripts\common\dialogs\confirmDialog.tpl.html" />
+    <Content Include="Scripts\common\dialogs\confirmDialog.js" />
     <Content Include="Scripts\common\directives\inputNumber.js" />
     <Content Include="Scripts\common\directives\showBigImage.js" />
     <Content Include="Scripts\common\directives\left-click-menu.js" />
