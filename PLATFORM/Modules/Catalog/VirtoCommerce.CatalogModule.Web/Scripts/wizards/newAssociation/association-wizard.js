@@ -1,104 +1,84 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.associationWizardController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'virtoCommerce.catalogModule.items', function ($scope, bladeNavigationService, dialogService, items) {
+.controller('virtoCommerce.catalogModule.associationWizardController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', 'virtoCommerce.catalogModule.items', function ($scope, bladeNavigationService, settings, items) {
+    var blade = $scope.blade;
+    blade.title = "New Association";
 
     $scope.create = function () {
-        $scope.blade.isLoading = true;
-        var entriesCopy = $scope.blade.currentEntities.slice();
+        blade.isLoading = true;
+        var entriesCopy = blade.associations.slice();
 
-        _.each($scope.blade.selection, function (item) {
-            if (_.every(entriesCopy, function (x) { return x.productId != item.id; })) {
+        _.each(blade.selection, function (id) {
+            if (_.every(entriesCopy, function (x) { return x.productId != id; })) {
                 var newEntry = {
-                    name: $scope.blade.groupName,
-                    productId: item.id
+                    name: blade.groupName,
+                    productId: id
                 };
                 entriesCopy.push(newEntry);
             }
         });
 
-        items.update({ id: $scope.blade.parentBlade.currentEntityId, associations: entriesCopy }, function () {
-                $scope.bladeClose();
-                $scope.blade.parentBlade.refresh();
-            },
-            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+        items.update({ id: blade.parentBlade.currentEntityId, associations: entriesCopy }, function () {
+            $scope.bladeClose();
+            blade.parentBlade.refresh();
+        },
+        function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
     }
 
-    $scope.openBlade = function (type) {
-        var newBlade = null;
-        switch (type) {
-            case 'group':
-                newBlade = {
-                    id: "associationGroup",
-                    title: 'Association Group',
-                    controller: 'virtoCommerce.catalogModule.associationGroupSelectController',
-                    groupNames: ['Accessories', 'Related Items'],
-                    template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/wizards/newAssociation/association-wizard-group-step.tpl.html'
-                };
-
-                if ($scope.blade.groupName && !_.contains(newBlade.groupNames, $scope.blade.groupName)) {
-                    newBlade.groupNames.splice(0, 0, $scope.blade.groupName);
+    $scope.openBlade = function () {
+        var initialSelection = _.union(blade.selection, _.pluck(blade.associations, 'productId'));
+        var selection = [];
+        var options = {
+            selectedItemIds: initialSelection,
+            checkItemFn: function (listItem, isSelected) {
+                if (isSelected) {
+                    if (_.all(selection, function (x) { return x.id != listItem.id; })) {
+                        selection.push(listItem);
+                    }
                 }
-
-                break;
-            case 'products':
-                newBlade = {
-                    id: 'selectCatalog',
-                    title: 'Select Catalog',
-                    subtitle: 'Adding Associations to product',
-                    controller: 'virtoCommerce.catalogModule.catalogsSelectController',
-                    template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/catalogs-select.tpl.html'
-                };
-
-                break;
-        }
-
-        if (newBlade != null) {
-            bladeNavigationService.showBlade(newBlade, $scope.blade);
-        }
-    }
-
-    $scope.blade.onAfterCatalogSelected = function (selectedNode) {
-        var newBlade = {
-            id: 'itemsList55',
-            level: 55,
-            mode: 'newAssociation',
-            breadcrumbs: [],
-            title: 'Choose Items to associate',
-            subtitle: 'Adding Associations to product',
-            catalogId: selectedNode.id,
-            catalog: selectedNode,
-            controller: 'virtoCommerce.catalogModule.categoriesItemsListController',
-            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/categories-items-list.tpl.html'
-        };
-        bladeNavigationService.showBlade(newBlade, $scope.blade);
-    };
-
-    $scope.blade.updateSelection = function (listItem) {
-        if (listItem.selected &&
-                _.every($scope.blade.selection, function (x) { return x.id != listItem.id; }) &&
-                _.every($scope.blade.currentEntities, function (x) { return x.id != listItem.id; })) {
-            $scope.blade.selection.push(listItem);
-        } else if (!listItem.selected) {
-            var existingItem = _.findWhere($scope.blade.selection, { id: listItem.id });
-            if (existingItem) {
-                var idx = $scope.blade.selection.indexOf(existingItem);
-                $scope.blade.selection.splice(idx, 1);
+                else {
+                    selection = _.reject(selection, function (x) { return x.id == listItem.id; });
+                }
             }
-        }
+        };
+        var newBlade = {
+            id: "CatalogItemsSelect",
+            title: "Select items to associate",
+            subtitle: 'Adding Associations to product',
+            controller: 'virtoCommerce.catalogModule.catalogItemSelectController',
+            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/common/catalog-items-select.tpl.html',
+            options: options,
+            breadcrumbs: [],
+            toolbarCommands: [
+              {
+                  name: "Confirm", icon: 'fa fa-check',
+                  executeMethod: function (pickingBlade) {
+                      blade.selection = _.union(blade.selection, _.pluck(selection, 'id'));
+                      bladeNavigationService.closeBlade(pickingBlade);
+                  },
+                  canExecuteMethod: function () {
+                      return _.any(selection);
+                  }
+              }]
+        };
+        bladeNavigationService.showBlade(newBlade, blade);
     }
 
-    $scope.blade.onClose = function (closeCallback) {
-        closeChildrenBlades();
-        closeCallback();
+
+    $scope.openDictionarySettingManagement = function () {
+        var newBlade = {
+            id: 'settingDetailChild',
+            isApiSave: true,
+            currentEntityId: 'Catalog.AssociationGroups',
+            title: 'Association Groups',
+            parentRefresh: function (data) { $scope.associationGroups = data; },
+            controller: 'platformWebApp.settingDictionaryController',
+            template: '$(Platform)/Scripts/app/settings/blades/setting-dictionary.tpl.html'
+        };
+        bladeNavigationService.showBlade(newBlade, blade);
     };
 
-    function closeChildrenBlades() {
-        angular.forEach($scope.blade.childrenBlades.slice(), function (child) {
-            bladeNavigationService.closeBlade(child);
-        });
-    }
+    $scope.associationGroups = settings.getValues({ id: 'Catalog.AssociationGroups' });
 
-    $scope.blade.selection = [];
-    $scope.blade.isLoading = false;
+    blade.selection = [];
+    blade.isLoading = false;
 }]);
-
-

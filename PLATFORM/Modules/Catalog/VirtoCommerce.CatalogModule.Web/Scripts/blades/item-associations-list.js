@@ -33,9 +33,7 @@
     function openAddEntityWizard() {
         var newBlade = {
             id: "associationWizard",
-            currentEntities: $scope.blade.currentEntities,
-            title: "New Association",
-            //subtitle: '',
+            associations: $scope.blade.currentEntities,
             controller: 'virtoCommerce.catalogModule.associationWizardController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/wizards/newAssociation/association-wizard.tpl.html'
         };
