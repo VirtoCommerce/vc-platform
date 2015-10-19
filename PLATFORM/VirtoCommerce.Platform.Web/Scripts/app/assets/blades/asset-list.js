@@ -1,54 +1,48 @@
 ﻿angular.module('platformWebApp')
 .controller('platformWebApp.assets.assetListController', ['$scope', 'platformWebApp.assets.api', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', '$sessionStorage', function ($scope, assets, bladeNavigationService, dialogService, $storage) {
-    //pagination settings
-    $scope.pageSettings = {};
-    $scope.pageSettings.totalItems = 0;
-    $scope.pageSettings.currentPage = 1;
-    $scope.pageSettings.numPages = 5;
-    $scope.pageSettings.itemsPerPageCount = 20;
-
     $scope.filter = { searchKeyword: undefined };
 
     var selectedNode = null;
     var preventFolderListingOnce; // prevent from unwanted additional actions after command was activated from context menu
 
     var blade = $scope.blade;
-    blade.currentEntity = {};
     blade.title = 'Assets';
+    if (!blade.currentEntity) {
+        blade.currentEntity = {};
+    }
 
     blade.refresh = function () {
-        //blade.isLoading = true;
-        //assets.search(
-        //    {
-        //        keyword: $scope.filter.searchKeyword,
-        //        folder: blade.currentEntity.id,
-        //        start: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
-        //        count: $scope.pageSettings.itemsPerPageCount
-        //    },
-        //function (data) {
-        blade.isLoading = false;
-        $scope.listEntries = [
-            { id: 'folder1', assetType: 'Folder', name: '151014094211-shakshuka-tease-medium-plus-169.jpg', lastModified: new Date() },
-            { id: 'file1', assetType: 'File', name: '151014094211-shakshuka-tease-medium-plus-169.jpg', url: 'http://i2.cdn.turner.com/cnnnext/dam/assets/151014094211-shakshuka-tease-medium-plus-169.jpg', mimeType: 'image/jpeg', isImage: true, size: '23151', lastModified: new Date() }
-        ];
-        //    $scope.listEntries = data.assets;
-        //    $scope.pageSettings.totalItems = data.totalCount;
-        //    $scope.pageSettings.selectedAll = false;
+        blade.isLoading = true;
+        assets.query(
+            {
+                folderUrl: blade.currentEntity.url
+            },
+        function (data) {
+            blade.isLoading = false;
+            //$scope.listEntries = [
+            //    { url: 'folder1', type: 'folder', name: '151014094211-shakshuka-tease-medium-plus-169.jpg', lastModified: new Date() },
+            //    { url: 'file1', type: 'File', name: '151014094211-shakshuka-tease-medium-plus-169.jpg', url: 'http://i2.cdn.turner.com/cnnnext/dam/assets/151014094211-shakshuka-tease-medium-plus-169.jpg', mimeType: 'image/jpeg', isImage: true, size: '23151', lastModified: new Date() }
+            //];
 
-        //    if (selectedNode != null) {
-        //        //select the node in the new list
-        //        angular.forEach($scope.listEntries, function (node) {
-        //            if (selectedNode.id === node.id) {
-        //                selectedNode = node;
-        //            }
-        //        });
-        //    }
+            _.each(data, function (x) { x.isImage = x.contentType === 'image/jpeg' || x.contentType === 'image/png'; });
 
-        //    //Set navigation breadcrumbs
-        setBreadcrumbs();
-        //}, function (error) {
-        //    bladeNavigationService.setError('Error ' + error.status, blade);
-        //});        
+            $scope.listEntries = data;
+            blade.selectedAll = false;
+
+            if (selectedNode != null) {
+                //select the node in the new list
+                angular.forEach($scope.listEntries, function (node) {
+                    if (selectedNode.url === node.url) {
+                        selectedNode = node;
+                    }
+                });
+            }
+
+            //    //Set navigation breadcrumbs
+            setBreadcrumbs();
+        }, function (error) {
+            bladeNavigationService.setError('Error ' + error.status, blade);
+        });
     };
 
     //Breadcrumbs
@@ -58,8 +52,8 @@
             var breadcrumbs = blade.breadcrumbs.slice(0);
 
             //prevent duplicate items
-            if (_.all(breadcrumbs, function (x) { return x.id !== blade.currentEntity.id; })) {
-                var breadCrumb = generateBreadcrumb(blade.currentEntity.id, blade.currentEntity.displayName);
+            if (_.all(breadcrumbs, function (x) { return x.url !== blade.currentEntity.url; })) {
+                var breadCrumb = generateBreadcrumb(blade.currentEntity.url, blade.currentEntity.name);
                 breadcrumbs.push(breadCrumb);
             }
             blade.breadcrumbs = breadcrumbs;
@@ -86,7 +80,7 @@
     };
 
     $scope.rename = function (listItem) {
-        if (listItem.assetType === 'Folder') {
+        if (listItem.type === 'folder') {
             preventFolderListingOnce = true;
         }
         rename(listItem);
@@ -100,15 +94,15 @@
     }
 
     function isItemsChecked() {
-        return _.any($scope.listEntries, function (x) { return x.selected; });
+        return _.any($scope.listEntries, function (x) { return x.$selected; });
     }
 
     function isSingleChecked() {
-        return _.where($scope.listEntries, { selected: true }).length == 1;
+        return _.where($scope.listEntries, { $selected: true }).length == 1;
     }
 
     function getFirstChecked() {
-        return _.findWhere($scope.listEntries, { selected: true });
+        return _.findWhere($scope.listEntries, { $selected: true });
     }
 
     $scope.delete = function () {
@@ -134,9 +128,9 @@
                 message: "Are you sure you want to delete selected folders or files?",
                 callback: function (remove) {
                     if (remove) {
-                        var selection = _.where($scope.listEntries, { selected: true });
-                        var listEntryIds = _.pluck(selection, 'id');
-                        assets.remove({ ids: listEntryIds },
+                        var selection = _.where($scope.listEntries, { $selected: true });
+                        var listEntryIds = _.pluck(selection, 'url');
+                        assets.remove({ urls: listEntryIds },
                             blade.refresh,
                         function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
                     }
@@ -148,14 +142,14 @@
 
     blade.setSelectedNode = function (listItem) {
         selectedNode = listItem;
-        $scope.selectedNodeId = selectedNode.id;
+        $scope.selectedNodeId = selectedNode.url;
     };
 
     $scope.selectNode = function (listItem) {
-        listItem.selected = !listItem.selected;
+        listItem.$selected = !listItem.$selected;
         blade.setSelectedNode(listItem);
 
-        if (listItem.assetType === 'Folder') {
+        if (listItem.type === 'folder') {
             if (preventFolderListingOnce) {
                 preventFolderListingOnce = false;
             } else {
@@ -189,7 +183,12 @@
         {
             name: "New folder", icon: 'fa fa-folder-o',
             executeMethod: function () {
-
+                var result = prompt("Enter folder name");
+                if (result) {
+                    assets.createFolder({ name: result, parentUrl: blade.currentEntity.url },
+                        blade.refresh,
+                        function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+                }
             },
             canExecuteMethod: function () {
                 return true;
@@ -201,7 +200,7 @@
             executeMethod: function () {
                 var newBlade = {
                     id: "assetUpload",
-                    currentEntityId: blade.currentEntity.id,
+                    currentEntityId: blade.currentEntity.url,
                     title: 'Asset upload',
                     controller: 'platformWebApp.assets.assetUploadController',
                     template: '$(Platform)/Scripts/app/assets/blades/asset-upload.tpl.html'
@@ -227,14 +226,14 @@
             },
             canExecuteMethod: isSingleChecked
         },
-        {
-            name: "Rename", icon: 'fa fa-font',
-            executeMethod: function () {
-                rename(getFirstChecked())
-            },
-            canExecuteMethod: isSingleChecked,
-            permission: 'asset:update'
-        },
+        //{
+        //    name: "Rename", icon: 'fa fa-font',
+        //    executeMethod: function () {
+        //        rename(getFirstChecked())
+        //    },
+        //    canExecuteMethod: isSingleChecked,
+        //    permission: 'asset:update'
+        //},
         {
             name: "Delete", icon: 'fa fa-trash-o',
             executeMethod: deleteChecked,
@@ -245,7 +244,7 @@
             name: "Cut",
             icon: 'fa fa-cut',
             executeMethod: function () {
-                $storage.catalogClipboardContent = _.where($scope.items, { selected: true });
+                $storage.catalogClipboardContent = _.where($scope.items, { $selected: true });
             },
             canExecuteMethod: isItemsChecked,
             permission: 'asset:delete'
@@ -256,7 +255,7 @@
             executeMethod: function () {
                 blade.isLoading = true;
                 assets.move({
-                    folder: blade.currentEntity.id,
+                    folder: blade.currentEntity.url,
                     listEntries: $storage.catalogClipboardContent
                 }, function () {
                     delete $storage.catalogClipboardContent;
@@ -272,14 +271,12 @@
         }
     ];
 
-    $scope.checkAll = function (selected) {
+    $scope.toggleAll = function () {
         angular.forEach($scope.listEntries, function (item) {
-            item.selected = selected;
+            item.$selected = blade.selectedAll;
         });
     };
 
-    $scope.$watch('pageSettings.currentPage', blade.refresh);
 
-    //No need to call this because page 'pageSettings.currentPage' is watched!!! It would trigger subsequent duplicated req...
-    //blade.refresh();
+    blade.refresh();
 }]);
