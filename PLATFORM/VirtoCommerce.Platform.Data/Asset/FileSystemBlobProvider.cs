@@ -25,11 +25,15 @@ namespace VirtoCommerce.Platform.Data.Asset
             var properties = connectionString.ToDictionary(";", "=");
 
             _storagePath = HostingEnvironment.MapPath(properties["rootPath"]);
-            _basePublicUrl = properties["publicUrl"];
-
-            if (_basePublicUrl != null && !_basePublicUrl.EndsWith("/"))
+            if(_storagePath != null)
             {
-                _basePublicUrl += "/";
+                _storagePath = _storagePath.TrimEnd('\\');
+            }
+
+            _basePublicUrl = properties["publicUrl"];
+            if (_basePublicUrl != null)
+            {
+                _basePublicUrl = _basePublicUrl.TrimEnd('/');
             }
         }
 
@@ -40,24 +44,16 @@ namespace VirtoCommerce.Platform.Data.Asset
             if (request == null)
                 throw new ArgumentNullException("request");
 
-            string folderName;
-            string fileName;
-            string key;
-            string storagePath = _storagePath;
+            var folderPath = GetAbsoluteStoragePathFromUrl(request.FolderName);
 
-            folderName = request.FolderName;
-            fileName = request.FileName;
-            key = Path.Combine(folderName, fileName);
-            storagePath = string.Empty;
-
-
-            if (!string.IsNullOrEmpty(folderName))
-                CreateFolder(_storagePath, folderName);
-
-            var storageFileName = Path.Combine(_storagePath, folderName, fileName);
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+            var storageFileName = Path.Combine(folderPath, request.FileName);
             UpdloadFile(request.FileByteStream, storageFileName);
 
-            return key;
+            return Path.Combine(request.FolderName, request.FileName);
         }
 
         /// <summary>
@@ -70,9 +66,7 @@ namespace VirtoCommerce.Platform.Data.Asset
             if (string.IsNullOrEmpty(url))
                 throw new ArgumentNullException("url");
 
-            url = url.Replace(@"\\", @"\");
-            url = url.Replace("//", "/");
-            var filePath = Path.Combine(_storagePath, url.IsAbsoluteUrl() ? new Uri(url).AbsolutePath : url);
+            var filePath = GetAbsoluteStoragePathFromUrl(url);
 
             var stream = LoadFile(filePath);
 
@@ -87,32 +81,28 @@ namespace VirtoCommerce.Platform.Data.Asset
         public BlobSearchResult Search(string folderUrl)
         {
             var retVal = new BlobSearchResult();
-            var path = _storagePath;
+            var storagePath = _storagePath;
             folderUrl = folderUrl ?? _basePublicUrl;
 
-            var relativeUri = new Uri(folderUrl.IsAbsoluteUrl() ? folderUrl.Replace(_basePublicUrl, String.Empty) : folderUrl, UriKind.Relative);
-            var absoluteUri = folderUrl.IsAbsoluteUrl() ? new Uri(folderUrl) : new Uri(new Uri(_basePublicUrl), relativeUri);
+            var absoluteFolderUrl = GetAbsoluteUrl(folderUrl);
+            var storageFolderPath = GetAbsoluteStoragePathFromUrl(folderUrl);
 
-            if (!String.IsNullOrEmpty(folderUrl))
+            foreach (var directory in Directory.EnumerateDirectories(storageFolderPath))
             {
-                path = Path.Combine(_storagePath, relativeUri.ToString());
-            }
-
-            foreach (var directory in Directory.EnumerateDirectories(path))
-            {
+                var directoryInfo = new DirectoryInfo(directory);
                 retVal.Folders.Add(new BlobFolder
                 {
                     Name = Path.GetFileName(directory),
-                    Url = new Uri(absoluteUri, directory.Replace(_storagePath, String.Empty).TrimStart('\\')).ToString(),
-                    ParentUrl = absoluteUri.ToString()
+                    Url = absoluteFolderUrl + "/" + directoryInfo.Name,
+                    ParentUrl = absoluteFolderUrl.ToString()
                 });
             }
-            foreach (var file in Directory.EnumerateFiles(path))
+            foreach (var file in Directory.EnumerateFiles(storageFolderPath))
             {
                 var fileInfo = new FileInfo(file);
                 retVal.Items.Add(new BlobInfo
                 {
-                    Url = new Uri(absoluteUri, fileInfo.Name).ToString(),
+                    Url =  absoluteFolderUrl + "/" + fileInfo.Name,
                     ContentType = MimeTypeResolver.ResolveContentType(fileInfo.Name),
                     Size = fileInfo.Length,
                     FileName = fileInfo.Name,
@@ -135,9 +125,15 @@ namespace VirtoCommerce.Platform.Data.Asset
             var path = _storagePath;
             if (folder.ParentUrl != null)
             {
-                path = Path.Combine(_storagePath, folder.ParentUrl.Replace(_basePublicUrl, String.Empty));
+                path = GetAbsoluteStoragePathFromUrl(folder.ParentUrl);
             }
-            CreateFolder(path, folder.Name);
+            path = Path.Combine(path, folder.Name);
+
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
         }
 
         /// <summary>
@@ -152,7 +148,7 @@ namespace VirtoCommerce.Platform.Data.Asset
             }
             foreach(var url in urls)
             {
-               var path = Path.Combine(_storagePath, url.Replace(_basePublicUrl, String.Empty));
+                var path = GetAbsoluteStoragePathFromUrl(url);
                 // get the file attributes for file or directory
                 var attr = File.GetAttributes(path);
 
@@ -172,20 +168,32 @@ namespace VirtoCommerce.Platform.Data.Asset
 
         #region IBlobUrlResolver Members
 
-        public string GetAbsoluteUrl(string assetKey)
+        public string GetAbsoluteUrl(string relativeUrl)
         {
-            var retVal = assetKey;
-            if (!Uri.IsWellFormedUriString(assetKey, UriKind.Absolute))
+            if (relativeUrl == null)
             {
-                retVal = _basePublicUrl + assetKey;
-
+                throw new ArgumentNullException("relativeUrl");
+            }
+            var retVal = relativeUrl;
+            if (!relativeUrl.IsAbsoluteUrl())
+            {
+                retVal = _basePublicUrl + "/" + relativeUrl.TrimStart('/').TrimEnd('/');
             }
             return retVal;
         }
 
         #endregion
+        private string GetAbsoluteStoragePathFromUrl(string url)
+        {
+            var retVal = _storagePath;
+            if (url != null)
+            {
+                retVal = _storagePath + "\\" + url.Replace(_basePublicUrl, String.Empty).Replace("/", "\\");
+            }
+            return retVal;
+        }
 
-
+  
         private static void UpdloadFile(Stream stream, string filePath)
         {
             if (File.Exists(filePath))
@@ -215,16 +223,6 @@ namespace VirtoCommerce.Platform.Data.Asset
             }
             return copyStream;
         }
-
-
-        private static string CreateFolder(string storagePath, string folderName)
-        {
-            var directory = string.Format(CultureInfo.CurrentCulture, @"{0}\{1}", storagePath, folderName);
-            if (!Directory.Exists(directory))
-                Directory.CreateDirectory(directory);
-            return directory;
-        }
-
 
     }
 }
