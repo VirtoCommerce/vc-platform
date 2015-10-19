@@ -70,6 +70,8 @@ namespace VirtoCommerce.Platform.Data.Asset
             if (string.IsNullOrEmpty(url))
                 throw new ArgumentNullException("url");
 
+            url = url.Replace(@"\\", @"\");
+            url = url.Replace("//", "/");
             var filePath = Path.Combine(_storagePath, url.IsAbsoluteUrl() ? new Uri(url).AbsolutePath : url);
 
             var stream = LoadFile(filePath);

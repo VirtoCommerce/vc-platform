@@ -20,11 +20,12 @@ namespace VirtoCommerce.Platform.Core.Common
 
         public static bool IsAbsoluteUrl(this string url)
         {
-            if (!Uri.IsWellFormedUriString(url, UriKind.RelativeOrAbsolute))
+            var retVal = Uri.IsWellFormedUriString(url, UriKind.RelativeOrAbsolute);
+            if (retVal)
             {
-                throw new ArgumentException("URL was in an invalid format", "url");
+                retVal = Uri.IsWellFormedUriString(url, UriKind.Absolute); 
             }
-            return Uri.IsWellFormedUriString(url, UriKind.Absolute);
+            return retVal;
         }
 
         public static Decimal TryParse(this string u, Decimal defaultValue)
