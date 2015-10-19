@@ -4,7 +4,7 @@
         <div class="inner-block">
             <form name="formScope" class="form">
                 <fieldset ng-init="setForm(formScope);">
-                    <div class="form-group" ng-repeat="property in blade.currentEntity.dynamicProperties | orderBy: 'name'">
+                    <div class="form-group" ng-repeat="property in blade.currentEntities | orderBy: 'name'">
                         <label class="form-label" for="">
                             {{property.name}}
                             <a href="" ng-click="editDictionary(property)" ng-show="property.isDictionary"><i class="form-ico fa fa-pencil"></i></a>
@@ -12,7 +12,7 @@
                         <va-generic-value-input ng-model="property" languages="languages" get-dictionary-values="getDictionaryValues" />
                     </div>
 
-                    <div class="text" ng-if="blade.currentEntity.dynamicProperties.length == 0">This entity doesn't have any dynamic properties yet. Click "Manage type properties" and create some properties. Close and reopen current entity view to get dynamic properties loaded.</div>
+                    <div class="text" ng-if="blade.currentEntities.length == 0">This entity doesn't have any dynamic properties yet. Click "Manage type properties" and create some properties. Close and reopen current entity view to get dynamic properties loaded.</div>
                 </fieldset>
             </form>
         </div>
