@@ -70,7 +70,7 @@
 			dialogService.showNotificationDialog(dialog);
 
 		    //revert params
-			blade.revertParams();
+			blade.revertParams(preparedParams);
 
 		}, function (error) {
 			blade.isLoading = false;
@@ -86,7 +86,7 @@
 			bladeNavigationService.setError('Error ' + error.status, blade);
 
 		    //revert params
-			blade.revertParams();
+			blade.revertParams(preparedParams);
 		});
 	}
 
@@ -94,7 +94,7 @@
 
 	blade.initialize();
 
-	blade.revertParams = function () {
+	blade.revertParams = function (preparedParams) {
 	    for (var i = 0; i < blade.currentParams.length; i++) {
 	        if (blade.currentParams[i].isDictionary) {
 	            blade.obj.notificationParameters[blade.currentParams[i].parameterName] = preparedParams[blade.currentParams[i].parameterName];
