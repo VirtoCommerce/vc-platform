@@ -69,11 +69,13 @@
 			bladeNavigationService.showBlade(newBlade, blade);
 
             //revert params
-			blade.revertParams(preparedParams);
+			for(var i = 0; i < blade.currentParams.length; i++){
+			    if (blade.currentParams[i].isDictionary) {
+			        blade.obj.notificationParameters[blade.currentParams[i].parameterName] = preparedParams[blade.currentParams[i].parameterName];
+			    }
+			}
 		}, function (error) {
-		    bladeNavigationService.setError('Error ' + error.status, blade);
-
-		    blade.revertParams(preparedParams);
+			bladeNavigationService.setError('Error ' + error.status, blade);
 		});
 	};
 
@@ -82,14 +84,6 @@
 	}
 
 	blade.headIcon = 'fa-play';
-
-	blade.revertParams = function (preparedParams) {
-	    for (var i = 0; i < blade.currentParams.length; i++) {
-	        if (blade.currentParams[i].isDictionary) {
-	            blade.obj.notificationParameters[blade.currentParams[i].parameterName] = preparedParams[blade.currentParams[i].parameterName];
-	        }
-	    }
-	}
 
 	blade.initialize();
 }]);
