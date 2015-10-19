@@ -1,44 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Web;
 using System.Web.Routing;
+using VirtoCommerce.Storefront.Models;
 
 namespace VirtoCommerce.Storefront.Routing
 {
     #region Temporary declarations
 
-    public class Language
-    {
-        public int Id { get; set; }
-    }
-
     public class UrlRecord
     {
         public int EntityId { get; set; }
-        public string EntityName { get; set; }
+        public string EntityType { get; set; }
         public string Slug { get; set; }
         public bool IsActive { get; set; }
-        public int LanguageId { get; set; }
+        public string Language { get; set; }
     }
 
     public interface IUrlRecordService
     {
         UrlRecord GetBySlug(string slug);
-        string GetActiveSlug(int entityId, string entityName, int languageId);
-    }
-    public interface ILanguageService
-    {
-        IList<Language> GetAllLanguages(bool showHidden = false, int storeId = 0);
-    }
-
-    public interface IWebHelper
-    {
-        string GetStoreLocation(bool useSsl);
-    }
-
-    public interface IWorkContext
-    {
-        Language WorkingLanguage { get; set; }
+        string GetActiveSlug(string entityType, int entityId, string language);
     }
 
     #endregion
@@ -46,13 +27,14 @@ namespace VirtoCommerce.Storefront.Routing
     public class SeoRoute : LocalizedRoute
     {
         private readonly IUrlRecordService _urlRecordService;
-        private readonly ILanguageService languageService;
-        private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
 
         public SeoRoute(string url, IRouteHandler routeHandler)
             : base(url, routeHandler)
         {
+            // TODO: initialize dependencies
+            _urlRecordService = null;
+            _workContext = null;
         }
 
         public override RouteData GetRouteData(HttpContextBase httpContext)
@@ -78,7 +60,7 @@ namespace VirtoCommerce.Storefront.Routing
                 if (!urlRecord.IsActive)
                 {
                     //URL record is not active. let's find the latest one
-                    var activeSlug = _urlRecordService.GetActiveSlug(urlRecord.EntityId, urlRecord.EntityName, urlRecord.LanguageId);
+                    var activeSlug = _urlRecordService.GetActiveSlug(urlRecord.EntityType, urlRecord.EntityId, urlRecord.Language);
                     if (string.IsNullOrWhiteSpace(activeSlug))
                     {
                         //no active slug found
@@ -91,29 +73,26 @@ namespace VirtoCommerce.Storefront.Routing
                     //the active one is found
                     var response = httpContext.Response;
                     response.Status = "301 Moved Permanently";
-                    response.RedirectLocation = string.Format("{0}{1}", _webHelper.GetStoreLocation(false), activeSlug);
+                    response.RedirectLocation = string.Format("{0}{1}", _workContext.GetStoreUrl(false), activeSlug);
                     response.End();
                     return null;
                 }
 
-                //ensure that the slug is the same for the current language
-                //otherwise, it can cause some issues when customers choose a new language but a slug stays the same
-                var slugForCurrentLanguage = GetSlug(urlRecord.EntityId, urlRecord.EntityName, _workContext.WorkingLanguage.Id, true, true);
-                if (!string.IsNullOrEmpty(slugForCurrentLanguage) &&
-                    !slugForCurrentLanguage.Equals(slug, StringComparison.OrdinalIgnoreCase))
+                // Redirect to the slug for current language if it differes from requested slug
+                var slugForCurrentLanguage = GetSlug(urlRecord.EntityType, urlRecord.EntityId, _workContext.WorkingLanguage, true, true);
+                if (!string.IsNullOrEmpty(slugForCurrentLanguage) && !slugForCurrentLanguage.Equals(slug, StringComparison.OrdinalIgnoreCase))
                 {
-                    // We should check for null or "" above because some entities does not have SeName for standard (ID=0) language (e.g. news, blog posts)
                     var response = httpContext.Response;
                     response.Status = "302 Moved Temporarily";
-                    response.RedirectLocation = string.Format("{0}{1}", _webHelper.GetStoreLocation(false), slugForCurrentLanguage);
+                    response.RedirectLocation = string.Format("{0}{1}", _workContext.GetStoreUrl(false), slugForCurrentLanguage);
                     response.End();
                     return null;
                 }
 
                 //process URL
-                switch (urlRecord.EntityName.ToLowerInvariant())
+                switch (urlRecord.EntityType)
                 {
-                    case "product":
+                    case "Product":
                         {
                             data.Values["controller"] = "Product";
                             data.Values["action"] = "ProductDetails";
@@ -121,7 +100,7 @@ namespace VirtoCommerce.Storefront.Routing
                             data.Values["SeName"] = urlRecord.Slug;
                         }
                         break;
-                    case "category":
+                    case "Category":
                         {
                             data.Values["controller"] = "Catalog";
                             data.Values["action"] = "Category";
@@ -135,31 +114,21 @@ namespace VirtoCommerce.Storefront.Routing
             return data;
         }
 
-        public string GetSlug(int entityId, string entityName, int languageId, bool returnDefaultValue, bool ensureTwoPublishedLanguages)
+        public string GetSlug(string entityType, int entityId, string language, bool returnDefaultValue, bool ensureTwoPublishedLanguages)
         {
-            string result = string.Empty;
+            var result = string.Empty;
 
-            if (languageId > 0)
+            if (!string.IsNullOrEmpty(language)
+                && (!ensureTwoPublishedLanguages || _workContext.StoreLanguages.Length >= 2)
+                )
             {
-                //ensure that we have at least two published languages
-                bool loadLocalizedValue = true;
-                if (ensureTwoPublishedLanguages)
-                {
-                    var totalPublishedLanguages = languageService.GetAllLanguages().Count;
-                    loadLocalizedValue = totalPublishedLanguages >= 2;
-                }
-
-                //localized value
-                if (loadLocalizedValue)
-                {
-                    result = _urlRecordService.GetActiveSlug(entityId, entityName, languageId);
-                }
+                result = _urlRecordService.GetActiveSlug(entityType, entityId, language);
             }
 
-            //set default value if required
+            // Set default value if required
             if (string.IsNullOrEmpty(result) && returnDefaultValue)
             {
-                result = _urlRecordService.GetActiveSlug(entityId, entityName, 0);
+                result = _urlRecordService.GetActiveSlug(entityType, entityId, null);
             }
 
             return result;

@@ -152,6 +152,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\IWorkContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routing\LocalizedRoute.cs" />
     <Compile Include="Routing\LocalizedRouteExtensions.cs" />
@@ -176,7 +177,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Controllers\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
