@@ -14,7 +14,7 @@ namespace VirtoCommerce.Platform.Tests.Helpers
     {
         private readonly string _name;
 
-        private string ConnectionStringFormat
+        private static readonly string ConnectionStringFormat
             = "Server=(local);Database={0};Trusted_Connection=True";
         //= "Data Source=(local);Initial Catalog={0};Integrated Security=True;Pooling=false;";
 
@@ -25,15 +25,33 @@ namespace VirtoCommerce.Platform.Tests.Helpers
 
             var setting = ConfigurationManager.ConnectionStrings["VirtoCommerce_MigrationTestsBase"];
 
+            var connectionStringFormat = ConnectionStringFormat;
             if (setting != null)
             {
-                ConnectionStringFormat = setting.ConnectionString;
+                connectionStringFormat = setting.ConnectionString;
             }
 
-            ConnectionString = string.Format(ConnectionStringFormat, name, Guid.NewGuid().ToString("N"));
+            ConnectionString = string.Format(connectionStringFormat, name, Guid.NewGuid().ToString("N"));
             ProviderName = "System.Data.SqlClient";
-            Info = CreateInfoContext(new SqlConnection(ConnectionString));
+            //Info = CreateInfoContext(new SqlConnection(ConnectionString));
         }
+
+        #region Overrides of TestDatabase
+
+        public override InfoContext Info
+        {
+            get
+            {
+                if (base.Info == null)
+                {
+                    base.Info = CreateInfoContext(new SqlConnection(ConnectionString));
+                }
+
+                return base.Info;
+            }
+        }
+
+        #endregion
 
         /*
         public override void EnsureDatabase()
@@ -113,7 +131,13 @@ namespace VirtoCommerce.Platform.Tests.Helpers
 
         public override bool Exists()
         {
-            return Database.Exists(ConnectionString);
+            var sql
+                = "SELECT count(name) FROM sys.databases WHERE name = N'" + _name + "'";
+
+            var count = ExecuteScalar<int>(sql, string.Format(ConnectionStringFormat, "master"));
+
+            return count > 0;
+            //return Database.Exists(ConnectionString);
         }
 
         public override DbConnection CreateConnection(string connectionString)

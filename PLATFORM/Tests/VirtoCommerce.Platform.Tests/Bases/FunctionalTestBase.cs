@@ -17,6 +17,7 @@ namespace VirtoCommerce.Platform.Tests.Bases
             get
             {
                 return Path.GetTempPath();
+                //return AppDomain.CurrentDomain.GetData("APPBASE") as string;
             }
         }
 
