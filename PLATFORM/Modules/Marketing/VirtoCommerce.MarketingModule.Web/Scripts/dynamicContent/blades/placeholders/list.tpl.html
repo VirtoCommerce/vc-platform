@@ -39,7 +39,7 @@
 						<tr class="table-item" ng-repeat="placeholder in blade.currentEntity.placeholders" ng-click="blade.editPlaceholder(placeholder)">
 							<td class="table-col __product-img">
 								<div class="product-img">
-									<div class="image ng-scope" style="background-image: url({{placeholder.imageUrl}})" va-showbigimage="placeholder.imageUrl"></div>
+									<div class="image ng-scope" style="background-image: url('{{placeholder.imageUrl}}')" va-showbigimage="placeholder.imageUrl"></div>
 								</div>
 							</td>
 							<td class="table-col __product-name">

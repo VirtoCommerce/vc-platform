@@ -13,7 +13,7 @@ namespace VirtoCommerce.Platform.Data.Asset
         public const string ProviderName = "LocalStorage";
 
         private readonly string _storagePath;
-        private readonly string _publicUrl;
+        private readonly string _basePublicUrl;
 
         public FileSystemBlobProvider(string connectionString)
         {
@@ -25,11 +25,11 @@ namespace VirtoCommerce.Platform.Data.Asset
             var properties = connectionString.ToDictionary(";", "=");
 
             _storagePath = HostingEnvironment.MapPath(properties["rootPath"]);
-            _publicUrl = properties["publicUrl"];
+            _basePublicUrl = properties["publicUrl"];
 
-            if (_publicUrl != null && !_publicUrl.EndsWith("/"))
+            if (_basePublicUrl != null && !_basePublicUrl.EndsWith("/"))
             {
-                _publicUrl += "/";
+                _basePublicUrl += "/";
             }
         }
 
@@ -47,55 +47,139 @@ namespace VirtoCommerce.Platform.Data.Asset
 
             folderName = request.FolderName;
             fileName = request.FileName;
-            key = string.Format(@"{0}/{1}", folderName, fileName);
+            key = Path.Combine(folderName, fileName);
             storagePath = string.Empty;
 
 
             if (!string.IsNullOrEmpty(folderName))
                 CreateFolder(_storagePath, folderName);
 
-            var storageFileName = string.Format(CultureInfo.CurrentCulture, @"{0}\{1}\{2}", _storagePath, folderName, fileName);
-
+            var storageFileName = Path.Combine(_storagePath, folderName, fileName);
             UpdloadFile(request.FileByteStream, storageFileName);
 
-
             return key;
-
         }
 
-        public Stream OpenReadOnly(string blobKey)
+        /// <summary>
+        /// Open blob by relative or absolute url
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        public Stream OpenReadOnly(string url)
         {
-            if (string.IsNullOrEmpty(blobKey))
-                throw new ArgumentNullException("blobKey");
+            if (string.IsNullOrEmpty(url))
+                throw new ArgumentNullException("url");
 
-            var fileName = _storagePath + "\\" + blobKey;
+            url = url.Replace(@"\\", @"\");
+            url = url.Replace("//", "/");
+            var filePath = Path.Combine(_storagePath, url.IsAbsoluteUrl() ? new Uri(url).AbsolutePath : url);
 
-            var stream = LoadFile(fileName);
+            var stream = LoadFile(filePath);
 
             return stream;
         }
 
-        public void Remove(string blobKey)
+        /// <summary>
+        /// Search folders and blobs in folder
+        /// </summary>
+        /// <param name="folderUrl">absolute or relative path</param>
+        /// <returns></returns>
+        public BlobSearchResult Search(string folderUrl)
         {
-            if (string.IsNullOrEmpty(blobKey))
-                throw new ArgumentNullException("blobKey");
-          
-            var fileName = _storagePath + "\\" + blobKey;
-            File.Delete(fileName);
+            var retVal = new BlobSearchResult();
+            var path = _storagePath;
+            folderUrl = folderUrl ?? _basePublicUrl;
+
+            var relativeUri = new Uri(folderUrl.IsAbsoluteUrl() ? folderUrl.Replace(_basePublicUrl, String.Empty) : folderUrl, UriKind.Relative);
+            var absoluteUri = folderUrl.IsAbsoluteUrl() ? new Uri(folderUrl) : new Uri(new Uri(_basePublicUrl), relativeUri);
+
+            if (!String.IsNullOrEmpty(folderUrl))
+            {
+                path = Path.Combine(_storagePath, relativeUri.ToString());
+            }
+
+            foreach (var directory in Directory.EnumerateDirectories(path))
+            {
+                retVal.Folders.Add(new BlobFolder
+                {
+                    Name = Path.GetFileName(directory),
+                    Url = new Uri(absoluteUri, directory.Replace(_storagePath, String.Empty).TrimStart('\\')).ToString(),
+                    ParentUrl = absoluteUri.ToString()
+                });
+            }
+            foreach (var file in Directory.EnumerateFiles(path))
+            {
+                var fileInfo = new FileInfo(file);
+                retVal.Items.Add(new BlobInfo
+                {
+                    Url = new Uri(absoluteUri, fileInfo.Name).ToString(),
+                    ContentType = MimeTypeResolver.ResolveContentType(fileInfo.Name),
+                    Size = fileInfo.Length,
+                    FileName = fileInfo.Name
+                });
+            }
+            return retVal;
         }
+
+        /// <summary>
+        /// Create folder in file system within to base directory
+        /// </summary>
+        /// <param name="folder"></param>
+        public void CreateFolder(BlobFolder folder)
+        {
+            if (folder == null)
+            {
+                throw new ArgumentNullException("folder");
+            }
+            var path = _storagePath;
+            if (folder.ParentUrl != null)
+            {
+                path = Path.Combine(_storagePath, folder.ParentUrl.Replace(_basePublicUrl, String.Empty));
+            }
+            CreateFolder(path, folder.Name);
+        }
+
+        /// <summary>
+        /// Remove folders and blobs by absolute or relative urls
+        /// </summary>
+        /// <param name="urls"></param>
+        public void Remove(string[] urls)
+        {
+            if (urls == null)
+            {
+                throw new ArgumentNullException("urls");
+            }
+            foreach(var url in urls)
+            {
+               var path = Path.Combine(_storagePath, url.Replace(_basePublicUrl, String.Empty));
+                // get the file attributes for file or directory
+                var attr = File.GetAttributes(path);
+
+                //detect whether its a directory or file
+                if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
+                {
+                    Directory.Delete(path, true);
+                }
+                else
+                {
+                    File.Delete(path);
+                }
+            }
+        }
+
         #endregion
 
         #region IBlobUrlResolver Members
 
         public string GetAbsoluteUrl(string assetKey)
         {
-			var retVal = assetKey;
-			if (!Uri.IsWellFormedUriString(assetKey, UriKind.Absolute))
-			{
-				retVal =  _publicUrl + assetKey;
+            var retVal = assetKey;
+            if (!Uri.IsWellFormedUriString(assetKey, UriKind.Absolute))
+            {
+                retVal = _basePublicUrl + assetKey;
 
-			}
-			return retVal;
+            }
+            return retVal;
         }
 
         #endregion
@@ -131,18 +215,6 @@ namespace VirtoCommerce.Platform.Data.Asset
             return copyStream;
         }
 
-        private static string CreateFileName()
-        {
-            return Convert.ToBase64String(Guid.NewGuid().ToByteArray())
-                          .Substring(0, 22)
-                          .Replace("/", "_")
-                          .Replace("+", "-");
-        }
-
-        private static string GetFileExtension(string fileName)
-        {
-            return Path.GetExtension(fileName);
-        }
 
         private static string CreateFolder(string storagePath, string folderName)
         {

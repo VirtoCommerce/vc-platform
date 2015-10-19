@@ -80,15 +80,106 @@ namespace VirtoCommerce.Platform.Data.Asset
             return retVal;
         }
 
-        public void Remove(string blobKey)
+        public void Remove(string[] urls)
         {
-            if (string.IsNullOrEmpty(blobKey))
-                throw new ArgumentNullException("blobKey");
-
-            var cloudBlob = _cloudBlobClient.GetBlobReferenceFromServer(new Uri(_cloudBlobClient.BaseUri, blobKey));
-            if (cloudBlob != null)
+            foreach (var url in urls)
             {
-                cloudBlob.DeleteIfExists();
+                var blobContainer = GetBlobContainer(GetContainerNameFromUrl(url));
+                var directoryPath = GetDirectoryPathFromUrl(url);
+                var blobDirectory = !String.IsNullOrEmpty(directoryPath) ? blobContainer.GetDirectoryReference(directoryPath) : null;
+
+                if (blobDirectory == null)
+                {
+                    blobContainer.DeleteIfExists();
+                }
+                else
+                {
+                    foreach (var blob in blobDirectory.ListBlobs(true).OfType<CloudBlockBlob>())
+                    {
+                        blob.Delete();
+                    }
+    
+                }
+            }
+        }
+
+
+        public BlobSearchResult Search(string folderUrl)
+        {
+            var retVal = new BlobSearchResult();
+
+            if (!String.IsNullOrEmpty(folderUrl))
+            {
+                var blobContainer = GetBlobContainer(GetContainerNameFromUrl(folderUrl));
+
+                if (blobContainer != null)
+                {
+                    var directoryPath = GetDirectoryPathFromUrl(folderUrl);
+                    var blobDirectory = !String.IsNullOrEmpty(directoryPath) ? blobContainer.GetDirectoryReference(directoryPath) : null;
+                    // Loop over items within the container and output the length and URI.
+                    foreach (IListBlobItem item in blobDirectory != null ? blobDirectory.ListBlobs() : blobContainer.ListBlobs())
+                    {
+                        var block = item as CloudBlockBlob;
+                        var directory = item as CloudBlobDirectory;
+                        if (block != null)
+                        {
+                            var blobInfo = new BlobInfo
+                            {
+                                Url = block.Uri.ToString(),
+                                FileName = Path.GetFileName(block.Uri.ToString()),
+                                ContentType = block.Properties.ContentType,
+                                Size = block.Properties.Length
+                            };
+                            retVal.Items.Add(blobInfo);
+                        }
+                        if (directory != null)
+                        {
+                            var folder = new BlobFolder
+                            {
+                                Name = directory.Uri.AbsolutePath.Split(new[] { _cloudBlobClient.DefaultDelimiter }, StringSplitOptions.RemoveEmptyEntries).Last(),
+                                Url = directory.Uri.ToString(),
+                                ParentUrl = directory.Parent != null ? directory.Parent.Uri.ToString() : null
+                            };
+                            retVal.Folders.Add(folder);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                foreach (var container in _cloudBlobClient.ListContainers())
+                {
+                    var folder = new BlobFolder
+                    {
+                        Name = container.Uri.AbsolutePath.Split('/').Last(),
+                        Url = container.Uri.ToString()
+                    };
+                    retVal.Folders.Add(folder);
+                }
+            }
+            return retVal;
+        }
+
+        public void CreateFolder(BlobFolder folder)
+        {
+            if (String.IsNullOrEmpty(folder.ParentUrl))
+            {
+                var container = _cloudBlobClient.GetContainerReference(folder.Name.ToLower());
+                container.CreateIfNotExists();
+            }
+            else
+            {
+                var containerName = GetContainerNameFromUrl(folder.ParentUrl);
+                var blobContainer = GetBlobContainer(containerName);
+                if (blobContainer == null)
+                {
+                    throw new DirectoryNotFoundException(containerName);
+                }
+
+                var directoryPath = GetDirectoryPathFromUrl(folder.ParentUrl);
+                var blobDirectory = !String.IsNullOrEmpty(directoryPath) ? blobContainer.GetDirectoryReference(directoryPath) : null;
+                var blobFolder = blobDirectory == null ? blobContainer.GetBlockBlobReference(folder.Name) : blobDirectory.GetBlockBlobReference(folder.Name);
+                blobFolder.UploadText(String.Empty);
             }
         }
 
@@ -110,6 +201,44 @@ namespace VirtoCommerce.Platform.Data.Asset
 
         #endregion
 
+        /// <summary>
+        /// Return outline folder from absolute or relative url
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        private string[] GetOutlineFromUrl(string url)
+        {
+            var relativeUrl = url;
+            if (url.IsAbsoluteUrl())
+            {
+                relativeUrl = new Uri(url).AbsolutePath;
+            }
+            return relativeUrl.Split(new[] { "/", "\\", _cloudBlobClient.DefaultDelimiter }, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        private string GetContainerNameFromUrl(string url)
+        {
+            return GetOutlineFromUrl(url).First();
+        }
+
+        private string GetDirectoryPathFromUrl(string url)
+        {
+            return String.Join(_cloudBlobClient.DefaultDelimiter, GetOutlineFromUrl(url).Skip(1).ToArray());
+        }
+
+
+        private CloudBlobContainer GetBlobContainer(string name)
+        {
+            CloudBlobContainer retVal = null;
+            // Retrieve container reference.
+            var container = _cloudBlobClient.GetContainerReference(name);
+            if (container.Exists())
+            {
+                retVal = container;
+            }
+            return retVal;
+        }
+
         private static CloudStorageAccount ParseConnectionString(string connectionString)
         {
             CloudStorageAccount cloudStorageAccount;
@@ -119,7 +248,6 @@ namespace VirtoCommerce.Platform.Data.Asset
             }
             return cloudStorageAccount;
         }
-
 
     }
 }

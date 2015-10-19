@@ -1,7 +1,7 @@
 ﻿angular.module('platformWebApp')
 .factory('platformWebApp.assets.api', ['$resource', function ($resource) {
     return $resource('api/platform/assets/', {}, {
-        search: {},
+        createFolder: { method: 'POST', url: 'api/platform/assets/folder' },
         move: { method: 'POST', url: 'api/platform/assets/move' },
         uploadFromUrl: { method: 'POST', params: { url: '@url', folder: '@folder' }, url: 'api/platform/assets/:folder' }
     });

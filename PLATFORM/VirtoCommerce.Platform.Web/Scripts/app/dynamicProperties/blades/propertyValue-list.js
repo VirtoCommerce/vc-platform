@@ -10,23 +10,34 @@
         settings.getValues({ id: 'VirtoCommerce.Core.General.Languages' }, function (data) {
             $scope.languages = data;
         });
-        blade.origEntity = blade.currentEntity;
-        blade.currentEntity = angular.copy(blade.currentEntity);
+
+        blade.data = blade.currentEntity;
+
+        var rawProperties = angular.copy(blade.currentEntity.dynamicProperties);
+        _.each(rawProperties, function (x) {
+            x.values.sort(function (a, b) {
+                return a.value.name ? a.value.name.localeCompare(b.value.name) : a.value.localeCompare(b.value);
+            });
+        });
+
+        blade.origEntity = rawProperties;
+        blade.currentEntities = angular.copy(rawProperties);
         blade.isLoading = false;
     };
 
     function isDirty() {
-        return !angular.equals(blade.currentEntity.dynamicProperties, blade.origEntity.dynamicProperties);
+        return !angular.equals(blade.currentEntities, blade.origEntity);
     }
 
     $scope.cancelChanges = function () {
-        angular.copy(blade.origEntity.dynamicProperties, blade.currentEntity.dynamicProperties);
+        angular.copy(blade.origEntity, blade.currentEntities);
         $scope.bladeClose();
     };
 
     $scope.saveChanges = function () {
         if (isDirty()) {
-            angular.copy(blade.currentEntity.dynamicProperties, blade.origEntity.dynamicProperties);
+            angular.copy(blade.currentEntities, blade.data.dynamicProperties);
+            angular.copy(blade.currentEntities, blade.origEntity);
         }
         $scope.bladeClose();
     };
@@ -44,7 +55,7 @@
             controller: 'platformWebApp.propertyDictionaryController',
             template: '$(Platform)/Scripts/app/dynamicProperties/blades/property-dictionary.tpl.html',
             onChangesConfirmedFn: function () {
-                blade.currentEntity.dynamicProperties = angular.copy(blade.currentEntity.dynamicProperties);
+                blade.currentEntities = angular.copy(blade.currentEntities);
             }
         };
         bladeNavigationService.showBlade(newBlade, blade);
@@ -74,7 +85,7 @@
         {
             name: "Reset", icon: 'fa fa-undo',
             executeMethod: function () {
-                angular.copy(blade.origEntity.dynamicProperties, blade.currentEntity.dynamicProperties);
+                angular.copy(blade.origEntity, blade.currentEntities);
             },
             canExecuteMethod: function () {
                 return isDirty();
@@ -85,14 +96,14 @@
 		    executeMethod: function () {
 		        var newBlade = {
 		            id: 'dynamicPropertyList',
-		            objectType: blade.currentEntity.objectType,
+		            objectType: blade.data.objectType,
 		            controller: 'platformWebApp.dynamicPropertyListController',
 		            template: '$(Platform)/Scripts/app/dynamicProperties/blades/dynamicProperty-list.tpl.html'
 		        };
 		        bladeNavigationService.showBlade(newBlade, blade);
 		    },
 		    canExecuteMethod: function () {
-		        return angular.isDefined(blade.currentEntity.objectType);
+		        return angular.isDefined(blade.data.objectType);
 		    }
 		}
     ];
