@@ -8,7 +8,7 @@
 	};
 
 	blade.addPlaceholder = function () {
-		var data = { name: '', description: '', imageUrl: 'http://virtotest.blob.core.windows.net/catalog/9f0113a5-fa34-4d83-bad8-2c9d6fdc763d.png', folderId: blade.choosenFolder };
+	    var data = { name: '', description: '', imageUrl: 'Modules/$(VirtoCommerce.Marketing)/Content/images/noimage.png', folderId: blade.choosenFolder };
 		blade.parentBlade.addNewPlaceholder(data);
 	};
 
