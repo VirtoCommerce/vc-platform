@@ -115,7 +115,8 @@ namespace VirtoCommerce.Platform.Data.Asset
                     Url = new Uri(absoluteUri, fileInfo.Name).ToString(),
                     ContentType = MimeTypeResolver.ResolveContentType(fileInfo.Name),
                     Size = fileInfo.Length,
-                    FileName = fileInfo.Name
+                    FileName = fileInfo.Name,
+                    ModifiedDate = fileInfo.LastWriteTimeUtc
                 });
             }
             return retVal;

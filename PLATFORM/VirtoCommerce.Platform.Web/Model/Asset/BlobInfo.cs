@@ -13,5 +13,6 @@ namespace VirtoCommerce.Platform.Web.Model.Asset
 		public string Name { get; set; }
 		public string Size { get; set; }
 		public string MimeType { get; set; }
-	}
+        public DateTime? ModifiedDate { get; set; }
+    }
 }

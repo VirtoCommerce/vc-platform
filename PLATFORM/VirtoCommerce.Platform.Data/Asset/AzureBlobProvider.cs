@@ -128,7 +128,8 @@ namespace VirtoCommerce.Platform.Data.Asset
                                 Url = block.Uri.ToString(),
                                 FileName = Path.GetFileName(block.Uri.ToString()),
                                 ContentType = block.Properties.ContentType,
-                                Size = block.Properties.Length
+                                Size = block.Properties.Length,
+                                ModifiedDate = block.Properties.LastModified != null ? block.Properties.LastModified.Value.DateTime : (DateTime?) null
                             };
                             retVal.Items.Add(blobInfo);
                         }
