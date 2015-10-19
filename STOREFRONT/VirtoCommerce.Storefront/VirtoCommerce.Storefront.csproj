@@ -157,7 +157,6 @@
     <Compile Include="Routing\LocalizedRoute.cs" />
     <Compile Include="Routing\LocalizedRouteExtensions.cs" />
     <Compile Include="Routing\LocalizedUrlExtenstions.cs" />
-    <Compile Include="Routing\SeoExtensions.cs" />
     <Compile Include="Routing\SeoRoute.cs" />
     <Compile Include="Routing\SeoRouteExtensions.cs" />
     <Compile Include="Startup.cs" />
