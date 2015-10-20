@@ -23,7 +23,7 @@ namespace VirtoCommerce.Client.Api
         /// </remarks>
         /// <param name="productId">Product id</param>
         /// <returns></returns>
-        void PricingModuleGetProductPriceLists (string productId);
+        List<VirtoCommercePricingModuleWebModelPricelist> PricingModuleGetProductPriceLists (string productId);
   
         /// <summary>
         /// Get pricelists for a product
@@ -33,7 +33,7 @@ namespace VirtoCommerce.Client.Api
         /// </remarks>
         /// <param name="productId">Product id</param>
         /// <returns></returns>
-        System.Threading.Tasks.Task PricingModuleGetProductPriceListsAsync (string productId);
+        System.Threading.Tasks.Task<List<VirtoCommercePricingModuleWebModelPricelist>> PricingModuleGetProductPriceListsAsync (string productId);
         
         /// <summary>
         /// Update prices
@@ -160,8 +160,8 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="id">Pricelist assignment id</param>
-        /// <returns></returns>
-        void PricingModuleGetPricelistAssignmentById (string id);
+        /// <returns>VirtoCommercePricingModuleWebModelPricelistAssignment</returns>
+        VirtoCommercePricingModuleWebModelPricelistAssignment PricingModuleGetPricelistAssignmentById (string id);
   
         /// <summary>
         /// Get pricelist assignment
@@ -170,8 +170,8 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="id">Pricelist assignment id</param>
-        /// <returns></returns>
-        System.Threading.Tasks.Task PricingModuleGetPricelistAssignmentByIdAsync (string id);
+        /// <returns>VirtoCommercePricingModuleWebModelPricelistAssignment</returns>
+        System.Threading.Tasks.Task<VirtoCommercePricingModuleWebModelPricelistAssignment> PricingModuleGetPricelistAssignmentByIdAsync (string id);
         
         /// <summary>
         /// Get pricelists
@@ -258,8 +258,8 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="id">Pricelist id</param>
-        /// <returns></returns>
-        void PricingModuleGetPriceListById (string id);
+        /// <returns>VirtoCommercePricingModuleWebModelPricelist</returns>
+        VirtoCommercePricingModuleWebModelPricelist PricingModuleGetPriceListById (string id);
   
         /// <summary>
         /// Get pricelist
@@ -268,8 +268,8 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="id">Pricelist id</param>
-        /// <returns></returns>
-        System.Threading.Tasks.Task PricingModuleGetPriceListByIdAsync (string id);
+        /// <returns>VirtoCommercePricingModuleWebModelPricelist</returns>
+        System.Threading.Tasks.Task<VirtoCommercePricingModuleWebModelPricelist> PricingModuleGetPriceListByIdAsync (string id);
         
         /// <summary>
         /// Get array of product prices
@@ -279,7 +279,7 @@ namespace VirtoCommerce.Client.Api
         /// </remarks>
         /// <param name="productId">Product id</param>
         /// <returns></returns>
-        void PricingModuleGetProductPrices (string productId);
+        List<VirtoCommercePricingModuleWebModelPrice> PricingModuleGetProductPrices (string productId);
   
         /// <summary>
         /// Get array of product prices
@@ -289,7 +289,7 @@ namespace VirtoCommerce.Client.Api
         /// </remarks>
         /// <param name="productId">Product id</param>
         /// <returns></returns>
-        System.Threading.Tasks.Task PricingModuleGetProductPricesAsync (string productId);
+        System.Threading.Tasks.Task<List<VirtoCommercePricingModuleWebModelPrice>> PricingModuleGetProductPricesAsync (string productId);
         
     }
   
@@ -351,7 +351,7 @@ namespace VirtoCommerce.Client.Api
         /// </summary>
         /// <param name="productId">Product id</param> 
         /// <returns></returns>            
-        public void PricingModuleGetProductPriceLists (string productId)
+        public List<VirtoCommercePricingModuleWebModelPricelist> PricingModuleGetProductPriceLists (string productId)
         {
             
             // verify the required parameter 'productId' is set
@@ -396,7 +396,7 @@ namespace VirtoCommerce.Client.Api
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling PricingModuleGetProductPriceLists: " + response.ErrorMessage, response.ErrorMessage);
     
-            return;
+            return (List<VirtoCommercePricingModuleWebModelPricelist>) ApiClient.Deserialize(response.Content, typeof(List<VirtoCommercePricingModuleWebModelPricelist>), response.Headers);
         }
     
         /// <summary>
@@ -404,7 +404,7 @@ namespace VirtoCommerce.Client.Api
         /// </summary>
         /// <param name="productId">Product id</param>
         /// <returns></returns>
-        public async System.Threading.Tasks.Task PricingModuleGetProductPriceListsAsync (string productId)
+        public async System.Threading.Tasks.Task<List<VirtoCommercePricingModuleWebModelPricelist>> PricingModuleGetProductPriceListsAsync (string productId)
         {
             // verify the required parameter 'productId' is set
             if (productId == null) throw new ApiException(400, "Missing required parameter 'productId' when calling PricingModuleGetProductPriceLists");
@@ -445,8 +445,7 @@ namespace VirtoCommerce.Client.Api
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling PricingModuleGetProductPriceLists: " + response.Content, response.Content);
 
-            
-            return;
+            return (List<VirtoCommercePricingModuleWebModelPricelist>) ApiClient.Deserialize(response.Content, typeof(List<VirtoCommercePricingModuleWebModelPricelist>), response.Headers);
         }
         
         /// <summary>
@@ -1059,8 +1058,8 @@ namespace VirtoCommerce.Client.Api
         /// Get pricelist assignment 
         /// </summary>
         /// <param name="id">Pricelist assignment id</param> 
-        /// <returns></returns>            
-        public void PricingModuleGetPricelistAssignmentById (string id)
+        /// <returns>VirtoCommercePricingModuleWebModelPricelistAssignment</returns>            
+        public VirtoCommercePricingModuleWebModelPricelistAssignment PricingModuleGetPricelistAssignmentById (string id)
         {
             
             // verify the required parameter 'id' is set
@@ -1105,15 +1104,15 @@ namespace VirtoCommerce.Client.Api
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling PricingModuleGetPricelistAssignmentById: " + response.ErrorMessage, response.ErrorMessage);
     
-            return;
+            return (VirtoCommercePricingModuleWebModelPricelistAssignment) ApiClient.Deserialize(response.Content, typeof(VirtoCommercePricingModuleWebModelPricelistAssignment), response.Headers);
         }
     
         /// <summary>
         /// Get pricelist assignment 
         /// </summary>
         /// <param name="id">Pricelist assignment id</param>
-        /// <returns></returns>
-        public async System.Threading.Tasks.Task PricingModuleGetPricelistAssignmentByIdAsync (string id)
+        /// <returns>VirtoCommercePricingModuleWebModelPricelistAssignment</returns>
+        public async System.Threading.Tasks.Task<VirtoCommercePricingModuleWebModelPricelistAssignment> PricingModuleGetPricelistAssignmentByIdAsync (string id)
         {
             // verify the required parameter 'id' is set
             if (id == null) throw new ApiException(400, "Missing required parameter 'id' when calling PricingModuleGetPricelistAssignmentById");
@@ -1154,8 +1153,7 @@ namespace VirtoCommerce.Client.Api
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling PricingModuleGetPricelistAssignmentById: " + response.Content, response.Content);
 
-            
-            return;
+            return (VirtoCommercePricingModuleWebModelPricelistAssignment) ApiClient.Deserialize(response.Content, typeof(VirtoCommercePricingModuleWebModelPricelistAssignment), response.Headers);
         }
         
         /// <summary>
@@ -1563,8 +1561,8 @@ namespace VirtoCommerce.Client.Api
         /// Get pricelist 
         /// </summary>
         /// <param name="id">Pricelist id</param> 
-        /// <returns></returns>            
-        public void PricingModuleGetPriceListById (string id)
+        /// <returns>VirtoCommercePricingModuleWebModelPricelist</returns>            
+        public VirtoCommercePricingModuleWebModelPricelist PricingModuleGetPriceListById (string id)
         {
             
             // verify the required parameter 'id' is set
@@ -1609,15 +1607,15 @@ namespace VirtoCommerce.Client.Api
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling PricingModuleGetPriceListById: " + response.ErrorMessage, response.ErrorMessage);
     
-            return;
+            return (VirtoCommercePricingModuleWebModelPricelist) ApiClient.Deserialize(response.Content, typeof(VirtoCommercePricingModuleWebModelPricelist), response.Headers);
         }
     
         /// <summary>
         /// Get pricelist 
         /// </summary>
         /// <param name="id">Pricelist id</param>
-        /// <returns></returns>
-        public async System.Threading.Tasks.Task PricingModuleGetPriceListByIdAsync (string id)
+        /// <returns>VirtoCommercePricingModuleWebModelPricelist</returns>
+        public async System.Threading.Tasks.Task<VirtoCommercePricingModuleWebModelPricelist> PricingModuleGetPriceListByIdAsync (string id)
         {
             // verify the required parameter 'id' is set
             if (id == null) throw new ApiException(400, "Missing required parameter 'id' when calling PricingModuleGetPriceListById");
@@ -1658,8 +1656,7 @@ namespace VirtoCommerce.Client.Api
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling PricingModuleGetPriceListById: " + response.Content, response.Content);
 
-            
-            return;
+            return (VirtoCommercePricingModuleWebModelPricelist) ApiClient.Deserialize(response.Content, typeof(VirtoCommercePricingModuleWebModelPricelist), response.Headers);
         }
         
         /// <summary>
@@ -1667,7 +1664,7 @@ namespace VirtoCommerce.Client.Api
         /// </summary>
         /// <param name="productId">Product id</param> 
         /// <returns></returns>            
-        public void PricingModuleGetProductPrices (string productId)
+        public List<VirtoCommercePricingModuleWebModelPrice> PricingModuleGetProductPrices (string productId)
         {
             
             // verify the required parameter 'productId' is set
@@ -1712,7 +1709,7 @@ namespace VirtoCommerce.Client.Api
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling PricingModuleGetProductPrices: " + response.ErrorMessage, response.ErrorMessage);
     
-            return;
+            return (List<VirtoCommercePricingModuleWebModelPrice>) ApiClient.Deserialize(response.Content, typeof(List<VirtoCommercePricingModuleWebModelPrice>), response.Headers);
         }
     
         /// <summary>
@@ -1720,7 +1717,7 @@ namespace VirtoCommerce.Client.Api
         /// </summary>
         /// <param name="productId">Product id</param>
         /// <returns></returns>
-        public async System.Threading.Tasks.Task PricingModuleGetProductPricesAsync (string productId)
+        public async System.Threading.Tasks.Task<List<VirtoCommercePricingModuleWebModelPrice>> PricingModuleGetProductPricesAsync (string productId)
         {
             // verify the required parameter 'productId' is set
             if (productId == null) throw new ApiException(400, "Missing required parameter 'productId' when calling PricingModuleGetProductPrices");
@@ -1761,8 +1758,7 @@ namespace VirtoCommerce.Client.Api
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling PricingModuleGetProductPrices: " + response.Content, response.Content);
 
-            
-            return;
+            return (List<VirtoCommercePricingModuleWebModelPrice>) ApiClient.Deserialize(response.Content, typeof(List<VirtoCommercePricingModuleWebModelPrice>), response.Headers);
         }
         
     }

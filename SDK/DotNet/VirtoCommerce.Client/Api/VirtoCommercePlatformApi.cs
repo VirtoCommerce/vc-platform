@@ -16,46 +16,86 @@ namespace VirtoCommerce.Client.Api
     {
         
         /// <summary>
-        /// Deletes blobs by they key.
+        /// Search asset folders and blobs
         /// </summary>
         /// <remarks>
-        /// Delete blob by key
+        /// 
         /// </remarks>
-        /// <param name="blobKey">blob key.</param>
+        /// <param name="folderUrl"></param>
         /// <returns></returns>
-        void AssetsDelete (string blobKey);
+        List<VirtoCommercePlatformWebModelAssetAssetListItem> AssetsSearchAssetItems (string folderUrl);
   
         /// <summary>
-        /// Deletes blobs by they key.
+        /// Search asset folders and blobs
         /// </summary>
         /// <remarks>
-        /// Delete blob by key
+        /// 
         /// </remarks>
-        /// <param name="blobKey">blob key.</param>
+        /// <param name="folderUrl"></param>
         /// <returns></returns>
-        System.Threading.Tasks.Task AssetsDeleteAsync (string blobKey);
+        System.Threading.Tasks.Task<List<VirtoCommercePlatformWebModelAssetAssetListItem>> AssetsSearchAssetItemsAsync (string folderUrl);
         
         /// <summary>
-        /// 
+        /// Upload assets to the folder
         /// </summary>
         /// <remarks>
-        /// 
+        /// Request body can contain multiple files.
         /// </remarks>
-        /// <param name="folder"></param>
-        /// <param name="url"></param>
-        /// <returns>VirtoCommercePlatformWebModelAssetBlobInfo</returns>
-        VirtoCommercePlatformWebModelAssetBlobInfo AssetsUploadAssetFromUrl (string folder, string url);
+        /// <param name="folderUrl">Parent folder url (relative or absolute).</param>
+        /// <param name="url">Url for uploaded remote resource (optional)</param>
+        /// <returns></returns>
+        List<VirtoCommercePlatformWebModelAssetBlobInfo> AssetsUploadAsset (string folderUrl, string url);
   
         /// <summary>
+        /// Upload assets to the folder
+        /// </summary>
+        /// <remarks>
+        /// Request body can contain multiple files.
+        /// </remarks>
+        /// <param name="folderUrl">Parent folder url (relative or absolute).</param>
+        /// <param name="url">Url for uploaded remote resource (optional)</param>
+        /// <returns></returns>
+        System.Threading.Tasks.Task<List<VirtoCommercePlatformWebModelAssetBlobInfo>> AssetsUploadAssetAsync (string folderUrl, string url);
+        
+        /// <summary>
+        /// Delete blobs by urls
+        /// </summary>
+        /// <remarks>
         /// 
+        /// </remarks>
+        /// <param name="urls"></param>
+        /// <returns></returns>
+        void AssetsDeleteBlobs (List<string> urls);
+  
+        /// <summary>
+        /// Delete blobs by urls
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="urls"></param>
+        /// <returns></returns>
+        System.Threading.Tasks.Task AssetsDeleteBlobsAsync (List<string> urls);
+        
+        /// <summary>
+        /// Create new blob folder
         /// </summary>
         /// <remarks>
         /// 
         /// </remarks>
         /// <param name="folder"></param>
-        /// <param name="url"></param>
-        /// <returns>VirtoCommercePlatformWebModelAssetBlobInfo</returns>
-        System.Threading.Tasks.Task<VirtoCommercePlatformWebModelAssetBlobInfo> AssetsUploadAssetFromUrlAsync (string folder, string url);
+        /// <returns></returns>
+        void AssetsCreateBlobFolder (VirtoCommercePlatformCoreAssetBlobFolder folder);
+  
+        /// <summary>
+        /// Create new blob folder
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="folder"></param>
+        /// <returns></returns>
+        System.Threading.Tasks.Task AssetsCreateBlobFolderAsync (VirtoCommercePlatformCoreAssetBlobFolder folder);
         
         /// <summary>
         /// Get object types which support dynamic properties
@@ -1175,125 +1215,15 @@ namespace VirtoCommerce.Client.Api
     
         
         /// <summary>
-        /// Deletes blobs by they key. Delete blob by key
+        /// Search asset folders and blobs 
         /// </summary>
-        /// <param name="blobKey">blob key.</param> 
+        /// <param name="folderUrl"></param> 
         /// <returns></returns>            
-        public void AssetsDelete (string blobKey)
+        public List<VirtoCommercePlatformWebModelAssetAssetListItem> AssetsSearchAssetItems (string folderUrl)
         {
-            
-            // verify the required parameter 'blobKey' is set
-            if (blobKey == null) throw new ApiException(400, "Missing required parameter 'blobKey' when calling AssetsDelete");
             
     
             var path = "/api/platform/assets";
-    
-            var pathParams = new Dictionary<String, String>();
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            String postBody = null;
-
-            // to determine the Accept header
-            String[] http_header_accepts = new String[] {
-                
-            };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
-            if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
-
-            // set "format" to json by default
-            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
-            pathParams.Add("format", "json");
-            
-            if (blobKey != null) queryParams.Add("blobKey", ApiClient.ParameterToString(blobKey)); // query parameter
-            
-            
-            
-            
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
-    
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling AssetsDelete: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling AssetsDelete: " + response.ErrorMessage, response.ErrorMessage);
-    
-            return;
-        }
-    
-        /// <summary>
-        /// Deletes blobs by they key. Delete blob by key
-        /// </summary>
-        /// <param name="blobKey">blob key.</param>
-        /// <returns></returns>
-        public async System.Threading.Tasks.Task AssetsDeleteAsync (string blobKey)
-        {
-            // verify the required parameter 'blobKey' is set
-            if (blobKey == null) throw new ApiException(400, "Missing required parameter 'blobKey' when calling AssetsDelete");
-            
-    
-            var path = "/api/platform/assets";
-    
-            var pathParams = new Dictionary<String, String>();
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            String postBody = null;
-
-            // to determine the Accept header
-            String[] http_header_accepts = new String[] {
-                
-            };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
-            if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
-
-            // set "format" to json by default
-            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
-            pathParams.Add("format", "json");
-            
-            if (blobKey != null) queryParams.Add("blobKey", ApiClient.ParameterToString(blobKey)); // query parameter
-            
-            
-            
-            
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling AssetsDelete: " + response.Content, response.Content);
-
-            
-            return;
-        }
-        
-        /// <summary>
-        ///  
-        /// </summary>
-        /// <param name="folder"></param> 
-        /// <param name="url"></param> 
-        /// <returns>VirtoCommercePlatformWebModelAssetBlobInfo</returns>            
-        public VirtoCommercePlatformWebModelAssetBlobInfo AssetsUploadAssetFromUrl (string folder, string url)
-        {
-            
-            // verify the required parameter 'folder' is set
-            if (folder == null) throw new ApiException(400, "Missing required parameter 'folder' when calling AssetsUploadAssetFromUrl");
-            
-            // verify the required parameter 'url' is set
-            if (url == null) throw new ApiException(400, "Missing required parameter 'url' when calling AssetsUploadAssetFromUrl");
-            
-    
-            var path = "/api/platform/assets/{folder}";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1313,8 +1243,109 @@ namespace VirtoCommerce.Client.Api
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (folder != null) pathParams.Add("folder", ApiClient.ParameterToString(folder)); // path parameter
             
+            if (folderUrl != null) queryParams.Add("folderUrl", ApiClient.ParameterToString(folderUrl)); // query parameter
+            
+            
+            
+            
+    
+            // authentication setting, if any
+            String[] authSettings = new String[] {  };
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+    
+            if (((int)response.StatusCode) >= 400)
+                throw new ApiException ((int)response.StatusCode, "Error calling AssetsSearchAssetItems: " + response.Content, response.Content);
+            else if (((int)response.StatusCode) == 0)
+                throw new ApiException ((int)response.StatusCode, "Error calling AssetsSearchAssetItems: " + response.ErrorMessage, response.ErrorMessage);
+    
+            return (List<VirtoCommercePlatformWebModelAssetAssetListItem>) ApiClient.Deserialize(response.Content, typeof(List<VirtoCommercePlatformWebModelAssetAssetListItem>), response.Headers);
+        }
+    
+        /// <summary>
+        /// Search asset folders and blobs 
+        /// </summary>
+        /// <param name="folderUrl"></param>
+        /// <returns></returns>
+        public async System.Threading.Tasks.Task<List<VirtoCommercePlatformWebModelAssetAssetListItem>> AssetsSearchAssetItemsAsync (string folderUrl)
+        {
+            
+    
+            var path = "/api/platform/assets";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                "application/json", "text/json"
+            };
+            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            if (folderUrl != null) queryParams.Add("folderUrl", ApiClient.ParameterToString(folderUrl)); // query parameter
+            
+            
+            
+            
+    
+            // authentication setting, if any
+            String[] authSettings = new String[] {  };
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            if (((int)response.StatusCode) >= 400)
+                throw new ApiException ((int)response.StatusCode, "Error calling AssetsSearchAssetItems: " + response.Content, response.Content);
+
+            return (List<VirtoCommercePlatformWebModelAssetAssetListItem>) ApiClient.Deserialize(response.Content, typeof(List<VirtoCommercePlatformWebModelAssetAssetListItem>), response.Headers);
+        }
+        
+        /// <summary>
+        /// Upload assets to the folder Request body can contain multiple files.
+        /// </summary>
+        /// <param name="folderUrl">Parent folder url (relative or absolute).</param> 
+        /// <param name="url">Url for uploaded remote resource (optional)</param> 
+        /// <returns></returns>            
+        public List<VirtoCommercePlatformWebModelAssetBlobInfo> AssetsUploadAsset (string folderUrl, string url)
+        {
+            
+            // verify the required parameter 'folderUrl' is set
+            if (folderUrl == null) throw new ApiException(400, "Missing required parameter 'folderUrl' when calling AssetsUploadAsset");
+            
+    
+            var path = "/api/platform/assets";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                "application/json", "text/json"
+            };
+            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            if (folderUrl != null) queryParams.Add("folderUrl", ApiClient.ParameterToString(folderUrl)); // query parameter
             if (url != null) queryParams.Add("url", ApiClient.ParameterToString(url)); // query parameter
             
             
@@ -1328,28 +1359,26 @@ namespace VirtoCommerce.Client.Api
             IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling AssetsUploadAssetFromUrl: " + response.Content, response.Content);
+                throw new ApiException ((int)response.StatusCode, "Error calling AssetsUploadAsset: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling AssetsUploadAssetFromUrl: " + response.ErrorMessage, response.ErrorMessage);
+                throw new ApiException ((int)response.StatusCode, "Error calling AssetsUploadAsset: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommercePlatformWebModelAssetBlobInfo) ApiClient.Deserialize(response.Content, typeof(VirtoCommercePlatformWebModelAssetBlobInfo), response.Headers);
+            return (List<VirtoCommercePlatformWebModelAssetBlobInfo>) ApiClient.Deserialize(response.Content, typeof(List<VirtoCommercePlatformWebModelAssetBlobInfo>), response.Headers);
         }
     
         /// <summary>
-        ///  
+        /// Upload assets to the folder Request body can contain multiple files.
         /// </summary>
-        /// <param name="folder"></param>
-        /// <param name="url"></param>
-        /// <returns>VirtoCommercePlatformWebModelAssetBlobInfo</returns>
-        public async System.Threading.Tasks.Task<VirtoCommercePlatformWebModelAssetBlobInfo> AssetsUploadAssetFromUrlAsync (string folder, string url)
+        /// <param name="folderUrl">Parent folder url (relative or absolute).</param>
+        /// <param name="url">Url for uploaded remote resource (optional)</param>
+        /// <returns></returns>
+        public async System.Threading.Tasks.Task<List<VirtoCommercePlatformWebModelAssetBlobInfo>> AssetsUploadAssetAsync (string folderUrl, string url)
         {
-            // verify the required parameter 'folder' is set
-            if (folder == null) throw new ApiException(400, "Missing required parameter 'folder' when calling AssetsUploadAssetFromUrl");
-            // verify the required parameter 'url' is set
-            if (url == null) throw new ApiException(400, "Missing required parameter 'url' when calling AssetsUploadAssetFromUrl");
+            // verify the required parameter 'folderUrl' is set
+            if (folderUrl == null) throw new ApiException(400, "Missing required parameter 'folderUrl' when calling AssetsUploadAsset");
             
     
-            var path = "/api/platform/assets/{folder}";
+            var path = "/api/platform/assets";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1369,8 +1398,8 @@ namespace VirtoCommerce.Client.Api
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (folder != null) pathParams.Add("folder", ApiClient.ParameterToString(folder)); // path parameter
             
+            if (folderUrl != null) queryParams.Add("folderUrl", ApiClient.ParameterToString(folderUrl)); // query parameter
             if (url != null) queryParams.Add("url", ApiClient.ParameterToString(url)); // query parameter
             
             
@@ -1383,9 +1412,215 @@ namespace VirtoCommerce.Client.Api
             // make the HTTP request
             IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling AssetsUploadAssetFromUrl: " + response.Content, response.Content);
+                throw new ApiException ((int)response.StatusCode, "Error calling AssetsUploadAsset: " + response.Content, response.Content);
 
-            return (VirtoCommercePlatformWebModelAssetBlobInfo) ApiClient.Deserialize(response.Content, typeof(VirtoCommercePlatformWebModelAssetBlobInfo), response.Headers);
+            return (List<VirtoCommercePlatformWebModelAssetBlobInfo>) ApiClient.Deserialize(response.Content, typeof(List<VirtoCommercePlatformWebModelAssetBlobInfo>), response.Headers);
+        }
+        
+        /// <summary>
+        /// Delete blobs by urls 
+        /// </summary>
+        /// <param name="urls"></param> 
+        /// <returns></returns>            
+        public void AssetsDeleteBlobs (List<string> urls)
+        {
+            
+            // verify the required parameter 'urls' is set
+            if (urls == null) throw new ApiException(400, "Missing required parameter 'urls' when calling AssetsDeleteBlobs");
+            
+    
+            var path = "/api/platform/assets";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                
+            };
+            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            if (urls != null) queryParams.Add("urls", ApiClient.ParameterToString(urls)); // query parameter
+            
+            
+            
+            
+    
+            // authentication setting, if any
+            String[] authSettings = new String[] {  };
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+    
+            if (((int)response.StatusCode) >= 400)
+                throw new ApiException ((int)response.StatusCode, "Error calling AssetsDeleteBlobs: " + response.Content, response.Content);
+            else if (((int)response.StatusCode) == 0)
+                throw new ApiException ((int)response.StatusCode, "Error calling AssetsDeleteBlobs: " + response.ErrorMessage, response.ErrorMessage);
+    
+            return;
+        }
+    
+        /// <summary>
+        /// Delete blobs by urls 
+        /// </summary>
+        /// <param name="urls"></param>
+        /// <returns></returns>
+        public async System.Threading.Tasks.Task AssetsDeleteBlobsAsync (List<string> urls)
+        {
+            // verify the required parameter 'urls' is set
+            if (urls == null) throw new ApiException(400, "Missing required parameter 'urls' when calling AssetsDeleteBlobs");
+            
+    
+            var path = "/api/platform/assets";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                
+            };
+            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            if (urls != null) queryParams.Add("urls", ApiClient.ParameterToString(urls)); // query parameter
+            
+            
+            
+            
+    
+            // authentication setting, if any
+            String[] authSettings = new String[] {  };
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            if (((int)response.StatusCode) >= 400)
+                throw new ApiException ((int)response.StatusCode, "Error calling AssetsDeleteBlobs: " + response.Content, response.Content);
+
+            
+            return;
+        }
+        
+        /// <summary>
+        /// Create new blob folder 
+        /// </summary>
+        /// <param name="folder"></param> 
+        /// <returns></returns>            
+        public void AssetsCreateBlobFolder (VirtoCommercePlatformCoreAssetBlobFolder folder)
+        {
+            
+            // verify the required parameter 'folder' is set
+            if (folder == null) throw new ApiException(400, "Missing required parameter 'folder' when calling AssetsCreateBlobFolder");
+            
+    
+            var path = "/api/platform/assets/folder";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                
+            };
+            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            
+            
+            
+            postBody = ApiClient.Serialize(folder); // http body (model) parameter
+            
+    
+            // authentication setting, if any
+            String[] authSettings = new String[] {  };
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+    
+            if (((int)response.StatusCode) >= 400)
+                throw new ApiException ((int)response.StatusCode, "Error calling AssetsCreateBlobFolder: " + response.Content, response.Content);
+            else if (((int)response.StatusCode) == 0)
+                throw new ApiException ((int)response.StatusCode, "Error calling AssetsCreateBlobFolder: " + response.ErrorMessage, response.ErrorMessage);
+    
+            return;
+        }
+    
+        /// <summary>
+        /// Create new blob folder 
+        /// </summary>
+        /// <param name="folder"></param>
+        /// <returns></returns>
+        public async System.Threading.Tasks.Task AssetsCreateBlobFolderAsync (VirtoCommercePlatformCoreAssetBlobFolder folder)
+        {
+            // verify the required parameter 'folder' is set
+            if (folder == null) throw new ApiException(400, "Missing required parameter 'folder' when calling AssetsCreateBlobFolder");
+            
+    
+            var path = "/api/platform/assets/folder";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                
+            };
+            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            
+            
+            
+            postBody = ApiClient.Serialize(folder); // http body (model) parameter
+            
+    
+            // authentication setting, if any
+            String[] authSettings = new String[] {  };
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            if (((int)response.StatusCode) >= 400)
+                throw new ApiException ((int)response.StatusCode, "Error calling AssetsCreateBlobFolder: " + response.Content, response.Content);
+
+            
+            return;
         }
         
         /// <summary>

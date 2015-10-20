@@ -82,8 +82,8 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="id">Contact id</param>
-        /// <returns></returns>
-        void CustomerModuleGetContactById (string id);
+        /// <returns>VirtoCommerceCustomerModuleWebModelContact</returns>
+        VirtoCommerceCustomerModuleWebModelContact CustomerModuleGetContactById (string id);
   
         /// <summary>
         /// Get contact
@@ -92,8 +92,8 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="id">Contact id</param>
-        /// <returns></returns>
-        System.Threading.Tasks.Task CustomerModuleGetContactByIdAsync (string id);
+        /// <returns>VirtoCommerceCustomerModuleWebModelContact</returns>
+        System.Threading.Tasks.Task<VirtoCommerceCustomerModuleWebModelContact> CustomerModuleGetContactByIdAsync (string id);
         
         /// <summary>
         /// Get members
@@ -206,8 +206,8 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="id">Organization id</param>
-        /// <returns></returns>
-        void CustomerModuleGetOrganizationById (string id);
+        /// <returns>VirtoCommerceCustomerModuleWebModelOrganization</returns>
+        VirtoCommerceCustomerModuleWebModelOrganization CustomerModuleGetOrganizationById (string id);
   
         /// <summary>
         /// Get organization
@@ -216,8 +216,8 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="id">Organization id</param>
-        /// <returns></returns>
-        System.Threading.Tasks.Task CustomerModuleGetOrganizationByIdAsync (string id);
+        /// <returns>VirtoCommerceCustomerModuleWebModelOrganization</returns>
+        System.Threading.Tasks.Task<VirtoCommerceCustomerModuleWebModelOrganization> CustomerModuleGetOrganizationByIdAsync (string id);
         
     }
   
@@ -586,8 +586,8 @@ namespace VirtoCommerce.Client.Api
         /// Get contact 
         /// </summary>
         /// <param name="id">Contact id</param> 
-        /// <returns></returns>            
-        public void CustomerModuleGetContactById (string id)
+        /// <returns>VirtoCommerceCustomerModuleWebModelContact</returns>            
+        public VirtoCommerceCustomerModuleWebModelContact CustomerModuleGetContactById (string id)
         {
             
             // verify the required parameter 'id' is set
@@ -632,15 +632,15 @@ namespace VirtoCommerce.Client.Api
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling CustomerModuleGetContactById: " + response.ErrorMessage, response.ErrorMessage);
     
-            return;
+            return (VirtoCommerceCustomerModuleWebModelContact) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceCustomerModuleWebModelContact), response.Headers);
         }
     
         /// <summary>
         /// Get contact 
         /// </summary>
         /// <param name="id">Contact id</param>
-        /// <returns></returns>
-        public async System.Threading.Tasks.Task CustomerModuleGetContactByIdAsync (string id)
+        /// <returns>VirtoCommerceCustomerModuleWebModelContact</returns>
+        public async System.Threading.Tasks.Task<VirtoCommerceCustomerModuleWebModelContact> CustomerModuleGetContactByIdAsync (string id)
         {
             // verify the required parameter 'id' is set
             if (id == null) throw new ApiException(400, "Missing required parameter 'id' when calling CustomerModuleGetContactById");
@@ -681,8 +681,7 @@ namespace VirtoCommerce.Client.Api
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CustomerModuleGetContactById: " + response.Content, response.Content);
 
-            
-            return;
+            return (VirtoCommerceCustomerModuleWebModelContact) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceCustomerModuleWebModelContact), response.Headers);
         }
         
         /// <summary>
@@ -1199,8 +1198,8 @@ namespace VirtoCommerce.Client.Api
         /// Get organization 
         /// </summary>
         /// <param name="id">Organization id</param> 
-        /// <returns></returns>            
-        public void CustomerModuleGetOrganizationById (string id)
+        /// <returns>VirtoCommerceCustomerModuleWebModelOrganization</returns>            
+        public VirtoCommerceCustomerModuleWebModelOrganization CustomerModuleGetOrganizationById (string id)
         {
             
             // verify the required parameter 'id' is set
@@ -1245,15 +1244,15 @@ namespace VirtoCommerce.Client.Api
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling CustomerModuleGetOrganizationById: " + response.ErrorMessage, response.ErrorMessage);
     
-            return;
+            return (VirtoCommerceCustomerModuleWebModelOrganization) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceCustomerModuleWebModelOrganization), response.Headers);
         }
     
         /// <summary>
         /// Get organization 
         /// </summary>
         /// <param name="id">Organization id</param>
-        /// <returns></returns>
-        public async System.Threading.Tasks.Task CustomerModuleGetOrganizationByIdAsync (string id)
+        /// <returns>VirtoCommerceCustomerModuleWebModelOrganization</returns>
+        public async System.Threading.Tasks.Task<VirtoCommerceCustomerModuleWebModelOrganization> CustomerModuleGetOrganizationByIdAsync (string id)
         {
             // verify the required parameter 'id' is set
             if (id == null) throw new ApiException(400, "Missing required parameter 'id' when calling CustomerModuleGetOrganizationById");
@@ -1294,8 +1293,7 @@ namespace VirtoCommerce.Client.Api
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CustomerModuleGetOrganizationById: " + response.Content, response.Content);
 
-            
-            return;
+            return (VirtoCommerceCustomerModuleWebModelOrganization) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceCustomerModuleWebModelOrganization), response.Headers);
         }
         
     }

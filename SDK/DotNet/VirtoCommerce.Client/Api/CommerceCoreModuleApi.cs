@@ -73,6 +73,26 @@ namespace VirtoCommerce.Client.Api
         /// <returns>VirtoCommerceCoreModuleWebModelFulfillmentCenter</returns>
         System.Threading.Tasks.Task<VirtoCommerceCoreModuleWebModelFulfillmentCenter> CommerceGetFulfillmentCenterAsync (string id);
         
+        /// <summary>
+        /// Find seo informations by slug keyword
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="slug">fulfillment center id</param>
+        /// <returns></returns>
+        List<VirtoCommerceDomainCommerceModelSeoInfo> CommerceGetSeoInfoBySlug (string slug);
+  
+        /// <summary>
+        /// Find seo informations by slug keyword
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="slug">fulfillment center id</param>
+        /// <returns></returns>
+        System.Threading.Tasks.Task<List<VirtoCommerceDomainCommerceModelSeoInfo>> CommerceGetSeoInfoBySlugAsync (string slug);
+        
     }
   
     /// <summary>
@@ -423,6 +443,108 @@ namespace VirtoCommerce.Client.Api
                 throw new ApiException ((int)response.StatusCode, "Error calling CommerceGetFulfillmentCenter: " + response.Content, response.Content);
 
             return (VirtoCommerceCoreModuleWebModelFulfillmentCenter) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceCoreModuleWebModelFulfillmentCenter), response.Headers);
+        }
+        
+        /// <summary>
+        /// Find seo informations by slug keyword 
+        /// </summary>
+        /// <param name="slug">fulfillment center id</param> 
+        /// <returns></returns>            
+        public List<VirtoCommerceDomainCommerceModelSeoInfo> CommerceGetSeoInfoBySlug (string slug)
+        {
+            
+            // verify the required parameter 'slug' is set
+            if (slug == null) throw new ApiException(400, "Missing required parameter 'slug' when calling CommerceGetSeoInfoBySlug");
+            
+    
+            var path = "/api/seoinfos/{slug}";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                "application/json", "text/json"
+            };
+            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            if (slug != null) pathParams.Add("slug", ApiClient.ParameterToString(slug)); // path parameter
+            
+            
+            
+            
+            
+    
+            // authentication setting, if any
+            String[] authSettings = new String[] {  };
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+    
+            if (((int)response.StatusCode) >= 400)
+                throw new ApiException ((int)response.StatusCode, "Error calling CommerceGetSeoInfoBySlug: " + response.Content, response.Content);
+            else if (((int)response.StatusCode) == 0)
+                throw new ApiException ((int)response.StatusCode, "Error calling CommerceGetSeoInfoBySlug: " + response.ErrorMessage, response.ErrorMessage);
+    
+            return (List<VirtoCommerceDomainCommerceModelSeoInfo>) ApiClient.Deserialize(response.Content, typeof(List<VirtoCommerceDomainCommerceModelSeoInfo>), response.Headers);
+        }
+    
+        /// <summary>
+        /// Find seo informations by slug keyword 
+        /// </summary>
+        /// <param name="slug">fulfillment center id</param>
+        /// <returns></returns>
+        public async System.Threading.Tasks.Task<List<VirtoCommerceDomainCommerceModelSeoInfo>> CommerceGetSeoInfoBySlugAsync (string slug)
+        {
+            // verify the required parameter 'slug' is set
+            if (slug == null) throw new ApiException(400, "Missing required parameter 'slug' when calling CommerceGetSeoInfoBySlug");
+            
+    
+            var path = "/api/seoinfos/{slug}";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                "application/json", "text/json"
+            };
+            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            if (slug != null) pathParams.Add("slug", ApiClient.ParameterToString(slug)); // path parameter
+            
+            
+            
+            
+            
+    
+            // authentication setting, if any
+            String[] authSettings = new String[] {  };
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            if (((int)response.StatusCode) >= 400)
+                throw new ApiException ((int)response.StatusCode, "Error calling CommerceGetSeoInfoBySlug: " + response.Content, response.Content);
+
+            return (List<VirtoCommerceDomainCommerceModelSeoInfo>) ApiClient.Deserialize(response.Content, typeof(List<VirtoCommerceDomainCommerceModelSeoInfo>), response.Headers);
         }
         
     }
