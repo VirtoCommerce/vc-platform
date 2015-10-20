@@ -107,6 +107,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\images\noimage.png" />
     <Content Include="packages.config" />
     <Content Include="module.manifest">
       <SubType>Designer</SubType>

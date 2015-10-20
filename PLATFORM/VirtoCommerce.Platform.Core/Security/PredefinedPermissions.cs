@@ -2,6 +2,12 @@
 {
     public static class PredefinedPermissions
     {
+        public const string AssetAccess = "platform:asset:access",
+           AssetDelete = "platform:asset:delete",
+           AssetUpdate = "platform:asset:update",
+           AssetCreate = "platform:asset:create",
+           AssetRead = "platform:asset:read";
+
         public const string ModuleQuery = "platform:module:read",
             ModuleAccess = "platform:module:access",
             ModuleManage = "platform:module:manage";
@@ -171,7 +177,39 @@
                     Description = "Allows to view and manage background jobs.",
                     ModuleId = "VirtoCommerce.Platform",
                     GroupName = "Background Jobs"
-                }
+                },
+                new Permission
+                {
+                    Id = AssetAccess,
+                    Name = "Access to asset management",
+                    ModuleId = "VirtoCommerce.Platform",
+                    GroupName = "Asset management"
+                },
+                new Permission
+                {
+                    Id = AssetCreate,
+                    ModuleId = "VirtoCommerce.Platform",
+                    GroupName = "Asset management"
+                },
+                new Permission
+                {
+                    Id = AssetDelete,
+                    ModuleId = "VirtoCommerce.Platform",
+                    GroupName = "Asset management"
+                },
+                new Permission
+                {
+                    Id = AssetRead,
+                    ModuleId = "VirtoCommerce.Platform",
+                    GroupName = "Asset management"
+                },
+                new Permission
+                {
+                    Id = AssetUpdate,
+                    ModuleId = "VirtoCommerce.Platform",
+                    GroupName = "Asset management"
+                },
+
             };
         }
     }

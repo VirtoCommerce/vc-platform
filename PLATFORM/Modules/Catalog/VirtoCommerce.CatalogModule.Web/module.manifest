@@ -30,27 +30,39 @@
     <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
   </scripts>
 
-	<settings>
-		<group name="Catalog|General">
-			<setting>
-				<name>Catalog.ExportImport.Description</name>
-				<valueType>string</valueType>
-				<defaultValue>Export/Import catalogs, categories, products, properties with images binary if you check binary flag</defaultValue>
-				<title>Export/Import description</title>
-				<description>Module description in platform export/import wizard</description>
-			</setting>
-		</group>
-	</settings>
-	
+  <settings>
+    <group name="Catalog|General">
+      <setting>
+        <name>Catalog.ExportImport.Description</name>
+        <valueType>string</valueType>
+        <defaultValue>Export/Import catalogs, categories, products, properties with images binary if you check binary flag</defaultValue>
+        <title>Export/Import description</title>
+        <description>Module description in platform export/import wizard</description>
+      </setting>
+      <setting>
+        <name>Catalog.AssociationGroups</name>
+        <valueType>string</valueType>
+        <defaultValue></defaultValue>
+        <title>Association Group names</title>
+        <description>Catalog product association groups</description>
+        <isArray>true</isArray>
+        <arrayValues>
+          <value>Accessories</value>
+          <value>Related Items</value>
+        </arrayValues>
+      </setting>
+    </group>
+  </settings>
+
   <permissions>
     <group name="Catalog">
       <permission id="catalog:access" name="Open catalogs menu" description=""/>
       <permission id="catalog:create" name="Create catalog related data" description=""/>
       <permission id="catalog:read" name="View catalog related data" description=""/>
       <permission id="catalog:update" name="Update catalog related data" description=""/>
-      <permission id="catalog:delete" name="Delete catalog related data" description=""/> 
-	  <permission id="catalog:export" name="Export catalog data" description=""/>      
-      <permission id="catalog:import" name="Import catalog data" description=""/>      
+      <permission id="catalog:delete" name="Delete catalog related data" description=""/>
+      <permission id="catalog:export" name="Export catalog data" description=""/>
+      <permission id="catalog:import" name="Import catalog data" description=""/>
     </group>
   </permissions>
 </module>

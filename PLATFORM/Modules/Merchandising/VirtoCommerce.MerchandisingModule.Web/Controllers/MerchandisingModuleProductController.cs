@@ -88,6 +88,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         /// <param name="product">Product id</param>
         /// <param name="responseGroup">Response detalization scale (default value is ItemLarge)</param>
         /// <param name="language">Culture name (default value is "en-us")</param>
+        /// <response code="200"></response>
         /// <response code="404">Product not found</response>
 		[HttpGet]
         [ResponseType(typeof(CatalogItem))]
@@ -117,6 +118,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         /// <param name="code">Product code</param>
         /// <param name="responseGroup">Response detalization scale (default value is ItemLarge)</param>
         /// <param name="language">Culture name (default value is "en-us")</param>
+        /// <response code="200"></response>
         /// <response code="404">Product not found</response>
         [HttpGet]
         [ResponseType(typeof(CatalogItem))]
@@ -158,6 +160,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         /// <param name="keyword">Product SEO keyword</param>
         /// <param name="responseGroup">Response detalization scale (default value is ItemLarge)</param>
         /// <param name="language">Culture name (default value is "en-us")</param>
+        /// <response code="200"></response>
         /// <response code="404">Product not found</response>
 		[HttpGet]
         [ResponseType(typeof(CatalogItem))]

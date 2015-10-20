@@ -375,6 +375,8 @@ namespace VirtoCommerce.Platform.Web
 
                     container.RegisterInstance<IBlobStorageProvider>(fileSystemBlobProvider);
                     container.RegisterInstance<IBlobUrlResolver>(fileSystemBlobProvider);
+                  
+
                 }
                 else if (string.Equals(provider, AzureBlobProvider.ProviderName, StringComparison.OrdinalIgnoreCase))
                 {

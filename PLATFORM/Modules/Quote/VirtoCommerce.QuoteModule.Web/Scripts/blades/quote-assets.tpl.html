@@ -27,7 +27,7 @@
                     <div class="sub-t">Progress</div>
                     <div class="progress-bar __aqua" ng-style="{'width': uploader.progress + '%'}"></div>
                 </div>
-                
+
                 <div class="table-wrapper" ng-if="currentEntities.length > 0">
                     <table class="table">
                         <tr>
@@ -60,19 +60,6 @@
                     </table>
                 </div>
             </div>
-
-            <script type="text/ng-template" id="assetTemplate.html">
-                <ul class="menu __context" id="quoteAssetMenu{{$index}}" role="menu" aria-labelledby="dropdownMenu2">
-                    <li class="menu-item" ng-click="removeAction([data])">
-                        <i class="menu-ico fa fa-trash-o"></i>
-                        Remove
-                    </li>
-                    <li class="menu-item" ng-click="copyUrl(data)">
-                        <i class="menu-ico fa fa-link"></i>
-                        Copy link
-                    </li>
-                </ul>
-            </script>
         </div>
     </div>
 </div>
