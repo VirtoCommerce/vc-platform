@@ -65,17 +65,18 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
             var themeService = factory.Invoke(chosenRepository);
 			this._themeService = themeService;
 		}
-		#endregion
+        #endregion
 
-		/// <summary>
-		/// Get theme asset
-		/// </summary>
-		/// <remarks>Get theme asset by store id, theme id and asset id. Asset id - asset path relative to root theme path</remarks>
-		/// <param name="storeId">Store id</param>
-		/// <param name="themeId">Theme id</param>
-		/// <param name="assetId">Theme asset id</param>
-		/// <response code="404">Theme asset not found</response>
-		[HttpGet]
+        /// <summary>
+        /// Get theme asset
+        /// </summary>
+        /// <remarks>Get theme asset by store id, theme id and asset id. Asset id - asset path relative to root theme path</remarks>
+        /// <param name="storeId">Store id</param>
+        /// <param name="themeId">Theme id</param>
+        /// <param name="assetId">Theme asset id</param>
+        /// <response code="200"></response>
+        /// <response code="404">Theme asset not found</response>
+        [HttpGet]
 		[ResponseType(typeof(ThemeAsset))]
 		[Route("themes/{themeId}/assets/{*assetId}")]
 		public IHttpActionResult GetThemeAsset(string assetId, string storeId, string themeId)

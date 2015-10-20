@@ -13,7 +13,7 @@
 			var uploader = $scope.uploader = new FileUploader({
 				scope: $scope,
 				headers: { Accept: 'application/json' },
-				url: 'api/platform/assets/placeholders-images',
+				url: 'api/platform/assets?folderUrl=placeholders-images',
 				autoUpload: true,
 				removeAfterUpload: true
 			});

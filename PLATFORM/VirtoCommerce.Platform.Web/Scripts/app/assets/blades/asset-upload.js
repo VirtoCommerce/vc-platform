@@ -9,17 +9,14 @@
             var uploader = $scope.uploader = new FileUploader({
                 scope: $scope,
                 headers: { Accept: 'application/json' },
-                url: 'api/platform/assets/ ' + blade.currentEntityId,
+                url: 'api/platform/assets?folderUrl=' + blade.currentEntityId,
                 method: 'POST',
                 autoUpload: true,
                 removeAfterUpload: true
             });
 
             uploader.onSuccessItem = function (fileItem, assets, status, headers) {
-                angular.forEach(assets, function (asset) {
-                    //ADD uploaded asset
-                    blade.currentEntities.push(asset);
-                });
+          
             };
         }
     }
@@ -30,7 +27,7 @@
 
     $scope.addImageFromUrl = function () {
         if (blade.newExternalImageUrl) {
-            assets.uploadFromUrl({ folder: blade.currentEntityId, url: blade.newExternalImageUrl }, function (data) {
+        	assets.uploadFromUrl({ folderUrl: blade.currentEntityId, url: blade.newExternalImageUrl }, function (data) {
                 //blade.currentEntity.images.push(data);
                 blade.newExternalImageUrl = undefined;
             });

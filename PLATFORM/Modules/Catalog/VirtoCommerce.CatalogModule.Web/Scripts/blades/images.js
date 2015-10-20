@@ -24,7 +24,7 @@
 
     $scope.addImageFromUrl = function () {
     	if (blade.newExternalImageUrl) {
-    		assets.uploadFromUrl({ folder: 'catalog', url: blade.newExternalImageUrl }, function (data) {
+    		assets.uploadFromUrl({ folderUrl: 'catalog', url: blade.newExternalImageUrl }, function (data) {
     			blade.currentEntity.images.push(data);
     			blade.newExternalImageUrl = undefined;
     		});       
@@ -66,7 +66,7 @@
             var uploader = $scope.uploader = new FileUploader({
                 scope: $scope,
                 headers: { Accept: 'application/json' },
-                url: 'api/platform/assets/catalog',
+                url: 'api/platform/assets?folderUrl=catalog',
                 autoUpload: true,
                 removeAfterUpload: true
             });
