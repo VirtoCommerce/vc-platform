@@ -8,22 +8,14 @@
         $modalInstance.close(false);
     }
 
-    $scope.prevImage = function () {
-        var imgIndex = dialog.images.indexOf($scope.currentImage);
-        if (imgIndex > 0) {
-            $scope.currentImage = dialog.images[imgIndex - 1];
-        } else {
-            $scope.currentImage = dialog.images[imgCount - 1];
-        }
+    $scope.prevImage = function (index) {
+        var i = index == -1 ? imgCount - 1 : index;
+        $scope.currentImage = dialog.images[i];
     }
 
-    $scope.nextImage = function () {
-        var imgIndex = dialog.images.indexOf($scope.currentImage);
-        if (imgIndex < imgCount - 1) {
-            $scope.currentImage = dialog.images[imgIndex + 1];
-        } else {
-            $scope.currentImage = dialog.images[0];
-        }
+    $scope.nextImage = function (index) {
+        var i = index == imgCount ? 0 : index;
+        $scope.currentImage = dialog.images[i];
     }
 
     $scope.customImage = function (image) {
