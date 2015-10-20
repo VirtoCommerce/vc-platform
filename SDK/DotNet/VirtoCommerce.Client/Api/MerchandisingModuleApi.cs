@@ -40,6 +40,30 @@ namespace VirtoCommerce.Client.Api
         System.Threading.Tasks.Task<VirtoCommerceMerchandisingModuleWebModelCategory> MerchandisingModuleCategoryGetCategoryByCodeAsync (string store, string code, string language);
         
         /// <summary>
+        /// Search for store categories
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="store">Store id</param>
+        /// <param name="language">Culture name (default value is \&quot;en-us\&quot;)</param>
+        /// <param name="parentId">Parent category id</param>
+        /// <returns>VirtoCommerceMerchandisingModuleWebModelCategoryResponseCollection</returns>
+        VirtoCommerceMerchandisingModuleWebModelCategoryResponseCollection MerchandisingModuleCategorySearchCategory (string store, string language, string parentId);
+  
+        /// <summary>
+        /// Search for store categories
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="store">Store id</param>
+        /// <param name="language">Culture name (default value is \&quot;en-us\&quot;)</param>
+        /// <param name="parentId">Parent category id</param>
+        /// <returns>VirtoCommerceMerchandisingModuleWebModelCategoryResponseCollection</returns>
+        System.Threading.Tasks.Task<VirtoCommerceMerchandisingModuleWebModelCategoryResponseCollection> MerchandisingModuleCategorySearchCategoryAsync (string store, string language, string parentId);
+        
+        /// <summary>
         /// Get store category by id
         /// </summary>
         /// <remarks>
@@ -499,6 +523,116 @@ namespace VirtoCommerce.Client.Api
                 throw new ApiException ((int)response.StatusCode, "Error calling MerchandisingModuleCategoryGetCategoryByCode: " + response.Content, response.Content);
 
             return (VirtoCommerceMerchandisingModuleWebModelCategory) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceMerchandisingModuleWebModelCategory), response.Headers);
+        }
+        
+        /// <summary>
+        /// Search for store categories 
+        /// </summary>
+        /// <param name="store">Store id</param> 
+        /// <param name="language">Culture name (default value is \&quot;en-us\&quot;)</param> 
+        /// <param name="parentId">Parent category id</param> 
+        /// <returns>VirtoCommerceMerchandisingModuleWebModelCategoryResponseCollection</returns>            
+        public VirtoCommerceMerchandisingModuleWebModelCategoryResponseCollection MerchandisingModuleCategorySearchCategory (string store, string language, string parentId)
+        {
+            
+            // verify the required parameter 'store' is set
+            if (store == null) throw new ApiException(400, "Missing required parameter 'store' when calling MerchandisingModuleCategorySearchCategory");
+            
+    
+            var path = "/api/mp/categories/search";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                "application/json", "text/json"
+            };
+            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            if (store != null) queryParams.Add("store", ApiClient.ParameterToString(store)); // query parameter
+            if (language != null) queryParams.Add("language", ApiClient.ParameterToString(language)); // query parameter
+            if (parentId != null) queryParams.Add("parentId", ApiClient.ParameterToString(parentId)); // query parameter
+            
+            
+            
+            
+    
+            // authentication setting, if any
+            String[] authSettings = new String[] {  };
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+    
+            if (((int)response.StatusCode) >= 400)
+                throw new ApiException ((int)response.StatusCode, "Error calling MerchandisingModuleCategorySearchCategory: " + response.Content, response.Content);
+            else if (((int)response.StatusCode) == 0)
+                throw new ApiException ((int)response.StatusCode, "Error calling MerchandisingModuleCategorySearchCategory: " + response.ErrorMessage, response.ErrorMessage);
+    
+            return (VirtoCommerceMerchandisingModuleWebModelCategoryResponseCollection) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceMerchandisingModuleWebModelCategoryResponseCollection), response.Headers);
+        }
+    
+        /// <summary>
+        /// Search for store categories 
+        /// </summary>
+        /// <param name="store">Store id</param>
+        /// <param name="language">Culture name (default value is \&quot;en-us\&quot;)</param>
+        /// <param name="parentId">Parent category id</param>
+        /// <returns>VirtoCommerceMerchandisingModuleWebModelCategoryResponseCollection</returns>
+        public async System.Threading.Tasks.Task<VirtoCommerceMerchandisingModuleWebModelCategoryResponseCollection> MerchandisingModuleCategorySearchCategoryAsync (string store, string language, string parentId)
+        {
+            // verify the required parameter 'store' is set
+            if (store == null) throw new ApiException(400, "Missing required parameter 'store' when calling MerchandisingModuleCategorySearchCategory");
+            
+    
+            var path = "/api/mp/categories/search";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                "application/json", "text/json"
+            };
+            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            if (store != null) queryParams.Add("store", ApiClient.ParameterToString(store)); // query parameter
+            if (language != null) queryParams.Add("language", ApiClient.ParameterToString(language)); // query parameter
+            if (parentId != null) queryParams.Add("parentId", ApiClient.ParameterToString(parentId)); // query parameter
+            
+            
+            
+            
+    
+            // authentication setting, if any
+            String[] authSettings = new String[] {  };
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            if (((int)response.StatusCode) >= 400)
+                throw new ApiException ((int)response.StatusCode, "Error calling MerchandisingModuleCategorySearchCategory: " + response.Content, response.Content);
+
+            return (VirtoCommerceMerchandisingModuleWebModelCategoryResponseCollection) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceMerchandisingModuleWebModelCategoryResponseCollection), response.Headers);
         }
         
         /// <summary>

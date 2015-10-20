@@ -175,6 +175,7 @@
     <Compile Include="Model\VirtoCommerceMerchandisingModuleWebModelAssociation.cs" />
     <Compile Include="Model\VirtoCommerceMerchandisingModuleWebModelCatalogItem.cs" />
     <Compile Include="Model\VirtoCommerceMerchandisingModuleWebModelCategory.cs" />
+    <Compile Include="Model\VirtoCommerceMerchandisingModuleWebModelCategoryResponseCollection.cs" />
     <Compile Include="Model\VirtoCommerceMerchandisingModuleWebModelDynamicContentItem.cs" />
     <Compile Include="Model\VirtoCommerceMerchandisingModuleWebModelDynamicContentItemGroup.cs" />
     <Compile Include="Model\VirtoCommerceMerchandisingModuleWebModelDynamicContentItemGroupResponseCollection.cs" />
