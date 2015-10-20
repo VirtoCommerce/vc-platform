@@ -19,6 +19,7 @@ namespace VirtoCommerce.Platform.Core.Asset
 		public string FileName { get; set; }
 		public long Size { get; set; }
 		public string ContentType { get; set; }
+        public DateTime? ModifiedDate { get; set; }
 
 	}
 }
