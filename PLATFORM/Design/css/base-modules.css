@@ -2869,6 +2869,40 @@ button.btn
             transform: translate(-50%, -50%);
 }
 
+.__gallery .modal-dialog {
+    background-color: #fff;
+    border: 5px solid #a1c0d4;
+    bottom: 40px;
+    left: 80px;
+    margin: 0;
+    position: absolute;
+    right: 80px;
+    top: 40px;
+    width: auto;
+
+    -webkit-transform: none;
+            transform: none;
+}
+
+.__gallery .modal-content {
+    height: 100%;
+    margin: 0;
+    position: static;
+    width: 100%;
+
+    -webkit-box-shadow: none;
+            box-shadow: none;
+
+    -webkit-transform: none;
+            transform: none;
+}
+
+.__gallery .modal-content .modal-body
+{
+    height: 100%;
+    padding: 0;
+}
+
 .modal-content
 {
     margin: 30px 0;
@@ -5635,9 +5669,9 @@ input.ui-grid-filter-input[type="text"]
                         box-sizing: border-box;
             }
 
-            .popup .popup-close
+            .modal-body .popup-close
             {
-                color: #dee9f0;
+                color: #fff;
                 cursor: pointer;
                 font-size: 18px;
                 line-height: 1;
@@ -5647,26 +5681,35 @@ input.ui-grid-filter-input[type="text"]
                 z-index: 50;
             }
 
-            .popup .popup-close:hover
-            {
-                color: #a1c0d4;
-            }
-
-            .popup .gallery
+            .modal-body .gallery
             {
                 height: 100%;
                 overflow: hidden;
                 position: relative;
+                text-align: center;
             }
 
-                .popup .__slides,
-                .popup .__slides .list-item
+                .gallery .image-link {
+                    background: #a1c0d4;
+                    color: #fff;
+                    left: 0;
+                    height: 45px;
+                    line-height: 40px;
+                    position: absolute;
+                    right: 0;
+                    text-align: center;
+                    top: 0;
+                    z-index: 25;
+                }
+
+                .gallery .__slides,
+                .gallery .__slides .list-item
                 {
                     height: 100%;
                     width: 100%;
                 }
 
-                .popup .gallery .control
+                .gallery .control
                 {
                     color: #a1c0d4;
                     font-size: 30px;
@@ -5683,7 +5726,7 @@ input.ui-grid-filter-input[type="text"]
                             transform: translateY(-50%);
                 }
 
-                .popup .gallery .control::after
+                .gallery .control::after
                 {
                     content: '';
                     height: 100%;
@@ -5691,30 +5734,34 @@ input.ui-grid-filter-input[type="text"]
                     vertical-align: middle;
                 }
 
-                .popup .gallery .control:hover
+                .gallery .control:hover
                 {
                     color: #43b0e6;
                 }
 
-                .popup .gallery:hover .ctrl-l
+                .gallery:hover .ctrl-l
                 {
                     left: 20px;
                 }
 
-                .popup .gallery .ctrl-r
+                .gallery .ctrl-r
                 {
                     left: auto;
                     right: -50px;
                 }
 
-                .popup .gallery:hover .ctrl-r
+                .gallery:hover .ctrl-r
                 {
                     right: 20px;
                 }
 
-                .popup .__slides
+                .gallery .__slides
                 {
+                    padding: 55px 0 10px;
                     position: relative;
+
+                    -webkit-box-sizing: border-box;
+                            box-sizing: border-box;
                 }
 
                 .__slides .list-item
@@ -5738,9 +5785,10 @@ input.ui-grid-filter-input[type="text"]
                     vertical-align: middle;
                 }
 
-                .popup .__navs
+                .gallery .__navs
                 {
                     bottom: -100px;
+                    height: 50px;
                     position: absolute;
                     left: 50%;
 
@@ -5751,21 +5799,21 @@ input.ui-grid-filter-input[type="text"]
                             transform: translateX(-50%);
                 }
 
-                .popup .gallery:hover .__navs
+                .gallery:hover .__navs
                 {
-                    bottom: 50px;
+                    bottom: 20px;
                 }
 
                     .__navs .list-item
                     {
                         background: #fff;
-                        border: 2px solid #dee9f0;
+                        border: 1px solid #dee9f0;
                         cursor: pointer;
                         display: inline-block;
-                        height: 80px;
-                        margin: 0 2px;
+                        height: 100%;
+                        margin: 0 4px;
                         opacity: .5;
-                        width: 80px;
+                        width: 50px;
 
                         filter: alpha(opacity=50);
 

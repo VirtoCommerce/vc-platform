@@ -383,6 +383,8 @@
     <Content Include="Scripts\codemirror\gfm.js" />
     <Content Include="Scripts\codemirror\markdown.js" />
     <Content Include="Scripts\codemirror\overlay.js" />
+    <Content Include="Scripts\common\dialogs\galleryDialog.js" />
+    <Content Include="Scripts\common\dialogs\galleryDialog.tpl.html" />
     <Content Include="Scripts\common\directives\genericValueInput.js" />
     <Content Include="Scripts\common\directives\genericValueInput.tpl.html" />
     <Content Include="Scripts\app\dynamicProperties\dynamicProperties.js" />

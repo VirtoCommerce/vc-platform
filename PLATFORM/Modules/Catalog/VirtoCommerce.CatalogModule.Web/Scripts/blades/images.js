@@ -147,7 +147,24 @@
 		        return retVal;
 		    },
 		    permission: blade.permission
-		}
+		},
+        {
+            name: "Gallery", icon: 'fa fa-image',
+            executeMethod: function () {
+                var dialog = {
+                    images: blade.currentEntity.images,
+                    currentImage: blade.currentEntity.images[0]
+                };
+                dialogService.showGalleryDialog(dialog);
+            },
+            canExecuteMethod: function () {
+                var canExecute = false;
+                if (blade.currentEntity && blade.currentEntity.images && blade.currentEntity.images.length > 0) {
+                    canExecute = true;
+                }
+                return canExecute;
+            }
+        }
     ];
 
     $scope.sortableOptions = {

@@ -18,15 +18,10 @@
                 folderUrl: blade.currentEntity.url
             },
         function (data) {
-            blade.isLoading = false;
-            //$scope.listEntries = [
-            //    { url: 'folder1', type: 'folder', name: '151014094211-shakshuka-tease-medium-plus-169.jpg', lastModified: new Date() },
-            //    { url: 'file1', type: 'File', name: '151014094211-shakshuka-tease-medium-plus-169.jpg', url: 'http://i2.cdn.turner.com/cnnnext/dam/assets/151014094211-shakshuka-tease-medium-plus-169.jpg', mimeType: 'image/jpeg', isImage: true, size: '23151', lastModified: new Date() }
-            //];
-
-            _.each(data, function (x) { x.isImage = x.contentType === 'image/jpeg' || x.contentType === 'image/png'; });
-
+            _.each(data, function (x) { x.isImage = x.contentType && x.contentType.startsWith('image/'); });
             $scope.listEntries = data;
+
+            blade.isLoading = false;
             blade.selectedAll = false;
 
             if (selectedNode != null) {
@@ -38,7 +33,7 @@
                 });
             }
 
-            //    //Set navigation breadcrumbs
+            //Set navigation breadcrumbs
             setBreadcrumbs();
         }, function (error) {
             bladeNavigationService.setError('Error ' + error.status, blade);
@@ -52,7 +47,7 @@
             var breadcrumbs = blade.breadcrumbs.slice(0);
 
             //prevent duplicate items
-            if (_.all(breadcrumbs, function (x) { return x.url !== blade.currentEntity.url; })) {
+            if (blade.currentEntity.url && _.all(breadcrumbs, function (x) { return x.id !== blade.currentEntity.url; })) {
                 var breadCrumb = generateBreadcrumb(blade.currentEntity.url, blade.currentEntity.name);
                 breadcrumbs.push(breadCrumb);
             }
@@ -77,21 +72,28 @@
 
     $scope.copyUrl = function (data) {
         window.prompt("Copy to clipboard: Ctrl+C, Enter", data.url);
-    };
-
-    $scope.rename = function (listItem) {
-        if (listItem.type === 'folder') {
+        if (data.type === 'folder') {
             preventFolderListingOnce = true;
         }
-        rename(listItem);
     };
 
-    function rename(listItem) {
-        var result = prompt("Enter new name", listItem.name);
-        if (result) {
-            listItem.name = result;
-        }
-    }
+    $scope.downloadUrl = function (data) {
+        window.open(data.url, '_blank', '');
+    };
+
+    //$scope.rename = function (listItem) {
+    //    if (listItem.type === 'folder') {
+    //        preventFolderListingOnce = true;
+    //    }
+    //    rename(listItem);
+    //};
+
+    //function rename(listItem) {
+    //    var result = prompt("Enter new name", listItem.name);
+    //    if (result) {
+    //        listItem.name = result;
+    //    }
+    //}
 
     function isItemsChecked() {
         return _.any($scope.listEntries, function (x) { return x.$selected; });
@@ -105,22 +107,13 @@
         return _.findWhere($scope.listEntries, { $selected: true });
     }
 
-    $scope.delete = function () {
-        if (isItemsChecked()) {
-            deleteChecked();
-        } else {
-            var dialog = {
-                id: "notifyNothingSelected",
-                title: "Message",
-                message: "Nothing selected. Check some folders or files first."
-            };
-            dialogService.showNotificationDialog(dialog);
-        }
+    $scope.delete = function (data) {
+        deleteList([data]);
 
         preventFolderListingOnce = true;
     };
 
-    function deleteChecked() {
+    function deleteList(selection) {
         bladeNavigationService.closeChildrenBlades(blade, function () {
             var dialog = {
                 id: "confirmDeleteItem",
@@ -128,7 +121,6 @@
                 message: "Are you sure you want to delete selected folders or files?",
                 callback: function (remove) {
                     if (remove) {
-                        var selection = _.where($scope.listEntries, { $selected: true });
                         var listEntryIds = _.pluck(selection, 'url');
                         assets.remove({ urls: listEntryIds },
                             blade.refresh,
@@ -215,9 +207,11 @@
         {
             name: "Download", icon: 'fa fa-download',
             executeMethod: function () {
-                // getFirstChecked().url
+                $scope.downloadUrl(getFirstChecked());
             },
-            canExecuteMethod: isSingleChecked
+            canExecuteMethod: function () {
+                return isSingleChecked() && getFirstChecked().type !== 'folder';
+            }
         },
         {
             name: "Copy link", icon: 'fa fa-link',
@@ -236,39 +230,39 @@
         //},
         {
             name: "Delete", icon: 'fa fa-trash-o',
-            executeMethod: deleteChecked,
+            executeMethod: function () { deleteList(_.where($scope.listEntries, { $selected: true })); },
             canExecuteMethod: isItemsChecked,
-            permission: 'asset:delete'
-        },
-        {
-            name: "Cut",
-            icon: 'fa fa-cut',
-            executeMethod: function () {
-                $storage.catalogClipboardContent = _.where($scope.items, { $selected: true });
-            },
-            canExecuteMethod: isItemsChecked,
-            permission: 'asset:delete'
-        },
-        {
-            name: "Paste",
-            icon: 'fa fa-clipboard',
-            executeMethod: function () {
-                blade.isLoading = true;
-                assets.move({
-                    folder: blade.currentEntity.url,
-                    listEntries: $storage.catalogClipboardContent
-                }, function () {
-                    delete $storage.catalogClipboardContent;
-                    blade.refresh();
-                }, function (error) {
-                    bladeNavigationService.setError('Error ' + error.status, blade);
-                });
-            },
-            canExecuteMethod: function () {
-                return $storage.catalogClipboardContent;
-            },
             permission: 'asset:delete'
         }
+        //{
+        //    name: "Cut",
+        //    icon: 'fa fa-cut',
+        //    executeMethod: function () {
+        //        $storage.catalogClipboardContent = _.where($scope.items, { $selected: true });
+        //    },
+        //    canExecuteMethod: isItemsChecked,
+        //    permission: 'asset:delete'
+        //},
+        //{
+        //    name: "Paste",
+        //    icon: 'fa fa-clipboard',
+        //    executeMethod: function () {
+        //        blade.isLoading = true;
+        //        assets.move({
+        //            folder: blade.currentEntity.url,
+        //            listEntries: $storage.catalogClipboardContent
+        //        }, function () {
+        //            delete $storage.catalogClipboardContent;
+        //            blade.refresh();
+        //        }, function (error) {
+        //            bladeNavigationService.setError('Error ' + error.status, blade);
+        //        });
+        //    },
+        //    canExecuteMethod: function () {
+        //        return $storage.catalogClipboardContent;
+        //    },
+        //    permission: 'asset:delete'
+        //}
     ];
 
     $scope.toggleAll = function () {

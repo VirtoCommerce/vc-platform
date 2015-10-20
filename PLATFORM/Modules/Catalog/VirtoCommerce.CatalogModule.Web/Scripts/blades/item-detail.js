@@ -84,16 +84,16 @@
     blade.headIcon = blade.productType === 'Digital' ? 'fa-file-zip-o' : 'fa-dropbox';
 
     blade.toolbarCommands = [
-	 {
-	     name: "Save", icon: 'fa fa-save',
-	     executeMethod: function () {
-	         saveChanges();
-	     },
-	     canExecuteMethod: function () {
-	         return isDirty() && formScope && formScope.$valid;
-	     },
-	     permission: 'catalog:update'
-	 },
+	    {
+	        name: "Save", icon: 'fa fa-save',
+	        executeMethod: function () {
+	            saveChanges();
+	        },
+	        canExecuteMethod: function () {
+	            return isDirty() && formScope && formScope.$valid;
+	        },
+	        permission: 'catalog:update'
+	    },
         {
             name: "Reset", icon: 'fa fa-undo',
             executeMethod: function () {
