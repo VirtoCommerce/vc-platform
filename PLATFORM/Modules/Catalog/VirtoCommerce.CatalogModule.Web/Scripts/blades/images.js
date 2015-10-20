@@ -147,7 +147,27 @@
 		        return retVal;
 		    },
 		    permission: blade.permission
-		}
+		},
+        {
+            name: "Gallery", icon: 'fa fa-image',
+            executeMethod: function () {
+                var dialog = {
+                    cssClass: '__gallery',
+                    images: blade.currentEntity.images,
+                    currentImage: blade.currentEntity.images[0],
+                    previousImage: blade.currentEntity.images.length > 1 ? blade.currentEntity.images[blade.currentEntity.images.length - 1] : blade.currentEntity.images[0],
+                    nextImage: blade.currentEntity.images.length > 1 ? blade.currentEntity.images[1] : blade.currentEntity.images[0]
+                };
+                dialogService.showGalleryDialog(dialog);
+            },
+            canExecuteMethod: function () {
+                var canExecute = false;
+                if (blade.currentEntity && blade.currentEntity.images && blade.currentEntity.images.length > 0) {
+                    canExecute = true;
+                }
+                return canExecute;
+            }
+        }
     ];
 
     $scope.sortableOptions = {
