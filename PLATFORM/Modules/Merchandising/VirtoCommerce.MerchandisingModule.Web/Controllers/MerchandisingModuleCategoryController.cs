@@ -133,7 +133,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         [HttpGet]
         [ResponseType(typeof(webModel.CategoryResponseCollection))]
         [ClientCache(Duration = 30)]
-        [Route("")]
+        [Route("search")]
         public IHttpActionResult SearchCategory(
             string store,
             string language = "en-us",
