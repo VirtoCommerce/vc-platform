@@ -27,7 +27,7 @@ namespace VirtoCommerce.Storefront.Routing
     public class SeoRoute : LocalizedRoute
     {
         private readonly IUrlRecordService _urlRecordService;
-        private readonly IWorkContext _workContext;
+        private readonly WorkContext _workContext;
 
         public SeoRoute(string url, IRouteHandler routeHandler)
             : base(url, routeHandler)
@@ -73,18 +73,18 @@ namespace VirtoCommerce.Storefront.Routing
                     //the active one is found
                     var response = httpContext.Response;
                     response.Status = "301 Moved Permanently";
-                    response.RedirectLocation = string.Format("{0}{1}", _workContext.GetStoreUrl(false), activeSlug);
+                    response.RedirectLocation = string.Format("{0}{1}", _workContext.CurrentStore.Url, activeSlug);
                     response.End();
                     return null;
                 }
 
                 // Redirect to the slug for current language if it differes from requested slug
-                var slugForCurrentLanguage = GetSlug(urlRecord.EntityType, urlRecord.EntityId, _workContext.WorkingLanguage, true, true);
+                var slugForCurrentLanguage = GetSlug(urlRecord.EntityType, urlRecord.EntityId, _workContext.CurrentLanguage, true, true);
                 if (!string.IsNullOrEmpty(slugForCurrentLanguage) && !slugForCurrentLanguage.Equals(slug, StringComparison.OrdinalIgnoreCase))
                 {
                     var response = httpContext.Response;
                     response.Status = "302 Moved Temporarily";
-                    response.RedirectLocation = string.Format("{0}{1}", _workContext.GetStoreUrl(false), slugForCurrentLanguage);
+                    response.RedirectLocation = string.Format("{0}{1}", _workContext.CurrentStore.Url, slugForCurrentLanguage);
                     response.End();
                     return null;
                 }
@@ -119,7 +119,7 @@ namespace VirtoCommerce.Storefront.Routing
             var result = string.Empty;
 
             if (!string.IsNullOrEmpty(language)
-                && (!ensureTwoPublishedLanguages || _workContext.StoreLanguages.Length >= 2)
+                && (!ensureTwoPublishedLanguages || _workContext.CurrentLanguage.Length >= 2)
                 )
             {
                 result = _urlRecordService.GetActiveSlug(entityType, entityId, language);

@@ -10,6 +10,7 @@ using System.Web.Routing;
 using Microsoft.Owin;
 using Owin;
 using VirtoCommerce.Storefront;
+using VirtoCommerce.Storefront.App_Start;
 
 [assembly: OwinStartup(typeof(Startup))]
 [assembly: PreApplicationStartMethod(typeof(Startup), "PreApplicationStart")]
@@ -47,6 +48,7 @@ namespace VirtoCommerce.Storefront
             //FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             AuthConfig.ConfigureAuth(app);
+            UnityWebActivator.Start();
         }
 
 

@@ -38,7 +38,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model
         /// Gets or sets the value of store default language
         /// </summary>
         /// <value>
-        /// Culture name in ISO 3166-1 alpha-3 format
+        /// Language culture name format (en-US etc)
         /// </value>
         public string DefaultLanguage { get; set; }
 
