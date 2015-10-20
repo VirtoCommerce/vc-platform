@@ -36,7 +36,7 @@ namespace VirtoCommerce.Storefront.Models
         public string Region { get; set; }
 
         /// <summary>
-        /// Default locale of store
+        /// Default Language culture name  of store ( example en-US )
         /// </summary>
         public string DefaultLanguage { get; set; }
 

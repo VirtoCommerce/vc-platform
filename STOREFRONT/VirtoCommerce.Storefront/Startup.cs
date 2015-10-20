@@ -9,8 +9,12 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Microsoft.Owin;
 using Owin;
+using VirtoCommerce.Client.Api;
 using VirtoCommerce.Storefront;
 using VirtoCommerce.Storefront.App_Start;
+using VirtoCommerce.Storefront.Models;
+using VirtoCommerce.Storefront.OwinMiddlewares;
+using Microsoft.Practices.Unity;
 
 [assembly: OwinStartup(typeof(Startup))]
 [assembly: PreApplicationStartMethod(typeof(Startup), "PreApplicationStart")]
@@ -49,6 +53,10 @@ namespace VirtoCommerce.Storefront
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             AuthConfig.ConfigureAuth(app);
             UnityWebActivator.Start();
+            var container = UnityConfig.GetConfiguredContainer();
+            //Owin middleware
+            app.Use<ContextInitializationMiddleware>(container.Resolve<IWorkContext>(), container.Resolve<IStoreModuleApi>(), 
+                                                    container.Resolve<IVirtoCommercePlatformApi>());
         }
 
 
