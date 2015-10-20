@@ -18,7 +18,7 @@
         $scope.currentImage = dialog.images[i];
     }
 
-    $scope.customImage = function (image) {
+    $scope.openImage = function (image) {
         $scope.currentImage = image;
     }
 }]);

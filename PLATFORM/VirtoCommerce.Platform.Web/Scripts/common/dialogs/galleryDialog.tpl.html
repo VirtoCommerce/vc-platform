@@ -12,7 +12,7 @@
             </li>
         </ul>
         <ul class="list __navs">
-            <li class="list-item" ng-class="{'__selected': currentImage.id == image.id}" ng-click="customImage(image)" ng-repeat="image in images">
+            <li class="list-item" ng-class="{'__selected': currentImage.id == image.id}" ng-click="openImage(image)" ng-repeat="image in images">
                 <img alt="{{image.name}}" class="list-img" src="{{image.url}}" />
             </li>
         </ul>
