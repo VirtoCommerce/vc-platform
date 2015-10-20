@@ -5693,7 +5693,8 @@ input.ui-grid-filter-input[type="text"]
                     background: #a1c0d4;
                     color: #fff;
                     left: 0;
-                    padding: 10px 0 15px;
+                    height: 45px;
+                    line-height: 40px;
                     position: absolute;
                     right: 0;
                     text-align: center;
@@ -5756,7 +5757,11 @@ input.ui-grid-filter-input[type="text"]
 
                 .gallery .__slides
                 {
+                    padding: 55px 0 10px;
                     position: relative;
+
+                    -webkit-box-sizing: border-box;
+                            box-sizing: border-box;
                 }
 
                 .__slides .list-item
@@ -5783,7 +5788,7 @@ input.ui-grid-filter-input[type="text"]
                 .gallery .__navs
                 {
                     bottom: -100px;
-                    height: 80px;
+                    height: 50px;
                     position: absolute;
                     left: 50%;
 
@@ -5802,13 +5807,13 @@ input.ui-grid-filter-input[type="text"]
                     .__navs .list-item
                     {
                         background: #fff;
-                        border: 2px solid #dee9f0;
+                        border: 1px solid #dee9f0;
                         cursor: pointer;
                         display: inline-block;
                         height: 100%;
-                        margin: 0 2px;
+                        margin: 0 4px;
                         opacity: .5;
-                        width: 80px;
+                        width: 50px;
 
                         filter: alpha(opacity=50);
 
