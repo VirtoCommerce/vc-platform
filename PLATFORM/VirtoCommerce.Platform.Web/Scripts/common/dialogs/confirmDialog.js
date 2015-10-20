@@ -31,7 +31,7 @@
         return found;
     }
 
-    dialogService.showDialog = function (dialog, templateUrl, controller) {
+    dialogService.showDialog = function (dialog, templateUrl, controller, cssClass) {
         var dlg = findDialog(dialog.id);
 
         if (angular.isUndefined(dlg)) {
@@ -40,7 +40,7 @@
             dlg.instance = $modal.open({
                 templateUrl: templateUrl,
                 controller: controller,
-                windowClass: dialog.cssClass ? dialog.cssClass : null,
+                windowClass: cssClass ? cssClass : null,
                 resolve: {
                     dialog: function () {
                         return dialog;
@@ -73,7 +73,7 @@
     };
 
     dialogService.showGalleryDialog = function (dialog) {
-        dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/galleryDialog.tpl.html', 'platformWebApp.galleryDialogController');
+        dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/galleryDialog.tpl.html', 'platformWebApp.galleryDialogController', '__gallery');
     };
 
     return dialogService;

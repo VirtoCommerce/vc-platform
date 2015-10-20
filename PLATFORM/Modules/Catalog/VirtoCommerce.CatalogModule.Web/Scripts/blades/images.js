@@ -152,11 +152,8 @@
             name: "Gallery", icon: 'fa fa-image',
             executeMethod: function () {
                 var dialog = {
-                    cssClass: '__gallery',
                     images: blade.currentEntity.images,
-                    currentImage: blade.currentEntity.images[0],
-                    previousImage: blade.currentEntity.images.length > 1 ? blade.currentEntity.images[blade.currentEntity.images.length - 1] : blade.currentEntity.images[0],
-                    nextImage: blade.currentEntity.images.length > 1 ? blade.currentEntity.images[1] : blade.currentEntity.images[0]
+                    currentImage: blade.currentEntity.images[0]
                 };
                 dialogService.showGalleryDialog(dialog);
             },
