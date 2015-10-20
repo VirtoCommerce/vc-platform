@@ -13,20 +13,13 @@ namespace VirtoCommerce.Client.Model {
   /// 
   /// </summary>
   [DataContract]
-  public class VirtoCommercePlatformWebModelAssetBlobInfo {
+  public class VirtoCommercePlatformWebModelAssetAssetListItem {
     
     /// <summary>
-    /// Gets or Sets RelativeUrl
+    /// Gets or Sets Type
     /// </summary>
-    [DataMember(Name="relativeUrl", EmitDefaultValue=false)]
-    public string RelativeUrl { get; set; }
-
-    
-    /// <summary>
-    /// Gets or Sets Url
-    /// </summary>
-    [DataMember(Name="url", EmitDefaultValue=false)]
-    public string Url { get; set; }
+    [DataMember(Name="type", EmitDefaultValue=false)]
+    public string Type { get; set; }
 
     
     /// <summary>
@@ -37,6 +30,20 @@ namespace VirtoCommerce.Client.Model {
 
     
     /// <summary>
+    /// Gets or Sets ContentType
+    /// </summary>
+    [DataMember(Name="contentType", EmitDefaultValue=false)]
+    public string ContentType { get; set; }
+
+    
+    /// <summary>
+    /// Gets or Sets Url
+    /// </summary>
+    [DataMember(Name="url", EmitDefaultValue=false)]
+    public string Url { get; set; }
+
+    
+    /// <summary>
     /// Gets or Sets Size
     /// </summary>
     [DataMember(Name="size", EmitDefaultValue=false)]
@@ -44,10 +51,10 @@ namespace VirtoCommerce.Client.Model {
 
     
     /// <summary>
-    /// Gets or Sets MimeType
+    /// Gets or Sets ParentUrl
     /// </summary>
-    [DataMember(Name="mimeType", EmitDefaultValue=false)]
-    public string MimeType { get; set; }
+    [DataMember(Name="parentUrl", EmitDefaultValue=false)]
+    public string ParentUrl { get; set; }
 
     
     /// <summary>
@@ -57,6 +64,13 @@ namespace VirtoCommerce.Client.Model {
     public DateTime? ModifiedDate { get; set; }
 
     
+    /// <summary>
+    /// Gets or Sets CreatedDate
+    /// </summary>
+    [DataMember(Name="createdDate", EmitDefaultValue=false)]
+    public DateTime? CreatedDate { get; set; }
+
+    
 
     /// <summary>
     /// Get the string presentation of the object
@@ -64,19 +78,23 @@ namespace VirtoCommerce.Client.Model {
     /// <returns>String presentation of the object</returns>
     public override string ToString()  {
       var sb = new StringBuilder();
-      sb.Append("class VirtoCommercePlatformWebModelAssetBlobInfo {\n");
+      sb.Append("class VirtoCommercePlatformWebModelAssetAssetListItem {\n");
       
-      sb.Append("  RelativeUrl: ").Append(RelativeUrl).Append("\n");
-      
-      sb.Append("  Url: ").Append(Url).Append("\n");
+      sb.Append("  Type: ").Append(Type).Append("\n");
       
       sb.Append("  Name: ").Append(Name).Append("\n");
       
+      sb.Append("  ContentType: ").Append(ContentType).Append("\n");
+      
+      sb.Append("  Url: ").Append(Url).Append("\n");
+      
       sb.Append("  Size: ").Append(Size).Append("\n");
       
-      sb.Append("  MimeType: ").Append(MimeType).Append("\n");
+      sb.Append("  ParentUrl: ").Append(ParentUrl).Append("\n");
       
       sb.Append("  ModifiedDate: ").Append(ModifiedDate).Append("\n");
+      
+      sb.Append("  CreatedDate: ").Append(CreatedDate).Append("\n");
       
       sb.Append("}\n");
       return sb.ToString();

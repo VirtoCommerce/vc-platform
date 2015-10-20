@@ -211,6 +211,7 @@
     <Compile Include="Model\VirtoCommerceOrderModuleWebModelShipment.cs" />
     <Compile Include="Model\VirtoCommerceOrderModuleWebModelShipmentItem.cs" />
     <Compile Include="Model\VirtoCommerceOrderModuleWebModelShipmentPackage.cs" />
+    <Compile Include="Model\VirtoCommercePlatformCoreAssetBlobFolder.cs" />
     <Compile Include="Model\VirtoCommercePlatformCoreChangeLogOperationLog.cs" />
     <Compile Include="Model\VirtoCommercePlatformCoreDynamicPropertiesDynamicObjectProperty.cs" />
     <Compile Include="Model\VirtoCommercePlatformCoreDynamicPropertiesDynamicProperty.cs" />
@@ -233,6 +234,7 @@
     <Compile Include="Model\VirtoCommercePlatformCoreSecuritySecurityResult.cs" />
     <Compile Include="Model\VirtoCommercePlatformCoreSecurityUserSearchRequest.cs" />
     <Compile Include="Model\VirtoCommercePlatformCoreSecurityUserSearchResponse.cs" />
+    <Compile Include="Model\VirtoCommercePlatformWebModelAssetAssetListItem.cs" />
     <Compile Include="Model\VirtoCommercePlatformWebModelAssetBlobInfo.cs" />
     <Compile Include="Model\VirtoCommercePlatformWebModelJobsJob.cs" />
     <Compile Include="Model\VirtoCommercePlatformWebModelNotificationsNotification.cs" />
@@ -277,6 +279,9 @@
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>nuget pack "$(MSBuildProjectFullPath)" -Symbols -Properties Configuration=Release</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -17,7 +17,7 @@ namespace VirtoCommerce.Storefront.Routing
                 throw new ArgumentNullException("url");
             }
 
-            var route = new SeoRoute(url, new MvcRouteHandler())
+            var route = new SeoRoute(url, new MvcRouteHandler(), null)
             {
                 Defaults = new RouteValueDictionary(defaults),
                 Constraints = new RouteValueDictionary(constraints),

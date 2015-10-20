@@ -172,8 +172,8 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="id">Shopping cart id</param>
-        /// <returns></returns>
-        void CartModuleGetCartById (string id);
+        /// <returns>VirtoCommerceCartModuleWebModelShoppingCart</returns>
+        VirtoCommerceCartModuleWebModelShoppingCart CartModuleGetCartById (string id);
   
         /// <summary>
         /// Get shopping cart by id
@@ -182,8 +182,8 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="id">Shopping cart id</param>
-        /// <returns></returns>
-        System.Threading.Tasks.Task CartModuleGetCartByIdAsync (string id);
+        /// <returns>VirtoCommerceCartModuleWebModelShoppingCart</returns>
+        System.Threading.Tasks.Task<VirtoCommerceCartModuleWebModelShoppingCart> CartModuleGetCartByIdAsync (string id);
         
         /// <summary>
         /// Get payment methods for store
@@ -213,8 +213,8 @@ namespace VirtoCommerce.Client.Api
         /// </remarks>
         /// <param name="storeId">Store id</param>
         /// <param name="customerId">Customer id</param>
-        /// <returns></returns>
-        void CartModuleGetCurrentCart (string storeId, string customerId);
+        /// <returns>VirtoCommerceCartModuleWebModelShoppingCart</returns>
+        VirtoCommerceCartModuleWebModelShoppingCart CartModuleGetCurrentCart (string storeId, string customerId);
   
         /// <summary>
         /// Get shopping cart by store id and customer id
@@ -224,8 +224,8 @@ namespace VirtoCommerce.Client.Api
         /// </remarks>
         /// <param name="storeId">Store id</param>
         /// <param name="customerId">Customer id</param>
-        /// <returns></returns>
-        System.Threading.Tasks.Task CartModuleGetCurrentCartAsync (string storeId, string customerId);
+        /// <returns>VirtoCommerceCartModuleWebModelShoppingCart</returns>
+        System.Threading.Tasks.Task<VirtoCommerceCartModuleWebModelShoppingCart> CartModuleGetCurrentCartAsync (string storeId, string customerId);
         
     }
   
@@ -1022,8 +1022,8 @@ namespace VirtoCommerce.Client.Api
         /// Get shopping cart by id 
         /// </summary>
         /// <param name="id">Shopping cart id</param> 
-        /// <returns></returns>            
-        public void CartModuleGetCartById (string id)
+        /// <returns>VirtoCommerceCartModuleWebModelShoppingCart</returns>            
+        public VirtoCommerceCartModuleWebModelShoppingCart CartModuleGetCartById (string id)
         {
             
             // verify the required parameter 'id' is set
@@ -1068,15 +1068,15 @@ namespace VirtoCommerce.Client.Api
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling CartModuleGetCartById: " + response.ErrorMessage, response.ErrorMessage);
     
-            return;
+            return (VirtoCommerceCartModuleWebModelShoppingCart) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceCartModuleWebModelShoppingCart), response.Headers);
         }
     
         /// <summary>
         /// Get shopping cart by id 
         /// </summary>
         /// <param name="id">Shopping cart id</param>
-        /// <returns></returns>
-        public async System.Threading.Tasks.Task CartModuleGetCartByIdAsync (string id)
+        /// <returns>VirtoCommerceCartModuleWebModelShoppingCart</returns>
+        public async System.Threading.Tasks.Task<VirtoCommerceCartModuleWebModelShoppingCart> CartModuleGetCartByIdAsync (string id)
         {
             // verify the required parameter 'id' is set
             if (id == null) throw new ApiException(400, "Missing required parameter 'id' when calling CartModuleGetCartById");
@@ -1117,8 +1117,7 @@ namespace VirtoCommerce.Client.Api
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CartModuleGetCartById: " + response.Content, response.Content);
 
-            
-            return;
+            return (VirtoCommerceCartModuleWebModelShoppingCart) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceCartModuleWebModelShoppingCart), response.Headers);
         }
         
         /// <summary>
@@ -1228,8 +1227,8 @@ namespace VirtoCommerce.Client.Api
         /// </summary>
         /// <param name="storeId">Store id</param> 
         /// <param name="customerId">Customer id</param> 
-        /// <returns></returns>            
-        public void CartModuleGetCurrentCart (string storeId, string customerId)
+        /// <returns>VirtoCommerceCartModuleWebModelShoppingCart</returns>            
+        public VirtoCommerceCartModuleWebModelShoppingCart CartModuleGetCurrentCart (string storeId, string customerId)
         {
             
             // verify the required parameter 'storeId' is set
@@ -1278,7 +1277,7 @@ namespace VirtoCommerce.Client.Api
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling CartModuleGetCurrentCart: " + response.ErrorMessage, response.ErrorMessage);
     
-            return;
+            return (VirtoCommerceCartModuleWebModelShoppingCart) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceCartModuleWebModelShoppingCart), response.Headers);
         }
     
         /// <summary>
@@ -1286,8 +1285,8 @@ namespace VirtoCommerce.Client.Api
         /// </summary>
         /// <param name="storeId">Store id</param>
         /// <param name="customerId">Customer id</param>
-        /// <returns></returns>
-        public async System.Threading.Tasks.Task CartModuleGetCurrentCartAsync (string storeId, string customerId)
+        /// <returns>VirtoCommerceCartModuleWebModelShoppingCart</returns>
+        public async System.Threading.Tasks.Task<VirtoCommerceCartModuleWebModelShoppingCart> CartModuleGetCurrentCartAsync (string storeId, string customerId)
         {
             // verify the required parameter 'storeId' is set
             if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling CartModuleGetCurrentCart");
@@ -1331,8 +1330,7 @@ namespace VirtoCommerce.Client.Api
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CartModuleGetCurrentCart: " + response.Content, response.Content);
 
-            
-            return;
+            return (VirtoCommerceCartModuleWebModelShoppingCart) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceCartModuleWebModelShoppingCart), response.Headers);
         }
         
     }

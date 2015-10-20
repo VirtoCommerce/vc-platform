@@ -524,8 +524,8 @@ namespace VirtoCommerce.Client.Api
         /// <param name="assetId">Theme asset id</param>
         /// <param name="storeId">Store id</param>
         /// <param name="themeId">Theme id</param>
-        /// <returns></returns>
-        void ThemeGetThemeAsset (string assetId, string storeId, string themeId);
+        /// <returns>VirtoCommerceContentWebModelsThemeAsset</returns>
+        VirtoCommerceContentWebModelsThemeAsset ThemeGetThemeAsset (string assetId, string storeId, string themeId);
   
         /// <summary>
         /// Get theme asset
@@ -536,8 +536,8 @@ namespace VirtoCommerce.Client.Api
         /// <param name="assetId">Theme asset id</param>
         /// <param name="storeId">Store id</param>
         /// <param name="themeId">Theme id</param>
-        /// <returns></returns>
-        System.Threading.Tasks.Task ThemeGetThemeAssetAsync (string assetId, string storeId, string themeId);
+        /// <returns>VirtoCommerceContentWebModelsThemeAsset</returns>
+        System.Threading.Tasks.Task<VirtoCommerceContentWebModelsThemeAsset> ThemeGetThemeAssetAsync (string assetId, string storeId, string themeId);
         
         /// <summary>
         /// Get theme assets folders
@@ -3128,8 +3128,8 @@ namespace VirtoCommerce.Client.Api
         /// <param name="assetId">Theme asset id</param> 
         /// <param name="storeId">Store id</param> 
         /// <param name="themeId">Theme id</param> 
-        /// <returns></returns>            
-        public void ThemeGetThemeAsset (string assetId, string storeId, string themeId)
+        /// <returns>VirtoCommerceContentWebModelsThemeAsset</returns>            
+        public VirtoCommerceContentWebModelsThemeAsset ThemeGetThemeAsset (string assetId, string storeId, string themeId)
         {
             
             // verify the required parameter 'assetId' is set
@@ -3182,7 +3182,7 @@ namespace VirtoCommerce.Client.Api
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling ThemeGetThemeAsset: " + response.ErrorMessage, response.ErrorMessage);
     
-            return;
+            return (VirtoCommerceContentWebModelsThemeAsset) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceContentWebModelsThemeAsset), response.Headers);
         }
     
         /// <summary>
@@ -3191,8 +3191,8 @@ namespace VirtoCommerce.Client.Api
         /// <param name="assetId">Theme asset id</param>
         /// <param name="storeId">Store id</param>
         /// <param name="themeId">Theme id</param>
-        /// <returns></returns>
-        public async System.Threading.Tasks.Task ThemeGetThemeAssetAsync (string assetId, string storeId, string themeId)
+        /// <returns>VirtoCommerceContentWebModelsThemeAsset</returns>
+        public async System.Threading.Tasks.Task<VirtoCommerceContentWebModelsThemeAsset> ThemeGetThemeAssetAsync (string assetId, string storeId, string themeId)
         {
             // verify the required parameter 'assetId' is set
             if (assetId == null) throw new ApiException(400, "Missing required parameter 'assetId' when calling ThemeGetThemeAsset");
@@ -3239,8 +3239,7 @@ namespace VirtoCommerce.Client.Api
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling ThemeGetThemeAsset: " + response.Content, response.Content);
 
-            
-            return;
+            return (VirtoCommerceContentWebModelsThemeAsset) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceContentWebModelsThemeAsset), response.Headers);
         }
         
         /// <summary>
