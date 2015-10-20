@@ -2,27 +2,31 @@
 .controller('platformWebApp.galleryDialogController', ['$scope', '$modalInstance', 'dialog', function ($scope, $modalInstance, dialog) {
     angular.extend($scope, dialog);
 
+    var imgCount = dialog.images.length;
+
     $scope.close = function () {
         $modalInstance.close(false);
     }
 
-    $scope.showImage = function (image) {
+    $scope.prevImage = function () {
+        var imgIndex = dialog.images.indexOf($scope.currentImage);
+        if (imgIndex > 0) {
+            $scope.currentImage = dialog.images[imgIndex - 1];
+        } else {
+            $scope.currentImage = dialog.images[imgCount - 1];
+        }
+    }
+
+    $scope.nextImage = function () {
+        var imgIndex = dialog.images.indexOf($scope.currentImage);
+        if (imgIndex < imgCount - 1) {
+            $scope.currentImage = dialog.images[imgIndex + 1];
+        } else {
+            $scope.currentImage = dialog.images[0];
+        }
+    }
+
+    $scope.customImage = function (image) {
         $scope.currentImage = image;
-
-        var imgIndex = dialog.images.indexOf(image);
-        var imgCount = dialog.images.length;
-
-        if (imgIndex > 0 && imgIndex < imgCount) {
-            $scope.previousImage = dialog.images[imgIndex - 1];
-            $scope.nextImage = dialog.images[imgIndex + 1];
-        }
-        if (imgIndex == 0) {
-            $scope.previousImage = dialog.images[imgCount - 1];
-            $scope.nextImage = dialog.images[imgIndex + 1];
-        }
-        if (imgIndex == imgCount - 1) {
-            $scope.previousImage = dialog.images[imgIndex - 1];
-            $scope.nextImage = dialog.images[0];
-        }
     }
 }]);
