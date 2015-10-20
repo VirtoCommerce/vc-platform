@@ -34,6 +34,7 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
         /// Get pricelist assignment
         /// </summary>
         /// <param name="id">Pricelist assignment id</param>
+        /// <response code="200"></response>
         /// <response code="404">Pricelist assignment not found.</response>
         [HttpGet]
         [ResponseType(typeof(webModel.PricelistAssignment))]
@@ -133,6 +134,7 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
         /// </summary>
         /// <remarks>Get an array of valid product prices for each currency.</remarks>
         /// <param name="productId">Product id</param>
+        /// <response code="200"></response>
         /// <response code="404">Prices not found.</response>
         [HttpGet]
         [ResponseType(typeof(webModel.Price[]))]
@@ -165,6 +167,7 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
         /// Get pricelist
         /// </summary>
         /// <param name="id">Pricelist id</param>
+        /// <response code="200"></response>
         /// <response code="404">Pricelist not found.</response>
         [HttpGet]
         [ResponseType(typeof(webModel.Pricelist))]
@@ -188,6 +191,7 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
         /// </summary>
         /// <remarks>Get all pricelists for given product.</remarks>
         /// <param name="productId">Product id</param>
+        /// <response code="200"></response>
         /// <response code="404">Pricelists not found.</response>
         /// <todo>I don't understand inherite algorithm. If product has two prices but variation has only one, then how (if need) variation does pick up inherite product prices</todo>
         [HttpGet]
