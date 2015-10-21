@@ -1,12 +1,10 @@
 ﻿angular.module('platformWebApp')
 .controller('platformWebApp.assets.assetListController', ['$scope', 'platformWebApp.assets.api', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', '$sessionStorage', function ($scope, assets, bladeNavigationService, dialogService, $storage) {
-    $scope.filter = { searchKeyword: undefined };
-
     var selectedNode = null;
     var preventFolderListingOnce; // prevent from unwanted additional actions after command was activated from context menu
 
     var blade = $scope.blade;
-    blade.title = 'Assets';
+    blade.title = 'Asset management';
     if (!blade.currentEntity) {
         blade.currentEntity = {};
     }
@@ -15,6 +13,7 @@
         blade.isLoading = true;
         assets.query(
             {
+                keyword: blade.searchKeyword,
                 folderUrl: blade.currentEntity.url
             },
         function (data) {
@@ -146,7 +145,7 @@
                 preventFolderListingOnce = false;
             } else {
                 var newBlade = {
-                    id: 'assetList',
+                    id: blade.id,
                     breadcrumbs: blade.breadcrumbs,
                     currentEntity: listItem,
                     disableOpenAnimation: true,

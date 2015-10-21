@@ -25,7 +25,7 @@ namespace VirtoCommerce.Platform.Data.Asset
             var properties = connectionString.ToDictionary(";", "=");
 
             _storagePath = HostingEnvironment.MapPath(properties["rootPath"]);
-            if(_storagePath != null)
+            if (_storagePath != null)
             {
                 _storagePath = _storagePath.TrimEnd('\\');
             }
@@ -78,31 +78,33 @@ namespace VirtoCommerce.Platform.Data.Asset
         /// </summary>
         /// <param name="folderUrl">absolute or relative path</param>
         /// <returns></returns>
-        public BlobSearchResult Search(string folderUrl)
+        public BlobSearchResult Search(string folderUrl, string keyword)
         {
             var retVal = new BlobSearchResult();
             var storagePath = _storagePath;
             folderUrl = folderUrl ?? _basePublicUrl;
 
-            var absoluteFolderUrl = GetAbsoluteUrl(folderUrl);
             var storageFolderPath = GetAbsoluteStoragePathFromUrl(folderUrl);
 
-            foreach (var directory in Directory.EnumerateDirectories(storageFolderPath))
+            var directories = String.IsNullOrEmpty(keyword) ? Directory.GetDirectories(storageFolderPath) : Directory.GetDirectories(storageFolderPath, "*" + keyword + "*", SearchOption.AllDirectories);
+            foreach (var directory in directories)
             {
                 var directoryInfo = new DirectoryInfo(directory);
                 retVal.Folders.Add(new BlobFolder
                 {
                     Name = Path.GetFileName(directory),
-                    Url = absoluteFolderUrl + "/" + directoryInfo.Name,
-                    ParentUrl = absoluteFolderUrl.ToString()
+                    Url = GetAbsoluteUrlFromPath(directory),
+                    ParentUrl = GetAbsoluteUrlFromPath(directoryInfo.Parent.FullName)
                 });
             }
-            foreach (var file in Directory.EnumerateFiles(storageFolderPath))
+
+            var files = String.IsNullOrEmpty(keyword) ? Directory.GetFiles(storageFolderPath) : Directory.GetFiles(storageFolderPath, "*" + keyword + "*.*", SearchOption.AllDirectories);
+            foreach (var file in files)
             {
                 var fileInfo = new FileInfo(file);
                 retVal.Items.Add(new BlobInfo
                 {
-                    Url =  absoluteFolderUrl + "/" + fileInfo.Name,
+                    Url = GetAbsoluteUrlFromPath(file),
                     ContentType = MimeTypeResolver.ResolveContentType(fileInfo.Name),
                     Size = fileInfo.Length,
                     FileName = fileInfo.Name,
@@ -146,7 +148,7 @@ namespace VirtoCommerce.Platform.Data.Asset
             {
                 throw new ArgumentNullException("urls");
             }
-            foreach(var url in urls)
+            foreach (var url in urls)
             {
                 var path = GetAbsoluteStoragePathFromUrl(url);
                 // get the file attributes for file or directory
@@ -183,6 +185,13 @@ namespace VirtoCommerce.Platform.Data.Asset
         }
 
         #endregion
+
+        private string GetAbsoluteUrlFromPath(string path)
+        {
+            var retVal = _basePublicUrl + "/" + path.Replace(_storagePath, String.Empty).TrimStart('\\').Replace('\\', '/');
+            return Uri.EscapeUriString(retVal);
+         }
+
         private string GetAbsoluteStoragePathFromUrl(string url)
         {
             var retVal = _storagePath;
@@ -190,10 +199,10 @@ namespace VirtoCommerce.Platform.Data.Asset
             {
                 retVal = _storagePath + "\\" + url.Replace(_basePublicUrl, String.Empty).Replace("/", "\\");
             }
-            return retVal;
+            return Uri.UnescapeDataString(retVal);
         }
 
-  
+
         private static void UpdloadFile(Stream stream, string filePath)
         {
             if (File.Exists(filePath))
