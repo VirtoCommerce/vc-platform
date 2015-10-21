@@ -1,6 +1,6 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.accountListController', ['$scope', 'platformWebApp.accounts', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService',
-function ($scope, accounts, bladeNavigationService, dialogService) {
+.controller('platformWebApp.accountListController', ['$scope', 'platformWebApp.accounts', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'uiGridConstants',
+function ($scope, accounts, bladeNavigationService, dialogService, uiGridConstants) {
     //pagination settings
     $scope.pageSettings = {};
     $scope.pageSettings.totalItems = 0;
@@ -135,6 +135,47 @@ function ($scope, accounts, bladeNavigationService, dialogService) {
             permission: 'platform:security:delete'
         }
     ];
+
+    // ui-grid
+    $scope.gridOptions = {
+        data: 'blade.currentEntities',
+        enableFullRowSelection: true,
+        enableSelectAll: true,
+        multiSelect: false,
+        noUnselect: true,
+        //selectionRowHeaderWidth: 35,
+        //rowHeight: 35,
+        showGridFooter: true
+    };
+
+    $scope.gridOptions.columnDefs = [
+        //{
+        //    name: 'selected'
+        //},
+        {
+            name: 'userName',
+            sort: {
+                direction: uiGridConstants.ASC,
+                priority: 1
+            }
+        },
+        { name: 'userType' },
+        { name: 'userState' }
+    ];
+
+    //$scope.gridOptions.onRegisterApi = function (gridApi) {
+    //    //set gridApi on scope
+    //    $scope.gridApi = gridApi;
+    //    gridApi.selection.on.rowSelectionChanged($scope, function (row) {
+    //         assignRole(row.entity, row.isSelected);
+    //    });
+
+    //    gridApi.selection.on.rowSelectionChangedBatch($scope, function (rows) {
+    //        _.each(rows, function (row) {
+    //            assignRole(row.entity, row.isSelected);
+    //        });
+    //    });
+    //};
 
     $scope.$watch('pageSettings.currentPage', function () {
         $scope.blade.refresh();

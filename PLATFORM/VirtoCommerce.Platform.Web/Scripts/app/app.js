@@ -9,15 +9,14 @@
   'ngAnimate',
   'ngStorage',
   'ngResource',
-  //'xeditable',
   'fiestah.money',
   'ngCookies',
   'angularMoment',
   'angularFileUpload',
   'ngSanitize',
   'ng-context-menu',
-  //'ui.grid',
-  //'ui.grid.selection',
+  'ui.grid',
+  'ui.grid.selection',
   'ui.codemirror',
   'focusOn',
   'textAngular',
@@ -68,7 +67,7 @@ angular.module('platformWebApp', AppDependencies).
       $httpProvider.interceptors.push('platformWebApp.httpErrorInterceptor');
       //ui-select set selectize as default theme
       uiSelectConfig.theme = 'select2';
-
+   
       datepickerConfig.showWeeks = false;
   }])
 
