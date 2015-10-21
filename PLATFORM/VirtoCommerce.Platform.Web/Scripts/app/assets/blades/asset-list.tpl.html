@@ -1,5 +1,13 @@
-﻿<div class="blade-static __collapsed">
+﻿<div class="blade-static __expanded">
     <va-breadcrumb ng-model="blade.breadcrumbs" blade-id="blade.id"></va-breadcrumb>
+    <div class="form-group">
+        <div class="form-input __info">
+            <input placeholder="Search keyword..." ng-model="blade.searchKeyword" ng-keyup="$event.which === 13 && blade.refresh()">
+            <button class="btn" type="button">
+                <i class="btn-ico fa fa-times-circle" title="Clear" ng-click="blade.searchKeyword=null;blade.refresh()"></i>
+            </button>
+        </div>
+    </div>
 </div>
 <div class="blade-content __medium-wide">
     <div class="blade-inner">
@@ -17,7 +25,8 @@
                             <th class="table-col __product-img">Pic</th>
                             <th class="table-col __product-name">Name</th>
                             <th class="table-col">Size</th>
-                            <th class="table-col">Modified</th>
+                            <th class="table-col __date">Modified</th>
+                            <th class="table-col __date">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -41,7 +50,7 @@
                                 <span>{{data.size}}</span>
                             </td>
                             <td class="table-col" ng-click='selectNode(data)'>
-                                <span>{{data.modifiedDate | date:'medium'}}</span>
+                                <span class="table-date" am-time-ago="data.modifiedDate"></span>
                                 <ul class="menu __context" role="menu" id="asl_menu_{{data.url}}">
                                     <li class="menu-item" ng-click='downloadUrl(data)' ng-if="data.type !== 'folder'">
                                         <i class="menu-ico fa fa-download"></i> Download
@@ -58,6 +67,15 @@
                                     <!--<li class="menu-item" ng-click='cut($index)'>
                                         <i class="menu-ico fa fa-cut"></i> Cut
                                     </li>-->
+                                </ul>
+                            </td>
+                            <td class="table-col __center">
+                                <ul class="menu __actions">
+                                    <li class="menu-item" ng-click="copyUrl(data)">
+                                        <a class="menu-link" title="Copy link">
+                                            <i class="menu-ico fa fa-link"></i>
+                                        </a>
+                                    </li>
                                 </ul>
                             </td>
                         </tr>

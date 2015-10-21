@@ -17,6 +17,7 @@ using Hangfire;
 using Hangfire.SqlServer;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.SignalR;
+using Microsoft.AspNet.SignalR.Infrastructure;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.DataProtection;
@@ -52,6 +53,7 @@ using VirtoCommerce.Platform.Web;
 using VirtoCommerce.Platform.Web.BackgroundJobs;
 using VirtoCommerce.Platform.Web.Controllers.Api;
 using VirtoCommerce.Platform.Web.Resources;
+using VirtoCommerce.Platform.Web.SignalR;
 using WebGrease.Extensions;
 
 #endregion
@@ -196,6 +198,9 @@ namespace VirtoCommerce.Platform.Web
                 moduleManager.PostInitializeModule(module);
             }
 
+            // SignalR
+            var tempCounterManager = new TempPerformanceCounterManager();
+            GlobalHost.DependencyResolver.Register(typeof(IPerformanceCounterManager), () => tempCounterManager);
             var hubConfiguration = new HubConfiguration();
             hubConfiguration.EnableJavaScriptProxies = false;
             app.MapSignalR("/" + moduleInitializerOptions.RoutPrefix + "signalr", hubConfiguration);
@@ -320,7 +325,7 @@ namespace VirtoCommerce.Platform.Web
                                     DefaultValue = AccountType.Manager.ToString()
                                 }
                             }
-                        }                     
+                        }
                     }
                 }
             };
@@ -375,7 +380,7 @@ namespace VirtoCommerce.Platform.Web
 
                     container.RegisterInstance<IBlobStorageProvider>(fileSystemBlobProvider);
                     container.RegisterInstance<IBlobUrlResolver>(fileSystemBlobProvider);
-                  
+
 
                 }
                 else if (string.Equals(provider, AzureBlobProvider.ProviderName, StringComparison.OrdinalIgnoreCase))

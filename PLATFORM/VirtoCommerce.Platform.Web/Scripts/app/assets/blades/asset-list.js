@@ -1,12 +1,10 @@
 ﻿angular.module('platformWebApp')
 .controller('platformWebApp.assets.assetListController', ['$scope', 'platformWebApp.assets.api', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', '$sessionStorage', function ($scope, assets, bladeNavigationService, dialogService, $storage) {
-    $scope.filter = { searchKeyword: undefined };
-
     var selectedNode = null;
     var preventFolderListingOnce; // prevent from unwanted additional actions after command was activated from context menu
 
     var blade = $scope.blade;
-    blade.title = 'Assets';
+    blade.title = 'Asset management';
     if (!blade.currentEntity) {
         blade.currentEntity = {};
     }
@@ -15,6 +13,7 @@
         blade.isLoading = true;
         assets.query(
             {
+                keyword: blade.searchKeyword,
                 folderUrl: blade.currentEntity.url
             },
         function (data) {
@@ -63,9 +62,29 @@
             name: name,
             blade: blade,
             navigate: function (breadcrumb) {
+                breadcrumb.blade.searchKeyword = null;
                 breadcrumb.blade.disableOpenAnimation = true;
                 bladeNavigationService.showBlade(breadcrumb.blade);
-                breadcrumb.blade.refresh();
+                // breadcrumb.blade.refresh();
+            }
+        }
+    }
+
+    function newFolder(value, prefix) {
+        var result = prompt(prefix ? prefix + "\n\nEnter folder name:" : "Enter folder name:", value);
+        if (result != null) {
+            if (blade.currentEntity.url) {
+                assets.createFolder({ name: result, parentUrl: blade.currentEntity.url },
+                        blade.refresh,
+                        function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+            } else {
+                if (result.length < 3 || result.length > 63 || !result.match(/^[a-z0-9]+(-[a-z0-9]+)*$/)) {
+                    newFolder(result, "A folder name must conform to the following naming rules:\n  Folder name must be from 3 through 63 characters long.\n  Folder name must start with a letter or number, and can contain only letters, numbers, and the dash (-) character.\n  Every dash (-) character must be immediately preceded and followed by a letter or number; consecutive dashes are not permitted.\n  All letters in a folder name must be lowercase.");
+                } else {
+                    assets.createFolder({ name: result, parentUrl: blade.currentEntity.url },
+                        blade.refresh,
+                        function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+                }
             }
         }
     }
@@ -146,7 +165,7 @@
                 preventFolderListingOnce = false;
             } else {
                 var newBlade = {
-                    id: 'assetList',
+                    id: blade.id,
                     breadcrumbs: blade.breadcrumbs,
                     currentEntity: listItem,
                     disableOpenAnimation: true,
@@ -174,14 +193,7 @@
         },
         {
             name: "New folder", icon: 'fa fa-folder-o',
-            executeMethod: function () {
-                var result = prompt("Enter folder name");
-                if (result) {
-                    assets.createFolder({ name: result, parentUrl: blade.currentEntity.url },
-                        blade.refresh,
-                        function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
-                }
-            },
+            executeMethod: function () { newFolder(); },
             canExecuteMethod: function () {
                 return true;
             },
@@ -213,13 +225,13 @@
                 return isSingleChecked() && getFirstChecked().type !== 'folder';
             }
         },
-        {
-            name: "Copy link", icon: 'fa fa-link',
-            executeMethod: function () {
-                $scope.copyUrl(getFirstChecked())
-            },
-            canExecuteMethod: isSingleChecked
-        },
+        //{
+        //    name: "Copy link", icon: 'fa fa-link',
+        //    executeMethod: function () {
+        //        $scope.copyUrl(getFirstChecked())
+        //    },
+        //    canExecuteMethod: isSingleChecked
+        //},
         //{
         //    name: "Rename", icon: 'fa fa-font',
         //    executeMethod: function () {
