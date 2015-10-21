@@ -1,7 +1,6 @@
 ﻿angular.module('platformWebApp')
 .controller('platformWebApp.assets.assetUploadController', ['$scope', 'platformWebApp.assets.api', 'platformWebApp.bladeNavigationService', 'FileUploader', function ($scope, assets, bladeNavigationService, FileUploader) {
     var blade = $scope.blade;
-    // $scope.currentEntities = blade.currentEntities = blade.currentEntity.attachments;
     
     function initialize() {
         if (!$scope.uploader) {
@@ -15,21 +14,25 @@
                 removeAfterUpload: true
             });
 
-            uploader.onSuccessItem = function (fileItem, assets, status, headers) {
-          
+            uploader.onAfterAddingAll = function () {
+                blade.uploadCompleted = false;
+            };
+
+            uploader.onCompleteAll = function () {
+                blade.parentBlade.refresh();
+                blade.uploadCompleted = true;
             };
         }
     }
    
-    $scope.copyUrl = function (data) {
-        window.prompt("Copy to clipboard: Ctrl+C, Enter", data.url);
-    };
-
     $scope.addImageFromUrl = function () {
         if (blade.newExternalImageUrl) {
+            blade.uploadCompleted = false;
+
         	assets.uploadFromUrl({ folderUrl: blade.currentEntityId, url: blade.newExternalImageUrl }, function (data) {
-                //blade.currentEntity.images.push(data);
-                blade.newExternalImageUrl = undefined;
+        	    blade.parentBlade.refresh();
+        	    blade.newExternalImageUrl = undefined;
+        	    blade.uploadCompleted = true;
             });
         }
     };

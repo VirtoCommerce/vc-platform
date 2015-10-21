@@ -137,7 +137,7 @@
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="VirtoCommerce.Client, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\VirtoCommerce.Client.2.5.916\lib\net451\VirtoCommerce.Client.dll</HintPath>
+      <HintPath>..\packages\VirtoCommerce.Client.2.5.923\lib\net451\VirtoCommerce.Client.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
