@@ -6,7 +6,7 @@ using System.Web.Routing;
 using Microsoft.AspNet.Identity.Owin;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Client.Model;
-using VirtoCommerce.Storefront.Models;
+using VirtoCommerce.Storefront.Model;
 
 namespace VirtoCommerce.Storefront.Routing
 {

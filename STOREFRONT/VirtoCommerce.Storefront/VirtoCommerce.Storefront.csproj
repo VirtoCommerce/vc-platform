@@ -183,19 +183,10 @@
     <Compile Include="App_Start\AuthConfig.cs" />
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="App_Start\UnityMvcActivator.cs" />
-    <Compile Include="Common\ValueObject.cs" />
     <Compile Include="Converters\StoreConverter.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Address.cs" />
-    <Compile Include="Models\AddressType.cs" />
-    <Compile Include="Models\Customer.cs" />
-    <Compile Include="Models\DynamicProperty.cs" />
-    <Compile Include="Common\Entity.cs" />
-    <Compile Include="Models\WorkContext.cs" />
-    <Compile Include="Models\SeoInfo.cs" />
-    <Compile Include="Models\Store.cs" />
     <Compile Include="Owin\WorkContextOwinMiddleware.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routing\LocalizedRoute.cs" />
@@ -220,7 +211,19 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Builders\" />
+    <Folder Include="Common\" />
     <Folder Include="Controllers\" />
+    <Folder Include="Models\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VirtoCommerce.LiquidThemeEngine\VirtoCommerce.LiquidThemeEngine.csproj">
+      <Project>{6c16b517-6de8-48a1-a76b-de96bea54d10}</Project>
+      <Name>VirtoCommerce.LiquidThemeEngine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VirtoCommerce.Storefront.Model\VirtoCommerce.Storefront.Model.csproj">
+      <Project>{fd2f9490-83eb-40df-a61b-7e4098d35bd8}</Project>
+      <Name>VirtoCommerce.Storefront.Model</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

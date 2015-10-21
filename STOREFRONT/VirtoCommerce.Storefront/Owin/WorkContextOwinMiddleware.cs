@@ -4,7 +4,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Storefront.Converters;
-using VirtoCommerce.Storefront.Models;
+using VirtoCommerce.Storefront.Model;
 
 namespace VirtoCommerce.Storefront.Owin
 {

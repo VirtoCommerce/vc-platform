@@ -15,7 +15,7 @@ using VirtoCommerce.Client;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Storefront;
 using VirtoCommerce.Storefront.App_Start;
-using VirtoCommerce.Storefront.Models;
+using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Owin;
 
 [assembly: OwinStartup(typeof(Startup))]

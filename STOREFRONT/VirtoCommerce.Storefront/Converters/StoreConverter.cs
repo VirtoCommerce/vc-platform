@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Omu.ValueInjecter;
-using VirtoCommerce.Storefront.Models;
+using VirtoCommerce.Storefront.Model;
 
 namespace VirtoCommerce.Storefront.Converters
 {

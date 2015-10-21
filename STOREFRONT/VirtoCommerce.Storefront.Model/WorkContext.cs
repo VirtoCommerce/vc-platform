@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace VirtoCommerce.Storefront.Models
+namespace VirtoCommerce.Storefront.Model
 {
     /// <summary>
     /// Main working context contains all data which could be used in presentation logic
