@@ -18,10 +18,10 @@
 .run(
   ['platformWebApp.mainMenuService', '$state', function (mainMenuService, $state) {
       var menuItem = {
-          path: 'configuration/assets',
+          path: 'browse/assets',
           icon: 'fa fa-folder-o',
           title: 'Assets',
-          priority: 3,
+          priority: 130,
           action: function () { $state.go('workspace.assets'); },
           permission: 'platform:assets:access'
       };
