@@ -114,6 +114,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// Search asset folders and blobs
         /// </summary>
         /// <param name="folderUrl"></param>
+        /// <param name="keyword"></param>
         /// <returns></returns>
         [HttpGet]
         [ResponseType(typeof(webModel.AssetListItem[]))]
