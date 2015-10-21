@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace VirtoCommerce.Storefront.Models
 {
     /// <summary>
     /// Main working context contains all data which could be used in presentation logic
     /// </summary>
-    public class WorkContext : IWorkContext
+    public class WorkContext : IDisposable
     {
         public WorkContext()
         {
@@ -20,11 +17,11 @@ namespace VirtoCommerce.Storefront.Models
         /// </summary>
         public Customer Customer { get; set; }
         /// <summary>
-        /// Language culture name format (en-US etc)
+        /// Language culture name format (e.g. en-US)
         /// </summary>
         public string CurrentLanguage { get; set; }
         /// <summary>
-        /// Currency code in ISO 4217 format (USD etc)
+        /// Currency code in ISO 4217 format (e.g. USD)
         /// </summary>
         public string CurrentCurrency { get; set; }
 
@@ -34,5 +31,21 @@ namespace VirtoCommerce.Storefront.Models
         /// List of all supported stores
         /// </summary>
         public ICollection<Store> AllStores { get; set; }
+
+        #region IDisposable Implementation
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+            }
+        }
+
+        #endregion
     }
 }

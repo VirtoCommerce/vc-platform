@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Reflection;
 using System.Web;
@@ -8,13 +9,14 @@ using System.Web.Hosting;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Microsoft.Owin;
+using Microsoft.Practices.Unity;
 using Owin;
+using VirtoCommerce.Client;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Storefront;
 using VirtoCommerce.Storefront.App_Start;
 using VirtoCommerce.Storefront.Models;
-using VirtoCommerce.Storefront.OwinMiddlewares;
-using Microsoft.Practices.Unity;
+using VirtoCommerce.Storefront.Owin;
 
 [assembly: OwinStartup(typeof(Startup))]
 [assembly: PreApplicationStartMethod(typeof(Startup), "PreApplicationStart")]
@@ -52,11 +54,19 @@ namespace VirtoCommerce.Storefront
             //FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             AuthConfig.ConfigureAuth(app);
+
             UnityWebActivator.Start();
             var container = UnityConfig.GetConfiguredContainer();
-            //Owin middleware
-            app.Use<ContextInitializationMiddleware>(container.Resolve<IWorkContext>(), container.Resolve<IStoreModuleApi>(), 
-                                                    container.Resolve<IVirtoCommercePlatformApi>());
+
+            var apiClient = new HmacApiClient(ConfigurationManager.ConnectionStrings["VirtoCommerceBaseUrl"].ConnectionString, ConfigurationManager.AppSettings["vc -public-ApiAppId"], ConfigurationManager.AppSettings["vc-public-ApiSecretKey"]);
+            container.RegisterType<IStoreModuleApi, StoreModuleApi>(new InjectionConstructor(apiClient));
+            container.RegisterType<IVirtoCommercePlatformApi, VirtoCommercePlatformApi>(new InjectionConstructor(apiClient));
+
+            // Create new work context per each request
+            // TODO: Add caching
+            app.CreatePerOwinContext(() => container.Resolve<WorkContext>());
+
+            app.Use<WorkContextOwinMiddleware>(container.Resolve<IStoreModuleApi>(), container.Resolve<IVirtoCommercePlatformApi>());
         }
 
 

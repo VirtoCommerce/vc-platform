@@ -1,7 +1,5 @@
 using System;
 using Microsoft.Practices.Unity;
-using Microsoft.Practices.Unity.Configuration;
-using VirtoCommerce.Storefront.Models;
 
 namespace VirtoCommerce.Storefront.App_Start
 {
@@ -10,7 +8,6 @@ namespace VirtoCommerce.Storefront.App_Start
     /// </summary>
     public class UnityConfig
     {
-        #region Unity Container
         private static Lazy<IUnityContainer> container = new Lazy<IUnityContainer>(() =>
         {
             var container = new UnityContainer();
@@ -25,7 +22,6 @@ namespace VirtoCommerce.Storefront.App_Start
         {
             return container.Value;
         }
-        #endregion
 
         /// <summary>Registers the type mappings with the Unity container.</summary>
         /// <param name="container">The unity container to configure.</param>
@@ -35,9 +31,6 @@ namespace VirtoCommerce.Storefront.App_Start
         {
             // NOTE: To load from web.config uncomment the line below. Make sure to add a Microsoft.Practices.Unity.Configuration to the using statements.
             // container.LoadConfiguration();
-
-            var context = new WorkContext();
-            container.RegisterInstance<IWorkContext>(context);
         }
     }
 }

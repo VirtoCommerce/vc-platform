@@ -1,40 +1,23 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Web;
 using System.Web.Routing;
+using Microsoft.AspNet.Identity.Owin;
+using VirtoCommerce.Client.Api;
+using VirtoCommerce.Client.Model;
 using VirtoCommerce.Storefront.Models;
 
 namespace VirtoCommerce.Storefront.Routing
 {
-    #region Temporary declarations
-
-    public class UrlRecord
-    {
-        public int EntityId { get; set; }
-        public string EntityType { get; set; }
-        public string Slug { get; set; }
-        public bool IsActive { get; set; }
-        public string Language { get; set; }
-    }
-
-    public interface IUrlRecordService
-    {
-        UrlRecord GetBySlug(string slug);
-        string GetActiveSlug(string entityType, int entityId, string language);
-    }
-
-    #endregion
-
     public class SeoRoute : LocalizedRoute
     {
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly WorkContext _workContext;
+        private readonly ICommerceCoreModuleApi _commerceCore;
 
-        public SeoRoute(string url, IRouteHandler routeHandler, WorkContext context)
+        public SeoRoute(string url, IRouteHandler routeHandler, ICommerceCoreModuleApi commerceCore)
             : base(url, routeHandler)
         {
-            // TODO: initialize dependencies
-            _urlRecordService = null;
-            _workContext = context;
+            _commerceCore = commerceCore;
         }
 
         public override RouteData GetRouteData(HttpContextBase httpContext)
@@ -43,10 +26,13 @@ namespace VirtoCommerce.Storefront.Routing
 
             if (data != null)
             {
-                var slug = data.Values["generic_se_name"] as string;
-                var urlRecord = _urlRecordService.GetBySlug(slug);
+                var workContext = httpContext.GetOwinContext().Get<WorkContext>();
 
-                if (urlRecord == null)
+                var slug = data.Values["generic_se_name"] as string;
+                var seoRecords = _commerceCore.CommerceGetSeoInfoBySlug(slug);
+                var seoRecord = seoRecords.FirstOrDefault(r => r.SemanticUrl == slug);
+
+                if (seoRecord == null)
                 {
                     // Slug not found
                     data.Values["controller"] = "Common";
@@ -55,10 +41,10 @@ namespace VirtoCommerce.Storefront.Routing
                 else
                 {
                     // Ensure the slug is active
-                    if (!urlRecord.IsActive)
+                    if (!seoRecord.IsActive())
                     {
                         // Slug is not active. Try to find the active one for the same entity.
-                        var activeSlug = _urlRecordService.GetActiveSlug(urlRecord.EntityType, urlRecord.EntityId, urlRecord.Language);
+                        var activeSlug = FindActiveSlug(seoRecord.ObjectType, seoRecord.ObjectId, seoRecord.LanguageCode, seoRecords);
 
                         if (string.IsNullOrWhiteSpace(activeSlug))
                         {
@@ -71,7 +57,7 @@ namespace VirtoCommerce.Storefront.Routing
                             // The active slug is found
                             var response = httpContext.Response;
                             response.Status = "301 Moved Permanently";
-                            response.RedirectLocation = string.Format("{0}{1}", _workContext.CurrentStore.Url, activeSlug);
+                            response.RedirectLocation = string.Format("{0}{1}", workContext.CurrentStore.Url, activeSlug);
                             response.End();
                             data = null;
                         }
@@ -79,32 +65,32 @@ namespace VirtoCommerce.Storefront.Routing
                     else
                     {
                         // Redirect to the slug for current language if it differes from requested slug
-                        var slugForCurrentLanguage = GetSlug(urlRecord.EntityType, urlRecord.EntityId, _workContext.CurrentLanguage);
+                        var slugForCurrentLanguage = GetSlug(workContext, seoRecord.ObjectType, seoRecord.ObjectId, workContext.CurrentLanguage, seoRecords);
 
                         if (!string.IsNullOrEmpty(slugForCurrentLanguage) && !slugForCurrentLanguage.Equals(slug, StringComparison.OrdinalIgnoreCase))
                         {
                             var response = httpContext.Response;
                             response.Status = "302 Moved Temporarily";
-                            response.RedirectLocation = string.Format("{0}{1}", _workContext.CurrentStore.Url, slugForCurrentLanguage);
+                            response.RedirectLocation = string.Format("{0}{1}", workContext.CurrentStore.Url, slugForCurrentLanguage);
                             response.End();
                             data = null;
                         }
                         else
                         {
                             // Process the URL
-                            switch (urlRecord.EntityType)
+                            switch (seoRecord.ObjectType)
                             {
-                                case "Product":
+                                case "CatalogProduct":
                                     data.Values["controller"] = "Product";
                                     data.Values["action"] = "ProductDetails";
-                                    data.Values["productid"] = urlRecord.EntityId;
-                                    data.Values["SeName"] = urlRecord.Slug;
+                                    data.Values["productid"] = seoRecord.ObjectType;
+                                    data.Values["SeName"] = seoRecord.SemanticUrl;
                                     break;
                                 case "Category":
                                     data.Values["controller"] = "Catalog";
                                     data.Values["action"] = "Category";
-                                    data.Values["categoryid"] = urlRecord.EntityId;
-                                    data.Values["SeName"] = urlRecord.Slug;
+                                    data.Values["categoryid"] = seoRecord.ObjectId;
+                                    data.Values["SeName"] = seoRecord.SemanticUrl;
                                     break;
                             }
                         }
@@ -115,23 +101,39 @@ namespace VirtoCommerce.Storefront.Routing
             return data;
         }
 
-        private string GetSlug(string entityType, int entityId, string language)
+        private string GetSlug(WorkContext workContext, string entityType, string entityId, string language, List<VirtoCommerceDomainCommerceModelSeoInfo> seoRecords)
         {
             var result = string.Empty;
 
             // Get slug for requested language
-            if (!string.IsNullOrEmpty(language) && _workContext.CurrentLanguage.Length >= 2)
+            if (!string.IsNullOrEmpty(language) && workContext.CurrentStore.Languages.Count >= 2)
             {
-                result = _urlRecordService.GetActiveSlug(entityType, entityId, language);
+                result = FindActiveSlug(entityType, entityId, language, seoRecords);
             }
 
             // Get slug for default language
             if (string.IsNullOrEmpty(result))
             {
-                result = _urlRecordService.GetActiveSlug(entityType, entityId, null);
+                result = FindActiveSlug(entityType, entityId, null, seoRecords);
             }
 
             return result;
+        }
+
+        private string FindActiveSlug(string entityType, string entityId, string language, List<VirtoCommerceDomainCommerceModelSeoInfo> seoRecords)
+        {
+            return seoRecords
+                .Where(r => r.ObjectType == entityType && r.ObjectId == entityId && r.LanguageCode == language)
+                .Select(r => r.SemanticUrl)
+                .FirstOrDefault();
+        }
+    }
+
+    internal static class VirtoCommerceDomainCommerceModelSeoInfoExtensions
+    {
+        public static bool IsActive(this VirtoCommerceDomainCommerceModelSeoInfo seo)
+        {
+            return true;
         }
     }
 }
