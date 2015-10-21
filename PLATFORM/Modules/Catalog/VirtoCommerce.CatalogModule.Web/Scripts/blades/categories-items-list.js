@@ -40,7 +40,6 @@
 
                         //Set navigation breadcrumbs
                         setBreadcrumbs();
-                        setCheckedEntries();
                     }, function (error) {
                         bladeNavigationService.setError('Error ' + error.status, blade);
                     });
@@ -109,7 +108,7 @@
                     subtitle: 'Category details',
                     controller: 'virtoCommerce.catalogModule.categoryDetailController',
                     template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/category-detail.tpl.html',
-                 };
+                };
                 bladeNavigationService.showBlade(newBlade, blade);
             };
 
@@ -381,7 +380,6 @@
 				    canExecuteMethod: function () { return true; },
 				    permission: 'catalog:export'
 				},
-                 /// hiding some UI functionality until it's fully implemented. Need to release
                  {
                      name: "Cut",
                      icon: 'fa fa-cut',
@@ -447,8 +445,6 @@
                         canExecuteMethod: isItemsChecked
                     }
                     $scope.blade.toolbarCommands.splice(1, 6, mapCommand);
-                } else if (blade.mode === 'newAssociation') {
-                    $scope.blade.toolbarCommands.splice(1, 6);
                 }
             } else if (authService.checkPermission('catalog:create')) {
                 $scope.blade.toolbarCommands.splice(1, 0, {
@@ -492,35 +488,10 @@
             $scope.checkAll = function (selected) {
                 angular.forEach($scope.items, function (item) {
                     item.selected = selected;
-                    $scope.checkOne(item);
                 });
             };
-
-            $scope.checkOne = function (listItem) {
-                if (blade.mode === 'newAssociation') {
-                    blade.parentBlade.updateSelection(listItem);
-                }
-            }
-
-            $scope.showCheck = function (listItem) {
-                var retVal = true;
-                if (blade.mode === 'newAssociation') {
-                    retVal = listItem.type !== 'category';
-                }
-                return retVal;
-            }
-
-            function setCheckedEntries() {
-                if (blade.mode === 'newAssociation') {
-                    _.each(blade.parentBlade.selection, function (selectedEntry) {
-                        var foundItem = _.findWhere($scope.items, { id: selectedEntry.id });
-                        if (foundItem) {
-                            foundItem.selected = true;
-                        }
-                    });
-                }
-            }
-
+            
+            
             //No need to call this because page 'pageSettings.currentPage' is watched!!! It would trigger subsequent duplicated req...
             //blade.refresh();
         }]);

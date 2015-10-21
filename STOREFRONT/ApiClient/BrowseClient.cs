@@ -52,7 +52,7 @@ namespace VirtoCommerce.ApiClient
             var parameters = new { store, language, parentId };
             return
                 await GetAsync<ResponseCollection<Category>>(
-                    CreateRequestUri(RelativePaths.Categories, parameters)).ConfigureAwait(false);
+                    CreateRequestUri(RelativePaths.CategorySearch, parameters)).ConfigureAwait(false);
         }
 
         public virtual async Task<Category> GetCategoryAsync(string store, string language, string categoryId)
@@ -212,6 +212,8 @@ namespace VirtoCommerce.ApiClient
             public const string Categories = "mp/categories";
 
             public const string Category = "mp/categories/{0}";
+
+            public const string CategorySearch = "mp/categories/search";
 
             public const string Product = "mp/products/{0}";
 

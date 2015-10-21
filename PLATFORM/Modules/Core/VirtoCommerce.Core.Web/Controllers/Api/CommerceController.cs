@@ -1,21 +1,18 @@
 ﻿using System;
 using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
-using VirtoCommerce.Domain.Payment.Services;
 using VirtoCommerce.CoreModule.Web.Converters;
-using webModel = VirtoCommerce.CoreModule.Web.Model;
-using VirtoCommerce.Domain.Commerce.Services;
-using VirtoCommerce.CoreModule.Web.Model;
-using VirtoCommerce.Domain.Order.Services;
-using VirtoCommerce.Domain.Store.Services;
-using VirtoCommerce.Domain.Order.Model;
-using VirtoCommerce.Domain.Payment.Model;
-using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.CoreModule.Web.Security;
+using VirtoCommerce.Domain.Commerce.Services;
+using VirtoCommerce.Domain.Order.Model;
+using VirtoCommerce.Domain.Order.Services;
+using VirtoCommerce.Domain.Payment.Model;
+using VirtoCommerce.Domain.Store.Services;
+using VirtoCommerce.Platform.Core.Security;
+using coreModel = VirtoCommerce.Domain.Commerce.Model;
+using webModel = VirtoCommerce.CoreModule.Web.Model;
 
 namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 {
@@ -127,6 +124,20 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
             }
 
             return Ok(new PostProcessPaymentResult { ErrorMessage = "cancel payment" });
+        }
+
+        /// <summary>
+        /// Find seo informations by slug keyword
+        /// </summary>
+        /// <param name="slug">fulfillment center id</param>
+        [HttpGet]
+        [ResponseType(typeof(coreModel.SeoInfo[]))]
+        [Route("seoinfos/{slug}")]
+        [CheckPermission(Permission = CommercePredefinedPermissions.Read)]
+        public IHttpActionResult GetSeoInfoBySlug(string slug)
+        {
+            var retVal = _commerceService.GetSeoByKeyword(slug).ToArray();
+            return Ok(retVal);
         }
     }
 }

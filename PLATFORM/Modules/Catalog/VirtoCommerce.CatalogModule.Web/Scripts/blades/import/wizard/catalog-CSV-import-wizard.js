@@ -15,11 +15,11 @@
 
 
     if (!$scope.uploader) {
-        // Creates a uploader
+        // create the uploader
         var uploader = $scope.uploader = new FileUploader({
             scope: $scope,
             headers: { Accept: 'application/json' },
-            url: 'api/platform/assets/tmp',
+            url: 'api/platform/assets?folderUrl=tmp',
             method: 'POST',
             autoUpload: true,
             removeAfterUpload: true

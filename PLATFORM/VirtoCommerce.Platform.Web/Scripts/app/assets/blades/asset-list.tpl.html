@@ -1,0 +1,74 @@
+﻿<div class="blade-static __expanded">
+    <va-breadcrumb ng-model="blade.breadcrumbs" blade-id="blade.id"></va-breadcrumb>
+    <div class="form-group">
+        <div class="form-input __search">
+            <input placeholder="Search keyword..." ng-model="blade.searchKeyword" ng-keyup="$event.which === 13 && blade.refresh()">
+        </div>
+    </div>
+</div>
+<div class="blade-content __medium-wide">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div class="table-wrapper">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="table-col __product-control">
+                                <label class="form-control __checkbox">
+                                    <input type="checkbox" ng-model="blade.selectedAll" ng-change="toggleAll()" />
+                                    <span class="check"></span>
+                                </label>
+                            </th>
+                            <th class="table-col __product-img">Pic</th>
+                            <th class="table-col __product-name">Name</th>
+                            <th class="table-col">Size</th>
+                            <th class="table-col">Modified</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="table-item" ng-repeat="data in listEntries track by data.url" ng-class="{'__selected': data.url === selectedNodeId}" context-menu data-target="asl_menu_{{data.url}}">
+                            <td class="table-col">
+                                <label class="form-control __checkbox">
+                                    <input type="checkbox" ng-model="data.$selected">
+                                    <span class="check"></span>
+                                </label>
+                            </td>
+                            <td class="table-col" ng-click='selectNode(data)'>
+                                <div class="product-img">
+                                    <div class="image" style="background-image: url('{{data.url}}')" ng-if="data.isImage"></div>
+                                    <i class="table-ico fa" ng-class="data.type == 'folder' ? 'fa-folder' : 'fa-file-text-o'" ng-if="!data.isImage"></i>
+                                </div>
+                            </td>
+                            <td class="table-col __product-name" ng-click='selectNode(data)' title="{{data.name}}">
+                                <span class="table-t">{{data.name}}</span>
+                            </td>
+                            <td class="table-col" ng-click='selectNode(data)'>
+                                <span>{{data.size}}</span>
+                            </td>
+                            <td class="table-col" ng-click='selectNode(data)'>
+                                <span>{{data.modifiedDate | date:'medium'}}</span>
+                                <ul class="menu __context" role="menu" id="asl_menu_{{data.url}}">
+                                    <li class="menu-item" ng-click='downloadUrl(data)' ng-if="data.type !== 'folder'">
+                                        <i class="menu-ico fa fa-download"></i> Download
+                                    </li>
+                                    <li class="menu-item" ng-click='copyUrl(data)'>
+                                        <i class="menu-ico fa fa-link"></i> Copy link
+                                    </li>
+                                    <!--<li class="menu-item" ng-click='rename(data)'>
+                                        <i class="menu-ico fa fa-font"></i> Rename
+                                    </li>-->
+                                    <li class="menu-item" ng-click='delete(data)'>
+                                        <i class="menu-ico fa fa-trash-o"></i> Delete
+                                    </li>
+                                    <!--<li class="menu-item" ng-click='cut($index)'>
+                                        <i class="menu-ico fa fa-cut"></i> Cut
+                                    </li>-->
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

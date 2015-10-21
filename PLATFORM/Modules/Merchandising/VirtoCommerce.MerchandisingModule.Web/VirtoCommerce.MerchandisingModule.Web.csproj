@@ -127,6 +127,7 @@
     <Compile Include="Model\DynamicContentItemGroupResponseCollection.cs" />
     <Compile Include="Model\Image.cs" />
     <Compile Include="Model\Inventory.cs" />
+    <Compile Include="Model\MarketingEvent.cs" />
     <Compile Include="Model\Notificaitons\DynamicMerchandisingNotification.cs" />
     <Compile Include="Model\Notificaitons\SendDynamicMerchandisingNotificationRequest.cs" />
     <Compile Include="Model\PaymentMethod.cs" />

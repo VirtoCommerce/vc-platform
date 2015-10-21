@@ -76,6 +76,7 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
         /// Get contact
         /// </summary>
         /// <param name="id">Contact id</param>
+        /// <response code="200"></response>
         /// <response code="404">Contact not found.</response>
         [HttpGet]
 		[ResponseType(typeof(webModel.Contact))]
@@ -135,6 +136,7 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
         /// Get organization
         /// </summary>
         /// <param name="id">Organization id</param>
+        /// <response code="200"></response>
         /// <response code="404">Organization not found.</response>
         [HttpGet]
 		[ResponseType(typeof(webModel.Organization))]

@@ -18,7 +18,14 @@ namespace VirtoCommerce.Platform.Core.Common
 				.ToDictionary(x => x[0], x => x.Length == 2 ? x[1] : string.Empty, StringComparer.OrdinalIgnoreCase);
 		}
 
-		public static Decimal TryParse(this string u, Decimal defaultValue)
+        public static bool IsAbsoluteUrl(this string url)
+        {
+            var shemes = new string[] { Uri.UriSchemeFile, Uri.UriSchemeFtp, Uri.UriSchemeHttp, Uri.UriSchemeHttps, Uri.UriSchemeMailto, Uri.UriSchemeNetPipe, Uri.UriSchemeNetTcp };
+            var retVal = shemes.Any(x=> url.StartsWith(x, StringComparison.InvariantCultureIgnoreCase));
+            return retVal;
+        }
+
+        public static Decimal TryParse(this string u, Decimal defaultValue)
 		{
 			var retVal = defaultValue;
 

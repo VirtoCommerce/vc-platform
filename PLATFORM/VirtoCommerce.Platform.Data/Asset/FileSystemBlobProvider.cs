@@ -13,7 +13,7 @@ namespace VirtoCommerce.Platform.Data.Asset
         public const string ProviderName = "LocalStorage";
 
         private readonly string _storagePath;
-        private readonly string _publicUrl;
+        private readonly string _basePublicUrl;
 
         public FileSystemBlobProvider(string connectionString)
         {
@@ -25,11 +25,15 @@ namespace VirtoCommerce.Platform.Data.Asset
             var properties = connectionString.ToDictionary(";", "=");
 
             _storagePath = HostingEnvironment.MapPath(properties["rootPath"]);
-            _publicUrl = properties["publicUrl"];
-
-            if (_publicUrl != null && !_publicUrl.EndsWith("/"))
+            if(_storagePath != null)
             {
-                _publicUrl += "/";
+                _storagePath = _storagePath.TrimEnd('\\');
+            }
+
+            _basePublicUrl = properties["publicUrl"];
+            if (_basePublicUrl != null)
+            {
+                _basePublicUrl = _basePublicUrl.TrimEnd('/');
             }
         }
 
@@ -40,67 +44,156 @@ namespace VirtoCommerce.Platform.Data.Asset
             if (request == null)
                 throw new ArgumentNullException("request");
 
-            string folderName;
-            string fileName;
-            string key;
-            string storagePath = _storagePath;
+            var folderPath = GetAbsoluteStoragePathFromUrl(request.FolderName);
 
-            folderName = request.FolderName;
-            fileName = request.FileName;
-            key = string.Format(@"{0}/{1}", folderName, fileName);
-            storagePath = string.Empty;
-
-
-            if (!string.IsNullOrEmpty(folderName))
-                CreateFolder(_storagePath, folderName);
-
-            var storageFileName = string.Format(CultureInfo.CurrentCulture, @"{0}\{1}\{2}", _storagePath, folderName, fileName);
-
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+            var storageFileName = Path.Combine(folderPath, request.FileName);
             UpdloadFile(request.FileByteStream, storageFileName);
 
-
-            return key;
-
+            return Path.Combine(request.FolderName, request.FileName);
         }
 
-        public Stream OpenReadOnly(string blobKey)
+        /// <summary>
+        /// Open blob by relative or absolute url
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        public Stream OpenReadOnly(string url)
         {
-            if (string.IsNullOrEmpty(blobKey))
-                throw new ArgumentNullException("blobKey");
+            if (string.IsNullOrEmpty(url))
+                throw new ArgumentNullException("url");
 
-            var fileName = _storagePath + "\\" + blobKey;
+            var filePath = GetAbsoluteStoragePathFromUrl(url);
 
-            var stream = LoadFile(fileName);
+            var stream = LoadFile(filePath);
 
             return stream;
         }
 
-        public void Remove(string blobKey)
+        /// <summary>
+        /// Search folders and blobs in folder
+        /// </summary>
+        /// <param name="folderUrl">absolute or relative path</param>
+        /// <returns></returns>
+        public BlobSearchResult Search(string folderUrl)
         {
-            if (string.IsNullOrEmpty(blobKey))
-                throw new ArgumentNullException("blobKey");
-          
-            var fileName = _storagePath + "\\" + blobKey;
-            File.Delete(fileName);
+            var retVal = new BlobSearchResult();
+            var storagePath = _storagePath;
+            folderUrl = folderUrl ?? _basePublicUrl;
+
+            var absoluteFolderUrl = GetAbsoluteUrl(folderUrl);
+            var storageFolderPath = GetAbsoluteStoragePathFromUrl(folderUrl);
+
+            foreach (var directory in Directory.EnumerateDirectories(storageFolderPath))
+            {
+                var directoryInfo = new DirectoryInfo(directory);
+                retVal.Folders.Add(new BlobFolder
+                {
+                    Name = Path.GetFileName(directory),
+                    Url = absoluteFolderUrl + "/" + directoryInfo.Name,
+                    ParentUrl = absoluteFolderUrl.ToString()
+                });
+            }
+            foreach (var file in Directory.EnumerateFiles(storageFolderPath))
+            {
+                var fileInfo = new FileInfo(file);
+                retVal.Items.Add(new BlobInfo
+                {
+                    Url =  absoluteFolderUrl + "/" + fileInfo.Name,
+                    ContentType = MimeTypeResolver.ResolveContentType(fileInfo.Name),
+                    Size = fileInfo.Length,
+                    FileName = fileInfo.Name,
+                    ModifiedDate = fileInfo.LastWriteTimeUtc
+                });
+            }
+            return retVal;
         }
+
+        /// <summary>
+        /// Create folder in file system within to base directory
+        /// </summary>
+        /// <param name="folder"></param>
+        public void CreateFolder(BlobFolder folder)
+        {
+            if (folder == null)
+            {
+                throw new ArgumentNullException("folder");
+            }
+            var path = _storagePath;
+            if (folder.ParentUrl != null)
+            {
+                path = GetAbsoluteStoragePathFromUrl(folder.ParentUrl);
+            }
+            path = Path.Combine(path, folder.Name);
+
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
+        }
+
+        /// <summary>
+        /// Remove folders and blobs by absolute or relative urls
+        /// </summary>
+        /// <param name="urls"></param>
+        public void Remove(string[] urls)
+        {
+            if (urls == null)
+            {
+                throw new ArgumentNullException("urls");
+            }
+            foreach(var url in urls)
+            {
+                var path = GetAbsoluteStoragePathFromUrl(url);
+                // get the file attributes for file or directory
+                var attr = File.GetAttributes(path);
+
+                //detect whether its a directory or file
+                if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
+                {
+                    Directory.Delete(path, true);
+                }
+                else
+                {
+                    File.Delete(path);
+                }
+            }
+        }
+
         #endregion
 
         #region IBlobUrlResolver Members
 
-        public string GetAbsoluteUrl(string assetKey)
+        public string GetAbsoluteUrl(string relativeUrl)
         {
-			var retVal = assetKey;
-			if (!Uri.IsWellFormedUriString(assetKey, UriKind.Absolute))
-			{
-				retVal =  _publicUrl + assetKey;
-
-			}
-			return retVal;
+            if (relativeUrl == null)
+            {
+                throw new ArgumentNullException("relativeUrl");
+            }
+            var retVal = relativeUrl;
+            if (!relativeUrl.IsAbsoluteUrl())
+            {
+                retVal = _basePublicUrl + "/" + relativeUrl.TrimStart('/').TrimEnd('/');
+            }
+            return retVal;
         }
 
         #endregion
+        private string GetAbsoluteStoragePathFromUrl(string url)
+        {
+            var retVal = _storagePath;
+            if (url != null)
+            {
+                retVal = _storagePath + "\\" + url.Replace(_basePublicUrl, String.Empty).Replace("/", "\\");
+            }
+            return retVal;
+        }
 
-
+  
         private static void UpdloadFile(Stream stream, string filePath)
         {
             if (File.Exists(filePath))
@@ -130,28 +223,6 @@ namespace VirtoCommerce.Platform.Data.Asset
             }
             return copyStream;
         }
-
-        private static string CreateFileName()
-        {
-            return Convert.ToBase64String(Guid.NewGuid().ToByteArray())
-                          .Substring(0, 22)
-                          .Replace("/", "_")
-                          .Replace("+", "-");
-        }
-
-        private static string GetFileExtension(string fileName)
-        {
-            return Path.GetExtension(fileName);
-        }
-
-        private static string CreateFolder(string storagePath, string folderName)
-        {
-            var directory = string.Format(CultureInfo.CurrentCulture, @"{0}\{1}", storagePath, folderName);
-            if (!Directory.Exists(directory))
-                Directory.CreateDirectory(directory);
-            return directory;
-        }
-
 
     }
 }

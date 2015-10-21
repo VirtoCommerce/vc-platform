@@ -8,7 +8,9 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using VirtoCommerce.Platform.Core.Asset;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Asset;
+using VirtoCommerce.Platform.Web.Converters.Asset;
 using webModel = VirtoCommerce.Platform.Web.Model.Asset;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
@@ -26,32 +28,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _tempPath = HostingEnvironment.MapPath("~/App_Data/Uploads/");
         }
 
-        [HttpPost]
-        [Route("{folder}")]
-        [ResponseType(typeof(webModel.BlobInfo))]
-        public IHttpActionResult UploadAssetFromUrl(string folder, [FromUri]string url)
-        {
-            using (var client = new WebClient())
-            {
-                var uploadInfo = new UploadStreamInfo
-                {
-                    FileByteStream = client.OpenRead(url),
-                    FolderName = folder,
-                    FileName = HttpUtility.UrlDecode(System.IO.Path.GetFileName(url))
-                };
-
-                var key = _blobProvider.Upload(uploadInfo);
-                var retVal = new webModel.BlobInfo
-                {
-
-                    Name = uploadInfo.FileName,
-                    RelativeUrl = key,
-                    Url = _urlResolver.GetAbsoluteUrl(key)
-                };
-                return Ok(retVal);
-            }
-
-        }
 
         /// <summary>
         /// Upload assets to the folder
@@ -59,51 +35,108 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <remarks>
         /// Request body can contain multiple files.
         /// </remarks>
-        /// <param name="folder">Folder name.</param>
+        /// <param name="folderUrl">Parent folder url (relative or absolute).</param>
+        /// <param name="url">Url for uploaded remote resource (optional)</param>
         /// <returns></returns>
         [HttpPost]
-		[Route("{folder}")]
-		[ResponseType(typeof(webModel.BlobInfo[]))]
-		public async Task<IHttpActionResult> UploadAsset(string folder)
-		{
-			if (!Request.Content.IsMimeMultipartContent())
-			{
-				throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
-			}
+        [Route("")]
+        [ResponseType(typeof(webModel.BlobInfo[]))]
+        [CheckPermission(Permission = PredefinedPermissions.AssetCreate)]
+        public async Task<IHttpActionResult> UploadAsset([FromUri] string folderUrl, [FromUri]string url = null)
+        {
+            if (url == null && !Request.Content.IsMimeMultipartContent())
+            {
+                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+            }
 
-			var blobMultipartProvider = new BlobStorageMultipartProvider(_blobProvider, _tempPath, folder);
-			await Request.Content.ReadAsMultipartAsync(blobMultipartProvider);
+            if (url != null)
+            {
+                using (var client = new WebClient())
+                {
+                    var uploadInfo = new UploadStreamInfo
+                    {
+                        FileByteStream = client.OpenRead(url),
+                        FolderName = folderUrl,
+                        FileName = HttpUtility.UrlDecode(System.IO.Path.GetFileName(url))
+                    };
 
-			var retVal = new List<webModel.BlobInfo>();
+                    var key = _blobProvider.Upload(uploadInfo);
+                    var retVal = new webModel.BlobInfo
+                    {
 
-			foreach (var blobInfo in blobMultipartProvider.BlobInfos)
-			{
-				retVal.Add(new webModel.BlobInfo
-				{
-					Name = blobInfo.FileName,
-					Size = blobInfo.Size.ToString(),
-					MimeType = blobInfo.ContentType,
-					RelativeUrl = blobInfo.Key,
-					Url = _urlResolver.GetAbsoluteUrl(blobInfo.Key)
-				});
-			}
+                        Name = uploadInfo.FileName,
+                        RelativeUrl = key,
+                        Url = _urlResolver.GetAbsoluteUrl(key)
+                    };
+                    return Ok(retVal);
+                }
+            }
+            else
+            {
+                var blobMultipartProvider = new BlobStorageMultipartProvider(_blobProvider, _tempPath, folderUrl);
+                await Request.Content.ReadAsMultipartAsync(blobMultipartProvider);
 
-			return Ok(retVal.ToArray());
-		}
+                var retVal = new List<webModel.BlobInfo>();
+
+                foreach (var blobInfo in blobMultipartProvider.BlobInfos)
+                {
+                    retVal.Add(new webModel.BlobInfo
+                    {
+                        Name = blobInfo.FileName,
+                        Size = blobInfo.Size.ToString(),
+                        MimeType = blobInfo.ContentType,
+                        RelativeUrl = blobInfo.Key,
+                        Url = _urlResolver.GetAbsoluteUrl(blobInfo.Key)
+                    });
+                }
+
+                return Ok(retVal.ToArray());
+            }
+        }
 
         /// <summary>
-        /// Deletes blobs by they key.
+        /// Delete blobs by urls
         /// </summary>
-        /// <remarks>Delete blob by key</remarks>
-        /// <param name="blobKey">blob key.</param>
+        /// <param name="urls"></param>
         /// <returns></returns>
         [HttpDelete]
         [ResponseType(typeof(void))]
         [Route("")]
-        public IHttpActionResult Delete([FromUri] string blobKey)
+        [CheckPermission(Permission = PredefinedPermissions.AssetDelete)]
+        public IHttpActionResult DeleteBlobs([FromUri] string[] urls)
         {
-             _blobProvider.Remove(blobKey);
+            _blobProvider.Remove(urls);
 
+            return StatusCode(HttpStatusCode.NoContent);
+        }
+
+        /// <summary>
+        /// Search asset folders and blobs
+        /// </summary>
+        /// <param name="folderUrl"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [ResponseType(typeof(webModel.AssetListItem[]))]
+        [Route("")]
+        [CheckPermission(Permission = PredefinedPermissions.AssetRead)]
+        public IHttpActionResult SearchAssetItems(string folderUrl = null)
+        {
+            var result = _blobProvider.Search(folderUrl);
+            return Ok(result.ToWebModel());
+        }
+
+        /// <summary>
+        /// Create new blob folder
+        /// </summary>
+        /// <param name="folder"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [ResponseType(typeof(void))]
+        [Route("folder")]
+        [CheckPermission(Permission = PredefinedPermissions.AssetCreate)]
+        public IHttpActionResult CreateBlobFolder(BlobFolder folder)
+        {
+            _blobProvider.CreateFolder(folder);
             return StatusCode(HttpStatusCode.NoContent);
         }
 

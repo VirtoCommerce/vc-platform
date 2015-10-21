@@ -5,11 +5,11 @@
     
     function initialize() {
         if (!$scope.uploader) {
-            // Creates a uploader
+            // create the uploader
             var uploader = $scope.uploader = new FileUploader({
                 scope: $scope,
                 headers: { Accept: 'application/json' },
-                url: 'api/platform/assets/quote',
+                url: 'api/platform/assets?folderUrl=quote',
                 method: 'POST',
                 autoUpload: true,
                 removeAfterUpload: true
@@ -17,13 +17,12 @@
 
             uploader.onSuccessItem = function (fileItem, assets, status, headers) {
                 angular.forEach(assets, function (asset) {
-                    asset.itemId = $scope.itemId;
                     //ADD uploaded asset
                     blade.currentEntities.push(asset);
                 });
             };
         }
-    };
+    }
     
     $scope.removeAction = function (asset) {
         var idx = blade.currentEntities.indexOf(asset);
@@ -34,7 +33,7 @@
 
     $scope.copyUrl = function (data) {
         window.prompt("Copy to clipboard: Ctrl+C, Enter", data.url);
-    }
+    };
 
     blade.headIcon = 'fa-file-text-o';
     

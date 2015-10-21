@@ -1,6 +1,4 @@
-﻿/// <binding />
-
-/*
+﻿/*
 This file in the main entry point for defining Gulp tasks and using Gulp plugins.
 Click here to learn more. http://go.microsoft.com/fwlink/?LinkId=518007
 */
@@ -8,10 +6,9 @@ Click here to learn more. http://go.microsoft.com/fwlink/?LinkId=518007
 var gulp = require("gulp"),
     mainBowerFiles = require('main-bower-files'),
     concat = require("gulp-concat"),
-    //cssmin = require("gulp-cssmin"),
     uglify = require("gulp-uglify");
 
-// Concatenate JS Files
+// minify all js files to single file
 gulp.task('packJavaScript', function () {
     return gulp.src(mainBowerFiles({
         // Only the JavaScript files
@@ -22,13 +19,13 @@ gulp.task('packJavaScript', function () {
       .pipe(gulp.dest('Scripts'));
 });
 
+// concatenate all css files to single file
 gulp.task('packCss', function () {
     return gulp.src(mainBowerFiles({
         // Only the CSS files
         filter: /.*\.css$/i
     }))
       .pipe(concat('allStyles.css'))
-      // .pipe(cssmin())
       .pipe(gulp.dest('Content'));
 });
 
@@ -52,5 +49,4 @@ gulp.task('fontawesomeFonts', function () {
 });
 gulp.task('fontawesomePackage', ['fontawesomeCss', 'fontawesomeFonts']);
 
-
-gulp.task('packAll', ['packJavaScript', 'packCss', 'copyMainFonts', 'fontawesomePackage']);
+gulp.task('packAll', ['packJavaScript', 'packCss', 'copyMainFonts']);

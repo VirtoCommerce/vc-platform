@@ -40,12 +40,11 @@
 
             <p class="note">Drag and drop an image to top left corner of images area to make it the default image.</p>
             <div class="tile-group triple __images-list" ui-sortable="sortableOptions" ng-model="blade.currentEntity.images">
-                <div class="tile" ng-class="{'double': $first, '__selected': image.$selected}" ng-click="toggleImageSelect($event, image)" ng-repeat="image in blade.currentEntity.images" ng-include="'imageTemplate.html'"></div>
+                <div class="tile" ng-click="toggleImageSelect($event, image)" ng-class="{'double': $first, '__selected': image.$selected}" ng-repeat="image in blade.currentEntity.images" ng-include="'imageTemplate.html'"></div>
             </div>
         </div>
 
         <script type="text/ng-template" id="imageTemplate.html">
-            <a class="tile-action" ng-click="copyUrl(image)"></a>
             <img class="tile-img" ng-src="{{image.url ? image.url : ''}}">
         </script>
     </div>

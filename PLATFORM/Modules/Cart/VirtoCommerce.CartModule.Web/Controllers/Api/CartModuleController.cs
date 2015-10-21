@@ -29,13 +29,14 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 			_storeService = storeService;
 		}
 
-		/// <summary>
+        /// <summary>
         /// Get shopping cart by store id and customer id
         /// </summary>
         /// <param name="storeId">Store id</param>
         /// <param name="customerId">Customer id</param>
+        /// <response code="200"></response>
         /// <response code="404">Shopping cart not found</response>
-		[HttpGet]
+        [HttpGet]
 		[ResponseType(typeof(webModel.ShoppingCart))]
 		[Route("{storeId}/{customerId}/carts/current")]
 		public IHttpActionResult GetCurrentCart(string storeId, string customerId)
@@ -60,12 +61,13 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 			return Ok(retVal.ToWebModel());
 		}
 
-		/// <summary>
+        /// <summary>
         /// Get shopping cart by id
         /// </summary>
         /// <param name="id">Shopping cart id</param>
+        /// <response code="200"></response>
         /// <response code="404">Shopping cart not found</response>
-		[HttpGet]
+        [HttpGet]
 		[ResponseType(typeof(webModel.ShoppingCart))]
 		[Route("carts/{id}")]
 		public IHttpActionResult GetCartById(string id)

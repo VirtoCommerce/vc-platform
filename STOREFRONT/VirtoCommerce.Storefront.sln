@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Storefront", "VirtoCommerce.Storefront\VirtoCommerce.Storefront.csproj", "{89054B36-0E64-4101-8260-333E6286B94F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.SwaggerApiClient", "VirtoCommerce.SwaggerApiClient\VirtoCommerce.SwaggerApiClient.csproj", "{45610268-8E12-4390-A216-19A78CDD2FBB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{89054B36-0E64-4101-8260-333E6286B94F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89054B36-0E64-4101-8260-333E6286B94F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89054B36-0E64-4101-8260-333E6286B94F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89054B36-0E64-4101-8260-333E6286B94F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45610268-8E12-4390-A216-19A78CDD2FBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45610268-8E12-4390-A216-19A78CDD2FBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45610268-8E12-4390-A216-19A78CDD2FBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45610268-8E12-4390-A216-19A78CDD2FBB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

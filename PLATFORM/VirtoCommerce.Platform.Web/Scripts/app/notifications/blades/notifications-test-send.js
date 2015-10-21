@@ -70,7 +70,7 @@
 			dialogService.showNotificationDialog(dialog);
 
 		    //revert params
-			blade.revertParams();
+			blade.revertParams(preparedParams);
 
 		}, function (error) {
 			blade.isLoading = false;
@@ -86,7 +86,7 @@
 			bladeNavigationService.setError('Error ' + error.status, blade);
 
 		    //revert params
-			blade.revertParams();
+			blade.revertParams(preparedParams);
 		});
 	}
 

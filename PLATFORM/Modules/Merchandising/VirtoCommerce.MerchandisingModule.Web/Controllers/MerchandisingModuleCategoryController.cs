@@ -41,6 +41,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         /// <param name="category">Category id</param>
         /// <param name="store">Store id</param>
         /// <param name="language">Culture name (default value is "en-us")</param>
+        /// <response code="200"></response>
         /// <response code="404">Category not found</response>
 		[HttpGet]
         [ResponseType(typeof(webModel.Category))]
@@ -60,6 +61,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         /// <param name="store">Store id</param>
         /// <param name="code">Category code</param>
         /// <param name="language">Culture name (default value is "en-us")</param>
+        /// <response code="200"></response>
         /// <response code="404">Category not found</response>
         [HttpGet]
         [ResponseType(typeof(webModel.Category))]
@@ -94,6 +96,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         /// <param name="store">Store id</param>
         /// <param name="keyword">Category SEO keyword</param>
         /// <param name="language">Culture name (default value is "en-us")</param>
+        /// <response code="200"></response>
         /// <response code="404">Category not found</response>
         [HttpGet]
         [ResponseType(typeof(webModel.Category))]
@@ -130,7 +133,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         [HttpGet]
         [ResponseType(typeof(webModel.CategoryResponseCollection))]
         [ClientCache(Duration = 30)]
-        [Route("")]
+        [Route("search")]
         public IHttpActionResult SearchCategory(
             string store,
             string language = "en-us",

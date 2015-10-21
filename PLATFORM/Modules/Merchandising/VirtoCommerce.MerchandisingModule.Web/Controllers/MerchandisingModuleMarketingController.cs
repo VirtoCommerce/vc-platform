@@ -52,7 +52,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         [HttpPost]
         [ResponseType(typeof(webModel.PromotionReward[]))]
         [Route("promotions/processevent")]
-        public IHttpActionResult ProcessMarketingEvent(coreModel.IMarketingEvent marketingEvent)
+        public IHttpActionResult ProcessMarketingEvent(webModel.MarketingEvent marketingEvent)
         {
             var retVal = _promotionEvaluator.ProcessEvent(marketingEvent);
             return Ok(retVal.Rewards.Select(x => x.ToWebModel()).ToArray());

@@ -1,0 +1,279 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{45610268-8E12-4390-A216-19A78CDD2FBB}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>VirtoCommerce.SwaggerApiClient</RootNamespace>
+    <AssemblyName>VirtoCommerce.SwaggerApiClient</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.105.2.3\lib\net451\RestSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Api\CatalogModuleApi.cs" />
+    <Compile Include="Api\CMSContentModuleApi.cs" />
+    <Compile Include="Api\CommerceCoreModuleApi.cs" />
+    <Compile Include="Api\CustomerManagementModuleApi.cs" />
+    <Compile Include="Api\InventoryModuleApi.cs" />
+    <Compile Include="Api\MarketingModuleApi.cs" />
+    <Compile Include="Api\MerchandisingModuleApi.cs" />
+    <Compile Include="Api\OrderModuleApi.cs" />
+    <Compile Include="Api\PricingModuleApi.cs" />
+    <Compile Include="Api\QuoteModuleApi.cs" />
+    <Compile Include="Api\ShoppingCartModuleApi.cs" />
+    <Compile Include="Api\StoreModuleApi.cs" />
+    <Compile Include="Api\VirtoCommercePlatformApi.cs" />
+    <Compile Include="Client\ApiClient.cs" />
+    <Compile Include="Client\ApiException.cs" />
+    <Compile Include="Client\Configuration.cs" />
+    <Compile Include="HmacApiClient.cs" />
+    <Compile Include="HmacUtility.cs" />
+    <Compile Include="Model\VirtoCommerceCartModuleWebModelAddress.cs" />
+    <Compile Include="Model\VirtoCommerceCartModuleWebModelCoupon.cs" />
+    <Compile Include="Model\VirtoCommerceCartModuleWebModelDiscount.cs" />
+    <Compile Include="Model\VirtoCommerceCartModuleWebModelLineItem.cs" />
+    <Compile Include="Model\VirtoCommerceCartModuleWebModelPayment.cs" />
+    <Compile Include="Model\VirtoCommerceCartModuleWebModelPaymentMethod.cs" />
+    <Compile Include="Model\VirtoCommerceCartModuleWebModelSearchCriteria.cs" />
+    <Compile Include="Model\VirtoCommerceCartModuleWebModelSearchResult.cs" />
+    <Compile Include="Model\VirtoCommerceCartModuleWebModelShipment.cs" />
+    <Compile Include="Model\VirtoCommerceCartModuleWebModelShippingMethod.cs" />
+    <Compile Include="Model\VirtoCommerceCartModuleWebModelShoppingCart.cs" />
+    <Compile Include="Model\VirtoCommerceCatalogModuleWebExportImportCsvExportInfo.cs" />
+    <Compile Include="Model\VirtoCommerceCatalogModuleWebExportImportCsvImportInfo.cs" />
+    <Compile Include="Model\VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration.cs" />
+    <Compile Include="Model\VirtoCommerceCatalogModuleWebExportImportCsvProductPropertyMap.cs" />
+    <Compile Include="Model\VirtoCommerceCatalogModuleWebModelAsset.cs" />
+    <Compile Include="Model\VirtoCommerceCatalogModuleWebModelCatalog.cs" />
+    <Compile Include="Model\VirtoCommerceCatalogModuleWebModelCatalogLanguage.cs" />
+    <Compile Include="Model\VirtoCommerceCatalogModuleWebModelCategory.cs" />
+    <Compile Include="Model\VirtoCommerceCatalogModuleWebModelCategoryLink.cs" />
+    <Compile Include="Model\VirtoCommerceCatalogModuleWebModelEditorialReview.cs" />
+    <Compile Include="Model\VirtoCommerceCatalogModuleWebModelEventNotificationsExportNotification.cs" />
+    <Compile Include="Model\VirtoCommerceCatalogModuleWebModelEventNotificationsImportNotification.cs" />
+    <Compile Include="Model\VirtoCommerceCatalogModuleWebModelImage.cs" />
+    <Compile Include="Model\VirtoCommerceCatalogModuleWebModelListEntry.cs" />
+    <Compile Include="Model\VirtoCommerceCatalogModuleWebModelListEntryLink.cs" />
+    <Compile Include="Model\VirtoCommerceCatalogModuleWebModelListEntrySearchCriteria.cs" />
+    <Compile Include="Model\VirtoCommerceCatalogModuleWebModelListEntrySearchResult.cs" />
+    <Compile Include="Model\VirtoCommerceCatalogModuleWebModelMoveInfo.cs" />
+    <Compile Include="Model\VirtoCommerceCatalogModuleWebModelProduct.cs" />
+    <Compile Include="Model\VirtoCommerceCatalogModuleWebModelProductAssociation.cs" />
+    <Compile Include="Model\VirtoCommerceCatalogModuleWebModelProperty.cs" />
+    <Compile Include="Model\VirtoCommerceCatalogModuleWebModelPropertyAttribute.cs" />
+    <Compile Include="Model\VirtoCommerceCatalogModuleWebModelPropertyDictionaryValue.cs" />
+    <Compile Include="Model\VirtoCommerceCatalogModuleWebModelPropertyValue.cs" />
+    <Compile Include="Model\VirtoCommerceContentWebModelsCheckNameResult.cs" />
+    <Compile Include="Model\VirtoCommerceContentWebModelsGetPagesCriteria.cs" />
+    <Compile Include="Model\VirtoCommerceContentWebModelsGetPagesResult.cs" />
+    <Compile Include="Model\VirtoCommerceContentWebModelsGetThemeAssetsCriteria.cs" />
+    <Compile Include="Model\VirtoCommerceContentWebModelsMenuLink.cs" />
+    <Compile Include="Model\VirtoCommerceContentWebModelsMenuLinkList.cs" />
+    <Compile Include="Model\VirtoCommerceContentWebModelsPage.cs" />
+    <Compile Include="Model\VirtoCommerceContentWebModelsPageFolder.cs" />
+    <Compile Include="Model\VirtoCommerceContentWebModelsSyncAsset.cs" />
+    <Compile Include="Model\VirtoCommerceContentWebModelsSyncAssetGroup.cs" />
+    <Compile Include="Model\VirtoCommerceContentWebModelsTheme.cs" />
+    <Compile Include="Model\VirtoCommerceContentWebModelsThemeAsset.cs" />
+    <Compile Include="Model\VirtoCommerceContentWebModelsThemeAssetFolder.cs" />
+    <Compile Include="Model\VirtoCommerceCoreModuleWebModelFulfillmentCenter.cs" />
+    <Compile Include="Model\VirtoCommerceCustomerModuleWebModelAddress.cs" />
+    <Compile Include="Model\VirtoCommerceCustomerModuleWebModelContact.cs" />
+    <Compile Include="Model\VirtoCommerceCustomerModuleWebModelMember.cs" />
+    <Compile Include="Model\VirtoCommerceCustomerModuleWebModelNote.cs" />
+    <Compile Include="Model\VirtoCommerceCustomerModuleWebModelOrganization.cs" />
+    <Compile Include="Model\VirtoCommerceCustomerModuleWebModelSearchCriteria.cs" />
+    <Compile Include="Model\VirtoCommerceCustomerModuleWebModelSearchResult.cs" />
+    <Compile Include="Model\VirtoCommerceDomainCatalogModelAsset.cs" />
+    <Compile Include="Model\VirtoCommerceDomainCatalogModelCatalog.cs" />
+    <Compile Include="Model\VirtoCommerceDomainCatalogModelCatalogLanguage.cs" />
+    <Compile Include="Model\VirtoCommerceDomainCatalogModelCatalogProduct.cs" />
+    <Compile Include="Model\VirtoCommerceDomainCatalogModelCategory.cs" />
+    <Compile Include="Model\VirtoCommerceDomainCatalogModelCategoryLink.cs" />
+    <Compile Include="Model\VirtoCommerceDomainCatalogModelEditorialReview.cs" />
+    <Compile Include="Model\VirtoCommerceDomainCatalogModelImage.cs" />
+    <Compile Include="Model\VirtoCommerceDomainCatalogModelProductAssociation.cs" />
+    <Compile Include="Model\VirtoCommerceDomainCatalogModelProperty.cs" />
+    <Compile Include="Model\VirtoCommerceDomainCatalogModelPropertyAttribute.cs" />
+    <Compile Include="Model\VirtoCommerceDomainCatalogModelPropertyDictionaryValue.cs" />
+    <Compile Include="Model\VirtoCommerceDomainCatalogModelPropertyDisplayName.cs" />
+    <Compile Include="Model\VirtoCommerceDomainCatalogModelPropertyValue.cs" />
+    <Compile Include="Model\VirtoCommerceDomainCommerceModelAddress.cs" />
+    <Compile Include="Model\VirtoCommerceDomainCommerceModelSeoInfo.cs" />
+    <Compile Include="Model\VirtoCommerceDomainCommerceModelTaxDetail.cs" />
+    <Compile Include="Model\VirtoCommerceDomainCommonConditionExpressionTree.cs" />
+    <Compile Include="Model\VirtoCommerceDomainCommonDynamicExpression.cs" />
+    <Compile Include="Model\VirtoCommerceDomainInventoryModelInventoryInfo.cs" />
+    <Compile Include="Model\VirtoCommerceDomainMarketingModelMarketingSearchCriteria.cs" />
+    <Compile Include="Model\VirtoCommerceDomainMarketingModelProductPromoEntry.cs" />
+    <Compile Include="Model\VirtoCommerceDomainMarketingModelPromoDynamicExpressionTree.cs" />
+    <Compile Include="Model\VirtoCommerceDomainMarketingModelPromotionEvaluationContext.cs" />
+    <Compile Include="Model\VirtoCommerceDomainOrderModelSearchCriteria.cs" />
+    <Compile Include="Model\VirtoCommerceDomainPaymentModelBankCardInfo.cs" />
+    <Compile Include="Model\VirtoCommerceDomainPricingModelPrice.cs" />
+    <Compile Include="Model\VirtoCommerceDomainQuoteModelQuoteAttachment.cs" />
+    <Compile Include="Model\VirtoCommerceDomainQuoteModelQuoteItem.cs" />
+    <Compile Include="Model\VirtoCommerceDomainQuoteModelQuoteRequest.cs" />
+    <Compile Include="Model\VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria.cs" />
+    <Compile Include="Model\VirtoCommerceDomainQuoteModelQuoteRequestSearchResult.cs" />
+    <Compile Include="Model\VirtoCommerceDomainQuoteModelQuoteRequestTotals.cs" />
+    <Compile Include="Model\VirtoCommerceDomainQuoteModelShipmentMethod.cs" />
+    <Compile Include="Model\VirtoCommerceDomainQuoteModelTierPrice.cs" />
+    <Compile Include="Model\VirtoCommerceInventoryModuleWebModelFulfillmentCenter.cs" />
+    <Compile Include="Model\VirtoCommerceInventoryModuleWebModelInventoryInfo.cs" />
+    <Compile Include="Model\VirtoCommerceMarketingModuleWebModelDynamicContentFolder.cs" />
+    <Compile Include="Model\VirtoCommerceMarketingModuleWebModelDynamicContentItem.cs" />
+    <Compile Include="Model\VirtoCommerceMarketingModuleWebModelDynamicContentPlace.cs" />
+    <Compile Include="Model\VirtoCommerceMarketingModuleWebModelDynamicContentPublication.cs" />
+    <Compile Include="Model\VirtoCommerceMarketingModuleWebModelMarketingSearchResult.cs" />
+    <Compile Include="Model\VirtoCommerceMarketingModuleWebModelPromotion.cs" />
+    <Compile Include="Model\VirtoCommerceMerchandisingModuleWebModelAsset.cs" />
+    <Compile Include="Model\VirtoCommerceMerchandisingModuleWebModelAssociation.cs" />
+    <Compile Include="Model\VirtoCommerceMerchandisingModuleWebModelCatalogItem.cs" />
+    <Compile Include="Model\VirtoCommerceMerchandisingModuleWebModelCategory.cs" />
+    <Compile Include="Model\VirtoCommerceMerchandisingModuleWebModelDynamicContentItem.cs" />
+    <Compile Include="Model\VirtoCommerceMerchandisingModuleWebModelDynamicContentItemGroup.cs" />
+    <Compile Include="Model\VirtoCommerceMerchandisingModuleWebModelDynamicContentItemGroupResponseCollection.cs" />
+    <Compile Include="Model\VirtoCommerceMerchandisingModuleWebModelEditorialReview.cs" />
+    <Compile Include="Model\VirtoCommerceMerchandisingModuleWebModelFacet.cs" />
+    <Compile Include="Model\VirtoCommerceMerchandisingModuleWebModelFacetValue.cs" />
+    <Compile Include="Model\VirtoCommerceMerchandisingModuleWebModelImage.cs" />
+    <Compile Include="Model\VirtoCommerceMerchandisingModuleWebModelInventory.cs" />
+    <Compile Include="Model\VirtoCommerceMerchandisingModuleWebModelMarketingEvent.cs" />
+    <Compile Include="Model\VirtoCommerceMerchandisingModuleWebModelNotificaitonsSendDynamicMerchandisingNotificationRequest.cs" />
+    <Compile Include="Model\VirtoCommerceMerchandisingModuleWebModelPaymentMethod.cs" />
+    <Compile Include="Model\VirtoCommerceMerchandisingModuleWebModelPrice.cs" />
+    <Compile Include="Model\VirtoCommerceMerchandisingModuleWebModelProduct.cs" />
+    <Compile Include="Model\VirtoCommerceMerchandisingModuleWebModelProductSearchRequest.cs" />
+    <Compile Include="Model\VirtoCommerceMerchandisingModuleWebModelProductSearchResult.cs" />
+    <Compile Include="Model\VirtoCommerceMerchandisingModuleWebModelProductVariation.cs" />
+    <Compile Include="Model\VirtoCommerceMerchandisingModuleWebModelPromotion.cs" />
+    <Compile Include="Model\VirtoCommerceMerchandisingModuleWebModelPromotionReward.cs" />
+    <Compile Include="Model\VirtoCommerceMerchandisingModuleWebModelReview.cs" />
+    <Compile Include="Model\VirtoCommerceMerchandisingModuleWebModelReviewComment.cs" />
+    <Compile Include="Model\VirtoCommerceMerchandisingModuleWebModelSeoKeyword.cs" />
+    <Compile Include="Model\VirtoCommerceMerchandisingModuleWebModelStore.cs" />
+    <Compile Include="Model\VirtoCommerceOrderModuleWebModelAddress.cs" />
+    <Compile Include="Model\VirtoCommerceOrderModuleWebModelCoupon.cs" />
+    <Compile Include="Model\VirtoCommerceOrderModuleWebModelCustomerOrder.cs" />
+    <Compile Include="Model\VirtoCommerceOrderModuleWebModelDashboardStatisticsResult.cs" />
+    <Compile Include="Model\VirtoCommerceOrderModuleWebModelDiscount.cs" />
+    <Compile Include="Model\VirtoCommerceOrderModuleWebModelLineItem.cs" />
+    <Compile Include="Model\VirtoCommerceOrderModuleWebModelMoney.cs" />
+    <Compile Include="Model\VirtoCommerceOrderModuleWebModelOperation.cs" />
+    <Compile Include="Model\VirtoCommerceOrderModuleWebModelPaymentIn.cs" />
+    <Compile Include="Model\VirtoCommerceOrderModuleWebModelQuarterPeriodMoney.cs" />
+    <Compile Include="Model\VirtoCommerceOrderModuleWebModelSearchResult.cs" />
+    <Compile Include="Model\VirtoCommerceOrderModuleWebModelShipment.cs" />
+    <Compile Include="Model\VirtoCommerceOrderModuleWebModelShipmentItem.cs" />
+    <Compile Include="Model\VirtoCommerceOrderModuleWebModelShipmentPackage.cs" />
+    <Compile Include="Model\VirtoCommercePlatformCoreChangeLogOperationLog.cs" />
+    <Compile Include="Model\VirtoCommercePlatformCoreDynamicPropertiesDynamicObjectProperty.cs" />
+    <Compile Include="Model\VirtoCommercePlatformCoreDynamicPropertiesDynamicProperty.cs" />
+    <Compile Include="Model\VirtoCommercePlatformCoreDynamicPropertiesDynamicPropertyDictionaryItem.cs" />
+    <Compile Include="Model\VirtoCommercePlatformCoreDynamicPropertiesDynamicPropertyDictionaryItemName.cs" />
+    <Compile Include="Model\VirtoCommercePlatformCoreDynamicPropertiesDynamicPropertyName.cs" />
+    <Compile Include="Model\VirtoCommercePlatformCoreDynamicPropertiesDynamicPropertyObjectValue.cs" />
+    <Compile Include="Model\VirtoCommercePlatformCoreNotificationsNotificationParameter.cs" />
+    <Compile Include="Model\VirtoCommercePlatformCorePushNotificationsPushNotification.cs" />
+    <Compile Include="Model\VirtoCommercePlatformCorePushNotificationsPushNotificationSearchCriteria.cs" />
+    <Compile Include="Model\VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult.cs" />
+    <Compile Include="Model\VirtoCommercePlatformCoreSecurityApiAccount.cs" />
+    <Compile Include="Model\VirtoCommercePlatformCoreSecurityApplicationUserExtended.cs" />
+    <Compile Include="Model\VirtoCommercePlatformCoreSecurityApplicationUserLogin.cs" />
+    <Compile Include="Model\VirtoCommercePlatformCoreSecurityPermission.cs" />
+    <Compile Include="Model\VirtoCommercePlatformCoreSecurityPermissionScope.cs" />
+    <Compile Include="Model\VirtoCommercePlatformCoreSecurityRole.cs" />
+    <Compile Include="Model\VirtoCommercePlatformCoreSecurityRoleSearchRequest.cs" />
+    <Compile Include="Model\VirtoCommercePlatformCoreSecurityRoleSearchResponse.cs" />
+    <Compile Include="Model\VirtoCommercePlatformCoreSecuritySecurityResult.cs" />
+    <Compile Include="Model\VirtoCommercePlatformCoreSecurityUserSearchRequest.cs" />
+    <Compile Include="Model\VirtoCommercePlatformCoreSecurityUserSearchResponse.cs" />
+    <Compile Include="Model\VirtoCommercePlatformWebModelAssetBlobInfo.cs" />
+    <Compile Include="Model\VirtoCommercePlatformWebModelJobsJob.cs" />
+    <Compile Include="Model\VirtoCommercePlatformWebModelNotificationsNotification.cs" />
+    <Compile Include="Model\VirtoCommercePlatformWebModelNotificationsNotificationTemplate.cs" />
+    <Compile Include="Model\VirtoCommercePlatformWebModelNotificationsRenderNotificationContentResult.cs" />
+    <Compile Include="Model\VirtoCommercePlatformWebModelNotificationsSearchNotificationsResult.cs" />
+    <Compile Include="Model\VirtoCommercePlatformWebModelNotificationsTestNotificationRequest.cs" />
+    <Compile Include="Model\VirtoCommercePlatformWebModelPackagingModuleDescriptor.cs" />
+    <Compile Include="Model\VirtoCommercePlatformWebModelPackagingModuleIdentity.cs" />
+    <Compile Include="Model\VirtoCommercePlatformWebModelPackagingModulePushNotification.cs" />
+    <Compile Include="Model\VirtoCommercePlatformWebModelPackagingProgressMessage.cs" />
+    <Compile Include="Model\VirtoCommercePlatformWebModelSecurityChangePasswordInfo.cs" />
+    <Compile Include="Model\VirtoCommercePlatformWebModelSecurityResetPasswordInfo.cs" />
+    <Compile Include="Model\VirtoCommercePlatformWebModelSecurityUserLogin.cs" />
+    <Compile Include="Model\VirtoCommercePlatformWebModelSettingsSetting.cs" />
+    <Compile Include="Model\VirtoCommercePricingModuleWebModelPrice.cs" />
+    <Compile Include="Model\VirtoCommercePricingModuleWebModelPricelist.cs" />
+    <Compile Include="Model\VirtoCommercePricingModuleWebModelPricelistAssignment.cs" />
+    <Compile Include="Model\VirtoCommercePricingModuleWebModelProductPrice.cs" />
+    <Compile Include="Model\VirtoCommerceQuoteModuleWebModelAddress.cs" />
+    <Compile Include="Model\VirtoCommerceQuoteModuleWebModelQuoteAttachment.cs" />
+    <Compile Include="Model\VirtoCommerceQuoteModuleWebModelQuoteItem.cs" />
+    <Compile Include="Model\VirtoCommerceQuoteModuleWebModelQuoteRequest.cs" />
+    <Compile Include="Model\VirtoCommerceQuoteModuleWebModelQuoteRequestTotals.cs" />
+    <Compile Include="Model\VirtoCommerceQuoteModuleWebModelShipmentMethod.cs" />
+    <Compile Include="Model\VirtoCommerceQuoteModuleWebModelTierPrice.cs" />
+    <Compile Include="Model\VirtoCommerceStoreModuleWebModelFulfillmentCenter.cs" />
+    <Compile Include="Model\VirtoCommerceStoreModuleWebModelPaymentMethod.cs" />
+    <Compile Include="Model\VirtoCommerceStoreModuleWebModelSetting.cs" />
+    <Compile Include="Model\VirtoCommerceStoreModuleWebModelShippingMethod.cs" />
+    <Compile Include="Model\VirtoCommerceStoreModuleWebModelStore.cs" />
+    <Compile Include="Model\VirtoCommerceStoreModuleWebModelTaxProvider.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="codegen-config.json" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

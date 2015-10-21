@@ -19,6 +19,7 @@ namespace VirtoCommerce.MarketingModule.Test
 
             using (var context = CreateContext<MarketingRepositoryImpl>())
             {
+                context.Database.CreateIfNotExists();
                 new SetupDatabaseInitializer<MarketingRepositoryImpl,Configuration>().InitializeDatabase(context);
                 Assert.Equal(0, context.Promotions.Count());
             }

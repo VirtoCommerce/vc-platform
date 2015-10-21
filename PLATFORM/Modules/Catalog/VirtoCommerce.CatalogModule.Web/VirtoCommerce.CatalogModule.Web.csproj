@@ -292,12 +292,8 @@
     <Content Include="Scripts\widgets\itemPropertyWidget.tpl.html" />
     <Content Include="Scripts\widgets\itemVariationWidget.js" />
     <Content Include="Scripts\widgets\itemVariationWidget.tpl.html" />
-    <Content Include="Scripts\wizards\newAssociation\association-wizard-group-new.js" />
-    <Content Include="Scripts\wizards\newAssociation\association-wizard-group-new.tpl.html" />
     <Content Include="Scripts\wizards\newAssociation\association-wizard.js" />
     <Content Include="Scripts\wizards\newAssociation\association-wizard.tpl.html" />
-    <Content Include="Scripts\wizards\newAssociation\association-wizard-group-step.js" />
-    <Content Include="Scripts\wizards\newAssociation\association-wizard-group-step.tpl.html" />
     <Content Include="Scripts\wizards\newCategory\category-wizard-actions.tpl.html" />
     <Content Include="Scripts\wizards\newCategory\category-wizard.js" />
     <Content Include="Scripts\wizards\newCategory\category-wizard.tpl.html" />

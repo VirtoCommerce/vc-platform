@@ -82,6 +82,38 @@
     width: 100%;
 }
 
+.vc-catalog .gallery-action
+{
+    background: #dee9f0;
+    height: 40px;
+    left: 0;
+    line-height: 40px;
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    width: 40px;
+    z-index: 50;
+
+    filter: alpha(opacity=0);
+
+    -webkit-transition: .25s ease-in-out;
+            transition: .25s ease-in-out;
+}
+
+.vc-catalog .gallery:hover .gallery-action
+{
+    background-color: #a1c0d4;
+    opacity: 1;
+
+    filter: alpha(opacity=100);
+}
+
+.vc-catalog .gallery-action *
+{
+    color: #fff;
+    font-size: 21px;
+}
+
 .vc-catalog .gallery .gallery-img
 {
     border: 1px solid #dee9f0;
@@ -98,6 +130,7 @@
 
 .vc-catalog .gallery-img
 {
+    background: #fff;
     cursor: pointer;
     height: 50px;
     line-height: 42px;
