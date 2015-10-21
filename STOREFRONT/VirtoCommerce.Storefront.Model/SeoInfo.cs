@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace VirtoCommerce.Storefront.Models
+namespace VirtoCommerce.Storefront.Model
 {
     /// <summary>
     /// Represent SEO information and contains common SEO fields  

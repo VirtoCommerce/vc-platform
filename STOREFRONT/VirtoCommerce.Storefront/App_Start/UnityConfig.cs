@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Practices.Unity;
 using Microsoft.Practices.Unity.Configuration;
-using VirtoCommerce.Storefront.Models;
+using VirtoCommerce.Storefront.Model;
 
 namespace VirtoCommerce.Storefront.App_Start
 {
@@ -37,7 +37,7 @@ namespace VirtoCommerce.Storefront.App_Start
             // container.LoadConfiguration();
 
             var context = new WorkContext();
-            container.RegisterInstance<IWorkContext>(context);
+            container.RegisterInstance(context);
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Web;
 using Microsoft.Owin;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Storefront.Converters;
-using VirtoCommerce.Storefront.Models;
+using VirtoCommerce.Storefront.Model;
 
 namespace VirtoCommerce.Storefront.OwinMiddlewares
 {
@@ -15,11 +15,11 @@ namespace VirtoCommerce.Storefront.OwinMiddlewares
     /// </summary>
     public class ContextInitializationMiddleware : OwinMiddleware
     {
-        private readonly IWorkContext _workContext;
+        private readonly WorkContext _workContext;
         private readonly IStoreModuleApi _storeApi;
         private readonly IVirtoCommercePlatformApi _platformApi;
 
-        public ContextInitializationMiddleware(OwinMiddleware next, IWorkContext workContext, IStoreModuleApi storeApi, IVirtoCommercePlatformApi platformApi)
+        public ContextInitializationMiddleware(OwinMiddleware next, WorkContext workContext, IStoreModuleApi storeApi, IVirtoCommercePlatformApi platformApi)
             : base(next)
         {
             _workContext = workContext;

@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VirtoCommerce.Storefront.Models
+namespace VirtoCommerce.Storefront.Model
 {
     /// <summary>
     /// Main working context contains all data which could be used in presentation logic
     /// </summary>
-    public class WorkContext : IWorkContext
+    public class WorkContext 
     {
         public WorkContext()
         {

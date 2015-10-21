@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace VirtoCommerce.Storefront.Common
+namespace VirtoCommerce.Storefront.Model.Common
 {
     public abstract class Entity
     {

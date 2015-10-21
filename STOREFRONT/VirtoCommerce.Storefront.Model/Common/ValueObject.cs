@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Web;
 
-namespace VirtoCommerce.Storefront.Common
+namespace VirtoCommerce.Storefront.Model.Common
 {
     /// <summary>
 	/// Base class for value objects in domain.

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Web;
 using System.Web.Routing;
-using VirtoCommerce.Storefront.Models;
+using VirtoCommerce.Storefront.Model;
 
 namespace VirtoCommerce.Storefront.Routing
 {
