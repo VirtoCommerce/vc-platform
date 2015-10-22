@@ -1,9 +1,9 @@
 ﻿<div class="blade-static __expanded">
     <va-breadcrumb ng-model="blade.breadcrumbs" blade-id="blade.id"></va-breadcrumb>
     <div class="form-group">
-        <div class="form-input __info">
+        <div class="form-input __other">
             <input placeholder="Search keyword..." ng-model="blade.searchKeyword" ng-keyup="$event.which === 13 && blade.refresh()">
-            <button class="btn" type="button">
+            <button class="btn __other" type="button">
                 <i class="btn-ico fa fa-times-circle" title="Clear" ng-click="blade.searchKeyword=null;blade.refresh()"></i>
             </button>
         </div>
