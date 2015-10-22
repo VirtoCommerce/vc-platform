@@ -19,6 +19,22 @@
       <label for="email" class="hidden-label">{{ 'customer.register.email' | t }}</label>
       <input type="email" value="" name="customer[email]" id="email" placeholder="{{ 'customer.register.email' | t }}" {% if form.errors contains "email" %} class="error"{% endif %} autocorrect="off" autocapitalize="off">
 
+	    {% for field in customer.dynamic_properties %}
+           {% if field.is_dictionary %}
+		    <select name="properties[{{ field.name }}]" id="{{ field.name }}">
+				<option value="" disabled selected>choose {{ field.name }}</option>
+				{% for dict in field.dictionary_items %}
+					<option value="{{dict.id}}">{{dict.name}}</option>
+				{% endfor %}
+			 </select>
+		   {% else if field.value_type == 'boolean' %}
+			 <input type="checkbox" name="properties[{{ field.name }}]" value="">{{ field.name }}<br>
+		   {% else %}
+              <input type="text" value="" name="properties[{{ field.name }}]" id="{{ field.name }}" placeholder="{{ field.name }}">
+
+           {% endif %}
+      {% endfor %}
+
       <label for="password" class="hidden-label">{{ 'customer.register.password' | t }}</label>
       <input type="password" value="" name="customer[password]" id="create_password" placeholder="{{ 'customer.register.password' | t }}" {% if form.errors contains "password" %} class="error"{% endif %}>
       <p>
