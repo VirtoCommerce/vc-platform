@@ -1,5 +1,9 @@
 ﻿#region
+using System.Collections.Generic;
 using System.Linq;
+using DotLiquid;
+using Newtonsoft.Json.Linq;
+using Omu.ValueInjecter;
 using VirtoCommerce.ApiClient.DataContracts.CustomerService;
 using VirtoCommerce.ApiClient.DataContracts.Security;
 using VirtoCommerce.Web.Models;
@@ -64,6 +68,10 @@ namespace VirtoCommerce.Web.Convertors
             customer.HasAccount = true; // TODO
             customer.Id = contact.Id;
 
+            if (contact.DynamicProperties != null && contact.DynamicProperties.Any())
+            {
+                customer.DynamicProperties = contact.DynamicProperties.Select(x => x.ToViewModel()).ToList();
+            }
             return customer;
         }
 
@@ -128,5 +136,6 @@ namespace VirtoCommerce.Web.Convertors
             return customerAddress;
         }
         #endregion
+
     }
 }

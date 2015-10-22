@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using VirtoCommerce.ApiClient.DataContracts.DynamicProperties;
 
 namespace VirtoCommerce.ApiClient.DataContracts.CustomerService
 {
@@ -21,24 +22,11 @@ namespace VirtoCommerce.ApiClient.DataContracts.CustomerService
         public DateTime? ModifiedDate { get; set; }
         public string PreferredCommunication { get; set; }
         public string PreferredDelivery { get; set; }
-        //Temporary comment because json serializator throw exception
-        //public ContactProperty[] DynamicProperties { get; set; }
+        public DynamicProperty[] DynamicProperties { get; set; }
         public string Salutation { get; set; }
         public string TaxpayerId { get; set; }
         public string TimeZone { get; set; }
 
         #endregion
-
-        //public IDictionary<string, object> Properties
-        //{
-        //	get
-        //	{
-        //		return _properties;
-        //	}
-        //	set
-        //	{
-        //		_properties = value;
-        //	}
-        //}
     }
 }

@@ -11,6 +11,8 @@ using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Convertors;
 using VirtoCommerce.Web.Models.FormModels;
 using VirtoCommerce.Web.Models.Forms;
+using VirtoCommerce.ApiClient;
+using VirtoCommerce.ApiClient.Extensions;
 
 namespace VirtoCommerce.Web.Controllers
 {
@@ -157,8 +159,20 @@ namespace VirtoCommerce.Web.Controllers
         [HttpGet]
         [AllowAnonymous]
         //[Route("register")]
-        public ActionResult Register()
+        public async Task<ActionResult> Register()
         {
+            var propertyClient = ClientContext.Clients.CreateDynamicPropertyClient();
+            var properties = await propertyClient.GetDynamicPropertiesForTypeAsync("VirtoCommerce.Domain.Customer.Model.Contact");
+            if (Context.Customer == null)
+            {
+                Context.Customer = new Customer();
+            }
+            foreach (var property in properties.Where(x => x.IsDictionary))
+            {
+                property.DictionaryItems = await propertyClient.GetDynamicPropertyDictionaryItemsAsync("VirtoCommerce.Domain.Customer.Model.Contact", property.Id);
+            }
+
+            Context.Customer.DynamicProperties = properties.Select(x => x.ToViewModel()).ToList();
             return View("customers/register");
         }
 
