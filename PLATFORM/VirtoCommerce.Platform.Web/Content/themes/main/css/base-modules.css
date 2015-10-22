@@ -5030,6 +5030,11 @@ tags-input .tags .tag-item .remove-button
     border-width: 0 0 1px;
 }
 
+.ui-grid-row .ui-grid-cell.__selected
+{
+    background: #d9effa;
+}
+
 .ui-grid-header-cell,
 .ui-grid-cell,
 .ui-grid-header-cell:last-child .ui-grid-column-resizer.right
