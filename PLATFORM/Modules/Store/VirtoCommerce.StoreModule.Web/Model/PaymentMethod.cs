@@ -30,6 +30,8 @@ namespace VirtoCommerce.StoreModule.Web.Model
 		public bool IsActive { get; set; }
 		public int Priority { get; set; }
 
-		public ICollection<Setting> Settings { get; set; }
+        public bool IsAvailableForPartial { get; set; }
+
+        public ICollection<Setting> Settings { get; set; }
 	}
 }
