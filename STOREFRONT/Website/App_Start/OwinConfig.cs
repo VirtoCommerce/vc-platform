@@ -361,6 +361,11 @@ namespace VirtoCommerce.Web
 
             if (string.IsNullOrEmpty(language))
             {
+                language = context.Request.Cookies[LanguageCookie];
+            }
+
+            if (string.IsNullOrEmpty(language))
+            {
                 language = "en-us";
             }
 
