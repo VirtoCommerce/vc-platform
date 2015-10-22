@@ -175,7 +175,8 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 								Type = p.PaymentMethodType.ToString(),
 								Group = p.PaymentMethodGroupType.ToString(),
 								Description = p.Description,
-								Priority = p.Priority
+								Priority = p.Priority,
+                                IsAvailableForPartial = p.IsAvailableForPartial
 							}).ToArray();
 
 			return this.Ok(retVal);
@@ -200,7 +201,8 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
                 Type = p.PaymentMethodType.ToString(),
                 Group = p.PaymentMethodGroupType.ToString(),
                 Description = p.Description,
-                Priority = p.Priority
+                Priority = p.Priority,
+                IsAvailableForPartial = p.IsAvailableForPartial
             }).ToArray();
 
             return this.Ok(retVal);

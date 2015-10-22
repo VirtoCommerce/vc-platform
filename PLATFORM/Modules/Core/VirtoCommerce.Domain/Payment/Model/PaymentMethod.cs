@@ -29,13 +29,15 @@ namespace VirtoCommerce.Domain.Payment.Model
 		public bool IsActive { get; set; }
 		public int Priority { get; set; }
 
+        public bool IsAvailableForPartial { get; set; }
 
-		#region IHaveSettings Members
 
-		/// <summary>
-		/// Settings of payment method
-		/// </summary>
-		public ICollection<SettingEntry> Settings { get; set; }
+        #region IHaveSettings Members
+
+        /// <summary>
+        /// Settings of payment method
+        /// </summary>
+        public ICollection<SettingEntry> Settings { get; set; }
 
 		#endregion
 
