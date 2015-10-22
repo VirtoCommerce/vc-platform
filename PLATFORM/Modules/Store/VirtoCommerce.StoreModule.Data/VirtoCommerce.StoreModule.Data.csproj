@@ -86,6 +86,10 @@
     <Compile Include="Migrations\201509151255225_TaxProviders.Designer.cs">
       <DependentUpon>201509151255225_TaxProviders.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201510221207527_AddPartialFlagToPaymentMethod.cs" />
+    <Compile Include="Migrations\201510221207527_AddPartialFlagToPaymentMethod.Designer.cs">
+      <DependentUpon>201510221207527_AddPartialFlagToPaymentMethod.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Store.cs" />
     <Compile Include="Model\StoreCurrency.cs" />
@@ -137,6 +141,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201509151255225_TaxProviders.resx">
       <DependentUpon>201509151255225_TaxProviders.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201510221207527_AddPartialFlagToPaymentMethod.resx">
+      <DependentUpon>201510221207527_AddPartialFlagToPaymentMethod.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

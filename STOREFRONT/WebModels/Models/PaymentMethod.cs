@@ -31,6 +31,9 @@ namespace VirtoCommerce.Web.Models
         public string Group { get; set; }
 
         [DataMember]
+        public bool IsAvailableForPartial { get; set; }
+
+        [DataMember]
         public string CardNumber { get; set; }
 
         [DataMember]

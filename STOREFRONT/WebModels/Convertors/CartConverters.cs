@@ -228,7 +228,8 @@ namespace VirtoCommerce.Web.Convertors
                 Title = paymentMethod.Name,
                 Priority = paymentMethod.Priority,
                 Type = paymentMethod.Type,
-                Group = paymentMethod.Group
+                Group = paymentMethod.Group,
+                IsAvailableForPartial = paymentMethod.IsAvailableForPartial
             };
         }
 
