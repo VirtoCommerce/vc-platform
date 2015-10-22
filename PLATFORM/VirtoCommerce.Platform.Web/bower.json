@@ -13,6 +13,7 @@
     "angular-file-upload": "2.1.1",
     "angular-moment": "0.10.3",
     "angular-resource": "1.4.4",
+    "angular-ui-grid": "3.0.7",
     "angular-ui-router": "0.2.15",
     "angular-ui-select": "0.12.1",
     "angular-ui-sortable": "0.13.4",
