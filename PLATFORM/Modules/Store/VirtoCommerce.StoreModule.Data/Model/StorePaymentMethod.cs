@@ -27,10 +27,11 @@ namespace VirtoCommerce.StoreModule.Data.Model
 
 		public bool IsActive { get; set; }
 
+        public bool IsAvailableForPartial { get; set; }
 
-		#region Navigation Properties
+        #region Navigation Properties
 
-		public string StoreId { get; set; }
+        public string StoreId { get; set; }
 		
 		public Store Store { get; set; }
 

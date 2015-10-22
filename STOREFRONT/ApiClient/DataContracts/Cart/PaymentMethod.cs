@@ -15,5 +15,7 @@
         public string Type { get; set; }
 
         public string Group { get; set; }
+
+        public bool IsAvailableForPartial { get; set; }
     }
 }

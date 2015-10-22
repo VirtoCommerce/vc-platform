@@ -44,5 +44,10 @@ namespace VirtoCommerce.CartModule.Web.Model
         /// Gets or sets the value of payment method priority
         /// </summary>
         public int Priority { get; set; }
+
+        /// <summary>
+        /// Is payment method available for partial payments
+        /// </summary>
+        public bool IsAvailableForPartial { get; set; }
     }
 }
