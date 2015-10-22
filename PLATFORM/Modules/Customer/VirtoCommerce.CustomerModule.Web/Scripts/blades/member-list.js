@@ -112,14 +112,6 @@
     $scope.edit = function (listItem) {
         if (listItem.memberType === 'Organization') {
             preventOrganizationListingOnce = true;
-        }
-        edit(listItem);
-    };
-
-    function edit(listItem) {
-        closeChildrenBlades();
-
-        if (listItem.memberType === 'Organization') {
             blade.showDetailBlade(listItem, listItem.displayName);
         }
         // else do nothing as customer is opened on selecting it.
@@ -147,17 +139,16 @@
         bladeNavigationService.showBlade(newBlade, blade);
     };
 
-    $scope.delete = function () {
-        if (isItemsChecked()) {
-            deleteChecked();
-        } else {
-            var dialog = {
-                id: "notifyNothingSelected",
-                title: "Message",
-                message: "Nothing selected. Check some Organizations or Customers first."
-            };
-            dialogService.showNotificationDialog(dialog);
-        }
+    function isSingleChecked() {
+        return _.where($scope.listEntries, { selected: true }).length == 1;
+    }
+
+    function getFirstChecked() {
+        return _.findWhere($scope.listEntries, { selected: true });
+    }
+
+    $scope.delete = function (data) {
+        deleteList([data]);
 
         preventOrganizationListingOnce = true;
     };
@@ -166,32 +157,28 @@
         return $scope.listEntries && _.any($scope.listEntries, function (x) { return x.selected; });
     }
 
-    function deleteChecked() {
+    function deleteList(selection) {
         var dialog = {
             id: "confirmDeleteItem",
             title: "Delete confirmation",
             message: "Are you sure you want to delete selected Organizations or Customers?",
             callback: function (remove) {
                 if (remove) {
-                    closeChildrenBlades();
+                    bladeNavigationService.closeChildrenBlades(blade, function () {
+                        var organizationIds = _.pluck(_.where(selection, { memberType: 'Organization' }), 'id');
+                        var customerIds = _.pluck(_.where(selection, { memberType: 'Contact' }), 'id');
 
-                    var selection = _.where($scope.listEntries, { selected: true, memberType: 'Organization' });
-                    var organizationIds = _.pluck(selection, 'id');
-                    selection = _.where($scope.listEntries, { selected: true, memberType: 'Contact' });
-                    var customerIds = _.pluck(selection, 'id');
-
-                    if (organizationIds.length > 0) {
-                        organizations.remove({ ids: organizationIds }, function (data) {
-                            blade.refresh();
-                        },
-                        function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
-                    }
-                    if (customerIds.length > 0) {
-                        contacts.remove({ ids: customerIds }, function (data) {
-                            blade.refresh();
-                        },
-                        function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
-                    }
+                        if (_.any(organizationIds)) {
+                            organizations.remove({ ids: organizationIds },
+                            blade.refresh,
+                            function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+                        }
+                        if (_.any(customerIds)) {
+                            contacts.remove({ ids: customerIds },
+                            blade.refresh,
+                            function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+                        }
+                    });
                 }
             }
         }
@@ -206,10 +193,10 @@
     $scope.selectNode = function (listItem) {
         blade.setSelectedNode(listItem);
 
-        if (listItem.memberType === 'Organization') {
-            if (preventOrganizationListingOnce) {
-                preventOrganizationListingOnce = false;
-            } else {
+        if (preventOrganizationListingOnce) {
+            preventOrganizationListingOnce = false;
+        } else {
+            if (listItem.memberType === 'Organization') {
                 var newBlade = {
                     id: 'memberList',
                     breadcrumbs: blade.breadcrumbs,
@@ -220,24 +207,12 @@
                     template: blade.template,
                     isClosingDisabled: true
                 };
-
                 bladeNavigationService.showBlade(newBlade, blade.parentBlade);
+            } else {
+                blade.showDetailBlade(listItem, listItem.displayName);
             }
-        } else {
-            blade.showDetailBlade(listItem, listItem.displayName);
         }
     };
-
-    blade.onClose = function (closeCallback) {
-        closeChildrenBlades();
-        closeCallback();
-    };
-
-    function closeChildrenBlades() {
-        angular.forEach(blade.childrenBlades.slice(), function (child) {
-            bladeNavigationService.closeBlade(child);
-        });
-    }
 
     blade.headIcon = 'fa-user';
 
@@ -254,8 +229,6 @@
         {
             name: "Add", icon: 'fa fa-plus',
             executeMethod: function () {
-                closeChildrenBlades();
-
                 var newBlade = {
                     id: 'listItemChild',
                     title: 'New member',
@@ -273,22 +246,16 @@
         {
             name: "Manage", icon: 'fa fa-edit',
             executeMethod: function () {
-                // selected OR the first checked listItem
-                edit(selectedNode || _.find($scope.listEntries, function (x) { return x.selected; }));
+                var listItem = getFirstChecked();
+                blade.showDetailBlade(listItem, listItem.displayName);
             },
-            canExecuteMethod: function () {
-                return selectedNode || isItemsChecked();
-            },
+            canExecuteMethod: isSingleChecked,
             permission: 'customer:update'
         },
         {
             name: "Delete", icon: 'fa fa-trash-o',
-            executeMethod: function () {
-                deleteChecked();
-            },
-            canExecuteMethod: function () {
-                return isItemsChecked();
-            },
+            executeMethod: function () { deleteList(_.where($scope.listEntries, { selected: true })); },
+            canExecuteMethod: isItemsChecked,
             permission: 'customer:delete'
         }
     ];
