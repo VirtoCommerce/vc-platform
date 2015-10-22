@@ -58,7 +58,7 @@ namespace VirtoCommerce.Storefront
             UnityWebActivator.Start();
             var container = UnityConfig.GetConfiguredContainer();
 
-            var apiClient = new HmacApiClient(ConfigurationManager.ConnectionStrings["VirtoCommerceBaseUrl"].ConnectionString, ConfigurationManager.AppSettings["vc -public-ApiAppId"], ConfigurationManager.AppSettings["vc-public-ApiSecretKey"]);
+            var apiClient = new HmacApiClient(ConfigurationManager.ConnectionStrings["VirtoCommerceBaseUrl"].ConnectionString, ConfigurationManager.AppSettings["vc-public-ApiAppId"], ConfigurationManager.AppSettings["vc-public-ApiSecretKey"]);
             container.RegisterType<IStoreModuleApi, StoreModuleApi>(new InjectionConstructor(apiClient));
             container.RegisterType<IVirtoCommercePlatformApi, VirtoCommercePlatformApi>(new InjectionConstructor(apiClient));
 
