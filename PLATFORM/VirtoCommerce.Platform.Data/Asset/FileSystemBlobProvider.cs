@@ -181,7 +181,7 @@ namespace VirtoCommerce.Platform.Data.Asset
             {
                 retVal = _basePublicUrl + "/" + relativeUrl.TrimStart('/').TrimEnd('/');
             }
-            return retVal;
+            return new Uri(retVal).ToString();
         }
 
         #endregion
