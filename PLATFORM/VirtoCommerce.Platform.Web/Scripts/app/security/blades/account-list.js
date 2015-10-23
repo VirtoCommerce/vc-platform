@@ -26,6 +26,7 @@ function ($scope, accounts, bladeNavigationService, dialogService, uiGridConstan
 
             $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
             blade.currentEntities = data.users;
+            $scope.gridOptions.minRowsToShow = blade.currentEntities.length;
 
             if (selectedNode != null) {
                 //select the node in the new list
@@ -142,11 +143,12 @@ function ($scope, accounts, bladeNavigationService, dialogService, uiGridConstan
     // ui-grid
     $scope.gridOptions = {
         data: 'blade.currentEntities',
+        enableVerticalScrollbar: uiGridConstants.scrollbars.NEVER,
+        enableHorizontalScrollbar: uiGridConstants.scrollbars.NEVER,
         enableRowHeaderSelection: true,
-        // enableFullRowSelection: true,
         //selectionRowHeaderWidth: 35,
-        //rowHeight: 35,
-        rowTemplate: "<div ng-click=\"grid.appScope.blade.selectNode(row.entity)\" ng-repeat=\"(colRenderIndex, col) in colContainer.renderedColumns track by col.uid\" ui-grid-one-bind-id-grid=\"rowRenderIndex + '-' + col.uid + '-cell'\" class=\"ui-grid-cell\" ng-class=\"{ 'ui-grid-row-header-cell': col.isRowHeader, '__selected': row.entity.userName === grid.appScope.selectedNodeId }\" role=\"{{col.isRowHeader ? 'rowheader' : 'gridcell'}}\" ui-grid-cell></div>",
+        rowHeight: 48,
+        rowTemplate: "<div ng-click=\"grid.appScope.blade.selectNode(row.entity)\" ng-repeat=\"(colRenderIndex, col) in colContainer.renderedColumns track by col.uid\" ui-grid-one-bind-id-grid=\"rowRenderIndex + '-' + col.uid + '-cell'\" class=\"ui-grid-cell\" ng-class=\"{ 'ui-grid-row-header-cell': col.isRowHeader, '__selected': row.entity.userName === grid.appScope.selectedNodeId }\" role=\"{{col.isRowHeader ? 'rowheader' : 'gridcell'}}\" ui-grid-cell style='cursor:pointer'></div>",
         columnDefs: [
         {
             displayName: 'Name',
