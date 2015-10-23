@@ -83,7 +83,7 @@ namespace VirtoCommerce.Storefront.Routing
                                 case "CatalogProduct":
                                     data.Values["controller"] = "Product";
                                     data.Values["action"] = "ProductDetails";
-                                    data.Values["productid"] = seoRecord.ObjectType;
+                                    data.Values["productid"] = seoRecord.ObjectId;
                                     data.Values["SeName"] = seoRecord.SemanticUrl;
                                     break;
                                 case "Category":

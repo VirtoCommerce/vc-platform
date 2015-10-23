@@ -1,36 +1,55 @@
-﻿using System.Linq;
+﻿using System;
+using System.IO;
+using System.Linq;
 using System.Web.Hosting;
 using System.Web.Mvc;
 using DotLiquid;
 using DotLiquid.ViewEngine.FileSystems;
 using VirtoCommerce.LiquidThemeEngine.Filters;
+using VirtoCommerce.LiquidThemeEngine.Operators;
 using VirtoCommerce.LiquidThemeEngine.Tags;
+using VirtoCommerce.Storefront.Model;
 
 namespace VirtoCommerce.LiquidThemeEngine
 {
-    public class DotLiquidViewEngine : VirtualPathProviderViewEngine
+    public class DotLiquidViewEngine : IViewEngine
     {
-        public DotLiquidViewEngine()
+        private readonly string _viewBasePath;
+        public DotLiquidViewEngine(string viewBasePath)
         {
+            _viewBasePath = viewBasePath;
+            Liquid.UseRubyDateFormat = true;
             // Register custom tags (Only need to do this once)
             Template.RegisterFilter(typeof(CommonFilters));
             Template.RegisterFilter(typeof(CommerceFilters));
+            Template.RegisterFilter(typeof(TranslationFilter));
+
+            Condition.Operators["contains"] = (left, right) => CommonOperators.ContainsMethod(left, right);
 
             Template.RegisterTag<Layout>("layout");
         }
 
-        protected override IView CreatePartialView(ControllerContext controllerContext, string partialPath)
+        public ViewEngineResult FindPartialView(ControllerContext controllerContext, string partialViewName, bool useCache)
         {
-            Template.FileSystem = new ThemeLiquidFileSystem(HostingEnvironment.MapPath("~/App_Data/Theme"));
-
-            return new DotLiquidView(controllerContext, partialPath);
+            InitTemplate(controllerContext);
+            return new ViewEngineResult(new DotLiquidView(controllerContext, partialViewName), this);
         }
 
-        protected override IView CreateView(ControllerContext controllerContext, string viewPath, string masterPath)
+        public ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName, bool useCache)
         {
-            Template.FileSystem = new ThemeLiquidFileSystem("~/App_Data/Theme");
+            InitTemplate(controllerContext);
+            return new ViewEngineResult(new DotLiquidView(controllerContext, viewName, masterName), this);
+        }
 
-            return new DotLiquidView(controllerContext, viewPath, masterPath);
+        public void ReleaseView(ControllerContext controllerContext, IView view)
+        {
+           
+        }
+
+        private void InitTemplate(ControllerContext controllerContext)
+        {
+            var workContext = controllerContext.Controller.ViewData.Model as WorkContext;
+            Template.FileSystem = new ShopifyThemeLiquidFileSystem(Path.Combine(_viewBasePath, workContext.CurrentStore.ThemeName ?? "default"), workContext.CurrentLanguage);
         }
     }
 }

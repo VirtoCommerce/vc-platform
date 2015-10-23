@@ -1,0 +1,48 @@
+<div class="grid">
+
+  {% if item.featured_image %}
+
+  {% comment %}
+    We have a featured_image, so it's likely a product
+  {% endcomment %}
+  <div class="grid-item one-third">
+    <a href="{{ item.url }}" title="{{ item.title | escape }}">
+      {{ item.featured_image.src | img_url: 'medium' | img_tag: item.featured_image.alt }}
+    </a>
+  </div>
+
+  {% endif %}
+
+  {% comment %}
+    If we don't have a featured_image, add a push-- class to keep the alignment the same
+  {% endcomment %}
+  <div class="grid-item two-thirds {% unless item.featured_image %}push--one-third{% endunless %}">
+    <h2 itemprop="name">{{ item.title | link_to: item.url }}</h2>
+
+    {% if item.compare_at_price > item.price %}
+      <li>
+        <span id="productPrice" class="h1">
+          {% include 'price' with item.price %}
+        </span>
+      </li>
+      <li>
+        <span id="comparePrice" class="sale-tag large">
+          {% assign compare_price = item.compare_at_price %}
+          {% assign product_price = item.price %}
+          {% include 'price-sale' %}
+        </span>
+      </li>
+    {% else %}
+      <li>
+        <span id="productPrice" class="h1">
+          {% include 'price' with item.price %}
+        </span>
+      </li>
+    {% endif %}
+
+    <p>{{ item.content | strip_html | truncatewords: 50 }}</p>
+  </div>
+
+</div>
+
+<hr>

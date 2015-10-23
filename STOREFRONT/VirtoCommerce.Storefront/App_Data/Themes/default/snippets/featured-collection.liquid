@@ -1,0 +1,26 @@
+{% unless featured_collection_width %}
+  {% assign featured_collection_width = 'small--one-half medium--one-third large--one-sixth' %}
+{% endunless %}
+
+{% unless featured_collection_size %}
+  {% assign featured_collection_size = 'medium' %}
+{% endunless %}
+
+<div class="grid-item {{ featured_collection_width }}">
+
+  {% capture collection_title %}{{ collections[featured].title | escape }}{% endcapture %}
+
+  <a href="{{ collections[featured].url }}" title="{{ 'collections.general.link_title' | t: title: collection_title }}" class="featured-box">
+    <div class="featured-box--inner">
+      <div class="featured-box--image">
+        {% if collections[featured].image %}
+          {{ collections[featured].image | img_url: featured_collection_size | img_tag: collection_title }}
+        {% else %}
+          {{ collections[featured].products.first.featured_image | img_url: featured_collection_size | img_tag: collection_title }}
+        {% endif %}
+      </div>
+    </div>
+    <span class="featured-box--title">{{ collection_title }}</span>
+  </a>
+
+</div>

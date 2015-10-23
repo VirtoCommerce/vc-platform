@@ -13,6 +13,7 @@ using Microsoft.Practices.Unity;
 using Owin;
 using VirtoCommerce.Client;
 using VirtoCommerce.Client.Api;
+using VirtoCommerce.LiquidThemeEngine;
 using VirtoCommerce.Storefront;
 using VirtoCommerce.Storefront.App_Start;
 using VirtoCommerce.Storefront.Model;
@@ -50,14 +51,17 @@ namespace VirtoCommerce.Storefront
                 CallChildConfigure(app, _managerAssembly, "VirtoCommerce.Platform.Web.Startup", "Configuration", "~/areas/admin", "admin/");
             }
 
-            //EnginesConfig.RegisterEngines(ViewEngines.Engines);
+            //Register liquid engine
+            ViewEngines.Engines.Add(new DotLiquidViewEngine(HostingEnvironment.MapPath("~/App_Data/Themes")));
             //FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             AuthConfig.ConfigureAuth(app);
 
+
             UnityWebActivator.Start();
             var container = UnityConfig.GetConfiguredContainer();
 
+            container.RegisterInstance<WorkContext>(new WorkContext());
             var apiClient = new HmacApiClient(ConfigurationManager.ConnectionStrings["VirtoCommerceBaseUrl"].ConnectionString, ConfigurationManager.AppSettings["vc-public-ApiAppId"], ConfigurationManager.AppSettings["vc-public-ApiSecretKey"]);
             container.RegisterType<IStoreModuleApi, StoreModuleApi>(new InjectionConstructor(apiClient));
             container.RegisterType<IVirtoCommercePlatformApi, VirtoCommercePlatformApi>(new InjectionConstructor(apiClient));
@@ -67,6 +71,7 @@ namespace VirtoCommerce.Storefront
             app.CreatePerOwinContext(() => container.Resolve<WorkContext>());
 
             app.Use<WorkContextOwinMiddleware>(container.Resolve<IStoreModuleApi>(), container.Resolve<IVirtoCommercePlatformApi>());
+
         }
 
 

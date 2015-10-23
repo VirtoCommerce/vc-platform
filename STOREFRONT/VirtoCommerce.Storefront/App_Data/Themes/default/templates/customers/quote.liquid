@@ -1,0 +1,112 @@
+﻿<h1>{{ 'customer.account.title' | t }}</h1>
+{% include 'customer-menu' %}
+<hr class="hr--small" />
+<div class="grid">
+    <div class="grid-item medium-down--one-whole">
+        <h4 id="quote-request-number" data-number="{{ quote_request.number }}">{{ 'customer.quote.title' | t: number: quote_request.number }}</h4>
+        {% if quote_request.comment.size > 0 %}
+            <p>
+                {{ 'customer.quote.comment' | t }} <b>{{ quote_request.comment }}</b>
+            </p>
+        {% endif %}
+        <p>
+            {{ 'customer.quote.date' | t }} <b>{{ quote_request.created_at }}</b>
+        </p>
+        <p>
+            {{ 'customer.quote.status' | t }} <b>{{ quote_request.status }}</b>
+        </p>
+        <div class="cart-row" style="height: 30px; font-weight: 600;">
+            <div class="grid">
+                <div class="grid-item large--seven-twelfths">
+                    <div class="grid">
+                        <div class="grid-item one-third large--one-quarter">
+                            &nbsp;
+                        </div>
+                        <div class="grid-item one-third">
+                            Title
+                        </div>
+                        <div class="grid-item one-third">
+                            Comment
+                        </div>
+                    </div>
+                </div>
+                <div class="grid-item large--five-twelfths medium--two-thirds push--medium--one-third">
+                    <div class="grid">
+                        <div class="grid-item one-third medium-down--one-third text-left">
+                            Original price
+                        </div>
+                        <div class="grid-item one-third medium-down--one-third text-left">
+                            QTY
+                        </div>
+                        <div class="grid-item one-third medium-down--one-third text-left">
+                            Proposal
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% for quote_item in quote_request.items %}
+            <div class="cart-row quote" data-id="{{ quote_item.id }}">
+                <div class="grid">
+                    <div class="grid-item large--seven-twelfths">
+                        <div class="grid">
+                            <div class="grid-item one-third large--one-quarter">
+                                <img alt="{{ quote_item.title }}" src="{{ quote_item.image_url }}" />
+                            </div>
+                            <div class="grid-item one-third">
+                                {{ quote_item.title }}
+                            </div>
+                            <div class="grid-item one-third">
+                                {{ quote_item.comment }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid-item large--five-twelfths medium--two-thirds push--medium--one-third">
+                        <div class="grid">
+                            <div class="grid-item one-third medium-down--one-third text-right">
+                                <div class="js-qty">
+                                    {{ quote_item.list_price | money }}
+                                </div>
+                            </div>
+                            <div class="grid-item one-third medium-down--one-third text-right">
+                                {% for proposal_price in quote_item.proposal_prices %}
+                                    <div class="js-qty">
+                                        {{ proposal_price.quantity }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <div class="grid-item one-third medium-down--one-third text-right">
+                                {% for proposal_price in quote_item.proposal_prices %}
+                                    <div class="js-qty">
+                                        <input class="proposal-price-radio" {% if quote_request.status == 'Rejected' %}disabled="disabled"{% endif %} {% if quote_item.selected_tier_price.quantity == proposal_price.quantity %}checked="checked"{% endif %} data-quantity="{{ proposal_price.quantity }}" name="{{ quote_item.id }}_selected_price" type="radio" value="{{ proposal_price.price }}" />
+                                        {{ proposal_price.price | money }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        <div class="cart-row" id="quote-totals">
+            {% include 'quote-totals' %}
+        </div>
+        <div class="cart-row" style="border-top: none;">
+            <div class="grid">
+                <div class="grid-item three-thirds medium-down--one-whole">
+                    <div class="cart-btn--block">
+                        {% unless quote_request.status == 'Proposal sent' and quote_request.status == 'Rejected' %}
+                            <a class="btn-secondary" href="{{ shop.simplified_url }}/account/quote/edit/{{ quote_request.number }}" id="btn-edit-quote-request">Edit request</a>
+                        {% endunless %}
+                        {% if quote_request.status == 'Proposal sent' %}
+                            <a class="btn-secondary" href="{{ shop.simplified_url }}/account/quote/reject/{{ quote_request.number }}" id="btn-reject-quote-proposal">Reject proposal</a>
+                            {% unless quote_request.status == 'On hold' and quote_request.status == 'Rejected' and quote_request.is_cancelled %}
+                                <button class="btn large--right" id="btn-checkout-quote-request">Confirm and checkout</button>
+                            {% endunless %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

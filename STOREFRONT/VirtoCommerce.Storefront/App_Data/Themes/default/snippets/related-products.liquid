@@ -1,0 +1,29 @@
+{% assign number_of_products = 5 %}
+{% assign number_of_products_to_fetch = number_of_products | plus: 1 %}
+{% if collection == null or collection.handle == 'frontpage' or collection.handle == 'all' %}
+  {% assign found_a_collection = false %}
+  {% for c in product.collections %}
+    {% if found_a_collection == false and c.handle != 'frontpage' and c.handle != 'all' and c.all_products_count > 1 %}
+      {% assign found_a_collection = true %}
+      {% assign collection = c %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+{% if collection and collection.products_count > 1 %}
+  <hr>
+  <span class="h1">{{ 'products.general.related_products' | t }}</span>
+  <div class="grid-uniform">
+    {% assign current_product = product %}
+    {% assign current_product_found = false %}
+    {% for product in collection.products limit: number_of_products_to_fetch %}
+      {% if product.handle == current_product.handle %}
+        {% assign current_product_found = true %}
+      {% else %}
+        {% unless current_product_found == false and forloop.last %}
+          {% include 'product-grid-item' %}
+        {% endunless %}
+      {% endif %}
+    {% endfor %}
+  </div>
+{% endif %}

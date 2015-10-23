@@ -1,0 +1,63 @@
+{% paginate collection.products by 20 %}
+
+{% include 'breadcrumb' %}
+
+{% assign has_sidebar = false %}
+{% if collection.all_tags.size > 0 %}
+  {% assign has_sidebar = true %}
+{% endif %}
+
+<div class="grid grid-border">
+
+  {% if has_sidebar %}
+  <div class="grid-item large--one-fifth collection-filters" id="collectionFilters">
+    {% include 'collection-sidebar' %}
+  </div>
+  {% endif %}
+
+  <div class="grid-item{% if has_sidebar %} large--four-fifths grid-border--left{% endif %}">
+
+    <header class="section-header">
+      <h1 class="section-header--left">{{ collection.title }}</h1>
+      <div class="section-header--right">
+
+        {% include 'collection-sorting' %}
+        {% include 'collection-views' %}
+        {% include 'toggle-filters' %}
+
+      </div>
+    </header>
+
+    <div class="grid-uniform">
+
+      {% for product in collection.products %}
+
+        {% include 'product-list-item' %}
+
+      {% else %}
+
+        <div class="grid-item">
+          <p>{{ 'collections.general.no_matches' | t }}</p>
+        </div>
+
+      {% endfor %}
+
+    </div>
+
+  </div>
+
+  {% if paginate.pages > 1 %}
+  <div class="grid-item pagination-border-top">
+    <div class="grid">
+      <div class="grid-item{% if has_sidebar %} large--four-fifths push--large--one-fifth{% endif %}">
+          <div class="text-center">
+            {% include 'pagination-custom' %}
+          </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+
+{% endpaginate %}

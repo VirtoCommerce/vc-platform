@@ -30,6 +30,7 @@ namespace VirtoCommerce.Storefront.Owin
             // Initialize common properties: stores, languages, user profile, cart
 
             workContext.AllStores = _storeApi.StoreModuleGetStores().Select(x => x.ToWebModel()).ToList();
+            workContext.CurrentStore = workContext.AllStores.FirstOrDefault();
 
             // Initialize request specific properties: current store, current language
 

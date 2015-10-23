@@ -1,0 +1,32 @@
+﻿<h1>{{ 'customer.account.title' | t }}</h1>
+{% include 'customer-menu' %}
+<hr class="hr--small" />
+<div class="grid">
+    <div class="grid-item two-thirds medium-down--one-whole">
+        <h4>{{ 'customer.quotes.title' | t }}</h4>
+        {% if customer.quotes.size > 0 %}
+            <table class="full">
+                <thead>
+                    <tr>
+                        <th>{{ 'customer.quotes.quote_number' | t }}</th>
+                        <th>{{ 'customer.quotes.date' | t }}</th>
+                        <th>{{ 'customer.quotes.status' | t }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for quote in customer.quotes %}
+                        <tr>
+                            <td>
+                                <a href="{{ shop.simplified_url }}/account/quote/{{ quote.number }}">{{ quote.number }}</a>
+                            </td>
+                            <td>{{ quote.created_at }}</td>
+                            <td>{{ quote.status }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>{{ 'customer.quotes.none' | t }}</p>
+        {% endif %}
+    </div>
+</div>

@@ -82,16 +82,17 @@
     <Compile Include="DotLiquidViewEngine.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\TemplateExtensions.cs" />
-    <Compile Include="FileSystems\ThemeLiquidFileSystem.cs" />
+    <Compile Include="Filters\TranslationFilter.cs" />
+    <Compile Include="ShopifyCompliant\ShopifyThemeFileSystem.cs" />
     <Compile Include="Filters\CommerceFilters.cs" />
     <Compile Include="Filters\CommonFilters.cs" />
+    <Compile Include="Operators\CommonOperators.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tags\Layout.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Blocks\" />
     <Folder Include="Converters\" />
-    <Folder Include="ShopifyContext\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
