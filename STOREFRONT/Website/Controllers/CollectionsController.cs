@@ -90,7 +90,7 @@ namespace VirtoCommerce.Web.Controllers
             this.Context.Set("current_tags", currentTags);
 
             var template = "collection";
-            if (!string.IsNullOrEmpty(view))
+            if (!string.IsNullOrEmpty(view) && view.Equals("list", StringComparison.OrdinalIgnoreCase))
             {
                 template = String.Format("{0}.{1}", template, view);
             }
