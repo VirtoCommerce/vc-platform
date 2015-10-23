@@ -14,6 +14,7 @@ using Microsoft.Practices.Unity;
 using Owin;
 using VirtoCommerce.Client;
 using VirtoCommerce.Client.Api;
+using VirtoCommerce.LiquidThemeEngine;
 using VirtoCommerce.Storefront;
 using VirtoCommerce.Storefront.App_Start;
 using VirtoCommerce.Storefront.Model;
@@ -60,7 +61,8 @@ namespace VirtoCommerce.Storefront
                 CallChildConfigure(app, _managerAssembly, "VirtoCommerce.Platform.Web.Startup", "Configuration", "~/areas/admin", "admin/");
             }
 
-            //EnginesConfig.RegisterEngines(ViewEngines.Engines);
+            //Register liquid engine
+            ViewEngines.Engines.Add(new DotLiquidViewEngine(HostingEnvironment.MapPath("~/App_Data/Themes")));
             //FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes, container.Resolve<ICommerceCoreModuleApi>());
             AuthConfig.ConfigureAuth(app);

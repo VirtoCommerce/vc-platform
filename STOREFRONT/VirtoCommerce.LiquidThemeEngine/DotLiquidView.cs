@@ -33,6 +33,7 @@ namespace VirtoCommerce.LiquidThemeEngine
             _masterPath = masterPath;
         }
 
+        #region IView members
         public void Render(ViewContext viewContext, TextWriter writer)
         {
             if (viewContext == null)
@@ -57,13 +58,13 @@ namespace VirtoCommerce.LiquidThemeEngine
                 LocalVariables = Hash.FromDictionary(localVars)
             };
 
-            var themeFileSystem = Template.FileSystem as ThemeLiquidFileSystem;
+            var themeFileSystem = Template.FileSystem as ShopifyThemeLiquidFileSystem;
             if (themeFileSystem != null)
             {
                 var viewContent = themeFileSystem.ReadTemplateByName(_viewPath);
                 // Render requested template
                 var template = Template.Parse(viewContent);
-        
+
                 //next need render master template if it defined manualy or in liquid view by special tag 'layout'
                 var layout = (template.Registers["layout"] ?? String.Empty).ToString();
                 if (String.IsNullOrEmpty(layout))
@@ -71,7 +72,7 @@ namespace VirtoCommerce.LiquidThemeEngine
                     layout = _masterPath;
                 }
                 //if layout specified need render with master page
-                if(!String.IsNullOrEmpty(layout))
+                if (!String.IsNullOrEmpty(layout))
                 {
                     var renderedTemplate = template.RenderWithTracing(renderParams);
                     var masterTemplate = Template.Parse(layout);
@@ -84,7 +85,8 @@ namespace VirtoCommerce.LiquidThemeEngine
                 }
             }
 
-        }
+        } 
+        #endregion
 
     }
 }

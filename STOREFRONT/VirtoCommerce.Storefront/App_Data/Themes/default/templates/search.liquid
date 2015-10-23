@@ -1,0 +1,69 @@
+{% assign grid_results = true %}
+
+{% assign respond_js_secret_key = shop.domain | md5 %}
+{% unless search.terms == respond_js_secret_key %}
+
+  <div class="grid">
+    <div class="grid-item">
+
+      <hr class="hr--clear hr--small">
+
+      {% if search.performed %}
+
+        {% paginate search.results by 20 %}
+
+          {% if search.results_count == 0 %}
+
+            <h2 class="text-center">{{ 'general.search.no_results_html' | t: terms: search.terms }}</h2>
+            {% include 'search-bar' %}
+
+          {% else %}
+
+            <h2 class="text-center">{{ 'general.search.results_for_html' | t: terms: search.terms }}</h2>
+            {% include 'search-bar' %}
+            <hr class="hr--clear">
+
+            {% if grid_results == false %}
+
+              {% for item in search.results %}
+                {% include 'search-result' %}
+              {% endfor %}
+
+            {% else %}
+
+              <div class="grid-uniform">
+                {% for item in search.results %}
+                  {% assign grid_item_width = 'large--one-fifth medium--one-third small--one-half' %}
+                  {% include 'search-result-grid' %}
+                {% endfor %}
+              </div>
+
+            {% endif %}
+
+          {% endif %}
+
+          {% if paginate.pages > 1 %}
+            <div class="text-center">
+              {% include 'pagination-custom' %}
+            </div>
+          {% endif %}
+
+        {% endpaginate %}
+
+      {% else %}
+
+        {% comment %}
+          If search.performed is false, someone either accessed the page without the q parameter, or it was blank.
+        {% endcomment %}
+        <h2 class="text-center">{{ 'general.search.title' | t }}</h2>
+        {% include 'search-bar' %}
+
+      {% endif %}
+
+    </div>
+  </div>
+
+{% else %}
+  {% include 'respond' %}
+  {% layout none %}
+{% endunless %}

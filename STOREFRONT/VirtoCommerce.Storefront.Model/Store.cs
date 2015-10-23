@@ -75,6 +75,11 @@ namespace VirtoCommerce.Storefront.Model
         /// </summary>
         public string AdminEmail { get; set; }
 
+        /// <summary>
+        /// Store theme name
+        /// </summary>
+        public string ThemeName { get; set; }
+  
         public ICollection<DynamicProperty> DynamicProperties { get; set; }
 
         public ICollection<SeoInfo> SeoInfos { get; set; }

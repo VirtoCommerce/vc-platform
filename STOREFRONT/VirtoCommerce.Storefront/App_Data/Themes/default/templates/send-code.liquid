@@ -1,0 +1,14 @@
+﻿<div style="margin: 0 auto; width: 50%;">
+    <h1>Send verification code</h1>
+    {% form 'send-code' %}
+    <input id="return_url" name="return_url" type="hidden" value="{{ return_url }}" />
+    <input id="remember_me" name="remember_me" type="hidden" value="{{ remember_me }}" />
+    <label for="selected_provider">Select Two-Factor Authentication Provider:</label>
+    <select id="selected_provider" name="selected_provider">
+        {% for provider in providers %}
+        <option value="{{ provider }}">{{ provider }}</option>
+        {% endfor %}
+    </select>
+    <input class="btn" type="submit" value="Submit" />
+    {% endform %}
+</div>

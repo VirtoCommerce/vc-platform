@@ -1,0 +1,22 @@
+
+{% assign formatted_price = price | money %}
+{% if settings.remove_dollar_symbol %}
+  {% assign formatted_price = formatted_price | remove: '$' %}
+{% endif %}
+{% comment %}
+  Unless this store uses multiple currencies,
+  if we apply a special style to cents,
+  we will wrap them in a sup (superscript) element.
+{% endcomment %}
+
+{% unless shop.money_format contains 'money' %}
+  {% if settings.superscript_decimals %}
+    {% if shop.money_format contains '{{amount}}' %}
+      {% capture formatted_price %}{{ formatted_price | replace: '.','<sup>' }}</sup>{% endcapture %}
+    {% elsif shop.money_format contains '{{amount_with_comma_separator}}' %}
+      {% capture formatted_price %}{{ formatted_price | replace: ',','<sup>' }}</sup>{% endcapture %}
+    {% endif %}
+  {% endif %}
+{% endunless %}
+
+<small>{{ formatted_price }}</small>
