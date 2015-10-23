@@ -5036,15 +5036,30 @@ tags-input .tags .tag-item .remove-button
     border-top: none;
 }
 
+.ui-grid-row:nth-child(2n) .ui-grid-cell
+{
+    background: none;
+}
+
+.ui-grid-row:nth-child(2n+1) .ui-grid-cell.__selected
+{
+    background: #d9effa !important;
+}
+
+.ui-grid-row.ui-grid-row-selected > [ui-grid-row] > .ui-grid-cell
+{
+    background: none;
+}
+
 .ui-grid-row:hover .ui-grid-cell,
 .ui-grid-row:nth-child(2n):hover .ui-grid-cell
 {
-    background: #ecf7fc;
+    background: #ecf7fc !important;
 }
 
-.ui-grid-row .ui-grid-cell.__selected
+.ui-grid-row.ui-grid-row-selected > [ui-grid-row] > .ui-grid-cell.__selected
 {
-    background: #d9effa;
+    background: #d9effa !important;
 }
 
 .ui-grid-header-cell,
@@ -5052,11 +5067,6 @@ tags-input .tags .tag-item .remove-button
 .ui-grid-header-cell:last-child .ui-grid-column-resizer.right
 {
     border-color: #dee9f0;
-}
-
-.ui-grid-row-selected > [ui-grid-row] > .ui-grid-cell
-{
-    background: #d9effa !important;
 }
 
 .ui-grid-canvas
@@ -5093,14 +5103,15 @@ tags-input .tags .tag-item .remove-button
     padding: 10px 5px;
 }
 
-.ui-grid-row:nth-child(2n) .ui-grid-cell
-{
-    background: #fff;
-}
-
 .ui-grid-row:nth-child(2n) .ui-grid-cell.__selected
 {
-    background: #d9effa;
+    background: #d9effa !important;
+}
+
+.ui-grid-pinned-container.ui-grid-pinned-container-left .ui-grid-cell.__selected,
+.ui-grid-pinned-container.ui-grid-pinned-container-left .ui-grid-row:nth-child(2n+1) .ui-grid-cell.__selected
+{
+    background: none !important;
 }
 
 .ui-grid-filter-container
@@ -5142,22 +5153,23 @@ input.ui-grid-filter-input[type="text"]
     border-bottom: 1px solid #d9effa;
 }
 
-.ui-grid-row-header-cell.__selected
+/*.ui-grid-row-header-cell.__selected
 {
     background: #d9effa !important;
     color: #a1c0d4 !important;
-}
+}*/
 
 .ui-grid-pinned-container.ui-grid-pinned-container-left .ui-grid-row-selected
 {
-    color: #a1c0d4 !important;
+    background: #d9effa;
+    color: #a1c0d4;
 }
 
-.ui-grid-row-header-cell.__selected .ui-grid-selection-row-header-buttons,
+/*.ui-grid-row-header-cell.__selected .ui-grid-selection-row-header-buttons,
 .ui-grid-row-selected
 {
     opacity: 1 !important;
-}
+}*/
 
 .ui-grid-pinned-container.ui-grid-pinned-container-left .ui-grid-header-cell:last-child
 {
