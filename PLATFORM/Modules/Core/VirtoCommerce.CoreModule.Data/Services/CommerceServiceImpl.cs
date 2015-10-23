@@ -122,8 +122,15 @@ namespace VirtoCommerce.CoreModule.Data.Repositories
 			var retVal = new List<coreModel.SeoInfo>();
 			using (var repository = _repositoryFactory())
 			{
+                //find seo entries for specified keyword
 				retVal = repository.SeoUrlKeywords.Where(x => x.Keyword == keyword).ToArray()
 								  .Select(x => x.ToCoreModel()).ToList();
+                //find other seo entries related to finding object
+                if(retVal.Any())
+                {
+                    var objectIds = retVal.Select(x => x.ObjectId).Distinct().ToArray();
+                    retVal.AddRange(GetObjectsSeo(objectIds));
+                }
 			}
 			return retVal;
 		}
