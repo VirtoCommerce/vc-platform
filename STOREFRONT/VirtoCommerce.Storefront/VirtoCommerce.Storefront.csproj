@@ -183,10 +183,14 @@
     <Compile Include="App_Start\AuthConfig.cs" />
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="App_Start\UnityMvcActivator.cs" />
+    <Compile Include="Converters\AddressConverter.cs" />
+    <Compile Include="Converters\CustomerConverter.cs" />
     <Compile Include="Converters\StoreConverter.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Owin\WorkContextExtensions.cs" />
+    <Compile Include="Owin\WorkContextOptions.cs" />
     <Compile Include="Owin\WorkContextOwinMiddleware.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routing\LocalizedRoute.cs" />

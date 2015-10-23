@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace VirtoCommerce.Storefront.Model
 {
@@ -10,7 +9,6 @@ namespace VirtoCommerce.Storefront.Model
     {
         public WorkContext()
         {
-            AllStores = new List<Store>();
         }
         /// <summary>
         /// Current customer
@@ -30,7 +28,7 @@ namespace VirtoCommerce.Storefront.Model
         /// <summary>
         /// List of all supported stores
         /// </summary>
-        public ICollection<Store> AllStores { get; set; }
+        public Store[] AllStores { get; set; }
 
         #region IDisposable Implementation
 

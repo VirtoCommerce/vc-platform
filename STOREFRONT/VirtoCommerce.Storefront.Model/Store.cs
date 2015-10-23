@@ -10,6 +10,12 @@ namespace VirtoCommerce.Storefront.Model
     /// </summary>
     public class Store
     {
+        public Store()
+        {
+            Languages = new List<string>();
+            Currencies = new List<string>();
+        }
+
         public string Name { get; set; }
 
         public string Description { get; set; }
