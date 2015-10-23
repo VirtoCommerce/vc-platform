@@ -151,7 +151,11 @@ namespace VirtoCommerce.Platform.Data.Asset
                                 Size = block.Properties.Length,
                                 ModifiedDate = block.Properties.LastModified != null ? block.Properties.LastModified.Value.DateTime : (DateTime?) null
                             };
-                            retVal.Items.Add(blobInfo);
+                            //Do not return empty blob (created with directory because azure blob not support direct directory creation)
+                            if (!String.IsNullOrEmpty(blobInfo.FileName))
+                            {
+                                retVal.Items.Add(blobInfo);
+                            }
                         }
                         if (directory != null)
                         {
@@ -192,6 +196,7 @@ namespace VirtoCommerce.Platform.Data.Asset
             var directoryPath = GetDirectoryPathFromUrl(path);
             if (!String.IsNullOrEmpty(directoryPath))
             {
+                //Need upload empty blob because azure blob storage not support direct directory creation
                 blobContainer.GetBlockBlobReference(directoryPath).UploadText(String.Empty);
             }
         }

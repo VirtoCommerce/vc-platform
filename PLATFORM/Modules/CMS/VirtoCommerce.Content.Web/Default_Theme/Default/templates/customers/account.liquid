@@ -80,7 +80,14 @@
       </p>
 
     {% endif %}
-
+	
+      <p>
+		{% for field in customer.dynamic_properties %}
+           
+             {{ field.name }}: {{ field.values | join }}<br>
+          
+          {% endfor %}
+      </p>
     <p><a href="{{ shop.simplified_url }}/account/addresses">{{ 'customer.account.view_addresses' | t }} ({{ customer.addresses_count }})</a></p>
   </div>
 
