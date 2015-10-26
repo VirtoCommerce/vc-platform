@@ -71,6 +71,14 @@ namespace VirtoCommerce.Client.Model {
     public int? Priority { get; set; }
 
     
+    /// <summary>
+    /// Is payment method available for partial payments
+    /// </summary>
+    /// <value>Is payment method available for partial payments</value>
+    [DataMember(Name="isAvailableForPartial", EmitDefaultValue=false)]
+    public bool? IsAvailableForPartial { get; set; }
+
+    
 
     /// <summary>
     /// Get the string presentation of the object
@@ -93,6 +101,8 @@ namespace VirtoCommerce.Client.Model {
       sb.Append("  Group: ").Append(Group).Append("\n");
       
       sb.Append("  Priority: ").Append(Priority).Append("\n");
+      
+      sb.Append("  IsAvailableForPartial: ").Append(IsAvailableForPartial).Append("\n");
       
       sb.Append("}\n");
       return sb.ToString();

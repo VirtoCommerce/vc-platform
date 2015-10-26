@@ -74,22 +74,22 @@ namespace VirtoCommerce.Client.Api
         System.Threading.Tasks.Task<VirtoCommerceCoreModuleWebModelFulfillmentCenter> CommerceGetFulfillmentCenterAsync (string id);
         
         /// <summary>
-        /// Find seo informations by slug keyword
+        /// Find all SEO records for object by slug
         /// </summary>
         /// <remarks>
         /// 
         /// </remarks>
-        /// <param name="slug">fulfillment center id</param>
+        /// <param name="slug">slug</param>
         /// <returns></returns>
         List<VirtoCommerceDomainCommerceModelSeoInfo> CommerceGetSeoInfoBySlug (string slug);
   
         /// <summary>
-        /// Find seo informations by slug keyword
+        /// Find all SEO records for object by slug
         /// </summary>
         /// <remarks>
         /// 
         /// </remarks>
-        /// <param name="slug">fulfillment center id</param>
+        /// <param name="slug">slug</param>
         /// <returns></returns>
         System.Threading.Tasks.Task<List<VirtoCommerceDomainCommerceModelSeoInfo>> CommerceGetSeoInfoBySlugAsync (string slug);
         
@@ -446,9 +446,9 @@ namespace VirtoCommerce.Client.Api
         }
         
         /// <summary>
-        /// Find seo informations by slug keyword 
+        /// Find all SEO records for object by slug 
         /// </summary>
-        /// <param name="slug">fulfillment center id</param> 
+        /// <param name="slug">slug</param> 
         /// <returns></returns>            
         public List<VirtoCommerceDomainCommerceModelSeoInfo> CommerceGetSeoInfoBySlug (string slug)
         {
@@ -499,9 +499,9 @@ namespace VirtoCommerce.Client.Api
         }
     
         /// <summary>
-        /// Find seo informations by slug keyword 
+        /// Find all SEO records for object by slug 
         /// </summary>
-        /// <param name="slug">fulfillment center id</param>
+        /// <param name="slug">slug</param>
         /// <returns></returns>
         public async System.Threading.Tasks.Task<List<VirtoCommerceDomainCommerceModelSeoInfo>> CommerceGetSeoInfoBySlugAsync (string slug)
         {
