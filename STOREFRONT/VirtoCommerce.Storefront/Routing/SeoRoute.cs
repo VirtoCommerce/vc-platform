@@ -43,8 +43,8 @@ namespace VirtoCommerce.Storefront.Routing
                     // Ensure the slug is active
                     if (seoRecord.IsActive == null || !seoRecord.IsActive.Value)
                     {
-                        // Slug is not active. Try to find the active one for the same entity.
-                        var activeSlug = FindActiveSlug(seoRecord.ObjectType, seoRecord.ObjectId, seoRecord.LanguageCode, seoRecords);
+                        // Slug is not active. Try to find the active one for the same entity and language.
+                        var activeSlug = FindActiveSlug(seoRecords, seoRecord.ObjectType, seoRecord.ObjectId, seoRecord.LanguageCode);
 
                         if (string.IsNullOrWhiteSpace(activeSlug))
                         {
@@ -64,8 +64,8 @@ namespace VirtoCommerce.Storefront.Routing
                     }
                     else
                     {
-                        // Redirect to the slug for current language if it differes from requested slug
-                        var slugForCurrentLanguage = GetSlug(workContext, seoRecord.ObjectType, seoRecord.ObjectId, workContext.CurrentLanguage, seoRecords);
+                        // Redirect to the slug for the current language if it differs from the requested slug
+                        var slugForCurrentLanguage = GetSlug(seoRecords, workContext, seoRecord.ObjectType, seoRecord.ObjectId, workContext.CurrentLanguage);
 
                         if (!string.IsNullOrEmpty(slugForCurrentLanguage) && !slugForCurrentLanguage.Equals(slug, StringComparison.OrdinalIgnoreCase))
                         {
@@ -101,26 +101,26 @@ namespace VirtoCommerce.Storefront.Routing
             return data;
         }
 
-        private string GetSlug(WorkContext workContext, string entityType, string entityId, string language, List<VirtoCommerceDomainCommerceModelSeoInfo> seoRecords)
+        private string GetSlug(List<VirtoCommerceDomainCommerceModelSeoInfo> seoRecords, WorkContext workContext, string entityType, string entityId, string language)
         {
             var result = string.Empty;
 
             // Get slug for requested language
             if (!string.IsNullOrEmpty(language) && workContext.CurrentStore.Languages.Count >= 2)
             {
-                result = FindActiveSlug(entityType, entityId, language, seoRecords);
+                result = FindActiveSlug(seoRecords, entityType, entityId, language);
             }
 
             // Get slug for default language
             if (string.IsNullOrEmpty(result))
             {
-                result = FindActiveSlug(entityType, entityId, null, seoRecords);
+                result = FindActiveSlug(seoRecords, entityType, entityId, null);
             }
 
             return result;
         }
 
-        private string FindActiveSlug(string entityType, string entityId, string language, List<VirtoCommerceDomainCommerceModelSeoInfo> seoRecords)
+        private string FindActiveSlug(List<VirtoCommerceDomainCommerceModelSeoInfo> seoRecords, string entityType, string entityId, string language)
         {
             return seoRecords
                 .Where(r => r.ObjectType == entityType && r.ObjectId == entityId && string.Equals(r.LanguageCode, language, StringComparison.OrdinalIgnoreCase) && r.IsActive != null && r.IsActive.Value)
