@@ -127,9 +127,9 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
         }
 
         /// <summary>
-        /// Find all object seo informations by slug keyword 
+        /// Find all SEO records for object by slug
         /// </summary>
-        /// <param name="slug">slug keyword</param>
+        /// <param name="slug">slug</param>
         [HttpGet]
         [ResponseType(typeof(coreModel.SeoInfo[]))]
         [Route("seoinfos/{slug}")]
@@ -137,7 +137,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
         public IHttpActionResult GetSeoInfoBySlug(string slug)
         {
             var retVal = _commerceService.GetSeoByKeyword(slug).ToArray();
-            
+
             return Ok(retVal);
         }
     }
