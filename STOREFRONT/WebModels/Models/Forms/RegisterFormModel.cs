@@ -13,6 +13,7 @@ namespace VirtoCommerce.Web.Models.FormModels
         public RegisterFormModel()
         {
             this.Customer = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            Properties = new Dictionary<string, string>();
         }
 
         public string Id
@@ -75,6 +76,7 @@ namespace VirtoCommerce.Web.Models.FormModels
             }
         }
 
+        public Dictionary<string, string> Properties { get; set; }
         public string GetValue(string key)
         {
             return this.Customer.ContainsKey(key) ? this.Customer[key] : null;

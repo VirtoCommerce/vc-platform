@@ -86,6 +86,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Convertors\DynamicPropertyConverter.cs" />
     <Compile Include="Convertors\AddressConverter.cs" />
     <Compile Include="Convertors\AttachmentConverter.cs" />
     <Compile Include="Convertors\PagesConverters.cs" />
@@ -135,6 +136,8 @@
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
     <Compile Include="Filters\ModelFilters.cs" />
     <Compile Include="Filters\TranslationFilter.cs" />
+    <Compile Include="Models\DynamicProperty\DynamicProperty.cs" />
+    <Compile Include="Models\DynamicProperty\DynamicPropertyDictionaryItem.cs" />
     <Compile Include="Models\Forms\CheckoutFirstStepFormModel.cs" />
     <Compile Include="Models\Forms\CheckoutSecondStepFormModel.cs" />
     <Compile Include="Models\Forms\CustomerAddressFormModel.cs" />

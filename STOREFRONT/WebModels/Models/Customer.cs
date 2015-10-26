@@ -10,6 +10,7 @@ using VirtoCommerce.Web.Convertors;
 using VirtoCommerce.Web.Views.Engines.Liquid.Extensions;
 using System.Runtime.Serialization;
 using Tag = VirtoCommerce.Web.Models.Tagging.Tag;
+using System.Collections;
 
 #endregion
 
@@ -128,6 +129,9 @@ namespace VirtoCommerce.Web.Models
 
         [DataMember]
         public decimal TotalSpent { get; set; }
+
+        [DataMember]
+        public ICollection<DynamicProperty> DynamicProperties { get; set; }
         #endregion
 
         public void LoadSlice(int from, int? to)
