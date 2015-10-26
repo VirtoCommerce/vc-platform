@@ -222,8 +222,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Owin\WorkContextExtensions.cs" />
-    <Compile Include="Owin\WorkContextOptions.cs" />
     <Compile Include="Owin\WorkContextOwinMiddleware.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routing\LocalizedRoute.cs" />

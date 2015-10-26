@@ -25,12 +25,12 @@ namespace VirtoCommerce.Storefront.Owin
         protected virtual string LanguageCookie { get { return "vcf.language"; } }
         protected virtual string CurrencyCookie { get { return "vcf.currency"; } }
 
-        public WorkContextOwinMiddleware(OwinMiddleware next, WorkContextOptions options)
+        public WorkContextOwinMiddleware(OwinMiddleware next, IStoreModuleApi storeApi, IVirtoCommercePlatformApi platformApi, ICustomerManagementModuleApi customerApi)
             : base(next)
         {
-            _storeApi = options.StoreApi;
-            _platformApi = options.PlatformApi;
-            _customerApi = options.CustomerApi;
+            _storeApi = storeApi;
+            _platformApi = platformApi;
+            _customerApi = customerApi;
         }
 
         public override async Task Invoke(IOwinContext context)
