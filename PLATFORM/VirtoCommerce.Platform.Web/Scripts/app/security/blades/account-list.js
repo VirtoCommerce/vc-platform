@@ -147,7 +147,7 @@ function ($scope, accounts, bladeNavigationService, dialogService, uiGridConstan
         enableHorizontalScrollbar: uiGridConstants.scrollbars.NEVER,
         enableRowHeaderSelection: true,
         //selectionRowHeaderWidth: 35,
-        rowHeight: 48,
+        rowHeight: 20,
         rowTemplate: "<div ng-click=\"grid.appScope.blade.selectNode(row.entity)\" ng-repeat=\"(colRenderIndex, col) in colContainer.renderedColumns track by col.uid\" ui-grid-one-bind-id-grid=\"rowRenderIndex + '-' + col.uid + '-cell'\" class=\"ui-grid-cell\" ng-class=\"{ 'ui-grid-row-header-cell': col.isRowHeader, '__selected': row.entity.userName === grid.appScope.selectedNodeId }\" role=\"{{col.isRowHeader ? 'rowheader' : 'gridcell'}}\" ui-grid-cell style='cursor:pointer'></div>",
         columnDefs: [
         {

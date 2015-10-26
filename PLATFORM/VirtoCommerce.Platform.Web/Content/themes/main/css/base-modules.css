@@ -5010,6 +5010,12 @@ tags-input .tags .tag-item .remove-button
 .ui-grid-header
 {
     border-color: #dee9f0;
+    height: auto !important;
+}
+
+.ui-grid-viewport
+{
+    height: auto !important;
 }
 
 .ui-grid-top-panel
@@ -5057,6 +5063,12 @@ tags-input .tags .tag-item .remove-button
     background: #ecf7fc !important;
 }
 
+.ui-grid-pinned-container.ui-grid-pinned-container-left .ui-grid-row:hover .ui-grid-cell,
+.ui-grid-pinned-container.ui-grid-pinned-container-left .ui-grid-row:nth-child(2n):hover .ui-grid-cell
+{
+    background: #d9effa !important;
+}
+
 .ui-grid-row.ui-grid-row-selected > [ui-grid-row] > .ui-grid-cell.__selected
 {
     background: #d9effa !important;
@@ -5071,6 +5083,7 @@ tags-input .tags .tag-item .remove-button
 
 .ui-grid-canvas
 {
+    height: auto !important;
     padding: 0;
 }
 
@@ -5080,7 +5093,6 @@ tags-input .tags .tag-item .remove-button
 .ui-grid-render-container-body .ui-grid-header-canvas
 {
     height: auto !important;
-    line-height: 40px;
     overflow: hidden;
 }
 
@@ -5159,7 +5171,7 @@ input.ui-grid-filter-input[type="text"]
     color: #a1c0d4 !important;
 }*/
 
-.ui-grid-pinned-container.ui-grid-pinned-container-left .ui-grid-row-selected
+.ui-grid-pinned-container.ui-grid-pinned-container-left .ui-grid-row.ui-grid-row-selected
 {
     background: #d9effa;
     color: #a1c0d4;
