@@ -9,6 +9,7 @@ using DotLiquid.FileSystems;
 using DotLiquid.ViewEngine.Extensions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using VirtoCommerce.LiquidThemeEngine.ShopifyCompliant.Context;
 
 namespace DotLiquid.ViewEngine.FileSystems
 {
@@ -54,6 +55,29 @@ namespace DotLiquid.ViewEngine.FileSystems
                 throw new FileSystemException("Error - No such template {0} . Looked in the following locations:<br />{1}", templateName, _themeBasePath);
 
             return File.ReadAllText(templateFile.FullName);
+        }
+
+        public Settings GetSettings()
+        {
+            Settings retVal = null;
+            var settingsFilePath = Path.Combine(_themeBasePath, "config\\settings_data.json");
+            if (File.Exists(settingsFilePath))
+            {
+                var settings = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(settingsFilePath));
+                // now get settings for current theme and add it as a settings parameter
+                var currentSettings = settings["current"];
+                if (!(currentSettings is JObject))
+                {
+                    currentSettings = settings["presets"][currentSettings.ToString()] as JObject;
+                }
+
+                if (currentSettings != null && currentSettings is JObject)
+                {
+                    var dict  = currentSettings.ToObject<Dictionary<string, object>>().ToDictionary(x => x.Key, x=> x.Value);
+                    retVal = new Settings(dict, String.Empty);
+                }
+            }
+            return retVal;
         }
 
         /// <summary>

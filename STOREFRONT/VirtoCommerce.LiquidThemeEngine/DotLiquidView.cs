@@ -10,6 +10,7 @@ using DotLiquid;
 using DotLiquid.FileSystems;
 using DotLiquid.ViewEngine.FileSystems;
 using VirtoCommerce.LiquidThemeEngine.Extensions;
+using VirtoCommerce.LiquidThemeEngine.ShopifyCompliant.Context;
 
 namespace VirtoCommerce.LiquidThemeEngine
 {
@@ -39,11 +40,15 @@ namespace VirtoCommerce.LiquidThemeEngine
             if (viewContext == null)
                 throw new ArgumentNullException("viewContext");
 
+            var themeFileSystem = Template.FileSystem as ShopifyThemeLiquidFileSystem;
+
             // Copy data from the view context over to DotLiquid
             var localVars = new Hash();
-
-            if (viewContext.ViewData.Model != null)
+            var shopifyWorkContext = viewContext.ViewData.Model as ShopifyThemeContext;
+            if (shopifyWorkContext != null)
             {
+                //Add settings to context
+                localVars.Add("settings", themeFileSystem.GetSettings());
                 //Todo: need convert our context to liquid context
             }
 
@@ -58,7 +63,6 @@ namespace VirtoCommerce.LiquidThemeEngine
                 LocalVariables = Hash.FromDictionary(localVars)
             };
 
-            var themeFileSystem = Template.FileSystem as ShopifyThemeLiquidFileSystem;
             if (themeFileSystem != null)
             {
                 var viewContent = themeFileSystem.ReadTemplateByName(_viewPath);

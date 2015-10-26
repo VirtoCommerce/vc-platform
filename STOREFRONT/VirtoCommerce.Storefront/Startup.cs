@@ -14,6 +14,7 @@ using Owin;
 using VirtoCommerce.Client;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.LiquidThemeEngine;
+using VirtoCommerce.LiquidThemeEngine.ShopifyCompliant.Context;
 using VirtoCommerce.Storefront;
 using VirtoCommerce.Storefront.App_Start;
 using VirtoCommerce.Storefront.Model;
@@ -61,7 +62,7 @@ namespace VirtoCommerce.Storefront
             UnityWebActivator.Start();
             var container = UnityConfig.GetConfiguredContainer();
 
-            container.RegisterInstance<WorkContext>(new WorkContext());
+            container.RegisterInstance<WorkContext>(new ShopifyThemeContext());
             var apiClient = new HmacApiClient(ConfigurationManager.ConnectionStrings["VirtoCommerceBaseUrl"].ConnectionString, ConfigurationManager.AppSettings["vc-public-ApiAppId"], ConfigurationManager.AppSettings["vc-public-ApiSecretKey"]);
             container.RegisterType<IStoreModuleApi, StoreModuleApi>(new InjectionConstructor(apiClient));
             container.RegisterType<IVirtoCommercePlatformApi, VirtoCommercePlatformApi>(new InjectionConstructor(apiClient));

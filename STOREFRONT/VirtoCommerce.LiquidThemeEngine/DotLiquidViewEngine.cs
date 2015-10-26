@@ -43,7 +43,7 @@ namespace VirtoCommerce.LiquidThemeEngine
 
         public void ReleaseView(ControllerContext controllerContext, IView view)
         {
-           
+          //Nothing todo  
         }
 
         private void InitTemplate(ControllerContext controllerContext)

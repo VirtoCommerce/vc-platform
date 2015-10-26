@@ -31,10 +31,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DotLiquid, Version=1.8.0.0, Culture=neutral, PublicKeyToken=82e46016ecf9f07c, processorArchitecture=MSIL">
-      <HintPath>..\packages\DotLiquid.1.8.0\lib\NET45\DotLiquid.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
       <Private>True</Private>
@@ -83,6 +79,8 @@
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\TemplateExtensions.cs" />
     <Compile Include="Filters\TranslationFilter.cs" />
+    <Compile Include="ShopifyCompliant\Context\Settings.cs" />
+    <Compile Include="ShopifyCompliant\Context\ShopifyThemeContext.cs" />
     <Compile Include="ShopifyCompliant\ShopifyThemeFileSystem.cs" />
     <Compile Include="Filters\CommerceFilters.cs" />
     <Compile Include="Filters\CommonFilters.cs" />
@@ -92,10 +90,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Blocks\" />
-    <Folder Include="Converters\" />
+    <Folder Include="ShopifyCompliant\Converters\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VirtoCommerce.Storefront.Model\VirtoCommerce.Storefront.Model.csproj">
