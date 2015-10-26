@@ -1,6 +1,6 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.accountListController', ['$scope', 'platformWebApp.accounts', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'uiGridConstants',
-function ($scope, accounts, bladeNavigationService, dialogService, uiGridConstants) {
+.controller('platformWebApp.accountListController', ['$scope', 'platformWebApp.accounts', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'uiGridConstants', '$localStorage', '$timeout',
+function ($scope, accounts, bladeNavigationService, dialogService, uiGridConstants, $localStorage, $timeout) {
     var blade = $scope.blade;
 
     //pagination settings
@@ -142,24 +142,18 @@ function ($scope, accounts, bladeNavigationService, dialogService, uiGridConstan
 
     // ui-grid
     $scope.gridOptions = {
-        data: 'blade.currentEntities',
-        enableVerticalScrollbar: uiGridConstants.scrollbars.NEVER,
-        enableHorizontalScrollbar: uiGridConstants.scrollbars.NEVER,
-        enableRowHeaderSelection: true,
-        //selectionRowHeaderWidth: 35,
-        rowHeight: 20,
         rowTemplate: "<div ng-click=\"grid.appScope.blade.selectNode(row.entity)\" ng-repeat=\"(colRenderIndex, col) in colContainer.renderedColumns track by col.uid\" ui-grid-one-bind-id-grid=\"rowRenderIndex + '-' + col.uid + '-cell'\" class=\"ui-grid-cell\" ng-class=\"{ 'ui-grid-row-header-cell': col.isRowHeader, '__selected': row.entity.userName === grid.appScope.selectedNodeId }\" role=\"{{col.isRowHeader ? 'rowheader' : 'gridcell'}}\" ui-grid-cell style='cursor:pointer'></div>",
         columnDefs: [
-        {
-            displayName: 'Name',
-            name: 'userName',
-            sort: {
-                direction: uiGridConstants.ASC,
-                priority: 1
-            }
-        },
-        { displayName: 'Account type', name: 'userType' },
-        { displayName: 'State', name: 'userState' }
+            {
+                displayName: 'Name',
+                name: 'userName',
+                sort: {
+                    direction: uiGridConstants.ASC,
+                    priority: 1
+                }
+            },
+            { displayName: 'Account type', name: 'userType' },
+            { displayName: 'State', name: 'userState' }
         ],
         onRegisterApi: function (gridApi) {
             //set gridApi on scope
@@ -170,10 +164,21 @@ function ($scope, accounts, bladeNavigationService, dialogService, uiGridConstan
             //    }
             //});
 
-            //gridApi.selection.on.rowSelectionChangedBatch($scope, function (rows) {
-            //});
+            gridApi.core.on.sortChanged($scope, saveState);
+            gridApi.colResizable.on.columnSizeChanged($scope, saveState);
+            gridApi.colMovable.on.columnPositionChanged($scope, saveState)
+
+            if ($localStorage['gridState:' + blade.template]) {
+                $timeout(function () {
+                    $scope.gridApi.saveState.restore($scope, $localStorage['gridState:' + blade.template]);
+                }, 10);
+            }
         }
     };
+
+    function saveState() {
+        $localStorage['gridState:' + blade.template] = $scope.gridApi.saveState.save();
+    }
 
 
     $scope.$watch('pageSettings.currentPage', blade.refresh);

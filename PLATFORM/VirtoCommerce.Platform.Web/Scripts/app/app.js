@@ -15,8 +15,7 @@
   'angularFileUpload',
   'ngSanitize',
   'ng-context-menu',
-  'ui.grid',
-  'ui.grid.selection',
+  'ui.grid', 'ui.grid.resizeColumns', 'ui.grid.moveColumns', 'ui.grid.saveState', 'ui.grid.selection',
   'ui.codemirror',
   'focusOn',
   'textAngular',
@@ -57,7 +56,7 @@ angular.module('platformWebApp', AppDependencies).
     return httpErrorInterceptor;
 }])
 .config(
-  ['$stateProvider', '$httpProvider', 'uiSelectConfig', 'datepickerConfig', function ($stateProvider, $httpProvider, uiSelectConfig, datepickerConfig) {
+  ['$stateProvider', '$httpProvider', 'uiSelectConfig', 'datepickerConfig', '$provide', 'uiGridConstants', function ($stateProvider, $httpProvider, uiSelectConfig, datepickerConfig, $provide, uiGridConstants) {
       $stateProvider.state('workspace', {
           url: '/workspace',
           templateUrl: '$(Platform)/Scripts/app/workspace.tpl.html'
@@ -67,8 +66,35 @@ angular.module('platformWebApp', AppDependencies).
       $httpProvider.interceptors.push('platformWebApp.httpErrorInterceptor');
       //ui-select set selectize as default theme
       uiSelectConfig.theme = 'select2';
-   
+
       datepickerConfig.showWeeks = false;
+
+      $provide.decorator('GridOptions', function ($delegate) {
+          var gridOptions = angular.copy($delegate);
+          gridOptions.initialize = function (options) {
+              var initOptions = $delegate.initialize(options);
+              angular.extend(initOptions, {
+                  data: 'blade.currentEntities',
+                  enableVerticalScrollbar: uiGridConstants.scrollbars.NEVER,
+                  enableHorizontalScrollbar: uiGridConstants.scrollbars.NEVER,
+                  enableRowHeaderSelection: true,
+                  //selectionRowHeaderWidth: 35,
+                  rowHeight: 20,
+                  //saveWidths: false,
+                  //saveOrder: false,
+                  //saveScroll: false,
+                  saveFocus: false,
+                  //saveVisible: false,
+                  //saveSort: false,
+                  saveFilter: false,
+                  savePinning: false,
+                  //saveGrouping: false,
+                  saveSelection: false
+              });
+              return initOptions;
+          };
+          return gridOptions;
+      });
   }])
 
 .run(
