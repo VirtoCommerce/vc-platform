@@ -219,6 +219,7 @@
     <Content Include="App_Data\Help\notheme.html" />
     <Content Include="App_Data\Themes\_Default\assets\arrow_switch.png" />
     <Content Include="App_Data\Themes\_Default\assets\flags.png" />
+    <None Include="App_Data\Themes\_Default\snippets\dynamic-properties-editor.liquid" />
     <Content Include="App_Data\Themes\_Global\api.jquery.js" />
     <Content Include="App_Data\Themes\_Global\assets\blank.gif" />
     <Content Include="App_Data\Themes\_Global\assets\icon_google_32.png" />
