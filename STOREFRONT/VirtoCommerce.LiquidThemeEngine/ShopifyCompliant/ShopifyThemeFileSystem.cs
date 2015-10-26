@@ -9,7 +9,7 @@ using DotLiquid.FileSystems;
 using DotLiquid.ViewEngine.Extensions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using VirtoCommerce.LiquidThemeEngine.ShopifyCompliant.Context;
+using VirtoCommerce.Storefront.Model.Common;
 
 namespace DotLiquid.ViewEngine.FileSystems
 {
@@ -57,9 +57,9 @@ namespace DotLiquid.ViewEngine.FileSystems
             return File.ReadAllText(templateFile.FullName);
         }
 
-        public Settings GetSettings()
+        public DefaultableDictionary GetSettings(string defaultValue)
         {
-            Settings retVal = null;
+            DefaultableDictionary retVal = new DefaultableDictionary(defaultValue);
             var settingsFilePath = Path.Combine(_themeBasePath, "config\\settings_data.json");
             if (File.Exists(settingsFilePath))
             {
@@ -74,7 +74,7 @@ namespace DotLiquid.ViewEngine.FileSystems
                 if (currentSettings != null && currentSettings is JObject)
                 {
                     var dict  = currentSettings.ToObject<Dictionary<string, object>>().ToDictionary(x => x.Key, x=> x.Value);
-                    retVal = new Settings(dict, String.Empty);
+                    retVal = new DefaultableDictionary(dict, defaultValue);
                 }
             }
             return retVal;

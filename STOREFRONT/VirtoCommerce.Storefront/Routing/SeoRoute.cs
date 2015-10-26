@@ -12,12 +12,12 @@ namespace VirtoCommerce.Storefront.Routing
 {
     public class SeoRoute : LocalizedRoute
     {
-        private readonly ICommerceCoreModuleApi _commerceCore;
+        private readonly ICommerceCoreModuleApi _commerceCoreApi;
 
-        public SeoRoute(string url, IRouteHandler routeHandler, ICommerceCoreModuleApi commerceCore)
+        public SeoRoute(string url, IRouteHandler routeHandler, ICommerceCoreModuleApi commerceCoreApi)
             : base(url, routeHandler)
         {
-            _commerceCore = commerceCore;
+            _commerceCoreApi = commerceCoreApi;
         }
 
         public override RouteData GetRouteData(HttpContextBase httpContext)
@@ -28,8 +28,8 @@ namespace VirtoCommerce.Storefront.Routing
             {
                 var workContext = httpContext.GetOwinContext().Get<WorkContext>();
 
-                var slug = data.Values["generic_se_name"] as string;
-                var seoRecords = _commerceCore.CommerceGetSeoInfoBySlug(slug);
+                var slug = data.Values["seo_slug"] as string;
+                var seoRecords = _commerceCoreApi.CommerceGetSeoInfoBySlug(slug);
                 var seoRecord = seoRecords.FirstOrDefault(r => r.SemanticUrl == slug);
 
                 if (seoRecord == null)
@@ -41,7 +41,7 @@ namespace VirtoCommerce.Storefront.Routing
                 else
                 {
                     // Ensure the slug is active
-                    if (!seoRecord.IsActive())
+                    if (seoRecord.IsActive == null || !seoRecord.IsActive.Value)
                     {
                         // Slug is not active. Try to find the active one for the same entity.
                         var activeSlug = FindActiveSlug(seoRecord.ObjectType, seoRecord.ObjectId, seoRecord.LanguageCode, seoRecords);
@@ -123,17 +123,9 @@ namespace VirtoCommerce.Storefront.Routing
         private string FindActiveSlug(string entityType, string entityId, string language, List<VirtoCommerceDomainCommerceModelSeoInfo> seoRecords)
         {
             return seoRecords
-                .Where(r => r.ObjectType == entityType && r.ObjectId == entityId && r.LanguageCode == language)
+                .Where(r => r.ObjectType == entityType && r.ObjectId == entityId && string.Equals(r.LanguageCode, language, StringComparison.OrdinalIgnoreCase) && r.IsActive != null && r.IsActive.Value)
                 .Select(r => r.SemanticUrl)
                 .FirstOrDefault();
-        }
-    }
-
-    internal static class VirtoCommerceDomainCommerceModelSeoInfoExtensions
-    {
-        public static bool IsActive(this VirtoCommerceDomainCommerceModelSeoInfo seo)
-        {
-            return true;
         }
     }
 }

@@ -15,10 +15,6 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
     {
         private static string[] _countSuffixes = new []{ ".zero", ".one", ".two" };
 
-        public TranslationFilter()
-        {
-        }
-
         #region Public Methods and Operators
         public static string T(string key, params object[] variables)
         {

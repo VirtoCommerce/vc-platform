@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Omu.ValueInjecter;
+﻿using Omu.ValueInjecter;
 using VirtoCommerce.Storefront.Model;
 
 namespace VirtoCommerce.Storefront.Converters
@@ -15,6 +11,5 @@ namespace VirtoCommerce.Storefront.Converters
             retVal.InjectFrom(storeDto);
             return retVal;
         }
-
     }
 }

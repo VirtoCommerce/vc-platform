@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Model
 {
@@ -8,10 +8,6 @@ namespace VirtoCommerce.Storefront.Model
     /// </summary>
     public class WorkContext : IDisposable
     {
-        public WorkContext()
-        {
-            AllStores = new List<Store>();
-        }
         /// <summary>
         /// Current customer
         /// </summary>
@@ -30,7 +26,7 @@ namespace VirtoCommerce.Storefront.Model
         /// <summary>
         /// List of all supported stores
         /// </summary>
-        public ICollection<Store> AllStores { get; set; }
+        public Store[] AllStores { get; set; }
 
         #region IDisposable Implementation
 

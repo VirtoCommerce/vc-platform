@@ -65,6 +65,13 @@ namespace VirtoCommerce.Client.Model {
 
     
     /// <summary>
+    /// Gets or Sets IsActive
+    /// </summary>
+    [DataMember(Name="isActive", EmitDefaultValue=false)]
+    public bool? IsActive { get; set; }
+
+    
+    /// <summary>
     /// Gets or Sets LanguageCode
     /// </summary>
     [DataMember(Name="languageCode", EmitDefaultValue=false)]
@@ -128,6 +135,8 @@ namespace VirtoCommerce.Client.Model {
       sb.Append("  ObjectId: ").Append(ObjectId).Append("\n");
       
       sb.Append("  ObjectType: ").Append(ObjectType).Append("\n");
+      
+      sb.Append("  IsActive: ").Append(IsActive).Append("\n");
       
       sb.Append("  LanguageCode: ").Append(LanguageCode).Append("\n");
       

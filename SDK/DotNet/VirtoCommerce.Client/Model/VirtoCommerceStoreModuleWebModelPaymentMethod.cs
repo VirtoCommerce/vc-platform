@@ -62,6 +62,13 @@ namespace VirtoCommerce.Client.Model {
 
     
     /// <summary>
+    /// Gets or Sets IsAvailableForPartial
+    /// </summary>
+    [DataMember(Name="isAvailableForPartial", EmitDefaultValue=false)]
+    public bool? IsAvailableForPartial { get; set; }
+
+    
+    /// <summary>
     /// Gets or Sets Settings
     /// </summary>
     [DataMember(Name="settings", EmitDefaultValue=false)]
@@ -95,6 +102,8 @@ namespace VirtoCommerce.Client.Model {
       sb.Append("  IsActive: ").Append(IsActive).Append("\n");
       
       sb.Append("  Priority: ").Append(Priority).Append("\n");
+      
+      sb.Append("  IsAvailableForPartial: ").Append(IsAvailableForPartial).Append("\n");
       
       sb.Append("  Settings: ").Append(Settings).Append("\n");
       

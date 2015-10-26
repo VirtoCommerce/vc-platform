@@ -10,7 +10,7 @@ using DotLiquid;
 using DotLiquid.FileSystems;
 using DotLiquid.ViewEngine.FileSystems;
 using VirtoCommerce.LiquidThemeEngine.Extensions;
-using VirtoCommerce.LiquidThemeEngine.ShopifyCompliant.Context;
+using VirtoCommerce.Storefront.Model;
 
 namespace VirtoCommerce.LiquidThemeEngine
 {
@@ -44,11 +44,12 @@ namespace VirtoCommerce.LiquidThemeEngine
 
             // Copy data from the view context over to DotLiquid
             var localVars = new Hash();
-            var shopifyWorkContext = viewContext.ViewData.Model as ShopifyThemeContext;
+            var shopifyWorkContext = viewContext.ViewData.Model as WorkContext;
             if (shopifyWorkContext != null)
             {
+                var settingDefaultValue = HttpContext.Current.Request.Path.Contains(".scss") ? "''" : null;
                 //Add settings to context
-                localVars.Add("settings", themeFileSystem.GetSettings());
+                localVars.Add("settings", themeFileSystem.GetSettings(settingDefaultValue));
                 //Todo: need convert our context to liquid context
             }
 

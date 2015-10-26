@@ -22,8 +22,9 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="folderUrl"></param>
+        /// <param name="keyword"></param>
         /// <returns></returns>
-        List<VirtoCommercePlatformWebModelAssetAssetListItem> AssetsSearchAssetItems (string folderUrl);
+        List<VirtoCommercePlatformWebModelAssetAssetListItem> AssetsSearchAssetItems (string folderUrl, string keyword);
   
         /// <summary>
         /// Search asset folders and blobs
@@ -32,8 +33,9 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="folderUrl"></param>
+        /// <param name="keyword"></param>
         /// <returns></returns>
-        System.Threading.Tasks.Task<List<VirtoCommercePlatformWebModelAssetAssetListItem>> AssetsSearchAssetItemsAsync (string folderUrl);
+        System.Threading.Tasks.Task<List<VirtoCommercePlatformWebModelAssetAssetListItem>> AssetsSearchAssetItemsAsync (string folderUrl, string keyword);
         
         /// <summary>
         /// Upload assets to the folder
@@ -1218,8 +1220,9 @@ namespace VirtoCommerce.Client.Api
         /// Search asset folders and blobs 
         /// </summary>
         /// <param name="folderUrl"></param> 
+        /// <param name="keyword"></param> 
         /// <returns></returns>            
-        public List<VirtoCommercePlatformWebModelAssetAssetListItem> AssetsSearchAssetItems (string folderUrl)
+        public List<VirtoCommercePlatformWebModelAssetAssetListItem> AssetsSearchAssetItems (string folderUrl, string keyword)
         {
             
     
@@ -1245,6 +1248,7 @@ namespace VirtoCommerce.Client.Api
             pathParams.Add("format", "json");
             
             if (folderUrl != null) queryParams.Add("folderUrl", ApiClient.ParameterToString(folderUrl)); // query parameter
+            if (keyword != null) queryParams.Add("keyword", ApiClient.ParameterToString(keyword)); // query parameter
             
             
             
@@ -1268,8 +1272,9 @@ namespace VirtoCommerce.Client.Api
         /// Search asset folders and blobs 
         /// </summary>
         /// <param name="folderUrl"></param>
+        /// <param name="keyword"></param>
         /// <returns></returns>
-        public async System.Threading.Tasks.Task<List<VirtoCommercePlatformWebModelAssetAssetListItem>> AssetsSearchAssetItemsAsync (string folderUrl)
+        public async System.Threading.Tasks.Task<List<VirtoCommercePlatformWebModelAssetAssetListItem>> AssetsSearchAssetItemsAsync (string folderUrl, string keyword)
         {
             
     
@@ -1295,6 +1300,7 @@ namespace VirtoCommerce.Client.Api
             pathParams.Add("format", "json");
             
             if (folderUrl != null) queryParams.Add("folderUrl", ApiClient.ParameterToString(folderUrl)); // query parameter
+            if (keyword != null) queryParams.Add("keyword", ApiClient.ParameterToString(keyword)); // query parameter
             
             
             

@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Address.cs" />
     <Compile Include="AddressType.cs" />
+    <Compile Include="Common\DefaultableDictionary.cs" />
     <Compile Include="Common\Entity.cs" />
     <Compile Include="Common\ValueObject.cs" />
     <Compile Include="Customer.cs" />

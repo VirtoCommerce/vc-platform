@@ -1,20 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using System.Web.Routing;
+using VirtoCommerce.Client.Api;
+using VirtoCommerce.Storefront.Routing;
 
 namespace VirtoCommerce.Storefront
 {
     public class RouteConfig
     {
-        public static void RegisterRoutes(RouteCollection routes)
+        public static void RegisterRoutes(RouteCollection routes, ICommerceCoreModuleApi commerceCoreApi)
         {
             routes.IgnoreRoute("favicon.ico");
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
             routes.MapMvcAttributeRoutes();
-            //routes.MapSeoRoutes(); // maps seo defined on product, category and store levels in virto commerce
+            routes.MapSeoRoute(commerceCoreApi, "SeoRoute", "{seo_slug}", new { controller = "Common", action = "GenericUrl" });
 
             routes.MapRoute(
               name: "Storefront_Error",

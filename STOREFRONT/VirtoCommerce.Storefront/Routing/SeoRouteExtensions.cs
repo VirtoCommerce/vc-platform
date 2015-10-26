@@ -1,12 +1,18 @@
 ﻿using System;
 using System.Web.Mvc;
 using System.Web.Routing;
+using VirtoCommerce.Client.Api;
 
 namespace VirtoCommerce.Storefront.Routing
 {
     public static class SeoRouteExtensions
     {
-        public static Route MapGenericPathRoute(this RouteCollection routes, string name, string url, object defaults, object constraints, string[] namespaces)
+        public static Route MapSeoRoute(this RouteCollection routes, ICommerceCoreModuleApi commerceCoreApi, string name, string url, object defaults)
+        {
+            return MapSeoRoute(routes, commerceCoreApi, name, url, defaults, null, null);
+        }
+
+        public static Route MapSeoRoute(this RouteCollection routes, ICommerceCoreModuleApi commerceCoreApi, string name, string url, object defaults, object constraints, string[] namespaces)
         {
             if (routes == null)
             {
@@ -17,7 +23,7 @@ namespace VirtoCommerce.Storefront.Routing
                 throw new ArgumentNullException("url");
             }
 
-            var route = new SeoRoute(url, new MvcRouteHandler(), null)
+            var route = new SeoRoute(url, new MvcRouteHandler(), commerceCoreApi)
             {
                 Defaults = new RouteValueDictionary(defaults),
                 Constraints = new RouteValueDictionary(constraints),
