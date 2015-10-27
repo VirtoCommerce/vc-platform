@@ -1,6 +1,7 @@
 ﻿#region
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using VirtoCommerce.ApiClient;
 using VirtoCommerce.ApiClient.DataContracts.CustomerService;
@@ -113,6 +114,7 @@ namespace VirtoCommerce.Web.Models.Services
             }
 
             contact.Id = customer.Id;
+            contact.DynamicProperties = customer.DynamicProperties.Select(p => p.ToServiceModel()).ToArray();
             contact = await this._customerClient.CreateContactAsync(contact);
 
             return contact.AsWebModel();
