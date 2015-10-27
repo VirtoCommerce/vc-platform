@@ -10,7 +10,7 @@ using VirtoCommerce.Storefront.Model;
 
 namespace VirtoCommerce.Storefront.Routing
 {
-    public class SeoRoute : LocalizedRoute
+    public class SeoRoute : Route
     {
         private readonly ICommerceCoreModuleApi _commerceCoreApi;
 
@@ -19,18 +19,15 @@ namespace VirtoCommerce.Storefront.Routing
         {
             _commerceCoreApi = commerceCoreApi;
         }
-
         public override RouteData GetRouteData(HttpContextBase httpContext)
         {
             var data = base.GetRouteData(httpContext);
 
             if (data != null)
             {
-                var workContext = httpContext.GetOwinContext().Get<WorkContext>();
-
-                var slug = data.Values["seo_slug"] as string;
-                var seoRecords = _commerceCoreApi.CommerceGetSeoInfoBySlug(slug);
-                var seoRecord = seoRecords.FirstOrDefault(r => r.SemanticUrl == slug);
+                var path = data.Values["path"] as string;
+                var seoRecords = GetSeoRecords(path);
+                var seoRecord = seoRecords.FirstOrDefault();
 
                 if (seoRecord == null)
                 {
@@ -40,6 +37,8 @@ namespace VirtoCommerce.Storefront.Routing
                 }
                 else
                 {
+                    var workContext = httpContext.GetOwinContext().Get<WorkContext>();
+
                     // Ensure the slug is active
                     if (seoRecord.IsActive == null || !seoRecord.IsActive.Value)
                     {
@@ -67,7 +66,7 @@ namespace VirtoCommerce.Storefront.Routing
                         // Redirect to the slug for the current language if it differs from the requested slug
                         var slugForCurrentLanguage = GetSlug(seoRecords, workContext, seoRecord.ObjectType, seoRecord.ObjectId, workContext.CurrentLanguage);
 
-                        if (!string.IsNullOrEmpty(slugForCurrentLanguage) && !slugForCurrentLanguage.Equals(slug, StringComparison.OrdinalIgnoreCase))
+                        if (!string.IsNullOrEmpty(slugForCurrentLanguage) && !slugForCurrentLanguage.Equals(seoRecord.SemanticUrl, StringComparison.OrdinalIgnoreCase))
                         {
                             var response = httpContext.Response;
                             response.Status = "302 Moved Temporarily";
@@ -84,13 +83,13 @@ namespace VirtoCommerce.Storefront.Routing
                                     data.Values["controller"] = "Product";
                                     data.Values["action"] = "ProductDetails";
                                     data.Values["productid"] = seoRecord.ObjectId;
-                                    data.Values["SeName"] = seoRecord.SemanticUrl;
+                                    data.Values["slug"] = seoRecord.SemanticUrl;
                                     break;
                                 case "Category":
                                     data.Values["controller"] = "Catalog";
                                     data.Values["action"] = "Category";
                                     data.Values["categoryid"] = seoRecord.ObjectId;
-                                    data.Values["SeName"] = seoRecord.SemanticUrl;
+                                    data.Values["slug"] = seoRecord.SemanticUrl;
                                     break;
                             }
                         }
@@ -99,6 +98,22 @@ namespace VirtoCommerce.Storefront.Routing
             }
 
             return data;
+        }
+
+
+        private List<VirtoCommerceDomainCommerceModelSeoInfo> GetSeoRecords(string path)
+        {
+            var seoRecords = new List<VirtoCommerceDomainCommerceModelSeoInfo>();
+
+            if (path != null)
+            {
+                var tokens = path.Split('/');
+                // TODO: Store path tokens as breadcrumbs to the work context
+                var slug = tokens.LastOrDefault();
+                seoRecords = _commerceCoreApi.CommerceGetSeoInfoBySlug(slug);
+            }
+
+            return seoRecords;
         }
 
         private string GetSlug(List<VirtoCommerceDomainCommerceModelSeoInfo> seoRecords, WorkContext workContext, string entityType, string entityId, string language)

@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
+using System.Web;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using VirtoCommerce.Client.Api;
@@ -112,7 +113,7 @@ namespace VirtoCommerce.Storefront.Owin
                 if (context.Request.Path.StartsWithSegments(pathString, out remainingPath))
                 {
                     removedStoreName = store.Name;
-                    context.Request.Path = remainingPath;
+                    RewritePath(context, remainingPath);
                     break;
                 }
             }
@@ -158,7 +159,7 @@ namespace VirtoCommerce.Storefront.Owin
                 if (context.Request.Path.StartsWithSegments(pathString, out remainingPath))
                 {
                     removedLanguage = language;
-                    context.Request.Path = remainingPath;
+                    RewritePath(context, remainingPath);
                     break;
                 }
             }
@@ -186,6 +187,12 @@ namespace VirtoCommerce.Storefront.Owin
             }
 
             return currency;
+        }
+
+        protected virtual void RewritePath(IOwinContext context, PathString newPath)
+        {
+            context.Request.Path = newPath;
+            HttpContext.Current.RewritePath("~" + newPath.Value);
         }
     }
 }

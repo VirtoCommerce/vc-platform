@@ -16,6 +16,7 @@ namespace VirtoCommerce.Storefront.Controllers
         }
 
         // GET: Home
+        [Route("")]
         public ActionResult Index()
         {
             return View("index", _workContext);

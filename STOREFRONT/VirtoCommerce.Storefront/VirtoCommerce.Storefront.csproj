@@ -224,9 +224,6 @@
     </Compile>
     <Compile Include="Owin\WorkContextOwinMiddleware.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Routing\LocalizedRoute.cs" />
-    <Compile Include="Routing\LocalizedRouteExtensions.cs" />
-    <Compile Include="Routing\LocalizedUrlExtenstions.cs" />
     <Compile Include="Routing\SeoRoute.cs" />
     <Compile Include="Routing\SeoRouteExtensions.cs" />
     <Compile Include="Startup.cs" />
@@ -387,7 +384,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>4290</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:4247/</IISUrl>
+          <IISUrl>http://localhost:4247/app</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
