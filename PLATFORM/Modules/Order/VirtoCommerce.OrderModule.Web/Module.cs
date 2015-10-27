@@ -54,7 +54,7 @@ namespace VirtoCommerce.OrderModule.Web
             //Adjust inventory activity
             _container.RegisterType<IObserver<OrderChangeEvent>, AdjustInventoryObserver>("AdjustInventoryObserver");
             //Create order observer. Send notification
-            _container.RegisterType<IObserver<OrderChangeEvent>, CreateOrderObserver>("CreateOrderObserver");
+            _container.RegisterType<IObserver<OrderChangeEvent>, ChangeOrderStatusesObserver>("ChangeOrderStatusesObserver");
             //Cancel payment observer. Payment method cancel operations
             _container.RegisterType<IObserver<OrderChangeEvent>, CancelPaymentObserver>("CancelPaymentObserver");
 
@@ -85,6 +85,50 @@ namespace VirtoCommerce.OrderModule.Web
                 {
                     Body = OrderNotificationResource.CreateOrderNotificationBody,
                     Subject = OrderNotificationResource.CreateOrderNotificationSubject,
+                    Language = "en-US"
+                }
+            });
+
+            notificationManager.RegisterNotificationType(() => new OrderPaidEmailNotification(_container.Resolve<IEmailNotificationSendingGateway>()) {
+                DisplayName = "Order paid notification",
+                Description = "This notification sends by email to client when all payments of order has status paid",
+                NotificationTemplate = new NotificationTemplate
+                {
+                    Body = OrderNotificationResource.OrderPaidNotificationBody,
+                    Subject = OrderNotificationResource.OrderPaidNotificationSubject,
+                    Language = "en-US"
+                }
+            });
+
+            notificationManager.RegisterNotificationType(() => new OrderSentEmailNotification(_container.Resolve<IEmailNotificationSendingGateway>()) {
+                DisplayName = "Order sent notification",
+                Description = "This notification sends by email to client when all shipments gets status sent",
+                NotificationTemplate = new NotificationTemplate
+                {
+                    Body = OrderNotificationResource.OrderSentNotificationBody,
+                    Subject = OrderNotificationResource.OrderSentNotificationSubject,
+                    Language = "en-US"
+                }
+            });
+
+            notificationManager.RegisterNotificationType(() => new NewOrderStatusEmailNotification(_container.Resolve<IEmailNotificationSendingGateway>()) {
+                DisplayName = "New order status notification",
+                Description = "This notification sends by email to client when status of orders has been changed",
+                NotificationTemplate = new NotificationTemplate
+                {
+                    Body = OrderNotificationResource.NewOrderStatusNotificationBody,
+                    Subject = OrderNotificationResource.NewOrderStatusNotificatonSubject,
+                    Language = "en-US"
+                }
+            });
+
+            notificationManager.RegisterNotificationType(() => new CancelOrderEmailNotification(_container.Resolve<IEmailNotificationSendingGateway>()) {
+                DisplayName = "Cancel order notification",
+                Description = "This notification sends by email to client when order canceled",
+                NotificationTemplate = new NotificationTemplate
+                {
+                    Body = OrderNotificationResource.CancelOrderNotificationBody,
+                    Subject = OrderNotificationResource.CancelOrderNotificationSubject,
                     Language = "en-US"
                 }
             });

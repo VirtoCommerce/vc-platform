@@ -1,7 +1,10 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using VirtoCommerce.Platform.Core.Notifications;
 
 namespace VirtoCommerce.Platform.Web.Model.Notifications
 {
@@ -23,5 +26,10 @@ namespace VirtoCommerce.Platform.Web.Model.Notifications
         /// 
         /// </summary>
         public bool IsDictionary { get; set; }
-	}
+
+        public bool IsArray { get; set; }
+
+        [JsonConverter(typeof(StringEnumConverter))]
+        public NotificationParameterValueType Type { get; set; }
+    }
 }
