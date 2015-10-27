@@ -57,12 +57,17 @@
                 {% endif %}
 
                 {{ '//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js' | script_tag }}
+                {{ '//ajax.aspnetcdn.com/ajax/jquery.validate/1.13.0/jquery.validate.min.js' | script_tag }}
+                {{ '//ajax.aspnetcdn.com/ajax/mvc/5.1/jquery.validate.unobtrusive.min.js' | script_tag }}
+                {{ 'jquery.datetimepicker.css' | asset_url | stylesheet_tag }}
+                {{ 'jquery.datetimepicker.full.min.js' | asset_url | script_tag }}
                 {% if settings.slider_home_enable %}
                 {{ 'jquery.flexslider.min.js' | asset_url | script_tag }}
                 {{ 'flexslider.css' | asset_url | stylesheet_tag }}
                 {% endif %}
                 {{ 'modernizr.min.js' | asset_url | script_tag }}
                 {{ 'virtocommerce.js' | shopify_asset_url | script_tag }}
+                {{ 'validation.js' | shopify_asset_url | script_tag }}
 
                 {% if settings.facebook_tracking_id != null %}
                 <script>
