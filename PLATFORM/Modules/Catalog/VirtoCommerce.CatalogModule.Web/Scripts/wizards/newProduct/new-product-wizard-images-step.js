@@ -30,7 +30,7 @@
             var uploader = $scope.uploader = new FileUploader({
                 scope: $scope,
                 headers: { Accept: 'application/json' },
-                url: 'api/platform/assets?folderUrl=catalog',
+                url: 'api/platform/assets?folderUrl=catalog/' + blade.currentEntity.code,
                 autoUpload: true,
                 removeAfterUpload: true
             });
