@@ -20,7 +20,7 @@
                     <input type="password" value="" name="customer[password]" id="create_password" placeholder="{{ 'customer.register.password' | t }}" {% if form.errors contains "password" %} required="required" class="error"{% endif %}>
                 </div>
                 <div class="grid-item large--one-half">
-                    {% include 'dynamic-properties-editor', properties: customer.dynamic_properties %}
+                    {% include 'dynamic-properties', properties: customer.dynamic_properties, disabled: false %}
                 </div>
             </div>
             <p>

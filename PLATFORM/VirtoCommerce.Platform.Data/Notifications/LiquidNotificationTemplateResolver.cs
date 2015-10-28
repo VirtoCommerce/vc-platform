@@ -48,7 +48,9 @@ namespace VirtoCommerce.Platform.Data.Notifications
 						ParameterName = property.Name,
 						ParameterDescription = attributes.Length > 0 ? ((NotificationParameterAttribute)(attributes[0])).Description : string.Empty,
 						ParameterCodeInView = GetLiquidCodeOfParameter(property.Name),
-                        IsDictionary = property.PropertyType.IsAssignableFrom(typeof(IDictionary))
+                        IsDictionary = property.PropertyType.IsAssignableFrom(typeof(IDictionary)),
+                        IsArray = property.PropertyType.IsArray,
+                        Type = GetParameterType(property.PropertyType.Name)
                     });
 				}
 			}
@@ -71,5 +73,35 @@ namespace VirtoCommerce.Platform.Data.Notifications
 
 			return retVal;
 		}
-	}
+
+        private NotificationParameterValueType GetParameterType(string name)
+        {
+            NotificationParameterValueType retVal;
+
+            switch(name)
+            {
+                case "Integer":
+                    retVal = NotificationParameterValueType.Integer;
+                    break;
+
+                case "Decimal":
+                    retVal = NotificationParameterValueType.Decimal;
+                    break;
+
+                case "DateTime":
+                    retVal = NotificationParameterValueType.DateTime;
+                    break;
+
+                case "Boolean":
+                    retVal = NotificationParameterValueType.Boolean;
+                    break;
+
+                default:
+                    retVal = NotificationParameterValueType.String;
+                    break;
+            }
+
+            return retVal;
+        }
+    }
 }

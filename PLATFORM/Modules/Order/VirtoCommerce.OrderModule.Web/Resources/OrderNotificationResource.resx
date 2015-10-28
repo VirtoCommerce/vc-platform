@@ -117,10 +117,34 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="CancelOrderNotificationBody" xml:space="preserve">
+    <value>Your order &lt;strong&gt;{{ ordernumber }}&lt;/strong&gt;.&lt;br&gt; Cancelation order reason - &lt;strong&gt;{{ cancelationreason }}&lt;/strong&gt;.</value>
+  </data>
+  <data name="CancelOrderNotificationSubject" xml:space="preserve">
+    <value>Your order was canceled</value>
+  </data>
   <data name="CreateOrderNotificationBody" xml:space="preserve">
-    <value>Your order number  - {{ ordernumber }}</value>
+    <value>Your order number  - &lt;strong&gt;{{ ordernumber }}&lt;/strong&gt;.</value>
   </data>
   <data name="CreateOrderNotificationSubject" xml:space="preserve">
     <value>Your order created</value>
+  </data>
+  <data name="NewOrderStatusNotificationBody" xml:space="preserve">
+    <value>Your order &lt;strong&gt;{{ ordernumber }}&lt;/strong&gt; change status from &lt;strong&gt;{{ oldstatus }}&lt;strong&gt; to &lt;strong&gt;{{ newstatus }}&lt;strong&gt;.</value>
+  </data>
+  <data name="NewOrderStatusNotificatonSubject" xml:space="preserve">
+    <value>Your order status has been change</value>
+  </data>
+  <data name="OrderPaidNotificationBody" xml:space="preserve">
+    <value>Thank you for paying &lt;strong&gt;{{ ordernumber }}&lt;/strong&gt; order.&lt;br&gt; You had paid &lt;strong&gt;{{ fullprice }} {{ currency }}&lt;/strong&gt;.&lt;br&gt; Paid date - &lt;strong&gt;{{ paiddate }}&lt;/strong&gt;.</value>
+  </data>
+  <data name="OrderPaidNotificationSubject" xml:space="preserve">
+    <value>Your order was fully paid</value>
+  </data>
+  <data name="OrderSentNotificationBody" xml:space="preserve">
+    <value>Your order &lt;strong&gt;{{ ordernumber }}&lt;/strong&gt; was sent.&lt;br&gt; Number of sent parcels - &lt;strong&gt;{{ numberofshipments }}&lt;/strong&gt;.&lt;br&gt; Parcels tracking numbers:&lt;br&gt; {% for shipmentnumber in shipmentsnumbers %} &lt;br&gt;&lt;strong&gt;{{ shipmentnumber }}&lt;/strong&gt; {% endfor %}&lt;br&gt;&lt;br&gt;Sent date - &lt;strong&gt;{{ sentorderdate }}&lt;/strong&gt;.</value>
+  </data>
+  <data name="OrderSentNotificationSubject" xml:space="preserve">
+    <value>Your order was sent</value>
   </data>
 </root>
