@@ -128,7 +128,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\tmp\dotliquid-master\src\DotLiquid\DotLiquid.csproj">
+    <ProjectReference Include="..\..\..\dotliquid\src\DotLiquid\DotLiquid.csproj">
       <Project>{cb9372cd-9c1d-47ab-92d8-702d4d68324f}</Project>
       <Name>DotLiquid</Name>
     </ProjectReference>
