@@ -144,7 +144,7 @@
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="VirtoCommerce.Client, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\VirtoCommerce.Client.2.5.932\lib\net451\VirtoCommerce.Client.dll</HintPath>
+      <HintPath>..\packages\VirtoCommerce.Client.2.5.933\lib\net451\VirtoCommerce.Client.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
@@ -234,13 +234,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Owin\WorkContextExtensions.cs" />
-    <Compile Include="Owin\WorkContextOptions.cs" />
     <Compile Include="Owin\WorkContextOwinMiddleware.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Routing\LocalizedRoute.cs" />
-    <Compile Include="Routing\LocalizedRouteExtensions.cs" />
-    <Compile Include="Routing\LocalizedUrlExtenstions.cs" />
     <Compile Include="Routing\SeoRoute.cs" />
     <Compile Include="Routing\SeoRouteExtensions.cs" />
     <Compile Include="Startup.cs" />
@@ -404,7 +399,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>4290</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:4247/</IISUrl>
+          <IISUrl>http://localhost:4247/app</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

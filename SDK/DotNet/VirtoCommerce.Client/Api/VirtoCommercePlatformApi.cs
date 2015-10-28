@@ -1108,8 +1108,8 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="name">Setting system name.</param>
-        /// <returns>Object</returns>
-        Object SettingGetValue (string name);
+        /// <returns>InlineResponse200</returns>
+        InlineResponse200 SettingGetValue (string name);
   
         /// <summary>
         /// Get non-array setting value by name
@@ -1118,8 +1118,8 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="name">Setting system name.</param>
-        /// <returns>Object</returns>
-        System.Threading.Tasks.Task<Object> SettingGetValueAsync (string name);
+        /// <returns>InlineResponse200</returns>
+        System.Threading.Tasks.Task<InlineResponse200> SettingGetValueAsync (string name);
         
         /// <summary>
         /// Get array setting values by name
@@ -1171,23 +1171,14 @@ namespace VirtoCommerce.Client.Api
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformApi"/> class.
         /// </summary>
-        /// <param name="apiClient"> an instance of ApiClient (optional)</param>
+        /// <param name="apiClient"> an instance of ApiClient</param>
         /// <returns></returns>
-        public VirtoCommercePlatformApi(ApiClient apiClient = null)
+        public VirtoCommercePlatformApi(ApiClient apiClient)
         {
             if (apiClient == null) // use the default one in Configuration
                 this.ApiClient = Configuration.DefaultApiClient; 
             else
                 this.ApiClient = apiClient;
-        }
-    
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformApi"/> class.
-        /// </summary>
-        /// <returns></returns>
-        public VirtoCommercePlatformApi(String basePath)
-        {
-            this.ApiClient = new ApiClient(basePath);
         }
     
         /// <summary>
@@ -6660,8 +6651,8 @@ namespace VirtoCommerce.Client.Api
         /// Get non-array setting value by name 
         /// </summary>
         /// <param name="name">Setting system name.</param> 
-        /// <returns>Object</returns>            
-        public Object SettingGetValue (string name)
+        /// <returns>InlineResponse200</returns>            
+        public InlineResponse200 SettingGetValue (string name)
         {
             
             // verify the required parameter 'name' is set
@@ -6706,15 +6697,15 @@ namespace VirtoCommerce.Client.Api
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling SettingGetValue: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (Object) ApiClient.Deserialize(response.Content, typeof(Object), response.Headers);
+            return (InlineResponse200) ApiClient.Deserialize(response.Content, typeof(InlineResponse200), response.Headers);
         }
     
         /// <summary>
         /// Get non-array setting value by name 
         /// </summary>
         /// <param name="name">Setting system name.</param>
-        /// <returns>Object</returns>
-        public async System.Threading.Tasks.Task<Object> SettingGetValueAsync (string name)
+        /// <returns>InlineResponse200</returns>
+        public async System.Threading.Tasks.Task<InlineResponse200> SettingGetValueAsync (string name)
         {
             // verify the required parameter 'name' is set
             if (name == null) throw new ApiException(400, "Missing required parameter 'name' when calling SettingGetValue");
@@ -6755,7 +6746,7 @@ namespace VirtoCommerce.Client.Api
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling SettingGetValue: " + response.Content, response.Content);
 
-            return (Object) ApiClient.Deserialize(response.Content, typeof(Object), response.Headers);
+            return (InlineResponse200) ApiClient.Deserialize(response.Content, typeof(InlineResponse200), response.Headers);
         }
         
         /// <summary>

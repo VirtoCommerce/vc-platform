@@ -8,12 +8,14 @@ using System.Web.Compilation;
 using System.Web.Hosting;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Extensions;
 using Microsoft.Practices.Unity;
 using Owin;
 using VirtoCommerce.Client;
 using VirtoCommerce.Client.Api;
+using VirtoCommerce.Client.Client;
 using VirtoCommerce.LiquidThemeEngine;
 using VirtoCommerce.Storefront;
 using VirtoCommerce.Storefront.App_Start;
@@ -47,15 +49,16 @@ namespace VirtoCommerce.Storefront
 
         public void Configuration(IAppBuilder app)
         {
-
             UnityWebActivator.Start();
             var container = UnityConfig.GetConfiguredContainer();
-            container.RegisterInstance<WorkContext>(new WorkContext());
+
             var apiClient = new HmacApiClient(ConfigurationManager.ConnectionStrings["VirtoCommerceBaseUrl"].ConnectionString, ConfigurationManager.AppSettings["vc-public-ApiAppId"], ConfigurationManager.AppSettings["vc-public-ApiSecretKey"]);
-            container.RegisterType<IStoreModuleApi, StoreModuleApi>(new InjectionConstructor(apiClient));
-            container.RegisterType<IVirtoCommercePlatformApi, VirtoCommercePlatformApi>(new InjectionConstructor(apiClient));
-            container.RegisterType<ICustomerManagementModuleApi, CustomerManagementModuleApi>(new InjectionConstructor(apiClient));
-            container.RegisterType<ICommerceCoreModuleApi, CommerceCoreModuleApi>(new InjectionConstructor(apiClient));
+            container.RegisterInstance<ApiClient>(apiClient);
+
+            container.RegisterType<IStoreModuleApi, StoreModuleApi>();
+            container.RegisterType<IVirtoCommercePlatformApi, VirtoCommercePlatformApi>();
+            container.RegisterType<ICustomerManagementModuleApi, CustomerManagementModuleApi>();
+            container.RegisterType<ICommerceCoreModuleApi, CommerceCoreModuleApi>();
 
             container.RegisterType<IStorefrontUrlBuilder, StorefrontUrlBuilder>();
             if (_managerAssembly != null)
@@ -71,12 +74,13 @@ namespace VirtoCommerce.Storefront
             RouteConfig.RegisterRoutes(RouteTable.Routes, container.Resolve<ICommerceCoreModuleApi>());
             AuthConfig.ConfigureAuth(app);
 
-       
-            // Create new work context per each request
+            // Create new work context for each request
             // TODO: Add caching
-            app.CreatePerOwinContext(() => container.Resolve<WorkContext>());
+            app.CreatePerOwinContext(() => new WorkContext());
+            container.RegisterType<WorkContext>(new InjectionFactory(c => HttpContext.Current.GetOwinContext().Get<WorkContext>()));
 
-            app.UseWorkContext(container.Resolve<WorkContextOptions>());
+            app.Use<WorkContextOwinMiddleware>(container.Resolve<IStoreModuleApi>(), container.Resolve<IVirtoCommercePlatformApi>(), container.Resolve<ICustomerManagementModuleApi>());
+            app.UseStageMarker(PipelineStage.ResolveCache);
         }
 
 

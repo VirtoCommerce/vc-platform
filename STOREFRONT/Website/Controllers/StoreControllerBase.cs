@@ -1,7 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.Routing;
+using VirtoCommerce.ApiClient;
+using VirtoCommerce.ApiClient.Extensions;
+using VirtoCommerce.Web.Convertors;
 using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Models.Helpers;
 using VirtoCommerce.Web.Models.Routing;
@@ -82,6 +87,61 @@ namespace VirtoCommerce.Web.Controllers
             form = SiteContext.Current.Forms.FirstOrDefault(f => f.Id == formId);
 
             return form;
+        }
+
+        protected async Task<ICollection<DynamicProperty>> GetDynamicPropertiesAsync()
+        {
+            var propertyClient = ClientContext.Clients.CreateDynamicPropertyClient();
+            var properties = await propertyClient.GetDynamicPropertiesForTypeAsync("VirtoCommerce.Domain.Customer.Model.Contact");
+
+            foreach (var property in properties.Where(x => x.IsDictionary))
+            {
+                property.DictionaryItems = await propertyClient.GetDynamicPropertyDictionaryItemsAsync("VirtoCommerce.Domain.Customer.Model.Contact", property.Id);
+            }
+
+            return properties.Select(x => x.ToViewModel()).ToList();
+        }
+
+        protected async Task<ICollection<DynamicProperty>> PopulateDynamicPropertiesAsync(IDictionary<string, string> formProperties)
+        {
+            var dynamicProperties = await GetDynamicPropertiesAsync();
+
+            foreach (var formProperty in formProperties)
+            {
+                var dynamicProperty = dynamicProperties.FirstOrDefault(dp => dp.Name.Equals(formProperty.Key, StringComparison.OrdinalIgnoreCase));
+                if (dynamicProperty != null)
+                {
+                    dynamicProperty.Values = new List<string>();
+                    if (dynamicProperty.IsDictionary)
+                    {
+                        var dictionaryItem = dynamicProperty.DictionaryItems.FirstOrDefault(i => i.Name == formProperty.Value);
+                        if (dictionaryItem != null)
+                        {
+                            dynamicProperty.Values.Add(dictionaryItem.Name);
+                        }
+                    }
+                    else
+                    {
+                        dynamicProperty.Values.Add(formProperty.Value);
+                    }
+                }
+            }
+
+            return dynamicProperties;
+        }
+
+        protected void ValidateDynamicProperties(ICollection<DynamicProperty> dynamicProperties)
+        {
+            foreach (var dynamicProperty in dynamicProperties)
+            {
+                if (dynamicProperty.IsRequired)
+                {
+                    if (dynamicProperty.Values == null || dynamicProperty.Values != null && !dynamicProperty.Values.Any())
+                    {
+                        ModelState.AddModelError(dynamicProperty.Name, string.Format("Field \"{0}\" is required", dynamicProperty.Name));
+                    }
+                }
+            }
         }
 
         protected SubmitFormErrors GetFormErrors(ModelStateDictionary modelState)

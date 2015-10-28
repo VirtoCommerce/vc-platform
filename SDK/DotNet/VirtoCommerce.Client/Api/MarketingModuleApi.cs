@@ -489,23 +489,14 @@ namespace VirtoCommerce.Client.Api
         /// <summary>
         /// Initializes a new instance of the <see cref="MarketingModuleApi"/> class.
         /// </summary>
-        /// <param name="apiClient"> an instance of ApiClient (optional)</param>
+        /// <param name="apiClient"> an instance of ApiClient</param>
         /// <returns></returns>
-        public MarketingModuleApi(ApiClient apiClient = null)
+        public MarketingModuleApi(ApiClient apiClient)
         {
             if (apiClient == null) // use the default one in Configuration
                 this.ApiClient = Configuration.DefaultApiClient; 
             else
                 this.ApiClient = apiClient;
-        }
-    
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MarketingModuleApi"/> class.
-        /// </summary>
-        /// <returns></returns>
-        public MarketingModuleApi(String basePath)
-        {
-            this.ApiClient = new ApiClient(basePath);
         }
     
         /// <summary>
