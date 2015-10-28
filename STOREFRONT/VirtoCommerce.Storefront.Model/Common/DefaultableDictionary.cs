@@ -103,7 +103,7 @@ namespace VirtoCommerce.Storefront.Model.Common
 
         public bool Contains(object key)
         {
-            return _dictionary.Contains(key);
+            return true;
         }
 
         public void Add(object key, object value)

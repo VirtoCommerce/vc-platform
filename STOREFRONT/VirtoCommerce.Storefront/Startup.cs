@@ -18,6 +18,7 @@ using VirtoCommerce.LiquidThemeEngine;
 using VirtoCommerce.Storefront;
 using VirtoCommerce.Storefront.App_Start;
 using VirtoCommerce.Storefront.Model;
+using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Owin;
 
 [assembly: OwinStartup(typeof(Startup))]
@@ -56,14 +57,16 @@ namespace VirtoCommerce.Storefront
             container.RegisterType<ICustomerManagementModuleApi, CustomerManagementModuleApi>(new InjectionConstructor(apiClient));
             container.RegisterType<ICommerceCoreModuleApi, CommerceCoreModuleApi>(new InjectionConstructor(apiClient));
 
+            container.RegisterType<IStorefrontUrlBuilder, StorefrontUrlBuilder>();
             if (_managerAssembly != null)
             {
                 AreaRegistration.RegisterAllAreas();
                 CallChildConfigure(app, _managerAssembly, "VirtoCommerce.Platform.Web.Startup", "Configuration", "~/areas/admin", "admin/");
             }
 
+            container.RegisterInstance<ShopifyLiquidThemeStructure>(new ShopifyLiquidThemeStructure(() => { return container.Resolve<WorkContext>(); }, container.Resolve<IStorefrontUrlBuilder>(), "~/App_data/themes", "~/themes/assets"));
             //Register liquid engine
-            ViewEngines.Engines.Add(new DotLiquidViewEngine(HostingEnvironment.MapPath("~/App_Data/Themes")));
+            ViewEngines.Engines.Add(new DotLiquidThemedViewEngine(container.Resolve<ShopifyLiquidThemeStructure>()));
             //FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes, container.Resolve<ICommerceCoreModuleApi>());
             AuthConfig.ConfigureAuth(app);

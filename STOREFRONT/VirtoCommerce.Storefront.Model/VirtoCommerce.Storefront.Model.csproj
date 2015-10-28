@@ -45,6 +45,7 @@
     <Compile Include="AddressType.cs" />
     <Compile Include="Common\DefaultableDictionary.cs" />
     <Compile Include="Common\Entity.cs" />
+    <Compile Include="Common\IStorefrontUrlBuilder.cs" />
     <Compile Include="Common\ValueObject.cs" />
     <Compile Include="Customer.cs" />
     <Compile Include="DynamicProperty.cs" />

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Model
@@ -20,6 +21,29 @@ namespace VirtoCommerce.Storefront.Model
         /// Currency code in ISO 4217 format (e.g. USD)
         /// </summary>
         public string CurrentCurrency { get; set; }
+
+        public CultureInfo CurrentCulture
+        {
+            get
+            {
+                var retVal = CultureInfo.CurrentCulture;
+                if(CurrentLanguage != null)
+                {
+                    retVal = CultureInfo.GetCultureInfo(CurrentLanguage);
+                }
+                return retVal;
+            }
+
+        }
+
+        public RegionInfo CurrentRegionInfo
+        {
+            get
+            {
+                return new RegionInfo(CurrentCulture.Name);
+            }
+
+        }
 
         public Store CurrentStore { get; set; }
 

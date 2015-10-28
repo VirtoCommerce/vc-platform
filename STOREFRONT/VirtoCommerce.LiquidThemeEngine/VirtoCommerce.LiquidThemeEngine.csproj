@@ -31,10 +31,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DotLiquid, Version=1.0.0.0, Culture=neutral, PublicKeyToken=82e46016ecf9f07c, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\DotLiquid.VirtoCommerce.1.8.2\lib\NET45\DotLiquid.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
       <Private>True</Private>
@@ -78,21 +74,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DotLiquidView.cs" />
-    <Compile Include="DotLiquidViewEngine.cs" />
+    <Compile Include="DotLiquidThemedView.cs" />
+    <Compile Include="DotLiquidThemedViewEngine.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\TemplateExtensions.cs" />
+    <Compile Include="Filters\HtmlFilters.cs" />
+    <Compile Include="Filters\MoneyFilters.cs" />
+    <Compile Include="Filters\UrlFilters.cs" />
     <Compile Include="Filters\TranslationFilter.cs" />
-    <Compile Include="ShopifyCompliant\ShopifyThemeFileSystem.cs" />
     <Compile Include="Filters\CommerceFilters.cs" />
     <Compile Include="Filters\CommonFilters.cs" />
     <Compile Include="Operators\CommonOperators.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ShopifyLiquidThemeStructure.cs" />
     <Compile Include="Tags\Layout.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Blocks\" />
-    <Folder Include="ShopifyCompliant\Converters\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">
@@ -100,6 +98,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\dotliquid\src\DotLiquid\DotLiquid.csproj">
+      <Project>{cb9372cd-9c1d-47ab-92d8-702d4d68324f}</Project>
+      <Name>DotLiquid</Name>
+    </ProjectReference>
     <ProjectReference Include="..\VirtoCommerce.Storefront.Model\VirtoCommerce.Storefront.Model.csproj">
       <Project>{fd2f9490-83eb-40df-a61b-7e4098d35bd8}</Project>
       <Name>VirtoCommerce.Storefront.Model</Name>

@@ -45,6 +45,9 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="LibSassNetProxy">
+      <HintPath>..\Shared\LibSassNetProxy.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
       <Private>True</Private>
@@ -205,6 +208,10 @@
     <Content Include="App_Data\Themes\default\assets\virtocommerce.js" />
     <Content Include="App_Data\Themes\default\social\shopify-social.svg" />
     <Content Include="App_Data\Themes\default\social\social-icons.css" />
+    <Content Include="App_Data\x64\LibSass.x64.dll" />
+    <Content Include="App_Data\x64\libsassnet.dll" />
+    <Content Include="App_Data\x86\LibSass.x86.dll" />
+    <Content Include="App_Data\x86\libsassnet.dll" />
     <Content Include="Global.asax" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -215,10 +222,15 @@
     <Compile Include="App_Start\AuthConfig.cs" />
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="App_Start\UnityMvcActivator.cs" />
+    <Compile Include="Common\DownloadResult.cs" />
+    <Compile Include="Common\ExtensyionMapper.cs" />
+    <Compile Include="Common\StorefrontUrlBuilder.cs" />
+    <Compile Include="Controllers\AssetsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Converters\AddressConverter.cs" />
     <Compile Include="Converters\CustomerConverter.cs" />
     <Compile Include="Converters\StoreConverter.cs" />
+    <Compile Include="Exceptions\SaasCompileException.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -361,10 +373,13 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Builders\" />
-    <Folder Include="Common\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\dotliquid\src\DotLiquid\DotLiquid.csproj">
+      <Project>{cb9372cd-9c1d-47ab-92d8-702d4d68324f}</Project>
+      <Name>DotLiquid</Name>
+    </ProjectReference>
     <ProjectReference Include="..\VirtoCommerce.LiquidThemeEngine\VirtoCommerce.LiquidThemeEngine.csproj">
       <Project>{6c16b517-6de8-48a1-a76b-de96bea54d10}</Project>
       <Name>VirtoCommerce.LiquidThemeEngine</Name>

@@ -9,7 +9,6 @@ using DotLiquid;
 
 namespace VirtoCommerce.LiquidThemeEngine.Extensions
 {
-
     public static class TemplateExtensions
     {
         #region Public Methods and Operators

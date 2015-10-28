@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DotLiquid;
-using DotLiquid.ViewEngine.FileSystems;
 
 namespace VirtoCommerce.LiquidThemeEngine.Filters
 {
@@ -13,22 +12,19 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
     /// </summary>
     public class TranslationFilter
     {
-        private static string[] _countSuffixes = new []{ ".zero", ".one", ".two" };
+        private static string[] _countSuffixes = new[] { ".zero", ".one", ".two" };
 
         #region Public Methods and Operators
         public static string T(string key, params object[] variables)
         {
             var retVal = key;
-            var shopifyFileSystem = Template.FileSystem as ShopifyThemeLiquidFileSystem;
-            if (shopifyFileSystem != null)
+            var themeAdaptor = (ShopifyLiquidThemeStructure)Template.FileSystem;
+            var localization = themeAdaptor.ReadLocalization();
+            if (localization != null)
             {
-                var localization = shopifyFileSystem.ReadLocalization();
-                if (localization != null)
-                {
-                    //try to transform localization key
-                    key = TryTransformKey(key, variables);
-                    retVal = (localization[key] ?? String.Empty).ToString();
-                }
+                //try to transform localization key
+                key = TryTransformKey(key, variables);
+                retVal = (localization.SelectToken(key) ?? String.Empty).ToString();
             }
 
             return retVal;
@@ -38,7 +34,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
         private static string TryTransformKey(string input, params object[] variables)
         {
             var retVal = input;
-            if(variables != null)
+            if (variables != null)
             {
                 var dictionary = variables.OfType<Tuple<string, object>>().ToDictionary(x => x.Item1, x => x.Item2);
                 object countValue;
