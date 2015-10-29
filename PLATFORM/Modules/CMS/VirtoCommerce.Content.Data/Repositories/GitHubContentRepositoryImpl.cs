@@ -16,7 +16,7 @@ namespace VirtoCommerce.Content.Data.Repositories
         private readonly GitHubClient _client;
         private readonly string _ownerName;
         private readonly string _repositoryName;
-        private readonly string _branchName = "master";
+        //private readonly string _branchName = "master";
         private readonly string _mainPath;
 
         public GitHubContentRepositoryImpl(
@@ -113,7 +113,7 @@ namespace VirtoCommerce.Content.Data.Repositories
                 Parallel.ForEach(files, file =>
                 {
                     var fullFile = GetContentItem(file.Path);
-                    if(fullFile != null)
+                    if (fullFile != null)
                         file.ByteContent = fullFile.ByteContent;
                 });
             }
@@ -381,7 +381,7 @@ namespace VirtoCommerce.Content.Data.Repositories
 
             return result;
         }
-        
+
         #endregion
     }
 }
