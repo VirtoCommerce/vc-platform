@@ -20,7 +20,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 		public CsvProductMap(CsvProductMappingConfiguration mappingCfg)
 		{
 			//Dynamical map scalar product fields use by manual mapping information
-			foreach (var mappingItem in mappingCfg.PropertyMaps.Where(x => x.CsvColumnName != null || x.CustomValue != null))
+			foreach (var mappingItem in mappingCfg.PropertyMaps.Where(x => !String.IsNullOrEmpty(x.CsvColumnName) || !String.IsNullOrEmpty(x.CustomValue)))
 			{
 				var propertyInfo = typeof(CsvProduct).GetProperty(mappingItem.EntityColumnName);
 				if (propertyInfo != null)
