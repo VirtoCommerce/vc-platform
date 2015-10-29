@@ -62,7 +62,7 @@ namespace VirtoCommerce.LiquidThemeEngine
             Condition.Operators["contains"] = (left, right) => ContainsMethod(left, right);
 
             Template.RegisterTag<Layout>("layout");
-            var contextType = workContextFactory().GetType();
+            var contextType = typeof(WorkContext);
 
             //Register WorkingContext properties as DropBased 
             foreach (var contextProperty in contextType.GetTypePropsRecursively((x) => x.PropertyType.Assembly == contextType.Assembly))

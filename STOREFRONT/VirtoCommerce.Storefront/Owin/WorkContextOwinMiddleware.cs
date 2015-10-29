@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
+using Microsoft.Practices.Unity;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.LiquidThemeEngine;
 using VirtoCommerce.Storefront.Converters;
@@ -22,31 +23,32 @@ namespace VirtoCommerce.Storefront.Owin
         private readonly IStoreModuleApi _storeApi;
         private readonly IVirtoCommercePlatformApi _platformApi;
         private readonly ICustomerManagementModuleApi _customerApi;
-        private readonly WorkContext _workContext;
+        private readonly UnityContainer _container;
 
         protected virtual string StoreCookie { get { return "vcf.store"; } }
         protected virtual string LanguageCookie { get { return "vcf.language"; } }
         protected virtual string CurrencyCookie { get { return "vcf.currency"; } }
 
-        public WorkContextOwinMiddleware(OwinMiddleware next, WorkContext workContext, IStoreModuleApi storeApi, IVirtoCommercePlatformApi platformApi, ICustomerManagementModuleApi customerApi)
+        public WorkContextOwinMiddleware(OwinMiddleware next, UnityContainer container)
             : base(next)
         {
-            _workContext = workContext;
-            _storeApi = storeApi;
-            _platformApi = platformApi;
-            _customerApi = customerApi;
+            _storeApi = container.Resolve<IStoreModuleApi>();
+            _platformApi = container.Resolve<IVirtoCommercePlatformApi>();
+            _customerApi = container.Resolve<ICustomerManagementModuleApi>();
+            _container = container;
         }
 
         public override async Task Invoke(IOwinContext context)
         {
+            var workContext = _container.Resolve<WorkContext>();
             // Initialize common properties: stores, user profile, cart
-            _workContext.AllStores = await GetAllStoresAsync();
-            _workContext.Customer = await GetCustomerAsync(context.Authentication.User.Identity);
+            workContext.AllStores = await GetAllStoresAsync();
+            workContext.Customer = await GetCustomerAsync(context.Authentication.User.Identity);
 
             // Initialize request specific properties: store, language, currency
-            _workContext.CurrentStore = GetStore(context, _workContext.AllStores);
-            _workContext.CurrentLanguage = GetLanguage(context, _workContext.AllStores, _workContext.CurrentStore);
-            _workContext.CurrentCurrency = GetCurrency(context, _workContext.CurrentStore);
+            workContext.CurrentStore = GetStore(context, workContext.AllStores);
+            workContext.CurrentLanguage = GetLanguage(context, workContext.AllStores, workContext.CurrentStore);
+            workContext.CurrentCurrency = GetCurrency(context, workContext.CurrentStore);
 
             await Next.Invoke(context);
         }

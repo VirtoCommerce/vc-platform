@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using DotLiquid;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Common;
@@ -20,7 +22,7 @@ namespace VirtoCommerce.LiquidThemeEngine
         {
             get
             {
-                return CurrentPageSeo.MetaDescription;
+                return CurrentPageSeo != null ? CurrentPageSeo.MetaDescription : String.Empty;
             }
         }
         /// <summary>
@@ -30,7 +32,7 @@ namespace VirtoCommerce.LiquidThemeEngine
         {
             get
             {
-                return CurrentPageSeo.Title;
+                return CurrentPageSeo != null ? CurrentPageSeo.Title : String.Empty;
             }
         }
         /// <summary>

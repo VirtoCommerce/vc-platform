@@ -37,6 +37,9 @@ namespace VirtoCommerce.Storefront
 
         public static void PreApplicationStart()
         {
+            // TODO: Uncomment if you want to use PerRequestLifetimeManager
+            Microsoft.Web.Infrastructure.DynamicModuleHelper.DynamicModuleUtility.RegisterModule(typeof(UnityPerRequestHttpModule));
+
             AppDomain.CurrentDomain.AssemblyResolve += Resolve;
 
             var managerAssemblyPath = HostingEnvironment.MapPath("~/Areas/Admin/bin/VirtoCommerce.Platform.Web.dll");
@@ -77,7 +80,7 @@ namespace VirtoCommerce.Storefront
             RouteConfig.RegisterRoutes(RouteTable.Routes, container.Resolve<ICommerceCoreModuleApi>());
             AuthConfig.ConfigureAuth(app);
 
-            app.Use<WorkContextOwinMiddleware>(container.Resolve<WorkContext>(), container.Resolve<IStoreModuleApi>(), container.Resolve<IVirtoCommercePlatformApi>(), container.Resolve<ICustomerManagementModuleApi>());
+            app.Use<WorkContextOwinMiddleware>(container);
             app.UseStageMarker(PipelineStage.ResolveCache);
         }
 
