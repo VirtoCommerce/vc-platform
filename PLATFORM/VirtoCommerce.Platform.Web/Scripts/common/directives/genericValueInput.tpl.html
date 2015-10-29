@@ -23,10 +23,11 @@
         </div>
     </script>
     <script type="text/ng-template" id="dHtml.html">
-        <div ng-required="currentEntity.property.isRequired"
-             ng-model="context.currentPropValues[0].value"
-             placeholder="Enter HTML"
-             class="editable" text-angular text-angular-name="dHtmlmyEditor"></div>
+        <div class="form-input">
+            <ui-codemirror ng-required="currentEntity.property.isRequired"
+                           ng-model="context.currentPropValues[0].value"
+                           ui-codemirror-opts="editorOptions"></ui-codemirror>
+        </div>
     </script>
 
     <script type="text/ng-template" id="dInteger.html">

@@ -12,5 +12,10 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
         public string CustomValue { get; set; }
         public string StringFormat { get; set; }
         public string Locale { get; set; }
+
+        public override string ToString()
+        {
+            return String.Format("{0} -> {1}", (CsvColumnName ?? CustomValue) ?? "none", EntityColumnName ?? "none");
+        }
     }
 }

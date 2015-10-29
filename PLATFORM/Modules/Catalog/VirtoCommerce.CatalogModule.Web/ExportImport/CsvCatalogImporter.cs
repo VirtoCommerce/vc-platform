@@ -80,6 +80,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 			{
 				reader.Configuration.Delimiter = importInfo.Configuration.Delimiter;
 				reader.Configuration.RegisterClassMap(new CsvProductMap(importInfo.Configuration));
+                reader.Configuration.WillThrowOnMissingField = false;
 
 				while (reader.Read())
 				{
