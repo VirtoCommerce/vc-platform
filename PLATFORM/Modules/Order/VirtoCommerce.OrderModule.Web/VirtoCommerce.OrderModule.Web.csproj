@@ -215,13 +215,14 @@
     <Content Include="Scripts\widgets\operation-tree-widget.tpl.html" />
     <Content Include="Scripts\widgets\operation-tree-widget.js" />
     <Content Include="Scripts\wizards\newOperation\newOperation-wizard.js" />
-    <Content Include="web.config">
+    <None Include="web.config">
       <SubType>Designer</SubType>
-    </Content>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\css\orderModule.css" />
     <Content Include="Scripts\wizards\newOperation\newOperation-wizard.tpl.html" />
+    <None Include="app.config" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

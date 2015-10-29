@@ -137,17 +137,17 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Google-Shopping-Logo1.jpg" />
-    <Content Include="packages.config">
+    <None Include="packages.config">
       <SubType>Designer</SubType>
-    </Content>
+    </None>
     <Content Include="module.manifest" />
     <Content Include="Scripts\gshopping.js" />
     <Content Include="Scripts\resources\gshopping.js" />
     <Content Include="Scripts\widgets\gshoppingWidget.js" />
     <Content Include="Scripts\widgets\gshoppingWidget.tpl.html" />
-    <Content Include="web.config">
+    <None Include="web.config">
       <SubType>Designer</SubType>
-    </Content>
+    </None>
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

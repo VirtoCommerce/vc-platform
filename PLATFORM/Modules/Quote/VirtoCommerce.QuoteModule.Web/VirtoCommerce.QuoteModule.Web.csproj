@@ -95,6 +95,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
     <Content Include="Content\css\quoteModule.css" />
     <Content Include="module.manifest">
@@ -126,7 +127,7 @@
     <Content Include="Scripts\widgets\quote-items-widget.tpl.html" />
     <Content Include="Scripts\widgets\quote-address-widget.js" />
     <Content Include="Scripts\widgets\quote-address-widget.tpl.html" />
-    <Content Include="Web.config" />
+    <None Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Binders\SearchCriteriaBinder.cs" />

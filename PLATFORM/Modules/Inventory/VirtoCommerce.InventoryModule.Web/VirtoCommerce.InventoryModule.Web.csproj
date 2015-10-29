@@ -95,6 +95,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
     <Content Include="module.manifest" />
     <None Include="Web.Debug.config">
@@ -113,7 +114,7 @@
     <Content Include="Scripts\inventory.js" />
     <Content Include="Scripts\widgets\inventoryWidget.js" />
     <Content Include="Scripts\widgets\inventoryWidget.tpl.html" />
-    <Content Include="Web.config" />
+    <None Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\Api\InventoryModuleController.cs" />
