@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<module>
+  <id>Cyber.Source</id>
+  <version>2.5.0</version>
+  <platformVersion>2.5.0</platformVersion>
+  <dependencies>
+    <dependency id="VirtoCommerce.Core" version="2.5.0" />
+  </dependencies>
+
+  <title>Cyber.Source payment gateway</title>
+  <description>APIs and UI for Cyber.Source payment gateway</description>
+  <authors>
+    <author>Virto Commerce</author>
+  </authors>
+  <owners>
+    <owner>Virto Commerce</owner>
+  </owners>
+  <projectUrl>http://virtocommerce.com/</projectUrl>
+  <iconUrl>Modules/$(Cyber.Source)/Content/cybersource.jpg</iconUrl>
+  <releaseNotes>First version.</releaseNotes>
+  <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
+  <tags>cyber source payment gateway</tags>
+
+  <assemblyFile>Cyber.Source.dll</assemblyFile>
+  <moduleType>Cyber.Source.Module, Cyber.Source</moduleType>
+  <!--<styles>
+		<directory virtualPath="$/Content/css" searchPattern="*.css" searchSubdirectories="true" />
+	</styles>
+  <scripts>
+		<directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
+	</scripts>-->
+
+  <settings>
+    <group name="Payment methods|Cyber.Source|Credentials">
+      <setting>
+        <name>CyberSource.MerchantId</name>
+        <valueType>string</valueType>
+        <title>Merchant id</title>
+        <description>CyberSource merchant id</description>
+      </setting>
+      <setting>
+        <name>CyberSource.MerchantReferenceCode</name>
+        <valueType>string</valueType>
+        <title>Merchant reference code</title>
+        <description>CyberSource merchant reference code</description>
+      </setting>
+      <setting>
+        <name>CyberSource.ThankYouPageRelativeUrl</name>
+        <valueType>string</valueType>
+        <title>Thank you page relative url</title>
+        <description>CyberSource thank you page relative url - url on that user will be redirected, after getting success payment result</description>
+      </setting>
+      <setting>
+        <name>CyberSource.WorkMode</name>
+        <valueType>string</valueType>
+        <defaultValue>test</defaultValue>
+        <allowedValues>
+          <value>test</value>
+          <value>live</value>
+        </allowedValues>
+        <title>Work mode</title>
+        <description>Mode of CyberSource payment gateway (test or live, set live only when you tested all)</description>
+      </setting>
+      <setting>
+        <name>CyberSource.PaymentMethod</name>
+        <valueType>string</valueType>
+        <allowedValues>
+          <value>Authorization/Capture</value>
+          <value>Sale</value>
+        </allowedValues>
+        <defaultValue>Sale</defaultValue>
+        <title>Payment action type</title>
+        <description>CyberSource payment method (Sale - authorization and capture in one, Authorization/Capture - operation separates in that 2 steps)</description>
+      </setting>
+    </group>
+  </settings>
+</module>
