@@ -53,9 +53,9 @@ namespace VirtoCommerce.Storefront.Controllers
             {
                 var fileExtensions = System.IO.Path.GetExtension(assetId);
                 var contentType = "application/octet-stream";
-                if (!string.IsNullOrEmpty(fileExtensions) && ExtensionMapper.Contains(fileExtensions))
+                if (!string.IsNullOrEmpty(fileExtensions) && FileExtensionMapper.Contains(fileExtensions))
                 {
-                    contentType = ExtensionMapper.GetContentType(fileExtensions);
+                    contentType = FileExtensionMapper.GetContentType(fileExtensions);
                 }
 
                 assetId = assetId.Replace(".scss.css", ".scss");

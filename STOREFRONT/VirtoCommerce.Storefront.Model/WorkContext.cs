@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
 using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Model
@@ -22,6 +23,24 @@ namespace VirtoCommerce.Storefront.Model
         /// </summary>
         public string CurrentCurrency { get; set; }
 
+        private SeoInfo _seoInfo;
+        public SeoInfo CurrentPageSeo
+        {
+            get
+            {
+                if(_seoInfo == null)
+                {
+                    //TODO: next need detec seo from category or product or cart etc
+                    _seoInfo = CurrentStore.SeoInfos.FirstOrDefault();
+                }
+                return _seoInfo;
+            }
+            set
+            {
+                _seoInfo = value;
+            }
+        }
+
         public CultureInfo CurrentCulture
         {
             get
@@ -33,7 +52,6 @@ namespace VirtoCommerce.Storefront.Model
                 }
                 return retVal;
             }
-
         }
 
         public RegionInfo CurrentRegionInfo
@@ -51,7 +69,7 @@ namespace VirtoCommerce.Storefront.Model
         /// List of all supported stores
         /// </summary>
         public Store[] AllStores { get; set; }
-
+        
         #region IDisposable Implementation
 
         public void Dispose()

@@ -6,7 +6,7 @@ using System.Web;
 namespace VirtoCommerce.Storefront.Common
 {
 
-    public class ExtensionMapper
+    public class FileExtensionMapper
     {
         #region Static Fields
         /// <summary>

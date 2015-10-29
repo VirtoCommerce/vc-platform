@@ -2,18 +2,22 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Model
 {
     /// <summary>
     /// Represent store - main ecommerce aggregate unit
     /// </summary>
-    public class Store
+    public class Store : Entity
     {
         public Store()
         {
             Languages = new List<string>();
             Currencies = new List<string>();
+            SeoInfos = new List<SeoInfo>();
+            DynamicProperties = new List<DynamicProperty>();
+
         }
 
         public string Name { get; set; }

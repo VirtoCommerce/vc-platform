@@ -12,6 +12,8 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Extensions;
 using Microsoft.Practices.Unity;
+using Microsoft.Practices.Unity.Mvc;
+using Microsoft.Web.Infrastructure.DynamicModuleHelper;
 using Owin;
 using VirtoCommerce.Client;
 using VirtoCommerce.Client.Api;
@@ -66,20 +68,16 @@ namespace VirtoCommerce.Storefront
                 AreaRegistration.RegisterAllAreas();
                 CallChildConfigure(app, _managerAssembly, "VirtoCommerce.Platform.Web.Startup", "Configuration", "~/areas/admin", "admin/");
             }
-
-            container.RegisterInstance<ShopifyLiquidThemeStructure>(new ShopifyLiquidThemeStructure(() => { return container.Resolve<WorkContext>(); }, container.Resolve<IStorefrontUrlBuilder>(), "~/App_data/themes", "~/themes/assets"));
+            // Create new work context for each request
+            container.RegisterType<WorkContext, ShopifyThemeWorkContext>(new PerRequestLifetimeManager());
+            container.RegisterInstance<ShopifyLiquidThemeStructure>(new ShopifyLiquidThemeStructure(() => container.Resolve<WorkContext>(), container.Resolve<IStorefrontUrlBuilder>(), "~/App_data/themes", "~/themes/assets"));
             //Register liquid engine
             ViewEngines.Engines.Add(new DotLiquidThemedViewEngine(container.Resolve<ShopifyLiquidThemeStructure>()));
             //FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes, container.Resolve<ICommerceCoreModuleApi>());
             AuthConfig.ConfigureAuth(app);
 
-            // Create new work context for each request
-            // TODO: Add caching
-            app.CreatePerOwinContext(() => new WorkContext());
-            container.RegisterType<WorkContext>(new InjectionFactory(c => HttpContext.Current.GetOwinContext().Get<WorkContext>()));
-
-            app.Use<WorkContextOwinMiddleware>(container.Resolve<IStoreModuleApi>(), container.Resolve<IVirtoCommercePlatformApi>(), container.Resolve<ICustomerManagementModuleApi>());
+            app.Use<WorkContextOwinMiddleware>(container.Resolve<WorkContext>(), container.Resolve<IStoreModuleApi>(), container.Resolve<IVirtoCommercePlatformApi>(), container.Resolve<ICustomerManagementModuleApi>());
             app.UseStageMarker(PipelineStage.ResolveCache);
         }
 

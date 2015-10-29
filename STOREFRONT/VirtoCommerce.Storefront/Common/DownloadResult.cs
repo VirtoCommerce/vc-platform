@@ -110,9 +110,9 @@ namespace VirtoCommerce.Storefront.Common
                 if (extIndex > -1)
                 {
                     var fileExt = filePath.Substring(extIndex);
-                    if (!string.IsNullOrEmpty(fileExt) && ExtensionMapper.Contains(fileExt))
+                    if (!string.IsNullOrEmpty(fileExt) && FileExtensionMapper.Contains(fileExt))
                     {
-                        context.HttpContext.Response.ContentType = ExtensionMapper.GetContentType(fileExt);
+                        context.HttpContext.Response.ContentType = FileExtensionMapper.GetContentType(fileExt);
                     }
                 }
             }

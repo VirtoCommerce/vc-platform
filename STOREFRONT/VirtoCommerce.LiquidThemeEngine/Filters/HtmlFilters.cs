@@ -32,5 +32,49 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
         {
             return String.Format("<link href=\"{0}\" rel=\"stylesheet\" type=\"text/css\" media=\"all\" />", input);
         }
+
+        /// <summary>
+        /// Generates an image tag
+        /// {{ 'smirking_gnome.gif' | asset_url | img_tag }}
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="alt"></param>
+        /// <param name="css"></param>
+        /// <returns></returns>
+        public static string ImgTag(object input, string alt = "", string css = "")
+        {
+            return input == null ? null : GetImageTag(GetImageUrl(input), alt, css);
+        }
+
+        private static string GetImageUrl(object input)
+        {
+            //if (input is Product)
+            //{
+            //    return (input as Product).FeaturedImage.Src;
+            //}
+            //if (input is Image)
+            //{
+            //    return (input as Image).Src;
+            //}
+            //if (input is Variant)
+            //{
+            //    return (input as Variant).Image.Src;
+            //}
+            //if (input is Collection)
+            //{
+            //    return (input as Collection).Image.Src;
+            //}
+            //if (input is LineItem)
+            //{
+            //    var lineItem = input as LineItem;
+            //    return lineItem.Image;
+            //}
+            return input.ToString();
+        }
+
+        private static string GetImageTag(string src, string alt, string css)
+        {
+            return String.Format("<img src=\"{0}\" alt=\"{1}\" class=\"{2}\" />", src, alt, css);
+        }
     }
 }

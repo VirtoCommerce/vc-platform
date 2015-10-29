@@ -8,6 +8,7 @@ using System.Web;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using VirtoCommerce.Client.Api;
+using VirtoCommerce.LiquidThemeEngine;
 using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
 
@@ -21,14 +22,16 @@ namespace VirtoCommerce.Storefront.Owin
         private readonly IStoreModuleApi _storeApi;
         private readonly IVirtoCommercePlatformApi _platformApi;
         private readonly ICustomerManagementModuleApi _customerApi;
+        private readonly WorkContext _workContext;
 
         protected virtual string StoreCookie { get { return "vcf.store"; } }
         protected virtual string LanguageCookie { get { return "vcf.language"; } }
         protected virtual string CurrencyCookie { get { return "vcf.currency"; } }
 
-        public WorkContextOwinMiddleware(OwinMiddleware next, IStoreModuleApi storeApi, IVirtoCommercePlatformApi platformApi, ICustomerManagementModuleApi customerApi)
+        public WorkContextOwinMiddleware(OwinMiddleware next, WorkContext workContext, IStoreModuleApi storeApi, IVirtoCommercePlatformApi platformApi, ICustomerManagementModuleApi customerApi)
             : base(next)
         {
+            _workContext = workContext;
             _storeApi = storeApi;
             _platformApi = platformApi;
             _customerApi = customerApi;
@@ -36,16 +39,14 @@ namespace VirtoCommerce.Storefront.Owin
 
         public override async Task Invoke(IOwinContext context)
         {
-            var workContext = context.Get<WorkContext>();
-
             // Initialize common properties: stores, user profile, cart
-            workContext.AllStores = await GetAllStoresAsync();
-            workContext.Customer = await GetCustomerAsync(context.Authentication.User.Identity);
+            _workContext.AllStores = await GetAllStoresAsync();
+            _workContext.Customer = await GetCustomerAsync(context.Authentication.User.Identity);
 
             // Initialize request specific properties: store, language, currency
-            workContext.CurrentStore = GetStore(context, workContext.AllStores);
-            workContext.CurrentLanguage = GetLanguage(context, workContext.AllStores, workContext.CurrentStore);
-            workContext.CurrentCurrency = GetCurrency(context, workContext.CurrentStore);
+            _workContext.CurrentStore = GetStore(context, _workContext.AllStores);
+            _workContext.CurrentLanguage = GetLanguage(context, _workContext.AllStores, _workContext.CurrentStore);
+            _workContext.CurrentCurrency = GetCurrency(context, _workContext.CurrentStore);
 
             await Next.Invoke(context);
         }

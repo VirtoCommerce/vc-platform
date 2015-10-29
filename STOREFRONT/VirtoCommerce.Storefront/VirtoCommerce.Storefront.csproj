@@ -223,7 +223,7 @@
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="App_Start\UnityMvcActivator.cs" />
     <Compile Include="Common\DownloadResult.cs" />
-    <Compile Include="Common\ExtensyionMapper.cs" />
+    <Compile Include="Common\FileExtensionMapper.cs" />
     <Compile Include="Common\StorefrontUrlBuilder.cs" />
     <Compile Include="Controllers\AssetsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />

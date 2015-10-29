@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using DotLiquid;
 using DotLiquid.FileSystems;
+using VirtoCommerce.LiquidThemeEngine.Converters;
 using VirtoCommerce.LiquidThemeEngine.Extensions;
 using VirtoCommerce.Storefront.Model;
 
@@ -40,7 +41,7 @@ namespace VirtoCommerce.LiquidThemeEngine
                 throw new ArgumentNullException("viewContext");
 
             // Copy data from the view context over to DotLiquid
-            var parameters = new Dictionary<string, object>();
+            var parameters = _themeAdaptor.WorkContext.ToLiquidThemeContext();
 
             //Add settings to context
             parameters.Add("settings", _themeAdaptor.GetSettings());
