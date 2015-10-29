@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Model
 {
-    public class DynamicProperty
+    public class DynamicProperty : Entity
     {
         public DynamicProperty()
         {

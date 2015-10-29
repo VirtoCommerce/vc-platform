@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Model
 {
     /// <summary>
     /// Represent SEO information and contains common SEO fields  
     /// </summary>
-    public class SeoInfo
+    public class SeoInfo : ValueObject<SeoInfo>
     {
         public string ImageAltDescription { get; set; }
 

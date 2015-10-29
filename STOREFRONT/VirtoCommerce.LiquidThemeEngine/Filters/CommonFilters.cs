@@ -41,71 +41,9 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
             return serializedString;
         }
 
-        public static string Md5(string input)
-        {
-            if (input == null)
-            {
-                return null;
-            }
-
-            byte[] hash;
-            using (var md5 = MD5.Create())
-            {
-                hash = md5.ComputeHash(Encoding.UTF8.GetBytes(input));
-            }
-
-            return ToHexString(hash);
-        }
-
-        public static string Pluralize(int input, string singular, string plural)
-        {
-            return input == 1 ? singular : plural;
-        }
-
-        public static string ScriptTag(string input)
-        {
-            return String.Format("<script src=\"{0}\" type=\"text/javascript\"></script>", input);
-        }
-
-
-        public static string Strip(string input)
-        {
-            return input.Trim();
-        }
-
-        public static string StylesheetTag(string input)
-        {
-            return String.Format("<link href=\"{0}\" rel=\"stylesheet\" type=\"text/css\" media=\"all\" />", input);
-        }
-
-        public static string ToHexString(byte[] hex)
-        {
-            if (hex == null)
-            {
-                return null;
-            }
-            if (hex.Length == 0)
-            {
-                return string.Empty;
-            }
-            var s = new StringBuilder();
-            foreach (var b in hex)
-            {
-                s.Append(b.ToString("x2"));
-            }
-            return s.ToString();
-        }
+   
         #endregion
 
-        public class RubyContractResolver : DefaultContractResolver
-        {
-            #region Methods
-            protected override string ResolvePropertyName(string propertyName)
-            {
-                return Template.NamingConvention.GetMemberName(propertyName);
-            }
-            #endregion
-        }
 
     }
 }

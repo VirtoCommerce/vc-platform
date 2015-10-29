@@ -25,6 +25,8 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
         /// <returns></returns>
         public static string CustomerLoginLink(string input)
         {
+            var themeAdaptor = (ShopifyLiquidThemeStructure)Template.FileSystem;
+
             var path = VirtualPathUtility.ToAbsolute("~/account/login");
 
             return String.Format("<a href=\"{0}\" id=\"customer_login_link\">{1}</a>", path, input);
@@ -71,6 +73,14 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
             return AssetUrl(input);
         }
 
-       
+        /// <summary>
+        /// Returns the URL of a file.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static string FileUrl(string input)
+        {
+            return AssetUrl(input);
+        }
     }
 }

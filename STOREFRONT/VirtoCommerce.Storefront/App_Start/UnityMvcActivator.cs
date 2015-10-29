@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using Microsoft.Practices.Unity.Mvc;
+using Microsoft.Web.Infrastructure.DynamicModuleHelper;
 
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof(VirtoCommerce.Storefront.App_Start.UnityWebActivator), "Start")]
 [assembly: WebActivatorEx.ApplicationShutdownMethod(typeof(VirtoCommerce.Storefront.App_Start.UnityWebActivator), "Shutdown")]
@@ -21,7 +22,7 @@ namespace VirtoCommerce.Storefront.App_Start
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
 
             // TODO: Uncomment if you want to use PerRequestLifetimeManager
-            // Microsoft.Web.Infrastructure.DynamicModuleHelper.DynamicModuleUtility.RegisterModule(typeof(UnityPerRequestHttpModule));
+            //Microsoft.Web.Infrastructure.DynamicModuleHelper.DynamicModuleUtility.RegisterModule(typeof(UnityPerRequestHttpModule));
         }
 
         /// <summary>Disposes the Unity container when the application is shut down.</summary>

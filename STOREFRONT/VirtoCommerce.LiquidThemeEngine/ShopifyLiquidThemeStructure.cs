@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Hosting;
@@ -54,10 +55,25 @@ namespace VirtoCommerce.LiquidThemeEngine
             Template.RegisterFilter(typeof(CommerceFilters));
             Template.RegisterFilter(typeof(TranslationFilter));
             Template.RegisterFilter(typeof(UrlFilters));
+            Template.RegisterFilter(typeof(MoneyFilters));
+            Template.RegisterFilter(typeof(HtmlFilters));
+            Template.RegisterFilter(typeof(StringFilters));
 
             Condition.Operators["contains"] = (left, right) => ContainsMethod(left, right);
 
             Template.RegisterTag<Layout>("layout");
+            var contextType = typeof(WorkContext);
+
+            //Register WorkingContext properties as DropBased 
+            foreach (var contextProperty in contextType.GetTypePropsRecursively((x) => x.PropertyType.Assembly == contextType.Assembly))
+            {
+                var dropType = contextProperty.PropertyType.IsArray ? contextProperty.PropertyType.GetElementType() : contextProperty.PropertyType;
+                var allowedProperties = dropType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                                                .Select(x => x.Name)
+                                                .ToArray();
+
+                Template.RegisterSafeType(dropType, allowedProperties);
+            }
         }
 
         /// <summary>
@@ -152,6 +168,12 @@ namespace VirtoCommerce.LiquidThemeEngine
             return File.ReadAllText(templateFile.FullName);
         }
 
+        /// <summary>
+        /// Render template by name and with passed context (parameters)
+        /// </summary>
+        /// <param name="templateName"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
         public string RenderTemplateByName(string templateName, Dictionary<string, object> parameters)
         {
             if (String.IsNullOrEmpty(templateName))
