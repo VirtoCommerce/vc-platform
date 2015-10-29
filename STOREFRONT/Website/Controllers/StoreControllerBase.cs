@@ -106,23 +106,42 @@ namespace VirtoCommerce.Web.Controllers
         {
             var dynamicProperties = await GetDynamicPropertiesAsync();
 
-            foreach (var formProperty in formProperties)
+            foreach (var dynamicProperty in dynamicProperties)
             {
-                var dynamicProperty = dynamicProperties.FirstOrDefault(dp => dp.Name.Equals(formProperty.Key, StringComparison.OrdinalIgnoreCase));
-                if (dynamicProperty != null)
+                dynamicProperty.Values = new List<string>();
+                string value = null;
+                if (formProperties.TryGetValue(dynamicProperty.Name, out value))
                 {
-                    dynamicProperty.Values = new List<string>();
-                    if (dynamicProperty.IsDictionary)
+                    if (!string.IsNullOrEmpty(value))
                     {
-                        var dictionaryItem = dynamicProperty.DictionaryItems.FirstOrDefault(i => i.Name == formProperty.Value);
-                        if (dictionaryItem != null)
+                        if (dynamicProperty.ValueType.Equals("Boolean"))
                         {
-                            dynamicProperty.Values.Add(dictionaryItem.Name);
+                            value = "true";
                         }
+
+                        if (dynamicProperty.IsDictionary)
+                        {
+                            var dictionaryItem = dynamicProperty.DictionaryItems.FirstOrDefault(di => di.Name == value);
+                            if (dictionaryItem != null)
+                            {
+                                dynamicProperty.Values.Add(dictionaryItem.Name);
+                            }
+                        }
+                        else
+                        {
+                            dynamicProperty.Values.Add(value);
+                        }
+                    }
+                }
+                else
+                {
+                    if (dynamicProperty.ValueType.Equals("Boolean"))
+                    {
+                        dynamicProperty.Values.Add("false");
                     }
                     else
                     {
-                        dynamicProperty.Values.Add(formProperty.Value);
+                        continue;
                     }
                 }
             }

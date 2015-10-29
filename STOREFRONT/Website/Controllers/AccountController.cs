@@ -560,6 +560,35 @@ namespace VirtoCommerce.Web.Controllers
         }
 
         //
+        // GET: /Account/Info
+        [HttpGet]
+        public async Task<ActionResult> Info()
+        {
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                var dynamicProperties = await GetDynamicPropertiesAsync();
+
+                var customer = await CustomerService.GetCustomerAsync(
+                        HttpContext.User.Identity.Name, Context.StoreId);
+
+                foreach (var dynamicProperty in dynamicProperties)
+                {
+                    var customerDynamicProperty = customer.DynamicProperties.FirstOrDefault(dp => dp.Id == dynamicProperty.Id);
+                    if (customerDynamicProperty != null)
+                    {
+                        dynamicProperty.Values = customerDynamicProperty.Values;
+                    }
+                }
+
+                Context.Customer.DynamicProperties = dynamicProperties;
+
+                return View("customers/info");
+            }
+
+            return RedirectToAction("Login", "Account");
+        }
+
+        //
         // GET: /Account/Addresses
         [HttpGet]
         public ActionResult Addresses()
