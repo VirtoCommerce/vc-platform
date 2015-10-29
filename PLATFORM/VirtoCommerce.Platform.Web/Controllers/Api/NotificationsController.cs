@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -127,7 +128,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <summary>
         /// Get testing parameters
         /// </summary>
-        /// <remarks>Method returns notification properties, that defined in notification class, this proprties used in notification template.</remarks>
+        /// <remarks>Method returns notification properties, that defined in notification class, this properties used in notification template.</remarks>
         /// <param name="type">Notification type</param>
         [HttpGet]
         [ResponseType(typeof(NotificationParameter[]))]
@@ -157,16 +158,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var notification = _notificationManager.GetNewNotification(request.Type, request.ObjectId, request.ObjectTypeId, request.Language);
             foreach (var param in request.NotificationParameters)
             {
-                var property = notification.GetType().GetProperty(param.Key);
-                var jObject = param.Value as Newtonsoft.Json.Linq.JObject;
-                if (jObject != null)
-                {
-                    property.SetValue(notification, jObject.ToObject<Dictionary<string, string>>());
-                }
-                else
-                {
-                    property.SetValue(notification, param.Value);
-                }
+                SetValue(notification, param);
             }
             _eventTemplateResolver.ResolveTemplate(notification);
 
@@ -260,6 +252,72 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _notificationManager.StopSendingNotifications(ids);
 
             return StatusCode(HttpStatusCode.NoContent);
+        }
+
+        private void SetValue(Notification notification, KeyValuePair<string, object> param)
+        {
+            var property = notification.GetType().GetProperty(param.Key);
+            var jObject = param.Value as Newtonsoft.Json.Linq.JObject;
+            var jArray = param.Value as Newtonsoft.Json.Linq.JArray;
+            if (jObject != null)
+            {
+                property.SetValue(notification, jObject.ToObject<Dictionary<string, string>>());
+            }
+            else if (jArray != null)
+            {
+                if (property.PropertyType.Name.Equals("DateTime[]"))
+                {
+                    property.SetValue(notification, jArray.ToObject<DateTime[]>());
+                }
+                if (property.PropertyType.Name.Equals("Decimal[]"))
+                {
+                    property.SetValue(notification, jArray.ToObject<decimal[]>());
+                }
+                if (property.PropertyType.Name.Equals("Int32[]"))
+                {
+                    property.SetValue(notification, jArray.ToObject<int[]>());
+                }
+                if (property.PropertyType.Name.Equals("Boolean[]"))
+                {
+                    property.SetValue(notification, jArray.ToObject<bool[]>());
+                }
+                if (property.PropertyType.Name.Equals("String[]"))
+                {
+                    property.SetValue(notification, jArray.ToObject<string[]>());
+                }
+            }
+            else if (property.PropertyType.Name.Equals("DateTime"))
+            {
+                if (param.Value is DateTime)
+                {
+                    property.SetValue(notification, param.Value);
+                }
+            }
+            else if (property.PropertyType.Name.Equals("Decimal"))
+            {
+                if (param.Value is double)
+                {
+                    property.SetValue(notification, Convert.ToDecimal(param.Value));
+                }
+            }
+            else if (property.PropertyType.Name.Equals("Int32"))
+            {
+                if (param.Value is int)
+                {
+                    property.SetValue(notification, param.Value);
+                }
+            }
+            else if (property.PropertyType.Name.Equals("Boolean"))
+            {
+                if (param.Value is bool)
+                {
+                    property.SetValue(notification, param.Value);
+                }
+            }
+            else
+            {
+                property.SetValue(notification, param.Value);
+            }
         }
     }
 }

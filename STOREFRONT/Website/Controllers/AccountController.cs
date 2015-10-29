@@ -161,18 +161,12 @@ namespace VirtoCommerce.Web.Controllers
         //[Route("register")]
         public async Task<ActionResult> Register()
         {
-            var propertyClient = ClientContext.Clients.CreateDynamicPropertyClient();
-            var properties = await propertyClient.GetDynamicPropertiesForTypeAsync("VirtoCommerce.Domain.Customer.Model.Contact");
             if (Context.Customer == null)
             {
                 Context.Customer = new Customer();
             }
-            foreach (var property in properties.Where(x => x.IsDictionary))
-            {
-                property.DictionaryItems = await propertyClient.GetDynamicPropertyDictionaryItemsAsync("VirtoCommerce.Domain.Customer.Model.Contact", property.Id);
-            }
 
-            Context.Customer.DynamicProperties = properties.Select(x => x.ToViewModel()).ToList();
+            Context.Customer.DynamicProperties = await GetDynamicPropertiesAsync();
             return View("customers/register");
         }
 
@@ -182,6 +176,17 @@ namespace VirtoCommerce.Web.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> Register(RegisterFormModel formModel)
         {
+            var dynamicProperties = await PopulateDynamicPropertiesAsync(formModel.Properties);
+            ValidateDynamicProperties(dynamicProperties);
+
+            var customer = new Customer
+            {
+                Email = formModel.Email,
+                FirstName = formModel.FirstName,
+                LastName = formModel.LastName,
+                DynamicProperties = dynamicProperties
+            };
+
             var form = Service.GetForm(SiteContext.Current, formModel.Id);
 
             if (form != null)
@@ -205,8 +210,9 @@ namespace VirtoCommerce.Web.Controllers
                     {
                         user = await SecurityService.GetUserByNameAsync(user.UserName);
 
-                        Context.Customer = await this.CustomerService.CreateCustomerAsync(
-                            formModel.Email, formModel.FirstName, formModel.LastName, user.Id, null);
+                        customer.Id = user.Id;
+
+                        Context.Customer = await this.CustomerService.CreateCustomerAsync(customer);
 
                         await SecurityService.PasswordSingInAsync(formModel.Email, formModel.Password, false);
 
@@ -231,6 +237,8 @@ namespace VirtoCommerce.Web.Controllers
             {
                 return View("error");
             }
+
+            Context.Customer = customer;
 
             return View("customers/register");
         }
@@ -497,8 +505,13 @@ namespace VirtoCommerce.Web.Controllers
 
                         user = await SecurityService.GetUserByNameAsync(formModel.Email);
 
-                        Context.Customer = await this.CustomerService.CreateCustomerAsync(
-                            formModel.Email, formModel.Email, null, user.Id, null);
+                        var customer = new Customer
+                        {
+                            Id = user.Id,
+                            Email = formModel.Email
+                        };
+
+                        Context.Customer = await this.CustomerService.CreateCustomerAsync(customer);
 
                         var identity = SecurityService.CreateClaimsIdentity(user.UserName);
                         AuthenticationManager.SignIn(identity);
@@ -541,6 +554,35 @@ namespace VirtoCommerce.Web.Controllers
                 Context.Set("current_page", page);
 
                 return View("customers/account");
+            }
+
+            return RedirectToAction("Login", "Account");
+        }
+
+        //
+        // GET: /Account/Info
+        [HttpGet]
+        public async Task<ActionResult> Info()
+        {
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                var dynamicProperties = await GetDynamicPropertiesAsync();
+
+                var customer = await CustomerService.GetCustomerAsync(
+                        HttpContext.User.Identity.Name, Context.StoreId);
+
+                foreach (var dynamicProperty in dynamicProperties)
+                {
+                    var customerDynamicProperty = customer.DynamicProperties.FirstOrDefault(dp => dp.Id == dynamicProperty.Id);
+                    if (customerDynamicProperty != null)
+                    {
+                        dynamicProperty.Values = customerDynamicProperty.Values;
+                    }
+                }
+
+                Context.Customer.DynamicProperties = dynamicProperties;
+
+                return View("customers/info");
             }
 
             return RedirectToAction("Login", "Account");

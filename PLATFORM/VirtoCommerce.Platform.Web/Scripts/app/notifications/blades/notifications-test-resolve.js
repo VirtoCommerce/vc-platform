@@ -20,6 +20,9 @@
 			        if (blade.currentParams[i].isDictionary) {
 			            blade.obj.notificationParameters[blade.currentParams[i].parameterName] = [ { name: '', value: '' } ];
 			        }
+			        else if (blade.currentParams[i].isArray) {
+			            blade.obj.notificationParameters[blade.currentParams[i].parameterName] = [{ key: '' }];
+			        }
 			        else {
 			            blade.obj.notificationParameters[blade.currentParams[i].parameterName] = $localStorage.notificationTestResolve[blade.currentParams[i].parameterName];
 			        }
@@ -52,6 +55,15 @@
 		        }
 		        blade.obj.notificationParameters[blade.currentParams[i].parameterName] = params;
 		    }
+		    else if (blade.currentParams[i].isArray) {
+		        arrayParams = [];
+		        preparedParams[blade.currentParams[i].parameterName] = blade.obj.notificationParameters[blade.currentParams[i].parameterName];
+		        var notParam = blade.obj.notificationParameters[blade.currentParams[i].parameterName];
+		        for (var j = 0; j < notParam.length; j++) {
+		            arrayParams.push(notParam[j].key);
+		        }
+		        blade.obj.notificationParameters[blade.currentParams[i].parameterName] = arrayParams;
+		    }
 		}
 
         //send params
@@ -76,15 +88,19 @@
 		});
 	};
 
-	blade.add = function (paramName) {
+	blade.addDictionaryElement = function (paramName) {
 	    blade.obj.notificationParameters[paramName].push({ name: '', value: '' });
+	}
+
+	blade.addArrayElement = function (paramName) {
+	    blade.obj.notificationParameters[paramName].push({ key: ''});
 	}
 
 	blade.headIcon = 'fa-play';
 
-	blade.revertParams = function () {
+	blade.revertParams = function (preparedParams) {
 	    for (var i = 0; i < blade.currentParams.length; i++) {
-	        if (blade.currentParams[i].isDictionary) {
+	        if (blade.currentParams[i].isDictionary || blade.currentParams[i].isArray) {
 	            blade.obj.notificationParameters[blade.currentParams[i].parameterName] = preparedParams[blade.currentParams[i].parameterName];
 	        }
 	    }

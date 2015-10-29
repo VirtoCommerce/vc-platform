@@ -149,7 +149,7 @@
 		var uploader = $scope.uploader = new FileUploader({
 			scope: $scope,
 			headers: { Accept: 'application/json' },
-			url: "api/platform/assets/file",
+			url: "api/platform/assets?folderUrl=themefile",
 			autoUpload: true,
 			removeAfterUpload: true
 		});
