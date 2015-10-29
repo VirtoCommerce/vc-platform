@@ -95,7 +95,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="packages.config" />
+    <None Include="packages.config" />
     <Content Include="module.manifest">
       <SubType>Designer</SubType>
     </Content>
@@ -121,7 +121,8 @@
   <ItemGroup>
     <Content Include="Scripts\all-templates.html" />
     <Content Include="Scripts\dynamicExpression.js" />
-    <Content Include="web.config" />
+    <None Include="web.config" />
+    <None Include="app.config" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

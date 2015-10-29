@@ -80,7 +80,8 @@
   <ItemGroup>
     <Content Include="Content\paypal_2014_logo.png" />
     <Content Include="module.manifest" />
-    <Content Include="packages.config" />
+    <None Include="packages.config" />
+    <None Include="app.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -89,7 +90,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Web.config" />
+    <None Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Managers\PaypalExpressCheckoutPaymentMethod.cs" />
