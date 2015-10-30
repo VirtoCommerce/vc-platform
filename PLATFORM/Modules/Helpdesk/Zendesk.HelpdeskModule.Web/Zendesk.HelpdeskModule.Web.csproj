@@ -86,8 +86,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Zendesk_logo_RGB.png" />
-    <Content Include="packages.config" />
+    <None Include="packages.config" />
     <Content Include="module.manifest" />
+    <None Include="app.config" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
@@ -102,7 +103,7 @@
     <Content Include="Scripts\widgets\helpdeskWidget.js" />
     <Content Include="Scripts\widgets\openTicketsWidget.tpl.html" />
     <Content Include="Scripts\widgets\helpdeskWidget.tpl.html" />
-    <Content Include="web.config" />
+    <None Include="web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\Api\ZDAuthorizationController.cs" />

@@ -211,6 +211,7 @@
     <Compile Include="Notifications\INotificationSendingGateway.cs" />
     <Compile Include="Notifications\INotificationTemplateResolver.cs" />
     <Compile Include="Notifications\INotificationTemplateService.cs" />
+    <Compile Include="Notifications\NotificationParameterValueType.cs" />
     <Compile Include="PushNotifications\IPushNotificationManager.cs" />
     <Compile Include="Notifications\ISmsNotificationSendingGateway.cs" />
     <Compile Include="Notifications\Notification.cs" />

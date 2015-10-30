@@ -127,9 +127,9 @@
     <Content Include="Default_Theme\Default\assets\slide_2.jpg" />
     <Content Include="gulpfile.js" />
     <Content Include="module.manifest" />
-    <Content Include="packages.config">
+    <None Include="packages.config">
       <SubType>Designer</SubType>
-    </Content>
+    </None>
     <Content Include="Default_Theme\Default\assets\ajaxify.js.liquid" />
     <Content Include="Default_Theme\Default\assets\ajaxify.scss.liquid" />
     <Content Include="Default_Theme\Default\assets\checkout.css.liquid" />
@@ -205,6 +205,9 @@
     <Content Include=".bowerrc" />
     <Content Include="bower.json" />
     <Content Include="package.json" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -247,7 +250,7 @@
     <Content Include="Scripts\widgets\pagesWidget.tpl.html" />
     <Content Include="Scripts\widgets\themesWidget.js" />
     <Content Include="Scripts\widgets\themesWidget.tpl.html" />
-    <Content Include="Web.config" />
+    <None Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\Api\ContentBaseController.cs" />

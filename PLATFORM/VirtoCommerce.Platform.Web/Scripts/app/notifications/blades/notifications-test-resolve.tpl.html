@@ -15,7 +15,10 @@
 				<div class="form-group" ng-repeat="data in blade.currentParams">
 					<label class="form-label">
                         {{data.parameterDescription}}
-                        <a ng-if="data.isDictionary" ng-click="blade.add(data.parameterName)">
+                        <a ng-if="data.isDictionary" ng-click="blade.addDictionaryElement(data.parameterName)">
+                            <i class="form-ico fa fa-plus"></i>
+                        </a>
+                        <a ng-if="data.isArray" ng-click="blade.addArrayElement(data.parameterName)">
                             <i class="form-ico fa fa-plus"></i>
                         </a>
                     </label>
@@ -35,8 +38,44 @@
                             </div>
                         </div>
                     </div>
-					<div class="form-input" ng-if="!data.isDictionary">
-						<input ng-model="blade.obj.notificationParameters[data.parameterName]" type="text" required="" placeholder="Enter {{data.parameterName}}" class="form-control">
+                    <div class="form-input" ng-if="data.isArray" ng-repeat="param in blade.obj.notificationParameters[data.parameterName] track by $index">
+                        <input ng-model="param.key" type="text" required="" class="form-control">
+                    </div>
+					<div class="form-input" ng-if="!data.isDictionary && !data.isArray" ng-class="{ '__calendar': data.type === 'DateTime' }">
+						<input ng-model="blade.obj.notificationParameters[data.parameterName]" 
+                               type="text" 
+                               required="" 
+                               placeholder="Enter {{data.parameterName}}" 
+                               class="form-control" 
+                               ng-if="data.type === 'String'">
+                        <input ng-model="blade.obj.notificationParameters[data.parameterName]"
+                               datepicker-popup
+                               is-open="datepickers.DateTime"
+                               placeholder="Enter {{data.parameterName}}"
+                               close-text="Close"
+                               required=""
+                               ng-if="data.type === 'DateTime'">
+                        <button ng-click="open($event, 'DateTime')" type="button" class="btn" ng-if="data.type === 'DateTime'">
+                            <i class="btn-ico fa fa-calendar"></i>
+                        </button>
+                        <input smart-float num-type="float" 
+                               ng-model="blade.obj.notificationParameters[data.parameterName]" 
+                               type="text" 
+                               required="" 
+                               placeholder="Enter {{data.parameterName}}" 
+                               class="form-control" 
+                               ng-if="data.type === 'Decimal'">
+                        <input smart-float num-type="integer" 
+                               ng-model="blade.obj.notificationParameters[data.parameterName]" 
+                               type="text" 
+                               required="" 
+                               placeholder="Enter {{data.parameterName}}" 
+                               class="form-control" 
+                               ng-if="data.type === 'Integer'">
+                        <label class="form-label __switch" ng-if="data.type === 'Boolean'">
+                            <input type="checkbox" ng-model="blade.obj.notificationParameters[data.parameterName]">
+                            <span class="switch"></span>
+                        </label>
 					</div>
 				</div>
 			</form>

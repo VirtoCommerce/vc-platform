@@ -186,7 +186,10 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 		{
 			using (var repository = _catalogRepositoryFactory())
 			{
-				repository.RemoveItems(itemIds);
+                var seoInfos = _commerceService.GetObjectsSeo(itemIds);
+                _commerceService.DeleteSeo(seoInfos.Select(x => x.Id).ToArray());
+
+                repository.RemoveItems(itemIds);
 				CommitChanges(repository);
 			}
 		}

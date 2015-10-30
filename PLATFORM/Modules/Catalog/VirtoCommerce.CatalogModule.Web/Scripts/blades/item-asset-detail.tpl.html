@@ -45,7 +45,7 @@
                                     <i class="table-ico fa {{data.mimeType == 'image/png' || data.mimeType == 'image/jpeg' ? 'fa-image' : 'fa-file-text'}}"></i>
                                 </div>
                             </td>
-                            <td class="table-col __product-name"> <a ng-href="{{data.url}}">{{data.name}}</a></td>
+                            <td class="table-col __product-name"> <a ng-href="{{data.url}}" target="_blank">{{data.name}}</a></td>
                             <td class="table-col __center">
                                 <ul class="menu __actions">
                                     <li class="menu-item" ng-click="removeAction(data)">

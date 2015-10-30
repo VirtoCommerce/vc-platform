@@ -1,0 +1,49 @@
+﻿{% for property in properties %}
+    <div class="text-left">
+        {% assign property_type = property.value_type %}
+        {% assign element_id = 'properties' | append: '_' | append: property.name | downcase %}
+        {% assign element_name = 'properties' | append: '[' | append: property.name | downcase | append: ']' %}
+
+        {% unless property.is_dictionary %}
+            {% assign value = property.values | first %}
+            {% if property_type == 'ShortText' %}
+                <input id="{{ element_id }}" name="{{ element_name }}" placeholder="{{ property.name }}" {% if property.is_required %}required="required"{% endif %} type="text" value="{{ value }}" />
+            {% endif %}
+            {% if property_type == 'Integer' %}
+                <input id="{{ element_id }}" name="{{ element_name }}" placeholder="{{ property.name }}" {% if property.is_required %}required="required"{% endif %} type="text" value="{{ value }}" />
+            {% endif %}
+            {% if property_type == 'Decimal' %}
+                {% assign value = property.values | first %}
+                <input id="{{ element_id }}" name="{{ element_name }}" placeholder="{{ property.name }}" {% if property.is_required %}required="required"{% endif %} type="text" value="{{ value }}" />
+            {% endif %}
+        {% endunless %}
+
+        {% if property_type == 'LongText' %}
+            <textarea id="{{ element_id }}" name="{{ element_name }}" placeholder="{{ property.name }}" {% if property.is_required %}required="required"{% endif %}></textarea>
+        {% endif %}
+
+        {% if property_type == 'Boolean' %}
+            <input id="{{ element_id }}" name="{{ element_name }}" style="display: inline-block;" type="checkbox" />
+            <label for="{{ element_id }}" {% if property.is_required %}required="required"{% endif %} style="display: inline-block;">{{ property.name }}</label>
+        {% endif %}
+
+        {% if property_type == 'DateTime' %}
+            <label for="{{ element_id }}">{{ property.name }}</label>
+            <input id="{{ element_id }}" name="{{ element_name }}" type="text" value="{{ value }}" {% if property.is_required %}required="required"{% endif %} />
+            <script>
+                $(function () {
+                    $("#{{ element_id }}").datetimepicker();
+                });
+            </script>
+        {% endif %}
+
+        {% if property.is_dictionary %}
+            <label for="{{ element_id }}">{{ property.name }}</label>
+            <select id="{{ element_id }}" name="{{ element_name }}" {% if property.is_required %}required="required"{% endif %}>
+                {% for option in property.dictionary_items %}
+                    <option value="{{ option.name }}">{{ option.name }}</option>
+                {% endfor %}
+            </select>
+        {% endif %}
+    </div>
+{% endfor %}

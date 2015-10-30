@@ -459,20 +459,21 @@ namespace VirtoCommerce.Web
 
         private string GetPoweredLink()
         {
+            string poweredLink = _poweredLinks[0];
+
             if (HttpContext.Current != null)
             {
                 var host = HttpContext.Current.Request.Url.Host.ToLowerInvariant();
-                var code = (int)host.ToCharArray()[0];
+                var hostHashCode = Math.Abs(host.GetHashCode());
 
-                var l = this._poweredLinks.Length;
-                var c = 26; // latters in english alphabet
-                var term = c / l;
-
-                int index = (code - 61) / term;
-                return index < l ? this._poweredLinks[index] : this._poweredLinks[0];
+                var index = hostHashCode % _poweredLinks.Length;
+                if (index < _poweredLinks.Length)
+                {
+                    poweredLink = _poweredLinks[index];
+                }
             }
 
-            return this._poweredLinks[0];
+            return poweredLink;
         }
         #endregion
     }

@@ -1,49 +1,32 @@
 {% layout settings.customer_layout %}
 
-<div class="grid">
+{% form 'create_customer' %}
+    <h1 class="text-center">{{ 'customer.register.title' | t }}</h1>
+    {% include 'form-errors-custom' %}
+    <div class="grid text-center">
+        <div class="grid-item large--two-third" style="display: inline-block;">
+            <div class="grid">
+                <div class="grid-item large--one-half">
+                    <label for="first_name" class="hidden-label">{{ 'customer.register.first_name' | t }}</label>
+                    <input type="text" value="" name="customer[first_name]" id="first_name" placeholder="{{ 'customer.register.first_name' | t }}" {% if form.errors contains "first_name" %} class="error"{% endif %} required="required" autocapitalize="words" autofocus>
 
-  <div class="grid-item large--one-third push--large--one-third text-center">
+                    <label for="last_name" class="hidden-label">{{ 'customer.register.last_name' | t }}</label>
+                    <input type="text" value="" name="customer[last_name]" id="last_name" placeholder="{{ 'customer.register.last_name' | t }}" {% if form.errors contains "last_name" %} class="error"{% endif %} required="required" autocapitalize="words">
 
-    <h1>{{ 'customer.register.title' | t }}</h1>
+                    <label for="email" class="hidden-label">{{ 'customer.register.email' | t }}</label>
+                    <input type="email" value="" name="customer[email]" id="email" placeholder="{{ 'customer.register.email' | t }}" {% if form.errors contains "email" %} class="error"{% endif %} required="required" autocorrect="off" autocapitalize="off">
 
-    {% form 'create_customer' %}
-
-      {% include 'form-errors-custom' %}
-
-      <label for="first_name" class="hidden-label">{{ 'customer.register.first_name' | t }}</label>
-      <input type="text" value="" name="customer[first_name]" id="first_name" placeholder="{{ 'customer.register.first_name' | t }}" {% if form.errors contains "first_name" %} class="error"{% endif %} autocapitalize="words" autofocus>
-
-      <label for="last_name" class="hidden-label">{{ 'customer.register.last_name' | t }}</label>
-      <input type="text" value="" name="customer[last_name]" id="last_name" placeholder="{{ 'customer.register.last_name' | t }}" {% if form.errors contains "last_name" %} class="error"{% endif %} autocapitalize="words">
-
-      <label for="email" class="hidden-label">{{ 'customer.register.email' | t }}</label>
-      <input type="email" value="" name="customer[email]" id="email" placeholder="{{ 'customer.register.email' | t }}" {% if form.errors contains "email" %} class="error"{% endif %} autocorrect="off" autocapitalize="off">
-
-	    {% for field in customer.dynamic_properties %}
-           {% if field.is_dictionary %}
-		    <select name="properties[{{ field.name }}]" id="{{ field.name }}">
-				<option value="" disabled selected>choose {{ field.name }}</option>
-				{% for dict in field.dictionary_items %}
-					<option value="{{dict.id}}">{{dict.name}}</option>
-				{% endfor %}
-			 </select>
-		   {% else if field.value_type == 'boolean' %}
-			 <input type="checkbox" name="properties[{{ field.name }}]" value="">{{ field.name }}<br>
-		   {% else %}
-              <input type="text" value="" name="properties[{{ field.name }}]" id="{{ field.name }}" placeholder="{{ field.name }}">
-
-           {% endif %}
-      {% endfor %}
-
-      <label for="password" class="hidden-label">{{ 'customer.register.password' | t }}</label>
-      <input type="password" value="" name="customer[password]" id="create_password" placeholder="{{ 'customer.register.password' | t }}" {% if form.errors contains "password" %} class="error"{% endif %}>
-      <p>
-        <input type="submit" value="{{ 'customer.register.submit' | t }}" class="btn">
-      </p>
-      {{ 'customer.register.or' | t }} <a href="{{ shop.url }}">{{ 'customer.register.cancel' | t }}</a>
-
-    {% endform %}
-
-  </div>
-
-</div>
+                    <label for="password" class="hidden-label">{{ 'customer.register.password' | t }}</label>
+                    <input type="password" value="" name="customer[password]" id="create_password" placeholder="{{ 'customer.register.password' | t }}" {% if form.errors contains "password" %} required="required" class="error"{% endif %}>
+                </div>
+                <div class="grid-item large--one-half">
+                    {% include 'dynamic-properties', properties: customer.dynamic_properties, disabled: false %}
+                </div>
+            </div>
+            <p>
+                <p><input type="submit" value="{{ 'customer.register.submit' | t }}" class="btn"></p>
+                {{ 'customer.register.or' | t }} <a href="{{ shop.url }}">{{ 'customer.register.cancel' | t }}</a>
+            </p>
+        </div>
+    </div>
+{% endform %}

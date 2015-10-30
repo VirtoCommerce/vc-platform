@@ -1,6 +1,7 @@
 ﻿#region
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using VirtoCommerce.ApiClient;
 using VirtoCommerce.ApiClient.DataContracts.CustomerService;
@@ -87,23 +88,33 @@ namespace VirtoCommerce.Web.Models.Services
             await this._customerClient.UpdateContactAsync(contact);
         }
 
-        public async Task<Customer> CreateCustomerAsync(string email, string firstName, string lastName, string id, ICollection<CustomerAddress> addresses)
+        public async Task<Customer> CreateCustomerAsync(Customer customer)
         {
-            var contact = new Contact { FullName = string.Format("{0} {1}", firstName, lastName) };
+            Contact contact = null;
 
-            contact.Emails = new List<string> { email };
+            if (string.IsNullOrEmpty(customer.FirstName) && string.IsNullOrEmpty(customer.LastName))
+            {
+                contact = new Contact { FullName = customer.Email };
+            }
+            else
+            {
+                contact = new Contact { FullName = string.Format("{0} {1}", customer.FirstName, customer.LastName) };
+            }
 
-            if (addresses != null)
+            contact.Emails = new List<string> { customer.Email };
+
+            if (customer.Addresses != null)
             {
                 contact.Addresses = new List<Address>();
 
-                foreach (var address in addresses)
+                foreach (var address in customer.Addresses)
                 {
                     contact.Addresses.Add(address.AsServiceModel());
                 }
             }
 
-            contact.Id = id;
+            contact.Id = customer.Id;
+            contact.DynamicProperties = customer.DynamicProperties.Select(p => p.ToServiceModel()).ToArray();
             contact = await this._customerClient.CreateContactAsync(contact);
 
             return contact.AsWebModel();

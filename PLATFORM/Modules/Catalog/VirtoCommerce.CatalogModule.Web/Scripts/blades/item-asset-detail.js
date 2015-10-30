@@ -1,16 +1,17 @@
 ﻿angular.module('virtoCommerce.catalogModule')
 .controller('virtoCommerce.catalogModule.itemAssetController', ['$rootScope', '$scope', 'virtoCommerce.catalogModule.items', 'platformWebApp.bladeNavigationService', '$filter', 'FileUploader', 'platformWebApp.dialogService', '$injector', function ($rootScope, $scope, items, bladeNavigationService, $filter, FileUploader, dialogService, $injector) {
-    $scope.currentBlade = $scope.blade;
+    var blade = $scope.blade;
     $scope.item = {};
     $scope.origItem = {};
 
-    $scope.currentBlade.refresh = function (parentRefresh) {
-        items.get({ id: $scope.currentBlade.itemId }, function (data) {
+    blade.refresh = function (parentRefresh) {
+        items.get({ id: blade.itemId }, function (data) {
+            $scope.uploader.url = 'api/platform/assets?folderUrl=catalog/' + data.code;
             $scope.origItem = data;
             $scope.item = angular.copy(data);
-            $scope.currentBlade.isLoading = false;
+            blade.isLoading = false;
             if (parentRefresh) {
-                $scope.currentBlade.parentBlade.refresh();
+                blade.parentBlade.refresh();
             }
         },
         function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
@@ -24,7 +25,7 @@
         angular.copy($scope.origItem, $scope.item);
     };
 
-    $scope.currentBlade.onClose = function (closeCallback) {
+    blade.onClose = function (closeCallback) {
         if ($scope.isDirty()) {
             var dialog = {
                 id: "confirmItemChange",
@@ -46,10 +47,10 @@
 
 
     $scope.saveChanges = function () {
-    	$scope.currentBlade.isLoading = true;
-    	items.update({}, $scope.item, function (data) {
-            $scope.currentBlade.refresh(true);
-    	},
+        blade.isLoading = true;
+        items.update({}, { id: blade.itemId, assets: $scope.item.assets }, function (data) {
+            blade.refresh(true);
+        },
         function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
     };
 
@@ -58,8 +59,7 @@
             // create the uploader
             var uploader = $scope.uploader = new FileUploader({
                 scope: $scope,
-                headers: { Accept: 'application/json' },
-                url: 'api/platform/assets?folderUrl=catalog',
+                headers: { Accept: 'application/json' },               
                 method: 'POST',
                 autoUpload: true,
                 removeAfterUpload: true
@@ -79,7 +79,7 @@
         if (e.ctrlKey == 1) {
             asset.selected = !asset.selected;
         } else {
-            if(asset.selected) {
+            if (asset.selected) {
                 asset.selected = false;
             } else {
                 asset.selected = true;
@@ -88,10 +88,10 @@
     }
 
     $scope.removeAction = function (asset) {
-    	var idx = $scope.item.assets.indexOf(asset);
-    	if (idx >= 0) {
-    		$scope.item.assets.splice(idx, 1);
-    	}
+        var idx = $scope.item.assets.indexOf(asset);
+        if (idx >= 0) {
+            $scope.item.assets.splice(idx, 1);
+        }
     };
 
     $scope.copyUrl = function (data) {
@@ -101,7 +101,6 @@
     $scope.blade.headIcon = 'fa-chain';
 
     $scope.blade.toolbarCommands = [
-
         {
             name: "Save", icon: 'fa fa-save',
             executeMethod: function () {
@@ -111,10 +110,10 @@
                 return $scope.isDirty();
             },
             permission: 'catalog:update'
-        }		
+        }
     ];
 
     initialize();
-    $scope.currentBlade.refresh();
+    blade.refresh();
 
 }]);
