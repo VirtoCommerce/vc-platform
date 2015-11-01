@@ -1,13 +1,9 @@
-﻿#region
-using System;
-using System.Linq;
+﻿using System;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using VirtoCommerce.Web.Extensions;
 using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Models.Tagging;
-
-#endregion
 
 namespace VirtoCommerce.Web.Controllers
 {
@@ -22,13 +18,13 @@ namespace VirtoCommerce.Web.Controllers
             int page = 1,
             string sort_by = "manual")
         {
-            var collection = new Collection() { Id = "All", SortBy = sort_by  };
+            var collection = new Collection() { Id = "All", SortBy = sort_by };
 
-            this.Context.Set("Collection", collection);
-            this.Context.Set("current_page", page);
-            this.Context.Set("current_tags", this.ParseTags(tags));
+            Context.Set("Collection", collection);
+            Context.Set("current_page", page);
+            Context.Set("current_tags", ParseTags(tags));
 
-            var template = "collection";
+            var template = await Task.FromResult("collection");
             if (!string.IsNullOrEmpty(view))
             {
                 template = string.Format("{0}.{1}", template, view);
@@ -46,14 +42,14 @@ namespace VirtoCommerce.Web.Controllers
             string sort_by = "manual",
             string constraint = "")
         {
-            this.Context.Set("Collection", await this.Service.GetCollectionAsync(SiteContext.Current, category));
-            this.Context.Set("current_page", page);
+            Context.Set("Collection", await Service.GetCollectionAsync(SiteContext.Current, category));
+            Context.Set("current_page", page);
 
-            var currentTags = this.ParseTags(tags);
-            if(currentTags == null)
-                currentTags = this.ParseTags(constraint, ' ');
+            var currentTags = ParseTags(tags);
+            if (currentTags == null)
+                currentTags = ParseTags(constraint, ' ');
 
-            this.Context.Set("current_tags", currentTags);
+            Context.Set("current_tags", currentTags);
 
             var template = "collection";
             if (!string.IsNullOrEmpty(view))
@@ -72,7 +68,7 @@ namespace VirtoCommerce.Web.Controllers
             string sort_by = "manual",
             string constraint = "")
         {
-            var categoryModel = await this.Service.GetCollectionByKeywordAsync(SiteContext.Current, category, sort_by) ?? await this.Service.GetCollectionAsync(SiteContext.Current, category, sort_by);
+            var categoryModel = await Service.GetCollectionByKeywordAsync(SiteContext.Current, category, sort_by) ?? await Service.GetCollectionAsync(SiteContext.Current, category, sort_by);
 
             if (categoryModel != null)
             {
@@ -80,19 +76,19 @@ namespace VirtoCommerce.Web.Controllers
                 SetPageMeta(keyword);
             }
 
-            this.Context.Set("Collection", categoryModel);
-            this.Context.Set("current_page", page);
+            Context.Set("Collection", categoryModel);
+            Context.Set("current_page", page);
 
-            var currentTags = this.ParseTags(tags);
+            var currentTags = ParseTags(tags);
             if (currentTags == null)
-                currentTags = this.ParseTags(constraint, ' ');
+                currentTags = ParseTags(constraint, ' ');
 
-            this.Context.Set("current_tags", currentTags);
+            Context.Set("current_tags", currentTags);
 
             var template = "collection";
             if (!string.IsNullOrEmpty(view) && view.Equals("list", StringComparison.OrdinalIgnoreCase))
             {
-                template = String.Format("{0}.{1}", template, view);
+                template = string.Format("{0}.{1}", template, view);
             }
 
             return View(template);
