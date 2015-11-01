@@ -69,7 +69,7 @@
                 {{ 'virtocommerce.js' | shopify_asset_url | script_tag }}
                 {{ 'validation.js' | shopify_asset_url | script_tag }}
 
-                {% if settings.facebook_tracking_id != null %}
+                {% if facebook_tracking_id != null %}
                 <script>
                     (function() {
                     var _fbq = window._fbq || (window._fbq = []);
@@ -81,13 +81,13 @@
                     s.parentNode.insertBefore(fbds, s);
                     _fbq.loaded = true;
                     }
-                    _fbq.push(['addPixelId', '{{ settings.facebook_tracking_id }}']);
+                    _fbq.push(['addPixelId', '{{ facebook_tracking_id }}']);
                     })();
                     window._fbq = window._fbq || [];
                     window._fbq.push(['track', 'PixelInitialized', {}]);
                 </script>
                 <noscript>
-                    <img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?id={{ settings.facebook_tracking_id }}&ev=PixelInitialized" />
+                    <img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?id={{ facebook_tracking_id }}&ev=PixelInitialized" />
                 </noscript>
                 {% endif %}
 
@@ -95,17 +95,17 @@
         </head>
 
   <body id="{{ page_title | handle }}" class="{% if customer %}customer-logged-in {% endif %}template-{{ template | replace: '.', ' ' | truncatewords: 1, '' | handle }}" >
-      {% if settings.google_analytics_tracking_id != null %}
+      {% if google_analytics_tracking_id != null %}
       <script type="text/javascript">
-		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-		  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-		  ga('create', '{{ settings.google_analytics_tracking_id }}', 'auto');
-		  ga('send', 'pageview');
+          ga('create', '{{ google_analytics_tracking_id }}', 'auto');
+          ga('send', 'pageview');
 
-	  </script>
+      </script>
 	  
       {% endif %}
       {% if settings.store_selector_enable %}{% include 'top-header-selector' %}{% endif %}

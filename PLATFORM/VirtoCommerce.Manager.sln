@@ -174,6 +174,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.QuoteModule.D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authorize.Net", "Modules\PaymentGateways\Authorize.Net\Authorize.Net.csproj", "{21C72F1C-39AB-4EE5-B622-17ED5E7B1618}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cyber.Source", "Modules\PaymentGateways\Cyber.Source\Cyber.Source.csproj", "{C91DB74E-9907-4467-9AF0-25E7539A47FD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -412,6 +414,10 @@ Global
 		{21C72F1C-39AB-4EE5-B622-17ED5E7B1618}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{21C72F1C-39AB-4EE5-B622-17ED5E7B1618}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{21C72F1C-39AB-4EE5-B622-17ED5E7B1618}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C91DB74E-9907-4467-9AF0-25E7539A47FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C91DB74E-9907-4467-9AF0-25E7539A47FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C91DB74E-9907-4467-9AF0-25E7539A47FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C91DB74E-9907-4467-9AF0-25E7539A47FD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -496,5 +502,6 @@ Global
 		{47F0B160-6457-4538-A9D4-63728A22C2C5} = {B058A0B5-FF74-4C39-9499-6059C3110B4F}
 		{AFA99193-5EB2-44BD-984E-A0FFEA24F60A} = {B058A0B5-FF74-4C39-9499-6059C3110B4F}
 		{21C72F1C-39AB-4EE5-B622-17ED5E7B1618} = {4E79CE95-D200-41C9-B191-324B741494BE}
+		{C91DB74E-9907-4467-9AF0-25E7539A47FD} = {4E79CE95-D200-41C9-B191-324B741494BE}
 	EndGlobalSection
 EndGlobal
