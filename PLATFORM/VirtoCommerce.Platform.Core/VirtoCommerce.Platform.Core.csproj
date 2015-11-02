@@ -90,7 +90,6 @@
     <Compile Include="Asset\BlobInfo.cs" />
     <Compile Include="Asset\IBlobUrlResolver.cs" />
     <Compile Include="Asset\IBlobStorageProvider.cs" />
-    <Compile Include="Asset\UploadStreamInfo.cs" />
     <Compile Include="ChangeLog\IHasChangesHistory.cs" />
     <Compile Include="Common\ConfigManagerExtensions.cs" />
     <Compile Include="Common\ObservableChangeTracker.cs" />
