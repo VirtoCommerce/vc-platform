@@ -71,6 +71,11 @@
                             </td>
                             <td class="table-col __center">
                                 <ul class="menu __actions">
+                                    <li class="menu-item" ng-click="downloadUrl(data)" ng-if="data.type !== 'folder'">
+                                        <a class="menu-link" title="Download">
+                                            <i class="menu-ico fa fa-download"></i>
+                                        </a>
+                                    </li>
                                     <li class="menu-item" ng-click="copyUrl(data)">
                                         <a class="menu-link" title="Copy link">
                                             <i class="menu-ico fa fa-link"></i>
