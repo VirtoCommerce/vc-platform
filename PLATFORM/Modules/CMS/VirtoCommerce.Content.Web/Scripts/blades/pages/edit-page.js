@@ -87,6 +87,14 @@
     					blade.image = image.url;
     				});
     			};
+
+    			uploader.onAfterAddingAll = function (addedItems) {
+    			    bladeNavigationService.setError(null, blade);
+    			};
+
+    			uploader.onErrorItem = function (item, response, status, headers) {
+    			    bladeNavigationService.setError(item._file.name + ' failed: ' + (response.message ? response.message : status), blade);
+    			};
     		}
     	}
     }

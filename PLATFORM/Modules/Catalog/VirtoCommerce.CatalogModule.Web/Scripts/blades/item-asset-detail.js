@@ -59,7 +59,7 @@
             // create the uploader
             var uploader = $scope.uploader = new FileUploader({
                 scope: $scope,
-                headers: { Accept: 'application/json' },               
+                headers: { Accept: 'application/json' },
                 method: 'POST',
                 autoUpload: true,
                 removeAfterUpload: true
@@ -71,6 +71,14 @@
                     //ADD uploaded asset to the item
                     $scope.item.assets.push(asset);
                 });
+            };
+
+            uploader.onAfterAddingAll = function (addedItems) {
+                bladeNavigationService.setError(null, blade);
+            };
+
+            uploader.onErrorItem = function (item, response, status, headers) {
+                bladeNavigationService.setError(item._file.name + ' failed: ' + (response.message ? response.message : status), blade);
             };
         }
     };
