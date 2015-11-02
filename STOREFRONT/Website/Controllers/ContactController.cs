@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using VirtoCommerce.Web.Models.Forms;
@@ -24,7 +22,8 @@ namespace VirtoCommerce.Web.Controllers
 
             string url = Request.UrlReferrer.GetLeftPart(UriPartial.Path);
             url += (Request.QueryString.ToString() == "") ? "?contact_posted=true" : "?" + Request.QueryString.ToString() + "&contact_posted=true";
-            return new RedirectResult(url);
+            var result = new RedirectResult(url);
+            return await Task.FromResult(result);
         }
     }
 }

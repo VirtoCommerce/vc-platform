@@ -100,7 +100,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Klarna-Logo.png" />
-    <Content Include="packages.config" />
+    <None Include="packages.config" />
     <Content Include="module.manifest" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -110,7 +110,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Web.config" />
+    <None Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Managers\KlarnaPaymentMethod.cs" />

@@ -118,7 +118,7 @@
     <Compile Include="Notifications\OrderPaidEmailNotification.cs" />
     <Compile Include="Notifications\OrderSentEmailNotification.cs" />
     <Compile Include="Observers\CancelPaymentObserver.cs" />
-    <Compile Include="Observers\ChangeOrderStatusesObserver.cs" />
+    <Compile Include="Observers\OrderNotificationObserver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\IOrderRepository.cs" />
     <Compile Include="Repositories\OrderRepositoryImpl.cs" />
