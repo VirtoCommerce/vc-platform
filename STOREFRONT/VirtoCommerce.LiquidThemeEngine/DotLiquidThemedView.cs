@@ -8,7 +8,6 @@ using System.Web;
 using System.Web.Mvc;
 using DotLiquid;
 using DotLiquid.FileSystems;
-using VirtoCommerce.LiquidThemeEngine.Converters;
 using VirtoCommerce.LiquidThemeEngine.Extensions;
 using VirtoCommerce.Storefront.Model;
 
@@ -17,11 +16,11 @@ namespace VirtoCommerce.LiquidThemeEngine
 
     public class DotLiquidThemedView : IView
     {
-        private readonly ShopifyLiquidThemeStructure _themeAdaptor;
+        private readonly ShopifyLiquidThemeEngine _themeAdaptor;
         private readonly string _viewName;
         private readonly string _masterViewName;
 
-        public DotLiquidThemedView(ShopifyLiquidThemeStructure themeAdaptor, string viewName, string masterViewName)
+        public DotLiquidThemedView(ShopifyLiquidThemeEngine themeAdaptor, string viewName, string masterViewName)
         {
             if (themeAdaptor == null)
                 throw new ArgumentNullException("themeAdaptor");
@@ -41,7 +40,7 @@ namespace VirtoCommerce.LiquidThemeEngine
                 throw new ArgumentNullException("viewContext");
 
             // Copy data from the view context over to DotLiquid
-            var parameters = _themeAdaptor.WorkContext.ToLiquidThemeContext();
+            var parameters = _themeAdaptor.WorkContext.ToLiquid() as Dictionary<string, object>;
 
             //Add settings to context
             parameters.Add("settings", _themeAdaptor.GetSettings());

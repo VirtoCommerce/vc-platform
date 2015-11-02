@@ -41,6 +41,22 @@ namespace VirtoCommerce.Storefront.Model
             }
         }
 
+        public string CurrentCultureName
+        {
+            get
+            {
+                return CurrentCulture.NativeName;
+            }
+        }
+
+        public string CurrentRegionTwoLeterName
+        {
+            get
+            {
+                return CurrentRegionInfo.TwoLetterISORegionName;
+            }
+        }
+
         public CultureInfo CurrentCulture
         {
             get

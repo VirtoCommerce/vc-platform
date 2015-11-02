@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -15,6 +16,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using VirtoCommerce.LiquidThemeEngine.Extensions;
 using VirtoCommerce.LiquidThemeEngine.Filters;
+using VirtoCommerce.LiquidThemeEngine.Objects;
 using VirtoCommerce.LiquidThemeEngine.Operators;
 using VirtoCommerce.LiquidThemeEngine.Tags;
 using VirtoCommerce.Storefront.Model;
@@ -24,7 +26,7 @@ using VirtoCommerce.Storefront.Model.Common;
 namespace VirtoCommerce.LiquidThemeEngine
 {
     /// <summary>
-    /// Shopify compliant theme folder structure
+    /// Shopify compliant theme folder structure and all methods for rendering
     /// assets - storages for css, images and other assets
     /// config - contains theme configuration
     /// layout - master pages and layouts
@@ -32,7 +34,7 @@ namespace VirtoCommerce.LiquidThemeEngine
     /// snippets - snippets - partial views
     /// templates - view templates
     /// </summary>
-    public class ShopifyLiquidThemeStructure : IFileSystem
+    public class ShopifyLiquidThemeEngine : IFileSystem
     {
         private const string _defaultMasterView = "theme";
         private const string _liquidTemplateFormat = "{0}.liquid";
@@ -42,7 +44,7 @@ namespace VirtoCommerce.LiquidThemeEngine
         private Func<WorkContext> _workContextFactory;
         private IStorefrontUrlBuilder _storeFrontUrlBuilder;
 
-        public ShopifyLiquidThemeStructure(Func<WorkContext> workContextFactory, IStorefrontUrlBuilder storeFrontUrlBuilder, string themesRealtiveUrl, string themesAssetsRelativeUrl)
+        public ShopifyLiquidThemeEngine(Func<WorkContext> workContextFactory, IStorefrontUrlBuilder storeFrontUrlBuilder, string themesRealtiveUrl, string themesAssetsRelativeUrl)
         {
             _workContextFactory = workContextFactory;
             _storeFrontUrlBuilder = storeFrontUrlBuilder;
@@ -74,16 +76,17 @@ namespace VirtoCommerce.LiquidThemeEngine
 
                 Template.RegisterSafeType(dropType, allowedProperties);
             }
+         
         }
 
         /// <summary>
         /// Main work context
         /// </summary>
-        public WorkContext WorkContext
+        public ShopifyThemeWorkContext WorkContext
         {
             get
             {
-                return _workContextFactory();
+                return _workContextFactory() as ShopifyThemeWorkContext;
             }
         }
 
@@ -115,7 +118,7 @@ namespace VirtoCommerce.LiquidThemeEngine
         {
             get
             {
-                return _storeFrontUrlBuilder.ToAppRelative(_themesRelativeUrl + "/" + ThemeName);
+                return _storeFrontUrlBuilder.ToAppRelative(_themesRelativeUrl + "/" + ThemeName, WorkContext.CurrentStore.Id, WorkContext.CurrentLanguage);
             }
 
         }
@@ -137,7 +140,7 @@ namespace VirtoCommerce.LiquidThemeEngine
         {
             get
             {
-                return _storeFrontUrlBuilder.ToAppRelative(_themesAssetsRelativeUrl);
+                return _storeFrontUrlBuilder.ToAppRelative(_themesAssetsRelativeUrl, WorkContext.CurrentStore.Id, WorkContext.CurrentLanguage);
             }
         }
       
@@ -180,6 +183,19 @@ namespace VirtoCommerce.LiquidThemeEngine
             {
                 throw new ArgumentNullException("templateName");
             }
+            string retVal = null;
+
+            var templateContent = ReadTemplateByName(templateName);
+            retVal = RenderTemplate(templateContent, parameters);
+            return retVal;
+        }
+
+        public string RenderTemplate(string templateContent, Dictionary<string, object> parameters)
+        {
+            if (String.IsNullOrEmpty(templateContent))
+            {
+                return templateContent;
+            }
             if (parameters == null)
             {
                 parameters = new Dictionary<string, object>();
@@ -192,8 +208,7 @@ namespace VirtoCommerce.LiquidThemeEngine
             {
                 LocalVariables = Hash.FromDictionary(parameters)
             };
-            var templateContent = ReadTemplateByName(templateName);
-            
+      
             var parsedTemplate = Template.Parse(templateContent);
             retVal = parsedTemplate.RenderWithTracing(renderParams);
             return retVal;
@@ -268,7 +283,7 @@ namespace VirtoCommerce.LiquidThemeEngine
         /// <returns></returns>
         public string GetAssetAbsoluteUrl(string assetName)
         {
-            return _storeFrontUrlBuilder.ToAbsolute(_themesAssetsRelativeUrl.TrimEnd('/') + "/" + assetName.TrimStart('/'));
+            return _storeFrontUrlBuilder.ToAbsolute(_themesAssetsRelativeUrl.TrimEnd('/') + "/" + assetName.TrimStart('/'), WorkContext.CurrentStore.Id, WorkContext.CurrentLanguage);
         }
 
         private static bool ContainsMethod(object left, object right)

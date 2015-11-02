@@ -19,6 +19,7 @@ using VirtoCommerce.Client;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Client.Client;
 using VirtoCommerce.LiquidThemeEngine;
+using VirtoCommerce.LiquidThemeEngine.Objects;
 using VirtoCommerce.Storefront;
 using VirtoCommerce.Storefront.App_Start;
 using VirtoCommerce.Storefront.Model;
@@ -73,9 +74,9 @@ namespace VirtoCommerce.Storefront
             }
             // Create new work context for each request
             container.RegisterType<WorkContext, ShopifyThemeWorkContext>(new PerRequestLifetimeManager());
-            container.RegisterInstance<ShopifyLiquidThemeStructure>(new ShopifyLiquidThemeStructure(() => container.Resolve<WorkContext>(), container.Resolve<IStorefrontUrlBuilder>(), "~/App_data/themes", "~/themes/assets"));
+            container.RegisterInstance<ShopifyLiquidThemeEngine>(new ShopifyLiquidThemeEngine(() => container.Resolve<WorkContext>(), container.Resolve<IStorefrontUrlBuilder>(), "~/App_data/themes", "~/themes/assets"));
             //Register liquid engine
-            ViewEngines.Engines.Add(new DotLiquidThemedViewEngine(container.Resolve<ShopifyLiquidThemeStructure>()));
+            ViewEngines.Engines.Add(new DotLiquidThemedViewEngine(container.Resolve<ShopifyLiquidThemeEngine>()));
             //FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes, container.Resolve<ICommerceCoreModuleApi>());
             AuthConfig.ConfigureAuth(app);

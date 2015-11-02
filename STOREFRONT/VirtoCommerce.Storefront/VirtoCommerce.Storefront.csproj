@@ -225,6 +225,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Converters\AddressConverter.cs" />
     <Compile Include="Converters\CustomerConverter.cs" />
+    <Compile Include="Converters\SeoInfoConverter.cs" />
     <Compile Include="Converters\StoreConverter.cs" />
     <Compile Include="Exceptions\SaasCompileException.cs" />
     <Compile Include="Global.asax.cs">

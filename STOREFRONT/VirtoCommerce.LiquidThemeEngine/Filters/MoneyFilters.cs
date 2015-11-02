@@ -36,7 +36,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
             {
                 return null;
             }
-            var themeAdaptor = (ShopifyLiquidThemeStructure)Template.FileSystem;
+            var themeAdaptor = (ShopifyLiquidThemeEngine)Template.FileSystem;
             var value = Convert.ToDecimal(input, CultureInfo.InvariantCulture);
 
             var currencyCulture = _cultures.Value.FirstOrDefault(x => new RegionInfo(x.Name).ISOCurrencySymbol.Equals(themeAdaptor.WorkContext.CurrentCurrency, StringComparison.OrdinalIgnoreCase));

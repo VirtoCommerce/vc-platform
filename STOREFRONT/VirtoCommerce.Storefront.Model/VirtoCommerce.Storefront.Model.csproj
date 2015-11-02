@@ -47,11 +47,13 @@
     <Compile Include="Common\DefaultableDictionary.cs" />
     <Compile Include="Common\Entity.cs" />
     <Compile Include="Common\IStorefrontUrlBuilder.cs" />
+    <Compile Include="Common\LocalizationExtensions.cs" />
     <Compile Include="Common\ReflectionExtension.cs" />
     <Compile Include="Common\StringExtensions.cs" />
     <Compile Include="Common\ValueObject.cs" />
     <Compile Include="Customer.cs" />
     <Compile Include="DynamicProperty.cs" />
+    <Compile Include="DynamicPropertyDictionaryItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SeoInfo.cs" />
     <Compile Include="Store.cs" />

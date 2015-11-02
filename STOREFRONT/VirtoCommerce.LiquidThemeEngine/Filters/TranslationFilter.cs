@@ -18,33 +18,38 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
         public static string T(string key, params object[] variables)
         {
             var retVal = key;
-            var themeAdaptor = (ShopifyLiquidThemeStructure)Template.FileSystem;
+            var themeAdaptor = (ShopifyLiquidThemeEngine)Template.FileSystem;
             var localization = themeAdaptor.ReadLocalization();
+            var dictionary = variables != null ? variables.OfType<Tuple<string, object>>().ToDictionary(x => x.Item1, x => x.Item2) : null;
+
             if (localization != null)
             {
-                //try to transform localization key
-                key = TryTransformKey(key, variables);
+                if (dictionary != null)
+                {
+                    //try to transform localization key
+                    key = TryTransformKey(key, dictionary);
+                }
                 retVal = (localization.SelectToken(key) ?? String.Empty).ToString();
             }
 
+            if(dictionary != null)
+            {
+                retVal = themeAdaptor.RenderTemplate(retVal, dictionary);
+            }
             return retVal;
         }
         #endregion
 
-        private static string TryTransformKey(string input, params object[] variables)
+        private static string TryTransformKey(string input, Dictionary<string, object> variables)
         {
             var retVal = input;
-            if (variables != null)
-            {
-                var dictionary = variables.OfType<Tuple<string, object>>().ToDictionary(x => x.Item1, x => x.Item2);
-                object countValue;
-                if (dictionary.TryGetValue("count", out countValue) && countValue != null)
-                {
-                    var count = Convert.ToUInt16(countValue);
-                    retVal += count < 2 ? _countSuffixes[count] : ".other";
-                }
-            }
 
+            object countValue;
+            if (variables.TryGetValue("count", out countValue) && countValue != null)
+            {
+                var count = Convert.ToUInt16(countValue);
+                retVal += count < 2 ? _countSuffixes[count] : ".other";
+            }
             return retVal;
         }
 

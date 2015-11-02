@@ -23,9 +23,9 @@ namespace VirtoCommerce.LiquidThemeEngine
   
     public class DotLiquidThemedViewEngine : IViewEngine
     {
-        private ShopifyLiquidThemeStructure _themeAdaptor;
+        private ShopifyLiquidThemeEngine _themeAdaptor;
 
-        public DotLiquidThemedViewEngine(ShopifyLiquidThemeStructure themeAdaptor)
+        public DotLiquidThemedViewEngine(ShopifyLiquidThemeEngine themeAdaptor)
         {
             _themeAdaptor = themeAdaptor;
         }

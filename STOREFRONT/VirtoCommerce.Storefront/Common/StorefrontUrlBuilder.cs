@@ -13,20 +13,14 @@ namespace VirtoCommerce.Storefront.Model.Common
     /// </summary>
     public class StorefrontUrlBuilder : IStorefrontUrlBuilder
     {
-        private readonly WorkContext _workContext;
-        public StorefrontUrlBuilder(WorkContext workContext)
-        {
-            _workContext = workContext;
-        }
-     
         #region IStorefrontUrlBuilder members
-        public string ToAbsolute(string virtualPath)
+        public string ToAbsolute(string virtualPath, string store, string language)
         {
-            var retVal = VirtualPathUtility.ToAbsolute(ToAppRelative(virtualPath));
+            var retVal = VirtualPathUtility.ToAbsolute(ToAppRelative(virtualPath, store, language));
             return retVal;
         }
 
-        public string ToAppRelative(string virtualPath)
+        public string ToAppRelative(string virtualPath, string store, string language)
         {
             virtualPath = virtualPath.Replace("~/", String.Empty);
             var retVal = "~/" + virtualPath.TrimStart('/');

@@ -1,13 +1,11 @@
-﻿{% assign language_culture = language | culture %}
-{% assign language_country_code = language | split: '-' | last | downcase %}
-<div class="head-top">
+﻿<div class="head-top">
 		<div class="wrapper">
 			<div class="head-switch">
 				<span>
           {{'Store' | t}}:
           <span class="current">
-						<img title="{{language_culture.native_name}}" alt="{{language_culture.native_name}}" class="flag flag-{{language_country_code}}" src="{{ 'blank.gif' | global_asset_url }}"/>
-              {{shop.name}}, {{shop.currency}}
+						<img title="{{current_culture_name}}" alt="{{current_culture_name}}" class="flag flag-{{current_region_two_leter_name | downcase}}" src="{{ 'blank.gif' | global_asset_url }}"/>
+               {{shop.name}}, {{shop.currency}}
           </span>
 				</span>
 				<ul>
@@ -15,11 +13,11 @@
 						<div class="language">
 							<span>
 								{{'Language' | t}}:
-								<span class="current">{{language_culture.native_name}}</span>
+								<span class="current">{{current_culture_name}}</span>
 							</span>
               <ul>
                 {% for store_language in shop.languages %}
-                {% assign store_language_culture = store_language | culture %}
+                {% assign store_language_culture = store_language %}
                 <li {% if language == store_language %} class="selected" {% endif %}>
                   {% assign country_code = store_language | split: '-' | last | downcase %}
                   <img alt="{{store_language_culture.native_name}}" class="flag flag-{{country_code}}" src="{{ 'blank.gif' | global_asset_url }}"/>

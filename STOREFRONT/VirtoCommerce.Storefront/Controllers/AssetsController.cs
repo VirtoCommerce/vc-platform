@@ -17,8 +17,8 @@ namespace VirtoCommerce.Storefront.Controllers
     public class AssetsController : Controller
     {
         private readonly SassCompilerProxy _compiler = new SassCompilerProxy();
-        private readonly ShopifyLiquidThemeStructure _themeAdaptor;
-        public AssetsController(ShopifyLiquidThemeStructure themeAdaptor)
+        private readonly ShopifyLiquidThemeEngine _themeAdaptor;
+        public AssetsController(ShopifyLiquidThemeEngine themeAdaptor)
         {
             _themeAdaptor = themeAdaptor;
         }

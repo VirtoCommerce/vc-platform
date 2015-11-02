@@ -11,21 +11,26 @@ namespace VirtoCommerce.Storefront.Model
         public DynamicProperty()
         {
             Values = new List<string>();
-            DisplayNames = new List<DynamicPropertyDisplayName>();
+            DictionaryItems = new List<DynamicPropertyDictionaryItem>();
         }
-        public string Name { get; set; }
-        public string ValueType { get; set; }
-        public ICollection<string> Values { get; set; }
-        public ICollection<DynamicPropertyDisplayName> DisplayNames { get; set; }
-    }
 
-    public class DynamicPropertyDisplayName
-    {
+        public string Name { get; set; }
         /// <summary>
-        /// Language ID, e.g. en-US.
+        /// Defines whether a property supports multiple values.
         /// </summary>
-        public string Locale { get; set; }
-        public string Name { get; set; }
+        public bool IsArray { get; set; }
+        /// <summary>
+        /// Dictionary has a predefined set of values. User can select one or more of them and cannot enter arbitrary values.
+        /// </summary>
+        public bool IsDictionary { get; set; }
 
+        public bool IsRequired { get; set; }
+
+        public string ValueType { get; set; }
+
+        public ICollection<string> Values { get; set; }
+        public ICollection<DynamicPropertyDictionaryItem> DictionaryItems { get; set; }
     }
+
+  
 }

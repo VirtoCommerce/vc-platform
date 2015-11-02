@@ -25,7 +25,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
         /// <returns></returns>
         public static string CustomerLoginLink(string input)
         {
-            var themeAdaptor = (ShopifyLiquidThemeStructure)Template.FileSystem;
+            var themeAdaptor = (ShopifyLiquidThemeEngine)Template.FileSystem;
 
             var path = VirtualPathUtility.ToAbsolute("~/account/login");
 
@@ -43,7 +43,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
             string retVal = null;
             if (input != null)
             {
-                var themeAdaptor = (ShopifyLiquidThemeStructure)Template.FileSystem;
+                var themeAdaptor = (ShopifyLiquidThemeEngine)Template.FileSystem;
                 retVal = themeAdaptor.GetAssetAbsoluteUrl(input);
             }
             return retVal;

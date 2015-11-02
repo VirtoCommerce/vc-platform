@@ -8,8 +8,8 @@ namespace VirtoCommerce.Storefront.Model.Common
 {
     public interface IStorefrontUrlBuilder
     {
-        string ToAbsolute(string virtualPath);
-        string ToAppRelative(string virtualPath);
+        string ToAbsolute(string virtualPath, string store, string language);
+        string ToAppRelative(string virtualPath, string store, string language);
         string ToLocalPath(string virtualPath);
     }
 }

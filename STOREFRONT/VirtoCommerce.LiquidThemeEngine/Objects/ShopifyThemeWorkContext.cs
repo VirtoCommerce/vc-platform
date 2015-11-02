@@ -10,11 +10,20 @@ using DotLiquid;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Common;
 
-namespace VirtoCommerce.LiquidThemeEngine
+namespace VirtoCommerce.LiquidThemeEngine.Objects
 {
-    public class ShopifyThemeWorkContext : WorkContext
+    /// <summary>
+    /// https://docs.shopify.com/themes/liquid-documentation/objects
+    /// </summary>
+    public class ShopifyThemeWorkContext : WorkContext, ILiquidizable
     {
+        private readonly IStorefrontUrlBuilder _urlBuilder;
+        public ShopifyThemeWorkContext(IStorefrontUrlBuilder urlBuilder)
+        {
+            _urlBuilder = urlBuilder;
+        }
         #region Aliases for shopify theme compliant
+      
         /// <summary>
         /// Merchants can specify a page_description.
         /// </summary>
@@ -38,22 +47,26 @@ namespace VirtoCommerce.LiquidThemeEngine
         /// <summary>
         /// The liquid object shop returns information about your shop
         /// </summary>
-        public Store Shop
+        public Shop Shop
         {
             get
             {
-                return CurrentStore;
+                return new Shop(CurrentStore, _urlBuilder, CurrentCurrency, CurrentLanguage);
             }
         }
+        #endregion
 
-        public Store[] Shops
+        #region ILiquidizable members
+        public object ToLiquid()
         {
-            get
+            var retVal = new Dictionary<string, object>();
+            foreach (var propertyInfo in this.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
-                return AllStores;
+                retVal.Add(propertyInfo.Name.Decamelize(), propertyInfo.GetValue(this));
             }
-        }
 
+            return retVal;
+        }
         #endregion
     }
 }
