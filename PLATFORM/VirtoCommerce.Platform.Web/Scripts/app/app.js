@@ -75,6 +75,7 @@ angular.module('platformWebApp', AppDependencies).
               var initOptions = $delegate.initialize(options);
               angular.extend(initOptions, {
                   data: 'blade.currentEntities',
+                  enableGridMenu: true,
                   enableVerticalScrollbar: uiGridConstants.scrollbars.NEVER,
                   enableHorizontalScrollbar: uiGridConstants.scrollbars.NEVER,
                   enableRowHeaderSelection: true,
