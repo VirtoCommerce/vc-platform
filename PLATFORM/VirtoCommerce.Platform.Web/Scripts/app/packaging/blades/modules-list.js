@@ -1,80 +1,95 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.modulesListController', ['$rootScope', '$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.modules', function ($rootScope, $scope, bladeNavigationService, dialogService, modules) {
-    $scope.selectedEntityId = null;
+.controller('platformWebApp.modulesListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.modules', 'uiGridConstants', 'platformWebApp.uiGridHelper',
+    function ($scope, bladeNavigationService, dialogService, modules, uiGridConstants, uiGridHelper) {
+        var blade = $scope.blade;
 
-    $scope.blade.refresh = function () {
-        $scope.blade.isLoading = true;
+        blade.refresh = function () {
+            blade.isLoading = true;
 
-        modules.getModules({}, function (results) {
-            $scope.blade.isLoading = false;
-            $scope.blade.currentEntities = results;
-        }, function (error) {
-            bladeNavigationService.setError('Error ' + error.status, $scope.blade);
-        });
-    };
-
-    $scope.blade.selectItem = function (id) {
-        $scope.selectedEntityId = id;
-
-        var newBlade = {
-            id: 'moduleDetails',
-            title: 'Module information',
-            currentEntityId: id,
-            controller: 'platformWebApp.moduleDetailController',
-            template: '$(Platform)/Scripts/app/packaging/blades/module-detail.tpl.html'
+            modules.getModules({}, function (results) {
+                blade.isLoading = false;
+                blade.currentEntities = results;
+                uiGridHelper.onDataLoaded($scope.gridOptions, blade.currentEntities);
+            }, function (error) {
+                bladeNavigationService.setError('Error ' + error.status, blade);
+            });
         };
 
-        bladeNavigationService.showBlade(newBlade, $scope.blade);
-    }
+        blade.selectNode = function (id) {
+            $scope.selectedNodeId = id;
 
-    $scope.blade.onClose = function (closeCallback) {
-        closeChildrenBlades();
-        closeCallback();
-    };
+            var newBlade = {
+                id: 'moduleDetails',
+                title: 'Module information',
+                currentEntityId: id,
+                controller: 'platformWebApp.moduleDetailController',
+                template: '$(Platform)/Scripts/app/packaging/blades/module-detail.tpl.html'
+            };
 
-    function closeChildrenBlades() {
-        angular.forEach($scope.blade.childrenBlades.slice(), function (child) {
-            bladeNavigationService.closeBlade(child);
-        });
-    }
-
-    $scope.blade.headIcon = 'fa-cubes';
-
-    $scope.blade.toolbarCommands = [
-        {
-            name: "Refresh", icon: 'fa fa-refresh',
-            executeMethod: function () {
-                $scope.blade.refresh();
-            },
-            canExecuteMethod: function () {
-                return true;
-            }
-        },
-        {
-            name: "Install", icon: 'fa fa-plus',
-            executeMethod: function () {
-                openAddEntityBlade();
-            },
-            canExecuteMethod: function () {
-                return true;
-            },
-            permission: 'platform:module:manage'
+            bladeNavigationService.showBlade(newBlade, blade);
         }
-    ];
 
-    function openAddEntityBlade() {
-        closeChildrenBlades();
+        function closeChildrenBlades() {
+            angular.forEach(blade.childrenBlades.slice(), function (child) {
+                bladeNavigationService.closeBlade(child);
+            });
+        }
 
-        var newBlade = {
-            id: "moduleWizard",
-            title: "Module install",
-            // subtitle: '',
-            mode: 'install',
-            controller: 'platformWebApp.installWizardController',
-            template: '$(Platform)/Scripts/app/packaging/blades/module-detail.tpl.html'
-        };
-        bladeNavigationService.showBlade(newBlade, $scope.blade);
-    }
+        blade.headIcon = 'fa-cubes';
 
-    $scope.blade.refresh();
-}]);
+        blade.toolbarCommands = [
+            {
+                name: "Refresh", icon: 'fa fa-refresh',
+                executeMethod: function () {
+                    blade.refresh();
+                },
+                canExecuteMethod: function () {
+                    return true;
+                }
+            },
+            {
+                name: "Install", icon: 'fa fa-plus',
+                executeMethod: function () {
+                    openAddEntityBlade();
+                },
+                canExecuteMethod: function () {
+                    return true;
+                },
+                permission: 'platform:module:manage'
+            }
+        ];
+
+        function openAddEntityBlade() {
+            closeChildrenBlades();
+
+            var newBlade = {
+                id: "moduleWizard",
+                title: "Module install",
+                // subtitle: '',
+                mode: 'install',
+                controller: 'platformWebApp.installWizardController',
+                template: '$(Platform)/Scripts/app/packaging/blades/module-detail.tpl.html'
+            };
+            bladeNavigationService.showBlade(newBlade, blade);
+        }
+
+        // ui-grid 
+        uiGridHelper.initialize($scope, {
+            rowTemplate: "modules-list.row.html",
+            columnDefs: [
+                        {
+                            displayName: 'Icon', name: 'iconUrl',
+                            cellTemplate: 'modules-list-icon.cell.html'                            
+                        },
+                        { displayName: 'Module', name: 'title' },
+                        { name: 'version' },
+                        {
+                            displayName: 'Author', name: 'authors',
+                            cellTemplate: 'modules-list-authors.cell.html'
+                        }
+            ]
+        });
+        
+
+        blade.refresh();
+    }]);

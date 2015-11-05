@@ -17,8 +17,8 @@
         blade.isLoading = false;
     };
 
-    $scope.openModule = function (module) {
-        blade.parentBlade.selectItem(module);
+    $scope.openModule = function (id) {
+        blade.parentBlade.selectNode(id);
     }
 
     $scope.blade.toolbarCommands = [

@@ -188,4 +188,58 @@ angular.module('platformWebApp', AppDependencies).
         ['justifyLeft', 'justifyCenter', 'justifyRight', 'indent', 'outdent', 'html', 'insertImage', 'insertLink', 'insertVideo']];
 
     }
-  ]);
+  ])
+.factory('platformWebApp.uiGridHelper', ['$localStorage', '$timeout', 'uiGridConstants', function ($localStorage, $timeout, uiGridConstants) {
+    var retVal = {};
+    retVal.initialize = function ($scope, gridOptions) {
+        $scope.gridOptions = {
+            rowTemplate: gridOptions.rowTemplate,
+            onRegisterApi: function (gridApi) {
+                $scope.gridApi = gridApi;
+
+                var savedState = $localStorage['gridState:' + $scope.blade.template];
+                if (savedState) {
+                    $scope.gridOptions.columnDefs = savedState.columns;
+                    $timeout(function () {
+                        gridApi.saveState.restore($scope, savedState);
+                        // fix cellTemplate
+                        var foundDef;
+                        _.each(gridOptions.columnDefs, function (x) {
+                            if (x.cellTemplate && (foundDef = _.findWhere($scope.gridOptions.columnDefs, { name: x.name }))) {
+                                foundDef.displayName = x.displayName;
+                                foundDef.cellTemplate = x.cellTemplate;
+                            }
+                        });
+                        // gridApi.core.notifyDataChange(uiGridConstants.dataChange.COLUMN);
+                    }, 10);
+                } else {
+                    $scope.gridOptions.columnDefs = gridOptions.columnDefs;
+                }
+
+                gridApi.colResizable.on.columnSizeChanged($scope, saveState);
+                gridApi.colMovable.on.columnPositionChanged($scope, saveState);
+                gridApi.core.on.columnVisibilityChanged($scope, saveState);
+                gridApi.core.on.sortChanged($scope, saveState);
+
+                function saveState() {
+                    //  $localStorage['gridState:' + $scope.blade.template] = gridApi.saveState.save();
+                }
+            }
+        };
+    };
+
+    retVal.onDataLoaded = function (gridOptions, currentEntities) {
+        gridOptions.minRowsToShow = currentEntities.length;
+        if (!gridOptions.columnDefsGenerated && _.any(currentEntities)) {
+            // generate columnDefs for each undefined property
+            _.each(_.keys(currentEntities[0]), function (x) {
+                if (!_.findWhere(gridOptions.columnDefs, { name: x })) {
+                    gridOptions.columnDefs.push({ name: x, visible: false });
+                }
+            });
+            gridOptions.columnDefsGenerated = true;
+        }
+    };
+
+    return retVal;
+}]);
