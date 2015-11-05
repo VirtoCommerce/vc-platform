@@ -9,6 +9,7 @@ using System.Web.Routing;
 using DotLiquid;
 using DotLiquid.Util;
 using System.Threading;
+using VirtoCommerce.Storefront.Model;
 
 namespace VirtoCommerce.LiquidThemeEngine.Filters
 {
@@ -88,13 +89,24 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public static string AbsoluteUrl(string input, string store = null, string language = null)
+        public static string AbsoluteUrl(string input, string storeId = null, string languageCode = null)
         {
             var themeAdaptor = (ShopifyLiquidThemeEngine)Template.FileSystem;
-            store = String.IsNullOrEmpty(store) ? themeAdaptor.WorkContext.CurrentStore.Id : store;
-            language = String.IsNullOrEmpty(language) ? themeAdaptor.WorkContext.CurrentLanguage.CultureName : language;
+            Store store = null;
+            Language language = null;
+            if(!String.IsNullOrEmpty(storeId))
+            {
+                store = themeAdaptor.WorkContext.AllStores.FirstOrDefault(x => String.Equals(x.Id, storeId, StringComparison.InvariantCultureIgnoreCase));
+            }
+            store = store ?? themeAdaptor.WorkContext.CurrentStore;
 
-            var retVal = themeAdaptor.UrlBuilder.ToAbsolute(input, store, language);
+            if (!String.IsNullOrEmpty(languageCode))
+            {
+                language = store.Languages.FirstOrDefault(x => String.Equals(x.CultureName, languageCode, StringComparison.InvariantCultureIgnoreCase));
+            }
+            language = language ?? store.DefaultLanguage;
+
+            var retVal = themeAdaptor.UrlBuilder.ToAbsolute(themeAdaptor.WorkContext, input, store, language);
             return retVal;
         }
     }

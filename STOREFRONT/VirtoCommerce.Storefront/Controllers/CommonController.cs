@@ -20,10 +20,15 @@ namespace VirtoCommerce.Storefront.Controllers
             _storefrontUrlBuilder = urlBuilder;
         }
 
+        /// <summary>
+        /// Set current currency for current user session
+        /// </summary>
+        /// <param name="currency"></param>
+        /// <param name="returnUrl"></param>
+        /// <returns></returns>
         [Route("setcurrency/{currency}")]
         public ActionResult SetCurrency(string currency, string returnUrl = "")
         {
-          
             var cookie = new HttpCookie(StorefrontConstants.CurrencyCookie);
             cookie.HttpOnly = true;
             cookie.Value = currency;
@@ -34,7 +39,9 @@ namespace VirtoCommerce.Storefront.Controllers
 
             //home page  and prevent open redirection attack
             if (String.IsNullOrEmpty(returnUrl) || !Url.IsLocalUrl(returnUrl))
-                returnUrl = _storefrontUrlBuilder.ToAbsolute("~/", _workContext.CurrentStore.Id, _workContext.CurrentLanguage.CultureName);
+            {
+                returnUrl = _storefrontUrlBuilder.ToAbsolute(_workContext, "~/", _workContext.CurrentStore, _workContext.CurrentLanguage);
+            }
 
             return Redirect(returnUrl);
         }

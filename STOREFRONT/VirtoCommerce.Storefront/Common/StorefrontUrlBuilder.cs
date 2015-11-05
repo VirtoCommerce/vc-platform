@@ -14,20 +14,41 @@ namespace VirtoCommerce.Storefront.Model.Common
     public class StorefrontUrlBuilder : IStorefrontUrlBuilder
     {
         #region IStorefrontUrlBuilder members
-        public string ToAbsolute(string virtualPath, string store, string language)
+        public string ToAbsolute(WorkContext context, string virtualPath, Store store, Language language)
         {
-            if(String.IsNullOrEmpty(virtualPath))
+            if (String.IsNullOrEmpty(virtualPath))
             {
                 virtualPath = "~/ ";
             }
-            var retVal = VirtualPathUtility.ToAbsolute(ToAppRelative(virtualPath, store, language));
+            var retVal = VirtualPathUtility.ToAbsolute(ToAppRelative(context, virtualPath, store, language));
             return retVal;
         }
 
-        public string ToAppRelative(string virtualPath, string store, string language)
+        public string ToAppRelative(WorkContext context, string virtualPath, Store store, Language language)
         {
             virtualPath = virtualPath.Replace("~/", String.Empty);
-            var retVal = "~/" + store + "/" + language + "/" + virtualPath.TrimStart('/');
+            var retVal = "~/";
+       
+            if (store != null)
+            {
+                //Do not use store in url if it single
+                if (context.AllStores.Count() > 1)
+                {
+                    //Check that store exist for not exist store use current
+                    store = context.AllStores.Contains(store) ? store : context.CurrentStore;
+                    retVal += store.Id + "/";
+                }
+            }
+
+            //Do not use language in url if it single for store
+            if (language != null && store != null && store.Languages.Count() > 1)
+            {
+                language = store.Languages.Contains(language) ? language : store.DefaultLanguage;
+                retVal += language.CultureName + "/";
+            }
+
+            retVal += virtualPath.TrimStart('/');
+
             return retVal;
         } 
 

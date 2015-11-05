@@ -16,15 +16,13 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
     public class Shop : Drop
     {
         private readonly Store _store;
-        private readonly Currency _currency;
-        private readonly Language _language;
         private readonly IStorefrontUrlBuilder _urlBuilder;
-        public Shop(Store store, IStorefrontUrlBuilder urlBuilder, Currency currency, Language language)
+        private readonly WorkContext _context;
+        public Shop(Store store, IStorefrontUrlBuilder urlBuilder, WorkContext context)
         {
             _store = store;
-            _currency = currency;
-            _language = language;
             _urlBuilder = urlBuilder;
+            _context = context;
         }
 
         /// <summary>
@@ -34,7 +32,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         {
             get
             {
-                return _currency.Code;
+                return _context.CurrentCurrency.Code;
             }
         }
 
@@ -92,11 +90,11 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
                 if (Currency.Equals("GBP", StringComparison.OrdinalIgnoreCase)
                    || Currency.Equals("USD", StringComparison.OrdinalIgnoreCase))
                 {
-                    return _currency.Symbol + "{{ amount }}";
+                    return _context.CurrentCurrency.Symbol + "{{ amount }}";
                 }
                 else
                 {
-                   return  "{{ amount }} " + _currency.Symbol;
+                   return  "{{ amount }} " + _context.CurrentCurrency.Symbol;
                 }
             }
         }
@@ -130,7 +128,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         {
             get
             {
-                return String.IsNullOrEmpty(_store.Url) ? _urlBuilder.ToAbsolute("~/", _store.Id, _language.CultureName) : _store.Url;
+                return String.IsNullOrEmpty(_store.Url) ? _urlBuilder.ToAbsolute(_context, "~/", _store, _context.CurrentLanguage) : _store.Url;
             }
         }
 

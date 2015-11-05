@@ -19,7 +19,7 @@
                 {% for store_language in current_store.languages %}
                 <li {% if store_language == current_language %} class="selected" {% endif %}>
                     <img alt="{{store_language.native_name}}" class="flag flag-{{store_language.two_letter_region_name | downcase}}" src="{{ 'blank.gif' | asset_url }}"/>
-                    <a title="{{store_language.native_name}}" href="{{store_language.culture_name | absolute_url : '', store_language.culture_name}}">{{store_language.native_name}}</a>
+                    <a title="{{store_language.native_name}}" href="{{'' | absolute_url : '', store_language.culture_name}}">{{store_language.native_name}}</a>
                   </li>
                 {% endfor %}
               </ul>

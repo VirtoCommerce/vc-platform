@@ -149,7 +149,7 @@ namespace VirtoCommerce.LiquidThemeEngine
         {
             get
             {
-                return _storeFrontUrlBuilder.ToAppRelative(_themesAssetsRelativeUrl, WorkContext.CurrentStore.Id, WorkContext.CurrentLanguage.CultureName);
+                return _storeFrontUrlBuilder.ToAppRelative(WorkContext, _themesAssetsRelativeUrl, WorkContext.CurrentStore, WorkContext.CurrentLanguage);
             }
         }
       
@@ -290,7 +290,7 @@ namespace VirtoCommerce.LiquidThemeEngine
         /// <returns></returns>
         public string GetAssetAbsoluteUrl(string assetName)
         {
-            return _storeFrontUrlBuilder.ToAbsolute(_themesAssetsRelativeUrl.TrimEnd('/') + "/" + assetName.TrimStart('/'), WorkContext.CurrentStore.Id, WorkContext.CurrentLanguage.CultureName);
+            return _storeFrontUrlBuilder.ToAbsolute(WorkContext, _themesAssetsRelativeUrl.TrimEnd('/') + "/" + assetName.TrimStart('/'), WorkContext.CurrentStore, WorkContext.CurrentLanguage);
         }
 
         private static bool ContainsMethod(object left, object right)
