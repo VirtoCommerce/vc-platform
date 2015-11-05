@@ -79,9 +79,14 @@
             columnDefs: [
                         {
                             displayName: 'Icon', name: 'iconUrl',
-                            cellTemplate: 'modules-list-icon.cell.html'                            
+                            enableColumnResizing: false,
+                            cellTemplate: 'modules-list-icon.cell.html'
                         },
-                        { displayName: 'Module', name: 'title' },
+                        {
+                            displayName: 'Module', name: 'customColumn', field: 'title',
+                            sort: { direction: uiGridConstants.DESC },
+                            cellTemplate: 'role-list-name.cell.html'
+                        },
                         { name: 'version' },
                         {
                             displayName: 'Author', name: 'authors',
@@ -89,7 +94,7 @@
                         }
             ]
         });
-        
+
 
         blade.refresh();
     }]);

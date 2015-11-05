@@ -85,7 +85,6 @@ angular.module('platformWebApp', AppDependencies).
                   //saveOrder: false,
                   //saveScroll: false,
                   saveFocus: false,
-                  //saveVisible: false,
                   //saveSort: false,
                   saveFilter: false,
                   savePinning: false,
@@ -192,37 +191,41 @@ angular.module('platformWebApp', AppDependencies).
 .factory('platformWebApp.uiGridHelper', ['$localStorage', '$timeout', 'uiGridConstants', function ($localStorage, $timeout, uiGridConstants) {
     var retVal = {};
     retVal.initialize = function ($scope, gridOptions) {
+        //$scope.$on('$destroy', function () {
+        //    $localStorage['gridState:' + $scope.blade.template] = $scope.gridApi.saveState.save();
+        //});
+
+        var savedState = $localStorage['gridState:' + $scope.blade.template];
+        if (savedState) {
+            // extend saved columns with custom columnDef information (e.g. cellTemplate, displayName)
+            var foundDef;
+            _.each(savedState.columns, function (x) {
+                if (foundDef = _.findWhere(gridOptions.columnDefs, { name: x.name })) {
+                    _.extend(x, foundDef);
+                }
+            });
+            gridOptions.columnDefs = savedState.columns;
+        }
+
         $scope.gridOptions = {
             rowTemplate: gridOptions.rowTemplate,
+            columnDefs: gridOptions.columnDefs,
             onRegisterApi: function (gridApi) {
+                //set gridApi on scope
                 $scope.gridApi = gridApi;
 
-                var savedState = $localStorage['gridState:' + $scope.blade.template];
                 if (savedState) {
-                    $scope.gridOptions.columnDefs = savedState.columns;
                     $timeout(function () {
                         gridApi.saveState.restore($scope, savedState);
-                        // fix cellTemplate
-                        var foundDef;
-                        _.each(gridOptions.columnDefs, function (x) {
-                            if (x.cellTemplate && (foundDef = _.findWhere($scope.gridOptions.columnDefs, { name: x.name }))) {
-                                foundDef.displayName = x.displayName;
-                                foundDef.cellTemplate = x.cellTemplate;
-                            }
-                        });
-                        // gridApi.core.notifyDataChange(uiGridConstants.dataChange.COLUMN);
                     }, 10);
-                } else {
-                    $scope.gridOptions.columnDefs = gridOptions.columnDefs;
                 }
 
                 gridApi.colResizable.on.columnSizeChanged($scope, saveState);
                 gridApi.colMovable.on.columnPositionChanged($scope, saveState);
                 gridApi.core.on.columnVisibilityChanged($scope, saveState);
                 gridApi.core.on.sortChanged($scope, saveState);
-
                 function saveState() {
-                    //  $localStorage['gridState:' + $scope.blade.template] = gridApi.saveState.save();
+                    $localStorage['gridState:' + $scope.blade.template] = gridApi.saveState.save();
                 }
             }
         };
@@ -230,6 +233,7 @@ angular.module('platformWebApp', AppDependencies).
 
     retVal.onDataLoaded = function (gridOptions, currentEntities) {
         gridOptions.minRowsToShow = currentEntities.length;
+
         if (!gridOptions.columnDefsGenerated && _.any(currentEntities)) {
             // generate columnDefs for each undefined property
             _.each(_.keys(currentEntities[0]), function (x) {

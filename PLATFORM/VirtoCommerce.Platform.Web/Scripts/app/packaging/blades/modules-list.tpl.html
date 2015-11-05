@@ -53,6 +53,12 @@
 <script type="text/ng-template" id="modules-list-icon.cell.html">
     <div class="image" style="background-image: url('{{COL_FIELD}}');height:50px"></div>
 </script>
+<script type="text/ng-template" id="role-list-name.cell.html">
+    <div class="ui-grid-cell-contents">
+        <span class="table-t" title="{{COL_FIELD}}">{{COL_FIELD}}</span>
+        <span class="table-descr" title="{{row.entity.description}}" style="overflow: hidden; text-overflow: ellipsis;">{{row.entity.description}}</span>
+    </div>
+</script>
 <script type="text/ng-template" id="modules-list-authors.cell.html">
     <div class="ui-grid-cell-contents"><span ng-repeat="x in COL_FIELD">{{x}} </span></div>
 </script>

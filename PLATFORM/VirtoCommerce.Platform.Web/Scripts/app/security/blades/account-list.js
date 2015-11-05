@@ -1,6 +1,6 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.accountListController', ['$scope', 'platformWebApp.accounts', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'uiGridConstants', '$localStorage', '$timeout',
-function ($scope, accounts, bladeNavigationService, dialogService, uiGridConstants, $localStorage, $timeout) {
+.controller('platformWebApp.accountListController', ['$scope', 'platformWebApp.accounts', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'uiGridConstants', 'platformWebApp.uiGridHelper',
+function ($scope, accounts, bladeNavigationService, dialogService, uiGridConstants, uiGridHelper) {
     var blade = $scope.blade;
 
     //pagination settings
@@ -26,14 +26,7 @@ function ($scope, accounts, bladeNavigationService, dialogService, uiGridConstan
 
             $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
             blade.currentEntities = data.users;
-            $scope.gridOptions.minRowsToShow = blade.currentEntities.length;
-            if (!blade.allColumns && _.any(blade.currentEntities)) {
-                blade.allColumns = _.map(_.keys(blade.currentEntities[0]), function (x) {
-                    var found = _.findWhere($scope.gridOptions.columnDefs, { name: x });
-                    return found ? found : { name: x, visible: false };
-                });
-                $scope.gridOptions.columnDefs = blade.allColumns;
-            }
+            uiGridHelper.onDataLoaded($scope.gridOptions, blade.currentEntities);
 
             if (selectedNode != null) {
                 //select the node in the new list
@@ -147,21 +140,10 @@ function ($scope, accounts, bladeNavigationService, dialogService, uiGridConstan
         }
     ];
 
-    // ui-grid    
-    $scope.gridOptions = {
+    // ui-grid
+    uiGridHelper.initialize($scope, {
         rowTemplate: "<div ng-click=\"grid.appScope.blade.selectNode(row.entity)\" ng-repeat=\"(colRenderIndex, col) in colContainer.renderedColumns track by col.uid\" ui-grid-one-bind-id-grid=\"rowRenderIndex + '-' + col.uid + '-cell'\" class=\"ui-grid-cell\" ng-class=\"{ 'ui-grid-row-header-cell': col.isRowHeader, '__selected': row.entity.userName === grid.appScope.selectedNodeId }\" role=\"{{col.isRowHeader ? 'rowheader' : 'gridcell'}}\" ui-grid-cell style='cursor:pointer'></div>",
-        onRegisterApi: function (gridApi) {
-            //set gridApi on scope
-            $scope.gridApi = gridApi;
-
-            var savedState = $localStorage['gridState:' + blade.template];
-            if (savedState) {
-                $scope.gridOptions.columnDefs = savedState.columns;
-                $timeout(function () {
-                    gridApi.saveState.restore($scope, savedState);
-                }, 10);
-            } else {
-                $scope.gridOptions.columnDefs = [
+        columnDefs: [
                     {
                         displayName: 'Name',
                         name: 'userName',
@@ -172,27 +154,9 @@ function ($scope, accounts, bladeNavigationService, dialogService, uiGridConstan
                     },
                     { displayName: 'Account type', name: 'userType' },
                     { displayName: 'State', name: 'userState' }
-                ];
-            }
-
-            //gridApi.selection.on.rowSelectionChanged($scope, function (row) {
-            //    if (row.isSelected) {
-            //        //blade.selectNode(row.entity);
-            //    }
-            //});
-
-            gridApi.colResizable.on.columnSizeChanged($scope, saveState);
-            gridApi.colMovable.on.columnPositionChanged($scope, saveState);
-            gridApi.core.on.columnVisibilityChanged($scope, saveState);
-            gridApi.core.on.sortChanged($scope, saveState);
-        }
-    };
-
-    function saveState() {
-        $localStorage['gridState:' + blade.template] = $scope.gridApi.saveState.save();
-    }
-
-
+        ]
+    });
+    
     $scope.$watch('pageSettings.currentPage', blade.refresh);
 
     // actions on load
