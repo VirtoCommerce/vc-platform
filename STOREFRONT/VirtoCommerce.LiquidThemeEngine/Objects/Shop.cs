@@ -16,10 +16,10 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
     public class Shop : Drop
     {
         private readonly Store _store;
-        private readonly string _currency;
-        private readonly string _language;
+        private readonly Currency _currency;
+        private readonly Language _language;
         private readonly IStorefrontUrlBuilder _urlBuilder;
-        public Shop(Store store, IStorefrontUrlBuilder urlBuilder, string currency, string language)
+        public Shop(Store store, IStorefrontUrlBuilder urlBuilder, Currency currency, Language language)
         {
             _store = store;
             _currency = currency;
@@ -34,7 +34,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         {
             get
             {
-                return _currency;
+                return _currency.Code;
             }
         }
 
@@ -89,14 +89,14 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         {
             get
             {
-                if (_currency.Equals("GBP", StringComparison.OrdinalIgnoreCase)
-                   || _currency.Equals("USD", StringComparison.OrdinalIgnoreCase))
+                if (Currency.Equals("GBP", StringComparison.OrdinalIgnoreCase)
+                   || Currency.Equals("USD", StringComparison.OrdinalIgnoreCase))
                 {
-                    return  _currency.GetCurrencySymbol() + "{{ amount }}";
+                    return _currency.Symbol + "{{ amount }}";
                 }
                 else
                 {
-                   return  "{{ amount }} " + _currency.GetCurrencySymbol();
+                   return  "{{ amount }} " + _currency.Symbol;
                 }
             }
         }
@@ -130,7 +130,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         {
             get
             {
-                return String.IsNullOrEmpty(_store.Url) ? _urlBuilder.ToAbsolute("~/", _store.Id, _language) : _store.Url;
+                return String.IsNullOrEmpty(_store.Url) ? _urlBuilder.ToAbsolute("~/", _store.Id, _language.CultureName) : _store.Url;
             }
         }
 
@@ -141,7 +141,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         {
             get
             {
-                return _store.Currencies.ToArray();
+                return _store.Currencies.Select(x=>x.Code).ToArray();
             }
         }
 
@@ -152,7 +152,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         {
             get
             {
-                return _store.Languages.ToArray();
+                return _store.Languages.Select(x=>x.CultureName).ToArray();
             }
         }
 

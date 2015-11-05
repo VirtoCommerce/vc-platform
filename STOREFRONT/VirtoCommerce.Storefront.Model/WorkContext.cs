@@ -14,14 +14,16 @@ namespace VirtoCommerce.Storefront.Model
         /// Current customer
         /// </summary>
         public Customer Customer { get; set; }
+     
         /// <summary>
-        /// Language culture name format (e.g. en-US)
+        /// Current language and culture
         /// </summary>
-        public string CurrentLanguage { get; set; }
+        public Language CurrentLanguage { get; set; }
+      
         /// <summary>
-        /// Currency code in ISO 4217 format (e.g. USD)
+        /// Current currency
         /// </summary>
-        public string CurrentCurrency { get; set; }
+        public Currency CurrentCurrency { get; set; }
 
         private SeoInfo _seoInfo;
         public SeoInfo CurrentPageSeo
@@ -40,44 +42,7 @@ namespace VirtoCommerce.Storefront.Model
                 _seoInfo = value;
             }
         }
-
-        public string CurrentCultureName
-        {
-            get
-            {
-                return CurrentCulture.NativeName;
-            }
-        }
-
-        public string CurrentRegionTwoLeterName
-        {
-            get
-            {
-                return CurrentRegionInfo.TwoLetterISORegionName;
-            }
-        }
-
-        public CultureInfo CurrentCulture
-        {
-            get
-            {
-                var retVal = CultureInfo.CurrentCulture;
-                if(CurrentLanguage != null)
-                {
-                    retVal = CultureInfo.GetCultureInfo(CurrentLanguage);
-                }
-                return retVal;
-            }
-        }
-
-        public RegionInfo CurrentRegionInfo
-        {
-            get
-            {
-                return new RegionInfo(CurrentCulture.Name);
-            }
-
-        }
+     
 
         public Store CurrentStore { get; set; }
 

@@ -13,8 +13,8 @@ namespace VirtoCommerce.Storefront.Model
     {
         public Store()
         {
-            Languages = new List<string>();
-            Currencies = new List<string>();
+            Languages = new List<Language>();
+            Currencies = new List<Currency>();
             SeoInfos = new List<SeoInfo>();
             DynamicProperties = new List<DynamicProperty>();
 
@@ -48,21 +48,21 @@ namespace VirtoCommerce.Storefront.Model
         /// <summary>
         /// Default Language culture name  of store ( example en-US )
         /// </summary>
-        public string DefaultLanguage { get; set; }
+        public Language DefaultLanguage { get; set; }
 
         /// <summary>
         /// All supported lanuagages
         /// </summary>
-        public ICollection<string> Languages { get; set; }
+        public ICollection<Language> Languages { get; set; }
 
         /// <summary>
         /// Default currency of store. Use ISO 4217 currency codes
         /// </summary>
-        public string DefaultCurrency { get; set; }
+        public Currency DefaultCurrency { get; set; }
         /// <summary>
         /// List of supported additional currencies
         /// </summary>
-        public ICollection<string> Currencies { get; set; }
+        public ICollection<Currency> Currencies { get; set; }
 
         /// <summary>
         /// Product catalog id assigned to store

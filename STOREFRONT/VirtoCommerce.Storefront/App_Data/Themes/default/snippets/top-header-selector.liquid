@@ -4,24 +4,22 @@
 				<span>
           {{'Store' | t}}:
           <span class="current">
-						<img title="{{current_culture_name}}" alt="{{current_culture_name}}" class="flag flag-{{current_region_two_leter_name | downcase}}" src="{{ 'blank.gif' | global_asset_url }}"/>
-               {{shop.name}}, {{shop.currency}}
-          </span>
+						<img title="{{current_language.culture_name}}" alt="{{current_language.culture_name}}" class="flag flag-{{current_language.two_letter_region_name | downcase}}" src="{{ 'blank.gif' | asset_url }}"/>
+			  {{current_store.name}}, {{current_currency.code}}
+		  </span>
 				</span>
 				<ul>
 					<li>
 						<div class="language">
 							<span>
 								{{'Language' | t}}:
-								<span class="current">{{current_culture_name}}</span>
+								<span class="current">{{current_language.culture_name}}</span>
 							</span>
               <ul>
-                {% for store_language in shop.languages %}
-                {% assign store_language_culture = store_language %}
-                <li {% if language == store_language %} class="selected" {% endif %}>
-                  {% assign country_code = store_language | split: '-' | last | downcase %}
-                  <img alt="{{store_language_culture.native_name}}" class="flag flag-{{country_code}}" src="{{ 'blank.gif' | global_asset_url }}"/>
-                    <a title="{{store_language_culture.native_name}}" href="{{store_language | link_to_switch_language}}">{{store_language_culture.native_name}}</a>
+                {% for store_language in current_store.languages %}
+                <li {% if store_language == current_language %} class="selected" {% endif %}>
+                    <img alt="{{store_language.native_name}}" class="flag flag-{{store_language.two_letter_region_name | downcase}}" src="{{ 'blank.gif' | asset_url }}"/>
+                    <a title="{{store_language.native_name}}" href="{{store_language.culture_name | absolute_url : '', store_language.culture_name}}">{{store_language.native_name}}</a>
                   </li>
                 {% endfor %}
               </ul>
@@ -31,12 +29,12 @@
 					<li>
 						<div class="store">
 							<span>
-                {{'Store' | t}}: <span class="current">{{shop.name}}</span>
+                {{'Store' | t}}: <span class="current">{{current_store.name}}</span>
 							</span>
 							<ul>
-                {% for shop_temp in Shops %}
-                <li {% if shop.name == shop_temp.name %} class="selected" {% endif %}>
-									<a href="{{shop_temp.url}}">{{shop_temp.name}}</a>
+                {% for store_temp in all_stores %}
+                <li {% if currentStore.name == store_temp.name %} class="selected" {% endif %}>
+									<a href="{{'' | absolute_url : store_temp.name, current_language.culture_name}}">{{store_temp.name}}</a>
 								</li>
                 {% endfor %}
               </ul>
@@ -46,12 +44,12 @@
 					<li>
 						<div class="currency">
 							<span>
-                {{'Currency' | t}}: <span class="current">{{shop.currency}}</span>
+                {{'Currency' | t}}: <span class="current">{{current_currency.code}}</span>
 							</span>
 							<ul>
-                {% for currency_temp in shop.currencies %}
-                <li {% if currency == currency_temp %} class="selected" {% endif %}>
-									<a onclick="VirtoCommerce.changeCurrency('{{currency_temp}}'); return false;" href="">{{currency_temp}}</a>
+								{% for currency_temp in current_store.currencies %}
+								<li {% if current_currency == currency_temp %} class="selected" {% endif %}>
+									<a href="{{ 'common/setcurrency/' | append : currency_temp.code | absolute_url  }}">{{currency_temp.code}}</a>
 								</li>
                 {% endfor %}
               </ul>

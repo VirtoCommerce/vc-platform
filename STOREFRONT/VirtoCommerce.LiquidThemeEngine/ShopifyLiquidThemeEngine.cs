@@ -89,7 +89,16 @@ namespace VirtoCommerce.LiquidThemeEngine
                 return _workContextFactory() as ShopifyThemeWorkContext;
             }
         }
-
+        /// <summary>
+        /// Store url builder
+        /// </summary>
+        public IStorefrontUrlBuilder UrlBuilder
+        {
+            get
+            {
+                return _storeFrontUrlBuilder;
+            }
+        }
         /// <summary>
         /// Default master view name
         /// </summary>
@@ -118,7 +127,7 @@ namespace VirtoCommerce.LiquidThemeEngine
         {
             get
             {
-                return _storeFrontUrlBuilder.ToAppRelative(_themesRelativeUrl + "/" + ThemeName, WorkContext.CurrentStore.Id, WorkContext.CurrentLanguage);
+                return _themesRelativeUrl + "/" + ThemeName;
             }
 
         }
@@ -140,7 +149,7 @@ namespace VirtoCommerce.LiquidThemeEngine
         {
             get
             {
-                return _storeFrontUrlBuilder.ToAppRelative(_themesAssetsRelativeUrl, WorkContext.CurrentStore.Id, WorkContext.CurrentLanguage);
+                return _storeFrontUrlBuilder.ToAppRelative(_themesAssetsRelativeUrl, WorkContext.CurrentStore.Id, WorkContext.CurrentLanguage.CultureName);
             }
         }
       
@@ -249,10 +258,8 @@ namespace VirtoCommerce.LiquidThemeEngine
         /// <returns></returns>
         public JObject ReadLocalization()
         {
-            var culture = WorkContext.CurrentCulture;
-
             var localeDirectory = new DirectoryInfo(Path.Combine(ThemeLocalPath, "locales"));
-            var localeFilePath = Path.Combine(localeDirectory.FullName, String.Format("{0}.json", culture.TwoLetterISOLanguageName));
+            var localeFilePath = Path.Combine(localeDirectory.FullName, String.Format("{0}.json", WorkContext.CurrentLanguage.TwoLetterLanguageName));
             var localeDefaultPath = localeDirectory.GetFiles("*.default.json").Select(x => x.FullName).FirstOrDefault();
 
             JObject localeJson = null;
@@ -283,7 +290,7 @@ namespace VirtoCommerce.LiquidThemeEngine
         /// <returns></returns>
         public string GetAssetAbsoluteUrl(string assetName)
         {
-            return _storeFrontUrlBuilder.ToAbsolute(_themesAssetsRelativeUrl.TrimEnd('/') + "/" + assetName.TrimStart('/'), WorkContext.CurrentStore.Id, WorkContext.CurrentLanguage);
+            return _storeFrontUrlBuilder.ToAbsolute(_themesAssetsRelativeUrl.TrimEnd('/') + "/" + assetName.TrimStart('/'), WorkContext.CurrentStore.Id, WorkContext.CurrentLanguage.CultureName);
         }
 
         private static bool ContainsMethod(object left, object right)

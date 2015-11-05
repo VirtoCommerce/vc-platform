@@ -82,5 +82,20 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
         {
             return AssetUrl(input);
         }
+
+        /// <summary>
+        /// Get absolute storefront url with specified store and language
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static string AbsoluteUrl(string input, string store = null, string language = null)
+        {
+            var themeAdaptor = (ShopifyLiquidThemeEngine)Template.FileSystem;
+            store = String.IsNullOrEmpty(store) ? themeAdaptor.WorkContext.CurrentStore.Id : store;
+            language = String.IsNullOrEmpty(language) ? themeAdaptor.WorkContext.CurrentLanguage.CultureName : language;
+
+            var retVal = themeAdaptor.UrlBuilder.ToAbsolute(input, store, language);
+            return retVal;
+        }
     }
 }
