@@ -11,6 +11,6 @@ namespace VirtoCommerce.Platform.Web.Model.Notifications
         public string ObjectId { get; set; }
         public string ObjectTypeId { get; set; }
         public string Language { get; set; }
-        public IDictionary<string, object> NotificationParameters { get; set; }
+        public NotificationParameter[] NotificationParameters { get; set; }
     }
 }

@@ -80,13 +80,20 @@
                     return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
                 }
             });
-
-
+            
             uploader.onSuccessItem = function (fileItem, images, status, headers) {
                 angular.forEach(images, function (image) {
                     //ADD uploaded image
                     blade.currentEntity.images.push(image);
                 });
+            };
+
+            uploader.onAfterAddingAll = function (addedItems) {
+                bladeNavigationService.setError(null, blade);
+            };
+
+            uploader.onErrorItem = function (item, response, status, headers) {
+                bladeNavigationService.setError(item._file.name + ' failed: ' + (response.message ? response.message : status), blade);
             };
         }
     };

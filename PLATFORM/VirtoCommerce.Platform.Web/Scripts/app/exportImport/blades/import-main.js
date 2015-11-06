@@ -59,6 +59,11 @@
 
         uploader.onBeforeUploadItem = function (fileItem) {
             blade.isLoading = true;
+            bladeNavigationService.setError(null, blade);
+        };
+
+        uploader.onErrorItem = function (item, response, status, headers) {
+            bladeNavigationService.setError(item._file.name + ' failed: ' + (response.message ? response.message : status), blade);
         };
 
         uploader.onSuccessItem = function (fileItem, asset, status, headers) {

@@ -2,7 +2,7 @@
 .controller('virtoCommerce.quoteModule.quoteAssetController', ['$scope', 'virtoCommerce.catalogModule.items', 'platformWebApp.bladeNavigationService', '$filter', 'FileUploader', 'platformWebApp.dialogService', '$injector', function ($scope, items, bladeNavigationService, $filter, FileUploader, dialogService, $injector) {
     var blade = $scope.blade;
     $scope.currentEntities = blade.currentEntities = blade.currentEntity.attachments;
-    
+
     function initialize() {
         if (!$scope.uploader) {
             // create the uploader
@@ -21,9 +21,17 @@
                     blade.currentEntities.push(asset);
                 });
             };
+
+            uploader.onAfterAddingAll = function (addedItems) {
+                bladeNavigationService.setError(null, blade);
+            };
+
+            uploader.onErrorItem = function (item, response, status, headers) {
+                bladeNavigationService.setError(item._file.name + ' failed: ' + (response.message ? response.message : status), blade);
+            };
         }
     }
-    
+
     $scope.removeAction = function (asset) {
         var idx = blade.currentEntities.indexOf(asset);
         if (idx >= 0) {
@@ -36,7 +44,7 @@
     };
 
     blade.headIcon = 'fa-file-text-o';
-    
+
     initialize();
     blade.isLoading = false;
 }]);
