@@ -114,14 +114,15 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// Search asset folders and blobs
         /// </summary>
         /// <param name="folderUrl"></param>
+        /// <param name="keyword"></param>
         /// <returns></returns>
         [HttpGet]
         [ResponseType(typeof(webModel.AssetListItem[]))]
         [Route("")]
         [CheckPermission(Permission = PredefinedPermissions.AssetRead)]
-        public IHttpActionResult SearchAssetItems(string folderUrl = null)
+        public IHttpActionResult SearchAssetItems(string folderUrl = null, string keyword = null)
         {
-            var result = _blobProvider.Search(folderUrl);
+            var result = _blobProvider.Search(folderUrl, keyword);
             return Ok(result.ToWebModel());
         }
 

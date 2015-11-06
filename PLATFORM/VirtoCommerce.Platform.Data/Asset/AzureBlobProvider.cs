@@ -43,7 +43,7 @@ namespace VirtoCommerce.Platform.Data.Asset
             directoryPath = GetDirectoryPathFromUrl(directoryPath);
 
             var container = _cloudBlobClient.GetContainerReference(containerName);
-            container.CreateIfNotExists(BlobContainerPublicAccessType.Container);
+            container.CreateIfNotExists(BlobContainerPublicAccessType.Blob);
 
             ICloudBlob blob = null;
             if (String.IsNullOrEmpty(directoryPath))
@@ -119,7 +119,7 @@ namespace VirtoCommerce.Platform.Data.Asset
         }
 
 
-        public BlobSearchResult Search(string folderUrl)
+        public BlobSearchResult Search(string folderUrl, string keyword)
         {
             var retVal = new BlobSearchResult();
 
@@ -131,8 +131,13 @@ namespace VirtoCommerce.Platform.Data.Asset
                 {
                     var directoryPath = GetDirectoryPathFromUrl(folderUrl);
                     var blobDirectory = !String.IsNullOrEmpty(directoryPath) ? blobContainer.GetDirectoryReference(directoryPath) : null;
+                    var listBlobs = blobDirectory != null ? blobDirectory.ListBlobs() : blobContainer.ListBlobs();
+                    if (!String.IsNullOrEmpty(keyword))
+                    {
+                        listBlobs =  blobContainer.ListBlobs(keyword, useFlatBlobListing: true);
+                    }
                     // Loop over items within the container and output the length and URI.
-                    foreach (IListBlobItem item in blobDirectory != null ? blobDirectory.ListBlobs() : blobContainer.ListBlobs())
+                    foreach (IListBlobItem item in listBlobs)
                     {
                         var block = item as CloudBlockBlob;
                         var directory = item as CloudBlobDirectory;
@@ -140,21 +145,25 @@ namespace VirtoCommerce.Platform.Data.Asset
                         {
                             var blobInfo = new BlobInfo
                             {
-                                Url = block.Uri.ToString(),
-                                FileName = Path.GetFileName(block.Uri.ToString()),
+                                Url = Uri.EscapeUriString(block.Uri.ToString()),
+                                FileName = Path.GetFileName(Uri.UnescapeDataString(block.Uri.ToString())),
                                 ContentType = block.Properties.ContentType,
                                 Size = block.Properties.Length,
                                 ModifiedDate = block.Properties.LastModified != null ? block.Properties.LastModified.Value.DateTime : (DateTime?) null
                             };
-                            retVal.Items.Add(blobInfo);
+                            //Do not return empty blob (created with directory because azure blob not support direct directory creation)
+                            if (!String.IsNullOrEmpty(blobInfo.FileName))
+                            {
+                                retVal.Items.Add(blobInfo);
+                            }
                         }
                         if (directory != null)
                         {
                             var folder = new BlobFolder
                             {
-                                Name = directory.Uri.AbsolutePath.Split(new[] { _cloudBlobClient.DefaultDelimiter }, StringSplitOptions.RemoveEmptyEntries).Last(),
-                                Url = directory.Uri.ToString(),
-                                ParentUrl = directory.Parent != null ? directory.Parent.Uri.ToString() : null
+                                Name = Uri.UnescapeDataString(directory.Uri.AbsolutePath).Split(new[] { _cloudBlobClient.DefaultDelimiter }, StringSplitOptions.RemoveEmptyEntries).Last(),
+                                Url = Uri.EscapeUriString(directory.Uri.ToString()),
+                                ParentUrl = directory.Parent != null ? Uri.EscapeUriString(directory.Parent.Uri.ToString()) : null
                             };
                             retVal.Folders.Add(folder);
                         }
@@ -168,7 +177,7 @@ namespace VirtoCommerce.Platform.Data.Asset
                     var folder = new BlobFolder
                     {
                         Name = container.Uri.AbsolutePath.Split('/').Last(),
-                        Url = container.Uri.ToString()
+                        Url = Uri.EscapeUriString(container.Uri.ToString())
                     };
                     retVal.Folders.Add(folder);
                 }
@@ -182,11 +191,12 @@ namespace VirtoCommerce.Platform.Data.Asset
 
             var containerName = GetContainerNameFromUrl(path);
             var blobContainer = _cloudBlobClient.GetContainerReference(containerName);
-            blobContainer.CreateIfNotExists(BlobContainerPublicAccessType.Container);
+            blobContainer.CreateIfNotExists(BlobContainerPublicAccessType.Blob);
 
             var directoryPath = GetDirectoryPathFromUrl(path);
             if (!String.IsNullOrEmpty(directoryPath))
             {
+                //Need upload empty blob because azure blob storage not support direct directory creation
                 blobContainer.GetBlockBlobReference(directoryPath).UploadText(String.Empty);
             }
         }
@@ -218,7 +228,7 @@ namespace VirtoCommerce.Platform.Data.Asset
             var relativeUrl = url;
             if (url.IsAbsoluteUrl())
             {
-                relativeUrl = new Uri(url).AbsolutePath;
+                relativeUrl = Uri.UnescapeDataString(new Uri(url).AbsolutePath);
             }
             return relativeUrl.Split(new[] { "/", "\\", _cloudBlobClient.DefaultDelimiter }, StringSplitOptions.RemoveEmptyEntries);
         }

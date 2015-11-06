@@ -98,7 +98,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 			}
 			set
 			{
-				Price.Sale = String.IsNullOrEmpty(value) ? 0 : Convert.ToDecimal(value, CultureInfo.InvariantCulture);
+				Price.List = String.IsNullOrEmpty(value) ? 0 : Convert.ToDecimal(value, CultureInfo.InvariantCulture);
 			}
 		}
 		
@@ -230,7 +230,11 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 		public string SeoUrl
 		{
 			get { return SeoInfo.SemanticUrl; }
-			set { SeoInfo.SemanticUrl = value.Substring(0, Math.Min(value.Length, 240));  }
+			set
+            {
+                var slug = value.GenerateSlug();
+                SeoInfo.SemanticUrl = slug.Substring(0, Math.Min(slug.Length, 240));
+            }
 		}
 
 		public string SeoDescription

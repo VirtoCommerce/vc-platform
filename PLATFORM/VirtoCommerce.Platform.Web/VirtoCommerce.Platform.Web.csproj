@@ -293,6 +293,8 @@
     <Compile Include="Model\Packaging\ModuleAction.cs" />
     <Compile Include="Model\Packaging\ModuleBackgroundJobOptions.cs" />
     <Compile Include="Model\Packaging\ModulePushNotification.cs" />
+    <Compile Include="SignalR\NoOpPerformanceCounter.cs" />
+    <Compile Include="SignalR\NoOpPerformanceCounterManager.cs" />
     <Compile Include="VirtoCommercePlatformWebBootstrapper.cs" />
     <Compile Include="Controllers\Api\AssetsController.cs" />
     <Compile Include="Controllers\Api\DynamicPropertiesController.cs" />
@@ -626,26 +628,6 @@
   <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
     <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
   </Target>
-  <!-- Virto Commerce Modules Publishing -->
-  <PropertyGroup>
-    <CopyAllFilesToSingleFolderForPackageDependsOn>
-      VirtoModulesCollectFiles;
-      $(CopyAllFilesToSingleFolderForPackageDependsOn);
-    </CopyAllFilesToSingleFolderForPackageDependsOn>
-    <CopyAllFilesToSingleFolderForMsdeployDependsOn>
-      VirtoModulesCollectFiles;
-      $(CopyAllFilesToSingleFolderForPackageDependsOn);
-    </CopyAllFilesToSingleFolderForMsdeployDependsOn>
-  </PropertyGroup>
-  <Target Name="VirtoModulesCollectFiles">
-    <ItemGroup>
-      <_CustomFiles Include="..\Modules\**\*.Web\**\*" Exclude="..\Modules\**\*.cs;..\Modules\**\*.config;..\Modules\**\*.csproj;..\Modules\**\*.user;..\Modules\**\obj\**;..\Modules\**\obj\*.manifest" />
-      <FilesForPackagingFromProject Include="%(_CustomFiles.Identity)">
-        <DestinationRelativePath>Modules\%(RecursiveDir)%(Filename)%(Extension)</DestinationRelativePath>
-      </FilesForPackagingFromProject>
-    </ItemGroup>
-  </Target>
-  <!-- /Virto Commerce Modules Publishing -->
   <ProjectExtensions>
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">

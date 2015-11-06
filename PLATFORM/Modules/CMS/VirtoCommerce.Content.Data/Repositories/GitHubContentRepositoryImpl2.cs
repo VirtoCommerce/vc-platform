@@ -15,7 +15,7 @@ namespace VirtoCommerce.Content.Data.Repositories
         private readonly GitHubClient _client;
         private readonly string _ownerName;
         private readonly string _repositoryName;
-        private readonly string _branchName = "master";
+        //private readonly string _branchName = "master";
         private readonly string _mainPath;
 
         public GitHubContentRepositoryImpl2(
@@ -61,7 +61,7 @@ namespace VirtoCommerce.Content.Data.Repositories
         {
             var fullPath = GetFullPath(relativePath);
 
-            var response = await 
+            var response = await
                 this._client.Repository.Content.CreateFile(
                     this._ownerName,
                     this._repositoryName,
@@ -71,7 +71,7 @@ namespace VirtoCommerce.Content.Data.Repositories
             var createdItem = response.Content.ToContentItem();
             createdItem.Path = relativePath;
 
-            var changeSet = new ContentChangeSet(response.Commit.Sha, new [] { new ContentItemInfo(createdItem) });
+            var changeSet = new ContentChangeSet(response.Commit.Sha, new[] { new ContentItemInfo(createdItem) });
             return changeSet;
         }
 
@@ -137,7 +137,7 @@ namespace VirtoCommerce.Content.Data.Repositories
 
             // TODO: sha1 here is incorrect, need to get the latest commit sha1 instead
             var items = blobs.Select(blob => blob.ToContentItem()).ToArray();
-            var changeSet = new ContentChangeSet(sha1, items.Select(x=>new ContentItemInfo(x)).ToArray());
+            var changeSet = new ContentChangeSet(sha1, items.Select(x => new ContentItemInfo(x)).ToArray());
 
             return changeSet;
         }

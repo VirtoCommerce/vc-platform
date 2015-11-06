@@ -173,9 +173,9 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
-    <Content Include="web.config">
+    <None Include="web.config">
       <SubType>Designer</SubType>
-    </Content>
+    </None>
     <Content Include="Scripts\common\blades\address-list.tpl.html" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>

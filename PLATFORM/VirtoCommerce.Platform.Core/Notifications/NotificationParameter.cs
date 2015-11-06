@@ -12,5 +12,8 @@ namespace VirtoCommerce.Platform.Core.Notifications
 		public string ParameterDescription { get; set; }
 		public string ParameterCodeInView { get; set; }
         public bool IsDictionary { get; set; }
+        public bool IsArray { get; set; }
+        public NotificationParameterValueType Type { get; set; }
+        public object Value { get; set; }
 	}
 }

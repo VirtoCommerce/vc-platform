@@ -1,10 +1,6 @@
-﻿#region
-
-using System;
+﻿using System;
 using DotLiquid;
 using VirtoCommerce.ApiClient.Extensions;
-
-#endregion
 
 namespace VirtoCommerce.Web.Models.Tagging
 {
@@ -21,7 +17,7 @@ namespace VirtoCommerce.Web.Models.Tagging
 
         public string Id
         {
-            get { return String.Format("{0}_{1}", this.Field, this.Value); }
+            get { return string.Format("{0}_{1}", Field, Value); }
         }
         #endregion
 
@@ -34,20 +30,20 @@ namespace VirtoCommerce.Web.Models.Tagging
 
         public override string ToString()
         {
-            var filters = this.Context["collection_sidebar_filters"].ToNullOrString();
+            var filters = Context["collection_sidebar_filters"].ToNullOrString();
 
             if (filters == "groups")
             {
                 // eliminate count for now, since it problematic to make it work in some templates, especially when determine active tag
-                return String.Format("{0}_{1}", this.Field, this.Value).ToLower();
+                return string.Format("{0}_{1}", Field, Value).ToLower();
             }
 
             if (filters == "facets")
             {
-                return String.Format("{0}_{1} ({2})", this.Field, this.Label, this.Count);
+                return string.Format("{0}_{1} ({2})", Field, Label, Count);
             }
 
-            return this.Id;
+            return Id;
         }
 
         public override object ToLiquid()
@@ -61,20 +57,22 @@ namespace VirtoCommerce.Web.Models.Tagging
         /// <returns></returns>
         public object ConvertToValueType()
         {
-            return this.ToString();
+            return ToString();
         }
-
 
         public override bool Equals(object obj)
         {
-            if(obj is string)
+            if (obj is string)
             {
-                return this.Value.Equals((string)obj) || this.Label.Equals((string)obj);
+                return Value.Equals((string)obj) || Label.Equals((string)obj);
             }
             return base.Equals(obj);
         }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
         #endregion
     }
-
-
 }

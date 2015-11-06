@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.newProductWizardImagesController', ['$scope', '$filter', 'FileUploader', function ($scope, $filter, FileUploader) {
+.controller('virtoCommerce.catalogModule.newProductWizardImagesController', ['$scope', '$filter', 'platformWebApp.bladeNavigationService', 'FileUploader', function ($scope, $filter, bladeNavigationService, FileUploader) {
     var blade = $scope.blade;
 
     blade.currentEntity = angular.copy(blade.item);
@@ -30,7 +30,7 @@
             var uploader = $scope.uploader = new FileUploader({
                 scope: $scope,
                 headers: { Accept: 'application/json' },
-                url: 'api/platform/assets?folderUrl=catalog',
+                url: 'api/platform/assets?folderUrl=catalog/' + blade.currentEntity.code,
                 autoUpload: true,
                 removeAfterUpload: true
             });
@@ -45,12 +45,19 @@
                 }
             });
 
-
             uploader.onSuccessItem = function (fileItem, images, status, headers) {
                 angular.forEach(images, function (image) {
                     //ADD uploaded image to the item
                     blade.currentEntity.images.push(image);
                 });
+            };
+
+            uploader.onAfterAddingAll = function (addedItems) {
+                bladeNavigationService.setError(null, blade);
+            };
+
+            uploader.onErrorItem = function (item, response, status, headers) {
+                bladeNavigationService.setError(item._file.name + ' failed: ' + (response.message ? response.message : status), blade);
             };
         }
     };

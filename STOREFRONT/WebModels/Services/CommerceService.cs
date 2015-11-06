@@ -729,9 +729,12 @@ namespace VirtoCommerce.Web.Models.Services
                 var culture = language.TryGetCultureInfo();
 
                 // check specific culture file existance
-                localeResource = this._viewLocator.LocateResource((String.Format("{0}.json", culture.Name)))
-                                 ?? this._viewLocator.LocateResource(
+                localeResource = this._viewLocator.LocateResource((String.Format("{0}.json", culture.Name)));
+                if (string.IsNullOrEmpty(localeResource.Name))
+                {
+                    localeResource = this._viewLocator.LocateResource(
                                      (String.Format("{0}.json", culture.TwoLetterISOLanguageName)));
+                }
             }
 
             if (localeResource == null || localeResource.SearchedLocations != null)

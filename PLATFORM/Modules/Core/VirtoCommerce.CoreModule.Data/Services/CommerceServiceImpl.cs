@@ -89,7 +89,7 @@ namespace VirtoCommerce.CoreModule.Data.Repositories
 			using (var repository = _repositoryFactory())
 			{
 				var sourceEntry = seo.ToDataModel();
-				var targetEntry = repository.SeoUrlKeywords.FirstOrDefault(x => x.Id == seo.Id || (x.Keyword == sourceEntry.Keyword && x.ObjectType == sourceEntry.ObjectType));
+				var targetEntry = repository.SeoUrlKeywords.FirstOrDefault(x => x.Id == seo.Id || (x.ObjectId == sourceEntry.ObjectId && x.ObjectType == sourceEntry.ObjectType));
 				if (targetEntry == null)
 				{
 					repository.Add(sourceEntry);
@@ -122,8 +122,15 @@ namespace VirtoCommerce.CoreModule.Data.Repositories
 			var retVal = new List<coreModel.SeoInfo>();
 			using (var repository = _repositoryFactory())
 			{
+                //find seo entries for specified keyword
 				retVal = repository.SeoUrlKeywords.Where(x => x.Keyword == keyword).ToArray()
 								  .Select(x => x.ToCoreModel()).ToList();
+                //find other seo entries related to finding object
+                if(retVal.Any())
+                {
+                    var objectIds = retVal.Select(x => x.ObjectId).Distinct().ToArray();
+                    retVal.AddRange(GetObjectsSeo(objectIds));
+                }
 			}
 			return retVal;
 		}

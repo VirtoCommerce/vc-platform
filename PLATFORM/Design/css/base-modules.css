@@ -1086,7 +1086,7 @@ fieldset + fieldset
         margin: 5px 0 0;
     }
 
-    .form .form-input
+    .form-input
     {
         position: relative;
     }
@@ -1226,7 +1226,8 @@ fieldset + fieldset
 
         .form-input.__calendar input,
         .form-input.__file input,
-        .form-input.__info input
+        .form-input.__info input,
+        .form-input.__other input
         {
             padding-right: 45px;
         }

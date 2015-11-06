@@ -12,14 +12,17 @@
 					<legend>Enter test data</legend>
 				</fieldset>
 
-				<div class="form-group" ng-repeat="data in blade.currentParams">
+				<div class="form-group" ng-repeat="data in blade.obj.notificationParameters">
 					<label class="form-label">
                         {{data.parameterDescription}}
-                        <a ng-if="data.isDictionary" ng-click="blade.add(data.parameterName)">
+                        <a ng-if="data.isDictionary" ng-click="blade.addDictionaryElement(data.parameterName)">
+                            <i class="form-ico fa fa-plus"></i>
+                        </a>
+                        <a ng-if="data.isArray" ng-click="blade.addArrayElement(data)">
                             <i class="form-ico fa fa-plus"></i>
                         </a>
                     </label>
-                    <div class="columns clearfix" ng-if="data.isDictionary" ng-repeat="param in blade.obj.notificationParameters[data.parameterName] track by $index">
+                    <div class="columns clearfix" ng-if="data.isDictionary" ng-repeat="param in data.value track by $index">
                         <div class="column">
                             <div class="form-group">
                                 <div class="form-input">
@@ -35,8 +38,87 @@
                             </div>
                         </div>
                     </div>
-					<div class="form-input" ng-if="!data.isDictionary">
-						<input ng-model="blade.obj.notificationParameters[data.parameterName]" type="text" required="" placeholder="Enter {{data.parameterName}}" class="form-control">
+                    <div class="form-input" ng-if="data.isArray" ng-repeat="param in data.value track by $index" ng-class="{ '__calendar': data.type === 'DateTime' }">
+                        <input ng-model="param.key"
+                               type="text"
+                               required=""
+                               placeholder="Enter {{data.parameterName}}"
+                               class="form-control"
+                               ng-if="data.type === 'String'">
+                        <input type="text"
+                               class="form-control"
+                               ng-model="param.key"
+                               datepicker-popup="shortDate"
+                               min-date="today"
+                               name="$index"
+                               datepicker-options="dateOptions"
+                               close-text="Close"
+                               placeholder="Enter {{ data.type }}"
+                               ng-if="data.type === 'DateTime'"
+                               is-open="datepickers[$index]"
+                               required="" />
+                        <button class="btn" type="button" ng-click="open($event, $index)" ng-if="data.type === 'DateTime'">
+                            <i class="btn-ico fa fa-calendar"></i>
+                        </button>
+                        <input smart-float num-type="float"
+                               ng-model="param.key"
+                               type="text"
+                               required=""
+                               placeholder="Enter {{data.parameterName}}"
+                               class="form-control"
+                               ng-if="data.type === 'Decimal'">
+                        <input smart-float num-type="integer"
+                               ng-model="param.key"
+                               type="text"
+                               required=""
+                               placeholder="Enter {{data.parameterName}}"
+                               class="form-control"
+                               ng-if="data.type === 'Integer'">
+                        <label class="form-label __switch" ng-if="data.type === 'Boolean'">
+                            <input type="checkbox" ng-model="param.key">
+                            <span class="switch"></span>
+                        </label>
+                    </div>
+					<div class="form-input" ng-if="!data.isDictionary && !data.isArray" ng-class="{ '__calendar': data.type === 'DateTime' }">
+						<input ng-model="data.value" 
+                               type="text" 
+                               required="" 
+                               placeholder="Enter {{data.parameterName}}" 
+                               class="form-control" 
+                               ng-if="data.type === 'String'">
+                        <input type="text" 
+                               class="form-control" 
+                               ng-model="data.value" 
+                               datepicker-popup="shortDate" 
+                               min-date="today"
+                               name="{{ data.parameterName }}"
+                               datepicker-options="dateOptions" 
+                               close-text="Close" 
+                               placeholder="Enter {{data.parameterName}}"
+                               ng-if="data.type === 'DateTime'"
+                               is-open="datepickers[data.parameterName]"
+                               required=""  />
+                        <button class="btn" type="button" ng-click="open($event, data.parameterName)" ng-if="data.type === 'DateTime'">
+                            <i class="btn-ico fa fa-calendar"></i>
+                        </button>
+                        <input smart-float num-type="float" 
+                               ng-model="data.value" 
+                               type="text" 
+                               required="" 
+                               placeholder="Enter {{data.parameterName}}" 
+                               class="form-control" 
+                               ng-if="data.type === 'Decimal'">
+                        <input smart-float num-type="integer" 
+                               ng-model="data.value" 
+                               type="text" 
+                               required="" 
+                               placeholder="Enter {{data.parameterName}}" 
+                               class="form-control" 
+                               ng-if="data.type === 'Integer'">
+                        <label class="form-label __switch" ng-if="data.type === 'Boolean'">
+                            <input type="checkbox" ng-model="data.value">
+                            <span class="switch"></span>
+                        </label>
 					</div>
 				</div>
 			</form>

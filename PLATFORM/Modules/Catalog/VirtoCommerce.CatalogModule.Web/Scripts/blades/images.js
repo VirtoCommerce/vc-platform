@@ -4,6 +4,7 @@
 
     blade.refresh = function (parentRefresh) {
         blade.currentResource.get({ id: blade.currentEntityId }, function (data) {
+            $scope.uploader.url = 'api/platform/assets?folderUrl=catalog/' + data.code;
             $scope.origItem = data;
             blade.currentEntity = angular.copy(data);
             blade.isLoading = false;
@@ -23,11 +24,11 @@
     };
 
     $scope.addImageFromUrl = function () {
-    	if (blade.newExternalImageUrl) {
-    		assets.uploadFromUrl({ folderUrl: 'catalog', url: blade.newExternalImageUrl }, function (data) {
-    			blade.currentEntity.images.push(data);
-    			blade.newExternalImageUrl = undefined;
-    		});       
+        if (blade.newExternalImageUrl) {
+            assets.uploadFromUrl({ folderUrl: 'catalog', url: blade.newExternalImageUrl }, function (data) {
+                blade.currentEntity.images.push(data);
+                blade.newExternalImageUrl = undefined;
+            });
         }
     };
 
@@ -54,7 +55,7 @@
 
     $scope.saveChanges = function () {
         blade.isLoading = true;
-        blade.currentResource.update({}, blade.currentEntity, function () {
+        blade.currentResource.update({}, { id: blade.currentEntityId, images: blade.currentEntity.images }, function () {
             blade.refresh(true);
         },
         function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
@@ -62,11 +63,10 @@
 
     function initialize() {
         if (!$scope.uploader && authService.checkPermission(blade.permission)) {
-            // create the uploader
+            // create the uploader            
             var uploader = $scope.uploader = new FileUploader({
                 scope: $scope,
                 headers: { Accept: 'application/json' },
-                url: 'api/platform/assets?folderUrl=catalog',
                 autoUpload: true,
                 removeAfterUpload: true
             });
@@ -80,13 +80,20 @@
                     return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
                 }
             });
-
-
+            
             uploader.onSuccessItem = function (fileItem, images, status, headers) {
                 angular.forEach(images, function (image) {
                     //ADD uploaded image
                     blade.currentEntity.images.push(image);
                 });
+            };
+
+            uploader.onAfterAddingAll = function (addedItems) {
+                bladeNavigationService.setError(null, blade);
+            };
+
+            uploader.onErrorItem = function (item, response, status, headers) {
+                bladeNavigationService.setError(item._file.name + ' failed: ' + (response.message ? response.message : status), blade);
             };
         }
     };

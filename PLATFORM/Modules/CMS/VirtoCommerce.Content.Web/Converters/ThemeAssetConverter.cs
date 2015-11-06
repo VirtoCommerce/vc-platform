@@ -27,36 +27,39 @@ namespace VirtoCommerce.Content.Web.Converters
 			return retVal;
 		}
 
-		public static webModels.ThemeAsset ToWebModel(this domainModels.ThemeAsset item)
+		public static webModels.ThemeAsset ToWebModel(this domainModels.ThemeAsset item, bool loadContent = true)
 		{
 			var retVal = new webModels.ThemeAsset();
 
-			if (ContentTypeUtility.IsImageContentType(item.ContentType))
-			{
-				if (item.ByteContent != null)
-				{
-					//retVal.Content = ContentTypeUtility.ConvertImageToBase64String(item.ByteContent, item.ContentType);
-                    retVal.ByteContent = item.ByteContent;
-				}
-				else
-				{
-					retVal.Content = retVal.AssetUrl = item.AssetUrl;
-				}
-			}
-			else if (ContentTypeUtility.IsTextContentType(item.ContentType))
-			{
-				if (item.ByteContent != null)
-				{
-					retVal.Content = Encoding.UTF8.GetString(item.ByteContent);
-				}
-			}
-			else // treat as a binary file for now
-			{
-                if (item.ByteContent != null)
+            if (loadContent)
+            {
+                if (ContentTypeUtility.IsImageContentType(item.ContentType))
                 {
-                    retVal.ByteContent = item.ByteContent;
+                    if (item.ByteContent != null)
+                    {
+                        //retVal.Content = ContentTypeUtility.ConvertImageToBase64String(item.ByteContent, item.ContentType);
+                        retVal.ByteContent = item.ByteContent;
+                    }
+                    else
+                    {
+                        retVal.Content = retVal.AssetUrl = item.AssetUrl;
+                    }
                 }
-			}
+                else if (ContentTypeUtility.IsTextContentType(item.ContentType))
+                {
+                    if (item.ByteContent != null)
+                    {
+                        retVal.Content = Encoding.UTF8.GetString(item.ByteContent);
+                    }
+                }
+                else // treat as a binary file for now
+                {
+                    if (item.ByteContent != null)
+                    {
+                        retVal.ByteContent = item.ByteContent;
+                    }
+                }
+            }
 			retVal.Id = item.Id;
 			retVal.ContentType = item.ContentType;
             retVal.Updated = item.Updated;
@@ -78,7 +81,7 @@ namespace VirtoCommerce.Content.Web.Converters
 					FolderName = folder
 				};
 
-				themeAssetFolder.Assets.AddRange(items.Select(i => i.ToWebModel()).Where(i => i.Id.StartsWith(string.Format("{0}/", folder))));
+				themeAssetFolder.Assets.AddRange(items.Select(i => i.ToWebModel(false)).Where(i => i.Id.StartsWith(string.Format("{0}/", folder))));
 
 				retVal.Add(themeAssetFolder);
 			}

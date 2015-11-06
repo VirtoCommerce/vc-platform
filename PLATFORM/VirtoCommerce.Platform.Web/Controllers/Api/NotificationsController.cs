@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -10,6 +11,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Web.Converters.Notifications;
+using VirtoCommerce.Platform.Core.Common;
 using webModels = VirtoCommerce.Platform.Web.Model.Notifications;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
@@ -127,7 +129,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <summary>
         /// Get testing parameters
         /// </summary>
-        /// <remarks>Method returns notification properties, that defined in notification class, this proprties used in notification template.</remarks>
+        /// <remarks>Method returns notification properties, that defined in notification class, this properties used in notification template.</remarks>
         /// <param name="type">Notification type</param>
         [HttpGet]
         [ResponseType(typeof(NotificationParameter[]))]
@@ -157,16 +159,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var notification = _notificationManager.GetNewNotification(request.Type, request.ObjectId, request.ObjectTypeId, request.Language);
             foreach (var param in request.NotificationParameters)
             {
-                var property = notification.GetType().GetProperty(param.Key);
-                var jObject = param.Value as Newtonsoft.Json.Linq.JObject;
-                if (jObject != null)
-                {
-                    property.SetValue(notification, jObject.ToObject<Dictionary<string, string>>());
-                }
-                else
-                {
-                    property.SetValue(notification, param.Value);
-                }
+                SetValue(notification, param);
             }
             _eventTemplateResolver.ResolveTemplate(notification);
 
@@ -193,16 +186,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var notification = _notificationManager.GetNewNotification(request.Type, request.ObjectId, request.ObjectTypeId, request.Language);
             foreach (var param in request.NotificationParameters)
             {
-                var property = notification.GetType().GetProperty(param.Key);
-                var jObject = param.Value as Newtonsoft.Json.Linq.JObject;
-                if (jObject != null)
-                {
-                    property.SetValue(notification, jObject.ToObject<Dictionary<string, string>>());
-                }
-                else
-                {
-                    property.SetValue(notification, param.Value);
-                }
+                SetValue(notification, param);
             }
             var result = _notificationManager.SendNotification(notification);
 
@@ -260,6 +244,64 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _notificationManager.StopSendingNotifications(ids);
 
             return StatusCode(HttpStatusCode.NoContent);
+        }
+
+        private void SetValue(Notification notification, webModels.NotificationParameter param)
+        {
+            var property = notification.GetType().GetProperty(param.ParameterName);
+            var jObject = param.Value as Newtonsoft.Json.Linq.JObject;
+            var jArray = param.Value as Newtonsoft.Json.Linq.JArray;
+            if (jObject != null && param.IsDictionary)
+            {
+                property.SetValue(notification, jObject.ToObject<Dictionary<string, string>>());
+            }
+            else
+            {
+                switch (param.Type)
+                {
+                    case NotificationParameterValueType.Boolean:
+                        if (jArray != null && param.IsArray)
+                            property.SetValue(notification, jArray.ToObject<Boolean[]>());
+                        else
+                            property.SetValue(notification, param.Value.ToNullable<Boolean>());
+                        break;
+
+                    case NotificationParameterValueType.DateTime:
+                        if (jArray != null && param.IsArray)
+                            property.SetValue(notification, jArray.ToObject<DateTime[]>());
+                        else
+                            property.SetValue(notification, param.Value.ToNullable<DateTime>());
+                        break;
+
+                    case NotificationParameterValueType.Decimal:
+                        if (jArray != null && param.IsArray)
+                            property.SetValue(notification, jArray.ToObject<Decimal[]>());
+                        else
+                            property.SetValue(notification, Convert.ToDecimal(param.Value));
+                        break;
+
+                    case NotificationParameterValueType.Integer:
+                        if (jArray != null && param.IsArray)
+                            property.SetValue(notification, jArray.ToObject<Int32[]>());
+                        else
+                            property.SetValue(notification, param.Value.ToNullable<Int32>());
+                        break;
+
+                    case NotificationParameterValueType.String:
+                        if (jArray != null && param.IsArray)
+                            property.SetValue(notification, jArray.ToObject<String[]>());
+                        else
+                            property.SetValue(notification, (string)param.Value);
+                        break;
+
+                    default:
+                        if (jArray != null && param.IsArray)
+                            property.SetValue(notification, jArray.ToObject<String[]>());
+                        else
+                            property.SetValue(notification, (string)param.Value);
+                        break;
+                }
+            }
         }
     }
 }
