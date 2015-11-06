@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using DotLiquid;
+using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.LiquidThemeEngine.Filters
 {
@@ -14,16 +15,6 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
     /// </summary>
     public class MoneyFilters
     {
-        private static readonly Lazy<CultureInfo[]> _cultures = new Lazy<CultureInfo[]>(
-           CreateCultures,
-           LazyThreadSafetyMode.ExecutionAndPublication);
-
-        private static CultureInfo[] CreateCultures()
-        {
-            return CultureInfo.GetCultures(CultureTypes.SpecificCultures);
-        }
-
-
         /// <summary>
         /// Formats the price based on the shop's HTML without currency setting.
         /// {{ 145 | money }}
@@ -36,12 +27,11 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
             {
                 return null;
             }
-            var themeAdaptor = (ShopifyLiquidThemeEngine)Template.FileSystem;
-            var value = Convert.ToDecimal(input, CultureInfo.InvariantCulture);
+            var themeEngine = (ShopifyLiquidThemeEngine)Template.FileSystem;
+            var amount = Convert.ToDecimal(input, CultureInfo.InvariantCulture);
+            var money = new Money(amount, themeEngine.WorkContext.CurrentCurrency.Code);
 
-            var currencyCulture = _cultures.Value.FirstOrDefault(x => new RegionInfo(x.Name).ISOCurrencySymbol.Equals(themeAdaptor.WorkContext.CurrentCurrency, StringComparison.OrdinalIgnoreCase));
-
-            return value.ToString("C", currencyCulture.NumberFormat);
+            return money.ToString();
         }
     }
 }

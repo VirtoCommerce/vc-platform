@@ -5,13 +5,16 @@ using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.LiquidThemeEngine;
+using VirtoCommerce.Storefront.Common;
 using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
+using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Owin
 {
@@ -24,10 +27,7 @@ namespace VirtoCommerce.Storefront.Owin
         private readonly IVirtoCommercePlatformApi _platformApi;
         private readonly ICustomerManagementModuleApi _customerApi;
         private readonly UnityContainer _container;
-
-        protected virtual string StoreCookie { get { return "vcf.store"; } }
-        protected virtual string LanguageCookie { get { return "vcf.language"; } }
-        protected virtual string CurrencyCookie { get { return "vcf.currency"; } }
+   
 
         public WorkContextOwinMiddleware(OwinMiddleware next, UnityContainer container)
             : base(next)
@@ -83,11 +83,12 @@ namespace VirtoCommerce.Storefront.Owin
 
         protected virtual Store GetStore(IOwinContext context, ICollection<Store> stores)
         {
+            //Remove store name from url need to prevent writing store in routing
             var storeName = RemoveStoreNameFromUrl(context, stores);
 
             if (string.IsNullOrEmpty(storeName))
             {
-                storeName = context.Request.Cookies[StoreCookie];
+                storeName = context.Request.Cookies[StorefrontConstants.StoreCookie];
             }
 
             if (string.IsNullOrEmpty(storeName))
@@ -124,31 +125,30 @@ namespace VirtoCommerce.Storefront.Owin
             return removedStoreName;
         }
 
-        protected virtual string GetLanguage(IOwinContext context, ICollection<Store> stores, Store store)
+        protected virtual Language GetLanguage(IOwinContext context, ICollection<Store> stores, Store store)
         {
             var languages = stores.SelectMany(s => s.Languages)
                 .Union(stores.Select(s => s.DefaultLanguage))
-                .Distinct()
+                .Select(x=>x.CultureName)
+                .Distinct()                
                 .ToArray();
 
-            var language = RemoveLanguageFromUrl(context, languages);
+            //Get language from request url and remove it from from url need to prevent writing language in routing
+            var languageCode = RemoveLanguageFromUrl(context, languages);
 
-            if (string.IsNullOrEmpty(language))
+            //Get language from Cookies
+            if (string.IsNullOrEmpty(languageCode))
             {
-                language = context.Request.Cookies[LanguageCookie];
+                languageCode = context.Request.Cookies[StorefrontConstants.LanguageCookie];
             }
-
-            if (string.IsNullOrEmpty(language))
+            var retVal = store.DefaultLanguage;
+            //Get store default language if language not in the supported by stores list
+            if (!String.IsNullOrEmpty(languageCode))
             {
-                language = "en-US";
+                var language = new Language(languageCode);
+                retVal = store.Languages.Contains(language) ? language : retVal;
             }
-
-            if (string.IsNullOrEmpty(language) || !store.Languages.Any(l => l.Equals(language, StringComparison.OrdinalIgnoreCase)))
-            {
-                language = store.DefaultLanguage;
-            }
-
-            return language;
+            return retVal;
         }
 
         protected virtual string RemoveLanguageFromUrl(IOwinContext context, string[] languages)
@@ -170,26 +170,24 @@ namespace VirtoCommerce.Storefront.Owin
             return removedLanguage;
         }
 
-        protected virtual string GetCurrency(IOwinContext context, Store store)
+        protected virtual Currency GetCurrency(IOwinContext context, Store store)
         {
-            var currency = context.Request.Query.Get("currency");
-
-            if (string.IsNullOrEmpty(currency))
+            //Get currency from request url
+            var currencyCode = context.Request.Query.Get("currency");
+            //Next try get from Cookies
+            if (String.IsNullOrEmpty(currencyCode))
             {
-                currency = context.Request.Cookies[CurrencyCookie];
+                currencyCode = context.Request.Cookies[StorefrontConstants.CurrencyCookie];
             }
 
-            if (string.IsNullOrEmpty(currency))
+            var retVal = store.DefaultCurrency;
+            //Get store default currency if currency not in the supported by stores list
+            if (!String.IsNullOrEmpty(currencyCode))
             {
-                currency = "USD";
+                var currency = new Currency(EnumUtility.SafeParse<CurrencyCodes>(currencyCode, store.DefaultCurrency.CurrencyCode));
+                retVal = store.Currencies.Contains(currency) ? currency : retVal;
             }
-
-            if (string.IsNullOrEmpty(currency) || !store.Currencies.Any(c => c.Equals(currency, StringComparison.OrdinalIgnoreCase)))
-            {
-                currency = store.DefaultCurrency;
-            }
-
-            return currency;
+            return retVal;
         }
 
         protected virtual void RewritePath(IOwinContext context, PathString newPath)

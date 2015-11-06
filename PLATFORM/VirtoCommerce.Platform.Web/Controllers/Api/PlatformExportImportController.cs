@@ -130,7 +130,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public IHttpActionResult LoadExportManifest([FromUri]string fileUrl)
         {
             PlatformExportManifest retVal = null;
-            using (var stream = _blobStorageProvider.OpenReadOnly(fileUrl))
+            using (var stream = _blobStorageProvider.OpenRead(fileUrl))
             {
                 retVal = _platformExportManager.ReadExportManifest(stream);
             }
@@ -236,7 +236,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var now = DateTime.UtcNow;
             try
             {
-                using (var stream = _blobStorageProvider.OpenReadOnly(importRequest.FileUrl))
+                using (var stream = _blobStorageProvider.OpenRead(importRequest.FileUrl))
                 {
                     var manifest = importRequest.ToManifest();
                     manifest.Created = now;
@@ -272,16 +272,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     var manifest = exportRequest.ToManifest();
                     _platformExportManager.Export(stream, manifest, progressCallback);
                     stream.Seek(0, SeekOrigin.Begin);
-                    //Upload result  to blob storage
-                    var uploadInfo = new UploadStreamInfo
+                    var relativeUrl = "tmp/exported_data.zip";
+                    using (var targetStream = _blobStorageProvider.OpenWrite(relativeUrl))
                     {
-                        FileName = string.Format("exported_data.zip"),
-                        FileByteStream = stream,
-                        FolderName = "tmp"
-                    };
-                    var blobKey = _blobStorageProvider.Upload(uploadInfo);
+                        stream.CopyTo(targetStream);
+                    }
                     //Get a download url
-                    pushNotification.DownloadUrl = _blobUrlResolver.GetAbsoluteUrl(blobKey);
+                    pushNotification.DownloadUrl = _blobUrlResolver.GetAbsoluteUrl(relativeUrl);
                 }
             }
             catch (Exception ex)

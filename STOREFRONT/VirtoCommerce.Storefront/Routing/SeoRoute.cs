@@ -64,7 +64,7 @@ namespace VirtoCommerce.Storefront.Routing
                     else
                     {
                         // Redirect to the slug for the current language if it differs from the requested slug
-                        var slugForCurrentLanguage = GetSlug(seoRecords, workContext, seoRecord.ObjectType, seoRecord.ObjectId, workContext.CurrentLanguage);
+                        var slugForCurrentLanguage = GetSlug(seoRecords, workContext, seoRecord.ObjectType, seoRecord.ObjectId, workContext.CurrentLanguage.CultureName);
 
                         if (!string.IsNullOrEmpty(slugForCurrentLanguage) && !slugForCurrentLanguage.Equals(seoRecord.SemanticUrl, StringComparison.OrdinalIgnoreCase))
                         {

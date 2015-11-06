@@ -29,7 +29,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
                     //try to transform localization key
                     key = TryTransformKey(key, dictionary);
                 }
-                retVal = (localization.SelectToken(key) ?? String.Empty).ToString();
+                retVal = (localization.SelectToken(key) ?? key).ToString();
             }
 
             if(dictionary != null)

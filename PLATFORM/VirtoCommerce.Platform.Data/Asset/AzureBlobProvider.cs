@@ -28,70 +28,46 @@ namespace VirtoCommerce.Platform.Data.Asset
         }
 
         #region IBlobStorageProvider Members
-
-        public string Upload(UploadStreamInfo request)
-        {
-            string result = null;
-            var directoryPath = DefaultBlobContainerName;
-            if (!string.IsNullOrEmpty(request.FolderName))
-            {
-                directoryPath = request.FolderName;
-            }
-            //Container name
-            var containerName = GetContainerNameFromUrl(directoryPath);
-            //directory path
-            directoryPath = GetDirectoryPathFromUrl(directoryPath);
-
-            var container = _cloudBlobClient.GetContainerReference(containerName);
-            container.CreateIfNotExists(BlobContainerPublicAccessType.Blob);
-
-            ICloudBlob blob = null;
-            if (String.IsNullOrEmpty(directoryPath))
-            {
-                blob = container.GetBlockBlobReference(request.FileName);
-            }
-            else
-            {
-                directoryPath += directoryPath.EndsWith(_cloudBlobClient.DefaultDelimiter) ? request.FileName : _cloudBlobClient.DefaultDelimiter + request.FileName;
-                blob = container.GetBlockBlobReference(directoryPath);
-            }
-
-            blob.Properties.ContentType = MimeTypeResolver.ResolveContentType(request.FileName);
-
-            using (var memoryStream = new MemoryStream())
-            {
-                // upload to MemoryStream
-                //memoryStream.SetLength(request.Length);
-                request.FileByteStream.CopyTo(memoryStream);
-                memoryStream.Position = 0;
-                // fill blob
-                blob.UploadFromStream(memoryStream);
-            }
-            result = blob.Uri.AbsolutePath.TrimStart('/');
-            return result;
-        }
-
-
-        public System.IO.Stream OpenReadOnly(string url)
+        /// <summary>
+        /// Open blob for read by relative or absolute url
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns>blob stream</returns>
+        public Stream OpenRead(string url)
         {
             if (string.IsNullOrEmpty(url))
                 throw new ArgumentNullException("url");
 
-            System.IO.Stream retVal = null;
             var uri = url.IsAbsoluteUrl() ? new Uri(url) : new Uri(_cloudBlobClient.BaseUri, url.TrimStart('/'));
             var cloudBlob = _cloudBlobClient.GetBlobReferenceFromServer(uri);
-            if (cloudBlob.Exists())
-            {
-                var stream = new MemoryStream();
-                cloudBlob.DownloadToStream(stream);
-                if (stream.CanSeek)
-                {
-                    stream.Seek(0, SeekOrigin.Begin);
-                }
-                retVal = stream;
-            }
-            return retVal;
+            return cloudBlob.OpenRead();
         }
+
+        /// <summary>
+        /// Open blob for write by relative or absolute url
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns>blob stream</returns>
+        public Stream OpenWrite(string url)
+        {
+            //Container name
+            var containerName = GetContainerNameFromUrl(url);
+            //directory path
+            var filePath = GetFilePathFromUrl(url);
+            if (filePath == null)
+            {
+                throw new NullReferenceException("filePath");
+            }
+            var container = _cloudBlobClient.GetContainerReference(containerName);
+            container.CreateIfNotExists(BlobContainerPublicAccessType.Blob);
+
+            var blob = container.GetBlockBlobReference(filePath);
+
+            blob.Properties.ContentType = MimeTypeResolver.ResolveContentType(Path.GetFileName(filePath));
+
+            return blob.OpenWrite();
+        }
+
 
         public void Remove(string[] urls)
         {
@@ -134,7 +110,7 @@ namespace VirtoCommerce.Platform.Data.Asset
                     var listBlobs = blobDirectory != null ? blobDirectory.ListBlobs() : blobContainer.ListBlobs();
                     if (!String.IsNullOrEmpty(keyword))
                     {
-                        listBlobs =  blobContainer.ListBlobs(keyword, useFlatBlobListing: true);
+                        listBlobs = blobContainer.ListBlobs(keyword, useFlatBlobListing: true);
                     }
                     // Loop over items within the container and output the length and URI.
                     foreach (IListBlobItem item in listBlobs)
@@ -149,7 +125,7 @@ namespace VirtoCommerce.Platform.Data.Asset
                                 FileName = Path.GetFileName(Uri.UnescapeDataString(block.Uri.ToString())),
                                 ContentType = block.Properties.ContentType,
                                 Size = block.Properties.Length,
-                                ModifiedDate = block.Properties.LastModified != null ? block.Properties.LastModified.Value.DateTime : (DateTime?) null
+                                ModifiedDate = block.Properties.LastModified != null ? block.Properties.LastModified.Value.DateTime : (DateTime?)null
                             };
                             //Do not return empty blob (created with directory because azure blob not support direct directory creation)
                             if (!String.IsNullOrEmpty(blobInfo.FileName))
@@ -187,7 +163,7 @@ namespace VirtoCommerce.Platform.Data.Asset
 
         public void CreateFolder(BlobFolder folder)
         {
-            var path = (folder.ParentUrl != null ? folder.ParentUrl + "/" : String.Empty ) + folder.Name;
+            var path = (folder.ParentUrl != null ? folder.ParentUrl + "/" : String.Empty) + folder.Name;
 
             var containerName = GetContainerNameFromUrl(path);
             var blobContainer = _cloudBlobClient.GetContainerReference(containerName);
@@ -243,7 +219,11 @@ namespace VirtoCommerce.Platform.Data.Asset
             var retVal = String.Join(_cloudBlobClient.DefaultDelimiter, GetOutlineFromUrl(url).Skip(1).ToArray());
             return !String.IsNullOrEmpty(retVal) ? retVal + _cloudBlobClient.DefaultDelimiter : null;
         }
-
+        private string GetFilePathFromUrl(string url)
+        {
+            var retVal = String.Join(_cloudBlobClient.DefaultDelimiter, GetOutlineFromUrl(url).Skip(1).ToArray());
+            return !String.IsNullOrEmpty(retVal) ? retVal : null;
+        }
 
         private CloudBlobContainer GetBlobContainer(string name)
         {

@@ -9,6 +9,7 @@ using System.Web.Routing;
 using DotLiquid;
 using DotLiquid.Util;
 using System.Threading;
+using VirtoCommerce.Storefront.Model;
 
 namespace VirtoCommerce.LiquidThemeEngine.Filters
 {
@@ -81,6 +82,32 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
         public static string FileUrl(string input)
         {
             return AssetUrl(input);
+        }
+
+        /// <summary>
+        /// Get absolute storefront url with specified store and language
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static string AbsoluteUrl(string input, string storeId = null, string languageCode = null)
+        {
+            var themeAdaptor = (ShopifyLiquidThemeEngine)Template.FileSystem;
+            Store store = null;
+            Language language = null;
+            if(!String.IsNullOrEmpty(storeId))
+            {
+                store = themeAdaptor.WorkContext.AllStores.FirstOrDefault(x => String.Equals(x.Id, storeId, StringComparison.InvariantCultureIgnoreCase));
+            }
+            store = store ?? themeAdaptor.WorkContext.CurrentStore;
+
+            if (!String.IsNullOrEmpty(languageCode))
+            {
+                language = store.Languages.FirstOrDefault(x => String.Equals(x.CultureName, languageCode, StringComparison.InvariantCultureIgnoreCase));
+            }
+            language = language ?? store.DefaultLanguage;
+
+            var retVal = themeAdaptor.UrlBuilder.ToAbsolute(themeAdaptor.WorkContext, input, store, language);
+            return retVal;
         }
     }
 }

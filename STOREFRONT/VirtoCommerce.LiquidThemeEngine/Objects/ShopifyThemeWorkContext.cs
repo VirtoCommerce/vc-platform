@@ -51,7 +51,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         {
             get
             {
-                return new Shop(CurrentStore, _urlBuilder, CurrentCurrency, CurrentLanguage);
+                return new Shop(CurrentStore, _urlBuilder, this);
             }
         }
         #endregion

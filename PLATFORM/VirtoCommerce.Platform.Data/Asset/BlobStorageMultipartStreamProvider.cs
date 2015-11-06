@@ -4,67 +4,43 @@ using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using System.Web.Hosting;
 using VirtoCommerce.Platform.Core.Asset;
-
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Data.Asset
 {
-	public class BlobStorageMultipartProvider : MultipartFileStreamProvider
-	{
-		private readonly IBlobStorageProvider _blobProvider;
-		private readonly string _folder;
-		public BlobStorageMultipartProvider(IBlobStorageProvider blobProvider, string tempPath, string folder)
-			: base(tempPath)
-		{
-			_folder = folder;
-			_blobProvider = blobProvider;
-			BlobInfos = new List<BlobInfo>();
-		}
+    public class BlobStorageMultipartProvider : MultipartStreamProvider
+    {
+        private readonly IBlobStorageProvider _blobProvider;
+        private readonly IBlobUrlResolver _blobUrlResolver;
+        private readonly string _rootPath;
+        public BlobStorageMultipartProvider(IBlobStorageProvider blobProvider, IBlobUrlResolver blobUrlResolver, string rootPath)
+        {
+            _rootPath = rootPath;
+            _blobProvider = blobProvider;
+            _blobUrlResolver = blobUrlResolver;
+            BlobInfos = new List<BlobInfo>();
+        }
 
-		public List<BlobInfo> BlobInfos { get; set; }
+        public List<BlobInfo> BlobInfos { get; set; }
 
-		public override Task ExecutePostProcessingAsync()
-		{
-			// Upload the files to  blob storage and remove them from local disk
-			foreach (var fileData in this.FileData)
-			{
-				var fileInfo = new FileInfo(fileData.LocalFileName);
-				var fileName = fileData.Headers.ContentDisposition.FileName.Replace("\"", string.Empty);
-				using (Stream stream = fileInfo.OpenRead())
-				{
-					var uploadStreamInfo = new UploadStreamInfo
-					{
-						FileByteStream = stream,
-						FileName = fileName,
-						Length = fileInfo.Length,
-						FolderName = _folder
-					};
+        public override Stream GetStream(HttpContent parent, HttpContentHeaders headers)
+        {
+            var fileName = headers.ContentDisposition.FileName.Replace("\"", string.Empty);
+            var relativeUrl = _rootPath + "/" + fileName;
+            var absoluteUrl = _blobUrlResolver.GetAbsoluteUrl(relativeUrl);
 
-					var blobKey = _blobProvider.Upload(uploadStreamInfo);
+            BlobInfos.Add(new BlobInfo
+            {
+                ContentType = MimeTypeResolver.ResolveContentType(fileName),
+                FileName = fileName,
+                Key = relativeUrl,
+                Url = absoluteUrl
+            });
 
-					BlobInfos.Add(new BlobInfo
-					{
-						ContentType = fileData.Headers.ContentType.MediaType,
-						FileName = fileName,
-						Size = fileInfo.Length,
-						Key = blobKey
-					});
-					
-				}
-				File.Delete(fileData.LocalFileName);
-			}
-
-			return base.ExecutePostProcessingAsync();
-		}
-
-		public override string GetLocalFileName(HttpContentHeaders headers)
-		{
-			// override the filename which is stored by the provider (by default is bodypart_x)
-			string oldfileName = headers.ContentDisposition.FileName.Replace("\"", string.Empty);
-			string newFileName = Guid.NewGuid().ToString() + Path.GetExtension(oldfileName);
-
-			return newFileName;
-		}
-	}
+            return _blobProvider.OpenWrite(_rootPath + "/" + fileName);
+        }
+    }
 
 }
