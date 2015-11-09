@@ -13,7 +13,7 @@ namespace VirtoCommerce.Client.Model {
   /// Notification for catalog data import job.
   /// </summary>
   [DataContract]
-  public class VirtoCommerceCatalogModuleWebModelEventNotificationsImportNotification {
+  public class VirtoCommerceCatalogModuleWebModelPushNotificationsImportNotification {
     
     /// <summary>
     /// Gets or sets the job finish date and time.
@@ -118,7 +118,7 @@ namespace VirtoCommerce.Client.Model {
     /// <returns>String presentation of the object</returns>
     public override string ToString()  {
       var sb = new StringBuilder();
-      sb.Append("class VirtoCommerceCatalogModuleWebModelEventNotificationsImportNotification {\n");
+      sb.Append("class VirtoCommerceCatalogModuleWebModelPushNotificationsImportNotification {\n");
       
       sb.Append("  Finished: ").Append(Finished).Append("\n");
       

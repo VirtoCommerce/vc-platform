@@ -236,8 +236,8 @@ namespace VirtoCommerce.Client.Api
         /// Data export is an async process. An ExportNotification is returned for progress reporting.
         /// </remarks>
         /// <param name="exportInfo">The export configuration.</param>
-        /// <returns>VirtoCommerceCatalogModuleWebModelEventNotificationsExportNotification</returns>
-        VirtoCommerceCatalogModuleWebModelEventNotificationsExportNotification CatalogModuleExportImportDoExport (VirtoCommerceCatalogModuleWebExportImportCsvExportInfo exportInfo);
+        /// <returns>VirtoCommerceCatalogModuleWebModelPushNotificationsExportNotification</returns>
+        VirtoCommerceCatalogModuleWebModelPushNotificationsExportNotification CatalogModuleExportImportDoExport (VirtoCommerceCatalogModuleWebExportImportCsvExportInfo exportInfo);
   
         /// <summary>
         /// Start catalog data export process.
@@ -246,8 +246,8 @@ namespace VirtoCommerce.Client.Api
         /// Data export is an async process. An ExportNotification is returned for progress reporting.
         /// </remarks>
         /// <param name="exportInfo">The export configuration.</param>
-        /// <returns>VirtoCommerceCatalogModuleWebModelEventNotificationsExportNotification</returns>
-        System.Threading.Tasks.Task<VirtoCommerceCatalogModuleWebModelEventNotificationsExportNotification> CatalogModuleExportImportDoExportAsync (VirtoCommerceCatalogModuleWebExportImportCsvExportInfo exportInfo);
+        /// <returns>VirtoCommerceCatalogModuleWebModelPushNotificationsExportNotification</returns>
+        System.Threading.Tasks.Task<VirtoCommerceCatalogModuleWebModelPushNotificationsExportNotification> CatalogModuleExportImportDoExportAsync (VirtoCommerceCatalogModuleWebExportImportCsvExportInfo exportInfo);
         
         /// <summary>
         /// Start catalog data import process.
@@ -256,8 +256,8 @@ namespace VirtoCommerce.Client.Api
         /// Data import is an async process. An ImportNotification is returned for progress reporting.
         /// </remarks>
         /// <param name="importInfo">The import data configuration.</param>
-        /// <returns>VirtoCommerceCatalogModuleWebModelEventNotificationsImportNotification</returns>
-        VirtoCommerceCatalogModuleWebModelEventNotificationsImportNotification CatalogModuleExportImportDoImport (VirtoCommerceCatalogModuleWebExportImportCsvImportInfo importInfo);
+        /// <returns>VirtoCommerceCatalogModuleWebModelPushNotificationsImportNotification</returns>
+        VirtoCommerceCatalogModuleWebModelPushNotificationsImportNotification CatalogModuleExportImportDoImport (VirtoCommerceCatalogModuleWebExportImportCsvImportInfo importInfo);
   
         /// <summary>
         /// Start catalog data import process.
@@ -266,8 +266,8 @@ namespace VirtoCommerce.Client.Api
         /// Data import is an async process. An ImportNotification is returned for progress reporting.
         /// </remarks>
         /// <param name="importInfo">The import data configuration.</param>
-        /// <returns>VirtoCommerceCatalogModuleWebModelEventNotificationsImportNotification</returns>
-        System.Threading.Tasks.Task<VirtoCommerceCatalogModuleWebModelEventNotificationsImportNotification> CatalogModuleExportImportDoImportAsync (VirtoCommerceCatalogModuleWebExportImportCsvImportInfo importInfo);
+        /// <returns>VirtoCommerceCatalogModuleWebModelPushNotificationsImportNotification</returns>
+        System.Threading.Tasks.Task<VirtoCommerceCatalogModuleWebModelPushNotificationsImportNotification> CatalogModuleExportImportDoImportAsync (VirtoCommerceCatalogModuleWebExportImportCsvImportInfo importInfo);
         
         /// <summary>
         /// Gets the CSV mapping configuration.
@@ -542,6 +542,60 @@ namespace VirtoCommerce.Client.Api
         /// <param name="keyword">The keyword. (Optional)</param>
         /// <returns></returns>
         System.Threading.Tasks.Task<List<VirtoCommerceCatalogModuleWebModelPropertyValue>> CatalogModulePropertiesGetPropertyValuesAsync (string propertyId, string keyword);
+        
+        /// <summary>
+        /// Searches for the items by complex criteria.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="criteriaResponseGroup"></param>
+        /// <param name="criteriaKeyword"></param>
+        /// <param name="criteriaCategoryId"></param>
+        /// <param name="criteriaCategoriesIds"></param>
+        /// <param name="criteriaCatalogId"></param>
+        /// <param name="criteriaCatalogsIds"></param>
+        /// <param name="criteriaLanguageCode"></param>
+        /// <param name="criteriaCurrency"></param>
+        /// <param name="criteriaCode"></param>
+        /// <param name="criteriaSeoKeyword"></param>
+        /// <param name="criteriaSort"></param>
+        /// <param name="criteriaFacets"></param>
+        /// <param name="criteriaHideDirectLinedCategories"></param>
+        /// <param name="criteriaPropertyValues"></param>
+        /// <param name="criteriaStart"></param>
+        /// <param name="criteriaCount"></param>
+        /// <param name="criteriaIndexDate"></param>
+        /// <param name="criteriaGetAllCategories"></param>
+        /// <returns>VirtoCommerceCatalogModuleWebModelCatalogSearchResult</returns>
+        VirtoCommerceCatalogModuleWebModelCatalogSearchResult CatalogModuleSearchSearch (string criteriaResponseGroup, string criteriaKeyword, string criteriaCategoryId, List<string> criteriaCategoriesIds, string criteriaCatalogId, List<string> criteriaCatalogsIds, string criteriaLanguageCode, string criteriaCurrency, string criteriaCode, string criteriaSeoKeyword, string criteriaSort, List<string> criteriaFacets, bool? criteriaHideDirectLinedCategories, List<string> criteriaPropertyValues, int? criteriaStart, int? criteriaCount, DateTime? criteriaIndexDate, bool? criteriaGetAllCategories);
+  
+        /// <summary>
+        /// Searches for the items by complex criteria.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="criteriaResponseGroup"></param>
+        /// <param name="criteriaKeyword"></param>
+        /// <param name="criteriaCategoryId"></param>
+        /// <param name="criteriaCategoriesIds"></param>
+        /// <param name="criteriaCatalogId"></param>
+        /// <param name="criteriaCatalogsIds"></param>
+        /// <param name="criteriaLanguageCode"></param>
+        /// <param name="criteriaCurrency"></param>
+        /// <param name="criteriaCode"></param>
+        /// <param name="criteriaSeoKeyword"></param>
+        /// <param name="criteriaSort"></param>
+        /// <param name="criteriaFacets"></param>
+        /// <param name="criteriaHideDirectLinedCategories"></param>
+        /// <param name="criteriaPropertyValues"></param>
+        /// <param name="criteriaStart"></param>
+        /// <param name="criteriaCount"></param>
+        /// <param name="criteriaIndexDate"></param>
+        /// <param name="criteriaGetAllCategories"></param>
+        /// <returns>VirtoCommerceCatalogModuleWebModelCatalogSearchResult</returns>
+        System.Threading.Tasks.Task<VirtoCommerceCatalogModuleWebModelCatalogSearchResult> CatalogModuleSearchSearchAsync (string criteriaResponseGroup, string criteriaKeyword, string criteriaCategoryId, List<string> criteriaCategoriesIds, string criteriaCatalogId, List<string> criteriaCatalogsIds, string criteriaLanguageCode, string criteriaCurrency, string criteriaCode, string criteriaSeoKeyword, string criteriaSort, List<string> criteriaFacets, bool? criteriaHideDirectLinedCategories, List<string> criteriaPropertyValues, int? criteriaStart, int? criteriaCount, DateTime? criteriaIndexDate, bool? criteriaGetAllCategories);
         
         /// <summary>
         /// Gets the template for a new category.
@@ -1776,8 +1830,8 @@ namespace VirtoCommerce.Client.Api
         /// Start catalog data export process. Data export is an async process. An ExportNotification is returned for progress reporting.
         /// </summary>
         /// <param name="exportInfo">The export configuration.</param> 
-        /// <returns>VirtoCommerceCatalogModuleWebModelEventNotificationsExportNotification</returns>            
-        public VirtoCommerceCatalogModuleWebModelEventNotificationsExportNotification CatalogModuleExportImportDoExport (VirtoCommerceCatalogModuleWebExportImportCsvExportInfo exportInfo)
+        /// <returns>VirtoCommerceCatalogModuleWebModelPushNotificationsExportNotification</returns>            
+        public VirtoCommerceCatalogModuleWebModelPushNotificationsExportNotification CatalogModuleExportImportDoExport (VirtoCommerceCatalogModuleWebExportImportCsvExportInfo exportInfo)
         {
             
             // verify the required parameter 'exportInfo' is set
@@ -1822,15 +1876,15 @@ namespace VirtoCommerce.Client.Api
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling CatalogModuleExportImportDoExport: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommerceCatalogModuleWebModelEventNotificationsExportNotification) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceCatalogModuleWebModelEventNotificationsExportNotification), response.Headers);
+            return (VirtoCommerceCatalogModuleWebModelPushNotificationsExportNotification) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceCatalogModuleWebModelPushNotificationsExportNotification), response.Headers);
         }
     
         /// <summary>
         /// Start catalog data export process. Data export is an async process. An ExportNotification is returned for progress reporting.
         /// </summary>
         /// <param name="exportInfo">The export configuration.</param>
-        /// <returns>VirtoCommerceCatalogModuleWebModelEventNotificationsExportNotification</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceCatalogModuleWebModelEventNotificationsExportNotification> CatalogModuleExportImportDoExportAsync (VirtoCommerceCatalogModuleWebExportImportCsvExportInfo exportInfo)
+        /// <returns>VirtoCommerceCatalogModuleWebModelPushNotificationsExportNotification</returns>
+        public async System.Threading.Tasks.Task<VirtoCommerceCatalogModuleWebModelPushNotificationsExportNotification> CatalogModuleExportImportDoExportAsync (VirtoCommerceCatalogModuleWebExportImportCsvExportInfo exportInfo)
         {
             // verify the required parameter 'exportInfo' is set
             if (exportInfo == null) throw new ApiException(400, "Missing required parameter 'exportInfo' when calling CatalogModuleExportImportDoExport");
@@ -1871,15 +1925,15 @@ namespace VirtoCommerce.Client.Api
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CatalogModuleExportImportDoExport: " + response.Content, response.Content);
 
-            return (VirtoCommerceCatalogModuleWebModelEventNotificationsExportNotification) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceCatalogModuleWebModelEventNotificationsExportNotification), response.Headers);
+            return (VirtoCommerceCatalogModuleWebModelPushNotificationsExportNotification) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceCatalogModuleWebModelPushNotificationsExportNotification), response.Headers);
         }
         
         /// <summary>
         /// Start catalog data import process. Data import is an async process. An ImportNotification is returned for progress reporting.
         /// </summary>
         /// <param name="importInfo">The import data configuration.</param> 
-        /// <returns>VirtoCommerceCatalogModuleWebModelEventNotificationsImportNotification</returns>            
-        public VirtoCommerceCatalogModuleWebModelEventNotificationsImportNotification CatalogModuleExportImportDoImport (VirtoCommerceCatalogModuleWebExportImportCsvImportInfo importInfo)
+        /// <returns>VirtoCommerceCatalogModuleWebModelPushNotificationsImportNotification</returns>            
+        public VirtoCommerceCatalogModuleWebModelPushNotificationsImportNotification CatalogModuleExportImportDoImport (VirtoCommerceCatalogModuleWebExportImportCsvImportInfo importInfo)
         {
             
             // verify the required parameter 'importInfo' is set
@@ -1924,15 +1978,15 @@ namespace VirtoCommerce.Client.Api
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling CatalogModuleExportImportDoImport: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommerceCatalogModuleWebModelEventNotificationsImportNotification) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceCatalogModuleWebModelEventNotificationsImportNotification), response.Headers);
+            return (VirtoCommerceCatalogModuleWebModelPushNotificationsImportNotification) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceCatalogModuleWebModelPushNotificationsImportNotification), response.Headers);
         }
     
         /// <summary>
         /// Start catalog data import process. Data import is an async process. An ImportNotification is returned for progress reporting.
         /// </summary>
         /// <param name="importInfo">The import data configuration.</param>
-        /// <returns>VirtoCommerceCatalogModuleWebModelEventNotificationsImportNotification</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceCatalogModuleWebModelEventNotificationsImportNotification> CatalogModuleExportImportDoImportAsync (VirtoCommerceCatalogModuleWebExportImportCsvImportInfo importInfo)
+        /// <returns>VirtoCommerceCatalogModuleWebModelPushNotificationsImportNotification</returns>
+        public async System.Threading.Tasks.Task<VirtoCommerceCatalogModuleWebModelPushNotificationsImportNotification> CatalogModuleExportImportDoImportAsync (VirtoCommerceCatalogModuleWebExportImportCsvImportInfo importInfo)
         {
             // verify the required parameter 'importInfo' is set
             if (importInfo == null) throw new ApiException(400, "Missing required parameter 'importInfo' when calling CatalogModuleExportImportDoImport");
@@ -1973,7 +2027,7 @@ namespace VirtoCommerce.Client.Api
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CatalogModuleExportImportDoImport: " + response.Content, response.Content);
 
-            return (VirtoCommerceCatalogModuleWebModelEventNotificationsImportNotification) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceCatalogModuleWebModelEventNotificationsImportNotification), response.Headers);
+            return (VirtoCommerceCatalogModuleWebModelPushNotificationsImportNotification) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceCatalogModuleWebModelPushNotificationsImportNotification), response.Headers);
         }
         
         /// <summary>
@@ -3330,6 +3384,171 @@ namespace VirtoCommerce.Client.Api
                 throw new ApiException ((int)response.StatusCode, "Error calling CatalogModulePropertiesGetPropertyValues: " + response.Content, response.Content);
 
             return (List<VirtoCommerceCatalogModuleWebModelPropertyValue>) ApiClient.Deserialize(response.Content, typeof(List<VirtoCommerceCatalogModuleWebModelPropertyValue>), response.Headers);
+        }
+        
+        /// <summary>
+        /// Searches for the items by complex criteria. 
+        /// </summary>
+        /// <param name="criteriaResponseGroup"></param> 
+        /// <param name="criteriaKeyword"></param> 
+        /// <param name="criteriaCategoryId"></param> 
+        /// <param name="criteriaCategoriesIds"></param> 
+        /// <param name="criteriaCatalogId"></param> 
+        /// <param name="criteriaCatalogsIds"></param> 
+        /// <param name="criteriaLanguageCode"></param> 
+        /// <param name="criteriaCurrency"></param> 
+        /// <param name="criteriaCode"></param> 
+        /// <param name="criteriaSeoKeyword"></param> 
+        /// <param name="criteriaSort"></param> 
+        /// <param name="criteriaFacets"></param> 
+        /// <param name="criteriaHideDirectLinedCategories"></param> 
+        /// <param name="criteriaPropertyValues"></param> 
+        /// <param name="criteriaStart"></param> 
+        /// <param name="criteriaCount"></param> 
+        /// <param name="criteriaIndexDate"></param> 
+        /// <param name="criteriaGetAllCategories"></param> 
+        /// <returns>VirtoCommerceCatalogModuleWebModelCatalogSearchResult</returns>            
+        public VirtoCommerceCatalogModuleWebModelCatalogSearchResult CatalogModuleSearchSearch (string criteriaResponseGroup, string criteriaKeyword, string criteriaCategoryId, List<string> criteriaCategoriesIds, string criteriaCatalogId, List<string> criteriaCatalogsIds, string criteriaLanguageCode, string criteriaCurrency, string criteriaCode, string criteriaSeoKeyword, string criteriaSort, List<string> criteriaFacets, bool? criteriaHideDirectLinedCategories, List<string> criteriaPropertyValues, int? criteriaStart, int? criteriaCount, DateTime? criteriaIndexDate, bool? criteriaGetAllCategories)
+        {
+            
+    
+            var path = "/api/catalog/search";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                "application/json", "text/json"
+            };
+            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            if (criteriaResponseGroup != null) queryParams.Add("criteria.responseGroup", ApiClient.ParameterToString(criteriaResponseGroup)); // query parameter
+            if (criteriaKeyword != null) queryParams.Add("criteria.keyword", ApiClient.ParameterToString(criteriaKeyword)); // query parameter
+            if (criteriaCategoryId != null) queryParams.Add("criteria.categoryId", ApiClient.ParameterToString(criteriaCategoryId)); // query parameter
+            if (criteriaCategoriesIds != null) queryParams.Add("criteria.categoriesIds", ApiClient.ParameterToString(criteriaCategoriesIds)); // query parameter
+            if (criteriaCatalogId != null) queryParams.Add("criteria.catalogId", ApiClient.ParameterToString(criteriaCatalogId)); // query parameter
+            if (criteriaCatalogsIds != null) queryParams.Add("criteria.catalogsIds", ApiClient.ParameterToString(criteriaCatalogsIds)); // query parameter
+            if (criteriaLanguageCode != null) queryParams.Add("criteria.languageCode", ApiClient.ParameterToString(criteriaLanguageCode)); // query parameter
+            if (criteriaCurrency != null) queryParams.Add("criteria.currency", ApiClient.ParameterToString(criteriaCurrency)); // query parameter
+            if (criteriaCode != null) queryParams.Add("criteria.code", ApiClient.ParameterToString(criteriaCode)); // query parameter
+            if (criteriaSeoKeyword != null) queryParams.Add("criteria.seoKeyword", ApiClient.ParameterToString(criteriaSeoKeyword)); // query parameter
+            if (criteriaSort != null) queryParams.Add("criteria.sort", ApiClient.ParameterToString(criteriaSort)); // query parameter
+            if (criteriaFacets != null) queryParams.Add("criteria.facets", ApiClient.ParameterToString(criteriaFacets)); // query parameter
+            if (criteriaHideDirectLinedCategories != null) queryParams.Add("criteria.hideDirectLinedCategories", ApiClient.ParameterToString(criteriaHideDirectLinedCategories)); // query parameter
+            if (criteriaPropertyValues != null) queryParams.Add("criteria.propertyValues", ApiClient.ParameterToString(criteriaPropertyValues)); // query parameter
+            if (criteriaStart != null) queryParams.Add("criteria.start", ApiClient.ParameterToString(criteriaStart)); // query parameter
+            if (criteriaCount != null) queryParams.Add("criteria.count", ApiClient.ParameterToString(criteriaCount)); // query parameter
+            if (criteriaIndexDate != null) queryParams.Add("criteria.indexDate", ApiClient.ParameterToString(criteriaIndexDate)); // query parameter
+            if (criteriaGetAllCategories != null) queryParams.Add("criteria.getAllCategories", ApiClient.ParameterToString(criteriaGetAllCategories)); // query parameter
+            
+            
+            
+            
+    
+            // authentication setting, if any
+            String[] authSettings = new String[] {  };
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+    
+            if (((int)response.StatusCode) >= 400)
+                throw new ApiException ((int)response.StatusCode, "Error calling CatalogModuleSearchSearch: " + response.Content, response.Content);
+            else if (((int)response.StatusCode) == 0)
+                throw new ApiException ((int)response.StatusCode, "Error calling CatalogModuleSearchSearch: " + response.ErrorMessage, response.ErrorMessage);
+    
+            return (VirtoCommerceCatalogModuleWebModelCatalogSearchResult) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceCatalogModuleWebModelCatalogSearchResult), response.Headers);
+        }
+    
+        /// <summary>
+        /// Searches for the items by complex criteria. 
+        /// </summary>
+        /// <param name="criteriaResponseGroup"></param>
+        /// <param name="criteriaKeyword"></param>
+        /// <param name="criteriaCategoryId"></param>
+        /// <param name="criteriaCategoriesIds"></param>
+        /// <param name="criteriaCatalogId"></param>
+        /// <param name="criteriaCatalogsIds"></param>
+        /// <param name="criteriaLanguageCode"></param>
+        /// <param name="criteriaCurrency"></param>
+        /// <param name="criteriaCode"></param>
+        /// <param name="criteriaSeoKeyword"></param>
+        /// <param name="criteriaSort"></param>
+        /// <param name="criteriaFacets"></param>
+        /// <param name="criteriaHideDirectLinedCategories"></param>
+        /// <param name="criteriaPropertyValues"></param>
+        /// <param name="criteriaStart"></param>
+        /// <param name="criteriaCount"></param>
+        /// <param name="criteriaIndexDate"></param>
+        /// <param name="criteriaGetAllCategories"></param>
+        /// <returns>VirtoCommerceCatalogModuleWebModelCatalogSearchResult</returns>
+        public async System.Threading.Tasks.Task<VirtoCommerceCatalogModuleWebModelCatalogSearchResult> CatalogModuleSearchSearchAsync (string criteriaResponseGroup, string criteriaKeyword, string criteriaCategoryId, List<string> criteriaCategoriesIds, string criteriaCatalogId, List<string> criteriaCatalogsIds, string criteriaLanguageCode, string criteriaCurrency, string criteriaCode, string criteriaSeoKeyword, string criteriaSort, List<string> criteriaFacets, bool? criteriaHideDirectLinedCategories, List<string> criteriaPropertyValues, int? criteriaStart, int? criteriaCount, DateTime? criteriaIndexDate, bool? criteriaGetAllCategories)
+        {
+            
+    
+            var path = "/api/catalog/search";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                "application/json", "text/json"
+            };
+            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            if (criteriaResponseGroup != null) queryParams.Add("criteria.responseGroup", ApiClient.ParameterToString(criteriaResponseGroup)); // query parameter
+            if (criteriaKeyword != null) queryParams.Add("criteria.keyword", ApiClient.ParameterToString(criteriaKeyword)); // query parameter
+            if (criteriaCategoryId != null) queryParams.Add("criteria.categoryId", ApiClient.ParameterToString(criteriaCategoryId)); // query parameter
+            if (criteriaCategoriesIds != null) queryParams.Add("criteria.categoriesIds", ApiClient.ParameterToString(criteriaCategoriesIds)); // query parameter
+            if (criteriaCatalogId != null) queryParams.Add("criteria.catalogId", ApiClient.ParameterToString(criteriaCatalogId)); // query parameter
+            if (criteriaCatalogsIds != null) queryParams.Add("criteria.catalogsIds", ApiClient.ParameterToString(criteriaCatalogsIds)); // query parameter
+            if (criteriaLanguageCode != null) queryParams.Add("criteria.languageCode", ApiClient.ParameterToString(criteriaLanguageCode)); // query parameter
+            if (criteriaCurrency != null) queryParams.Add("criteria.currency", ApiClient.ParameterToString(criteriaCurrency)); // query parameter
+            if (criteriaCode != null) queryParams.Add("criteria.code", ApiClient.ParameterToString(criteriaCode)); // query parameter
+            if (criteriaSeoKeyword != null) queryParams.Add("criteria.seoKeyword", ApiClient.ParameterToString(criteriaSeoKeyword)); // query parameter
+            if (criteriaSort != null) queryParams.Add("criteria.sort", ApiClient.ParameterToString(criteriaSort)); // query parameter
+            if (criteriaFacets != null) queryParams.Add("criteria.facets", ApiClient.ParameterToString(criteriaFacets)); // query parameter
+            if (criteriaHideDirectLinedCategories != null) queryParams.Add("criteria.hideDirectLinedCategories", ApiClient.ParameterToString(criteriaHideDirectLinedCategories)); // query parameter
+            if (criteriaPropertyValues != null) queryParams.Add("criteria.propertyValues", ApiClient.ParameterToString(criteriaPropertyValues)); // query parameter
+            if (criteriaStart != null) queryParams.Add("criteria.start", ApiClient.ParameterToString(criteriaStart)); // query parameter
+            if (criteriaCount != null) queryParams.Add("criteria.count", ApiClient.ParameterToString(criteriaCount)); // query parameter
+            if (criteriaIndexDate != null) queryParams.Add("criteria.indexDate", ApiClient.ParameterToString(criteriaIndexDate)); // query parameter
+            if (criteriaGetAllCategories != null) queryParams.Add("criteria.getAllCategories", ApiClient.ParameterToString(criteriaGetAllCategories)); // query parameter
+            
+            
+            
+            
+    
+            // authentication setting, if any
+            String[] authSettings = new String[] {  };
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            if (((int)response.StatusCode) >= 400)
+                throw new ApiException ((int)response.StatusCode, "Error calling CatalogModuleSearchSearch: " + response.Content, response.Content);
+
+            return (VirtoCommerceCatalogModuleWebModelCatalogSearchResult) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceCatalogModuleWebModelCatalogSearchResult), response.Headers);
         }
         
         /// <summary>
