@@ -599,7 +599,7 @@ namespace VirtoCommerce.Client.Api
         /// Get testing parameters
         /// </summary>
         /// <remarks>
-        /// Method returns notification properties, that defined in notification class, this proprties used in notification template.
+        /// Method returns notification properties, that defined in notification class, this properties used in notification template.
         /// </remarks>
         /// <param name="type">Notification type</param>
         /// <returns></returns>
@@ -609,7 +609,7 @@ namespace VirtoCommerce.Client.Api
         /// Get testing parameters
         /// </summary>
         /// <remarks>
-        /// Method returns notification properties, that defined in notification class, this proprties used in notification template.
+        /// Method returns notification properties, that defined in notification class, this properties used in notification template.
         /// </remarks>
         /// <param name="type">Notification type</param>
         /// <returns></returns>
@@ -4149,7 +4149,7 @@ namespace VirtoCommerce.Client.Api
         }
         
         /// <summary>
-        /// Get testing parameters Method returns notification properties, that defined in notification class, this proprties used in notification template.
+        /// Get testing parameters Method returns notification properties, that defined in notification class, this properties used in notification template.
         /// </summary>
         /// <param name="type">Notification type</param> 
         /// <returns></returns>            
@@ -4202,7 +4202,7 @@ namespace VirtoCommerce.Client.Api
         }
     
         /// <summary>
-        /// Get testing parameters Method returns notification properties, that defined in notification class, this proprties used in notification template.
+        /// Get testing parameters Method returns notification properties, that defined in notification class, this properties used in notification template.
         /// </summary>
         /// <param name="type">Notification type</param>
         /// <returns></returns>
