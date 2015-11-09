@@ -85,6 +85,9 @@
     <Compile Include="Filters\TranslationFilter.cs" />
     <Compile Include="Filters\CommerceFilters.cs" />
     <Compile Include="Filters\CommonFilters.cs" />
+    <Compile Include="Objects\Form.cs" />
+    <Compile Include="Objects\FormErrors.cs" />
+    <Compile Include="Tags\FormTag.cs" />
     <Compile Include="Objects\ItemCollections.cs" />
     <Compile Include="Objects\MetafieldsCollections.cs" />
     <Compile Include="Objects\Shop.cs" />
@@ -92,7 +95,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShopifyLiquidThemeEngine.cs" />
     <Compile Include="Objects\ShopifyThemeWorkContext.cs" />
-    <Compile Include="Tags\Layout.cs" />
+    <Compile Include="Tags\LayoutTag.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Blocks\" />

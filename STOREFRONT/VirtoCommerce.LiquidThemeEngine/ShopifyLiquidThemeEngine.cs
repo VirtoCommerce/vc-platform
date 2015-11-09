@@ -64,7 +64,8 @@ namespace VirtoCommerce.LiquidThemeEngine
 
             Condition.Operators["contains"] = (left, right) => ContainsMethod(left, right);
 
-            Template.RegisterTag<Layout>("layout");
+            Template.RegisterTag<LayoutTag>("layout");
+            Template.RegisterTag<FormTag>("form");
             var contextType = typeof(WorkContext);
 
             //Register WorkingContext properties as DropBased 
@@ -153,7 +154,6 @@ namespace VirtoCommerce.LiquidThemeEngine
                 return _storeFrontUrlBuilder.ToAppRelative(WorkContext, _themesAssetsRelativeUrl, WorkContext.CurrentStore, WorkContext.CurrentLanguage);
             }
         }
-      
 
         #region IFileSystem members
         public string ReadTemplateFile(Context context, string templateName)
