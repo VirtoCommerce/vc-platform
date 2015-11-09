@@ -10,7 +10,7 @@ using Hangfire;
 using Omu.ValueInjecter;
 using VirtoCommerce.CatalogModule.Web.ExportImport;
 using VirtoCommerce.CatalogModule.Web.Model;
-using VirtoCommerce.CatalogModule.Web.Model.EventNotifications;
+using VirtoCommerce.CatalogModule.Web.Model.PushNotifications;
 using VirtoCommerce.CatalogModule.Web.Security;
 using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Platform.Core.Asset;
@@ -22,6 +22,7 @@ using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Common;
 using coreModel = VirtoCommerce.Domain.Catalog.Model;
+using webModel = VirtoCommerce.CatalogModule.Web.Model;
 
 namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 {
