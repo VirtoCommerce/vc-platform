@@ -1,6 +1,6 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.modulesListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.modules', 'uiGridConstants', 'platformWebApp.uiGridHelper',
-    function ($scope, bladeNavigationService, dialogService, modules, uiGridConstants, uiGridHelper) {
+.controller('platformWebApp.modulesListController', ['$scope', 'filterFilter', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.modules', 'uiGridConstants', 'platformWebApp.uiGridHelper',
+    function ($scope, filterFilter, bladeNavigationService, dialogService, modules, uiGridConstants, uiGridHelper) {
         var blade = $scope.blade;
 
         blade.refresh = function () {
@@ -93,7 +93,34 @@
                             cellTemplate: 'modules-list-authors.cell.html'
                         }
             ]
-        });
+            },
+            function (gridApi) {
+                gridApi.grid.registerRowsProcessor($scope.singleFilter, 90);
+            });
+
+        $scope.singleFilter = function (renderableRows) {
+            //var matcher = new RegExp(blade.searchText);
+            var visibleCount = 0;
+            renderableRows.forEach(function (row) {
+                row.visible = _.any(filterFilter([row.entity], blade.searchText));
+                if (row.visible) visibleCount++;
+                //var match = false;
+                //['title', 'version', 'authors'].forEach(function (field) {                    
+                //    if (row.entity[field].match(matcher)) {
+                //        match = true;
+                //    }
+                //});
+                //if (!match) {
+                //    row.visible = false;
+                //}
+            });
+
+            //$timeout(function () {                
+            //}, 1);
+
+            $scope.filteredEntitiesCount = visibleCount;
+            return renderableRows;
+        };
 
 
         blade.refresh();

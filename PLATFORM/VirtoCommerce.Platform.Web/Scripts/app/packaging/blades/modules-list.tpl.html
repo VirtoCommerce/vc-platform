@@ -1,9 +1,9 @@
 ﻿<div class="blade-static">
     <div class="form-group">
         <div class="form-input __search">
-            <input placeholder="Search keyword..." ng-model="searchText">
+            <input placeholder="Search keyword..." ng-model="blade.searchText" ng-keyup="gridApi.grid.queueGridRefresh()">
         </div>
-        <p class="form-count">Count: <span class="count">{{filteredEntities.length}}</span></p>
+        <p class="form-count">Count: <span class="count">{{filteredEntitiesCount}}</span></p>
     </div>
 </div>
 <div class="blade-content __medium-wide">

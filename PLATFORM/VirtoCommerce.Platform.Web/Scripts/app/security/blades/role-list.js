@@ -57,11 +57,11 @@ function ($scope, roles, bladeNavigationService, dialogService, uiGridConstants,
         bladeNavigationService.showBlade(newBlade, blade);
     };
 
-    $scope.toggleAll = function () {
-        angular.forEach(blade.currentEntities, function (item) {
-            item.selected = blade.selectedAll;
-        });
-    };
+    //$scope.toggleAll = function () {
+    //    angular.forEach(blade.currentEntities, function (item) {
+    //        item.selected = blade.selectedAll;
+    //    });
+    //};
 
     function isItemsChecked() {
         return blade.currentEntities && _.any(blade.currentEntities, function (x) { return x.selected; });

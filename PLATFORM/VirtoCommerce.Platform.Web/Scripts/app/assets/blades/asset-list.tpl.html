@@ -93,5 +93,27 @@
 </div>
 
 <script type="text/ng-template" id="asset-list-icon.cell.html">
-    <div class="image" style="background-image: url('{{COL_FIELD}}');height:50px"></div>
+    <div class="product-img">
+        <div class="image" style="background-image: url('{{COL_FIELD}}');height:50px" ng-if="row.entity.isImage"></div>
+        <i class="table-ico fa" ng-class="row.entity.type == 'folder' ? 'fa-folder' : 'fa-file-text-o'" ng-if="!row.entity.isImage"></i>
+    </div>
+</script>
+<script type="text/ng-template" id="am-time-ago.cell.html">
+    <div class="ui-grid-cell-contents">
+        <span class="table-date" am-time-ago="COL_FIELD"></span>
+    </div>
+</script>
+<script type="text/ng-template" id="asset-list-actions.cell.html">
+    <ul class="ui-grid-cell-contents menu __actions">
+        <li class="menu-item" ng-click="grid.appScope.downloadUrl(data)" ng-if="row.entity.type !== 'folder'">
+            <a class="menu-link" title="Download">
+                <i class="menu-ico fa fa-download"></i>
+            </a>
+        </li>
+        <li class="menu-item" ng-click="grid.appScope.copyUrl(data)">
+            <a class="menu-link" title="Copy link">
+                <i class="menu-ico fa fa-link"></i>
+            </a>
+        </li>
+    </ul>
 </script>

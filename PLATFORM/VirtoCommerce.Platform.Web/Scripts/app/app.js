@@ -74,7 +74,7 @@ angular.module('platformWebApp', AppDependencies).
           gridOptions.initialize = function (options) {
               var initOptions = $delegate.initialize(options);
               angular.extend(initOptions, {
-                  data: 'blade.currentEntities',
+                  data: _.any(initOptions.data) ? initOptions.data : 'blade.currentEntities',
                   enableGridMenu: true,
                   enableVerticalScrollbar: uiGridConstants.scrollbars.NEVER,
                   enableHorizontalScrollbar: uiGridConstants.scrollbars.NEVER,
@@ -190,7 +190,7 @@ angular.module('platformWebApp', AppDependencies).
   ])
 .factory('platformWebApp.uiGridHelper', ['$localStorage', '$timeout', 'uiGridConstants', function ($localStorage, $timeout, uiGridConstants) {
     var retVal = {};
-    retVal.initialize = function ($scope, gridOptions) {
+    retVal.initialize = function ($scope, gridOptions, externalRegisterApiCallback) {
         //$scope.$on('$destroy', function () {
         //    $localStorage['gridState:' + $scope.blade.template] = $scope.gridApi.saveState.save();
         //});
@@ -201,15 +201,15 @@ angular.module('platformWebApp', AppDependencies).
             var foundDef;
             _.each(savedState.columns, function (x) {
                 if (foundDef = _.findWhere(gridOptions.columnDefs, { name: x.name })) {
+                    var customSort = x.sort;
                     _.extend(x, foundDef);
+                    x.sort = customSort;
                 }
             });
             gridOptions.columnDefs = savedState.columns;
         }
 
-        $scope.gridOptions = {
-            rowTemplate: gridOptions.rowTemplate,
-            columnDefs: gridOptions.columnDefs,
+        $scope.gridOptions = angular.extend({
             onRegisterApi: function (gridApi) {
                 //set gridApi on scope
                 $scope.gridApi = gridApi;
@@ -227,8 +227,12 @@ angular.module('platformWebApp', AppDependencies).
                 function saveState() {
                     $localStorage['gridState:' + $scope.blade.template] = gridApi.saveState.save();
                 }
+
+                if (externalRegisterApiCallback) {
+                    externalRegisterApiCallback(gridApi);
+                }                
             }
-        };
+        }, gridOptions);
     };
 
     retVal.onDataLoaded = function (gridOptions, currentEntities) {
