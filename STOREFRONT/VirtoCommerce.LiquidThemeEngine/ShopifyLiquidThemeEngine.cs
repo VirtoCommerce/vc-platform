@@ -38,6 +38,7 @@ namespace VirtoCommerce.LiquidThemeEngine
     {
         private const string _defaultMasterView = "theme";
         private const string _liquidTemplateFormat = "{0}.liquid";
+        private static string[] _templatesDiscoveryFolders = new string[] { "templates", "snippets", "layout", "assets" };
         private static Regex _templateRegex = new Regex(@"[a-zA-Z0-9]+$", RegexOptions.Compiled);
         private string _themesRelativeUrl;
         private string _themesAssetsRelativeUrl;
@@ -171,13 +172,16 @@ namespace VirtoCommerce.LiquidThemeEngine
             if (templateName == null || !_templateRegex.IsMatch(templateName))
                 throw new FileSystemException("Error - Illegal template name '{0}'", templateName);
 
-            var baseDirectory = new DirectoryInfo(ThemeLocalPath);
-            var templateFile = baseDirectory.GetFiles(String.Format(_liquidTemplateFormat, templateName), SearchOption.AllDirectories).FirstOrDefault();
 
-            if (templateFile == null)
-                throw new FileSystemException("Error - No such template {0} . Looked in the following locations:<br />{1}", templateName, ThemeName);
-
-            return File.ReadAllText(templateFile.FullName);
+            foreach (var templateDiscoveryFolder in _templatesDiscoveryFolders)
+            {
+                var templatePath = Path.Combine(ThemeLocalPath, templateDiscoveryFolder, String.Format(_liquidTemplateFormat, templateName));
+                if (File.Exists(templatePath))
+                {
+                    return File.ReadAllText(templatePath);
+                }
+            }
+            throw new FileSystemException("Error - No such template {0} . Looked in the following locations:<br />{1}", templateName, ThemeName);
         }
 
         /// <summary>
