@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Routing;
-using Microsoft.AspNet.Identity.Owin;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Client.Model;
 using VirtoCommerce.Storefront.Model;
@@ -12,11 +11,13 @@ namespace VirtoCommerce.Storefront.Routing
 {
     public class SeoRoute : Route
     {
+        private readonly Func<WorkContext> _workContextFactory;
         private readonly ICommerceCoreModuleApi _commerceCoreApi;
 
-        public SeoRoute(string url, IRouteHandler routeHandler, ICommerceCoreModuleApi commerceCoreApi)
+        public SeoRoute(string url, IRouteHandler routeHandler, Func<WorkContext> workContextFactory, ICommerceCoreModuleApi commerceCoreApi)
             : base(url, routeHandler)
         {
+            _workContextFactory = workContextFactory;
             _commerceCoreApi = commerceCoreApi;
         }
         public override RouteData GetRouteData(HttpContextBase httpContext)
@@ -37,7 +38,7 @@ namespace VirtoCommerce.Storefront.Routing
                 }
                 else
                 {
-                    var workContext = httpContext.GetOwinContext().Get<WorkContext>();
+                    var workContext = _workContextFactory();
 
                     // Ensure the slug is active
                     if (seoRecord.IsActive == null || !seoRecord.IsActive.Value)
