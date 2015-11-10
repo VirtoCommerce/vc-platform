@@ -13,7 +13,7 @@ namespace VirtoCommerce.Client.Model {
   /// 
   /// </summary>
   [DataContract]
-  public class VirtoCommercePlatformCoreNotificationsNotificationParameter {
+  public class VirtoCommercePlatformWebModelNotificationsNotificationParameter {
     
     /// <summary>
     /// Gets or Sets ParameterName
@@ -23,22 +23,25 @@ namespace VirtoCommerce.Client.Model {
 
     
     /// <summary>
-    /// Gets or Sets ParameterDescription
+    /// Parameter description, can be used for display detailed information about parameter
     /// </summary>
+    /// <value>Parameter description, can be used for display detailed information about parameter</value>
     [DataMember(Name="parameterDescription", EmitDefaultValue=false)]
     public string ParameterDescription { get; set; }
 
     
     /// <summary>
-    /// Gets or Sets ParameterCodeInView
+    /// Code template for notification parameter for template resolver
     /// </summary>
+    /// <value>Code template for notification parameter for template resolver</value>
     [DataMember(Name="parameterCodeInView", EmitDefaultValue=false)]
     public string ParameterCodeInView { get; set; }
 
     
     /// <summary>
-    /// Gets or Sets IsDictionary
+    /// 
     /// </summary>
+    /// <value></value>
     [DataMember(Name="isDictionary", EmitDefaultValue=false)]
     public bool? IsDictionary { get; set; }
 
@@ -71,7 +74,7 @@ namespace VirtoCommerce.Client.Model {
     /// <returns>String presentation of the object</returns>
     public override string ToString()  {
       var sb = new StringBuilder();
-      sb.Append("class VirtoCommercePlatformCoreNotificationsNotificationParameter {\n");
+      sb.Append("class VirtoCommercePlatformWebModelNotificationsNotificationParameter {\n");
       
       sb.Append("  ParameterName: ").Append(ParameterName).Append("\n");
       

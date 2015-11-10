@@ -242,6 +242,7 @@
     <Compile Include="Model\VirtoCommercePlatformWebModelAssetBlobInfo.cs" />
     <Compile Include="Model\VirtoCommercePlatformWebModelJobsJob.cs" />
     <Compile Include="Model\VirtoCommercePlatformWebModelNotificationsNotification.cs" />
+    <Compile Include="Model\VirtoCommercePlatformWebModelNotificationsNotificationParameter.cs" />
     <Compile Include="Model\VirtoCommercePlatformWebModelNotificationsNotificationTemplate.cs" />
     <Compile Include="Model\VirtoCommercePlatformWebModelNotificationsRenderNotificationContentResult.cs" />
     <Compile Include="Model\VirtoCommercePlatformWebModelNotificationsSearchNotificationsResult.cs" />

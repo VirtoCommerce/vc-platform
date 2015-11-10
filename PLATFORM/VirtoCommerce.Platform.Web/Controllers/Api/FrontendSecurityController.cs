@@ -4,13 +4,13 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
 using Hangfire;
+using Microsoft.AspNet.Identity.Owin;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Security.Identity;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
     [RoutePrefix("api/security/frontend")]
-    [ApiExplorerSettings(IgnoreApi = true)]
     public class FrontEndSecurityController : ApiController
     {
         private readonly ISecurityService _securityService;
@@ -35,6 +35,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         // GET: /api/security/frontend/user/id
         [HttpGet]
         [Route("user/id/{userId}")]
+        [ResponseType(typeof(ApplicationUserExtended))]
         public async Task<IHttpActionResult> GetUserById(string userId)
         {
             if (string.IsNullOrEmpty(userId))
@@ -51,6 +52,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         // GET: /api/security/frontend/user/name
         [HttpGet]
         [Route("user/name/{userName}")]
+        [ResponseType(typeof(ApplicationUserExtended))]
         public async Task<IHttpActionResult> GetUserByName(string userName)
         {
             if (string.IsNullOrEmpty(userName))
@@ -67,6 +69,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         // GET: /api/security/frontend/user/login
         [HttpGet]
         [Route("user/login")]
+        [ResponseType(typeof(ApplicationUserExtended))]
         public async Task<IHttpActionResult> GetUserByLogin(string loginProvider, string providerKey)
         {
             if (string.IsNullOrEmpty(loginProvider) || string.IsNullOrEmpty(providerKey))
@@ -83,6 +86,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         // POST: /api/security/frontend/user/signin
         [HttpPost]
         [Route("user/signin")]
+        [ResponseType(typeof(SignInStatus))]
         public async Task<IHttpActionResult> PasswordSignIn(string userName, string password, bool isPersistent)
         {
             if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(password))
@@ -99,6 +103,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         // POST: /api/security/frontend/user
         [HttpPost]
         [Route("user")]
+        [ResponseType(typeof(SignInStatus))]
         public async Task<IHttpActionResult> Create(ApplicationUserExtended user)
         {
             if (user != null)
@@ -119,6 +124,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         // POST: /api/security/frontend/user/password/resettoken
         [HttpPost]
         [Route("user/password/resettoken")]
+        [ResponseType(typeof(void))]
         public async Task<IHttpActionResult> GenerateResetPasswordToken(string userId, string storeName, string callbackUrl)
         {
             if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(storeName) || string.IsNullOrEmpty(callbackUrl))
@@ -147,6 +153,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         // POST: /api/security/frontend/user/password/reset
         [HttpPost]
         [Route("user/password/reset")]
+        [ResponseType(typeof(SignInStatus))]
         public async Task<IHttpActionResult> ResetPassword(string userId, string token, string newPassword)
         {
             if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token) || string.IsNullOrEmpty(newPassword))
