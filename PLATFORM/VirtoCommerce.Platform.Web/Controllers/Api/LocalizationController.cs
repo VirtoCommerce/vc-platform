@@ -27,13 +27,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var files = directory.GetFiles().Where(x => x.Name.StartsWith(lang)).ToList();
 
             // move custom file to the end of file list
-            var custom = string.Format("{0}.custom.json", lang);
-            var customFile = files.FirstOrDefault(x => x.Name.ToLower() == custom);
-            if (customFile != null)
-            {
-                files.Remove(customFile);
-                files.Add(customFile);
-            }
+            //var custom = string.Format("{0}.custom.json", lang);
+            //var customFile = files.FirstOrDefault(x => x.Name.ToLower() == custom);
+            //if (customFile != null)
+            //{
+            //    files.Remove(customFile);
+            //    files.Add(customFile);
+            //}
 
             var result = new JObject();
             foreach (var file in files)
