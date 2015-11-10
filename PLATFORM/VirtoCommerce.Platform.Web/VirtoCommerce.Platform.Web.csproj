@@ -283,6 +283,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="BackgroundJobs\SendNotificationsJobs.cs" />
+    <Compile Include="Controllers\Api\LocalizationController.cs" />
     <Compile Include="Converters\Asset\AssetSearchResultConverter.cs" />
     <Compile Include="Converters\ExportImport\ExportImportRequestConverter.cs" />
     <Compile Include="Model\Asset\AssetListItem.cs" />
