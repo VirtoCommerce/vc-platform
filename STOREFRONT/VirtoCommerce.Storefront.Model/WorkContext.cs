@@ -51,6 +51,13 @@ namespace VirtoCommerce.Storefront.Model
         /// </summary>
         public Store[] AllStores { get; set; }
         
+        /// <summary>
+        /// List of categories
+        /// </summary>
+        public Category[] AllCategories { get; set; } 
+
+        public Product CurrentProduct { get; set; }
+
         #region IDisposable Implementation
 
         public void Dispose()

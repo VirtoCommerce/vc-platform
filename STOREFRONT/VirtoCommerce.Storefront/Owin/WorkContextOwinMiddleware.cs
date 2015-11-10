@@ -53,7 +53,6 @@ namespace VirtoCommerce.Storefront.Owin
             await Next.Invoke(context);
         }
 
-
         protected virtual async Task<Store[]> GetAllStoresAsync()
         {
             var stores = await _storeApi.StoreModuleGetStoresAsync();

@@ -54,6 +54,14 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
                 return new Shop(CurrentStore, _urlBuilder, this);
             }
         }
+
+        public Product Product
+        {
+            get
+            {
+                return new Product(CurrentProduct, _urlBuilder, this);
+            }
+        }
         #endregion
 
         #region ILiquidizable members
