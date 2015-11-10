@@ -1168,8 +1168,8 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="user"></param>
-        /// <returns>string</returns>
-        string FrontEndSecurityCreate (VirtoCommercePlatformCoreSecurityApplicationUserExtended user);
+        /// <returns>VirtoCommercePlatformCoreSecuritySecurityResult</returns>
+        VirtoCommercePlatformCoreSecuritySecurityResult FrontEndSecurityCreate (VirtoCommercePlatformCoreSecurityApplicationUserExtended user);
   
         /// <summary>
         /// 
@@ -1178,8 +1178,8 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="user"></param>
-        /// <returns>string</returns>
-        System.Threading.Tasks.Task<string> FrontEndSecurityCreateAsync (VirtoCommercePlatformCoreSecurityApplicationUserExtended user);
+        /// <returns>VirtoCommercePlatformCoreSecuritySecurityResult</returns>
+        System.Threading.Tasks.Task<VirtoCommercePlatformCoreSecuritySecurityResult> FrontEndSecurityCreateAsync (VirtoCommercePlatformCoreSecurityApplicationUserExtended user);
         
         /// <summary>
         /// 
@@ -1252,8 +1252,8 @@ namespace VirtoCommerce.Client.Api
         /// <param name="userId"></param>
         /// <param name="token"></param>
         /// <param name="newPassword"></param>
-        /// <returns>string</returns>
-        string FrontEndSecurityResetPassword (string userId, string token, string newPassword);
+        /// <returns>VirtoCommercePlatformCoreSecuritySecurityResult</returns>
+        VirtoCommercePlatformCoreSecuritySecurityResult FrontEndSecurityResetPassword (string userId, string token, string newPassword);
   
         /// <summary>
         /// 
@@ -1264,8 +1264,8 @@ namespace VirtoCommerce.Client.Api
         /// <param name="userId"></param>
         /// <param name="token"></param>
         /// <param name="newPassword"></param>
-        /// <returns>string</returns>
-        System.Threading.Tasks.Task<string> FrontEndSecurityResetPasswordAsync (string userId, string token, string newPassword);
+        /// <returns>VirtoCommercePlatformCoreSecuritySecurityResult</returns>
+        System.Threading.Tasks.Task<VirtoCommercePlatformCoreSecuritySecurityResult> FrontEndSecurityResetPasswordAsync (string userId, string token, string newPassword);
         
         /// <summary>
         /// 
@@ -7111,8 +7111,8 @@ namespace VirtoCommerce.Client.Api
         ///  
         /// </summary>
         /// <param name="user"></param> 
-        /// <returns>string</returns>            
-        public string FrontEndSecurityCreate (VirtoCommercePlatformCoreSecurityApplicationUserExtended user)
+        /// <returns>VirtoCommercePlatformCoreSecuritySecurityResult</returns>            
+        public VirtoCommercePlatformCoreSecuritySecurityResult FrontEndSecurityCreate (VirtoCommercePlatformCoreSecurityApplicationUserExtended user)
         {
             
             // verify the required parameter 'user' is set
@@ -7157,15 +7157,15 @@ namespace VirtoCommerce.Client.Api
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling FrontEndSecurityCreate: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (string) ApiClient.Deserialize(response.Content, typeof(string), response.Headers);
+            return (VirtoCommercePlatformCoreSecuritySecurityResult) ApiClient.Deserialize(response.Content, typeof(VirtoCommercePlatformCoreSecuritySecurityResult), response.Headers);
         }
     
         /// <summary>
         ///  
         /// </summary>
         /// <param name="user"></param>
-        /// <returns>string</returns>
-        public async System.Threading.Tasks.Task<string> FrontEndSecurityCreateAsync (VirtoCommercePlatformCoreSecurityApplicationUserExtended user)
+        /// <returns>VirtoCommercePlatformCoreSecuritySecurityResult</returns>
+        public async System.Threading.Tasks.Task<VirtoCommercePlatformCoreSecuritySecurityResult> FrontEndSecurityCreateAsync (VirtoCommercePlatformCoreSecurityApplicationUserExtended user)
         {
             // verify the required parameter 'user' is set
             if (user == null) throw new ApiException(400, "Missing required parameter 'user' when calling FrontEndSecurityCreate");
@@ -7206,7 +7206,7 @@ namespace VirtoCommerce.Client.Api
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling FrontEndSecurityCreate: " + response.Content, response.Content);
 
-            return (string) ApiClient.Deserialize(response.Content, typeof(string), response.Headers);
+            return (VirtoCommercePlatformCoreSecuritySecurityResult) ApiClient.Deserialize(response.Content, typeof(VirtoCommercePlatformCoreSecuritySecurityResult), response.Headers);
         }
         
         /// <summary>
@@ -7530,8 +7530,8 @@ namespace VirtoCommerce.Client.Api
         /// <param name="userId"></param> 
         /// <param name="token"></param> 
         /// <param name="newPassword"></param> 
-        /// <returns>string</returns>            
-        public string FrontEndSecurityResetPassword (string userId, string token, string newPassword)
+        /// <returns>VirtoCommercePlatformCoreSecuritySecurityResult</returns>            
+        public VirtoCommercePlatformCoreSecuritySecurityResult FrontEndSecurityResetPassword (string userId, string token, string newPassword)
         {
             
             // verify the required parameter 'userId' is set
@@ -7584,7 +7584,7 @@ namespace VirtoCommerce.Client.Api
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling FrontEndSecurityResetPassword: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (string) ApiClient.Deserialize(response.Content, typeof(string), response.Headers);
+            return (VirtoCommercePlatformCoreSecuritySecurityResult) ApiClient.Deserialize(response.Content, typeof(VirtoCommercePlatformCoreSecuritySecurityResult), response.Headers);
         }
     
         /// <summary>
@@ -7593,8 +7593,8 @@ namespace VirtoCommerce.Client.Api
         /// <param name="userId"></param>
         /// <param name="token"></param>
         /// <param name="newPassword"></param>
-        /// <returns>string</returns>
-        public async System.Threading.Tasks.Task<string> FrontEndSecurityResetPasswordAsync (string userId, string token, string newPassword)
+        /// <returns>VirtoCommercePlatformCoreSecuritySecurityResult</returns>
+        public async System.Threading.Tasks.Task<VirtoCommercePlatformCoreSecuritySecurityResult> FrontEndSecurityResetPasswordAsync (string userId, string token, string newPassword)
         {
             // verify the required parameter 'userId' is set
             if (userId == null) throw new ApiException(400, "Missing required parameter 'userId' when calling FrontEndSecurityResetPassword");
@@ -7641,7 +7641,7 @@ namespace VirtoCommerce.Client.Api
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling FrontEndSecurityResetPassword: " + response.Content, response.Content);
 
-            return (string) ApiClient.Deserialize(response.Content, typeof(string), response.Headers);
+            return (VirtoCommercePlatformCoreSecuritySecurityResult) ApiClient.Deserialize(response.Content, typeof(VirtoCommercePlatformCoreSecuritySecurityResult), response.Headers);
         }
         
         /// <summary>

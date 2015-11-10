@@ -103,7 +103,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         // POST: /api/security/frontend/user
         [HttpPost]
         [Route("user")]
-        [ResponseType(typeof(SignInStatus))]
+        [ResponseType(typeof(SecurityResult))]
         public async Task<IHttpActionResult> Create(ApplicationUserExtended user)
         {
             if (user != null)
@@ -153,7 +153,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         // POST: /api/security/frontend/user/password/reset
         [HttpPost]
         [Route("user/password/reset")]
-        [ResponseType(typeof(SignInStatus))]
+        [ResponseType(typeof(SecurityResult))]
         public async Task<IHttpActionResult> ResetPassword(string userId, string token, string newPassword)
         {
             if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token) || string.IsNullOrEmpty(newPassword))
