@@ -3,22 +3,22 @@
     <div class="blade-inner">
         <div class="inner-block">
             <form name="formScope" class="form">
-                <div class="sub-t">Default language</div>
+                <div class="sub-t">{{'catalog.blades.catalog-languages.labels.default-language' | translate}}</div>
                 <div class="form-group">
                     <div class="form-input">
                         <ui-select ng-model="blade.currentEntity.defaultValue" required>
-                            <ui-select-match placeholder="Select...">{{$select.selected}}</ui-select-match>
+                            <ui-select-match placeholder="{{'catalog.blades.catalog-languages.placeholders.select' | translate}}">{{$select.selected}}</ui-select-match>
                             <ui-select-choices repeat="x in languages | filter: $select.search">
                                 <span ng-bind-html="x | highlight: $select.search"></span>
                             </ui-select-choices>
                         </ui-select>
                     </div>
                 </div>
-                <div class="sub-t" ng-if="!blade.data.virtual">Additional languages</div>
+                <div class="sub-t" ng-if="!blade.data.virtual">{{'catalog.blades.catalog-languages.labels.additional-languages' | translate}}</div>
                 <div class="form-group" ng-if="!blade.data.virtual">
                     <div class="form-input" data-role="input-control">
                         <ui-select multiple ng-model="blade.currentEntity.selectedValues">
-                            <ui-select-match placeholder="Select...">{{$item}}</ui-select-match>
+                            <ui-select-match placeholder="{{'catalog.blades.catalog-languages.placeholders.select' | translate}}">{{$item}}</ui-select-match>
                             <ui-select-choices repeat="x in languages | filter:'!'+blade.currentEntity.defaultValue | filter: $select.search">
                                 <span ng-bind-html="x | highlight: $select.search"></span>
                             </ui-select-choices>

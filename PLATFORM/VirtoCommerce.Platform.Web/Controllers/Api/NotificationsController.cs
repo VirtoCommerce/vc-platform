@@ -11,6 +11,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Web.Converters.Notifications;
+using VirtoCommerce.Platform.Core.Common;
 using webModels = VirtoCommerce.Platform.Web.Model.Notifications;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
@@ -185,16 +186,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var notification = _notificationManager.GetNewNotification(request.Type, request.ObjectId, request.ObjectTypeId, request.Language);
             foreach (var param in request.NotificationParameters)
             {
-                var property = notification.GetType().GetProperty(param.Key);
-                var jObject = param.Value as Newtonsoft.Json.Linq.JObject;
-                if (jObject != null)
-                {
-                    property.SetValue(notification, jObject.ToObject<Dictionary<string, string>>());
-                }
-                else
-                {
-                    property.SetValue(notification, param.Value);
-                }
+                SetValue(notification, param);
             }
             var result = _notificationManager.SendNotification(notification);
 
@@ -254,69 +246,61 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        private void SetValue(Notification notification, KeyValuePair<string, object> param)
+        private void SetValue(Notification notification, webModels.NotificationParameter param)
         {
-            var property = notification.GetType().GetProperty(param.Key);
+            var property = notification.GetType().GetProperty(param.ParameterName);
             var jObject = param.Value as Newtonsoft.Json.Linq.JObject;
             var jArray = param.Value as Newtonsoft.Json.Linq.JArray;
-            if (jObject != null)
+            if (jObject != null && param.IsDictionary)
             {
                 property.SetValue(notification, jObject.ToObject<Dictionary<string, string>>());
             }
-            else if (jArray != null)
-            {
-                if (property.PropertyType.Name.Equals("DateTime[]"))
-                {
-                    property.SetValue(notification, jArray.ToObject<DateTime[]>());
-                }
-                if (property.PropertyType.Name.Equals("Decimal[]"))
-                {
-                    property.SetValue(notification, jArray.ToObject<decimal[]>());
-                }
-                if (property.PropertyType.Name.Equals("Int32[]"))
-                {
-                    property.SetValue(notification, jArray.ToObject<int[]>());
-                }
-                if (property.PropertyType.Name.Equals("Boolean[]"))
-                {
-                    property.SetValue(notification, jArray.ToObject<bool[]>());
-                }
-                if (property.PropertyType.Name.Equals("String[]"))
-                {
-                    property.SetValue(notification, jArray.ToObject<string[]>());
-                }
-            }
-            else if (property.PropertyType.Name.Equals("DateTime"))
-            {
-                if (param.Value is DateTime)
-                {
-                    property.SetValue(notification, param.Value);
-                }
-            }
-            else if (property.PropertyType.Name.Equals("Decimal"))
-            {
-                if (param.Value is double)
-                {
-                    property.SetValue(notification, Convert.ToDecimal(param.Value));
-                }
-            }
-            else if (property.PropertyType.Name.Equals("Int32"))
-            {
-                if (param.Value is int)
-                {
-                    property.SetValue(notification, param.Value);
-                }
-            }
-            else if (property.PropertyType.Name.Equals("Boolean"))
-            {
-                if (param.Value is bool)
-                {
-                    property.SetValue(notification, param.Value);
-                }
-            }
             else
             {
-                property.SetValue(notification, param.Value);
+                switch (param.Type)
+                {
+                    case NotificationParameterValueType.Boolean:
+                        if (jArray != null && param.IsArray)
+                            property.SetValue(notification, jArray.ToObject<Boolean[]>());
+                        else
+                            property.SetValue(notification, param.Value.ToNullable<Boolean>());
+                        break;
+
+                    case NotificationParameterValueType.DateTime:
+                        if (jArray != null && param.IsArray)
+                            property.SetValue(notification, jArray.ToObject<DateTime[]>());
+                        else
+                            property.SetValue(notification, param.Value.ToNullable<DateTime>());
+                        break;
+
+                    case NotificationParameterValueType.Decimal:
+                        if (jArray != null && param.IsArray)
+                            property.SetValue(notification, jArray.ToObject<Decimal[]>());
+                        else
+                            property.SetValue(notification, Convert.ToDecimal(param.Value));
+                        break;
+
+                    case NotificationParameterValueType.Integer:
+                        if (jArray != null && param.IsArray)
+                            property.SetValue(notification, jArray.ToObject<Int32[]>());
+                        else
+                            property.SetValue(notification, param.Value.ToNullable<Int32>());
+                        break;
+
+                    case NotificationParameterValueType.String:
+                        if (jArray != null && param.IsArray)
+                            property.SetValue(notification, jArray.ToObject<String[]>());
+                        else
+                            property.SetValue(notification, (string)param.Value);
+                        break;
+
+                    default:
+                        if (jArray != null && param.IsArray)
+                            property.SetValue(notification, jArray.ToObject<String[]>());
+                        else
+                            property.SetValue(notification, (string)param.Value);
+                        break;
+                }
             }
         }
     }

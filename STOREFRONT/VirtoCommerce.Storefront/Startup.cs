@@ -8,12 +8,10 @@ using System.Web.Compilation;
 using System.Web.Hosting;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Extensions;
 using Microsoft.Practices.Unity;
 using Microsoft.Practices.Unity.Mvc;
-using Microsoft.Web.Infrastructure.DynamicModuleHelper;
 using Owin;
 using VirtoCommerce.Client;
 using VirtoCommerce.Client.Api;
@@ -72,13 +70,16 @@ namespace VirtoCommerce.Storefront
                 AreaRegistration.RegisterAllAreas();
                 CallChildConfigure(app, _managerAssembly, "VirtoCommerce.Platform.Web.Startup", "Configuration", "~/areas/admin", "admin/");
             }
+
             // Create new work context for each request
             container.RegisterType<WorkContext, ShopifyThemeWorkContext>(new PerRequestLifetimeManager());
-            container.RegisterInstance<ShopifyLiquidThemeEngine>(new ShopifyLiquidThemeEngine(() => container.Resolve<WorkContext>(), container.Resolve<IStorefrontUrlBuilder>(), "~/App_data/themes", "~/themes/assets"));
+
+            container.RegisterInstance(new ShopifyLiquidThemeEngine(() => container.Resolve<WorkContext>(), container.Resolve<IStorefrontUrlBuilder>(), "~/App_data/themes", "~/themes/assets"));
             //Register liquid engine
             ViewEngines.Engines.Add(new DotLiquidThemedViewEngine(container.Resolve<ShopifyLiquidThemeEngine>()));
+
             //FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
-            RouteConfig.RegisterRoutes(RouteTable.Routes, container.Resolve<ICommerceCoreModuleApi>());
+            RouteConfig.RegisterRoutes(RouteTable.Routes, () => container.Resolve<WorkContext>(), container.Resolve<ICommerceCoreModuleApi>());
             AuthConfig.ConfigureAuth(app);
 
             app.Use<WorkContextOwinMiddleware>(container);

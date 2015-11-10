@@ -3,18 +3,18 @@
         <div class="inner-block">
             <form name="detailForm" class="form">
                 <div ng-init="setForm(detailForm)">
-                    <label class="form-label">SKU</label>
+                    <label class="form-label">{{ 'catalog.blades.item.labels.sku' | translate }}</label>
                     <div class="form-input">
-                        <input ng-class="{'error': detailForm.code.$invalid && !detailForm.code.$pristine}" required class="form-control" ng-model="blade.item.code" name="code" placeholder="Enter item sku" ui-validate=" 'codeValidator($value)' " />
+                        <input ng-class="{'error': detailForm.code.$invalid && !detailForm.code.$pristine}" required class="form-control" ng-model="blade.item.code" name="code" placeholder="{{ 'catalog.blades.item.placeholders.sku' | translate }}" ui-validate=" 'codeValidator($value)' " />
                     </div>
                     <div class="form-error" data-ng-show="detailForm.code.$dirty">
-                        <span data-ng-show="detailForm.code.$error.validator">SKU can't contain $+;=%{}[]|\/@ ~#!^*&()?:'<>, characters</span>
+                        <span data-ng-show="detailForm.code.$error.validator">{{ 'catalog.blades.item.validations.sku' | translate }}</span>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Name</label>
+                    <label class="form-label">{{ 'catalog.blades.item.labels.name' | translate }}</label>
                     <div class="form-input">
-                        <textarea class="__small" ng-class="{'error': detailForm.itemName.$invalid && !detailForm.itemName.$pristine}" cols="30" rows="2" ng-model="blade.item.name" name="itemName" placeholder="Enter item name"></textarea>
+                        <textarea class="__small" ng-class="{'error': detailForm.itemName.$invalid && !detailForm.itemName.$pristine}" cols="30" rows="2" ng-model="blade.item.name" name="itemName" placeholder="{{ 'catalog.blades.item.placeholders.sku' | translate }}"></textarea>
                     </div>
                 </div>
                 <div class="form-group">
@@ -25,7 +25,7 @@
                                     <label class="form-label">
                                         <input type="checkbox" ng-model="blade.item.isBuyable">
                                         <span class="check"></span>
-                                        <span class="name">Can be purchased</span>
+                                        <span class="name">{{ 'catalog.blades.item.labels.can-be-purchased' | translate }}</span>
                                     </label>
                                 </div>
                             </div>
@@ -36,7 +36,7 @@
                                     <label class="form-label">
                                         <input type="checkbox" ng-model="blade.item.isActive">
                                         <span class="check"></span>
-                                        <span class="name">Store visible</span>
+                                        <span class="name">{{ 'catalog.blades.item.labels.store-visible' | translate }}</span>
                                     </label>
                                 </div>
                             </div>
@@ -47,7 +47,7 @@
                                     <label class="form-label">
                                         <input type="checkbox" ng-model="blade.item.trackInventory">
                                         <span class="check"></span>
-                                        <span class="name">Track inventory</span>
+                                        <span class="name">{{ 'catalog.blades.item.labels.track-inventory' | translate }}</span>
                                     </label>
                                 </div>
                             </div>
@@ -58,7 +58,7 @@
                                     <label class="form-label">
                                         <input type="checkbox" ng-model="blade.item.hasUserAgreement">
                                         <span class="check"></span>
-                                        <span class="name">Has user agreement</span>
+                                        <span class="name">{{ 'catalog.blades.item.labels.has-user-agreement' | translate }}</span>
                                     </label>
                                 </div>
                             </div>
@@ -69,7 +69,7 @@
                     <div class="columns clearfix">
                         <div class="column">
                             <div class="form-group">
-                                <label class="form-label">Min. quantity</label>
+                                <label class="form-label">{{ 'catalog.blades.item.labels.min-quantity' | translate }}</label>
                                 <div class="form-input __number">
                                     <input smart-float num-type="integer" ng-model="blade.item.minQuantity">
                                 </div>
@@ -77,7 +77,7 @@
                         </div>
                         <div class="column">
                             <div class="form-group">
-                                <label class="form-label">Max. quantity</label>
+                                <label class="form-label">{{ 'catalog.blades.item.labels.max-quantity' | translate }}</label>
                                 <div class="form-input __number">
                                     <input smart-float num-type="integer" ng-model="blade.item.maxQuantity">
                                 </div>
@@ -85,10 +85,10 @@
                         </div>
                         <div class="column">
                             <div class="form-group">
-                                <label class="form-label">Tax type <a href="" ng-click="openDictionarySettingManagement()" va-permission="platform:setting:update"><i class="form-ico fa fa-pencil"></i></a></label>
+                                <label class="form-label">{{ 'catalog.blades.item.labels.tax-type' | translate }} <a href="" ng-click="openDictionarySettingManagement()" va-permission="platform:setting:update"><i class="form-ico fa fa-pencil"></i></a></label>
                                 <div class="form-input">
                                     <ui-select ng-model="blade.item.taxType">
-                                        <ui-select-match allow-clear="true" placeholder="Select...">{{$select.selected}}</ui-select-match>
+                                        <ui-select-match allow-clear="true" placeholder="{{ 'catalog.blades.item.placeholders.tax-type' | translate }}">{{$select.selected}}</ui-select-match>
                                         <ui-select-choices repeat="x in taxTypes | filter: $select.search">
                                             <span ng-bind-html="x | highlight: $select.search"></span>
                                         </ui-select-choices>
@@ -102,7 +102,7 @@
                     <div class="columns clearfix">
                         <div class="column">
                             <div class="form-group">
-                                <label class="form-label">Max. number of downloads</label>
+                                <label class="form-label">{{ 'catalog.blades.item.labels.max-downloads' | translate }}</label>
                                 <div class="form-input __number">
                                     <input smart-float num-type="integer" ng-model="blade.item.maxNumberOfDownload">
                                 </div>
@@ -110,9 +110,9 @@
                         </div>
                         <div class="column">
                             <div class="form-group">
-                                <label class="form-label">Download expiration date</label>
+                                <label class="form-label">{{ 'catalog.blades.item.labels.expiration-date' | translate }}</label>
                                 <div class="form-input __calendar">
-                                    <input placeholder="Choose date" ng-model="blade.item.downloadExpiration" datepicker-popup="shortDate" is-open="datepickers.str" close-text="Close" />
+                                    <input placeholder="{{ 'catalog.blades.item.placeholders.expiration-date' | translate }}" ng-model="blade.item.downloadExpiration" datepicker-popup="shortDate" is-open="datepickers.str" close-text="Close" />
                                     <button class="btn" type="button" ng-click="open($event,'str')">
                                         <i class="btn-ico fa fa-calendar"></i>
                                     </button>
@@ -125,10 +125,10 @@
                     <div class="columns clearfix">
                         <div class="column">
                             <div class="form-group">
-                                <label class="form-label">Download type</label>
+                                <label class="form-label">{{ 'catalog.blades.item.labels.download-type' | translate }}</label>
                                 <div class="form-input">
                                     <ui-select ng-model="blade.item.downloadType" ng-init="downloadTypes=['Standard Product', 'Software', 'Music']">
-                                        <ui-select-match placeholder="Select...">{{$select.selected}}</ui-select-match>
+                                        <ui-select-match placeholder="{{ 'catalog.blades.item.placeholders.download-type' | translate }}">{{$select.selected}}</ui-select-match>
                                         <ui-select-choices repeat="x in downloadTypes | filter: $select.search">
                                             <span ng-bind-html="x | highlight: $select.search"></span>
                                         </ui-select-choices>
@@ -138,10 +138,10 @@
                         </div>
                         <div class="column">
                             <div class="form-group">
-                                <label class="form-label">Tax type <a href="" ng-click="openDictionarySettingManagement()" va-permission="platform:setting:update"><i class="form-ico fa fa-pencil"></i></a></label>
+                                <label class="form-label">{{ 'catalog.blades.item.labels.tax-type' | translate }} <a href="" ng-click="openDictionarySettingManagement()" va-permission="platform:setting:update"><i class="form-ico fa fa-pencil"></i></a></label>
                                 <div class="form-input">
                                     <ui-select ng-model="blade.item.taxType">
-                                        <ui-select-match allow-clear="true" placeholder="Select...">{{$select.selected}}</ui-select-match>
+                                        <ui-select-match allow-clear="true" placeholder="{{ 'catalog.blades.item.placeholders.tax-type' | translate }}">{{$select.selected}}</ui-select-match>
                                         <ui-select-choices repeat="x in taxTypes | filter: $select.search">
                                             <span ng-bind-html="x | highlight: $select.search"></span>
                                         </ui-select-choices>

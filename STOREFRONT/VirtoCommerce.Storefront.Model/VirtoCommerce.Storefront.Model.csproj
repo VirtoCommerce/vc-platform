@@ -72,6 +72,7 @@
     <Compile Include="DynamicPropertyDictionaryItem.cs" />
     <Compile Include="Language.cs" />
     <Compile Include="Catalog\Product.cs" />
+    <Compile Include="Login.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Catalog\Property.cs" />
     <Compile Include="SeoInfo.cs" />

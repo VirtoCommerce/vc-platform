@@ -9,11 +9,11 @@ using System.Web.Mvc;
 using DotLiquid;
 using DotLiquid.FileSystems;
 using VirtoCommerce.LiquidThemeEngine.Extensions;
+using VirtoCommerce.LiquidThemeEngine.Objects;
 using VirtoCommerce.Storefront.Model;
 
 namespace VirtoCommerce.LiquidThemeEngine
 {
-
     public class DotLiquidThemedView : IView
     {
         private readonly ShopifyLiquidThemeEngine _themeAdaptor;
@@ -39,18 +39,32 @@ namespace VirtoCommerce.LiquidThemeEngine
             if (viewContext == null)
                 throw new ArgumentNullException("viewContext");
 
+            var shopifyContext = _themeAdaptor.WorkContext as ShopifyThemeWorkContext;
+
+            var formErrors = new FormErrors(viewContext.ViewData.ModelState);
+            //Set single Form object with errors for shopify compilance
+            shopifyContext.Form = new Form();
+            if(formErrors.Any())
+            {
+                shopifyContext.Form.Errors = formErrors;
+                shopifyContext.Form.PostedSuccessfully = false;
+            }
+          
             // Copy data from the view context over to DotLiquid
-            var parameters = _themeAdaptor.WorkContext.ToLiquid() as Dictionary<string, object>;
+            var parameters = shopifyContext.ToLiquid() as Dictionary<string, object>;
 
             //Add settings to context
             parameters.Add("settings", _themeAdaptor.GetSettings());
-            //Todo: need convert our context to liquid context
 
             foreach (var item in viewContext.ViewData)
+            {
                 parameters.Add(Template.NamingConvention.GetMemberName(item.Key), item.Value);
+            }
 
             foreach (var item in viewContext.TempData)
+            {
                 parameters.Add(Template.NamingConvention.GetMemberName(item.Key), item.Value);
+            }
 
             var viewTemplate = _themeAdaptor.RenderTemplateByName(_viewName, parameters);
                    

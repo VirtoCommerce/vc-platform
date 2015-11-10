@@ -91,11 +91,10 @@
     <Compile Include="Model\VirtoCommerceCatalogModuleWebModelAsset.cs" />
     <Compile Include="Model\VirtoCommerceCatalogModuleWebModelCatalog.cs" />
     <Compile Include="Model\VirtoCommerceCatalogModuleWebModelCatalogLanguage.cs" />
+    <Compile Include="Model\VirtoCommerceCatalogModuleWebModelCatalogSearchResult.cs" />
     <Compile Include="Model\VirtoCommerceCatalogModuleWebModelCategory.cs" />
     <Compile Include="Model\VirtoCommerceCatalogModuleWebModelCategoryLink.cs" />
     <Compile Include="Model\VirtoCommerceCatalogModuleWebModelEditorialReview.cs" />
-    <Compile Include="Model\VirtoCommerceCatalogModuleWebModelEventNotificationsExportNotification.cs" />
-    <Compile Include="Model\VirtoCommerceCatalogModuleWebModelEventNotificationsImportNotification.cs" />
     <Compile Include="Model\VirtoCommerceCatalogModuleWebModelImage.cs" />
     <Compile Include="Model\VirtoCommerceCatalogModuleWebModelListEntry.cs" />
     <Compile Include="Model\VirtoCommerceCatalogModuleWebModelListEntryLink.cs" />
@@ -108,6 +107,8 @@
     <Compile Include="Model\VirtoCommerceCatalogModuleWebModelPropertyAttribute.cs" />
     <Compile Include="Model\VirtoCommerceCatalogModuleWebModelPropertyDictionaryValue.cs" />
     <Compile Include="Model\VirtoCommerceCatalogModuleWebModelPropertyValue.cs" />
+    <Compile Include="Model\VirtoCommerceCatalogModuleWebModelPushNotificationsExportNotification.cs" />
+    <Compile Include="Model\VirtoCommerceCatalogModuleWebModelPushNotificationsImportNotification.cs" />
     <Compile Include="Model\VirtoCommerceContentWebModelsCheckNameResult.cs" />
     <Compile Include="Model\VirtoCommerceContentWebModelsGetPagesCriteria.cs" />
     <Compile Include="Model\VirtoCommerceContentWebModelsGetPagesResult.cs" />
@@ -143,6 +144,7 @@
     <Compile Include="Model\VirtoCommerceDomainCatalogModelPropertyDictionaryValue.cs" />
     <Compile Include="Model\VirtoCommerceDomainCatalogModelPropertyDisplayName.cs" />
     <Compile Include="Model\VirtoCommerceDomainCatalogModelPropertyValue.cs" />
+    <Compile Include="Model\VirtoCommerceDomainCatalogModelSearchCriteria.cs" />
     <Compile Include="Model\VirtoCommerceDomainCommerceModelAddress.cs" />
     <Compile Include="Model\VirtoCommerceDomainCommerceModelSeoInfo.cs" />
     <Compile Include="Model\VirtoCommerceDomainCommerceModelTaxDetail.cs" />

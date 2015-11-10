@@ -21,6 +21,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         public ShopifyThemeWorkContext(IStorefrontUrlBuilder urlBuilder)
         {
             _urlBuilder = urlBuilder;
+            
         }
         #region Aliases for shopify theme compliant
       
@@ -53,6 +54,15 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
             {
                 return new Shop(CurrentStore, _urlBuilder, this);
             }
+        }
+
+        /// <summary>
+        /// Current single form value  created in DotLiquidThemedView with ModelState errors
+        /// The form object is used within the form tag. It contains attributes of its parent form.
+        /// </summary>
+        public Objects.Form Form
+        {
+            get; set;
         }
 
         public Product Product

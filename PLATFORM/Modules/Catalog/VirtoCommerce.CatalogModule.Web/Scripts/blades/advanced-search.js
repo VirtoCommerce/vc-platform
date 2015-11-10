@@ -32,7 +32,7 @@
         
         var newBlade = {
             id: "searchResults",
-            title: 'Search results',
+            title: 'catalog.blades.search-results.title',
             subtitle: '',
             filter: $scope.filter,
             controller: 'virtoCommerce.catalogModule.advancedSearchResultsController',

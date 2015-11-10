@@ -13,7 +13,7 @@ namespace VirtoCommerce.Client.Model {
   /// Notification for catalog data export job.
   /// </summary>
   [DataContract]
-  public class VirtoCommerceCatalogModuleWebModelEventNotificationsExportNotification {
+  public class VirtoCommerceCatalogModuleWebModelPushNotificationsExportNotification {
     
     /// <summary>
     /// Gets or sets the URL for downloading exported data.
@@ -126,7 +126,7 @@ namespace VirtoCommerce.Client.Model {
     /// <returns>String presentation of the object</returns>
     public override string ToString()  {
       var sb = new StringBuilder();
-      sb.Append("class VirtoCommerceCatalogModuleWebModelEventNotificationsExportNotification {\n");
+      sb.Append("class VirtoCommerceCatalogModuleWebModelPushNotificationsExportNotification {\n");
       
       sb.Append("  DownloadUrl: ").Append(DownloadUrl).Append("\n");
       

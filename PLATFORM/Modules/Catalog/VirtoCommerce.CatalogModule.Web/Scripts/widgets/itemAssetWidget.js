@@ -8,7 +8,7 @@
             id: "itemAsset",
             itemId: blade.item.id,
             title: blade.origItem.name,
-            subtitle: 'item assets',
+            subtitle: 'catalog.blades.assets.subtitle',
             controller: 'virtoCommerce.catalogModule.itemAssetController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/item-asset-detail.tpl.html'
         };

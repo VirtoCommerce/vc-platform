@@ -4,23 +4,23 @@
             <ul class="list __items">
                 <li class="list-item" ng-mouseup="addCategory()" va-permission="catalog:create">
                     <i class="list-ico fa fa-folder"></i>
-                    <span class="list-t">Category</span>
-                    <span class="list-descr">A container for other Categories and Products or Variations.</span>
+                    <span class="list-t">{{'catalog.blades.new-category-type.menu.category.title' | translate}}</span>
+                    <span class="list-descr">{{ 'catalog.blades.new-category-type.menu.category.description' | translate }}</span>
                 </li>
                 <li class="list-item" ng-mouseup="addLinkedCategory()" ng-if="blade.parentBlade.catalog.virtual" va-permission="catalog:create">
                     <i class="list-ico fa fa-link"></i>
-                    <span class="list-t">Link</span>
-                    <span class="list-descr">A link to real Category or Product.</span>
+                    <span class="list-t">{{ 'catalog.blades.new-category-type.menu.link.title' | translate }}</span>
+                    <span class="list-descr">{{ 'catalog.blades.new-category-type.menu.link.description' | translate }}</span>
                 </li>
                 <li class="list-item" ng-mouseup="addProduct('Physical')" ng-if="!blade.parentBlade.catalog.virtual" va-permission="catalog:create">
                     <i class="list-ico fa fa-truck"></i>
-                    <span class="list-t">Physical Product</span>
-                    <span class="list-descr">Represents orderable item of merchandise for sale, can be used for targeted promotions, etc. Requires physical shipping.</span>
+                    <span class="list-t">{{ 'catalog.blades.new-category-type.menu.physical-product.title' | translate }}</span>
+                    <span class="list-descr">{{ 'catalog.blades.new-category-type.menu.physical-product.description' | translate }}</span>
                 </li>
                 <li class="list-item" ng-mouseup="addProduct('Digital')" ng-if="!blade.parentBlade.catalog.virtual" va-permission="catalog:create">
                     <i class="list-ico fa fa-file-archive-o"></i>
-                    <span class="list-t">Digital Product</span>
-                    <span class="list-descr">Represents orderable item of merchandise for sale, can be used for targeted promotions, etc. Is digital product, thus is downloaded on purchase, not shipped.</span>
+                    <span class="list-t">{{ 'catalog.blades.new-category-type.menu.digital-product.title' | translate }}</span>
+                    <span class="list-descr">{{ 'catalog.blades.new-category-type.menu.digital-product.description' | translate }}</span>
                 </li>
             </ul>
         </div>

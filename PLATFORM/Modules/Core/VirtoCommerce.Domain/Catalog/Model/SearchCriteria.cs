@@ -17,8 +17,15 @@ namespace VirtoCommerce.Domain.Catalog.Model
         public string[] CategoriesIds { get; set; }
         public string CatalogId { get; set; }
         public string[] CatalogsIds { get; set; }
+        public string LanguageCode { get; set; }
+        public string Currency { get; set; }
+        /// <summary>
+        /// Product ore category code
+        /// </summary>
 		public string Code { get; set; }
 		public string SeoKeyword { get; set; }
+        public string Sort { get; set; }
+        public string[] Facets { get; set; }
 		//Hides direct linked categories in virtual category displayed only linked category content without itself
 		public bool HideDirectLinedCategories { get; set; }
         public List<PropertyValue> PropertyValues { get; set; }

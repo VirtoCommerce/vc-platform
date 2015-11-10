@@ -43,6 +43,20 @@ namespace VirtoCommerce.Client.Model {
     public bool? IsDictionary { get; set; }
 
     
+    /// <summary>
+    /// Gets or Sets IsArray
+    /// </summary>
+    [DataMember(Name="isArray", EmitDefaultValue=false)]
+    public bool? IsArray { get; set; }
+
+    
+    /// <summary>
+    /// Gets or Sets Type
+    /// </summary>
+    [DataMember(Name="type", EmitDefaultValue=false)]
+    public string Type { get; set; }
+
+    
 
     /// <summary>
     /// Get the string presentation of the object
@@ -59,6 +73,10 @@ namespace VirtoCommerce.Client.Model {
       sb.Append("  ParameterCodeInView: ").Append(ParameterCodeInView).Append("\n");
       
       sb.Append("  IsDictionary: ").Append(IsDictionary).Append("\n");
+      
+      sb.Append("  IsArray: ").Append(IsArray).Append("\n");
+      
+      sb.Append("  Type: ").Append(Type).Append("\n");
       
       sb.Append("}\n");
       return sb.ToString();

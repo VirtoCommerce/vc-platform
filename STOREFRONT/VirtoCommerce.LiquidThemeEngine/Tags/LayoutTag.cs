@@ -10,15 +10,10 @@ using DotLiquid.Exceptions;
 
 namespace VirtoCommerce.LiquidThemeEngine.Tags
 {
-    public class Layout : Block
+    public class LayoutTag : Block
     {
-        #region Static Fields
         private static readonly Regex Syntax = new Regex(string.Format(@"^({0})", DotLiquid.Liquid.QuotedFragment));
-        #endregion
-
-        #region Fields
         private string _templateName;
-        #endregion
 
         #region Public Methods and Operators
         public override void Initialize(string tagName, string markup, List<string> tokens)
@@ -46,6 +41,14 @@ namespace VirtoCommerce.LiquidThemeEngine.Tags
             }
 
             context.Registers["layout"] = template;
+        }
+
+        protected override void AssertMissingDelimitation()
+        {
+        }
+
+        protected override void Parse(List<string> tokens)
+        {
         }
         #endregion
     }

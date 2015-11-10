@@ -34,7 +34,7 @@
 
     $scope.blade.toolbarCommands = [
      {
-         name: "Delete", icon: 'fa fa-trash-o',
+         name: "platform.commands.delete", icon: 'fa fa-trash-o',
          executeMethod: function () {
              deleteChecked();
          },
@@ -61,8 +61,8 @@
     function deleteChecked() {
         var dialog = {
             id: "confirmDeleteItem",
-            title: "Delete confirmation",
-            message: "Are you sure you want to delete selected attributes?",
+            title: "catalog.dialogs.attribut-delete.title",
+            message: "catalog.dialogs.attribut-delete.message",
             callback: function (remove) {
                 if (remove) {
                     var selection = $filter('filter')(pb.currentEntity.attributes, { selected: true }, true);

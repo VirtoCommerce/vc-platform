@@ -31,5 +31,7 @@ namespace VirtoCommerce.Platform.Web.Model.Notifications
 
         [JsonConverter(typeof(StringEnumConverter))]
         public NotificationParameterValueType Type { get; set; }
+
+        public object Value { get; set; }
     }
 }

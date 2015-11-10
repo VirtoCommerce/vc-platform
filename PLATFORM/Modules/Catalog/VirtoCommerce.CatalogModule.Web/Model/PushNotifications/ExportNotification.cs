@@ -5,7 +5,7 @@ using System.Web;
 using Newtonsoft.Json;
 using VirtoCommerce.Platform.Core.Notifications;
 
-namespace VirtoCommerce.CatalogModule.Web.Model.EventNotifications
+namespace VirtoCommerce.CatalogModule.Web.Model.PushNotifications
 {
     /// <summary>
     ///  Notification for catalog data export job.

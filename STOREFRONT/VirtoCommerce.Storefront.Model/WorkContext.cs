@@ -10,6 +10,7 @@ namespace VirtoCommerce.Storefront.Model
     /// </summary>
     public class WorkContext : IDisposable
     {
+        public Login Login { get; set; }
         /// <summary>
         /// Current customer
         /// </summary>

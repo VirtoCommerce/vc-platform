@@ -30,11 +30,18 @@
 		//		return '|zip|'.indexOf(type) !== -1;
 		//	}
 		//});
-
-
+        
 		uploader.onSuccessItem = function (fileItem, files, status, headers) {
 			blade.themeFileUrl = files[0].url;
 			blade.themeLoaded = true;
+		};
+
+		uploader.onAfterAddingAll = function (addedItems) {
+		    bladeNavigationService.setError(null, blade);
+		};
+
+		uploader.onErrorItem = function (item, response, status, headers) {
+		    bladeNavigationService.setError(item._file.name + ' failed: ' + (response.message ? response.message : status), blade);
 		};
 	}
 

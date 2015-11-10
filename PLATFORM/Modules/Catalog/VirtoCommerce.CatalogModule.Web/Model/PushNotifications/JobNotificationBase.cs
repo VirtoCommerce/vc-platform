@@ -5,7 +5,7 @@ using System.Web;
 using Newtonsoft.Json;
 using VirtoCommerce.Platform.Core.PushNotifications;
 
-namespace VirtoCommerce.CatalogModule.Web.Model.EventNotifications
+namespace VirtoCommerce.CatalogModule.Web.Model.PushNotifications
 {
     /// <summary>
     /// Base class for sending jobs status notifications.

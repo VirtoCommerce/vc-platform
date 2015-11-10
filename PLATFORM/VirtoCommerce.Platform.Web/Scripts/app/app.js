@@ -21,7 +21,8 @@
   'ui.codemirror',
   'focusOn',
   'textAngular',
-  'ngTagsInput'
+  'ngTagsInput',
+  'pascalprecht.translate'
 ];
 
 angular.module('platformWebApp', AppDependencies).
@@ -57,8 +58,18 @@ angular.module('platformWebApp', AppDependencies).
 
     return httpErrorInterceptor;
 }])
+.factory('translateLoaderErrorHandler', function ($q, $log) {
+    return function (part, lang) {
+        $log.error('Localization "' + part + '" for "' + lang + '" was not loaded.');
+
+        //todo add notification.
+
+        //2) You have to either resolve the promise with a translation table for the given part and language or reject it 3) The partial loader will use the given translation table like it was successfully fetched from the server 4) If you reject the promise, then the loader will reject the whole loading process
+        return $q.when({});
+    };
+})
 .config(
-  ['$stateProvider', '$httpProvider', 'uiSelectConfig', 'datepickerConfig', function ($stateProvider, $httpProvider, uiSelectConfig, datepickerConfig) {
+  ['$stateProvider', '$httpProvider', 'uiSelectConfig', 'datepickerConfig', '$translateProvider', '$translatePartialLoaderProvider', function ($stateProvider, $httpProvider, uiSelectConfig, datepickerConfig, $translateProvider, $translatePartialLoaderProvider) {
       $stateProvider.state('workspace', {
           url: '/workspace',
           templateUrl: '$(Platform)/Scripts/app/workspace.tpl.html'
@@ -70,11 +81,22 @@ angular.module('platformWebApp', AppDependencies).
       uiSelectConfig.theme = 'select2';
 
       datepickerConfig.showWeeks = false;
+
+      //Localization
+      $translatePartialLoaderProvider
+        .addPart('VirtoCommerce.Platform')
+        .addPart('Custom', 9999);
+
+      $translateProvider.useLoader('$translatePartialLoader', { urlTemplate: 'Localizations/{lang}.{part}.json', loadFailureHandler: 'translateLoaderErrorHandler'})
+        //.useLoaderCache(true)
+        .useSanitizeValueStrategy('sanitize')
+        .preferredLanguage('en')
+        .fallbackLanguage('en');
   }])
 
 .run(
-  ['$rootScope', '$state', '$stateParams', 'platformWebApp.authService', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', '$animate', '$templateCache', 'gridsterConfig', 'taOptions',
-    function ($rootScope, $state, $stateParams, authService, mainMenuService, pushNotificationService, $animate, $templateCache, gridsterConfig, taOptions) {
+  ['$rootScope', '$state', '$stateParams', '$translate', 'platformWebApp.authService', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', '$animate', '$templateCache', 'gridsterConfig', 'taOptions',
+    function ($rootScope, $state, $stateParams, $translate, authService, mainMenuService, pushNotificationService, $animate, $templateCache, gridsterConfig, taOptions) {
         //Disable animation
         $animate.enabled(false);
 
@@ -82,7 +104,7 @@ angular.module('platformWebApp', AppDependencies).
         $rootScope.$stateParams = $stateParams;
         var homeMenuItem = {
             path: 'home',
-            title: 'Home',
+            title: 'platform.menu.home',
             icon: 'fa fa-home',
             action: function () { $state.go('workspace'); },
             priority: 0
@@ -92,7 +114,7 @@ angular.module('platformWebApp', AppDependencies).
         var browseMenuItem = {
             path: 'browse',
             icon: 'fa fa-search',
-            title: 'Browse',
+            title: 'platform.menu.browse',
             priority: 90,
         };
         mainMenuService.addMenuItem(browseMenuItem);
@@ -100,11 +122,10 @@ angular.module('platformWebApp', AppDependencies).
         var cfgMenuItem = {
             path: 'configuration',
             icon: 'fa fa-wrench',
-            title: 'Configuration',
+            title: 'platform.menu.configuration',
             priority: 91,
         };
         mainMenuService.addMenuItem(cfgMenuItem);
-
 
         $rootScope.$on('unauthorized', function (event, rejection) {
             if (!authService.isAuthenticated) {
@@ -161,5 +182,6 @@ angular.module('platformWebApp', AppDependencies).
         ['bold', 'italics', 'underline', 'strikeThrough', 'ul', 'ol', 'redo', 'undo', 'clear', 'quote'],
         ['justifyLeft', 'justifyCenter', 'justifyRight', 'indent', 'outdent', 'html', 'insertImage', 'insertLink', 'insertVideo']];
 
+        $translate.refresh();
     }
   ]);

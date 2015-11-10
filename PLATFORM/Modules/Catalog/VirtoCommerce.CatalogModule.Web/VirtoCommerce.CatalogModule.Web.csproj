@@ -114,6 +114,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Binders\CatalogSearchCriteriaBinder.cs" />
     <Compile Include="Binders\ListEntrySearchCriteriaBinder.cs" />
     <Compile Include="Controllers\Api\CatalogBaseController.cs" />
     <Compile Include="Controllers\Api\CatalogModuleCatalogsController.cs" />
@@ -121,7 +122,9 @@
     <Compile Include="Controllers\Api\CatalogModuleExportImportController.cs" />
     <Compile Include="Controllers\Api\CatalogModuleProductsController.cs" />
     <Compile Include="Controllers\Api\CatalogModuleListEntryController.cs" />
+    <Compile Include="Controllers\Api\CatalogModuleSearchController.cs" />
     <Compile Include="Controllers\Api\CatalogModulePropertiesController.cs" />
+    <Compile Include="Model\CatalogSearchResult.cs" />
     <Compile Include="Security\CatalogPredefinedPermissions.cs" />
     <Compile Include="Converters\AssetConverter.cs" />
     <Compile Include="Converters\AssociationConverter.cs" />
@@ -154,9 +157,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Model\EditorialReview.cs" />
-    <Compile Include="Model\EventNotifications\ExportNotification.cs" />
-    <Compile Include="Model\EventNotifications\ImportNotification.cs" />
-    <Compile Include="Model\EventNotifications\JobNotificationBase.cs" />
+    <Compile Include="Model\PushNotifications\ExportNotification.cs" />
+    <Compile Include="Model\PushNotifications\ImportNotification.cs" />
+    <Compile Include="Model\PushNotifications\JobNotificationBase.cs" />
     <Compile Include="Model\ListEntryLink.cs" />
     <Compile Include="ExportImport\CsvProductPropertyMap.cs" />
     <Compile Include="Model\PasteInfo.cs" />
@@ -314,6 +317,7 @@
     <Content Include="module.manifest">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Localizations\en.VirtoCommerce.Catalog.json" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>

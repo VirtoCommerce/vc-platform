@@ -216,15 +216,15 @@
             },
             permission: 'asset:create'
         },
-        {
-            name: "Download", icon: 'fa fa-download',
-            executeMethod: function () {
-                $scope.downloadUrl(getFirstChecked());
-            },
-            canExecuteMethod: function () {
-                return isSingleChecked() && getFirstChecked().type !== 'folder';
-            }
-        },
+        //{
+        //    name: "Download", icon: 'fa fa-download',
+        //    executeMethod: function () {
+        //        $scope.downloadUrl(getFirstChecked());
+        //    },
+        //    canExecuteMethod: function () {
+        //        return isSingleChecked() && getFirstChecked().type !== 'folder';
+        //    }
+        //},
         //{
         //    name: "Copy link", icon: 'fa fa-link',
         //    executeMethod: function () {
