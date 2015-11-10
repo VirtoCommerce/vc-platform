@@ -10,8 +10,8 @@
                     var newBlade = {
                         id: "newCategoryWizard",
                         currentEntity: data,
-                        title: "New category",
-                        subtitle: 'Fill category information',
+                        title: "catalog.blades.new-category.title",
+                        subtitle: 'catalog.blades.new-category.subtitle',
                         controller: 'virtoCommerce.catalogModule.newCategoryWizardController',
                         template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/wizards/newCategory/category-wizard.tpl.html'
                     };
@@ -26,8 +26,8 @@
         $scope.bladeClose(function () {
             var newBlade = {
                 id: 'selectCatalog',
-                title: 'Select Catalog',
-                subtitle: 'Creating a Link inside virtual catalog',
+                title: 'catalog.blades.add-linked-category.title',
+                subtitle: 'catalog.blades.add-linked-category.subtitle',
                 controller: 'virtoCommerce.catalogModule.catalogsSelectController',
                 template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/catalogs-select.tpl.html'
             };
@@ -63,8 +63,8 @@
         var newBlade = {
             id: 'listItemDetail',
             item: data,
-            title: "New product",
-            subtitle: 'Fill all product information',
+            title: "catalog.blades.new-product.title",
+            subtitle: 'catalog.blades.new-product.subtitle',
             controller: 'virtoCommerce.catalogModule.newProductWizardController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/wizards/newProduct/new-product-wizard.tpl.html'
         };

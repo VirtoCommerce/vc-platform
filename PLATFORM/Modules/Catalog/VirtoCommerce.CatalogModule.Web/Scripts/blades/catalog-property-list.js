@@ -46,8 +46,8 @@
         if (isDirty()) {
             var dialog = {
                 id: "confirmItemChange",
-                title: "Save changes",
-                message: "The catalog has been modified. Do you want to save changes?",
+                title: "catalog.dialogs.catalog-save.title",
+                message: "catalog.dialogs.catalog-save.message",
                 callback: function (needSave) {
                     if (needSave) {
                         saveChanges();
@@ -73,8 +73,8 @@
             id: 'editCatalogProperty',
             currentEntityId: prop.id,
             catalogId: $scope.blade.currentEntity.id,
-            title: 'Edit catalog property',
-            subtitle: 'Enter property information',
+            title: 'catalog.blades.catalog-property.title',
+            subtitle: 'catalog.blades.catalog-property.subtitle',
             controller: 'virtoCommerce.catalogModule.propertyDetailController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/property-detail.tpl.html'
         };
@@ -95,7 +95,7 @@
 
     $scope.blade.toolbarCommands = [
 		{
-		    name: "Save", icon: 'fa fa-save',
+		    name: "platform.commands.save", icon: 'fa fa-save',
 		    executeMethod: function () {
 		        saveChanges();
 		    },
@@ -105,7 +105,7 @@
 		    permission: 'catalog:update'
 		},
         {
-            name: "Reset", icon: 'fa fa-undo',
+            name: "platform.commands.reset", icon: 'fa fa-undo',
             executeMethod: function () {
                 angular.copy($scope.blade.origEntity, $scope.blade.currentEntity);
             },
@@ -115,13 +115,13 @@
             permission: 'catalog:update'
         },
 		  {
-		      name: "Add property", icon: 'fa fa-plus',
+		      name: "catalog.commands.add-property", icon: 'fa fa-plus',
 		      executeMethod: function () {
 		          var newBlade = {
 		              id: 'editCatalogProperty',
 		              catalogId: $scope.blade.currentEntity.id,
-		              title: 'New catalog property',
-		              subtitle: 'Enter property information',
+		              title: 'catalog.blades.new-catalog-property.title',
+		              subtitle: 'catalog.blades.new-catalog-property.subtitle',
 		              controller: 'virtoCommerce.catalogModule.propertyDetailController',
 		              template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/property-detail.tpl.html'
 		          };

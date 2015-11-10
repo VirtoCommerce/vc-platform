@@ -1,25 +1,23 @@
 ﻿<div class="modal-header">
-    <h3 class="modal-title">Delete confirmation</h3>
+    <h3 class="modal-title">{{ 'catalog.dialogs.catalog-items-delete.title' | translate }}</h3>
 </div>
 <div class="modal-body">
     <div class="form-group">
-        <div class="form-error">
-            WARNING: this change is permanent and can't be undone afterwards. It can lead to data loss.
-        </div>
+        <div class="form-error">{{ 'catalog.dialogs.catalog-items-delete.warning' | translate }}</div>
     </div>
-    <p>The following will be deleted:</p>
+    <p>{{ 'catalog.dialogs.catalog-items-delete.message' | translate }}</p>
     <ul>
-        <li ng-if="categoryCount>0">{{categoryCount}} Category(ies) and any content inside it</li>
-        <li ng-if="itemCount>0">{{itemCount}} Item(s)</li>
-        <li ng-if="listCategoryLinkCount>0">{{listCategoryLinkCount}} Linked Category(ies)</li>
-        <li ng-if="listItemLinkCount>0">{{listItemLinkCount}} Linked Item(s)</li>
+        <li ng-if="categoryCount>0">{{'catalog.dialogs.catalog-items-delete.category' | translate:{ count: categoryCount } }}</li>
+        <li ng-if="itemCount>0">{{'catalog.dialogs.catalog-items-delete.item' | translate:{ count: itemCount } }}</li>
+        <li ng-if="listCategoryLinkCount>0">{{'catalog.dialogs.catalog-items-delete.linked-category' | translate:{ count: listCategoryLinkCount } }}</li>
+        <li ng-if="listItemLinkCount>0">{{'catalog.dialogs.catalog-items-delete.linked-item' | translate:{ count: listItemLinkCount } }} </li>
     </ul>
-    Enter 'yes' to enable deletion:
+    {{ 'catalog.dialogs.catalog-items-delete.instruction' | translate }}:
     <div class="form-input __mini">
         <input ng-model="enteredText" />
     </div>
 </div>
 <div class="modal-footer">
-    <button class="btn" ng-click="yes()" ng-class="{'__disabled': 'yes'!==enteredText}">Confirm</button>
-    <button class="btn" ng-click="cancel()">Cancel</button>
+    <button class="btn" ng-click="yes()" ng-class="{'__disabled': 'yes'!==enteredText}">{{ 'platform.commands.confirm' | translate }}</button>
+    <button class="btn" ng-click="cancel()">{{ 'platform.commands.cancel' | translate }}</button>
 </div>

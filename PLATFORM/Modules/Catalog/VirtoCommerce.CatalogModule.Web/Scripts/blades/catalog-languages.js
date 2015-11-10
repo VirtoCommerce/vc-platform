@@ -28,8 +28,8 @@
         if (isDirty()) {
             var dialog = {
                 id: "confirmItemChange",
-                title: "Save changes",
-                message: "The Languages has been modified. Do you want to save changes?"
+                title: "catalogs.dialogs.language-save.title",
+                message: "catalogs.dialogs.language-save.message"
             };
             dialog.callback = function (needSave) {
                 if (needSave) {

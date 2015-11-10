@@ -26,7 +26,7 @@
       var menuItem = {
           path: 'configuration/packaging',
           icon: 'fa fa-cubes',
-          title: 'Modules',
+          title: 'platform.menu.modules',
           priority: 6,
           action: function () { $state.go('workspace.packaging'); },
           permission: 'platform:module:access'

@@ -23,8 +23,8 @@
             id: 'editorialReview',
             currentEntity: data,
             languages: $scope.blade.parentBlade.item.catalog.languages,
-            title: 'Review',
-            subtitle: 'Product Review',
+            title: 'catalog.blades.review.title',
+            subtitle: 'catalog.blades.review.subtitle',
             controller: 'virtoCommerce.catalogModule.editorialReviewDetailController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/editorialReview-detail.tpl.html'
         };
@@ -54,7 +54,7 @@
 
     $scope.blade.toolbarCommands = [
         {
-            name: "Add", icon: 'fa fa-plus',
+            name: "platform.commands.add", icon: 'fa fa-plus',
             executeMethod: function () {
                 openAddEntityBlade();
             },

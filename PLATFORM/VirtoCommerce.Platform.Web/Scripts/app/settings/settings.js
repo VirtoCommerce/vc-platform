@@ -26,7 +26,7 @@
       var menuItem = {
           path: 'configuration/settings',
           icon: 'fa fa-gears',
-          title: 'Settings',
+          title: 'platform.menu.settings',
           priority: 1,
           action: function () { $state.go('workspace.modulesSettings'); },
           permission: 'platform:setting:access'

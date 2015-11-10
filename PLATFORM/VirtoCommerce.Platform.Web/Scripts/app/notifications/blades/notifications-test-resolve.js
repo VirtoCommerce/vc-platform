@@ -15,16 +15,32 @@
 
 			blade.currentParams = data;
 			if (!angular.isUndefined($localStorage.notificationTestResolve)) {
-			    blade.obj = { notificationParameters: {} };
+			    blade.obj = { notificationParameters: [] };
 			    for (var i = 0; i < blade.currentParams.length; i++) {
-			        if (blade.currentParams[i].isDictionary) {
-			            blade.obj.notificationParameters[blade.currentParams[i].parameterName] = [ { name: '', value: '' } ];
+			        var property = blade.currentParams[i];
+			        if (property.isDictionary) {
+			            blade.currentParams[i].value = [{ name: '', value: '' }];
+			            blade.obj.notificationParameters.push(blade.currentParams[i]);
 			        }
-			        else if (blade.currentParams[i].isArray) {
-			            blade.obj.notificationParameters[blade.currentParams[i].parameterName] = [{ key: '' }];
+			        else if (property.isArray) {
+			            if (property.type === 'Decimal')
+			                blade.currentParams[i].value = [{ key: '0.00' }];
+			            else if (property.type === 'Integer')
+			                blade.currentParams[i].value = [{ key: '0' }];
+			            else if (property.type === 'DateTime')
+			                blade.currentParams[i].value = [{ key: undefined }];
+			            else if (property.type === 'Boolean')
+			                blade.currentParams[i].value = [{ key: false }];
+			            else if (property.type === 'String')
+			                blade.currentParams[i].value = [{ key: '' }];
+			            blade.obj.notificationParameters.push(blade.currentParams[i]);
 			        }
 			        else {
-			            blade.obj.notificationParameters[blade.currentParams[i].parameterName] = $localStorage.notificationTestResolve[blade.currentParams[i].parameterName];
+			            var value = _.find($localStorage.notificationTestResolve, function (element) { return blade.currentParams[i].parameterName === element.parameterName; });
+			            if (value) {
+			                blade.currentParams[i].value = value.value;
+			            }
+			            blade.obj.notificationParameters.push(blade.currentParams[i]);
 			        }
 				}
 			}
@@ -43,26 +59,25 @@
 		blade.obj["Language"] = blade.language;
         
         //prepare params for sending
-		var params = {};
-		var preparedParams = {};
-		for (var i = 0; i < blade.currentParams.length; i++) {
-		    if (blade.currentParams[i].isDictionary) {
-		        params = {};
-		        preparedParams[blade.currentParams[i].parameterName] = blade.obj.notificationParameters[blade.currentParams[i].parameterName];
-		        var notParam = blade.obj.notificationParameters[blade.currentParams[i].parameterName];
+		var preparedParams = [];
+		for (var i = 0; i < blade.obj.notificationParameters.length; i++) {
+		    if (blade.obj.notificationParameters[i].isDictionary) {
+		        var params = {};
+		        preparedParams[i] = angular.copy(blade.obj.notificationParameters[i]);
+		        var notParam = blade.obj.notificationParameters[i].value;
 		        for (var j = 0; j < notParam.length; j++) {
 		            params[notParam[j].name] = notParam[j].value;
 		        }
-		        blade.obj.notificationParameters[blade.currentParams[i].parameterName] = params;
+		        blade.obj.notificationParameters[i].value = params;
 		    }
-		    else if (blade.currentParams[i].isArray) {
-		        arrayParams = [];
-		        preparedParams[blade.currentParams[i].parameterName] = blade.obj.notificationParameters[blade.currentParams[i].parameterName];
-		        var notParam = blade.obj.notificationParameters[blade.currentParams[i].parameterName];
+		    else if (blade.obj.notificationParameters[i].isArray) {
+		        var arrayParams = [];
+		        preparedParams[i] = angular.copy(blade.obj.notificationParameters[i]);
+		        var notParam = blade.obj.notificationParameters[i].value;
 		        for (var j = 0; j < notParam.length; j++) {
 		            arrayParams.push(notParam[j].key);
 		        }
-		        blade.obj.notificationParameters[blade.currentParams[i].parameterName] = arrayParams;
+		        blade.obj.notificationParameters[i].value = arrayParams;
 		    }
 		}
 
@@ -89,22 +104,56 @@
 	};
 
 	blade.addDictionaryElement = function (paramName) {
-	    blade.obj.notificationParameters[paramName].push({ name: '', value: '' });
+	    var value = _.find(blade.obj.notificationParameters, function (element) { return paramName === element.parameterName; });
+	    value.push({ name: '', value: '' });
 	}
 
-	blade.addArrayElement = function (paramName) {
-	    blade.obj.notificationParameters[paramName].push({ key: ''});
+	blade.addArrayElement = function (parameter) {
+	    var value = _.find(blade.obj.notificationParameters, function (element) { return parameter.parameterName === element.parameterName; });
+	    if (value) {
+	        if (value.type === 'Decimal')
+	            value.value.push({ key: '0.00' });
+	        else if (value.type === 'Integer')
+	            value.value.push({ key: '0' });
+	        else if (value.type === 'DateTime')
+	            value.value.push({ key: undefined });
+	        else if (value.type === 'Boolean')
+	            value.value.push({ key: false });
+	        else if (value.type === 'String')
+	            value.value.push({ key: '' });
+	    }
 	}
 
 	blade.headIcon = 'fa-play';
 
 	blade.revertParams = function (preparedParams) {
-	    for (var i = 0; i < blade.currentParams.length; i++) {
-	        if (blade.currentParams[i].isDictionary || blade.currentParams[i].isArray) {
-	            blade.obj.notificationParameters[blade.currentParams[i].parameterName] = preparedParams[blade.currentParams[i].parameterName];
+	    for (var i = 0; i < blade.obj.notificationParameters.length; i++) {
+	        if (blade.obj.notificationParameters[i].isDictionary || blade.obj.notificationParameters[i].isArray) {
+	            blade.obj.notificationParameters[i].value = preparedParams[i].value;
 	        }
 	    }
 	}
+
+	$scope.datepickers = {
+	    endDate: false,
+	    startDate: false,
+	}
+	$scope.today = new Date();
+
+	$scope.open = function ($event, parameterName) {
+	    $event.preventDefault();
+	    $event.stopPropagation();
+
+	    $scope.datepickers[parameterName] = true;
+	};
+
+	$scope.dateOptions = {
+	    'year-format': "'yyyy'",
+	    'starting-day': 1
+	};
+
+	$scope.formats = ['shortDate', 'dd-MMMM-yyyy', 'yyyy/MM/dd'];
+	$scope.format = $scope.formats[0];
 
 	blade.initialize();
 }]);

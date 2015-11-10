@@ -317,6 +317,7 @@
     <Content Include="module.manifest">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Localizations\en.VirtoCommerce.Catalog.json" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>

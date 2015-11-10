@@ -20,7 +20,7 @@
       var menuItem = {
           path: 'browse/assets',
           icon: 'fa fa-folder-o',
-          title: 'Assets',
+          title: 'platform.menu.assets',
           priority: 130,
           action: function () { $state.go('workspace.assets'); },
           permission: 'platform:assets:access'

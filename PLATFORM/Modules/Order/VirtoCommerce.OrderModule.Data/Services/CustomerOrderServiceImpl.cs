@@ -168,9 +168,21 @@ namespace VirtoCommerce.OrderModule.Data.Services
 
         }
 
-        public void Delete(string[] oderIds)
+        public void Delete(string[] orderIds)
         {
-            throw new NotImplementedException();
+            using (var repository = _repositoryFactory())
+            {
+             
+                foreach (var orderId in orderIds)
+                {
+                    var order = repository.GetCustomerOrderById(orderId, CustomerOrderResponseGroup.Full);
+                    if (order != null)
+                    {
+                        repository.Remove(order);
+                    }
+                }
+                repository.UnitOfWork.Commit();
+            }
         }
         #endregion
 

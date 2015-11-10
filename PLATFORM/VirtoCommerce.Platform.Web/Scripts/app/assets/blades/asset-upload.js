@@ -18,17 +18,23 @@
             uploader.onAfterAddingAll = function (addedItems) {
                 blade.isLoading = true;
                 blade.uploadCompleted = false;
+                bladeNavigationService.setError(null, blade);
 
+                // check for asset duplicates
                 assets.query({ folderUrl: blade.currentEntityId },
                     function (data) {
                         blade.isLoading = false;
                         currentEntities = data;
-                        
+
                         _.each(addedItems, promptUserDecision);
                         uploader.uploadAll();
                     }, function (error) {
                         bladeNavigationService.setError('Error ' + error.status, blade);
                     });
+            };
+
+            uploader.onErrorItem = function (item, response, status, headers) {
+                bladeNavigationService.setError(item._file.name + ' failed: ' + (response.message ? response.message : status), blade);
             };
 
             uploader.onCompleteAll = function () {

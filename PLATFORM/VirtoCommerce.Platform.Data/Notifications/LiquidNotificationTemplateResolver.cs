@@ -43,14 +43,14 @@ namespace VirtoCommerce.Platform.Data.Notifications
 				foreach (var property in properties)
 				{
 					var attributes = property.GetCustomAttributes(typeof(NotificationParameterAttribute), true);
-					retVal.Add(new NotificationParameter
-					{
-						ParameterName = property.Name,
-						ParameterDescription = attributes.Length > 0 ? ((NotificationParameterAttribute)(attributes[0])).Description : string.Empty,
-						ParameterCodeInView = GetLiquidCodeOfParameter(property.Name),
+                    retVal.Add(new NotificationParameter
+                    {
+                        ParameterName = property.Name,
+                        ParameterDescription = attributes.Length > 0 ? ((NotificationParameterAttribute)(attributes[0])).Description : string.Empty,
+                        ParameterCodeInView = GetLiquidCodeOfParameter(property.Name),
                         IsDictionary = property.PropertyType.IsAssignableFrom(typeof(IDictionary)),
                         IsArray = property.PropertyType.IsArray,
-                        Type = GetParameterType(property.PropertyType.Name)
+                        Type = GetParameterType(property)
                     });
 				}
 			}
@@ -74,32 +74,27 @@ namespace VirtoCommerce.Platform.Data.Notifications
 			return retVal;
 		}
 
-        private NotificationParameterValueType GetParameterType(string name)
+        private NotificationParameterValueType GetParameterType(PropertyInfo property)
         {
             NotificationParameterValueType retVal;
-
-            switch(name)
+            var type = property.PropertyType;
+            if(property.PropertyType.IsArray)
             {
-                case "Integer":
-                    retVal = NotificationParameterValueType.Integer;
-                    break;
-
-                case "Decimal":
-                    retVal = NotificationParameterValueType.Decimal;
-                    break;
-
-                case "DateTime":
-                    retVal = NotificationParameterValueType.DateTime;
-                    break;
-
-                case "Boolean":
-                    retVal = NotificationParameterValueType.Boolean;
-                    break;
-
-                default:
-                    retVal = NotificationParameterValueType.String;
-                    break;
+                type = property.PropertyType.GetElementType();
             }
+
+            if (type == typeof(int))
+                retVal = NotificationParameterValueType.Integer;
+            else if (type == typeof(DateTime))
+                retVal = NotificationParameterValueType.DateTime;
+            else if (type == typeof(decimal))
+                retVal = NotificationParameterValueType.Decimal;
+            else if (type == typeof(bool))
+                retVal = NotificationParameterValueType.Boolean;
+            else if (type == typeof(string))
+                retVal = NotificationParameterValueType.String;
+            else
+                retVal = NotificationParameterValueType.String;
 
             return retVal;
         }

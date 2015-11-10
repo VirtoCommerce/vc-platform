@@ -21,18 +21,20 @@ namespace VirtoCommerce.Platform.Web
         private readonly string _modulesVirtualPath;
         private readonly string _modulesPhysicalPath;
         private readonly string _assembliesPath;
+        private readonly string _localizationsPath;
         private static ILog _logger = LogManager.GetLogger("platform");
-        public VirtoCommercePlatformWebBootstrapper(string modulesVirtualPath, string modulesPhysicalPath, string assembliesPath)
+        public VirtoCommercePlatformWebBootstrapper(string modulesVirtualPath, string modulesPhysicalPath, string assembliesPath, string localizationsPath)
         {
             _modulesVirtualPath = modulesVirtualPath;
             _modulesPhysicalPath = modulesPhysicalPath;
             _assembliesPath = assembliesPath;
+            _localizationsPath = localizationsPath;
         }
 
         protected override IModuleCatalog CreateModuleCatalog()
         {
             var manifestProvider = new ModuleManifestProvider(_modulesPhysicalPath);
-            return new ManifestModuleCatalog(manifestProvider, _modulesVirtualPath, _assembliesPath);
+            return new ManifestModuleCatalog(manifestProvider, _modulesVirtualPath, _assembliesPath, _localizationsPath);
         }
 
         /// <summary>

@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.itemAssetController', ['$rootScope', '$scope', 'virtoCommerce.catalogModule.items', 'platformWebApp.bladeNavigationService', '$filter', 'FileUploader', 'platformWebApp.dialogService', '$injector', function ($rootScope, $scope, items, bladeNavigationService, $filter, FileUploader, dialogService, $injector) {
+.controller('virtoCommerce.catalogModule.itemAssetController', ['$rootScope', '$scope', '$translate', 'virtoCommerce.catalogModule.items', 'platformWebApp.bladeNavigationService', '$filter', 'FileUploader', 'platformWebApp.dialogService', '$injector', function ($rootScope, $scope, $translate, items, bladeNavigationService, $filter, FileUploader, dialogService, $injector) {
     var blade = $scope.blade;
     $scope.item = {};
     $scope.origItem = {};
@@ -29,8 +29,8 @@
         if ($scope.isDirty()) {
             var dialog = {
                 id: "confirmItemChange",
-                title: "Save changes",
-                message: "The assets has been modified. Do you want to save changes?"
+                title: "catalog.dialogs.asset-save.title",
+                message: "catalog.dialogs.asset-save.message"
             };
             dialog.callback = function (needSave) {
                 if (needSave) {
@@ -59,7 +59,7 @@
             // create the uploader
             var uploader = $scope.uploader = new FileUploader({
                 scope: $scope,
-                headers: { Accept: 'application/json' },               
+                headers: { Accept: 'application/json' },
                 method: 'POST',
                 autoUpload: true,
                 removeAfterUpload: true
@@ -71,6 +71,14 @@
                     //ADD uploaded asset to the item
                     $scope.item.assets.push(asset);
                 });
+            };
+
+            uploader.onAfterAddingAll = function (addedItems) {
+                bladeNavigationService.setError(null, blade);
+            };
+
+            uploader.onErrorItem = function (item, response, status, headers) {
+                bladeNavigationService.setError(item._file.name + ' failed: ' + (response.message ? response.message : status), blade);
             };
         }
     };
@@ -95,14 +103,16 @@
     };
 
     $scope.copyUrl = function (data) {
-        window.prompt("Copy to clipboard: Ctrl+C, Enter", data.url);
+        $translate('catalog.blades.assets.labels.copy-url-prompt').then(function (promptMessage) {
+            window.prompt(promptMessage, data.url);
+        });
     }
 
     $scope.blade.headIcon = 'fa-chain';
 
     $scope.blade.toolbarCommands = [
         {
-            name: "Save", icon: 'fa fa-save',
+            name: "platform.commands.save", icon: 'fa fa-save',
             executeMethod: function () {
                 $scope.saveChanges();
             },

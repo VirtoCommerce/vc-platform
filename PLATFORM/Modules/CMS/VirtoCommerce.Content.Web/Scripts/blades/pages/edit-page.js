@@ -17,15 +17,6 @@
                     blade.isByteContent = blade.isFile();
 
                     if (!blade.isFile()) {
-                        blade.origEntity = angular.copy(blade.currentEntity);
-
-                        var pathParts = blade.currentEntity.name.split('/');
-                        var pageNameWithExtension = pathParts[pathParts.length - 1];
-                        var pageName = pageNameWithExtension.split('.')[0];
-                        blade.currentEntity.pageName = pageName;
-
-                        blade.origEntity = angular.copy(blade.currentEntity);
-
                         var parts = blade.currentEntity.content.split('---');
                         if (parts.length > 2) {
                             blade.body = parts[2].trim();
@@ -40,6 +31,13 @@
                     		blade.image = "data:" + blade.currentEntity.contentType + ";base64," + blade.currentEntity.byteContent;
                     	}
                     }
+
+                    var pathParts = blade.currentEntity.name.split('/');
+                    var pageNameWithExtension = pathParts[pathParts.length - 1];
+                    var pageName = pageNameWithExtension.split('.')[0];
+                    blade.currentEntity.pageName = pageName;
+
+                    blade.origEntity = angular.copy(blade.currentEntity);
                 },
                 function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
             }
@@ -86,6 +84,14 @@
     					blade.currentEntity.fileUrl = image.url;
     					blade.image = image.url;
     				});
+    			};
+
+    			uploader.onAfterAddingAll = function (addedItems) {
+    			    bladeNavigationService.setError(null, blade);
+    			};
+
+    			uploader.onErrorItem = function (item, response, status, headers) {
+    			    bladeNavigationService.setError(item._file.name + ' failed: ' + (response.message ? response.message : status), blade);
     			};
     		}
     	}

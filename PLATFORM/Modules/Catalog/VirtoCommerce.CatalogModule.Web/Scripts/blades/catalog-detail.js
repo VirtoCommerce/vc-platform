@@ -64,8 +64,8 @@
         if (isDirty()) {
             var dialog = {
                 id: "confirmCurrentBladeClose",
-                title: "Save changes",
-                message: "The catalog has been modified. Do you want to save changes?"
+                title: "catalog.dialogs.catalog-save.title",
+                message: "catalog.dialogs.catalog-save.message"
             };
             dialog.callback = function (needSave) {
                 if (needSave) {

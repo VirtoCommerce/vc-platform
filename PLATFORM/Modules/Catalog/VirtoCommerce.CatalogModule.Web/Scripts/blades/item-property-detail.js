@@ -20,8 +20,9 @@
         
         switch (childType) {
             case 'valType':
-                newBlade.title = b.origEntity.name ? b.origEntity.name : b.currentEntity.name + ' value type';
-                newBlade.subtitle = 'Change value type';
+                newBlade.title = 'catalog.blades.property-value-type.title';
+                newBlade.titleValues = {name: b.origEntity.name ? b.origEntity.name : b.currentEntity.name};
+                newBlade.subtitle = 'catalog.blades.property-value-type.subtitle';
                 newBlade.controller = 'virtoCommerce.catalogModule.propertyValueTypeController';
                 newBlade.template = 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/property-valueType.tpl.html';
                 break;
@@ -52,8 +53,9 @@
     function removeProperty(prop) {
         var dialog = {
             id: "confirmDelete",
-            title: "Delete confirmation",
-            message: "Are you sure you want to delete Property '" + prop.name + "'?",
+            title: "catalog.dialogs.property-delete.title",
+            message: 'catalog.dialogs.property-delete.message',
+            messageValues: {name: prop.name},
             callback: function (remove) {
                 if (remove) {
                     var idx = b.currentEntities.indexOf(b.origEntity);
@@ -63,6 +65,7 @@
             }
         }
         dialogService.showConfirmationDialog(dialog);
+            $scope.paragraph = paragraph;
     }
 
     b.onClose = function (closeCallback) {
@@ -73,8 +76,8 @@
         if (isDirty()) {
             var dialog = {
                 id: "confirmItemChange",
-                title: "Save changes",
-                message: "The property has been modified. Do you want to save changes?",
+                title: "catalog.dialogs.property-save.title",
+                message: "catalog.dialogs.property-save.message",
                 callback: function (needSave) {
                     if (needSave) {
                         $scope.saveChanges();
@@ -97,7 +100,7 @@
         b.headIcon = 'fa-gear';
         b.toolbarCommands = [
             {
-                name: "Reset", icon: 'fa fa-undo',
+                name: "platform.commands.reset", icon: 'fa fa-undo',
                 executeMethod: function () {
                     angular.copy(b.origEntity, b.currentEntity);
                 },
@@ -106,7 +109,7 @@
                 }
             },
             {
-                name: "Delete", icon: 'fa fa-trash-o',
+                name: "platform.commands.delete", icon: 'fa fa-trash-o',
                 executeMethod: function () {
                     removeProperty(b.origEntity);
                 },
