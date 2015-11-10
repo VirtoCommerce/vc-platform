@@ -46,8 +46,8 @@
         } else {
             var dialog = {
                 id: "notifyNoTargetCategory",
-                title: "Message",
-                message: "Nothing selected. Check some Categories or Items first."
+                title: "catalog.dialogs.nothing-selected.title",
+                message: "catalog.dialogs.nothing-selected.message"
             };
             dialogService.showNotificationDialog(dialog);
         }
@@ -90,7 +90,7 @@
 
     $scope.blade.toolbarCommands = [
       {
-          name: "Refresh", icon: 'fa fa-refresh',
+          name: "platform.commands.refresh", icon: 'fa fa-refresh',
           executeMethod: function () {
               $scope.blade.refresh();
           },
@@ -99,7 +99,7 @@
           }
       },
         {
-            name: "Manage", icon: 'fa fa-edit',
+            name: "platform.commands.manage", icon: 'fa fa-edit',
             executeMethod: function () {
                 $scope.edit($scope.selectedItem);
             },
@@ -108,7 +108,7 @@
             }
         },
       {
-          name: "Delete", icon: 'fa fa-trash-o',
+          name: "platform.commands.delete", icon: 'fa fa-trash-o',
           executeMethod: function () {
               deleteChecked();
           },

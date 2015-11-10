@@ -33,7 +33,7 @@
 
     $scope.blade.toolbarCommands = [
         {
-            name: "Delete", icon: 'fa fa-trash-o',
+            name: "platform.commands.delete", icon: 'fa fa-trash-o',
             executeMethod: function () {
                 if (angular.isDefined($scope.blade.parentBlade.currentEntities))
                 {

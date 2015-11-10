@@ -22,7 +22,7 @@
                         currentEntityId: $scope.blade.currentEntityId,
                         currentEntity: $scope.blade.currentEntity,
                         title: $scope.blade.title,
-                        subtitle: 'Category properties',
+                        subtitle: 'catalog.blades.category-properties.title',
                         controller: 'virtoCommerce.catalogModule.categoryPropertyController',
                         //isNew: true,
                         template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/category-property-detail.tpl.html'

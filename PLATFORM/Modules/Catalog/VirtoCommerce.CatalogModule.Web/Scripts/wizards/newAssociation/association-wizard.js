@@ -1,7 +1,7 @@
 ﻿angular.module('virtoCommerce.catalogModule')
 .controller('virtoCommerce.catalogModule.associationWizardController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', 'virtoCommerce.catalogModule.items', function ($scope, bladeNavigationService, settings, items) {
     var blade = $scope.blade;
-    blade.title = "New Association";
+    blade.title = "catalog.blades.new-association.title";
 
     $scope.create = function () {
         blade.isLoading = true;
@@ -42,15 +42,15 @@
         };
         var newBlade = {
             id: "CatalogItemsSelect",
-            title: "Select items to associate",
-            subtitle: 'Adding Associations to product',
+            title: "catalog.blades.add-association.title",
+            subtitle: 'catalog.blades.add-association.subtitle',
             controller: 'virtoCommerce.catalogModule.catalogItemSelectController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/common/catalog-items-select.tpl.html',
             options: options,
             breadcrumbs: [],
             toolbarCommands: [
               {
-                  name: "Confirm", icon: 'fa fa-check',
+                  name: "platform.commands.confirm", icon: 'fa fa-check',
                   executeMethod: function (pickingBlade) {
                       blade.selection = _.union(blade.selection, _.pluck(selection, 'id'));
                       bladeNavigationService.closeBlade(pickingBlade);
@@ -69,7 +69,7 @@
             id: 'settingDetailChild',
             isApiSave: true,
             currentEntityId: 'Catalog.AssociationGroups',
-            title: 'Association Groups',
+            title: 'catalog.blades.association-groups.title',
             parentRefresh: function (data) { $scope.associationGroups = data; },
             controller: 'platformWebApp.settingDictionaryController',
             template: '$(Platform)/Scripts/app/settings/blades/setting-dictionary.tpl.html'

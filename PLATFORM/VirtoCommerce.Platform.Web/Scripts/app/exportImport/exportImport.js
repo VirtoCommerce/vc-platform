@@ -61,7 +61,7 @@
   	var menuItem = {
   		path: 'configuration/exportImport',
   		icon: 'fa fa-download',
-  		title: 'Export & Import',
+  		title: 'platform.menu.export-import',
   		priority: 10,
   		action: function () { $state.go('workspace.exportImport'); },
   		permission: 'platform:exportImport'

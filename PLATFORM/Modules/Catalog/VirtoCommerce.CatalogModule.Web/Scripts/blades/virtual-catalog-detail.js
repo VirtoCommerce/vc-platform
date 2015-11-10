@@ -63,8 +63,8 @@
         if (isDirty()) {
             var dialog = {
                 id: "confirmCurrentBladeClose",
-                title: "Save changes",
-                message: "The virtual catalog has been modified. Do you want to save changes?"
+                title: "catalog.dialogs.virtual-catalog-save.title",
+                message: "catalog.dialogs.virtual-catalog-save.message"
             };
             dialog.callback = function (needSave) {
                 if (needSave) {
@@ -89,7 +89,7 @@
         if (!blade.isNew) {
             blade.toolbarCommands = [
                 {
-                    name: "Save", icon: 'fa fa-save',
+                    name: "platform.commands.save", icon: 'fa fa-save',
                     executeMethod: function () {
                         $scope.saveChanges();
                     },
@@ -99,7 +99,7 @@
                     permission: 'catalog:update'
                 },
                 {
-                    name: "Reset", icon: 'fa fa-undo',
+                    name: "platform.commands.reset", icon: 'fa fa-undo',
                     executeMethod: function () {
                         angular.copy(blade.origEntity, blade.currentEntity);
                     },
@@ -109,7 +109,7 @@
                     permission: 'catalog:update'
                 },
                 {
-                    name: "Delete", icon: 'fa fa-trash-o',
+                    name: "platform.commands.delete", icon: 'fa fa-trash-o',
                     executeMethod: function () {
                         var dialog = {
                             id: "confirmDelete",
