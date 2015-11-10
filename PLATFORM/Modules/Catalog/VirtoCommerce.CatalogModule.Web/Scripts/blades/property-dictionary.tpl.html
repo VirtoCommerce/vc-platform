@@ -3,43 +3,44 @@
         <div class="inner-block">
             <form class="form" ng-submit="add(pdForm)" name="pdForm" novalidate autocomplete="off">
                 <fieldset ng-if="!pb.currentEntity.multilanguage">
-                    <legend>New value</legend>
+                    <legend>{{ 'catalog.blades.property-dictionary.labels.new-value' | translate }}</legend>
                     <div class="form-group">
                         <div class="form-input">
-                            <input ng-class="{'error' : pdForm.dictValue.$invalid && !pdForm.dictValue.$pristine}" required ng-model="newValue.value" ui-validate=" 'dictValueValidator($value)' " name="dictValue" focus-on="" placeholder="Enter value" />
+                            <input ng-class="{'error' : pdForm.dictValue.$invalid && !pdForm.dictValue.$pristine}" required ng-model="newValue.value" ui-validate=" 'dictValueValidator($value)' " name="dictValue" focus-on="" placeholder="{{ 'catalog.blades.property-dictionary.placeholders.value' | translate }}" />
                         </div>
                         <div class="form-error" ng-if="pdForm.dictValue.$dirty && pdForm.dictValue.$invalid">
-                            <span ng-if="pdForm.dictValue.$error.required">Required</span>
-                            <span ng-if="pdForm.dictValue.$error.validator">Duplicate key found</span>
+                            <span ng-if="pdForm.dictValue.$error.required">{{ 'catalog.blades.property-dictionary.validations.required' | translate }}</span>
+                            <span ng-if="pdForm.dictValue.$error.validator">{{ 'catalog.blades.property-dictionary.validations.duplicate' | translate }}</span>
                         </div>
                     </div>
                     <div class="form-group">
-                        <button class="btn" ng-disabled="pdForm.$invalid" type="submit">Add</button>
+                        <button class="btn" ng-disabled="pdForm.$invalid" type="submit">{{ 'platform.commands.add' | translate }}</button>
                     </div>
                 </fieldset>
 
                 <fieldset ng-if="pb.currentEntity.multilanguage">
-                    <legend>{{selectedItem ? 'Edit values' : 'New values'}}</legend>
+                    <legend ng-show="selectedItem">{{ 'catalog.blades.property-dictionary.labels.language-edit' | translate }}</legend>
+                    <legend ng-hide="selectedItem">{{ 'catalog.blades.property-dictionary.labels.language-add' | translate }}</legend>
                     <div class="form-group">
                         <div class="form-input __langs" ng-repeat="data in newValue.values">
                             <ng-form name="valuesForm">
                                 <span class="flag flag-{{data.languageCode.substr(3).toLowerCase()}}"></span>
-                                <input ng-model="data.value" class="form-control" ng-required="$first" ui-validate=" 'dictValueValidator($value, data)' " name="mValue" placeholder="Enter value" />
+                                <input ng-model="data.value" class="form-control" ng-required="$first" ui-validate=" 'dictValueValidator($value, data)' " name="mValue" placeholder="{{ 'catalog.blades.property-dictionary.placeholders.value' | translate }}" />
                                 <div class="form-error" ng-if="valuesForm.mValue.$dirty && valuesForm.mValue.$invalid">
-                                    <span ng-if="valuesForm.mValue.$error.required">Required</span>
-                                    <span ng-if="valuesForm.mValue.$error.validator">Duplicate key found</span>
+                                    <span ng-if="valuesForm.mValue.$error.required">{{ 'catalog.blades.property-dictionary.validations.required' | translate }}</span>
+                                    <span ng-if="valuesForm.mValue.$error.validator">{{ 'catalog.blades.property-dictionary.validations.duplicate' | translate }}</span>
                                 </div>
                             </ng-form>
                         </div>
                     </div>
                     <div class="form-group">
-                        <button class="btn" ng-if="selectedItem" ng-click="cancel()">Cancel</button>
+                        <button class="btn" ng-if="selectedItem" ng-click="cancel()">{{ 'platform.commands.cancel' | translate }}</button>
                         <button class="btn" ng-disabled="pdForm.$invalid" type="submit">{{selectedItem ? 'Ok' : 'Add'}}</button>
                     </div>
                 </fieldset>
             </form>
             <fieldset ng-if="pb.currentEntity.dictionaryValues.length > 0">
-                <legend>Current values</legend>
+                <legend>{{ 'catalog.blades.property-dictionary.labels.current-values' | translate }}</legend>
                 <div class="table-wrapper">
                     <table class="table">
                         <thead>
@@ -50,7 +51,7 @@
                                         <span class="check"></span>
                                     </label>
                                 </th>
-                                <th class="table-col">Value</th>
+                                <th class="table-col">{{ 'catalog.blades.property-dictionary.labels.value' | translate }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -70,7 +71,7 @@
                                     </div>
                                     <ul role="menu" class="menu __context" id="pd_menu_{{$index}}">
                                         <li class="menu-item" ng-click='delete($index)'>
-                                            <i class="menu-ico fa fa-trash-o"></i> Delete
+                                            <i class="menu-ico fa fa-trash-o"></i> {{ 'platform.commands.delete' | translate }}
                                         </li>
                                     </ul>
                                 </td>
@@ -89,7 +90,7 @@
                                     </div>
                                     <ul role="menu" class="menu __context" id="pd_multi_{{$index}}">
                                         <li class="menu-item" ng-click='deleteMultilanguage(group.alias)'>
-                                            <i class="menu-ico fa fa-trash-o"></i> Delete
+                                            <i class="menu-ico fa fa-trash-o"></i> {{ 'platform.commands.delete' | translate }}
                                         </li>
                                     </ul>
                                 </td>

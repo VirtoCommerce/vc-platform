@@ -32,8 +32,8 @@
         if (isDirty() && $scope.currentEntity.content) {
             var dialog = {
                 id: "confirmCurrentBladeClose",
-                title: "Save changes",
-                message: "The Review has been modified. Do you want to save changes?",
+                title: "catalog.dialogs.review-save.title",
+                message: "catalog.dialogs.review-save.message",
                 callback: function (needSave) {
                     if (needSave) {
                         saveChanges();
@@ -51,8 +51,8 @@
     function deleteEntry() {
         var dialog = {
             id: "confirmDelete",
-            title: "Delete confirmation",
-            message: "Are you sure you want to delete this Editorial Review?",
+            title: "catalog.dialogs.review-delete.title",
+            message: "catalog.dialogs.review-delete.message",
             callback: function (remove) {
                 if (remove) {
                     $scope.blade.isLoading = true;
@@ -77,7 +77,7 @@
 
     $scope.blade.toolbarCommands = [
         {
-            name: "Save", icon: 'fa fa-save',
+            name: "platform.commands.save", icon: 'fa fa-save',
             executeMethod: function () {
                 saveChanges();
             },
@@ -87,7 +87,7 @@
             permission: 'catalog:update'
         },
         {
-            name: "Reset", icon: 'fa fa-undo',
+            name: "platform.commands.reset", icon: 'fa fa-undo',
             executeMethod: function () {
                 angular.copy($scope.blade.origEntity, $scope.currentEntity);
             },
@@ -97,7 +97,7 @@
             permission: 'catalog:update'
         },
         {
-            name: "Delete", icon: 'fa fa-trash-o',
+            name: "platform.commands.delete", icon: 'fa fa-trash-o',
             executeMethod: function () {
                 deleteEntry();
             },

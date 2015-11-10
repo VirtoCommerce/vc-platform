@@ -49,7 +49,8 @@ function ($scope, carts, bladeNavigationService, dialogService) {
 
         var newBlade = {
             id: 'cartDetail',
-            title: selectedNode.customerName + '\'s Shopping cart',
+            title: 'cart.blades.shopping-cart.title',
+            titleValues: { name: selectedNode.customerName},
             currentEntityId: selectedNode.id,
             controller: 'virtoCommerce.cartModule.cartDetailController',
             template: 'Modules/$(VirtoCommerce.Cart)/Scripts/blades/cart-detail.tpl.html'
@@ -71,8 +72,8 @@ function ($scope, carts, bladeNavigationService, dialogService) {
     function deleteChecked() {
         var dialog = {
             id: "confirmDeleteItem",
-            title: "Delete confirmation",
-            message: "Are you sure you want to delete selected Carts?",
+            title: "cart.dialogs.carts-delete.title",
+            message: "cart.dialogs.carts-delete.message",
             callback: function (remove) {
                 if (remove) {
                     closeChildrenBlades();
@@ -99,7 +100,7 @@ function ($scope, carts, bladeNavigationService, dialogService) {
 
     $scope.blade.toolbarCommands = [
           {
-              name: "Refresh", icon: 'fa fa-refresh',
+              name: "platform.commands.refresh", icon: 'fa fa-refresh',
               executeMethod: function () {
                   $scope.blade.refresh();
               },
@@ -116,7 +117,7 @@ function ($scope, carts, bladeNavigationService, dialogService) {
           //    }
           //},
           {
-              name: "Open in Store", icon: 'fa fa-edit',
+              name: "cart.commands.open-in-store", icon: 'fa fa-edit',
               executeMethod: function () {
               },
               canExecuteMethod: function () {
@@ -124,7 +125,7 @@ function ($scope, carts, bladeNavigationService, dialogService) {
               }
           },
           {
-              name: "Delete", icon: 'fa fa-trash-o',
+              name: "platform.commands.delete", icon: 'fa fa-trash-o',
               executeMethod: function () {
                   deleteChecked();
               },

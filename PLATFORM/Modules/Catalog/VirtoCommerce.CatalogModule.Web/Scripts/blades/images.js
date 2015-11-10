@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.imagesController', ['$scope', '$filter', 'FileUploader', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'platformWebApp.authService', 'platformWebApp.assets.api', function ($scope, $filter, FileUploader, dialogService, bladeNavigationService, authService, assets) {
+.controller('virtoCommerce.catalogModule.imagesController', ['$scope', '$filter', '$translate', 'FileUploader', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'platformWebApp.authService', 'platformWebApp.assets.api', function ($scope, $filter, $translate, FileUploader, dialogService, bladeNavigationService, authService, assets) {
     var blade = $scope.blade;
 
     blade.refresh = function (parentRefresh) {
@@ -36,8 +36,8 @@
         if ($scope.isDirty() && authService.checkPermission(blade.permission)) {
             var dialog = {
                 id: "confirmItemChange",
-                title: "Save changes",
-                message: "The images has been modified. Do you want to save changes?"
+                title: "catalog.dialogs.image-save.title",
+                message: "catalog.dialogs.image-save.message"
             };
             dialog.callback = function (needSave) {
                 if (needSave) {
@@ -118,7 +118,9 @@
     };
 
     $scope.copyUrl = function (data) {
-        window.prompt("Copy to clipboard: Ctrl+C, Enter", data.url);
+        $translate('catalog.blades.images.labels.copy-url-prompt').then(function (promptMessage) {
+            window.prompt(promptMessage, data.url);
+        });
     }
 
     $scope.removeAction = function (selectedImages) {
@@ -138,13 +140,13 @@
 
     blade.toolbarCommands = [
         {
-            name: "Save", icon: 'fa fa-save',
+            name: 'platform.commands.save', icon: 'fa fa-save',
             executeMethod: $scope.saveChanges,
             canExecuteMethod: $scope.isDirty,
             permission: blade.permission
         },
 		{
-		    name: "Remove", icon: 'fa fa-trash-o', executeMethod: function () { $scope.removeAction(); },
+		    name: 'platform.commands.remove', icon: 'fa fa-trash-o', executeMethod: function () { $scope.removeAction(); },
 		    canExecuteMethod: function () {
 		        var retVal = false;
 		        if (blade.currentEntity && blade.currentEntity.images) {
@@ -156,7 +158,7 @@
 		    permission: blade.permission
 		},
         {
-            name: "Gallery", icon: 'fa fa-image',
+            name: 'catalog.commands.gallery', icon: 'fa fa-image',
             executeMethod: function () {
                 var dialog = {
                     images: blade.currentEntity.images,

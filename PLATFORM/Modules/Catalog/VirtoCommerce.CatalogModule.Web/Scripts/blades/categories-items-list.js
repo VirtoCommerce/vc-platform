@@ -105,7 +105,7 @@
                     id: "listCategoryDetail",
                     currentEntityId: listItem.id,
                     title: listItem.name,
-                    subtitle: 'Category details',
+                    subtitle: 'catalog.blades.category-details.subtitle',
                     controller: 'virtoCommerce.catalogModule.categoryDetailController',
                     template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/category-detail.tpl.html',
                 };
@@ -118,8 +118,8 @@
                 } else {
                     var dialog = {
                         id: "notifyNoTargetCategory",
-                        title: "Message",
-                        message: "Nothing selected. Check some Categories or Items first."
+                        title: "catalog.dialogs.nothing-selected.title",
+                        message: "catalog.dialogs.nothing-selected.message"
                     };
                     dialogService.showNotificationDialog(dialog);
                 }
@@ -252,8 +252,9 @@
                             mode: blade.mode,
                             isBrowsingLinkedCategory: blade.isBrowsingLinkedCategory || $scope.hasLinks(listItem),
                             breadcrumbs: blade.breadcrumbs,
-                            title: 'Categories & Items',
-                            subtitle: 'Browsing "' + listItem.name + '"',
+                            title: 'catalog.blades.categories.title',
+                            subtitle: 'catalog.blades.categories.subtitle',
+                            subtitleValues: listItem.name != null ? {name: listItem.name} : '',
                             catalogId: blade.catalogId,
                             catalog: blade.catalog,
                             categoryId: listItem.id,
@@ -314,7 +315,7 @@
 
             $scope.blade.toolbarCommands = [
                 {
-                    name: "Refresh",
+                    name: "platform.commands.refresh",
                     icon: 'fa fa-refresh',
                     executeMethod: function () {
                         blade.refresh();
@@ -324,7 +325,7 @@
                     }
                 },
                 {
-                    name: "Manage",
+                    name: "platform.commands.manage",
                     icon: 'fa fa-edit',
                     executeMethod: function () {
                         // selected OR the first checked listItem
@@ -336,7 +337,7 @@
                     permission: 'catalog:read'
                 },
                 {
-                    name: "Delete",
+                    name: "platform.commands.delete",
                     icon: 'fa fa-trash-o',
                     executeMethod: function () {
                         deleteChecked();
@@ -345,14 +346,14 @@
                     permission: 'catalog:delete'
                 },
     			{
-    			    name: "Import",
+    			    name: "platform.commands.import",
     			    icon: 'fa fa-download',
     			    executeMethod: function () {
     			        var newBlade = {
     			            id: 'catalogImport',
-    			            title: 'Catalog import',
+    			            title: 'catalog.blades.catalog-import.title',
+    			            subtitle: 'catalog.blades.catalog-import.subtitle',
     			            catalog: blade.catalog,
-    			            subtitle: 'Choose data format & start import',
     			            controller: 'virtoCommerce.catalogModule.importerListController',
     			            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/import/importers-list.tpl.html'
     			        };
@@ -362,14 +363,14 @@
     			    permission: 'catalog:import'
     			},
 				{
-				    name: "Export",
+				    name: "platform.commands.export",
 				    icon: 'fa fa-upload',
 				    executeMethod: function () {
 				        var newBlade = {
 				            id: 'catalogExport',
-				            title: 'Data export',
+				            title: 'catalog.blades.catalog-export.title',
+				            subtitle: 'catalog.blades.catalog-export.subtitle',
 				            catalog: blade.catalog,
-				            subtitle: 'Choose data format & start export',
 				            controller: 'virtoCommerce.catalogModule.exporterListController',
 				            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/export/exporter-list.tpl.html',
 				            selectedProducts: _.filter($scope.items, function (x) { return x.type == 'product' && x.selected == true; }),
@@ -381,7 +382,7 @@
 				    permission: 'catalog:export'
 				},
                  {
-                     name: "Cut",
+                     name: "platform.commands.cut",
                      icon: 'fa fa-cut',
                      executeMethod: function () {
                          $storage.catalogClipboardContent = _.where($scope.items, { selected: true });
@@ -390,7 +391,7 @@
                      permission: 'catalog:create'
                  },
                  {
-                     name: "Paste",
+                     name: "platform.commands.paste",
                      icon: 'fa fa-clipboard',
                      executeMethod: function () {
                          blade.isLoading = true;
@@ -448,15 +449,15 @@
                 }
             } else if (authService.checkPermission('catalog:create')) {
                 $scope.blade.toolbarCommands.splice(1, 0, {
-                    name: "Add",
+                    name: "platform.commands.add",
                     icon: 'fa fa-plus',
                     executeMethod: function () {
                         closeChildrenBlades();
 
                         var newBlade = {
                             id: 'listItemChild',
-                            title: 'New category item',
-                            subtitle: 'choose new item type',
+                            title: 'catalog.blades.new-category-type.title',
+                            subtitle: 'catalog.blades.new-category-type.subtitle',
                             controller: 'virtoCommerce.catalogModule.categoriesItemsAddController',
                             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/categories-items-add.tpl.html'
                         };
@@ -474,8 +475,8 @@
                     level: blade.level + 1,
                     mode: 'mappingSource',
                     breadcrumbs: [],
-                    title: 'Choose Categories & Items for mapping',
-                    subtitle: 'Creating a Link inside virtual catalog',
+                    title: 'catalog.blades.mapping.title',
+                    subtitle: 'catalog.blades.mapping.subtitle',
                     catalogId: selectedNode.id,
                     catalog: selectedNode,
                     disableOpenAnimation: true,

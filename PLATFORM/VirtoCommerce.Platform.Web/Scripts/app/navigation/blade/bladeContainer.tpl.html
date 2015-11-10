@@ -33,21 +33,21 @@
                 <i class="blade-t_ico fa {{blade.headIcon == 'fa fa-user' ? '__customers' : ''}}" ng-class="blade.headIcon ? blade.headIcon : 'fa-folder'">
                     <i ng-if="blade.headIcon == 'fa fa-user'"></i>
                 </i>
-                <p class="blade-t_head" ng-if="blade.title" ng-bind="blade.title"></p>
-                <p class="blade-t_subhead" ng-if="blade.subtitle" ng-bind="blade.subtitle"></p>
+                <p class="blade-t_head">{{ blade.title | translate: blade.titleValues }}</p>
+                <p class="blade-t_subhead">{{ blade.subtitle | translate: blade.subtitleValues }}</p>
             </div>
             <div class="blade-toolbar">
                 <ul class="menu __inline">
                     <li class="menu-item" ng-class="{'__disabled': !toolbarCommand.canExecuteMethod(blade)}" ng-click='toolbarCommand.executeMethod(blade)' ng-repeat="toolbarCommand in resolvedToolbarCommands | limitTo:toolsPerLineCount" ng-disabled="!toolbarCommand.canExecuteMethod(blade)" va-permission="{{toolbarCommand.permission}}" security-scopes="blade.securityScopes">
                         <button class="menu-btn">
                             <i class="menu-ico" ng-class="toolbarCommand.icon"></i>
-                            {{toolbarCommand.name}}
+                            {{ toolbarCommand.name | translate }}
                         </button>
                     </li>
                     <li class="menu-item __more" ng-click="showMoreTools($event)" ng-if="resolvedToolbarCommands.length > toolsPerLineCount">
                         <a class="menu-btn">
                             <i class="menu-ico fa fa-ellipsis-h"></i>
-                            More
+                            {{ 'platform.commands.more' | translate }}
                         </a>
                     </li>
                 </ul>
