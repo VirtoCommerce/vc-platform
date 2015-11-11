@@ -137,7 +137,9 @@ namespace VirtoCommerce.Web.Models
         {
             get
             {
-                return SubtotalPrice + TaxPrice + ShippingPrice;
+                var discountsAmount = Discounts.Sum(d => d.Amount);
+
+                return SubtotalPrice + TaxPrice + ShippingPrice - discountsAmount;
             }
         }
         #endregion

@@ -87,10 +87,14 @@ namespace VirtoCommerce.CartModule.Data.Converters
 																						  x => x.CustomerId, x => x.CustomerName,
 																						  x => x.IsAnonymous, x => x.IsRecuring, x => x.LanguageCode, x => x.Comment,
 																						  x => x.OrganizationId, x => x.Total, x => x.SubTotal, x => x.ShippingTotal,
-																						  x => x.HandlingTotal, x => x.DiscountTotal, x => x.TaxTotal);
+																						  x => x.HandlingTotal, x => x.DiscountTotal, x => x.TaxTotal, x => x.Coupon);
 			target.InjectFrom(patchInjectionPolicy, source);
 
-			
+			if (string.IsNullOrEmpty(source.Coupon))
+            {
+                target.Coupon = null;
+            }
+
 			if (!source.Items.IsNullCollection())
 			{
 				source.Items.Patch(target.Items, (sourceItem, targetItem) => sourceItem.Patch(targetItem));
