@@ -22,6 +22,10 @@
 	color: #43b0e6 !important;
 }
 
+ui-codemirror > *:first-child {
+    border: 1px solid #ddd;
+}
+
 /* Scroll bar */
 *::-webkit-scrollbar
 {

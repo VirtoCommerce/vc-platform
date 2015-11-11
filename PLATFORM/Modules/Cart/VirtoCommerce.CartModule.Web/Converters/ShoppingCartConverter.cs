@@ -50,10 +50,7 @@ namespace VirtoCommerce.CartModule.Web.Converters
 				retVal.Shipments = cart.Shipments.Select(x => x.ToCoreModel()).ToList();
 			if(cart.Discounts != null)
 				retVal.Discounts = cart.Discounts.Select(x => x.ToCoreModel()).ToList();
-			if(cart.Coupon != null)
-			{
-				retVal.Coupon = new coreModel.Coupon() { CouponCode = cart.Coupon.CouponCode, InvalidDescription = cart.Coupon.InvalidDescription };
-			}
+		
 
 			retVal.TaxDetails = cart.TaxDetails;
 			return retVal;

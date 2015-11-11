@@ -113,7 +113,6 @@
     <Compile Include="Model\Address.cs" />
     <Compile Include="Model\CardSummary.cs" />
     <Compile Include="Model\LineItem.cs" />
-    <Compile Include="Model\Coupon.cs" />
     <Compile Include="Model\Discount.cs" />
     <Compile Include="Model\Payment.cs" />
     <Compile Include="Model\PaymentMethod.cs" />
