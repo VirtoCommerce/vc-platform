@@ -4,9 +4,9 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
 using Hangfire;
-using Microsoft.AspNet.Identity.Owin;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Security.Identity;
+using VirtoCommerce.Platform.Web.Model.Security;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
@@ -86,7 +86,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         // POST: /api/security/frontend/user/signin
         [HttpPost]
         [Route("user/signin")]
-        [ResponseType(typeof(SignInStatus))]
+        [ResponseType(typeof(SignInResult))]
         public async Task<IHttpActionResult> PasswordSignIn(string userName, string password, bool isPersistent)
         {
             if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(password))
@@ -94,7 +94,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 return BadRequest();
             }
 
-            var result = await SignInManager.PasswordSignInAsync(userName, password, isPersistent, shouldLockout: true);
+            var status = await SignInManager.PasswordSignInAsync(userName, password, isPersistent, shouldLockout: true);
+            var result = new SignInResult { Status = status };
 
             return Ok(result);
         }
