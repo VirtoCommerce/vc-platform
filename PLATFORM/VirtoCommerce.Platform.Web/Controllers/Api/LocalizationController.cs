@@ -1,8 +1,9 @@
-﻿using Newtonsoft.Json.Linq;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Web.Hosting;
 using System.Web.Http;
+using System.Web.Http.Description;
+using Newtonsoft.Json.Linq;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
@@ -21,6 +22,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <returns>json</returns>
         [System.Web.Http.HttpGet]
         [System.Web.Http.Route("")]
+        [ResponseType(typeof(object))]
         public JObject GetLocalizationFile(string lang = "en")
         {
             DirectoryInfo directory = new DirectoryInfo(_localizationPath);
@@ -42,10 +44,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 result.Merge(part, new JsonMergeSettings { MergeArrayHandling = MergeArrayHandling.Concat });
             }
 
-            return result; 
+            return result;
         }
-
     }
-
-
 }
