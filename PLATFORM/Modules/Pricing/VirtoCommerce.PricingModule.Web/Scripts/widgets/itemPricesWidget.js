@@ -34,7 +34,7 @@
                 itemId: blade.itemId,
                 parentWidgetRefresh: refresh,
                 title: blade.title,
-                subtitle: 'Select Price list to manage prices',
+                subtitle: 'pricing.blades.item-pricelists-list.subtitle',
                 controller: 'virtoCommerce.pricingModule.itemPricelistsListController',
                 template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/blades/item/item-pricelists-list.tpl.html'
             };

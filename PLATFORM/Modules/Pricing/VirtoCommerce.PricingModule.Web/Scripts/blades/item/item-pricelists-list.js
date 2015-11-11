@@ -21,7 +21,7 @@
             data: data,
             currency: data.currency,
             title: data.name,
-            subtitle: 'Manage prices',
+            subtitle: 'pricing.blades.prices-list.subtitle',
             controller: 'virtoCommerce.pricingModule.pricesListController',
             template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/blades/prices-list.tpl.html'
         };
@@ -43,7 +43,7 @@
 
     $scope.blade.toolbarCommands = [
         {
-            name: "Refresh", icon: 'fa fa-refresh',
+            name: "platform.commands.refresh", icon: 'fa fa-refresh',
             executeMethod: function () {
                 $scope.blade.refresh();
             },

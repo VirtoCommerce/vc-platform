@@ -297,7 +297,8 @@
         "labels": {
           "picture": "Pic",
           "name": "Name",
-          "sku": "SKU"
+          "sku": "SKU",
+          "virtual": "{{name}} (virtual)"
         }
       },
       "new-product": {
