@@ -75,20 +75,14 @@ angular.module('platformWebApp', AppDependencies).
               var initOptions = $delegate.initialize(options);
               angular.extend(initOptions, {
                   data: _.any(initOptions.data) ? initOptions.data : 'blade.currentEntities',
+                  // rowHeight: initOptions.rowHeight === 30 ? 36 : initOptions.rowHeight,
                   enableGridMenu: true,
-                  enableVerticalScrollbar: uiGridConstants.scrollbars.NEVER,
-                  enableHorizontalScrollbar: uiGridConstants.scrollbars.NEVER,
-                  enableRowHeaderSelection: true,
+                  enableVerticalScrollbar: uiGridConstants.scrollbars.NEVER,                  
+                  //enableHorizontalScrollbar: uiGridConstants.scrollbars.NEVER,
                   //selectionRowHeaderWidth: 35,
-                  rowHeight: 20,
-                  //saveWidths: false,
-                  //saveOrder: false,
-                  //saveScroll: false,
                   saveFocus: false,
-                  //saveSort: false,
                   saveFilter: false,
                   savePinning: false,
-                  //saveGrouping: false,
                   saveSelection: false
               });
               return initOptions;
@@ -191,10 +185,6 @@ angular.module('platformWebApp', AppDependencies).
 .factory('platformWebApp.uiGridHelper', ['$localStorage', '$timeout', 'uiGridConstants', function ($localStorage, $timeout, uiGridConstants) {
     var retVal = {};
     retVal.initialize = function ($scope, gridOptions, externalRegisterApiCallback) {
-        //$scope.$on('$destroy', function () {
-        //    $localStorage['gridState:' + $scope.blade.template] = $scope.gridApi.saveState.save();
-        //});
-
         var savedState = $localStorage['gridState:' + $scope.blade.template];
         if (savedState) {
             // extend saved columns with custom columnDef information (e.g. cellTemplate, displayName)
@@ -230,7 +220,7 @@ angular.module('platformWebApp', AppDependencies).
 
                 if (externalRegisterApiCallback) {
                     externalRegisterApiCallback(gridApi);
-                }                
+                }
             }
         }, gridOptions);
     };

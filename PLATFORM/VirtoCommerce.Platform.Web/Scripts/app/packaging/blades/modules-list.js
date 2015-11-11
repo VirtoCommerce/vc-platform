@@ -76,24 +76,26 @@
         // ui-grid 
         uiGridHelper.initialize($scope, {
             rowTemplate: "modules-list.row.html",
+            virtualizationThreshold: 30,
+            rowHeight: 61,
             columnDefs: [
                         {
                             displayName: 'Icon', name: 'iconUrl',
-                            enableColumnResizing: false,
+                            enableColumnResizing: false, width: 70,
                             cellTemplate: 'modules-list-icon.cell.html'
                         },
                         {
                             displayName: 'Module', name: 'customColumn', field: 'title',
-                            sort: { direction: uiGridConstants.DESC },
-                            cellTemplate: 'role-list-name.cell.html'
+                            sort: { direction: uiGridConstants.ASC }, width: '50%',
+                            cellTemplate: 'modules-list-name.cell.html'
                         },
-                        { name: 'version' },
+                        { name: 'version', width: 80 },
                         {
                             displayName: 'Author', name: 'authors',
                             cellTemplate: 'modules-list-authors.cell.html'
                         }
             ]
-            },
+        },
             function (gridApi) {
                 gridApi.grid.registerRowsProcessor($scope.singleFilter, 90);
             });
@@ -114,9 +116,6 @@
                 //    row.visible = false;
                 //}
             });
-
-            //$timeout(function () {                
-            //}, 1);
 
             $scope.filteredEntitiesCount = visibleCount;
             return renderableRows;

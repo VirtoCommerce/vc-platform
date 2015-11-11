@@ -94,14 +94,12 @@
 
 <script type="text/ng-template" id="asset-list-icon.cell.html">
     <div class="product-img">
-        <div class="image" style="background-image: url('{{COL_FIELD}}');height:50px" ng-if="row.entity.isImage"></div>
+        <div class="image" style="background-image: url('{{COL_FIELD}}')" ng-if="row.entity.isImage"></div>
         <i class="table-ico fa" ng-class="row.entity.type == 'folder' ? 'fa-folder' : 'fa-file-text-o'" ng-if="!row.entity.isImage"></i>
     </div>
 </script>
 <script type="text/ng-template" id="am-time-ago.cell.html">
-    <div class="ui-grid-cell-contents">
-        <span class="table-date" am-time-ago="COL_FIELD"></span>
-    </div>
+    <span class="table-date" am-time-ago="COL_FIELD"></span>
 </script>
 <script type="text/ng-template" id="asset-list-actions.cell.html">
     <ul class="ui-grid-cell-contents menu __actions">

@@ -11,7 +11,8 @@
     <div class="blade-inner">
         <div class="inner-block">
             <div class="table-wrapper">
-                <table class="table">
+                <div ui-grid="gridOptions" ui-grid-save-state ui-grid-selection ui-grid-resize-columns ui-grid-move-columns></div>
+                <!--<table class="table">
                     <thead>
                         <tr>
                             <th class="table-col __product-control">
@@ -61,8 +62,17 @@
                             </td>
                         </tr>
                     </tbody>
-                </table>
+                </table>-->
             </div>
         </div>
     </div>
 </div>
+
+<script type="text/ng-template" id="order-list-name.cell.html">
+    <div class="ui-grid-cell-contents">
+        <span title="{{COL_FIELD + ' by ' + row.entity.customerName}}">{{COL_FIELD + ' by ' + row.entity.customerName}}</span>
+    </div>
+</script>
+<script type="text/ng-template" id="total-list-name.cell.html">
+    <span>{{COL_FIELD +' ' + row.entity.currency}}</span>
+</script>

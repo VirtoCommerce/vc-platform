@@ -12,7 +12,8 @@
     <div class="blade-inner">
         <div class="inner-block">
             <div class="table-wrapper">
-                <table class="table">
+                <div ui-grid="gridOptions" ui-grid-save-state ui-grid-selection ui-grid-resize-columns ui-grid-move-columns></div>
+                <!--<table class="table">
                     <thead>
                         <tr>
                             <th class="table-col __product-control">
@@ -42,7 +43,6 @@
                             </td>
                             <td class="table-col __product-name" ng-click='selectNode(data)'>
                                 <span class="table-t">{{data.displayName}}</span>
-                                <!--<span class="table-descr" ng-if="data.statusId">{{data.statusId}}</span>-->
                             </td>
                             <td class="table-col" ng-click='selectNode(data)'>
                                 <span>{{getMainAddress(data)}}</span>
@@ -60,8 +60,14 @@
                             </td>
                         </tr>
                     </tbody>
-                </table>
+                </table>-->
             </div>
         </div>
     </div>
 </div>
+
+<script type="text/ng-template" id="member-list-icon.cell.html">
+    <div class="product-img" ng-attr-title="{{COL_FIELD}}">
+        <i class="table-ico fa" ng-class="'{{COL_FIELD}}' === 'Organization' ? 'fa-university' : 'fa-user'"></i>
+    </div>
+</script>

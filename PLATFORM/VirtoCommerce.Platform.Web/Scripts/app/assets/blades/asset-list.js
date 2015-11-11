@@ -254,16 +254,17 @@
         uiGridHelper.initialize($scope, {
             data: 'listEntries',
             rowTemplate: "<div ng-click=\"grid.appScope.selectNode(row.entity)\" ng-repeat=\"(colRenderIndex, col) in colContainer.renderedColumns track by col.uid\" ui-grid-one-bind-id-grid=\"rowRenderIndex + '-' + col.uid + '-cell'\" class=\"ui-grid-cell\" ng-class=\"{ 'ui-grid-row-header-cell': col.isRowHeader }\" role=\"{{col.isRowHeader ? 'rowheader' : 'gridcell'}}\" ui-grid-cell style='cursor:pointer'></div>",
+            rowHeight: 61,
             columnDefs: [
                         {
                             name: 'url', displayName: 'Pic',
-                            enableColumnResizing: false,
+                            enableColumnResizing: false, width: 60,
                             cellTemplate: 'asset-list-icon.cell.html'
                         },
                         { name: 'name', cellTooltip: true },
                         { name: 'size' },
                         { name: 'modifiedDate', displayName: 'Modified', cellTemplate: 'am-time-ago.cell.html' },
-                        { name: 'actions', enableColumnResizing: false, enableSorting: false, cellTemplate: 'asset-list-actions.cell.html' }
+                        { name: 'actions', enableColumnResizing: false, enableSorting: false, width: 80, cellTemplate: 'asset-list-actions.cell.html' }
             ]
         });
         

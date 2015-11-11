@@ -5116,20 +5116,18 @@ tags-input .tags .tag-item .remove-button
 .ui-grid-cell,
 .ui-grid-cell .ui-grid-vertical-bar
 {
-    height: auto !important;
-    min-height: 61px;
     overflow: hidden;
 }
 
-.ui-grid-row
+/*.ui-grid-row
 {
     min-height: 40px;
-}
+}*/
 
-.ui-grid-row .ui-grid-cell:not(.ui-grid-row-header-cell)
+/*.ui-grid-row .ui-grid-cell:not(.ui-grid-row-header-cell)
 {
     padding: 10px;
-}
+}*/
 
 .ui-grid-row:last-child .ui-grid-cell
 {
@@ -5140,14 +5138,8 @@ tags-input .tags .tag-item .remove-button
 .ui-grid-cell-contents
 {
     font-size: 14px;
-    padding: 10px;
+    /*padding: 10px;*/
     text-shadow: 1px 1px #fff;
-}
-
-.ui-grid-row-header-cell .ui-grid-cell-contents,
-.ui-grid-header-cell:first-child .ui-grid-cell-contents
-{
-    padding: 10px 5px;
 }
 
 .ui-grid-row:nth-child(2n) .ui-grid-cell.__selected
@@ -5164,11 +5156,6 @@ tags-input .tags .tag-item .remove-button
 .ui-grid-filter-container
 {
     padding: 0 10px 10px;
-}
-
-.ui-grid-disable-selection .ui-grid-selection-row-header-buttons
-{
-    margin: 10px 0 0;
 }
 
 input.ui-grid-filter-input[type="text"]
@@ -5247,7 +5234,7 @@ input.ui-grid-filter-input[type="text"]
 {
     height: 40px;
     line-height: 40px;
-    margin: 0 auto;
+    margin: 10px auto;
     width: auto;
 }
 
