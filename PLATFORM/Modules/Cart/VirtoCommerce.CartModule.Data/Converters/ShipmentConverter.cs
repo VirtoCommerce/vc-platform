@@ -33,7 +33,8 @@ namespace VirtoCommerce.CartModule.Data.Converters
 				retVal.Items = entity.Items.Select(x => x.ToCoreModel()).ToList();
 			}
 			retVal.TaxDetails = entity.TaxDetails.Select(x => x.ToCoreModel()).ToList();
-			return retVal;
+            retVal.Discounts = entity.Discounts.Select(x => x.ToCoreModel()).ToList();
+            return retVal;
 		}
 
 		public static ShipmentEntity ToDataModel(this Shipment shipment)
@@ -59,7 +60,12 @@ namespace VirtoCommerce.CartModule.Data.Converters
 				retVal.TaxDetails = new ObservableCollection<TaxDetailEntity>();
 				retVal.TaxDetails.AddRange(shipment.TaxDetails.Select(x => x.ToDataModel()));
 			}
-			return retVal;
+            if (shipment.Discounts != null)
+            {
+                retVal.Discounts = new ObservableCollection<DiscountEntity>();
+                retVal.Discounts.AddRange(shipment.Discounts.Select(x => x.ToDataModel()));
+            }
+            return retVal;
 		}
 
 		/// <summary>
@@ -94,8 +100,11 @@ namespace VirtoCommerce.CartModule.Data.Converters
 				var taxDetailComparer = AnonymousComparer.Create((TaxDetailEntity x) => x.Name);
 				source.TaxDetails.Patch(target.TaxDetails, taxDetailComparer, (sourceTaxDetail, targetTaxDetail) => sourceTaxDetail.Patch(targetTaxDetail));
 			}
-
-		}
+            if (!source.Discounts.IsNullCollection())
+            {
+                source.Discounts.Patch(target.Discounts, new DiscountComparer(), (sourceDiscount, targetDiscount) => sourceDiscount.Patch(targetDiscount));
+            }
+        }
 
 	}
 }

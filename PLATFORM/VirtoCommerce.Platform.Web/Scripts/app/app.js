@@ -69,7 +69,7 @@ angular.module('platformWebApp', AppDependencies).
     };
 })
 .config(
-  ['$stateProvider', '$httpProvider', 'uiSelectConfig', 'datepickerConfig', '$translateProvider', '$translatePartialLoaderProvider', function ($stateProvider, $httpProvider, uiSelectConfig, datepickerConfig, $translateProvider, $translatePartialLoaderProvider) {
+  ['$stateProvider', '$httpProvider', 'uiSelectConfig', 'datepickerConfig', '$translateProvider', function ($stateProvider, $httpProvider, uiSelectConfig, datepickerConfig, $translateProvider) {
       $stateProvider.state('workspace', {
           url: '/workspace',
           templateUrl: '$(Platform)/Scripts/app/workspace.tpl.html'
@@ -83,20 +83,16 @@ angular.module('platformWebApp', AppDependencies).
       datepickerConfig.showWeeks = false;
 
       //Localization
-      $translatePartialLoaderProvider
-        .addPart('VirtoCommerce.Platform')
-        .addPart('Custom', 9999);
-
-      $translateProvider.useLoader('$translatePartialLoader', { urlTemplate: 'Localizations/{lang}.{part}.json', loadFailureHandler: 'translateLoaderErrorHandler'})
-        //.useLoaderCache(true)
+      $translateProvider.useUrlLoader('api/platform/localization')
+        .useLoaderCache(true)
         .useSanitizeValueStrategy('sanitize')
         .preferredLanguage('en')
         .fallbackLanguage('en');
   }])
 
 .run(
-  ['$rootScope', '$state', '$stateParams', '$translate', 'platformWebApp.authService', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', '$animate', '$templateCache', 'gridsterConfig', 'taOptions',
-    function ($rootScope, $state, $stateParams, $translate, authService, mainMenuService, pushNotificationService, $animate, $templateCache, gridsterConfig, taOptions) {
+  ['$rootScope', '$state', '$stateParams', 'platformWebApp.authService', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', '$animate', '$templateCache', 'gridsterConfig', 'taOptions',
+    function ($rootScope, $state, $stateParams, authService, mainMenuService, pushNotificationService, $animate, $templateCache, gridsterConfig, taOptions) {
         //Disable animation
         $animate.enabled(false);
 
@@ -182,6 +178,5 @@ angular.module('platformWebApp', AppDependencies).
         ['bold', 'italics', 'underline', 'strikeThrough', 'ul', 'ol', 'redo', 'undo', 'clear', 'quote'],
         ['justifyLeft', 'justifyCenter', 'justifyRight', 'indent', 'outdent', 'html', 'insertImage', 'insertLink', 'insertVideo']];
 
-        $translate.refresh();
     }
   ]);

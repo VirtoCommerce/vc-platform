@@ -1161,6 +1161,160 @@ namespace VirtoCommerce.Client.Api
         /// <returns>VirtoCommercePlatformWebModelSettingsSetting</returns>
         System.Threading.Tasks.Task<VirtoCommercePlatformWebModelSettingsSetting> SettingGetSettingAsync (string id);
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="user"></param>
+        /// <returns>VirtoCommercePlatformCoreSecuritySecurityResult</returns>
+        VirtoCommercePlatformCoreSecuritySecurityResult FrontEndSecurityCreate (VirtoCommercePlatformCoreSecurityApplicationUserExtended user);
+  
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="user"></param>
+        /// <returns>VirtoCommercePlatformCoreSecuritySecurityResult</returns>
+        System.Threading.Tasks.Task<VirtoCommercePlatformCoreSecuritySecurityResult> FrontEndSecurityCreateAsync (VirtoCommercePlatformCoreSecurityApplicationUserExtended user);
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="userId"></param>
+        /// <returns>VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
+        VirtoCommercePlatformCoreSecurityApplicationUserExtended FrontEndSecurityGetUserById (string userId);
+  
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="userId"></param>
+        /// <returns>VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
+        System.Threading.Tasks.Task<VirtoCommercePlatformCoreSecurityApplicationUserExtended> FrontEndSecurityGetUserByIdAsync (string userId);
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="loginProvider"></param>
+        /// <param name="providerKey"></param>
+        /// <returns>VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
+        VirtoCommercePlatformCoreSecurityApplicationUserExtended FrontEndSecurityGetUserByLogin (string loginProvider, string providerKey);
+  
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="loginProvider"></param>
+        /// <param name="providerKey"></param>
+        /// <returns>VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
+        System.Threading.Tasks.Task<VirtoCommercePlatformCoreSecurityApplicationUserExtended> FrontEndSecurityGetUserByLoginAsync (string loginProvider, string providerKey);
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="userName"></param>
+        /// <returns>VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
+        VirtoCommercePlatformCoreSecurityApplicationUserExtended FrontEndSecurityGetUserByName (string userName);
+  
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="userName"></param>
+        /// <returns>VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
+        System.Threading.Tasks.Task<VirtoCommercePlatformCoreSecurityApplicationUserExtended> FrontEndSecurityGetUserByNameAsync (string userName);
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="userId"></param>
+        /// <param name="token"></param>
+        /// <param name="newPassword"></param>
+        /// <returns>VirtoCommercePlatformCoreSecuritySecurityResult</returns>
+        VirtoCommercePlatformCoreSecuritySecurityResult FrontEndSecurityResetPassword (string userId, string token, string newPassword);
+  
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="userId"></param>
+        /// <param name="token"></param>
+        /// <param name="newPassword"></param>
+        /// <returns>VirtoCommercePlatformCoreSecuritySecurityResult</returns>
+        System.Threading.Tasks.Task<VirtoCommercePlatformCoreSecuritySecurityResult> FrontEndSecurityResetPasswordAsync (string userId, string token, string newPassword);
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="userId"></param>
+        /// <param name="storeName"></param>
+        /// <param name="callbackUrl"></param>
+        /// <returns></returns>
+        void FrontEndSecurityGenerateResetPasswordToken (string userId, string storeName, string callbackUrl);
+  
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="userId"></param>
+        /// <param name="storeName"></param>
+        /// <param name="callbackUrl"></param>
+        /// <returns></returns>
+        System.Threading.Tasks.Task FrontEndSecurityGenerateResetPasswordTokenAsync (string userId, string storeName, string callbackUrl);
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="userName"></param>
+        /// <param name="password"></param>
+        /// <param name="isPersistent"></param>
+        /// <returns>string</returns>
+        string FrontEndSecurityPasswordSignIn (string userName, string password, bool? isPersistent);
+  
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="userName"></param>
+        /// <param name="password"></param>
+        /// <param name="isPersistent"></param>
+        /// <returns>string</returns>
+        System.Threading.Tasks.Task<string> FrontEndSecurityPasswordSignInAsync (string userName, string password, bool? isPersistent);
+        
     }
   
     /// <summary>
@@ -6951,6 +7105,784 @@ namespace VirtoCommerce.Client.Api
                 throw new ApiException ((int)response.StatusCode, "Error calling SettingGetSetting: " + response.Content, response.Content);
 
             return (VirtoCommercePlatformWebModelSettingsSetting) ApiClient.Deserialize(response.Content, typeof(VirtoCommercePlatformWebModelSettingsSetting), response.Headers);
+        }
+        
+        /// <summary>
+        ///  
+        /// </summary>
+        /// <param name="user"></param> 
+        /// <returns>VirtoCommercePlatformCoreSecuritySecurityResult</returns>            
+        public VirtoCommercePlatformCoreSecuritySecurityResult FrontEndSecurityCreate (VirtoCommercePlatformCoreSecurityApplicationUserExtended user)
+        {
+            
+            // verify the required parameter 'user' is set
+            if (user == null) throw new ApiException(400, "Missing required parameter 'user' when calling FrontEndSecurityCreate");
+            
+    
+            var path = "/api/security/frontend/user";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                "application/json", "text/json"
+            };
+            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            
+            
+            
+            postBody = ApiClient.Serialize(user); // http body (model) parameter
+            
+    
+            // authentication setting, if any
+            String[] authSettings = new String[] {  };
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+    
+            if (((int)response.StatusCode) >= 400)
+                throw new ApiException ((int)response.StatusCode, "Error calling FrontEndSecurityCreate: " + response.Content, response.Content);
+            else if (((int)response.StatusCode) == 0)
+                throw new ApiException ((int)response.StatusCode, "Error calling FrontEndSecurityCreate: " + response.ErrorMessage, response.ErrorMessage);
+    
+            return (VirtoCommercePlatformCoreSecuritySecurityResult) ApiClient.Deserialize(response.Content, typeof(VirtoCommercePlatformCoreSecuritySecurityResult), response.Headers);
+        }
+    
+        /// <summary>
+        ///  
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns>VirtoCommercePlatformCoreSecuritySecurityResult</returns>
+        public async System.Threading.Tasks.Task<VirtoCommercePlatformCoreSecuritySecurityResult> FrontEndSecurityCreateAsync (VirtoCommercePlatformCoreSecurityApplicationUserExtended user)
+        {
+            // verify the required parameter 'user' is set
+            if (user == null) throw new ApiException(400, "Missing required parameter 'user' when calling FrontEndSecurityCreate");
+            
+    
+            var path = "/api/security/frontend/user";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                "application/json", "text/json"
+            };
+            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            
+            
+            
+            postBody = ApiClient.Serialize(user); // http body (model) parameter
+            
+    
+            // authentication setting, if any
+            String[] authSettings = new String[] {  };
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            if (((int)response.StatusCode) >= 400)
+                throw new ApiException ((int)response.StatusCode, "Error calling FrontEndSecurityCreate: " + response.Content, response.Content);
+
+            return (VirtoCommercePlatformCoreSecuritySecurityResult) ApiClient.Deserialize(response.Content, typeof(VirtoCommercePlatformCoreSecuritySecurityResult), response.Headers);
+        }
+        
+        /// <summary>
+        ///  
+        /// </summary>
+        /// <param name="userId"></param> 
+        /// <returns>VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>            
+        public VirtoCommercePlatformCoreSecurityApplicationUserExtended FrontEndSecurityGetUserById (string userId)
+        {
+            
+            // verify the required parameter 'userId' is set
+            if (userId == null) throw new ApiException(400, "Missing required parameter 'userId' when calling FrontEndSecurityGetUserById");
+            
+    
+            var path = "/api/security/frontend/user/id/{userId}";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                "application/json", "text/json"
+            };
+            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            if (userId != null) pathParams.Add("userId", ApiClient.ParameterToString(userId)); // path parameter
+            
+            
+            
+            
+            
+    
+            // authentication setting, if any
+            String[] authSettings = new String[] {  };
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+    
+            if (((int)response.StatusCode) >= 400)
+                throw new ApiException ((int)response.StatusCode, "Error calling FrontEndSecurityGetUserById: " + response.Content, response.Content);
+            else if (((int)response.StatusCode) == 0)
+                throw new ApiException ((int)response.StatusCode, "Error calling FrontEndSecurityGetUserById: " + response.ErrorMessage, response.ErrorMessage);
+    
+            return (VirtoCommercePlatformCoreSecurityApplicationUserExtended) ApiClient.Deserialize(response.Content, typeof(VirtoCommercePlatformCoreSecurityApplicationUserExtended), response.Headers);
+        }
+    
+        /// <summary>
+        ///  
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns>VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
+        public async System.Threading.Tasks.Task<VirtoCommercePlatformCoreSecurityApplicationUserExtended> FrontEndSecurityGetUserByIdAsync (string userId)
+        {
+            // verify the required parameter 'userId' is set
+            if (userId == null) throw new ApiException(400, "Missing required parameter 'userId' when calling FrontEndSecurityGetUserById");
+            
+    
+            var path = "/api/security/frontend/user/id/{userId}";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                "application/json", "text/json"
+            };
+            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            if (userId != null) pathParams.Add("userId", ApiClient.ParameterToString(userId)); // path parameter
+            
+            
+            
+            
+            
+    
+            // authentication setting, if any
+            String[] authSettings = new String[] {  };
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            if (((int)response.StatusCode) >= 400)
+                throw new ApiException ((int)response.StatusCode, "Error calling FrontEndSecurityGetUserById: " + response.Content, response.Content);
+
+            return (VirtoCommercePlatformCoreSecurityApplicationUserExtended) ApiClient.Deserialize(response.Content, typeof(VirtoCommercePlatformCoreSecurityApplicationUserExtended), response.Headers);
+        }
+        
+        /// <summary>
+        ///  
+        /// </summary>
+        /// <param name="loginProvider"></param> 
+        /// <param name="providerKey"></param> 
+        /// <returns>VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>            
+        public VirtoCommercePlatformCoreSecurityApplicationUserExtended FrontEndSecurityGetUserByLogin (string loginProvider, string providerKey)
+        {
+            
+            // verify the required parameter 'loginProvider' is set
+            if (loginProvider == null) throw new ApiException(400, "Missing required parameter 'loginProvider' when calling FrontEndSecurityGetUserByLogin");
+            
+            // verify the required parameter 'providerKey' is set
+            if (providerKey == null) throw new ApiException(400, "Missing required parameter 'providerKey' when calling FrontEndSecurityGetUserByLogin");
+            
+    
+            var path = "/api/security/frontend/user/login";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                "application/json", "text/json"
+            };
+            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            if (loginProvider != null) queryParams.Add("loginProvider", ApiClient.ParameterToString(loginProvider)); // query parameter
+            if (providerKey != null) queryParams.Add("providerKey", ApiClient.ParameterToString(providerKey)); // query parameter
+            
+            
+            
+            
+    
+            // authentication setting, if any
+            String[] authSettings = new String[] {  };
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+    
+            if (((int)response.StatusCode) >= 400)
+                throw new ApiException ((int)response.StatusCode, "Error calling FrontEndSecurityGetUserByLogin: " + response.Content, response.Content);
+            else if (((int)response.StatusCode) == 0)
+                throw new ApiException ((int)response.StatusCode, "Error calling FrontEndSecurityGetUserByLogin: " + response.ErrorMessage, response.ErrorMessage);
+    
+            return (VirtoCommercePlatformCoreSecurityApplicationUserExtended) ApiClient.Deserialize(response.Content, typeof(VirtoCommercePlatformCoreSecurityApplicationUserExtended), response.Headers);
+        }
+    
+        /// <summary>
+        ///  
+        /// </summary>
+        /// <param name="loginProvider"></param>
+        /// <param name="providerKey"></param>
+        /// <returns>VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
+        public async System.Threading.Tasks.Task<VirtoCommercePlatformCoreSecurityApplicationUserExtended> FrontEndSecurityGetUserByLoginAsync (string loginProvider, string providerKey)
+        {
+            // verify the required parameter 'loginProvider' is set
+            if (loginProvider == null) throw new ApiException(400, "Missing required parameter 'loginProvider' when calling FrontEndSecurityGetUserByLogin");
+            // verify the required parameter 'providerKey' is set
+            if (providerKey == null) throw new ApiException(400, "Missing required parameter 'providerKey' when calling FrontEndSecurityGetUserByLogin");
+            
+    
+            var path = "/api/security/frontend/user/login";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                "application/json", "text/json"
+            };
+            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            if (loginProvider != null) queryParams.Add("loginProvider", ApiClient.ParameterToString(loginProvider)); // query parameter
+            if (providerKey != null) queryParams.Add("providerKey", ApiClient.ParameterToString(providerKey)); // query parameter
+            
+            
+            
+            
+    
+            // authentication setting, if any
+            String[] authSettings = new String[] {  };
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            if (((int)response.StatusCode) >= 400)
+                throw new ApiException ((int)response.StatusCode, "Error calling FrontEndSecurityGetUserByLogin: " + response.Content, response.Content);
+
+            return (VirtoCommercePlatformCoreSecurityApplicationUserExtended) ApiClient.Deserialize(response.Content, typeof(VirtoCommercePlatformCoreSecurityApplicationUserExtended), response.Headers);
+        }
+        
+        /// <summary>
+        ///  
+        /// </summary>
+        /// <param name="userName"></param> 
+        /// <returns>VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>            
+        public VirtoCommercePlatformCoreSecurityApplicationUserExtended FrontEndSecurityGetUserByName (string userName)
+        {
+            
+            // verify the required parameter 'userName' is set
+            if (userName == null) throw new ApiException(400, "Missing required parameter 'userName' when calling FrontEndSecurityGetUserByName");
+            
+    
+            var path = "/api/security/frontend/user/name/{userName}";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                "application/json", "text/json"
+            };
+            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            if (userName != null) pathParams.Add("userName", ApiClient.ParameterToString(userName)); // path parameter
+            
+            
+            
+            
+            
+    
+            // authentication setting, if any
+            String[] authSettings = new String[] {  };
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+    
+            if (((int)response.StatusCode) >= 400)
+                throw new ApiException ((int)response.StatusCode, "Error calling FrontEndSecurityGetUserByName: " + response.Content, response.Content);
+            else if (((int)response.StatusCode) == 0)
+                throw new ApiException ((int)response.StatusCode, "Error calling FrontEndSecurityGetUserByName: " + response.ErrorMessage, response.ErrorMessage);
+    
+            return (VirtoCommercePlatformCoreSecurityApplicationUserExtended) ApiClient.Deserialize(response.Content, typeof(VirtoCommercePlatformCoreSecurityApplicationUserExtended), response.Headers);
+        }
+    
+        /// <summary>
+        ///  
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <returns>VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
+        public async System.Threading.Tasks.Task<VirtoCommercePlatformCoreSecurityApplicationUserExtended> FrontEndSecurityGetUserByNameAsync (string userName)
+        {
+            // verify the required parameter 'userName' is set
+            if (userName == null) throw new ApiException(400, "Missing required parameter 'userName' when calling FrontEndSecurityGetUserByName");
+            
+    
+            var path = "/api/security/frontend/user/name/{userName}";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                "application/json", "text/json"
+            };
+            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            if (userName != null) pathParams.Add("userName", ApiClient.ParameterToString(userName)); // path parameter
+            
+            
+            
+            
+            
+    
+            // authentication setting, if any
+            String[] authSettings = new String[] {  };
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            if (((int)response.StatusCode) >= 400)
+                throw new ApiException ((int)response.StatusCode, "Error calling FrontEndSecurityGetUserByName: " + response.Content, response.Content);
+
+            return (VirtoCommercePlatformCoreSecurityApplicationUserExtended) ApiClient.Deserialize(response.Content, typeof(VirtoCommercePlatformCoreSecurityApplicationUserExtended), response.Headers);
+        }
+        
+        /// <summary>
+        ///  
+        /// </summary>
+        /// <param name="userId"></param> 
+        /// <param name="token"></param> 
+        /// <param name="newPassword"></param> 
+        /// <returns>VirtoCommercePlatformCoreSecuritySecurityResult</returns>            
+        public VirtoCommercePlatformCoreSecuritySecurityResult FrontEndSecurityResetPassword (string userId, string token, string newPassword)
+        {
+            
+            // verify the required parameter 'userId' is set
+            if (userId == null) throw new ApiException(400, "Missing required parameter 'userId' when calling FrontEndSecurityResetPassword");
+            
+            // verify the required parameter 'token' is set
+            if (token == null) throw new ApiException(400, "Missing required parameter 'token' when calling FrontEndSecurityResetPassword");
+            
+            // verify the required parameter 'newPassword' is set
+            if (newPassword == null) throw new ApiException(400, "Missing required parameter 'newPassword' when calling FrontEndSecurityResetPassword");
+            
+    
+            var path = "/api/security/frontend/user/password/reset";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                "application/json", "text/json"
+            };
+            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            if (userId != null) queryParams.Add("userId", ApiClient.ParameterToString(userId)); // query parameter
+            if (token != null) queryParams.Add("token", ApiClient.ParameterToString(token)); // query parameter
+            if (newPassword != null) queryParams.Add("newPassword", ApiClient.ParameterToString(newPassword)); // query parameter
+            
+            
+            
+            
+    
+            // authentication setting, if any
+            String[] authSettings = new String[] {  };
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+    
+            if (((int)response.StatusCode) >= 400)
+                throw new ApiException ((int)response.StatusCode, "Error calling FrontEndSecurityResetPassword: " + response.Content, response.Content);
+            else if (((int)response.StatusCode) == 0)
+                throw new ApiException ((int)response.StatusCode, "Error calling FrontEndSecurityResetPassword: " + response.ErrorMessage, response.ErrorMessage);
+    
+            return (VirtoCommercePlatformCoreSecuritySecurityResult) ApiClient.Deserialize(response.Content, typeof(VirtoCommercePlatformCoreSecuritySecurityResult), response.Headers);
+        }
+    
+        /// <summary>
+        ///  
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="token"></param>
+        /// <param name="newPassword"></param>
+        /// <returns>VirtoCommercePlatformCoreSecuritySecurityResult</returns>
+        public async System.Threading.Tasks.Task<VirtoCommercePlatformCoreSecuritySecurityResult> FrontEndSecurityResetPasswordAsync (string userId, string token, string newPassword)
+        {
+            // verify the required parameter 'userId' is set
+            if (userId == null) throw new ApiException(400, "Missing required parameter 'userId' when calling FrontEndSecurityResetPassword");
+            // verify the required parameter 'token' is set
+            if (token == null) throw new ApiException(400, "Missing required parameter 'token' when calling FrontEndSecurityResetPassword");
+            // verify the required parameter 'newPassword' is set
+            if (newPassword == null) throw new ApiException(400, "Missing required parameter 'newPassword' when calling FrontEndSecurityResetPassword");
+            
+    
+            var path = "/api/security/frontend/user/password/reset";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                "application/json", "text/json"
+            };
+            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            if (userId != null) queryParams.Add("userId", ApiClient.ParameterToString(userId)); // query parameter
+            if (token != null) queryParams.Add("token", ApiClient.ParameterToString(token)); // query parameter
+            if (newPassword != null) queryParams.Add("newPassword", ApiClient.ParameterToString(newPassword)); // query parameter
+            
+            
+            
+            
+    
+            // authentication setting, if any
+            String[] authSettings = new String[] {  };
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            if (((int)response.StatusCode) >= 400)
+                throw new ApiException ((int)response.StatusCode, "Error calling FrontEndSecurityResetPassword: " + response.Content, response.Content);
+
+            return (VirtoCommercePlatformCoreSecuritySecurityResult) ApiClient.Deserialize(response.Content, typeof(VirtoCommercePlatformCoreSecuritySecurityResult), response.Headers);
+        }
+        
+        /// <summary>
+        ///  
+        /// </summary>
+        /// <param name="userId"></param> 
+        /// <param name="storeName"></param> 
+        /// <param name="callbackUrl"></param> 
+        /// <returns></returns>            
+        public void FrontEndSecurityGenerateResetPasswordToken (string userId, string storeName, string callbackUrl)
+        {
+            
+            // verify the required parameter 'userId' is set
+            if (userId == null) throw new ApiException(400, "Missing required parameter 'userId' when calling FrontEndSecurityGenerateResetPasswordToken");
+            
+            // verify the required parameter 'storeName' is set
+            if (storeName == null) throw new ApiException(400, "Missing required parameter 'storeName' when calling FrontEndSecurityGenerateResetPasswordToken");
+            
+            // verify the required parameter 'callbackUrl' is set
+            if (callbackUrl == null) throw new ApiException(400, "Missing required parameter 'callbackUrl' when calling FrontEndSecurityGenerateResetPasswordToken");
+            
+    
+            var path = "/api/security/frontend/user/password/resettoken";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                
+            };
+            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            if (userId != null) queryParams.Add("userId", ApiClient.ParameterToString(userId)); // query parameter
+            if (storeName != null) queryParams.Add("storeName", ApiClient.ParameterToString(storeName)); // query parameter
+            if (callbackUrl != null) queryParams.Add("callbackUrl", ApiClient.ParameterToString(callbackUrl)); // query parameter
+            
+            
+            
+            
+    
+            // authentication setting, if any
+            String[] authSettings = new String[] {  };
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+    
+            if (((int)response.StatusCode) >= 400)
+                throw new ApiException ((int)response.StatusCode, "Error calling FrontEndSecurityGenerateResetPasswordToken: " + response.Content, response.Content);
+            else if (((int)response.StatusCode) == 0)
+                throw new ApiException ((int)response.StatusCode, "Error calling FrontEndSecurityGenerateResetPasswordToken: " + response.ErrorMessage, response.ErrorMessage);
+    
+            return;
+        }
+    
+        /// <summary>
+        ///  
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="storeName"></param>
+        /// <param name="callbackUrl"></param>
+        /// <returns></returns>
+        public async System.Threading.Tasks.Task FrontEndSecurityGenerateResetPasswordTokenAsync (string userId, string storeName, string callbackUrl)
+        {
+            // verify the required parameter 'userId' is set
+            if (userId == null) throw new ApiException(400, "Missing required parameter 'userId' when calling FrontEndSecurityGenerateResetPasswordToken");
+            // verify the required parameter 'storeName' is set
+            if (storeName == null) throw new ApiException(400, "Missing required parameter 'storeName' when calling FrontEndSecurityGenerateResetPasswordToken");
+            // verify the required parameter 'callbackUrl' is set
+            if (callbackUrl == null) throw new ApiException(400, "Missing required parameter 'callbackUrl' when calling FrontEndSecurityGenerateResetPasswordToken");
+            
+    
+            var path = "/api/security/frontend/user/password/resettoken";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                
+            };
+            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            if (userId != null) queryParams.Add("userId", ApiClient.ParameterToString(userId)); // query parameter
+            if (storeName != null) queryParams.Add("storeName", ApiClient.ParameterToString(storeName)); // query parameter
+            if (callbackUrl != null) queryParams.Add("callbackUrl", ApiClient.ParameterToString(callbackUrl)); // query parameter
+            
+            
+            
+            
+    
+            // authentication setting, if any
+            String[] authSettings = new String[] {  };
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            if (((int)response.StatusCode) >= 400)
+                throw new ApiException ((int)response.StatusCode, "Error calling FrontEndSecurityGenerateResetPasswordToken: " + response.Content, response.Content);
+
+            
+            return;
+        }
+        
+        /// <summary>
+        ///  
+        /// </summary>
+        /// <param name="userName"></param> 
+        /// <param name="password"></param> 
+        /// <param name="isPersistent"></param> 
+        /// <returns>string</returns>            
+        public string FrontEndSecurityPasswordSignIn (string userName, string password, bool? isPersistent)
+        {
+            
+            // verify the required parameter 'userName' is set
+            if (userName == null) throw new ApiException(400, "Missing required parameter 'userName' when calling FrontEndSecurityPasswordSignIn");
+            
+            // verify the required parameter 'password' is set
+            if (password == null) throw new ApiException(400, "Missing required parameter 'password' when calling FrontEndSecurityPasswordSignIn");
+            
+            // verify the required parameter 'isPersistent' is set
+            if (isPersistent == null) throw new ApiException(400, "Missing required parameter 'isPersistent' when calling FrontEndSecurityPasswordSignIn");
+            
+    
+            var path = "/api/security/frontend/user/signin";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                "application/json", "text/json"
+            };
+            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            if (userName != null) queryParams.Add("userName", ApiClient.ParameterToString(userName)); // query parameter
+            if (password != null) queryParams.Add("password", ApiClient.ParameterToString(password)); // query parameter
+            if (isPersistent != null) queryParams.Add("isPersistent", ApiClient.ParameterToString(isPersistent)); // query parameter
+            
+            
+            
+            
+    
+            // authentication setting, if any
+            String[] authSettings = new String[] {  };
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+    
+            if (((int)response.StatusCode) >= 400)
+                throw new ApiException ((int)response.StatusCode, "Error calling FrontEndSecurityPasswordSignIn: " + response.Content, response.Content);
+            else if (((int)response.StatusCode) == 0)
+                throw new ApiException ((int)response.StatusCode, "Error calling FrontEndSecurityPasswordSignIn: " + response.ErrorMessage, response.ErrorMessage);
+    
+            return (string) ApiClient.Deserialize(response.Content, typeof(string), response.Headers);
+        }
+    
+        /// <summary>
+        ///  
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <param name="password"></param>
+        /// <param name="isPersistent"></param>
+        /// <returns>string</returns>
+        public async System.Threading.Tasks.Task<string> FrontEndSecurityPasswordSignInAsync (string userName, string password, bool? isPersistent)
+        {
+            // verify the required parameter 'userName' is set
+            if (userName == null) throw new ApiException(400, "Missing required parameter 'userName' when calling FrontEndSecurityPasswordSignIn");
+            // verify the required parameter 'password' is set
+            if (password == null) throw new ApiException(400, "Missing required parameter 'password' when calling FrontEndSecurityPasswordSignIn");
+            // verify the required parameter 'isPersistent' is set
+            if (isPersistent == null) throw new ApiException(400, "Missing required parameter 'isPersistent' when calling FrontEndSecurityPasswordSignIn");
+            
+    
+            var path = "/api/security/frontend/user/signin";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                "application/json", "text/json"
+            };
+            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            if (userName != null) queryParams.Add("userName", ApiClient.ParameterToString(userName)); // query parameter
+            if (password != null) queryParams.Add("password", ApiClient.ParameterToString(password)); // query parameter
+            if (isPersistent != null) queryParams.Add("isPersistent", ApiClient.ParameterToString(isPersistent)); // query parameter
+            
+            
+            
+            
+    
+            // authentication setting, if any
+            String[] authSettings = new String[] {  };
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            if (((int)response.StatusCode) >= 400)
+                throw new ApiException ((int)response.StatusCode, "Error calling FrontEndSecurityPasswordSignIn: " + response.Content, response.Content);
+
+            return (string) ApiClient.Deserialize(response.Content, typeof(string), response.Headers);
         }
         
     }

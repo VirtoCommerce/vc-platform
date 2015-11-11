@@ -208,38 +208,7 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
             return this.Ok(retVal);
         }
 
-		/// <summary>
-        /// Apply coupon for shopping cart
-        /// </summary>
-        /// <param name="cartId">Shopping cart id</param>
-        /// <param name="couponCode">Coupon code</param>
-		[HttpPost]
-		[ResponseType(typeof(webModel.ShoppingCart))]
-		[Route("carts/{cartId}/coupons/{couponCode}")]
-		public IHttpActionResult ApplyCoupon(string cartId, string couponCode)
-		{
-			var retVal = _shoppingCartService.GetById(cartId);
-
-			//TODO: check coupon from marketing service 
-
-			var coupon = new Domain.Cart.Model.Coupon
-			{
-				CouponCode = couponCode
-			};
-			var discount = new Domain.Cart.Model.Discount
-			{
-				Description = couponCode,
-				PromotionId = couponCode,
-				DiscountAmount = 10
-			};
-			retVal.Discounts.Add(discount);
-			retVal.Coupon = coupon;
-			_shoppingCartService.Update(new[] { retVal });
-
-
-			return this.Ok(retVal.ToWebModel());
-		}
-
+		
 		/// <summary>
         /// Delete shopping carts by ids
         /// </summary>

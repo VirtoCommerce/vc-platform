@@ -3,7 +3,7 @@
         <div class="form-input __search">
             <input type="text" placeholder="Search keyword..." ng-model="filter.searchKeyword" ng-keyup="$event.which === 13 && blade.refresh()">
         </div>
-        <p class="form-count">Count: <span class="count">{{pageSettings.totalItems}}</span></p>
+        <p class="form-count">{{'platform.list.count | translate'}}: <span class="count">{{pageSettings.totalItems}}</span></p>
     </div>
 </div>
 <div class="blade-static __bottom" ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems" ng-include="'pagerTemplate.html'"></div>
@@ -20,11 +20,11 @@
                                     <span class="check"></span>
                                 </label>
                             </th>
-                            <th class="table-col">Customer</th>
-                            <th class="table-col">Items count</th>
-                            <th class="table-col">Total</th>
-                            <th class="table-col __date">Created</th>
-                            <th class="table-col __date">Modified</th>
+                            <th class="table-col">{{'cart.blades.shopping-carts.labels.customer' | translate}}</th>
+                            <th class="table-col">{{'cart.blades.shopping-carts.labels.items-count' | translate}}</th>
+                            <th class="table-col">{{'cart.blades.shopping-carts.labels.total' | translate}}</th>
+                            <th class="table-col __date">{{'cart.blades.shopping-carts.labels.created' | translate}}</th>
+                            <th class="table-col __date">{{'cart.blades.shopping-carts.labels.modified' | translate}}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -42,10 +42,10 @@
                                 <span>{{data.items?data.items.length:0}}</span>
                                 <ul role="menu" class="menu __context" id="cl_menu_{{data.id}}">
                                     <li class="menu-item" ng-click='edit(data)'>
-                                        <i class="menu-ico fa fa-edit"></i> Manage
+                                        <i class="menu-ico fa fa-edit"></i> {{'platform.commands.manage' | translate}}
                                     </li>
                                     <li class="menu-item" ng-click='delete()'>
-                                        <i class="menu-ico fa fa-trash-o"></i> Delete
+                                        <i class="menu-ico fa fa-trash-o"></i> {{'platform.commands.delete' | translate}}
                                     </li>
                                 </ul>
                             </td>

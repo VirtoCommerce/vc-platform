@@ -58,7 +58,7 @@ namespace VirtoCommerce.CartModule.Web.Model
         /// <value>
         /// Coupon object
         /// </value>
-        public Coupon Coupon { get; set; }
+        public string Coupon { get; set; }
 
         /// <summary>
         /// Gets or sets the value of shopping cart language code

@@ -47,7 +47,7 @@ namespace VirtoCommerce.Client.Model {
     /// Gets or Sets NotificationParameters
     /// </summary>
     [DataMember(Name="notificationParameters", EmitDefaultValue=false)]
-    public Dictionary<string, Object> NotificationParameters { get; set; }
+    public List<VirtoCommercePlatformWebModelNotificationsNotificationParameter> NotificationParameters { get; set; }
 
     
 

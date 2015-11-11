@@ -56,6 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converters\AddressConverter.cs" />
+    <Compile Include="Converters\DiscountConverter.cs" />
     <Compile Include="Converters\LineItemConverter.cs" />
     <Compile Include="Converters\PaymentConverter.cs" />
     <Compile Include="Converters\ShipmentConverter.cs" />
@@ -85,8 +86,13 @@
     <Compile Include="Migrations\201509141459314_SkuAndShipmentOption.Designer.cs">
       <DependentUpon>201509141459314_SkuAndShipmentOption.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201511101658409_AddDiscounts.cs" />
+    <Compile Include="Migrations\201511101658409_AddDiscounts.Designer.cs">
+      <DependentUpon>201511101658409_AddDiscounts.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\AddressEntity.cs" />
+    <Compile Include="Model\DiscountEntity.cs" />
     <Compile Include="Model\LineItemEntity.cs" />
     <Compile Include="Model\PaymentEntity.cs" />
     <Compile Include="Model\ShipmentEntity.cs" />
@@ -135,6 +141,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201509141459314_SkuAndShipmentOption.resx">
       <DependentUpon>201509141459314_SkuAndShipmentOption.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201511101658409_AddDiscounts.resx">
+      <DependentUpon>201511101658409_AddDiscounts.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

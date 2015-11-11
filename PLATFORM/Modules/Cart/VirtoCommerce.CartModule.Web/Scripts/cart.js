@@ -16,7 +16,7 @@ angular.module(moduleName, [])
                   '$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
                       var blade = {
                           id: 'carts',
-                          title: 'Shopping carts',
+                          title: 'cart.blades.shopping-carts.title',
                           //subtitle: 'Manage Shopping carts',
                           controller: 'virtoCommerce.cartModule.cartListController',
                           template: 'Modules/$(VirtoCommerce.Cart)/Scripts/blades/carts-list.tpl.html',
@@ -34,7 +34,7 @@ angular.module(moduleName, [])
       var menuItem = {
           path: 'browse/carts',
           icon: 'fa fa-shopping-cart',
-          title: 'Shopping carts',
+          title: 'cart.main-menu-title',
           priority: 99,
           action: function () { $state.go('workspace.cartModule'); },
           permission: 'cart:access'
