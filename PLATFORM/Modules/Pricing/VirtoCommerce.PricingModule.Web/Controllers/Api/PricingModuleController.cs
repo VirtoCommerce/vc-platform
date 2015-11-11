@@ -11,6 +11,8 @@ using coreModel = VirtoCommerce.Domain.Pricing.Model;
 using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.PricingModule.Web.Security;
+using System.Web.Http.ModelBinding;
+using VirtoCommerce.CatalogModule.Web.Binders;
 
 namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 {
@@ -28,6 +30,23 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
             _pricingService = pricingService;
             _itemService = itemService;
             _catalogService = catalogService;
+        }
+
+        /// <summary>
+        /// Evaluate prices by given context
+        /// </summary>
+        /// <param name="evalContext">Pricing evaluation context</param>
+        /// <returns>Prices array</returns>
+        [HttpGet]
+        [ResponseType(typeof(webModel.Price[]))]
+        [Route("api/pricing/evaluate")]
+        public IHttpActionResult EvaluatePrices([ModelBinder(typeof(PriceEvaluationContextBinder))] coreModel.PriceEvaluationContext evalContext)
+        {
+            var retVal = _pricingService.EvaluateProductPrices(evalContext)
+                                        .Select(x=>x.ToWebModel())
+                                        .ToArray();
+         
+            return Ok(retVal);
         }
 
         /// <summary>
