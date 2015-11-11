@@ -4,7 +4,7 @@
         <div class="inner-block">
             <form class="form" name="commentForm">
                 <div class="form-group" ng-init="setForm(commentForm)">
-                    <label class="form-label">Comments</label>
+                    <label class="form-label">{{ 'orders.blades.operation-comment.labels.comments' | translate }}</label>
                     <div class="form-input">
                         <textarea class="__large" ng-model="blade.currentEntity.comment" cols="30" rows="20"></textarea>
                     </div>

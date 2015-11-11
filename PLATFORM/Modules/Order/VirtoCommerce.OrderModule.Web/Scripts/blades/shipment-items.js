@@ -30,7 +30,7 @@
 
 	$scope.blade.toolbarCommands = [
         {
-        	name: "Add item", icon: 'fa fa-plus',
+            name: "orders.commands.add-item", icon: 'fa fa-plus',
         	executeMethod: function () {
         		openAddEntityWizard();
         	},
@@ -40,7 +40,7 @@
         	permission: 'order:update'
         },
         {
-        	name: "Remove", icon: 'fa fa-trash-o',
+            name: "platform.commands.remove", icon: 'fa fa-trash-o',
         	executeMethod: function () {
         		var items = $scope.blade.currentEntity.items;
         		$scope.blade.currentEntity.items = _.difference(items, _.filter(items, function (x) { return x.selected }));

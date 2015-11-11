@@ -1,0 +1,186 @@
+﻿{
+  "orders": {
+    "main-menu-title": "Orders",
+    "blades": {
+      "customer-order-list": {
+        "title": "Customer orders",
+        "labels": {
+          "description": "Description",
+          "confirmed": "Confirmed",
+          "total": "Total",
+          "created": "Created",
+          "store": "Store"
+        }
+      },
+      "customer-order-detail": {
+        "title": "{{customer}}'s Customer Order",
+        "subtitle": "Edit order details and related documents",
+        "labels": {
+          "approved": "Approved",
+          "order-number": "Customer order number",
+          "status": "Status",
+          "store": "Store",
+          "from": "from",
+          "channel": "Channel",
+          "customer": "Customer"
+        },
+        "placeholders": {
+          "status": "Select...",
+          "store": "Select or search a country in the list..."
+        }
+      },
+      "new-operation-wizard": {
+        "title": "New operation",
+        "subtitle": "Select operation type",
+        "menu": {
+          "shipment-operation": {
+            "title": "Shipment",
+            "description": "Add new shipment"
+          },
+          "payment-operation": {
+            "title": "Incoming payment",
+            "description": "Add new incoming payment"
+          }
+        }
+      },
+      "catalog-items-select": {
+        "title": "Add item to order"
+      },
+      "customer-order-items": {
+        "labels": {
+          "item": "Item",
+          "quantity": "Qty",
+          "aviable": "Avail",
+          "await": "Await",
+          "price": "Price",
+          "discount": "Discount",
+          "tax": "Tax",
+          "total": "Total",
+          "dynamic-properties": "Dynamic properties",
+          "sub-total": "Sub Total",
+          "discount-total": "Discount Total",
+          "tax-total": "Tax Total"
+        }
+      },
+      "operation-comment": {
+        "labels": {
+          "comments": "Comments"
+        }
+      },
+      "payment-detail": {
+        "title": "Incoming payment #{{number}}",
+        "subtitle": "Edit payment details and related documents",
+        "labels": {
+          "approved": "Approved",
+          "payment-number": "Payment number",
+          "status": "Status",
+          "amount": "Amount",
+          "from": "from",
+          "payment-gateway": "Payment gateway",
+          "payment-purpose": "Payment purpose"
+        },
+        "placeholders": {
+          "status": "Select...",
+          "payment-gateway": "Select..."
+        }
+      },
+      "shipment-detail": {
+        "title": "Shipment #{{number}}",
+        "subtitle": "Edit shipment details",
+        "labels": {
+          "approved": "Approved",
+          "shipment-number": "Shipment number",
+          "status": "Status",
+          "fulfillment-center": "Fulfillment center",
+          "from": "from",
+          "employee": "Employee",
+          "shipment-amount": "Shipment amount"
+        },
+        "placeholders": {
+          "status": "Select...",
+          "fulfillment-center": "Select or search a center..."
+        }
+      },
+      "shipment-items": {
+        "title": "{{title}} line items",
+        "subtitle": "Edit shipment items",
+        "labels": {
+          "item": "Item",
+          "quantity": "Qty",
+          "price": "Price",
+          "total": "Total"
+        }
+      }
+    },
+    "widgets": {
+      "customer-order-address": {
+        "title": "Addresses",
+        "blade-title": "Manage addresses"
+      },
+      "customer-order-items": {
+        "title": "Line items",
+        "blade-title": "{{title}} line items",
+        "blade-subtitle": "Edit line items"
+      },
+      "customer-order-totals": {
+        "sub-total": "Sub total",
+        "shipping-total": "Shipping total",
+        "discount-total": "Discount Total",
+        "total": "Total"
+      },
+      "shipment-totals": {
+        "tax-total": "Tax total",
+        "shipment-total": "Shipment total",
+        "discount-total": "Discount Total",
+        "total": "Total"
+      },
+      "operation-comment": {
+        "no-comments": "no comments",
+        "blade-title": "Write comments"
+      },
+      "shipment-items": {
+        "title": "Shipment items"
+      },
+      "shipment-address": {
+        "blade-title": "Manage delivery address",
+        "title": "Delivery address",
+        "not-applicable": "N/A"
+      },
+      "statistics-templates": {
+        "revenue": "Revenue",
+        "customers-with-orders": "Customers with orders",
+        "average-order-value": "Average order value",
+        "items-purchased": "Items purchased",
+        "lines-per-order": "Lines per order",
+        "revenue-per-customer": "Revenue per customer"
+      }
+    },
+    "dialogs": {
+      "orders-delete": {
+        "title": "Delete confirmation",
+        "message": "Are you sure you want to delete selected customer orders?"
+      },
+      "operation-save": {
+        "title": "Save changes",
+        "message": "The operation has been modified. Do you want to save changes?"
+      },
+      "operation-delete": {
+        "title": "Delete confirmation",
+        "message": "Are you sure you want to delete current operation?"
+      },
+      "operation-cancel": {
+        "title": "Cancel operation",
+        "message": "Are you sure you want to cancel the document?",
+        "placeholders": {
+          "reason": "Please enter cancel reason here..."
+        }
+      }
+    },
+    "commands": {
+      "new-document": "New document",
+      "cancel-document": "Cancel document",
+      "add-selected": "Add selected",
+      "add-item": "Add item"
+    }
+  }
+  }
