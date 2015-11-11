@@ -1,7 +1,7 @@
 ﻿<div class="gridster-cnt" ng-click="openBlade()">
     <div class="cnt-inner">
         <div class="list-count">{{blade.currentEntity.items.length}}</div>
-        <div class="list-t">Line items</div>
+        <div class="list-t">{{ 'quotes.widgets.quotes-items.title' | translate }}</div>
         <div class="list-price">{{blade.currentEntity._subTotal | number:2}}&nbsp;{{blade.currentEntity.currency}}</div>
     </div>
 </div>

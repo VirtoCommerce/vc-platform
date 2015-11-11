@@ -36,7 +36,7 @@
             id: 'quoteDetails',
             currentEntityId: node.id,
             title: node.number,
-            subtitle: 'Quote details',
+            subtitle: 'quotes.blades.quote-detail.subtitle',
             controller: 'virtoCommerce.quoteModule.quoteDetailController',
             template: 'Modules/$(VirtoCommerce.Quote)/Scripts/blades/quote-detail.tpl.html'
         };
@@ -51,8 +51,8 @@
     function deleteChecked() {
         var dialog = {
             id: "confirmDeleteItem",
-            title: "Delete confirmation",
-            message: "Are you sure you want to delete selected Quote Requests?",
+            title: "quotes.dialogs.quote-requests-delete.title",
+            message: "quotes.dialogs.quote-requests-delete.message",
             callback: function (remove) {
                 if (remove) {
                     bladeNavigationService.closeChildrenBlades(blade, function () {
@@ -73,7 +73,7 @@
 
     blade.toolbarCommands = [
         {
-            name: "Refresh", icon: 'fa fa-refresh',
+            name: "platform.commands.refresh", icon: 'fa fa-refresh',
             executeMethod: function () {
                 blade.refresh();
             },
@@ -92,7 +92,7 @@
         //    permission: 'quote:create'
         //}
         {
-            name: "Delete", icon: 'fa fa-trash-o',
+            name: "platform.commands.delete", icon: 'fa fa-trash-o',
             executeMethod: function () {
                 deleteChecked();
             },
