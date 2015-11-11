@@ -5,7 +5,7 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.CartModule.Web.Model
 {
-    public class Discount : ValueObject<Coupon>
+    public class Discount : ValueObject<Discount>
     {
         /// <summary>
         /// Gets or sets the value of promotion id

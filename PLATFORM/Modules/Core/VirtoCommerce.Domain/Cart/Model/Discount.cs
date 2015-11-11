@@ -13,7 +13,7 @@ namespace VirtoCommerce.Domain.Cart.Model
 		public string PromotionId { get; set; }
 		public CurrencyCodes Currency { get; set; }
 		public decimal DiscountAmount { get; set; }
-
+        public string Coupon { get; set; }
 		public string Description { get; set; }
 	}
 }

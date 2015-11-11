@@ -112,9 +112,30 @@ namespace VirtoCommerce.CartModule.Data.Repositories
 
 
 			modelBuilder.Entity<TaxDetailEntity>().ToTable("CartTaxDetail");
-			#endregion
+            #endregion
 
-			base.OnModelCreating(modelBuilder);
+            #region Discount
+            modelBuilder.Entity<DiscountEntity>().HasKey(x => x.Id)
+                        .Property(x => x.Id);
+
+
+            modelBuilder.Entity<DiscountEntity>().HasOptional(x => x.ShoppingCart)
+                                       .WithMany(x => x.Discounts)
+                                       .HasForeignKey(x => x.ShoppingCartId).WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<DiscountEntity>().HasOptional(x => x.Shipment)
+                                       .WithMany(x => x.Discounts)
+                                       .HasForeignKey(x => x.ShipmentId).WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<DiscountEntity>().HasOptional(x => x.LineItem)
+                                       .WithMany(x => x.Discounts)
+                                       .HasForeignKey(x => x.LineItemId).WillCascadeOnDelete(false);
+
+
+            modelBuilder.Entity<DiscountEntity>().ToTable("CartDiscount");
+            #endregion
+
+            base.OnModelCreating(modelBuilder);
 		}
 
 		#region ICartRepository Members
@@ -124,17 +145,38 @@ namespace VirtoCommerce.CartModule.Data.Repositories
 			get { return GetAsQueryable<ShoppingCartEntity>(); }
 		}
 
+        public IQueryable<AddressEntity> Addresses
+        {
+            get { return GetAsQueryable<AddressEntity>(); }
+        }
 
-		public ShoppingCartEntity GetShoppingCartById(string id)
+        public IQueryable<PaymentEntity> Payments
+        {
+            get { return GetAsQueryable<PaymentEntity>(); }
+        }
+
+        public IQueryable<LineItemEntity> LineItems
+        {
+            get { return GetAsQueryable<LineItemEntity>(); }
+        }
+        public IQueryable<ShipmentEntity> Shipments
+        {
+            get { return GetAsQueryable<ShipmentEntity>(); }
+        }
+
+        public ShoppingCartEntity GetShoppingCartById(string id)
 		{
-			var query = ShoppingCarts.Where(x => x.Id == id)
-									 .Include(x => x.Addresses)
-									 .Include(x => x.Payments.Select(y => y.Addresses))
-									 .Include(x => x.Items)
-									 .Include(x => x.Items.Select(y => y.TaxDetails))
-									 .Include(x => x.Shipments.Select(y => y.Addresses))
-									 .Include(x => x.Shipments.Select(y => y.TaxDetails))
-									 .Include(x => x.TaxDetails);
+            var query = ShoppingCarts.Include(x => x.TaxDetails)
+                                     .Include(x=> x.Discounts)
+                                     .Where(x => x.Id == id);
+            var addresses = Addresses.Where(x => x.ShoppingCartId == id).ToArray();
+            var payments = Payments.Include(x=> x.Addresses).Where(x => x.ShoppingCartId == id).ToArray();
+            var lineItems = LineItems.Include(x => x.Discounts)
+                                     .Include(x=>x.TaxDetails)
+                                     .Where(x => x.ShoppingCartId == id).ToArray();
+            var shipments = Shipments.Include(x=>x.TaxDetails)
+                                     .Include(x=>x.Discounts)
+                                     .Where(x => x.ShoppingCartId == id).ToArray();
 			return query.FirstOrDefault();
 		}
 		#endregion
