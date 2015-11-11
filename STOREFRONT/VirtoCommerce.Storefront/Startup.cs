@@ -17,6 +17,7 @@ using VirtoCommerce.Client;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Client.Client;
 using VirtoCommerce.LiquidThemeEngine;
+using VirtoCommerce.LiquidThemeEngine.Binders;
 using VirtoCommerce.LiquidThemeEngine.Objects;
 using VirtoCommerce.Storefront;
 using VirtoCommerce.Storefront.App_Start;
@@ -63,6 +64,7 @@ namespace VirtoCommerce.Storefront
             container.RegisterType<IVirtoCommercePlatformApi, VirtoCommercePlatformApi>();
             container.RegisterType<ICustomerManagementModuleApi, CustomerManagementModuleApi>();
             container.RegisterType<ICommerceCoreModuleApi, CommerceCoreModuleApi>();
+            container.RegisterType<ICustomerManagementModuleApi, CustomerManagementModuleApi>();
 
             container.RegisterType<IStorefrontUrlBuilder, StorefrontUrlBuilder>();
             if (_managerAssembly != null)
@@ -77,6 +79,8 @@ namespace VirtoCommerce.Storefront
             container.RegisterInstance(new ShopifyLiquidThemeEngine(() => container.Resolve<WorkContext>(), container.Resolve<IStorefrontUrlBuilder>(), "~/App_data/themes", "~/themes/assets"));
             //Register liquid engine
             ViewEngines.Engines.Add(new DotLiquidThemedViewEngine(container.Resolve<ShopifyLiquidThemeEngine>()));
+
+            container.RegisterType<IModelBinderProvider, ShopifyModelBinderProvider>("shopify");
 
             //FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes, () => container.Resolve<WorkContext>(), container.Resolve<ICommerceCoreModuleApi>());

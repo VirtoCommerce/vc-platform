@@ -74,7 +74,6 @@
     <Compile Include="HmacUtility.cs" />
     <Compile Include="Model\InlineResponse200.cs" />
     <Compile Include="Model\VirtoCommerceCartModuleWebModelAddress.cs" />
-    <Compile Include="Model\VirtoCommerceCartModuleWebModelCoupon.cs" />
     <Compile Include="Model\VirtoCommerceCartModuleWebModelDiscount.cs" />
     <Compile Include="Model\VirtoCommerceCartModuleWebModelLineItem.cs" />
     <Compile Include="Model\VirtoCommerceCartModuleWebModelPayment.cs" />
@@ -253,6 +252,7 @@
     <Compile Include="Model\VirtoCommercePlatformWebModelPackagingProgressMessage.cs" />
     <Compile Include="Model\VirtoCommercePlatformWebModelSecurityChangePasswordInfo.cs" />
     <Compile Include="Model\VirtoCommercePlatformWebModelSecurityResetPasswordInfo.cs" />
+    <Compile Include="Model\VirtoCommercePlatformWebModelSecuritySignInResult.cs" />
     <Compile Include="Model\VirtoCommercePlatformWebModelSecurityUserLogin.cs" />
     <Compile Include="Model\VirtoCommercePlatformWebModelSettingsSetting.cs" />
     <Compile Include="Model\VirtoCommercePricingModuleWebModelPrice.cs" />

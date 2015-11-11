@@ -296,6 +296,26 @@ namespace VirtoCommerce.Client.Api
         System.Threading.Tasks.Task<VirtoCommercePlatformWebModelJobsJob> JobsGetStatusAsync (string id);
         
         /// <summary>
+        /// Get all localization files by given language
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="lang"></param>
+        /// <returns>InlineResponse200</returns>
+        InlineResponse200 LocalizationGetLocalizationFile (string lang);
+  
+        /// <summary>
+        /// Get all localization files by given language
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="lang"></param>
+        /// <returns>InlineResponse200</returns>
+        System.Threading.Tasks.Task<InlineResponse200> LocalizationGetLocalizationFileAsync (string lang);
+        
+        /// <summary>
         /// Get installed modules
         /// </summary>
         /// <remarks>
@@ -1300,8 +1320,8 @@ namespace VirtoCommerce.Client.Api
         /// <param name="userName"></param>
         /// <param name="password"></param>
         /// <param name="isPersistent"></param>
-        /// <returns>string</returns>
-        string FrontEndSecurityPasswordSignIn (string userName, string password, bool? isPersistent);
+        /// <returns>VirtoCommercePlatformWebModelSecuritySignInResult</returns>
+        VirtoCommercePlatformWebModelSecuritySignInResult FrontEndSecurityPasswordSignIn (string userName, string password, bool? isPersistent);
   
         /// <summary>
         /// 
@@ -1312,8 +1332,8 @@ namespace VirtoCommerce.Client.Api
         /// <param name="userName"></param>
         /// <param name="password"></param>
         /// <param name="isPersistent"></param>
-        /// <returns>string</returns>
-        System.Threading.Tasks.Task<string> FrontEndSecurityPasswordSignInAsync (string userName, string password, bool? isPersistent);
+        /// <returns>VirtoCommercePlatformWebModelSecuritySignInResult</returns>
+        System.Threading.Tasks.Task<VirtoCommercePlatformWebModelSecuritySignInResult> FrontEndSecurityPasswordSignInAsync (string userName, string password, bool? isPersistent);
         
     }
   
@@ -2766,6 +2786,103 @@ namespace VirtoCommerce.Client.Api
                 throw new ApiException ((int)response.StatusCode, "Error calling JobsGetStatus: " + response.Content, response.Content);
 
             return (VirtoCommercePlatformWebModelJobsJob) ApiClient.Deserialize(response.Content, typeof(VirtoCommercePlatformWebModelJobsJob), response.Headers);
+        }
+        
+        /// <summary>
+        /// Get all localization files by given language 
+        /// </summary>
+        /// <param name="lang"></param> 
+        /// <returns>InlineResponse200</returns>            
+        public InlineResponse200 LocalizationGetLocalizationFile (string lang)
+        {
+            
+    
+            var path = "/api/platform/localization";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                "application/json", "text/json"
+            };
+            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            if (lang != null) queryParams.Add("lang", ApiClient.ParameterToString(lang)); // query parameter
+            
+            
+            
+            
+    
+            // authentication setting, if any
+            String[] authSettings = new String[] {  };
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+    
+            if (((int)response.StatusCode) >= 400)
+                throw new ApiException ((int)response.StatusCode, "Error calling LocalizationGetLocalizationFile: " + response.Content, response.Content);
+            else if (((int)response.StatusCode) == 0)
+                throw new ApiException ((int)response.StatusCode, "Error calling LocalizationGetLocalizationFile: " + response.ErrorMessage, response.ErrorMessage);
+    
+            return (InlineResponse200) ApiClient.Deserialize(response.Content, typeof(InlineResponse200), response.Headers);
+        }
+    
+        /// <summary>
+        /// Get all localization files by given language 
+        /// </summary>
+        /// <param name="lang"></param>
+        /// <returns>InlineResponse200</returns>
+        public async System.Threading.Tasks.Task<InlineResponse200> LocalizationGetLocalizationFileAsync (string lang)
+        {
+            
+    
+            var path = "/api/platform/localization";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                "application/json", "text/json"
+            };
+            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            if (lang != null) queryParams.Add("lang", ApiClient.ParameterToString(lang)); // query parameter
+            
+            
+            
+            
+    
+            // authentication setting, if any
+            String[] authSettings = new String[] {  };
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            if (((int)response.StatusCode) >= 400)
+                throw new ApiException ((int)response.StatusCode, "Error calling LocalizationGetLocalizationFile: " + response.Content, response.Content);
+
+            return (InlineResponse200) ApiClient.Deserialize(response.Content, typeof(InlineResponse200), response.Headers);
         }
         
         /// <summary>
@@ -7771,8 +7888,8 @@ namespace VirtoCommerce.Client.Api
         /// <param name="userName"></param> 
         /// <param name="password"></param> 
         /// <param name="isPersistent"></param> 
-        /// <returns>string</returns>            
-        public string FrontEndSecurityPasswordSignIn (string userName, string password, bool? isPersistent)
+        /// <returns>VirtoCommercePlatformWebModelSecuritySignInResult</returns>            
+        public VirtoCommercePlatformWebModelSecuritySignInResult FrontEndSecurityPasswordSignIn (string userName, string password, bool? isPersistent)
         {
             
             // verify the required parameter 'userName' is set
@@ -7825,7 +7942,7 @@ namespace VirtoCommerce.Client.Api
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling FrontEndSecurityPasswordSignIn: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (string) ApiClient.Deserialize(response.Content, typeof(string), response.Headers);
+            return (VirtoCommercePlatformWebModelSecuritySignInResult) ApiClient.Deserialize(response.Content, typeof(VirtoCommercePlatformWebModelSecuritySignInResult), response.Headers);
         }
     
         /// <summary>
@@ -7834,8 +7951,8 @@ namespace VirtoCommerce.Client.Api
         /// <param name="userName"></param>
         /// <param name="password"></param>
         /// <param name="isPersistent"></param>
-        /// <returns>string</returns>
-        public async System.Threading.Tasks.Task<string> FrontEndSecurityPasswordSignInAsync (string userName, string password, bool? isPersistent)
+        /// <returns>VirtoCommercePlatformWebModelSecuritySignInResult</returns>
+        public async System.Threading.Tasks.Task<VirtoCommercePlatformWebModelSecuritySignInResult> FrontEndSecurityPasswordSignInAsync (string userName, string password, bool? isPersistent)
         {
             // verify the required parameter 'userName' is set
             if (userName == null) throw new ApiException(400, "Missing required parameter 'userName' when calling FrontEndSecurityPasswordSignIn");
@@ -7882,7 +7999,7 @@ namespace VirtoCommerce.Client.Api
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling FrontEndSecurityPasswordSignIn: " + response.Content, response.Content);
 
-            return (string) ApiClient.Deserialize(response.Content, typeof(string), response.Headers);
+            return (VirtoCommercePlatformWebModelSecuritySignInResult) ApiClient.Deserialize(response.Content, typeof(VirtoCommercePlatformWebModelSecuritySignInResult), response.Headers);
         }
         
     }

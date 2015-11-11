@@ -84,7 +84,7 @@ namespace VirtoCommerce.Client.Model {
     /// </summary>
     /// <value>Gets or sets the shopping cart coupon</value>
     [DataMember(Name="coupon", EmitDefaultValue=false)]
-    public VirtoCommerceCartModuleWebModelCoupon Coupon { get; set; }
+    public string Coupon { get; set; }
 
     
     /// <summary>

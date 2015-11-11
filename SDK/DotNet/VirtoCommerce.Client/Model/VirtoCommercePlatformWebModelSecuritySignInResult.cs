@@ -13,22 +13,13 @@ namespace VirtoCommerce.Client.Model {
   /// 
   /// </summary>
   [DataContract]
-  public class VirtoCommerceCartModuleWebModelCoupon {
+  public class VirtoCommercePlatformWebModelSecuritySignInResult {
     
     /// <summary>
-    /// Gets or sets the value of coupon code
+    /// Gets or Sets Status
     /// </summary>
-    /// <value>Gets or sets the value of coupon code</value>
-    [DataMember(Name="couponCode", EmitDefaultValue=false)]
-    public string CouponCode { get; set; }
-
-    
-    /// <summary>
-    /// Gets or sets the value of description of invalid operation with coupon
-    /// </summary>
-    /// <value>Gets or sets the value of description of invalid operation with coupon</value>
-    [DataMember(Name="invalidDescription", EmitDefaultValue=false)]
-    public string InvalidDescription { get; set; }
+    [DataMember(Name="status", EmitDefaultValue=false)]
+    public string Status { get; set; }
 
     
 
@@ -38,11 +29,9 @@ namespace VirtoCommerce.Client.Model {
     /// <returns>String presentation of the object</returns>
     public override string ToString()  {
       var sb = new StringBuilder();
-      sb.Append("class VirtoCommerceCartModuleWebModelCoupon {\n");
+      sb.Append("class VirtoCommercePlatformWebModelSecuritySignInResult {\n");
       
-      sb.Append("  CouponCode: ").Append(CouponCode).Append("\n");
-      
-      sb.Append("  InvalidDescription: ").Append(InvalidDescription).Append("\n");
+      sb.Append("  Status: ").Append(Status).Append("\n");
       
       sb.Append("}\n");
       return sb.ToString();

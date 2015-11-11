@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using System.Linq;
 using VirtoCommerce.Storefront.Model.Common;
 
@@ -15,12 +14,12 @@ namespace VirtoCommerce.Storefront.Model
         /// Current customer
         /// </summary>
         public Customer Customer { get; set; }
-     
+
         /// <summary>
         /// Current language and culture
         /// </summary>
         public Language CurrentLanguage { get; set; }
-      
+
         /// <summary>
         /// Current currency
         /// </summary>
@@ -31,7 +30,7 @@ namespace VirtoCommerce.Storefront.Model
         {
             get
             {
-                if(_seoInfo == null)
+                if (_seoInfo == null)
                 {
                     //TODO: next need detec seo from category or product or cart etc
                     _seoInfo = CurrentStore.SeoInfos.FirstOrDefault();
@@ -43,7 +42,7 @@ namespace VirtoCommerce.Storefront.Model
                 _seoInfo = value;
             }
         }
-     
+
 
         public Store CurrentStore { get; set; }
 
@@ -51,7 +50,8 @@ namespace VirtoCommerce.Storefront.Model
         /// List of all supported stores
         /// </summary>
         public Store[] AllStores { get; set; }
-        
+        public int CurrentPage { get; set; }
+
         #region IDisposable Implementation
 
         public void Dispose()
