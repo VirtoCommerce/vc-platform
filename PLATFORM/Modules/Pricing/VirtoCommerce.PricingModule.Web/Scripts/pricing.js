@@ -16,8 +16,8 @@ angular.module(moduleName, [])
                   '$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
                       var blade = {
                           id: 'pricing',
-                          title: 'Pricing',
-                          subtitle: 'Merchandise management',
+                          title: 'pricing.blades.pricing-main.title',
+                          subtitle: 'pricing.blades.pricing-main.subtitle',
                           controller: 'virtoCommerce.pricingModule.pricingMainController',
                           template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/blades/pricing-main.tpl.html',
                           isClosingDisabled: true
@@ -36,7 +36,7 @@ angular.module(moduleName, [])
       var menuItem = {
           path: 'browse/pricing',
           icon: 'fa fa-usd',
-          title: 'Pricing',
+          title: 'pricing.main-menu-title',
           priority: 30,
           action: function () { $state.go('workspace.pricingModule'); },
           permission: 'pricing:access'

@@ -10,8 +10,9 @@
 	$scope.openItemsBlade = function () {
 		var newBlade = {
 			id: 'shipmentItems',
-			title: $scope.blade.title + ' line items',
-			subtitle: 'Edit shipment items',
+			title: 'orders.blades.shipment-items.title',
+			title: { title: $scope.blade.title },
+			subtitle: 'orders.blades.shipment-items.subtitle',
 			currentEntity: $scope.blade.currentEntity,
 			isClosingDisabled: false,
 			controller: 'virtoCommerce.orderModule.shipmentItemsController',

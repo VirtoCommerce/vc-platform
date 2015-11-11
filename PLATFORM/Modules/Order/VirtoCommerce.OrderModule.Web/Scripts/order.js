@@ -16,7 +16,7 @@ angular.module(moduleName, ['virtoCommerce.catalogModule', 'virtoCommerce.pricin
                   '$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
                       var blade = {
                           id: 'orders',
-                          title: 'Customer orders',
+                          title: 'orders.blades.customer-order-list.title',
                           //subtitle: 'Manage Orders',
                           controller: 'virtoCommerce.orderModule.customerOrderListController',
                           template: 'Modules/$(VirtoCommerce.Orders)/Scripts/blades/customerOrder-list.tpl.html',
@@ -38,7 +38,7 @@ angular.module(moduleName, ['virtoCommerce.catalogModule', 'virtoCommerce.pricin
 	    var menuItem = {
 	        path: 'browse/orders',
 	        icon: 'fa fa-file-text',
-	        title: 'Orders',
+	        title: 'orders.main-menu-title',
 	        priority: 90,
 	        action: function () { $state.go('workspace.orderModule'); },
 	        permission: 'order:access'

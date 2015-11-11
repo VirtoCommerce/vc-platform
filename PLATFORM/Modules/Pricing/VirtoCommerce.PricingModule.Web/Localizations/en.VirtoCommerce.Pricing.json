@@ -1,0 +1,122 @@
+﻿{
+  "pricing": {
+    "main-menu-title": "Pricing",
+    "blades": {
+      "pricing-main": {
+        "title": "Pricing",
+        "subtitle": "Merchandise management",
+        "menu": {
+          "pricelist-list": {
+            "title": "Price lists"
+          },
+          "pricelist-assignment-list": {
+            "title": "Price list assignments"
+          }
+        }
+      },
+      "pricelist-list": {
+        "subtitle": "Merchandise management",
+        "labels": {
+          "name": "Name",
+          "prices-count": "Prices count",
+          "last-modified": "Last modified"
+        }
+      },
+      "pricelist-detail": {
+        "labels": {
+          "name": "Name",
+          "currency": "Currency",
+          "description": "Description"
+        }
+      },
+      "pricelist-item-list": {
+        "subtitle": "Select Price list to manage prices",
+        "widget-title": "Prices",
+        "labels": {
+          "item-name": "Item name",
+          "item-code": "Item code",
+          "price-range": "Price range",
+          "prices-count": "Prices count"
+        },
+        "placeholders": {
+          "search-item": "Search Item by name..."
+        }
+      },
+      "prices-list": {
+        "title": "Prices for {{name}}",
+        "subtitle": "Edit prices",
+        "labels": {
+          "currency": "Currency",
+          "list-price": "List price",
+          "sale-price": "Sale price",
+          "min-quantity": "Min. quantity",
+          "last-modified": "Last modified"
+        }
+      },
+      "pricelist-assignment-list": {
+        "subtitle": "Manage assigned catalogs",
+        "widget-title": "Assigned catalog",
+        "labels": {
+          "assignment-name": "Assignment name",
+          "catalog": "Catalog",
+          "priority": "Priority"
+        }
+      },
+      "assignments": {
+        "subtitle": "Merchandise management",
+        "labels": {
+          "name": "Name",
+          "catalog": "Catalog",
+          "priority": "Priority",
+          "last-modified": "Last modified"
+        }
+      },
+      "assignment-detail": {
+        "subtitle": "Merchandise management",
+        "new-title": "New price list assignment",
+        "edit-subtitle": "Edit catalog assignment",
+        "labels": {
+          "assignment-name": "Assignment name",
+          "price-list": "Price list",
+          "catalog": "Catalog",
+          "priority": "Priority",
+          "description": "Description",
+          "enable-date": "Enable date (leave blank if always available)",
+          "expiration-date": "Expiration date (leave blank if always available)",
+          "eligible-shoppers": "Eligible shoppers"
+        }
+      },
+      "item-pricelists-list": {
+        "subtitle": "Select Price list to manage prices",
+        "labels": {
+          "no-pricelists": "No Pricelists yet"
+        }
+      }
+    },
+    "dialogs": {
+      "assignments-delete": {
+        "title": "Delete confirmation",
+        "message": "Are you sure you want to delete selected price list assignments?"
+      },
+      "pricelists-delete": {
+        "title": "Delete confirmation",
+        "message": "Are you sure you want to delete selected Price lists?"
+      },
+      "prices-save": {
+        "title": "Save changes",
+        "message": "The Prices has been modified. Do you want to save changes?"
+      },
+      "pricelist-save": {
+        "title": "Save changes",
+        "message": "The Price list has been modified. Do you want to save changes?"
+      },
+      "assignment-save": {
+        "title": "Save changes",
+        "message": "The catalog assignment has been modified. Do you want to save changes?"
+      }
+    },
+    "commands": {
+      "add-selected": "Add selected"
+    }
+  }
+}

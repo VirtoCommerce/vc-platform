@@ -4,8 +4,8 @@
 	$scope.blade.isLoading = false;
 	var shipmentOperation =
 		{
-			name: 'Shipment',
-			descr: 'Add new shipment',
+		    name: 'orders.blades.new-operation-wizard.menu.shipment-operation.title',
+		    descr: 'orders.blades.new-operation-wizard.menu.shipment-operation.description',
 			action: function () {
 
 				order_res_customerOrders.getNewShipment({ id: $scope.blade.customerOrder.id }, function (result) {
@@ -17,8 +17,9 @@
 
 					var newBlade = {
 						id: 'operationDetail',
-						title: 'Shipment #' + result.number,
-						subtitle: 'Edit shipment details',
+						title: 'orders.blades.shipment-detail.title',
+						titleValues: { number: result.number },
+						subtitle: 'orders.blades.shipment-detail.subtitle',
 						isNew: true,
 						customerOrder: $scope.blade.customerOrder,
 						currentEntity: result,
@@ -35,9 +36,9 @@
 
 	var paymentOperation =
 	{
-		name: 'Incoming payment',
-		descr: 'Add new incoming payment',
-		action: function () {
+	    name: 'orders.blades.new-operation-wizard.menu.payment-operation.title',
+	    descr: 'orders.blades.new-operation-wizard.menu.payment-operation.description',
+	    action: function () {
 
 			order_res_customerOrders.getNewPayment({ id: $scope.blade.customerOrder.id }, function (result) {
 
@@ -48,8 +49,9 @@
 
 				var newBlade = {
 					id: 'operationDetail',
-					title: 'Incoming payment #' + result.number,
-					subtitle: 'Edit payment details and related documents',
+					title: 'orders.blades.payment-detail.title',
+					titleValues: { number: result.number },
+					subtitle: 'orders.blades.payment-detail.subtitle',
 					customerOrder: $scope.blade.customerOrder,
 					currentEntity: result,
 					isNew: true,

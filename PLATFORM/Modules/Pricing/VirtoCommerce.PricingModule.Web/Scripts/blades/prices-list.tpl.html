@@ -13,11 +13,11 @@
                                         <span class="check"></span>
                                     </label>
                                 </th>
-                                <th class="table-col">Currency</th>
-                                <th class="table-col">List price</th>
-                                <th class="table-col">Sale price</th>
-                                <th class="table-col">Min. quantity</th>
-                                <th class="table-col __date">Last modified</th>
+                                <th class="table-col">{{'pricing.blades.prices-list.labels.currency' | translate}}</th>
+                                <th class="table-col">{{'pricing.blades.prices-list.labels.list-price' | translate}}</th>
+                                <th class="table-col">{{'pricing.blades.prices-list.labels.sale-price' | translate}}</th>
+                                <th class="table-col">{{'pricing.blades.prices-list.labels.min-quantity' | translate}}</th>
+                                <th class="table-col __date">{{'pricing.blades.prices-list.labels.last-modified' | translate}}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -48,7 +48,7 @@
                                     <span class="table-date" am-time-ago="data.modifiedDate"></span>
                                     <ul class="menu __context" role="menu" id="pril_menu_{{$index}}">
                                         <li class="menu-item" ng-click='delete(data)'>
-                                            <i class="menu-ico fa fa-trash-o"></i> Delete
+                                            <i class="menu-ico fa fa-trash-o"></i> {{'platform.commands.delete' | translate}}
                                         </li>
                                     </ul>
                                 </td>
