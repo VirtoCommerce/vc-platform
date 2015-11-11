@@ -20,5 +20,11 @@ namespace VirtoCommerce.Web.Models
 
         [DataMember]
         public string Type { get; set; }
+
+        [DataMember]
+        public string PromotionId { get; set; }
+
+        [DataMember]
+        public string Coupon { get; set; }
     }
 }

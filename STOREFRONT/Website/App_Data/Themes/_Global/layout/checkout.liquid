@@ -73,7 +73,7 @@
 
             var selectedShippingMethod = $("#shipping-methods input:checked");
             if (selectedShippingMethod.length) {
-                updateTotals(selectedShippingMethod.val());
+                updateShippingMethod(selectedShippingMethod.val());
             }
 
             var selectedPaymentMethod = $("#payment-methods input:checked");
@@ -92,7 +92,7 @@
                 var input = $(this).find("input");
                 if (!input.is(":checked")) {
                     input.prop("checked", true);
-                    updateTotals(input.val());
+                    updateShippingMethod(input.val());
                 }
             });
 
@@ -116,6 +116,43 @@
                 } else {
                     $("#billing-address").show();
                 }
+            });
+
+            $("#btn-apply-coupon").on("click", function () {
+                var couponCode = $("#couponCode").val();
+                var validationElement = $("#coupon-validation-message");
+                $.ajax({
+                    type: "POST",
+                    url: VirtoCommerce.url("/checkout/updatediscounts?coupon=" + couponCode),
+                    success: function (jsonResult) {
+                        if (jsonResult) {
+                            if (jsonResult.status == "Ok") {
+                                validationElement.text("");
+                                window.location.reload();
+                            } else {
+                                validationElement.text(jsonResult.message);
+                                validationElement.show();
+                            }
+                        }
+                    }
+                });
+            });
+
+            $("#remove-coupon").on("click", function (event) {
+                event.preventDefault();
+                $.ajax({
+                    type: "POST",
+                    url: VirtoCommerce.url("/checkout/updatediscounts"),
+                    success: function (jsonResult) {
+                        if (jsonResult) {
+                            if (jsonResult.status == "Ok") {
+                                window.location.reload();
+                            } else {
+                                alert(jsonResult.message);
+                            }
+                        }
+                    }
+                });
             });
         });
 
@@ -199,25 +236,31 @@
             return addressString;
         }
 
-        function updateTotals(shippingMethodId) {
+        function updateShippingMethod(shippingMethodId) {
             $.ajax({
                 type: "GET",
                 cache: false,
                 url: VirtoCommerce.url("/checkout/recalculateshippingmethod?id=" + shippingMethodId),
                 beforeSend: function () {
                     var spinnerTag = '{{ 'assets/loader_spinner.gif' | shopify_asset_url | img_tag }}';
+                    //$(".price-list li:eq(1) small").html(spinnerTag);
                     $(".price-list li:eq(1) small").html(spinnerTag);
-                    $(".price-list li:eq(2) small").html(spinnerTag);
-                    $(".price-list li:eq(3) small").html(spinnerTag);
+                    //$(".price-list li:eq(3) small").html(spinnerTag);
+                    //$(".price-list li:eq(4) small").html(spinnerTag);
                 },
                 success: function (jsonResponse) {
                     if (jsonResponse) {
-                        $(".price-list li:eq(1) small").text(jsonResponse.stringified_shipping_price);
-                        $(".price-list li:eq(2) small").text(jsonResponse.stringified_tax_price);
-                        $(".price-list li:eq(3) small").text(jsonResponse.stringified_total_price);
+                        updateTotals(jsonResponse);
                     }
                 }
             });
+        }
+
+        function updateTotals(checkout) {
+            $(".price-list li:eq(1) small").text(checkout.stringified_shipping_price);
+            //$(".price-list li:eq(2) small").text(checkout.stringified_tax_price);
+            //$(".price-list li:eq(3) small").text(checkout.discounts_amount);
+            //$(".price-list li:eq(4) small").text(checkout.stringified_total_price);
         }
     </script>
 </head>

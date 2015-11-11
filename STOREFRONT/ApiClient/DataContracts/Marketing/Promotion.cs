@@ -8,8 +8,14 @@ namespace VirtoCommerce.ApiClient.DataContracts.Marketing
 
         public string Type { get; set; }
 
+        /// <summary>
+        /// Gets or sets the value of promotion name
+        /// </summary>
         public string Name { get; set; }
 
+        /// <summary>
+        /// Gets or sets the value of store id
+        /// </summary>
         public string Store { get; set; }
 
         public string Catalog { get; set; }
@@ -22,9 +28,7 @@ namespace VirtoCommerce.ApiClient.DataContracts.Marketing
 
         public int MaxPersonalUsageCount { get; set; }
 
-        public string Coupon { get; set; }
-
-        public int Priority { get; set; }
+        public string[] Coupons { get; set; }
 
         public DateTime? StartDate { get; set; }
 
