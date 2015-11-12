@@ -104,28 +104,6 @@ namespace VirtoCommerce.Client.Api
         System.Threading.Tasks.Task CartModuleDeleteCartsAsync (List<string> ids);
         
         /// <summary>
-        /// Apply coupon for shopping cart
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="cartId">Shopping cart id</param>
-        /// <param name="couponCode">Coupon code</param>
-        /// <returns>VirtoCommerceCartModuleWebModelShoppingCart</returns>
-        VirtoCommerceCartModuleWebModelShoppingCart CartModuleApplyCoupon (string cartId, string couponCode);
-  
-        /// <summary>
-        /// Apply coupon for shopping cart
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="cartId">Shopping cart id</param>
-        /// <param name="couponCode">Coupon code</param>
-        /// <returns>VirtoCommerceCartModuleWebModelShoppingCart</returns>
-        System.Threading.Tasks.Task<VirtoCommerceCartModuleWebModelShoppingCart> CartModuleApplyCouponAsync (string cartId, string couponCode);
-        
-        /// <summary>
         /// Get payment methods for shopping cart
         /// </summary>
         /// <remarks>
@@ -286,7 +264,7 @@ namespace VirtoCommerce.Client.Api
         {
             
     
-            var path = "/api/cart/carts";
+            var path_ = "/api/cart/carts";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -321,14 +299,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CartModuleSearchCarts: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling CartModuleSearchCarts: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommerceCartModuleWebModelSearchResult) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceCartModuleWebModelSearchResult), response.Headers);
+            return (VirtoCommerceCartModuleWebModelSearchResult) ApiClient.Deserialize(response, typeof(VirtoCommerceCartModuleWebModelSearchResult));
         }
     
         /// <summary>
@@ -344,7 +322,7 @@ namespace VirtoCommerce.Client.Api
         {
             
     
-            var path = "/api/cart/carts";
+            var path_ = "/api/cart/carts";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -379,11 +357,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CartModuleSearchCarts: " + response.Content, response.Content);
 
-            return (VirtoCommerceCartModuleWebModelSearchResult) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceCartModuleWebModelSearchResult), response.Headers);
+            return (VirtoCommerceCartModuleWebModelSearchResult) ApiClient.Deserialize(response, typeof(VirtoCommerceCartModuleWebModelSearchResult));
         }
         
         /// <summary>
@@ -398,7 +376,7 @@ namespace VirtoCommerce.Client.Api
             if (cart == null) throw new ApiException(400, "Missing required parameter 'cart' when calling CartModuleUpdate");
             
     
-            var path = "/api/cart/carts";
+            var path_ = "/api/cart/carts";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -429,14 +407,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CartModuleUpdate: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling CartModuleUpdate: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommerceCartModuleWebModelShoppingCart) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceCartModuleWebModelShoppingCart), response.Headers);
+            return (VirtoCommerceCartModuleWebModelShoppingCart) ApiClient.Deserialize(response, typeof(VirtoCommerceCartModuleWebModelShoppingCart));
         }
     
         /// <summary>
@@ -450,7 +428,7 @@ namespace VirtoCommerce.Client.Api
             if (cart == null) throw new ApiException(400, "Missing required parameter 'cart' when calling CartModuleUpdate");
             
     
-            var path = "/api/cart/carts";
+            var path_ = "/api/cart/carts";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -481,11 +459,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CartModuleUpdate: " + response.Content, response.Content);
 
-            return (VirtoCommerceCartModuleWebModelShoppingCart) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceCartModuleWebModelShoppingCart), response.Headers);
+            return (VirtoCommerceCartModuleWebModelShoppingCart) ApiClient.Deserialize(response, typeof(VirtoCommerceCartModuleWebModelShoppingCart));
         }
         
         /// <summary>
@@ -500,7 +478,7 @@ namespace VirtoCommerce.Client.Api
             if (cart == null) throw new ApiException(400, "Missing required parameter 'cart' when calling CartModuleCreate");
             
     
-            var path = "/api/cart/carts";
+            var path_ = "/api/cart/carts";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -531,7 +509,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CartModuleCreate: " + response.Content, response.Content);
@@ -552,7 +530,7 @@ namespace VirtoCommerce.Client.Api
             if (cart == null) throw new ApiException(400, "Missing required parameter 'cart' when calling CartModuleCreate");
             
     
-            var path = "/api/cart/carts";
+            var path_ = "/api/cart/carts";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -583,7 +561,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CartModuleCreate: " + response.Content, response.Content);
 
@@ -603,7 +581,7 @@ namespace VirtoCommerce.Client.Api
             if (ids == null) throw new ApiException(400, "Missing required parameter 'ids' when calling CartModuleDeleteCarts");
             
     
-            var path = "/api/cart/carts";
+            var path_ = "/api/cart/carts";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -634,7 +612,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CartModuleDeleteCarts: " + response.Content, response.Content);
@@ -655,7 +633,7 @@ namespace VirtoCommerce.Client.Api
             if (ids == null) throw new ApiException(400, "Missing required parameter 'ids' when calling CartModuleDeleteCarts");
             
     
-            var path = "/api/cart/carts";
+            var path_ = "/api/cart/carts";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -686,123 +664,12 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CartModuleDeleteCarts: " + response.Content, response.Content);
 
             
             return;
-        }
-        
-        /// <summary>
-        /// Apply coupon for shopping cart 
-        /// </summary>
-        /// <param name="cartId">Shopping cart id</param> 
-        /// <param name="couponCode">Coupon code</param> 
-        /// <returns>VirtoCommerceCartModuleWebModelShoppingCart</returns>            
-        public VirtoCommerceCartModuleWebModelShoppingCart CartModuleApplyCoupon (string cartId, string couponCode)
-        {
-            
-            // verify the required parameter 'cartId' is set
-            if (cartId == null) throw new ApiException(400, "Missing required parameter 'cartId' when calling CartModuleApplyCoupon");
-            
-            // verify the required parameter 'couponCode' is set
-            if (couponCode == null) throw new ApiException(400, "Missing required parameter 'couponCode' when calling CartModuleApplyCoupon");
-            
-    
-            var path = "/api/cart/carts/{cartId}/coupons/{couponCode}";
-    
-            var pathParams = new Dictionary<String, String>();
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            String postBody = null;
-
-            // to determine the Accept header
-            String[] http_header_accepts = new String[] {
-                "application/json", "text/json"
-            };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
-            if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
-
-            // set "format" to json by default
-            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
-            pathParams.Add("format", "json");
-            if (cartId != null) pathParams.Add("cartId", ApiClient.ParameterToString(cartId)); // path parameter
-            if (couponCode != null) pathParams.Add("couponCode", ApiClient.ParameterToString(couponCode)); // path parameter
-            
-            
-            
-            
-            
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
-    
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling CartModuleApplyCoupon: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling CartModuleApplyCoupon: " + response.ErrorMessage, response.ErrorMessage);
-    
-            return (VirtoCommerceCartModuleWebModelShoppingCart) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceCartModuleWebModelShoppingCart), response.Headers);
-        }
-    
-        /// <summary>
-        /// Apply coupon for shopping cart 
-        /// </summary>
-        /// <param name="cartId">Shopping cart id</param>
-        /// <param name="couponCode">Coupon code</param>
-        /// <returns>VirtoCommerceCartModuleWebModelShoppingCart</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceCartModuleWebModelShoppingCart> CartModuleApplyCouponAsync (string cartId, string couponCode)
-        {
-            // verify the required parameter 'cartId' is set
-            if (cartId == null) throw new ApiException(400, "Missing required parameter 'cartId' when calling CartModuleApplyCoupon");
-            // verify the required parameter 'couponCode' is set
-            if (couponCode == null) throw new ApiException(400, "Missing required parameter 'couponCode' when calling CartModuleApplyCoupon");
-            
-    
-            var path = "/api/cart/carts/{cartId}/coupons/{couponCode}";
-    
-            var pathParams = new Dictionary<String, String>();
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            String postBody = null;
-
-            // to determine the Accept header
-            String[] http_header_accepts = new String[] {
-                "application/json", "text/json"
-            };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
-            if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
-
-            // set "format" to json by default
-            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
-            pathParams.Add("format", "json");
-            if (cartId != null) pathParams.Add("cartId", ApiClient.ParameterToString(cartId)); // path parameter
-            if (couponCode != null) pathParams.Add("couponCode", ApiClient.ParameterToString(couponCode)); // path parameter
-            
-            
-            
-            
-            
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling CartModuleApplyCoupon: " + response.Content, response.Content);
-
-            return (VirtoCommerceCartModuleWebModelShoppingCart) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceCartModuleWebModelShoppingCart), response.Headers);
         }
         
         /// <summary>
@@ -817,7 +684,7 @@ namespace VirtoCommerce.Client.Api
             if (cartId == null) throw new ApiException(400, "Missing required parameter 'cartId' when calling CartModuleGetPaymentMethods");
             
     
-            var path = "/api/cart/carts/{cartId}/paymentMethods";
+            var path_ = "/api/cart/carts/{cartId}/paymentMethods";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -848,14 +715,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CartModuleGetPaymentMethods: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling CartModuleGetPaymentMethods: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (List<VirtoCommerceCartModuleWebModelPaymentMethod>) ApiClient.Deserialize(response.Content, typeof(List<VirtoCommerceCartModuleWebModelPaymentMethod>), response.Headers);
+            return (List<VirtoCommerceCartModuleWebModelPaymentMethod>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceCartModuleWebModelPaymentMethod>));
         }
     
         /// <summary>
@@ -869,7 +736,7 @@ namespace VirtoCommerce.Client.Api
             if (cartId == null) throw new ApiException(400, "Missing required parameter 'cartId' when calling CartModuleGetPaymentMethods");
             
     
-            var path = "/api/cart/carts/{cartId}/paymentMethods";
+            var path_ = "/api/cart/carts/{cartId}/paymentMethods";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -900,11 +767,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CartModuleGetPaymentMethods: " + response.Content, response.Content);
 
-            return (List<VirtoCommerceCartModuleWebModelPaymentMethod>) ApiClient.Deserialize(response.Content, typeof(List<VirtoCommerceCartModuleWebModelPaymentMethod>), response.Headers);
+            return (List<VirtoCommerceCartModuleWebModelPaymentMethod>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceCartModuleWebModelPaymentMethod>));
         }
         
         /// <summary>
@@ -919,7 +786,7 @@ namespace VirtoCommerce.Client.Api
             if (cartId == null) throw new ApiException(400, "Missing required parameter 'cartId' when calling CartModuleGetShipmentMethods");
             
     
-            var path = "/api/cart/carts/{cartId}/shipmentMethods";
+            var path_ = "/api/cart/carts/{cartId}/shipmentMethods";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -950,14 +817,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CartModuleGetShipmentMethods: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling CartModuleGetShipmentMethods: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (List<VirtoCommerceCartModuleWebModelShippingMethod>) ApiClient.Deserialize(response.Content, typeof(List<VirtoCommerceCartModuleWebModelShippingMethod>), response.Headers);
+            return (List<VirtoCommerceCartModuleWebModelShippingMethod>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceCartModuleWebModelShippingMethod>));
         }
     
         /// <summary>
@@ -971,7 +838,7 @@ namespace VirtoCommerce.Client.Api
             if (cartId == null) throw new ApiException(400, "Missing required parameter 'cartId' when calling CartModuleGetShipmentMethods");
             
     
-            var path = "/api/cart/carts/{cartId}/shipmentMethods";
+            var path_ = "/api/cart/carts/{cartId}/shipmentMethods";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1002,11 +869,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CartModuleGetShipmentMethods: " + response.Content, response.Content);
 
-            return (List<VirtoCommerceCartModuleWebModelShippingMethod>) ApiClient.Deserialize(response.Content, typeof(List<VirtoCommerceCartModuleWebModelShippingMethod>), response.Headers);
+            return (List<VirtoCommerceCartModuleWebModelShippingMethod>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceCartModuleWebModelShippingMethod>));
         }
         
         /// <summary>
@@ -1021,7 +888,7 @@ namespace VirtoCommerce.Client.Api
             if (id == null) throw new ApiException(400, "Missing required parameter 'id' when calling CartModuleGetCartById");
             
     
-            var path = "/api/cart/carts/{id}";
+            var path_ = "/api/cart/carts/{id}";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1052,14 +919,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CartModuleGetCartById: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling CartModuleGetCartById: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommerceCartModuleWebModelShoppingCart) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceCartModuleWebModelShoppingCart), response.Headers);
+            return (VirtoCommerceCartModuleWebModelShoppingCart) ApiClient.Deserialize(response, typeof(VirtoCommerceCartModuleWebModelShoppingCart));
         }
     
         /// <summary>
@@ -1073,7 +940,7 @@ namespace VirtoCommerce.Client.Api
             if (id == null) throw new ApiException(400, "Missing required parameter 'id' when calling CartModuleGetCartById");
             
     
-            var path = "/api/cart/carts/{id}";
+            var path_ = "/api/cart/carts/{id}";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1104,11 +971,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CartModuleGetCartById: " + response.Content, response.Content);
 
-            return (VirtoCommerceCartModuleWebModelShoppingCart) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceCartModuleWebModelShoppingCart), response.Headers);
+            return (VirtoCommerceCartModuleWebModelShoppingCart) ApiClient.Deserialize(response, typeof(VirtoCommerceCartModuleWebModelShoppingCart));
         }
         
         /// <summary>
@@ -1123,7 +990,7 @@ namespace VirtoCommerce.Client.Api
             if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling CartModuleGetPaymentMethodsForStore");
             
     
-            var path = "/api/cart/stores/{storeId}/paymentMethods";
+            var path_ = "/api/cart/stores/{storeId}/paymentMethods";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1154,14 +1021,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CartModuleGetPaymentMethodsForStore: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling CartModuleGetPaymentMethodsForStore: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (List<VirtoCommerceCartModuleWebModelPaymentMethod>) ApiClient.Deserialize(response.Content, typeof(List<VirtoCommerceCartModuleWebModelPaymentMethod>), response.Headers);
+            return (List<VirtoCommerceCartModuleWebModelPaymentMethod>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceCartModuleWebModelPaymentMethod>));
         }
     
         /// <summary>
@@ -1175,7 +1042,7 @@ namespace VirtoCommerce.Client.Api
             if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling CartModuleGetPaymentMethodsForStore");
             
     
-            var path = "/api/cart/stores/{storeId}/paymentMethods";
+            var path_ = "/api/cart/stores/{storeId}/paymentMethods";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1206,11 +1073,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CartModuleGetPaymentMethodsForStore: " + response.Content, response.Content);
 
-            return (List<VirtoCommerceCartModuleWebModelPaymentMethod>) ApiClient.Deserialize(response.Content, typeof(List<VirtoCommerceCartModuleWebModelPaymentMethod>), response.Headers);
+            return (List<VirtoCommerceCartModuleWebModelPaymentMethod>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceCartModuleWebModelPaymentMethod>));
         }
         
         /// <summary>
@@ -1229,7 +1096,7 @@ namespace VirtoCommerce.Client.Api
             if (customerId == null) throw new ApiException(400, "Missing required parameter 'customerId' when calling CartModuleGetCurrentCart");
             
     
-            var path = "/api/cart/{storeId}/{customerId}/carts/current";
+            var path_ = "/api/cart/{storeId}/{customerId}/carts/current";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1261,14 +1128,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CartModuleGetCurrentCart: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling CartModuleGetCurrentCart: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommerceCartModuleWebModelShoppingCart) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceCartModuleWebModelShoppingCart), response.Headers);
+            return (VirtoCommerceCartModuleWebModelShoppingCart) ApiClient.Deserialize(response, typeof(VirtoCommerceCartModuleWebModelShoppingCart));
         }
     
         /// <summary>
@@ -1285,7 +1152,7 @@ namespace VirtoCommerce.Client.Api
             if (customerId == null) throw new ApiException(400, "Missing required parameter 'customerId' when calling CartModuleGetCurrentCart");
             
     
-            var path = "/api/cart/{storeId}/{customerId}/carts/current";
+            var path_ = "/api/cart/{storeId}/{customerId}/carts/current";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1317,11 +1184,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CartModuleGetCurrentCart: " + response.Content, response.Content);
 
-            return (VirtoCommerceCartModuleWebModelShoppingCart) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceCartModuleWebModelShoppingCart), response.Headers);
+            return (VirtoCommerceCartModuleWebModelShoppingCart) ApiClient.Deserialize(response, typeof(VirtoCommerceCartModuleWebModelShoppingCart));
         }
         
     }

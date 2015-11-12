@@ -234,7 +234,7 @@ namespace VirtoCommerce.Client.Api
         {
             
     
-            var path = "/api/quote/requests";
+            var path_ = "/api/quote/requests";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -273,14 +273,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling QuoteModuleSearch: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling QuoteModuleSearch: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommerceDomainQuoteModelQuoteRequestSearchResult) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceDomainQuoteModelQuoteRequestSearchResult), response.Headers);
+            return (VirtoCommerceDomainQuoteModelQuoteRequestSearchResult) ApiClient.Deserialize(response, typeof(VirtoCommerceDomainQuoteModelQuoteRequestSearchResult));
         }
     
         /// <summary>
@@ -300,7 +300,7 @@ namespace VirtoCommerce.Client.Api
         {
             
     
-            var path = "/api/quote/requests";
+            var path_ = "/api/quote/requests";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -339,11 +339,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling QuoteModuleSearch: " + response.Content, response.Content);
 
-            return (VirtoCommerceDomainQuoteModelQuoteRequestSearchResult) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceDomainQuoteModelQuoteRequestSearchResult), response.Headers);
+            return (VirtoCommerceDomainQuoteModelQuoteRequestSearchResult) ApiClient.Deserialize(response, typeof(VirtoCommerceDomainQuoteModelQuoteRequestSearchResult));
         }
         
         /// <summary>
@@ -358,7 +358,7 @@ namespace VirtoCommerce.Client.Api
             if (quoteRequest == null) throw new ApiException(400, "Missing required parameter 'quoteRequest' when calling QuoteModuleUpdate");
             
     
-            var path = "/api/quote/requests";
+            var path_ = "/api/quote/requests";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -389,7 +389,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling QuoteModuleUpdate: " + response.Content, response.Content);
@@ -410,7 +410,7 @@ namespace VirtoCommerce.Client.Api
             if (quoteRequest == null) throw new ApiException(400, "Missing required parameter 'quoteRequest' when calling QuoteModuleUpdate");
             
     
-            var path = "/api/quote/requests";
+            var path_ = "/api/quote/requests";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -441,7 +441,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling QuoteModuleUpdate: " + response.Content, response.Content);
 
@@ -461,7 +461,7 @@ namespace VirtoCommerce.Client.Api
             if (quoteRequest == null) throw new ApiException(400, "Missing required parameter 'quoteRequest' when calling QuoteModuleCreate");
             
     
-            var path = "/api/quote/requests";
+            var path_ = "/api/quote/requests";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -492,14 +492,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling QuoteModuleCreate: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling QuoteModuleCreate: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommerceQuoteModuleWebModelQuoteRequest) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceQuoteModuleWebModelQuoteRequest), response.Headers);
+            return (VirtoCommerceQuoteModuleWebModelQuoteRequest) ApiClient.Deserialize(response, typeof(VirtoCommerceQuoteModuleWebModelQuoteRequest));
         }
     
         /// <summary>
@@ -513,7 +513,7 @@ namespace VirtoCommerce.Client.Api
             if (quoteRequest == null) throw new ApiException(400, "Missing required parameter 'quoteRequest' when calling QuoteModuleCreate");
             
     
-            var path = "/api/quote/requests";
+            var path_ = "/api/quote/requests";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -544,11 +544,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling QuoteModuleCreate: " + response.Content, response.Content);
 
-            return (VirtoCommerceQuoteModuleWebModelQuoteRequest) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceQuoteModuleWebModelQuoteRequest), response.Headers);
+            return (VirtoCommerceQuoteModuleWebModelQuoteRequest) ApiClient.Deserialize(response, typeof(VirtoCommerceQuoteModuleWebModelQuoteRequest));
         }
         
         /// <summary>
@@ -563,7 +563,7 @@ namespace VirtoCommerce.Client.Api
             if (ids == null) throw new ApiException(400, "Missing required parameter 'ids' when calling QuoteModuleDelete");
             
     
-            var path = "/api/quote/requests";
+            var path_ = "/api/quote/requests";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -594,7 +594,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling QuoteModuleDelete: " + response.Content, response.Content);
@@ -615,7 +615,7 @@ namespace VirtoCommerce.Client.Api
             if (ids == null) throw new ApiException(400, "Missing required parameter 'ids' when calling QuoteModuleDelete");
             
     
-            var path = "/api/quote/requests";
+            var path_ = "/api/quote/requests";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -646,7 +646,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling QuoteModuleDelete: " + response.Content, response.Content);
 
@@ -666,7 +666,7 @@ namespace VirtoCommerce.Client.Api
             if (quoteRequest == null) throw new ApiException(400, "Missing required parameter 'quoteRequest' when calling QuoteModuleCalculateTotals");
             
     
-            var path = "/api/quote/requests/recalculate";
+            var path_ = "/api/quote/requests/recalculate";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -697,14 +697,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling QuoteModuleCalculateTotals: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling QuoteModuleCalculateTotals: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommerceQuoteModuleWebModelQuoteRequest) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceQuoteModuleWebModelQuoteRequest), response.Headers);
+            return (VirtoCommerceQuoteModuleWebModelQuoteRequest) ApiClient.Deserialize(response, typeof(VirtoCommerceQuoteModuleWebModelQuoteRequest));
         }
     
         /// <summary>
@@ -718,7 +718,7 @@ namespace VirtoCommerce.Client.Api
             if (quoteRequest == null) throw new ApiException(400, "Missing required parameter 'quoteRequest' when calling QuoteModuleCalculateTotals");
             
     
-            var path = "/api/quote/requests/recalculate";
+            var path_ = "/api/quote/requests/recalculate";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -749,11 +749,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling QuoteModuleCalculateTotals: " + response.Content, response.Content);
 
-            return (VirtoCommerceQuoteModuleWebModelQuoteRequest) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceQuoteModuleWebModelQuoteRequest), response.Headers);
+            return (VirtoCommerceQuoteModuleWebModelQuoteRequest) ApiClient.Deserialize(response, typeof(VirtoCommerceQuoteModuleWebModelQuoteRequest));
         }
         
         /// <summary>
@@ -768,7 +768,7 @@ namespace VirtoCommerce.Client.Api
             if (id == null) throw new ApiException(400, "Missing required parameter 'id' when calling QuoteModuleGetById");
             
     
-            var path = "/api/quote/requests/{id}";
+            var path_ = "/api/quote/requests/{id}";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -799,14 +799,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling QuoteModuleGetById: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling QuoteModuleGetById: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommerceQuoteModuleWebModelQuoteRequest) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceQuoteModuleWebModelQuoteRequest), response.Headers);
+            return (VirtoCommerceQuoteModuleWebModelQuoteRequest) ApiClient.Deserialize(response, typeof(VirtoCommerceQuoteModuleWebModelQuoteRequest));
         }
     
         /// <summary>
@@ -820,7 +820,7 @@ namespace VirtoCommerce.Client.Api
             if (id == null) throw new ApiException(400, "Missing required parameter 'id' when calling QuoteModuleGetById");
             
     
-            var path = "/api/quote/requests/{id}";
+            var path_ = "/api/quote/requests/{id}";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -851,11 +851,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling QuoteModuleGetById: " + response.Content, response.Content);
 
-            return (VirtoCommerceQuoteModuleWebModelQuoteRequest) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceQuoteModuleWebModelQuoteRequest), response.Headers);
+            return (VirtoCommerceQuoteModuleWebModelQuoteRequest) ApiClient.Deserialize(response, typeof(VirtoCommerceQuoteModuleWebModelQuoteRequest));
         }
         
         /// <summary>
@@ -870,7 +870,7 @@ namespace VirtoCommerce.Client.Api
             if (id == null) throw new ApiException(400, "Missing required parameter 'id' when calling QuoteModuleGetShipmentMethods");
             
     
-            var path = "/api/quote/requests/{id}/shipmentmethods";
+            var path_ = "/api/quote/requests/{id}/shipmentmethods";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -901,14 +901,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling QuoteModuleGetShipmentMethods: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling QuoteModuleGetShipmentMethods: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (List<VirtoCommerceQuoteModuleWebModelShipmentMethod>) ApiClient.Deserialize(response.Content, typeof(List<VirtoCommerceQuoteModuleWebModelShipmentMethod>), response.Headers);
+            return (List<VirtoCommerceQuoteModuleWebModelShipmentMethod>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceQuoteModuleWebModelShipmentMethod>));
         }
     
         /// <summary>
@@ -922,7 +922,7 @@ namespace VirtoCommerce.Client.Api
             if (id == null) throw new ApiException(400, "Missing required parameter 'id' when calling QuoteModuleGetShipmentMethods");
             
     
-            var path = "/api/quote/requests/{id}/shipmentmethods";
+            var path_ = "/api/quote/requests/{id}/shipmentmethods";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -953,11 +953,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling QuoteModuleGetShipmentMethods: " + response.Content, response.Content);
 
-            return (List<VirtoCommerceQuoteModuleWebModelShipmentMethod>) ApiClient.Deserialize(response.Content, typeof(List<VirtoCommerceQuoteModuleWebModelShipmentMethod>), response.Headers);
+            return (List<VirtoCommerceQuoteModuleWebModelShipmentMethod>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceQuoteModuleWebModelShipmentMethod>));
         }
         
     }

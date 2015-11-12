@@ -147,7 +147,7 @@ namespace VirtoCommerce.Client.Api
         {
             
     
-            var path = "/api/fulfillment/centers";
+            var path_ = "/api/fulfillment/centers";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -177,14 +177,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CommerceGetFulfillmentCenters: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling CommerceGetFulfillmentCenters: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (List<VirtoCommerceCoreModuleWebModelFulfillmentCenter>) ApiClient.Deserialize(response.Content, typeof(List<VirtoCommerceCoreModuleWebModelFulfillmentCenter>), response.Headers);
+            return (List<VirtoCommerceCoreModuleWebModelFulfillmentCenter>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceCoreModuleWebModelFulfillmentCenter>));
         }
     
         /// <summary>
@@ -195,7 +195,7 @@ namespace VirtoCommerce.Client.Api
         {
             
     
-            var path = "/api/fulfillment/centers";
+            var path_ = "/api/fulfillment/centers";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -225,11 +225,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CommerceGetFulfillmentCenters: " + response.Content, response.Content);
 
-            return (List<VirtoCommerceCoreModuleWebModelFulfillmentCenter>) ApiClient.Deserialize(response.Content, typeof(List<VirtoCommerceCoreModuleWebModelFulfillmentCenter>), response.Headers);
+            return (List<VirtoCommerceCoreModuleWebModelFulfillmentCenter>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceCoreModuleWebModelFulfillmentCenter>));
         }
         
         /// <summary>
@@ -244,7 +244,7 @@ namespace VirtoCommerce.Client.Api
             if (center == null) throw new ApiException(400, "Missing required parameter 'center' when calling CommerceUpdateFulfillmentCenter");
             
     
-            var path = "/api/fulfillment/centers";
+            var path_ = "/api/fulfillment/centers";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -275,14 +275,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CommerceUpdateFulfillmentCenter: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling CommerceUpdateFulfillmentCenter: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommerceCoreModuleWebModelFulfillmentCenter) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceCoreModuleWebModelFulfillmentCenter), response.Headers);
+            return (VirtoCommerceCoreModuleWebModelFulfillmentCenter) ApiClient.Deserialize(response, typeof(VirtoCommerceCoreModuleWebModelFulfillmentCenter));
         }
     
         /// <summary>
@@ -296,7 +296,7 @@ namespace VirtoCommerce.Client.Api
             if (center == null) throw new ApiException(400, "Missing required parameter 'center' when calling CommerceUpdateFulfillmentCenter");
             
     
-            var path = "/api/fulfillment/centers";
+            var path_ = "/api/fulfillment/centers";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -327,11 +327,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CommerceUpdateFulfillmentCenter: " + response.Content, response.Content);
 
-            return (VirtoCommerceCoreModuleWebModelFulfillmentCenter) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceCoreModuleWebModelFulfillmentCenter), response.Headers);
+            return (VirtoCommerceCoreModuleWebModelFulfillmentCenter) ApiClient.Deserialize(response, typeof(VirtoCommerceCoreModuleWebModelFulfillmentCenter));
         }
         
         /// <summary>
@@ -346,7 +346,7 @@ namespace VirtoCommerce.Client.Api
             if (id == null) throw new ApiException(400, "Missing required parameter 'id' when calling CommerceGetFulfillmentCenter");
             
     
-            var path = "/api/fulfillment/centers/{id}";
+            var path_ = "/api/fulfillment/centers/{id}";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -377,14 +377,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CommerceGetFulfillmentCenter: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling CommerceGetFulfillmentCenter: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommerceCoreModuleWebModelFulfillmentCenter) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceCoreModuleWebModelFulfillmentCenter), response.Headers);
+            return (VirtoCommerceCoreModuleWebModelFulfillmentCenter) ApiClient.Deserialize(response, typeof(VirtoCommerceCoreModuleWebModelFulfillmentCenter));
         }
     
         /// <summary>
@@ -398,7 +398,7 @@ namespace VirtoCommerce.Client.Api
             if (id == null) throw new ApiException(400, "Missing required parameter 'id' when calling CommerceGetFulfillmentCenter");
             
     
-            var path = "/api/fulfillment/centers/{id}";
+            var path_ = "/api/fulfillment/centers/{id}";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -429,11 +429,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CommerceGetFulfillmentCenter: " + response.Content, response.Content);
 
-            return (VirtoCommerceCoreModuleWebModelFulfillmentCenter) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceCoreModuleWebModelFulfillmentCenter), response.Headers);
+            return (VirtoCommerceCoreModuleWebModelFulfillmentCenter) ApiClient.Deserialize(response, typeof(VirtoCommerceCoreModuleWebModelFulfillmentCenter));
         }
         
         /// <summary>
@@ -448,7 +448,7 @@ namespace VirtoCommerce.Client.Api
             if (slug == null) throw new ApiException(400, "Missing required parameter 'slug' when calling CommerceGetSeoInfoBySlug");
             
     
-            var path = "/api/seoinfos/{slug}";
+            var path_ = "/api/seoinfos/{slug}";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -479,14 +479,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CommerceGetSeoInfoBySlug: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling CommerceGetSeoInfoBySlug: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (List<VirtoCommerceDomainCommerceModelSeoInfo>) ApiClient.Deserialize(response.Content, typeof(List<VirtoCommerceDomainCommerceModelSeoInfo>), response.Headers);
+            return (List<VirtoCommerceDomainCommerceModelSeoInfo>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceDomainCommerceModelSeoInfo>));
         }
     
         /// <summary>
@@ -500,7 +500,7 @@ namespace VirtoCommerce.Client.Api
             if (slug == null) throw new ApiException(400, "Missing required parameter 'slug' when calling CommerceGetSeoInfoBySlug");
             
     
-            var path = "/api/seoinfos/{slug}";
+            var path_ = "/api/seoinfos/{slug}";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -531,11 +531,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CommerceGetSeoInfoBySlug: " + response.Content, response.Content);
 
-            return (List<VirtoCommerceDomainCommerceModelSeoInfo>) ApiClient.Deserialize(response.Content, typeof(List<VirtoCommerceDomainCommerceModelSeoInfo>), response.Headers);
+            return (List<VirtoCommerceDomainCommerceModelSeoInfo>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceDomainCommerceModelSeoInfo>));
         }
         
     }

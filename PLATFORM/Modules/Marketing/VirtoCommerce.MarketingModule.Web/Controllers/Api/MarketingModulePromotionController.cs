@@ -21,20 +21,35 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
     {
 		private readonly IMarketingExtensionManager _marketingExtensionManager;
 		private readonly IPromotionService _promotionService;
+        private readonly IMarketingPromoEvaluator _promoEvaluator;
 
-		public MarketingModulePromotionController(IPromotionService promotionService, 	IMarketingExtensionManager promotionManager)
+		public MarketingModulePromotionController(IPromotionService promotionService, 	IMarketingExtensionManager promotionManager, IMarketingPromoEvaluator promoEvaluator)
 		{
 			_marketingExtensionManager = promotionManager;
 			_promotionService = promotionService;
-		}
+            _promoEvaluator = promoEvaluator;
+        }
 
 
-		/// <summary>
-		/// Find promotion object by id
-		/// </summary>
-		/// <remarks>Return a single promotion (dynamic or custom) object </remarks>
-		/// <param name="id">promotion id</param>
-		[HttpGet]
+        /// <summary>
+        /// Evaluate promotions
+        /// </summary>
+        /// <param name="context">Promotion evaluation context</param>
+        [HttpPost]
+        [ResponseType(typeof(webModel.PromotionReward[]))]
+        [Route("evaluate")]
+        public IHttpActionResult EvaluatePromotions(coreModel.PromotionEvaluationContext context)
+        {
+            var retVal = _promoEvaluator.EvaluatePromotion(context);
+            return Ok(retVal.Rewards.Select(x => x.ToWebModel()).ToArray());
+        }
+
+        /// <summary>
+        /// Find promotion object by id
+        /// </summary>
+        /// <remarks>Return a single promotion (dynamic or custom) object </remarks>
+        /// <param name="id">promotion id</param>
+        [HttpGet]
 		[ResponseType(typeof(webModel.Promotion))]
 		[Route("{id}")]
 		public IHttpActionResult GetPromotionById(string id)

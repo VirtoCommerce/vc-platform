@@ -74,6 +74,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Binders\BaseModelBinder.cs" />
+    <Compile Include="Binders\LoginModelBinder.cs" />
+    <Compile Include="Binders\RegisterModelBinder.cs" />
+    <Compile Include="Binders\ShopifyModelBinderProvider.cs" />
     <Compile Include="DotLiquidThemedView.cs" />
     <Compile Include="DotLiquidThemedViewEngine.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />

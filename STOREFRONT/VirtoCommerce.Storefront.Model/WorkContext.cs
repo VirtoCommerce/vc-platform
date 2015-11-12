@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using System.Linq;
 using VirtoCommerce.Storefront.Model.Common;
 
@@ -31,7 +30,7 @@ namespace VirtoCommerce.Storefront.Model
         {
             get
             {
-                if(_seoInfo == null)
+                if (_seoInfo == null)
                 {
                     //TODO: next need detec seo from category or product or cart etc
                     _seoInfo = CurrentStore.SeoInfos.FirstOrDefault();
@@ -51,6 +50,7 @@ namespace VirtoCommerce.Storefront.Model
         /// List of all supported stores
         /// </summary>
         public Store[] AllStores { get; set; }
+        public int CurrentPage { get; set; }
         
         /// <summary>
         /// List of categories

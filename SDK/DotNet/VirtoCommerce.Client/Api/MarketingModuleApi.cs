@@ -537,7 +537,7 @@ namespace VirtoCommerce.Client.Api
             if (folder == null) throw new ApiException(400, "Missing required parameter 'folder' when calling MarketingModuleDynamicContentUpdateDynamicContentFolder");
             
     
-            var path = "/api/marketing/contentfolders";
+            var path_ = "/api/marketing/contentfolders";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -568,7 +568,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModuleDynamicContentUpdateDynamicContentFolder: " + response.Content, response.Content);
@@ -589,7 +589,7 @@ namespace VirtoCommerce.Client.Api
             if (folder == null) throw new ApiException(400, "Missing required parameter 'folder' when calling MarketingModuleDynamicContentUpdateDynamicContentFolder");
             
     
-            var path = "/api/marketing/contentfolders";
+            var path_ = "/api/marketing/contentfolders";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -620,7 +620,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModuleDynamicContentUpdateDynamicContentFolder: " + response.Content, response.Content);
 
@@ -640,7 +640,7 @@ namespace VirtoCommerce.Client.Api
             if (folder == null) throw new ApiException(400, "Missing required parameter 'folder' when calling MarketingModuleDynamicContentCreateDynamicContentFolder");
             
     
-            var path = "/api/marketing/contentfolders";
+            var path_ = "/api/marketing/contentfolders";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -671,14 +671,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModuleDynamicContentCreateDynamicContentFolder: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModuleDynamicContentCreateDynamicContentFolder: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommerceMarketingModuleWebModelDynamicContentFolder) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentFolder), response.Headers);
+            return (VirtoCommerceMarketingModuleWebModelDynamicContentFolder) ApiClient.Deserialize(response, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentFolder));
         }
     
         /// <summary>
@@ -692,7 +692,7 @@ namespace VirtoCommerce.Client.Api
             if (folder == null) throw new ApiException(400, "Missing required parameter 'folder' when calling MarketingModuleDynamicContentCreateDynamicContentFolder");
             
     
-            var path = "/api/marketing/contentfolders";
+            var path_ = "/api/marketing/contentfolders";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -723,11 +723,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModuleDynamicContentCreateDynamicContentFolder: " + response.Content, response.Content);
 
-            return (VirtoCommerceMarketingModuleWebModelDynamicContentFolder) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentFolder), response.Headers);
+            return (VirtoCommerceMarketingModuleWebModelDynamicContentFolder) ApiClient.Deserialize(response, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentFolder));
         }
         
         /// <summary>
@@ -742,7 +742,7 @@ namespace VirtoCommerce.Client.Api
             if (ids == null) throw new ApiException(400, "Missing required parameter 'ids' when calling MarketingModuleDynamicContentDeleteDynamicContentFolders");
             
     
-            var path = "/api/marketing/contentfolders";
+            var path_ = "/api/marketing/contentfolders";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -773,7 +773,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModuleDynamicContentDeleteDynamicContentFolders: " + response.Content, response.Content);
@@ -794,7 +794,7 @@ namespace VirtoCommerce.Client.Api
             if (ids == null) throw new ApiException(400, "Missing required parameter 'ids' when calling MarketingModuleDynamicContentDeleteDynamicContentFolders");
             
     
-            var path = "/api/marketing/contentfolders";
+            var path_ = "/api/marketing/contentfolders";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -825,7 +825,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModuleDynamicContentDeleteDynamicContentFolders: " + response.Content, response.Content);
 
@@ -845,7 +845,7 @@ namespace VirtoCommerce.Client.Api
             if (id == null) throw new ApiException(400, "Missing required parameter 'id' when calling MarketingModuleDynamicContentGetDynamicContentFolderById");
             
     
-            var path = "/api/marketing/contentfolders/{id}";
+            var path_ = "/api/marketing/contentfolders/{id}";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -876,14 +876,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModuleDynamicContentGetDynamicContentFolderById: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModuleDynamicContentGetDynamicContentFolderById: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommerceMarketingModuleWebModelDynamicContentFolder) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentFolder), response.Headers);
+            return (VirtoCommerceMarketingModuleWebModelDynamicContentFolder) ApiClient.Deserialize(response, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentFolder));
         }
     
         /// <summary>
@@ -897,7 +897,7 @@ namespace VirtoCommerce.Client.Api
             if (id == null) throw new ApiException(400, "Missing required parameter 'id' when calling MarketingModuleDynamicContentGetDynamicContentFolderById");
             
     
-            var path = "/api/marketing/contentfolders/{id}";
+            var path_ = "/api/marketing/contentfolders/{id}";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -928,11 +928,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModuleDynamicContentGetDynamicContentFolderById: " + response.Content, response.Content);
 
-            return (VirtoCommerceMarketingModuleWebModelDynamicContentFolder) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentFolder), response.Headers);
+            return (VirtoCommerceMarketingModuleWebModelDynamicContentFolder) ApiClient.Deserialize(response, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentFolder));
         }
         
         /// <summary>
@@ -947,7 +947,7 @@ namespace VirtoCommerce.Client.Api
             if (contentItem == null) throw new ApiException(400, "Missing required parameter 'contentItem' when calling MarketingModuleDynamicContentUpdateDynamicContent");
             
     
-            var path = "/api/marketing/contentitems";
+            var path_ = "/api/marketing/contentitems";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -978,7 +978,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModuleDynamicContentUpdateDynamicContent: " + response.Content, response.Content);
@@ -999,7 +999,7 @@ namespace VirtoCommerce.Client.Api
             if (contentItem == null) throw new ApiException(400, "Missing required parameter 'contentItem' when calling MarketingModuleDynamicContentUpdateDynamicContent");
             
     
-            var path = "/api/marketing/contentitems";
+            var path_ = "/api/marketing/contentitems";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1030,7 +1030,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModuleDynamicContentUpdateDynamicContent: " + response.Content, response.Content);
 
@@ -1050,7 +1050,7 @@ namespace VirtoCommerce.Client.Api
             if (contentItem == null) throw new ApiException(400, "Missing required parameter 'contentItem' when calling MarketingModuleDynamicContentCreateDynamicContent");
             
     
-            var path = "/api/marketing/contentitems";
+            var path_ = "/api/marketing/contentitems";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1081,14 +1081,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModuleDynamicContentCreateDynamicContent: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModuleDynamicContentCreateDynamicContent: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommerceMarketingModuleWebModelDynamicContentItem) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentItem), response.Headers);
+            return (VirtoCommerceMarketingModuleWebModelDynamicContentItem) ApiClient.Deserialize(response, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentItem));
         }
     
         /// <summary>
@@ -1102,7 +1102,7 @@ namespace VirtoCommerce.Client.Api
             if (contentItem == null) throw new ApiException(400, "Missing required parameter 'contentItem' when calling MarketingModuleDynamicContentCreateDynamicContent");
             
     
-            var path = "/api/marketing/contentitems";
+            var path_ = "/api/marketing/contentitems";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1133,11 +1133,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModuleDynamicContentCreateDynamicContent: " + response.Content, response.Content);
 
-            return (VirtoCommerceMarketingModuleWebModelDynamicContentItem) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentItem), response.Headers);
+            return (VirtoCommerceMarketingModuleWebModelDynamicContentItem) ApiClient.Deserialize(response, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentItem));
         }
         
         /// <summary>
@@ -1152,7 +1152,7 @@ namespace VirtoCommerce.Client.Api
             if (ids == null) throw new ApiException(400, "Missing required parameter 'ids' when calling MarketingModuleDynamicContentDeleteDynamicContents");
             
     
-            var path = "/api/marketing/contentitems";
+            var path_ = "/api/marketing/contentitems";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1183,7 +1183,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModuleDynamicContentDeleteDynamicContents: " + response.Content, response.Content);
@@ -1204,7 +1204,7 @@ namespace VirtoCommerce.Client.Api
             if (ids == null) throw new ApiException(400, "Missing required parameter 'ids' when calling MarketingModuleDynamicContentDeleteDynamicContents");
             
     
-            var path = "/api/marketing/contentitems";
+            var path_ = "/api/marketing/contentitems";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1235,7 +1235,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModuleDynamicContentDeleteDynamicContents: " + response.Content, response.Content);
 
@@ -1255,7 +1255,7 @@ namespace VirtoCommerce.Client.Api
             if (id == null) throw new ApiException(400, "Missing required parameter 'id' when calling MarketingModuleDynamicContentGetDynamicContentById");
             
     
-            var path = "/api/marketing/contentitems/{id}";
+            var path_ = "/api/marketing/contentitems/{id}";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1286,14 +1286,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModuleDynamicContentGetDynamicContentById: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModuleDynamicContentGetDynamicContentById: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommerceMarketingModuleWebModelDynamicContentItem) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentItem), response.Headers);
+            return (VirtoCommerceMarketingModuleWebModelDynamicContentItem) ApiClient.Deserialize(response, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentItem));
         }
     
         /// <summary>
@@ -1307,7 +1307,7 @@ namespace VirtoCommerce.Client.Api
             if (id == null) throw new ApiException(400, "Missing required parameter 'id' when calling MarketingModuleDynamicContentGetDynamicContentById");
             
     
-            var path = "/api/marketing/contentitems/{id}";
+            var path_ = "/api/marketing/contentitems/{id}";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1338,11 +1338,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModuleDynamicContentGetDynamicContentById: " + response.Content, response.Content);
 
-            return (VirtoCommerceMarketingModuleWebModelDynamicContentItem) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentItem), response.Headers);
+            return (VirtoCommerceMarketingModuleWebModelDynamicContentItem) ApiClient.Deserialize(response, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentItem));
         }
         
         /// <summary>
@@ -1357,7 +1357,7 @@ namespace VirtoCommerce.Client.Api
             if (contentPlace == null) throw new ApiException(400, "Missing required parameter 'contentPlace' when calling MarketingModuleDynamicContentUpdateDynamicContentPlace");
             
     
-            var path = "/api/marketing/contentplaces";
+            var path_ = "/api/marketing/contentplaces";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1388,7 +1388,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModuleDynamicContentUpdateDynamicContentPlace: " + response.Content, response.Content);
@@ -1409,7 +1409,7 @@ namespace VirtoCommerce.Client.Api
             if (contentPlace == null) throw new ApiException(400, "Missing required parameter 'contentPlace' when calling MarketingModuleDynamicContentUpdateDynamicContentPlace");
             
     
-            var path = "/api/marketing/contentplaces";
+            var path_ = "/api/marketing/contentplaces";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1440,7 +1440,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModuleDynamicContentUpdateDynamicContentPlace: " + response.Content, response.Content);
 
@@ -1460,7 +1460,7 @@ namespace VirtoCommerce.Client.Api
             if (contentPlace == null) throw new ApiException(400, "Missing required parameter 'contentPlace' when calling MarketingModuleDynamicContentCreateDynamicContentPlace");
             
     
-            var path = "/api/marketing/contentplaces";
+            var path_ = "/api/marketing/contentplaces";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1491,14 +1491,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModuleDynamicContentCreateDynamicContentPlace: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModuleDynamicContentCreateDynamicContentPlace: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommerceMarketingModuleWebModelDynamicContentPlace) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentPlace), response.Headers);
+            return (VirtoCommerceMarketingModuleWebModelDynamicContentPlace) ApiClient.Deserialize(response, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentPlace));
         }
     
         /// <summary>
@@ -1512,7 +1512,7 @@ namespace VirtoCommerce.Client.Api
             if (contentPlace == null) throw new ApiException(400, "Missing required parameter 'contentPlace' when calling MarketingModuleDynamicContentCreateDynamicContentPlace");
             
     
-            var path = "/api/marketing/contentplaces";
+            var path_ = "/api/marketing/contentplaces";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1543,11 +1543,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModuleDynamicContentCreateDynamicContentPlace: " + response.Content, response.Content);
 
-            return (VirtoCommerceMarketingModuleWebModelDynamicContentPlace) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentPlace), response.Headers);
+            return (VirtoCommerceMarketingModuleWebModelDynamicContentPlace) ApiClient.Deserialize(response, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentPlace));
         }
         
         /// <summary>
@@ -1562,7 +1562,7 @@ namespace VirtoCommerce.Client.Api
             if (ids == null) throw new ApiException(400, "Missing required parameter 'ids' when calling MarketingModuleDynamicContentDeleteDynamicContentPlaces");
             
     
-            var path = "/api/marketing/contentplaces";
+            var path_ = "/api/marketing/contentplaces";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1593,7 +1593,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModuleDynamicContentDeleteDynamicContentPlaces: " + response.Content, response.Content);
@@ -1614,7 +1614,7 @@ namespace VirtoCommerce.Client.Api
             if (ids == null) throw new ApiException(400, "Missing required parameter 'ids' when calling MarketingModuleDynamicContentDeleteDynamicContentPlaces");
             
     
-            var path = "/api/marketing/contentplaces";
+            var path_ = "/api/marketing/contentplaces";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1645,7 +1645,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModuleDynamicContentDeleteDynamicContentPlaces: " + response.Content, response.Content);
 
@@ -1665,7 +1665,7 @@ namespace VirtoCommerce.Client.Api
             if (id == null) throw new ApiException(400, "Missing required parameter 'id' when calling MarketingModuleDynamicContentGetDynamicContentPlaceById");
             
     
-            var path = "/api/marketing/contentplaces/{id}";
+            var path_ = "/api/marketing/contentplaces/{id}";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1696,14 +1696,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModuleDynamicContentGetDynamicContentPlaceById: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModuleDynamicContentGetDynamicContentPlaceById: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommerceMarketingModuleWebModelDynamicContentPlace) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentPlace), response.Headers);
+            return (VirtoCommerceMarketingModuleWebModelDynamicContentPlace) ApiClient.Deserialize(response, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentPlace));
         }
     
         /// <summary>
@@ -1717,7 +1717,7 @@ namespace VirtoCommerce.Client.Api
             if (id == null) throw new ApiException(400, "Missing required parameter 'id' when calling MarketingModuleDynamicContentGetDynamicContentPlaceById");
             
     
-            var path = "/api/marketing/contentplaces/{id}";
+            var path_ = "/api/marketing/contentplaces/{id}";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1748,11 +1748,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModuleDynamicContentGetDynamicContentPlaceById: " + response.Content, response.Content);
 
-            return (VirtoCommerceMarketingModuleWebModelDynamicContentPlace) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentPlace), response.Headers);
+            return (VirtoCommerceMarketingModuleWebModelDynamicContentPlace) ApiClient.Deserialize(response, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentPlace));
         }
         
         /// <summary>
@@ -1767,7 +1767,7 @@ namespace VirtoCommerce.Client.Api
             if (publication == null) throw new ApiException(400, "Missing required parameter 'publication' when calling MarketingModuleDynamicContentUpdateDynamicContentPublication");
             
     
-            var path = "/api/marketing/contentpublications";
+            var path_ = "/api/marketing/contentpublications";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1798,7 +1798,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModuleDynamicContentUpdateDynamicContentPublication: " + response.Content, response.Content);
@@ -1819,7 +1819,7 @@ namespace VirtoCommerce.Client.Api
             if (publication == null) throw new ApiException(400, "Missing required parameter 'publication' when calling MarketingModuleDynamicContentUpdateDynamicContentPublication");
             
     
-            var path = "/api/marketing/contentpublications";
+            var path_ = "/api/marketing/contentpublications";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1850,7 +1850,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModuleDynamicContentUpdateDynamicContentPublication: " + response.Content, response.Content);
 
@@ -1870,7 +1870,7 @@ namespace VirtoCommerce.Client.Api
             if (publication == null) throw new ApiException(400, "Missing required parameter 'publication' when calling MarketingModuleDynamicContentCreateDynamicContentPublication");
             
     
-            var path = "/api/marketing/contentpublications";
+            var path_ = "/api/marketing/contentpublications";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1901,14 +1901,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModuleDynamicContentCreateDynamicContentPublication: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModuleDynamicContentCreateDynamicContentPublication: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommerceMarketingModuleWebModelDynamicContentPublication) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentPublication), response.Headers);
+            return (VirtoCommerceMarketingModuleWebModelDynamicContentPublication) ApiClient.Deserialize(response, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentPublication));
         }
     
         /// <summary>
@@ -1922,7 +1922,7 @@ namespace VirtoCommerce.Client.Api
             if (publication == null) throw new ApiException(400, "Missing required parameter 'publication' when calling MarketingModuleDynamicContentCreateDynamicContentPublication");
             
     
-            var path = "/api/marketing/contentpublications";
+            var path_ = "/api/marketing/contentpublications";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1953,11 +1953,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModuleDynamicContentCreateDynamicContentPublication: " + response.Content, response.Content);
 
-            return (VirtoCommerceMarketingModuleWebModelDynamicContentPublication) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentPublication), response.Headers);
+            return (VirtoCommerceMarketingModuleWebModelDynamicContentPublication) ApiClient.Deserialize(response, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentPublication));
         }
         
         /// <summary>
@@ -1972,7 +1972,7 @@ namespace VirtoCommerce.Client.Api
             if (ids == null) throw new ApiException(400, "Missing required parameter 'ids' when calling MarketingModuleDynamicContentDeleteDynamicContentPublications");
             
     
-            var path = "/api/marketing/contentpublications";
+            var path_ = "/api/marketing/contentpublications";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -2003,7 +2003,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModuleDynamicContentDeleteDynamicContentPublications: " + response.Content, response.Content);
@@ -2024,7 +2024,7 @@ namespace VirtoCommerce.Client.Api
             if (ids == null) throw new ApiException(400, "Missing required parameter 'ids' when calling MarketingModuleDynamicContentDeleteDynamicContentPublications");
             
     
-            var path = "/api/marketing/contentpublications";
+            var path_ = "/api/marketing/contentpublications";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -2055,7 +2055,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModuleDynamicContentDeleteDynamicContentPublications: " + response.Content, response.Content);
 
@@ -2071,7 +2071,7 @@ namespace VirtoCommerce.Client.Api
         {
             
     
-            var path = "/api/marketing/contentpublications/new";
+            var path_ = "/api/marketing/contentpublications/new";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -2101,14 +2101,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModuleDynamicContentGetNewDynamicPublication: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModuleDynamicContentGetNewDynamicPublication: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommerceMarketingModuleWebModelDynamicContentPublication) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentPublication), response.Headers);
+            return (VirtoCommerceMarketingModuleWebModelDynamicContentPublication) ApiClient.Deserialize(response, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentPublication));
         }
     
         /// <summary>
@@ -2119,7 +2119,7 @@ namespace VirtoCommerce.Client.Api
         {
             
     
-            var path = "/api/marketing/contentpublications/new";
+            var path_ = "/api/marketing/contentpublications/new";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -2149,11 +2149,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModuleDynamicContentGetNewDynamicPublication: " + response.Content, response.Content);
 
-            return (VirtoCommerceMarketingModuleWebModelDynamicContentPublication) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentPublication), response.Headers);
+            return (VirtoCommerceMarketingModuleWebModelDynamicContentPublication) ApiClient.Deserialize(response, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentPublication));
         }
         
         /// <summary>
@@ -2168,7 +2168,7 @@ namespace VirtoCommerce.Client.Api
             if (id == null) throw new ApiException(400, "Missing required parameter 'id' when calling MarketingModuleDynamicContentGetDynamicContentPublicationById");
             
     
-            var path = "/api/marketing/contentpublications/{id}";
+            var path_ = "/api/marketing/contentpublications/{id}";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -2199,14 +2199,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModuleDynamicContentGetDynamicContentPublicationById: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModuleDynamicContentGetDynamicContentPublicationById: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommerceMarketingModuleWebModelDynamicContentPublication) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentPublication), response.Headers);
+            return (VirtoCommerceMarketingModuleWebModelDynamicContentPublication) ApiClient.Deserialize(response, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentPublication));
         }
     
         /// <summary>
@@ -2220,7 +2220,7 @@ namespace VirtoCommerce.Client.Api
             if (id == null) throw new ApiException(400, "Missing required parameter 'id' when calling MarketingModuleDynamicContentGetDynamicContentPublicationById");
             
     
-            var path = "/api/marketing/contentpublications/{id}";
+            var path_ = "/api/marketing/contentpublications/{id}";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -2251,11 +2251,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModuleDynamicContentGetDynamicContentPublicationById: " + response.Content, response.Content);
 
-            return (VirtoCommerceMarketingModuleWebModelDynamicContentPublication) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentPublication), response.Headers);
+            return (VirtoCommerceMarketingModuleWebModelDynamicContentPublication) ApiClient.Deserialize(response, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentPublication));
         }
         
         /// <summary>
@@ -2270,7 +2270,7 @@ namespace VirtoCommerce.Client.Api
             if (promotion == null) throw new ApiException(400, "Missing required parameter 'promotion' when calling MarketingModulePromotionUpdatePromotions");
             
     
-            var path = "/api/marketing/promotions";
+            var path_ = "/api/marketing/promotions";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -2301,7 +2301,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModulePromotionUpdatePromotions: " + response.Content, response.Content);
@@ -2322,7 +2322,7 @@ namespace VirtoCommerce.Client.Api
             if (promotion == null) throw new ApiException(400, "Missing required parameter 'promotion' when calling MarketingModulePromotionUpdatePromotions");
             
     
-            var path = "/api/marketing/promotions";
+            var path_ = "/api/marketing/promotions";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -2353,7 +2353,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModulePromotionUpdatePromotions: " + response.Content, response.Content);
 
@@ -2373,7 +2373,7 @@ namespace VirtoCommerce.Client.Api
             if (promotion == null) throw new ApiException(400, "Missing required parameter 'promotion' when calling MarketingModulePromotionCreatePromotion");
             
     
-            var path = "/api/marketing/promotions";
+            var path_ = "/api/marketing/promotions";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -2404,14 +2404,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModulePromotionCreatePromotion: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModulePromotionCreatePromotion: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommerceMarketingModuleWebModelPromotion) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceMarketingModuleWebModelPromotion), response.Headers);
+            return (VirtoCommerceMarketingModuleWebModelPromotion) ApiClient.Deserialize(response, typeof(VirtoCommerceMarketingModuleWebModelPromotion));
         }
     
         /// <summary>
@@ -2425,7 +2425,7 @@ namespace VirtoCommerce.Client.Api
             if (promotion == null) throw new ApiException(400, "Missing required parameter 'promotion' when calling MarketingModulePromotionCreatePromotion");
             
     
-            var path = "/api/marketing/promotions";
+            var path_ = "/api/marketing/promotions";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -2456,11 +2456,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModulePromotionCreatePromotion: " + response.Content, response.Content);
 
-            return (VirtoCommerceMarketingModuleWebModelPromotion) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceMarketingModuleWebModelPromotion), response.Headers);
+            return (VirtoCommerceMarketingModuleWebModelPromotion) ApiClient.Deserialize(response, typeof(VirtoCommerceMarketingModuleWebModelPromotion));
         }
         
         /// <summary>
@@ -2475,7 +2475,7 @@ namespace VirtoCommerce.Client.Api
             if (ids == null) throw new ApiException(400, "Missing required parameter 'ids' when calling MarketingModulePromotionDeletePromotions");
             
     
-            var path = "/api/marketing/promotions";
+            var path_ = "/api/marketing/promotions";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -2506,7 +2506,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModulePromotionDeletePromotions: " + response.Content, response.Content);
@@ -2527,7 +2527,7 @@ namespace VirtoCommerce.Client.Api
             if (ids == null) throw new ApiException(400, "Missing required parameter 'ids' when calling MarketingModulePromotionDeletePromotions");
             
     
-            var path = "/api/marketing/promotions";
+            var path_ = "/api/marketing/promotions";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -2558,7 +2558,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModulePromotionDeletePromotions: " + response.Content, response.Content);
 
@@ -2574,7 +2574,7 @@ namespace VirtoCommerce.Client.Api
         {
             
     
-            var path = "/api/marketing/promotions/new";
+            var path_ = "/api/marketing/promotions/new";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -2604,14 +2604,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModulePromotionGetNewDynamicPromotion: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModulePromotionGetNewDynamicPromotion: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommerceMarketingModuleWebModelPromotion) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceMarketingModuleWebModelPromotion), response.Headers);
+            return (VirtoCommerceMarketingModuleWebModelPromotion) ApiClient.Deserialize(response, typeof(VirtoCommerceMarketingModuleWebModelPromotion));
         }
     
         /// <summary>
@@ -2622,7 +2622,7 @@ namespace VirtoCommerce.Client.Api
         {
             
     
-            var path = "/api/marketing/promotions/new";
+            var path_ = "/api/marketing/promotions/new";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -2652,11 +2652,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModulePromotionGetNewDynamicPromotion: " + response.Content, response.Content);
 
-            return (VirtoCommerceMarketingModuleWebModelPromotion) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceMarketingModuleWebModelPromotion), response.Headers);
+            return (VirtoCommerceMarketingModuleWebModelPromotion) ApiClient.Deserialize(response, typeof(VirtoCommerceMarketingModuleWebModelPromotion));
         }
         
         /// <summary>
@@ -2671,7 +2671,7 @@ namespace VirtoCommerce.Client.Api
             if (id == null) throw new ApiException(400, "Missing required parameter 'id' when calling MarketingModulePromotionGetPromotionById");
             
     
-            var path = "/api/marketing/promotions/{id}";
+            var path_ = "/api/marketing/promotions/{id}";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -2702,14 +2702,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModulePromotionGetPromotionById: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModulePromotionGetPromotionById: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommerceMarketingModuleWebModelPromotion) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceMarketingModuleWebModelPromotion), response.Headers);
+            return (VirtoCommerceMarketingModuleWebModelPromotion) ApiClient.Deserialize(response, typeof(VirtoCommerceMarketingModuleWebModelPromotion));
         }
     
         /// <summary>
@@ -2723,7 +2723,7 @@ namespace VirtoCommerce.Client.Api
             if (id == null) throw new ApiException(400, "Missing required parameter 'id' when calling MarketingModulePromotionGetPromotionById");
             
     
-            var path = "/api/marketing/promotions/{id}";
+            var path_ = "/api/marketing/promotions/{id}";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -2754,11 +2754,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModulePromotionGetPromotionById: " + response.Content, response.Content);
 
-            return (VirtoCommerceMarketingModuleWebModelPromotion) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceMarketingModuleWebModelPromotion), response.Headers);
+            return (VirtoCommerceMarketingModuleWebModelPromotion) ApiClient.Deserialize(response, typeof(VirtoCommerceMarketingModuleWebModelPromotion));
         }
         
         /// <summary>
@@ -2774,7 +2774,7 @@ namespace VirtoCommerce.Client.Api
         {
             
     
-            var path = "/api/marketing/search";
+            var path_ = "/api/marketing/search";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -2809,14 +2809,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModuleSearch: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModuleSearch: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommerceMarketingModuleWebModelMarketingSearchResult) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceMarketingModuleWebModelMarketingSearchResult), response.Headers);
+            return (VirtoCommerceMarketingModuleWebModelMarketingSearchResult) ApiClient.Deserialize(response, typeof(VirtoCommerceMarketingModuleWebModelMarketingSearchResult));
         }
     
         /// <summary>
@@ -2832,7 +2832,7 @@ namespace VirtoCommerce.Client.Api
         {
             
     
-            var path = "/api/marketing/search";
+            var path_ = "/api/marketing/search";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -2867,11 +2867,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarketingModuleSearch: " + response.Content, response.Content);
 
-            return (VirtoCommerceMarketingModuleWebModelMarketingSearchResult) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceMarketingModuleWebModelMarketingSearchResult), response.Headers);
+            return (VirtoCommerceMarketingModuleWebModelMarketingSearchResult) ApiClient.Deserialize(response, typeof(VirtoCommerceMarketingModuleWebModelMarketingSearchResult));
         }
         
     }

@@ -631,7 +631,7 @@ namespace VirtoCommerce.Client.Api
             if (pagesUpdated == null) throw new ApiException(400, "Missing required parameter 'pagesUpdated' when calling SyncSyncAssets");
             
     
-            var path = "/api/cms/sync/stores/{storeId}/assets";
+            var path_ = "/api/cms/sync/stores/{storeId}/assets";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -665,14 +665,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling SyncSyncAssets: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling SyncSyncAssets: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (List<VirtoCommerceContentWebModelsSyncAssetGroup>) ApiClient.Deserialize(response.Content, typeof(List<VirtoCommerceContentWebModelsSyncAssetGroup>), response.Headers);
+            return (List<VirtoCommerceContentWebModelsSyncAssetGroup>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceContentWebModelsSyncAssetGroup>));
         }
     
         /// <summary>
@@ -695,7 +695,7 @@ namespace VirtoCommerce.Client.Api
             if (pagesUpdated == null) throw new ApiException(400, "Missing required parameter 'pagesUpdated' when calling SyncSyncAssets");
             
     
-            var path = "/api/cms/sync/stores/{storeId}/assets";
+            var path_ = "/api/cms/sync/stores/{storeId}/assets";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -729,11 +729,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling SyncSyncAssets: " + response.Content, response.Content);
 
-            return (List<VirtoCommerceContentWebModelsSyncAssetGroup>) ApiClient.Deserialize(response.Content, typeof(List<VirtoCommerceContentWebModelsSyncAssetGroup>), response.Headers);
+            return (List<VirtoCommerceContentWebModelsSyncAssetGroup>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceContentWebModelsSyncAssetGroup>));
         }
         
         /// <summary>
@@ -748,7 +748,7 @@ namespace VirtoCommerce.Client.Api
             if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling MenuGetLists");
             
     
-            var path = "/api/cms/{storeId}/menu";
+            var path_ = "/api/cms/{storeId}/menu";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -779,14 +779,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MenuGetLists: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling MenuGetLists: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (List<VirtoCommerceContentWebModelsMenuLinkList>) ApiClient.Deserialize(response.Content, typeof(List<VirtoCommerceContentWebModelsMenuLinkList>), response.Headers);
+            return (List<VirtoCommerceContentWebModelsMenuLinkList>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceContentWebModelsMenuLinkList>));
         }
     
         /// <summary>
@@ -800,7 +800,7 @@ namespace VirtoCommerce.Client.Api
             if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling MenuGetLists");
             
     
-            var path = "/api/cms/{storeId}/menu";
+            var path_ = "/api/cms/{storeId}/menu";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -831,11 +831,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MenuGetLists: " + response.Content, response.Content);
 
-            return (List<VirtoCommerceContentWebModelsMenuLinkList>) ApiClient.Deserialize(response.Content, typeof(List<VirtoCommerceContentWebModelsMenuLinkList>), response.Headers);
+            return (List<VirtoCommerceContentWebModelsMenuLinkList>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceContentWebModelsMenuLinkList>));
         }
         
         /// <summary>
@@ -854,7 +854,7 @@ namespace VirtoCommerce.Client.Api
             if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling MenuUpdate");
             
     
-            var path = "/api/cms/{storeId}/menu";
+            var path_ = "/api/cms/{storeId}/menu";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -886,7 +886,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MenuUpdate: " + response.Content, response.Content);
@@ -910,7 +910,7 @@ namespace VirtoCommerce.Client.Api
             if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling MenuUpdate");
             
     
-            var path = "/api/cms/{storeId}/menu";
+            var path_ = "/api/cms/{storeId}/menu";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -942,7 +942,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MenuUpdate: " + response.Content, response.Content);
 
@@ -966,7 +966,7 @@ namespace VirtoCommerce.Client.Api
             if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling MenuDelete");
             
     
-            var path = "/api/cms/{storeId}/menu";
+            var path_ = "/api/cms/{storeId}/menu";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -998,7 +998,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MenuDelete: " + response.Content, response.Content);
@@ -1022,7 +1022,7 @@ namespace VirtoCommerce.Client.Api
             if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling MenuDelete");
             
     
-            var path = "/api/cms/{storeId}/menu";
+            var path_ = "/api/cms/{storeId}/menu";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1054,7 +1054,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MenuDelete: " + response.Content, response.Content);
 
@@ -1083,7 +1083,7 @@ namespace VirtoCommerce.Client.Api
             if (language == null) throw new ApiException(400, "Missing required parameter 'language' when calling MenuCheckName");
             
     
-            var path = "/api/cms/{storeId}/menu/checkname";
+            var path_ = "/api/cms/{storeId}/menu/checkname";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1117,14 +1117,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MenuCheckName: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling MenuCheckName: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommerceContentWebModelsCheckNameResult) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceContentWebModelsCheckNameResult), response.Headers);
+            return (VirtoCommerceContentWebModelsCheckNameResult) ApiClient.Deserialize(response, typeof(VirtoCommerceContentWebModelsCheckNameResult));
         }
     
         /// <summary>
@@ -1145,7 +1145,7 @@ namespace VirtoCommerce.Client.Api
             if (language == null) throw new ApiException(400, "Missing required parameter 'language' when calling MenuCheckName");
             
     
-            var path = "/api/cms/{storeId}/menu/checkname";
+            var path_ = "/api/cms/{storeId}/menu/checkname";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1179,11 +1179,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MenuCheckName: " + response.Content, response.Content);
 
-            return (VirtoCommerceContentWebModelsCheckNameResult) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceContentWebModelsCheckNameResult), response.Headers);
+            return (VirtoCommerceContentWebModelsCheckNameResult) ApiClient.Deserialize(response, typeof(VirtoCommerceContentWebModelsCheckNameResult));
         }
         
         /// <summary>
@@ -1202,7 +1202,7 @@ namespace VirtoCommerce.Client.Api
             if (listId == null) throw new ApiException(400, "Missing required parameter 'listId' when calling MenuGetList");
             
     
-            var path = "/api/cms/{storeId}/menu/{listId}";
+            var path_ = "/api/cms/{storeId}/menu/{listId}";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1234,14 +1234,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MenuGetList: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling MenuGetList: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommerceContentWebModelsMenuLinkList) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceContentWebModelsMenuLinkList), response.Headers);
+            return (VirtoCommerceContentWebModelsMenuLinkList) ApiClient.Deserialize(response, typeof(VirtoCommerceContentWebModelsMenuLinkList));
         }
     
         /// <summary>
@@ -1258,7 +1258,7 @@ namespace VirtoCommerce.Client.Api
             if (listId == null) throw new ApiException(400, "Missing required parameter 'listId' when calling MenuGetList");
             
     
-            var path = "/api/cms/{storeId}/menu/{listId}";
+            var path_ = "/api/cms/{storeId}/menu/{listId}";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1290,11 +1290,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling MenuGetList: " + response.Content, response.Content);
 
-            return (VirtoCommerceContentWebModelsMenuLinkList) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceContentWebModelsMenuLinkList), response.Headers);
+            return (VirtoCommerceContentWebModelsMenuLinkList) ApiClient.Deserialize(response, typeof(VirtoCommerceContentWebModelsMenuLinkList));
         }
         
         /// <summary>
@@ -1310,7 +1310,7 @@ namespace VirtoCommerce.Client.Api
             if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling PagesGetPages");
             
     
-            var path = "/api/cms/{storeId}/pages";
+            var path_ = "/api/cms/{storeId}/pages";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1342,14 +1342,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling PagesGetPages: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling PagesGetPages: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (List<VirtoCommerceContentWebModelsPage>) ApiClient.Deserialize(response.Content, typeof(List<VirtoCommerceContentWebModelsPage>), response.Headers);
+            return (List<VirtoCommerceContentWebModelsPage>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceContentWebModelsPage>));
         }
     
         /// <summary>
@@ -1364,7 +1364,7 @@ namespace VirtoCommerce.Client.Api
             if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling PagesGetPages");
             
     
-            var path = "/api/cms/{storeId}/pages";
+            var path_ = "/api/cms/{storeId}/pages";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1396,11 +1396,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling PagesGetPages: " + response.Content, response.Content);
 
-            return (List<VirtoCommerceContentWebModelsPage>) ApiClient.Deserialize(response.Content, typeof(List<VirtoCommerceContentWebModelsPage>), response.Headers);
+            return (List<VirtoCommerceContentWebModelsPage>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceContentWebModelsPage>));
         }
         
         /// <summary>
@@ -1419,7 +1419,7 @@ namespace VirtoCommerce.Client.Api
             if (page == null) throw new ApiException(400, "Missing required parameter 'page' when calling PagesSaveItem");
             
     
-            var path = "/api/cms/{storeId}/pages";
+            var path_ = "/api/cms/{storeId}/pages";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1451,7 +1451,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling PagesSaveItem: " + response.Content, response.Content);
@@ -1475,7 +1475,7 @@ namespace VirtoCommerce.Client.Api
             if (page == null) throw new ApiException(400, "Missing required parameter 'page' when calling PagesSaveItem");
             
     
-            var path = "/api/cms/{storeId}/pages";
+            var path_ = "/api/cms/{storeId}/pages";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1507,7 +1507,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling PagesSaveItem: " + response.Content, response.Content);
 
@@ -1531,7 +1531,7 @@ namespace VirtoCommerce.Client.Api
             if (pageNamesAndLanguges == null) throw new ApiException(400, "Missing required parameter 'pageNamesAndLanguges' when calling PagesDeleteItem");
             
     
-            var path = "/api/cms/{storeId}/pages";
+            var path_ = "/api/cms/{storeId}/pages";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1563,7 +1563,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling PagesDeleteItem: " + response.Content, response.Content);
@@ -1587,7 +1587,7 @@ namespace VirtoCommerce.Client.Api
             if (pageNamesAndLanguges == null) throw new ApiException(400, "Missing required parameter 'pageNamesAndLanguges' when calling PagesDeleteItem");
             
     
-            var path = "/api/cms/{storeId}/pages";
+            var path_ = "/api/cms/{storeId}/pages";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1619,7 +1619,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling PagesDeleteItem: " + response.Content, response.Content);
 
@@ -1643,7 +1643,7 @@ namespace VirtoCommerce.Client.Api
             if (blogName == null) throw new ApiException(400, "Missing required parameter 'blogName' when calling PagesCreateBlog");
             
     
-            var path = "/api/cms/{storeId}/pages/blog/{blogName}";
+            var path_ = "/api/cms/{storeId}/pages/blog/{blogName}";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1675,7 +1675,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling PagesCreateBlog: " + response.Content, response.Content);
@@ -1699,7 +1699,7 @@ namespace VirtoCommerce.Client.Api
             if (blogName == null) throw new ApiException(400, "Missing required parameter 'blogName' when calling PagesCreateBlog");
             
     
-            var path = "/api/cms/{storeId}/pages/blog/{blogName}";
+            var path_ = "/api/cms/{storeId}/pages/blog/{blogName}";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1731,7 +1731,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling PagesCreateBlog: " + response.Content, response.Content);
 
@@ -1755,7 +1755,7 @@ namespace VirtoCommerce.Client.Api
             if (blogName == null) throw new ApiException(400, "Missing required parameter 'blogName' when calling PagesDeleteBlog");
             
     
-            var path = "/api/cms/{storeId}/pages/blog/{blogName}";
+            var path_ = "/api/cms/{storeId}/pages/blog/{blogName}";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1787,7 +1787,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling PagesDeleteBlog: " + response.Content, response.Content);
@@ -1811,7 +1811,7 @@ namespace VirtoCommerce.Client.Api
             if (blogName == null) throw new ApiException(400, "Missing required parameter 'blogName' when calling PagesDeleteBlog");
             
     
-            var path = "/api/cms/{storeId}/pages/blog/{blogName}";
+            var path_ = "/api/cms/{storeId}/pages/blog/{blogName}";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1843,7 +1843,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling PagesDeleteBlog: " + response.Content, response.Content);
 
@@ -1871,7 +1871,7 @@ namespace VirtoCommerce.Client.Api
             if (oldBlogName == null) throw new ApiException(400, "Missing required parameter 'oldBlogName' when calling PagesUpdateBlog");
             
     
-            var path = "/api/cms/{storeId}/pages/blog/{blogName}/{oldBlogName}";
+            var path_ = "/api/cms/{storeId}/pages/blog/{blogName}/{oldBlogName}";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1904,7 +1904,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling PagesUpdateBlog: " + response.Content, response.Content);
@@ -1931,7 +1931,7 @@ namespace VirtoCommerce.Client.Api
             if (oldBlogName == null) throw new ApiException(400, "Missing required parameter 'oldBlogName' when calling PagesUpdateBlog");
             
     
-            var path = "/api/cms/{storeId}/pages/blog/{blogName}/{oldBlogName}";
+            var path_ = "/api/cms/{storeId}/pages/blog/{blogName}/{oldBlogName}";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1964,7 +1964,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling PagesUpdateBlog: " + response.Content, response.Content);
 
@@ -1992,7 +1992,7 @@ namespace VirtoCommerce.Client.Api
             if (language == null) throw new ApiException(400, "Missing required parameter 'language' when calling PagesCheckName");
             
     
-            var path = "/api/cms/{storeId}/pages/checkname";
+            var path_ = "/api/cms/{storeId}/pages/checkname";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -2025,14 +2025,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling PagesCheckName: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling PagesCheckName: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommerceContentWebModelsCheckNameResult) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceContentWebModelsCheckNameResult), response.Headers);
+            return (VirtoCommerceContentWebModelsCheckNameResult) ApiClient.Deserialize(response, typeof(VirtoCommerceContentWebModelsCheckNameResult));
         }
     
         /// <summary>
@@ -2052,7 +2052,7 @@ namespace VirtoCommerce.Client.Api
             if (language == null) throw new ApiException(400, "Missing required parameter 'language' when calling PagesCheckName");
             
     
-            var path = "/api/cms/{storeId}/pages/checkname";
+            var path_ = "/api/cms/{storeId}/pages/checkname";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -2085,11 +2085,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling PagesCheckName: " + response.Content, response.Content);
 
-            return (VirtoCommerceContentWebModelsCheckNameResult) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceContentWebModelsCheckNameResult), response.Headers);
+            return (VirtoCommerceContentWebModelsCheckNameResult) ApiClient.Deserialize(response, typeof(VirtoCommerceContentWebModelsCheckNameResult));
         }
         
         /// <summary>
@@ -2104,7 +2104,7 @@ namespace VirtoCommerce.Client.Api
             if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling PagesGetFolders");
             
     
-            var path = "/api/cms/{storeId}/pages/folders";
+            var path_ = "/api/cms/{storeId}/pages/folders";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -2135,14 +2135,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling PagesGetFolders: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling PagesGetFolders: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommerceContentWebModelsGetPagesResult) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceContentWebModelsGetPagesResult), response.Headers);
+            return (VirtoCommerceContentWebModelsGetPagesResult) ApiClient.Deserialize(response, typeof(VirtoCommerceContentWebModelsGetPagesResult));
         }
     
         /// <summary>
@@ -2156,7 +2156,7 @@ namespace VirtoCommerce.Client.Api
             if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling PagesGetFolders");
             
     
-            var path = "/api/cms/{storeId}/pages/folders";
+            var path_ = "/api/cms/{storeId}/pages/folders";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -2187,11 +2187,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling PagesGetFolders: " + response.Content, response.Content);
 
-            return (VirtoCommerceContentWebModelsGetPagesResult) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceContentWebModelsGetPagesResult), response.Headers);
+            return (VirtoCommerceContentWebModelsGetPagesResult) ApiClient.Deserialize(response, typeof(VirtoCommerceContentWebModelsGetPagesResult));
         }
         
         /// <summary>
@@ -2214,7 +2214,7 @@ namespace VirtoCommerce.Client.Api
             if (pageName == null) throw new ApiException(400, "Missing required parameter 'pageName' when calling PagesGetPage");
             
     
-            var path = "/api/cms/{storeId}/pages/{language}/{pageName}";
+            var path_ = "/api/cms/{storeId}/pages/{language}/{pageName}";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -2247,14 +2247,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling PagesGetPage: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling PagesGetPage: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommerceContentWebModelsPage) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceContentWebModelsPage), response.Headers);
+            return (VirtoCommerceContentWebModelsPage) ApiClient.Deserialize(response, typeof(VirtoCommerceContentWebModelsPage));
         }
     
         /// <summary>
@@ -2274,7 +2274,7 @@ namespace VirtoCommerce.Client.Api
             if (pageName == null) throw new ApiException(400, "Missing required parameter 'pageName' when calling PagesGetPage");
             
     
-            var path = "/api/cms/{storeId}/pages/{language}/{pageName}";
+            var path_ = "/api/cms/{storeId}/pages/{language}/{pageName}";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -2307,11 +2307,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling PagesGetPage: " + response.Content, response.Content);
 
-            return (VirtoCommerceContentWebModelsPage) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceContentWebModelsPage), response.Headers);
+            return (VirtoCommerceContentWebModelsPage) ApiClient.Deserialize(response, typeof(VirtoCommerceContentWebModelsPage));
         }
         
         /// <summary>
@@ -2326,7 +2326,7 @@ namespace VirtoCommerce.Client.Api
             if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling ThemeGetThemes");
             
     
-            var path = "/api/cms/{storeId}/themes";
+            var path_ = "/api/cms/{storeId}/themes";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -2357,14 +2357,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling ThemeGetThemes: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling ThemeGetThemes: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (List<VirtoCommerceContentWebModelsTheme>) ApiClient.Deserialize(response.Content, typeof(List<VirtoCommerceContentWebModelsTheme>), response.Headers);
+            return (List<VirtoCommerceContentWebModelsTheme>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceContentWebModelsTheme>));
         }
     
         /// <summary>
@@ -2378,7 +2378,7 @@ namespace VirtoCommerce.Client.Api
             if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling ThemeGetThemes");
             
     
-            var path = "/api/cms/{storeId}/themes";
+            var path_ = "/api/cms/{storeId}/themes";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -2409,11 +2409,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling ThemeGetThemes: " + response.Content, response.Content);
 
-            return (List<VirtoCommerceContentWebModelsTheme>) ApiClient.Deserialize(response.Content, typeof(List<VirtoCommerceContentWebModelsTheme>), response.Headers);
+            return (List<VirtoCommerceContentWebModelsTheme>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceContentWebModelsTheme>));
         }
         
         /// <summary>
@@ -2428,7 +2428,7 @@ namespace VirtoCommerce.Client.Api
             if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling ThemeCreateDefaultTheme");
             
     
-            var path = "/api/cms/{storeId}/themes/createdefault";
+            var path_ = "/api/cms/{storeId}/themes/createdefault";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -2459,7 +2459,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling ThemeCreateDefaultTheme: " + response.Content, response.Content);
@@ -2480,7 +2480,7 @@ namespace VirtoCommerce.Client.Api
             if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling ThemeCreateDefaultTheme");
             
     
-            var path = "/api/cms/{storeId}/themes/createdefault";
+            var path_ = "/api/cms/{storeId}/themes/createdefault";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -2511,7 +2511,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling ThemeCreateDefaultTheme: " + response.Content, response.Content);
 
@@ -2539,7 +2539,7 @@ namespace VirtoCommerce.Client.Api
             if (themeName == null) throw new ApiException(400, "Missing required parameter 'themeName' when calling ThemeCreateNewTheme");
             
     
-            var path = "/api/cms/{storeId}/themes/file";
+            var path_ = "/api/cms/{storeId}/themes/file";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -2572,7 +2572,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling ThemeCreateNewTheme: " + response.Content, response.Content);
@@ -2599,7 +2599,7 @@ namespace VirtoCommerce.Client.Api
             if (themeName == null) throw new ApiException(400, "Missing required parameter 'themeName' when calling ThemeCreateNewTheme");
             
     
-            var path = "/api/cms/{storeId}/themes/file";
+            var path_ = "/api/cms/{storeId}/themes/file";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -2632,7 +2632,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling ThemeCreateNewTheme: " + response.Content, response.Content);
 
@@ -2656,7 +2656,7 @@ namespace VirtoCommerce.Client.Api
             if (themeId == null) throw new ApiException(400, "Missing required parameter 'themeId' when calling ThemeDeleteTheme");
             
     
-            var path = "/api/cms/{storeId}/themes/{themeId}";
+            var path_ = "/api/cms/{storeId}/themes/{themeId}";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -2688,7 +2688,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling ThemeDeleteTheme: " + response.Content, response.Content);
@@ -2712,7 +2712,7 @@ namespace VirtoCommerce.Client.Api
             if (themeId == null) throw new ApiException(400, "Missing required parameter 'themeId' when calling ThemeDeleteTheme");
             
     
-            var path = "/api/cms/{storeId}/themes/{themeId}";
+            var path_ = "/api/cms/{storeId}/themes/{themeId}";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -2744,7 +2744,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling ThemeDeleteTheme: " + response.Content, response.Content);
 
@@ -2770,7 +2770,7 @@ namespace VirtoCommerce.Client.Api
             if (themeId == null) throw new ApiException(400, "Missing required parameter 'themeId' when calling ThemeSearchThemeAssets");
             
     
-            var path = "/api/cms/{storeId}/themes/{themeId}/assets";
+            var path_ = "/api/cms/{storeId}/themes/{themeId}/assets";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -2804,14 +2804,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling ThemeSearchThemeAssets: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling ThemeSearchThemeAssets: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (List<VirtoCommerceContentWebModelsThemeAsset>) ApiClient.Deserialize(response.Content, typeof(List<VirtoCommerceContentWebModelsThemeAsset>), response.Headers);
+            return (List<VirtoCommerceContentWebModelsThemeAsset>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceContentWebModelsThemeAsset>));
         }
     
         /// <summary>
@@ -2830,7 +2830,7 @@ namespace VirtoCommerce.Client.Api
             if (themeId == null) throw new ApiException(400, "Missing required parameter 'themeId' when calling ThemeSearchThemeAssets");
             
     
-            var path = "/api/cms/{storeId}/themes/{themeId}/assets";
+            var path_ = "/api/cms/{storeId}/themes/{themeId}/assets";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -2864,11 +2864,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling ThemeSearchThemeAssets: " + response.Content, response.Content);
 
-            return (List<VirtoCommerceContentWebModelsThemeAsset>) ApiClient.Deserialize(response.Content, typeof(List<VirtoCommerceContentWebModelsThemeAsset>), response.Headers);
+            return (List<VirtoCommerceContentWebModelsThemeAsset>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceContentWebModelsThemeAsset>));
         }
         
         /// <summary>
@@ -2891,7 +2891,7 @@ namespace VirtoCommerce.Client.Api
             if (themeId == null) throw new ApiException(400, "Missing required parameter 'themeId' when calling ThemeSaveItem");
             
     
-            var path = "/api/cms/{storeId}/themes/{themeId}/assets";
+            var path_ = "/api/cms/{storeId}/themes/{themeId}/assets";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -2924,7 +2924,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling ThemeSaveItem: " + response.Content, response.Content);
@@ -2951,7 +2951,7 @@ namespace VirtoCommerce.Client.Api
             if (themeId == null) throw new ApiException(400, "Missing required parameter 'themeId' when calling ThemeSaveItem");
             
     
-            var path = "/api/cms/{storeId}/themes/{themeId}/assets";
+            var path_ = "/api/cms/{storeId}/themes/{themeId}/assets";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -2984,7 +2984,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling ThemeSaveItem: " + response.Content, response.Content);
 
@@ -3012,7 +3012,7 @@ namespace VirtoCommerce.Client.Api
             if (assetIds == null) throw new ApiException(400, "Missing required parameter 'assetIds' when calling ThemeDeleteAssets");
             
     
-            var path = "/api/cms/{storeId}/themes/{themeId}/assets";
+            var path_ = "/api/cms/{storeId}/themes/{themeId}/assets";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -3045,7 +3045,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling ThemeDeleteAssets: " + response.Content, response.Content);
@@ -3072,7 +3072,7 @@ namespace VirtoCommerce.Client.Api
             if (assetIds == null) throw new ApiException(400, "Missing required parameter 'assetIds' when calling ThemeDeleteAssets");
             
     
-            var path = "/api/cms/{storeId}/themes/{themeId}/assets";
+            var path_ = "/api/cms/{storeId}/themes/{themeId}/assets";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -3105,7 +3105,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling ThemeDeleteAssets: " + response.Content, response.Content);
 
@@ -3133,7 +3133,7 @@ namespace VirtoCommerce.Client.Api
             if (themeId == null) throw new ApiException(400, "Missing required parameter 'themeId' when calling ThemeGetThemeAsset");
             
     
-            var path = "/api/cms/{storeId}/themes/{themeId}/assets/{assetId}";
+            var path_ = "/api/cms/{storeId}/themes/{themeId}/assets/{assetId}";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -3166,14 +3166,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling ThemeGetThemeAsset: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling ThemeGetThemeAsset: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommerceContentWebModelsThemeAsset) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceContentWebModelsThemeAsset), response.Headers);
+            return (VirtoCommerceContentWebModelsThemeAsset) ApiClient.Deserialize(response, typeof(VirtoCommerceContentWebModelsThemeAsset));
         }
     
         /// <summary>
@@ -3193,7 +3193,7 @@ namespace VirtoCommerce.Client.Api
             if (themeId == null) throw new ApiException(400, "Missing required parameter 'themeId' when calling ThemeGetThemeAsset");
             
     
-            var path = "/api/cms/{storeId}/themes/{themeId}/assets/{assetId}";
+            var path_ = "/api/cms/{storeId}/themes/{themeId}/assets/{assetId}";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -3226,11 +3226,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling ThemeGetThemeAsset: " + response.Content, response.Content);
 
-            return (VirtoCommerceContentWebModelsThemeAsset) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceContentWebModelsThemeAsset), response.Headers);
+            return (VirtoCommerceContentWebModelsThemeAsset) ApiClient.Deserialize(response, typeof(VirtoCommerceContentWebModelsThemeAsset));
         }
         
         /// <summary>
@@ -3249,7 +3249,7 @@ namespace VirtoCommerce.Client.Api
             if (themeId == null) throw new ApiException(400, "Missing required parameter 'themeId' when calling ThemeGetThemeAssets");
             
     
-            var path = "/api/cms/{storeId}/themes/{themeId}/folders";
+            var path_ = "/api/cms/{storeId}/themes/{themeId}/folders";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -3281,14 +3281,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling ThemeGetThemeAssets: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling ThemeGetThemeAssets: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (List<VirtoCommerceContentWebModelsThemeAssetFolder>) ApiClient.Deserialize(response.Content, typeof(List<VirtoCommerceContentWebModelsThemeAssetFolder>), response.Headers);
+            return (List<VirtoCommerceContentWebModelsThemeAssetFolder>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceContentWebModelsThemeAssetFolder>));
         }
     
         /// <summary>
@@ -3305,7 +3305,7 @@ namespace VirtoCommerce.Client.Api
             if (themeId == null) throw new ApiException(400, "Missing required parameter 'themeId' when calling ThemeGetThemeAssets");
             
     
-            var path = "/api/cms/{storeId}/themes/{themeId}/folders";
+            var path_ = "/api/cms/{storeId}/themes/{themeId}/folders";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -3337,11 +3337,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling ThemeGetThemeAssets: " + response.Content, response.Content);
 
-            return (List<VirtoCommerceContentWebModelsThemeAssetFolder>) ApiClient.Deserialize(response.Content, typeof(List<VirtoCommerceContentWebModelsThemeAssetFolder>), response.Headers);
+            return (List<VirtoCommerceContentWebModelsThemeAssetFolder>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceContentWebModelsThemeAssetFolder>));
         }
         
     }
