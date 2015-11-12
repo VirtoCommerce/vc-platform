@@ -27,7 +27,7 @@
             itemId: $scope.blade.itemId,
             data: data,
             title: data.fulfillmentCenter.name,
-            subtitle: 'Edit Inventory',
+            subtitle: 'inventory.blades.inventory-detail.subtatle',
             controller: 'virtoCommerce.inventoryModule.inventoryDetailController',
             template: 'Modules/$(VirtoCommerce.Inventory)/Scripts/blades/inventory-detail.tpl.html'
         };
@@ -49,7 +49,7 @@
 
     $scope.blade.toolbarCommands = [
         {
-            name: "Refresh", icon: 'fa fa-refresh',
+            name: "platform.commands.refresh", icon: 'fa fa-refresh',
             executeMethod: function () {
                 $scope.blade.refresh();
             },
