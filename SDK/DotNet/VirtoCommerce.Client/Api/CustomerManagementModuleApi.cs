@@ -277,7 +277,7 @@ namespace VirtoCommerce.Client.Api
             if (contact == null) throw new ApiException(400, "Missing required parameter 'contact' when calling CustomerModuleUpdateContact");
             
     
-            var path = "/api/contacts";
+            var path_ = "/api/contacts";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -308,7 +308,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CustomerModuleUpdateContact: " + response.Content, response.Content);
@@ -329,7 +329,7 @@ namespace VirtoCommerce.Client.Api
             if (contact == null) throw new ApiException(400, "Missing required parameter 'contact' when calling CustomerModuleUpdateContact");
             
     
-            var path = "/api/contacts";
+            var path_ = "/api/contacts";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -360,7 +360,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CustomerModuleUpdateContact: " + response.Content, response.Content);
 
@@ -380,7 +380,7 @@ namespace VirtoCommerce.Client.Api
             if (contact == null) throw new ApiException(400, "Missing required parameter 'contact' when calling CustomerModuleCreateContact");
             
     
-            var path = "/api/contacts";
+            var path_ = "/api/contacts";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -411,14 +411,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CustomerModuleCreateContact: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling CustomerModuleCreateContact: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommerceCustomerModuleWebModelContact) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceCustomerModuleWebModelContact), response.Headers);
+            return (VirtoCommerceCustomerModuleWebModelContact) ApiClient.Deserialize(response, typeof(VirtoCommerceCustomerModuleWebModelContact));
         }
     
         /// <summary>
@@ -432,7 +432,7 @@ namespace VirtoCommerce.Client.Api
             if (contact == null) throw new ApiException(400, "Missing required parameter 'contact' when calling CustomerModuleCreateContact");
             
     
-            var path = "/api/contacts";
+            var path_ = "/api/contacts";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -463,11 +463,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CustomerModuleCreateContact: " + response.Content, response.Content);
 
-            return (VirtoCommerceCustomerModuleWebModelContact) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceCustomerModuleWebModelContact), response.Headers);
+            return (VirtoCommerceCustomerModuleWebModelContact) ApiClient.Deserialize(response, typeof(VirtoCommerceCustomerModuleWebModelContact));
         }
         
         /// <summary>
@@ -482,7 +482,7 @@ namespace VirtoCommerce.Client.Api
             if (ids == null) throw new ApiException(400, "Missing required parameter 'ids' when calling CustomerModuleDeleteContacts");
             
     
-            var path = "/api/contacts";
+            var path_ = "/api/contacts";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -513,7 +513,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CustomerModuleDeleteContacts: " + response.Content, response.Content);
@@ -534,7 +534,7 @@ namespace VirtoCommerce.Client.Api
             if (ids == null) throw new ApiException(400, "Missing required parameter 'ids' when calling CustomerModuleDeleteContacts");
             
     
-            var path = "/api/contacts";
+            var path_ = "/api/contacts";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -565,7 +565,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CustomerModuleDeleteContacts: " + response.Content, response.Content);
 
@@ -585,7 +585,7 @@ namespace VirtoCommerce.Client.Api
             if (id == null) throw new ApiException(400, "Missing required parameter 'id' when calling CustomerModuleGetContactById");
             
     
-            var path = "/api/contacts/{id}";
+            var path_ = "/api/contacts/{id}";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -616,14 +616,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CustomerModuleGetContactById: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling CustomerModuleGetContactById: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommerceCustomerModuleWebModelContact) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceCustomerModuleWebModelContact), response.Headers);
+            return (VirtoCommerceCustomerModuleWebModelContact) ApiClient.Deserialize(response, typeof(VirtoCommerceCustomerModuleWebModelContact));
         }
     
         /// <summary>
@@ -637,7 +637,7 @@ namespace VirtoCommerce.Client.Api
             if (id == null) throw new ApiException(400, "Missing required parameter 'id' when calling CustomerModuleGetContactById");
             
     
-            var path = "/api/contacts/{id}";
+            var path_ = "/api/contacts/{id}";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -668,11 +668,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CustomerModuleGetContactById: " + response.Content, response.Content);
 
-            return (VirtoCommerceCustomerModuleWebModelContact) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceCustomerModuleWebModelContact), response.Headers);
+            return (VirtoCommerceCustomerModuleWebModelContact) ApiClient.Deserialize(response, typeof(VirtoCommerceCustomerModuleWebModelContact));
         }
         
         /// <summary>
@@ -687,7 +687,7 @@ namespace VirtoCommerce.Client.Api
         {
             
     
-            var path = "/api/members";
+            var path_ = "/api/members";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -721,14 +721,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CustomerModuleSearch: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling CustomerModuleSearch: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommerceCustomerModuleWebModelSearchResult) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceCustomerModuleWebModelSearchResult), response.Headers);
+            return (VirtoCommerceCustomerModuleWebModelSearchResult) ApiClient.Deserialize(response, typeof(VirtoCommerceCustomerModuleWebModelSearchResult));
         }
     
         /// <summary>
@@ -743,7 +743,7 @@ namespace VirtoCommerce.Client.Api
         {
             
     
-            var path = "/api/members";
+            var path_ = "/api/members";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -777,11 +777,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CustomerModuleSearch: " + response.Content, response.Content);
 
-            return (VirtoCommerceCustomerModuleWebModelSearchResult) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceCustomerModuleWebModelSearchResult), response.Headers);
+            return (VirtoCommerceCustomerModuleWebModelSearchResult) ApiClient.Deserialize(response, typeof(VirtoCommerceCustomerModuleWebModelSearchResult));
         }
         
         /// <summary>
@@ -792,7 +792,7 @@ namespace VirtoCommerce.Client.Api
         {
             
     
-            var path = "/api/organizations";
+            var path_ = "/api/organizations";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -822,14 +822,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CustomerModuleListOrganizations: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling CustomerModuleListOrganizations: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (List<VirtoCommerceCustomerModuleWebModelOrganization>) ApiClient.Deserialize(response.Content, typeof(List<VirtoCommerceCustomerModuleWebModelOrganization>), response.Headers);
+            return (List<VirtoCommerceCustomerModuleWebModelOrganization>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceCustomerModuleWebModelOrganization>));
         }
     
         /// <summary>
@@ -840,7 +840,7 @@ namespace VirtoCommerce.Client.Api
         {
             
     
-            var path = "/api/organizations";
+            var path_ = "/api/organizations";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -870,11 +870,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CustomerModuleListOrganizations: " + response.Content, response.Content);
 
-            return (List<VirtoCommerceCustomerModuleWebModelOrganization>) ApiClient.Deserialize(response.Content, typeof(List<VirtoCommerceCustomerModuleWebModelOrganization>), response.Headers);
+            return (List<VirtoCommerceCustomerModuleWebModelOrganization>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceCustomerModuleWebModelOrganization>));
         }
         
         /// <summary>
@@ -889,7 +889,7 @@ namespace VirtoCommerce.Client.Api
             if (organization == null) throw new ApiException(400, "Missing required parameter 'organization' when calling CustomerModuleUpdateOrganization");
             
     
-            var path = "/api/organizations";
+            var path_ = "/api/organizations";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -920,7 +920,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CustomerModuleUpdateOrganization: " + response.Content, response.Content);
@@ -941,7 +941,7 @@ namespace VirtoCommerce.Client.Api
             if (organization == null) throw new ApiException(400, "Missing required parameter 'organization' when calling CustomerModuleUpdateOrganization");
             
     
-            var path = "/api/organizations";
+            var path_ = "/api/organizations";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -972,7 +972,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CustomerModuleUpdateOrganization: " + response.Content, response.Content);
 
@@ -992,7 +992,7 @@ namespace VirtoCommerce.Client.Api
             if (organization == null) throw new ApiException(400, "Missing required parameter 'organization' when calling CustomerModuleCreateOrganization");
             
     
-            var path = "/api/organizations";
+            var path_ = "/api/organizations";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1023,14 +1023,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CustomerModuleCreateOrganization: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling CustomerModuleCreateOrganization: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommerceCustomerModuleWebModelOrganization) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceCustomerModuleWebModelOrganization), response.Headers);
+            return (VirtoCommerceCustomerModuleWebModelOrganization) ApiClient.Deserialize(response, typeof(VirtoCommerceCustomerModuleWebModelOrganization));
         }
     
         /// <summary>
@@ -1044,7 +1044,7 @@ namespace VirtoCommerce.Client.Api
             if (organization == null) throw new ApiException(400, "Missing required parameter 'organization' when calling CustomerModuleCreateOrganization");
             
     
-            var path = "/api/organizations";
+            var path_ = "/api/organizations";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1075,11 +1075,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CustomerModuleCreateOrganization: " + response.Content, response.Content);
 
-            return (VirtoCommerceCustomerModuleWebModelOrganization) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceCustomerModuleWebModelOrganization), response.Headers);
+            return (VirtoCommerceCustomerModuleWebModelOrganization) ApiClient.Deserialize(response, typeof(VirtoCommerceCustomerModuleWebModelOrganization));
         }
         
         /// <summary>
@@ -1094,7 +1094,7 @@ namespace VirtoCommerce.Client.Api
             if (ids == null) throw new ApiException(400, "Missing required parameter 'ids' when calling CustomerModuleDeleteOrganizations");
             
     
-            var path = "/api/organizations";
+            var path_ = "/api/organizations";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1125,7 +1125,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CustomerModuleDeleteOrganizations: " + response.Content, response.Content);
@@ -1146,7 +1146,7 @@ namespace VirtoCommerce.Client.Api
             if (ids == null) throw new ApiException(400, "Missing required parameter 'ids' when calling CustomerModuleDeleteOrganizations");
             
     
-            var path = "/api/organizations";
+            var path_ = "/api/organizations";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1177,7 +1177,7 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CustomerModuleDeleteOrganizations: " + response.Content, response.Content);
 
@@ -1197,7 +1197,7 @@ namespace VirtoCommerce.Client.Api
             if (id == null) throw new ApiException(400, "Missing required parameter 'id' when calling CustomerModuleGetOrganizationById");
             
     
-            var path = "/api/organizations/{id}";
+            var path_ = "/api/organizations/{id}";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1228,14 +1228,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CustomerModuleGetOrganizationById: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling CustomerModuleGetOrganizationById: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommerceCustomerModuleWebModelOrganization) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceCustomerModuleWebModelOrganization), response.Headers);
+            return (VirtoCommerceCustomerModuleWebModelOrganization) ApiClient.Deserialize(response, typeof(VirtoCommerceCustomerModuleWebModelOrganization));
         }
     
         /// <summary>
@@ -1249,7 +1249,7 @@ namespace VirtoCommerce.Client.Api
             if (id == null) throw new ApiException(400, "Missing required parameter 'id' when calling CustomerModuleGetOrganizationById");
             
     
-            var path = "/api/organizations/{id}";
+            var path_ = "/api/organizations/{id}";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -1280,11 +1280,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling CustomerModuleGetOrganizationById: " + response.Content, response.Content);
 
-            return (VirtoCommerceCustomerModuleWebModelOrganization) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceCustomerModuleWebModelOrganization), response.Headers);
+            return (VirtoCommerceCustomerModuleWebModelOrganization) ApiClient.Deserialize(response, typeof(VirtoCommerceCustomerModuleWebModelOrganization));
         }
         
     }

@@ -135,7 +135,7 @@ namespace VirtoCommerce.Client.Api
             if (ids == null) throw new ApiException(400, "Missing required parameter 'ids' when calling InventoryModuleGetProductsInventories");
             
     
-            var path = "/api/inventory/products";
+            var path_ = "/api/inventory/products";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -166,14 +166,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling InventoryModuleGetProductsInventories: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling InventoryModuleGetProductsInventories: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (List<VirtoCommerceInventoryModuleWebModelInventoryInfo>) ApiClient.Deserialize(response.Content, typeof(List<VirtoCommerceInventoryModuleWebModelInventoryInfo>), response.Headers);
+            return (List<VirtoCommerceInventoryModuleWebModelInventoryInfo>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceInventoryModuleWebModelInventoryInfo>));
         }
     
         /// <summary>
@@ -187,7 +187,7 @@ namespace VirtoCommerce.Client.Api
             if (ids == null) throw new ApiException(400, "Missing required parameter 'ids' when calling InventoryModuleGetProductsInventories");
             
     
-            var path = "/api/inventory/products";
+            var path_ = "/api/inventory/products";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -218,11 +218,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling InventoryModuleGetProductsInventories: " + response.Content, response.Content);
 
-            return (List<VirtoCommerceInventoryModuleWebModelInventoryInfo>) ApiClient.Deserialize(response.Content, typeof(List<VirtoCommerceInventoryModuleWebModelInventoryInfo>), response.Headers);
+            return (List<VirtoCommerceInventoryModuleWebModelInventoryInfo>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceInventoryModuleWebModelInventoryInfo>));
         }
         
         /// <summary>
@@ -237,7 +237,7 @@ namespace VirtoCommerce.Client.Api
             if (productId == null) throw new ApiException(400, "Missing required parameter 'productId' when calling InventoryModuleGetProductInventories");
             
     
-            var path = "/api/inventory/products/{productId}";
+            var path_ = "/api/inventory/products/{productId}";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -268,14 +268,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling InventoryModuleGetProductInventories: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling InventoryModuleGetProductInventories: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (List<VirtoCommerceInventoryModuleWebModelInventoryInfo>) ApiClient.Deserialize(response.Content, typeof(List<VirtoCommerceInventoryModuleWebModelInventoryInfo>), response.Headers);
+            return (List<VirtoCommerceInventoryModuleWebModelInventoryInfo>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceInventoryModuleWebModelInventoryInfo>));
         }
     
         /// <summary>
@@ -289,7 +289,7 @@ namespace VirtoCommerce.Client.Api
             if (productId == null) throw new ApiException(400, "Missing required parameter 'productId' when calling InventoryModuleGetProductInventories");
             
     
-            var path = "/api/inventory/products/{productId}";
+            var path_ = "/api/inventory/products/{productId}";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -320,11 +320,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling InventoryModuleGetProductInventories: " + response.Content, response.Content);
 
-            return (List<VirtoCommerceInventoryModuleWebModelInventoryInfo>) ApiClient.Deserialize(response.Content, typeof(List<VirtoCommerceInventoryModuleWebModelInventoryInfo>), response.Headers);
+            return (List<VirtoCommerceInventoryModuleWebModelInventoryInfo>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceInventoryModuleWebModelInventoryInfo>));
         }
         
         /// <summary>
@@ -343,7 +343,7 @@ namespace VirtoCommerce.Client.Api
             if (productId == null) throw new ApiException(400, "Missing required parameter 'productId' when calling InventoryModuleUpsertProductInventory");
             
     
-            var path = "/api/inventory/products/{productId}";
+            var path_ = "/api/inventory/products/{productId}";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -375,14 +375,14 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling InventoryModuleUpsertProductInventory: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling InventoryModuleUpsertProductInventory: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommerceInventoryModuleWebModelInventoryInfo) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceInventoryModuleWebModelInventoryInfo), response.Headers);
+            return (VirtoCommerceInventoryModuleWebModelInventoryInfo) ApiClient.Deserialize(response, typeof(VirtoCommerceInventoryModuleWebModelInventoryInfo));
         }
     
         /// <summary>
@@ -399,7 +399,7 @@ namespace VirtoCommerce.Client.Api
             if (productId == null) throw new ApiException(400, "Missing required parameter 'productId' when calling InventoryModuleUpsertProductInventory");
             
     
-            var path = "/api/inventory/products/{productId}";
+            var path_ = "/api/inventory/products/{productId}";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -431,11 +431,11 @@ namespace VirtoCommerce.Client.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling InventoryModuleUpsertProductInventory: " + response.Content, response.Content);
 
-            return (VirtoCommerceInventoryModuleWebModelInventoryInfo) ApiClient.Deserialize(response.Content, typeof(VirtoCommerceInventoryModuleWebModelInventoryInfo), response.Headers);
+            return (VirtoCommerceInventoryModuleWebModelInventoryInfo) ApiClient.Deserialize(response, typeof(VirtoCommerceInventoryModuleWebModelInventoryInfo));
         }
         
     }
