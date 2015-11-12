@@ -75,6 +75,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         {
             get
             {
+                //TODO no info
                 return null;
             }
         }

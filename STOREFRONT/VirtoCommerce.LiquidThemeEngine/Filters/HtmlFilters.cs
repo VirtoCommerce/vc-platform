@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VirtoCommerce.LiquidThemeEngine.Objects;
 
 namespace VirtoCommerce.LiquidThemeEngine.Filters
 {
@@ -46,20 +47,25 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
             return input == null ? null : GetImageTag(GetImageUrl(input), alt, css);
         }
 
+        public static string ImgUrl(object input, string type)
+        {
+            return input == null ? null : GetImageUrl(input);
+        }
+
         private static string GetImageUrl(object input)
         {
-            //if (input is Product)
-            //{
-            //    return (input as Product).FeaturedImage.Src;
-            //}
-            //if (input is Image)
-            //{
-            //    return (input as Image).Src;
-            //}
-            //if (input is Variant)
-            //{
-            //    return (input as Variant).Image.Src;
-            //}
+            if (input is Product)
+            {
+                return (input as Product).FeaturedImage.Src;
+            }
+            if (input is Image)
+            {
+                return (input as Image).Src;
+            }
+            if (input is Variant)
+            {
+                return (input as Variant).Image.Src;
+            }
             //if (input is Collection)
             //{
             //    return (input as Collection).Image.Src;

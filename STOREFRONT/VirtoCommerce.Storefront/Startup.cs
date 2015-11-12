@@ -63,6 +63,10 @@ namespace VirtoCommerce.Storefront
             container.RegisterType<IVirtoCommercePlatformApi, VirtoCommercePlatformApi>();
             container.RegisterType<ICustomerManagementModuleApi, CustomerManagementModuleApi>();
             container.RegisterType<ICommerceCoreModuleApi, CommerceCoreModuleApi>();
+            container.RegisterType<ICatalogModuleApi, CatalogModuleApi>();
+            container.RegisterType<IPricingModuleApi, PricingModuleApi>();
+            container.RegisterType<IInventoryModuleApi, InventoryModuleApi>();
+            //container.RegisterType
 
             container.RegisterType<IStorefrontUrlBuilder, StorefrontUrlBuilder>();
             if (_managerAssembly != null)

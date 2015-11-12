@@ -10,7 +10,7 @@ using VirtoCommerce.Storefront.Converters;
 
 namespace VirtoCommerce.Storefront.Controllers
 {
-    [RoutePrefix("product")]
+    //[RoutePrefix("product")]
     public class ProductController : Controller
     {
         private readonly WorkContext _workContext;
@@ -27,7 +27,7 @@ namespace VirtoCommerce.Storefront.Controllers
         }
 
         [HttpGet]
-        [Route("{productid}")]
+        //[Route("{productid}")]
         public async Task<ActionResult> ProductDetails(string productid)
         {
             await GetProduct(productid);
@@ -39,19 +39,23 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             var product = await _catalogApi.CatalogModuleProductsGetAsync(id);
             _workContext.CurrentProduct = product.ToWebModel();
-            var prices = await _pricingApi.PricingModuleGetProductPricesAsync(id);
-            foreach(var price in prices)
-            {
-                if (_workContext.CurrentProduct.Id == price.ProductId)
-                    _workContext.CurrentProduct.Price = price.ToWebModel();
-
-                var variation = _workContext.CurrentProduct.Variations.FirstOrDefault(v => v.Id == price.ProductId);
-                if (variation != null)
-                    variation.Price = price.ToWebModel();
-            }
-
             var ids = _workContext.CurrentProduct.Variations.Select(v => v.Id).ToList();
             ids.Add(id);
+            foreach (var productId in ids)
+            {
+                var prices = await _pricingApi.PricingModuleGetProductPricesAsync(productId);
+                foreach (var price in prices)
+                {
+                    if (_workContext.CurrentProduct.Id == price.ProductId && _workContext.CurrentCurrency.CurrencyCode.ToString() == price.Currency)
+                        _workContext.CurrentProduct.Price = price.ToWebModel();
+
+                    var variation = _workContext.CurrentProduct.Variations.FirstOrDefault(v => v.Id == price.ProductId);
+                    if (variation != null)
+                        variation.Price = price.ToWebModel();
+                }
+            }
+
+
             var inventories = await _inventoryApi.InventoryModuleGetProductsInventoriesAsync(ids);
             foreach (var inventory in inventories)
             {

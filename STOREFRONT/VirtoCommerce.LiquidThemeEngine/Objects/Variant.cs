@@ -172,7 +172,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
             get
             {
                 var options = new List<string>();
-                if(_product.Properties != null && _product.Properties.Any())
+                if(_product.Properties != null)
                 {
                     foreach(var property in _product.Properties)
                     {

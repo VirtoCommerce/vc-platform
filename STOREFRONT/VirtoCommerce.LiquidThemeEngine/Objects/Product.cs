@@ -157,9 +157,9 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
                 {
                     foreach (var property in _product.Properties)
                     {
-                        if (property.Values != null)
+                        if (property.Type == "Variation")
                         {
-                            options.Add(string.Join(";", property.Values.Select(v => v.Value)));
+                            options.Add(property.Name);
                         }
                     }
                 }
@@ -203,7 +203,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         {
             get
             {
-                return this.SelectedVariant != null ? this.SelectedVariant : this.FirstAvailableVariant;
+                return this.SelectedVariant ?? this.FirstAvailableVariant;
             }
         }
 
@@ -258,7 +258,11 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         {
             get
             {
-                return _product.Variations.Select(v => new Variant(v, _context, _urlBuilder, _product.Id)).ToList();
+                var variants = new List<Variant>();
+                variants.Add(new Variant(_product, _context, _urlBuilder, _product.Id));
+                foreach (var v in _product.Variations.Select(v => new Variant(v, _context, _urlBuilder, _product.Id)))
+                    variants.Add(v);
+                return variants;
             }
         }
 

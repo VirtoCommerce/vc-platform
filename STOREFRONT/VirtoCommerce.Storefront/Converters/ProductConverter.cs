@@ -10,14 +10,14 @@ namespace VirtoCommerce.Storefront.Converters
 {
     public static class ProductConverter
     {
-        public static Product ToWebModel(this VirtoCommerceCatalogModuleWebModelProduct product)
+        public static Product ToWebModel(this VirtoCommerceCatalogModuleWebModelProduct product, List<Property> properties = null)
         {
             var retVal = new Product();
 
             retVal.InjectFrom(product);
             retVal.Sku = product.Code;
             if (product.Properties != null)
-                retVal.Properties = product.Properties.Select(p => p.ToWebModel()).ToList();
+                retVal.Properties = product.Properties.Select(p => p.ToWebModel(properties)).ToList();
 
             if (product.Images != null)
                 retVal.Images = product.Images.Select(i => i.ToWebModel()).ToList();
@@ -26,7 +26,7 @@ namespace VirtoCommerce.Storefront.Converters
                 retVal.Assets = product.Assets.Select(a => a.ToWebModel()).ToList();
 
             if (product.Variations != null)
-                retVal.Variations = product.Variations.Select(v => v.ToWebModel()).ToList();
+                retVal.Variations = product.Variations.Select(v => v.ToWebModel(retVal.Properties)).ToList();
 
             if (product.Links != null)
                 retVal.Links = product.Links.Select(l => l.ToWebModel()).ToList();
