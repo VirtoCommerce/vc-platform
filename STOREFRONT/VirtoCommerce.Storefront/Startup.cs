@@ -80,6 +80,7 @@ namespace VirtoCommerce.Storefront
             //Register liquid engine
             ViewEngines.Engines.Add(new DotLiquidThemedViewEngine(container.Resolve<ShopifyLiquidThemeEngine>()));
 
+            // Shopify model binders convert Shopify form fields with bad names to VirtoCommerce model properties.
             container.RegisterType<IModelBinderProvider, ShopifyModelBinderProvider>("shopify");
 
             //FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
