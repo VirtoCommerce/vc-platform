@@ -28,14 +28,14 @@
                                     <label for="customer_password">Password</label>
                                     <input class="form-control" id="customer_password" name="customer[password]" required="required" type="password" value="" />
                                 </div>
-                                <p><a href="/account/login#recover">Forgot password?</a></p><br />
+                                <p><a href="{{ shop.simplified_url }}/account/login#recover">Forgot password?</a></p><br />
                                 <button class="btn btn-primary" type="submit">Sign in</button>
                             {% endform %}
                         </div>
                         <div class="col-md-6">
                             <h3>Continue without signing in</h3>
                             <p>You'll have the option to register for an account after your purchase.</p>
-                            <p>You can also <a href="/account/register">register for an account now</a>.</p><br />
+                            <p>You can also <a href="{{ shop.simplified_url }}/account/register">register for an account now</a>.</p><br />
                             <p class="text-center"><button class="btn btn-primary" data-dismiss="modal">Continue as a guest</button></p>
                         </div>
                     </div>
