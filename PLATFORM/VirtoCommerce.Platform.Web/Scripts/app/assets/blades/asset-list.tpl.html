@@ -9,11 +9,29 @@
         </div>
     </div>
 </div>
+<div class="blade-static __bottom" ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems" ng-include="'pagerTemplate.html'"></div>
 <div class="blade-content __medium-wide">
     <div class="blade-inner">
         <div class="inner-block">
-            <div class="table-wrapper">
-                <div ui-grid="gridOptions" ui-grid-save-state ui-grid-selection ui-grid-resize-columns ui-grid-move-columns></div>
+            <div class="table-wrapper" ng-init="setGridOptions({
+                data: 'listEntries',
+                rowTemplate: 'asset-list.row.html',
+                rowHeight: 61,
+                columnDefs: [
+                        {
+                            name: 'url', displayName: 'Pic',
+                            enableColumnResizing: false, enableSorting: false, width: 60,
+                            cellTemplate: 'asset-list-icon.cell.html'
+                        },
+                        { name: 'name', cellTooltip: true },
+                        { name: 'size' },
+                        { name: 'modifiedDate', displayName: 'Modified', cellTemplate: 'am-time-ago.cell.html' },
+                        { name: 'actions', enableColumnResizing: false, enableSorting: false, width: 80, cellTemplate: 'asset-list-actions.cell.html' }
+                ],
+                enablePaginationControls: false,
+                paginationPageSize: pageSettings.itemsPerPageCount
+                 })">
+                <div ui-grid="gridOptions" ui-grid-save-state ui-grid-selection ui-grid-resize-columns ui-grid-move-columns ui-grid-pagination></div>
                 <!--<table class="table">
                     <thead>
                         <tr>
@@ -92,6 +110,10 @@
     </div>
 </div>
 
+<script type="text/ng-template" id="asset-list.row.html">
+    <div ng-click='grid.appScope.selectNode(row.entity)' ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'" class="ui-grid-cell" ng-class="{'ui-grid-row-header-cell': col.isRowHeader}" role="{{col.isRowHeader ? 'rowheader' : 'gridcell' }}" ui-grid-cell style='cursor:pointer'></div>
+</script>
+
 <script type="text/ng-template" id="asset-list-icon.cell.html">
     <div class="product-img">
         <div class="image" style="background-image: url('{{COL_FIELD}}')" ng-if="row.entity.isImage"></div>
@@ -103,12 +125,12 @@
 </script>
 <script type="text/ng-template" id="asset-list-actions.cell.html">
     <ul class="ui-grid-cell-contents menu __actions">
-        <li class="menu-item" ng-click="grid.appScope.downloadUrl(data)" ng-if="row.entity.type !== 'folder'">
+        <li class="menu-item" ng-click="grid.appScope.downloadUrl(row.entity)" ng-if="row.entity.type !== 'folder'">
             <a class="menu-link" title="Download">
                 <i class="menu-ico fa fa-download"></i>
             </a>
         </li>
-        <li class="menu-item" ng-click="grid.appScope.copyUrl(data)">
+        <li class="menu-item" ng-click="grid.appScope.copyUrl(row.entity)">
             <a class="menu-link" title="Copy link">
                 <i class="menu-ico fa fa-link"></i>
             </a>

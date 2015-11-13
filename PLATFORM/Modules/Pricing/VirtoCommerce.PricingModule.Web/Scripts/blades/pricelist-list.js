@@ -1,44 +1,37 @@
 ﻿angular.module('virtoCommerce.pricingModule')
-.controller('virtoCommerce.pricingModule.pricelistListController', ['$scope', 'virtoCommerce.pricingModule.pricelists', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService',
-function ($scope, pricelists, bladeNavigationService, dialogService) {
-    var selectedNode = null;
+.controller('virtoCommerce.pricingModule.pricelistListController', ['$scope', 'virtoCommerce.pricingModule.pricelists', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'uiGridConstants', 'platformWebApp.uiGridHelper',
+function ($scope, pricelists, bladeNavigationService, dialogService, uiGridConstants, uiGridHelper) {
+    var blade = $scope.blade;
 
-    $scope.blade.refresh = function () {
-        $scope.blade.isLoading = true;
-        $scope.blade.selectedAll = false;
+    blade.refresh = function () {
+        blade.isLoading = true;
 
         pricelists.query({}, function (data) {
-            $scope.blade.isLoading = false;
-            $scope.blade.currentEntities = data;
+            blade.isLoading = false;
+            blade.currentEntities = data;
+            uiGridHelper.onDataLoaded($scope.gridOptions, blade.currentEntities);
         }, function (error) {
-            bladeNavigationService.setError('Error ' + error.status, $scope.blade);
+            bladeNavigationService.setError('Error ' + error.status, blade);
         });
     };
 
     $scope.selectNode = function (node) {
-        selectedNode = node;
-        $scope.selectedNodeId = selectedNode.id;
+        $scope.selectedNodeId = node.id;
 
         var newBlade = {
             id: 'listItemChild',
-            currentEntityId: selectedNode.id,
-            title: selectedNode.name,
-            subtitle: $scope.blade.subtitle,
+            currentEntityId: node.id,
+            title: node.name,
+            subtitle: blade.subtitle,
             controller: 'virtoCommerce.pricingModule.pricelistDetailController',
             template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/blades/pricelist-detail.tpl.html'
         };
 
-        bladeNavigationService.showBlade(newBlade, $scope.blade);
-    };
-
-    $scope.toggleAll = function () {
-        angular.forEach($scope.blade.currentEntities, function (item) {
-            item.selected = $scope.blade.selectedAll;
-        });
+        bladeNavigationService.showBlade(newBlade, blade);
     };
 
     function isItemsChecked() {
-        return $scope.blade.currentEntities && _.any($scope.blade.currentEntities, function (x) { return x.selected; });
+        return $scope.gridApi && _.any($scope.gridApi.selection.getSelectedRows());
     }
 
     function deleteChecked() {
@@ -50,12 +43,12 @@ function ($scope, pricelists, bladeNavigationService, dialogService) {
                 if (remove) {
                     closeChildrenBlades();
 
-                    var selection = _.where($scope.blade.currentEntities, { selected: true });
+                    var selection = $scope.gridApi.selection.getSelectedRows();
                     var itemIds = _.pluck(selection, 'id');
                     pricelists.remove({ ids: itemIds }, function (data, headers) {
-                        $scope.blade.refresh();
+                        blade.refresh();
                     }, function (error) {
-                        bladeNavigationService.setError('Error ' + error.status, $scope.blade);
+                        bladeNavigationService.setError('Error ' + error.status, blade);
                     });
                 }
             }
@@ -64,18 +57,18 @@ function ($scope, pricelists, bladeNavigationService, dialogService) {
     }
 
     function closeChildrenBlades() {
-        angular.forEach($scope.blade.childrenBlades.slice(), function (child) {
+        angular.forEach(blade.childrenBlades.slice(), function (child) {
             bladeNavigationService.closeBlade(child);
         });
     }
 
-    $scope.blade.headIcon = 'fa-usd';
+    blade.headIcon = 'fa-usd';
 
-    $scope.blade.toolbarCommands = [
+    blade.toolbarCommands = [
         {
             name: "Refresh", icon: 'fa fa-refresh',
             executeMethod: function () {
-                $scope.blade.refresh();
+                blade.refresh();
             },
             canExecuteMethod: function () {
                 return true;
@@ -89,12 +82,12 @@ function ($scope, pricelists, bladeNavigationService, dialogService) {
                 var newBlade = {
                     id: 'listItemChild',
                     title: 'New Price list',
-                    subtitle: $scope.blade.subtitle,
+                    subtitle: blade.subtitle,
                     isNew: true,
                     controller: 'virtoCommerce.pricingModule.pricelistDetailController',
                     template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/blades/pricelist-detail.tpl.html'
                 };
-                bladeNavigationService.showBlade(newBlade, $scope.blade);
+                bladeNavigationService.showBlade(newBlade, blade);
             },
             canExecuteMethod: function () {
                 return true;
@@ -115,13 +108,16 @@ function ($scope, pricelists, bladeNavigationService, dialogService) {
             executeMethod: function () {
                 deleteChecked();
             },
-            canExecuteMethod: function () {
-                return isItemsChecked();
-            },
+            canExecuteMethod: isItemsChecked,
             permission: 'pricing:delete'
         }
     ];
 
+    // ui-grid
+    $scope.setGridOptions = function (gridOptions) {
+        uiGridHelper.initialize($scope, gridOptions);
+    };
+    
     // actions on load
-    $scope.blade.refresh();
+    blade.refresh();
 }]);

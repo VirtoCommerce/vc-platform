@@ -128,7 +128,7 @@ function ($scope, order_res_customerOrders, bladeNavigationService, dialogServic
     uiGridHelper.initialize($scope, {
         data: 'objects',
         rowTemplate: "<div ng-click=\"grid.appScope.selectNode(row.entity)\" ng-repeat=\"(colRenderIndex, col) in colContainer.renderedColumns track by col.uid\" ui-grid-one-bind-id-grid=\"rowRenderIndex + '-' + col.uid + '-cell'\" class=\"ui-grid-cell\" ng-class=\"{ 'ui-grid-row-header-cell': col.isRowHeader, '__selected': row.entity.id === grid.appScope.selectedNodeId }\" role=\"{{col.isRowHeader ? 'rowheader' : 'gridcell'}}\" ui-grid-cell style='cursor:pointer'></div>",
-        rowHeight: 59,
+        rowHeight: 45,
         columnDefs: [
                     {
                         name: 'customColumn', displayName: 'Description', field: 'number',

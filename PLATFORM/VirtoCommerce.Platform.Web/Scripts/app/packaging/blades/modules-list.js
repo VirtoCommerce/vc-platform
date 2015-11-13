@@ -76,7 +76,7 @@
         // ui-grid 
         uiGridHelper.initialize($scope, {
             rowTemplate: "modules-list.row.html",
-            virtualizationThreshold: 30,
+            virtualizationThreshold: 1000, // workaround
             rowHeight: 61,
             columnDefs: [
                         {

@@ -15,7 +15,7 @@
   'angularFileUpload',
   'ngSanitize',
   'ng-context-menu',
-  'ui.grid', 'ui.grid.resizeColumns', 'ui.grid.moveColumns', 'ui.grid.saveState', 'ui.grid.selection',
+  'ui.grid', 'ui.grid.resizeColumns', 'ui.grid.moveColumns', 'ui.grid.saveState', 'ui.grid.selection', 'ui.grid.pagination',
   'ui.codemirror',
   'focusOn',
   'textAngular',

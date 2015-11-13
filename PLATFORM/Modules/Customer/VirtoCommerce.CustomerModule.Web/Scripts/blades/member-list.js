@@ -10,7 +10,6 @@
 
         $scope.filter = { searchKeyword: undefined };
 
-        var selectedNode = null;
         var preventOrganizationListingOnce; // prevent from unwanted additional actions after command was activated from context menu
 
         var blade = $scope.blade;
@@ -30,17 +29,7 @@
                 $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
                 $scope.listEntries = data.members;
                 uiGridHelper.onDataLoaded($scope.gridOptions, $scope.listEntries);
-                $scope.pageSettings.selectedAll = false;
-
-                if (selectedNode != null) {
-                    //select the node in the new list
-                    angular.forEach($scope.listEntries, function (node) {
-                        if (selectedNode.id === node.id) {
-                            selectedNode = node;
-                        }
-                    });
-                }
-
+                
                 //Set navigation breadcrumbs
                 setBreadcrumbs();
             }, function (error) {
@@ -184,8 +173,7 @@
         }
 
         blade.setSelectedNode = function (listItem) {
-            selectedNode = listItem;
-            $scope.selectedNodeId = selectedNode.id;
+            $scope.selectedNodeId = listItem.id;
         };
 
         $scope.selectNode = function (listItem) {

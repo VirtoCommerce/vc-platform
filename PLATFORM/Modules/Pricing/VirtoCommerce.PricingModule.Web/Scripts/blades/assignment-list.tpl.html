@@ -1,8 +1,18 @@
 ﻿<div class="blade-content __medium-wide">
     <div class="blade-inner">
         <div class="inner-block">
-            <div class="table-wrapper">
-                <table class="table">
+            <div class="table-wrapper" ng-init="setGridOptions({
+                    rowTemplate: 'assignment-list.row.html',
+                    rowHeight: 40,
+                    columnDefs: [
+                                { name: 'name' },
+                                { name: 'priority', width: 72, sort: { direction: uiGridConstants.ASC } },
+                                { name: 'modifiedDate', displayName: 'Modified', width: 87, cellTemplate: 'am-time-ago.cell.html' },
+                                { name: 'modifiedBy', width: 87, headerTooltip: true }
+                    ]
+                 })">
+                <div ui-grid="gridOptions" ui-grid-save-state ui-grid-selection ui-grid-resize-columns ui-grid-move-columns></div>
+                <!--<table class="table">
                     <thead>
                         <tr>
                             <th class="table-col __product-control">
@@ -39,8 +49,15 @@
                             </td>
                         </tr>
                     </tbody>
-                </table>
+                </table>-->
             </div>
         </div>
     </div>
 </div>
+
+<script type="text/ng-template" id="assignment-list.row.html">
+    <div ng-click='grid.appScope.selectNode(row.entity)' ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'" class="ui-grid-cell" ng-class="{'ui-grid-row-header-cell': col.isRowHeader, '__selected': row.entity.id===grid.appScope.selectedNodeId }" role="{{col.isRowHeader ? 'rowheader' : 'gridcell' }}" ui-grid-cell style='cursor:pointer'></div>
+</script>
+<script type="text/ng-template" id="am-time-ago.cell.html">
+    <span class="table-date" am-time-ago="COL_FIELD"></span>
+</script>

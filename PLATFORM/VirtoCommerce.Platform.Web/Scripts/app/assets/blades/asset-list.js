@@ -3,6 +3,13 @@
     function ($scope, assets, bladeNavigationService, dialogService, $storage, uiGridConstants, uiGridHelper) {
         var preventFolderListingOnce; // prevent from unwanted additional actions after command was activated from context menu
 
+        //pagination settings
+        $scope.pageSettings = {};
+        $scope.pageSettings.totalItems = 0;
+        $scope.pageSettings.currentPage = 1;
+        $scope.pageSettings.numPages = 5;
+        $scope.pageSettings.itemsPerPageCount = 20;
+
         var blade = $scope.blade;
         blade.title = 'Asset management';
         if (!blade.currentEntity) {
@@ -17,11 +24,12 @@
                     folderUrl: blade.currentEntity.url
                 },
             function (data) {
+                $scope.pageSettings.totalItems = data.length;
                 uiGridHelper.onDataLoaded($scope.gridOptions, data);
                 _.each(data, function (x) { x.isImage = x.contentType && x.contentType.startsWith('image/'); });
                 $scope.listEntries = data;
                 blade.isLoading = false;
-                
+
                 //Set navigation breadcrumbs
                 setBreadcrumbs();
             }, function (error) {
@@ -107,7 +115,7 @@
         function isItemsChecked() {
             return $scope.gridApi && _.any($scope.gridApi.selection.getSelectedRows());
         }
-        
+
         $scope.delete = function (data) {
             deleteList([data]);
 
@@ -132,7 +140,7 @@
                 dialogService.showConfirmationDialog(dialog);
             });
         }
-        
+
         $scope.selectNode = function (listItem) {
             if (listItem.type === 'folder') {
                 if (preventFolderListingOnce) {
@@ -249,24 +257,15 @@
             //    permission: 'asset:delete'
             //}
         ];
-        
+
         // ui-grid
-        uiGridHelper.initialize($scope, {
-            data: 'listEntries',
-            rowTemplate: "<div ng-click=\"grid.appScope.selectNode(row.entity)\" ng-repeat=\"(colRenderIndex, col) in colContainer.renderedColumns track by col.uid\" ui-grid-one-bind-id-grid=\"rowRenderIndex + '-' + col.uid + '-cell'\" class=\"ui-grid-cell\" ng-class=\"{ 'ui-grid-row-header-cell': col.isRowHeader }\" role=\"{{col.isRowHeader ? 'rowheader' : 'gridcell'}}\" ui-grid-cell style='cursor:pointer'></div>",
-            rowHeight: 61,
-            columnDefs: [
-                        {
-                            name: 'url', displayName: 'Pic',
-                            enableColumnResizing: false, width: 60,
-                            cellTemplate: 'asset-list-icon.cell.html'
-                        },
-                        { name: 'name', cellTooltip: true },
-                        { name: 'size' },
-                        { name: 'modifiedDate', displayName: 'Modified', cellTemplate: 'am-time-ago.cell.html' },
-                        { name: 'actions', enableColumnResizing: false, enableSorting: false, width: 80, cellTemplate: 'asset-list-actions.cell.html' }
-            ]
-        });
+        $scope.setGridOptions = function (gridOptions) {
+            uiGridHelper.initialize($scope, gridOptions,
+            function (gridApi) {
+                $scope.$watch('pageSettings.currentPage', gridApi.pagination.seek);
+            });
+        };
         
+
         blade.refresh();
     }]);

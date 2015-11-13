@@ -56,17 +56,7 @@ function ($scope, accounts, bladeNavigationService, dialogService, uiGridConstan
 
         bladeNavigationService.showBlade(newBlade, blade);
     };
-
-    $scope.toggleAll = function () {
-        angular.forEach(blade.currentEntities, function (item) {
-            item.selected = blade.selectedAll;
-        });
-    };
-
-    function isItemsChecked() {
-        return _.any(blade.currentEntities, function (x) { return x.selected; });
-    }
-
+    
     function deleteChecked() {
         var dialog = {
             id: "confirmDeleteItem",
@@ -134,7 +124,6 @@ function ($scope, accounts, bladeNavigationService, dialogService, uiGridConstan
             },
             canExecuteMethod: function () {
                 return $scope.gridApi && _.any($scope.gridApi.selection.getSelectedRows());
-                // return isItemsChecked();
             },
             permission: 'platform:security:delete'
         }

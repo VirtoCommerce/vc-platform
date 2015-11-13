@@ -20,7 +20,6 @@
                 count: $scope.pageSettings.itemsPerPageCount
             }, function (data) {
                 blade.isLoading = false;
-                blade.selectedAll = false;
 
                 $scope.pageSettings.totalItems = data.totalCount;
                 blade.currentEntities = data.quoteRequests;
@@ -107,7 +106,7 @@
         // ui-grid
         uiGridHelper.initialize($scope, {
             rowTemplate: "<div ng-click=\"grid.appScope.selectNode(row.entity)\" ng-repeat=\"(colRenderIndex, col) in colContainer.renderedColumns track by col.uid\" ui-grid-one-bind-id-grid=\"rowRenderIndex + '-' + col.uid + '-cell'\" class=\"ui-grid-cell\" ng-class=\"{ 'ui-grid-row-header-cell': col.isRowHeader, '__selected': row.entity.id === grid.appScope.selectedNodeId }\" role=\"{{col.isRowHeader ? 'rowheader' : 'gridcell'}}\" ui-grid-cell style='cursor:pointer'></div>",
-            rowHeight: 50,
+            rowHeight: 45,
             columnDefs: [
                         { name: 'number', displayName: 'Quote #', cellTooltip: true },
                         { name: 'status' },

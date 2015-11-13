@@ -11,7 +11,8 @@
     <div class="blade-inner">
         <div class="inner-block">
             <div class="table-wrapper">
-                <table class="table">
+                <div ui-grid="gridOptions" ui-grid-save-state ui-grid-selection ui-grid-resize-columns ui-grid-move-columns></div>
+                <!--<table class="table">
                     <thead>
                         <tr>
                             <th class="table-col __product-control">
@@ -41,8 +42,18 @@
                             </td>
                         </tr>
                     </tbody>
-                </table>
+                </table>-->
             </div>
         </div>
     </div>
 </div>
+
+<script type="text/ng-template" id="promotion-list-name.cell.html">
+    <div class="__product-name">
+        <i class="table-ico fa" ng-class="row.entity.type == 'DynamicPromotion' ? 'fa-asterisk' : ' fa-file-code-o'" title="{{row.entity.type == 'DynamicPromotion' ? 'Dynamic promotion' : 'Promotion defined in code'}}"></i>
+        <span class="table-t">{{COL_FIELD}}</span>
+    </div>
+</script>
+<script type="text/ng-template" id="am-time-ago.cell.html">
+    <span class="table-date" am-time-ago="COL_FIELD"></span>
+</script>
