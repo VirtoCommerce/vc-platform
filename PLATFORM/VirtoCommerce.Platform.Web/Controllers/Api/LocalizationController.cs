@@ -21,6 +21,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <returns>json</returns>
         [System.Web.Http.HttpGet]
         [System.Web.Http.Route("")]
+        [AllowAnonymous]
         public JObject GetLocalizationFile(string lang = "en")
         {
             DirectoryInfo directory = new DirectoryInfo(_localizationPath);
