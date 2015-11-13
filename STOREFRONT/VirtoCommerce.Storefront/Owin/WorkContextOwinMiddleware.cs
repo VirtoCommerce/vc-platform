@@ -43,7 +43,7 @@ namespace VirtoCommerce.Storefront.Owin
             var workContext = _container.Resolve<WorkContext>();
             // Initialize common properties: stores, user profile, cart
             workContext.AllStores = await GetAllStoresAsync();
-            workContext.Customer = await GetCustomerAsync(context.Authentication.User.Identity);
+            workContext.Customer = await GetCustomerAsync(context);
 
             // Initialize request specific properties: store, language, currency
             workContext.CurrentStore = GetStore(context, workContext.AllStores);
@@ -60,24 +60,38 @@ namespace VirtoCommerce.Storefront.Owin
             return result;
         }
 
-        protected virtual async Task<Customer> GetCustomerAsync(IIdentity identity)
+        protected virtual async Task<Customer> GetCustomerAsync(IOwinContext context)
         {
-            Customer result = null;
+            var customer = new Customer();
 
-            if (identity.IsAuthenticated)
+            var anonymousCustomerCookie = context.Request.Cookies[StorefrontConstants.AnonymousCustomerIdCookie];
+
+            if (context.Authentication.User.Identity.IsAuthenticated)
             {
-                var user = await _platformApi.SecurityGetUserByNameAsync(identity.Name);
+                var user = await _platformApi.SecurityGetUserByNameAsync(context.Authentication.User.Identity.Name);
                 if (user != null)
                 {
                     var contact = await _customerApi.CustomerModuleGetContactByIdAsync(user.Id);
                     if (contact != null)
                     {
-                        result = contact.ToWebModel();
+                        customer = contact.ToWebModel();
+                        context.Response.Cookies.Append(StorefrontConstants.AnonymousCustomerIdCookie, string.Empty, new CookieOptions { Expires = DateTime.UtcNow.AddDays(-1) });
                     }
                 }
             }
+            else
+            {
+                if (string.IsNullOrEmpty(anonymousCustomerCookie))
+                {
+                    anonymousCustomerCookie = Guid.NewGuid().ToString();
+                    context.Response.Cookies.Append(StorefrontConstants.AnonymousCustomerIdCookie, anonymousCustomerCookie, new CookieOptions { Expires = DateTime.UtcNow.AddDays(30) });
+                }
 
-            return result;
+                customer.Id = anonymousCustomerCookie;
+                customer.Name = "Anonymous";
+            }
+
+            return customer;
         }
 
         protected virtual Store GetStore(IOwinContext context, ICollection<Store> stores)
