@@ -191,6 +191,18 @@ namespace VirtoCommerce.Platform.Web
                 }
             });
 
+            notificationManager.RegisterNotificationType(() => new ResetPasswordEmailNotification(container.Resolve<IEmailNotificationSendingGateway>())
+            {
+                DisplayName = "Reset password notification",
+                Description = "This notification sends by email to client when he want to reset his password",
+                NotificationTemplate = new NotificationTemplate
+                {
+                    Body = PlatformNotificationResource.ResetPasswordNotificationBody,
+                    Subject = PlatformNotificationResource.ResetPasswordNotificationSubject,
+                    Language = "en-US"
+                }
+            });
+
             var postInitializeModules = moduleCatalog.CompleteListWithDependencies(moduleCatalog.Modules)
                 .Where(m => m.ModuleInstance != null)
                 .ToArray();
