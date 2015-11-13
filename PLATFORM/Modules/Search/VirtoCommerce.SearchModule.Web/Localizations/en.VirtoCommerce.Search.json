@@ -1,0 +1,20 @@
+﻿{
+  "search": {
+    "blades": {
+      "rebuildIndex": {
+        "title": "Rebuild Search Index",
+        "labels": {
+          "progress": "Progress",
+          "job": "Job",
+          "state": "State"
+        }
+      }
+    },
+    "dialogs": {
+      "rebuild-index": {
+        "title": "Rebuild Search Index",
+        "message": "Current search index will be deleted and built from scratch. Are you sure you want to rebuild the index?"
+      }
+    }
+  }
+}

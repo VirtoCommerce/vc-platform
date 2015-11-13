@@ -49,7 +49,12 @@
       "new-customer": {
         "title": "New Customer"
       },
+      "account-changePassword": {
+        "subtitle": "Change user's password"
+      },
       "member-add": {
+        "title": "New member",
+        "subtitle": "Choose new member type",
         "menu": {
           "organization": {
             "title": "Organization",
@@ -60,9 +65,6 @@
             "description": "The shop Customer. Can belong to Organizations or represent an individual shopper."
           }
         }
-      },
-      "account-changePassword": {
-        "subtitle": "Change user's password"
       },
       "member-emails-list": {
         "labels": {
@@ -86,10 +88,6 @@
         "labels": {
           "no-phones": "No phones yet"
         }
-      },
-      "member-add": {
-        "title": "New member",
-        "subtitle": "Choose new member type"
       },
       "member-property-valueType": {
         "title": "{{name}} value type",
@@ -170,8 +168,8 @@
     "commands": {
       "login-on-behalf": "Login on behalf",
       "change-password": "Change password",
-      "reject-user":  "Reject user",
-      "approve-user":  "Approve user",
+      "reject-user": "Reject user",
+      "approve-user": "Approve user"
     }
   }
 }

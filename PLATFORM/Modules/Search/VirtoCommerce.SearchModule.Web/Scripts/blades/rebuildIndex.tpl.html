@@ -2,14 +2,14 @@
     <div class="blade-inner">
         <div class="inner-block">
             <div ng-if="blade.currentEntity">
-                <div class="t __divider">Progress</div>
+                <div class="t __divider">{{ 'search.blades.rebuildIndex.labels.progress' | translate }}</div>
                 <ul class="list __info">
                     <li class="list-item">
-                        <div class="list-t">Job</div>
+                        <div class="list-t">{{ 'search.blades.rebuildIndex.labels.job' | translate }}</div>
                         <div class="list-descr">{{blade.currentEntity.id}}</div>
                     </li>
                     <li class="list-item">
-                        <div class="list-t">State</div>
+                        <div class="list-t">{{ 'search.blades.rebuildIndex.labels.state' | translate }}</div>
                         <div class="list-descr">{{blade.currentEntity.state}}</div>
                     </li>
                 </ul>
