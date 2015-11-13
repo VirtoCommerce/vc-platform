@@ -191,6 +191,18 @@ namespace VirtoCommerce.Platform.Web
                 }
             });
 
+            notificationManager.RegisterNotificationType(() => new ResetPasswordEmailNotification(container.Resolve<IEmailNotificationSendingGateway>())
+            {
+                DisplayName = "Reset password notification",
+                Description = "This notification sends by email to client when he want to reset his password",
+                NotificationTemplate = new NotificationTemplate
+                {
+                    Body = PlatformNotificationResource.ResetPasswordNotificationBody,
+                    Subject = PlatformNotificationResource.ResetPasswordNotificationSubject,
+                    Language = "en-US"
+                }
+            });
+
             var postInitializeModules = moduleCatalog.CompleteListWithDependencies(moduleCatalog.Modules)
                 .Where(m => m.ModuleInstance != null)
                 .ToArray();
@@ -311,6 +323,43 @@ namespace VirtoCommerce.Platform.Web
                                 }
                             }
                         },
+
+                        new ModuleSettingsGroup
+                        {
+                            Name = "Platform|Notifications|SmtpClient",
+                            Settings = new []
+                            {
+                                new ModuleSetting
+                                {
+                                    Name = "VirtoCommerce.Platform.Notifications.SmptClient.Host",
+                                    ValueType = ModuleSetting.TypeString,
+                                    Title = "Smtp server host",
+                                    Description = "Smtp server host"
+                                },
+                                new ModuleSetting
+                                {
+                                    Name = "VirtoCommerce.Platform.Notifications.SmptClient.Port",
+                                    ValueType = ModuleSetting.TypeInteger,
+                                    Title = "Smtp server port",
+                                    Description = "Smtp server port"
+                                },
+                                new ModuleSetting
+                                {
+                                    Name = "VirtoCommerce.Platform.Notifications.SmptClient.Login",
+                                    ValueType = ModuleSetting.TypeString,
+                                    Title = "Smtp server login",
+                                    Description = "Smtp server login"
+                                },
+                                new ModuleSetting
+                                {
+                                    Name = "VirtoCommerce.Platform.Notifications.SmptClient.Password",
+                                    ValueType = ModuleSetting.TypeString,
+                                    Title = "Smtp server password",
+                                    Description = "Smtp server password"
+                                }
+                            }
+                        },
+
                          new ModuleSettingsGroup
                         {
                             Name = "Platform|Security",
@@ -353,7 +402,8 @@ namespace VirtoCommerce.Platform.Web
             var notificationTemplateService = new NotificationTemplateServiceImpl(platformRepositoryFactory);
             var notificationManager = new NotificationManager(resolver, platformRepositoryFactory, notificationTemplateService);
 
-            var emailNotificationSendingGateway = new DefaultEmailNotificationSendingGateway(settingsManager);
+            //var emailNotificationSendingGateway = new DefaultEmailNotificationSendingGateway(settingsManager);
+            var emailNotificationSendingGateway = new DefaultSmtpEmailNotificationSendingGateway(settingsManager);
 
             var defaultSmsNotificationSendingGateway = new DefaultSmsNotificationSendingGateway();
 

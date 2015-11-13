@@ -91,20 +91,20 @@ namespace VirtoCommerce.CoreModule.Web
 
             });
 
-			paymentService.RegisterPaymentMethod(() => new DefaultManualPaymentMethod()
-				{
-					IsActive = true,
-					Name = "Manual test payment method",
-					Description = "Manual test, don't use on production",
-					LogoUrl = "http://virtocommerce.com/Content/images/logo.jpg",
-				});
+            paymentService.RegisterPaymentMethod(() => new DefaultManualPaymentMethod()
+            {
+                IsActive = true,
+                Name = "Manual test payment method",
+                Description = "Manual test, don't use on production",
+                LogoUrl = "http://virtocommerce.com/Content/images/logo.jpg",
+            });
         }
 
         #endregion
 
-		#region ISupportExportImportModule Members
+        #region ISupportExportImportModule Members
 
-		public void DoExport(System.IO.Stream outStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
+        public void DoExport(System.IO.Stream outStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
         {
 			var job = _container.Resolve<CoreExportImport>();
             job.DoExport(outStream, progressCallback);

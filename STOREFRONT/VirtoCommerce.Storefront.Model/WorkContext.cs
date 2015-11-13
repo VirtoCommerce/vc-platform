@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using VirtoCommerce.Storefront.Model.Cart;
 using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Model
@@ -42,9 +43,16 @@ namespace VirtoCommerce.Storefront.Model
                 _seoInfo = value;
             }
         }
-     
 
+        /// <summary>
+        /// Current store
+        /// </summary>
         public Store CurrentStore { get; set; }
+
+        /// <summary>
+        /// Current shopping cart
+        /// </summary>
+        public ShoppingCart CurrentCart { get; set; }
 
         /// <summary>
         /// List of all supported stores

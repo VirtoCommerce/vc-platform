@@ -123,4 +123,10 @@
   <data name="RegistrationNotificationSubject" xml:space="preserve">
     <value>Your login - {{ login }}.</value>
   </data>
+  <data name="ResetPasswordNotificationBody" xml:space="preserve">
+    <value>Please reset your password by clicking &lt;strong&gt;&lt;a href="{{ url }}"&gt;here&lt;/a&gt;&lt;/strong&gt;</value>
+  </data>
+  <data name="ResetPasswordNotificationSubject" xml:space="preserve">
+    <value>Reset password link</value>
+  </data>
 </root>
