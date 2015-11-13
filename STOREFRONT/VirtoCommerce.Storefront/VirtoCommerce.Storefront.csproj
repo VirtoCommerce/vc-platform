@@ -347,7 +347,7 @@
     <Content Include="App_Data\Themes\default\templates\lockedout.liquid" />
     <Content Include="App_Data\Themes\default\templates\page.contact.liquid" />
     <Content Include="App_Data\Themes\default\templates\page.liquid" />
-    <Content Include="App_Data\Themes\default\templates\password_reseted.liquid" />
+    <Content Include="App_Data\Themes\default\templates\customers\reset_password_confirmation.liquid" />
     <Content Include="App_Data\Themes\default\templates\payment.liquid" />
     <Content Include="App_Data\Themes\default\templates\placeholder.liquid" />
     <Content Include="App_Data\Themes\default\templates\placeholders.liquid" />

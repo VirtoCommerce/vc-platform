@@ -51,6 +51,7 @@ namespace VirtoCommerce.Storefront.Model
         /// </summary>
         public Store[] AllStores { get; set; }
         public int CurrentPage { get; set; }
+        public string ErrorMessage { get; set; }
 
         #region IDisposable Implementation
 

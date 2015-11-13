@@ -27,7 +27,7 @@ namespace VirtoCommerce.Storefront.Owin
         private readonly IVirtoCommercePlatformApi _platformApi;
         private readonly ICustomerManagementModuleApi _customerApi;
         private readonly UnityContainer _container;
-   
+
 
         public WorkContextOwinMiddleware(OwinMiddleware next, UnityContainer container)
             : base(next)
@@ -49,6 +49,8 @@ namespace VirtoCommerce.Storefront.Owin
             workContext.CurrentStore = GetStore(context, workContext.AllStores);
             workContext.CurrentLanguage = GetLanguage(context, workContext.AllStores, workContext.CurrentStore);
             workContext.CurrentCurrency = GetCurrency(context, workContext.CurrentStore);
+
+            workContext.CurrentPage = 1;
 
             await Next.Invoke(context);
         }
@@ -129,8 +131,8 @@ namespace VirtoCommerce.Storefront.Owin
         {
             var languages = stores.SelectMany(s => s.Languages)
                 .Union(stores.Select(s => s.DefaultLanguage))
-                .Select(x=>x.CultureName)
-                .Distinct()                
+                .Select(x => x.CultureName)
+                .Distinct()
                 .ToArray();
 
             //Get language from request url and remove it from from url need to prevent writing language in routing

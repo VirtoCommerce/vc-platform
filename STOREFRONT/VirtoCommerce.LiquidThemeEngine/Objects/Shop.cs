@@ -23,6 +23,9 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
             _store = store;
             _urlBuilder = urlBuilder;
             _context = context;
+
+            CustomerAccountsEnabled = true;
+            CustomerAccountsOptional = true;
         }
 
         /// <summary>
@@ -94,7 +97,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
                 }
                 else
                 {
-                   return  "{{ amount }} " + _context.CurrentCurrency.Symbol;
+                    return "{{ amount }} " + _context.CurrentCurrency.Symbol;
                 }
             }
         }
@@ -139,7 +142,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         {
             get
             {
-                return _store.Currencies.Select(x=>x.Code).ToArray();
+                return _store.Currencies.Select(x => x.Code).ToArray();
             }
         }
 
@@ -150,7 +153,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         {
             get
             {
-                return _store.Languages.Select(x=>x.CultureName).ToArray();
+                return _store.Languages.Select(x => x.CultureName).ToArray();
             }
         }
 
@@ -177,5 +180,8 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
 
             }
         }
+
+        public bool CustomerAccountsEnabled { get; set; }
+        public bool CustomerAccountsOptional { get; set; }
     }
 }

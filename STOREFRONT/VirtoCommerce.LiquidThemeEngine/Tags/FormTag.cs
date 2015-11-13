@@ -37,7 +37,8 @@ namespace VirtoCommerce.LiquidThemeEngine.Tags
             _formsMap["customer_login"] = "~/account/login";
             //Generates a form for recovering a lost password on the login.liquid template.
             _formsMap["recover_customer_password"] = "~/account/forgotpassword";
-
+            //Generates a form for setting a new password on the reset_password.liquid template.
+            _formsMap["reset_customer_password"] = "~/account/resetpassword";
         }
 
         #region Public Methods and Operators
@@ -73,7 +74,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Tags
             {
                 throw new SyntaxException(String.Format("Unknow form type {0}", _formName));
             }
-          
+
         }
         #endregion
     }
