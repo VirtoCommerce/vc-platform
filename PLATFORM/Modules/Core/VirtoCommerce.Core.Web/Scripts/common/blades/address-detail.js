@@ -39,8 +39,8 @@
         if (isDirty()) {
             var dialog = {
                 id: "confirmCurrentBladeClose",
-                title: "Save changes",
-                message: "The Address has been modified. Do you want to save changes?",
+                title: "core.dialogs.address-save.title",
+                message: "core.dialogs.address-save.subtitle",
                 callback: function (needSave) {
                     if (needSave) {
                         $scope.saveChanges();
@@ -58,8 +58,8 @@
     function deleteEntry() {
         var dialog = {
             id: "confirmDelete",
-            title: "Delete confirmation",
-            message: "Are you sure you want to delete this Address?",
+            title: "core.dialogs.address-delete.title",
+            message: "core.dialogs.address-delete.message",
             callback: function (remove) {
                 if (remove) {
                     if ($scope.blade.deleteFn) {
@@ -76,7 +76,7 @@
 
     $scope.blade.toolbarCommands = [
         {
-            name: "Reset", icon: 'fa fa-undo',
+            name: "platform.commands.reset", icon: 'fa fa-undo',
             executeMethod: function () {
                 angular.copy($scope.blade.origEntity, $scope.blade.currentEntity);
             },
@@ -85,7 +85,7 @@
             }
         },
         {
-            name: "Delete", icon: 'fa fa-trash-o',
+            name: "platform.commands.delete", icon: 'fa fa-trash-o',
             executeMethod: function () {
                 deleteEntry();
             },

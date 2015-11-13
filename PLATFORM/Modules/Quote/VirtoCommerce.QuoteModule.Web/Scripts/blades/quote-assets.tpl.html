@@ -2,13 +2,13 @@
     <div class="blade-inner">
         <div class="inner-block">
             <div class="inner">
-                <div class="sub-t">Select files</div>
+                <div class="sub-t">{{ 'quotes.blades.quotes-assets.labels.select-files' | translate }}</div>
                 <form class="form">
                     <div ng-show="uploader.isHTML5">
                         <!-- 3. ng-file-over | ng-file-over="className" -->
                         <div class="well my-drop-zone panel drag-area" uploader="uploader" nv-file-drop nv-file-over>
                             <div class="drag-content">
-                                Drag and drop files here
+                                {{ 'quotes.blades.quotes-assets.labels.drag-note' | translate }}
                             </div>
                         </div>
                     </div>
@@ -24,16 +24,16 @@
                 </form>
 
                 <div ng-show="uploader.isUploading">
-                    <div class="sub-t">Progress</div>
+                    <div class="sub-t">{{ 'quotes.blades.quotes-assets.labels.progress' | translate }}</div>
                     <div class="progress-bar __aqua" ng-style="{'width': uploader.progress + '%'}"></div>
                 </div>
 
                 <div class="table-wrapper" ng-if="currentEntities.length > 0">
                     <table class="table">
                         <tr>
-                            <th class="table-col">Type</th>
-                            <th class="table-col">Name</th>
-                            <th class="table-col">Actions</th>
+                            <th class="table-col">{{ 'quotes.blades.quotes-assets.labels.type' | translate }}</th>
+                            <th class="table-col">{{ 'quotes.blades.quotes-assets.labels.name' | translate }}</th>
+                            <th class="table-col">{{ 'quotes.blades.quotes-assets.labels.actions' | translate }}</th>
                         </tr>
                         <tr class="table-item" ng-repeat="data in currentEntities">
                             <td class="table-col __product-img">

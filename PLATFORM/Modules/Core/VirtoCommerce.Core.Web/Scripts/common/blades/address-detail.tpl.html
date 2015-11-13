@@ -4,10 +4,10 @@
         <div class="inner-block">
             <form class="form" name="detailForm">
                 <div class="form-group" ng-init="setForm(detailForm)">
-                    <label class="form-label">Address type</label>
+                    <label class="form-label">{{ 'core.blades.address-detail.labels.address-type' | translate }}</label>
                     <div class="form-input">
                         <ui-select ng-model="blade.currentEntity.addressType">
-                            <ui-select-match placeholder="Select ...">{{$select.selected}}</ui-select-match>
+                            <ui-select-match placeholder="{{ 'core.blades.address-detail.placeholders.address-type' | translate }}">{{$select.selected}}</ui-select-match>
                             <ui-select-choices repeat="x as x in addressTypes | filter: $select.search ">
                                 <span ng-bind-html="x | highlight: $select.search"></span>
                             </ui-select-choices>
@@ -15,22 +15,22 @@
                     </div>
                 </div>                
                 <div class="form-group">
-                    <label class="form-label">First name</label>
+                    <label class="form-label">{{ 'core.blades.address-detail.labels.first-name' | translate }}</label>
                     <div class="form-input">
                         <input ng-model="blade.currentEntity.firstName" placeholder="Enter value" required />
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Last name</label>
+                    <label class="form-label">{{ 'core.blades.address-detail.labels.last-name' | translate }}</label>
                     <div class="form-input">
                         <input ng-model="blade.currentEntity.lastName" placeholder="Enter value" required />
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Country</label>
+                    <label class="form-label">{{ 'core.blades.address-detail.labels.country' | translate }}</label>
                     <div class="form-input">
                         <ui-select ng-model="blade.currentEntity.countryCode" required>
-                            <ui-select-match placeholder="Select ...">{{$select.selected.name}}</ui-select-match>
+                            <ui-select-match placeholder="{{ 'core.blades.address-detail.placeholders.country' | translate }}">{{$select.selected.name}}</ui-select-match>
                             <ui-select-choices repeat="x.code as x in countries | filter: $select.search ">
                                 <span ng-bind-html="x.name | highlight: $select.search"></span>
                             </ui-select-choices>
@@ -38,19 +38,19 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Region</label>
+                    <label class="form-label">{{ 'core.blades.address-detail.labels.region' | translate }}</label>
                     <div class="form-input">
                         <input ng-model="blade.currentEntity.regionName" placeholder="Enter region" required />
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">City</label>
+                    <label class="form-label">{{ 'core.blades.address-detail.labels.city' | translate }}</label>
                     <div class="form-input">
                         <input ng-model="blade.currentEntity.city" required placeholder="Enter city" />
                     </div>
                 </div>
                <div class="form-group">
-                    <label class="form-label">Address</label>
+                    <label class="form-label">{{ 'core.blades.address-detail.labels.address' | translate }}</label>
                     <div class="form-input">
                         <input ng-model="blade.currentEntity.line1" placeholder="Enter address line 1" required />
                     </div>
@@ -60,19 +60,19 @@
                 </div>
                
                 <div class="form-group">
-                    <label class="form-label">Zip code</label>
+                    <label class="form-label">{{ 'core.blades.address-detail.labels.zip code' | translate }}</label>
                     <div class="form-input">
                         <input ng-model="blade.currentEntity.postalCode" required placeholder="Enter postal code" />
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Email</label>
+                    <label class="form-label">{{ 'core.blades.address-detail.labels.email' | translate }}</label>
                     <div class="form-input">
                         <input ng-model="blade.currentEntity.email" type="email" placeholder="Enter value" />
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Phone</label>
+                    <label class="form-label">{{ 'core.blades.address-detail.labels.phone' | translate }}</label>
                     <div class="form-input">
                         <input ng-model="blade.currentEntity.phone" placeholder="Enter phone number" />
                     </div>

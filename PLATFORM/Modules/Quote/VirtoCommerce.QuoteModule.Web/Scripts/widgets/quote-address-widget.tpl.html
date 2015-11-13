@@ -2,9 +2,9 @@
     <div class="cnt-inner" ng-if="address">
         <div class="list-t">{{address.firstName}} {{address.lastName}}</div>
         <div class="list-t">{{address.countryCode}}, {{ address.regionName}}, {{address.city}}, {{address.line1}}</div>
-        <div class="list-t">Address type: {{address.addressType}}</div>
+        <div class="list-t">{{ 'quotes.widgets.address-list.address-type' | translate }}: {{address.addressType}}</div>
     </div>
     <div class="cnt-inner" ng-if="!address">
-        <div class="list-count">No address</div>
+        <div class="list-count">{{ 'quotes.widgets.address-list.no-address' | translate }}</div>
     </div>
 </div>

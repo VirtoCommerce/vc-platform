@@ -1,0 +1,83 @@
+﻿{
+  "core": {
+    "main-menu-title": "Shopping carts",
+    "blades": {
+      "address-list": {
+        "labels": {
+          "no-addresses": "No Addresses yet"
+        }
+      },
+      "address-detail": {
+        "subtitle": "Edit address",
+        "labels": {
+          "address-type": "Address type",
+          "first-name": "First name",
+          "last-name": "Last name",
+          "country": "Country",
+          "region": "Region",
+          "city": "City",
+          "address": "Address",
+          "zip-code": "Zip code",
+          "email": "Email",
+          "phone": "Phone"
+        },
+        "placeholders": {
+          "address-type": "Select...",
+          "country": "Select..."
+        }
+      },
+      "fulfillment-center-contact": {
+        "labels": {
+          "region": "Region",
+          "city": "City",
+          "address": "Address",
+          "zip-code": "Zip code",
+          "phone": "Phone"
+        },
+        "placeholders": {
+          "country": "Select..."
+        }
+      },
+      "fulfillment-center-detail": {
+        "subtitle": "Edit Fulfillment center",
+        "labels": {
+          "name": "Name",
+          "description": "Description",
+          "max-releases": "Max. releases per pick batch",
+          "pick-delay": "Pick delay"
+        }
+      },
+      "fulfillment-center-list": {
+        "title": "Fulfillment centers",
+        "subtitle": "Manage Fulfillment centers"
+      }
+    },
+    "dialogs": {
+      "address-delete": {
+        "title": "Delete confirmation",
+        "message": "Are you sure you want to delete this Address?"
+      },
+      "address-save": {
+        "title": "Save changes",
+        "message": "The Address has been modified. Do you want to save changes?"
+      },
+      "fulfillment-delete": {
+        "title": "Delete confirmation",
+        "message": "Are you sure you want to delete this Fulfillment center?"
+      },
+      "fulfillments-save": {
+        "title": "Save changes",
+        "message": "The fulfillments has been modified. Do you want to save changes?"
+      }
+    },
+    "widgets": {
+      "fulfillment-center-contact": {
+        "blade-subtitle": "Contact information",
+        "title": "Contact information"
+      },
+      "fulfillment": {
+        "title": "Fulfillment centers"
+      }
+    }
+  }
+}

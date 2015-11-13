@@ -96,6 +96,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <Content Include="Localizations\en.VirtoCommerce.Quote.json" />
     <None Include="packages.config" />
     <Content Include="Content\css\quoteModule.css" />
     <Content Include="module.manifest">
