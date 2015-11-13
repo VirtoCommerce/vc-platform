@@ -226,8 +226,17 @@
     <Compile Include="Controllers\AssetsController.cs" />
     <Compile Include="Controllers\CommonController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Converters\AddressConverter.cs" />
+    <Compile Include="Converters\AssetConverter.cs" />
+    <Compile Include="Converters\CategoryLinkConverter.cs" />
     <Compile Include="Converters\CustomerConverter.cs" />
+    <Compile Include="Converters\EditorialReviewConverter.cs" />
+    <Compile Include="Converters\InventoryConverter.cs" />
+    <Compile Include="Converters\PriceConverter.cs" />
+    <Compile Include="Converters\ProductAssociationConverter.cs" />
+    <Compile Include="Converters\ProductConverter.cs" />
+    <Compile Include="Converters\PropertyConverter.cs" />
     <Compile Include="Converters\SeoInfoConverter.cs" />
     <Compile Include="Converters\StoreConverter.cs" />
     <Compile Include="Exceptions\SaasCompileException.cs" />

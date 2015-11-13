@@ -3,23 +3,33 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
-using Hangfire;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Security.Identity;
-using VirtoCommerce.Platform.Web.Model.Security;
+using VirtoCommerce.Platform.Core.Notifications;
+using VirtoCommerce.Platform.Data.Notifications;
+using VirtoCommerce.Domain.Store.Services;
+using VirtoCommerce.Domain.Customer.Services;
+using System.Linq;
+using VirtoCommerce.CoreModule.Web.Model;
 
-namespace VirtoCommerce.Platform.Web.Controllers.Api
+namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 {
-    [RoutePrefix("api/security/frontend")]
-    public class FrontEndSecurityController : ApiController
+    [RoutePrefix("api/security/storefront")]
+    public class StorefrontSecurityController : ApiController
     {
         private readonly ISecurityService _securityService;
         private readonly Func<ApplicationSignInManager> _signInManagerFactory;
+        private readonly INotificationManager _notificationManager;
+        private readonly IStoreService _storeService;
+        private readonly IContactService _contactService;
 
-        public FrontEndSecurityController(ISecurityService securityService, Func<ApplicationSignInManager> signInManagerFactory)
+        public StorefrontSecurityController(ISecurityService securityService, Func<ApplicationSignInManager> signInManagerFactory, INotificationManager notificationManager, IStoreService storeService, IContactService contactService)
         {
             _securityService = securityService;
             _signInManagerFactory = signInManagerFactory;
+            _notificationManager = notificationManager;
+            _storeService = storeService;
+            _contactService = contactService;
         }
 
         private ApplicationSignInManager _signInManager;
@@ -31,8 +41,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
         }
 
-        //
-        // GET: /api/security/frontend/user/id
         [HttpGet]
         [Route("user/id/{userId}")]
         [ResponseType(typeof(ApplicationUserExtended))]
@@ -48,8 +56,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return Ok(user);
         }
 
-        //
-        // GET: /api/security/frontend/user/name
         [HttpGet]
         [Route("user/name/{userName}")]
         [ResponseType(typeof(ApplicationUserExtended))]
@@ -65,8 +71,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return Ok(user);
         }
 
-        //
-        // GET: /api/security/frontend/user/login
         [HttpGet]
         [Route("user/login")]
         [ResponseType(typeof(ApplicationUserExtended))]
@@ -82,8 +86,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return Ok(user);
         }
 
-        //
-        // POST: /api/security/frontend/user/signin
         [HttpPost]
         [Route("user/signin")]
         [ResponseType(typeof(SignInResult))]
@@ -100,8 +102,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return Ok(result);
         }
 
-        //
-        // POST: /api/security/frontend/user
         [HttpPost]
         [Route("user")]
         [ResponseType(typeof(SecurityResult))]
@@ -121,12 +121,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return Ok(result);
         }
 
-        //
-        // POST: /api/security/frontend/user/password/resettoken
         [HttpPost]
         [Route("user/password/resettoken")]
         [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> GenerateResetPasswordToken(string userId, string storeName, string callbackUrl)
+        public async Task<IHttpActionResult> GenerateResetPasswordToken(string userId, string storeName, string language, string callbackUrl)
         {
             if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(storeName) || string.IsNullOrEmpty(callbackUrl))
             {
@@ -145,13 +143,30 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 HttpUtility.HtmlEncode(uriBuilder.ToString()));
             string subject = string.Format("\"{0}\" reset password link", storeName);
 
-            BackgroundJob.Enqueue(() => SendEmail(userId, subject, message));
+
+
+            var notification = _notificationManager.GetNewNotification<ResetPasswordEmailNotification>(storeName, "Store", language);
+            notification.Url = uriBuilder.ToString();
+
+            var store = _storeService.GetById(storeName);
+            notification.Sender = store.Email;
+            notification.IsActive = true;
+
+            var contact = _contactService.GetById(userId);
+            if (contact != null)
+            {
+                var email = contact.Emails.FirstOrDefault();
+                if (!string.IsNullOrEmpty(email))
+                {
+                    notification.Recipient = email;
+                }
+            }
+
+            _notificationManager.ScheduleSendNotification(notification);
 
             return Ok();
         }
 
-        //
-        // POST: /api/security/frontend/user/password/reset
         [HttpPost]
         [Route("user/password/reset")]
         [ResponseType(typeof(SecurityResult))]
@@ -165,12 +180,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var result = await _securityService.ResetPasswordAsync(userId, token, newPassword);
 
             return Ok(result);
-        }
-
-
-        public void SendEmail(string userId, string subject, string message)
-        {
-            // TODO: Use notifications
         }
     }
 }

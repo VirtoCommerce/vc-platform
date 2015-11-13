@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using VirtoCommerce.Storefront.Model.Cart;
 using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Model
@@ -43,8 +44,15 @@ namespace VirtoCommerce.Storefront.Model
             }
         }
 
-
+        /// <summary>
+        /// Current store
+        /// </summary>
         public Store CurrentStore { get; set; }
+
+        /// <summary>
+        /// Current shopping cart
+        /// </summary>
+        public ShoppingCart CurrentCart { get; set; }
 
         /// <summary>
         /// List of all supported stores
@@ -52,6 +60,13 @@ namespace VirtoCommerce.Storefront.Model
         public Store[] AllStores { get; set; }
         public int CurrentPage { get; set; }
         public string ErrorMessage { get; set; }
+
+        /// <summary>
+        /// List of categories
+        /// </summary>
+        public Category[] AllCategories { get; set; } 
+
+        public Product CurrentProduct { get; set; }
 
         #region IDisposable Implementation
 

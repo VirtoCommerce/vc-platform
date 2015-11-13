@@ -43,6 +43,15 @@
   <ItemGroup>
     <Compile Include="Address.cs" />
     <Compile Include="AddressType.cs" />
+    <Compile Include="Catalog\Asset.cs" />
+    <Compile Include="Catalog\CategoryLink.cs" />
+    <Compile Include="Catalog\EditorialReview.cs" />
+    <Compile Include="Catalog\Image.cs" />
+    <Compile Include="Catalog\Inventory.cs" />
+    <Compile Include="Catalog\Price.cs" />
+    <Compile Include="Catalog\ProductAssociation.cs" />
+    <Compile Include="Catalog\PropertyValue.cs" />
+    <Compile Include="Catalog\Category.cs" />
     <Compile Include="Common\ArrayExtensions.cs" />
     <Compile Include="Common\DefaultableDictionary.cs" />
     <Compile Include="Common\Entity.cs" />
@@ -63,14 +72,26 @@
     <Compile Include="DynamicPropertyDictionaryItem.cs" />
     <Compile Include="ForgotPassword.cs" />
     <Compile Include="Language.cs" />
+    <Compile Include="Catalog\Product.cs" />
     <Compile Include="Login.cs" />
+    <Compile Include="PaymentMethod.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Register.cs" />
     <Compile Include="ResetPassword.cs" />
+    <Compile Include="Catalog\Property.cs" />
     <Compile Include="SeoInfo.cs" />
+    <Compile Include="ShipmentMethod.cs" />
+    <Compile Include="Cart\CartSummary.cs" />
+    <Compile Include="Discount.cs" />
+    <Compile Include="Cart\LineItem.cs" />
+    <Compile Include="Cart\Payment.cs" />
+    <Compile Include="Cart\Shipment.cs" />
+    <Compile Include="Cart\ShoppingCart.cs" />
     <Compile Include="Store.cs" />
+    <Compile Include="TaxDetail.cs" />
     <Compile Include="WorkContext.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
