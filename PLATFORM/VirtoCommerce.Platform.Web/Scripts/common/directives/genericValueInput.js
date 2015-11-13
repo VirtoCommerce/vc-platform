@@ -134,9 +134,24 @@
             };
 
             function changeValueTemplate() {
+                if (scope.currentEntity.valueType === 'Html') {
+                    // Codemirror configuration
+                    scope.editorOptions = {
+                        lineWrapping: true,
+                        lineNumbers: true,
+                        parserfile: "liquid.js",
+                        extraKeys: { "Ctrl-Q": function (cm) { cm.foldCode(cm.getCursor()); } },
+                        foldGutter: true,
+                        gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+                        onLoad: function (_editor) {
+                            codemirrorEditor = _editor;
+                        },
+                        mode: 'htmlmixed'
+                        // mode: getEditorMode()
+                    };
+                }                
+
                 var templateName = getTemplateName(scope.currentEntity);
-
-
                 //load input template and display
                 $http.get(templateName, { cache: $templateCache }).success(function (tplContent) {
                     //Need to add ngForm to isolate form validation into sub form

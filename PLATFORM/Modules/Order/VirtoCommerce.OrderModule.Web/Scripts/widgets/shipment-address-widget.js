@@ -10,7 +10,7 @@
 		};
 		var newBlade = {
 			id: 'orderOperationAddresses',
-			title: 'Manage delivery address',
+			title: 'orders.widgets.shipment-address.blade-title',
 			currentEntity: deliveryAddress,
 			controller: 'virtoCommerce.coreModule.common.coreAddressDetailController',
 			template: 'Modules/$(VirtoCommerce.Core)/Scripts/common/blades/address-detail.tpl.html',

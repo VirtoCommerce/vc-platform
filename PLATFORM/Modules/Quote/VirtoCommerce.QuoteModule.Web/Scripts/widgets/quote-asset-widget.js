@@ -5,7 +5,7 @@
         var blade = {
             id: "quoteAssets",
             title: $scope.blade.title,
-            subtitle: 'Quote attachments',
+            subtitle: 'quotes.blades.quotes-assets.subtitle',
             currentEntity: $scope.blade.currentEntity,
             controller: 'virtoCommerce.quoteModule.quoteAssetController',
             template: 'Modules/$(VirtoCommerce.Quote)/Scripts/blades/quote-assets.tpl.html'

@@ -22,7 +22,7 @@
       var menuItem = {
           path: 'configuration/dynamicProperties',
           icon: 'fa fa-pencil-square-o',
-          title: 'Dynamic properties',
+          title: 'platform.menu.dynamic-properties',
           priority: 2,
           action: function () { $state.go('workspace.dynamicProperties'); },
           permission: 'platform:dynamic_properties:access'

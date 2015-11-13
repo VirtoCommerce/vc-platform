@@ -1,6 +1,6 @@
 ﻿<div class="blade-static __bottom">
     <button class="btn" ng-click="startImport()" ng-disabled="!blade.canImport">
-        <span>Start import</span>
+        {{ 'catalog.commands.start-import' | translate }}
     </button>
 </div>
 <div class="blade-content">
@@ -8,7 +8,7 @@
         <div class="inner-block">
             <form name="importWizardForm" class="form">
                 <fieldset ng-init="setForm(importWizardForm)">
-                    <label class="form-label">Csv column delimiter</label>
+                    <label class="form-label">{{ 'catalog.blades.csv-import-wizard.labels.delimiter' | translate }}</label>
                     <ui-select required ng-model="blade.columnDelimiter">
                         <ui-select-match allow-clear="true" placeholder="Select ...">{{$select.selected.name}}</ui-select-match>
                         <ui-select-choices repeat="x.value as x in columnDelimiters | filter: $select.search ">
@@ -19,7 +19,7 @@
 
                 <fieldset ng-disabled="!blade.columnDelimiter">
                     <div class="form-group">
-                        <label class="form-label">Upload Csv file</label>
+                        <label class="form-label">{{ 'catalog.blades.csv-import-wizard.labels.upload' | translate }}</label>
                         <div class="form-input">
                             <input type="file" uploader="uploader" nv-file-select style="z-index: 0;" tabindex="-1">
                             <input type="text" readonly="" ng-model="blade.csvFileUrl">
@@ -29,7 +29,7 @@
                         </div>
                     </div>
                     <div ng-show="uploader.isUploading">
-                        <div class="sub-t">Upload progress</div>
+                        <div class="sub-t">{{ 'catalog.blades.csv-import-wizard.labels.upload-progress' | translate }}</div>
                         <div class="progress-bar __aqua" ng-style="{'width': uploader.progress + '%'}" style="width: 0%;"></div>
                     </div>
                 </fieldset>
@@ -38,8 +38,8 @@
 
             <ul class="list __items">
                 <li class="list-item" ng-click="openMappingStep()" ng-class="{'__disabled': !canMapColumns()}">
-                    <span class="list-t">Map columns</span>
-                    <span class="list-descr">Define column mapping</span>
+                    <span class="list-t">{{ 'catalog.blades.csv-import-wizard.labels.map-columns' | translate }}</span>
+                    <span class="list-descr">{{ 'catalog.blades.csv-import-wizard.labels.define-columns' | translate }}</span>
                 </li>
             </ul>
         </div>

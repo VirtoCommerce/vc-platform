@@ -26,7 +26,7 @@
             itemId: listItem.id,
             productType: listItem.productType,
             title: listItem.code,
-            subtitle: 'Variation details',
+            subtitle: 'catalog.blades.variation.subtitle',
             controller: 'virtoCommerce.catalogModule.itemDetailController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/item-detail.tpl.html'
         };
@@ -43,14 +43,14 @@
 
     blade.toolbarCommands = [
         {
-            name: "Refresh", icon: 'fa fa-refresh',
+            name: "platform.commands.refresh", icon: 'fa fa-refresh',
             executeMethod: function () {
                 blade.refresh(false);
             },
             canExecuteMethod: function () { return true; }
         },
 	     {
-	         name: "Add", icon: 'fa fa-plus',
+	         name: "platform.commands.add", icon: 'fa fa-plus',
 	         executeMethod: function () {
 	             items.newVariation({ itemId: blade.itemId }, function (data) {
 	                 // take variation properties only
@@ -60,8 +60,8 @@
 	                 var newBlade = {
 	                     id: 'variationDetail',
 	                     item: data,
-	                     title: "New variation",
-	                     subtitle: 'Fill variation information',
+	                     title: "catalog.blades.new-variation.title",
+	                     subtitle: 'catalog.blades.new-variation.subtitle',
 	                     controller: 'virtoCommerce.catalogModule.newProductWizardController',
 	                     template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/wizards/newProduct/new-variation-wizard.tpl.html'
 	                 };
@@ -73,12 +73,12 @@
 	         permission: 'catalog:create'
 	     },
           {
-              name: "Delete", icon: 'fa fa-trash-o',
+              name: "platform.commands.delete", icon: 'fa fa-trash-o',
               executeMethod: function () {
                   var dialog = {
                       id: "confirmDeleteItem",
-                      title: "Delete confirmation",
-                      message: "Are you sure you want to delete selected Variations?",
+                      title: "catalog.dialogs.variation-delete.title",
+                      message: "catalog.dialogs.variation-delete.message",
                       callback: function (remove) {
                           if (remove) {
                               closeChildrenBlades();

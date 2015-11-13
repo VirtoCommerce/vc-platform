@@ -4,8 +4,8 @@
 
     function initializeBlade() {
         var entities = [
-            { name: 'Price lists', entityName: 'pricelist', icon: 'fa-usd' },
-            { name: 'Price list assignments', entityName: 'assignment', icon: 'fa-usd' }];
+            { name: 'pricing.blades.pricing-main.menu.pricelist-list.title', entityName: 'pricelist', icon: 'fa-usd', subtitle: 'pricing.blades.pricelist-list.subtitle' },
+            { name: 'pricing.blades.pricing-main.menu.pricelist-assignment-list.title', entityName: 'assignment', icon: 'fa-usd', subtitle: 'pricing.blades.pricelist-assignment-list.subtitle' }];
         $scope.blade.currentEntities = entities;
         $scope.blade.isLoading = false;
 
@@ -18,7 +18,7 @@
         var newBlade = {
             id: 'pricingList',
             title: data.name,
-            subtitle: 'Merchandise management',
+            subtitle: data.subtitle,
             controller: 'virtoCommerce.pricingModule.'+ data.entityName + 'ListController',
             template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/blades/' + data.entityName + '-list.tpl.html'
         };

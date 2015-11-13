@@ -57,7 +57,7 @@
 
     $scope.blade.toolbarCommands = [
         {
-            name: "Save", icon: 'fa fa-save',
+            name: "platform.commands.save", icon: 'fa fa-save',
             executeMethod: function () {
                 saveChanges();
             },
@@ -67,7 +67,7 @@
             permission: 'core:fulfillment:update'
         },
         {
-            name: "Reset", icon: 'fa fa-undo',
+            name: "platform.commands.reset", icon: 'fa fa-undo',
             executeMethod: function () {
                 angular.copy($scope.blade.origEntity, $scope.blade.currentEntity);
             },
@@ -77,7 +77,7 @@
             permission: 'core:fulfillment:update'
         },
         {
-            name: "Delete", icon: 'fa fa-trash-o',
+            name: "platform.commands.delete", icon: 'fa fa-trash-o',
             executeMethod: function () {
                 deleteEntry();
             },
@@ -91,8 +91,8 @@
     function deleteEntry() {
         var dialog = {
             id: "confirmDelete",
-            title: "Delete confirmation",
-            message: "Are you sure you want to delete this Fulfillment center?",
+            title: "core.dialogs.fulfillment-delete.title",
+            message: "core.dialogs.fulfillment-delete.message",
             callback: function (remove) {
                 if (remove) {
                     $scope.blade.isLoading = true;
@@ -113,8 +113,8 @@
         if (isDirty()) {
             var dialog = {
                 id: "confirmItemChange",
-                title: "Save changes",
-                message: "The fulfillments has been modified. Do you want to save changes?",
+                title: "core.dialogs.fulfillments-save.title",
+                message: "core.dialogs.fulfillments-save.message",
                 callback: function (needSave) {
                     if (needSave) {
                         saveChanges();

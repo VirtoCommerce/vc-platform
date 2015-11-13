@@ -6,7 +6,7 @@
 	$scope.openCommentBlade = function () {
 		var newBlade = {
 			id: 'operationComment',
-			title: 'Write comments',
+			title: 'orders.widgets.operation-comment.blade-title',
 			currentEntity: $scope.operation,
 			controller: 'virtoCommerce.orderModule.orderOperationCommentDetail',
 			template: 'Modules/$(VirtoCommerce.Orders)/Scripts/blades/operation-comment.tpl.html'

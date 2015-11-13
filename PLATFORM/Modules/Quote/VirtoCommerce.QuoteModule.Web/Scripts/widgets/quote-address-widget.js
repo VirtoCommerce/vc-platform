@@ -7,7 +7,7 @@
             id: 'quoteAddresses',
             currentEntities: blade.currentEntity.addresses,
             title: blade.title,
-            subtitle: 'Manage addresses',
+            subtitle: 'quotes.widgets.address-list.blade-subtitle',
             controller: 'virtoCommerce.coreModule.common.coreAddressListController',
             template: 'Modules/$(VirtoCommerce.Core)/Scripts/common/blades/address-list.tpl.html'
         };

@@ -1,9 +1,9 @@
 ﻿<div class="blade-static">
     <div class="form-group">
         <div class="form-input __search">
-            <input placeholder="Search Item by name..." ng-model="searchText">
+            <input placeholder="{{'pricing.blades.pricelist-item-list.placeholders.search-item' | translate}}" ng-model="searchText">
         </div>
-        <p class="form-count">Count: <span class="count">{{filteredEntities.length}}</span></p>
+        <p class="form-count">{{'platform.list.count' | translate}}: <span class="count">{{filteredEntities.length}}</span></p>
     </div>
 </div>
 <div class="blade-content __large-wide">
@@ -13,10 +13,10 @@
                 <table class="table __normal">
                     <thead>
                         <tr>
-                            <th class="table-col __product-name">Item name</th>
-                            <th class="table-col __product-code">Item code</th>
-                            <th class="table-col">Price range</th>
-                            <th class="table-col">Prices count</th>
+                            <th class="table-col __product-name">{{'pricing.blades.pricelist-item-list.labels.item-name' | translate}}</th>
+                            <th class="table-col __product-code">{{'pricing.blades.pricelist-item-list.labels.item-code' | translate}}</th>
+                            <th class="table-col">{{'pricing.blades.pricelist-item-list.labels.price-range' | translate}}</th>
+                            <th class="table-col">{{'pricing.blades.pricelist-item-list.labels.prices-count' | translate}}</th>
                         </tr>
                     </thead>
                     <tbody>

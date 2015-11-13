@@ -113,7 +113,6 @@
     <Compile Include="Model\Address.cs" />
     <Compile Include="Model\CardSummary.cs" />
     <Compile Include="Model\LineItem.cs" />
-    <Compile Include="Model\Coupon.cs" />
     <Compile Include="Model\Discount.cs" />
     <Compile Include="Model\Payment.cs" />
     <Compile Include="Model\PaymentMethod.cs" />
@@ -145,12 +144,16 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="Localizations\en.VirtoCommerce.Cart.json" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="web.config">
+    <None Include="web.config">
       <SubType>Designer</SubType>
-    </Content>
+    </None>
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

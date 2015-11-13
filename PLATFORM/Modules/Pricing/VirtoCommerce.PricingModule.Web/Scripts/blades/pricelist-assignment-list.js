@@ -15,7 +15,7 @@
             id: 'pricelistChildChild',
             currentEntityId: selectedNode.id,
             title: selectedNode.name,
-            subtitle: 'Edit catalog assignment',
+            subtitle: 'pricing.blades.assignment-detail.edit-subtitle',
             controller: 'virtoCommerce.pricingModule.assignmentDetailController',
             template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/blades/assignment-detail.tpl.html'
         };

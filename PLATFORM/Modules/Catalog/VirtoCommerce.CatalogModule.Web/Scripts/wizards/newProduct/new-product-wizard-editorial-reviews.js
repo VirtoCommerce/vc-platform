@@ -16,8 +16,8 @@
             id: 'editorialReviewWizard',
             currentEntity: data,
             languages: $scope.wizardBlade.parentBlade.catalog.languages,
-            title: 'Review',
-            subtitle: 'Product Review',
+            title: 'catalog.blades.review.title',
+            subtitle: 'catalog.blades.review.subtitle',
             bottomTemplate: '$(Platform)/Scripts/common/templates/ok.tpl.html',
             controller: 'virtoCommerce.catalogModule.editorialReviewDetailWizardStepController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/editorialReview-detail.tpl.html'
@@ -51,7 +51,7 @@
 
     $scope.blade.toolbarCommands = [
         {
-            name: "Add", icon: 'fa fa-plus',
+            name: "platform.commands.add", icon: 'fa fa-plus',
             executeMethod: function ()
             {
                 var data = { languageCode: $scope.wizardBlade.parentBlade.catalog.defaultLanguage.languageCode };

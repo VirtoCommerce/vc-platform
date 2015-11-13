@@ -53,11 +53,11 @@ function ($scope, order_res_customerOrders, bladeNavigationService, dialogServic
 	$scope.selectNode = function (node) {
 		selectedNode = node;
 		$scope.selectedNodeId = selectedNode.id;
-
 		var newBlade = {
 			id: 'operationDetail',
-			title: selectedNode.customer + '\'s Customer Order',
-			subtitle: 'Edit order details and related documents',
+			title: 'orders.blades.customer-order-detail.title',
+			titleValues: { customer: selectedNode.customerName },
+			subtitle: 'orders.blades.customer-order-detail.subtitle',
 			customerOrder: selectedNode,
 			controller: 'virtoCommerce.orderModule.operationDetailController',
 			template: 'Modules/$(VirtoCommerce.Orders)/Scripts/blades/customerOrder-detail.tpl.html'
@@ -79,8 +79,8 @@ function ($scope, order_res_customerOrders, bladeNavigationService, dialogServic
 	function deleteChecked() {
 		var dialog = {
 			id: "confirmDeleteItem",
-			title: "Delete confirmation",
-			message: "Are you sure you want to delete selected customer orders?",
+			title: "orders.dialogs.orders-delete.title",
+			message: "orders.dialogs.orders-delete.message",
 			callback: function (remove) {
 				if (remove) {
 					closeChildrenBlades();
@@ -107,7 +107,7 @@ function ($scope, order_res_customerOrders, bladeNavigationService, dialogServic
 
 	$scope.blade.toolbarCommands = [
           {
-          	name: "Refresh", icon: 'fa fa-refresh',
+              name: "platform.commands.refresh", icon: 'fa fa-refresh',
           	executeMethod: function () {
           		$scope.blade.refresh();
           	},
@@ -116,7 +116,7 @@ function ($scope, order_res_customerOrders, bladeNavigationService, dialogServic
           	}
           },
           {
-          	name: "Delete", icon: 'fa fa-trash-o',
+              name: "platform.commands.delete", icon: 'fa fa-trash-o',
           	executeMethod: function () {
           		deleteChecked();
           	},

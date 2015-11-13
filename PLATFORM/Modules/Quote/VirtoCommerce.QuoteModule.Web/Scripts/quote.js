@@ -16,7 +16,7 @@ angular.module(moduleName, [])
                   '$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
                       var blade = {
                           id: 'quote',
-                          title: 'Quotes',
+                          title: 'quotes.blades.quotes-list.title',
                           controller: 'virtoCommerce.quoteModule.quotesListController',
                           template: 'Modules/$(VirtoCommerce.Quote)/Scripts/blades/quotes-list.tpl.html',
                           isClosingDisabled: true
@@ -36,7 +36,7 @@ angular.module(moduleName, [])
       var menuItem = {
           path: 'browse/quote',
           icon: 'fa fa-file-text-o',
-          title: 'quotes',
+          title: 'quotes.main-menu-title',
           priority: 95,
           action: function () { $state.go('workspace.quoteModule'); },
           permission: 'quote:access'

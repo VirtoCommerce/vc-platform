@@ -16,6 +16,7 @@ namespace VirtoCommerce.Web.Models
             Currency = currency;
             CustomerId = customerId;
             Items = new List<LineItem>();
+            Discounts = new List<Discount>();
             Language = language;
             Name = "default";
             StoreId = storeId;
@@ -26,6 +27,8 @@ namespace VirtoCommerce.Web.Models
         public DateTime CreatedAt { get; set; }
 
         public string Currency { get; set; }
+
+        public string Coupon { get; set; }
 
         public string CustomerId { get; set; }
 
@@ -56,6 +59,9 @@ namespace VirtoCommerce.Web.Models
 
         [DataMember]
         public List<LineItem> Items { get; set; }
+
+        [DataMember]
+        public List<Discount> Discounts { get; set; }
 
         [DataMember]
         public string Key { get; set; }
@@ -115,6 +121,13 @@ namespace VirtoCommerce.Web.Models
             foreach (var anotherLineItem in anotherCart.Items)
             {
                 AddLineItem(anotherLineItem);
+            }
+
+            Coupon = anotherCart.Coupon;
+
+            foreach (var discount in anotherCart.Discounts)
+            {
+                Discounts.Add(discount);
             }
 
             return this;

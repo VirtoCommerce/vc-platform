@@ -1,0 +1,48 @@
+﻿{
+  "platform": {
+    "menu": {
+      "home": "Home",
+      "browse": "Browse",
+      "configuration": "Configuration",
+      "settings": "Settings",
+      "dynamic-properties": "Dynamic properties",
+      "security": "Security",
+      "modules": "Modules",
+      "notifications":  "Notifications",
+      "export-import": "Export & Import",
+      "assets":  "Assets"
+    },
+    "commands": {
+      "add": "Add",
+      "delete": "Delete",
+      "remove": "Remove",
+      "cut": "Cut",
+      "paste": "Paste",
+      "refresh": "Refresh",
+      "reset": "Reset",
+      "save": "Save",
+      "create": "Create",
+      "manage": "Manage",
+      "import": "Import",
+      "export": "Export",
+      "more":  "More",
+      "ok": "Ok",
+      "yes": "Yes",
+      "no": "No",
+      "cancel": "Cancel",
+      "confirm":  "Confirm"
+    },
+
+    "list": {
+      "no-data": "No data",
+      "count": "Count"
+    },
+    "navigation": {
+      "back": "Back",
+      "bread-crumb-top": "All"
+    },
+    "placeholders": {
+      "search-keyword": "Search keyword..."
+    }
+  }
+}

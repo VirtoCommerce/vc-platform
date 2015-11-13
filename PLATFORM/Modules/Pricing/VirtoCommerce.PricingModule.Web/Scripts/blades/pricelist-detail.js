@@ -63,8 +63,8 @@
             if (isDirty()) {
                 var dialog = {
                     id: "confirmCurrentBladeClose",
-                    title: "Save changes",
-                    message: "The Price list has been modified. Do you want to save changes?"
+                    title: "prising.dialogs.pricelist-save.title",
+                    message: "prising.dialogs.pricelist-save.message"
                 };
                 dialog.callback = function (needSave) {
                     if (needSave) {
@@ -90,7 +90,7 @@
             if (!$scope.blade.isNew) {
                 $scope.blade.toolbarCommands = [
                     {
-                        name: "Save",
+                        name: "platform.commands.save",
                         icon: 'fa fa-save',
                         executeMethod: function () {
                             $scope.saveChanges();
@@ -101,7 +101,7 @@
                         permission: 'pricing:update'
                     },
                     {
-                        name: "Reset",
+                        name: "platform.commands.reset",
                         icon: 'fa fa-undo',
                         executeMethod: function () {
                             angular.copy($scope.blade.origEntity, $scope.blade.currentEntity);

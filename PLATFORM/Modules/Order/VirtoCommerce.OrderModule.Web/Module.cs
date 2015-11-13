@@ -54,7 +54,7 @@ namespace VirtoCommerce.OrderModule.Web
             //Adjust inventory activity
             _container.RegisterType<IObserver<OrderChangeEvent>, AdjustInventoryObserver>("AdjustInventoryObserver");
             //Create order observer. Send notification
-            _container.RegisterType<IObserver<OrderChangeEvent>, ChangeOrderStatusesObserver>("ChangeOrderStatusesObserver");
+            _container.RegisterType<IObserver<OrderChangeEvent>, OrderNotificationObserver>("OrderNotificationObserver");
             //Cancel payment observer. Payment method cancel operations
             _container.RegisterType<IObserver<OrderChangeEvent>, CancelPaymentObserver>("CancelPaymentObserver");
 

@@ -6,7 +6,7 @@
                 <div class="reason" ng-bind="blade.currentEntity.cancelReason" ng-if="blade.currentEntity.isCancelled"></div>
             </div>
             <div class="form-group">
-                <label class="form-label">Approved</label>
+                <label class="form-label">{{ 'orders.blades.payment-detail.labels.approved' | translate }}</label>
                 <div class="form-input">
                     <label class="form-label __switch">
                         <input type="checkbox" ng-model="blade.currentEntity.isApproved" />
@@ -17,14 +17,14 @@
             <div class="form columns clearfix">
                 <div class="column">
                     <div class="form-group">
-                        <label class="form-label">Payment number</label>
+                        <label class="form-label">{{ 'orders.blades.payment-detail.labels.payment-number' | translate }}</label>
                         <div class="form-input">
                             <input required type="text" ng-model="blade.currentEntity.number">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="form-label">
-                            Status
+                            {{ 'orders.blades.payment-detail.labels.status' | translate }}
                             <a href="" ng-click="openStatusSettingManagement()">
                                 <i class="form-ico fa fa-pencil"></i>
                             </a>
@@ -32,7 +32,7 @@
                         </label>
                         <div class="form-input">
                             <ui-select ng-model="blade.currentEntity.status">
-                                <ui-select-match placeholder="Select ...">{{$select.selected}}</ui-select-match>
+                                <ui-select-match placeholder="{{ 'orders.blades.payment-detail.placeholders.status' | translate }}">{{$select.selected}}</ui-select-match>
                                 <ui-select-choices repeat="x as x in statuses | filter: $select.search ">
                                     <span ng-bind-html="x | highlight: $select.search"></span>
                                 </ui-select-choices>
@@ -40,7 +40,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Amount</label>
+                        <label class="form-label">{{ 'orders.blades.payment-detail.labels.amount' | translate }}</label>
                         <div class="form-input __currency">
                             <span class="currency">{{blade.currentEntity.currency}}</span>
                             <input money required type="text" ng-model="blade.currentEntity.sum">
@@ -49,16 +49,16 @@
                 </div>
                 <div class="column">
                     <div class="form-group">
-                        <label class="form-label">from</label>
+                        <label class="form-label">{{ 'orders.blades.payment-detail.labels.from' | translate }}</label>
                         <div class="form-input">
                             <div class="form-text">{{blade.currentEntity.createdDate | date:'short'}}</div>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Payment gateway</label>
+                        <label class="form-label">{{ 'orders.blades.payment-detail.labels.payment-gateway' | translate }}</label>
                         <div class="form-input">
                             <ui-select ng-model="blade.currentEntity.gatewayCode">
-                                <ui-select-match placeholder="Select ...">{{$select.selected.gatewayCode}}</ui-select-match>
+                                <ui-select-match placeholder="{{ 'orders.blades.payment-detail.placeholders.payment-gateway' | translate }}">{{$select.selected.gatewayCode}}</ui-select-match>
                                 <ui-select-choices repeat="x.gatewayCode as x in paymentGateways | filter: { gatewayCode: $select.search }">
                                     <span ng-bind-html="x.gatewayCode | highlight: $select.search"></span>
                                 </ui-select-choices>
@@ -67,7 +67,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Payment purpose</label>
+                        <label class="form-label">{{ 'orders.blades.payment-detail.labels.payment-purpose' | translate }}</label>
                         <div class="form-input">
                             <textarea ng-model="blade.currentEntity.purpose"></textarea>
                         </div>
