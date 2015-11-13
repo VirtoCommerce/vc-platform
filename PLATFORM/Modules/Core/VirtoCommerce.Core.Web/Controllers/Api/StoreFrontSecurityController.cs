@@ -14,7 +14,7 @@ using VirtoCommerce.CoreModule.Web.Model;
 
 namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 {
-    [RoutePrefix("api/security/storefront")]
+    [RoutePrefix("api/storefront/security")]
     public class StorefrontSecurityController : ApiController
     {
         private readonly ISecurityService _securityService;
@@ -41,6 +41,11 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
             }
         }
 
+        /// <summary>
+        /// Get user details by user ID
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("user/id/{userId}")]
         [ResponseType(typeof(ApplicationUserExtended))]
@@ -56,6 +61,11 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
             return Ok(user);
         }
 
+        /// <summary>
+        /// Get user details by user name
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("user/name/{userName}")]
         [ResponseType(typeof(ApplicationUserExtended))]
@@ -71,8 +81,14 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
             return Ok(user);
         }
 
+        /// <summary>
+        /// Get user details by external login provider
+        /// </summary>
+        /// <param name="loginProvider"></param>
+        /// <param name="providerKey"></param>
+        /// <returns></returns>
         [HttpGet]
-        [Route("user/login")]
+        [Route("user/external")]
         [ResponseType(typeof(ApplicationUserExtended))]
         public async Task<IHttpActionResult> GetUserByLogin(string loginProvider, string providerKey)
         {
@@ -86,22 +102,33 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
             return Ok(user);
         }
 
+        /// <summary>
+        /// Sign in with user name and password
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("user/signin")]
         [ResponseType(typeof(SignInResult))]
-        public async Task<IHttpActionResult> PasswordSignIn(string userName, string password, bool isPersistent)
+        public async Task<IHttpActionResult> PasswordSignIn(string userName, string password)
         {
             if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(password))
             {
                 return BadRequest();
             }
 
-            var status = await SignInManager.PasswordSignInAsync(userName, password, isPersistent, shouldLockout: true);
+            var status = await SignInManager.PasswordSignInAsync(userName, password, false, shouldLockout: true);
             var result = new SignInResult { Status = status };
 
             return Ok(result);
         }
 
+        /// <summary>
+        /// Create a new user
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("user")]
         [ResponseType(typeof(SecurityResult))]
@@ -121,6 +148,17 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
             return Ok(result);
         }
 
+        /// <summary>
+        /// Generate a password reset token
+        /// </summary>
+        /// <remarks>
+        /// Generates a password reset token and sends a password reset link to the user via email.
+        /// </remarks>
+        /// <param name="userId"></param>
+        /// <param name="storeName"></param>
+        /// <param name="language"></param>
+        /// <param name="callbackUrl"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("user/password/resettoken")]
         [ResponseType(typeof(void))]
@@ -167,6 +205,13 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
             return Ok();
         }
 
+        /// <summary>
+        /// Reset a password for the user
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="token"></param>
+        /// <param name="newPassword"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("user/password/reset")]
         [ResponseType(typeof(SecurityResult))]
