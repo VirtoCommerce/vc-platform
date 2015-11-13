@@ -5,32 +5,32 @@
                 <label class="list-item" ng-mouseup="selectOption('Boolean')">
                     <input type="checkbox" ng-checked="'Boolean' ===  blade.valueType">
                     <span class="switch"></span>
-                    <span class="list-t">Boolean</span>
-                    <span class="list-descr">Switch type.</span>
+                    <span class="list-t">{{ 'customer.blades.member-property-valueType.menu.boolean.title' | translate }}</span>
+                    <span class="list-descr">{{ 'customer.blades.member-property-valueType.menu.boolean.description' | translate }}</span>
                 </label>
                 <label class="list-item" ng-mouseup="selectOption('ShortText')">
                     <input type="checkbox" ng-checked="'ShortText' === blade.valueType">
                     <span class="switch"></span>
-                    <span class="list-t">Short Text</span>
-                    <span class="list-descr">Text values less than 1024 chars.</span>
+                    <span class="list-t">{{ 'customer.blades.member-property-valueType.menu.short-text.title' | translate }}</span>
+                    <span class="list-descr">{{ 'customer.blades.member-property-valueType.menu.short-text.description' | translate }}</span>
                 </label>
                 <label class="list-item" ng-mouseup="selectOption('LongText')">
                     <input type="checkbox" ng-checked="'LongText' ===  blade.valueType">
                     <span class="switch"></span>
-                    <span class="list-t">Long Text</span>
-                    <span class="list-descr">Huge amount text without size limit.</span>
+                    <span class="list-t">{{ 'customer.blades.member-property-valueType.menu.long-text.title' | translate }}</span>
+                    <span class="list-descr">{{ 'customer.blades.member-property-valueType.menu.long-text.description' | translate }}</span>
                 </label>
                 <label class="list-item" ng-mouseup="selectOption('Decimal')">
                     <input type="checkbox" ng-checked="'Decimal' ===  blade.valueType">
                     <span class="switch"></span>
-                    <span class="list-t">Decimal</span>
-                    <span class="list-descr">Digital input with float point.</span>
+                    <span class="list-t">{{ 'customer.blades.member-property-valueType.menu.decimal.title' | translate }}</span>
+                    <span class="list-descr">{{ 'customer.blades.member-property-valueType.menu.decimal.description' | translate }}</span>
                 </label>
                 <label class="list-item" ng-mouseup="selectOption('DateTime')">
                     <input type="checkbox" ng-checked="'DateTime' ===  blade.valueType">
                     <span class="switch"></span>
-                    <span class="list-t">Date time</span>
-                    <span class="list-descr">Select date.</span>
+                    <span class="list-t">{{ 'customer.blades.member-property-valueType.menu.date-time.title' | translate }}</span>
+                    <span class="list-descr">{{ 'customer.blades.member-property-valueType.menu.date-time.description' | translate }}</span>
                 </label>                
             </ul>
         </div>

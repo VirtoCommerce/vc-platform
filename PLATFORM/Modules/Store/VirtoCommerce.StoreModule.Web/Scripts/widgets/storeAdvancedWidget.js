@@ -7,7 +7,7 @@
             id: "storeChildBlade",
             entity: blade.currentEntity,
             title: blade.title,
-            subtitle: 'Advanced properties',
+            subtitle: 'stores.widgets.storeAdvancedWidget.blade-subtitle',
             controller: 'virtoCommerce.storeModule.storeAdvancedController',
             template: 'Modules/$(VirtoCommerce.Store)/Scripts/blades/store-advanced.tpl.html'
         };

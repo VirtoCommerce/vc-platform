@@ -21,7 +21,7 @@
             currentEntityId: data.id,
             // currentEntity: data,
             title: data.name,
-            subtitle: 'Store details',
+            subtitle: 'stores.blades.store-detail.subtitle',
             controller: 'virtoCommerce.storeModule.storeDetailController',
             template: 'Modules/$(VirtoCommerce.Store)/Scripts/blades/store-detail.tpl.html'
         };
@@ -35,8 +35,8 @@
             id: 'storeDetails',
             // currentEntityId: data.id,
             currentEntity: {},
-            title: 'New Store',
-            subtitle: 'Create new Store',
+            title: 'stores.blades.new-store-wizard.title',
+            subtitle: 'stores.blades.new-store-wizard.subtitle',
             controller: 'virtoCommerce.storeModule.newStoreWizardController',
             template: 'Modules/$(VirtoCommerce.Store)/Scripts/wizards/newStore/new-store-wizard.tpl.html'
         };
@@ -58,7 +58,7 @@
 
     $scope.blade.toolbarCommands = [
         {
-            name: "Refresh", icon: 'fa fa-refresh',
+            name: "platform.commands.refresh", icon: 'fa fa-refresh',
             executeMethod: function () {
                 $scope.blade.refresh();
             },
@@ -67,7 +67,7 @@
             }
         },
         {
-            name: "Add", icon: 'fa fa-plus',
+            name: "platform.commands.add", icon: 'fa fa-plus',
             executeMethod: function () {
                 openBladeNew();
             },

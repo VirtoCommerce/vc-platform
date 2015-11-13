@@ -4,7 +4,7 @@
         <div class="form-input __search">
             <input type="text" placeholder="Search keyword..." ng-model="filter.searchKeyword" ng-keyup="$event.which === 13 && blade.refresh()">
         </div>
-        <p class="form-count">Count: <span class="count">{{pageSettings.totalItems}}</span></p>
+        <p class="form-count">{{ 'platform.list.count' | translate }}: <span class="count">{{pageSettings.totalItems}}</span></p>
     </div>
 </div>
 <div class="blade-static __bottom" ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems" ng-include="'pagerTemplate.html'"></div>
@@ -21,10 +21,10 @@
                                     <span class="check"></span>
                                 </label>
                             </th>
-                            <th class="table-col __product-img" title="Organization or individual Customer">Type</th>
-                            <th class="table-col __product-name">Name</th>
-                            <th class="table-col">Address</th>
-                            <th class="table-col">Email</th>
+                            <th class="table-col __product-img" title="Organization or individual Customer">{{ 'customer.blades.member-list.labels.type' | translate }}</th>
+                            <th class="table-col __product-name">{{ 'customer.blades.member-list.labels.name' | translate }}</th>
+                            <th class="table-col">{{ 'customer.blades.member-list.labels.address' | translate }}</th>
+                            <th class="table-col">{{ 'customer.blades.member-list.labels.email' | translate }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -51,10 +51,10 @@
                                 <span>{{getMainEmail(data)}}</span>
                                 <ul class="menu __context" role="menu" id="cml_menu_{{data.id}}">
                                     <li class="menu-item" ng-click='edit(data)'>
-                                        <i class="menu-ico fa fa-edit"></i> Manage
+                                        <i class="menu-ico fa fa-edit"></i> {{ 'platform.commands.manage' | translate }}
                                     </li>
                                     <li class="menu-item" ng-click='delete(data)'>
-                                        <i class="menu-ico fa fa-trash-o"></i> Delete
+                                        <i class="menu-ico fa fa-trash-o"></i> {{ 'platform.commands.delete' | translate }}
                                     </li>
                                 </ul>
                             </td>

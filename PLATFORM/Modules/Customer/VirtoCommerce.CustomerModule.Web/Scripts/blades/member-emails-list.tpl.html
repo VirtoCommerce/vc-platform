@@ -13,7 +13,7 @@
                                     </div>
                                     <ul class="menu __context" role="menu" id="cel_menu_{{data}}">
                                         <li class="menu-item" ng-click='delete()'>
-                                            <i class="menu-ico fa fa-trash-o"></i> Delete
+                                            <i class="menu-ico fa fa-trash-o"></i> {{ 'platform.commands.delete' | translate }}
                                         </li>
                                     </ul>
                                 </td>
@@ -22,7 +22,7 @@
                     </table>
                 </form>
             </div>
-            <p class="text" ng-if="!blade.currentEntities.length">No emails yet</p>
+            <p class="text" ng-if="!blade.currentEntities.length">{{ 'customer.blades.member-emails-list.labels.no-emails' | translate }}</p>
         </div>
     </div>
 </div>

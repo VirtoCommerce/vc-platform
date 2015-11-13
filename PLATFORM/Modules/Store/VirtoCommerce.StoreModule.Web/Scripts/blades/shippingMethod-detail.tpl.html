@@ -3,7 +3,7 @@
     <div class="blade-inner">
         <div class="inner-block clearfix">
             <div class="form-group">
-                <label class="form-label">Is active</label>
+                <label class="form-label">{{ 'stores.blades.shippingMethod-detail.labels.is-active' | translate }}</label>
                 <div class="form-input">
                     <label class="form-label __switch">
                         <input type="checkbox" ng-model="blade.currentEntity.isActive" />
@@ -15,7 +15,7 @@
                 <div class="column">
                     <ul class="list __info">
                         <li class="list-item">
-                            <div class="list-t">Name</div>
+                            <div class="list-t">{{ 'stores.blades.shippingMethod-detail.labels.name' | translate }}</div>
                             <div class="list-descr">{{blade.currentEntity.name}}</div>
                         </li>
                     </ul>
@@ -23,17 +23,17 @@
                 <div class="column">
                     <ul class="list __info">
                         <li class="list-item">
-                            <div class="list-t">Code</div>
+                            <div class="list-t">{{ 'stores.blades.shippingMethod-detail.labels.code' | translate }}</div>
                             <div class="list-descr">{{blade.currentEntity.code}}</div>
                         </li>
                     </ul>
                 </div>
             </div>
             <div class="form-group">
-                <label class="form-label">Tax type <a href="" ng-click="openDictionarySettingManagement()" va-permission="platform:setting:update"><i class="form-ico fa fa-pencil"></i></a></label>
+                <label class="form-label">{{ 'stores.blades.shippingMethod-detail.labels.tax-type' | translate }} <a href="" ng-click="openDictionarySettingManagement()" va-permission="platform:setting:update"><i class="form-ico fa fa-pencil"></i></a></label>
                 <div class="form-input">
                     <ui-select ng-model="blade.currentEntity.taxType">
-                        <ui-select-match allow-clear="true" placeholder="Select...">{{$select.selected}}</ui-select-match>
+                        <ui-select-match allow-clear="true" placeholder="{{ 'stores.blades.shippingMethod-detail.placeholders.tax-type' | translate }}">{{$select.selected}}</ui-select-match>
                         <ui-select-choices repeat="x in taxTypes | filter: $select.search">
                             <span ng-bind-html="x | highlight: $select.search"></span>
                         </ui-select-choices>
@@ -43,14 +43,14 @@
             <form class="form" name="detailForm">
                 <fieldset>
                     <div class="form-group" ng-init="setForm(detailForm)">
-                        <label class="form-label">Description</label>
+                        <label class="form-label">{{ 'stores.blades.shippingMethod-detail.labels.description' | translate }}</label>
                         <div class="form-input">
-                            <textarea class="form-control" ng-model="blade.currentEntity.description" placeholder="Enter description"></textarea>
+                            <textarea class="form-control" ng-model="blade.currentEntity.description" placeholder="{{ 'stores.blades.shippingMethod-detail.placeholders.description' | translate }}"></textarea>
                         </div>
                     </div>
                 </fieldset>
                 <fieldset>
-                    <legend>Settings</legend>
+                    <legend>{{ 'stores.blades.shippingMethod-detail.labels.settings' | translate }}</legend>
                     <ul class="list __info">
                         <li class="list-item" ng-repeat="data in blade.currentEntity.settings">
                             <label class="form-label">{{data.title}}</label>

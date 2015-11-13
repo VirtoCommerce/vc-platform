@@ -1,0 +1,177 @@
+﻿{
+  "customer": {
+    "main-menu-title": "Customers",
+    "blades": {
+      "customer-detail": {
+        "subtitle": "Customer details",
+        "labels": {
+          "full-name": "Full name",
+          "birthday": "Birthday",
+          "account-state": "Account state",
+          "organizations": "Organization(s)"
+        },
+        "placeholders": {
+          "full-name": "Enter value",
+          "birthday": "Enter value",
+          "organizations": "Select organization"
+        }
+      },
+      "organization-detail": {
+        "subtitle": "Organization details",
+        "labels": {
+          "name": "Name",
+          "description": "Description",
+          "business-category": "Business category"
+        },
+        "placeholders": {
+          "name": "Enter name",
+          "description": "Enter value",
+          "business-category": "Enter description"
+        }
+      },
+      "loginOnBehalf-list": {
+        "title": "Login on behalf of {{name}}",
+        "labels": {
+          "pick-store-to-login": "Pick a Store to login",
+          "no-stores": "No Stores yet"
+        },
+        "validations": {
+          "secure-url-missing": "Secure URL is missing. Click to open Store details.",
+          "default-language-missing": "Default language is missing. Click to open Store details."
+        }
+      },
+      "store-detail": {
+        "subtitle": "Store details"
+      },
+      "new-organization": {
+        "title": "New Organization"
+      },
+      "new-customer": {
+        "title": "New Customer"
+      },
+      "member-add": {
+        "menu": {
+          "organization": {
+            "title": "Organization",
+            "description": "A container for other Organizations and Customers."
+          },
+          "customer": {
+            "title": "Customer",
+            "description": "The shop Customer. Can belong to Organizations or represent an individual shopper."
+          }
+        }
+      },
+      "account-changePassword": {
+        "subtitle": "Change user's password"
+      },
+      "member-emails-list": {
+        "labels": {
+          "no-emails": "No emails yet",
+          "name": "Name",
+          "address": "Address",
+          "Email": "Email"
+        }
+      },
+      "member-list": {
+        "title": "Organizations & Customers",
+        "subtitle": "Browsing '{{name}}'",
+        "labels": {
+          "type": "Type",
+          "name": "Name",
+          "address": "Address",
+          "email": "Email"
+        }
+      },
+      "member-phones-list": {
+        "labels": {
+          "no-phones": "No phones yet"
+        }
+      },
+      "member-add": {
+        "title": "New member",
+        "subtitle": "Choose new member type"
+      },
+      "member-property-valueType": {
+        "title": "{{name}} value type",
+        "subtitle": "Change value type",
+        "menu": {
+          "boolean": {
+            "title": "Boolean",
+            "description": "Switch type."
+          },
+          "short-text": {
+            "title": "Short Text",
+            "description": "Text values less than 1024 chars."
+          },
+          "long-text": {
+            "title": "Long Text",
+            "description": "Huge amount text without size limit."
+          },
+          "decimal": {
+            "title": "Decimal",
+            "description": "Digital input with float point."
+          },
+          "date-time": {
+            "title": "Date time",
+            "description": "Select date."
+          }
+        }
+      },
+      "member-property-detail": {
+        "labels": {
+          "property-name": "Property name",
+          "value-type": "Value Type"
+        },
+        "placeholders": {
+          "property-name": "Enter name"
+        }
+      }
+    },
+    "widgets": {
+      "address-list": {
+        "title": "Addresses",
+        "blade-subtitle": "Manage addresses"
+      },
+      "member-emails-list": {
+        "title": "Emails",
+        "blade-subtitle": "Manage customer emails"
+      },
+      "member-phones-list": {
+        "title": "Phones",
+        "blade-subtitle": "Manage customer phones"
+      }
+    },
+    "dialogs": {
+      "organizations-delete": {
+        "title": "Delete confirmation",
+        "message": "Are you sure you want to delete selected Organizations or Customers?"
+      },
+      "property-delete": {
+        "title": "Delete confirmation",
+        "message": "Are you sure you want to delete Property '{{name}}'?"
+      },
+      "property-save": {
+        "title": "Save changes",
+        "message": "The property has been modified. Do you want to save changes??"
+      },
+      "customer-save": {
+        "title": "Save changes",
+        "message": "The Customer has been modified. Do you want to save changes?"
+      },
+      "email-save": {
+        "title": "Save changes",
+        "message": "The Email has been modified. Do you want to save changes?"
+      },
+      "phone-number-save": {
+        "title": "Save changes",
+        "message": "The Phone number has been modified. Do you want to save changes?"
+      }
+    },
+    "commands": {
+      "login-on-behalf": "Login on behalf",
+      "change-password": "Change password",
+      "reject-user":  "Reject user",
+      "approve-user":  "Approve user",
+    }
+  }
+}

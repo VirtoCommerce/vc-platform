@@ -40,7 +40,7 @@
             var dialog = {
                 id: "confirmCurrentBladeClose",
                 title: "core.dialogs.address-save.title",
-                message: "core.dialogs.address-save.subtitle",
+                message: "core.dialogs.address-save.message",
                 callback: function (needSave) {
                     if (needSave) {
                         $scope.saveChanges();

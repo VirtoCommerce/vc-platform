@@ -15,8 +15,9 @@
 
         switch (childType) {
             case 'valType':
-                newBlade.title = b.origEntity.name ? b.origEntity.name : b.currentEntity.name + ' value type';
-                newBlade.subtitle = 'Change value type';
+                newBlade.title = 'customer.blades.member-property-valueType.title';
+                newBlade.titleValues = { name: b.origEntity.name ? b.origEntity.name : b.currentEntity.name };
+                newBlade.subtitle = 'customer.blades.member-property-valueType.subtitle';
                 newBlade.valueType = b.currentEntity.valueType
                 newBlade.controller = 'virtoCommerce.customerModule.memberPropertyValueTypeController';
                 newBlade.template = 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/member-property-valueType.tpl.html';
@@ -47,8 +48,9 @@
     function removeProperty(prop) {
         var dialog = {
             id: "confirmDelete",
-            title: "Delete confirmation",
-            message: "Are you sure you want to delete Property '" + prop.name + "'?",
+            title: "customer.dialogs.property-delete.title",
+            message: "customer.dialogs.property-delete.message",
+            messageValues: { name: prop.name },
             callback: function (remove) {
                 if (remove) {
                     var idx = $scope.blade.parentBlade.currentEntities.indexOf(prop);
@@ -70,8 +72,8 @@
         if (isDirty()) {
             var dialog = {
                 id: "confirmItemChange",
-                title: "Save changes",
-                message: "The property has been modified. Do you want to save changes?",
+                title: "customer.dialogs.property-save.title",
+                message: "customer.dialogs.property-save.message",
                 callback: function (needSave) {
                     if (needSave) {
                         $scope.saveChanges();
@@ -94,7 +96,7 @@
 
     $scope.blade.toolbarCommands = [
         {
-            name: "Reset", icon: 'fa fa-undo',
+            name: "platform.commands.reset", icon: 'fa fa-undo',
             executeMethod: function () {
                 angular.copy(b.origEntity, b.currentEntity);
             },
@@ -104,7 +106,7 @@
             permission: 'customer:update'
         },
 		{
-		    name: "Delete", icon: 'fa fa-trash-o',
+		    name: "platform.commands.delete", icon: 'fa fa-trash-o',
 		    executeMethod: function () {
 		        removeProperty(b.origEntity);
 		    },
