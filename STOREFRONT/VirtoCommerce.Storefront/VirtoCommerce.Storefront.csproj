@@ -368,6 +368,7 @@
     <Content Include="App_Data\Themes\default\templates\send-code.liquid" />
     <Content Include="App_Data\Themes\default\templates\thanks_page.liquid" />
     <Content Include="App_Data\Themes\default\templates\verify-code.liquid" />
+    <Content Include="App_Data\Themes\default\layout\product_layout.liquid" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

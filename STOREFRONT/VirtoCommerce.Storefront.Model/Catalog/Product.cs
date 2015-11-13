@@ -167,7 +167,7 @@ namespace VirtoCommerce.Storefront.Model
         /// <summary>
         /// List of product images
         /// </summary>
-        public List<Image> Images { get; set; }
+        public Image[] Images { get; set; }
 
         /// <summary>
         /// List of product assets
@@ -202,5 +202,12 @@ namespace VirtoCommerce.Storefront.Model
         public Price Price { get; set; }
 
         public Inventory Inventory { get; set; }
+
+        /// <summary>
+        /// Main product seo info
+        /// </summary>
+        public SeoInfo MainSeo { get; set; }
+
+        public Image MainImage { get; set; }
     }
 }

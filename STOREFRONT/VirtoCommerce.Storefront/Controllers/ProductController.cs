@@ -31,7 +31,7 @@ namespace VirtoCommerce.Storefront.Controllers
         public async Task<ActionResult> ProductDetails(string productid)
         {
             await GetProduct(productid);
-            return View("product", _workContext);
+            return View("product", "product_layout", _workContext);
         }
 
 
@@ -66,6 +66,11 @@ namespace VirtoCommerce.Storefront.Controllers
                 if (variation != null)
                     variation.Inventory = inventory.ToWebModel();
             }
+
+            _workContext.CurrentProduct.MainSeo = _workContext.CurrentProduct.SeoInfos.FirstOrDefault();
+            _workContext.CurrentProduct.MainImage = _workContext.CurrentProduct.Images.FirstOrDefault();
+
+            _workContext.CurrentPageSeo = _workContext.CurrentProduct.SeoInfos.FirstOrDefault();
         }
     }
 }

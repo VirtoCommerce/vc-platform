@@ -1,15 +1,14 @@
 {% include 'breadcrumb' %}
 {% include 'quote-informer' %}
-<div class="grid" itemscope itemtype="http://schema.org/Product">
-  <meta itemprop="url" content="{{ shop.url }}{{ product.url }}">
-  <meta itemprop="image" content="{{ product.featured_image.src | img_url: 'grande' }}">
+<div class="grid" itemscope itemtype="http://schema.org/Product" ng-app="virtoProductApp" ng-controller="virtoProductApp.appCtrl">
+  <meta itemprop="url" content="{{ current_product.main_seo.slug | absolute_url : '', store_language.culture_name}}">
+  <meta itemprop="image" content="{{ current_product.img_src }}">
 
   <div class="grid-item large--two-fifths">
     <div class="grid">
       <div class="grid-item large--eleven-twelfths text-center">
         <div class="product-photo-container" id="productPhoto">
-          {% assign featured_image = product.selected_or_first_available_variant.featured_image.src | default: product.featured_image.src %}
-          <img id="productPhotoImg" src="{{ featured_image }}" alt="{{ featured_image.alt | escape }}" {% if settings.product_image_zoom_enable %} data-zoom="{{ featured_image | img_url: '1024x1024' }}"{% endif %}>
+          <img id="productPhotoImg" src="{{ current_product.images[0].url }}" alt="{{ current_product.name }}">
         </div>
         {% if product.images.size > 1 %}
           <ul class="product-photo-thumbs grid-uniform" id="productThumbs">
@@ -130,103 +129,6 @@
   <hr>
   <div id="shopify-product-reviews" data-id="{{ product.id }}">{{ product.metafields.spr.reviews }}</div>
 {% endif %}
-
-{{ 'option_selection.js' | shopify_asset_url | script_tag }}
-<script>
-
-  // Pre-loading product images, to avoid a lag when a thumbnail is clicked, or
-  // when a variant is selected that has a variant image.
-  Shopify.Image.preload({{ product.images | json }}, 'large');
-
-  var selectCallback = function(variant, selector) {
-
-    var $addToCart = $('#addToCart'),
-        $productPrice = $('#productPrice'),
-        $comparePrice = $('#comparePrice'),
-        $variantQuantity = $('#variantQuantity'),
-        $quantityElements = $('.quantity-selector, label + .js-qty'),
-        $addToCartText = $('#addToCartText'),
-        $featuredImage = $('#productPhotoImg');
-
-    if (variant) {
-      // Update variant image, if one is set
-      // Call timber.switchImage function in shop.js
-      if (variant.featured_image) {
-        var newImg = variant.featured_image,
-            el = $featuredImage[0];
-        Shopify.Image.switchImage(newImg, el, timber.switchImage);
-      }
-
-      // Select a valid variant if available
-      if (variant.available) {
-        // We have a valid product variant, so enable the submit button
-        $addToCart.removeClass('disabled').prop('disabled', false);
-        $addToCartText.html({{ 'products.product.add_to_cart' | t | json }});
-
-        // Show how many items are left, if below 10
-        if (variant.inventory_management) {
-          if (variant.inventory_quantity < 10 && variant.inventory_quantity > 0) {
-            $variantQuantity.html({{ 'products.product.only_left' | t: count: '1' | json }}.replace('1', variant.inventory_quantity)).show();
-          } else {
-            $variantQuantity.hide();
-          }
-        }
-
-
-        $quantityElements.show();
-      } else {
-        // Variant is sold out, disable the submit button
-        $addToCart.addClass('disabled').prop('disabled', true);
-        $addToCartText.html({{ 'products.product.sold_out' | t | json }});
-        $variantQuantity.hide();
-        $quantityElements.hide();
-      }
-
-      // Regardless of stock, update the product price
-      var customPriceFormat = timber.formatMoney( Shopify.formatMoney(variant.price, "{{ shop.money_format }}") );
-      $productPrice.html(customPriceFormat);
-
-      // Also update and show the product's compare price if necessary
-      if ( variant.compare_at_price > variant.price ) {
-        var priceSaving = timber.formatSaleTag( Shopify.formatMoney(variant.compare_at_price - variant.price, "{{ shop.money_format }}") );
-        {% comment %}
-        priceSaving += ' (' + ( (variant.compare_at_price - variant.price)*100/(variant.compare_at_price) ).toFixed(0) + '%)';
-        {% endcomment %}
-        $comparePrice.html({{ 'products.general.save_html' | t: saved_amount: '[$]' | json }}.replace('[$]', priceSaving)).show();
-      } else {
-        $comparePrice.hide();
-      }
-
-    } else {
-      // The variant doesn't exist, disable submit button.
-      // This may be an error or notice that a specific variant is not available.
-      $addToCart.addClass('disabled').prop('disabled', true);
-      $addToCartText.html({{ 'products.product.unavailable' | t | json }});
-      $variantQuantity.hide();
-      $quantityElements.hide();
-    }
-  };
-
-  jQuery(function($) {
-    new Shopify.OptionSelectors('productSelect', {
-      product: {{ product | json }},
-      onVariantSelected: selectCallback,
-      enableHistoryState: true
-    });
-
-    // Add label if only one product option and it isn't 'Title'. Could be 'Size'.
-    {% if product.options.size == 1 and product.options.first != 'Title' %}
-      $('.selector-wrapper:eq(0)').prepend('<label>{{ product.options.first | escape }}</label>');
-    {% endif %}
-
-    // Hide selectors if we only have 1 variant and its title contains 'Default'.
-    {% if product.variants.size == 1 and product.variants.first.title contains 'Default' %}
-      $('.selector-wrapper').hide();
-    {% else %}
-      $('#variantBreak').removeClass('hr--clear');
-    {% endif %}
-  });
-</script>
 
 {% if settings.product_image_zoom_enable %}
   {{ 'jquery.zoom.min.js' | asset_url | script_tag }}
