@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNet.Identity.Owin;
 
-namespace VirtoCommerce.Platform.Web.Model.Security
+namespace VirtoCommerce.CoreModule.Web.Model
 {
     public class SignInResult
     {
