@@ -200,6 +200,7 @@
     <Compile Include="Model\SettingValueEntity.cs" />
     <Compile Include="Notifications\DefaultEmailNotificationSendingGateway.cs" />
     <Compile Include="Notifications\DefaultSmsNotificationSendingGateway.cs" />
+    <Compile Include="Notifications\DefaultSmtpEmailNotificationSendingGateway.cs" />
     <Compile Include="Notifications\ResetPasswordEmailNotification.cs" />
     <Compile Include="PushNotifications\InMemoryPushNotificationManager.cs" />
     <Compile Include="Notifications\LiquidNotificationTemplateResolver.cs" />
