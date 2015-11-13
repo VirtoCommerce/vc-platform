@@ -84,7 +84,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Zapier-300x155.png" />
-    <Content Include="packages.config" />
+    <None Include="packages.config" />
     <Content Include="module.manifest" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
@@ -94,7 +94,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="web.config" />
+    <None Include="web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\Api\ActionController.cs" />

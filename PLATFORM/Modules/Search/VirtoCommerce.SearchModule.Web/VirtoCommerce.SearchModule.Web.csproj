@@ -107,6 +107,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
     <Content Include="module.manifest" />
     <None Include="Web.Debug.config">
@@ -121,7 +122,7 @@
     <Content Include="Scripts\blades\rebuildIndex.tpl.html" />
     <Content Include="Scripts\resources\search.js" />
     <Content Include="Scripts\search.js" />
-    <Content Include="Web.config" />
+    <None Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BackgroundJobs\SearchIndexJobs.cs" />

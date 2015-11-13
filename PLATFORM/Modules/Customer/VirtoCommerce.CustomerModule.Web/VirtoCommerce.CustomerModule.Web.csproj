@@ -95,6 +95,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
     <Content Include="module.manifest">
       <SubType>Designer</SubType>
@@ -132,7 +133,7 @@
     <Content Include="Scripts\widgets\memberPhonesWidget.tpl.html" />
     <Content Include="Scripts\widgets\memberEmailsWidget.tpl.html" />
     <Content Include="Scripts\widgets\memberAddressesWidget.tpl.html" />
-    <Content Include="Web.config" />
+    <None Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Binders\SearchCriteriaBinder.cs" />
