@@ -1,16 +1,17 @@
 ﻿using System;
+using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
-using VirtoCommerce.Platform.Core.Security;
-using VirtoCommerce.Platform.Data.Security.Identity;
-using VirtoCommerce.Platform.Core.Notifications;
-using VirtoCommerce.Platform.Data.Notifications;
-using VirtoCommerce.Domain.Store.Services;
-using VirtoCommerce.Domain.Customer.Services;
-using System.Linq;
 using VirtoCommerce.CoreModule.Web.Model;
+using VirtoCommerce.Domain.Customer.Services;
+using VirtoCommerce.Domain.Store.Services;
+using VirtoCommerce.Platform.Core.Notifications;
+using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Data.Notifications;
+using VirtoCommerce.Platform.Data.Security.Identity;
 
 namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 {
@@ -176,13 +177,6 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
             query["code"] = token;
             uriBuilder.Query = query.ToString();
 
-            string message = string.Format(
-                "Please reset your password by clicking <strong><a href=\"{0}\">here</a></strong>",
-                HttpUtility.HtmlEncode(uriBuilder.ToString()));
-            string subject = string.Format("\"{0}\" reset password link", storeName);
-
-
-
             var notification = _notificationManager.GetNewNotification<ResetPasswordEmailNotification>(storeName, "Store", language);
             notification.Url = uriBuilder.ToString();
 
@@ -202,7 +196,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 
             _notificationManager.ScheduleSendNotification(notification);
 
-            return Ok();
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
         /// <summary>
