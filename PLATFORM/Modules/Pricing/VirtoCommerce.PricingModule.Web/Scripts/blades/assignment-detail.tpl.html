@@ -8,14 +8,14 @@
                         <div class="form-group" ng-init="setForm(formScope)">
                             <label class="form-label">{{'pricing.blades.assignment-detail.labels.assignment-name' | translate}}</label>
                             <div class="form-input">
-                                <input ng-model="blade.currentEntity.name" required placeholder="Enter name" />
+                                <input ng-model="blade.currentEntity.name" required placeholder="{{'pricing.blades.assignment-detail.placeholders.assignment-name' | translate}}" />
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="form-label">{{'pricing.blades.assignment-detail.labels.price-list' | translate}}</label>
                             <div class="form-input">
                                 <ui-select ng-model="blade.currentEntity.pricelistId" required>
-                                    <ui-select-match placeholder="Select...">{{$select.selected.name}}</ui-select-match>
+                                    <ui-select-match placeholder="{{'pricing.blades.assignment-detail.placeholders.price-list' | translate}}">{{$select.selected.name}}</ui-select-match>
                                     <ui-select-choices repeat="x.id as x in pricelists | filter: { name: $select.search }">
                                         <span ng-bind-html="x.name | highlight: $select.search"></span>
                                     </ui-select-choices>
@@ -28,7 +28,7 @@
                             <label class="form-label">{{'pricing.blades.assignment-detail.labels.catalog' | translate}}</label>
                             <div class="form-input">
                                 <ui-select ng-model="blade.currentEntity.catalogId" required>
-                                    <ui-select-match placeholder="Select...">{{$select.selected.name}}</ui-select-match>
+                                    <ui-select-match placeholder="{{'pricing.blades.assignment-detail.placeholders.catalog' | translate}}">{{$select.selected.name}}</ui-select-match>
                                     <ui-select-choices repeat="x.id as x in catalogs | filter: { name: $select.search }">
                                         <span ng-bind-html="x.name | highlight: $select.search"></span>
                                     </ui-select-choices>
@@ -46,7 +46,7 @@
                 <div class="form-group">
                     <label class="form-label">{{'pricing.blades.assignment-detail.labels.description' | translate}}</label>
                     <div class="form-input">
-                        <textarea class="form-control" cols="30" rows="3" ng-model="blade.currentEntity.description" placeholder="Enter description"></textarea>
+                        <textarea class="form-control" cols="30" rows="3" ng-model="blade.currentEntity.description" placeholder="{{'pricing.blades.assignment-detail.placeholders.description' | translate}}"></textarea>
                     </div>
                 </div>
                 <div class="form-group columns clearfix">
