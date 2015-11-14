@@ -2,15 +2,15 @@
   "quotes": {
     "main-menu-title": "Quotes",
     "blades": {
-      "quotes-list": {
-        "title": "Quotes",
+      "quotes-assets": {
+        "subtitle": "Quote attachments",
         "labels": {
-          "quote-number": "Quote #",
-          "status": "Status",
-          "items-count": "Items count",
-          "customer": "Customer",
-          "created": "Created",
-          "no-quotes": "No Quotes yet"
+          "drag-note": "Drag and drop files here",
+          "select-files": "Select files",
+          "progress": "Progress",
+          "type": "Type",
+          "name": "Name",
+          "actions": "Actions"
         }
       },
       "quote-detail": {
@@ -68,15 +68,15 @@
           "comment": "Enter comment"
         }
       },
-      "quotes-assets": {
-        "subtitle": "Quote attachments",
+      "quotes-list": {
+        "title": "Quotes",
         "labels": {
-          "drag-note": "Drag and drop files here",
-          "select-files": "Select files",
-          "progress": "Progress",
-          "type": "Type",
-          "name": "Name",
-          "actions": "Actions"
+          "quote-number": "Quote #",
+          "status": "Status",
+          "items-count": "Items count",
+          "customer": "Customer",
+          "created": "Created",
+          "no-quotes": "No Quotes yet"
         }
       },
       "catalog-items-select": {
@@ -84,7 +84,7 @@
       }
     },
     "widgets": {
-      "address-list": {
+      "quote-address": {
         "address-type": "Address type",
         "no-address": "No address",
         "blade-subtitle": "Manage addresses"
@@ -117,7 +117,11 @@
       },
       "quote-cancel": {
         "title": "Cancel Quote",
-        "message": "Are you sure you want to cancel this quote?"
+        "message": "Are you sure you want to cancel this quote?",
+        "placeholders": {
+          "reason": "Enter cancel reason here..."
+        }
+
       },
       "hold-confirmation": {
         "title": "On Hold confirmation",
