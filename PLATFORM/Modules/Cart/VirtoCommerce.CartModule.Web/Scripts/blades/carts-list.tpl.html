@@ -1,7 +1,7 @@
 ﻿<div class="blade-static">
     <div class="form-group">
         <div class="form-input __search">
-            <input type="text" placeholder="Search keyword..." ng-model="filter.searchKeyword" ng-keyup="$event.which === 13 && blade.refresh()">
+            <input type="text" placeholder="{{ 'platform.placeholders.search-keyword' | translate }}" ng-model="filter.searchKeyword" ng-keyup="$event.which === 13 && blade.refresh()">
         </div>
         <p class="form-count">{{'platform.list.count | translate'}}: <span class="count">{{pageSettings.totalItems}}</span></p>
     </div>
@@ -20,11 +20,11 @@
                                     <span class="check"></span>
                                 </label>
                             </th>
-                            <th class="table-col">{{'cart.blades.shopping-carts.labels.customer' | translate}}</th>
-                            <th class="table-col">{{'cart.blades.shopping-carts.labels.items-count' | translate}}</th>
-                            <th class="table-col">{{'cart.blades.shopping-carts.labels.total' | translate}}</th>
-                            <th class="table-col __date">{{'cart.blades.shopping-carts.labels.created' | translate}}</th>
-                            <th class="table-col __date">{{'cart.blades.shopping-carts.labels.modified' | translate}}</th>
+                            <th class="table-col">{{'cart.blades.carts-list.labels.customer' | translate}}</th>
+                            <th class="table-col">{{'cart.blades.carts-list.labels.items-count' | translate}}</th>
+                            <th class="table-col">{{'cart.blades.carts-list.labels.total' | translate}}</th>
+                            <th class="table-col __date">{{'cart.blades.carts-list.labels.created' | translate}}</th>
+                            <th class="table-col __date">{{'cart.blades.carts-list.labels.modified' | translate}}</th>
                         </tr>
                     </thead>
                     <tbody>

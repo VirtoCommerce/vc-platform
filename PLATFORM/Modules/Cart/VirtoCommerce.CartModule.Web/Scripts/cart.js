@@ -16,7 +16,7 @@ angular.module(moduleName, [])
                   '$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
                       var blade = {
                           id: 'carts',
-                          title: 'cart.blades.shopping-carts.title',
+                          title: 'cart.blades.carts-list.title',
                           //subtitle: 'Manage Shopping carts',
                           controller: 'virtoCommerce.cartModule.cartListController',
                           template: 'Modules/$(VirtoCommerce.Cart)/Scripts/blades/carts-list.tpl.html',

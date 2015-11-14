@@ -2,7 +2,7 @@
   "cart": {
     "main-menu-title": "Shopping carts",
     "blades": {
-      "shopping-carts": {
+      "carts-list": {
         "title": "Shopping carts",
         "labels": {
           "customer": "Customer",
