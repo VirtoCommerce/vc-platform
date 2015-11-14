@@ -16,7 +16,7 @@ angular.module(moduleName, ['virtoCommerce.catalogModule', 'virtoCommerce.pricin
                   '$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
                       var blade = {
                           id: 'orders',
-                          title: 'orders.blades.customer-order-list.title',
+                          title: 'orders.blades.customerOrder-list.title',
                           //subtitle: 'Manage Orders',
                           controller: 'virtoCommerce.orderModule.customerOrderListController',
                           template: 'Modules/$(VirtoCommerce.Orders)/Scripts/blades/customerOrder-list.tpl.html',

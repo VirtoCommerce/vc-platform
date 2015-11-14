@@ -55,9 +55,9 @@ function ($scope, order_res_customerOrders, bladeNavigationService, dialogServic
 		$scope.selectedNodeId = selectedNode.id;
 		var newBlade = {
 			id: 'operationDetail',
-			title: 'orders.blades.customer-order-detail.title',
+			title: 'orders.blades.customerOrder-detail.title',
 			titleValues: { customer: selectedNode.customerName },
-			subtitle: 'orders.blades.customer-order-detail.subtitle',
+			subtitle: 'orders.blades.customerOrder-detail.subtitle',
 			customerOrder: selectedNode,
 			controller: 'virtoCommerce.orderModule.operationDetailController',
 			template: 'Modules/$(VirtoCommerce.Orders)/Scripts/blades/customerOrder-detail.tpl.html'

@@ -1,7 +1,7 @@
 ﻿<div class="blade-static">
     <div class="form-group">
         <div class="form-input __search">
-            <input type="text" placeholder="Search keyword..." ng-model="filter.searchKeyword" ng-keyup="$event.which === 13 && blade.refresh()">
+            <input type="text" placeholder="{{'platform.placeholders.search-keyword' | translate}}" ng-model="filter.searchKeyword" ng-keyup="$event.which === 13 && blade.refresh()">
         </div>
         <p class="form-count">{{'platform.list.count' | translate}}: <span class="count">{{pageSettings.totalItems}}</span></p>
     </div>
@@ -20,11 +20,11 @@
                                     <span class="check"></span>
                                 </label>
                             </th>
-                            <th class="table-col __product-name">{{ 'orders.blades.customer-order-list.labels.description' | translate }}</th>
-                            <th class="table-col">{{ 'orders.blades.customer-order-list.labels.confirmed' | translate }}</th>
-                            <th class="table-col">{{ 'orders.blades.customer-order-list.labels.total' | translate }}</th>
-                            <th class="table-col __date">{{ 'orders.blades.customer-order-list.labels.created' | translate }}</th>
-                            <th class="table-col">{{ 'orders.blades.customer-order-list.labels.store' | translate }}</th>
+                            <th class="table-col __product-name">{{ 'orders.blades.customerOrder-list.labels.description' | translate }}</th>
+                            <th class="table-col">{{ 'orders.blades.customerOrder-list.labels.confirmed' | translate }}</th>
+                            <th class="table-col">{{ 'orders.blades.customerOrder-list.labels.total' | translate }}</th>
+                            <th class="table-col __date">{{ 'orders.blades.customerOrder-list.labels.created' | translate }}</th>
+                            <th class="table-col">{{ 'orders.blades.customerOrder-list.labels.store' | translate }}</th>
                         </tr>
                     </thead>
                     <tbody>

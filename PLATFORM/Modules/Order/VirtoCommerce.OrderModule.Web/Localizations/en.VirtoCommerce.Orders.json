@@ -2,17 +2,7 @@
   "orders": {
     "main-menu-title": "Orders",
     "blades": {
-      "customer-order-list": {
-        "title": "Customer orders",
-        "labels": {
-          "description": "Description",
-          "confirmed": "Confirmed",
-          "total": "Total",
-          "created": "Created",
-          "store": "Store"
-        }
-      },
-      "customer-order-detail": {
+      "customerOrder-detail": {
         "title": "{{customer}}'s Customer Order",
         "subtitle": "Edit order details and related documents",
         "labels": {
@@ -29,24 +19,7 @@
           "store": "Select or search a country in the list..."
         }
       },
-      "new-operation-wizard": {
-        "title": "New operation",
-        "subtitle": "Select operation type",
-        "menu": {
-          "shipment-operation": {
-            "title": "Shipment",
-            "description": "Add new shipment"
-          },
-          "payment-operation": {
-            "title": "Incoming payment",
-            "description": "Add new incoming payment"
-          }
-        }
-      },
-      "catalog-items-select": {
-        "title": "Add item to order"
-      },
-      "customer-order-items": {
+      "customerOrder-items": {
         "labels": {
           "item": "Item",
           "quantity": "Qty",
@@ -60,6 +33,16 @@
           "sub-total": "Sub Total",
           "discount-total": "Discount Total",
           "tax-total": "Tax Total"
+        }
+      },
+      "customerOrder-list": {
+        "title": "Customer orders",
+        "labels": {
+          "description": "Description",
+          "confirmed": "Confirmed",
+          "total": "Total",
+          "created": "Created",
+          "store": "Store"
         }
       },
       "operation-comment": {
@@ -110,27 +93,38 @@
           "price": "Price",
           "total": "Total"
         }
+      },
+      "catalog-items-select": {
+        "title": "Add item to order"
+      },
+      "newOperation-wizard": {
+        "title": "New operation",
+        "subtitle": "Select operation type",
+        "menu": {
+          "shipment-operation": {
+            "title": "Shipment",
+            "description": "Add new shipment"
+          },
+          "payment-operation": {
+            "title": "Incoming payment",
+            "description": "Add new incoming payment"
+          }
+        }
       }
     },
     "widgets": {
-      "customer-order-address": {
+      "customerOrder-address": {
         "title": "Addresses",
         "blade-title": "Manage addresses"
       },
-      "customer-order-items": {
+      "customerOrder-items": {
         "title": "Line items",
         "blade-title": "{{title}} line items",
         "blade-subtitle": "Edit line items"
       },
-      "customer-order-totals": {
+      "customerOrder-totals": {
         "sub-total": "Sub total",
         "shipping-total": "Shipping total",
-        "discount-total": "Discount Total",
-        "total": "Total"
-      },
-      "shipment-totals": {
-        "tax-total": "Tax total",
-        "shipment-total": "Shipment total",
         "discount-total": "Discount Total",
         "total": "Total"
       },
@@ -138,13 +132,19 @@
         "no-comments": "no comments",
         "blade-title": "Write comments"
       },
-      "shipment-items": {
-        "title": "Shipment items"
-      },
       "shipment-address": {
         "blade-title": "Manage delivery address",
         "title": "Delivery address",
         "not-applicable": "N/A"
+      },
+      "shipment-items": {
+        "title": "Shipment items"
+      },
+      "shipment-totals": {
+        "tax-total": "Tax total",
+        "shipment-total": "Shipment total",
+        "discount-total": "Discount Total",
+        "total": "Total"
       },
       "statistics-templates": {
         "revenue": "Revenue",

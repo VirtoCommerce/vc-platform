@@ -12,7 +12,7 @@
           "total": "Total"
         }
       },
-      "shopping-cart": {
+      "cart-detail": {
         "title": "{{name}} 's Shopping cart",
         "labels": {
           "name": "Name",

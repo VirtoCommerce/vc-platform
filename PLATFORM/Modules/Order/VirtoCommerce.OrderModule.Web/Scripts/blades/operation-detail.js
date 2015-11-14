@@ -106,8 +106,8 @@
 					            id: "newOperationWizard",
 					            customerOrder: $scope.blade.customerOrder,
 					            currentEntity: $scope.blade.currentEntity,
-					            title: "orders.blades.new-operation-wizard.title",
-					            subtitle: 'orders.blades.new-operation-wizard.subtitle',
+					            title: "orders.blades.newOperation-wizard.title",
+					            subtitle: 'orders.blades.newOperation-wizard.subtitle',
 					            controller: 'virtoCommerce.orderModule.newOperationWizardController',
 					            template: 'Modules/$(VirtoCommerce.Orders)/Scripts/wizards/newOperation/newOperation-wizard.tpl.html'
 					        };
@@ -152,9 +152,9 @@
 					                    if ($scope.blade.currentEntity.operationType.toLowerCase() != 'customerorder') {
 					                        order_res_customerOrders.deleteOperation({ id: $scope.blade.customerOrder.id, operationId: $scope.blade.currentEntity.id },
                                             function () {
-                                                $scope.blade.title = 'orders.blades.customer-order-detail.title';
+                                                $scope.blade.title = 'orders.blades.customerOrder-detail.title';
                                                 $scope.blade.titleValues = { customer: $scope.blade.customerOrder.customer };
-                                                $scope.blade.subtitle = 'orders.blades.customer-order-detail.subtitle';
+                                                $scope.blade.subtitle = 'orders.blades.customerOrder-detail.subtitle';
                                                 $scope.blade.template = 'Modules/$(VirtoCommerce.Orders)/Scripts/blades/customerOrder-detail.tpl.html';
                                                 $scope.blade.currentEntity = $scope.blade.customerOrder;
                                                 $scope.blade.refresh();

@@ -30,9 +30,9 @@
 			else if (operation.operationType.toLowerCase() == 'customerorder') {
 				newBlade = {
 					id: 'operationDetail',
-					title: 'orders.blades.customer-order-detail.title',
+					title: 'orders.blades.customerOrder-detail.title',
 					titleValues: { customer: customer },
-					subtitle: 'orders.blades.customer-order-detail.subtitle',
+					subtitle: 'orders.blades.customerOrder-detail.subtitle',
 					customerOrder: $scope.widget.blade.customerOrder,
 					currentEntity: operation,
 					disableOpenAnimation: true,
