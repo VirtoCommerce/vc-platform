@@ -23,7 +23,16 @@
         },
         "placeholders": {
           "address-type": "Select...",
-          "country": "Select..."
+          "first-name": "Enter value",
+          "last-name": "Enter value",
+          "country": "Select...",
+          "region": "Enter region",
+          "city": "Enter city",
+          "address1": "Enter address line 1",
+          "address2": "Enter address line 2",
+          "zip-code": "Enter postal code",
+          "email": "Enter value",
+          "phone": "Enter phone number"
         }
       },
       "fulfillment-center-contact": {
@@ -35,7 +44,13 @@
           "phone": "Phone"
         },
         "placeholders": {
-          "country": "Select..."
+          "country": "Select...",
+          "region": "Enter region",
+          "city": "Enter city",
+          "address1": "Enter address line 1",
+          "address2": "Enter address line 2",
+          "zip-code": "Enter postal code",
+          "phone": "Enter phone number"
         }
       },
       "fulfillment-center-detail": {
@@ -71,7 +86,7 @@
       }
     },
     "widgets": {
-      "fulfillment-center-contact": {
+      "fulfillmentCenterContact": {
         "blade-subtitle": "Contact information",
         "title": "Contact information"
       },
