@@ -40,12 +40,9 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 				throw new ArgumentNullException("review");
 
 			var retVal = new dataModel.EditorialReview();
-			var id = retVal.Id;
+	
 			retVal.InjectFrom(review);
-			if(review.Id == null)
-			{
-				retVal.Id = id;
-			}
+
 			retVal.ItemId = product.Id;
 			retVal.Source = review.ReviewType;
 			retVal.ReviewState = (int)coreModel.ReviewState.Active;

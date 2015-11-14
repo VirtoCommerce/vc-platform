@@ -61,10 +61,10 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			
 			}
 
-			if (dbProperty.PropertyValues != null)
+			if (dbProperty.DictionaryValues != null)
 			{
 				retVal.DictionaryValues = new List<coreModel.PropertyDictionaryValue>();
-				retVal.DictionaryValues.AddRange(dbProperty.PropertyValues.Select(x => x.ToCoreModel(retVal)));
+				retVal.DictionaryValues.AddRange(dbProperty.DictionaryValues.Select(x => x.ToCoreModel()));
 			}
 
 			return retVal;
@@ -82,14 +82,10 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 				throw new ArgumentNullException("property");
 
 			var retVal = new dataModel.Property();
-			var id = retVal.Id;
+		
 			retVal.InjectFrom(property);
 
-			if(property.Id == null)
-			{
-				retVal.Id = id;
-			}
-			retVal.PropertyValueType = (int)property.ValueType;
+            retVal.PropertyValueType = (int)property.ValueType;
 			retVal.IsMultiValue = property.Multivalue;
 			retVal.IsLocaleDependant = property.Multilanguage;
 			retVal.IsEnum = property.Dictionary;
@@ -108,11 +104,11 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 
 			if (property.DictionaryValues != null)
 			{
-				retVal.PropertyValues = new ObservableCollection<dataModel.PropertyValue>();
+				retVal.DictionaryValues = new ObservableCollection<dataModel.PropertyDictionaryValue>();
 				foreach (var dictValue in property.DictionaryValues)
 				{
-					var dbDictValue = dictValue.ToDataModel(property);
-					retVal.PropertyValues.Add(dbDictValue);
+					var dbDictValue = dictValue.ToDataModel();
+					retVal.DictionaryValues.Add(dbDictValue);
 				}
 			}
 
@@ -160,9 +156,9 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 				source.PropertyAttributes.Patch(target.PropertyAttributes, attributeComparer, (sourceAsset, targetAsset) => sourceAsset.Patch(targetAsset));
 			}
 			//Property dict values
-			if (!source.PropertyValues.IsNullCollection())
+			if (!source.DictionaryValues.IsNullCollection())
 			{
-				source.PropertyValues.Patch(target.PropertyValues, (sourcePropValue, targetPropValue) => sourcePropValue.Patch(targetPropValue));
+				source.DictionaryValues.Patch(target.DictionaryValues, (sourcePropValue, targetPropValue) => sourcePropValue.Patch(targetPropValue));
 			}
 		}
 

@@ -21,7 +21,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         /// <param name="properties">The properties.</param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentNullException">dbPropValue</exception>
-        public static coreModel.PropertyValue ToCoreModel(this dataModel.PropertyValueBase dbPropValue, coreModel.Property[] properties)
+        public static coreModel.PropertyValue ToCoreModel(this dataModel.PropertyValue dbPropValue, IEnumerable<dataModel.Property> properties)
         {
             if (dbPropValue == null)
                 throw new ArgumentNullException("dbPropValue");
@@ -30,7 +30,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
             retVal.InjectFrom(dbPropValue);
             retVal.LanguageCode = dbPropValue.Locale;
             retVal.PropertyName = dbPropValue.Name;
-            retVal.Value = dbPropValue.ToObjectValue();
+            retVal.Value = GetPropertyValue(dbPropValue);
             retVal.ValueId = dbPropValue.KeyValue;
             retVal.ValueType = (coreModel.PropertyValueType)dbPropValue.ValueType;
 
@@ -52,19 +52,15 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         /// <param name="propValue">The property value.</param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentNullException">propValue</exception>
-        public static dataModel.PropertyValueBase ToDataModel<T>(this coreModel.PropertyValue propValue) where T : dataModel.PropertyValueBase, new()
+        public static dataModel.PropertyValue ToDataModel(this coreModel.PropertyValue propValue) 
         {
             if (propValue == null)
                 throw new ArgumentNullException("propValue");
 
-            var retVal = new T();
-            var id = retVal.Id;
+            var retVal = new dataModel.PropertyValue();
+   
             retVal.InjectFrom(propValue);
-            if (propValue.Id == null)
-            {
-                retVal.Id = id;
-            }
-
+   
             retVal.Name = propValue.PropertyName;
             retVal.KeyValue = propValue.ValueId;
             retVal.Locale = propValue.LanguageCode;
@@ -79,7 +75,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         /// </summary>
         /// <param name="source"></param>
         /// <param name="target"></param>
-        public static void Patch(this dataModel.PropertyValueBase source, dataModel.PropertyValueBase target)
+        public static void Patch(this dataModel.PropertyValue source, dataModel.PropertyValue target)
         {
             if (target == null)
             {
@@ -87,13 +83,32 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
             }
 
 
-            var patchInjectionPolicy = new PatchInjection<dataModel.PropertyValueBase>(x => x.BooleanValue, x => x.DateTimeValue,
+            var patchInjectionPolicy = new PatchInjection<dataModel.PropertyValue>(x => x.BooleanValue, x => x.DateTimeValue,
                                                                                   x => x.DecimalValue, x => x.IntegerValue,
                                                                                   x => x.KeyValue, x => x.LongTextValue, x => x.ShortTextValue);
             target.InjectFrom(patchInjectionPolicy, source);
         }
 
-        private static void SetPropertyValue(dataModel.PropertyValueBase retVal, coreModel.PropertyValueType type, string value)
+        private static object GetPropertyValue(dataModel.PropertyValue propertyValue)
+        {
+            
+            switch (propertyValue.ValueType)
+            {
+                case (int)coreModel.PropertyValueType.Boolean:
+                    return propertyValue.BooleanValue;
+                case (int)coreModel.PropertyValueType.DateTime:
+                    return propertyValue.DateTimeValue;
+                case (int)coreModel.PropertyValueType.Number:
+                    return propertyValue.DecimalValue;
+                case (int)coreModel.PropertyValueType.LongText:
+                    return propertyValue.LongTextValue;
+                default:
+                    return propertyValue.ShortTextValue;
+            }
+
+    }
+
+        private static void SetPropertyValue(dataModel.PropertyValue retVal, coreModel.PropertyValueType type, string value)
         {
             switch (type)
             {
