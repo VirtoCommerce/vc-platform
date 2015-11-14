@@ -116,8 +116,7 @@
           "default-language": "Default language",
           "additional-languages": "Additional languages",
           "default-currency": "Default currency",
-          "additional-currencies": "Additional currencies",
-          "state": "State"
+          "additional-currencies": "Additional currencies"
         },
         "placeholders": {
           "name": "Enter name",
@@ -126,8 +125,7 @@
           "default-language": "Select...",
           "additional-languages": "Select...",
           "default-currency": "Select...",
-          "additional-currencies": "Select...",
-          "state": "Select..."
+          "additional-currencies": "Select..."
         }
       },
       "new-store-wizard": {
@@ -152,10 +150,6 @@
           "is-active": "Is active",
           "tax-provider": "Tax provider"
         }
-      },
-      "new-store-wizard": {
-        "title":  "New Store",
-        "subtitle":  "Create new Store"
       }
     },
     "widgets": {

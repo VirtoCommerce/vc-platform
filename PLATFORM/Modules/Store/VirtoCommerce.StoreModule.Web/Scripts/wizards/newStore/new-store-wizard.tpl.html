@@ -10,13 +10,13 @@
                 <div ng-init="setForm(detailForm)">
                     <label class="form-label">{{ 'stores.blades.store-detail.labels.code' | translate }}</label>
                     <div class="form-input">
-                        <input ng-model="blade.currentEntity.id" type="text" placeholder="Enter code" required focus-on="">
+                        <input ng-model="blade.currentEntity.id" type="text" placeholder="{{ 'stores.blades.store-detail.placeholders.code' | translate }}" required focus-on="">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">{{ 'stores.blades.store-detail.labels.name' | translate }}</label>
                     <div class="form-input">
-                        <input ng-model="blade.currentEntity.name" type="text" placeholder="Enter name" required>
+                        <input ng-model="blade.currentEntity.name" type="text" placeholder="{{ 'stores.blades.store-detail.placeholders.name' | translate }}" required>
                     </div>
                 </div>
                 <div class="form-group">
