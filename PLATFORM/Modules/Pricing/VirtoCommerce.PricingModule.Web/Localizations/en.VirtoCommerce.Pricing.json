@@ -93,6 +93,11 @@
         }
       }
     },
+    "widgets": {
+      "itemPricesWidget": {
+        "title": "Price"
+      }
+    },
     "dialogs": {
       "assignments-delete": {
         "title": "Delete confirmation",
