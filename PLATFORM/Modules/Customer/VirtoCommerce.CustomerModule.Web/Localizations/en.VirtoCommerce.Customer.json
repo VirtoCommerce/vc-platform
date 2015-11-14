@@ -72,6 +72,9 @@
           "name": "Name",
           "address": "Address",
           "Email": "Email"
+        },
+        "placeholders": {
+          "email": "Enter value"
         }
       },
       "member-list": {
@@ -87,6 +90,9 @@
       "member-phones-list": {
         "labels": {
           "no-phones": "No phones yet"
+        },
+        "placeholders": {
+          "phone": "Enter phone number"
         }
       },
       "member-property-valueType": {

@@ -9,7 +9,7 @@
                             <tr class="table-item" ng-repeat="data in blade.currentEntities" ng-class="{'__selected': data === selectedItem}" context-menu data-target="cel_menu_{{data}}" ng-click='selectItem(data)'>
                                 <td class="table-col">
                                     <div class="form-input">
-                                        <input type="email" ng-model="data.value" required placeholder="Enter value" />
+                                        <input type="email" ng-model="data.value" required placeholder="{{ 'customer.blades.member-emails-list.placeholders.email' | translate }}" />
                                     </div>
                                     <ul class="menu __context" role="menu" id="cel_menu_{{data}}">
                                         <li class="menu-item" ng-click='delete()'>
