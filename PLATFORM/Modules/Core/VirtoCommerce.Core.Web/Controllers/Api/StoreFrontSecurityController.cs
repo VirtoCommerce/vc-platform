@@ -89,14 +89,14 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
         [HttpPost]
         [Route("user/signin")]
         [ResponseType(typeof(SignInResult))]
-        public async Task<IHttpActionResult> PasswordSignIn(string userName, string password, bool isPersistent)
+        public async Task<IHttpActionResult> PasswordSignIn(string userName, string password)
         {
             if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(password))
             {
                 return BadRequest();
             }
 
-            var status = await SignInManager.PasswordSignInAsync(userName, password, isPersistent, shouldLockout: true);
+            var status = await SignInManager.PasswordSignInAsync(userName, password, false, shouldLockout: true);
             var result = new SignInResult { Status = status };
 
             return Ok(result);
