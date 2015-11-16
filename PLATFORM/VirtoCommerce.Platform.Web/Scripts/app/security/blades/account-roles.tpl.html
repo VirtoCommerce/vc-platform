@@ -2,7 +2,7 @@
 <div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
-            <div class="sub-t">Select roles to assign</div>
+            <div class="sub-t">{{ 'platform.blades.account-roles.labels.select-roles' | translate }}</div>
             <div class="table-wrapper">
                 <table class="table">
                     <tbody>
@@ -21,7 +21,7 @@
                     </tbody>
                 </table>
             </div>
-            <p class="text" ng-if="!blade.currentEntities.length">No roles to assign.</p>
+            <p class="text" ng-if="!blade.currentEntities.length">{{ 'platform.blades.account-roles.labels.no-roles' | translate }}</p>
         </div>
     </div>
 </div>

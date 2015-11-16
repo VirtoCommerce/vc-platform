@@ -19,7 +19,7 @@
                         </div>
                         <div class="form-input" ng-if="data.allowedValues.length>0 && !data.isArray">
                             <ui-select ng-model="data.value">
-                                <ui-select-match placeholder="Select ...">{{$select.selected}}</ui-select-match>
+                                <ui-select-match placeholder="{{ 'platform.blades.entitySetting-list.placeholders.entity' | translate }}">{{$select.selected}}</ui-select-match>
                                 <ui-select-choices repeat="x as x in data.allowedValues | filter: $select.search">
                                     <span ng-bind-html="x | highlight: $select.search"></span>
                                 </ui-select-choices>

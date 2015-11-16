@@ -33,15 +33,15 @@
     return function (input) {
         var retVal;
         switch (input) {
-            case 'ShortText': retVal = 'Short text'; break;
-            case 'LongText': retVal = 'Long text'; break;
-            case 'Integer': retVal = 'Integer'; break;
-            case 'Decimal': retVal = 'Decimal'; break;
-            case 'DateTime': retVal = 'Date'; break;
-            case 'Boolean': retVal = 'Boolean'; break;
-            case 'Html': retVal = 'HTML'; break;
+            case 'ShortText': retVal = 'platform.properties.short-text.title'; break;
+            case 'LongText': retVal = 'platform.properties.long-text.title'; break;
+            case 'Integer': retVal = 'platform.properties.integer.title'; break;
+            case 'Decimal': retVal = 'platform.properties.decimal.title'; break;
+            case 'DateTime': retVal = 'platform.properties.date-time.title'; break;
+            case 'Boolean': retVal = 'platform.properties.boolean.title'; break;
+            case 'Html': retVal = 'platform.properties.html.title'; break;
             default:
-                retVal = input ? input : 'Undefined';
+                retVal = input ? input : 'platform.properties.undefined.title';
         }
         return retVal;
     }

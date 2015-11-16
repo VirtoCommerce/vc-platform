@@ -97,29 +97,7 @@
       },
       "member-property-valueType": {
         "title": "{{name}} value type",
-        "subtitle": "Change value type",
-        "menu": {
-          "boolean": {
-            "title": "Boolean",
-            "description": "Switch type."
-          },
-          "short-text": {
-            "title": "Short Text",
-            "description": "Text values less than 1024 chars."
-          },
-          "long-text": {
-            "title": "Long Text",
-            "description": "Huge amount text without size limit."
-          },
-          "decimal": {
-            "title": "Decimal",
-            "description": "Digital input with float point."
-          },
-          "date-time": {
-            "title": "Date time",
-            "description": "Select date."
-          }
-        }
+        "subtitle": "Change value type"
       },
       "member-property-detail": {
         "labels": {

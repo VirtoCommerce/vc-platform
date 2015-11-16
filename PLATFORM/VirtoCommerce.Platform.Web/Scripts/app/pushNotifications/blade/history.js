@@ -10,9 +10,9 @@ function ($scope, bladeNavigationService, eventTemplateResolver, notifications) 
     $scope.notifications = [];
 
     $scope.columns = [
-    	{ title: "Type", orderBy: "NotifyType" },
-		{ title: "Title", orderBy: "Title" },
-		{ title: "Created", orderBy: "Created", checked: true, reverse: true }
+    	{ title: "platform.blades.history.labels.type", orderBy: "NotifyType" },
+		{ title: "platform.blades.history.labels.title", orderBy: "Title" },
+		{ title: "platform.blades.history.labels.created", orderBy: "Created", checked: true, reverse: true }
 
     ];
 	
@@ -58,7 +58,7 @@ function ($scope, bladeNavigationService, eventTemplateResolver, notifications) 
     
     $scope.blade.toolbarCommands = [
 			{
-				name: "Refresh",
+				name: "platform.commands.refresh",
 				icon: 'fa fa-refresh',
 				executeMethod: function () {
 					$scope.blade.refresh();
