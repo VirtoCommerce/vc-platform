@@ -49,10 +49,8 @@
 </div>
 
 <script type="text/ng-template" id="promotion-list-name.cell.html">
-    <div class="__product-name">
-        <i class="table-ico fa" ng-class="row.entity.type == 'DynamicPromotion' ? 'fa-asterisk' : ' fa-file-code-o'" title="{{row.entity.type == 'DynamicPromotion' ? 'Dynamic promotion' : 'Promotion defined in code'}}"></i>
-        <span class="table-t">{{COL_FIELD}}</span>
-    </div>
+    <i class="table-ico fa" ng-class="row.entity.type == 'DynamicPromotion' ? 'fa-asterisk' : ' fa-file-code-o'" title="{{row.entity.type == 'DynamicPromotion' ? 'Dynamic promotion' : 'Promotion defined in code'}}"></i>
+    <span class="table-t">{{COL_FIELD}}</span>
 </script>
 <script type="text/ng-template" id="am-time-ago.cell.html">
     <span class="table-date" am-time-ago="COL_FIELD"></span>

@@ -839,31 +839,30 @@ h3
         vertical-align: top;
     }
 
-        .table-col .table-t,
-        .table-col .table-descr
+        .table-t,
+        .table-descr
         {
             display: block;
             font-size: 12px;
         }
 
-        .table-col .table-t
+        .table-t
         {
             display: inline-block;
             font-size: 14px;
             font-weight: 500;
-            margin: 0 0 5px;
             max-width: 100%;
             overflow: hidden;
             text-overflow: ellipsis;
             vertical-align: middle;
         }
 
-        .table-col .table-descr
+        .table-descr
         {
             color: #999;
         }
 
-        .table-col .table-status
+        .table-status
         {
             background: #a6a6a6;
             color: #fff;
@@ -872,13 +871,12 @@ h3
             height: 20px;
             line-height: 18px;
             max-width: 56px;
-            margin: 5px 0 0;
             padding: 0 5px;
             text-align: center;
             text-shadow: none;
         }
 
-        .table-col .table-status.__active
+        .table-status.__active
         {
             background: #43b0e6;
         }
@@ -897,7 +895,7 @@ h3
             width: 40px;
         }
 
-        .table-col .table-img
+        .table-img
         {
             border: none;
             height: auto;
@@ -944,18 +942,18 @@ h3
         padding-right: 20px;
     }
 
-    .table .table-progress
+    .table-progress
     {
         margin: 10px 0 0;
         position: relative;
     }
 
-    .table .table-ico,
-    .product-img .table-ico
+    .table-ico,
+    .product .table-ico
     {
         color: #a6a6a6;
         font-size: 28px;
-        margin: -4px 10px 0 0;
+        margin: 0 10px;
         text-shadow: 1px 1px #fff;
         vertical-align: middle;
     }
@@ -3737,6 +3735,11 @@ button.btn
 
 
 /* Tags input */
+tags-input .host
+{
+    margin: 0;
+}
+
 tags-input .tags
 {
     border-color: #dee9f0;
@@ -4856,8 +4859,6 @@ tags-input .tags .tag-item .remove-button
         width: 340px;
     }
 
-        
-
         .blade-content .table
         {
             min-width: 420px;
@@ -5039,17 +5040,10 @@ tags-input .tags .tag-item .remove-button
     font-size: 14px;
 }
 
-.ui-grid-cell .table-t,
-.ui-grid-cell .table-descr
-{
-    display: block;
-}
-
 .ui-grid-cell .table-descr
 {
     color: #999;
     font-size: 12px;
-    margin: 5px 0 0;
 }
 
 .ui-grid-pinned-container.ui-grid-pinned-container-left .ui-grid-cell:last-child
@@ -5129,17 +5123,34 @@ tags-input .tags .tag-item .remove-button
     padding: 10px;
 }*/
 
+.ui-grid-cell::after
+{
+    content: ' ';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+}
+
 .ui-grid-row:last-child .ui-grid-cell
 {
     border-color: #dee9f0;
     border-width: 0 0 1px !important;
 }
 
+.ui-grid-row-header-cell > :first-child
+{
+    display: inline-block;
+    vertical-align: middle;
+}
+
 .ui-grid-cell-contents
 {
+    display: inline-block;
     font-size: 14px;
-    /*padding: 10px;*/
+    height: auto;
     text-shadow: 1px 1px #fff;
+    vertical-align: middle;
+    width: 100%;
 }
 
 .ui-grid-row:nth-child(2n) .ui-grid-cell.__selected
