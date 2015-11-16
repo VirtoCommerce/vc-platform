@@ -28,8 +28,8 @@
         var newBlade = {
             id: 'editCategoryProperty',
             currentEntityId: prop.id,
-            title: 'Edit category property',
-            subtitle: 'Enter property information',
+            title: 'catalog.blades.property-detail.title-category',
+            subtitle: 'catalog.blades.property-detail.subtitle-category',
             controller: 'virtoCommerce.catalogModule.propertyDetailController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/property-detail.tpl.html'
         };

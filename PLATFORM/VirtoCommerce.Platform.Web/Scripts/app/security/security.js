@@ -42,8 +42,8 @@
 	        controller: ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
 				    var blade = {
 				        id: 'security',
-				        title: 'Security',
-				        subtitle: 'User management',
+				        title: 'platform.blades.security-main.title',
+				        subtitle: 'platform.blades.security-main.subtitle',
 				        controller: 'platformWebApp.securityMainController',
 				        template: '$(Platform)/Scripts/app/security/blades/security-main.tpl.html',
 				        isClosingDisabled: true
@@ -58,7 +58,7 @@
         var menuItem = {
             path: 'configuration/security',
             icon: 'fa fa-key',
-            title: 'Security',
+            title: 'platform.menu.security',
             priority: 5,
             action: function () { $state.go('workspace.securityModule'); },
             permission: 'platform:security:access'

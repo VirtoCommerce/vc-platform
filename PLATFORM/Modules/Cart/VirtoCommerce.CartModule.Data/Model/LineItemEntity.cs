@@ -15,7 +15,8 @@ namespace VirtoCommerce.CartModule.Data.Model
 		public LineItemEntity()
 		{
 			TaxDetails = new NullCollection<TaxDetailEntity>();
-		}
+            Discounts = new NullCollection<DiscountEntity>();
+        }
 
 		[Required]
 		[StringLength(3)]
@@ -94,5 +95,7 @@ namespace VirtoCommerce.CartModule.Data.Model
 		public string ShipmentId { get; set; }
 
 		public virtual ObservableCollection<TaxDetailEntity> TaxDetails { get; set; }
-	}
+
+        public virtual ObservableCollection<DiscountEntity> Discounts { get; set; }
+    }
 }

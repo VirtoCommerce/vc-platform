@@ -88,7 +88,7 @@
 
     blade.toolbarCommands = [
 		{
-		    name: "Remove", icon: 'fa fa-trash-o', executeMethod: function () { $scope.removeAction(); },
+		    name: "platform.commands.remove", icon: 'fa fa-trash-o', executeMethod: function () { $scope.removeAction(); },
 		    canExecuteMethod: function () {
 		        var selectedImages = $filter('filter')(blade.currentEntity.images, { $selected: true });
 		        return selectedImages.length > 0;

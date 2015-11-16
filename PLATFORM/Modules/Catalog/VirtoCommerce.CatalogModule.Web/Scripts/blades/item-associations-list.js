@@ -42,7 +42,7 @@
 
     $scope.blade.toolbarCommands = [
         {
-            name: "Add", icon: 'fa fa-plus',
+            name: "platform.commands.add", icon: 'fa fa-plus',
             executeMethod: function () {
                 openAddEntityWizard();
             },
@@ -52,12 +52,12 @@
             permission: 'catalog:update'
         },
         {
-            name: "Delete", icon: 'fa fa-trash-o',
+            name: "platform.commands.delete", icon: 'fa fa-trash-o',
             executeMethod: function () {
                 var dialog = {
                     id: "confirmDeleteItem",
-                    title: "Delete confirmation",
-                    message: "Are you sure you want to delete selected Associations?",
+                    title: "catalog.dialogs.association-delete.title",
+                    message: "catalog.dialogs.association-delete.message",
                     callback: function (remove) {
                         if (remove) {
                             $scope.blade.isLoading = true;

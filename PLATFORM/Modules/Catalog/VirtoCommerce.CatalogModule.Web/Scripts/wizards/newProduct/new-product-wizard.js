@@ -34,7 +34,7 @@
                     id: "newProductProperties",
                     item: blade.item,
                     title: blade.item.name,
-                    subtitle: 'item properties',
+                    subtitle: 'catalog.blades.item-property-list.subtitle',
                     bottomTemplate: '$(Platform)/Scripts/common/templates/ok.tpl.html',
                     controller: 'virtoCommerce.catalogModule.newProductWizardPropertiesController',
                     template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/item-property-list.tpl.html'
@@ -45,7 +45,7 @@
                     id: "newProductImages",
                     item: blade.item,
                     title: blade.item.name,
-                    subtitle: 'item images',
+                    subtitle: 'catalog.wizards.item-images.subtitle',
                     bottomTemplate: '$(Platform)/Scripts/common/templates/ok.tpl.html',
                     controller: 'virtoCommerce.catalogModule.newProductWizardImagesController',
                     template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/images.tpl.html'
@@ -56,7 +56,7 @@
                     id: "newProductSeoDetail",
                     item: blade.item,
                     title: blade.item.name,
-                    subtitle: 'Seo details',
+                    subtitle: 'catalog.blades.seo-detail.subtitle',
                     isNew: true,
                     controller: 'virtoCommerce.catalogModule.newProductSeoDetailController',
                     template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/seo-detail.tpl.html'
@@ -68,7 +68,7 @@
                         id: "newProductEditorialReviewsList",
                         currentEntities: blade.item.reviews,
                         title: blade.item.name,
-                        subtitle: 'Product Editorial Reviews',
+                        subtitle: 'catalog.blades.editorialReviews-list.subtitle',
                         controller: 'virtoCommerce.catalogModule.newProductWizardReviewsController',
                         template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/editorialReviews-list.tpl.html'
                     };
@@ -77,8 +77,8 @@
                         id: 'editorialReviewWizard',
                         currentEntity: { languageCode: getCatalog().defaultLanguage.languageCode },
                         languages: getCatalog().languages,
-                        title: 'Review',
-                        subtitle: 'Product Review',
+                        title: 'catalog.blades.editorialReview-detail.title',
+                        subtitle: 'catalog.blades.editorialReview-detail.subtitle',
                         bottomTemplate: '$(Platform)/Scripts/common/templates/ok.tpl.html',
                         controller: 'virtoCommerce.catalogModule.editorialReviewDetailWizardStepController',
                         template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/editorialReview-detail.tpl.html'

@@ -11,7 +11,7 @@
                         <div class="column">
                             <ul class="list __info">
                                 <li class="list-item">
-                                    <div class="list-t">Customer</div>
+                                    <div class="list-t">{{ 'quotes.blades.quote-detail.labels.customer' | translate }}</div>
                                     <div class="list-descr">{{blade.currentEntity.customerName}}</div>
                                 </li>
                             </ul>
@@ -19,7 +19,7 @@
                         <div class="column">
                             <ul class="list __info">
                                 <li class="list-item">
-                                    <div class="list-t">Created</div>
+                                    <div class="list-t">{{ 'quotes.blades.quote-detail.labels.created' | translate }}</div>
                                     <div class="list-descr">{{blade.currentEntity.createdDate}}</div>
                                 </li>
                             </ul>
@@ -29,7 +29,7 @@
                         <div class="column">
                             <ul class="list __info">
                                 <li class="list-item">
-                                    <div class="list-t">Customer organization</div>
+                                    <div class="list-t">{{ 'quotes.blades.quote-detail.labels.customer-organization' | translate }}</div>
                                     <div class="list-descr">{{blade.currentEntity.organizationName?blade.currentEntity.organizationName:'Not defined'}}</div>
                                 </li>
                             </ul>
@@ -37,7 +37,7 @@
                         <div class="column">
                             <ul class="list __info">
                                 <li class="list-item">
-                                    <div class="list-t">Last updated</div>
+                                    <div class="list-t">{{ 'quotes.blades.quote-detail.labels.last-updated' | translate }}</div>
                                     <div class="list-descr">{{blade.currentEntity.modifiedDate}}</div>
                                 </li>
                             </ul>
@@ -46,10 +46,10 @@
                     <div class="clearfix">
                         <div class="column">
                             <div class="form-group">
-                                <label class="form-label">Status <a href="" ng-click="openDictionarySettingManagement()" va-permission="platform:setting:update"><i class="form-ico fa fa-pencil"></i></a></label>
+                                <label class="form-label">{{ 'quotes.blades.quote-detail.labels.status' | translate }} <a href="" ng-click="openDictionarySettingManagement()" va-permission="platform:setting:update"><i class="form-ico fa fa-pencil"></i></a></label>
                                 <div class="form-input">
                                     <ui-select ng-model="blade.currentEntity.status" required ng-disabled="blade.isLocked()">
-                                        <ui-select-match placeholder="Select...">{{$select.selected}}</ui-select-match>
+                                        <ui-select-match placeholder="{{ 'quotes.blades.quote-detail.placeholders.status' | translate }}">{{$select.selected}}</ui-select-match>
                                         <ui-select-choices repeat="x in quoteStatuses | filter: $select.search">
                                             <span ng-bind-html="x | highlight: $select.search"></span>
                                         </ui-select-choices>
@@ -57,19 +57,19 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Expiry date</label>
+                                <label class="form-label">{{ 'quotes.blades.quote-detail.labels.expiry-date' | translate }}</label>
                                 <div class="form-input __calendar">
-                                    <input placeholder="Choose date" ng-model="blade.currentEntity.expirationDate" datepicker-popup="shortDate" is-open="datepickers.exp" close-text="Close" min-date="today" />
+                                    <input placeholder="{{ 'quotes.blades.quote-detail.placeholders.expiry-date' | translate }}" ng-model="blade.currentEntity.expirationDate" datepicker-popup="shortDate" is-open="datepickers.exp" close-text="Close" min-date="today" />
                                     <button class="btn" type="button" ng-click="open($event,'exp')">
                                         <i class="btn-ico fa fa-calendar"></i>
                                     </button>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Assigned to</label>
+                                <label class="form-label">{{ 'quotes.blades.quote-detail.labels.assigned-to' | translate }}</label>
                                 <div class="form-input">
                                     <ui-select ng-model="blade.currentEntity.employeeId" ng-disabled="blade.isLocked()">
-                                        <ui-select-match placeholder="Select...">{{$select.selected.userName}}</ui-select-match>
+                                        <ui-select-match placeholder="{{ 'quotes.blades.quote-detail.placeholders.assigned-to' | translate }}">{{$select.selected.userName}}</ui-select-match>
                                         <ui-select-choices repeat="x.id as x in employees | filter: { userName: $select.search }">
                                             <span ng-bind-html="x.userName | highlight: $select.search"></span>
                                         </ui-select-choices>
@@ -79,10 +79,10 @@
                         </div>
                         <div class="column">
                             <div class="form-group">
-                                <label class="form-label">RFQ from</label>
+                                <label class="form-label"></label>
                                 <div class="form-input">
                                     <ui-select ng-model="blade.currentEntity.storeId" required ng-disabled="blade.isLocked()">
-                                        <ui-select-match placeholder="Select a store">{{$select.selected.name}}</ui-select-match>
+                                        <ui-select-match placeholder="{{ 'quotes.blades.quote-detail.placeholders.rfq-from' | translate }}">{{$select.selected.name}}</ui-select-match>
                                         <ui-select-choices repeat="store.id as store in stores | filter: { name: $select.search }">
                                             <span ng-bind-html="store.name | highlight: $select.search"></span>
                                         </ui-select-choices>
@@ -90,9 +90,9 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Reminder date</label>
+                                <label class="form-label">{{ 'quotes.blades.quote-detail.labels.reminder-date' | translate }}</label>
                                 <div class="form-input __calendar">
-                                    <input placeholder="Choose date" ng-model="blade.currentEntity.reminderDate" datepicker-popup="shortDate" is-open="datepickers.rmd" close-text="Close" min-date="today" />
+                                    <input placeholder="{{ 'quotes.blades.quote-detail.placeholders.reminder-date' | translate }}" ng-model="blade.currentEntity.reminderDate" datepicker-popup="shortDate" is-open="datepickers.rmd" close-text="Close" min-date="today" />
                                     <button class="btn" type="button" ng-click="open($event,'rmd')">
                                         <i class="btn-ico fa fa-calendar"></i>
                                     </button>
@@ -101,15 +101,15 @@
                         </div>
                     </div>
                     <div class="form-group" ng-init="setForm(detailForm)">
-                        <label class="form-label">General comment</label>
+                        <label class="form-label">{{ 'quotes.blades.quote-detail.labels.general-comment' | translate }}</label>
                         <div class="form-input">
-                            <textarea class="form-control" ng-model="blade.currentEntity.comment" placeholder="Public comment"></textarea>
+                            <textarea class="form-control" ng-model="blade.currentEntity.comment" placeholder="{{ 'quotes.blades.quote-detail.placeholders.general-comment' | translate }}"></textarea>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Internal comment</label>
+                        <label class="form-label">{{ 'quotes.blades.quote-detail.labels.internal-comment' | translate }}</label>
                         <div class="form-input">
-                            <textarea class="form-control" ng-model="blade.currentEntity.innerComment" placeholder="Internal comment"></textarea>
+                            <textarea class="form-control" ng-model="blade.currentEntity.innerComment" placeholder="{{ 'quotes.blades.quote-detail.placeholders.internal-comment' | translate }}"></textarea>
                         </div>
                     </div>
                 </fieldset>

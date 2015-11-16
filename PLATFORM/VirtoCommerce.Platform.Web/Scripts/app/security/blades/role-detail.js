@@ -66,7 +66,7 @@
                 id: 'permissionScopes',
                 permission: node,
                 title: node.name,
-                subtitle: 'Configure permission scopes',
+                subtitle: 'platform.blades.permission-scopes.subtitle',
                 controller: 'platformWebApp.permissionScopesController',
                 template: '$(Platform)/Scripts/app/security/blades/permission-scopes.tpl.html'
             };
@@ -83,8 +83,8 @@
         if (isDirty()) {
             var dialog = {
                 id: "confirmCurrentBladeClose",
-                title: "Save changes",
-                message: "The Role has been modified. Do you want to save changes?"
+                title: "platform.dialogs.role-save.title",
+                message: "platform.dialogs.role-save.message"
             };
             dialog.callback = function (needSave) {
                 if (needSave) {
@@ -134,7 +134,7 @@
         if (!blade.isNew) {
             blade.toolbarCommands = [
                 {
-                    name: "Save",
+                    name: "platform.commands.save",
                     icon: 'fa fa-save',
                     executeMethod: function () {
                         $scope.saveChanges();
@@ -145,7 +145,7 @@
                     permission: 'platform:security:update'
                 },
                 {
-                    name: "Reset",
+                    name: "platform.commands.reset",
                     icon: 'fa fa-undo',
                     executeMethod: function () {
                         angular.copy(blade.origEntity, blade.currentEntity);
@@ -156,13 +156,13 @@
                     permission: 'platform:security:update'
                 },
                 {
-                    name: "Assign", icon: 'fa fa-plus',
+                    name: "platform.commands.assign", icon: 'fa fa-plus',
                     executeMethod: function () {
                         var newBlade = {
                             id: 'listItemChildChild',
                             promise: promise,
                             title: blade.title,
-                            subtitle: 'Assign permissions',
+                            subtitle: 'platform.blades.role-permissions.subtitle',
                             controller: 'platformWebApp.rolePermissionsController',
                             template: '$(Platform)/Scripts/app/security/blades/role-permissions.tpl.html'
                         };
@@ -175,7 +175,7 @@
                     permission: 'platform:security:update'
                 },
                 {
-                    name: "Remove", icon: 'fa fa-trash-o',
+                    name: "platform.commands.remove", icon: 'fa fa-trash-o',
                     executeMethod: function () {
                         deleteChecked();
                     },

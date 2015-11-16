@@ -10,11 +10,14 @@ namespace VirtoCommerce.Platform.Core.Modularity
     {
         private readonly string _contentVirtualPath;
         private readonly string _assembliesPath;
+        private readonly string _localizationsPath;
+        private readonly string _platformPath;
         private static readonly string[] _assemblyFileExtensions = { ".dll", ".pdb", ".exe", ".xml" };
 
         public IModuleManifestProvider ManifestProvider { get; private set; }
 
-        public ManifestModuleCatalog(IModuleManifestProvider manifestProvider, string contentVirtualPath, string assembliesPath)
+        public ManifestModuleCatalog(IModuleManifestProvider manifestProvider, string contentVirtualPath, 
+            string assembliesPath, string localizationsPath, string platformPath)
         {
             ManifestProvider = manifestProvider;
             if (contentVirtualPath != null)
@@ -22,6 +25,8 @@ namespace VirtoCommerce.Platform.Core.Modularity
                 _contentVirtualPath = contentVirtualPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
             }
             _assembliesPath = assembliesPath;
+            _localizationsPath = localizationsPath;
+            _platformPath = platformPath;
         }
 
         protected override void InnerLoad()
@@ -44,6 +49,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
             var rootUri = new Uri(contentPhysicalPath);
 
             CopyAssemblies(ManifestProvider.RootPath, _assembliesPath);
+            CopyLocalizations(_platformPath, _localizationsPath);
 
             foreach (var pair in ManifestProvider.GetModuleManifests())
             {
@@ -52,6 +58,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
 
                 var modulePath = Path.GetDirectoryName(manifestPath);
                 CopyAssemblies(modulePath, _assembliesPath);
+                CopyLocalizations(modulePath, _localizationsPath);
 
                 var moduleVirtualPath = GetModuleVirtualPath(rootUri, modulePath);
                 ConvertVirtualPath(manifest.Scripts, moduleVirtualPath);
@@ -92,6 +99,27 @@ namespace VirtoCommerce.Platform.Core.Modularity
                 }
             }
         }
+
+        private static void CopyLocalizations(string sourceParentPath, string targetDirectoryPath)
+        {
+            if (sourceParentPath != null)
+            {
+                var sourceDirectoryPath = Path.Combine(sourceParentPath, "localizations\\");
+
+                if (Directory.Exists(sourceDirectoryPath))
+                {
+                    var sourceDirectoryUri = new Uri(sourceDirectoryPath);
+
+                    foreach (var sourceFilePath in Directory.EnumerateFiles(sourceDirectoryPath))
+                    {
+                            var relativePath = MakeRelativePath(sourceDirectoryUri, sourceFilePath);
+                            var targetFilePath = Path.Combine(targetDirectoryPath, relativePath);
+                            CopyFile(sourceFilePath, targetFilePath);
+                    }
+                }
+            }
+        }
+
 
         private static void CopyFile(string sourceFilePath, string targetFilePath)
         {

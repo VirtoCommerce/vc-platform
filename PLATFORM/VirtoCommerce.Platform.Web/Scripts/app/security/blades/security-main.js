@@ -4,8 +4,8 @@
 
     function initializeBlade() {
         var entities = [
-            { name: 'Users', entityName: 'account' },
-            { name: 'Roles', entityName: 'role' }
+            { name: 'platform.blades.account-list.title', entityName: 'account', subtitle: 'platform.blades.account-list.subtitle' },
+            { name: 'platform.blades.role-list.title', entityName: 'role', subtitle: 'platform.blades.role-list.subtitle' }
         ];
         $scope.blade.currentEntities = entities;
         $scope.blade.isLoading = false;
@@ -19,7 +19,7 @@
         var newBlade = {
             id: 'securityDetails',
             title: data.name,
-            subtitle: 'Security service',
+            subtitle: data.subtitle,
             controller: 'platformWebApp.' + data.entityName + 'ListController',
             template: '$(Platform)/Scripts/app/security/blades/' + data.entityName + '-list.tpl.html'
         };

@@ -70,8 +70,8 @@ function ($scope, roles, bladeNavigationService, dialogService, uiGridConstants,
     function deleteChecked() {
         var dialog = {
             id: "confirmDeleteItem",
-            title: "Delete confirmation",
-            message: "Are you sure you want to delete selected Roles?",
+            title: "platform.dialogs.roles-delete.title",
+            message: "platform.dialogs.roles-delete.message",
             callback: function (remove) {
                 if (remove) {
                     closeChildrenBlades();
@@ -99,7 +99,7 @@ function ($scope, roles, bladeNavigationService, dialogService, uiGridConstants,
 
     blade.toolbarCommands = [
         {
-            name: "Refresh", icon: 'fa fa-refresh',
+            name: "platform.commands.refresh", icon: 'fa fa-refresh',
             executeMethod: function () {
                 blade.refresh();
             },
@@ -108,14 +108,14 @@ function ($scope, roles, bladeNavigationService, dialogService, uiGridConstants,
             }
         },
         {
-            name: "Add", icon: 'fa fa-plus',
+            name: "platform.commands.add", icon: 'fa fa-plus',
             executeMethod: function () {
                 closeChildrenBlades();
 
                 var newBlade = {
                     id: 'listItemChild',
                     isNew: true,
-                    title: 'New Role',
+                    title: 'platform.blades.new-role-wizard.title',
                     subtitle: blade.subtitle,
                     controller: 'platformWebApp.roleDetailController',
                     template: '$(Platform)/Scripts/app/security/wizards/new-role-wizard.tpl.html'
@@ -128,7 +128,7 @@ function ($scope, roles, bladeNavigationService, dialogService, uiGridConstants,
             permission: 'platform:security:create'
         },
         {
-            name: "Delete", icon: 'fa fa-trash-o',
+            name: "platform.commands.delete", icon: 'fa fa-trash-o',
             executeMethod: function () {
                 deleteChecked();
             },

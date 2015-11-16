@@ -2,8 +2,9 @@
 .controller('virtoCommerce.catalogModule.catalogCSVimportWizardController', ['$scope', '$localStorage', 'platformWebApp.bladeNavigationService', 'FileUploader', 'virtoCommerce.catalogModule.import', function ($scope, $localStorage, bladeNavigationService, FileUploader, importResource) {
     var blade = $scope.blade;
     blade.isLoading = false;
-    blade.title = 'Import catalog from csv';
-    blade.subtitle = 'All products will be added to "' + blade.catalog.name + '" catalog';
+    blade.title = 'catalog.wizards.catalog-CSV-import.title';
+    blade.subtitle = 'catalog.wizards.catalog-CSV-import.subtitle';
+    blade.subtitleVales = { name: blade.catalog.name };
 
     $scope.columnDelimiters = [
         { name: "Space", value: " " },
@@ -70,8 +71,8 @@
         var newBlade = {
             id: "importMapping",
             importConfiguration: blade.importConfiguration,
-            title: 'Column mapping',
-            subtitle: 'Manual map product properties to csv columns',
+            title: 'catalog.blades.catalog-CSV-import-wizard-mapping-step.title',
+            subtitle: 'catalog.blades.catalog-CSV-import-wizard-mapping-step.subtitle',
             controller: 'virtoCommerce.catalogModule.catalogCSVimportWizardMappingStepController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/import/wizard/catalog-CSV-import-wizard-mapping-step.tpl.html'
         };

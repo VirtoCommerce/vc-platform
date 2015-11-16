@@ -2,9 +2,9 @@
     <va-breadcrumb ng-model="blade.breadcrumbs" blade-id="blade.id"></va-breadcrumb>
     <div class="form-group">
         <div class="form-input __search">
-            <input type="text" placeholder="Search keyword..." ng-model="filter.searchKeyword" ng-keyup="$event.which === 13 && blade.refresh()">
+            <input type="text" placeholder="{{'platform.placeholders.search-keyword' | translate}}" ng-model="filter.searchKeyword" ng-keyup="$event.which === 13 && blade.refresh()">
         </div>
-        <p class="form-count">Count: <span class="count">{{pageSettings.totalItems}}</span></p>
+        <p class="form-count">{{ 'platform.list.count' | translate }}: <span class="count">{{pageSettings.totalItems}}</span></p>
     </div>
 </div>
 <div class="blade-content __medium-wide" ng-if="!isCatalogSelectMode()">
@@ -34,9 +34,9 @@
                                     <span class="check"></span>
                                 </label>
                             </th>
-                            <th class="table-col __product-img">Pic</th>
-                            <th class="table-col __product-name">Name</th>
-                            <th class="table-col __product-code">SKU</th>
+                            <th class="table-col __product-img">{{ 'catalog.blades.catalog-items-select.labels.picture' | translate }}</th>
+                            <th class="table-col __product-name">{{ 'catalog.blades.catalog-items-select.labels.name' | translate }}</th>
+                            <th class="table-col __product-code">{{ 'catalog.blades.catalog-items-select.labels.sku' | translate }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -75,7 +75,8 @@
             <ul class="list __items">
                 <li class="list-item" ng-repeat="data in items track by data.id" ng-class="{'__selected': data.id === selectedNodeId}" ng-click='selectItem($event, data)'>
                     <i class="list-ico fa" ng-class="data.virtual ? 'fa-cloud' : 'fa-folder'"></i>
-                    <span class="list-name">{{data.name + (data.virtual ? ' (virtual)' : '')}}</span>
+                    <span class="list-name" ng-show="data.virtual">{{ 'catalog.blades.catalog-items-select.labels.virtual' | translate:{ name: data.name } }}</span>
+                    <span class="list-name" ng-hide="data.virtual">{{data.name}}</span>
                 </li>
             </ul>
         </div>

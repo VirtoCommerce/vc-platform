@@ -23,24 +23,14 @@ namespace VirtoCommerce.CartModule.Data.Converters
 			retVal.InjectFrom(entity);
 			retVal.Currency = (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), entity.Currency);
 
-			if (entity.Items != null)
-			{
-				retVal.Items = entity.Items.Select(x => x.ToCoreModel()).ToList();
-			}
-			if (entity.Addresses != null)
-			{
-				retVal.Addresses = entity.Addresses.Select(x => x.ToCoreModel()).ToList();
-			}
-			if (entity.Shipments != null)
-			{
-				retVal.Shipments = entity.Shipments.Select(x => x.ToCoreModel()).ToList();
-			}
-			if (entity.Payments != null)
-			{
-				retVal.Payments = entity.Payments.Select(x => x.ToCoreModel()).ToList();
-			}
+			retVal.Items = entity.Items.Select(x => x.ToCoreModel()).ToList();
+			retVal.Addresses = entity.Addresses.Select(x => x.ToCoreModel()).ToList();
+			retVal.Shipments = entity.Shipments.Select(x => x.ToCoreModel()).ToList();
+			retVal.Payments = entity.Payments.Select(x => x.ToCoreModel()).ToList();
 			retVal.TaxDetails = entity.TaxDetails.Select(x => x.ToCoreModel()).ToList();
-			return retVal;
+            retVal.Discounts = entity.Discounts.Select(x => x.ToCoreModel()).ToList();
+
+            return retVal;
 		}
 
 		public static ShoppingCartEntity ToDataModel(this ShoppingCart cart)
@@ -74,7 +64,12 @@ namespace VirtoCommerce.CartModule.Data.Converters
 				retVal.TaxDetails = new ObservableCollection<TaxDetailEntity>();
 				retVal.TaxDetails.AddRange(cart.TaxDetails.Select(x => x.ToDataModel()));
 			}
-			return retVal;
+            if (cart.Discounts != null)
+            {
+                retVal.Discounts = new ObservableCollection<DiscountEntity>();
+                retVal.Discounts.AddRange(cart.Discounts.Select(x => x.ToDataModel()));
+            }
+            return retVal;
 		}
 
 
@@ -92,10 +87,14 @@ namespace VirtoCommerce.CartModule.Data.Converters
 																						  x => x.CustomerId, x => x.CustomerName,
 																						  x => x.IsAnonymous, x => x.IsRecuring, x => x.LanguageCode, x => x.Comment,
 																						  x => x.OrganizationId, x => x.Total, x => x.SubTotal, x => x.ShippingTotal,
-																						  x => x.HandlingTotal, x => x.DiscountTotal, x => x.TaxTotal);
+																						  x => x.HandlingTotal, x => x.DiscountTotal, x => x.TaxTotal, x => x.Coupon);
 			target.InjectFrom(patchInjectionPolicy, source);
 
-			
+			if (string.IsNullOrEmpty(source.Coupon))
+            {
+                target.Coupon = null;
+            }
+
 			if (!source.Items.IsNullCollection())
 			{
 				source.Items.Patch(target.Items, (sourceItem, targetItem) => sourceItem.Patch(targetItem));
@@ -121,7 +120,11 @@ namespace VirtoCommerce.CartModule.Data.Converters
 				var taxDetailComparer = AnonymousComparer.Create((TaxDetailEntity x) => x.Name);
 				source.TaxDetails.Patch(target.TaxDetails, taxDetailComparer, (sourceTaxDetail, targetTaxDetail) => sourceTaxDetail.Patch(targetTaxDetail));
 			}
-		}
+            if (!source.Discounts.IsNullCollection())
+            {
+                source.Discounts.Patch(target.Discounts, new DiscountComparer(), (sourceDiscount, targetDiscount) => sourceDiscount.Patch(targetDiscount));
+            }
+        }
 
 	}
 }

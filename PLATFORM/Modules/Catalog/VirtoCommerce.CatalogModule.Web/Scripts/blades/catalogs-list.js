@@ -50,8 +50,9 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
                 id: 'itemsList1',
                 level: 1,
                 breadcrumbs: blade.breadcrumbs,
-                title: 'Categories & Items',
-                subtitle: 'Browsing ' + (selectedNode != null ? '"' + selectedNode.name + '"' : ''),
+                title: 'catalog.blades.categories-items-list.title',
+                subtitle: 'catalog.blades.categories-items-list.subtitle',
+                subtitleValues: selectedNode != null ? {name: selectedNode.name} : '',
                 catalogId: (selectedNode != null) ? selectedNode.id : null,
                 catalog: selectedNode,
                 controller: 'virtoCommerce.catalogModule.categoriesItemsListController',
@@ -79,7 +80,7 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
             currentEntity: data,
             title: title,
             id: 'catalogEdit',
-            subtitle: 'Catalog details',
+            subtitle: 'catalog.blades.catalog-detail.subtitle',
             deleteFn: onAfterCatalogDeleted,
             controller: 'virtoCommerce.catalogModule.catalogDetailController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/catalog-detail.tpl.html',
@@ -93,7 +94,7 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
             currentEntityId: id,
             currentEntity: data,
             title: title,
-            subtitle: 'Virtual catalog details',
+            subtitle: 'catalog.blades.virtual-catalog.subtitle-virtual',
             deleteFn: onAfterCatalogDeleted,
             id: 'catalogEdit',
             controller: 'virtoCommerce.catalogModule.virtualCatalogDetailController',
@@ -119,14 +120,14 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
 
     blade.toolbarCommands = [
         {
-            name: "Refresh", icon: 'fa fa-refresh',
+            name: "platform.commands.refresh", icon: 'fa fa-refresh',
             executeMethod: blade.refresh,
             canExecuteMethod: function () {
                 return true;
             }
         },
         {
-            name: "Manage", icon: 'fa fa-edit',
+            name: "platform.commands.manage", icon: 'fa fa-edit',
             executeMethod: function () {
                 $scope.editCatalog(selectedNode);
             },
@@ -139,7 +140,7 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
 
     if (authService.checkPermission('catalog:create')) {
         blade.toolbarCommands.splice(1, 0, {
-            name: "Add",
+            name: "platform.commands.add",
             icon: 'fa fa-plus',
             executeMethod: function () {
                 selectedNode = undefined;
@@ -147,8 +148,8 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
 
                 var newBlade = {
                     id: 'listItemChild',
-                    title: 'New catalog',
-                    subtitle: 'Choose new catalog type',
+                    title: 'catalog.blades.catalog-add.title',
+                    subtitle: 'catalog.blades.catalog-add.subtitle',
                     controller: 'virtoCommerce.catalogModule.catalogAddController',
                     template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/catalog-add.tpl.html'
                 };

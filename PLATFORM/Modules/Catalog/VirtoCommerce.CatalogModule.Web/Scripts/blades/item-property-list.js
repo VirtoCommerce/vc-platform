@@ -45,8 +45,8 @@
         if (isDirty()) {
             var dialog = {
                 id: "confirmItemChange",
-                title: "Save changes",
-                message: "The item has been modified. Do you want to save changes?"
+                title: "catalog.dialogs.item-save.title",
+                message: "catalog.dialogs.item-save.message"
             };
             dialog.callback = function (needSave) {
                 if (needSave) {
@@ -66,15 +66,15 @@
             var newBlade = {
                 id: 'editCategoryProperty',
                 currentEntityId: prop.id,
-                title: 'Edit item property',
-                subtitle: 'Enter property information',
+                title: 'catalog.blades.property-detail.title-item',
+                subtitle: 'catalog.blades.property-detail.subtitle-item',
                 controller: 'virtoCommerce.catalogModule.propertyDetailController',
                 template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/property-detail.tpl.html'
             };
             bladeNavigationService.showBlade(newBlade, blade);
         } else {
             editUnmanageable({
-                title: 'Edit item property',
+                title: 'catalog.blades.item-property-detail.title',
                 origEntity: prop
             });
         }
@@ -83,7 +83,7 @@
     function editUnmanageable(bladeData) {
         var newBlade = {
             id: 'editItemProperty',
-            subtitle: 'Enter property information',
+            subtitle: 'catalog.blades.item-property-detail.subtitle',
             controller: 'virtoCommerce.catalogModule.itemPropertyDetailController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/item-property-detail.tpl.html'
         };
@@ -107,7 +107,7 @@
 
     blade.toolbarCommands = [
 		{
-		    name: "Save", icon: 'fa fa-save',
+		    name: "platform.commands.save", icon: 'fa fa-save',
 		    executeMethod: function () {
 		        saveChanges();
 		    },
@@ -117,7 +117,7 @@
 		    permission: 'catalog:update'
 		},
         {
-            name: "Reset", icon: 'fa fa-undo',
+            name: "platform.commands.reset", icon: 'fa fa-undo',
             executeMethod: function () {
                 angular.copy(blade.origItem, blade.item);
             },
@@ -127,11 +127,11 @@
             permission: 'catalog:update'
         },
 		{
-		    name: "Add property", icon: 'fa fa-plus',
+		    name: "catalog.commands.add-property", icon: 'fa fa-plus',
 		    executeMethod: function () {
 		        editUnmanageable({
 		            isNew: true,
-		            title: 'New item property',
+		            title: 'catalog.blades.item-property-detail.title-new',
 		            origEntity: {
 		                type: "Product",
 		                valueType: "ShortText",

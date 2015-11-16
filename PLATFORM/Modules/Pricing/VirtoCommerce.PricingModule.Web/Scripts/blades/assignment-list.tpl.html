@@ -4,8 +4,8 @@
             <div class="table-wrapper" ng-init="setGridOptions({
                     rowTemplate: 'assignment-list.row.html',
                     columnDefs: [
-                                { name: 'name' },
-                                { name: 'priority', width: 72, sort: { direction: uiGridConstants.ASC } },
+                                { name: 'name', displayName: '{{'pricing.blades.assignment-list.labels.name' | translate}}' },
+                                { name: 'priority', displayName: 'zaz' width: 72, sort: { direction: uiGridConstants.ASC } },
                                 { name: 'modifiedDate', displayName: 'Modified', width: 87, cellTemplate: 'am-time-ago.cell.html' },
                                 { name: 'modifiedBy', width: 87, headerTooltip: true }
                     ]
@@ -20,10 +20,10 @@
                                     <span class="check"></span>
                                 </label>
                             </th>
-                            <th class="table-col __product-name">Name</th>
-                            <th class="table-col">Catalog</th>
-                            <th class="table-col __product-range">Priority</th>
-                            <th class="table-col __date">Last modified</th>
+                            <th class="table-col __product-name">{{'pricing.blades.assignment-list.labels.name' | translate}}</th>
+                            <th class="table-col">{{'pricing.blades.assignment-list.labels.catalog' | translate}}</th>
+                            <th class="table-col __product-range">{{'pricing.blades.assignment-list.labels.priority' | translate}}</th>
+                            <th class="table-col __date">{{'pricing.blades.assignment-list.labels.last-modified' | translate}}</th>
                         </tr>
                     </thead>
                     <tbody>

@@ -8,10 +8,7 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 {
 	public class ItemRelation : AuditableEntity
 	{
-		public ItemRelation()
-		{
-			Id = Guid.NewGuid().ToString("N");
-		}
+		
 		[StringLength(64)]
 		public string RelationTypeId { get; set; }
 
@@ -25,17 +22,10 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 
 		#region Navigation Properties
 
-		[StringLength(128)]
-		[ForeignKey("ChildItem")]
-		[Required]
 		public string ChildItemId { get; set; }
 		public virtual Item ChildItem { get; set; }
 
-		[StringLength(128)]
-		[ForeignKey("ParentItem")]
-		[Required]
 		public string ParentItemId { get; set; }
-
 		public virtual Item ParentItem { get; set; }
 		#endregion
 	}

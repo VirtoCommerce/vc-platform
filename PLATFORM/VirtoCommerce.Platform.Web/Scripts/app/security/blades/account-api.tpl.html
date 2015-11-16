@@ -3,7 +3,7 @@
     <div class="blade-inner">
         <div class="inner-block form">
             <div class="form-group">
-                <label class="form-label">Is active</label>
+                <label class="form-label">{{ 'platform.blades.account-api.labels.is-active' | translate }}</label>
                 <div class="form-input">
                     <label class="form-label __switch">
                         <input type="checkbox" ng-model="blade.currentEntity.isActive" />
@@ -12,18 +12,18 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="form-label">Key name</label>
+                <label class="form-label">{{ 'platform.blades.account-api.labels.key-name' | translate }}</label>
                 <div class="form-input">
-                    <input ng-model="blade.currentEntity.name" placeholder="Enter name" focus-on>
+                    <input ng-model="blade.currentEntity.name" placeholder="{{ 'platform.blades.account-api.placeholders.key-name' | translate }}" focus-on>
                 </div>
             </div>
             <div class="form-group">
                 <label class="form-label">
-                    Key type
+                    {{ 'platform.blades.account-api.labels.key-type' | translate }}
                 </label>
                 <div class="form-input">
                     <ui-select ng-model="blade.currentEntity.apiAccountType">
-                        <ui-select-match placeholder="Select...">{{$select.selected}}</ui-select-match>
+                        <ui-select-match placeholder="{{ 'platform.blades.account-api.placeholders.key-type' | translate }}">{{$select.selected}}</ui-select-match>
                         <ui-select-choices repeat="x as x in apiAccountTypes | filter: $select.search">
                             <span ng-bind-html="x | highlight: $select.search"></span>
                         </ui-select-choices>
@@ -35,13 +35,13 @@
                     {{blade.currentEntity.apiAccountType===apiAccountTypes[0]?'App ID':'Key'}}
                 </label>
                 <div class="form-input">
-                    <input ng-model="blade.currentEntity.appId" placeholder="Generate..." readonly>
+                    <input ng-model="blade.currentEntity.appId" placeholder="{{ 'platform.blades.account-api.placeholders.app-id' | translate }}" readonly>
                 </div>
             </div>
             <div class="form-group" ng-if="blade.currentEntity.apiAccountType===apiAccountTypes[0]">
-                <label class="form-label">Secret key</label>
+                <label class="form-label">{{ 'platform.blades.account-api.labels.secret-key' | translate }}</label>
                 <div class="form-input">
-                    <textarea class="form-control" id="secretKey" ng-model="blade.currentEntity.secretKey" placeholder="Generate secret key" readonly></textarea>
+                    <textarea class="form-control" id="secretKey" ng-model="blade.currentEntity.secretKey" placeholder="{{ 'platform.blades.account-api.placeholders.secret-key' | translate }}" readonly></textarea>
                 </div>
             </div>
         </div>

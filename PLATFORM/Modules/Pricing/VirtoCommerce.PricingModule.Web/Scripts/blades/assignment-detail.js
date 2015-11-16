@@ -24,7 +24,7 @@
         if (!$scope.blade.isNew) {
             $scope.blade.toolbarCommands = [
                 {
-                    name: "Save",
+                    name: "platform.commands.save",
                     icon: 'fa fa-save',
                     executeMethod: function () {
                         $scope.saveChanges();
@@ -35,7 +35,7 @@
                     permission: 'pricing:update'
                 },
                 {
-                    name: "Reset",
+                    name: "platform.commands.reset",
                     icon: 'fa fa-undo',
                     executeMethod: function () {
                         angular.copy($scope.blade.origEntity, $scope.blade.currentEntity);
@@ -95,8 +95,8 @@
         if (isDirty()) {
             var dialog = {
                 id: "confirmCurrentBladeClose",
-                title: "Save changes",
-                message: "The catalog assignment has been modified. Do you want to save changes?",
+                title: "pricing.dialogs.assignment-save.title",
+                message: "pricing.dialogs.assignment-save.message",
                 callback: function (needSave) {
                     if (needSave) {
                         $scope.saveChanges();

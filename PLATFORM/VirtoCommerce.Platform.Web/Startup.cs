@@ -80,13 +80,15 @@ namespace VirtoCommerce.Platform.Web
             VirtualRoot = virtualRoot;
 
             _assembliesPath = HostingEnvironment.MapPath(VirtualRoot + "/App_Data/Modules");
+            var localizationsPath = HostingEnvironment.MapPath(VirtualRoot + "/App_Data/Localizations");
+            var platformPath = HostingEnvironment.MapPath(VirtualRoot).EnsureEndSeparator();
             var modulesVirtualPath = VirtualRoot + "/Modules";
             var modulesPhysicalPath = HostingEnvironment.MapPath(modulesVirtualPath).EnsureEndSeparator();
 
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
 
             //Modules initialization
-            var bootstrapper = new VirtoCommercePlatformWebBootstrapper(modulesVirtualPath, modulesPhysicalPath, _assembliesPath);
+            var bootstrapper = new VirtoCommercePlatformWebBootstrapper(modulesVirtualPath, modulesPhysicalPath, _assembliesPath, localizationsPath, platformPath);
             bootstrapper.Run();
 
             var container = bootstrapper.Container;

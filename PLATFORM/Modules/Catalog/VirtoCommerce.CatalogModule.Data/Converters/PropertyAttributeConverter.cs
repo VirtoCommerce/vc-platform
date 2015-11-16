@@ -42,13 +42,9 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		public static dataModel.PropertyAttribute ToDataModel(this coreModel.PropertyAttribute attribute)
 		{
 			var retVal = new dataModel.PropertyAttribute();
-			var id = retVal.Id;
+	
 			retVal.InjectFrom(attribute);
-			if(attribute.Id == null)
-			{
-				retVal.Id = id;
-			}
-
+	
 			retVal.PropertyAttributeName = attribute.Name;
 			retVal.PropertyAttributeValue = attribute.Value;
 			return retVal;

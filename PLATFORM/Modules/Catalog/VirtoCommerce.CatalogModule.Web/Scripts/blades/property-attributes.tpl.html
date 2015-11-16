@@ -3,35 +3,35 @@
         <div class="inner-block">
             <form class="form" ng-submit="add()" name="contextEntityDetailForm" novalidate autocomplete="off">
                 <fieldset>
-                    <legend>New attribute</legend>
+                    <legend>{{ 'catalog.blades.property-attributes.labels.new-attribute' | translate }}</legend>
                     <div class="form-group">
-                        <label class="form-label">Name</label>
+                        <label class="form-label">{{ 'catalog.blades.property-attributes.labels.name' | translate }}</label>
                         <div class="form-input" ng-init="setForm(contextEntityDetailForm);">
-                            <input ng-class="{'error': contextEntityDetailForm.attrName.$invalid && !contextEntityDetailForm.attrName.$pristine}" type="text" placeholder="Please enter name" required ng-model="newValue.name" ui-validate=" 'attributeNameValidator($value)' " name="attrName" focus-on="">
+                            <input ng-class="{'error': contextEntityDetailForm.attrName.$invalid && !contextEntityDetailForm.attrName.$pristine}" type="text" placeholder="{{ 'catalog.blades.property-attributes.placeholders.name' | translate }}" required ng-model="newValue.name" ui-validate=" 'attributeNameValidator($value)' " name="attrName" focus-on="">
                         </div>
                         <div class="form-error" ng-if="contextEntityDetailForm.attrName.$dirty && contextEntityDetailForm.attrName.$invalid">
-                            <span ng-if="contextEntityDetailForm.attrName.$error.required">Required</span>
-                            <span ng-if="contextEntityDetailForm.attrName.$error.validator">Duplicate name found</span>
+                            <span ng-if="contextEntityDetailForm.attrName.$error.required">{{ 'catalog.blades.property-attributes.validations.name-required' | translate }}</span>
+                            <span ng-if="contextEntityDetailForm.attrName.$error.validator">{{ 'catalog.blades.property-attributes.validations.name-duplicate' | translate }}</span>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Value</label>
+                        <label class="form-label">{{ 'catalog.blades.property-attributes.labels.value' | translate }}</label>
                         <div class="form-input">
-                            <input ng-class="{'error': contextEntityDetailForm.attrValue.$invalid && !contextEntityDetailForm.attrValue.$pristine}" type="text" placeholder="Please enter value" required ng-model="newValue.value" name="attrValue">
+                            <input ng-class="{'error': contextEntityDetailForm.attrValue.$invalid && !contextEntityDetailForm.attrValue.$pristine}" type="text" placeholder="{{ 'catalog.blades.property-attributes.placeholders.value' | translate }}" required ng-model="newValue.value" name="attrValue">
                         </div>
                         <div class="form-error" ng-if="contextEntityDetailForm.attrValue.$dirty">
-                            <span ng-if="contextEntityDetailForm.attrValue.$error.required">Required</span>
+                            <span ng-if="contextEntityDetailForm.attrValue.$error.required">{{ 'catalog.blades.property-attributes.validations.value-required' | translate }}</span>
                         </div>
                     </div>
                     <div class="form-group">
                         <button class="btn" ng-disabled="contextEntityDetailForm.$invalid" type="submit">
-                            <span>Add</span>
+                            {{ 'platform.commands.add' | translate }}
                         </button>
                     </div>
                 </fieldset>
             </form>
             <fieldset>
-                <legend>Current attributes</legend>
+                <legend>{{ 'catalog.blades.property-attributes.labels.current-attributes' | translate }}</legend>
                 <div class="table-wrapper">
                     <table class="table">
                         <thead>
@@ -42,8 +42,8 @@
                                         <span class="check"></span>
                                     </label>
                                 </th>
-                                <th class="table-col">Name</th>
-                                <th class="table-col">Value</th>
+                                <th class="table-col">{{ 'catalog.blades.property-attributes.labels.name' | translate }}</th>
+                                <th class="table-col">{{ 'catalog.blades.property-attributes.labels.value' | translate }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -62,7 +62,8 @@
                                     </div>
                                     <ul role="menu" class="menu __context" id="pa_menu_{{$index}}">
                                         <li class="menu-item" ng-click='delete($index)'>
-                                            <i class="menu-ico fa fa-trash-o"></i>Delete
+                                            <i class="menu-ico fa fa-trash-o"></i>
+                                            {{ 'platform.commands.delete' | translate }}
                                         </li>
                                     </ul>
                                 </td>

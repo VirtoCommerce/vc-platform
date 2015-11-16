@@ -4,9 +4,9 @@
         <div class="inner-block">
             <form name="mappingForm" class="form">
                 <fieldset ng-init="setForm(mappingForm)">
-                <legend class="ng-binding">CSV fields automatically mapped to same product properties</legend>
+                <legend class="ng-binding">{{ 'catalog.wizards.catalog-CSV-import.labels.auto-mapping' | translate }}</legend>
                 <div class="form-group">
-                    <a class="clear text-mini __link" ng-click="clearPropertyCsvColumns()" ng-if="blade.importConfiguration.propertyCsvColumns.length > 0">Clear all</a>
+                    <a class="clear text-mini __link" ng-click="clearPropertyCsvColumns()" ng-if="blade.importConfiguration.propertyCsvColumns.length > 0">{{ 'catalog.commands.clear-all' | translate }}</a>
                     <ul class="list __inline __chosen">
                         <li class="list-item" ng-repeat="item in blade.importConfiguration.propertyCsvColumns">
                             <a class="list-remove" ng-click="removePropertyCsvColumn(item)">×</a>
@@ -16,14 +16,14 @@
                 </div>
             </fieldset>
             <fieldset>
-                <legend class="ng-binding">Chose map CSV columns with product fields</legend>
+                <legend class="ng-binding">{{ 'catalog.wizards.catalog-CSV-import.labels.chose-map' | translate }}</legend>
                 <div class="table-wrapper">
                     <table class="table hovered">
                         <thead>
                             <tr>
-                                <th class="table-col">Product property</th>
-                                <th class="table-col">CSV column</th>
-                                <th class="table-col">Custom value</th>
+                                <th class="table-col">{{ 'catalog.wizards.catalog-CSV-import.labels.product-property' | translate }}</th>
+                                <th class="table-col">{{ 'catalog.wizards.catalog-CSV-import.labels.csv-column' | translate }}</th>
+                                <th class="table-col">{{ 'catalog.wizards.catalog-CSV-import.labels.custom-value' | translate }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -33,7 +33,7 @@
                                 </td>
                                 <td class="table-col">
                                     <ui-select ng-required="!mappingItem.customValue && mappingItem.isRequired" ng-model="mappingItem.csvColumnName">
-                                        <ui-select-match allow-clear="true" placeholder="Select ...">{{$select.selected}}</ui-select-match>
+                                        <ui-select-match allow-clear="true" placeholder="{{ 'catalog.wizards.catalog-CSV-import.placeholders.select-column-name' | translate }}">{{$select.selected}}</ui-select-match>
                                         <ui-select-choices repeat="x as x in blade.importConfiguration.csvColumns | filter: $select.search ">
                                             <span ng-bind-html="x | highlight: $select.search"></span>
                                         </ui-select-choices>
@@ -41,7 +41,7 @@
                                 </td>
                                 <td class="table-col __product-name">
                                     <div class="form-input">
-                                        <input ng-required="!mappingItem.csvColumnName && mappingItem.isRequired" ng-model="mappingItem.customValue" placeholder="Default value...">
+                                        <input ng-required="!mappingItem.csvColumnName && mappingItem.isRequired" ng-model="mappingItem.customValue" placeholder="{{ 'catalog.wizards.catalog-CSV-import.placeholders.select-custom-value' | translate }}">
                                     </div>
                                 </td>
                             </tr>

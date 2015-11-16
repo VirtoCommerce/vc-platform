@@ -1,24 +1,25 @@
 ﻿<div class="blade-static">
     <div class="form-group">
         <div class="form-input __search">
-            <input placeholder="Search keyword..." ng-model="blade.searchText" ng-keyup="gridApi.grid.queueGridRefresh()">
+            <input placeholder="Search keyword..." ng-model="searchText">
+            <input placeholder="{{ 'platform.placeholders.search-keyword' | translate }}" ng-model="blade.searchText" ng-keyup="gridApi.grid.queueGridRefresh()">
         </div>
-        <p class="form-count">Count: <span class="count">{{filteredEntitiesCount}}</span></p>
+        <p class="form-count">{{ 'platform.list.count' | translate }}: <span class="count">{{filteredEntitiesCount}}</span></p>
     </div>
 </div>
 <div class="blade-content __medium-wide">
     <div class="blade-inner">
         <div class="inner-block">
-            <div class="text" ng-if="blade.currentEntities.length == 0">No Modules found. Check if virtual directory with alias Modules is configured as described in <a href="http://docs.virtocommerce.com/display/vc2devguide/Source+Code+Getting+Started#SourceCodeGettingStarted-ConfigureIIS" target="_blank">the documentation</a>.</div>
+            <div class="text" ng-if="blade.currentEntities.length == 0">{{ 'platform.blades.modules-list.labels.no-modules-part1' | translate }} <a href="http://docs.virtocommerce.com/display/vc2devguide/Source+Code+Getting+Started#SourceCodeGettingStarted-ConfigureIIS" target="_blank">{{ 'platform.blades.modules-list.labels.no-modules-part2' | translate }}</a>.</div>
             <div class="table-wrapper" ng-show="blade.currentEntities.length > 0">
                 <div ui-grid="gridOptions" ui-grid-save-state ui-grid-resize-columns ui-grid-move-columns></div>
                 <!--<table class="table __normal">
                     <thead>
                         <tr>
-                            <th class="table-col __product-img">Icon</th>
-                            <th class="table-col">Module</th>
-                            <th class="table-col __version">Version</th>
-                            <th class="table-col __author">Author</th>
+                            <th class="table-col __product-img">{{ 'platform.blades.modules-list.labels.icon' | translate }}</th>
+                            <th class="table-col">{{ 'platform.blades.modules-list.labels.module' | translate }}</th>
+                            <th class="table-col __version">{{ 'platform.blades.modules-list.labels.version' | translate }}</th>
+                            <th class="table-col __author">{{ 'platform.blades.modules-list.labels.author' | translate }}</th>
                         </tr>
                     </thead>
                     <tbody>

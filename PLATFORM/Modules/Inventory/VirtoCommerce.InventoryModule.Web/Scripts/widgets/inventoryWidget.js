@@ -17,7 +17,7 @@
             itemId: blade.itemId,
             parentWidgetRefresh: refresh,
             title: blade.title,
-            subtitle: 'Select Fulfillment center to edit inventory',
+            subtitle: 'inventory.widgets.inventoryWidget.blade-subtitle',
             controller: 'virtoCommerce.inventoryModule.inventoryFulfillmentcentersListController',
             template: 'Modules/$(VirtoCommerce.Inventory)/Scripts/blades/inventory-fulfillmentcenters-list.tpl.html'
         };

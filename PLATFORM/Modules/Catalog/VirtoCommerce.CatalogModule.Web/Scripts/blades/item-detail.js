@@ -60,8 +60,8 @@
         if (isDirty()) {
             var dialog = {
                 id: "confirmItemChange",
-                title: "Save changes",
-                message: "The item has been modified. Do you want to save changes?"
+                title: "catalog.dialogs.item-save.title",
+                message: "catalog.dialogs.item-save.message"
             };
             dialog.callback = function (needSave) {
                 if (needSave) {
@@ -85,7 +85,7 @@
 
     blade.toolbarCommands = [
 	    {
-	        name: "Save", icon: 'fa fa-save',
+	        name: "platform.commands.save", icon: 'fa fa-save',
 	        executeMethod: function () {
 	            saveChanges();
 	        },
@@ -95,7 +95,7 @@
 	        permission: 'catalog:update'
 	    },
         {
-            name: "Reset", icon: 'fa fa-undo',
+            name: "platform.commands.reset", icon: 'fa fa-undo',
             executeMethod: function () {
                 angular.copy(blade.origItem, blade.item);
                 $scope.isTitular = blade.item.titularItemId == null;
@@ -121,7 +121,7 @@
             id: 'settingDetailChild',
             isApiSave: true,
             currentEntityId: 'VirtoCommerce.Core.General.TaxTypes',
-            title: 'Tax types',
+            title: 'catalog.blades.setting-dictionary-tax.title',
             parentRefresh: function(data) { $scope.taxTypes = data; },
             controller: 'platformWebApp.settingDictionaryController',
             template: '$(Platform)/Scripts/app/settings/blades/setting-dictionary.tpl.html'

@@ -4,10 +4,10 @@
 <div class="blade-content __gray">
     <div class="blade-inner">
         <div class="inner-block">
-            <form name="itemProperties" class="form" ng-init="propGroups = [{title:'Product properties', type:'product'}, {title:'Variation properties', type:'variation'}]">
+            <form name="itemProperties" class="form" ng-init="propGroups = [{title:'catalog.properties.category', type:'Category'}, {title:'catalog.properties.product', type:'Product'}, {title:'catalog.properties.variation', type:'Variation'}]">
                 <fieldset ng-repeat="propGroup in propGroups" ng-init="setForm(itemProperties)">
                     <legend>
-                        {{propGroup.title}}: <span class="count">{{properties.length}}</span>
+                        {{ propGroup.title | translate }}: <span class="count">{{properties.length}}</span>
                     </legend>
                     <div class="form-group" ng-repeat="prop in properties = (blade.item.properties | filter: {type:propGroup.type})">
                         <label class="form-label">
@@ -18,7 +18,7 @@
                         </label>
                         <va-property2 ng-model="prop" get-prop-values="getPropValues" />
                     </div>
-                    <div ng-if="properties.length == 0">None</div>
+                    <div class="text" ng-if="properties.length == 0">{{ 'catalog.blades.item-property-list.labels.empty-list' | translate }}</div>
                 </fieldset>
             </form>
         </div>

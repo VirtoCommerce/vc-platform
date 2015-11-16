@@ -1,7 +1,7 @@
 ﻿angular.module('platformWebApp')
 .controller('platformWebApp.propertyValueTypeController', ['$scope', function ($scope) {
-	$scope.blade.title = 'Dynamic property value type';
-	$scope.blade.subtitle = 'Change value type';
+    $scope.blade.title = 'platform.blades.property-valueType.title';
+    $scope.blade.subtitle = 'platform.blades.property-valueType.subtitle';
 
     $scope.selectOption = function (option) {
         $scope.blade.currentEntity.valueType = option;

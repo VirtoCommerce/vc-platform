@@ -1,0 +1,39 @@
+﻿{
+  "cart": {
+    "main-menu-title": "Shopping carts",
+    "blades": {
+      "carts-list": {
+        "title": "Shopping carts",
+        "labels": {
+          "customer": "Customer",
+          "items-count": "Items count",
+          "created": "Created",
+          "modified": "Modified",
+          "total": "Total"
+        }
+      },
+      "cart-detail": {
+        "title": "{{name}} 's Shopping cart",
+        "labels": {
+          "name": "Name",
+          "price": "Price",
+          "quantity": "Qty.",
+          "total": "Total"
+        }
+      }
+    },
+    "dialogs": {
+      "carts-delete": {
+        "title": "Delete confirmation",
+        "message": "Are you sure you want to delete selected Carts?"
+      },
+      "cart-save": {
+        "title": "Save changes",
+        "message": "The cart has been modified. Do you want to save changes?"
+      }
+    },
+    "commands": {
+      "open-in-store": "Open in Store"
+    }
+  }
+}

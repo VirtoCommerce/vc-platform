@@ -24,7 +24,7 @@
 	}
 
 	blade.headIcon = 'fa-plus-square-o';
-	blade.title = 'Dynamic object types',
-    blade.subtitle = 'Pick object type to manage dynamic properties',
+    blade.title = 'platform.blades.dynamicObject-list.title',
+    blade.subtitle = 'platform.blades.dynamicObject-list.subtitle',
 	blade.refresh();
 }]);

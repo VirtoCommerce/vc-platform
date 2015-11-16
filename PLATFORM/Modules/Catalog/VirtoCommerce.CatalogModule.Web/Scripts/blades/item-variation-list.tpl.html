@@ -1,15 +1,15 @@
 ﻿<div class="blade-static">
     <div class="form-group">
         <div class="form-input __search">
-            <input placeholder="Search keyword..." ng-model="searchText">
+            <input placeholder="{{ 'platform.placeholders.search-keyword' | translate }}" ng-model="searchText">
         </div>
-        <p class="form-count">Count: <span class="count">{{filteredEntities.length}}</span></p>
+        <p class="form-count">{{ 'platform.list.count' | translate }}: <span class="count">{{filteredEntities.length}}</span></p>
     </div>
 </div>
 <div class="blade-content __medium-wide">
     <div class="blade-inner">
         <div class="inner-block">
-            <div class="text" ng-if="blade.item.variations.length == 0">No Variations yet</div>
+            <div class="text" ng-if="blade.item.variations.length == 0">{{ 'catalog.blades.item-variation-list.labels.no-items' | translate }}</div>
             <div class="table-wrapper" ng-show="blade.item.variations.length > 0">
                 <table class="table">
                     <thead>
@@ -20,9 +20,9 @@
                                     <span class="check"></span>
                                 </label>
                             </th>
-                            <th class="table-col __product-img">Pic</th>
-                            <th class="table-col __product-name">Name</th>
-                            <th class="table-col __product-code">SKU</th>
+                            <th class="table-col __product-img">{{ 'catalog.blades.item-variation-list.labels.picture' | translate }}</th>
+                            <th class="table-col __product-name">{{ 'catalog.blades.item-variation-list.labels.name' | translate }}</th>
+                            <th class="table-col __product-code">{{ 'catalog.blades.item-variation-list.labels.sku' | translate }}</th>
                         </tr>
                     </thead>
                     <tbody>

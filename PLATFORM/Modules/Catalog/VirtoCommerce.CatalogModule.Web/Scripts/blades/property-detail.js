@@ -35,27 +35,31 @@
 
         switch (childType) {
             case 'attr':
-                newBlade.title = b.origEntity.name ? b.origEntity.name : b.currentEntity.name + ' attributes';
-                newBlade.subtitle = 'manage attributes';
+                newBlade.title = 'catalog.blades.property-attributes.title';
+                newBlade.titleValues = {name: b.origEntity.name ? b.origEntity.name : b.currentEntity.name};
+                newBlade.subtitle = 'catalog.blades.property-attributes.subtitle';
                 newBlade.controller = 'virtoCommerce.catalogModule.propertyAttributesController';
                 newBlade.template = 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/property-attributes.tpl.html';
                 break;
             case 'valType':
-                newBlade.title = b.origEntity.name ? b.origEntity.name : b.currentEntity.name + ' value type';
-                newBlade.subtitle = 'Change value type';
+                newBlade.title = 'catalog.blades.property-valueType.title';
+                newBlade.titleValues = {name: b.origEntity.name ? b.origEntity.name : b.currentEntity.name};
+                newBlade.subtitle = 'catalog.blades.property-valueType.subtitle';
                 newBlade.controller = 'virtoCommerce.catalogModule.propertyValueTypeController';
                 newBlade.template = 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/property-valueType.tpl.html';
                 break;
             case 'appliesto':
-                newBlade.title = b.origEntity.name ? b.origEntity.name : b.currentEntity.name + ' applies to';
-                newBlade.subtitle = 'Change to what it applies';
+                newBlade.title = 'catalog.blades.property-type.title';
+                newBlade.titleValues = { name: b.origEntity.name ? b.origEntity.name : b.currentEntity.name };
+                newBlade.subtitle = 'catalog.blades.property-type.subtitle';
                 newBlade.controller = 'virtoCommerce.catalogModule.propertyTypeController';
                 newBlade.template = 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/property-type.tpl.html';
                 newBlade.availablePropertyTypes = b.catalogId ? ['Product', 'Variation', 'Category', 'Catalog'] : ['Product', 'Variation', 'Category'];
                 break;
             case 'dict':
-                newBlade.title = b.origEntity.name ? b.origEntity.name : b.currentEntity.name + ' dictionary';
-                newBlade.subtitle = 'Manage dictionary';
+                newBlade.title = 'catalog.blades.property-dictionary.title';
+                newBlade.titleValues = {name: b.origEntity.name ? b.origEntity.name : b.currentEntity.name};
+                newBlade.subtitle = 'catalog.blades.property-dictionary.subtitle';
                 newBlade.controller = 'virtoCommerce.catalogModule.propertyDictionaryController';
                 newBlade.template = 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/property-dictionary.tpl.html';
                 break;
@@ -92,8 +96,9 @@
     function removeProperty(prop) {
         var dialog = {
             id: "confirmDelete",
-            title: "Delete confirmation",
-            message: "Are you sure you want to delete Property '" + prop.name + "'?",
+            title: "catalog.dialogs.property-delete.title",
+            message: "catalog.dialogs.property-delete.subtitle",
+            messageValues: { name: prop.name },
             callback: function (remove) {
                 if (remove) {
                     $scope.blade.isLoading = true;
@@ -117,8 +122,8 @@
         if (isDirty()) {
             var dialog = {
                 id: "confirmItemChange",
-                title: "Save changes",
-                message: "The property has been modified. Do you want to save changes?",
+                title: "catalog.dialogs.property-save.title",
+                message: "catalog.dialogs.property-save.message",
                 callback: function (needSave) {
                     if (needSave) {
                         saveChanges();
@@ -141,7 +146,7 @@
 
     $scope.blade.toolbarCommands = [
 		{
-		    name: "Save", icon: 'fa fa-save',
+		    name: "platform.commands.save", icon: 'fa fa-save',
 		    executeMethod: function () {
 		        saveChanges();
 		    },
@@ -150,7 +155,7 @@
 		    }
 		},
         {
-            name: "Reset", icon: 'fa fa-undo',
+            name: "platform.commands.reset", icon: 'fa fa-undo',
             executeMethod: function () {
                 angular.copy(b.origEntity, b.currentEntity);
             },
@@ -159,7 +164,7 @@
             }
         },
 		   {
-		       name: "Delete", icon: 'fa fa-trash-o',
+		       name: "platform.commands.delete", icon: 'fa fa-trash-o',
 		       executeMethod: function () {
 		           removeProperty(b.origEntity);
 		       },

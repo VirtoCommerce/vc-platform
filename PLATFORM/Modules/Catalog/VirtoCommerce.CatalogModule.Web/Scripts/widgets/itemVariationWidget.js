@@ -6,7 +6,7 @@
             id: "itemVariationList",
             itemId: $scope.blade.item.id,
             title: $scope.blade.origItem.name,
-            subtitle: 'Item variations',
+            subtitle: 'catalog.widgets.itemVariation.blade-subtitle',
             controller: 'virtoCommerce.catalogModule.itemVariationListController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/item-variation-list.tpl.html',
         };

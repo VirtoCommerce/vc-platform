@@ -8,7 +8,7 @@
               controller: ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
                   var blade = {
                       id: 'settings',
-                      title: 'Settings',
+                      title: 'platform.blades.settingGroup-list.title',
                       //subtitle: 'Manage settings',
                       controller: 'platformWebApp.settingGroupListController',
                       template: '$(Platform)/Scripts/app/settings/blades/settingGroup-list.tpl.html',
@@ -26,7 +26,7 @@
       var menuItem = {
           path: 'configuration/settings',
           icon: 'fa fa-gears',
-          title: 'Settings',
+          title: 'platform.menu.settings',
           priority: 1,
           action: function () { $state.go('workspace.modulesSettings'); },
           permission: 'platform:setting:access'

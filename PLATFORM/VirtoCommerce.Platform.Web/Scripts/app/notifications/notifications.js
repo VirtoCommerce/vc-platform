@@ -14,8 +14,8 @@ angular.module(moduleName)
 			controller: ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
 				var blade = {
 					id: 'notifications',
-					title: 'Notifications',
-					subtitle: 'Working with notifications system',
+					title: 'platform.menu.notifications',
+					subtitle: 'platform.blades.notifications-menu.subtitle',
 					controller: 'platformWebApp.notificationsMenuController',
 					template: '$(Platform)/Scripts/app/notifications/blades/notifications-menu.tpl.html',
 					isClosingDisabled: true
@@ -32,7 +32,7 @@ angular.module(moduleName)
   	var menuItem = {
   		path: 'configuration/notifications',
   		icon: 'fa fa-envelope',
-  		title: 'Notifications',
+  		title: 'platform.menu.notifications',
   		priority: 7,
   		action: function () { $state.go('workspace.notifications'); },
   		//permission: 'platform:???'

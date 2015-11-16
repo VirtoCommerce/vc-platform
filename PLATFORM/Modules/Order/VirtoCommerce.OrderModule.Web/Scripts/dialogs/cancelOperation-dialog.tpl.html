@@ -1,13 +1,13 @@
 ﻿<div class="modal-header">
-    <h3 class="modal-title">Cancel operation</h3>
+    <h3 class="modal-title">{{'orders.dialogs.operation-cancel.title' | translate}}</h3>
 </div>
 <div class="modal-body">
-    <p>    Are you sure you want to cancel the document?</p>
+    <p>{{'orders.dialogs.operation-cancel.message' | translate}}</p>
     <div class="form-input">
-        <textarea placeholder="Please enter cancel reason here..." ng-model="cancelReason"></textarea>
+        <textarea placeholder="{{'orders.dialogs.operation-cancel.placeholders.reason' | translate}}" ng-model="cancelReason"></textarea>
 </div>
 </div>
 <div class="modal-footer">
-    <button class="btn" ng-click="yes()">Confirm</button>
-    <button class="btn" ng-click="cancel()">Cancel</button>
+    <button class="btn" ng-click="yes()">{{'platform.commands.confirm' | translate}}</button>
+    <button class="btn" ng-click="cancel()">{{'platform.commands.cancel' | translate}}</button>
 </div>

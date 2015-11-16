@@ -72,8 +72,8 @@
         if (isDirty()) {
             var dialog = {
                 id: "confirmItemChange",
-                title: "Save changes",
-                message: "The SEO information has been modified. Do you want to save changes?"
+                title: "catalog.dialogs.seo-save.title",
+                message: "catalog.dialogs.seo-save.message"
             };
             dialog.callback = function (needSave) {
                 if (needSave) {
@@ -97,7 +97,7 @@
         blade.headIcon = 'fa-globe';
         blade.toolbarCommands = [
             {
-                name: "Save", icon: 'fa fa-save',
+                name: "platform.commands.save", icon: 'fa fa-save',
                 executeMethod: function () {
                     $scope.saveChanges();
                 },
@@ -107,7 +107,7 @@
                 permission: 'catalog:update'
             },
             {
-                name: "Reset", icon: 'fa fa-undo',
+                name: "platform.commands.reset", icon: 'fa fa-undo',
                 executeMethod: function () {
                     angular.copy(blade.origItem, $scope.seoInfos);
                 },
@@ -119,7 +119,7 @@
         ];
     }
 
-    blade.subtitle = 'SEO information';
+    blade.subtitle = 'catalog.blades.seo-detail.subtitle';
 
     $scope.$watch('blade.parentBlade.currentEntity', initializeBlade); // for category
     $scope.$watch('blade.parentBlade.item', initializeBlade);          // for item

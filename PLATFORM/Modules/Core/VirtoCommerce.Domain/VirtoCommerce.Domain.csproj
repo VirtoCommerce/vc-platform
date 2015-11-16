@@ -51,7 +51,6 @@
   <ItemGroup>
     <Compile Include="Cart\Events\CartChangeEvent.cs" />
     <Compile Include="Cart\Model\LineItem.cs" />
-    <Compile Include="Cart\Model\Coupon.cs" />
     <Compile Include="Cart\Model\Payment.cs" />
     <Compile Include="Cart\Model\SearchCriteria.cs" />
     <Compile Include="Cart\Model\Discount.cs" />

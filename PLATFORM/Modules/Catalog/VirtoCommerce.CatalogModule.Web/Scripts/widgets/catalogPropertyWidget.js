@@ -8,7 +8,7 @@
             currentEntityId: blade.currentEntityId,
             currentEntity: blade.currentEntity,
             title: blade.title,
-            subtitle: 'Catalog properties',
+            subtitle: 'catalog.widgets.catalogProperty.blade-subtitle',
             controller: 'virtoCommerce.catalogModule.catalogPropertyListController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/catalog-property-list.tpl.html'
         };

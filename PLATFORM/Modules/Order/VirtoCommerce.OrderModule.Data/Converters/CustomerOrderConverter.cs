@@ -71,7 +71,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			}
 			if (cart.Discounts != null)
 			{
-				retVal.Discount = cart.Discounts.First().ToCoreModel();
+				retVal.Discount = cart.Discounts.Select(x=>x.ToCoreModel()).FirstOrDefault();
 			}
 			if (cart.Addresses != null)
 			{

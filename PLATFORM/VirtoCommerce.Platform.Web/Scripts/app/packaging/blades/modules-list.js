@@ -20,7 +20,7 @@
 
             var newBlade = {
                 id: 'moduleDetails',
-                title: 'Module information',
+            title: 'platform.blades.module-detail.title',
                 currentEntityId: id,
                 controller: 'platformWebApp.moduleDetailController',
                 template: '$(Platform)/Scripts/app/packaging/blades/module-detail.tpl.html'
@@ -39,7 +39,7 @@
 
         blade.toolbarCommands = [
             {
-                name: "Refresh", icon: 'fa fa-refresh',
+            name: "platform.commands.refresh", icon: 'fa fa-refresh',
                 executeMethod: function () {
                     blade.refresh();
                 },
@@ -48,7 +48,7 @@
                 }
             },
             {
-                name: "Install", icon: 'fa fa-plus',
+            name: "platform.commands.install", icon: 'fa fa-plus',
                 executeMethod: function () {
                     openAddEntityBlade();
                 },
@@ -64,7 +64,7 @@
 
             var newBlade = {
                 id: "moduleWizard",
-                title: "Module install",
+            title: "platform.blades.module-detail.title-install",
                 // subtitle: '',
                 mode: 'install',
                 controller: 'platformWebApp.installWizardController',

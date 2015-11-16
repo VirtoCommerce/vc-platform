@@ -1,6 +1,7 @@
 ﻿<div class="gridster-cnt" ng-click="openBlade()">
     <div class="cnt-inner">
         <div class="list-count">{{dynamicPropertyCount}}</div>
-        <div class="list-t">{{ widget.title ? widget.title : 'Dynamic properties' }}</div>
+        <div class="list-t" ng-show="widget.title">widget.title</div>
+        <div class="list-t" ng_hide="widget.title">{{ 'platform.widgets.dynamicProperty.title' | translate }}</div>
     </div>
 </div>

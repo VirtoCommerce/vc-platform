@@ -188,6 +188,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Localizations\en.VirtoCommerce.Orders.json" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>

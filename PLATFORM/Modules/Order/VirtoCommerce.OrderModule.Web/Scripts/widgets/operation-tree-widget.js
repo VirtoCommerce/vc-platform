@@ -16,8 +16,9 @@
 			{
 				newBlade = {
 					id: 'operationDetail',
-					title: 'Shipment #' + operation.number,
-					subtitle: 'Edit shipment details',
+					title: 'orders.blades.shipment-detail.title',
+					titleValues: { number: operation.number },
+					subtitle: 'orders.blades.shipment-detail.subtitle',
 					customerOrder: $scope.widget.blade.customerOrder,
 					currentEntity: operation,
 					isClosingDisabled: false,
@@ -29,8 +30,9 @@
 			else if (operation.operationType.toLowerCase() == 'customerorder') {
 				newBlade = {
 					id: 'operationDetail',
-					title: operation.customer + '\'s Customer Order',
-					subtitle: 'Edit order details and related documents',
+					title: 'orders.blades.customerOrder-detail.title',
+					titleValues: { customer: customer },
+					subtitle: 'orders.blades.customerOrder-detail.subtitle',
 					customerOrder: $scope.widget.blade.customerOrder,
 					currentEntity: operation,
 					disableOpenAnimation: true,
@@ -41,8 +43,9 @@
 			else if (operation.operationType.toLowerCase() == 'paymentin') {
 				newBlade = {
 					id: 'operationDetail',
-					title: 'Incoming payment #' + operation.number,
-					subtitle: 'Edit payment details and related documents',
+					title: 'orders.blades.payment-detail.title',
+					titleValues: { number: operation.number },
+					subtitle: 'orders.blades.payment-detail.subtitle',
 					customerOrder: $scope.widget.blade.customerOrder,
 					currentEntity: operation,
 					disableOpenAnimation: true,

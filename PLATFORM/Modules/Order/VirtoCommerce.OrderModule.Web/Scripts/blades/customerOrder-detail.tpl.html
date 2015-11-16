@@ -6,7 +6,7 @@
                 <div class="reason" ng-bind="blade.currentEntity.cancelReason" ng-if="blade.currentEntity.isCancelled"></div>
             </div>
             <div class="form-group">
-                <label class="form-label">Approved</label>
+                <label class="form-label">{{ 'orders.blades.customerOrder-detail.labels.approved' | translate }}</label>
                 <div class="form-input">
                     <label class="form-label __switch">
                         <input type="checkbox" ng-model="blade.currentEntity.isApproved" />
@@ -17,14 +17,14 @@
             <div class="form columns clearfix">
                 <div class="column">
                     <div class="form-group">
-                        <label class="form-label">Customer order number</label>
+                        <label class="form-label">{{ 'orders.blades.customerOrder-detail.labels.order-number' | translate }}</label>
                         <div class="form-input">
                             <input required type="text" ng-model="blade.currentEntity.number">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="form-label">
-                            Status
+                            {{ 'orders.blades.customerOrder-detail.labels.status' | translate }}
                             <a href="" ng-click="openStatusSettingManagement()">
                                 <i class="form-ico fa fa-pencil"></i>
                             </a>
@@ -32,7 +32,7 @@
                         </label>
                         <div class="form-input">
                             <ui-select ng-model="blade.currentEntity.status">
-                                <ui-select-match placeholder="Select ...">{{$select.selected}}</ui-select-match>
+                                <ui-select-match placeholder="{{ 'orders.blades.customerOrder-detail.placeholders.status' | translate }}">{{$select.selected}}</ui-select-match>
                                 <ui-select-choices repeat="x as x in statuses | filter: $select.search ">
                                     <span ng-bind-html="x | highlight: $select.search"></span>
                                 </ui-select-choices>
@@ -40,10 +40,10 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Store</label>
+                        <label class="form-label">{{ 'orders.blades.customerOrder-detail.labels.store' | translate }}</label>
                         <div class="form-input">
                             <ui-select ng-model="blade.currentEntity.storeId" ng-disabled="disabled">
-                                <ui-select-match placeholder="Select or search a country in the list...">{{$select.selected.name}}</ui-select-match>
+                                <ui-select-match placeholder="{{ 'orders.blades.customerOrder-detail.placeholders.store' | translate }}">{{$select.selected.name}}</ui-select-match>
                                 <ui-select-choices repeat="store.id as store in stores | filter: { name: $select.search }">
                                     <span ng-bind-html="store.name | highlight: $select.search"></span>
                                 </ui-select-choices>
@@ -53,13 +53,13 @@
                 </div>
                 <div class="column">
                     <div class="form-group">
-                        <label class="form-label">from</label>
+                        <label class="form-label">{{ 'orders.blades.customerOrder-detail.labels.from' | translate }}</label>
                         <div class="form-input">
                             <div class="form-text">{{blade.currentEntity.createdDate | date:'short'}}</div>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Channel</label>
+                        <label class="form-label">{{ 'orders.blades.customerOrder-detail.labels.channel' | translate }}</label>
                         <div class="form-input">
                             <select ng-model="blade.currentEntity.channelId">
                             
@@ -67,7 +67,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Customer</label>
+                        <label class="form-label">{{ 'orders.blades.customerOrder-detail.labels.customer' | translate }}</label>
                         <div class="form-input">
                             <input required type="text" ng-model="blade.currentEntity.customerName">
                         </div>

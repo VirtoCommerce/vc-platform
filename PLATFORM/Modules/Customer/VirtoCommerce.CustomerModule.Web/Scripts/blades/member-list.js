@@ -13,7 +13,7 @@
         var preventOrganizationListingOnce; // prevent from unwanted additional actions after command was activated from context menu
 
         var blade = $scope.blade;
-        blade.title = 'Organizations & Customers';
+    blade.title = 'customer.blades.member-list.title';
 
         blade.refresh = function () {
             blade.isLoading = true;
@@ -116,14 +116,14 @@
                 currentEntityId: listItem.id,
                 isOrganization: false,
                 title: title,
-                subtitle: 'Customer details',
+            subtitle: 'customer.blades.customer-detail.subtitle',
                 controller: 'virtoCommerce.customerModule.memberDetailController',
                 template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/customer-detail.tpl.html'
             };
 
             if (listItem.memberType === 'Organization') {
                 newBlade.isOrganization = true;
-                newBlade.subtitle = 'Organization details';
+            newBlade.subtitle = 'customer.blades.organization-detail.subtitle';
                 newBlade.template = 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/organization-detail.tpl.html';
             }
 
@@ -147,8 +147,8 @@
         function deleteList(selection) {
             var dialog = {
                 id: "confirmDeleteItem",
-                title: "Delete confirmation",
-                message: "Are you sure you want to delete selected Organizations or Customers?",
+            title: "customer.dialogs.organizations-delete.title",
+            message: "customer.dialogs.organizations-delete.subtitle",
                 callback: function (remove) {
                     if (remove) {
                         bladeNavigationService.closeChildrenBlades(blade, function () {
@@ -186,7 +186,8 @@
                     var newBlade = {
                         id: 'memberList',
                         breadcrumbs: blade.breadcrumbs,
-                        subtitle: 'Browsing "' + listItem.displayName + '"',
+                    subtitle: 'customer.blades.member-list.subtitle',
+                    subtitleValues: { name: listItem.displayName },
                         currentEntity: listItem,
                         disableOpenAnimation: true,
                         controller: blade.controller,
@@ -204,7 +205,7 @@
 
         blade.toolbarCommands = [
             {
-                name: "Refresh", icon: 'fa fa-refresh',
+            name: "platform.commands.refresh", icon: 'fa fa-refresh',
                 executeMethod: function () {
                     blade.refresh();
                 },
@@ -213,12 +214,12 @@
                 }
             },
             {
-                name: "Add", icon: 'fa fa-plus',
+            name: "platform.commands.add", icon: 'fa fa-plus',
                 executeMethod: function () {
                     var newBlade = {
                         id: 'listItemChild',
-                        title: 'New member',
-                        subtitle: 'Choose new member type',
+                    title: 'customer.blades.member-add.title',
+                    subtitle: 'customer.blades.member-add.subtitle',
                         controller: 'virtoCommerce.customerModule.memberAddController',
                         template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/member-add.tpl.html'
                     };
@@ -230,7 +231,7 @@
                 permission: 'customer:create'
             },
             {
-                name: "Manage", icon: 'fa fa-edit',
+            name: "platform.commands.manage", icon: 'fa fa-edit',
                 executeMethod: function () {
                     var listItem = getFirstChecked();
                     blade.showDetailBlade(listItem, listItem.displayName);
@@ -239,7 +240,7 @@
                 permission: 'customer:update'
             },
             {
-                name: "Delete", icon: 'fa fa-trash-o',
+            name: "platform.commands.delete", icon: 'fa fa-trash-o',
                 executeMethod: function () { deleteList($scope.gridApi.selection.getSelectedRows()); },
                 canExecuteMethod: function () {
                     return $scope.gridApi && _.any($scope.gridApi.selection.getSelectedRows());

@@ -57,8 +57,8 @@
         function deleteEntry() {
             var dialog = {
                 id: "confirmDelete",
-                title: "Delete confirmation",
-                message: "Are you sure you want to delete this Store?",
+                title: "stores.dialogs.store-delete.title",
+                message: "stores.dialogs.store-delete.message",
                 callback: function (remove) {
                     if (remove) {
                         blade.isLoading = true;
@@ -84,8 +84,8 @@
             if (isDirty()) {
                 var dialog = {
                     id: "confirmCurrentBladeClose",
-                    title: "Save changes",
-                    message: "The Store has been modified. Do you want to save changes?"
+                    title: "stores.dialogs.store-save.title",
+                    message: "stores.dialogs.store-save.message"
                 };
                 dialog.callback = function (needSave) {
                     if (needSave) {
@@ -110,7 +110,7 @@
 
         blade.toolbarCommands = [
             {
-                name: "Save",
+                name: "platform.commands.save",
                 icon: 'fa fa-save',
                 executeMethod: function () {
                     $scope.saveChanges();
@@ -121,7 +121,7 @@
                 permission: 'store:update'
             },
             {
-                name: "Reset",
+                name: "platform.commands.reset",
                 icon: 'fa fa-undo',
                 executeMethod: function () {
                     angular.copy(blade.origEntity, blade.currentEntity);
@@ -132,7 +132,7 @@
                 permission: 'store:update'
             },
             {
-                name: "Delete", icon: 'fa fa-trash-o',
+                name: "platform.commands.delete", icon: 'fa fa-trash-o',
                 executeMethod: function () {
                     deleteEntry();
                 },

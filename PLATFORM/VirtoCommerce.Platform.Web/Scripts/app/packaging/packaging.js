@@ -8,8 +8,8 @@
               controller: ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
                   var blade = {
                       id: 'modules',
-                      title: 'Modules',
-                      subtitle: 'Manage installed modules',
+                      title: 'platform.blades.modules-list.title',
+                      subtitle: 'platform.blades.modules-list.subtitle',
                       controller: 'platformWebApp.modulesListController',
                       template: '$(Platform)/Scripts/app/packaging/blades/modules-list.tpl.html',
                       isClosingDisabled: true
@@ -26,7 +26,7 @@
       var menuItem = {
           path: 'configuration/packaging',
           icon: 'fa fa-cubes',
-          title: 'Modules',
+          title: 'platform.menu.modules',
           priority: 6,
           action: function () { $state.go('workspace.packaging'); },
           permission: 'platform:module:access'

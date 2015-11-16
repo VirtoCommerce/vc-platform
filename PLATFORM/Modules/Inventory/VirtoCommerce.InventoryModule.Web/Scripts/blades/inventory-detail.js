@@ -44,8 +44,8 @@
         if (isDirty()) {
             var dialog = {
                 id: "confirmCurrentBladeClose",
-                title: "Save changes",
-                message: "Inventory has been modified. Do you want to save changes?",
+                title: "inventory.dialogs.inventory-save.title",
+                message: "inventory.dialogs.inventory-save.message",
                 callback: function (needSave) {
                     if (needSave) {
                         $scope.saveChanges();
@@ -64,7 +64,7 @@
 
     $scope.blade.toolbarCommands = [
         {
-            name: "Save", icon: 'fa fa-save',
+            name: "platform.commands.save", icon: 'fa fa-save',
             executeMethod: function () {
                 $scope.saveChanges();
             },
@@ -74,7 +74,7 @@
             permission: 'customer:update'
         },
         {
-            name: "Reset", icon: 'fa fa-undo',
+            name: "platform.commands.reset", icon: 'fa fa-undo',
             executeMethod: function () {
                 angular.copy($scope.blade.origEntity, $scope.blade.currentEntity);
             },

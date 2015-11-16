@@ -1,7 +1,7 @@
 ﻿<div class="blade-content __medium-wide">
     <div class="blade-inner">
         <div class="inner-block">
-            <p class="note">Set the order how associated items appear sorted in web store. Drag and drop the products to change the order.</p>
+            <p class="note">{{ 'catalog.blades.item-associations-list.labels.sorting-prompt' | translate }}</p>
             <div class="table-wrapper">
                 <table class="table" ng-if="blade.currentEntities.length > 0">
                     <thead>
@@ -12,9 +12,9 @@
                                     <span class="check"></span>
                                 </label>
                             </th>
-                            <th class="table-col">Img</th>
-                            <th class="table-col">Product</th>
-                            <th class="table-col">Group</th>
+                            <th class="table-col">{{ 'catalog.blades.item-associations-list.labels.picture' | translate }}</th>
+                            <th class="table-col">{{ 'catalog.blades.item-associations-list.labels.product' | translate }}</th>
+                            <th class="table-col">{{ 'catalog.blades.item-associations-list.labels.group' | translate }}</th>
                         </tr>
                     </thead>
                     <tbody ui-sortable="sortableOptions" ng-model="blade.currentEntities">

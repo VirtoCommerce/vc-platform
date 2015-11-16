@@ -7,10 +7,11 @@
 		var objectTypeId = 'Store';
 		var newBlade = {
 			id: 'storeNotificationLogWidgetChild',
-			title: 'Store ' + blade.currentEntity.id + ' notification sending log',
+			title: 'stores.widgets.storeNotificationsLogWidget.blade-title',
+			titleValues: { id: blade.currentEntity.id },
 			objectId: objectId,
 			objectTypeId: objectTypeId,
-			subtitle: 'Notifications log',
+			subtitle: 'stores.widgets.storeNotificationsLogWidget.blade-subtitle',
 			controller: 'platformWebApp.notificationsJournalController',
 			template: '$(Platform)/Scripts/app/notifications/blades/notifications-journal.tpl.html'
 		};

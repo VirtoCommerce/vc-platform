@@ -2,9 +2,9 @@
     <va-breadcrumb ng-model="blade.breadcrumbs" blade-id="blade.id"></va-breadcrumb>
     <div class="form-group">
         <div class="form-input __search">
-            <input placeholder="Search keyword..." ng-model="filter.searchKeyword" ng-keyup="$event.which === 13 && blade.refresh()">
+            <input placeholder="{{'platform.placeholders.search-keyword' | translate}}" ng-model="filter.searchKeyword" ng-keyup="$event.which === 13 && blade.refresh()">
         </div>
-        <p class="form-count">Count: <span class="count">{{pageSettings.totalItems}}</span></p>
+        <p class="form-count">{{'platform.list.count' | translate}}: <span class="count">{{pageSettings.totalItems}}</span></p>
     </div>
 </div>
 <div class="blade-static __bottom" ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems" ng-include="'pagerTemplate.html'"></div>
@@ -34,9 +34,9 @@
                                     <span class="check"></span>
                                 </label>
                             </th>
-                            <th class="table-col __product-img">Pic</th>
-                            <th class="table-col __product-name">Name</th>
-                            <th class="table-col __product-code">SKU</th>
+                            <th class="table-col __product-img">{{'catalog.blades.categories-items-list.labels.picture' | translate}}</th>
+                            <th class="table-col __product-name">{{'catalog.blades.categories-items-list.labels.name' | translate}}</th>
+                            <th class="table-col __product-code">{{'catalog.blades.categories-items-list.labels.sku' | translate}}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -56,15 +56,15 @@
                             <td class="table-col __product-name" ng-click='selectItem($event, data)'>
                                 <i class="table-ico fa fa-link" ng-if="hasLinks(data)" title="This category is linked"></i>
                                 <div class="table-t">{{data.name}}</div>
-                                <span class="table-status" ng-if="data.type==='category' && !data.isActive">Inactive</span>
+                                <span class="table-status" ng-if="data.type==='category' && !data.isActive">{{ 'catalog.blades.categories-items-list.labels.inactive' | translate }}</span>
                                 <div class="table-descr">{{data.productType}}</div>
 
                                 <ul class="menu __context" role="menu" id="cil_menu_{{data.id+blade.level}}">
                                     <li class="menu-item" ng-click='edit(data)'>
-                                        <i class="menu-ico fa fa-edit"></i> Manage
+                                        <i class="menu-ico fa fa-edit"></i> {{ 'platform.commands.manage' | translate }}
                                     </li>
                                     <li class="menu-item" ng-click='delete()'>
-                                        <i class="menu-ico fa fa-trash-o"></i> Delete
+                                        <i class="menu-ico fa fa-trash-o"></i> {{ 'platform.commands.delete' | translate }}
                                     </li>
                                 </ul>
                             </td>
@@ -75,11 +75,9 @@
                     </tbody>
                 </table>-->
             </div>
-            <div class="note" ng-if="!items.length">
-                No data
+            <div class="note" ng-if="!items.length">{{ 'platform.list.no-data' | translate }}</div>
             </div>
         </div>
-    </div>
 </div>
 
 <script type="text/ng-template" id="item-list.row.html">

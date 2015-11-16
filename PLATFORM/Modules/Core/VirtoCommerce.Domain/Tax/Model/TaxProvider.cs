@@ -18,7 +18,7 @@ namespace VirtoCommerce.Domain.Tax.Model
         {
             Id = Guid.NewGuid().ToString("N");
             Code = code;
-            IsActive = true;
+            IsActive = false;
         }
 
         /// <summary>

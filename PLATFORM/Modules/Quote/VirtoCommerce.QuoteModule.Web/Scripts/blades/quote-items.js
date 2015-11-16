@@ -77,14 +77,14 @@
         var newBlade = {
             id: "CatalogItemsSelect",
             currentEntities: blade.currentEntity,
-            title: "Add item to quote",
+            title: "quotes.blades.catalog-items-select.title",
             controller: 'virtoCommerce.catalogModule.catalogItemSelectController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/common/catalog-items-select.tpl.html',
             options: options,
             breadcrumbs: [],
             toolbarCommands: [
 			  {
-			      name: "Add selected", icon: 'fa fa-plus',
+			      name: "quotes.commands.add-selected", icon: 'fa fa-plus',
 			      executeMethod: function (blade) {
 			          addProducts(selectedProducts);
 			          selectedProducts.length = 0;
@@ -103,7 +103,7 @@
 
     blade.toolbarCommands = [
         {
-            name: "Add item", icon: 'fa fa-plus',
+            name: "quotes.commands.add-item", icon: 'fa fa-plus',
             executeMethod: function () {
                 openAddEntityWizard();
             },
@@ -113,7 +113,7 @@
             permission: 'quote:update'
         },
         {
-            name: "Remove", icon: 'fa fa-trash-o',
+            name: "platform.commands.remove", icon: 'fa fa-trash-o',
             executeMethod: function () {
                 var lineItems = blade.currentEntity.items;
                 blade.currentEntity.items = _.difference(lineItems, _.filter(lineItems, function (x) { return x.$selected }));
