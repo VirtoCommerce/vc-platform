@@ -21,6 +21,7 @@ using VirtoCommerce.LiquidThemeEngine.Binders;
 using VirtoCommerce.LiquidThemeEngine.Objects;
 using VirtoCommerce.Storefront;
 using VirtoCommerce.Storefront.App_Start;
+using VirtoCommerce.Storefront.Builders;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Owin;
@@ -68,6 +69,8 @@ namespace VirtoCommerce.Storefront
             container.RegisterType<ICatalogModuleApi, CatalogModuleApi>();
             container.RegisterType<IPricingModuleApi, PricingModuleApi>();
             container.RegisterType<IInventoryModuleApi, InventoryModuleApi>();
+            container.RegisterType<IShoppingCartModuleApi, ShoppingCartModuleApi>();
+            container.RegisterType<ICartBuilder, CartBuilder>();
 
             container.RegisterType<IStorefrontUrlBuilder, StorefrontUrlBuilder>();
             if (_managerAssembly != null)

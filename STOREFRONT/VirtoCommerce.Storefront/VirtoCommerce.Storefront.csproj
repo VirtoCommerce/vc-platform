@@ -218,17 +218,21 @@
     <Compile Include="App_Start\AuthConfig.cs" />
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="App_Start\UnityMvcActivator.cs" />
+    <Compile Include="Builders\CartBuilder.cs" />
+    <Compile Include="Builders\ICartBuilder.cs" />
     <Compile Include="Common\StorefrontConstants.cs" />
     <Compile Include="Common\DownloadResult.cs" />
     <Compile Include="Common\FileExtensionMapper.cs" />
     <Compile Include="Common\StorefrontUrlBuilder.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AssetsController.cs" />
+    <Compile Include="Controllers\CartController.cs" />
     <Compile Include="Controllers\CommonController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Converters\AddressConverter.cs" />
     <Compile Include="Converters\AssetConverter.cs" />
+    <Compile Include="Converters\CartConverter.cs" />
     <Compile Include="Converters\CategoryLinkConverter.cs" />
     <Compile Include="Converters\CustomerConverter.cs" />
     <Compile Include="Converters\EditorialReviewConverter.cs" />
@@ -376,7 +380,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Builders\" />
     <Folder Include="Models\" />
     <Folder Include="Views\Account\" />
     <Folder Include="Views\Common\" />

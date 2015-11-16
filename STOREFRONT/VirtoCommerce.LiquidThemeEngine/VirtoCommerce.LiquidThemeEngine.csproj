@@ -89,8 +89,11 @@
     <Compile Include="Filters\TranslationFilter.cs" />
     <Compile Include="Filters\CommerceFilters.cs" />
     <Compile Include="Filters\CommonFilters.cs" />
+    <Compile Include="Objects\Cart.cs" />
     <Compile Include="Objects\Form.cs" />
     <Compile Include="Objects\FormErrors.cs" />
+    <Compile Include="Objects\Fulfillment.cs" />
+    <Compile Include="Objects\LineItem.cs" />
     <Compile Include="Tags\FormTag.cs" />
     <Compile Include="Objects\Image.cs" />
     <Compile Include="Objects\ItemCollections.cs" />

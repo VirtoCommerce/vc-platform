@@ -11,6 +11,7 @@ using Microsoft.Owin;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.LiquidThemeEngine;
+using VirtoCommerce.Storefront.Builders;
 using VirtoCommerce.Storefront.Common;
 using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
@@ -26,8 +27,8 @@ namespace VirtoCommerce.Storefront.Owin
         private readonly IStoreModuleApi _storeApi;
         private readonly IVirtoCommercePlatformApi _platformApi;
         private readonly ICustomerManagementModuleApi _customerApi;
+        private readonly ICartBuilder _cartBuilder;
         private readonly UnityContainer _container;
-   
 
         public WorkContextOwinMiddleware(OwinMiddleware next, UnityContainer container)
             : base(next)
@@ -35,20 +36,23 @@ namespace VirtoCommerce.Storefront.Owin
             _storeApi = container.Resolve<IStoreModuleApi>();
             _platformApi = container.Resolve<IVirtoCommercePlatformApi>();
             _customerApi = container.Resolve<ICustomerManagementModuleApi>();
+            _cartBuilder = container.Resolve<ICartBuilder>();
             _container = container;
         }
 
         public override async Task Invoke(IOwinContext context)
         {
             var workContext = _container.Resolve<WorkContext>();
-            // Initialize common properties: stores, user profile, cart
+            // Initialize common properties: stores, user profile
             workContext.AllStores = await GetAllStoresAsync();
+            MaintainAnonymousCustomerCookie(context);
             workContext.Customer = await GetCustomerAsync(context);
 
-            // Initialize request specific properties: store, language, currency
+            // Initialize request specific properties: store, language, currency, cart
             workContext.CurrentStore = GetStore(context, workContext.AllStores);
             workContext.CurrentLanguage = GetLanguage(context, workContext.AllStores, workContext.CurrentStore);
             workContext.CurrentCurrency = GetCurrency(context, workContext.CurrentStore);
+            workContext.CurrentCart = (await _cartBuilder.GetOrCreateNewTransientCartAsync(workContext.CurrentStore, workContext.Customer, workContext.CurrentCurrency)).Cart;
 
             await Next.Invoke(context);
         }
@@ -64,8 +68,6 @@ namespace VirtoCommerce.Storefront.Owin
         {
             var customer = new Customer();
 
-            var anonymousCustomerCookie = context.Request.Cookies[StorefrontConstants.AnonymousCustomerIdCookie];
-
             if (context.Authentication.User.Identity.IsAuthenticated)
             {
                 var user = await _platformApi.SecurityGetUserByNameAsync(context.Authentication.User.Identity.Name);
@@ -75,23 +77,37 @@ namespace VirtoCommerce.Storefront.Owin
                     if (contact != null)
                     {
                         customer = contact.ToWebModel();
-                        context.Response.Cookies.Append(StorefrontConstants.AnonymousCustomerIdCookie, string.Empty, new CookieOptions { Expires = DateTime.UtcNow.AddDays(-1) });
                     }
                 }
             }
             else
             {
-                if (string.IsNullOrEmpty(anonymousCustomerCookie))
-                {
-                    anonymousCustomerCookie = Guid.NewGuid().ToString();
-                    context.Response.Cookies.Append(StorefrontConstants.AnonymousCustomerIdCookie, anonymousCustomerCookie, new CookieOptions { Expires = DateTime.UtcNow.AddDays(30) });
-                }
-
-                customer.Id = anonymousCustomerCookie;
+                customer.Id = context.Request.Cookies[StorefrontConstants.AnonymousCustomerIdCookie];
                 customer.Name = "Anonymous";
             }
 
             return customer;
+        }
+
+        // TODO: Rethink usage of this method - possibly should be merged with GetCustomer
+        protected virtual void MaintainAnonymousCustomerCookie(IOwinContext context)
+        {
+            string anonymousCustomerId = context.Request.Cookies[StorefrontConstants.AnonymousCustomerIdCookie];
+
+            if (context.Authentication.User.Identity.IsAuthenticated)
+            {
+                // Remove anonymous customer cookie for registered customer
+                context.Response.Cookies.Append(StorefrontConstants.AnonymousCustomerIdCookie, string.Empty, new CookieOptions { Expires = DateTime.UtcNow.AddDays(-30) });
+            }
+            else
+            {
+                if (string.IsNullOrEmpty(anonymousCustomerId))
+                {
+                    // Add anonymous customer cookie for nonregistered customer
+                    anonymousCustomerId = Guid.NewGuid().ToString();
+                    context.Response.Cookies.Append(StorefrontConstants.AnonymousCustomerIdCookie, anonymousCustomerId, new CookieOptions { Expires = DateTime.UtcNow.AddDays(30) });
+                }
+            }
         }
 
         protected virtual Store GetStore(IOwinContext context, ICollection<Store> stores)

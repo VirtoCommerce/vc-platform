@@ -56,6 +56,14 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
             }
         }
 
+        public Cart Cart
+        {
+            get
+            {
+                return new Cart(CurrentCart);
+            }
+        }
+
         /// <summary>
         /// Current single form value  created in DotLiquidThemedView with ModelState errors
         /// The form object is used within the form tag. It contains attributes of its parent form.
