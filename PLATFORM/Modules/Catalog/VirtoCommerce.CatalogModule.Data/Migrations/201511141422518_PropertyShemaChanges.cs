@@ -135,6 +135,11 @@ namespace VirtoCommerce.CatalogModule.Data.Migrations
             DropIndex("dbo.Item", new[] { "PropertySetId" });
             DropColumn("dbo.Item", "PropertySetId");
 
+            DropColumn("dbo.Category", "Discriminator");
+            DropColumn("dbo.CatalogLanguage", "Discriminator");
+            DropColumn("dbo.PropertyAttribute", "Discriminator");
+
+
             DropTable("dbo.CatalogPropertyValue");
             DropTable("dbo.CategoryPropertyValue");
             DropTable("dbo.ItemPropertyValue");
