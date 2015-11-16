@@ -103,7 +103,7 @@
     };
 
     $scope.copyUrl = function (data) {
-        $translate('catalog.blades.assets.labels.copy-url-prompt').then(function (promptMessage) {
+        $translate('catalog.blades.item-asset-detail.labels.copy-url-prompt').then(function (promptMessage) {
             window.prompt(promptMessage, data.url);
         });
     }

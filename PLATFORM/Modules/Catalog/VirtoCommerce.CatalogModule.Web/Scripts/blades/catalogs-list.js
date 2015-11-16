@@ -50,8 +50,8 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
                 id: 'itemsList1',
                 level: 1,
                 breadcrumbs: blade.breadcrumbs,
-                title: 'catalog.blades.categories.title',
-                subtitle: 'catalog.blades.categories.subtitle',
+                title: 'catalog.blades.categories-items-list.title',
+                subtitle: 'catalog.blades.categories-items-list.subtitle',
                 subtitleValues: selectedNode != null ? {name: selectedNode.name} : '',
                 catalogId: (selectedNode != null) ? selectedNode.id : null,
                 catalog: selectedNode,
@@ -80,7 +80,7 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
             currentEntity: data,
             title: title,
             id: 'catalogEdit',
-            subtitle: 'catalog.blades.catalog-details.subtitle',
+            subtitle: 'catalog.blades.catalog-detail.subtitle',
             deleteFn: onAfterCatalogDeleted,
             controller: 'virtoCommerce.catalogModule.catalogDetailController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/catalog-detail.tpl.html',
@@ -94,7 +94,7 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
             currentEntityId: id,
             currentEntity: data,
             title: title,
-            subtitle: 'catalog.blades.new-virtual-catalog.subtitle',
+            subtitle: 'catalog.blades.virtual-catalog.subtitle-virtual',
             deleteFn: onAfterCatalogDeleted,
             id: 'catalogEdit',
             controller: 'virtoCommerce.catalogModule.virtualCatalogDetailController',
@@ -148,8 +148,8 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
 
                 var newBlade = {
                     id: 'listItemChild',
-                    title: 'catalog.blades.new-catalog-type.title',
-                    subtitle: 'catalog.blades.new-catalog-type.subtitle',
+                    title: 'catalog.blades.catalog-add.title',
+                    subtitle: 'catalog.blades.catalog-add.subtitle',
                     controller: 'virtoCommerce.catalogModule.catalogAddController',
                     template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/catalog-add.tpl.html'
                 };
