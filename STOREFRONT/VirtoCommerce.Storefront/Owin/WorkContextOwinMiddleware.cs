@@ -29,7 +29,7 @@ namespace VirtoCommerce.Storefront.Owin
         private readonly ICustomerManagementModuleApi _customerApi;
         private readonly ICartBuilder _cartBuilder;
         private readonly UnityContainer _container;
-   
+
         public WorkContextOwinMiddleware(OwinMiddleware next, UnityContainer container)
             : base(next)
         {
@@ -45,8 +45,8 @@ namespace VirtoCommerce.Storefront.Owin
             var workContext = _container.Resolve<WorkContext>();
             // Initialize common properties: stores, user profile
             workContext.AllStores = await GetAllStoresAsync();
-            MaintainAnonymousCustomerCookie(context);
             workContext.Customer = await GetCustomerAsync(context);
+            MaintainAnonymousCustomerCookie(context, workContext);
 
             // Initialize request specific properties: store, language, currency, cart
             workContext.CurrentStore = GetStore(context, workContext.AllStores);
@@ -86,13 +86,12 @@ namespace VirtoCommerce.Storefront.Owin
             {
                 customer.Id = context.Request.Cookies[StorefrontConstants.AnonymousCustomerIdCookie];
                 customer.Name = "Anonymous";
-                }
-
-            return customer;
             }
 
-        // TODO: Rethink usage of this method - possibly should be merged with GetCustomer
-        protected virtual void MaintainAnonymousCustomerCookie(IOwinContext context)
+            return customer;
+        }
+
+        protected virtual void MaintainAnonymousCustomerCookie(IOwinContext context, WorkContext workContext)
         {
             string anonymousCustomerId = context.Request.Cookies[StorefrontConstants.AnonymousCustomerIdCookie];
 
@@ -107,6 +106,7 @@ namespace VirtoCommerce.Storefront.Owin
                 {
                     // Add anonymous customer cookie for nonregistered customer
                     anonymousCustomerId = Guid.NewGuid().ToString();
+                    workContext.Customer.Id = anonymousCustomerId;
                     context.Response.Cookies.Append(StorefrontConstants.AnonymousCustomerIdCookie, anonymousCustomerId, new CookieOptions { Expires = DateTime.UtcNow.AddDays(30) });
                 }
             }
@@ -161,7 +161,7 @@ namespace VirtoCommerce.Storefront.Owin
             var languages = stores.SelectMany(s => s.Languages)
                 .Union(stores.Select(s => s.DefaultLanguage))
                 .Select(x => x.CultureName)
-                .Distinct()                
+                .Distinct()
                 .ToArray();
 
             //Get language from request url and remove it from from url need to prevent writing language in routing
