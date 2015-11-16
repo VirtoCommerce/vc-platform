@@ -100,7 +100,7 @@
     </div>
 </script>
 <script type="text/ng-template" id="item-list-name.cell.html">
-    <div class="table-col __product-name">
+    <div class="ui-grid-cell-contents">
         <i class="table-ico fa fa-link" ng-if="grid.appScope.hasLinks(row.entity)" title="This category is linked"></i>
         <div class="table-t">{{COL_FIELD}}</div>
         <span class="table-status" ng-if="row.entity.type==='category' && !row.entity.isActive">Inactive</span>
@@ -109,7 +109,5 @@
 </script>
 
 <script type="text/ng-template" id="item-list-SKU.cell.html">
-    <div class="table-col __product-code">
-        {{row.entity.type!=='category'?COL_FIELD:''}}
-    </div>   
+    <div class="ui-grid-cell-contents">{{row.entity.type!=='category'?COL_FIELD:''}}</div>
 </script>
