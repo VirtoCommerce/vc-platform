@@ -162,7 +162,7 @@
 
     blade.toolbarCommands = [
 		{
-		    name: "marketing.commands.add", icon: 'fa fa-plus',
+		    name: "platform.commands.add", icon: 'fa fa-plus',
 		    executeMethod: function () {
 		        blade.addNew();
 		    },

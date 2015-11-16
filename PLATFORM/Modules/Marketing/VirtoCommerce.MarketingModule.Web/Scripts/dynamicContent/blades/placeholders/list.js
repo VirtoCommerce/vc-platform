@@ -69,8 +69,8 @@
 
         var newBlade = {
             id: 'listItemChild',
-            title: 'marketing.blades.placeholders.content-item-details.title-new',
-            subtitle: 'marketing.blades.placeholders.content-item-details.subtitle-new',
+            title: 'marketing.blades.placeholders.placeholder-details.title-new',
+            subtitle: 'marketing.blades.placeholders.placeholder-details.subtitle-new',
             entity: data,
             isNew: true,
             controller: 'virtoCommerce.marketingModule.addPlaceholderController',
@@ -84,8 +84,8 @@
 
         var newBlade = {
             id: 'listItemChild',
-            title: 'marketing.blades.placeholders.content-item-details.title',
-            subtitle: 'marketing.blades.placeholders.content-item-details.subtitle',
+            title: 'marketing.blades.placeholders.placeholder-details.title',
+            subtitle: 'marketing.blades.placeholders.placeholder-details.subtitle',
             entity: data,
             isNew: false,
             controller: 'virtoCommerce.marketingModule.addPlaceholderController',

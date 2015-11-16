@@ -5,6 +5,56 @@
       "marketing-main": {
         "title": "Marketing"
       },
+      "promotion-detail": {
+        "title-new": "New Promotion list",
+        "labels": {
+          "is-active": "Is active",
+          "promotion-name": "Promotion name",
+          "description": "Description",
+          "store": "Store",
+          "start-date": "Start date",
+          "usage-limit": "Usage limit",
+          "coupons": "Coupons",
+          "expiration-date": "Expiration date",
+          "per-customer-limit": "Per customer limit",
+          "promotion-conditions": "Promotion conditions"
+        },
+        "placeholders": {
+          "promotion-name": "Please enter name...",
+          "description": "Enter description...",
+          "store": "Select...",
+          "start-date": "Please choose date...",
+          "coupons": "Enter coupon codes...",
+          "expiration-date": "Please choose date..."
+
+        }
+      },
+      "promotion-list": {
+        "labels": {
+          "name": "Name",
+          "last-modified": "Last modified"
+        }
+      },
+      "catalog-items-select": {
+        "title-product": "Pick Product for promotion condition",
+        "title-category": "Pick Category for promotion condition"
+      },
+      "dynamicContent-list": {
+        "menu": {
+          "items": {
+            "title": "Content items",
+            "description": "Content items description"
+          },
+          "placeholders": {
+            "title": "Content placeholders",
+            "description": "Placeholders description"
+          },
+          "publishing": {
+            "title": "Content publishing",
+            "description": "Publishing description"
+          }
+        }
+      },
       "items": {
         "add": {
           "title": "New content items element",
@@ -29,6 +79,10 @@
             "content-item-name": "Content item name:",
             "content-item-description": "Content item description:",
             "none": "None"
+          },
+          "placeholders": {
+            "content-item-name": "Enter content item name",
+            "content-item-description": "Enter content item description"
           }
         },
         "folder-details": {
@@ -46,6 +100,8 @@
           }
         },
         "list": {
+          "title": "Content items",
+          "subtitle": "Content items list",
           "labels": {
             "picture": "Pic",
             "name": "Name",
@@ -80,6 +136,10 @@
             "placeholder-image-description": "Placeholder image description",
             "image-note": "Drag and drop image here",
             "progress": "Progress"
+          },
+          "placeholders": {
+            "placeholder-name": "Enter placeholder name",
+            "placeholder-description": "Enter placeholder description"
           }
         },
         "folder-details": {
@@ -97,6 +157,8 @@
           }
         },
         "list": {
+          "title": "Content placeholders",
+          "subtitle": "Content placeholders list",
           "labels": {
             "picture": "Pic",
             "name": "Name",
@@ -107,9 +169,11 @@
       },
       "publishing": {
         "add-content-items": {
-          "title": "New content items element",
-          "subtitle": "Add new content items element",
+          "title": "Add content items elements",
+          "subtitle": "Add content items elements",
           "labels": {
+            "chosen-content-items": "Chosen content items",
+            "content-items": "Content items",
             "picture": "Pic",
             "name": "Name",
             "description": "Description",
@@ -117,27 +181,54 @@
           }
         },
         "add-placeholders": {
-          "title": "New content items element",
-          "subtitle": "Add new content items element",
-          "menu": {
-            "folder": {
-              "title": "Content items folder",
-              "description": "A container for content items."
-            },
-            "item": {
-              "title": "Content item",
-              "description": "Content item."
-            }
-          }
-        },
-        "publishing-main-step": {
-        },
-        "list": {
+          "title": "Add placeholders elements",
+          "subtitle": "Add placeholders elements",
           "labels": {
+            "chosen-placeholders": "Chosen placeholders",
+            "content-placeholders": "Content placeholders",
             "picture": "Pic",
             "name": "Name",
             "description": "Description",
             "no-data": "No data"
+          }
+        },
+        "publishing-main-step": {
+          "title": "Edit publishing element",
+          "subtitle": "Edit publishing element",
+          "title-new": "New publishing element",
+          "subtitle-new": "New publishing element",
+          "labels": {
+            "name": "Name",
+            "description": "Description",
+            "store": "Store",
+            "is-active": "Is active",
+            "start-date": "Start date",
+            "end-date": "End date",
+            "publishing-conditions": "Publishing conditions"
+          },
+          "placeholders": {
+            "name": "Enter publishing name",
+            "description": "Enter publishing description",
+            "store": "Select...",
+            "start-date": "Enter value",
+            "end-date": "Enter value"
+          },
+          "menu": {
+            "placeholders": {
+              "title": "Placeholders",
+              "description": "Chosen {{quontity}} placeholders"
+            },
+            "content-items": {
+              "title": "Content items",
+              "description": "Chosen {{quontity}} content items"
+            }
+          }
+        },
+        "list": {
+          "title": "Content publishing",
+          "subtitle": "Content publishing list",
+          "labels": {
+            "no-data": "No Publishing yet"
           }
         }
       }
@@ -159,14 +250,27 @@
         "title": "Delete confirmation",
         "message": "Are you sure want to delete this folder?"
       },
+      "publication-delete": {
+        "title": "Delete confirmation",
+        "message": "Are you sure want to delete publication?"
+      },
       "content-placeholder-delete": {
         "title": "Delete confirmation",
         "message": "Are you sure want to delete content placeholder?"
+      },
+      "promotions-delete": {
+        "title": "Delete confirmation",
+        "message": "Are you sure you want to delete selected Promitions?"
+      },
+      "promotion-save": {
+        "title": "Save changes",
+        "message": "The promotion has been modified. Do you want to save changes?"
       }
     },
     "commands": {
       "manage-type-properties": "Manage type properties",
-      "edit-folder": "Edit folder"
+      "edit-folder": "Edit folder",
+      "pick-selected": "Pick selected"
     }
   }
 }

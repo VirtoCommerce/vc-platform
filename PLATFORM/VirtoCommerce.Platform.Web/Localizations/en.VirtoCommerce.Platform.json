@@ -16,6 +16,7 @@
       "add": "Add",
       "assign": "Assign",
       "cancel": "Cancel",
+      "clear-all": "Clear all",
       "confirm": "Confirm",
       "copy-link": "Copy link",
       "create": "Create",
@@ -102,7 +103,7 @@
       }
     },
     "genericValueInput": {
-      "placeholder": {
+      "placeholders": {
         "short-text": "Enter short text",
         "secure-string": "Enter secret text",
         "long-text": "Enter long text",

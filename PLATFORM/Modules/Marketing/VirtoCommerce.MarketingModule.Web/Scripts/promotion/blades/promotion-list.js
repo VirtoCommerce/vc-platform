@@ -69,8 +69,8 @@
     function deleteChecked() {
         var dialog = {
             id: "confirmDeleteItem",
-            title: "Delete confirmation",
-            message: "Are you sure you want to delete selected Promitions?",
+            title: "marketing.dialogs.promotions-delete.title",
+            message: "marketing.dialogs.promotions-delete.message",
             callback: function (remove) {
                 if (remove) {
                     closeChildrenBlades();
@@ -98,7 +98,7 @@
 
     $scope.blade.toolbarCommands = [
         {
-            name: "Refresh", icon: 'fa fa-refresh',
+            name: "platform.commands.refresh", icon: 'fa fa-refresh',
             executeMethod: function () {
                 $scope.blade.refresh();
             },
@@ -107,13 +107,13 @@
             }
         },
         {
-            name: "Add", icon: 'fa fa-plus',
+            name: "platform.commands.add", icon: 'fa fa-plus',
             executeMethod: function () {
                 closeChildrenBlades();
 
                 var newBlade = {
                     id: 'listItemChild',
-                    title: 'New Promotion list',
+                    title: 'marketing.blades.promotion-detail.title-new',
                     subtitle: $scope.blade.subtitle,
                     isNew: true,
                     controller: 'virtoCommerce.marketingModule.promotionDetailController',
@@ -127,7 +127,7 @@
             permission: 'marketing:create'
         },
         {
-            name: "Delete", icon: 'fa fa-trash-o',
+            name: "platform.commands.delete", icon: 'fa fa-trash-o',
             executeMethod: function () {
                 deleteChecked();
             },

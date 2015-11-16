@@ -12,13 +12,13 @@
 					<div class="form-group" ng-init="setForm(contextEntityDetailForm)">
 						<label class="form-label">{{ 'marketing.blades.items.content-item-details.labels.content-item-name' | translate }}</label>
 						<div class="form-input">
-							<input focus-on="" required class="form-control" ng-model="blade.entity.name" placeholder="Enter content item name" />
+							<input focus-on="" required class="form-control" ng-model="blade.entity.name" placeholder="{{ 'marketing.blades.items.content-item-details.placeholders.content-item-name' | translate }}" />
 						</div>
 					</div>
 					<div class="form-group">
 						<label class="form-label">{{ 'marketing.blades.items.content-item-details.labels.content-item-description' | translate }}</label>
 						<div class="form-input">
-							<textarea required cols="60" rows="30" ng-model="blade.entity.description" placeholder="Enter content item description"></textarea>
+							<textarea required cols="60" rows="30" ng-model="blade.entity.description" placeholder="{{ 'marketing.blades.items.content-item-details.placeholders.content-item-description' | translate }}"></textarea>
 						</div>
 					</div>
 
