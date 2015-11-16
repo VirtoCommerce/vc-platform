@@ -1,6 +1,7 @@
 ﻿angular.module('virtoCommerce.quoteModule')
 .controller('virtoCommerce.quoteModule.quotesListController', ['$scope', 'virtoCommerce.quoteModule.quotes', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'uiGridConstants', 'platformWebApp.uiGridHelper',
     function ($scope, quotes, bladeNavigationService, dialogService, uiGridConstants, uiGridHelper) {
+        $scope.uiGridConstants = uiGridConstants;
         var blade = $scope.blade;
 
         //pagination settings
@@ -104,24 +105,9 @@
         ];
 
         // ui-grid
-        uiGridHelper.initialize($scope, {
-            rowTemplate: "<div ng-click=\"grid.appScope.selectNode(row.entity)\" ng-repeat=\"(colRenderIndex, col) in colContainer.renderedColumns track by col.uid\" ui-grid-one-bind-id-grid=\"rowRenderIndex + '-' + col.uid + '-cell'\" class=\"ui-grid-cell\" ng-class=\"{ 'ui-grid-row-header-cell': col.isRowHeader, '__selected': row.entity.id === grid.appScope.selectedNodeId }\" role=\"{{col.isRowHeader ? 'rowheader' : 'gridcell'}}\" ui-grid-cell style='cursor:pointer'></div>",
-            rowHeight: 45,
-            columnDefs: [
-                        { name: 'number', displayName: 'Quote #', cellTooltip: true },
-                        { name: 'status' },
-                        { name: 'items.length', displayName: 'Items count' },
-                        { name: 'customerName', displayName: 'Customer', cellTooltip: true }, // cellTemplate
-                        {
-                            name: 'createdDate', displayName: 'Created',
-                            sort: {
-                                direction: uiGridConstants.DESC
-                            },
-                            cellTemplate: 'am-time-ago.cell.html'
-                        }
-            ]
-        });
-
+        $scope.setGridOptions = function (gridOptions) {
+            uiGridHelper.initialize($scope, gridOptions);
+        };
 
         $scope.$watch('pageSettings.currentPage', blade.refresh);
         //No need to call this because page 'pageSettings.currentPage' is watched!!! It would trigger subsequent duplicated req...

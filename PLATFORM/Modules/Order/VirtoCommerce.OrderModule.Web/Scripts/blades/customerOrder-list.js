@@ -1,6 +1,8 @@
 ﻿angular.module('virtoCommerce.orderModule')
-.controller('virtoCommerce.orderModule.customerOrderListController', ['$scope', 'virtoCommerce.orderModule.order_res_customerOrders', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.authService', 'uiGridConstants', 'platformWebApp.uiGridHelper',
-function ($scope, order_res_customerOrders, bladeNavigationService, dialogService, authService, uiGridConstants, uiGridHelper) {
+.controller('virtoCommerce.orderModule.customerOrderListController', ['$scope', 'virtoCommerce.orderModule.order_res_customerOrders', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.authService', 'uiGridConstants', 'platformWebApp.uiGridHelper', 'dateFilter',
+function ($scope, order_res_customerOrders, bladeNavigationService, dialogService, authService, uiGridConstants, uiGridHelper, dateFilter) {
+    $scope.uiGridConstants = uiGridConstants;
+
     //pagination settings
     $scope.pageSettings = {};
     $scope.pageSettings.totalItems = 0;
@@ -125,21 +127,14 @@ function ($scope, order_res_customerOrders, bladeNavigationService, dialogServic
     ];
 
     // ui-grid
-    uiGridHelper.initialize($scope, {
-        data: 'objects',
-        rowTemplate: "<div ng-click=\"grid.appScope.selectNode(row.entity)\" ng-repeat=\"(colRenderIndex, col) in colContainer.renderedColumns track by col.uid\" ui-grid-one-bind-id-grid=\"rowRenderIndex + '-' + col.uid + '-cell'\" class=\"ui-grid-cell\" ng-class=\"{ 'ui-grid-row-header-cell': col.isRowHeader, '__selected': row.entity.id === grid.appScope.selectedNodeId }\" role=\"{{col.isRowHeader ? 'rowheader' : 'gridcell'}}\" ui-grid-cell style='cursor:pointer'></div>",
-        rowHeight: 45,
-        columnDefs: [
-                    {
-                        name: 'customColumn', displayName: 'Description', field: 'number',
-                        width: '*', cellTemplate: 'order-list-name.cell.html'
-                    },
-                    { name: 'isApproved', displayName: 'Confirmed', width: 87, cellClass: '__blue' },
-                    { name: 'customColumn2', displayName: 'Total', width: 76, field: 'sum', cellTemplate: 'total-list-name.cell.html' },
-                    { name: 'createdDate', displayName: 'Created', width: 82, cellClass: 'table-date', cellFilter: 'date', cellTooltip: function (row, col) { return ' '+row.entity.createdDate; }, sort: { direction: uiGridConstants.DESC } }
-                    //{ name: 'site', displayName: 'Store', cellTooltip: true }
-        ]
-    });
+    $scope.setGridOptions = function (gridOptions) {
+        var createdDateColumn = _.findWhere(gridOptions.columnDefs, { name: 'createdDate' });
+        if (createdDateColumn) { // custom tooltip
+            createdDateColumn.cellTooltip = function (row, col) { return dateFilter(row.entity.createdDate, 'medium'); }
+        }
+        uiGridHelper.initialize($scope, gridOptions);
+    };
+
 
     // actions on load
     //No need to call this because page 'pageSettings.currentPage' is watched!!! It would trigger subsequent duplicated req...
