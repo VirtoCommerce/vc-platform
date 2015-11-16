@@ -73,7 +73,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 					if (dbItem.Category != null)
 					{
 						var allParents = repository.GetAllCategoryParents(dbItem.Category).ToArray();
-						category = dbItem.Category.ToCoreModel(catalog, null, allParents);
+						category = dbItem.Category.ToCoreModel(catalog, allParents);
 					}
 				
 					var item = dbItem.ToCoreModel(catalog: catalog, category: category, associatedProducts: associatedProducts.ToArray());

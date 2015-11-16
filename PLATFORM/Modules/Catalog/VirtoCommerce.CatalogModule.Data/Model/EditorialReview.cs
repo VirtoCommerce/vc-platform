@@ -12,10 +12,7 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 {
 	public class EditorialReview : AuditableEntity
 	{
-		public EditorialReview()
-		{
-			Id = Guid.NewGuid().ToString("N");
-		}
+	
 		public int Priority { get; set; }
 
 		[StringLength(128)]
@@ -32,14 +29,8 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 		public string Locale { get; set; }
 
 		#region Navigation Properties
-
-		[StringLength(128)]
-		[ForeignKey("CatalogItem")]
-		[Required]
 		public string ItemId { get; set; }
 
-		[Parent]
-		[ForeignKey("ItemId")]
 		public Item CatalogItem { get; set; }
 		#endregion
 	}
