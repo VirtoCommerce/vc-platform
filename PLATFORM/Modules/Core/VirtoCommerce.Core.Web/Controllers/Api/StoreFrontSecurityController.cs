@@ -14,7 +14,7 @@ using VirtoCommerce.CoreModule.Web.Model;
 
 namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 {
-    [RoutePrefix("api/security/storefront")]
+    [RoutePrefix("api/storefront/security")]
     public class StorefrontSecurityController : ApiController
     {
         private readonly ISecurityService _securityService;
