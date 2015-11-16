@@ -17,7 +17,7 @@
             id: 'roleDetails',
             data: node,
             title: node.name,
-            subtitle: 'Role details',
+            subtitle: 'platform.blades.role-detail.subtitle',
             controller: 'platformWebApp.roleDetailController',
             template: '$(Platform)/Scripts/app/security/blades/role-detail.tpl.html'
         };

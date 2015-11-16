@@ -1,14 +1,14 @@
 ﻿<div class="blade-static">
     <div class="form-group">
         <div class="form-input __search">
-            <input placeholder="Search keyword..." ng-model="searchText">
+            <input placeholder="{{ 'platform.placeholders.search-keyword' | translate }}" ng-model="searchText">
         </div>
     </div>
 </div>
 <div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
-            <div class="text" ng-if="blade.currentEntities.length == 0">No objects supports dynamic properties yet.</div>
+            <div class="text" ng-if="blade.currentEntities.length == 0">{{ 'platform.blades.dynamicObject-list.labels.no-objects' | translate }}</div>
             <ul class="list __items" ng-if="blade.currentEntities.length > 0">
                 <li class="list-item" ng-repeat="data in blade.currentEntities | filter:searchText | orderBy: 'name' track by data.name" ng-class="{'__selected': data.name === selectedNodeId}" ng-click='selectNode(data)'>
                     <span class="list-t" title="{{data.name}}">{{data.name}}</span>

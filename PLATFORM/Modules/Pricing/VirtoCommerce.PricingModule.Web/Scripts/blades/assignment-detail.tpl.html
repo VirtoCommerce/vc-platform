@@ -6,16 +6,16 @@
                 <div class="columns clearfix">
                     <div class="column">
                         <div class="form-group" ng-init="setForm(formScope)">
-                            <label class="form-label">Assignment name</label>
+                            <label class="form-label">{{'pricing.blades.assignment-detail.labels.assignment-name' | translate}}</label>
                             <div class="form-input">
-                                <input ng-model="blade.currentEntity.name" required placeholder="Enter name" />
+                                <input ng-model="blade.currentEntity.name" required placeholder="{{'pricing.blades.assignment-detail.placeholders.assignment-name' | translate}}" />
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Price list</label>
+                            <label class="form-label">{{'pricing.blades.assignment-detail.labels.price-list' | translate}}</label>
                             <div class="form-input">
                                 <ui-select ng-model="blade.currentEntity.pricelistId" required>
-                                    <ui-select-match placeholder="Select...">{{$select.selected.name}}</ui-select-match>
+                                    <ui-select-match placeholder="{{'pricing.blades.assignment-detail.placeholders.price-list' | translate}}">{{$select.selected.name}}</ui-select-match>
                                     <ui-select-choices repeat="x.id as x in pricelists | filter: { name: $select.search }">
                                         <span ng-bind-html="x.name | highlight: $select.search"></span>
                                     </ui-select-choices>
@@ -25,10 +25,10 @@
                     </div>
                     <div class="column">
                         <div class="form-group">
-                            <label class="form-label">Catalog</label>
+                            <label class="form-label">{{'pricing.blades.assignment-detail.labels.catalog' | translate}}</label>
                             <div class="form-input">
                                 <ui-select ng-model="blade.currentEntity.catalogId" required>
-                                    <ui-select-match placeholder="Select...">{{$select.selected.name}}</ui-select-match>
+                                    <ui-select-match placeholder="{{'pricing.blades.assignment-detail.placeholders.catalog' | translate}}">{{$select.selected.name}}</ui-select-match>
                                     <ui-select-choices repeat="x.id as x in catalogs | filter: { name: $select.search }">
                                         <span ng-bind-html="x.name | highlight: $select.search"></span>
                                     </ui-select-choices>
@@ -36,7 +36,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Priority</label>
+                            <label class="form-label">{{'pricing.blades.assignment-detail.labels.priority' | translate}}</label>
                             <div class="form-input __number">
                                 <input smart-float num-type="integer" required ng-model="blade.currentEntity.priority" type="text" >
                             </div>
@@ -44,15 +44,15 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Description</label>
+                    <label class="form-label">{{'pricing.blades.assignment-detail.labels.description' | translate}}</label>
                     <div class="form-input">
-                        <textarea class="form-control" cols="30" rows="3" ng-model="blade.currentEntity.description" placeholder="Enter description"></textarea>
+                        <textarea class="form-control" cols="30" rows="3" ng-model="blade.currentEntity.description" placeholder="{{'pricing.blades.assignment-detail.placeholders.description' | translate}}"></textarea>
                     </div>
                 </div>
                 <div class="form-group columns clearfix">
                     <div class="column">
                         <div class="form-group">
-                            <label class="form-label">Enable date (leave blank if always available)</label>
+                            <label class="form-label">{{'pricing.blades.assignment-detail.labels.enable-date' | translate}}</label>
                             <div class="form-input __calendar">
                                 <input type="text" class="form-control" ng-model="blade.currentEntity.startDate" datepicker-popup="{{format}}" is-open="datepickers.str" datepicker-options="dateOptions" close-text="Close" />
                                 <button class="btn" type="button" ng-click="open($event,'str')">
@@ -63,7 +63,7 @@
                     </div>
                     <div class="column">
                         <div class="form-group">
-                            <label class="form-label">Expiration date (leave blank if always available)</label>
+                            <label class="form-label">{{'pricing.blades.assignment-detail.labels.expiration-date' | translate}}</label>
                             <div class="form-input __calendar">
                                 <input type="text" class="form-control" ng-model="blade.currentEntity.endDate" datepicker-popup="{{format}}" is-open="datepickers.end" datepicker-options="dateOptions" close-text="Close" />
                                 <button class="btn" type="button" ng-click="open($event,'end')">
@@ -75,7 +75,7 @@
                 </div>
                 <div class="form-group">
                     <fieldset>
-                        <legend>Eligible shoppers</legend>
+                        <legend>{{'pricing.blades.assignment-detail.labels.eligible-shoppers' | translate}}</legend>
                         <div class="dynamic-expression">
                             <va-dynamic-expression-tree source="blade.currentEntity.dynamicExpression"></va-dynamic-expression-tree>
                         </div>

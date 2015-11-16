@@ -13,7 +13,7 @@
             id: 'paymentMethodList',
             data: node,
             title: $scope.blade.title,
-            subtitle: 'Edit payment method',
+            subtitle: 'stores.blades.paymentMethod-detail.subtitle',
             controller: 'virtoCommerce.storeModule.paymentMethodDetailController',
             template: 'Modules/$(VirtoCommerce.Store)/Scripts/blades/paymentMethod-detail.tpl.html'
         };

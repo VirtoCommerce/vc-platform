@@ -68,8 +68,9 @@
 	blade.testResolve = function () {
 		var newBlade = {
 			id: 'testResolve',
-			title: 'Preview notification',
-			subtitle: 'Enter test data for ' + blade.notificationType,
+			title: 'platform.blades.notifications-test-resolve.title',
+			subtitle: 'platform.blades.notifications-test-resolve.subtitle',
+			subtitleValues: { type: blade.notificationType },
 			notificationType: blade.notificationType,
 			objectId: blade.objectId,
 			objectTypeId: blade.objectTypeId,
@@ -84,8 +85,9 @@
 	blade.testSend = function () {
 		var newBlade = {
 			id: 'testSend',
-			title: 'Send notification',
-			subtitle: 'Enter test data for ' + blade.notificationType,
+			title: 'platform.blades.notifications-test-send.title',
+			subtitle: 'platform.blades.notifications-test-send.subtitle',
+			subtitleValues: { type: blade.notificationType },
 			notificationType: blade.notificationType,
 			objectId: blade.objectId,
 			objectTypeId: blade.objectTypeId,
@@ -114,7 +116,7 @@
 	if (!blade.isNew) {
 		$scope.blade.toolbarCommands = [
 			{
-				name: "Save", icon: 'fa fa-save',
+			    name: "platform.commands.save", icon: 'fa fa-save',
 				executeMethod: function () {
 					blade.updateTemplate();
 				},
@@ -123,7 +125,7 @@
 				}
 			},
 			{
-				name: "Undo", icon: 'fa fa-undo',
+			    name: "platform.commands.undo", icon: 'fa fa-undo',
 				executeMethod: function () {
 					blade.currentEntity = _.clone(blade.origEntity);
 				},
@@ -132,7 +134,7 @@
 				}
 			},
 			{
-				name: "Preview", icon: 'fa fa-eye',
+			    name: "platform.commands.preview", icon: 'fa fa-eye',
 				executeMethod: function () {
 					blade.testResolve();
 				},
@@ -141,7 +143,7 @@
 				}
 			},
 			{
-				name: "Send", icon: 'fa fa-envelope',
+			    name: "platform.commands.send", icon: 'fa fa-envelope',
 				executeMethod: function () {
 					blade.testSend();
 				},
@@ -150,7 +152,7 @@
 				}
 			},
 			{
-				name: "Set Active", icon: 'fa fa-pencil-square-o',
+			    name: "platform.commands.set-active", icon: 'fa fa-pencil-square-o',
 				executeMethod: function () {
 					blade.setActive();
 				},
@@ -162,7 +164,7 @@
 				}
 			},
 			{
-				name: "Delete", icon: 'fa fa-trash',
+			    name: "platform.commands.delete", icon: 'fa fa-trash',
 				executeMethod: function () {
 					blade.delete();
 				},
@@ -175,7 +177,7 @@
 	else {
 		$scope.blade.toolbarCommands = [
 			{
-				name: "Create", icon: 'fa fa-save',
+			    name: "platform.commands.create", icon: 'fa fa-save',
 				executeMethod: function () {
 					blade.updateTemplate();
 				},
@@ -211,8 +213,8 @@
 	    if (blade.canSave()) {
 	        var dialog = {
 	            id: "confirmCurrentBladeClose",
-	            title: "Save changes",
-	            message: "The notification template has been modified. Do you want to save changes?",
+	            title: "platform.dialogs.notification-template-save.title",
+	            message: "platform.dialogs.notification-template-save.message",
 	            callback: function (needSave) {
 	                if (needSave) {
 	                    blade.updateTemplate();

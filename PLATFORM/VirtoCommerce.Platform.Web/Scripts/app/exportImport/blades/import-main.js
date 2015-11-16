@@ -2,7 +2,7 @@
 .controller('platformWebApp.exportImport.importMainController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.exportImport.resource', 'FileUploader', function ($scope, bladeNavigationService, exportImportResourse, FileUploader) {
     var blade = $scope.blade;
     blade.headIcon = 'fa-download';
-    blade.title = 'Data import';
+    blade.title = 'platform.import-main.title';
     blade.isLoading = false;
 
     $scope.importRequest = {};

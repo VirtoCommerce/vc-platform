@@ -4,25 +4,25 @@
         <div class="inner-block">
             <form class="form" name="formScope">
                 <div class="form-group" ng-init="setForm(formScope)">
-                    <label class="form-label">Login</label>
+                    <label class="form-label">{{ 'platform.blades.new-account-wizard.labels.login' | translate }}</label>
                     <div class="form-input">
-                        <input ng-model="blade.currentEntity.userName" type="text" placeholder="Enter login" required focus-on="">
+                        <input ng-model="blade.currentEntity.userName" type="text" placeholder="{{ 'platform.blades.new-account-wizard.placeholders.login' | translate }}" required focus-on="">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Password</label>
+                    <label class="form-label">{{ 'platform.blades.new-account-wizard.labels.password' | translate }}</label>
                     <div class="form-input">
-                        <input ng-model="blade.currentEntity.password" required placeholder="Enter new password" type="password">
+                        <input ng-model="blade.currentEntity.password" required placeholder="{{ 'platform.blades.new-account-wizard.placeholders.password' | translate }}" type="password">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Repeat password</label>
+                    <label class="form-label">{{ 'platform.blades.new-account-wizard.labels.repeat-password' | translate }}</label>
                     <div class="form-input">
-                        <input ng-model="blade.currentEntity.newPassword2" required placeholder="Repeat new password" type="password">
+                        <input ng-model="blade.currentEntity.newPassword2" required placeholder="{{ 'platform.blades.new-account-wizard.placeholders.repeat-password' | translate }}" type="password">
                     </div>
                 </div>
             </form>
-            <div class="sub-t">Assign roles</div>
+            <div class="sub-t">{{ 'platform.blades.new-account-wizard.labels.assign-roles' | translate }}</div>
             <div class="table-wrapper">
                 <table class="table">
                     <tbody>

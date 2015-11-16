@@ -49,7 +49,7 @@ function ($scope, carts, bladeNavigationService, dialogService) {
 
         var newBlade = {
             id: 'cartDetail',
-            title: 'cart.blades.shopping-cart.title',
+            title: 'cart.blades.cart-detail.title',
             titleValues: { name: selectedNode.customerName},
             currentEntityId: selectedNode.id,
             controller: 'virtoCommerce.cartModule.cartDetailController',

@@ -100,8 +100,8 @@
 			blade.isLoading = false;
 			var dialog = {
 				id: "successSend",
-				title: "Sending success",
-				message: "Email was send successfully!",
+				title: "platform.dialogs.email-sending-success.title",
+				message: "platform.dialogs.email-sending-success.message",
 				callback: function (remove) {
 
 				}
@@ -115,8 +115,8 @@
 			blade.isLoading = false;
 			var dialog = {
 				id: "errorSend",
-				title: "Error in sending",
-				message: "Email wasn't send!",
+				title: "platform.dialogs.email-send-error.title",
+				message: "platform.dialogs.email-send-error.message",
 				callback: function (remove) {
 
 				}

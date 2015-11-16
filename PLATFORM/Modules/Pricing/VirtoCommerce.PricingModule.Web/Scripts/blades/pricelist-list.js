@@ -44,8 +44,8 @@ function ($scope, pricelists, bladeNavigationService, dialogService) {
     function deleteChecked() {
         var dialog = {
             id: "confirmDeleteItem",
-            title: "Delete confirmation",
-            message: "Are you sure you want to delete selected Price lists?",
+            title: "pricing.dialogs.pricelists-delete.title",
+            message: "pricing.dialogs.pricelists-delete.message",
             callback: function (remove) {
                 if (remove) {
                     closeChildrenBlades();
@@ -73,7 +73,7 @@ function ($scope, pricelists, bladeNavigationService, dialogService) {
 
     $scope.blade.toolbarCommands = [
         {
-            name: "Refresh", icon: 'fa fa-refresh',
+            name: "platform.commands.refresh", icon: 'fa fa-refresh',
             executeMethod: function () {
                 $scope.blade.refresh();
             },
@@ -82,7 +82,7 @@ function ($scope, pricelists, bladeNavigationService, dialogService) {
             }
         },
         {
-            name: "Add", icon: 'fa fa-plus',
+            name: "platform.commands.add", icon: 'fa fa-plus',
             executeMethod: function () {
                 closeChildrenBlades();
 
@@ -111,7 +111,7 @@ function ($scope, pricelists, bladeNavigationService, dialogService) {
         //    permission: 'pricing:update'
         //},
         {
-            name: "Delete", icon: 'fa fa-trash-o',
+            name: "platform.commands.delete", icon: 'fa fa-trash-o',
             executeMethod: function () {
                 deleteChecked();
             },

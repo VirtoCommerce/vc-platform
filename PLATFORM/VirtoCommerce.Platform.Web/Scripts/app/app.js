@@ -85,7 +85,7 @@ angular.module('platformWebApp', AppDependencies).
       //Localization
       $translateProvider.useUrlLoader('api/platform/localization')
         .useLoaderCache(true)
-        .useSanitizeValueStrategy('sanitize')
+        .useSanitizeValueStrategy('escapeParameters')
         .preferredLanguage('en')
         .fallbackLanguage('en');
   }])

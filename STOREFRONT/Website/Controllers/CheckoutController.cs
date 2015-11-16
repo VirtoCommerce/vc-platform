@@ -124,6 +124,156 @@ namespace VirtoCommerce.Web.Controllers
         }
 
         //
+        // POST: /Checkout/UpdateDiscounts
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("checkout/updatediscounts")]
+        public async Task<ActionResult> UpdateDiscounts(string coupon)
+        {
+            var checkout = await Service.GetCheckoutAsync();
+
+            checkout.Coupon = coupon;
+
+            var promotionContext = new ApiClient.DataContracts.Marketing.PromotionEvaluationContext();
+            promotionContext.CustomerId = Context.CustomerId;
+            promotionContext.Coupon = coupon;
+
+            promotionContext.CartPromoEntries = new List<ApiClient.DataContracts.Marketing.ProductPromoEntry>();
+            foreach (var lineItem in Context.Cart.Items)
+            {
+                promotionContext.CartPromoEntries.Add(lineItem.ToPromoItem());
+            }
+
+            promotionContext.PromoEntries = new List<ApiClient.DataContracts.Marketing.ProductPromoEntry>();
+            foreach (var lineItem in Context.Cart.Items)
+            {
+                promotionContext.PromoEntries.Add(lineItem.ToPromoItem());
+            }
+
+            promotionContext.StoreId = Context.StoreId;
+
+            var promotionResult = await Service.GetPromoRewardsAsync(promotionContext);
+
+            var validPromotions = promotionResult.Where(pr => pr.IsValid);
+
+            var couponReward = validPromotions.FirstOrDefault(pr => pr.Promotion != null &&
+                                                                    pr.Promotion.Coupons != null &&
+                                                                    pr.Promotion.Coupons.Count() > 0);
+
+            if (!string.IsNullOrEmpty(coupon) && couponReward == null)
+            {
+                return Json(new { Status = "Error", Message = "Invalid coupon code" });
+            }
+
+            checkout.Discounts = new List<Discount>();
+            foreach (var promotion in validPromotions)
+            {
+                var discount = new Discount();
+
+                discount.Amount = promotion.Amount;
+                discount.Code = promotion.Promotion.Name;
+                discount.Coupon = coupon;
+                discount.PromotionId = promotion.Promotion.Id;
+                discount.Savings = -promotion.Amount;
+                discount.Type = promotion.RewardType;
+
+                checkout.Discounts.Add(discount);
+            }
+
+            await Service.UpdateCheckoutAsync(checkout);
+
+            return Json(new { Status = "Ok" });
+        }
+
+        //
+        // POST: /Checkout/ApplyCoupon
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("checkout/applycoupon")]
+        public async Task<ActionResult> ApplyCoupon(string couponCode)
+        {
+            if (string.IsNullOrEmpty(couponCode))
+            {
+                return Json(new { Status = "Error", Message = "Coupon code is required" });
+            }
+
+            var promotionContext = new ApiClient.DataContracts.Marketing.PromotionEvaluationContext();
+            promotionContext.CustomerId = Context.CustomerId;
+            promotionContext.Coupon = couponCode;
+
+            promotionContext.CartPromoEntries = new List<ApiClient.DataContracts.Marketing.ProductPromoEntry>();
+            foreach (var lineItem in Context.Cart.Items)
+            {
+                promotionContext.CartPromoEntries.Add(lineItem.ToPromoItem());
+            }
+
+            promotionContext.PromoEntries = new List<ApiClient.DataContracts.Marketing.ProductPromoEntry>();
+            foreach (var lineItem in Context.Cart.Items)
+            {
+                promotionContext.PromoEntries.Add(lineItem.ToPromoItem());
+            }
+
+            promotionContext.StoreId = Context.StoreId;
+
+            var promotionResult = await Service.GetPromoRewardsAsync(promotionContext);
+
+            if (promotionResult == null || promotionResult.Count() == 0)
+            {
+                return Json(new { Status = "Error", Message = "Invalid coupon code" });
+            }
+
+            var couponReward = promotionResult.FirstOrDefault(pr => pr.IsValid && pr.Promotion != null && pr.Promotion.Coupons != null && pr.Promotion.Coupons.Count() > 0);
+            if (couponReward == null)
+            {
+                return Json(new { Status = "Error", Message = "Invalid coupon code" });
+            }
+
+            var checkout = await Service.GetCheckoutAsync();
+
+            checkout.Coupon = couponCode;
+            checkout.Discounts = new List<Discount>();
+            checkout.Discounts.Add(new Discount
+            {
+                Amount = couponReward.Amount,
+                Code = couponReward.Promotion.Id,
+                Savings = -couponReward.Amount,
+                Type = couponReward.AmountType
+            });
+
+            await Service.UpdateCheckoutAsync(checkout);
+
+            //checkout = await
+
+            return Json(new { Status = "Ok", Checkout = checkout });
+        }
+
+        //
+        // POST: /Checkout/RemoveCoupon
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("checkout/removecoupon")]
+        public async Task<ActionResult> RemoveCoupon(string couponCode)
+        {
+            if (string.IsNullOrEmpty(couponCode))
+            {
+                return Json(new { Status = "Error", Message = "Coupon code is required" });
+            }
+
+            var checkout = await Service.GetCheckoutAsync();
+
+            checkout.Coupon = null;
+            var discount = checkout.Discounts.FirstOrDefault(d => d.Code == couponCode);
+            if (discount != null)
+            {
+                checkout.Discounts.Remove(discount);
+            }
+
+            await Service.UpdateCheckoutAsync(checkout);
+
+            return Json(new { Status = "Ok", Checkout = checkout });
+        }
+
+        //
         // GET: /Checkout/Step2
         [HttpGet]
         [Route("checkout/step-2")]
@@ -456,8 +606,6 @@ namespace VirtoCommerce.Web.Controllers
                 var culture = GetCultureInfoByCurrencyCode(SiteContext.Current.Shop.Currency);
 
                 checkout.StringifiedShippingPrice = checkout.ShippingPrice.ToString("C", culture);
-                checkout.StringifiedTaxPrice = checkout.TaxPrice.ToString("C", culture);
-                checkout.StringifiedTotalPrice = checkout.TotalPrice.ToString("C", culture);
             }
 
             return Json(checkout);

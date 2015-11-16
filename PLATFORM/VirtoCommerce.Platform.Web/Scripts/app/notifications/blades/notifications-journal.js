@@ -25,7 +25,7 @@
 	blade.openNotification = function (data) {
 		var newBlade = {
 			id: 'notificationDetails',
-			title: 'Details of notification',
+			title: 'platform.blades.notification-journal-details.title',
 			currentNotificationId: data.id,
 			currentEntity: data,
 			controller: 'platformWebApp.notificationsJournalDetailtsController',
@@ -63,7 +63,7 @@
 
 	$scope.blade.toolbarCommands = [
 		{
-			name: "Stop sending", icon: 'fa fa-stop',
+			name: "platform.commands.stop-sending", icon: 'fa fa-stop',
 			executeMethod: function () {
 				blade.stopNotification();
 			},

@@ -8,9 +8,9 @@
               controller: ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
                   var blade = {
                       id: 'events',
-                      title: 'System events',
+                      title: 'platform.blades.history.title',
                       breadcrumbs: [],
-                      subtitle: 'Events history',
+                      subtitle: 'platform.blades.history.subtitle',
                       controller: 'platformWebApp.pushNotificationsHistoryController',
                       template: '$(Platform)/Scripts/app/pushNotifications/blade/history.tpl.html',
                       isClosingDisabled: true
@@ -58,8 +58,8 @@
 		    action: function (notify) {
 		        var blade = {
 		            id: 'notifyDetail',
-		            title: 'Event detail',
-		            subtitle: 'Event detail',
+		            title: 'platform.blades.historyDetailDefault.title',
+		            subtitle: 'platform.blades.historyDetailDefault.subtitle',
 		            template: '$(Platform)/Scripts/app/pushNotifications/blade/historyDetailDefault.tpl.html',
 		            isClosingDisabled: false,
 		            notify: notify
@@ -143,7 +143,7 @@
                         notifyMenu = {
                             path: 'pushNotifications',
                             icon: 'fa fa-bell-o',
-                            title: 'Notifications',
+                            title: 'platform.menu.notifications',
                             priority: 2,
                             permission: '',
                             headerTemplate: '$(Platform)/Scripts/app/pushNotifications/menuHeader.tpl.html',
