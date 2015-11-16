@@ -20,7 +20,7 @@ namespace VirtoCommerce.Storefront.Converters
                 retVal.Properties = product.Properties.Select(p => p.ToWebModel(properties)).ToList();
 
             if (product.Images != null)
-                retVal.Images = product.Images.Select(i => i.ToWebModel()).ToList();
+                retVal.Images = product.Images.Select(i => i.ToWebModel()).ToArray();
 
             if (product.Assets != null)
                 retVal.Assets = product.Assets.Select(a => a.ToWebModel()).ToList();

@@ -360,7 +360,7 @@
     <Content Include="App_Data\Themes\default\templates\lockedout.liquid" />
     <Content Include="App_Data\Themes\default\templates\page.contact.liquid" />
     <Content Include="App_Data\Themes\default\templates\page.liquid" />
-    <Content Include="App_Data\Themes\default\templates\password_reseted.liquid" />
+    <Content Include="App_Data\Themes\default\templates\customers\reset_password_confirmation.liquid" />
     <Content Include="App_Data\Themes\default\templates\payment.liquid" />
     <Content Include="App_Data\Themes\default\templates\placeholder.liquid" />
     <Content Include="App_Data\Themes\default\templates\placeholders.liquid" />
@@ -372,6 +372,7 @@
     <Content Include="App_Data\Themes\default\templates\send-code.liquid" />
     <Content Include="App_Data\Themes\default\templates\thanks_page.liquid" />
     <Content Include="App_Data\Themes\default\templates\verify-code.liquid" />
+    <Content Include="App_Data\Themes\default\layout\product_layout.liquid" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -29,7 +29,7 @@ namespace VirtoCommerce.Storefront.Owin
         private readonly ICustomerManagementModuleApi _customerApi;
         private readonly ICartBuilder _cartBuilder;
         private readonly UnityContainer _container;
-
+   
         public WorkContextOwinMiddleware(OwinMiddleware next, UnityContainer container)
             : base(next)
         {
@@ -53,6 +53,8 @@ namespace VirtoCommerce.Storefront.Owin
             workContext.CurrentLanguage = GetLanguage(context, workContext.AllStores, workContext.CurrentStore);
             workContext.CurrentCurrency = GetCurrency(context, workContext.CurrentStore);
             workContext.CurrentCart = (await _cartBuilder.GetOrCreateNewTransientCartAsync(workContext.CurrentStore, workContext.Customer, workContext.CurrentCurrency)).Cart;
+
+            workContext.CurrentPage = 1;
 
             await Next.Invoke(context);
         }
@@ -84,10 +86,10 @@ namespace VirtoCommerce.Storefront.Owin
             {
                 customer.Id = context.Request.Cookies[StorefrontConstants.AnonymousCustomerIdCookie];
                 customer.Name = "Anonymous";
-            }
+                }
 
             return customer;
-        }
+            }
 
         // TODO: Rethink usage of this method - possibly should be merged with GetCustomer
         protected virtual void MaintainAnonymousCustomerCookie(IOwinContext context)
@@ -158,7 +160,7 @@ namespace VirtoCommerce.Storefront.Owin
         {
             var languages = stores.SelectMany(s => s.Languages)
                 .Union(stores.Select(s => s.DefaultLanguage))
-                .Select(x=>x.CultureName)
+                .Select(x => x.CultureName)
                 .Distinct()                
                 .ToArray();
 

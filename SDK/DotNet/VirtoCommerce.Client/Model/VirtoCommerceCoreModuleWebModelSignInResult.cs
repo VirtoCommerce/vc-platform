@@ -14,7 +14,7 @@ namespace VirtoCommerce.Client.Model {
   /// 
   /// </summary>
   [DataContract]
-  public class VirtoCommercePlatformWebModelSecuritySignInResult {
+  public class VirtoCommerceCoreModuleWebModelSignInResult {
     
     /// <summary>
     /// Gets or Sets Status
@@ -30,7 +30,7 @@ namespace VirtoCommerce.Client.Model {
     /// <returns>String presentation of the object</returns>
     public override string ToString()  {
       var sb = new StringBuilder();
-      sb.Append("class VirtoCommercePlatformWebModelSecuritySignInResult {\n");
+      sb.Append("class VirtoCommerceCoreModuleWebModelSignInResult {\n");
       
       sb.Append("  Status: ").Append(Status).Append("\n");
       

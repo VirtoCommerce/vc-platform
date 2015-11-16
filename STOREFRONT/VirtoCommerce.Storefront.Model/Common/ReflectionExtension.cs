@@ -20,8 +20,20 @@ namespace VirtoCommerce.Storefront.Model.Common
 
             foreach (var property in props.Where(x=> predicate(x)))
             {
+                var type = ListTypesOrSelf(property.PropertyType);
+
+                foreach (var info in IteratePropsInner(type, predicate))
+                    yield return info;
+
                 yield return property;
             }
+        }
+
+        public static Type ListTypesOrSelf(Type type)
+        {
+            if (!type.IsGenericType)
+                return type;
+            return type.GetGenericArguments()[0];
         }
 
     }

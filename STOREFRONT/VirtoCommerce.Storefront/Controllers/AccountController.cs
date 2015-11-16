@@ -15,14 +15,17 @@ namespace VirtoCommerce.Storefront.Controllers
     [RoutePrefix("account")]
     public class AccountController : Controller
     {
+        private const string ResetCustomerPasswordTokenCookie = "Vcf.PasswordResetToken";
+        private const string CustomerIdCookie = "Vcf.CustomerId";
+
         private readonly WorkContext _workContext;
-        private readonly IVirtoCommercePlatformApi _platformApi;
+        private readonly ICommerceCoreModuleApi _commerceCoreApi;
         private readonly ICustomerManagementModuleApi _customerApi;
 
-        public AccountController(WorkContext workContext, IVirtoCommercePlatformApi platformApi, ICustomerManagementModuleApi customerApi)
+        public AccountController(WorkContext workContext, ICommerceCoreModuleApi commerceCoreApi, ICustomerManagementModuleApi customerApi)
         {
             _workContext = workContext;
-            _platformApi = platformApi;
+            _commerceCoreApi = commerceCoreApi;
             _customerApi = customerApi;
         }
 
@@ -61,11 +64,6 @@ namespace VirtoCommerce.Storefront.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> Register(Register formModel)
         {
-            if (!ValidateModelState())
-            {
-                return View("customers/register", _workContext);
-            }
-
             var user = new VirtoCommercePlatformCoreSecurityApplicationUserExtended
             {
                 Email = formModel.Email,
@@ -73,11 +71,11 @@ namespace VirtoCommerce.Storefront.Controllers
                 UserName = formModel.Email,
             };
 
-            var result = await _platformApi.FrontEndSecurityCreateAsync(user);
+            var result = await _commerceCoreApi.StorefrontSecurityCreateAsync(user);
 
-            if (result.Succeeded.Value)
+            if (result.Succeeded == true)
             {
-                user = await _platformApi.FrontEndSecurityGetUserByNameAsync(user.UserName);
+                user = await _commerceCoreApi.StorefrontSecurityGetUserByNameAsync(user.UserName);
 
                 var contact = new VirtoCommerceCustomerModuleWebModelContact
                 {
@@ -93,7 +91,7 @@ namespace VirtoCommerce.Storefront.Controllers
 
                 contact = await _customerApi.CustomerModuleCreateContactAsync(contact);
 
-                await _platformApi.FrontEndSecurityPasswordSignInAsync(formModel.Email, formModel.Password, false);
+                await _commerceCoreApi.StorefrontSecurityPasswordSignInAsync(formModel.Email, formModel.Password);
 
                 var identity = CreateClaimsIdentity(formModel.Email);
                 AuthenticationManager.SignIn(identity);
@@ -128,12 +126,7 @@ namespace VirtoCommerce.Storefront.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> Login(Login formModel, string returnUrl)
         {
-            if (!ValidateModelState())
-            {
-                return View("customers/login", _workContext);
-            }
-
-            var loginResult = await _platformApi.FrontEndSecurityPasswordSignInAsync(formModel.Email, formModel.Password, false);
+            var loginResult = await _commerceCoreApi.StorefrontSecurityPasswordSignInAsync(formModel.Email, formModel.Password);
 
             switch (loginResult.Status)
             {
@@ -160,6 +153,92 @@ namespace VirtoCommerce.Storefront.Controllers
             return Redirect("~");
         }
 
+        [HttpPost]
+        [Route("forgotpassword")]
+        [AllowAnonymous]
+        public async Task<ActionResult> ForgotPassword(ForgotPassword formModel)
+        {
+            var user = await _commerceCoreApi.StorefrontSecurityGetUserByNameAsync(formModel.Email);
+
+            if (user != null)
+            {
+                string callbackUrl = Url.Action("ResetPassword", "Account",
+                    new { UserId = user.Id, Code = "token" }, protocol: Request.Url.Scheme);
+
+                await _commerceCoreApi.StorefrontSecurityGenerateResetPasswordTokenAsync(user.Id, _workContext.CurrentStore.Id, _workContext.CurrentLanguage.CultureName, callbackUrl);
+            }
+            else
+            {
+                ModelState.AddModelError("form", "User not found");
+            }
+
+            return new RedirectResult(Url.Action("Login", "Account") + "#recover");
+        }
+
+        [HttpGet]
+        [Route("resetpassword")]
+        [AllowAnonymous]
+        public async Task<ActionResult> ResetPassword(string code, string userId)
+        {
+            if (string.IsNullOrEmpty(code) && string.IsNullOrEmpty(userId))
+            {
+                _workContext.ErrorMessage = "Error in URL format";
+
+                return View("error");
+            }
+
+            var user = await _commerceCoreApi.StorefrontSecurityGetUserByIdAsync(userId);
+            if (user == null)
+            {
+                _workContext.ErrorMessage = "User was not found.";
+                return View("error");
+            }
+
+            var tokenCookie = new HttpCookie(ResetCustomerPasswordTokenCookie, code);
+            tokenCookie.Expires = DateTime.UtcNow.AddDays(1);
+            HttpContext.Response.Cookies.Add(tokenCookie);
+
+            var customerIdCookie = new HttpCookie(CustomerIdCookie, userId);
+            customerIdCookie.Expires = DateTime.UtcNow.AddDays(1);
+            HttpContext.Response.Cookies.Add(customerIdCookie);
+
+            return View("customers/reset_password", _workContext);
+        }
+
+        [HttpPost]
+        [Route("resetpassword")]
+        [AllowAnonymous]
+        public async Task<ActionResult> ResetPassword(ResetPassword formModel)
+        {
+            var customerIdCookie = HttpContext.Request.Cookies[CustomerIdCookie];
+            string userId = customerIdCookie != null ? customerIdCookie.Value : null;
+
+            var tokenCookie = HttpContext.Request.Cookies[ResetCustomerPasswordTokenCookie];
+            string token = tokenCookie != null ? tokenCookie.Value : null;
+
+            if (userId == null && token == null)
+            {
+                _workContext.ErrorMessage = "Not enough info for reseting password";
+                return View("error");
+            }
+
+            var result = await _commerceCoreApi.StorefrontSecurityResetPasswordAsync(userId, token, formModel.Password);
+
+            if (result.Succeeded == true)
+            {
+                HttpContext.Response.Cookies.Add(new HttpCookie(CustomerIdCookie) { Expires = DateTime.UtcNow.AddDays(-1) });
+                HttpContext.Response.Cookies.Add(new HttpCookie(ResetCustomerPasswordTokenCookie) { Expires = DateTime.UtcNow.AddDays(-1) });
+
+                return View("customers/reset_password_confirmation");
+            }
+            else
+            {
+                ModelState.AddModelError("form", result.Errors.First());
+            }
+
+            return View("customers/reset_password");
+        }
+
 
         private ClaimsIdentity CreateClaimsIdentity(string userName)
         {
@@ -179,41 +258,6 @@ namespace VirtoCommerce.Storefront.Controllers
             }
 
             return Redirect("~");
-        }
-
-        private bool ValidateModelState()
-        {
-            var formErrors = GetFormErrors(ModelState);
-
-            if (formErrors != null)
-            {
-                foreach (var error in formErrors)
-                {
-                    ModelState.AddModelError(error.Key, error.Value);
-                }
-            }
-
-            return formErrors == null;
-        }
-
-        private IDictionary<string, string> GetFormErrors(ModelStateDictionary modelState)
-        {
-            IDictionary<string, string> formErrors = null;
-
-            if (!modelState.IsValid)
-            {
-                var errorsDictionary = new Dictionary<string, string>();
-
-                foreach (var error in modelState.Where(f => f.Value.Errors.Count > 0))
-                {
-                    var errorMessage = error.Value.Errors.First();
-                    errorsDictionary.Add(error.Key, errorMessage.ErrorMessage);
-                }
-
-                formErrors = errorsDictionary;
-            }
-
-            return formErrors;
         }
     }
 }

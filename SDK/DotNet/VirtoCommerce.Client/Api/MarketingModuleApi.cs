@@ -414,6 +414,26 @@ namespace VirtoCommerce.Client.Api
         System.Threading.Tasks.Task MarketingModulePromotionDeletePromotionsAsync (List<string> ids);
         
         /// <summary>
+        /// Evaluate promotions
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="context">Promotion evaluation context</param>
+        /// <returns></returns>
+        List<VirtoCommerceMarketingModuleWebModelPromotionReward> MarketingModulePromotionEvaluatePromotions (VirtoCommerceDomainMarketingModelPromotionEvaluationContext context);
+  
+        /// <summary>
+        /// Evaluate promotions
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="context">Promotion evaluation context</param>
+        /// <returns></returns>
+        System.Threading.Tasks.Task<List<VirtoCommerceMarketingModuleWebModelPromotionReward>> MarketingModulePromotionEvaluatePromotionsAsync (VirtoCommerceDomainMarketingModelPromotionEvaluationContext context);
+        
+        /// <summary>
         /// Get new dynamic promotion object
         /// </summary>
         /// <remarks>
@@ -2564,6 +2584,108 @@ namespace VirtoCommerce.Client.Api
 
             
             return;
+        }
+        
+        /// <summary>
+        /// Evaluate promotions 
+        /// </summary>
+        /// <param name="context">Promotion evaluation context</param> 
+        /// <returns></returns>            
+        public List<VirtoCommerceMarketingModuleWebModelPromotionReward> MarketingModulePromotionEvaluatePromotions (VirtoCommerceDomainMarketingModelPromotionEvaluationContext context)
+        {
+            
+            // verify the required parameter 'context' is set
+            if (context == null) throw new ApiException(400, "Missing required parameter 'context' when calling MarketingModulePromotionEvaluatePromotions");
+            
+    
+            var path_ = "/api/marketing/promotions/evaluate";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                "application/json", "text/json"
+            };
+            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            
+            
+            
+            postBody = ApiClient.Serialize(context); // http body (model) parameter
+            
+    
+            // authentication setting, if any
+            String[] authSettings = new String[] {  };
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+    
+            if (((int)response.StatusCode) >= 400)
+                throw new ApiException ((int)response.StatusCode, "Error calling MarketingModulePromotionEvaluatePromotions: " + response.Content, response.Content);
+            else if (((int)response.StatusCode) == 0)
+                throw new ApiException ((int)response.StatusCode, "Error calling MarketingModulePromotionEvaluatePromotions: " + response.ErrorMessage, response.ErrorMessage);
+    
+            return (List<VirtoCommerceMarketingModuleWebModelPromotionReward>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceMarketingModuleWebModelPromotionReward>));
+        }
+    
+        /// <summary>
+        /// Evaluate promotions 
+        /// </summary>
+        /// <param name="context">Promotion evaluation context</param>
+        /// <returns></returns>
+        public async System.Threading.Tasks.Task<List<VirtoCommerceMarketingModuleWebModelPromotionReward>> MarketingModulePromotionEvaluatePromotionsAsync (VirtoCommerceDomainMarketingModelPromotionEvaluationContext context)
+        {
+            // verify the required parameter 'context' is set
+            if (context == null) throw new ApiException(400, "Missing required parameter 'context' when calling MarketingModulePromotionEvaluatePromotions");
+            
+    
+            var path_ = "/api/marketing/promotions/evaluate";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                "application/json", "text/json"
+            };
+            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            
+            
+            
+            postBody = ApiClient.Serialize(context); // http body (model) parameter
+            
+    
+            // authentication setting, if any
+            String[] authSettings = new String[] {  };
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            if (((int)response.StatusCode) >= 400)
+                throw new ApiException ((int)response.StatusCode, "Error calling MarketingModulePromotionEvaluatePromotions: " + response.Content, response.Content);
+
+            return (List<VirtoCommerceMarketingModuleWebModelPromotionReward>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceMarketingModuleWebModelPromotionReward>));
         }
         
         /// <summary>
