@@ -17,8 +17,8 @@ angular.module(moduleName, [
           executeMethod: function (blade) {
               var dialog = {
                   id: "confirmRebuildIndex",
-                  title: "Rebuild Search Index",
-                  message: "Current search index will be deleted and built from scratch. Are you sure you want to rebuild the index?",
+                  title: "search.dialogs.rebuild-index.title",
+                  message: "search.dialogs.rebuild-index.message",
                   callback: function (confirm) {
                       if (confirm) {
                           var newBlade = {

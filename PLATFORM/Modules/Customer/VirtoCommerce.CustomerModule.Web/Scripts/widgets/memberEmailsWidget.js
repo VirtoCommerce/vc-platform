@@ -7,7 +7,7 @@
             id: "customerChildBlade",
             //data: $scope.blade.currentEntity.emails,
             title: $scope.blade.title,
-            subtitle: 'Manage customer emails',
+            subtitle: 'customer.widgets.member-emails-list.blade-subtitle',
             controller: 'virtoCommerce.customerModule.memberEmailsListController',
             template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/member-emails-list.tpl.html'
         };

@@ -80,9 +80,9 @@
 
     initialize();
     if ($scope.blade.mode === 'install') {
-        $scope.actionButtonTitle = 'Install';
+        $scope.actionButtonTitle = 'platform.commands.install';
     } else {
-        $scope.actionButtonTitle = 'Update';
+        $scope.actionButtonTitle = 'platform.commands.update';
     }
 
     $scope.blade.isLoading = false;

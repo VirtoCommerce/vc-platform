@@ -13,7 +13,7 @@
             id: 'shippingMethodList',
             data: node,
             title: $scope.blade.title,
-            subtitle: 'Edit shipping method',
+            subtitle: 'stores.blades.shippingMethod-detail.subtitle',
             controller: 'virtoCommerce.storeModule.shippingMethodDetailController',
             template: 'Modules/$(VirtoCommerce.Store)/Scripts/blades/shippingMethod-detail.tpl.html'
         };

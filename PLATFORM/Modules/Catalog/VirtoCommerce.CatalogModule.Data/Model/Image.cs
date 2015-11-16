@@ -10,12 +10,7 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 {
 	public class Image : AuditableEntity
 	{
-		public Image()
-		{
-			Id = Guid.NewGuid().ToString("N");
-		}
-
-		[StringLength(2083)]
+	    [StringLength(2083)]
 		[Required]
 		public string Url { get; set; }
 

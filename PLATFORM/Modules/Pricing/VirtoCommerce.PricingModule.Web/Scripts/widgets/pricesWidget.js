@@ -20,7 +20,7 @@
             currency: $scope.currentBlade.currentEntity.currency,
             currentEntity: $scope.currentBlade.currentEntity,
             title: $scope.currentBlade.title,
-            subtitle: 'Manage prices',
+            subtitle: 'pricing.blades.pricelist-item-list.subtitle',
             controller: 'virtoCommerce.pricingModule.pricelistItemListController',
             template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/blades/pricelist-item-list.tpl.html'
         };

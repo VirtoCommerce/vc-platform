@@ -15,7 +15,7 @@ angular.module(moduleName)
 				var blade = {
 					id: 'notifications',
 					title: 'platform.menu.notifications',
-					subtitle: 'Working with notifications system',
+					subtitle: 'platform.blades.notifications-menu.subtitle',
 					controller: 'platformWebApp.notificationsMenuController',
 					template: '$(Platform)/Scripts/app/notifications/blades/notifications-menu.tpl.html',
 					isClosingDisabled: true

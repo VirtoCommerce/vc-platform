@@ -36,8 +36,8 @@
     function deleteEntry() {
         var dialog = {
             id: "confirmDelete",
-            title: "Delete confirmation",
-            message: "Are you sure you want to delete this API key?",
+            title: "platform.dialog.api-key-delete.title",
+            message: "platform.dialog.api-key-delete.message",
             callback: function (remove) {
                 if (remove) {
                     if ($scope.blade.deleteFn) {
@@ -54,7 +54,7 @@
 
     $scope.blade.toolbarCommands = [
         {
-            name: "Generate", icon: 'fa fa-refresh',
+            name: "platform.commands.generate", icon: 'fa fa-refresh',
             executeMethod: function () {
                 generateNewApiAccount();
             },
@@ -64,7 +64,7 @@
             permission: 'platform:security:update'
         },
         {
-            name: "Reset",
+            name: "platform.commands.reset",
             icon: 'fa fa-undo',
             executeMethod: function () {
                 angular.copy($scope.blade.origEntity, $scope.blade.currentEntity);
@@ -75,7 +75,7 @@
             permission: 'platform:security:update'
         },
         {
-            name: "Delete", icon: 'fa fa-trash-o',
+            name: "platform.commands.delete", icon: 'fa fa-trash-o',
             executeMethod: function () {
                 deleteEntry();
             },

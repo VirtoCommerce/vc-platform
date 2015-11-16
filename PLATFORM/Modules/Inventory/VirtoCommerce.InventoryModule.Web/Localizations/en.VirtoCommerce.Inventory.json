@@ -1,0 +1,41 @@
+﻿{
+  "inventory": {
+    "blades": {
+      "inventory-detail": {
+        "subtitle": "Edit Inventory",
+        "labels": {
+          "in-stock": "In stock",
+          "reserved": "Reserved",
+          "reorder-min-quantity": "Reorder min. qty.",
+          "allow-preorder": "Allow preorder",
+          "reorder-quantity": "Preorder qty.",
+          "preorder-availability-date": "Preorder availability date",
+          "allow-backorder": "Allow backorder",
+          "backorder-quantity": "Backorder qty.",
+          "backorder-availability-date": "Backorder availability date"
+        }
+      },
+      "inventory-fulfillmentcenters-list": {
+        "labels": {
+          "no-fulfillment-centers": "No Fulfillment centers available"
+        }
+      }
+    },
+    "dialogs": {
+      "inventory-delete": {
+        "title": "Delete confirmation",
+        "message": "Are you sure you want to delete this Quote?"
+      },
+      "inventory-save": {
+        "title": "Save changes",
+        "message": "Inventory has been modified. Do you want to save changes?"
+      }
+    },
+    "widgets": {
+      "inventoryWidget": {
+        "title": "Inventory",
+        "blade-subtitle": "Select Fulfillment center to edit inventory"
+      }
+    }
+  }
+}

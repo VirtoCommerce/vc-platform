@@ -1,7 +1,7 @@
 ﻿<div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
-            <div class="sub-t">Assigned roles</div>
+            <div class="sub-t">{{ 'platform.blades.account-roles-list.labels.assigned-roles' | translate }}</div>
             <div class="table-wrapper">
                 <table class="table">
                     <tbody>
@@ -17,7 +17,7 @@
                                 <span class="table-descr">{{data.description}}</span>
                                 <ul role="menu" class="menu __context" id="arl_menu_{{$index}}">
                                     <li class="menu-item" ng-click='delete($index)'>
-                                        <i class="menu-ico fa fa-trash-o"></i> Delete
+                                        <i class="menu-ico fa fa-trash-o"></i> {{ 'platform.commands.delete' | translate }}
                                     </li>
                                 </ul>
                             </td>
@@ -25,7 +25,7 @@
                     </tbody>
                 </table>
             </div>
-            <p class="text" ng-if="!blade.currentEntities.length">No roles assigned.</p>
+            <p class="text" ng-if="!blade.currentEntities.length">{{ 'platform.blades.account-roles-list.labels.no-assigned' | translate }}</p>
         </div>
     </div>
 </div>

@@ -5,8 +5,8 @@
 
 	function initializeBlade() {
 		var entities = [
-            { id: '1', name: 'Notifications', templateName: 'notifications-list', controllerName: 'notificationsListController', icon: 'fa-list' },
-            { id: '2', name: 'Journal of sending', templateName: 'notifications-journal', controllerName: 'notificationsJournalController', icon: 'fa-book' }];
+            { id: '1', name: 'platform.blades.notifications-list.title', templateName: 'notifications-list', controllerName: 'notificationsListController', icon: 'fa-list', subtitle: 'platform.blades.notifications-list.subtitle' },
+            { id: '2', name: 'platform.blades.notifications-journal.title', templateName: 'notifications-journal', controllerName: 'notificationsJournalController', icon: 'fa-book', subtitle: 'platform.blades.notifications-journal.subtitle' }];
 		blade.currentEntities = entities;
 		blade.isLoading = false;
 	};
@@ -21,7 +21,7 @@
 			title: data.name,
 			objectId: objectId,
 			objectTypeId: objectTypeId,
-			subtitle: 'Marketing service',
+			subtitle: data.subtitle,
 			controller: 'platformWebApp.' + data.controllerName,
 			template: '$(Platform)/Scripts/app/notifications/blades/' + data.templateName + '.tpl.html'
 		};

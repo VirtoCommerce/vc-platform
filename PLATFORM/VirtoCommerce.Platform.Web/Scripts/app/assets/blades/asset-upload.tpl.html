@@ -2,13 +2,13 @@
     <div class="blade-inner">
         <div class="inner-block">
             <div class="inner">
-                <div class="sub-t">Select files</div>
+                <div class="sub-t">{{ 'platform.blades.asset-upload.labels.select-files' | translate }}</div>
                 <form class="form">
                     <div ng-show="uploader.isHTML5">
                         <!-- 3. ng-file-over | ng-file-over="className" -->
                         <div class="well my-drop-zone panel drag-area" uploader="uploader" nv-file-drop nv-file-over>
                             <div class="drag-content">
-                                Drag and drop files here
+                                {{ 'platform.blades.asset-upload.labels.note' | translate }}
                             </div>
                         </div>
                     </div>
@@ -23,7 +23,7 @@
                     </div>
 
                     <div class="form-input __file">
-                        <input ng-model="blade.newExternalImageUrl" type="url" placeholder='Paste file URL here' tabindex="-1">
+                        <input ng-model="blade.newExternalImageUrl" type="url" placeholder='{{ 'platform.blades.asset-upload.placeholders.image-url' | translate }}' tabindex="-1">
                         <button class="btn __file" type="button" ng-click="addImageFromUrl()" title="Add file by URL">
                             <i class="btn-ico fa fa-plus"></i>
                         </button>
@@ -31,11 +31,11 @@
                 </form>
 
                 <div ng-show="uploader.isUploading">
-                    <div class="sub-t">Progress</div>
+                    <div class="sub-t">{{ 'platform.blades.asset-upload.labels.progress' | translate }}</div>
                     <div class="progress-bar __aqua" ng-style="{'width': uploader.progress + '%'}"></div>
                 </div>
 
-                <p class="note" ng-if="blade.uploadCompleted">Asset(s) uploaded.</p>
+                <p class="note" ng-if="blade.uploadCompleted">{{ 'platform.blades.asset-upload.labels.asset-uploaded' | translate }}</p>
             </div>
         </div>
     </div>

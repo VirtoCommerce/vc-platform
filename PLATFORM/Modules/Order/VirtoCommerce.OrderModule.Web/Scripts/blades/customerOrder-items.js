@@ -96,14 +96,14 @@
         var newBlade = {
             id: "CatalogItemsSelect",
             currentEntities: $scope.blade.currentEntity,
-            title: "Add item to order",
+            title: "orders.blades.catalog-items-select.title",
             controller: 'virtoCommerce.catalogModule.catalogItemSelectController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/common/catalog-items-select.tpl.html',
             options: options,
             breadcrumbs: [],
             toolbarCommands: [
 			  {
-			      name: "Add selected", icon: 'fa fa-plus',
+			      name: "orders.commands.add-selected", icon: 'fa fa-plus',
 			      executeMethod: function (blade) {
 			          addProductsToOrder(selectedProducts);
 			          selectedProducts.length = 0;
@@ -122,7 +122,7 @@
 
     $scope.blade.toolbarCommands = [
         {
-            name: "Add item", icon: 'fa fa-plus',
+            name: "orders.commands.add-item", icon: 'fa fa-plus',
             executeMethod: function () {
                 openAddEntityWizard();
             },
@@ -132,7 +132,7 @@
             permission: 'order:update'
         },
         {
-            name: "Remove", icon: 'fa fa-trash-o',
+            name: "platform.commands.remove", icon: 'fa fa-trash-o',
             executeMethod: function () {
                 var lineItems = $scope.blade.currentEntity.items;
                 $scope.blade.currentEntity.items = _.difference(lineItems, _.filter(lineItems, function (x) { return x.selected }));

@@ -96,6 +96,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <Content Include="Localizations\en.VirtoCommerce.Customer.json" />
     <None Include="packages.config" />
     <Content Include="module.manifest">
       <SubType>Designer</SubType>

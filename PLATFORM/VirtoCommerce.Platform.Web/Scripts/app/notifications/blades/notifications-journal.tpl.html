@@ -1,9 +1,9 @@
 ﻿<div class="blade-static __expanded">
 	<div class="form-group">
 		<div class="form-input __search">
-			<input placeholder="Search keyword..." ng-model="filter.searchKeyword" ng-keyup="$event.which === 13 && blade.refresh()">
+			<input placeholder="{{ 'platform.placeholders.search-keyword' | translate }}" ng-model="filter.searchKeyword" ng-keyup="$event.which === 13 && blade.refresh()">
 		</div>
-		<p class="form-count">Count: <span class="count">{{pageSettings.totalItems}}</span></p>
+		<p class="form-count">{{ 'platform.list.count' | translate }}: <span class="count">{{pageSettings.totalItems}}</span></p>
 	</div>
 </div>
 <div class="blade-static __bottom" ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems" ng-include="'pagerTemplate.html'"></div>
@@ -20,10 +20,10 @@
 									<span class="check"></span>
 								</label>
 							</th>
-							<th class="table-col">Display Name</th>
-							<th class="table-col">Recipient</th>
-							<th class="table-col">Sent Date</th>
-							<th class="table-col">Channel</th>
+							<th class="table-col">{{ 'platform.blades.notifications-journal.labels.display-name' | translate }}</th>
+							<th class="table-col">{{ 'platform.blades.notifications-journal.labels.recipient' | translate }}</th>
+							<th class="table-col">{{ 'platform.blades.notifications-journal.labels.sent-date' | translate }}</th>
+							<th class="table-col">{{ 'platform.blades.notifications-journal.labels.channel' | translate }}</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -36,9 +36,9 @@
 							</td>
 							<td class="table-col" ng-click='blade.openNotification(data)'>
 								<span class="table-t">{{data.displayName}}</span>
-								<span class="table-status" ng-if="!data.isActive && !data.isSuccessSend" style="background:red">Error</span>
-								<span class="table-status" ng-if="data.isActive && !data.isSuccessSend" style="max-width:60px;">Processing</span>
-								<span class="table-status __active" ng-if="(!data.isActive && data.isSuccessSend) || (data.isActive && data.isSuccessSend)">Success</span>
+								<span class="table-status" ng-if="!data.isActive && !data.isSuccessSend" style="background:red">{{ 'platform.blades.notifications-journal.labels.error' | translate }}</span>
+								<span class="table-status" ng-if="data.isActive && !data.isSuccessSend" style="max-width:60px;">{{ 'platform.blades.notifications-journal.labels.processing' | translate }}</span>
+								<span class="table-status __active" ng-if="(!data.isActive && data.isSuccessSend) || (data.isActive && data.isSuccessSend)">{{ 'platform.blades.notifications-journal.labels.success' | translate }}</span>
 							</td>
 							<td class="table-col" ng-click='blade.openNotification(data)'>
 								{{data.recipient}}
@@ -57,7 +57,7 @@
 				</table>
 			</div>
 			<div class="note" ng-if="items.length == 0">
-				No notifications yet
+				{{ 'platform.blades.notifications-journal.labels.no-notifications' | translate }}
 			</div>
 		</div>
 	</div>

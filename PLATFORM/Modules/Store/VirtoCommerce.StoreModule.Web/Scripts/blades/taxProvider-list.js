@@ -16,7 +16,7 @@
             id: 'taxProviderList',
             data: node,
             title: blade.title,
-            subtitle: 'Edit tax provider',
+            subtitle: 'stores.blades.taxProvider-detail.subtitle',
             controller: 'virtoCommerce.storeModule.taxProviderDetailController',
             template: 'Modules/$(VirtoCommerce.Store)/Scripts/blades/taxProvider-detail.tpl.html'
         };

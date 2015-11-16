@@ -6,7 +6,7 @@
         var newBlade = {
             id: "storeChildBlade",
             title: blade.title,
-            subtitle: 'Payment methods',
+            subtitle: 'stores.widgets.storePaymentsWidget.blade-subtitle',
             controller: 'virtoCommerce.storeModule.paymentMethodListController',
             template: 'Modules/$(VirtoCommerce.Store)/Scripts/blades/paymentMethod-list.tpl.html'
         };

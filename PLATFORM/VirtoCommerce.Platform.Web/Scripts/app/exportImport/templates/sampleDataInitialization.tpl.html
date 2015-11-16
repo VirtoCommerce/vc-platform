@@ -3,18 +3,18 @@
         <div class="progress-bar"></div>
     </div>
     <header class="window-head">
-        <div class="window-t __logo">Sample data initialization</div>
+        <div class="window-t __logo">{{ 'platform.templates.sampleDataInitialization.labels.sample-data-initialization' | translate }}</div>
     </header>
     <div class="window-cnt">
         <form class="form" novalidate name="sampleDataForm" ng-submit="close()">
             <div class="form-group">
                 <div class="sub-t">{{notification.description ? notification.description : 'Starting sample data initialization...'}}</div>
                 <div class="block" ng-if="notification.created || notification.finished">
-                    <p ng-if="notification.created" ng-class="{'no-data': notification.created}" class="text">Start — <i class="fa fa-clock-o"></i> <span am-time-ago="notification.created"></span></p>
-                    <p ng-if="notification.finished" ng-class="{'no-data': notification.finished}" class="text">End — <i class="fa fa-clock-o"></i> <span am-time-ago="notification.finished"></span></p>
+                    <p ng-if="notification.created" ng-class="{'no-data': notification.created}" class="text">{{ 'platform.templates.sampleDataInitialization.labels.start' | translate }} — <i class="fa fa-clock-o"></i> <span am-time-ago="notification.created"></span></p>
+                    <p ng-if="notification.finished" ng-class="{'no-data': notification.finished}" class="text">{{ 'platform.templates.sampleDataInitialization.labels.end' | translate }} — <i class="fa fa-clock-o"></i> <span am-time-ago="notification.finished"></span></p>
                 </div>
                 <div ng-if="notification.errorCount > 0">
-                    <span class="sub-t">Errors</span>
+                    <span class="sub-t">{{ 'platform.templates.sampleDataInitialization.labels.errors' | translate }}</span>
                     <div class="log">
                         <p ng-repeat="error in notification.errors track by $index" class="error">{{error}}</p>
                     </div>
@@ -22,7 +22,7 @@
             </div>
             <div class="form-group __right">
                 <button class="btn" type="submit" ng-disabled="!notification.finished">
-                    <span>Close</span>
+                    <span>{{ 'platform.commands.close' | translate }}</span>
                 </button>
             </div>
         </form>

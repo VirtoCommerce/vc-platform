@@ -2,7 +2,7 @@
 .controller('platformWebApp.exportImport.exportMainController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.exportImport.resource', function ($scope, bladeNavigationService, exportImportResourse) {
     var blade = $scope.blade;
     blade.headIcon = 'fa-upload';
-    blade.title = 'Data export';
+    blade.title = 'platform.export-main.title';
 
     $scope.exportRequest = {};
 

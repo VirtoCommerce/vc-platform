@@ -6,7 +6,7 @@
                 <div class="column">
                     <ul class="list __info">
                         <li class="list-item">
-                            <div class="list-t">Name</div>
+                            <div class="list-t">{{ 'stores.blades.taxProvider-detail.labels.name' | translate }}</div>
                             <div class="list-descr">{{blade.currentEntity.name}}</div>
                         </li>
                     </ul>
@@ -14,7 +14,7 @@
                 <div class="column">
                     <ul class="list __info">
                         <li class="list-item">
-                            <div class="list-t">Code</div>
+                            <div class="list-t">{{ 'stores.blades.taxProvider-detail.labels.code' | translate }}</div>
                             <div class="list-descr">{{blade.currentEntity.code}}</div>
                         </li>
                     </ul>
@@ -23,14 +23,14 @@
             <form class="form" name="detailForm">
                 <fieldset>
                     <div class="form-group" ng-init="setForm(detailForm)">
-                        <label class="form-label">Description</label>
+                        <label class="form-label">{{ 'stores.blades.taxProvider-detail.labels.description' | translate }}</label>
                         <div class="form-input">
-                            <textarea class="form-control" ng-model="blade.currentEntity.description" placeholder="Enter description"></textarea>
+                            <textarea class="form-control" ng-model="blade.currentEntity.description" placeholder="{{ 'stores.blades.taxProvider-detail.placeholders.description' | translate }}"></textarea>
                         </div>
                     </div>
                 </fieldset>
                 <fieldset>
-                    <legend>Settings</legend>
+                    <legend>{{ 'stores.blades.taxProvider-detail.labels.settings' | translate }}</legend>
                     <ul class="list __info">
                         <li class="list-item" ng-repeat="data in blade.currentEntity.settings">
                             <label class="form-label">{{data.title}}</label>

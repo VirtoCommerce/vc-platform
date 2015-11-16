@@ -111,7 +111,7 @@ namespace VirtoCommerce.SearchModule.Data.Services
 
         protected virtual void IndexItem(ref ResultDocument doc, string productId)
         {
-            var item = _itemService.GetById(productId, ItemResponseGroup.ItemProperties | ItemResponseGroup.Categories);
+            var item = _itemService.GetById(productId, ItemResponseGroup.ItemProperties | ItemResponseGroup.Links);
             if(item == null)
                 return;
 

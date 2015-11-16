@@ -9,6 +9,11 @@ namespace VirtoCommerce.Web.Models
     [DataContract]
     public class Checkout : Drop
     {
+        public Checkout()
+        {
+            Discounts = new List<Discount>();
+        }
+
         [DataMember]
         public IDictionary<string, string> Attributes { get; set; }
 
@@ -25,20 +30,14 @@ namespace VirtoCommerce.Web.Models
         public ICollection<Discount> Discounts { get; set; }
 
         [DataMember]
-        public decimal DiscountsAmount
-        {
-            get
-            {
-                return Discounts != null ? Discounts.Sum(d => d.Amount) : 0M;
-            }
-        }
+        public decimal DiscountsAmount { get; set; }
 
         [DataMember]
         public decimal DiscountsSavings
         {
             get
             {
-                return Discounts != null ? Discounts.Sum(d => d.Savings) : 0M;
+                return Discounts.Sum(d => d.Savings);
             }
         }
 
@@ -47,6 +46,9 @@ namespace VirtoCommerce.Web.Models
 
         [DataMember]
         public ICollection<GiftCard> GiftCards { get; set; }
+
+        [DataMember]
+        public string Coupon { get; set; }
 
         [DataMember]
         public decimal GiftCardsAmount { get; set; }
@@ -118,62 +120,22 @@ namespace VirtoCommerce.Web.Models
         public ICollection<PaymentMethod> PaymentMethods { get; set; }
 
         [DataMember]
-        public decimal ShippingPrice
-        {
-            get
-            {
-                decimal price = ShippingMethod != null ? ShippingMethod.Price : 0M;
-
-                var discount = Discounts != null ?
-                    Discounts.FirstOrDefault(d => d.Type.Equals("ShippingDiscount", StringComparison.OrdinalIgnoreCase)) : null;
-
-                if (discount != null)
-                {
-                    price -= discount.Amount;
-                }
-
-                return price >= 0 ? price : 0;
-            }
-        }
+        public decimal ShippingPrice { get; set; }
 
         [DataMember]
-        public decimal SubtotalPrice
-        {
-            get
-            {
-                return LineItems != null ? LineItems.Sum(li => li.LinePrice) : 0M;
-            }
-        }
+        public decimal SubtotalPrice { get; set; }
 
         [DataMember]
         public ICollection<TaxLine> TaxLines { get; set; }
 
         [DataMember]
-        public decimal TaxPrice
-        {
-            get
-            {
-                return TaxLines != null ? TaxLines.Sum(tl => tl.Price) : 0M;
-            }
-        }
+        public decimal TaxPrice { get; set; }
 
         [DataMember]
-        public decimal TotalPrice
-        {
-            get
-            {
-                return SubtotalPrice + ShippingPrice + TaxPrice;
-            }
-        }
+        public decimal TotalPrice { get; set; }
 
         [DataMember]
         public string StringifiedShippingPrice { get; set; }
-
-        [DataMember]
-        public string StringifiedTaxPrice { get; set; }
-
-        [DataMember]
-        public string StringifiedTotalPrice { get; set; }
 
         [DataMember]
         public ICollection<Transaction> Transactions { get; set; }
