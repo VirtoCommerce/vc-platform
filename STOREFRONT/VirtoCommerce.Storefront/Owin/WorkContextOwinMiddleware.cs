@@ -2,15 +2,11 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.Client.Api;
-using VirtoCommerce.LiquidThemeEngine;
 using VirtoCommerce.Storefront.Builders;
 using VirtoCommerce.Storefront.Common;
 using VirtoCommerce.Storefront.Converters;
@@ -97,8 +93,11 @@ namespace VirtoCommerce.Storefront.Owin
 
             if (context.Authentication.User.Identity.IsAuthenticated)
             {
-                // Remove anonymous customer cookie for registered customer
-                context.Response.Cookies.Append(StorefrontConstants.AnonymousCustomerIdCookie, string.Empty, new CookieOptions { Expires = DateTime.UtcNow.AddDays(-30) });
+                if (!string.IsNullOrEmpty(anonymousCustomerId))
+                {
+                    // Remove anonymous customer cookie for registered customer
+                    context.Response.Cookies.Append(StorefrontConstants.AnonymousCustomerIdCookie, string.Empty, new CookieOptions { Expires = DateTime.UtcNow.AddDays(-30) });
+                }
             }
             else
             {
