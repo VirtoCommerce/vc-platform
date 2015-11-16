@@ -25,8 +25,8 @@
 
         var newBlade = {
             id: 'listItemChild',
-            title: 'New placeholders element',
-            subtitle: 'Add new placeholders element',
+            title: 'marketing.blades.placeholders.add.title',
+            subtitle: 'marketing.blades.placeholders.add.subtitle',
             choosenFolder: blade.choosenFolder,
             controller: 'virtoCommerce.marketingModule.addPlaceholderElementController',
             template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/placeholders/add.tpl.html'
@@ -39,8 +39,8 @@
 
         var newBlade = {
             id: 'listItemChild',
-            title: 'New placeholders folder',
-            subtitle: 'Add new placeholders folder',
+            title: 'marketing.blades.placeholders.folder-details.title-new',
+            subtitle: 'marketing.blades.placeholders.folder-details.subtitle-new',
             entity: data,
             isNew: true,
             controller: 'virtoCommerce.marketingModule.addFolderPlaceholderController',
@@ -54,8 +54,8 @@
 
         var newBlade = {
             id: 'listItemChild',
-            title: 'Edit placeholders folder',
-            subtitle: 'Edit placeholders folder',
+            title: 'marketing.blades.placeholders.folder-details.title',
+            subtitle: 'marketing.blades.placeholders.folder-details.subtitle',
             entity: data,
             isNew: false,
             controller: 'virtoCommerce.marketingModule.addFolderPlaceholderController',
@@ -69,8 +69,8 @@
 
         var newBlade = {
             id: 'listItemChild',
-            title: 'New placeholders element',
-            subtitle: 'Add new placeholders element',
+            title: 'marketing.blades.placeholders.content-item-details.title-new',
+            subtitle: 'marketing.blades.placeholders.content-item-details.subtitle-new',
             entity: data,
             isNew: true,
             controller: 'virtoCommerce.marketingModule.addPlaceholderController',
@@ -84,8 +84,8 @@
 
         var newBlade = {
             id: 'listItemChild',
-            title: 'Edit placeholders element',
-            subtitle: 'Edit placeholders element',
+            title: 'marketing.blades.placeholders.content-item-details.title',
+            subtitle: 'marketing.blades.placeholders.content-item-details.subtitle',
             entity: data,
             isNew: false,
             controller: 'virtoCommerce.marketingModule.addPlaceholderController',
@@ -142,8 +142,8 @@
     blade.deleteFolder = function (data) {
         var dialog = {
             id: "confirmDeleteContentPlaceholdersFolder",
-            title: "Delete confirmation",
-            message: "Are you sure want to delete content placeholders folder?",
+            title: "marketing.dialiogs.placeholders-folder-delete.title",
+            message: "marketing.dialiogs.placeholders-folder-delete.message",
             callback: function (remove) {
                 if (remove) {
                     marketing_dynamicContents_res_folders.delete({ ids: [data.id] }, function () {
@@ -162,7 +162,7 @@
 
     blade.toolbarCommands = [
         {
-            name: "Add", icon: 'fa fa-plus',
+            name: "platform.commands.add", icon: 'fa fa-plus',
             executeMethod: function () {
                 blade.addNew();
             },
@@ -172,7 +172,7 @@
             permission: 'marketing:create'
         },
 		{
-		    name: "Edit folder", icon: 'fa fa-pencil-square-o',
+		    name: "marketing.commands.edit-folder", icon: 'fa fa-pencil-square-o',
 		    executeMethod: function () {
 		        blade.editFolder(blade.currentEntity);
 		    },

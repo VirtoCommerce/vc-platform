@@ -1,0 +1,172 @@
+﻿{
+  "marketing": {
+    "main-menu-title": "Marketing",
+    "blades": {
+      "marketing-main": {
+        "title": "Marketing"
+      },
+      "items": {
+        "add": {
+          "title": "New content items element",
+          "subtitle": "Add new content items element",
+          "menu": {
+            "folder": {
+              "title": "Content items folder",
+              "description": "A container for content items."
+            },
+            "item": {
+              "title": "Content item",
+              "description": "Content item."
+            }
+          }
+        },
+        "content-item-details": {
+          "title": "Edit content item element",
+          "subtitle": "Edit content item element",
+          "title-new": "New content item element",
+          "subtitle-new": "Add new content item element",
+          "labels": {
+            "content-item-name": "Content item name:",
+            "content-item-description": "Content item description:",
+            "none": "None"
+          }
+        },
+        "folder-details": {
+          "title": "Edit content items folder element",
+          "subtitle": "Edit content items folder element",
+          "title-new": "New content items folder element",
+          "subtitle-new": "Add new content items folder element",
+          "labels": {
+            "folder-name": "Folder name:",
+            "folder-description": "Folder description:"
+          },
+          "placeholders": {
+            "folder-name": "Enter folder name",
+            "folder-description": "Enter folder description"
+          }
+        },
+        "list": {
+          "labels": {
+            "picture": "Pic",
+            "name": "Name",
+            "description": "Description",
+            "no-data": "No data"
+          }
+        }
+      },
+      "placeholders": {
+        "add": {
+          "title": "New placeholders element",
+          "subtitle": "Add new placeholders element",
+          "menu": {
+            "folder": {
+              "title": "Placeholders folder",
+              "description": "A container for placeholders."
+            },
+            "item": {
+              "title": "Placeholder",
+              "description": "A container for content items."
+            }
+          }
+        },
+        "placeholder-details": {
+          "title": "New placeholders element",
+          "subtitle": "Add new placeholders element",
+          "title-new": "Edit placeholders element",
+          "subtitle-new": "Edit placeholders element",
+          "labels": {
+            "placeholder-name": "Placeholder name",
+            "placeholder-description": "Placeholder description",
+            "placeholder-image-description": "Placeholder image description",
+            "image-note": "Drag and drop image here",
+            "progress": "Progress"
+          }
+        },
+        "folder-details": {
+          "title": "Edit placeholders folder",
+          "subtitle": "Edit placeholders folder",
+          "title-new": "New placeholders folder",
+          "subtitle-new": "Add new placeholders folder",
+          "labels": {
+            "folder-name": "Folder name:",
+            "folder-description": "Folder description:"
+          },
+          "placeholders": {
+            "folder-name": "Enter folder name",
+            "folder-description": "Enter folder description"
+          }
+        },
+        "list": {
+          "labels": {
+            "picture": "Pic",
+            "name": "Name",
+            "description": "Description",
+            "no-data": "No data"
+          }
+        }
+      },
+      "publishing": {
+        "add-content-items": {
+          "title": "New content items element",
+          "subtitle": "Add new content items element",
+          "labels": {
+            "picture": "Pic",
+            "name": "Name",
+            "description": "Description",
+            "no-data": "No data"
+          }
+        },
+        "add-placeholders": {
+          "title": "New content items element",
+          "subtitle": "Add new content items element",
+          "menu": {
+            "folder": {
+              "title": "Content items folder",
+              "description": "A container for content items."
+            },
+            "item": {
+              "title": "Content item",
+              "description": "Content item."
+            }
+          }
+        },
+        "publishing-main-step": {
+        },
+        "list": {
+          "labels": {
+            "picture": "Pic",
+            "name": "Name",
+            "description": "Description",
+            "no-data": "No data"
+          }
+        }
+      }
+    },
+    "dialogs": {
+      "content-item-delete": {
+        "title": "Delete confirmation",
+        "message": "Are you sure want to delete content item?"
+      },
+      "placeholders-folder-delete": {
+        "title": "Delete confirmation",
+        "message": "Are you sure want to delete content placeholders folder?"
+      },
+      "content-item-folder-delete": {
+        "title": "Delete confirmation",
+        "message": "Are you sure want to delete content items folder?"
+      },
+      "content-folder-delete": {
+        "title": "Delete confirmation",
+        "message": "Are you sure want to delete this folder?"
+      },
+      "content-placeholder-delete": {
+        "title": "Delete confirmation",
+        "message": "Are you sure want to delete content placeholder?"
+      }
+    },
+    "commands": {
+      "manage-type-properties": "Manage type properties",
+      "edit-folder": "Edit folder"
+    }
+  }
+}

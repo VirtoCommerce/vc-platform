@@ -25,8 +25,8 @@
 
         var newBlade = {
             id: 'listItemChild',
-            title: 'New content items element',
-            subtitle: 'Add new content items element',
+            title: 'marketing.blades.items.add.title',
+            subtitle: 'marketing.blades.items.add.subtitle',
             choosenFolder: blade.choosenFolder,
             controller: 'virtoCommerce.marketingModule.addContentItemsElementController',
             template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/items/add.tpl.html'
@@ -39,8 +39,8 @@
 
         var newBlade = {
             id: 'listItemChild',
-            title: 'New content items folder element',
-            subtitle: 'Add new content items folder element',
+            title: 'marketing.blades.items.folder-details.title-new',
+            subtitle: 'marketing.blades.items.folder-details.subtitle-new',
             entity: data,
             isNew: true,
             controller: 'virtoCommerce.marketingModule.addFolderContentItemsController',
@@ -54,8 +54,8 @@
 
         var newBlade = {
             id: 'listItemChild',
-            title: 'Edit content items folder element',
-            subtitle: 'Edit content items folder element',
+            title: 'marketing.blades.items.folder-details.title',
+            subtitle: 'marketing.blades.items.folder-details.subtitle',
             entity: data,
             isNew: false,
             controller: 'virtoCommerce.marketingModule.addFolderContentItemsController',
@@ -69,8 +69,8 @@
 
         var newBlade = {
             id: 'listItemChild',
-            title: 'New content item element',
-            subtitle: 'Add new content item element',
+            title: 'marketing.blades.items.content-item-details.title-new',
+            subtitle: 'marketing.blades.items.content-item-details.subtitle-new',
             entity: data,
             isNew: true,
             controller: 'virtoCommerce.marketingModule.addContentItemsController',
@@ -84,8 +84,8 @@
 
         var newBlade = {
             id: 'listItemChild',
-            title: 'Edit content item element',
-            subtitle: 'Edit content item element',
+            title: 'marketing.blades.items.content-item-details.title',
+            subtitle: 'marketing.blades.items.content-item-details.subtitle',
             entity: data,
             isNew: false,
             controller: 'virtoCommerce.marketingModule.addContentItemsController',
@@ -142,8 +142,8 @@
     blade.deleteFolder = function (data) {
         var dialog = {
             id: "confirmDeleteContentItemsFolder",
-            title: "Delete confirmation",
-            message: "Are you sure want to delete content items folder?",
+            title: "marketing.dialogs.content-item-folder-delete.title",
+            message: "marketing.dialogs.content-item-folder-delete.message",
             callback: function (remove) {
                 if (remove) {
                     marketing_dynamicContents_res_folders.delete({ ids: [data.id] }, function () {
@@ -162,7 +162,7 @@
 
     blade.toolbarCommands = [
 		{
-		    name: "Add", icon: 'fa fa-plus',
+		    name: "marketing.commands.add", icon: 'fa fa-plus',
 		    executeMethod: function () {
 		        blade.addNew();
 		    },
@@ -172,7 +172,7 @@
 		    permission: 'marketing:create'
 		},
 		{
-		    name: "Edit folder", icon: 'fa fa-pencil-square-o',
+		    name: "marketing.commands.edit-folder", icon: 'fa fa-pencil-square-o',
 		    executeMethod: function () {
 		        blade.editFolder(blade.currentEntity);
 		    },

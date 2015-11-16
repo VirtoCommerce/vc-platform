@@ -22,6 +22,7 @@
       "cut": "Cut",
       "delete": "Delete",
       "download": "Download",
+      "edit": "Edit",
       "export": "Export",
       "generate": "Generate",
       "import": "Import",
@@ -586,20 +587,11 @@
       },
       "login": {
         "labels": {
-          "Sign-in": "Sign in to Virto Commerce Manager",
+          "sign-in": "Sign in to Virto Commerce Manager",
           "login": "Login",
           "password": "Password",
           "remember-me": "Remember me",
-          "Log-in": "Log in"
-        }
-      },
-      "loginToolbar": {
-        "labels": {
-          "Sign-in": "Sign in to Virto Commerce Manager",
-          "login": "Login",
-          "password": "Password",
-          "remember-me": "Remember me",
-          "Log-in": "Log in"
+          "log-in": "Log in"
         }
       },
       "new-account-wizard": {
