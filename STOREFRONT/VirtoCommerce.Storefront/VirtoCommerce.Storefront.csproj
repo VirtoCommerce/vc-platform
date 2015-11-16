@@ -233,6 +233,7 @@
     <Compile Include="Converters\AddressConverter.cs" />
     <Compile Include="Converters\AssetConverter.cs" />
     <Compile Include="Converters\CartConverter.cs" />
+    <Compile Include="Converters\CartLineItemConverter.cs" />
     <Compile Include="Converters\CategoryLinkConverter.cs" />
     <Compile Include="Converters\CustomerConverter.cs" />
     <Compile Include="Converters\EditorialReviewConverter.cs" />
@@ -269,7 +270,9 @@
     <Content Include="App_Data\Themes\default\assets\style.css.liquid" />
     <Content Include="App_Data\Themes\default\config\settings_data.json" />
     <Content Include="App_Data\Themes\default\layout\checkout.liquid" />
-    <Content Include="App_Data\Themes\default\layout\theme.liquid" />
+    <Content Include="App_Data\Themes\default\layout\theme.liquid">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="App_Data\Themes\default\layout\theme_blank.liquid" />
     <Content Include="App_Data\Themes\default\locales\de.json" />
     <Content Include="App_Data\Themes\default\locales\en.default.json" />
@@ -373,6 +376,7 @@
     <Content Include="App_Data\Themes\default\templates\thanks_page.liquid" />
     <Content Include="App_Data\Themes\default\templates\verify-code.liquid" />
     <Content Include="App_Data\Themes\default\layout\product_layout.liquid" />
+    <Content Include="App_Data\Themes\default\layout\cart_layout.liquid" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

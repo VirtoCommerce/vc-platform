@@ -16,11 +16,20 @@ namespace VirtoCommerce.Storefront.Controllers
             _cartBuilder = cartBuilder;
         }
 
+        // GET: /cart
         [HttpGet]
         [Route("")]
         public ActionResult Index()
         {
-            return View("cart", _workContext);
+            return View("cart", "cart_layout", _workContext);
+        }
+
+        // POST: /cart/add?id=...&quantity=...
+        [HttpPost]
+        [Route("add")]
+        public ActionResult Add(string id, int quantity = 1)
+        {
+            return RedirectToAction("Index");
         }
     }
 }
