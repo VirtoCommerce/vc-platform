@@ -26,7 +26,6 @@ namespace GoogleShopping.MerchantModule.Web.Controllers.Api
     [CheckPermission(Permission = PredefinedPermissions.Manage)]
     public class GoogleShoppingController : ApiController
     {
-        private const string _accessTokenPropertyName = "Google.Shopping.Credentials.AccessToken";
         private readonly IGoogleProductProvider _productProvider;
         private readonly IShoppingSettings _settingsManager;
 		private readonly IPushNotificationManager _pushNotificationManager;

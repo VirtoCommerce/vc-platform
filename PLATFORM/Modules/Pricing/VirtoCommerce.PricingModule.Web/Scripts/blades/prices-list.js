@@ -39,8 +39,8 @@
         if (isDirty()) {
             var dialog = {
                 id: "confirmItemChange",
-                title: "Save changes",
-                message: "The Prices has been modified. Do you want to save changes?"
+                title: "pricing.dialogs.prices-save.title",
+                message: "pricing.dialogs.prices-save.message"
             };
             dialog.callback = function (needSave) {
                 if (needSave) {
@@ -106,7 +106,7 @@
 
     $scope.blade.toolbarCommands = [
         {
-            name: "Add", icon: 'fa fa-plus',
+            name: "platform.commands.add", icon: 'fa fa-plus',
             executeMethod: function () {
                 var newEntity = { productId: $scope.blade.itemId, list: 0, minQuantity: 1, currency: $scope.blade.currency };
                 $scope.blade.currentEntities.push(newEntity);
@@ -118,7 +118,7 @@
             permission: 'pricing:update'
         },
         {
-            name: "Save", icon: 'fa fa-save',
+            name: "platform.commands.save", icon: 'fa fa-save',
             executeMethod: function () {
                 $scope.saveChanges();
             },
@@ -128,7 +128,7 @@
             permission: 'pricing:update'
         },
         {
-            name: "Reset", icon: 'fa fa-undo',
+            name: "platform.commands.reset", icon: 'fa fa-undo',
             executeMethod: function () {
                 angular.copy($scope.blade.origEntity, $scope.blade.currentEntities);
                 $scope.blade.selectedAll = false;
@@ -139,7 +139,7 @@
             permission: 'pricing:update'
         },
         {
-            name: "Delete", icon: 'fa fa-trash-o',
+            name: "platform.commands.delete", icon: 'fa fa-trash-o',
             executeMethod: function () {
                 var selection = _.where($scope.blade.currentEntities, { _selected: true });
                 angular.forEach(selection, function (listItem) {

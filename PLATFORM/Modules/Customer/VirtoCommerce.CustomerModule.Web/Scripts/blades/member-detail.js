@@ -25,13 +25,14 @@
                             if (needToAddToolbarCommands) {
                                 blade.toolbarCommands.push(
                                    {
-                                       name: "Login on behalf",
+                                       name: "customer.commands.login-on-behalf",
                                        icon: 'fa fa-key',
                                        executeMethod: function () {
                                            var newBlade = {
                                                id: 'memberDetailChild',
                                                currentEntityId: blade.currentEntityId,
-                                               title: 'Login on behalf of ' + blade.currentEntity.fullName,
+                                               title: 'customer.blades.loginOnBehalf-list.title',
+                                               titleValues: { name: blade.currentEntity.fullName },
                                                controller: 'virtoCommerce.customerModule.loginOnBehalfListController',
                                                template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/loginOnBehalf-list.tpl.html'
                                            };
@@ -42,7 +43,7 @@
                                    },
                                    userStateCommand = {
                                        updateName: function () {
-                                           return this.name = (blade.currentEntity && blade.currentEntity.userState === 'Approved') ? 'Reject user' : 'Approve user';
+                                           return this.name = (blade.currentEntity && blade.currentEntity.userState === 'Approved') ? 'customer.commands.reject-user' : 'customer.commands.approve-user';
                                        },
                                        icon: 'fa fa-dot-circle-o',
                                        executeMethod: function () {
@@ -59,14 +60,14 @@
                                        permission: 'platform:security:update'
                                    },
                                    {
-                                       name: "Change password",
+                                       name: "customer.commands.change-password",
                                        icon: 'fa fa-refresh',
                                        executeMethod: function () {
                                            var newBlade = {
                                                id: 'accountDetailChild',
                                                currentEntityId: account.userName,
                                                title: blade.title,
-                                               subtitle: "Change user's password",
+                                               subtitle: "customer.blades.account-changePassword.subtitle",
                                                controller: 'platformWebApp.accountChangePasswordController',
                                                template: '$(Platform)/Scripts/app/security/blades/account-changePassword.tpl.html'
                                            };
@@ -174,8 +175,8 @@
         if (isDirty()) {
             var dialog = {
                 id: "confirmCurrentBladeClose",
-                title: "Save changes",
-                message: "The Customer has been modified. Do you want to save changes?"
+                title: "customer.dialogs.customer-save.title",
+                message: "customer.dialogs.customer-save.message"
             };
             dialog.callback = function (needSave) {
                 if (needSave) {
@@ -200,7 +201,7 @@
 
     blade.toolbarCommands = [
         {
-            name: "Save",
+            name: "platform.commands.save",
             icon: 'fa fa-save',
             executeMethod: function () {
                 $scope.saveChanges();
@@ -211,7 +212,7 @@
             permission: 'customer:update'
         },
         {
-            name: "Reset",
+            name: "platform.commands.reset",
             icon: 'fa fa-undo',
             executeMethod: function () {
                 angular.copy(blade.origEntity, blade.currentEntity);

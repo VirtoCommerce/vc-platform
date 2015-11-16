@@ -14,17 +14,17 @@
                     </li>
                     <li class="menu-item __minimize" ng-click="bladeRestore()" ng-show="maximized">
                         <button>
-                            Minimize
+                            {{ 'platform.commands.minimize' | translate }}
                         </button>
                     </li>
                     <li class="menu-item __maximize" ng-click="bladeMaximize()" ng-show="!maximized">
                         <button>
-                            Maximize
+                            {{ 'platform.commands.maximize' | translate }}
                         </button>
                     </li>
                     <li class="menu-item __close" ng-click="bladeClose()" ng-class="{'__disabled': blade.isClosingDisabled}" ng-disabled="blade.isClosingDisabled">
                         <button>
-                            Close
+                            {{ 'platform.commands.close' | translate }}
                         </button>
                     </li>
                 </ul>

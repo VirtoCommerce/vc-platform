@@ -2,8 +2,8 @@
 .controller('platformWebApp.propertyValueListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.settings', 'platformWebApp.dynamicProperties.dictionaryItemsApi', function ($scope, bladeNavigationService, dialogService, settings, dictionaryItemsApi) {
     var blade = $scope.blade;
     blade.headIcon = 'fa-plus-square-o';
-    blade.title = "Properties values";
-    blade.subtitle = "Edit properties values";
+    blade.title = "platform.blades.propertyValue-list.title";
+    blade.subtitle = "platform.blades.propertyValue-list.subtitle";
     $scope.languages = [];
 
     blade.refresh = function () {
@@ -65,8 +65,8 @@
         if (isDirty()) {
             var dialog = {
                 id: "confirmItemChange",
-                title: "Save changes",
-                message: "The properties have been modified. Do you want to confirm changes?",
+                title: "platform.dialogs.properties-save.title",
+                message: "platform.dialogs.properties-save.message",
                 callback: function (needSave) {
                     if (needSave) {
                         $scope.saveChanges();
@@ -83,7 +83,7 @@
 
     blade.toolbarCommands = [
         {
-            name: "Reset", icon: 'fa fa-undo',
+            name: "platform.commands.reset", icon: 'fa fa-undo',
             executeMethod: function () {
                 angular.copy(blade.origEntity, blade.currentEntities);
             },
@@ -92,7 +92,7 @@
             }
         },
 		{
-		    name: "Manage type properties", icon: 'fa fa-edit',
+		    name: "platform.commands.manage-type-properties", icon: 'fa fa-edit',
 		    executeMethod: function () {
 		        var newBlade = {
 		            id: 'dynamicPropertyList',

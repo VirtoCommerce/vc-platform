@@ -51,6 +51,6 @@
         stopRefresh();
     });
 
-    blade.title = "Rebuild Search Index";
+    blade.title = "search.blades.rebuildIndex.title";
     rebuild();
 }]);

@@ -23,6 +23,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [System.Web.Http.HttpGet]
         [System.Web.Http.Route("")]
         [ResponseType(typeof(object))]
+        [AllowAnonymous]
         public JObject GetLocalizationFile(string lang = "en")
         {
             DirectoryInfo directory = new DirectoryInfo(_localizationPath);
@@ -44,7 +45,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 result.Merge(part, new JsonMergeSettings { MergeArrayHandling = MergeArrayHandling.Concat });
             }
 
-            return result;
+            return result; 
         }
     }
 }

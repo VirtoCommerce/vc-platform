@@ -123,7 +123,7 @@
             var dialog = {
                 id: "confirmItemChange",
                 title: "catalog.dialogs.property-save.title",
-                message: "catalog.dialogs.property-save.subtitle",
+                message: "catalog.dialogs.property-save.message",
                 callback: function (needSave) {
                     if (needSave) {
                         saveChanges();

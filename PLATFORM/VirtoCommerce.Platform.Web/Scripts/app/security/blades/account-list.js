@@ -67,8 +67,8 @@ function ($scope, accounts, bladeNavigationService, dialogService) {
     function deleteChecked() {
         var dialog = {
             id: "confirmDeleteItem",
-            title: "Delete confirmation",
-            message: "Are you sure you want to delete selected Accounts?",
+            title: "platform.dialogs.account-delete.title",
+            message: "platform.dialogs.account-delete.message",
             callback: function (remove) {
                 if (remove) {
                     closeChildrenBlades();
@@ -96,7 +96,7 @@ function ($scope, accounts, bladeNavigationService, dialogService) {
 
     $scope.blade.toolbarCommands = [
         {
-            name: "Refresh", icon: 'fa fa-refresh',
+            name: "platform.commands.refresh", icon: 'fa fa-refresh',
             executeMethod: function () {
                 $scope.blade.refresh();
             },
@@ -105,14 +105,14 @@ function ($scope, accounts, bladeNavigationService, dialogService) {
             }
         },
         {
-            name: "Add", icon: 'fa fa-plus',
+            name: "platform.commands.add", icon: 'fa fa-plus',
             executeMethod: function () {
                 closeChildrenBlades();
 
                 var newBlade = {
                     id: 'listItemChild',
                     currentEntity: { roles: [], userType: 'SiteAdministrator' },
-                    title: 'New Account',
+                    title: 'platform.blades.account-detail.title-new',
                     subtitle: $scope.blade.subtitle,
                     controller: 'platformWebApp.newAccountWizardController',
                     template: '$(Platform)/Scripts/app/security/wizards/newAccount/new-account-wizard.tpl.html'
@@ -125,7 +125,7 @@ function ($scope, accounts, bladeNavigationService, dialogService) {
             permission: 'platform:security:create'
         },
         {
-            name: "Delete", icon: 'fa fa-trash-o',
+            name: "platform.commands.delete", icon: 'fa fa-trash-o',
             executeMethod: function () {
                 deleteChecked();
             },

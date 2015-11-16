@@ -42,8 +42,8 @@
 	        controller: ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
 				    var blade = {
 				        id: 'security',
-				        title: 'platform.menu.security',
-				        subtitle: 'User management',
+				        title: 'platform.blades.security-main.title',
+				        subtitle: 'platform.blades.security-main.subtitle',
 				        controller: 'platformWebApp.securityMainController',
 				        template: '$(Platform)/Scripts/app/security/blades/security-main.tpl.html',
 				        isClosingDisabled: true

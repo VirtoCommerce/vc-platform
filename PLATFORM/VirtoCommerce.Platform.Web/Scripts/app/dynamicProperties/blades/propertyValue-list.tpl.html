@@ -12,7 +12,7 @@
                         <va-generic-value-input ng-model="property" languages="languages" get-dictionary-values="getDictionaryValues" />
                     </div>
 
-                    <div class="text" ng-if="blade.currentEntities.length == 0">This entity doesn't have any dynamic properties yet. Click "Manage type properties" and create some properties. Close and reopen current entity view to get dynamic properties loaded.</div>
+                    <div class="text" ng-if="blade.currentEntities.length == 0">{{ 'platform.blades.propertyValue-list.labels.no-properties' | translate }}</div>
                 </fieldset>
             </form>
         </div>

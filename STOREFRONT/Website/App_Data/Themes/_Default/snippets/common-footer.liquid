@@ -1,0 +1,96 @@
+﻿<footer class="clearfix">
+    <div class="row show-for-medium-down">
+        <div class="columns text-center">
+            <ul class="show-for-medium-down">
+                <li>{{ 'Store Locations' | link_to: 'pages/store-listing' }}</li>
+                <li>{{ 'Make an Appointment' | link_to: 'pages/appointment' }}</li>
+                <li>{{ 'About Us & Careers' | link_to: 'pages/about-robbins-brothers' }}</li>
+                <li>{{ 'In-Store Events' | link_to: 'pages/events' }}</li>
+                <li>{{ 'Clearance Outlet' | link_to: 'pages/clearance-outlet' }}</li>
+                <li>{{ 'Financing' | link_to: 'pages/finance' }}</li>
+                <li>{{ 'Customer Care' | link_to: 'pages/customer-care' }}</li>
+                <li>{{ 'Make a Payment' | link_to: 'pages/payment-options' }}</li>
+                <li>{{ 'Contact Us' | link_to: 'pages/contact-us' }}</li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="columns large-3">
+            <p class="header">Plan Your Visit</p>
+            <ul>
+                <li>{{ 'What to Expect' | link_to: 'pages/store-experience' }}</li>
+                <li>{{ 'Make An Appointment' | link_to: 'pages/appointment' }}</li>
+                <li>{{ 'Store Locations' | link_to: 'pages/store-listing' }}</li>
+                <li>{{ 'In-Store Events' | link_to: 'pages/events' }}</li>
+            </ul>
+            <p class="header">Call us</p>
+            <p class="call-us show-for-large-up"><span class="phone">1-800-295-1543</span></p>
+        </div>
+        <div class="columns large-3">
+            <p class="header">Why Robbins Brothers</p>
+            <ul>
+                <li>{{ 'About Us' | link_to: 'pages/about-robbins-brothers' }}</li>
+                <li>{{ 'Careers' | link_to: 'pages/careers' }}</li>
+            </ul>
+            <p class="header">Quick Shop</p>
+            <ul>
+                {% for collection in collections %}
+                    <li>{{ collection.title | link_to: collection.url }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="columns large-3">
+            <p class="header">Get Connected!</p>
+            <ul class="footer-email">
+                <li class="show-for-large-up">Sign up to receive emails with exclusive offers and invitations to special events!</li>
+                <li class="show-for-medium-down">Newsletter Subscription</li>
+                <li class="form clearfix">
+                    <form action="/CustomerService/Subscription.aspx" method="post">
+                        <input name="ff" id="ff" type="hidden" value="1">
+                        <input name="email" type="email" placeholder="Enter your email address">
+                        <button class="primary" type="submit"></button>
+                    </form>
+                </li>
+            </ul>
+            <p class="call-us show-for-medium-down"><span class="phone">1-800-295-1543</span></p>
+            <p class="header hide-for-medium-down">Follow Us</p>
+            <ul class="social-links clearfix">
+                <li>
+                    <a title="Facebook" class="facebook" href="http://www.facebook.com/RobbinsBrothers" target="_blank"></a>
+                </li>
+                <li>
+                    <a title="Twitter" class="twitter" href="http://twitter.com/RobbinsBrothers" target="_blank"></a>
+                </li>
+                <li>
+                    <a title="Pintrest" class="pinterest" href="http://pinterest.com/robbinsbrothers" target="_blank"></a>
+                </li>
+                <li>
+                    <a title="Linked In" class="linkedin" href="https://www.linkedin.com/company/290059" target="_blank"></a>
+                </li>
+            </ul>
+        </div>
+        <div class="columns large-3">
+            <p class="header">Customer Service</p>
+            <ul>
+                <li>{{ 'Customer Care' | link_to: 'pages/customer-care' }}</li>
+                <li>{{ 'Make a Payment' | link_to: 'pages/payment-options' }}</li>
+                <li>{{ 'Contact Us' | link_to: 'pages/contact-us' }}</li>
+            </ul>
+            <p class="header hide-for-medium-down">Special Offers</p>
+            <ul>
+                <li>{{ 'Finance Offers' | link_to: 'pages/finance' }}</li>
+                <li>{{ 'Military Appreciation' | link_to: 'pages/military-offer' }}</li>
+                <li>{{ 'Refer A Friend' | link_to: 'pages/share-the-love' }}</li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="columns large-12 align-center copyright clearfix">
+            <p>© <span class="currentYear">2015</span> Robbins Bros. All Rights Reserved. <span class="hide-for-medium-down">Call <span class="phone">1-800-295-1543</span></span></p>
+            <ul>
+                <li>{{ 'Privacy Policy' | link_to: 'pages/privacy-policy' }}</li>
+                <li>{{ 'Terms & Conditions' | link_to: 'pages/terms-conditions' }}</li>
+            </ul>
+        </div>
+    </div>
+</footer>

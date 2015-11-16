@@ -64,7 +64,11 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			{
 				retVal.Items = shipment.Items.Select(x => x.ToCoreShipmentItemModel()).ToList();
 			}
-			retVal.TaxDetails = shipment.TaxDetails;
+            if (shipment.Discounts != null)
+            {
+                retVal.Discount = shipment.Discounts.Select(x => x.ToCoreModel()).FirstOrDefault();
+            }
+            retVal.TaxDetails = shipment.TaxDetails;
 			return retVal;
 		}
 

@@ -62,13 +62,13 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 			{
 				var query = repository.Categories;
 
-				dataModel.CatalogBase dbCatalog = null;
+				dataModel.Catalog dbCatalog = null;
 				var isVirtual = false;
 
 				if(!String.IsNullOrEmpty(criteria.CatalogId))
 				{
 					 dbCatalog = repository.GetCatalogById(criteria.CatalogId);
-					 isVirtual = dbCatalog is dataModel.VirtualCatalog;
+                    isVirtual = dbCatalog.Virtual;
 
 					 query = query.Where(x => x.CatalogId == criteria.CatalogId);
 				}
@@ -128,9 +128,8 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 					if (isVirtual)
 					{
 						//Need return only catalog linked categories 
-						var allLinkedCategoriesIds = ((dataModel.VirtualCatalog)dbCatalog).IncommingLinks
-																						  .Where(x => x.TargetCategoryId == null)
-																						  .Select(x => x.SourceCategoryId);
+						var allLinkedCategoriesIds = dbCatalog.IncommingLinks.Where(x => x.TargetCategoryId == null)
+																			 .Select(x => x.SourceCategoryId);
 						//Search in all catalogs
 						query = repository.Categories;
 						query = query.Where(x => (x.CatalogId == criteria.CatalogId && (x.ParentCategoryId == null || criteria.GetAllCategories)) || allLinkedCategoriesIds.Contains(x.Id));
@@ -188,7 +187,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 				if (criteria.CatalogId != null)
 				{
 					var dbCatalog = repository.GetCatalogById(criteria.CatalogId);
-					isVirtual = dbCatalog is dataModel.VirtualCatalog;
+					isVirtual = dbCatalog.Virtual;
 				}
 
 				var query = repository.Items;
@@ -249,7 +248,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                                    .Select(x => x.Id)
                                    .ToArray();
 
-				var productResponseGroup = coreModel.ItemResponseGroup.ItemInfo | coreModel.ItemResponseGroup.ItemAssets | ItemResponseGroup.Categories;
+				var productResponseGroup = coreModel.ItemResponseGroup.ItemInfo | coreModel.ItemResponseGroup.ItemAssets | ItemResponseGroup.Links;
 				if ((criteria.ResponseGroup & coreModel.ResponseGroup.WithProperties) ==coreModel.ResponseGroup.WithProperties)
 				{
 					productResponseGroup |= coreModel.ItemResponseGroup.ItemProperties;

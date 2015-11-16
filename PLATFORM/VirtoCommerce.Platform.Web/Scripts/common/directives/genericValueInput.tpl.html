@@ -5,21 +5,21 @@
         <div class="form-input">
             <input ng-required="currentEntity.property.isRequired"
                    ng-model="context.currentPropValues[0].value"
-                   placeholder="Enter short text">
+                   placeholder="platform.genericValueInput.placeholders.short-text">
         </div>
     </script>
     <script type="text/ng-template" id="dSecureString.html">
         <div class="form-input">
             <input ng-required="currentEntity.property.isRequired"
                    ng-model="context.currentPropValues[0].value"
-                   type="password" placeholder="Enter secret text">
+                   type="password" placeholder="platform.genericValueInput.placeholders.secure-string">
         </div>
     </script>
     <script type="text/ng-template" id="dLongText.html">
         <div class="form-input">
             <textarea ng-required="currentEntity.property.isRequired"
                       ng-model="context.currentPropValues[0].value"
-                      placeholder="Enter long text"></textarea>
+                      placeholder="platform.genericValueInput.placeholders.long-text"></textarea>
         </div>
     </script>
     <script type="text/ng-template" id="dHtml.html">
@@ -35,7 +35,7 @@
             <input smart-float num-type="integer"
                    ng-required="currentEntity.property.isRequired"
                    ng-model="context.currentPropValues[0].value"
-                   placeholder="Enter integer number" />
+                   placeholder="platform.genericValueInput.placeholders.integer" />
         </div>
     </script>
 
@@ -44,7 +44,7 @@
             <input smart-float num-type="float"
                    ng-required="currentEntity.property.isRequired"
                    ng-model="context.currentPropValues[0].value"
-                   placeholder="Enter decimal number" />
+                   placeholder="platform.genericValueInput.placeholders.number" />
         </div>
     </script>
 
@@ -53,7 +53,7 @@
             <input ng-model="context.currentPropValues[0].value"
                    datepicker-popup
                    is-open="datepickers.DateTime"
-                   placeholder="Choose date"
+                   placeholder="platform.genericValueInput.placeholders.date-time"
                    close-text="Close">
             <button ng-click="open($event, 'DateTime')" type="button" class="btn">
                 <i class="btn-ico fa fa-calendar"></i>
@@ -74,7 +74,7 @@
                     min-tags="{{currentEntity.property.isRequired ? 1 : undefined}}"
                     add-on-blur="true"
                     display-property="value"
-                    placeholder="Add value">
+                    placeholder="platform.genericValueInput.placeholders.short-text-multivalue">
         </tags-input>
     </script>
     <script type="text/ng-template" id="dInteger-multivalue.html">
@@ -84,7 +84,7 @@
                     allowed-tags-pattern="^[-]?[0-9]*$"
                     min-length="1"
                     display-property="value"
-                    placeholder="Add integer">
+                    placeholder="platform.genericValueInput.placeholders.integer-multivalue">
         </tags-input>
     </script>
     <script type="text/ng-template" id="dDecimal-multivalue.html">
@@ -94,14 +94,14 @@
                     allowed-tags-pattern="^[-]?[0-9]+[\.]?[0-9]*$"
                     min-length="1"
                     display-property="value"
-                    placeholder="Add decimal">
+                    placeholder="platform.genericValueInput.placeholders.number-multivalue">
         </tags-input>
     </script>
 
     <script type="text/ng-template" id="dShortText-dictionary.html">
         <div class="form-input">
             <ui-select ng-model="context.currentPropValues[0]">
-                <ui-select-match placeholder="Select value">{{$select.selected.name}}</ui-select-match>
+                <ui-select-match placeholder="platform.genericValueInput.placeholders.short-text-dictionary">{{$select.selected.name}}</ui-select-match>
                 <ui-select-choices repeat="propValue in context.allDictionaryValues | filter: {name: $select.search}">
                     <span ng-bind-html="propValue.name | highlight: $select.search"></span>
                 </ui-select-choices>
@@ -113,7 +113,7 @@
     <script type="text/ng-template" id="dShortText-dictionary-multivalue.html">
         <div class="form-input">
             <ui-select multiple ng-model="context.currentPropValues">
-                <ui-select-match placeholder="Select value">{{$item.name}}</ui-select-match>
+                <ui-select-match placeholder="platform.genericValueInput.placeholders.short-text-dictionary-multivalue">{{$item.name}}</ui-select-match>
                 <ui-select-choices repeat="propValue in context.allDictionaryValues | filter: {name: $select.search}">
                     <span ng-bind-html="propValue.name | highlight: $select.search"></span>
                 </ui-select-choices>
@@ -127,7 +127,7 @@
                 <span class="flag flag-{{propValue.locale.substr(3).toLowerCase()}}"></span>
                 <input ng-required="currentEntity.property.isRequired"
                        ng-model="propValue.value"
-                       placeholder="Enter value">
+                       placeholder="platform.genericValueInput.placeholders.short-text-multilang">
             </div>
         </div>
     </script>
@@ -137,7 +137,7 @@
                 <span class="flag flag-{{propValue.locale.substr(3).toLowerCase()}}"></span>
                 <textarea ng-required="currentEntity.property.isRequired"
                           ng-model="propValue.value"
-                          placeholder="Enter value" />
+                          placeholder="platform.genericValueInput.placeholders.long-text-multilang" />
             </div>
         </div>
     </script>
@@ -146,7 +146,7 @@
             <span class="flag flag-{{propValue.locale.substr(3).toLowerCase()}}"></span>
             <div ng-required="currentEntity.property.isRequired"
                  ng-model="propValue.value"
-                 placeholder="Enter HTML"
+                 placeholder="platform.genericValueInput.placeholders.html-multilang"
                  class="editable" text-angular text-angular-name="dHMmyEditor"></div>
         </div>
     </script>
@@ -161,7 +161,7 @@
                             add-on-blur="true"
                             min-length="1"
                             display-property="value"
-                            placeholder="Add value">
+                            placeholder="platform.genericValueInput.placeholders.short-text-multivalue-multilang">
                 </tags-input>
             </div>
         </div>
@@ -171,7 +171,7 @@
         <div class="form-group">
             <div class="form-input">
                 <ui-select ng-model="context.currentPropValues[0]">
-                    <ui-select-match placeholder="Select value">{{$select.selected.name}}</ui-select-match>
+                    <ui-select-match placeholder="platform.genericValueInput.placeholders.short-text-dictionary-multilang">{{$select.selected.name}}</ui-select-match>
                     <ui-select-choices repeat="propValue in context.allDictionaryValues | filter: {name: $select.search}">
                         <span ng-bind-html="propValue.name | highlight: $select.search"></span>
                     </ui-select-choices>
@@ -187,7 +187,7 @@
     <script type="text/ng-template" id="dShortText-dictionary-multivalue-multilang.html">
         <div class="form-input">
             <ui-select multiple ng-model="context.currentPropValues">
-                <ui-select-match placeholder="Select value">{{$item.name}}</ui-select-match>
+                <ui-select-match placeholder="platform.genericValueInput.placeholders.short-text-dictionary-multivalue-multilang">{{$item.name}}</ui-select-match>
                 <ui-select-choices repeat="propValue in context.allDictionaryValues | filter: {name: $select.search}">
                     <span ng-bind-html="propValue.name | highlight: $select.search"></span>
                 </ui-select-choices>

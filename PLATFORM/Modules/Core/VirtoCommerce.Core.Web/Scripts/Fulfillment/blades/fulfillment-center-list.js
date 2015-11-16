@@ -34,7 +34,7 @@ function ($scope, fulfillments, bladeNavigationService) {
             currentEntityId: selectedNode.id,
             currentEntity: selectedNode,
             title: title,
-            subtitle: 'Edit Fulfillment center',
+            subtitle: 'core.blades.fulfillment-center-detail.subtitle',
             controller: 'virtoCommerce.coreModule.fulfillment.fulfillmentCenterDetailController',
             template: 'Modules/$(VirtoCommerce.Core)/Scripts/fulfillment/blades/fulfillment-center-detail.tpl.html'
         };
@@ -59,7 +59,7 @@ function ($scope, fulfillments, bladeNavigationService) {
     $scope.blade.headIcon = 'fa-wrench';
     $scope.blade.toolbarCommands = [
       {
-          name: "Refresh", icon: 'fa fa-refresh',
+          name: "platform.commands.refresh", icon: 'fa fa-refresh',
           executeMethod: function () {
               $scope.blade.refresh();
           },
@@ -68,7 +68,7 @@ function ($scope, fulfillments, bladeNavigationService) {
           }
       },
         {
-            name: "Add", icon: 'fa fa-plus',
+            name: "platform.commands.add", icon: 'fa fa-plus',
             executeMethod: function () {
                 showDetailBlade({ maxReleasesPerPickBatch: 20, pickDelay: 30 }, 'New Fulfillment center');
             },
@@ -80,7 +80,7 @@ function ($scope, fulfillments, bladeNavigationService) {
     ];
 
     // actions on load
-    $scope.blade.title = 'Fulfillment centers',
-    $scope.blade.subtitle = 'Manage Fulfillment centers',
+    $scope.blade.title = 'core.blades.fulfillment-center-list.title',
+    $scope.blade.subtitle = 'core.blades.fulfillment-center-list.subtitle',
     $scope.blade.refresh();
 }]);

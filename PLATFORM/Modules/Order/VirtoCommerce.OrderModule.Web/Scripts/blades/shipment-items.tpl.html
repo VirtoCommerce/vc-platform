@@ -1,6 +1,6 @@
 ﻿<div class="blade-static">
     <div class="form-group">
-        <p class="form-count">Count: <span class="count">{{pageSettings.totalItems}}</span></p>
+        <p class="form-count">{{'platform.list.count' | translate}}: <span class="count">{{pageSettings.totalItems}}</span></p>
     </div>
 </div>
 <div class="blade-content __large-wide">
@@ -17,10 +17,10 @@
                                     <span class="check"></span>
                                 </label>
                             </th>
-                            <th class="table-col __proudct-img">Item</th>
-                            <th class="table-col">Qty</th>
-                            <th class="table-col">Price</th>
-                            <th class="table-col">Total</th>
+                            <th class="table-col __proudct-img">{{ 'orders.blades.shipment-items.labels.item' | translate }}</th>
+                            <th class="table-col">{{ 'orders.blades.shipment-items.labels.quantity' | translate }}</th>
+                            <th class="table-col">{{ 'orders.blades.shipment-items.labels.price' | translate }}</th>
+                            <th class="table-col">{{ 'orders.blades.shipment-items.labels.total' | translate }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -38,10 +38,10 @@
                                 </div>
                                 <ul role="menu" class="menu __context" id="col_menu_{{data.id}}">
                                     <li class="menu-item" ng-click='edit(data)'>
-                                        <i class="menu-ico fa fa-edit"></i> Manage
+                                        <i class="menu-ico fa fa-edit"></i> {{'platform.commands.manage' | translate}}
                                     </li>
                                     <li class="menu-item" ng-click='delete()'>
-                                        <i class="menu-ico fa fa-trash-o"></i> Delete
+                                        <i class="menu-ico fa fa-trash-o"></i> {{'platform.commands.delete' | translate}}
                                     </li>
                                 </ul>
                             </td>
@@ -64,10 +64,10 @@
                                 {{data.lineItem.name}}
                                 <ul role="menu" class="menu __context" id="col_menu_{{data.id}}">
                                     <li class="menu-item" ng-click='edit(data)'>
-                                        <i class="menu-ico fa fa-edit"></i> Manage
+                                        <i class="menu-ico fa fa-edit"></i> {{'platform.commands.manage' | translate}}
                                     </li>
                                     <li class="menu-item" ng-click='delete()'>
-                                        <i class="menu-ico fa fa-trash-o"></i> Delete
+                                        <i class="menu-ico fa fa-trash-o"></i> {{'platform.commands.delete' | translate}}
                                     </li>
                                 </ul>
                             </td>

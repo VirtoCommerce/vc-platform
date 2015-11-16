@@ -16,8 +16,9 @@
             itemId: selectedNode.productId,
             data: selectedNode,
             currency: $scope.blade.currency,
-            title: 'Prices for ' + selectedNode.productName,
-            subtitle: 'Edit prices',
+            title: 'pricing.blades.prices-list.title',
+            titleValues: { name: selectedNode.productName },
+            subtitle: 'pricing.blades.prices-list.subtitle',
             controller: 'virtoCommerce.pricingModule.pricesListController',
             template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/blades/prices-list.tpl.html'
         };
@@ -40,13 +41,13 @@
         var selectedProducts = [];
         var newBlade = {
             id: "CatalogItemsSelect",
-            title: "Select items for pricing",
+            title: "Select items for pricing", //catalogItemSelectController hardcode set title 
             controller: 'virtoCommerce.catalogModule.catalogItemSelectController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/common/catalog-items-select.tpl.html',
             breadcrumbs: [],
             toolbarCommands: [
             {
-                name: "Add selected", icon: 'fa fa-plus',
+                name: "pricing.commands.add-selected", icon: 'fa fa-plus',
                 executeMethod: function (blade) {
                     addProductsToPricelist(selectedProducts);
                     bladeNavigationService.closeBlade(blade);
@@ -97,7 +98,7 @@
 
     $scope.blade.toolbarCommands = [
     {
-        name: "Add", icon: 'fa fa-plus',
+        name: "platform.commands.add", icon: 'fa fa-plus',
         executeMethod: function () {
             closeChildrenBlades();
             openAddEntityWizard();

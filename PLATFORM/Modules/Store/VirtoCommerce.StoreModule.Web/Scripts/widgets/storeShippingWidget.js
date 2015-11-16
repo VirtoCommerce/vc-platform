@@ -6,7 +6,7 @@
         var newBlade = {
             id: "storeChildBlade",
             title: blade.title,
-            subtitle: 'Shipping methods',
+            subtitle: 'stores.widgets.storeShippingWidget.blade-subtitle',
             controller: 'virtoCommerce.storeModule.shippingMethodListController',
             template: 'Modules/$(VirtoCommerce.Store)/Scripts/blades/shippingMethod-list.tpl.html'
         };

@@ -108,6 +108,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <Content Include="Localizations\en.VirtoCommerce.Search.json" />
     <None Include="packages.config" />
     <Content Include="module.manifest" />
     <None Include="Web.Debug.config">

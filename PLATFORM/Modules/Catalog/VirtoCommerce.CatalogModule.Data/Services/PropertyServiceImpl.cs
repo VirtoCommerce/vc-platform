@@ -53,9 +53,8 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 			using (var repository = _catalogRepositoryFactory())
 			{
 				var dbCatalog = repository.GetCatalogById(catalogId);
-				var dbCatalogProperties = repository.GetCatalogProperties(dbCatalog);
 				var catalog = dbCatalog.ToCoreModel();
-				retVal = dbCatalogProperties.Select(x => x.ToCoreModel(catalog, null)).ToArray();
+				retVal = dbCatalog.Properties.Select(x => x.ToCoreModel(catalog, null)).ToArray();
 			}
 			return retVal;
 		}
@@ -95,7 +94,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 				if (property.CategoryId != null)
 				{
 					var dbCategory = repository.GetCategoryById(property.CategoryId);
-					repository.SetCategoryProperty(dbCategory, dbProperty);
+                    dbCategory.Properties.Add(dbProperty);
 				}
 				else
 				{
@@ -104,7 +103,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 					{
 						throw new OperationCanceledException("Add property only to catalog");
 					}
-					repository.SetCatalogProperty(dbCatalog, dbProperty);
+                    dbCatalog.Properties.Add(dbProperty);
 				}
 				repository.Add(dbProperty);
 				CommitChanges(repository);
@@ -153,14 +152,15 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 
 		public coreModel.PropertyDictionaryValue[] SearchDictionaryValues(string propertyId, string keyword)
 		{
-			var property = GetById(propertyId);
-			var query = property.DictionaryValues.AsQueryable();
-			//TODO: Replace to search in db
-            if (!String.IsNullOrEmpty(keyword))
-			{
-				query = query.Where(x => x.Value.ToLowerInvariant().Contains(keyword.ToLowerInvariant()));
-			}
-			return query.ToArray();
+            using (var repository = _catalogRepositoryFactory())
+            {
+                var query = repository.PropertyDictionaryValues.Where(x => x.PropertyId == propertyId);
+                if (!String.IsNullOrEmpty(keyword))
+                {
+                    query = query.Where(x => x.Value.Contains(keyword));
+                }
+                return query.ToArray().Select(x=> x.ToCoreModel()).ToArray();
+            }
 		}
 		#endregion
 	}

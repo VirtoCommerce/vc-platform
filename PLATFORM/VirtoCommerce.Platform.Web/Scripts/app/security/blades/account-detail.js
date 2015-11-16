@@ -31,10 +31,10 @@
     		isApiSave: true,
     		currentEntityId: 'VirtoCommerce.Platform.Security.AccountTypes',
     		// parentWidget: $scope.widget,
-    		title: 'Account types',
+    		title: 'platform.blades.account-setting-dictionary.title',
     		parentRefresh: function (data) { $scope.accountTypes = data; },
     		controller: 'platformWebApp.settingDictionaryController',
-    		template: '$(Platform)/Scripts/app/settings/blades/setting-dictionary.tpl.html'
+    		template: '$(Platform)/Scripts/app/settings/blades/account-setting-dictionary.tpl.html'
     	};
     	bladeNavigationService.showBlade(newBlade, $scope.blade);
    
@@ -55,8 +55,8 @@
         if (isDirty()) {
             var dialog = {
                 id: "confirmCurrentBladeClose",
-                title: "Save changes",
-                message: "The Account has been modified. Do you want to save changes?"
+                title: "platform.dialogs.account-save.title",
+                message: "platform.dialogs.account-save.message"
             };
             dialog.callback = function (needSave) {
                 if (needSave) {
@@ -81,7 +81,7 @@
 
     var userStateCommand = {
         updateName: function () {
-            return this.name = ($scope.blade.currentEntity && $scope.blade.currentEntity.userState === 'Approved') ? 'Reject user' : 'Approve user';
+            return this.name = ($scope.blade.currentEntity && $scope.blade.currentEntity.userState === 'Approved') ? 'platform.commands.reject-user' : 'platform.commands.approve-user';
         },
         // name: this.updateName(),
         icon: 'fa fa-dot-circle-o',
@@ -101,7 +101,7 @@
 
     $scope.blade.toolbarCommands = [
         {
-            name: "Save",
+            name: "platform.commands.save",
             icon: 'fa fa-save',
             executeMethod: function () {
                 $scope.saveChanges();
@@ -112,7 +112,7 @@
             permission: 'platform:security:update'
         },
         {
-            name: "Reset",
+            name: "platform.commands.reset",
             icon: 'fa fa-undo',
             executeMethod: function () {
                 angular.copy($scope.blade.origEntity, $scope.blade.currentEntity);
@@ -125,14 +125,14 @@
         },
         userStateCommand,
         {
-            name: "Change password",
+            name: "platform.commands.change-password",
             icon: 'fa fa-refresh',
             executeMethod: function () {
                 var newBlade = {
                     id: 'accountDetailChild',
                     currentEntityId: $scope.blade.currentEntity.userName,
                     title: $scope.blade.title,
-                    subtitle: "Change your password",
+                    subtitle: "platform.blades.account-resetPassword.subtitle",
                     controller: 'platformWebApp.accountResetPasswordController',
                     template: '$(Platform)/Scripts/app/security/blades/account-resetPassword.tpl.html'
                 };

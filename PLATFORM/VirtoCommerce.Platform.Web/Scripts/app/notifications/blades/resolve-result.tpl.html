@@ -3,7 +3,7 @@
 		<div class="inner-block">
 			<form class="form">
 				<fieldset>
-					<legend>Subject</legend>
+					<legend>{{ 'platform.blades.resolve-result.labels.subject' | translate }}</legend>
                     <div class="form-group">
                         <div class="form-input">
                             {{blade.notification.subject}}
@@ -12,7 +12,7 @@
 				</fieldset>
 
 				<fieldset style="margin-top:20px;">
-					<legend>Body</legend>
+					<legend>{{ 'platform.blades.resolve-result.labels.body' | translate }}</legend>
                     <div class="form-group">
                         <div class="form-input" ng-bind-html="to_trusted(blade.notification.body)">
                         </div>

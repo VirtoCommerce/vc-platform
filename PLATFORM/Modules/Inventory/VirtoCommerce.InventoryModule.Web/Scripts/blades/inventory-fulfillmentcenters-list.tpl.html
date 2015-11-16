@@ -10,7 +10,7 @@
                     <span class="list-descr">{{data.fulfillmentCenter.description | limitTo:50}}</span>
                 </li>
 			</ul>
-			<p class="text" ng-if="!blade.currentEntities.length">No Fulfillment centers available</p>
+			<p class="text" ng-if="!blade.currentEntities.length">{{ 'inventory.blades.inventory-fulfillmentcenters-list.labels.no-fulfillment-centers' | translate }}</p>
 		</div>
 	</div>
 </div>

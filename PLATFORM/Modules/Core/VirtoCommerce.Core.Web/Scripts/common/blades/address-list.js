@@ -12,7 +12,7 @@
 			id: 'coreAddressDetail',
 			currentEntity: address,
 			title: $scope.blade.title,
-			subtitle: 'Edit address',
+			subtitle: 'core.blades.address-detail.subtitle',
 			controller: 'virtoCommerce.coreModule.common.coreAddressDetailController',
 			confirmChangesFn: function(address)
 			{
@@ -67,7 +67,7 @@
 
 	$scope.blade.toolbarCommands = [
         {
-        	name: "Add", icon: 'fa fa-plus',
+        	name: "platform.commands.add", icon: 'fa fa-plus',
         	executeMethod: function () {
         		$scope.openDetailBlade();
         	},

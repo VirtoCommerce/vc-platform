@@ -22,7 +22,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         /// <returns></returns>
         /// <exception cref="System.ArgumentNullException">catalog</exception>
         public static coreModel.Category ToCoreModel(this dataModel.Category dbCategory, coreModel.Catalog catalog,
-                                                    coreModel.Property[] properties = null,  dataModel.Category[] allParents = null)
+                                                     dataModel.Category[] allParents = null)
         {
             if (catalog == null)
                 throw new ArgumentNullException("catalog");
@@ -35,7 +35,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			retVal.IsActive = dbCategory.IsActive;
 
 
-			retVal.PropertyValues = dbCategory.CategoryPropertyValues.Select(x => x.ToCoreModel(properties)).ToList();
+			retVal.PropertyValues = dbCategory.CategoryPropertyValues.Select(x => x.ToCoreModel(dbCategory.Properties)).ToList();
 			retVal.Virtual = catalog.Virtual;
 			retVal.Links = dbCategory.OutgoingLinks.Select(x => x.ToCoreModel(retVal)).ToList();
 
@@ -71,12 +71,8 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         {
 			var retVal = new dataModel.Category();
 
-			var id = retVal.Id;
 			retVal.InjectFrom(category);
-			if(category.Id == null)
-			{
-				retVal.Id = id;
-			}
+	
 			retVal.ParentCategoryId = category.ParentId;
 			retVal.EndDate = DateTime.UtcNow.AddYears(100);
 			retVal.StartDate = DateTime.UtcNow;
@@ -84,8 +80,8 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
           
             if (category.PropertyValues != null)
             {
-                retVal.CategoryPropertyValues = new ObservableCollection<dataModel.CategoryPropertyValue>();
-                retVal.CategoryPropertyValues.AddRange(category.PropertyValues.Select(x => x.ToDataModel<dataModel.CategoryPropertyValue>()).OfType<dataModel.CategoryPropertyValue>());
+                retVal.CategoryPropertyValues = new ObservableCollection<dataModel.PropertyValue>();
+                retVal.CategoryPropertyValues.AddRange(category.PropertyValues.Select(x => x.ToDataModel()));
             }
 
             if (category.Links != null)

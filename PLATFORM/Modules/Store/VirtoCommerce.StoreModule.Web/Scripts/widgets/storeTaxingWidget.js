@@ -6,7 +6,7 @@
         var newBlade = {
             id: "storeChildBlade",
             title: blade.title,
-            subtitle: 'Tax providers',
+            subtitle: 'stores.widgets.storeTaxingWidget.blade-subtitle',
             controller: 'virtoCommerce.storeModule.taxProviderListController',
             template: 'Modules/$(VirtoCommerce.Store)/Scripts/blades/taxProvider-list.tpl.html'
         };

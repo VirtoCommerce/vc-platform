@@ -68,7 +68,7 @@ function ($injector, $scope, settings, bladeNavigationService) {
                 var newBlade = {
                     id: 'settingsSection',
                     data: selectedSettings,
-                    title: 'Setting values',
+                    title: 'platform.blades.settings-detail.title',
                     disableOpenAnimation: disableOpenAnimation,
                     controller: 'platformWebApp.settingsDetailController',
                     template: '$(Platform)/Scripts/app/settings/blades/settings-detail.tpl.html'
