@@ -41,14 +41,14 @@ namespace VirtoCommerce.Storefront.Owin
             var workContext = _container.Resolve<WorkContext>();
             // Initialize common properties: stores, user profile
             workContext.AllStores = await GetAllStoresAsync();
-            workContext.Customer = await GetCustomerAsync(context);
+            workContext.CurrentCustomer = await GetCustomerAsync(context);
             MaintainAnonymousCustomerCookie(context, workContext);
 
             // Initialize request specific properties: store, language, currency, cart
             workContext.CurrentStore = GetStore(context, workContext.AllStores);
             workContext.CurrentLanguage = GetLanguage(context, workContext.AllStores, workContext.CurrentStore);
             workContext.CurrentCurrency = GetCurrency(context, workContext.CurrentStore);
-            workContext.CurrentCart = (await _cartBuilder.GetOrCreateNewTransientCartAsync(workContext.CurrentStore, workContext.Customer, workContext.CurrentCurrency)).Cart;
+            workContext.CurrentCart = (await _cartBuilder.GetOrCreateNewTransientCartAsync(workContext.CurrentStore, workContext.CurrentCustomer, workContext.CurrentCurrency)).Cart;
 
             workContext.CurrentPage = 1;
 
@@ -75,6 +75,7 @@ namespace VirtoCommerce.Storefront.Owin
                     if (contact != null)
                     {
                         customer = contact.ToWebModel();
+                        customer.HasAccount = true;
                     }
                 }
             }
@@ -105,7 +106,7 @@ namespace VirtoCommerce.Storefront.Owin
                 {
                     // Add anonymous customer cookie for nonregistered customer
                     anonymousCustomerId = Guid.NewGuid().ToString();
-                    workContext.Customer.Id = anonymousCustomerId;
+                    workContext.CurrentCustomer.Id = anonymousCustomerId;
                     context.Response.Cookies.Append(StorefrontConstants.AnonymousCustomerIdCookie, anonymousCustomerId, new CookieOptions { Expires = DateTime.UtcNow.AddDays(30) });
                 }
             }
