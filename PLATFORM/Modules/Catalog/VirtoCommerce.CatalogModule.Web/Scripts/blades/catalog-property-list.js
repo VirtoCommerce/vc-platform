@@ -73,8 +73,8 @@
             id: 'editCatalogProperty',
             currentEntityId: prop.id,
             catalogId: $scope.blade.currentEntity.id,
-            title: 'catalog.blades.catalog-property.title',
-            subtitle: 'catalog.blades.catalog-property.subtitle',
+            title: 'catalog.blades.property-detail.title-catalog',
+            subtitle: 'catalog.blades.property-detail.subtitle-catalog',
             controller: 'virtoCommerce.catalogModule.propertyDetailController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/property-detail.tpl.html'
         };
@@ -120,8 +120,8 @@
 		          var newBlade = {
 		              id: 'editCatalogProperty',
 		              catalogId: $scope.blade.currentEntity.id,
-		              title: 'catalog.blades.new-catalog-property.title',
-		              subtitle: 'catalog.blades.new-catalog-property.subtitle',
+		              title: 'catalog.blades.property-detail.title-catalog-new',
+		              subtitle: 'catalog.blades.property-detail.subtitle-catalog-new',
 		              controller: 'virtoCommerce.catalogModule.propertyDetailController',
 		              template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/property-detail.tpl.html'
 		          };

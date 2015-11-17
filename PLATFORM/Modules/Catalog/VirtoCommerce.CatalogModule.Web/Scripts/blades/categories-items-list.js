@@ -105,7 +105,7 @@
                     id: "listCategoryDetail",
                     currentEntityId: listItem.id,
                     title: listItem.name,
-                    subtitle: 'catalog.blades.category-details.subtitle',
+                    subtitle: 'catalog.blades.category-detail.subtitle',
                     controller: 'virtoCommerce.catalogModule.categoryDetailController',
                     template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/category-detail.tpl.html',
                 };
@@ -252,8 +252,8 @@
                             mode: blade.mode,
                             isBrowsingLinkedCategory: blade.isBrowsingLinkedCategory || $scope.hasLinks(listItem),
                             breadcrumbs: blade.breadcrumbs,
-                            title: 'catalog.blades.categories.title',
-                            subtitle: 'catalog.blades.categories.subtitle',
+                            title: 'catalog.blades.categories-items-list.title',
+                            subtitle: 'catalog.blades.categories-items-list.subtitle',
                             subtitleValues: listItem.name != null ? {name: listItem.name} : '',
                             catalogId: blade.catalogId,
                             catalog: blade.catalog,
@@ -351,8 +351,8 @@
     			    executeMethod: function () {
     			        var newBlade = {
     			            id: 'catalogImport',
-    			            title: 'catalog.blades.catalog-import.title',
-    			            subtitle: 'catalog.blades.catalog-import.subtitle',
+    			            title: 'catalog.blades.importers-list.title',
+    			            subtitle: 'catalog.blades.importers-list.subtitle',
     			            catalog: blade.catalog,
     			            controller: 'virtoCommerce.catalogModule.importerListController',
     			            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/import/importers-list.tpl.html'
@@ -368,8 +368,8 @@
 				    executeMethod: function () {
 				        var newBlade = {
 				            id: 'catalogExport',
-				            title: 'catalog.blades.catalog-export.title',
-				            subtitle: 'catalog.blades.catalog-export.subtitle',
+				            title: 'catalog.blades.exporter-list.title',
+				            subtitle: 'catalog.blades.exporter-list.subtitle',
 				            catalog: blade.catalog,
 				            controller: 'virtoCommerce.catalogModule.exporterListController',
 				            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/export/exporter-list.tpl.html',
@@ -456,8 +456,8 @@
 
                         var newBlade = {
                             id: 'listItemChild',
-                            title: 'catalog.blades.new-category-type.title',
-                            subtitle: 'catalog.blades.new-category-type.subtitle',
+                            title: 'catalog.blades.categories-items-add.title',
+                            subtitle: 'catalog.blades.categories-items-add.subtitle',
                             controller: 'virtoCommerce.catalogModule.categoriesItemsAddController',
                             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/categories-items-add.tpl.html'
                         };
@@ -475,8 +475,8 @@
                     level: blade.level + 1,
                     mode: 'mappingSource',
                     breadcrumbs: [],
-                    title: 'catalog.blades.mapping.title',
-                    subtitle: 'catalog.blades.mapping.subtitle',
+                    title: 'catalog.blades.categories-items-list.title-mapping',
+                    subtitle: 'catalog.blades.categories-items-list.subtitle-mapping',
                     catalogId: selectedNode.id,
                     catalog: selectedNode,
                     disableOpenAnimation: true,

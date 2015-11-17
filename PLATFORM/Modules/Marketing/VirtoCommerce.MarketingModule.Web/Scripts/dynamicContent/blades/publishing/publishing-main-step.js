@@ -13,7 +13,7 @@
 
                 $scope.blade.toolbarCommands = [
 				    {
-				        name: "Save", icon: 'fa fa-save',
+				        name: "platform.commands.save", icon: 'fa fa-save',
 				        executeMethod: function () {
 				            blade.saveChanges();
 				        },
@@ -23,7 +23,7 @@
 				        permission: 'marketing:update'
 				    },
 				    {
-				        name: "Reset", icon: 'fa fa-undo',
+				        name: "platform.commands.reset", icon: 'fa fa-undo',
 				        executeMethod: function () {
 				            blade.entity = angular.copy(blade.originalEntity);
 				        },
@@ -33,12 +33,12 @@
 				        permission: 'marketing:update'
 				    },
 				    {
-				        name: "Delete", icon: 'fa fa-trash',
+				        name: "platform.commands.delete", icon: 'fa fa-trash',
 				        executeMethod: function () {
 				            var dialog = {
 				                id: "confirmDeleteContentItem",
-				                title: "Delete confirmation",
-				                message: "Are you sure want to delete publication?",
+				                title: "marketing.dialogs.publication-delete.title",
+				                message: "marketing.dialogs.publication-delete.message",
 				                callback: function (remove) {
 				                    if (remove) {
 				                        bladeNavigationService.closeBlade(blade);
@@ -78,8 +78,8 @@
 
         var newBlade = {
             id: 'publishing_add_placeholders',
-            title: 'Add placeholders elements',
-            subtitle: 'Add placeholders elements',
+            title: 'marketing.blades.publishing.add-placeholders.title',
+            subtitle: 'marketing.blades.publishing.add-placeholders.subtitle',
             entity: blade.entity,
             controller: 'virtoCommerce.marketingModule.addPublishingPlaceholdersStepController',
             template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/publishing/add-placeholders.tpl.html'
@@ -92,8 +92,8 @@
 
         var newBlade = {
             id: 'publishing_add_content_items',
-            title: 'Add content items elements',
-            subtitle: 'Add content items elements',
+            title: 'marketing.blades.publishing.add-content-items.title',
+            subtitle: 'marketing.blades.publishing.add-content-items.subtitle',
             entity: blade.entity,
             controller: 'virtoCommerce.marketingModule.addPublishingContentItemsStepController',
             template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/publishing/add-content-items.tpl.html'

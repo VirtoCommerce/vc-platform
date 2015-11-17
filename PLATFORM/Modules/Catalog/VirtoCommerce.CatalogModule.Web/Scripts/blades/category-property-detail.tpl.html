@@ -1,6 +1,6 @@
 ﻿<div class="blade-content __gray">
     <div class="blade-inner">
-        <div class="inner-block" ng-init="propGroups = [{title:'catalog.blades.catalog-properties.labels.category-properties', type:'Category'}, {title:'catalog.blades.catalog-properties.labels.product-properties', type:'Product'}, {title:'catalog.blades.catalog-properties.labels.variation-properties', type:'Variation'}]">
+        <div class="inner-block" ng-init="propGroups = [{title:'catalog.properties.category', type:'Category'}, {title:'catalog.properties.product', type:'Product'}, {title:'catalog.properties.variation', type:'Variation'}]">
             <form name="contextEntityDetailForm" class="form">
                 <fieldset ng-repeat="propGroup in propGroups" ng-init="setForm(contextEntityDetailForm);">
                     <legend>
@@ -15,7 +15,7 @@
                         </label>
                         <va-property2 ng-model="prop" get-prop-values="getPropValues" />
                     </div>
-                    <div class="text" ng-if="properties.length == 0">{{ 'catalog.blades.catalog-properties.labels.empty-list' | translate }}</div>
+                    <div class="text" ng-if="properties.length == 0">{{ 'catalog.blades.category-property-detail.labels.empty-list' | translate }}</div>
                 </fieldset>
             </form>
         </div>

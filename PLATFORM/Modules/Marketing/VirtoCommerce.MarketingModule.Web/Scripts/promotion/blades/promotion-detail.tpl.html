@@ -1,5 +1,5 @@
 ﻿<div class="blade-static __bottom" ng-if="blade.isNew">
-    <button class="btn" ng-click="saveChanges()" ng-disabled="!isValid()">Create</button>
+    <button class="btn" ng-click="saveChanges()" ng-disabled="!isValid()">{{ 'platform.commands.create' | translate }}</button>
 </div>
 <div class="blade-content __medium-wide">
     <div class="blade-inner">
@@ -7,7 +7,7 @@
             <form class="form" name="formScope">
                 <fieldset ng-init="setForm(formScope)">
                     <div ng-if="!blade.isNew">
-                        <label class="form-label">Is active</label>
+                        <label class="form-label">{{ 'marketing.blades.promotion-detail.labels.is-active' | translate }}</label>
                         <div class="form-input">
                             <label class="form-label __switch">
                                 <input type="checkbox" ng-model="blade.currentEntity.isActive" />
@@ -16,15 +16,15 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Promotion name</label>
+                        <label class="form-label">{{ 'marketing.blades.promotion-detail.labels.promotion-name' | translate }}</label>
                         <div class="form-input">
-                            <input ng-model="blade.currentEntity.name" focus-on="" required placeholder="Please enter name...">
+                            <input ng-model="blade.currentEntity.name" focus-on="" required placeholder="{{ 'marketing.blades.promotion-detail.placeholders.promotion-name' | translate }}">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Description</label>
+                        <label class="form-label">{{ 'marketing.blades.promotion-detail.labels.description' | translate }}</label>
                         <div class="form-input">
-                            <textarea cols="30" rows="10" ng-model="blade.currentEntity.description" placeholder="Enter description"></textarea>
+                            <textarea cols="30" rows="10" ng-model="blade.currentEntity.description" placeholder="{{ 'marketing.blades.promotion-detail.placeholders.description' | translate }}"></textarea>
                         </div>
                     </div>
                     <div class="form-group">
@@ -32,10 +32,10 @@
                             <div class="column">
                                 <div class="form-group">
 
-                                    <label class="form-label">Store</label>
+                                    <label class="form-label">{{ 'marketing.blades.promotion-detail.labels.store' | translate }}</label>
                                     <div class="form-input">
                                         <ui-select ng-model="blade.currentEntity.store" ng-disabled="!blade.isNew" required>
-                                            <ui-select-match placeholder="Select...">{{$select.selected.name}}</ui-select-match>
+                                            <ui-select-match placeholder="{{ 'marketing.blades.promotion-detail.placeholders.store' | translate }}">{{$select.selected.name}}</ui-select-match>
                                             <ui-select-choices repeat="store.id as store in stores | filter: { name: $select.search }">
                                                 <span ng-bind-html="store.name | highlight: $select.search"></span>
                                             </ui-select-choices>
@@ -44,16 +44,16 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="form-label">Start date</label>
+                                    <label class="form-label">{{ 'marketing.blades.promotion-detail.labels.start-date' | translate }}</label>
                                     <div class="form-input __calendar">
-                                        <input placeholder="Please choose date..." ng-model="blade.currentEntity.startDate" datepicker-popup="{{format}}" is-open="datepickers.str" datepicker-options="dateOptions" close-text="Close" />
+                                        <input placeholder="{{ 'marketing.blades.promotion-detail.placeholders.start-date' | translate }}" ng-model="blade.currentEntity.startDate" datepicker-popup="{{format}}" is-open="datepickers.str" datepicker-options="dateOptions" close-text="Close" />
                                         <button class="btn" type="button" ng-click="open($event,'str')">
                                             <i class="btn-ico fa fa-calendar"></i>
                                         </button>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-label">Usage limit</label>
+                                    <label class="form-label">{{ 'marketing.blades.promotion-detail.labels.usage-limit' | translate }}</label>
                                     <div class="form-input __number">
                                         <input smart-float num-type="integer" required ng-model="blade.currentEntity.maxUsageCount">
                                     </div>
@@ -61,24 +61,24 @@
                             </div>
                             <div class="column">
                                 <div class="form-group" title="Enter coupon codes. Press [Enter] to confirm.">
-                                    <label class="form-label">Coupons</label>
+                                    <label class="form-label">{{ 'marketing.blades.promotion-detail.labels.coupons' | translate }}</label>
                                     <div class="form-input">
                                         <tags-input ng-model="blade.currentEntity.coupons"
-                                                    placeholder="Enter coupon codes...">
+                                                    placeholder="{{ 'marketing.blades.promotion-detail.placeholders.coupons' | translate }}">
                                         </tags-input>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-label">Expiration date</label>
+                                    <label class="form-label">{{ 'marketing.blades.promotion-detail.labels.expiration-date' | translate }}</label>
                                     <div class="form-input __calendar">
-                                        <input placeholder="Please choose date..." ng-model="blade.currentEntity.endDate" datepicker-popup="{{format}}" is-open="datepickers.end" datepicker-options="dateOptions" close-text="Close" />
+                                        <input placeholder="{{ 'marketing.blades.promotion-detail.placeholders.expiration-date' | translate }}" ng-model="blade.currentEntity.endDate" datepicker-popup="{{format}}" is-open="datepickers.end" datepicker-options="dateOptions" close-text="Close" />
                                         <button class="btn" type="button" ng-click="open($event,'end')">
                                             <i class="btn-ico fa fa-calendar"></i>
                                         </button>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-label">Per customer limit</label>
+                                    <label class="form-label">{{ 'marketing.blades.promotion-detail.labels.per-customer-limit' | translate }}</label>
                                     <div class="form-input __number">
                                         <input smart-float num-type="integer" required ng-model="blade.currentEntity.maxPersonalUsageCount" >
                                     </div>
@@ -90,7 +90,7 @@
 
                 <!--ui-validate=" 'promotionExpressionValidator(blade.isExpresionValid)' " ng-model="blade.isExpresionValid"-->
                 <fieldset ng-if="blade.currentEntity.type==='DynamicPromotion'">
-                    <legend>Promotion conditions</legend>
+                    <legend>{{ 'marketing.blades.promotion-detail.labels.promotion-conditions' | translate }}</legend>
                     <div class="dynamic-expression">
                         <va-dynamic-expression-tree ng-controller="virtoCommerce.marketingModule.promotionExpressionsController" source="blade.currentEntity.dynamicExpression"></va-dynamic-expression-tree>
                     </div>

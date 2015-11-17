@@ -1,7 +1,9 @@
 ﻿<script type="text/ng-template" id="order-statistics-revenue.html">
     <div class="gridster-cnt">
         <div class="cnt-inner">
-            <div class="list-count" ng-repeat="data in $storage.ordersDashboardStatistics.revenue track by $index">{{data.amount | number : 2}} {{data.currency}}</div>
+            <div class="list-count">
+                <div ng-repeat="data in $storage.ordersDashboardStatistics.revenuePerCustomer track by $index">{{data.amount | number : 2}} {{data.currency}}</div>
+            </div> 
             <div class="list-t">{{'orders.widgets.statistics-templates.revenue' | translate}}</div>
         </div>
     </div>
@@ -17,7 +19,9 @@
 <script type="text/ng-template" id="order-statistics-revenuePerCustomer.html">
     <div class="gridster-cnt">
         <div class="cnt-inner">
-            <div class="list-count" ng-repeat="data in $storage.ordersDashboardStatistics.revenuePerCustomer track by $index">{{data.amount | number : 2}} {{data.currency}}</div>
+            <div class="list-count">
+                <div ng-repeat="data in $storage.ordersDashboardStatistics.revenuePerCustomer track by $index">{{data.amount | number : 2}} {{data.currency}}</div>
+            </div> 
             <div class="list-t">{{'orders.widgets.statistics-templates.revenue-per-customer' | translate}}</div>
         </div>
     </div>
@@ -25,7 +29,9 @@
 <script type="text/ng-template" id="order-statistics-orderValue.html">
     <div class="gridster-cnt">
         <div class="cnt-inner">
-            <div class="list-count" ng-repeat="data in $storage.ordersDashboardStatistics.avgOrderValue track by $index">{{data.amount | number : 2}} {{data.currency}}</div>
+            <div class="list-count">
+                <div ng-repeat="data in $storage.ordersDashboardStatistics.avgOrderValue track by $index">{{data.amount | number : 2}} {{data.currency}}</div>
+            </div>
             <div class="list-t">{{'orders.widgets.statistics-templates.average-order-value' | translate}}</div>
         </div>
     </div>

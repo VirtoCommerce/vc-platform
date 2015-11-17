@@ -2,9 +2,9 @@
 	<div class="blade-inner">
 		<div class="inner-block">
 			<fieldset>
-				<legend class="ng-binding">Chosen content items</legend>
+				<legend class="ng-binding">{{ 'marketing.blades.publishing.add-content-items.labels.chosen-content-items' | translate }}</legend>
 				<div class="form-group">
-					<a class="clear text-mini __link" ng-click="blade.deleteAllContentItems()" ng-if="blade.entity.contentItems.length > 0">Clear all</a>
+					<a class="clear text-mini __link" ng-click="blade.deleteAllContentItems()" ng-if="blade.entity.contentItems.length > 0">{{ 'platform.commands.clear-all' | translate }}</a>
 					<ul class="list __inline __chosen">
 						<li class="list-item" ng-repeat="item in blade.entity.contentItems">
 							<a class="list-remove" ng-click="blade.deleteContentItem(item)">×</a>
@@ -14,16 +14,16 @@
 				</div>
 			</fieldset>
 			<fieldset>
-				<legend class="ng-binding">Content items</legend>
+				<legend class="ng-binding">{{ 'marketing.blades.publishing.add-content-items.labels.content-items' | translate }}</legend>
 				<va-breadcrumb ng-model="blade.breadcrumbs" blade-id="blade.id"></va-breadcrumb>
 
 				<div class="table-wrapper">
 					<table class="table" ng-if="blade.currentEntity && (blade.currentEntity.childrenFolders.length > 0 || blade.currentEntity.items.length > 0)">
 						<thead>
 							<tr>
-								<th class="table-col">Pic</th>
-								<th class="table-col">Name</th>
-								<th class="table-col">Description</th>
+								<th class="table-col">{{ 'marketing.blades.publishing.add-content-items.labels.picture' | translate }}</th>
+								<th class="table-col">{{ 'marketing.blades.publishing.add-content-items.labels.name' | translate }}</th>
+								<th class="table-col">{{ 'marketing.blades.publishing.add-content-items.labels.description' | translate }}</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -57,7 +57,7 @@
 					</table>
 				</div>
 				<div class="note" ng-if="(blade.currentEntity.childrenFolders.length === 0 && blade.currentEntity.items.length === 0)">
-					No data
+					{{ 'marketing.blades.publishing.add-content-items.labels.no-data' | translate }}
 				</div>
 			</fieldset>
 		</div>

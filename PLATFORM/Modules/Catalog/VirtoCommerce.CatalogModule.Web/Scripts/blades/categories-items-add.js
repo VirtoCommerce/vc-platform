@@ -10,8 +10,8 @@
                     var newBlade = {
                         id: "newCategoryWizard",
                         currentEntity: data,
-                        title: "catalog.blades.new-category.title",
-                        subtitle: 'catalog.blades.new-category.subtitle',
+                        title: "catalog.wizards.category.title",
+                        subtitle: 'catalog.wizards.category.subtitle',
                         controller: 'virtoCommerce.catalogModule.newCategoryWizardController',
                         template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/wizards/newCategory/category-wizard.tpl.html'
                     };
@@ -26,8 +26,8 @@
         $scope.bladeClose(function () {
             var newBlade = {
                 id: 'selectCatalog',
-                title: 'catalog.blades.add-linked-category.title',
-                subtitle: 'catalog.blades.add-linked-category.subtitle',
+                title: 'catalog.blades.catalogs-select.title',
+                subtitle: 'catalog.blades.catalogs-select.subtitle',
                 controller: 'virtoCommerce.catalogModule.catalogsSelectController',
                 template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/catalogs-select.tpl.html'
             };
@@ -63,8 +63,8 @@
         var newBlade = {
             id: 'listItemDetail',
             item: data,
-            title: "catalog.blades.new-product.title",
-            subtitle: 'catalog.blades.new-product.subtitle',
+            title: "catalog.wizards.new-product.title",
+            subtitle: 'catalog.wizards.new-product.subtitle',
             controller: 'virtoCommerce.catalogModule.newProductWizardController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/wizards/newProduct/new-product-wizard.tpl.html'
         };

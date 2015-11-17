@@ -23,8 +23,8 @@
             id: 'editorialReview',
             currentEntity: data,
             languages: $scope.blade.parentBlade.item.catalog.languages,
-            title: 'catalog.blades.review.title',
-            subtitle: 'catalog.blades.review.subtitle',
+            title: 'catalog.blades.editorialReview-detail.title',
+            subtitle: 'catalog.blades.editorialReview-detail.subtitle',
             controller: 'virtoCommerce.catalogModule.editorialReviewDetailController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/editorialReview-detail.tpl.html'
         };

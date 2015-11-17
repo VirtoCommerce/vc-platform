@@ -7,8 +7,8 @@
                 id: 'catalogEdit',
                 isNew: true,
                 currentEntity: data,
-                title: 'catalog.blades.new-catalog.title',
-                subtitle: 'catalog.blades.new-catalog.subtitle',
+                title: 'catalog.blades.catalog-detail.title-new',
+                subtitle: 'catalog.blades.catalog-detail.subtitle-new',
                 controller: 'virtoCommerce.catalogModule.catalogDetailController',
                 template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/catalog-detail.tpl.html'
             };
@@ -24,8 +24,8 @@
                 id: 'catalogEdit',
                 isNew: true,
                 currentEntity: data,
-                title: 'catalog.blades.new-virtual-catalog.title',
-                subtitle: 'catalog.blades.new-virtual-catalog.subtitle',
+                title: 'catalog.blades.catalog-detail.title-new-virtual',
+                subtitle: 'catalog.blades.catalog-detail.subtitle-virtual',
                 controller: 'virtoCommerce.catalogModule.virtualCatalogDetailController',
                 template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/catalog-detail.tpl.html'
             };

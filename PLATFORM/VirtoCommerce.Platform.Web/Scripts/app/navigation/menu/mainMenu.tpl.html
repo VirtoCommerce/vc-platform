@@ -3,7 +3,7 @@
         <li class="menu-item" ng-class="{'__selected': currentMenuItem === menuItem && showSubMenu, '__animated': menuItem.incremented}" ng-repeat="menuItem in menuItems | filter: {parent: null}" ng-click="selectMenuItem(menuItem)">
             <a class="menu-link" ng-if="!menuItem.template" href="" va-permission="{{menuItem.permission}}">
                 <span class="menu-ico" ng-class="menuItem.icon"></span>
-                <span class="name" translate>{{menuItem.title}}</span>
+                <span class="name">{{menuItem.title | translate}}</span>
             </a>
             <ng-include src='menuItem.template'> </ng-include>
         </li>

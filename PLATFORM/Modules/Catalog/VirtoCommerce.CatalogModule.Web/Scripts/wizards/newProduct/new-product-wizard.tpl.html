@@ -4,22 +4,22 @@
         <div class="inner-block">
             <form class="form" name="detailForm">
                 <div ng-init="setForm(detailForm)">
-                    <label class="form-label">{{ 'catalog.blades.new-product.labels.sku' | translate }}</label>
+                    <label class="form-label">{{ 'catalog.wizards.new-product.labels.sku' | translate }}</label>
                     <div class="form-input">
-                        <input required class="form-control" name="code" ng-model="blade.item.code" ng-class="{'error': detailForm.code.$invalid && !detailForm.code.$pristine}" placeholder="{{ 'catalog.blades.new-product.placeholders.sku' | translate }}" ui-validate=" 'codeValidator($value)' " />
+                        <input required class="form-control" name="code" ng-model="blade.item.code" ng-class="{'error': detailForm.code.$invalid && !detailForm.code.$pristine}" placeholder="{{ 'catalog.wizards.new-product.placeholders.sku' | translate }}" ui-validate=" 'codeValidator($value)' " />
                     </div>
                     <div class="form-error" ng-if="detailForm.code.$dirty">
-                        <span data-ng-show="detailForm.code.$error.required">{{ 'catalog.blades.new-product.validations.sku-required' | translate }}</span>
-                        <span data-ng-show="detailForm.code.$error.validator">{{ 'catalog.blades.new-product.validations.sku' | translate }}</span>
+                        <span data-ng-show="detailForm.code.$error.required">{{ 'catalog.wizards.new-product.validations.sku-required' | translate }}</span>
+                        <span data-ng-show="detailForm.code.$error.validator">{{ 'catalog.wizards.new-product.validations.sku' | translate }}</span>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">{{ 'catalog.blades.new-product.labels.name' | translate }}</label>
+                    <label class="form-label">{{ 'catalog.wizards.new-product.labels.name' | translate }}</label>
                     <div class="form-input">
-                        <textarea name="productName" required class="form-control" cols="30" rows="3" ng-model="blade.item.name" ng-class="{'error': detailForm.productName.$invalid && !detailForm.productName.$pristine}" placeholder="{{ 'catalog.blades.new-product.placeholders.name' | translate }}"></textarea>
+                        <textarea name="productName" required class="form-control" cols="30" rows="3" ng-model="blade.item.name" ng-class="{'error': detailForm.productName.$invalid && !detailForm.productName.$pristine}" placeholder="{{ 'catalog.wizards.new-product.placeholders.name' | translate }}"></textarea>
                     </div>
                     <div class="form-error" ng-if="detailForm.productName.$dirty && detailForm.productName.$invalid">
-                        <span ng-if="detailForm.productName.$error.required">{{ 'catalog.blades.new-product.validations.name-required' | translate }}</span>
+                        <span ng-if="detailForm.productName.$error.required">{{ 'catalog.wizards.new-product.validations.name-required' | translate }}</span>
                     </div>
                 </div>
             </form>
@@ -27,24 +27,24 @@
             <ul class="list __items">
                 <li class="list-item" ng-click="openBlade('properties')" ng-if="blade.item.properties.length > 0">
                     <i class="list-ico fa fa-cogs"></i>
-                    <span class="list-t">{{ 'catalog.blades.new-product.labels.fill-properties' | translate }}</span>
-                    <span class="list-descr">{{ 'catalog.blades.new-product.labels.fill-properties-summary' | translate: {count: getUnfilledProperties().length, total: blade.item.properties.length} }} </span>
+                    <span class="list-t">{{ 'catalog.wizards.new-product.labels.fill-properties' | translate }}</span>
+                    <span class="list-descr">{{ 'catalog.wizards.new-product.labels.fill-properties-summary' | translate: {count: getUnfilledProperties().length, total: blade.item.properties.length} }} </span>
                 </li>
                 <li class="list-item" ng-click="openBlade('images')">
                     <i class="list-ico fa fa-image"></i>
-                    <span class="list-t">{{ 'catalog.blades.new-product.labels.upload-images' | translate }}</span>
-                    <span class="list-descr">{{ 'catalog.blades.new-product.labels.upload-images-summary' | translate: {count: blade.item.images.length >= 0 ? blade.item.images.length : 0} }}</span>
+                    <span class="list-t">{{ 'catalog.wizards.new-product.labels.upload-images' | translate }}</span>
+                    <span class="list-descr">{{ 'catalog.wizards.new-product.labels.upload-images-summary' | translate: {count: blade.item.images.length >= 0 ? blade.item.images.length : 0} }}</span>
                 </li>
                 <li class="list-item" ng-click="openBlade('review')">
                     <i class="list-ico fa fa-file-text"></i>
-                    <span class="list-t">{{'catalog.blades.new-product.labels.add-review' | translate}}</span>
-                    <span class="list-descr">{{ 'catalog.blades.new-product.labels.add-review-summary' | translate: {count: blade.item.reviews.length >= 0 ? blade.item.reviews.length : 0} }}</span>
+                    <span class="list-t">{{'catalog.wizards.new-product.labels.add-review' | translate}}</span>
+                    <span class="list-descr">{{ 'catalog.wizards.new-product.labels.add-review-summary' | translate: {count: blade.item.reviews.length >= 0 ? blade.item.reviews.length : 0} }}</span>
                 </li>
                 <li class="list-item" ng-click="openBlade('seo')">
                     <i class="list-ico fa fa-bar-chart-o"></i>
-                    <span class="list-t">{{'catalog.blades.new-product.labels.seo-information' | translate }}</span>
-                    <span class="list-descr" ng-show="blade.item.seoInfos.length > 0">{{'catalog.blades.new-product.labels.seo-information-summary-defined' | translate}}</span>
-                    <span class="list-descr" ng-hide="blade.item.seoInfos.length > 0">{{'catalog.blades.new-product.labels.seo-information-summary-undefined' | translate}}</span>
+                    <span class="list-t">{{'catalog.wizards.new-product.labels.seo-information' | translate }}</span>
+                    <span class="list-descr" ng-show="blade.item.seoInfos.length > 0">{{'catalog.wizards.new-product.labels.seo-information-summary-defined' | translate}}</span>
+                    <span class="list-descr" ng-hide="blade.item.seoInfos.length > 0">{{'catalog.wizards.new-product.labels.seo-information-summary-undefined' | translate}}</span>
                 </li>
             </ul>
         </div>
