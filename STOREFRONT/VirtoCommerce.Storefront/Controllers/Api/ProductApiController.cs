@@ -7,6 +7,7 @@ using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Converters;
 using System.Web.Http;
 using System.Web.Http.Description;
+using VirtoCommerce.Storefront.Model.Catalog;
 
 namespace VirtoCommerce.Storefront.Controllers
 {
@@ -68,10 +69,7 @@ namespace VirtoCommerce.Storefront.Controllers
                     variation.Inventory = inventory.ToWebModel();
             }
 
-            _workContext.CurrentProduct.MainSeo = _workContext.CurrentProduct.SeoInfos.FirstOrDefault();
-            _workContext.CurrentProduct.MainImage = _workContext.CurrentProduct.Images.FirstOrDefault();
-
-            _workContext.CurrentPageSeo = _workContext.CurrentProduct.SeoInfos.FirstOrDefault();
+      
         }
     }
 }
