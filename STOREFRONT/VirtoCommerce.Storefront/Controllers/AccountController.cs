@@ -21,22 +21,15 @@ namespace VirtoCommerce.Storefront.Controllers
         private IStorefrontUrlBuilder _urlBuilder;
         private readonly ICommerceCoreModuleApi _commerceCoreApi;
         private readonly ICustomerManagementModuleApi _customerApi;
+        private readonly IAuthenticationManager _authenticationManager;
 
-        public AccountController(WorkContext workContext, IStorefrontUrlBuilder urlBuilder, ICommerceCoreModuleApi commerceCoreApi, ICustomerManagementModuleApi customerApi)
+        public AccountController(WorkContext workContext, IStorefrontUrlBuilder urlBuilder, ICommerceCoreModuleApi commerceCoreApi, ICustomerManagementModuleApi customerApi, IAuthenticationManager authenticationManager)
         {
             _workContext = workContext;
             _urlBuilder = urlBuilder;
             _commerceCoreApi = commerceCoreApi;
             _customerApi = customerApi;
-        }
-
-        private IAuthenticationManager _authenticationManager;
-        private IAuthenticationManager AuthenticationManager
-        {
-            get
-            {
-                return _authenticationManager ?? (_authenticationManager = HttpContext.GetOwinContext().Authentication);
-            }
+            _authenticationManager = authenticationManager;
         }
 
         [HttpGet]
@@ -95,7 +88,7 @@ namespace VirtoCommerce.Storefront.Controllers
                 await _commerceCoreApi.StorefrontSecurityPasswordSignInAsync(formModel.Email, formModel.Password);
 
                 var identity = CreateClaimsIdentity(formModel.Email);
-                AuthenticationManager.SignIn(identity);
+                _authenticationManager.SignIn(identity);
                 return Redirect("~/account");
             }
             else
@@ -113,7 +106,7 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                AuthenticationManager.SignOut();
+                _authenticationManager.SignOut();
             }
 
             _workContext.Login = new Login();
@@ -132,7 +125,7 @@ namespace VirtoCommerce.Storefront.Controllers
             {
                 case "success":
                     var identity = CreateClaimsIdentity(formModel.Email);
-                    AuthenticationManager.SignIn(identity);
+                    _authenticationManager.SignIn(identity);
                     return Redirect(returnUrl);
                 case "lockedOut":
                     return View("lockedout", _workContext);
@@ -149,7 +142,7 @@ namespace VirtoCommerce.Storefront.Controllers
         [Route("logout")]
         public ActionResult Logout()
         {
-            AuthenticationManager.SignOut();
+            _authenticationManager.SignOut();
             return Redirect("~/");
         }
 
