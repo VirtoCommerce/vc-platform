@@ -2,38 +2,41 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Converters;
+using System.Web.Http;
+using System.Web.Http.Description;
 
 namespace VirtoCommerce.Storefront.Controllers
 {
-    public class ProductController : Controller
+    [RoutePrefix("api/product")]
+    public class ProductApiController : ApiController
     {
         private readonly WorkContext _workContext;
         private readonly ICatalogModuleApi _catalogApi;
         private readonly IPricingModuleApi _pricingApi;
         private readonly IInventoryModuleApi _inventoryApi;
 
-        public ProductController(WorkContext context, ICatalogModuleApi catalogApi, IPricingModuleApi pricingApi, IInventoryModuleApi inventoryApi)
+        public ProductApiController(WorkContext workContext, ICatalogModuleApi catalogApi, IPricingModuleApi pricingApi, IInventoryModuleApi inventoryApi)
         {
-            _workContext = context;
+            _workContext = workContext;
             _catalogApi = catalogApi;
             _pricingApi = pricingApi;
             _inventoryApi = inventoryApi;
         }
 
         [HttpGet]
-        public async Task<ActionResult> ProductDetails(string productid)
+        [ResponseType(typeof(Product))]
+        [Route("{id}")]
+        public async Task<IHttpActionResult> GetProduct(string id)
         {
-            await GetProduct(productid);
-            return View("product", _workContext);
+            await SetProduct(id);
+
+            return Ok(_workContext.CurrentProduct);
         }
 
-
-        protected async Task GetProduct(string id)
+        protected async Task SetProduct(string id)
         {
             var product = await _catalogApi.CatalogModuleProductsGetAsync(id);
             _workContext.CurrentProduct = product.ToWebModel();
