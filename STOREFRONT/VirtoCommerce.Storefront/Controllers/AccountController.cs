@@ -10,6 +10,7 @@ using VirtoCommerce.Client.Api;
 using VirtoCommerce.Client.Model;
 using VirtoCommerce.Storefront.Common;
 using VirtoCommerce.Storefront.Model;
+using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Controllers
 {
@@ -17,12 +18,14 @@ namespace VirtoCommerce.Storefront.Controllers
     public class AccountController : Controller
     {
         private readonly WorkContext _workContext;
+        private IStorefrontUrlBuilder _urlBuilder;
         private readonly ICommerceCoreModuleApi _commerceCoreApi;
         private readonly ICustomerManagementModuleApi _customerApi;
 
-        public AccountController(WorkContext workContext, ICommerceCoreModuleApi commerceCoreApi, ICustomerManagementModuleApi customerApi)
+        public AccountController(WorkContext workContext, IStorefrontUrlBuilder urlBuilder, ICommerceCoreModuleApi commerceCoreApi, ICustomerManagementModuleApi customerApi)
         {
             _workContext = workContext;
+            _urlBuilder = urlBuilder;
             _commerceCoreApi = commerceCoreApi;
             _customerApi = customerApi;
         }
@@ -46,7 +49,7 @@ namespace VirtoCommerce.Storefront.Controllers
                 return View("customers/account", _workContext);
             }
 
-            return RedirectToAction("Login", "Account");
+            return Redirect("~/account/login");
         }
 
         [HttpGet]
@@ -93,7 +96,7 @@ namespace VirtoCommerce.Storefront.Controllers
 
                 var identity = CreateClaimsIdentity(formModel.Email);
                 AuthenticationManager.SignIn(identity);
-                return RedirectToAction("Index", "Account");
+                return Redirect("~/account");
             }
             else
             {
@@ -130,11 +133,11 @@ namespace VirtoCommerce.Storefront.Controllers
                 case "success":
                     var identity = CreateClaimsIdentity(formModel.Email);
                     AuthenticationManager.SignIn(identity);
-                    return RedirectToLocal(returnUrl);
+                    return Redirect(returnUrl);
                 case "lockedOut":
                     return View("lockedout", _workContext);
                 case "requiresVerification":
-                    return RedirectToAction("SendCode", "Account");
+                    return Redirect("~/account/sendcode");
                 case "failure":
                 default:
                     ModelState.AddModelError("form", "Login attempt failed.");
@@ -147,7 +150,7 @@ namespace VirtoCommerce.Storefront.Controllers
         public ActionResult Logout()
         {
             AuthenticationManager.SignOut();
-            return Redirect("~");
+            return Redirect("~/");
         }
 
         [HttpPost]
@@ -169,7 +172,7 @@ namespace VirtoCommerce.Storefront.Controllers
                 ModelState.AddModelError("form", "User not found");
             }
 
-            return new RedirectResult(Url.Action("Login", "Account") + "#recover");
+            return Redirect("~/account/login#recover");
         }
 
         [HttpGet]
@@ -237,6 +240,14 @@ namespace VirtoCommerce.Storefront.Controllers
         }
 
 
+        protected override RedirectResult Redirect(string url)
+        {
+            var newUrl = Url.IsLocalUrl(url) ? url : "~/";
+            var appRelativeUrl = _urlBuilder.ToAppRelative(_workContext, newUrl, _workContext.CurrentStore, _workContext.CurrentLanguage);
+            return base.Redirect(appRelativeUrl);
+        }
+
+
         private ClaimsIdentity CreateClaimsIdentity(string userName)
         {
             var claims = new List<Claim>();
@@ -245,16 +256,6 @@ namespace VirtoCommerce.Storefront.Controllers
             var identity = new ClaimsIdentity(claims, Microsoft.AspNet.Identity.DefaultAuthenticationTypes.ApplicationCookie);
 
             return identity;
-        }
-
-        private ActionResult RedirectToLocal(string returnUrl)
-        {
-            if (Url.IsLocalUrl(returnUrl))
-            {
-                return Redirect(returnUrl);
-            }
-
-            return Redirect("~");
         }
     }
 }
