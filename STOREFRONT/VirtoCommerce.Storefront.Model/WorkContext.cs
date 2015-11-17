@@ -15,7 +15,7 @@ namespace VirtoCommerce.Storefront.Model
         /// <summary>
         /// Current customer
         /// </summary>
-        public Customer Customer { get; set; }
+        public Customer CurrentCustomer { get; set; }
 
         /// <summary>
         /// Current language and culture

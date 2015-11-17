@@ -1,14 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
 using DotLiquid;
-using DotLiquid.Util;
-using System.Threading;
 using VirtoCommerce.Storefront.Model;
 
 namespace VirtoCommerce.LiquidThemeEngine.Filters
@@ -37,7 +30,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
 
         public static string CustomerLogoutLink(string input)
         {
-            var path = VirtualPathUtility.ToAbsolute("~/account/logoff");
+            var path = VirtualPathUtility.ToAbsolute("~/account/logout");
             return string.Format("<a href=\"{0}\" id=\"customer_logout_link\">{1}</a>", path, input);
         }
 

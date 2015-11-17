@@ -1,6 +1,6 @@
 {% include 'breadcrumb' %}
 {% include 'quote-informer' %}
-<div class="grid" itemscope itemtype="http://schema.org/Product" ng-app="virtoProductApp" ng-controller="virtoProductApp.appCtrl">
+<div class="grid" itemscope itemtype="http://schema.org/Product" ng-app="productApp" ng-controller="productController">
   <meta itemprop="url" content="{{ current_product.main_seo.slug | absolute_url : '', store_language.culture_name}}">
   <meta itemprop="image" content="{{ current_product.img_src }}">
 
@@ -8,22 +8,13 @@
     <div class="grid">
       <div class="grid-item large--eleven-twelfths text-center">
         <div class="product-photo-container" id="productPhoto">
-          <img id="productPhotoImg" src="{{ current_product.images[0].url }}" alt="{{ current_product.name }}">
+          <img id="productPhotoImg" ng-src="{( selectedImage.Url )}" src="{{ current_product.images[0].url }}" alt="{{ current_product.name }}">
         </div>
-        {% if product.images.size > 1 %}
-          <ul class="product-photo-thumbs grid-uniform" id="productThumbs">
-
-            {% for image in product.images %}
-              <li class="grid-item medium--down-one-quarter large--one-quarter">
-                <a href="{{ image.src | img_url: 'large' }}" class="product-photo-thumb">
-                  <img src="{{ image.src | img_url: 'compact' }}" alt="{{ image.alt | escape }}">
-                </a>
-              </li>
-            {% endfor %}
-
-          </ul>
-        {% endif %}
-
+        <ul class="product-photo-thumbs grid-uniform" id="productThumbs">
+            <li ng-repeat="image in product.Images" class="grid-item medium--down-one-quarter large--one-quarter" ng-click="selectImage(image)">
+                <img ng-src="{( image.Url )}" alt="{( product.Name )}">
+            </li>
+        </ul>
       </div>
     </div>
 
@@ -31,7 +22,7 @@
 
   <div class="grid-item large--three-fifths">
 
-    <h2 itemprop="name">{{ product.title }}</h2>
+    <h2 itemprop="name">{{ current_product.name }}</h2>
 
     <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
 
@@ -66,24 +57,17 @@
         {% endif %}
       </ul>
 
-      <hr id="variantBreak" class="hr--clear hr--small">
+      <hr id="variantBreak" class="hr--clear hr--small" ng-if="isSkuSelectorAvailable">
 
-      <link itemprop="availability" href="http://schema.org/{% if product.available %}InStock{% else %}OutOfStock{% endif %}">
+      <link itemprop="availability" href="http://schema.org/{% if current_product.available %}InStock{% else %}OutOfStock{% endif %}">
 
-      <form action="{{ shop.simplified_url }}/cart/add" method="post" enctype="multipart/form-data" id="addToCartForm">
-        <select name="id" id="productSelect" class="product-variants">
-          {% for variant in product.variants %}
-            {% if variant.available %}
-
-              <option {% if variant == product.selected_or_first_available_variant %} selected="selected" {% endif %} value="{{ variant.id }}">{{ variant.title }} - {{ variant.price | money_with_currency }}</option>
-
-            {% else %}
-              <option disabled="disabled">
-                {{ variant.title }} - {{ 'products.product.sold_out' | t }}
-              </option>
-            {% endif %}
-          {% endfor %}
-        </select>
+      <form action="{{ 'cart/add' | absolute_url }}" method="post" enctype="multipart/form-data" id="addToCartForm" ng-if="isSkuSelectorAvailable">
+        <div class="selector-wrapper" ng-repeat="property in properties">
+            <label>{( property.name )}</label>
+            <select class="single-option-selector" ng-model="property.selectedValue" ng-change="rebuildSkuSelector(property)" required="">
+                <option ng-repeat="value in property.values" value="{( value )}">{( value )}</option>
+            </select>
+        </div>
 
         {% if settings.product_quantity_enable %}
           <label for="quantity" class="quantity-selector">{{ 'products.product.quantity' | t }}</label>
@@ -133,3 +117,8 @@
 {% if settings.product_image_zoom_enable %}
   {{ 'jquery.zoom.min.js' | asset_url | script_tag }}
 {% endif %}
+
+{{ '//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js' | script_tag }}
+{{ '//ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.min.js' | script_tag }}
+{{ '//ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular-resource.js' | script_tag }}
+{{ 'productDetails.js' | asset_url | script_tag }}

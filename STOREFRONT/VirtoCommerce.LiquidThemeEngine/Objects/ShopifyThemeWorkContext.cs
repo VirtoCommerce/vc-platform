@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
 using DotLiquid;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Common;
@@ -18,13 +13,15 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
     public class ShopifyThemeWorkContext : WorkContext, ILiquidizable
     {
         private readonly IStorefrontUrlBuilder _urlBuilder;
+
         public ShopifyThemeWorkContext(IStorefrontUrlBuilder urlBuilder)
         {
             _urlBuilder = urlBuilder;
-            
+
         }
-        #region Aliases for shopify theme compliant
-      
+
+        #region Aliases for shopify theme compliance
+
         /// <summary>
         /// Merchants can specify a page_description.
         /// </summary>
@@ -80,9 +77,22 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
                 return new Product(CurrentProduct, _urlBuilder, this);
             }
         }
+
+        /// <summary>
+        /// Returns logged in customer or null.
+        /// </summary>
+        public Customer Customer
+        {
+            get
+            {
+                return CurrentCustomer.HasAccount ? CurrentCustomer : null;
+            }
+        }
+
         #endregion
 
         #region ILiquidizable members
+
         public object ToLiquid()
         {
             var retVal = new Dictionary<string, object>();
@@ -93,6 +103,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
 
             return retVal;
         }
+
         #endregion
     }
 }

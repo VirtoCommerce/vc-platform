@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using Microsoft.Owin.Security;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Client.Model;
+using VirtoCommerce.Storefront.Common;
 using VirtoCommerce.Storefront.Model;
 
 namespace VirtoCommerce.Storefront.Controllers
@@ -15,9 +16,6 @@ namespace VirtoCommerce.Storefront.Controllers
     [RoutePrefix("account")]
     public class AccountController : Controller
     {
-        private const string ResetCustomerPasswordTokenCookie = "Vcf.PasswordResetToken";
-        private const string CustomerIdCookie = "Vcf.CustomerId";
-
         private readonly WorkContext _workContext;
         private readonly ICommerceCoreModuleApi _commerceCoreApi;
         private readonly ICustomerManagementModuleApi _customerApi;
@@ -45,7 +43,7 @@ namespace VirtoCommerce.Storefront.Controllers
             if (HttpContext.User.Identity.IsAuthenticated)
             {
                 _workContext.CurrentPage = page;
-                return View("customers/account");
+                return View("customers/account", _workContext);
             }
 
             return RedirectToAction("Login", "Account");
@@ -120,7 +118,6 @@ namespace VirtoCommerce.Storefront.Controllers
             return View("customers/login", _workContext);
         }
 
-        // POST: /Account/Login
         [HttpPost]
         [Route("login")]
         [AllowAnonymous]
@@ -135,13 +132,13 @@ namespace VirtoCommerce.Storefront.Controllers
                     AuthenticationManager.SignIn(identity);
                     return RedirectToLocal(returnUrl);
                 case "lockedOut":
-                    return View("lockedout");
+                    return View("lockedout", _workContext);
                 case "requiresVerification":
                     return RedirectToAction("SendCode", "Account");
                 case "failure":
                 default:
                     ModelState.AddModelError("form", "Login attempt failed.");
-                    return View("customers/login");
+                    return View("customers/login", _workContext);
             }
         }
 
@@ -184,21 +181,21 @@ namespace VirtoCommerce.Storefront.Controllers
             {
                 _workContext.ErrorMessage = "Error in URL format";
 
-                return View("error");
+                return View("error", _workContext);
             }
 
             var user = await _commerceCoreApi.StorefrontSecurityGetUserByIdAsync(userId);
             if (user == null)
             {
                 _workContext.ErrorMessage = "User was not found.";
-                return View("error");
+                return View("error", _workContext);
             }
 
-            var tokenCookie = new HttpCookie(ResetCustomerPasswordTokenCookie, code);
+            var tokenCookie = new HttpCookie(StorefrontConstants.PasswordResetTokenCookie, code);
             tokenCookie.Expires = DateTime.UtcNow.AddDays(1);
             HttpContext.Response.Cookies.Add(tokenCookie);
 
-            var customerIdCookie = new HttpCookie(CustomerIdCookie, userId);
+            var customerIdCookie = new HttpCookie(StorefrontConstants.CustomerIdCookie, userId);
             customerIdCookie.Expires = DateTime.UtcNow.AddDays(1);
             HttpContext.Response.Cookies.Add(customerIdCookie);
 
@@ -210,33 +207,33 @@ namespace VirtoCommerce.Storefront.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> ResetPassword(ResetPassword formModel)
         {
-            var customerIdCookie = HttpContext.Request.Cookies[CustomerIdCookie];
+            var customerIdCookie = HttpContext.Request.Cookies[StorefrontConstants.CustomerIdCookie];
             string userId = customerIdCookie != null ? customerIdCookie.Value : null;
 
-            var tokenCookie = HttpContext.Request.Cookies[ResetCustomerPasswordTokenCookie];
+            var tokenCookie = HttpContext.Request.Cookies[StorefrontConstants.PasswordResetTokenCookie];
             string token = tokenCookie != null ? tokenCookie.Value : null;
 
             if (userId == null && token == null)
             {
                 _workContext.ErrorMessage = "Not enough info for reseting password";
-                return View("error");
+                return View("error", _workContext);
             }
 
             var result = await _commerceCoreApi.StorefrontSecurityResetPasswordAsync(userId, token, formModel.Password);
 
             if (result.Succeeded == true)
             {
-                HttpContext.Response.Cookies.Add(new HttpCookie(CustomerIdCookie) { Expires = DateTime.UtcNow.AddDays(-1) });
-                HttpContext.Response.Cookies.Add(new HttpCookie(ResetCustomerPasswordTokenCookie) { Expires = DateTime.UtcNow.AddDays(-1) });
+                HttpContext.Response.Cookies.Add(new HttpCookie(StorefrontConstants.CustomerIdCookie) { Expires = DateTime.UtcNow.AddDays(-1) });
+                HttpContext.Response.Cookies.Add(new HttpCookie(StorefrontConstants.PasswordResetTokenCookie) { Expires = DateTime.UtcNow.AddDays(-1) });
 
-                return View("customers/reset_password_confirmation");
+                return View("customers/reset_password_confirmation", _workContext);
             }
             else
             {
                 ModelState.AddModelError("form", result.Errors.First());
             }
 
-            return View("customers/reset_password");
+            return View("customers/reset_password", _workContext);
         }
 
 
