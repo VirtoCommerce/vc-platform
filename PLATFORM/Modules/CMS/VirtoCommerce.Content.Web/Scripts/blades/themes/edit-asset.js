@@ -19,7 +19,7 @@
 
                         $scope.blade.toolbarCommands.push(
                             {
-                                name: "Undo", icon: 'fa fa-rotate-left',
+                                name: "platform.commands.undo", icon: 'fa fa-rotate-left',
                                 executeMethod: function () {
                                     codemirrorEditor.undo();
                                 },
@@ -30,7 +30,7 @@
                             });
                         $scope.blade.toolbarCommands.push(
                             {
-                                name: "Redo", icon: 'fa fa-rotate-right',
+                                name: "platform.commands.redo", icon: 'fa fa-rotate-right',
                                 executeMethod: function () {
                                     codemirrorEditor.redo();
                                 },
@@ -47,7 +47,7 @@
 
             $scope.blade.toolbarCommands = [
 			{
-			    name: "Save", icon: 'fa fa-save',
+			    name: "platform.commands.save", icon: 'fa fa-save',
 			    executeMethod: function () {
 			        $scope.saveChanges();
 			    },
@@ -57,7 +57,7 @@
 			    permission: 'content:update'
 			},
 			{
-			    name: "Reset", icon: 'fa fa-undo',
+			    name: "platform.commands.reset", icon: 'fa fa-undo',
 			    executeMethod: function () {
 			        angular.copy(blade.origEntity, blade.currentEntity);
 			    },
@@ -67,7 +67,7 @@
 			    permission: 'content:update'
 			},
 			{
-			    name: "Delete", icon: 'fa fa-trash-o',
+			    name: "platform.commands.delete", icon: 'fa fa-trash-o',
 			    executeMethod: function () {
 			        deleteEntry();
 			    },
@@ -80,7 +80,7 @@
         else {
             $scope.blade.toolbarCommands = [
 			{
-			    name: "Create", icon: 'fa fa-save',
+			    name: "platform.commands.create", icon: 'fa fa-save',
 			    executeMethod: function () {
 			        $scope.saveChanges();
 			    },
@@ -124,8 +124,8 @@
     function deleteEntry() {
         var dialog = {
             id: "confirmDelete",
-            title: "Delete confirmation",
-            message: "Are you sure you want to delete this asset?",
+            title: "content.dialogs.asset-delete.title",
+            message: "content.dialogs.asset-delete.message",
             callback: function (remove) {
                 if (remove) {
                     $scope.blade.isLoading = true;
@@ -196,8 +196,8 @@
         if ((isDirty() && !blade.newAsset) || (isCanSave() && blade.newAsset)) {
             var dialog = {
                 id: "confirmCurrentBladeClose",
-                title: "Save changes",
-                message: "The asset has been modified. Do you want to save changes?",
+                title: "content.dialogs.asset-save.title",
+                message: "content.dialogs.asset-save.message",
                 callback: function (needSave) {
                     if (needSave) {
                         $scope.saveChanges();

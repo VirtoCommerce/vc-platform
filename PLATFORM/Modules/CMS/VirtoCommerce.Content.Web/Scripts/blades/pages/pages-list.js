@@ -59,8 +59,9 @@
                     newPage: false,
                     body: body,
                     metadata: metadata,
-                    title: 'Edit ' + data.name,
-                    subtitle: 'Page edit',
+                    title: 'content.blades.edit-page.title',
+                    titlevalues: { name: data.name },
+                    subtitle: 'content.blades.edit-page.subtitle',
                     controller: 'virtoCommerce.contentModule.editPageController',
                     template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/pages/edit-page.tpl.html'
                 };
@@ -74,8 +75,9 @@
                     choosenPageName: data.id,
                     choosenPageLanguage: data.language,
                     newPage: false,
-                    title: 'Edit ' + data.name,
-                    subtitle: 'Page edit',
+                    title: 'content.blades.edit-page.title',
+                    titlevalues: { name: data.name },
+                    subtitle: 'content.blades.edit-page.subtitle',
                     controller: 'virtoCommerce.contentModule.editPageController',
                     template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/pages/edit-page.tpl.html'
                 };
@@ -108,8 +110,8 @@
                 newPage: true,
                 body: '',
                 metadata: '',
-                title: 'Add new page',
-                subtitle: 'Create new page',
+                title: 'content.blades.edit-page.title-new',
+                subtitle: 'content.blades.edit-page.subtitle-new',
                 controller: 'virtoCommerce.contentModule.editPageController',
                 template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/pages/edit-page.tpl.html'
             };
@@ -122,8 +124,8 @@
                 path: path,
                 currentEntity: { name: path + 'new_file', pageName: 'new_file', content: null, contentType: null, language: null, storeId: blade.storeId },
                 newPage: true,
-                title: 'Add new file',
-                subtitle: 'Create new file',
+                title: 'content.blades.edit-page.title-new-file',
+                subtitle: 'content.blades.edit-page.subtitle-new-file',
                 controller: 'virtoCommerce.contentModule.editPageController',
                 template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/pages/edit-page.tpl.html'
             };
@@ -150,7 +152,7 @@
         if (blade.currentPageCatalog.folderName === 'blogs') {
             $scope.blade.toolbarCommands = [
                 {
-                    name: "Add blog", icon: 'fa fa-plus',
+                    name: "content.commands.add-blog", icon: 'fa fa-plus',
                     executeMethod: function () {
                         blade.openBlogNew(true, { name: undefined });
                     },
@@ -167,7 +169,7 @@
         if (blade.currentPageCatalog.folderName !== 'blogs' && _.find(blade.steps, function (step) { return step === 'Blogs'; }) !== undefined) {
             $scope.blade.toolbarCommands.push(
             {
-                name: "Manage blog", icon: 'fa fa-edit',
+                name: "content.commands.manage-blog", icon: 'fa fa-edit',
                 executeMethod: function () {
                     blade.openBlogNew(false, { name: blade.currentPageCatalog.folderName });
                 },
@@ -197,7 +199,7 @@
         if (blade.currentPageCatalog.folderName === 'blogs') {
             $scope.blade.toolbarCommands = [
                 {
-                    name: "Add blog", icon: 'fa fa-plus',
+                    name: "content.commands.add-blog", icon: 'fa fa-plus',
                     executeMethod: function () {
                         blade.openBlogNew(true, { name: undefined });
                     },
@@ -215,7 +217,7 @@
         if (blade.currentPageCatalog.folderName !== 'blogs' && _.find(blade.steps, function (step) { return step === 'Blogs'; }) !== undefined) {
             $scope.blade.toolbarCommands.push(
             {
-                name: "Manage blog", icon: 'fa fa-edit',
+                name: "content.commands.manage-blog", icon: 'fa fa-edit',
                 executeMethod: function () {
                     blade.openBlogNew(false, { name: blade.currentPageCatalog.folderName });
                 },
@@ -283,7 +285,7 @@
         if (blade.currentPageCatalog.folderName === 'blogs') {
             $scope.blade.toolbarCommands = [
                 {
-                    name: "Add blog", icon: 'fa fa-plus',
+                    name: "content.commands.add-blog", icon: 'fa fa-plus',
                     executeMethod: function () {
                         blade.openBlogNew(true, { name: undefined });
                     },
@@ -297,7 +299,7 @@
         else {
             $scope.blade.toolbarCommands = [
                 {
-                    name: "Add page", icon: 'fa fa-plus',
+                    name: "content.commands.add-page", icon: 'fa fa-plus',
                     executeMethod: function () {
                         blade.openBladeNew(false);
                     },
@@ -307,7 +309,7 @@
                     permission: 'content:create'
                 },
                 {
-                    name: "Add file", icon: 'fa fa-plus',
+                    name: "content.commands.add-file", icon: 'fa fa-plus',
                     executeMethod: function () {
                         blade.openBladeNew(true);
                     },
