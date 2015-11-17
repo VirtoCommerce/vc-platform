@@ -24,13 +24,12 @@
 ];
 
 angular.module('platformWebApp', AppDependencies).
-  controller('platformWebApp.appCtrl', ['$scope', '$window', '$state', 'platformWebApp.pushNotificationService', function ($scope, $window, $state, pushNotificationService) {
+  controller('platformWebApp.appCtrl', ['$scope', '$window', 'platformWebApp.pushNotificationService', '$translate', 'platformWebApp.settings', function ($scope, $window, pushNotificationService, $translate, settings) {
       $scope.platformVersion = $window.platformVersion;
       pushNotificationService.run();
 
-      $scope.curentStateName = function () {
-          return $state.current.name;
-      };
+      $scope.$translate = $translate;
+      $scope.managerLanguages = settings.getValues({ id: 'VirtoCommerce.Platform.General.ManagerLanguages' });
   }])
 // Specify SignalR server URL (application URL)
 .factory('platformWebApp.signalRServerName', ['$location', function apiTokenFactory($location) {
@@ -102,11 +101,13 @@ angular.module('platformWebApp', AppDependencies).
       });
 
       //Localization
+      // var defaultLanguage = settings.getValues({ id: 'VirtoCommerce.Platform.General.ManagerDefaultLanguage' });
       $translateProvider.useUrlLoader('api/platform/localization')
         .useLoaderCache(true)
         .useSanitizeValueStrategy('escapeParameters')
         .preferredLanguage('en')
-        .fallbackLanguage('en');
+        .fallbackLanguage('en')
+        .useLocalStorage();
   }])
 
 .run(

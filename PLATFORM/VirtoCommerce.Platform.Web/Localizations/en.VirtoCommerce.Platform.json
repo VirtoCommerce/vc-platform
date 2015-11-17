@@ -16,12 +16,14 @@
       "add": "Add",
       "assign": "Assign",
       "cancel": "Cancel",
+      "clear-all": "Clear all",
       "confirm": "Confirm",
       "copy-link": "Copy link",
       "create": "Create",
       "cut": "Cut",
       "delete": "Delete",
       "download": "Download",
+      "edit": "Edit",
       "export": "Export",
       "generate": "Generate",
       "import": "Import",
@@ -101,7 +103,7 @@
       }
     },
     "genericValueInput": {
-      "placeholder": {
+      "placeholders": {
         "short-text": "Enter short text",
         "secure-string": "Enter secret text",
         "long-text": "Enter long text",
@@ -276,7 +278,7 @@
             "description": "Data will be saved out to a file so it can later be imported."
           },
           "import": {
-            "title": "v",
+            "title": "Import",
             "description": "Import data from an exported file."
           }
         }
@@ -586,20 +588,11 @@
       },
       "login": {
         "labels": {
-          "Sign-in": "Sign in to Virto Commerce Manager",
+          "sign-in": "Sign in to Virto Commerce Manager",
           "login": "Login",
           "password": "Password",
           "remember-me": "Remember me",
-          "Log-in": "Log in"
-        }
-      },
-      "loginToolbar": {
-        "labels": {
-          "Sign-in": "Sign in to Virto Commerce Manager",
-          "login": "Login",
-          "password": "Password",
-          "remember-me": "Remember me",
-          "Log-in": "Log in"
+          "log-in": "Log in"
         }
       },
       "new-account-wizard": {

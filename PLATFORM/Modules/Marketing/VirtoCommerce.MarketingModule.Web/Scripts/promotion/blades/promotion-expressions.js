@@ -12,13 +12,13 @@
         var selectedListEntries = [];
         var newBlade = {
             id: "CatalogEntrySelect",
-            title: "Pick Product for promotion condition",
+            title: "marketing.blades.catalog-items-select.title-product",
             controller: 'virtoCommerce.catalogModule.catalogItemSelectController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/common/catalog-items-select.tpl.html',
             breadcrumbs: [],
             toolbarCommands: [
             {
-                name: "Pick selected", icon: 'fa fa-plus',
+                name: "marketing.commands.pick-selected", icon: 'fa fa-plus',
                 executeMethod: function (blade) {
                     //parentElement.selectedListEntry = selectedListEntries[0];
                     parentElement.productId = selectedListEntries[0].id;
@@ -62,13 +62,13 @@
         var selectedListEntries = [];
         var newBlade = {
             id: "CatalogCategorySelect",
-            title: "Pick Category for promotion condition",
+            title: "marketing.blades.catalog-items-select.title-category",
             controller: 'virtoCommerce.catalogModule.catalogItemSelectController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/common/catalog-items-select.tpl.html',
             breadcrumbs: [],
             toolbarCommands: [
             {
-                name: "Pick selected", icon: 'fa fa-plus',
+                name: "marketing.commands.pick-selected", icon: 'fa fa-plus',
                 executeMethod: function (blade) {
                     parentElement.categoryId = selectedListEntries[0].id;
                     parentElement.categoryName = selectedListEntries[0].name;

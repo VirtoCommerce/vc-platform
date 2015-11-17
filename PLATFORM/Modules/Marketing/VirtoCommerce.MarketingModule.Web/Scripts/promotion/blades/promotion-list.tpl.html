@@ -1,9 +1,9 @@
 ﻿<div class="blade-static">
     <div class="form-group">
         <div class="form-input __search">
-            <input type="text" placeholder="Search keyword..." ng-model="filter.searchKeyword" ng-keyup="$event.which === 13 && blade.refresh()">
+            <input type="text" placeholder="{{'platform.placeholders.search-keyword' | translate}}" ng-model="filter.searchKeyword" ng-keyup="$event.which === 13 && blade.refresh()">
         </div>
-        <p class="form-count">Count: <span class="count">{{pageSettings.totalItems}}</span></p>
+        <p class="form-count">{{ 'platform.list.count' | translate }}: <span class="count">{{pageSettings.totalItems}}</span></p>
     </div>
 </div>
 <div class="blade-static __bottom" ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems" ng-include="'pagerTemplate.html'"></div>
@@ -21,8 +21,8 @@
                                     <span class="check"></span>
                                 </label>
                             </th>
-                            <th class="table-col __product-name">Name</th>
-                            <th class="table-col __date">Last modified</th>
+                            <th class="table-col __product-name">{{ 'marketing.blades.promotion-list.labels.name' | translate }}</th>
+                            <th class="table-col __date">{{ 'marketing.blades.promotion-list.labels.last-modified' | translate }}</th>
                         </tr>
                     </thead>
                     <tbody>
