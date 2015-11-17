@@ -26,13 +26,18 @@
 ];
 
 angular.module('platformWebApp', AppDependencies).
-  controller('platformWebApp.appCtrl', ['$scope', '$window', 'platformWebApp.pushNotificationService', '$translate', 'platformWebApp.settings', function ($scope, $window, pushNotificationService, $translate, settings) {
-      $scope.platformVersion = $window.platformVersion;
-      pushNotificationService.run();
+  controller('platformWebApp.appCtrl', ['$rootScope', '$scope', '$window', 'platformWebApp.pushNotificationService', '$translate', 'platformWebApp.settings',
+ function ($rootScope, $scope, $window, pushNotificationService, $translate, settings) {
+     $scope.$translate = $translate;
+     $scope.platformVersion = $window.platformVersion;
+     pushNotificationService.run();
 
-      $scope.$translate = $translate;
-      $scope.managerLanguages = settings.getValues({ id: 'VirtoCommerce.Platform.General.ManagerLanguages' });
-  }])
+     $rootScope.$on('loginStatusChanged', function (event, authContext) {
+         if (authContext.isAuthenticated) {
+             $scope.managerLanguages = settings.getValues({ id: 'VirtoCommerce.Platform.General.ManagerLanguages' });
+         }
+     });
+ }])
 // Specify SignalR server URL (application URL)
 .factory('platformWebApp.signalRServerName', ['$location', function apiTokenFactory($location) {
     var retVal = $location.url() ? $location.absUrl().slice(0, -$location.url().length - 1) : $location.absUrl();
