@@ -53,7 +53,6 @@
 
     function addMenuItem(menuItem) {
         menuItems.push(menuItem);
-        console.log(menuItem);
         constructTree();
     }
 

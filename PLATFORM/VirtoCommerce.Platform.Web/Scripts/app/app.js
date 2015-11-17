@@ -87,7 +87,8 @@ angular.module('platformWebApp', AppDependencies).
         .useLoaderCache(true)
         .useSanitizeValueStrategy('escapeParameters')
         .preferredLanguage('en')
-        .fallbackLanguage('en');
+        .fallbackLanguage('en')
+        .useLocalStorage();
   }])
 
 .run(
