@@ -7,7 +7,7 @@ using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Model
 {
-    public class Price : Entity
+    public class ProductPrice : ValueObject<ProductPrice>
     {
         /// <summary>
         /// Price list id
@@ -17,21 +17,31 @@ namespace VirtoCommerce.Storefront.Model
         /// <summary>
         /// Currency
         /// </summary>
-        public string Currency { get; set; }
+        public Currency Currency { get; set; }
 
         /// <summary>
         /// Product id
         public string ProductId { get; set; }
 
         /// <summary>
-        /// Sale price of a product. It can be null, then Sale price will be equal List price
+        /// Original product price (old price)
         /// </summary>
-        public double? Sale { get; set; }
+        public Money ListPrice { get; set; }
 
         /// <summary>
-        /// Price of a product. It can be catalog price or purchase price
+        /// Sale product price (new price)
         /// </summary>
-        public double? List { get; set; }
+        public Money SalePrice { get; set; }
+
+        /// <summary>
+        /// Current active discount
+        /// </summary>
+        public Discount ActiveDiscount { get; set; }
+
+        /// <summary>
+        /// Not active but potential better that active discount 
+        /// </summary>
+        public Discount PotentialDiscount { get; set; }
 
         /// <summary>
         /// It defines the minimum quantity of products

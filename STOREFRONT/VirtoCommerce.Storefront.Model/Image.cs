@@ -7,21 +7,25 @@ using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Model
 {
-    public class EditorialReview : Entity
+    public class Image : ValueObject<Image>
     {
         /// <summary>
-        /// Editorial review content
+        /// Full url of image
         /// </summary>
-        public string Content { get; set; }
+        public string Url { get; set; }
+
+        public string FullSizeImageUrl { get; set; }
 
         /// <summary>
-        /// Editorial review type
+        /// Image title
         /// </summary>
-        public string ReviewType { get; set; }
+        public string Title { get; set; }
 
         /// <summary>
-        /// Editorial review language
+        /// Image alt text
         /// </summary>
-        public string LanguageCode { get; set; }
+        public string AlternateText { get; set; }
+
+      
     }
 }

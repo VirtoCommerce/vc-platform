@@ -13,9 +13,9 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
     public class Image : Drop
     {
         private readonly Storefront.Model.Image _image;
-        private readonly Storefront.Model.Product _product;
+        private readonly Storefront.Model.Catalog.Product _product;
 
-        public Image(Storefront.Model.Image image, Storefront.Model.Product product)
+        public Image(Storefront.Model.Image image, Storefront.Model.Catalog.Product product)
         {
             _image = image;
             _product = product;
@@ -25,7 +25,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         {
             get
             {
-                return _product.Name;
+                return _image.AlternateText;
             }
         }
 
@@ -67,7 +67,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         {
             get
             {
-                return _image.Name;
+                return _image.Title;
             }
         }
 

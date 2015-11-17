@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Storefront.Model.Common;
 
-namespace VirtoCommerce.Storefront.Model
+namespace VirtoCommerce.Storefront.Model.Catalog
 {
     public class PropertyValue : Entity
     {
@@ -13,11 +13,6 @@ namespace VirtoCommerce.Storefront.Model
         /// Name of the property that this value belongs to.
         /// </summary>
         public string PropertyName { get; set; }
-
-        /// <summary>
-        /// Language of this property value.
-        /// </summary>
-        public string LanguageCode { get; set; }
 
         /// <summary>
         /// Property value type of the value.

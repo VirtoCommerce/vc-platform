@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Storefront.Model.Common;
 
-namespace VirtoCommerce.Storefront.Model
+namespace VirtoCommerce.Storefront.Model.Catalog
 {
-    public class Inventory : Entity
+    public class Inventory : ValueObject<Inventory>
     {
         /// <summary>
         /// Gets or Sets PreorderAvailabilityDate

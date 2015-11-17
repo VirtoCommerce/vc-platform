@@ -12,10 +12,10 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
     /// </summary>
     public class Product : Drop
     {
-        private readonly Storefront.Model.Product _product;
+        private readonly Storefront.Model.Catalog.Product _product;
         private readonly Storefront.Model.WorkContext _context;
         private readonly Storefront.Model.Common.IStorefrontUrlBuilder _urlBuilder;
-        public Product(Storefront.Model.Product product, Storefront.Model.Common.IStorefrontUrlBuilder urlBuilder, Storefront.Model.WorkContext context)
+        public Product(Storefront.Model.Catalog.Product product, Storefront.Model.Common.IStorefrontUrlBuilder urlBuilder, Storefront.Model.WorkContext context)
         {
             _product = product;
             _context = context;
@@ -78,11 +78,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         {
             get
             {
-                string retVal = null;
-                var review = _product.Reviews != null ? _product.Reviews.FirstOrDefault(er => er.ReviewType.Equals("quickreview", StringComparison.OrdinalIgnoreCase)) : null;
-                if(review != null)
-                    retVal = review.Content;
-                return retVal;
+                return _product.Description;
             }
         }
 
@@ -135,14 +131,6 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
             get
             {
                 return new ItemCollection<Image>(_product.Images.Select(i => new Image(i, _product)));
-            }
-        }
-
-        public IEnumerable<SeoKeyword> Keywords
-        {
-            get
-            {
-                return _product.SeoInfos.Select(s => new SeoKeyword(s));
             }
         }
 

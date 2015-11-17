@@ -234,12 +234,9 @@
     <Compile Include="Converters\AssetConverter.cs" />
     <Compile Include="Converters\CartConverter.cs" />
     <Compile Include="Converters\CartLineItemConverter.cs" />
-    <Compile Include="Converters\CategoryLinkConverter.cs" />
     <Compile Include="Converters\CustomerConverter.cs" />
-    <Compile Include="Converters\EditorialReviewConverter.cs" />
     <Compile Include="Converters\InventoryConverter.cs" />
     <Compile Include="Converters\PriceConverter.cs" />
-    <Compile Include="Converters\ProductAssociationConverter.cs" />
     <Compile Include="Converters\ProductConverter.cs" />
     <Compile Include="Converters\PropertyConverter.cs" />
     <Compile Include="Converters\SeoInfoConverter.cs" />

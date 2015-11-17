@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Storefront.Model.Common;
 
-namespace VirtoCommerce.Storefront.Model
+namespace VirtoCommerce.Storefront.Model.Catalog
 {
-    public class Asset : Entity
+    public class Asset : ValueObject<Asset>
     {
         /// <summary>
         /// Size of asset in bytes
@@ -18,11 +18,6 @@ namespace VirtoCommerce.Storefront.Model
         /// Mime type of asset
         /// </summary>
         public string MimeType { get; set; }
-
-        /// <summary>
-        /// Relative url of asset
-        /// </summary>
-        public string RelativeUrl { get; set; }
 
         /// <summary>
         /// Full url of asset
@@ -37,7 +32,6 @@ namespace VirtoCommerce.Storefront.Model
         /// <summary>
         /// Asset group name
         /// </summary>
-
         public string Group { get; set; }
 
         /// <summary>
@@ -45,9 +39,5 @@ namespace VirtoCommerce.Storefront.Model
         /// </summary>
         public string Name { get; set; }
 
-        /// <summary>
-        /// Asset language code
-        /// </summary>
-        public string LanguageCode { get; set; }
     }
 }

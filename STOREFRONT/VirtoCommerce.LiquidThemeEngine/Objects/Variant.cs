@@ -14,12 +14,12 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
     /// </summary>
     public class Variant : Drop
     {
-        private readonly Storefront.Model.Product _product;
+        private readonly Storefront.Model.Catalog.Product _product;
         private readonly WorkContext _workContext;
         private readonly string _mainProductId;
         private readonly IStorefrontUrlBuilder _urlBuilder;
 
-        public Variant(Storefront.Model.Product product, WorkContext workContext, IStorefrontUrlBuilder urlBuilder, string mainProductId)
+        public Variant(Storefront.Model.Catalog.Product product, WorkContext workContext, IStorefrontUrlBuilder urlBuilder, string mainProductId)
         {
             _product = product;
             _workContext = workContext;
@@ -217,8 +217,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         {
             get
             {
-                var price = _product.Price;
-                var retVal = (decimal)(price != null ? (price.Sale.HasValue ? price.Sale.Value : price.List.HasValue ? price.List.Value : 0) : 0);
+                var retVal = _product.Price.SalePrice.Amount;
                 return retVal;
             }
         }

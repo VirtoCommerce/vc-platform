@@ -5,6 +5,10 @@ namespace VirtoCommerce.Storefront.Model
 {
     public class ShippingMethod : ValueObject<ShippingMethod>
     {
+        public ShippingMethod()
+        {
+            Discounts = new List<Discount>();
+        }
         /// <summary>
         /// Gets or sets the value of shipping method code
         /// </summary>
@@ -36,17 +40,9 @@ namespace VirtoCommerce.Storefront.Model
         public string TaxType { get; set; }
 
         /// <summary>
-        /// Gets or sets the value of shipping method currency
-        /// </summary>
-        /// <value>
-        /// Currency code in ISO 4217 format
-        /// </value>
-        public CurrencyCodes Currency { get; set; }
-
-        /// <summary>
         /// Gets or sets the value of shipping method price
         /// </summary>
-        public decimal Price { get; set; }
+        public Money Price { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of shipping method discounts

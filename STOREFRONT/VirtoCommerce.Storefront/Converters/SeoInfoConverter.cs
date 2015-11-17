@@ -15,8 +15,6 @@ namespace VirtoCommerce.Storefront.Converters
             retVal.InjectFrom(seoDto);
             retVal.Slug = seoDto.SemanticUrl;
             retVal.Title = seoDto.PageTitle;
-            retVal.Language = seoDto.LanguageCode;
-            retVal.ImageAltDescription = seoDto.ImageAltDescription;
             return retVal;
         }
     }

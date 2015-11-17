@@ -11,10 +11,6 @@ namespace VirtoCommerce.Storefront.Model
     /// </summary>
     public class SeoInfo : ValueObject<SeoInfo>
     {
-        public string ImageAltDescription { get; set; }
-
-        public string Language { get; set; }
-
         public string MetaDescription { get; set; }
 
         public string Slug { get; set; }

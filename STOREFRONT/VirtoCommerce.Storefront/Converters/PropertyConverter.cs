@@ -5,19 +5,21 @@ using System.Web;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Client.Model;
 using Omu.ValueInjecter;
+using VirtoCommerce.Storefront.Model.Catalog;
 
 namespace VirtoCommerce.Storefront.Converters
 {
     public static class PropertyConverter
     {
-        public static Property ToWebModel(this VirtoCommerceCatalogModuleWebModelProperty property, List<Property> properties = null)
+        public static ProductProperty ToWebModel(this VirtoCommerceCatalogModuleWebModelProperty property)
         {
-            var retVal = new Property();
+            var retVal = new ProductProperty();
             retVal.InjectFrom(property);
-            if(property.Values != null)
+            if (property.Values != null)
+            {
                 retVal.Values = property.Values.Select(v => v.ToWebModel()).ToList();
-            if (properties != null && properties.Any(p => p.Name.Equals(retVal.Name)))
-                retVal.Type = properties.First(p => p.Name.Equals(retVal.Name)).Type;
+            }
+            
             return retVal;
         }
 

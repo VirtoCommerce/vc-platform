@@ -5,10 +5,19 @@ using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Storefront.Model.Common;
 
-namespace VirtoCommerce.Storefront.Model
+namespace VirtoCommerce.Storefront.Model.Catalog
 {
     public class Product : Entity
     {
+        public Product()
+        {
+            Properties = new List<ProductProperty>();
+            TierPrices = new List<TierPrice>();
+            Assets = new List<Asset>();
+            Variations = new List<Product>();
+            Images = new List<Image>();
+        }
+
         /// <summary>
         /// Manufacturer part number for this product
         /// </summary>
@@ -155,19 +164,10 @@ namespace VirtoCommerce.Storefront.Model
         public string Vendor { get; set; }
 
         /// <summary>
-        /// Default image of product
-        /// </summary>
-        public string ImgSrc { get; set; }
-
-        /// <summary>
         /// List of product properties
         /// </summary>
-        public List<Property> Properties { get; set; }
+        public List<ProductProperty> Properties { get; set; }
 
-        /// <summary>
-        /// List of product images
-        /// </summary>
-        public Image[] Images { get; set; }
 
         /// <summary>
         /// List of product assets
@@ -180,34 +180,38 @@ namespace VirtoCommerce.Storefront.Model
         public List<Product> Variations { get; set; }
 
         /// <summary>
-        /// List of product categories links
+        /// Product description
         /// </summary>
-        public List<CategoryLink> Links { get; set; }
+        public string Description { get; set; }
 
         /// <summary>
-        /// List of product SEO information records
+        /// Current product price
         /// </summary>
-        public List<SeoInfo> SeoInfos { get; set; }
+        public ProductPrice Price { get; set; }
 
         /// <summary>
-        /// List of product reviews
+        /// Tier prices 
         /// </summary>
-        public List<EditorialReview> Reviews { get; set; }
+        public ICollection<TierPrice> TierPrices { get; set; }
 
         /// <summary>
-        /// List of product associations
+        /// Inventory info
         /// </summary>
-        public List<ProductAssociation> Associations { get; set; }
-
-        public Price Price { get; set; }
-
         public Inventory Inventory { get; set; }
 
         /// <summary>
-        /// Main product seo info
+        /// product seo info
         /// </summary>
-        public SeoInfo MainSeo { get; set; }
+        public SeoInfo SeoInfo { get; set; }
 
-        public Image MainImage { get; set; }
+        /// <summary>
+        /// Product main image
+        /// </summary>
+        public Image PrimaryImage { get; set; }
+
+        /// <summary>
+        /// List of product images
+        /// </summary>
+        public ICollection<Image> Images { get; set; }
     }
 }

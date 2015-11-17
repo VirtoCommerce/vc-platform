@@ -67,10 +67,6 @@ namespace VirtoCommerce.Storefront.Controllers
                     variation.Inventory = inventory.ToWebModel();
             }
 
-            _workContext.CurrentProduct.MainSeo = _workContext.CurrentProduct.SeoInfos.FirstOrDefault();
-            _workContext.CurrentProduct.MainImage = _workContext.CurrentProduct.Images.FirstOrDefault();
-
-            _workContext.CurrentPageSeo = _workContext.CurrentProduct.SeoInfos.FirstOrDefault();
         }
     }
 }

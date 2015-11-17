@@ -100,7 +100,6 @@
     <Compile Include="Objects\ItemCollections.cs" />
     <Compile Include="Objects\MetafieldsCollections.cs" />
     <Compile Include="Objects\Product.cs" />
-    <Compile Include="Objects\SeoKeyword.cs" />
     <Compile Include="Objects\Shop.cs" />
     <Compile Include="Objects\Variant.cs" />
     <Compile Include="Operators\CommonOperators.cs" />

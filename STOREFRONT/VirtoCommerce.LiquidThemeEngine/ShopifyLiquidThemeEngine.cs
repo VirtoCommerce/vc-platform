@@ -62,7 +62,7 @@ namespace VirtoCommerce.LiquidThemeEngine
             Template.RegisterFilter(typeof(HtmlFilters));
             Template.RegisterFilter(typeof(StringFilters));
 
-            Condition.Operators["contains"] = (left, right) => ContainsMethod(left, right);
+            Condition.Operators["contains"] = (left, right) => CommonOperators.ContainsMethod(left, right);
 
             Template.RegisterTag<LayoutTag>("layout");
             Template.RegisterTag<FormTag>("form");
@@ -295,22 +295,6 @@ namespace VirtoCommerce.LiquidThemeEngine
         public string GetAssetAbsoluteUrl(string assetName)
         {
             return _storeFrontUrlBuilder.ToAbsolute(WorkContext, _themesAssetsRelativeUrl.TrimEnd('/') + "/" + assetName.TrimStart('/'), WorkContext.CurrentStore, WorkContext.CurrentLanguage);
-        }
-
-        private static bool ContainsMethod(object left, object right)
-        {
-
-            if (left is string)
-            {
-                return right != null && ((string)left).Contains(right as string);
-            }
-
-            if (left is IList)
-            {
-                return ((IList)left).Contains(right);
-            }
-
-            return false;
         }
 
     }
