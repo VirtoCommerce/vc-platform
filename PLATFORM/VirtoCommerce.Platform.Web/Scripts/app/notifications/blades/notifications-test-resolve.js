@@ -87,7 +87,7 @@
 
 			var newBlade = {
 				id: 'resolveResult',
-				title: 'Preview result',
+				title: 'platform.blades.resolve-result.title',
 				notification: notification,
 				controller: 'platformWebApp.resolveResultController',
 				template: '$(Platform)/Scripts/app/notifications/blades/resolve-result.tpl.html'

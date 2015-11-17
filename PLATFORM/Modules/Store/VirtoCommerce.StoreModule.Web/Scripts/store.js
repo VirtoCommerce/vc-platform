@@ -19,7 +19,7 @@ angular.module(moduleName, [
                   '$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
                       var blade = {
                           id: 'store',
-                          title: 'Stores',
+                          title: 'stores.blades.stores-list.title',
                           controller: 'virtoCommerce.storeModule.storesListController',
                           template: 'Modules/$(VirtoCommerce.Store)/Scripts/blades/stores-list.tpl.html',
                           isClosingDisabled: true
@@ -37,7 +37,7 @@ angular.module(moduleName, [
       var menuItem = {
           path: 'browse/store',
           icon: 'fa fa-archive',
-          title: 'Stores',
+          title: 'stores.main-menu-title',
           priority: 110,
           action: function () { $state.go('workspace.storeModule'); },
           permission: 'store:access'
@@ -80,7 +80,7 @@ angular.module(moduleName, [
       }, 'storeDetail');
 
       var resetCommand = {
-          name: "Reset",
+          name: "platform.commands.reset",
           icon: 'fa fa-undo',
           executeMethod: function (blade) {
               angular.copy(blade.origEntity, blade.currentEntity);

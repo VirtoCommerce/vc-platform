@@ -54,10 +54,10 @@
     };
 
     blade.headIcon = 'fa-wrench';
-    blade.subtitle = 'Manage dictionary values';
+    blade.subtitle = 'platform.blades.setting-dictionary.subtitle';
     blade.toolbarCommands = [
      {
-         name: "Delete", icon: 'fa fa-trash-o',
+         name: "platform.commands.delete", icon: 'fa fa-trash-o',
          executeMethod: function () {
              deleteChecked();
          },
@@ -88,7 +88,7 @@
 
         blade.toolbarCommands.splice(0, 0,
         {
-            name: "Save",
+            name: "platform.commands.save",
             icon: 'fa fa-save',
             executeMethod: function () {
                 saveChanges();
@@ -98,7 +98,7 @@
             }
         },
         {
-            name: "Reset",
+            name: "platform.commands.reset",
             icon: 'fa fa-undo',
             executeMethod: function () {
                 angular.copy(blade.origEntity, currentEntities);
@@ -127,8 +127,8 @@
     function deleteChecked() {
         var dialog = {
             id: "confirmDeleteItem",
-            title: "Delete confirmation",
-            message: "Are you sure you want to delete selected Values?",
+            title: "platform.dialogs.settings-value-delete.title",
+            message: "platform.dialogs.settings-value-delete.message",
             callback: function (remove) {
                 if (remove) {
                     var selection = _.where(currentEntities, { _selected: true });

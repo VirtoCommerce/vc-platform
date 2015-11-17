@@ -77,6 +77,7 @@
     <Compile Include="Binders\BaseModelBinder.cs" />
     <Compile Include="Binders\LoginModelBinder.cs" />
     <Compile Include="Binders\RegisterModelBinder.cs" />
+    <Compile Include="Binders\ResetPasswordModelBinder.cs" />
     <Compile Include="Binders\ShopifyModelBinderProvider.cs" />
     <Compile Include="DotLiquidThemedView.cs" />
     <Compile Include="DotLiquidThemedViewEngine.cs" />
@@ -89,8 +90,11 @@
     <Compile Include="Filters\TranslationFilter.cs" />
     <Compile Include="Filters\CommerceFilters.cs" />
     <Compile Include="Filters\CommonFilters.cs" />
+    <Compile Include="Objects\Cart.cs" />
     <Compile Include="Objects\Form.cs" />
     <Compile Include="Objects\FormErrors.cs" />
+    <Compile Include="Objects\Fulfillment.cs" />
+    <Compile Include="Objects\LineItem.cs" />
     <Compile Include="Tags\FormTag.cs" />
     <Compile Include="Objects\Image.cs" />
     <Compile Include="Objects\ItemCollections.cs" />

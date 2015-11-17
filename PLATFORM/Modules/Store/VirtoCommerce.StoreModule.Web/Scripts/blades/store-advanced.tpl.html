@@ -5,24 +5,24 @@
             <form class="form" name="detailForm">
                 <div class="form columns clearfix" ng-init="setForm(detailForm)">
                     <div class="form-group">
-                        <label class="form-label">Description</label>
+                        <label class="form-label">{{ 'stores.blades.store-advanced.labels.description' | translate }}</label>
                         <div class="form-input">
-                            <textarea class="form-control" cols="30" rows="2" ng-model="blade.currentEntity.description" placeholder="Enter description"></textarea>
+                            <textarea class="form-control" cols="30" rows="2" ng-model="blade.currentEntity.description" placeholder="{{ 'stores.blades.store-advanced.placeholders.description' | translate }}"></textarea>
                         </div>
                     </div>
                     <div class="column">
                         <div class="form-group">
-                            <label class="form-label">Store URL</label>
+                            <label class="form-label">{{ 'stores.blades.store-advanced.labels.store-url' | translate }}</label>
                             <div class="form-input">
-                                <input ng-model="blade.currentEntity.url" type="url" placeholder="Enter URL">
+                                <input ng-model="blade.currentEntity.url" type="url" placeholder="{{ 'stores.blades.store-advanced.placeholders.store-url' | translate }}">
                             </div>
                         </div>
                     </div>
                     <div class="column">
                         <div class="form-group">
-                            <label class="form-label">Secure URL</label>
+                            <label class="form-label">{{ 'stores.blades.store-advanced.labels.secure-url' | translate }}</label>
                             <div class="form-input">
-                                <input ng-model="blade.currentEntity.secureUrl" type="url" placeholder="Enter secure URL">
+                                <input ng-model="blade.currentEntity.secureUrl" type="url" placeholder="{{ 'stores.blades.store-advanced.placeholders.secure-url' | translate }}">
                             </div>
                         </div>
                     </div>
@@ -30,10 +30,10 @@
                 <div class="form columns clearfix">
                     <div class="column">
                         <div class="form-group">
-                            <label class="form-label">Store country</label>
+                            <label class="form-label">{{ 'stores.blades.store-advanced.labels.store-country' | translate }}</label>
                             <div class="form-input">
                                 <ui-select ng-model="blade.currentEntity.country">
-                                    <ui-select-match placeholder="Select ...">{{$select.selected.name}}</ui-select-match>
+                                    <ui-select-match placeholder="{{ 'stores.blades.store-advanced.placeholders.store-country' | translate }}">{{$select.selected.name}}</ui-select-match>
                                     <ui-select-choices repeat="x.code as x in countries | filter: { name: $select.search }">
                                         <span ng-bind-html="x.name | highlight: $select.search"></span>
                                     </ui-select-choices>
@@ -43,10 +43,10 @@
                     </div>
                     <div class="column">
                         <div class="form-group">
-                            <label class="form-label">Store region</label>
+                            <label class="form-label">{{ 'stores.blades.store-advanced.labels.sStore-region' | translate }}</label>
                             <div class="form-input">
                                 <ui-select ng-model="blade.currentEntity.region">
-                                    <ui-select-match placeholder="Select ...">{{$select.selected.name}}</ui-select-match>
+                                    <ui-select-match placeholder="{{ 'stores.blades.store-advanced.placeholders.sStore-region' | translate }}">{{$select.selected.name}}</ui-select-match>
                                     <ui-select-choices repeat="x.id as x in regions | filter: { name: $select.search }">
                                         <span ng-bind-html="x.name | highlight: $select.search"></span>
                                     </ui-select-choices>
@@ -58,17 +58,17 @@
                 <div class="form columns clearfix">
                     <div class="column">
                         <div class="form-group">
-                            <label class="form-label">Store email</label>
+                            <label class="form-label">{{ 'stores.blades.store-advanced.labels.store-email' | translate }}</label>
                             <div class="form-input">
-                                <input ng-model="blade.currentEntity.email" type="email" placeholder="Enter value">
+                                <input ng-model="blade.currentEntity.email" type="email" placeholder="{{ 'stores.blades.store-advanced.placeholders.store-email' | translate }}">
                             </div>
                         </div>
                     </div>
                     <div class="column">
                         <div class="form-group">
-                            <label class="form-label">Store admin email</label>
+                            <label class="form-label">{{ 'stores.blades.store-advanced.labels.store-admin-email' | translate }}</label>
                             <div class="form-input">
-                                <input ng-model="blade.currentEntity.adminEmail" type="email" placeholder="Enter value">
+                                <input ng-model="blade.currentEntity.adminEmail" type="email" placeholder="{{ 'stores.blades.store-advanced.placeholders.store-admin-email' | translate }}">
                             </div>
                         </div>
                     </div>
@@ -76,10 +76,10 @@
                 <div class="form columns clearfix">
                     <div class="column">
                         <div class="form-group">
-                            <label class="form-label">Fulfillment center <a href="" ng-click="openFulfillmentCentersList()"><i class="form-ico fa fa-pencil"></i></a></label>
+                            <label class="form-label">{{ 'stores.blades.store-advanced.labels.fulfillment-center' | translate }} <a href="" ng-click="openFulfillmentCentersList()"><i class="form-ico fa fa-pencil"></i></a></label>
                             <div class="form-input">
                                 <ui-select ng-model="blade.currentEntity.fulfillmentCenter">
-                                    <ui-select-match placeholder="Select...">{{$select.selected.name}}</ui-select-match>
+                                    <ui-select-match placeholder="{{ 'stores.blades.store-advanced.placeholders.fulfillment-center' | translate }}">{{$select.selected.name}}</ui-select-match>
                                     <ui-select-choices repeat="x in fulfillmentCenters | filter: { name: $select.search }">
                                         <span ng-bind-html="x.name | highlight: $select.search"></span>
                                     </ui-select-choices>
@@ -89,10 +89,10 @@
                     </div>
                     <div class="column">
                         <div class="form-group">
-                            <label class="form-label">Returns Fulfillment center <a href="" ng-click="openFulfillmentCentersList()"><i class="form-ico fa fa-pencil"></i></a></label>
+                            <label class="form-label">{{ 'stores.blades.store-advanced.labels.returns-fulfillment-center' | translate }} <a href="" ng-click="openFulfillmentCentersList()"><i class="form-ico fa fa-pencil"></i></a></label>
                             <div class="form-input">
                                 <ui-select ng-model="blade.currentEntity.returnsFulfillmentCenter">
-                                    <ui-select-match placeholder="Select...">{{$select.selected.name}}</ui-select-match>
+                                    <ui-select-match placeholder="{{ 'stores.blades.store-advanced.placeholders.returns-fulfillment-center' | translate }}">{{$select.selected.name}}</ui-select-match>
                                     <ui-select-choices repeat="x as x in fulfillmentCenters | filter: { name: $select.search }">
                                         <span ng-bind-html="x.name | highlight: $select.search"></span>
                                     </ui-select-choices>
@@ -103,10 +103,10 @@
                 </div>
                 <div class="form columns clearfix">
                     <div class="form-group">
-                        <label class="form-label">Operational timezone</label>
+                        <label class="form-label">{{ 'stores.blades.store-advanced.labels.operational-timezone' | translate }}</label>
                         <div class="form-input">
                             <ui-select ng-model="blade.currentEntity.timeZone">
-                                <ui-select-match placeholder="Select...">{{$select.selected.name}}</ui-select-match>
+                                <ui-select-match placeholder="{{ 'stores.blades.store-advanced.placeholders.operational-timezone' | translate }}">{{$select.selected.name}}</ui-select-match>
                                 <ui-select-choices repeat="x.id as x in timeZones | filter: { name: $select.search }">
                                     <span ng-bind-html="x.name | highlight: $select.search"></span>
                                 </ui-select-choices>

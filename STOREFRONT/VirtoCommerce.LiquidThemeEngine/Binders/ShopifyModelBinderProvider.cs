@@ -14,6 +14,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Binders
         {
             { typeof(Login), new LoginModelBinder() },
             { typeof(Register), new RegisterModelBinder() },
+            { typeof(ResetPassword), new ResetPasswordModelBinder() },
         };
 
         public IModelBinder GetBinder(Type modelType)

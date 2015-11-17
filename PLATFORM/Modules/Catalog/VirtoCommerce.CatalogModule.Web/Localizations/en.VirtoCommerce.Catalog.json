@@ -198,29 +198,7 @@
 
       "property-value-type": {
         "title": "{{name}} value type",
-        "subtitle": "Change value type",
-        "menu": {
-          "short-text": {
-            "title": "Short Text",
-            "description": "Text values less than 1024 chars."
-          },
-          "long-text": {
-            "title": "Long Text",
-            "description": "Huge amount text without size limit."
-          },
-          "number": {
-            "title": "Number",
-            "description": "Digital input with float point."
-          },
-          "date-time": {
-            "title": "Date time",
-            "description": "Select date."
-          },
-          "boolean": {
-            "title": "Boolean",
-            "description": "Switch type."
-          }
-        }
+        "subtitle": "Change value type"
       },
       "property-attributes": {
         "title": "{{name}} attributes",
@@ -297,7 +275,8 @@
         "labels": {
           "picture": "Pic",
           "name": "Name",
-          "sku": "SKU"
+          "sku": "SKU",
+          "virtual": "{{name}} (virtual)"
         }
       },
       "new-product": {

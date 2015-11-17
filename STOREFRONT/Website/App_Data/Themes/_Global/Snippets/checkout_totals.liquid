@@ -7,6 +7,28 @@
             <div class="alert alert-info">
                 Shipping, tax and total prices can be updated during checkout modifications.
             </div>
+            <hr />
+                {% if checkout.coupon %}
+                    <ul class="coupons-list">
+                        <li>
+                            Applied coupon:
+                            <strong>
+                                <small>{{ checkout.coupon }}</small>
+                                <a id="remove-coupon" style="cursor: pointer; margin-left: 10px;" title="Remove coupon">
+                                    <span class="glyphicon glyphicon-remove"></span>
+                                </a>
+                            </strong>
+                        </li>
+                    </ul>
+                {% else %}
+                    <p>If you have a coupon you can enter its code into text field below</p>
+                    <form action="{{ shop.simplified_url }}/checkout/updatediscounts" class="form-inline" id="apply-coupon-section" method="POST">
+                        <input class="form-control" id="couponCode" name="couponCode" placeholder="Coupon code" required="required" type="text" />
+                        <button class="btn btn-default" id="btn-apply-coupon" type="button">Apply</button>
+                        <div id="coupon-validation-message" style="color: red; display: none;"></div>
+                    </form>
+                {% endif %}
+            <hr />
             <ul class="product-list">
                 {% for line_item in checkout.line_items %}
                     <li>
@@ -35,6 +57,9 @@
                 </li>
                 <li>
                     Tax: <strong>{% include 'price' with checkout.tax_price %}</strong>
+                </li>
+                <li>
+                    Discount: <strong>{% include 'price' with checkout.discounts_amount %}</strong>
                 </li>
             </ul>
         </div>

@@ -12,7 +12,6 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 	{
 		public AssociationGroup()
 		{
-			Id = Guid.NewGuid().ToString("N");
 			Associations = new ObservableCollection<Association>();
 		}
 
@@ -28,8 +27,6 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 		#region Navigation Properties
 
 		public string ItemId { get; set; }
-		[Parent]
-		[ForeignKey("ItemId")]
 		public virtual Item CatalogItem { get; set; }
 
 		public virtual ObservableCollection<Association> Associations { get; set; }

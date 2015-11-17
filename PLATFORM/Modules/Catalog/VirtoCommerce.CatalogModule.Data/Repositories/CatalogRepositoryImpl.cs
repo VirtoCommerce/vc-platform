@@ -6,6 +6,8 @@ using coreModel = VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using System.Data.Entity.ModelConfiguration.Conventions;
+using System;
+using System.Text;
 
 namespace VirtoCommerce.CatalogModule.Data.Repositories
 {
@@ -29,12 +31,100 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
 
-            InheritanceMapping(modelBuilder);
 
-            #region CategoryLink
+            #region Catalog
+            modelBuilder.Entity<dataModel.Catalog>().ToTable("Catalog").HasKey(x => x.Id).Property(x => x.Id);
+            #endregion
 
-            modelBuilder.Entity<dataModel.CategoryRelation>().HasKey(x => x.Id)
-                    .Property(x => x.Id);
+            #region Category
+            modelBuilder.Entity<dataModel.Category>().ToTable("Category").HasKey(x => x.Id).Property(x => x.Id);
+            modelBuilder.Entity<dataModel.Category>().HasOptional(x => x.ParentCategory).WithMany().HasForeignKey(x => x.ParentCategoryId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<dataModel.Category>().HasRequired(x => x.Catalog).WithMany().HasForeignKey(x => x.CatalogId).WillCascadeOnDelete(true);
+            #endregion
+
+            #region Item
+            modelBuilder.Entity<dataModel.Item>().ToTable("Item").HasKey(x => x.Id).Property(x => x.Id);
+            modelBuilder.Entity<dataModel.Item>().HasRequired(m => m.Catalog).WithMany().HasForeignKey(x => x.CatalogId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<dataModel.Item>().HasOptional(m => m.Category).WithMany().HasForeignKey(x => x.CategoryId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<dataModel.Item>().HasOptional(m => m.Parent).WithMany(x => x.Childrens).HasForeignKey(x => x.ParentId).WillCascadeOnDelete(false);
+            #endregion
+
+            #region Property
+            modelBuilder.Entity<dataModel.Property>().ToTable("Property").HasKey(x => x.Id).Property(x => x.Id);
+            modelBuilder.Entity<dataModel.Property>().HasOptional(m => m.Catalog).WithMany(x => x.Properties).HasForeignKey(x => x.CatalogId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<dataModel.Property>().HasOptional(m => m.Category).WithMany(x => x.Properties).HasForeignKey(x => x.CategoryId).WillCascadeOnDelete(false);
+
+            #endregion
+
+            #region PropertyDictionaryValue
+            modelBuilder.Entity<dataModel.PropertyDictionaryValue>().ToTable("PropertyDictionaryValue").HasKey(x => x.Id).Property(x => x.Id);
+            modelBuilder.Entity<dataModel.PropertyDictionaryValue>().HasRequired(m => m.Property).WithMany(x => x.DictionaryValues).HasForeignKey(x => x.PropertyId).WillCascadeOnDelete(true);
+            #endregion
+
+            #region PropertyAttribute
+            modelBuilder.Entity<dataModel.PropertyAttribute>().ToTable("PropertyAttribute").HasKey(x => x.Id).Property(x => x.Id);
+            modelBuilder.Entity<dataModel.PropertyAttribute>().HasRequired(m => m.Property).WithMany(x => x.PropertyAttributes).HasForeignKey(x => x.PropertyId).WillCascadeOnDelete(true);
+            #endregion
+
+            #region PropertyValue
+            modelBuilder.Entity<dataModel.PropertyValue>().ToTable("PropertyValue").HasKey(x => x.Id).Property(x => x.Id);
+            modelBuilder.Entity<dataModel.PropertyValue>().HasOptional(m => m.CatalogItem).WithMany(x => x.ItemPropertyValues).HasForeignKey(x => x.ItemId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<dataModel.PropertyValue>().HasOptional(m => m.Category).WithMany(x => x.CategoryPropertyValues).HasForeignKey(x => x.CategoryId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<dataModel.PropertyValue>().HasOptional(m => m.Catalog).WithMany(x => x.CatalogPropertyValues).HasForeignKey(x => x.CatalogId).WillCascadeOnDelete(false);
+            #endregion
+
+            #region ItemRelation
+            modelBuilder.Entity<dataModel.ItemRelation>().ToTable("ItemRelation").HasKey(x => x.Id).Property(x => x.Id);
+            modelBuilder.Entity<dataModel.ItemRelation>().HasRequired(m => m.ChildItem).WithMany().HasForeignKey(x => x.ChildItemId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<dataModel.ItemRelation>().HasOptional(m => m.ParentItem).WithMany().HasForeignKey(x => x.ParentItemId).WillCascadeOnDelete(false);
+
+            #endregion
+
+            #region CatalogImage
+            modelBuilder.Entity<dataModel.Image>().ToTable("CatalogImage").HasKey(x => x.Id).Property(x => x.Id);
+            modelBuilder.Entity<dataModel.Image>().HasOptional(m => m.Category).WithMany(x => x.Images).HasForeignKey(x => x.CategoryId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<dataModel.Image>().HasOptional(m => m.CatalogItem).WithMany(x => x.Images).HasForeignKey(x => x.ItemId).WillCascadeOnDelete(false);
+            #endregion
+
+            #region EditorialReview
+            modelBuilder.Entity<dataModel.EditorialReview>().ToTable("EditorialReview").HasKey(x => x.Id).Property(x => x.Id);
+            modelBuilder.Entity<dataModel.EditorialReview>().HasRequired(x => x.CatalogItem).WithMany(x => x.EditorialReviews).HasForeignKey(x => x.ItemId).WillCascadeOnDelete(true);
+            #endregion
+
+            #region AssociationGroup
+            modelBuilder.Entity<dataModel.AssociationGroup>().ToTable("AssociationGroup").HasKey(x => x.Id).Property(x => x.Id);
+            modelBuilder.Entity<dataModel.AssociationGroup>().HasRequired(x => x.CatalogItem).WithMany(x => x.AssociationGroups).HasForeignKey(x => x.ItemId).WillCascadeOnDelete(true);
+            #endregion
+
+            #region Association
+            modelBuilder.Entity<dataModel.Association>().ToTable("Association").HasKey(x => x.Id).Property(x => x.Id);
+            modelBuilder.Entity<dataModel.Association>().HasRequired(m => m.CatalogItem).WithMany().WillCascadeOnDelete(false);
+            modelBuilder.Entity<dataModel.Association>().HasRequired(m => m.AssociationGroup).WithMany(x => x.Associations).HasForeignKey(x => x.AssociationGroupId).WillCascadeOnDelete(true);
+            #endregion
+
+            #region Asset
+            modelBuilder.Entity<dataModel.Asset>().ToTable("CatalogAsset").HasKey(x => x.Id).Property(x => x.Id);
+            modelBuilder.Entity<dataModel.Asset>().HasRequired(m => m.CatalogItem).WithMany(x => x.Assets).HasForeignKey(x => x.ItemId).WillCascadeOnDelete(true);
+            #endregion
+
+            #region CatalogLanguage
+            modelBuilder.Entity<dataModel.CatalogLanguage>().ToTable("CatalogLanguage").HasKey(x => x.Id).Property(x => x.Id);
+            modelBuilder.Entity<dataModel.CatalogLanguage>().HasRequired(m => m.Catalog).WithMany(x => x.CatalogLanguages).HasForeignKey(x => x.CatalogId).WillCascadeOnDelete(true);
+            #endregion
+
+
+
+            #region CategoryItemRelation
+            modelBuilder.Entity<dataModel.CategoryItemRelation>().ToTable("CategoryItemRelation").HasKey(x => x.Id).Property(x => x.Id);
+
+            modelBuilder.Entity<dataModel.CategoryItemRelation>().HasRequired(p => p.Category).WithMany().HasForeignKey(x => x.CategoryId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<dataModel.CategoryItemRelation>().HasRequired(p => p.CatalogItem).WithMany(x => x.CategoryLinks).HasForeignKey(x => x.ItemId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<dataModel.CategoryItemRelation>().HasRequired(p => p.Catalog).WithMany().HasForeignKey(x => x.CatalogId).WillCascadeOnDelete(false);
+            #endregion
+
+
+            #region CategoryRelation
+            modelBuilder.Entity<dataModel.CategoryRelation>().ToTable("CategoryRelation").HasKey(x => x.Id).Property(x => x.Id);
 
             modelBuilder.Entity<dataModel.CategoryRelation>().HasOptional(x => x.TargetCategory)
                                        .WithMany(x => x.IncommingLinks)
@@ -47,141 +137,9 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             modelBuilder.Entity<dataModel.CategoryRelation>().HasOptional(x => x.TargetCatalog)
                                        .WithMany(x => x.IncommingLinks)
                                        .HasForeignKey(x => x.TargetCatalogId).WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<dataModel.CategoryRelation>().ToTable("CategoryRelation");
             #endregion
-
-            MapEntity<dataModel.CategoryItemRelation>(modelBuilder, toTable: "CategoryItemRelation");
-            MapEntity<dataModel.Association>(modelBuilder, toTable: "Association");
-            MapEntity<dataModel.AssociationGroup>(modelBuilder, toTable: "AssociationGroup");
-            MapEntity<dataModel.CatalogLanguage>(modelBuilder, toTable: "CatalogLanguage");
-            MapEntity<dataModel.EditorialReview>(modelBuilder, toTable: "EditorialReview");
-            MapEntity<dataModel.ItemRelation>(modelBuilder, toTable: "ItemRelation");
-            MapEntity<dataModel.Property>(modelBuilder, toTable: "Property");
-            MapEntity<dataModel.PropertyAttribute>(modelBuilder, toTable: "PropertyAttribute");
-            MapEntity<dataModel.PropertySet>(modelBuilder, toTable: "PropertySet");
-            MapEntity<dataModel.PropertySetProperty>(modelBuilder, toTable: "PropertySetProperty");
-
-
-			#region Category
-			modelBuilder.Entity<dataModel.Category>().HasKey(x => x.Id)
-					.Property(x => x.Id);
-			modelBuilder.Entity<dataModel.Category>().HasMany(c => c.Images).WithOptional(p => p.Category).HasForeignKey(x => x.CategoryId).WillCascadeOnDelete(true);
-			modelBuilder.Entity<dataModel.Category>().HasOptional(x=>x.ParentCategory).WithMany().HasForeignKey(x => x.ParentCategoryId).WillCascadeOnDelete(false);
-			modelBuilder.Entity<dataModel.Category>().ToTable("Category"); 
-			#endregion
-
-			modelBuilder.Entity<dataModel.Image>().ToTable("CatalogImage");
-			modelBuilder.Entity<dataModel.Asset>().ToTable("CatalogAsset");
-
-            // Introducing FOREIGN KEY constraint 'FK_dbo.Association_dbo.Item_ItemId' on table 'Association' may cause cycles or multiple cascade paths.
-            modelBuilder.Entity<dataModel.Association>().HasRequired(m => m.CatalogItem).WithMany().WillCascadeOnDelete(false);
-            modelBuilder.Entity<dataModel.CategoryItemRelation>().HasRequired(p => p.Category).WithMany().WillCascadeOnDelete(false);
-            modelBuilder.Entity<dataModel.ItemRelation>().HasRequired(m => m.ChildItem).WithMany().WillCascadeOnDelete(false);
-            // cascade delete Item and Category when PropertySet is deleted. This should happen ONLY when catalog is being deleted.
-            modelBuilder.Entity<dataModel.Item>().HasOptional(m => m.PropertySet).WithMany().WillCascadeOnDelete(false);
-			modelBuilder.Entity<dataModel.Item>().HasOptional(m => m.Category).WithMany().WillCascadeOnDelete(false);
-            modelBuilder.Entity<dataModel.Category>().HasOptional(m => m.PropertySet).WithMany().WillCascadeOnDelete(true);
-            modelBuilder.Entity<dataModel.Catalog>().HasOptional(m => m.PropertySet).WithMany().WillCascadeOnDelete(true);
-			modelBuilder.Entity<dataModel.CatalogPropertyValue>().HasRequired(m => m.Catalog).WithMany(x=>x.CatalogPropertyValues)
-																 .HasForeignKey(x=>x.CatalogId).WillCascadeOnDelete(true);
-			modelBuilder.Entity<dataModel.CategoryPropertyValue>().HasRequired(m => m.Category).WithMany(x => x.CategoryPropertyValues)
-																 .HasForeignKey(x => x.CategoryId).WillCascadeOnDelete(true);
-		
-
-
-
             base.OnModelCreating(modelBuilder);
         }
-
-        /// <summary>
-        /// Inheritances the mapping.
-        /// </summary>
-        /// <param name="modelBuilder">The model builder.</param>
-        private void InheritanceMapping(DbModelBuilder modelBuilder)
-        {
-            #region Catalog TPT
-            modelBuilder.Entity<dataModel.CatalogBase>().Map(entity =>
-            {
-                entity.ToTable("CatalogBase");
-            });
-            modelBuilder.Entity<dataModel.VirtualCatalog>().Map(entity =>
-            {
-                entity.ToTable("VirtualCatalog");
-            });
-            modelBuilder.Entity<dataModel.Catalog>().Map(entity =>
-            {
-                entity.ToTable("Catalog");
-            });
-            #endregion
-
-       
-            #region Item TPH
-            MapEntity<dataModel.Item>(modelBuilder, toTable: "Item");
-            MapEntity<dataModel.Product>(modelBuilder, toTable: "Item", discriminatorValue: "Product");
-
-            #endregion
-
-	
-            #region PropertyValueBase TPC
-            modelBuilder.Entity<dataModel.CatalogPropertyValue>().Map(entity =>
-            {
-                entity.MapInheritedProperties();
-                entity.ToTable("CatalogPropertyValue");
-            });
-            modelBuilder.Entity<dataModel.CategoryPropertyValue>().Map(entity =>
-            {
-                entity.MapInheritedProperties();
-                entity.ToTable("CategoryPropertyValue");
-            });
-            modelBuilder.Entity<dataModel.PropertyValue>().Map(entity =>
-            {
-                entity.MapInheritedProperties();
-                entity.ToTable("PropertyValue");
-            });
-            modelBuilder.Entity<dataModel.ItemPropertyValue>().Map(entity =>
-            {
-                entity.MapInheritedProperties();
-                entity.ToTable("ItemPropertyValue");
-            });
-            #endregion
-
-            #region Navigation properties required
-
-            modelBuilder.Entity<dataModel.Item>()
-                .HasMany(c => c.AssociationGroups)
-                .WithRequired(p => p.CatalogItem);
-
-            modelBuilder.Entity<dataModel.Item>()
-                .HasMany(c => c.CategoryLinks)
-                .WithRequired(p => p.CatalogItem);
-
-			modelBuilder.Entity<dataModel.Item>()
-				.HasMany(c => c.Images)
-				.WithOptional(p => p.CatalogItem)
-				.HasForeignKey(x => x.ItemId).WillCascadeOnDelete(true);
-
-			modelBuilder.Entity<dataModel.Item>()
-			   .HasMany(c => c.Assets)
-			   .WithOptional(p => p.CatalogItem)
-			   .HasForeignKey(x => x.ItemId).WillCascadeOnDelete(true);
-
-            modelBuilder.Entity<dataModel.Item>()
-                .HasMany(c => c.Childrens)
-                .WithOptional(p => p.Parent).HasForeignKey(x => x.ParentId);
-
-            modelBuilder.Entity<dataModel.AssociationGroup>()
-                        .HasMany(c => c.Associations)
-                        .WithRequired(a => a.AssociationGroup);
-
-            modelBuilder.Entity<dataModel.Property>()
-                        .HasMany(x => x.PropertyValues)
-                        .WithRequired(x => x.Property);
-
-            #endregion
-        }
-
-
 
         #region ICatalogRepository Members
         public IQueryable<dataModel.Category> Categories
@@ -189,24 +147,24 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             get { return GetAsQueryable<dataModel.Category>(); }
         }
 
-        public IQueryable<dataModel.CatalogBase> Catalogs
+        public IQueryable<dataModel.Catalog> Catalogs
         {
-            get { return GetAsQueryable<dataModel.CatalogBase>(); }
+            get { return GetAsQueryable<dataModel.Catalog>(); }
         }
 
-        public IQueryable<dataModel.ItemPropertyValue> ItemPropertyValues
+        public IQueryable<dataModel.PropertyValue> PropertyValues
         {
-            get { return GetAsQueryable<dataModel.ItemPropertyValue>(); }
+            get { return GetAsQueryable<dataModel.PropertyValue>(); }
         }
 
-		public IQueryable<dataModel.Image> Images 
-		{
-			get { return GetAsQueryable<dataModel.Image>(); }
-		}
-		public IQueryable<dataModel.Asset> Assets
-		{
-			get { return GetAsQueryable<dataModel.Asset>(); }
-		}
+        public IQueryable<dataModel.Image> Images
+        {
+            get { return GetAsQueryable<dataModel.Image>(); }
+        }
+        public IQueryable<dataModel.Asset> Assets
+        {
+            get { return GetAsQueryable<dataModel.Asset>(); }
+        }
 
         public IQueryable<dataModel.Item> Items
         {
@@ -223,17 +181,15 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             get { return GetAsQueryable<dataModel.Property>(); }
         }
 
-        public IQueryable<dataModel.PropertySet> PropertySets
-        {
-            get { return GetAsQueryable<dataModel.PropertySet>(); }
-        }
-
         public IQueryable<dataModel.ItemRelation> ItemRelations
         {
             get { return GetAsQueryable<dataModel.ItemRelation>(); }
         }
 
-
+        public IQueryable<dataModel.PropertyDictionaryValue> PropertyDictionaryValues
+        {
+            get { return GetAsQueryable<dataModel.PropertyDictionaryValue>(); }
+        }
         public IQueryable<dataModel.CategoryItemRelation> CategoryItemRelations
         {
             get { return GetAsQueryable<dataModel.CategoryItemRelation>(); }
@@ -254,21 +210,17 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             get { return GetAsQueryable<dataModel.CategoryRelation>(); }
         }
 
-        public dataModel.CatalogBase GetCatalogById(string catalogId)
+        public dataModel.Catalog GetCatalogById(string catalogId)
         {
-            dataModel.CatalogBase retVal = Catalogs.OfType<dataModel.Catalog>()
-                                                         .Include(x => x.CatalogLanguages)
+            dataModel.Catalog retVal = Catalogs.Include(x => x.CatalogLanguages)
                                                          .Include(x => x.CatalogPropertyValues)
-                                                         .Include(x => x.PropertySet.PropertySetProperties.Select(y => y.Property))
+                                                         .Include(x => x.IncommingLinks)
+                                                         .Include(x => x.Properties)
                                                          .FirstOrDefault(x => x.Id == catalogId);
-            if (retVal == null)
-            {
-                retVal = Catalogs.OfType<dataModel.VirtualCatalog>()
-                                .Include(x => x.IncommingLinks)
-                                .FirstOrDefault(x => x.Id == catalogId);
-            }
             return retVal;
         }
+
+
 
         public dataModel.Category[] GetAllCategoryParents(dataModel.Category category)
         {
@@ -291,8 +243,8 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             var result = Categories.Include(x => x.CategoryPropertyValues)
                 .Include(x => x.OutgoingLinks)
                 .Include(x => x.IncommingLinks)
-				.Include(x=> x.Images)
-                .Include(x => x.PropertySet.PropertySetProperties.Select(y => y.Property))
+                .Include(x => x.Images)
+                .Include(x => x.Properties)
                 .FirstOrDefault(x => x.Id == categoryId);
 
             return result;
@@ -312,16 +264,16 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             }
 
             //Used breaking query EF performance concept https://msdn.microsoft.com/en-us/data/hh949853.aspx#8
-            var retVal = Items.Include(x => x.Catalog).Include(x => x.Category).Include(x=>x.Images).Where(x => itemIds.Contains(x.Id)).ToArray();
+            var retVal = Items.Include(x => x.Catalog).Include(x => x.Category).Include(x => x.Images).Where(x => itemIds.Contains(x.Id)).ToArray();
 
 
-            if ((respGroup & coreModel.ItemResponseGroup.Categories) == coreModel.ItemResponseGroup.Categories)
+            if ((respGroup & coreModel.ItemResponseGroup.Links) == coreModel.ItemResponseGroup.Links)
             {
                 var relations = CategoryItemRelations.Where(x => itemIds.Contains(x.ItemId)).ToArray();
             }
             if ((respGroup & coreModel.ItemResponseGroup.ItemProperties) == coreModel.ItemResponseGroup.ItemProperties)
             {
-                var propertyValues = ItemPropertyValues.Where(x => itemIds.Contains(x.ItemId)).ToArray();
+                var propertyValues = PropertyValues.Where(x => itemIds.Contains(x.ItemId)).ToArray();
             }
             if ((respGroup & coreModel.ItemResponseGroup.ItemAssets) == coreModel.ItemResponseGroup.ItemAssets)
             {
@@ -333,7 +285,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             }
             if ((respGroup & coreModel.ItemResponseGroup.ItemAssociations) == coreModel.ItemResponseGroup.ItemAssociations)
             {
-                var associations = AssociationGroups.Include(x=>x.Associations).Where(x => itemIds.Contains(x.ItemId)).ToArray();
+                var associations = AssociationGroups.Include(x => x.Associations).Where(x => itemIds.Contains(x.ItemId)).ToArray();
             }
             if ((respGroup & coreModel.ItemResponseGroup.Variations) == coreModel.ItemResponseGroup.Variations)
             {
@@ -349,70 +301,39 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
         public dataModel.Property[] GetPropertiesByIds(string[] propIds)
         {
             var retVal = Properties.Include(x => x.Catalog)
-                                        .Include(x => x.PropertyValues)
+                                        .Include(x => x.DictionaryValues)
                                         .Include(x => x.PropertyAttributes)
                                         .Where(x => propIds.Contains(x.Id))
                                         .ToArray();
             return retVal;
         }
+
         public dataModel.Catalog GetPropertyCatalog(string propId)
         {
-            dataModel.Catalog retVal = null;
-            var propSet = PropertySets.FirstOrDefault(x => x.PropertySetProperties.Any(y => y.PropertyId == propId));
-            if (propSet != null)
+            var catalogId = Properties.Where(x => x.Id == propId).Select(x => x.CatalogId).FirstOrDefault();
+            if (catalogId != null)
             {
-                var catalogId = Catalogs.OfType<dataModel.Catalog>()
-                                   .Where(x => x.PropertySetId == propSet.Id)
-                                   .Select(x => x.Id).FirstOrDefault();
-                if (catalogId != null)
-                {
-                    retVal = GetCatalogById(catalogId) as dataModel.Catalog;
-                }
+                return GetCatalogById(catalogId);
             }
-            return retVal;
+            return null;
         }
 
         public dataModel.Category GetPropertyCategory(string propId)
         {
-            dataModel.Category retVal = null;
-            var propSet = PropertySets.FirstOrDefault(x => x.PropertySetProperties.Any(y => y.PropertyId == propId));
-            if (propSet != null)
+            var categoryId = Properties.Where(x => x.Id == propId).Select(x => x.CategoryId).FirstOrDefault();
+            if (categoryId != null)
             {
-                var categoryId = Categories.Where(x => x.PropertySetId == propSet.Id)
-                                   .Select(x => x.Id).FirstOrDefault();
-                if (categoryId != null)
-                {
-                    retVal = GetCategoryById(categoryId);
-                }
+                return GetCategoryById(categoryId);
             }
-            return retVal;
+            return null;
         }
 
-        public dataModel.Property[] GetCatalogProperties(dataModel.CatalogBase catalogBase)
-        {
-            var retVal = new List<dataModel.Property>();
-            var catalog = catalogBase as dataModel.Catalog;
-            if (catalog != null)
-            {
-                if (catalog.PropertySet == null && catalog.PropertySetId != null)
-                {
-                    catalog = GetCatalogById(catalogBase.Id) as dataModel.Catalog;
-                }
-                if (catalog.PropertySet != null)
-                {
-                    retVal.AddRange(catalog.PropertySet.PropertySetProperties.Select(x => x.Property));
-                }
-            }
-            return retVal.ToArray();
-        }
 
         public dataModel.Property[] GetAllCategoryProperties(dataModel.Category category)
         {
             var retVal = new List<dataModel.Property>();
-            if (category.PropertySet != null)
-            {
-                retVal.AddRange(category.PropertySet.PropertySetProperties.Select(x => x.Property));
-            }
+            retVal.AddRange(category.Properties);
+
             if (category.ParentCategoryId != null)
             {
                 var parentCategory = GetCategoryById(category.ParentCategoryId);
@@ -421,145 +342,114 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
                     retVal.AddRange(GetAllCategoryProperties(parentCategory));
                 }
             }
-
             //Add catalog properties
             if (category.Catalog == null)
             {
                 category.Catalog = GetCatalogById(category.CatalogId);
             }
-            retVal.AddRange(GetCatalogProperties(category.Catalog));
+            retVal.AddRange(category.Catalog.Properties);
             return retVal.Distinct().ToArray();
         }
 
 
-        public void SetCatalogProperty(dataModel.Catalog catalog, dataModel.Property property)
-        {
-            if (catalog.PropertySet == null)
-            {
-                var propertySet = new dataModel.PropertySet
-                {
-                    Name = catalog.Name + " property set",
-                    TargetType = "Catalog"
-                };
-                Add(propertySet);
-                catalog.PropertySetId = propertySet.Id;
-            }
 
-            var propertySetProperty = new dataModel.PropertySetProperty
-            {
-                PropertySetId = catalog.PropertySetId,
-                PropertyId = property.Id
-            };
-            Add(propertySetProperty);
-
-        }
-
-        public void SetCategoryProperty(dataModel.Category category, dataModel.Property property)
-        {
-            if (category.PropertySet == null)
-            {
-                var propertySet = new dataModel.PropertySet
-                {
-                    Name = category.Name + " property set",
-                    TargetType = "Category"
-                };
-                Add(propertySet);
-                category.PropertySetId = propertySet.Id;
-            }
-
-            var propertySetProperty = new dataModel.PropertySetProperty
-            {
-                PropertySetId = category.PropertySetId,
-                PropertyId = property.Id
-            };
-            Add(propertySetProperty);
-
-        }
-
-
-    
         public void RemoveItems(string[] itemIds)
         {
-            var items = GetItemByIds(itemIds);
-            foreach (var item in items)
-            {
-                //Delete all variations
-                RemoveItems(Items.Where(x => x.ParentId == item.Id).Select(x => x.Id).ToArray());
+            if (itemIds == null || !itemIds.Any())
+                return;
+  
+            const string queryPattern =
+            @"DELETE CR FROM CategoryItemRelation  CR INNER JOIN Item I ON I.Id = CR.ItemId
+            WHERE I.Id IN ({0}) OR I.ParentId IN ({0})
 
-                //delete all relations
-                var allItemRelations = ItemRelations.Where(x => x.ChildItemId == item.Id || x.ParentItemId == item.Id);
-                foreach (var relation in allItemRelations)
-                {
-                    base.Remove(relation);
-                }
+            DELETE IR FROM ItemRelation  IR INNER JOIN Item I ON I.Id = IR.ChildItemId  OR I.Id = IR.ParentItemId
+            WHERE I.Id IN ({0}) OR I.ParentId IN ({0})
 
-                base.Remove(item);
+            DELETE CI FROM CatalogImage CI INNER JOIN Item I ON I.Id = CI.ItemId
+            WHERE I.Id IN ({0})  OR I.ParentId IN ({0})
 
-            }
+            DELETE CA FROM CatalogAsset CA INNER JOIN Item I ON I.Id = CA.ItemId
+            WHERE I.Id IN ({0}) OR I.ParentId IN ({0})
+
+            DELETE PV FROM PropertyValue PV INNER JOIN Item I ON I.Id = PV.ItemId
+            WHERE I.Id IN ({0}) OR I.ParentId IN ({0})
+
+            DELETE ER FROM EditorialReview ER INNER JOIN Item I ON I.Id = ER.ItemId
+            WHERE I.Id IN ({0}) OR I.ParentId IN ({0})
+
+            DELETE AG FROM AssociationGroup AG INNER JOIN Item I ON I.Id = AG.ItemId
+            WHERE I.Id IN ({0}) OR I.ParentId IN ({0})
+
+            DELETE  FROM Item  WHERE ParentId IN ({0})
+
+            DELETE  FROM Item  WHERE Id IN ({0})";
+
+            var query = String.Format(queryPattern, String.Join(", ", itemIds.Select(x => String.Format("'{0}'", x))));
+
+            ObjectContext.ExecuteStoreCommand(query);
         }
 
         public void RemoveCategories(string[] ids)
         {
-            foreach (var id in ids)
+            if (ids == null || !ids.Any())
+                return;
+
+            var allCategoriesIds = GetAllCategoriesChildrenIdsRecursive(ids).Concat(ids);
+            const string queryPattern =
+            @"DELETE CI FROM CatalogImage CI INNER JOIN Category C ON C.Id = CI.CategoryId WHERE C.Id IN ({0}) 
+            DELETE PV FROM PropertyValue PV INNER JOIN Category C ON C.Id = PV.CategoryId WHERE C.Id IN ({0}) 
+            DELETE CR FROM CategoryRelation CR INNER JOIN Category C ON C.Id = CR.SourceCategoryId OR C.Id = CR.TargetCategoryId  WHERE C.Id IN ({0}) 
+            DELETE P FROM Property P INNER JOIN Category C ON C.Id = P.CategoryId  WHERE C.Id IN ({0})";
+                
+            var itemsIds = Items.Where(x => allCategoriesIds.Contains(x.CategoryId)).Select(x => x.Id).ToArray();
+
+            RemoveItems(itemsIds);
+
+            var query = String.Format(queryPattern, String.Join(", ", allCategoriesIds.Select(x => String.Format("'{0}'", x))));
+            var queryBuilder = new StringBuilder(query);
+            //Need remove categories in prior hierarchy order from  child to parent
+            foreach (var categoryId in allCategoriesIds)
             {
-                //Recursive delete all child categories
-                var allChildrenIds = Categories.Where(x => x.ParentCategoryId == id).Select(x => x.Id).ToArray();
-                RemoveCategories(allChildrenIds);
-
-                //Remove all products from category
-                var productsIds = Items.Where(x => x.CategoryId == id).Select(x => x.Id).ToArray();
-                RemoveItems(productsIds);
-
-                //Remove all categoryRelations
-                foreach (var categoryRelation in CategoryLinks.Where(x => x.SourceCategoryId == id || x.TargetCategoryId == id))
-                {
-                    base.Remove(categoryRelation);
-                }
-
-                var category = GetCategoryById(id);
-                if (category.PropertySet != null)
-                {
-                    //Remove properties
-                    foreach (var property in category.PropertySet.PropertySetProperties.Select(x => x.Property).ToArray())
-                    {
-                        base.Remove(property);
-                    }
-
-                }
-
-                base.Remove(category);
-
+                queryBuilder.AppendLine(String.Format("DELETE FROM Category WHERE Id = '{0}'", categoryId));
             }
+            ObjectContext.ExecuteStoreCommand(queryBuilder.ToString());
         }
 
         public void RemoveCatalogs(string[] ids)
         {
-            foreach (var id in ids)
-            {
-                //Recursive remove all categories and products
-                var categoriesIds = Categories.Where(x => x.CatalogId == id && x.ParentCategoryId == null).Select(x => x.Id).ToArray();
-                RemoveCategories(categoriesIds);
+            if (ids == null || !ids.Any())
+                return;
 
-                //Remove items direct belong to catalog
-                var itemIds = Items.Where(x => x.CatalogId == id).Select(x => x.Id).ToArray();
-                RemoveItems(itemIds);
+            var catalogCategoriesIds = Categories.Where(x => ids.Contains(x.CatalogId)).Select(x => x.Id).ToArray();
+            var catalogItemsIds = Items.Where(x => x.CategoryId == null && ids.Contains(x.CatalogId)).Select(x => x.Id).ToArray();
 
-                //Remove catalog itself
-                var catalogBase = GetCatalogById(id);
-                var catalog = catalogBase as dataModel.Catalog;
-                if (catalog != null && catalog.PropertySet != null)
-                {
-                    foreach (var property in catalog.PropertySet.PropertySetProperties.Select(x => x.Property).ToArray())
-                    {
-                        base.Remove(property);
-                    }
-                }
+            RemoveItems(catalogItemsIds);
+            RemoveCategories(catalogCategoriesIds);
 
-                base.Remove(catalogBase);
+            const string queryPattern =
+            @"DELETE CL FROM CatalogLanguage CL INNER JOIN Catalog C ON C.Id = CL.CatalogId WHERE C.Id IN ({0})
+            DELETE CR FROM CategoryRelation CR INNER JOIN Catalog C ON C.Id = CR.TargetCatalogId WHERE C.Id IN ({0}) 
+            DELETE P FROM Property P INNER JOIN Catalog C ON C.Id = P.CatalogId  WHERE C.Id IN ({0})
+            DELETE FROM Catalog WHERE Id IN ({0})";
+            var query = String.Format(queryPattern, String.Join(", ", ids.Select(x => String.Format("'{0}'", x))));
+            ObjectContext.ExecuteStoreCommand(query);
 
-            }
+
         }
         #endregion
+
+
+        private string[] GetAllCategoriesChildrenIdsRecursive(string[] categoryIds)
+        {
+            var retVal = new List<string>();
+            var childs = Categories.Where(x => categoryIds.Contains(x.ParentCategoryId)).Select(x => x.Id).Distinct().ToList();
+            if (childs.Any())
+            {
+                retVal.AddRange(GetAllCategoriesChildrenIdsRecursive(retVal.ToArray()));
+            }
+            retVal.AddRange(childs);
+            return retVal.ToArray();
+        }
 
 
     }

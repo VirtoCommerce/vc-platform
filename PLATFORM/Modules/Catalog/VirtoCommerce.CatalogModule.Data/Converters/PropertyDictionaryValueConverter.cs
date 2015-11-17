@@ -15,19 +15,14 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         /// </summary>
         /// <param name="catalogBase"></param>
         /// <returns></returns>
-        public static coreModel.PropertyDictionaryValue ToCoreModel(this dataModel.PropertyValue dbPropValue, coreModel.Property property)
+        public static coreModel.PropertyDictionaryValue ToCoreModel(this dataModel.PropertyDictionaryValue dbPropDictValue)
         {
-            if (property == null)
-                throw new ArgumentNullException("property");
+ 			var retVal = new coreModel.PropertyDictionaryValue();
+			retVal.InjectFrom(dbPropDictValue);
 
-			var retVal = new coreModel.PropertyDictionaryValue();
-			retVal.InjectFrom(dbPropValue);
-
-			retVal.LanguageCode = dbPropValue.Locale;
-			retVal.Value = dbPropValue.ToString();
-			retVal.PropertyId = property.Id;
-			retVal.Property = property;
-          
+			retVal.LanguageCode = dbPropDictValue.Locale;
+			retVal.Value = dbPropDictValue.Value;
+		          
             return retVal;
         }
 
@@ -36,21 +31,15 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         /// </summary>
         /// <param name="catalog"></param>
         /// <returns></returns>
-        public static dataModel.PropertyValue ToDataModel(this coreModel.PropertyDictionaryValue propDictValue, coreModel.Property property)
+        public static dataModel.PropertyDictionaryValue ToDataModel(this coreModel.PropertyDictionaryValue propDictValue)
         {
-            var retVal = new dataModel.PropertyValue
+            var retVal = new dataModel.PropertyDictionaryValue
             {
 	            Locale = propDictValue.LanguageCode,
-                PropertyId = property.Id
             };
 			retVal.InjectFrom(propDictValue);
-
-			if(propDictValue.Id != null)
-			{
-				retVal.Id = propDictValue.Id;
-			}
-            SetPropertyValue(retVal, property.ValueType, propDictValue.Value);
-
+            retVal.Value = propDictValue.Value;
+         
             return retVal;
         }
 
@@ -60,39 +49,21 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         /// </summary>
         /// <param name="source"></param>
         /// <param name="target"></param>
-        public static void Patch(this dataModel.PropertyValue source, dataModel.PropertyValue target)
+        public static void Patch(this dataModel.PropertyDictionaryValue source, dataModel.PropertyDictionaryValue target)
         {
             if (target == null)
                 throw new ArgumentNullException("target");
 
 			var newValue = source.ToString();
             if (newValue != null)
-				SetPropertyValue(target, (coreModel.PropertyValueType)target.ValueType, newValue);
+                target.Value = source.Value;
             if (source.Alias != null)
                 target.Alias = source.Alias;
-            if (source.KeyValue != null)
-                target.KeyValue = source.KeyValue;
-			if (source.Alias != null)
-				target.Alias = source.Alias;
+
+           
         }
 
-		private static void SetPropertyValue(dataModel.PropertyValueBase retVal, coreModel.PropertyValueType type, string value)
-        {
-            switch (type)
-            {
-				case coreModel.PropertyValueType.LongText:
-                    retVal.LongTextValue = value;
-                    break;
-				case coreModel.PropertyValueType.ShortText:
-                    retVal.ShortTextValue = value;
-                    break;
-				case coreModel.PropertyValueType.Number:
-                    decimal parsedDecimal;
-                    Decimal.TryParse(value, out parsedDecimal);
-                    retVal.DecimalValue = parsedDecimal;
-                    break;
-            }
-        }
+		
 
     }
 

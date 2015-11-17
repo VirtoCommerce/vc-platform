@@ -1,6 +1,6 @@
 ﻿<div class="blade-static">
     <div class="form-group">
-        <p class="form-count">Count: <span class="count">{{pageSettings.totalItems}}</span></p>
+        <p class="form-count">{{'platform.list.count' | translate}}: <span class="count">{{pageSettings.totalItems}}</span></p>
     </div>
 </div>
 <div class="blade-content __large-wide">
@@ -17,14 +17,14 @@
                                     <span class="check"></span>
                                 </label>
                             </th>
-                            <th class="table-col __proudct-img">Item</th>
-                            <th class="table-col">Qty</th>
-                            <th class="table-col">Avail</th>
-                            <th class="table-col">Await</th>
-                            <th class="table-col">Price</th>
-                            <th class="table-col">Discount</th>
-                            <th class="table-col">Tax</th>
-                            <th class="table-col">Total</th>
+                            <th class="table-col __proudct-img">{{ 'orders.blades.customerOrder-items.labels.item' | translate }}</th>
+                            <th class="table-col">{{ 'orders.blades.customerOrder-items.labels.quantity' | translate }}</th>
+                            <th class="table-col">{{ 'orders.blades.customerOrder-items.labels.aviable' | translate }}</th>
+                            <th class="table-col">{{ 'orders.blades.customerOrder-items.labels.await' | translate }}</th>
+                            <th class="table-col">{{ 'orders.blades.customerOrder-items.labels.price' | translate }}</th>
+                            <th class="table-col">{{ 'orders.blades.customerOrder-items.labels.discount' | translate }}</th>
+                            <th class="table-col">{{ 'orders.blades.customerOrder-items.labels.tax' | translate }}</th>
+                            <th class="table-col">{{ 'orders.blades.customerOrder-items.labels.total' | translate }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -34,7 +34,7 @@
                                     <input type="checkbox" ng-model="data.selected">
                                     <span class="check"></span>
                                 </label>
-                                <a class="clear text-mini __link" ng-click="openItemDynamicProperties(data)">Dynamic properties</a>
+                                <a class="clear text-mini __link" ng-click="openItemDynamicProperties(data)">{{ 'orders.blades.customerOrder-items.labels.dynamic-properties' | translate }}</a>
                             </td>
                             <td class="table-col">
                                 <div class="product-img">
@@ -85,19 +85,19 @@
             <div class="table-wrapper">
                 <table class="table __collapsed __order-info">
                     <tr class="table-item">
-                        <td class="table-col">Sub Total</td>
+                        <td class="table-col">{{ 'orders.blades.customerOrder-items.labels.sub-total' | translate }}</td>
                         <td class="table-col __price">{{blade.currentEntity._subTotal | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
                     </tr>
                     <tr class="table-item">
-                        <td class="table-col">Discount Total</td>
+                        <td class="table-col">{{ 'orders.blades.customerOrder-items.labels.discount-total' | translate }}</td>
                         <td class="table-col __price">{{blade.currentEntity._discountTotal | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
                     </tr>
                     <tr class="table-item">
-                        <td class="table-col">Tax Total</td>
+                        <td class="table-col">{{ 'orders.blades.customerOrder-items.labels.tax-total' | translate }}</td>
                         <td class="table-col __price">{{blade.currentEntity._taxTotal | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
                     </tr>
                     <tr class="table-item __total">
-                        <td class="table-col">Total:</td>
+                        <td class="table-col">{{ 'orders.blades.customerOrder-items.labels.total' | translate }}:</td>
                         <td class="table-col __price">{{blade.currentEntity._total | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
                     </tr>
                 </table>

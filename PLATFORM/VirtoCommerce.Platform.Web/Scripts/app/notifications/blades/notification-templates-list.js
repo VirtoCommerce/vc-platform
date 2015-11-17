@@ -19,7 +19,7 @@
 
 		var newBlade = {
 			id: 'editTemplate',
-			title: 'Edit notification template',
+			title: 'platform.blades.notifications-edit-template.title',
 			notificationType: blade.notificationType,
 			objectId: blade.objectId,
 			objectTypeId: blade.objectTypeId,
@@ -37,7 +37,7 @@
 	blade.createTemplate = function (template) {
 		var newBlade = {
 			id: 'editTemplate',
-			title: 'Create notification template',
+			title: 'platform.blades.notifications-edit-template.title-new',
 			notificationType: blade.notificationType,
 			objectId: blade.objectId,
 			objectTypeId: blade.objectTypeId,
@@ -54,7 +54,7 @@
 
 	$scope.blade.toolbarCommands = [
 			{
-				name: "Add", icon: 'fa fa-plus',
+				name: "platform.commands.add", icon: 'fa fa-plus',
 				executeMethod: function () {
 					blade.createTemplate();
 				},

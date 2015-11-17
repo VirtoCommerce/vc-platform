@@ -2,8 +2,8 @@
 .controller('platformWebApp.propertyDictionaryController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', 'platformWebApp.dynamicProperties.dictionaryItemsApi', function ($scope, dialogService, bladeNavigationService, settings, dictionaryItemsApi) {
     var blade = $scope.blade;
     blade.headIcon = 'fa-plus-square-o';
-    blade.title = 'Dictionary values';
-    blade.subtitle = 'Manage dictionary values';
+    blade.title = 'platform.blades.property-dictionary.title';
+    blade.subtitle = 'platform.blades.property-dictionary.subtitle';
 
     var availableLanguages;
 
@@ -156,7 +156,7 @@
 
     blade.toolbarCommands = [
         {
-            name: "Save", icon: 'fa fa-save',
+            name: "platform.commands.save", icon: 'fa fa-save',
             executeMethod: function () {
                 $scope.saveChanges();
             },
@@ -166,7 +166,7 @@
             permission: 'platform:dynamic_properties:update'
         },
         {
-            name: "Reset", icon: 'fa fa-undo',
+            name: "platform.commands.reset", icon: 'fa fa-undo',
             executeMethod: function () {
                 angular.copy(blade.origEntity, blade.currentEntities);
             },
@@ -176,7 +176,7 @@
             permission: 'platform:dynamic_properties:update'
         },
         {
-            name: "Delete", icon: 'fa fa-trash-o',
+            name: "platform.commands.delete", icon: 'fa fa-trash-o',
             executeMethod: function () {
                 deleteChecked();
             },
@@ -206,8 +206,9 @@
         var ids = _.pluck(selection, 'id');
         var dialog = {
             id: "confirmDeleteItem",
-            title: "Delete confirmation",
-            message: "Are you sure you want to delete " + ids.length + " selected dictionary item(s)?",
+            title: "platform.dialogs.dictionary-items-delete.title",
+            message: "platform.dialogs.dictionary-items-delete.message",
+            messageValues: { quantity: ids.length },
             callback: function (remove) {
                 if (remove) {
                     blade.isLoading = true;

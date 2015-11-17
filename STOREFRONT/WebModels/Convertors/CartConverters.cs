@@ -24,6 +24,7 @@ namespace VirtoCommerce.Web.Convertors
             ret.LanguageCode = cart.Language;
             ret.Name = cart.Name;
             ret.StoreId = cart.StoreId;
+            ret.Coupon = cart.Coupon;
 
             if (cart.Items != null && cart.Items.Any())
             {
@@ -35,7 +36,21 @@ namespace VirtoCommerce.Web.Convertors
                 ret.Items = new List<Data.CartItem>();
             }
 
+            ret.Discounts = new List<Data.Discount>(cart.Discounts.Select(x => x.AsServiceModel(cart.Currency)));
+
             return ret;
+        }
+
+        public static ApiClient.DataContracts.Marketing.ProductPromoEntry ToPromoItem(this LineItem lineItem)
+        {
+            var promoItem = new ApiClient.DataContracts.Marketing.ProductPromoEntry();
+
+            promoItem.Code = lineItem.Sku;
+            promoItem.Price = lineItem.Price;
+            promoItem.ProductId = lineItem.ProductId;
+            promoItem.Quantity = lineItem.Quantity;
+
+            return promoItem;
         }
 
         public static Data.CartItem AsServiceModel(this LineItem item)
@@ -67,17 +82,42 @@ namespace VirtoCommerce.Web.Convertors
 
             ret.CreatedAt = cart.CreatedDate;
             ret.CreatedBy = cart.CreatedBy;
+            ret.Coupon = cart.Coupon;
 
             if (cart.Items != null && cart.Items.Any())
             {
                 ret.Items.AddRange(cart.Items.Select(x => x.AsWebModel()));
             }
 
+            ret.Discounts.AddRange(cart.Discounts.Select(x => x.AsWebModel()));
+
             ret.Key = cart.Id;
             ret.Name = cart.Name;
-            ret.Note = cart.Note;
 
             return ret;
+        }
+
+        public static Models.Discount AsWebModel(this Data.Discount discount)
+        {
+            var discountModel = new Models.Discount();
+
+            discountModel.Amount = discount.DiscountAmount;
+            discountModel.Code = discount.Description;
+            discountModel.PromotionId = discount.PromotionId;
+            discountModel.Savings = -discount.DiscountAmount;
+
+            return discountModel;
+        }
+
+        public static Data.Discount AsServiceModel(this Models.Discount discount, string currency)
+        {
+            var discountModel = new Data.Discount();
+
+            discountModel.Currency = currency;
+            discountModel.DiscountAmount = discount.Amount;
+            discountModel.PromotionId = discount.PromotionId;
+
+            return discountModel;
         }
 
         public static Checkout AsCheckoutWebModel(
@@ -105,21 +145,16 @@ namespace VirtoCommerce.Web.Convertors
             }
 
             checkoutModel.BuyerAcceptsMarketing = true;
+            checkoutModel.Coupon = cart.Coupon;
             checkoutModel.Currency = cart.Currency;
             checkoutModel.CustomerId = cart.CustomerId;
 
+            checkoutModel.Discounts = new List<VirtoCommerce.Web.Models.Discount>();
             if (cart.Discounts != null)
             {
-                checkoutModel.Discounts = new List<VirtoCommerce.Web.Models.Discount>();
-
                 foreach (var discount in cart.Discounts)
                 {
-                    checkoutModel.Discounts.Add(new VirtoCommerce.Web.Models.Discount
-                    {
-                        Amount = (decimal)discount.DiscountAmount,
-                        Code = discount.PromotionId,
-                        Id = discount.Id
-                    });
+                    checkoutModel.Discounts.Add(discount.AsWebModel());
                 }
             }
 
@@ -213,6 +248,12 @@ namespace VirtoCommerce.Web.Convertors
                 }
             }
 
+            checkoutModel.SubtotalPrice = cart.SubTotal;
+            checkoutModel.ShippingPrice = cart.ShippingTotal;
+            checkoutModel.TaxPrice = cart.TaxTotal;
+            checkoutModel.DiscountsAmount = cart.DiscountTotal;
+            checkoutModel.TotalPrice = cart.Total;
+
             // Transactions
 
             return checkoutModel;
@@ -253,10 +294,18 @@ namespace VirtoCommerce.Web.Convertors
                 cart.Addresses.Add(shippingAddress);
             }
 
+            cart.Coupon = checkoutModel.Coupon;
             cart.Currency = checkoutModel.Currency;
             cart.CustomerId = checkoutModel.CustomerId;
 
-            // DISCOUNTS
+            cart.Discounts = new List<ApiClient.DataContracts.Cart.Discount>();
+            if (checkoutModel.Discounts.Count > 0)
+            {
+                foreach (var discount in checkoutModel.Discounts)
+                {
+                    cart.Discounts.Add(discount.AsServiceModel(cart.Currency));
+                }
+            }
 
             if (checkoutModel.LineItems != null)
             {

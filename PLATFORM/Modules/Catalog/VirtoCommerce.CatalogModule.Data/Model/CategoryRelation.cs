@@ -11,24 +11,13 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 {
 	public class CategoryRelation : Entity
 	{
-		public CategoryRelation()
-		{
-			Id = Guid.NewGuid().ToString("N");
-		}
-
-	
 		#region Navigation Properties
-		[StringLength(128)]
-		[Required]
 		public string SourceCategoryId { get; set; }
 		public virtual Category SourceCategory { get; set; }
 
-		[StringLength(128)]
 		public string TargetCatalogId { get; set; }
-		public virtual CatalogBase TargetCatalog { get; set; }
+		public virtual Catalog TargetCatalog { get; set; }
 
-
-		[StringLength(128)]
 		public string TargetCategoryId { get; set; }
 		public virtual Category TargetCategory { get; set; }
 		#endregion

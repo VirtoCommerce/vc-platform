@@ -14,13 +14,13 @@ namespace VirtoCommerce.Storefront.Model
         /// <summary>
         /// Current customer
         /// </summary>
-        public Customer Customer { get; set; }
-     
+        public Customer CurrentCustomer { get; set; }
+
         /// <summary>
         /// Current language and culture
         /// </summary>
         public Language CurrentLanguage { get; set; }
-      
+
         /// <summary>
         /// Current currency
         /// </summary>
@@ -59,7 +59,8 @@ namespace VirtoCommerce.Storefront.Model
         /// </summary>
         public Store[] AllStores { get; set; }
         public int CurrentPage { get; set; }
-        
+        public string ErrorMessage { get; set; }
+
         /// <summary>
         /// List of categories
         /// </summary>

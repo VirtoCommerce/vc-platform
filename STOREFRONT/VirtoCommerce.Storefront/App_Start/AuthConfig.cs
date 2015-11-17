@@ -6,6 +6,7 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.Facebook;
 using Microsoft.Owin.Security.Google;
 using Owin;
+using VirtoCommerce.Storefront.Common;
 
 namespace VirtoCommerce.Storefront
 {
@@ -26,7 +27,7 @@ namespace VirtoCommerce.Storefront
                 {
                     AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
                     LoginPath = new PathString("/Account/Login"),
-                    CookieName = "VirtoCommerce.Storefront",
+                    CookieName = StorefrontConstants.AuthenticationCookie,
                     //Provider =
                     //    new CookieAuthenticationProvider
                     //    {

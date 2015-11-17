@@ -1,14 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
 using DotLiquid;
-using DotLiquid.Util;
-using System.Threading;
 using VirtoCommerce.Storefront.Model;
 
 namespace VirtoCommerce.LiquidThemeEngine.Filters
@@ -26,11 +19,19 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
         /// <returns></returns>
         public static string CustomerLoginLink(string input)
         {
-            var themeAdaptor = (ShopifyLiquidThemeEngine)Template.FileSystem;
-
             var path = VirtualPathUtility.ToAbsolute("~/account/login");
+            return string.Format("<a href=\"{0}\" id=\"customer_login_link\">{1}</a>", path, input);
+        }
+        public static string CustomerRegisterLink(string input)
+        {
+            var path = VirtualPathUtility.ToAbsolute("~/account/register");
+            return string.Format("<a href=\"{0}\" id=\"customer_register_link\">{1}</a>", path, input);
+        }
 
-            return String.Format("<a href=\"{0}\" id=\"customer_login_link\">{1}</a>", path, input);
+        public static string CustomerLogoutLink(string input)
+        {
+            var path = VirtualPathUtility.ToAbsolute("~/account/logout");
+            return string.Format("<a href=\"{0}\" id=\"customer_logout_link\">{1}</a>", path, input);
         }
 
         /// <summary>
@@ -94,15 +95,15 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
             var themeAdaptor = (ShopifyLiquidThemeEngine)Template.FileSystem;
             Store store = null;
             Language language = null;
-            if(!String.IsNullOrEmpty(storeId))
+            if (!string.IsNullOrEmpty(storeId))
             {
-                store = themeAdaptor.WorkContext.AllStores.FirstOrDefault(x => String.Equals(x.Id, storeId, StringComparison.InvariantCultureIgnoreCase));
+                store = themeAdaptor.WorkContext.AllStores.FirstOrDefault(x => string.Equals(x.Id, storeId, StringComparison.InvariantCultureIgnoreCase));
             }
             store = store ?? themeAdaptor.WorkContext.CurrentStore;
 
-            if (!String.IsNullOrEmpty(languageCode))
+            if (!string.IsNullOrEmpty(languageCode))
             {
-                language = store.Languages.FirstOrDefault(x => String.Equals(x.CultureName, languageCode, StringComparison.InvariantCultureIgnoreCase));
+                language = store.Languages.FirstOrDefault(x => string.Equals(x.CultureName, languageCode, StringComparison.InvariantCultureIgnoreCase));
             }
             language = language ?? store.DefaultLanguage;
 

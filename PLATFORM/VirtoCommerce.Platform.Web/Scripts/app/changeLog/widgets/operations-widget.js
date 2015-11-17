@@ -8,7 +8,7 @@
             currentEntities: blade.currentEntity.operationsLog,
             headIcon: blade.headIcon,
             title: blade.title,
-            subtitle: 'Changes history',
+            subtitle: 'platform.widgets.operations.blade-subtitle',
             controller: 'platformWebApp.changeLog.operationListController',
             template: '$(Platform)/Scripts/app/changeLog/blades/operation-list.tpl.html'
         };

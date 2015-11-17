@@ -17,7 +17,7 @@
 	blade.openList = function (type) {
 		var newBlade = {
 			id: 'templatesList',
-			title: 'Notification templates',
+			title: 'platform.blades.notification-templates-list.title',
 			notificationType: type,
 			objectId: blade.objectId,
 			objectTypeId: blade.objectTypeId,
@@ -31,7 +31,7 @@
 	blade.editTemplate = function (type) {
 		var newBlade = {
 			id: 'editTemplate',
-			title: 'Create notification template',
+			title: 'platform.blades.new-notification-templates-list.title',
 			notificationType: type,
 			objectId: blade.objectId,
 			objectTypeId: blade.objectTypeId,

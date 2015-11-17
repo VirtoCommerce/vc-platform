@@ -99,15 +99,15 @@
 
 			    $scope.blade.toolbarCommands = [
 					{
-					    name: "New document", icon: 'fa fa-plus',
+					    name: "orders.commands.new-document", icon: 'fa fa-plus',
 					    executeMethod: function () {
 
 					        var newBlade = {
 					            id: "newOperationWizard",
 					            customerOrder: $scope.blade.customerOrder,
 					            currentEntity: $scope.blade.currentEntity,
-					            title: "New operation",
-					            subtitle: 'Select operation type',
+					            title: "orders.blades.newOperation-wizard.title",
+					            subtitle: 'orders.blades.newOperation-wizard.subtitle',
 					            controller: 'virtoCommerce.orderModule.newOperationWizardController',
 					            template: 'Modules/$(VirtoCommerce.Orders)/Scripts/wizards/newOperation/newOperation-wizard.tpl.html'
 					        };
@@ -120,7 +120,7 @@
 					    permission: 'order:update'
 					},
 					{
-					    name: "Save", icon: 'fa fa-save',
+					    name: "platform.commands.save", icon: 'fa fa-save',
 					    executeMethod: function () {
 					        saveChanges();
 					    },
@@ -130,7 +130,7 @@
 					    permission: 'order:update'
 					},
 					{
-					    name: "Reset", icon: 'fa fa-undo',
+					    name: "platform.commands.reset", icon: 'fa fa-undo',
 					    executeMethod: function () {
 					        angular.copy($scope.blade.origEntity, $scope.blade.currentEntity);
 					    },
@@ -140,20 +140,21 @@
 					    permission: 'order:update'
 					},
 					{
-					    name: "Delete", icon: 'fa fa-trash-o',
+					    name: "platform.commands.delete", icon: 'fa fa-trash-o',
 					    executeMethod: function () {
 					        var dialog = {
 					            id: "confirmDeleteItem",
-					            title: "Delete confirmation",
-					            message: "Are you sure you want to delete current operation?",
+					            title: "orders.dialogs.operation-delete.title",
+					            message: "orders.dialogs.operation-delete.message",
 					            callback: function (remove) {
 					                if (remove) {
 
 					                    if ($scope.blade.currentEntity.operationType.toLowerCase() != 'customerorder') {
 					                        order_res_customerOrders.deleteOperation({ id: $scope.blade.customerOrder.id, operationId: $scope.blade.currentEntity.id },
                                             function () {
-                                                $scope.blade.title = $scope.blade.customerOrder.customer + '\'s Customer Order';
-                                                $scope.blade.subtitle = 'Edit order details and related documents';
+                                                $scope.blade.title = 'orders.blades.customerOrder-detail.title';
+                                                $scope.blade.titleValues = { customer: $scope.blade.customerOrder.customer };
+                                                $scope.blade.subtitle = 'orders.blades.customerOrder-detail.subtitle';
                                                 $scope.blade.template = 'Modules/$(VirtoCommerce.Orders)/Scripts/blades/customerOrder-detail.tpl.html';
                                                 $scope.blade.currentEntity = $scope.blade.customerOrder;
                                                 $scope.blade.refresh();
@@ -178,7 +179,7 @@
 					    permission: 'order:delete'
 					},
 					{
-					    name: "Cancel document", icon: 'fa fa-remove',
+					    name: "orders.commands.cancel-document", icon: 'fa fa-remove',
 					    executeMethod: function () {
 					        var dialog = {
 					            id: "confirmCancelOperation",
@@ -204,8 +205,8 @@
 			        if (isDirty()) {
 			            var dialog = {
 			                id: "confirmItemChange",
-			                title: "Save changes",
-			                message: "The operation has been modified. Do you want to save changes?",
+			                title: "orders.dialogs.operation-save.title",
+			                message: "orders.dialogs.operation-save.message",
 			                callback: function (needSave) {
 			                    if (needSave) {
 			                        saveChanges();

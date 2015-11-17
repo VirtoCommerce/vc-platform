@@ -14,8 +14,7 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 	{
 		public Property()
 		{
-			Id = Guid.NewGuid().ToString("N");
-			PropertyValues = new NullCollection<PropertyValue>();
+			DictionaryValues = new NullCollection<PropertyDictionaryValue>();
 			PropertyAttributes = new NullCollection<PropertyAttribute>();
 		}
 
@@ -53,21 +52,14 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 
 		#region Navigation Properties
 
-		[StringLength(128)]
-		[ForeignKey("ParentProperty")]
-		public string ParentPropertyId { get; set; }
-
-		public virtual Property ParentProperty { get; set; }
-
-		[StringLength(128)]
 		public string CatalogId { get; set; }
-
 		public virtual Catalog Catalog { get; set; }
 
-		public virtual ObservableCollection<PropertyValue> PropertyValues { get; set; }
+        public string CategoryId { get; set; }
+        public virtual Category Category { get; set; }
 
+        public virtual ObservableCollection<PropertyDictionaryValue> DictionaryValues { get; set; }
 		public virtual ObservableCollection<PropertyAttribute> PropertyAttributes { get; set; }
-
 
 		#endregion
 	}

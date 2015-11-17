@@ -236,18 +236,23 @@
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="App_Start\UnityMvcActivator.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Builders\CartBuilder.cs" />
+    <Compile Include="Builders\ICartBuilder.cs" />
     <Compile Include="Common\StorefrontConstants.cs" />
     <Compile Include="Common\DownloadResult.cs" />
     <Compile Include="Common\FileExtensionMapper.cs" />
     <Compile Include="Common\StorefrontUrlBuilder.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AssetsController.cs" />
+    <Compile Include="Controllers\CartController.cs" />
     <Compile Include="Controllers\CommonController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\Api\ProductApiController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Converters\AddressConverter.cs" />
     <Compile Include="Converters\AssetConverter.cs" />
+    <Compile Include="Converters\CartConverter.cs" />
+    <Compile Include="Converters\CartLineItemConverter.cs" />
     <Compile Include="Converters\CategoryLinkConverter.cs" />
     <Compile Include="Converters\CustomerConverter.cs" />
     <Compile Include="Converters\EditorialReviewConverter.cs" />
@@ -284,7 +289,9 @@
     <Content Include="App_Data\Themes\default\assets\style.css.liquid" />
     <Content Include="App_Data\Themes\default\config\settings_data.json" />
     <Content Include="App_Data\Themes\default\layout\checkout.liquid" />
-    <Content Include="App_Data\Themes\default\layout\theme.liquid" />
+    <Content Include="App_Data\Themes\default\layout\theme.liquid">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="App_Data\Themes\default\layout\theme_blank.liquid" />
     <Content Include="App_Data\Themes\default\locales\de.json" />
     <Content Include="App_Data\Themes\default\locales\en.default.json" />
@@ -375,7 +382,7 @@
     <Content Include="App_Data\Themes\default\templates\lockedout.liquid" />
     <Content Include="App_Data\Themes\default\templates\page.contact.liquid" />
     <Content Include="App_Data\Themes\default\templates\page.liquid" />
-    <Content Include="App_Data\Themes\default\templates\password_reseted.liquid" />
+    <Content Include="App_Data\Themes\default\templates\customers\reset_password_confirmation.liquid" />
     <Content Include="App_Data\Themes\default\templates\payment.liquid" />
     <Content Include="App_Data\Themes\default\templates\placeholder.liquid" />
     <Content Include="App_Data\Themes\default\templates\placeholders.liquid" />
@@ -387,6 +394,7 @@
     <Content Include="App_Data\Themes\default\templates\send-code.liquid" />
     <Content Include="App_Data\Themes\default\templates\thanks_page.liquid" />
     <Content Include="App_Data\Themes\default\templates\verify-code.liquid" />
+    <Content Include="App_Data\Themes\default\layout\cart_layout.liquid" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -395,7 +403,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Builders\" />
     <Folder Include="Models\" />
     <Folder Include="Views\Account\" />
     <Folder Include="Views\Common\" />

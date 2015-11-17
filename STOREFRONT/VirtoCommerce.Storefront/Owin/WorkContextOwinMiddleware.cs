@@ -2,15 +2,12 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.Client.Api;
-using VirtoCommerce.LiquidThemeEngine;
+using VirtoCommerce.Storefront.Builders;
 using VirtoCommerce.Storefront.Common;
 using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
@@ -26,8 +23,8 @@ namespace VirtoCommerce.Storefront.Owin
         private readonly IStoreModuleApi _storeApi;
         private readonly IVirtoCommercePlatformApi _platformApi;
         private readonly ICustomerManagementModuleApi _customerApi;
+        private readonly ICartBuilder _cartBuilder;
         private readonly UnityContainer _container;
-   
 
         public WorkContextOwinMiddleware(OwinMiddleware next, UnityContainer container)
             : base(next)
@@ -35,20 +32,25 @@ namespace VirtoCommerce.Storefront.Owin
             _storeApi = container.Resolve<IStoreModuleApi>();
             _platformApi = container.Resolve<IVirtoCommercePlatformApi>();
             _customerApi = container.Resolve<ICustomerManagementModuleApi>();
+            _cartBuilder = container.Resolve<ICartBuilder>();
             _container = container;
         }
 
         public override async Task Invoke(IOwinContext context)
         {
             var workContext = _container.Resolve<WorkContext>();
-            // Initialize common properties: stores, user profile, cart
+            // Initialize common properties: stores, user profile
             workContext.AllStores = await GetAllStoresAsync();
-            workContext.Customer = await GetCustomerAsync(context);
+            workContext.CurrentCustomer = await GetCustomerAsync(context);
+            MaintainAnonymousCustomerCookie(context, workContext);
 
-            // Initialize request specific properties: store, language, currency
+            // Initialize request specific properties: store, language, currency, cart
             workContext.CurrentStore = GetStore(context, workContext.AllStores);
             workContext.CurrentLanguage = GetLanguage(context, workContext.AllStores, workContext.CurrentStore);
             workContext.CurrentCurrency = GetCurrency(context, workContext.CurrentStore);
+            workContext.CurrentCart = (await _cartBuilder.GetOrCreateNewTransientCartAsync(workContext.CurrentStore, workContext.CurrentCustomer, workContext.CurrentCurrency)).Cart;
+
+            workContext.CurrentPage = 1;
 
             await Next.Invoke(context);
         }
@@ -64,8 +66,6 @@ namespace VirtoCommerce.Storefront.Owin
         {
             var customer = new Customer();
 
-            var anonymousCustomerCookie = context.Request.Cookies[StorefrontConstants.AnonymousCustomerIdCookie];
-
             if (context.Authentication.User.Identity.IsAuthenticated)
             {
                 var user = await _platformApi.SecurityGetUserByNameAsync(context.Authentication.User.Identity.Name);
@@ -75,23 +75,41 @@ namespace VirtoCommerce.Storefront.Owin
                     if (contact != null)
                     {
                         customer = contact.ToWebModel();
-                        context.Response.Cookies.Append(StorefrontConstants.AnonymousCustomerIdCookie, string.Empty, new CookieOptions { Expires = DateTime.UtcNow.AddDays(-1) });
+                        customer.HasAccount = true;
                     }
                 }
             }
             else
             {
-                if (string.IsNullOrEmpty(anonymousCustomerCookie))
-                {
-                    anonymousCustomerCookie = Guid.NewGuid().ToString();
-                    context.Response.Cookies.Append(StorefrontConstants.AnonymousCustomerIdCookie, anonymousCustomerCookie, new CookieOptions { Expires = DateTime.UtcNow.AddDays(30) });
-                }
-
-                customer.Id = anonymousCustomerCookie;
+                customer.Id = context.Request.Cookies[StorefrontConstants.AnonymousCustomerIdCookie];
                 customer.Name = "Anonymous";
             }
 
             return customer;
+        }
+
+        protected virtual void MaintainAnonymousCustomerCookie(IOwinContext context, WorkContext workContext)
+        {
+            string anonymousCustomerId = context.Request.Cookies[StorefrontConstants.AnonymousCustomerIdCookie];
+
+            if (context.Authentication.User.Identity.IsAuthenticated)
+            {
+                if (!string.IsNullOrEmpty(anonymousCustomerId))
+                {
+                    // Remove anonymous customer cookie for registered customer
+                    context.Response.Cookies.Append(StorefrontConstants.AnonymousCustomerIdCookie, string.Empty, new CookieOptions { Expires = DateTime.UtcNow.AddDays(-30) });
+                }
+            }
+            else
+            {
+                if (string.IsNullOrEmpty(anonymousCustomerId))
+                {
+                    // Add anonymous customer cookie for nonregistered customer
+                    anonymousCustomerId = Guid.NewGuid().ToString();
+                    workContext.CurrentCustomer.Id = anonymousCustomerId;
+                    context.Response.Cookies.Append(StorefrontConstants.AnonymousCustomerIdCookie, anonymousCustomerId, new CookieOptions { Expires = DateTime.UtcNow.AddDays(30) });
+                }
+            }
         }
 
         protected virtual Store GetStore(IOwinContext context, ICollection<Store> stores)
@@ -142,8 +160,8 @@ namespace VirtoCommerce.Storefront.Owin
         {
             var languages = stores.SelectMany(s => s.Languages)
                 .Union(stores.Select(s => s.DefaultLanguage))
-                .Select(x=>x.CultureName)
-                .Distinct()                
+                .Select(x => x.CultureName)
+                .Distinct()
                 .ToArray();
 
             //Get language from request url and remove it from from url need to prevent writing language in routing

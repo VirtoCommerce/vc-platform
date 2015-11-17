@@ -7,7 +7,7 @@
         	controller: ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
         		var blade = {
         			id: 'exportImport',
-        			title: 'Data export and import',
+        			title: 'platform.blades.exportImport-main.title',
         			controller: 'platformWebApp.exportImport.mainController',
         			template: '$(Platform)/Scripts/app/exportImport/blades/exportImport-main.tpl.html',
         			isClosingDisabled: true

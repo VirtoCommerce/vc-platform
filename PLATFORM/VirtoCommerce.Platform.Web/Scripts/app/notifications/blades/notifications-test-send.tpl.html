@@ -1,6 +1,6 @@
 ﻿<div class="blade-static __bottom">
 	<button class="btn" ng-click="blade.send()" ng-disabled="formScope.$invalid">
-		<span>Send</span>
+		<span>{{ 'platform.blades.notifications-test-send.labels.send' | translate }}</span>
 	</button>
 </div>
 
@@ -9,7 +9,7 @@
 		<div class="inner-block">
 			<form class="form" name="send">
 				<fieldset style="margin-top:25px;">
-					<legend>Enter test data</legend>
+					<legend>{{ 'platform.blades.notifications-test-send.labels.enter-test-data' | translate }}</legend>
 				</fieldset>
 
                 <div class="form-group" ng-repeat="data in blade.obj.notificationParameters">

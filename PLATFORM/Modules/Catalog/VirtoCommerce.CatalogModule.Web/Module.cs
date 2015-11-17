@@ -50,7 +50,7 @@ namespace VirtoCommerce.CatalogModule.Web
 
             Func<ICatalogRepository> catalogRepFactory = () =>
                 new CatalogRepositoryImpl(_connectionStringName, new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor(),
-                    new ChangeLogInterceptor(_container.Resolve<Func<IPlatformRepository>>(), ChangeLogPolicy.Cumulative, new[] { typeof(Product).Name }));
+                    new ChangeLogInterceptor(_container.Resolve<Func<IPlatformRepository>>(), ChangeLogPolicy.Cumulative, new[] { typeof(Item).Name }));
 
             _container.RegisterInstance(catalogRepFactory);
 

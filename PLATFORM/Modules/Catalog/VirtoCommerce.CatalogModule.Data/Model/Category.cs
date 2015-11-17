@@ -14,12 +14,12 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 	{
 		public Category()
 		{
-			Id = Guid.NewGuid().ToString("N");
-			Images = new NullCollection<Image>();
-			CategoryPropertyValues = new NullCollection<CategoryPropertyValue>();
+	    	Images = new NullCollection<Image>();
+			CategoryPropertyValues = new NullCollection<PropertyValue>();
 			OutgoingLinks = new NullCollection<CategoryRelation>();
 			IncommingLinks = new NullCollection<CategoryRelation>();
-		}
+            Properties = new NullCollection<Property>();
+        }
 
 		[Required]
 		[StringLength(64)]
@@ -47,7 +47,7 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 		[Required]
 		public string CatalogId { get; set; }
 
-		public virtual CatalogBase Catalog { get; set; }
+		public virtual Catalog Catalog { get; set; }
 
 		[StringLength(128)]
 		[ForeignKey("ParentCategory")]
@@ -57,19 +57,14 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 
 		public virtual ObservableCollection<Image> Images { get; set; }
 
-		[StringLength(128)]
-		[ForeignKey("PropertySet")]
-		public string PropertySetId { get; set; }
-
-		public virtual PropertySet PropertySet { get; set; }
-		public virtual ObservableCollection<CategoryPropertyValue> CategoryPropertyValues { get; set; }
+		public virtual ObservableCollection<PropertyValue> CategoryPropertyValues { get; set; }
 		//It new navigation property for link replace to stupid CategoryLink (will be removed later)
 		public virtual ObservableCollection<CategoryRelation> OutgoingLinks { get; set; }
 		public virtual ObservableCollection<CategoryRelation> IncommingLinks { get; set; }
+        public virtual ObservableCollection<Property> Properties { get; set; }
+        #endregion
 
-		#endregion
-
-		public static ValidationResult ValidateCategoryCode(string value, ValidationContext context)
+        public static ValidationResult ValidateCategoryCode(string value, ValidationContext context)
 		{
 			if (value == null || string.IsNullOrEmpty(value))
 			{

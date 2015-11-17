@@ -3,7 +3,7 @@
     var blade = $scope.blade;
     blade.headIcon = 'fa-plus-square-o';
     blade.title = blade.objectType;
-    blade.subtitle = 'Manage dynamic properties';
+    blade.subtitle = 'platform.blades.dynamicProperty-list.subtitle';
 
     blade.refresh = function () {
         dynamicPropertiesApi.query({ id: blade.objectType }, function (results) {
@@ -16,7 +16,7 @@
         $scope.selectedNodeId = node.id;
 
         var newBlade = {
-            subtitle: 'Manage property',
+            subtitle: 'platform.blades.dynamicProperty-detail.subtitle',
             currentEntity: node
         };
         openDetailsBlade(newBlade);
@@ -45,11 +45,11 @@
        //    }
        //},
        {
-           name: "Add new property", icon: 'fa fa-plus',
+           name: "platform.commands.add-new-property", icon: 'fa fa-plus',
            executeMethod: function () {
                $scope.selectedNodeId = undefined;
                var newBlade = {
-                   subtitle: 'New property',
+                   subtitle: 'platform.blades.dynamicProperty-detail.subtitle-new',
                    isNew: true,
                    onChangesConfirmedFn: function (entry) {
                        $scope.selectedNodeId = entry.id;
