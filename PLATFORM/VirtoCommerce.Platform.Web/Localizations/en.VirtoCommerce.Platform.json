@@ -278,7 +278,7 @@
             "description": "Data will be saved out to a file so it can later be imported."
           },
           "import": {
-            "title": "v",
+            "title": "Import",
             "description": "Import data from an exported file."
           }
         }

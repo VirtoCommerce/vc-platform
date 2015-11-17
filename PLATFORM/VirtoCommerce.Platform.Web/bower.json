@@ -20,6 +20,7 @@
     "angular-google-chart": "0.0.11",
     "angular-gridster": "0.13.5",
     "angular-translate": "2.8.1",
+    "angular-translate-loader-url": "2.8.1",
     "font-awesome": "4.4.0",
     "moment": "2.10.6",
     "ng-tags-input": "2.3.0",
