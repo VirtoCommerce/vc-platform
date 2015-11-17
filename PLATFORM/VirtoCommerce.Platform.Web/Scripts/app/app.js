@@ -26,9 +26,10 @@
 ];
 
 angular.module('platformWebApp', AppDependencies).
-  controller('platformWebApp.appCtrl', ['$rootScope', '$scope', '$window', 'platformWebApp.pushNotificationService', '$translate', 'platformWebApp.settings',
- function ($rootScope, $scope, $window, pushNotificationService, $translate, settings) {
+  controller('platformWebApp.appCtrl', ['$rootScope', '$scope', '$window', 'platformWebApp.pushNotificationService', '$translate', 'platformWebApp.settings', 'virtoCommerce.coreModule.common.countries',
+ function ($rootScope, $scope, $window, pushNotificationService, $translate, settings, countries) {
      $scope.$translate = $translate;
+     $scope.countries = countries;
      $scope.platformVersion = $window.platformVersion;
      pushNotificationService.run();
 

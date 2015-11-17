@@ -6,9 +6,9 @@
                 <h1 class="dashboard-title">Virto Commerce</h1>
 
                 <div>
-                    <a class="__link" left-click-menu data-target="lngSwitch_menu">{{$translate.use()}}</a>
+                    <a class="__link" left-click-menu data-target="lngSwitch_menu">{{countries.getLanguageByCode($translate.use()).nativeName}}</a>
                     <ul class="menu __context" role="menu" id="lngSwitch_menu">
-                        <li class="menu-item" ng-click='$translate.use(data)' ng-repeat="data in managerLanguages">{{data}}</li>
+                        <li class="menu-item" ng-click='$translate.use(data)' ng-repeat="data in managerLanguages">{{countries.getLanguageByCode(data).nativeName}}</li>
                     </ul>
                 </div>
 
