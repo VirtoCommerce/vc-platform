@@ -34,20 +34,29 @@
 
       <ul class="inline-list product-meta">
         <li>
-            <span id="productPrice" class="h1" ng-if="product.Price.SalePrice.InternalAmount > 0">
-                {( product.Price.SalePrice.InternalAmount | currency: product.Price.SalePrice.CurrencySymbol )}
+            <span id="productPrice" class="h1 line-through" ng-if="selectedProduct.Price.SalePrice.InternalAmount > 0 || selectedProduct.Price.ActiveDiscount.DiscountAmount.InternalAmount > 0">
+                {( selectedProduct.Price.ListPrice.InternalAmount | currency: selectedProduct.Price.ListPrice.CurrencySymbol )}
             </span>
-            <span id="productPrice" class="h1" ng-if="product.Price.SalePrice.InternalAmount == 0">
-                {( product.Price.ListPrice.InternalAmount | currency: product.Price.SalePrice.CurrencySymbol )}
+            <span id="productPrice" class="h1" ng-if="selectedProduct.Price.SalePrice.InternalAmount == 0 && selectedProduct.Price.ActiveDiscount.DiscountAmount.InternalAmount == 0">
+                {( selectedProduct.Price.ListPrice.InternalAmount | currency: selectedProduct.Price.ListPrice.CurrencySymbol )}
             </span>
         </li>
-        {% if current_product.price.sale_price.internal_amount > 0 %}
-            <li>
-                <span id="comparePrice" class="sale-tag large">
-                    {( product.Price.ListPrice.InternalAmount - product.Price.SalePrice.InternalAmount | currency: product.Price.SalePrice.CurrencySymbol )}
-                </span>
-            </li>
-        {% endif %}
+        <li ng-if="selectedProduct.Price.SalePrice.InternalAmount > 0 || selectedProduct.Price.ActiveDiscount.DiscountAmount > 0">
+            <span id="productPrice" class="h1" ng-if="selectedProduct.Price.SalePrice.InternalAmount > 0 && selectedProduct.Price.ActiveDiscount.DiscountAmount.InternalAmount > 0">
+                {( selectedProduct.Price.SalePrice.InternalAmount - selectedProduct.Price.ActiveDiscount.DiscountAmount.InternalAmount | currency: selectedProduct.Price.ListPrice.CurrencySymbol )}
+            </span>
+            <span id="productPrice" class="h1" ng-if="selectedProduct.Price.SalePrice.InternalAmount > 0 && selectedProduct.Price.ActiveDiscount.DiscountAmount.InternalAmount == 0">
+                {( selectedProduct.Price.SalePrice.InternalAmount | currency: selectedProduct.Price.ListPrice.CurrencySymbol )}
+            </span>
+            <span id="productPrice" class="h1" ng-if="selectedProduct.Price.ActiveDiscount.DiscountAmount.InternalAmount > 0 && selectedProduct.Price.SalePrice.InternalAmount == 0">
+                {( selectedProduct.Price.ListPrice.InternalAmount - selectedProduct.Price.ActiveDiscount.DiscountAmount.InternalAmount | currency: selectedProduct.Price.ListPrice.CurrencySymbol )}
+            </span>
+        </li>
+        <li ng-if="selectedProduct.Price.SalePrice.InternalAmount > 0 || selectedProduct.Price.ActiveDiscount.DiscountAmount > 0">
+            <span id="comparePrice" class="sale-tag large">
+                {( product.Price.ListPrice.InternalAmount - product.Price.SalePrice.InternalAmount - selectedProduct.Price.ActiveDiscount.DiscountAmount.InternalAmount | currency: product.Price.SalePrice.CurrencySymbol )}
+            </span>
+        </li>
         {% if settings.product_reviews_enable %}
           <li class="product-meta--review">
             <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>

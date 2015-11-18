@@ -19,7 +19,7 @@
                 $scope.selectedProduct = data;
                 $scope.trustedDescription = $sce.trustAsHtml($scope.selectedProduct.Description);
                 if (data.Variations.length > 0) {
-                    $scope.createPropertiesCombinations();
+                    //$scope.createPropertiesCombinations();
                 }
             });
         }
