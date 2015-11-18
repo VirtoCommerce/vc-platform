@@ -1,6 +1,7 @@
 ﻿angular.module('virtoCommerce.catalogModule')
     .controller('virtoCommerce.catalogModule.categoriesItemsListController', [
-        '$sessionStorage', '$scope', '$filter', 'virtoCommerce.catalogModule.categories', 'virtoCommerce.catalogModule.items', 'virtoCommerce.catalogModule.listEntries', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.authService', function ($storage, $scope, $filter, categories, items, listEntries, bladeNavigationService, dialogService, authService) {
+        '$sessionStorage', '$scope', 'virtoCommerce.catalogModule.categories', 'virtoCommerce.catalogModule.items', 'virtoCommerce.catalogModule.listEntries', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.authService', 'uiGridConstants', 'platformWebApp.uiGridHelper',
+        function ($storage, $scope, categories, items, listEntries, bladeNavigationService, dialogService, authService, uiGridConstants, uiGridHelper) {
             //pagination settings
             $scope.pageSettings = {};
             $scope.pageSettings.totalItems = 0;
@@ -10,8 +11,6 @@
 
             $scope.filter = { searchKeyword: undefined };
 
-            $scope.selectedAll = false;
-            $scope.selectedItem = null;
             var preventCategoryListingOnce; // prevent from unwanted additional actions after command was activated from context menu
 
             var blade = $scope.blade;
@@ -28,15 +27,11 @@
                         start: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
                         count: $scope.pageSettings.itemsPerPageCount
                     },
-                    function (data, headers) {
+                    function (data) {
                         blade.isLoading = false;
                         $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
                         $scope.items = data.listEntries;
-                        $scope.selectedAll = false;
-
-                        if ($scope.selectedItem != null) {
-                            $scope.selectedItem = $scope.findItem($scope.selectedItem.id);
-                        }
+                        uiGridHelper.onDataLoaded($scope.gridOptions, $scope.items);
 
                         //Set navigation breadcrumbs
                         setBreadcrumbs();
@@ -93,7 +88,7 @@
             function edit(listItem) {
                 closeChildrenBlades();
 
-                $scope.selectedItem = listItem;
+                blade.setSelectedItem(listItem);
                 if (listItem.type === 'category') {
                     blade.showCategoryBlade(listItem);
                 }
@@ -128,11 +123,11 @@
             };
 
             function isItemsChecked() {
-                return $scope.items && _.any($scope.items, function (x) { return x.selected; });
+                return $scope.gridApi && _.any($scope.gridApi.selection.getSelectedRows());
             }
 
             function deleteChecked() {
-                var selection = $filter('filter')($scope.items, { selected: true }, true);
+                var selection = $scope.gridApi.selection.getSelectedRows();
 
                 var listEntryLinks = [];
                 var categoryIds = [];
@@ -204,16 +199,9 @@
             }
 
             function mapChecked() {
-                //var dialog = {
-                //    id: "confirmDeleteItem",
-                //    title: "Map confirmation",
-                //    message: "Are you sure you want to map selected Categories or Items?",
-                //    callback: function (confirmed) {
-                //        if (confirmed) {
-                // blade.parentBlade.catalog.virtual....
                 closeChildrenBlades();
 
-                var selection = _.where($scope.items, { selected: true });
+                var selection = $scope.gridApi.selection.getSelectedRows();
                 var listEntryLinks = [];
                 angular.forEach(selection, function (listItem) {
                     listEntryLinks.push({
@@ -228,15 +216,11 @@
                     blade.refresh();
                     blade.parentBlade.refresh();
                 },
-                function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
-                //}
-                //    }
-                //}
-                //dialogService.showConfirmationDialog(dialog);
+                function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
             }
 
             blade.setSelectedItem = function (listItem) {
-                $scope.selectedItem = listItem;
+                $scope.selectedNodeId = listItem.id;
             };
 
             $scope.selectItem = function (e, listItem) {
@@ -283,21 +267,8 @@
                     };
                     bladeNavigationService.showBlade(newBlade, blade);
                 }
-
-                blade.currentItemId = $scope.selectedItem.type === 'product' ? $scope.selectedItem.id : undefined;
             };
-
-
-            $scope.findItem = function (id) {
-                var retVal;
-                angular.forEach($scope.items, function (item) {
-                    if (item.id == id)
-                        retVal = item;
-                });
-
-                return retVal;
-            }
-
+            
             $scope.hasLinks = function (listEntry) {
                 return blade.catalog.virtual && listEntry.links && (listEntry.type === 'category' ? listEntry.links.length > 0 : listEntry.links.length > 1);
             }
@@ -313,7 +284,7 @@
                 });
             }
 
-            $scope.blade.toolbarCommands = [
+            blade.toolbarCommands = [
                 {
                     name: "platform.commands.refresh",
                     icon: 'fa fa-refresh',
@@ -328,11 +299,11 @@
                     name: "platform.commands.manage",
                     icon: 'fa fa-edit',
                     executeMethod: function () {
-                        // selected OR the first checked listItem
-                        edit($scope.selectedItem || _.find($scope.items, function (x) { return x.selected; }));
+                        // the first selected node
+                        edit(_.find($scope.gridApi.selection.getSelectedRows()));
                     },
                     canExecuteMethod: function () {
-                        return $scope.selectedItem || isItemsChecked();
+                        return isItemsChecked();
                     },
                     permission: 'catalog:read'
                 },
@@ -357,7 +328,7 @@
     			            controller: 'virtoCommerce.catalogModule.importerListController',
     			            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/import/importers-list.tpl.html'
     			        };
-    			        bladeNavigationService.showBlade(newBlade, $scope.blade);
+    			        bladeNavigationService.showBlade(newBlade, blade);
     			    },
     			    canExecuteMethod: function () { return true; },
     			    permission: 'catalog:import'
@@ -373,10 +344,10 @@
 				            catalog: blade.catalog,
 				            controller: 'virtoCommerce.catalogModule.exporterListController',
 				            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/export/exporter-list.tpl.html',
-				            selectedProducts: _.filter($scope.items, function (x) { return x.type == 'product' && x.selected == true; }),
-				            selectedCategories: _.filter($scope.items, function (x) { return x.type == 'category' && x.selected == true; })
+				            selectedProducts: _.filter($scope.gridApi.selection.getSelectedRows(), function (x) { return x.type == 'product' }),
+				            selectedCategories: _.filter($scope.gridApi.selection.getSelectedRows(), function (x) { return x.type == 'category' })
 				        };
-				        bladeNavigationService.showBlade(newBlade, $scope.blade);
+				        bladeNavigationService.showBlade(newBlade, blade);
 				    },
 				    canExecuteMethod: function () { return true; },
 				    permission: 'catalog:export'
@@ -385,7 +356,7 @@
                      name: "platform.commands.cut",
                      icon: 'fa fa-cut',
                      executeMethod: function () {
-                         $storage.catalogClipboardContent = _.where($scope.items, { selected: true });
+                         $storage.catalogClipboardContent = $scope.gridApi.selection.getSelectedRows();
                      },
                      canExecuteMethod: isItemsChecked,
                      permission: 'catalog:create'
@@ -431,7 +402,7 @@
             ];
 
             if (blade.isBrowsingLinkedCategory) {
-                $scope.blade.toolbarCommands.splice(2, 5);
+                blade.toolbarCommands.splice(2, 5);
             }
 
             if (angular.isDefined(blade.mode)) {
@@ -445,10 +416,10 @@
                         },
                         canExecuteMethod: isItemsChecked
                     }
-                    $scope.blade.toolbarCommands.splice(1, 6, mapCommand);
+                    blade.toolbarCommands.splice(1, 6, mapCommand);
                 }
             } else if (authService.checkPermission('catalog:create')) {
-                $scope.blade.toolbarCommands.splice(1, 0, {
+                blade.toolbarCommands.splice(1, 0, {
                     name: "platform.commands.add",
                     icon: 'fa fa-plus',
                     executeMethod: function () {
@@ -486,13 +457,12 @@
                 bladeNavigationService.showBlade(newBlade, blade);
             };
 
-            $scope.checkAll = function (selected) {
-                angular.forEach($scope.items, function (item) {
-                    item.selected = selected;
-                });
+            // ui-grid
+            $scope.setGridOptions = function (gridOptions) {
+                uiGridHelper.initialize($scope, gridOptions);
             };
-            
-            
+
+
             //No need to call this because page 'pageSettings.currentPage' is watched!!! It would trigger subsequent duplicated req...
             //blade.refresh();
         }]);

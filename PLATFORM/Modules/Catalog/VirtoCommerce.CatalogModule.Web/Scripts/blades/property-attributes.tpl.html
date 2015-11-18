@@ -47,7 +47,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="table-item" ng-repeat="data in pb.currentEntity.attributes track by data.id" ng-class="{'selected': data === selectedItem}" context-menu data-target="pa_menu_{{$index}}" ng-click='selectItem(data)'>
+                            <tr class="table-item" ng-repeat="data in pb.currentEntity.attributes track by $index" ng-class="{'selected': data === selectedItem}" context-menu data-target="pa_menu_{{$index}}" ng-click='selectItem(data)'>
                                 <td class="table-col">
                                     <div data-role="input-control" class="input-control checkbox">
                                         <label class="form-control __checkbox">
