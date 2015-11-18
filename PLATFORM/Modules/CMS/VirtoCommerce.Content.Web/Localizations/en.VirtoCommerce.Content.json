@@ -126,8 +126,6 @@
         }
       },
       "edit-blog": {
-        "title": "",
-        "subtitle": "",
         "title-new": "Add blog",
         "subtitle-new": "Create new blog",
         "labels": {

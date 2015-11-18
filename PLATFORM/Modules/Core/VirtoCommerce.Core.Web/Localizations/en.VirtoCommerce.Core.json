@@ -37,6 +37,7 @@
       },
       "fulfillment-center-contact": {
         "labels": {
+          "country": "Country",
           "region": "Region",
           "city": "City",
           "address": "Address",

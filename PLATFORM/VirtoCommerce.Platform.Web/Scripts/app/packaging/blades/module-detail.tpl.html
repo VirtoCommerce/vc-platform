@@ -10,7 +10,7 @@
         </div>
     </div>
     <button class="btn" ng-click="submit()" ng-disabled="!blade.currentEntity || isInstalling || (blade.currentEntity.requireLicenseAcceptance && !blade.currentEntity.licenseAccepted)">
-        <span>{{actionButtonTitle}}</span>
+        <span>{{actionButtonTitle | translate}}</span>
     </button>
 </div>
 <div class="blade-content">

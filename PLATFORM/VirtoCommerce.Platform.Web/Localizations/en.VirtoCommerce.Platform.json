@@ -349,7 +349,7 @@
         "subtitle": "Enter test data for {{type}}",
         "labels": {
           "test": "Test",
-          "Enter-test-data": "Enter test data"
+          "enter-test-data": "Enter test data"
         }
       },
       "notifications-test-send": {
@@ -611,15 +611,14 @@
       },
       "new-account-wizard": {
         "labels": {
-          "login": "Login",
-          "password": "Password",
-          "repeat-password": "Repeat password",
-          "assign-roles": "Assign roles"
+          "summary": "Summary",
+          "name": "Name",
+          "description": "Description",
+          "assign-permissions": "Assign permissions"
         },
         "placeholders": {
-          "login": "Enter login",
-          "password": "Enter new password",
-          "repeat-password": "Repeat new password"
+          "name": "Enter name",
+          "description": "Enter description"
         }
       },
       "security-main": {
