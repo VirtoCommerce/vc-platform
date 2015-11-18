@@ -10,6 +10,7 @@ using VirtoCommerce.Client.Api;
 using VirtoCommerce.Client.Model;
 using VirtoCommerce.Storefront.Common;
 using VirtoCommerce.Storefront.Model;
+using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Controllers
 {
@@ -17,23 +18,18 @@ namespace VirtoCommerce.Storefront.Controllers
     public class AccountController : Controller
     {
         private readonly WorkContext _workContext;
+        private IStorefrontUrlBuilder _urlBuilder;
         private readonly ICommerceCoreModuleApi _commerceCoreApi;
         private readonly ICustomerManagementModuleApi _customerApi;
+        private readonly IAuthenticationManager _authenticationManager;
 
-        public AccountController(WorkContext workContext, ICommerceCoreModuleApi commerceCoreApi, ICustomerManagementModuleApi customerApi)
+        public AccountController(WorkContext workContext, IStorefrontUrlBuilder urlBuilder, ICommerceCoreModuleApi commerceCoreApi, ICustomerManagementModuleApi customerApi, IAuthenticationManager authenticationManager)
         {
             _workContext = workContext;
+            _urlBuilder = urlBuilder;
             _commerceCoreApi = commerceCoreApi;
             _customerApi = customerApi;
-        }
-
-        private IAuthenticationManager _authenticationManager;
-        private IAuthenticationManager AuthenticationManager
-        {
-            get
-            {
-                return _authenticationManager ?? (_authenticationManager = HttpContext.GetOwinContext().Authentication);
-            }
+            _authenticationManager = authenticationManager;
         }
 
         [HttpGet]
@@ -46,7 +42,7 @@ namespace VirtoCommerce.Storefront.Controllers
                 return View("customers/account", _workContext);
             }
 
-            return RedirectToAction("Login", "Account");
+            return Redirect("~/account/login");
         }
 
         [HttpGet]
@@ -92,8 +88,8 @@ namespace VirtoCommerce.Storefront.Controllers
                 await _commerceCoreApi.StorefrontSecurityPasswordSignInAsync(formModel.Email, formModel.Password);
 
                 var identity = CreateClaimsIdentity(formModel.Email);
-                AuthenticationManager.SignIn(identity);
-                return RedirectToAction("Index", "Account");
+                _authenticationManager.SignIn(identity);
+                return Redirect("~/account");
             }
             else
             {
@@ -110,7 +106,7 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                AuthenticationManager.SignOut();
+                _authenticationManager.SignOut();
             }
 
             _workContext.Login = new Login();
@@ -129,12 +125,12 @@ namespace VirtoCommerce.Storefront.Controllers
             {
                 case "success":
                     var identity = CreateClaimsIdentity(formModel.Email);
-                    AuthenticationManager.SignIn(identity);
-                    return RedirectToLocal(returnUrl);
+                    _authenticationManager.SignIn(identity);
+                    return Redirect(returnUrl);
                 case "lockedOut":
                     return View("lockedout", _workContext);
                 case "requiresVerification":
-                    return RedirectToAction("SendCode", "Account");
+                    return Redirect("~/account/sendcode");
                 case "failure":
                 default:
                     ModelState.AddModelError("form", "Login attempt failed.");
@@ -146,8 +142,8 @@ namespace VirtoCommerce.Storefront.Controllers
         [Route("logout")]
         public ActionResult Logout()
         {
-            AuthenticationManager.SignOut();
-            return Redirect("~");
+            _authenticationManager.SignOut();
+            return Redirect("~/");
         }
 
         [HttpPost]
@@ -169,7 +165,7 @@ namespace VirtoCommerce.Storefront.Controllers
                 ModelState.AddModelError("form", "User not found");
             }
 
-            return new RedirectResult(Url.Action("Login", "Account") + "#recover");
+            return Redirect("~/account/login#recover");
         }
 
         [HttpGet]
@@ -237,6 +233,14 @@ namespace VirtoCommerce.Storefront.Controllers
         }
 
 
+        protected override RedirectResult Redirect(string url)
+        {
+            var newUrl = Url.IsLocalUrl(url) ? url : "~/";
+            var appRelativeUrl = _urlBuilder.ToAppRelative(_workContext, newUrl, _workContext.CurrentStore, _workContext.CurrentLanguage);
+            return base.Redirect(appRelativeUrl);
+        }
+
+
         private ClaimsIdentity CreateClaimsIdentity(string userName)
         {
             var claims = new List<Claim>();
@@ -245,16 +249,6 @@ namespace VirtoCommerce.Storefront.Controllers
             var identity = new ClaimsIdentity(claims, Microsoft.AspNet.Identity.DefaultAuthenticationTypes.ApplicationCookie);
 
             return identity;
-        }
-
-        private ActionResult RedirectToLocal(string returnUrl)
-        {
-            if (Url.IsLocalUrl(returnUrl))
-            {
-                return Redirect(returnUrl);
-            }
-
-            return Redirect("~");
         }
     }
 }

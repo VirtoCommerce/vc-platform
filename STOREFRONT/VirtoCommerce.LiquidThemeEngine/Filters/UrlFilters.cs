@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using DotLiquid;
@@ -19,19 +20,16 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
         /// <returns></returns>
         public static string CustomerLoginLink(string input)
         {
-            var path = VirtualPathUtility.ToAbsolute("~/account/login");
-            return string.Format("<a href=\"{0}\" id=\"customer_login_link\">{1}</a>", path, input);
+            return BuildHtmlLink("customer_login_link", "~/account/login", input);
         }
         public static string CustomerRegisterLink(string input)
         {
-            var path = VirtualPathUtility.ToAbsolute("~/account/register");
-            return string.Format("<a href=\"{0}\" id=\"customer_register_link\">{1}</a>", path, input);
+            return BuildHtmlLink("customer_register_link", "~/account/register", input);
         }
 
         public static string CustomerLogoutLink(string input)
         {
-            var path = VirtualPathUtility.ToAbsolute("~/account/logout");
-            return string.Format("<a href=\"{0}\" id=\"customer_logout_link\">{1}</a>", path, input);
+            return BuildHtmlLink("customer_logout_link", "~/account/logout", input);
         }
 
         /// <summary>
@@ -109,6 +107,27 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
 
             var retVal = themeAdaptor.UrlBuilder.ToAbsolute(themeAdaptor.WorkContext, input, store, language);
             return retVal;
+        }
+
+
+        private static string BuildHtmlLink(string id, string virtualUrl, string title)
+        {
+            var href = BuildAbsoluteUrl(virtualUrl);
+
+            var result = string.Format(CultureInfo.InvariantCulture, "<a href=\"{0}\" id=\"{1}\">{2}</a>",
+               HttpUtility.HtmlAttributeEncode(href),
+               HttpUtility.HtmlAttributeEncode(id),
+               HttpUtility.HtmlEncode(title));
+
+            return result;
+        }
+
+        private static string BuildAbsoluteUrl(string virtualUrl)
+        {
+            var themeEngine = (ShopifyLiquidThemeEngine)Template.FileSystem;
+            var workContext = themeEngine.WorkContext;
+            var result = themeEngine.UrlBuilder.ToAbsolute(workContext, virtualUrl, workContext.CurrentStore, workContext.CurrentLanguage);
+            return result;
         }
     }
 }

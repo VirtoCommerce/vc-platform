@@ -6,10 +6,12 @@ using System.Reflection;
 using System.Web;
 using System.Web.Compilation;
 using System.Web.Hosting;
+using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Microsoft.Owin;
 using Microsoft.Owin.Extensions;
+using Microsoft.Owin.Security;
 using Microsoft.Practices.Unity;
 using Microsoft.Practices.Unity.Mvc;
 using Owin;
@@ -71,6 +73,7 @@ namespace VirtoCommerce.Storefront
             container.RegisterType<IInventoryModuleApi, InventoryModuleApi>();
             container.RegisterType<IShoppingCartModuleApi, ShoppingCartModuleApi>();
             container.RegisterType<ICartBuilder, CartBuilder>();
+            container.RegisterType<IAuthenticationManager>(new InjectionFactory((context) => HttpContext.Current.GetOwinContext().Authentication));
 
             container.RegisterType<IStorefrontUrlBuilder, StorefrontUrlBuilder>();
             if (_managerAssembly != null)
