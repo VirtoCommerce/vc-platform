@@ -87,7 +87,7 @@ angular.module('platformWebApp', AppDependencies).
                   data: _.any(initOptions.data) ? initOptions.data : 'blade.currentEntities',
                   rowHeight: initOptions.rowHeight === 30 ? 40 : initOptions.rowHeight,
                   enableGridMenu: true,
-                  enableVerticalScrollbar: uiGridConstants.scrollbars.NEVER,                  
+                  enableVerticalScrollbar: uiGridConstants.scrollbars.NEVER,
                   //enableHorizontalScrollbar: uiGridConstants.scrollbars.NEVER,
                   //selectionRowHeaderWidth: 35,
                   saveFocus: false,
@@ -200,7 +200,7 @@ angular.module('platformWebApp', AppDependencies).
 
     }
   ])
-.factory('platformWebApp.uiGridHelper', ['$localStorage', '$timeout', 'uiGridConstants', function ($localStorage, $timeout, uiGridConstants) {
+.factory('platformWebApp.uiGridHelper', ['$localStorage', '$timeout', 'uiGridConstants', '$translate', function ($localStorage, $timeout, uiGridConstants, $translate) {
     var retVal = {};
     retVal.initialize = function ($scope, gridOptions, externalRegisterApiCallback) {
         var savedState = $localStorage['gridState:' + $scope.blade.template];
@@ -217,7 +217,11 @@ angular.module('platformWebApp', AppDependencies).
             gridOptions.columnDefs = savedState.columns;
         }
 
+        // translate filter
+        _.each(gridOptions.columnDefs, function (x) { x.headerCellFilter = 'translate'; })
+
         $scope.gridOptions = angular.extend({
+            gridMenuTitleFilter: $translate,
             onRegisterApi: function (gridApi) {
                 //set gridApi on scope
                 $scope.gridApi = gridApi;

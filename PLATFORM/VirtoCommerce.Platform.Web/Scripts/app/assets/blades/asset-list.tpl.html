@@ -19,14 +19,14 @@
                 rowHeight: 61,
                 columnDefs: [
                         {
-                            name: 'url', displayName: 'Pic',
+                            name: 'url', displayName: 'platform.blades.asset-list.labels.picture',
                             enableColumnResizing: false, enableSorting: false, width: 60,
                             cellTemplate: 'asset-list-icon.cell.html'
                         },
-                        { name: 'name', cellTooltip: true },
-                        { name: 'size' },
-                        { name: 'modifiedDate', displayName: 'Modified', cellTemplate: 'am-time-ago.cell.html' },
-                        { name: 'actions', enableColumnResizing: false, enableSorting: false, width: 80, cellTemplate: 'asset-list-actions.cell.html' }
+                        { name: 'name', displayName: 'platform.blades.asset-list.labels.name', cellTooltip: true },
+                        { name: 'size', displayName: 'platform.blades.asset-list.labels.size'},
+                        { name: 'modifiedDate', displayName: 'platform.blades.asset-list.labels.modified', cellTemplate: 'am-time-ago.cell.html' },
+                        { name: 'actions', displayName: 'platform.blades.asset-list.labels.actions', enableColumnResizing: false, enableSorting: false, width: 80, cellTemplate: 'asset-list-actions.cell.html' }
                 ],
                 enablePaginationControls: false,
                 paginationPageSize: pageSettings.itemsPerPageCount

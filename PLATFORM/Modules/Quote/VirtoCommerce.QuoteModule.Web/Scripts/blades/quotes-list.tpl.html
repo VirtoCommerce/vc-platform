@@ -13,16 +13,14 @@
             <div class="table-wrapper" ng-init="setGridOptions({
                     rowTemplate: 'quotes-list.row.html',
                     columnDefs: [
-                        { name: 'number', displayName: 'Quote #', cellTooltip: true },
-                        { name: 'status' },
-                        { name: 'items.length', displayName: 'Items count' },
-                        { name: 'customerName', displayName: 'Customer', cellTooltip: true },
+                        { name: 'number', displayName: 'quotes.blades.quotes-list.labels.quote-number', cellTooltip: true },
+                        { name: 'status', displayName: 'quotes.blades.quotes-list.labels.status', width:100 },
+                        { name: 'items.length', displayName: 'quotes.blades.quotes-list.labels.items-count', width:95 },
+                        { name: 'customerName', displayName: 'quotes.blades.quotes-list.labels.customer', cellTooltip: true },
                         {
-                            name: 'createdDate', displayName: 'Created',
-                            sort: {
-                                direction: uiGridConstants.DESC
-                            },
-                            cellTemplate: 'am-time-ago.cell.html'
+                            name: 'createdDate', displayName: 'quotes.blades.quotes-list.labels.created',
+                            sort: { direction: uiGridConstants.DESC },
+                            width: 87, cellTemplate: 'am-time-ago.cell.html'
                         }
                     ]})">
                 <div ui-grid="gridOptions" ui-grid-save-state ui-grid-selection ui-grid-resize-columns ui-grid-move-columns></div>

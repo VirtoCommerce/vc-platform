@@ -1,6 +1,7 @@
 ﻿angular.module('virtoCommerce.customerModule')
 .controller('virtoCommerce.customerModule.memberListController', ['$scope', 'virtoCommerce.customerModule.members', 'virtoCommerce.customerModule.contacts', 'virtoCommerce.customerModule.organizations', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'uiGridConstants', 'platformWebApp.uiGridHelper',
     function ($scope, members, contacts, organizations, bladeNavigationService, dialogService, uiGridConstants, uiGridHelper) {
+        $scope.uiGridConstants = uiGridConstants;
         //pagination settings
         $scope.pageSettings = {};
         $scope.pageSettings.totalItems = 0;
@@ -250,21 +251,9 @@
         ];
 
         // ui-grid
-        uiGridHelper.initialize($scope, {
-            data: 'listEntries',
-            rowTemplate: "<div ng-click=\"grid.appScope.selectNode(row.entity)\" ng-repeat=\"(colRenderIndex, col) in colContainer.renderedColumns track by col.uid\" ui-grid-one-bind-id-grid=\"rowRenderIndex + '-' + col.uid + '-cell'\" class=\"ui-grid-cell\" ng-class=\"{ 'ui-grid-row-header-cell': col.isRowHeader, '__selected': row.entity.id === grid.appScope.selectedNodeId }\" role=\"{{col.isRowHeader ? 'rowheader' : 'gridcell'}}\" ui-grid-cell style='cursor:pointer'></div>",
-            rowHeight: 61,
-            columnDefs: [
-                        {
-                            name: 'memberType', displayName: 'Type', headerTooltip: 'Organization or individual Customer',
-                            sort: { direction: uiGridConstants.DESC, priority: 1 },
-                            enableColumnResizing: false, width: 60, cellTemplate: 'member-list-icon.cell.html'
-                        },
-                        { name: 'displayName', displayName: 'Name', sort: { direction: uiGridConstants.ASC, priority: 2 } }
-                        //{ name: 'customAddress', displayName: 'Address', field: 'grid.appScope.getMainAddress(row)' },
-                        //{ name: 'customEmail', displayName: 'Email' }
-            ]
-        });
+        $scope.setGridOptions = function (gridOptions) {
+            uiGridHelper.initialize($scope, gridOptions);
+        };
 
 
         //No need to call this because page 'pageSettings.currentPage' is watched!!! It would trigger subsequent duplicated req...

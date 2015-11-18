@@ -32,7 +32,7 @@
       "promotion-list": {
         "labels": {
           "name": "Name",
-          "last-modified": "Last modified"
+          "last-modified": "Modified"
         }
       },
       "catalog-items-select": {

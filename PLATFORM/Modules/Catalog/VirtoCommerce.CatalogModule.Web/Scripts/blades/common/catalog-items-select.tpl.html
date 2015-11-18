@@ -16,12 +16,12 @@
                 enableSelectionBatchEvent: false,
                 columnDefs: [
                         {
-                            name: 'imageUrl', displayName: 'Pic',
+                            name: 'imageUrl', displayName: 'catalog.blades.catalog-items-select.labels.picture',
                             enableColumnResizing: false, enableSorting: false, width: 60,
                             cellTemplate: 'item-list-icon.cell.html'
                         },
-                        { name: 'name' },
-                        { name: 'code', displayName: 'SKU', width: 170, cellTemplate: 'item-list-SKU.cell.html' }
+                        { name: 'name', displayName: 'catalog.blades.catalog-items-select.labels.name' },
+                        { name: 'code', displayName: 'catalog.blades.catalog-items-select.labels.sku', width: 170, cellTemplate: 'item-list-SKU.cell.html' }
                  ]})">
             <div class="table-wrapper">
                 <div ui-grid="gridOptions" ui-grid-save-state ui-grid-selection ui-grid-resize-columns ui-grid-move-columns></div>

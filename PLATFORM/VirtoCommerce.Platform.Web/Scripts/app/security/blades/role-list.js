@@ -1,6 +1,7 @@
 ﻿angular.module('platformWebApp')
 .controller('platformWebApp.roleListController', ['$scope', 'platformWebApp.roles', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'uiGridConstants', 'platformWebApp.uiGridHelper',
 function ($scope, roles, bladeNavigationService, dialogService, uiGridConstants, uiGridHelper) {
+    $scope.uiGridConstants = uiGridConstants;
     var blade = $scope.blade;
 
     //pagination settings
@@ -140,18 +141,9 @@ function ($scope, roles, bladeNavigationService, dialogService, uiGridConstants,
     ];
 
     // ui-grid
-    uiGridHelper.initialize($scope, {
-        rowTemplate: "<div ng-click=\"grid.appScope.blade.selectNode(row.entity)\" ng-repeat=\"(colRenderIndex, col) in colContainer.renderedColumns track by col.uid\" ui-grid-one-bind-id-grid=\"rowRenderIndex + '-' + col.uid + '-cell'\" class=\"ui-grid-cell\" ng-class=\"{ 'ui-grid-row-header-cell': col.isRowHeader, '__selected': row.entity.id === grid.appScope.selectedNodeId }\" role=\"{{col.isRowHeader ? 'rowheader' : 'gridcell'}}\" ui-grid-cell style='cursor:pointer'></div>",
-        rowHeight: 50,
-        columnDefs: [
-                    {
-                        displayName: 'Role',
-                        name: 'customColumn',
-                        cellTemplate: 'role-list-name.cell.html'
-                        // sort: { direction: uiGridConstants.ASC }
-                    }
-        ]
-    });
+    $scope.setGridOptions = function (gridOptions) {
+        uiGridHelper.initialize($scope, gridOptions);
+    };
     
     $scope.$watch('pageSettings.currentPage', blade.refresh);
 

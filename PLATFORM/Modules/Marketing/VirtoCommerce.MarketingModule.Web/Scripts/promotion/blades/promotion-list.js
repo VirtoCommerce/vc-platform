@@ -57,8 +57,8 @@
         function deleteChecked() {
             var dialog = {
                 id: "confirmDeleteItem",
-            title: "marketing.dialogs.promotions-delete.title",
-            message: "marketing.dialogs.promotions-delete.message",
+                title: "marketing.dialogs.promotions-delete.title",
+                message: "marketing.dialogs.promotions-delete.message",
                 callback: function (remove) {
                     if (remove) {
                         closeChildrenBlades();
@@ -86,7 +86,7 @@
 
         blade.toolbarCommands = [
             {
-            name: "platform.commands.refresh", icon: 'fa fa-refresh',
+                name: "platform.commands.refresh", icon: 'fa fa-refresh',
                 executeMethod: function () {
                     blade.refresh();
                 },
@@ -95,13 +95,13 @@
                 }
             },
             {
-            name: "platform.commands.add", icon: 'fa fa-plus',
+                name: "platform.commands.add", icon: 'fa fa-plus',
                 executeMethod: function () {
                     closeChildrenBlades();
 
                     var newBlade = {
                         id: 'listItemChild',
-                    title: 'marketing.blades.promotion-detail.title-new',
+                        title: 'marketing.blades.promotion-detail.title-new',
                         subtitle: blade.subtitle,
                         isNew: true,
                         controller: 'virtoCommerce.marketingModule.promotionDetailController',
@@ -115,7 +115,7 @@
                 permission: 'marketing:create'
             },
             {
-            name: "platform.commands.delete", icon: 'fa fa-trash-o',
+                name: "platform.commands.delete", icon: 'fa fa-trash-o',
                 executeMethod: function () {
                     deleteChecked();
                 },
@@ -127,14 +127,9 @@
         ];
 
         // ui-grid
-        uiGridHelper.initialize($scope, {
-            rowTemplate: "<div ng-click=\"grid.appScope.selectNode(row.entity)\" ng-repeat=\"(colRenderIndex, col) in colContainer.renderedColumns track by col.uid\" ui-grid-one-bind-id-grid=\"rowRenderIndex + '-' + col.uid + '-cell'\" class=\"ui-grid-cell\" ng-class=\"{ 'ui-grid-row-header-cell': col.isRowHeader, '__selected': row.entity.id === grid.appScope.selectedNodeId }\" role=\"{{col.isRowHeader ? 'rowheader' : 'gridcell'}}\" ui-grid-cell style='cursor:pointer'></div>",
-            rowHeight: 59,
-            columnDefs: [
-                        { name: 'name', cellTemplate: 'promotion-list-name.cell.html' },
-                        { name: 'modifiedDate', displayName: 'Modified', width: 87, cellTemplate: 'am-time-ago.cell.html' }
-            ]
-        });
+        $scope.setGridOptions = function (gridOptions) {
+            uiGridHelper.initialize($scope, gridOptions);
+        };
 
 
         $scope.$watch('pageSettings.currentPage', function () {

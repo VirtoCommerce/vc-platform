@@ -1,6 +1,7 @@
 ﻿angular.module('platformWebApp')
 .controller('platformWebApp.modulesListController', ['$scope', 'filterFilter', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.modules', 'uiGridConstants', 'platformWebApp.uiGridHelper',
     function ($scope, filterFilter, bladeNavigationService, dialogService, modules, uiGridConstants, uiGridHelper) {
+        $scope.uiGridConstants = uiGridConstants;
         var blade = $scope.blade;
 
         blade.refresh = function () {
@@ -20,7 +21,7 @@
 
             var newBlade = {
                 id: 'moduleDetails',
-            title: 'platform.blades.module-detail.title',
+                title: 'platform.blades.module-detail.title',
                 currentEntityId: id,
                 controller: 'platformWebApp.moduleDetailController',
                 template: '$(Platform)/Scripts/app/packaging/blades/module-detail.tpl.html'
@@ -39,7 +40,7 @@
 
         blade.toolbarCommands = [
             {
-            name: "platform.commands.refresh", icon: 'fa fa-refresh',
+                name: "platform.commands.refresh", icon: 'fa fa-refresh',
                 executeMethod: function () {
                     blade.refresh();
                 },
@@ -48,7 +49,7 @@
                 }
             },
             {
-            name: "platform.commands.install", icon: 'fa fa-plus',
+                name: "platform.commands.install", icon: 'fa fa-plus',
                 executeMethod: function () {
                     openAddEntityBlade();
                 },
@@ -64,7 +65,7 @@
 
             var newBlade = {
                 id: "moduleWizard",
-            title: "platform.blades.module-detail.title-install",
+                title: "platform.blades.module-detail.title-install",
                 // subtitle: '',
                 mode: 'install',
                 controller: 'platformWebApp.installWizardController',
@@ -73,32 +74,13 @@
             bladeNavigationService.showBlade(newBlade, blade);
         }
 
-        // ui-grid 
-        uiGridHelper.initialize($scope, {
-            rowTemplate: "modules-list.row.html",
-            virtualizationThreshold: 1000, // workaround
-            rowHeight: 61,
-            columnDefs: [
-                        {
-                            displayName: 'Icon', name: 'iconUrl',
-                            enableColumnResizing: false, width: 70,
-                            cellTemplate: 'modules-list-icon.cell.html'
-                        },
-                        {
-                            displayName: 'Module', name: 'customColumn', field: 'title',
-                            sort: { direction: uiGridConstants.ASC }, width: '50%',
-                            cellTemplate: 'modules-list-name.cell.html'
-                        },
-                        { name: 'version', width: 80 },
-                        {
-                            displayName: 'Author', name: 'authors',
-                            cellTemplate: 'modules-list-authors.cell.html'
-                        }
-            ]
-        },
+        // ui-grid
+        $scope.setGridOptions = function (gridOptions) {
+            uiGridHelper.initialize($scope, gridOptions,
             function (gridApi) {
                 gridApi.grid.registerRowsProcessor($scope.singleFilter, 90);
             });
+        };
 
         $scope.singleFilter = function (renderableRows) {
             //var matcher = new RegExp(blade.searchText);

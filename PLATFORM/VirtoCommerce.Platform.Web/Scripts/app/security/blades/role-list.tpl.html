@@ -10,7 +10,17 @@
 <div class="blade-content __medium-wide">
     <div class="blade-inner">
         <div class="inner-block">
-            <div class="table-wrapper">
+            <div class="table-wrapper" ng-init="setGridOptions({
+                rowTemplate: 'role-list.row.html',                      
+                rowHeight: 50,
+                columnDefs: [
+                    {
+                        displayName: 'platform.blades.role-list.labels.name',
+                        name: 'customColumn',
+                        cellTemplate: 'role-list-name.cell.html',
+                        sort: { direction: uiGridConstants.ASC }
+                    }
+                    ]})">
                 <div ui-grid="gridOptions" ui-grid-save-state ui-grid-selection ui-grid-resize-columns ui-grid-move-columns></div>
                 <!--<table class="table __normal">
                     <thead>
@@ -44,6 +54,9 @@
     </div>
 </div>
 
+<script type="text/ng-template" id="role-list.row.html">
+    <div ng-click='grid.appScope.blade.selectNode(row.entity)' ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'" class="ui-grid-cell" ng-class="{'ui-grid-row-header-cell': col.isRowHeader, '__selected': row.entity.id===grid.appScope.selectedNodeId }" role="{{col.isRowHeader ? 'rowheader' : 'gridcell' }}" ui-grid-cell style='cursor:pointer'></div>
+</script>
 <script type="text/ng-template" id="role-list-name.cell.html">
     <div class="ui-grid-cell-contents">
         <span class="table-t">{{row.entity.name}}</span>

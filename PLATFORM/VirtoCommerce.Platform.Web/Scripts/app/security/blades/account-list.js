@@ -1,6 +1,7 @@
 ﻿angular.module('platformWebApp')
 .controller('platformWebApp.accountListController', ['$scope', 'platformWebApp.accounts', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'uiGridConstants', 'platformWebApp.uiGridHelper',
 function ($scope, accounts, bladeNavigationService, dialogService, uiGridConstants, uiGridHelper) {
+    $scope.uiGridConstants = uiGridConstants;
     var blade = $scope.blade;
 
     //pagination settings
@@ -130,22 +131,10 @@ function ($scope, accounts, bladeNavigationService, dialogService, uiGridConstan
     ];
 
     // ui-grid
-    uiGridHelper.initialize($scope, {
-        rowTemplate: "<div ng-click=\"grid.appScope.blade.selectNode(row.entity)\" ng-repeat=\"(colRenderIndex, col) in colContainer.renderedColumns track by col.uid\" ui-grid-one-bind-id-grid=\"rowRenderIndex + '-' + col.uid + '-cell'\" class=\"ui-grid-cell\" ng-class=\"{ 'ui-grid-row-header-cell': col.isRowHeader, '__selected': row.entity.userName === grid.appScope.selectedNodeId }\" role=\"{{col.isRowHeader ? 'rowheader' : 'gridcell'}}\" ui-grid-cell style='cursor:pointer'></div>",
-        columnDefs: [
-                    {
-                        displayName: 'Name',
-                        name: 'userName',
-                        sort: {
-                            direction: uiGridConstants.ASC,
-                            priority: 1
-                        }
-                    },
-                    { displayName: 'Account type', name: 'userType' },
-                    { displayName: 'State', name: 'userState' }
-        ]
-    });
-    
+    $scope.setGridOptions = function (gridOptions) {
+        uiGridHelper.initialize($scope, gridOptions);
+    };
+        
     $scope.$watch('pageSettings.currentPage', blade.refresh);
 
     // actions on load

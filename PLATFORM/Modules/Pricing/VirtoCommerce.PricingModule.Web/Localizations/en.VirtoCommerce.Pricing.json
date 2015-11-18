@@ -18,8 +18,8 @@
         "subtitle": "Merchandise management",
         "labels": {
           "name": "Name",
-          "prices-count": "Prices count",
-          "last-modified": "Last modified"
+          "currency": "Currency",
+          "last-modified": "Modified"
         }
       },
       "pricelist-detail": {
@@ -54,7 +54,7 @@
           "list-price": "List price",
           "sale-price": "Sale price",
           "min-quantity": "Min. quantity",
-          "last-modified": "Last modified"
+          "last-modified": "Modified"
         }
       },
       "pricelist-assignment-list": {
@@ -71,7 +71,8 @@
           "name": "Name",
           "catalog": "Catalog",
           "priority": "Priority",
-          "last-modified": "Last modified"
+          "last-modified": "Modified",
+          "modified-by": "Modified by"
         }
       },
       "assignment-detail": {
