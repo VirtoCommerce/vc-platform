@@ -26,16 +26,28 @@
 ];
 
 angular.module('platformWebApp', AppDependencies).
-  controller('platformWebApp.appCtrl', ['$rootScope', '$scope', '$window', 'platformWebApp.pushNotificationService', '$translate', 'platformWebApp.settings', 'virtoCommerce.coreModule.common.countries',
- function ($rootScope, $scope, $window, pushNotificationService, $translate, settings, countries) {
-     $scope.$translate = $translate;
-     $scope.countries = countries;
+  controller('platformWebApp.appCtrl', ['$rootScope', '$scope', '$window', 'platformWebApp.pushNotificationService', '$translate', 'platformWebApp.settings', 'virtoCommerce.coreModule.common.countries', 'platformWebApp.mainMenuService',
+ function ($rootScope, $scope, $window, pushNotificationService, $translate, settings, countries, mainMenuService) {
      $scope.platformVersion = $window.platformVersion;
      pushNotificationService.run();
 
      $rootScope.$on('loginStatusChanged', function (event, authContext) {
          if (authContext.isAuthenticated) {
-             $scope.managerLanguages = settings.getValues({ id: 'VirtoCommerce.Platform.General.ManagerLanguages' });
+             settings.getValues({ id: 'VirtoCommerce.Platform.General.ManagerLanguages' },
+                function (result) {
+                    var otherLangs = _.reject(result, function (x) { return x === $translate.use(); });
+                    otherLangs.sort();
+                    _.each(_.union([$translate.use()], otherLangs), function (x, i) {
+                        var foundLang = countries.getLanguageByCode(x);
+                        mainMenuService.addMenuItem({
+                            path: 'langs/' + x,
+                            title: foundLang ? foundLang.nativeName : x,
+                            priority: i,
+                            action: function () { $translate.use(x) }
+                        });
+                    });
+                }
+            );
          }
      });
  }])
@@ -113,14 +125,6 @@ angular.module('platformWebApp', AppDependencies).
             priority: 0
         };
         mainMenuService.addMenuItem(langMenuItem);
-
-        var menuItem = {
-            path: 'langs/en',
-            title: 'English',
-            priority: 20,
-            action: function () {}
-        };
-        mainMenuService.addMenuItem(menuItem);
 
         var homeMenuItem = {
             path: 'home',
