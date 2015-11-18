@@ -10,6 +10,7 @@ using VirtoCommerce.Storefront.Converters;
 
 namespace VirtoCommerce.Storefront.Controllers
 {
+    [RoutePrefix("product")]
     public class ProductController : Controller
     {
         private readonly WorkContext _workContext;
@@ -32,6 +33,13 @@ namespace VirtoCommerce.Storefront.Controllers
             return View("product", _workContext);
         }
 
+        [Route("{id}")]
+        [HttpGet]
+        public async Task<ActionResult> GetProductById(string id)
+        {
+            await GetProduct(id);
+            return Json(_workContext.CurrentProduct, JsonRequestBehavior.AllowGet);
+        }
 
         protected async Task GetProduct(string id)
         {

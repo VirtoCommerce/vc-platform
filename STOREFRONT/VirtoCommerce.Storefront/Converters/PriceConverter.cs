@@ -16,6 +16,8 @@ namespace VirtoCommerce.Storefront.Converters
             var retVal = new ProductPrice();
             retVal.InjectFrom(price);
             retVal.Currency = new Currency(EnumUtility.SafeParse<CurrencyCodes>(price.Currency, CurrencyCodes.USD));
+            retVal.ListPrice = new Money((decimal)(price.List ?? 0), price.Currency);
+            retVal.SalePrice = new Money((decimal)(price.Sale ?? 0), price.Currency);
             return retVal;
         }
     }
