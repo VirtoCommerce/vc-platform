@@ -44,6 +44,7 @@
     <Compile Include="Address.cs" />
     <Compile Include="AddressType.cs" />
     <Compile Include="Catalog\Asset.cs" />
+    <Compile Include="Catalog\ItemResponseGroup.cs" />
     <Compile Include="Catalog\TierPrice.cs" />
     <Compile Include="Image.cs" />
     <Compile Include="Catalog\Inventory.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="ResetPassword.cs" />
     <Compile Include="Catalog\ProductProperty.cs" />
     <Compile Include="SeoInfo.cs" />
+    <Compile Include="Services\IProductService.cs" />
     <Compile Include="ShipmentMethod.cs" />
     <Compile Include="Cart\CartSummary.cs" />
     <Compile Include="Discount.cs" />

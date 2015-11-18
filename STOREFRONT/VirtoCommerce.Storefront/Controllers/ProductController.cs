@@ -4,9 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using VirtoCommerce.Client.Api;
 using VirtoCommerce.Storefront.Model;
-using VirtoCommerce.Storefront.Converters;
+using VirtoCommerce.Storefront.Model.Services;
 
 namespace VirtoCommerce.Storefront.Controllers
 {
@@ -14,65 +13,27 @@ namespace VirtoCommerce.Storefront.Controllers
     public class ProductController : Controller
     {
         private readonly WorkContext _workContext;
-        private readonly ICatalogModuleApi _catalogApi;
-        private readonly IPricingModuleApi _pricingApi;
-        private readonly IInventoryModuleApi _inventoryApi;
+        private readonly IProductService _productService;
 
-        public ProductController(WorkContext context, ICatalogModuleApi catalogApi, IPricingModuleApi pricingApi, IInventoryModuleApi inventoryApi)
+        public ProductController(WorkContext context, IProductService productService)
         {
             _workContext = context;
-            _catalogApi = catalogApi;
-            _pricingApi = pricingApi;
-            _inventoryApi = inventoryApi;
+            _productService = productService;
         }
 
         [HttpGet]
-        public async Task<ActionResult> ProductDetails(string productid)
+        public ActionResult ProductDetails(string productid)
         {
-            await GetProduct(productid);
+            _workContext.CurrentProduct = _productService.GetProductById(productid, _workContext.CurrentCurrency.Code, Model.Catalog.ItemResponseGroup.ItemLarge);
             return View("product", _workContext);
         }
 
         [Route("{id}")]
         [HttpGet]
-        public async Task<ActionResult> GetProductById(string id)
+        public ActionResult GetProductById(string id)
         {
-            await GetProduct(id);
+            _workContext.CurrentProduct = _productService.GetProductById(id, _workContext.CurrentCurrency.Code, Model.Catalog.ItemResponseGroup.ItemLarge);
             return Json(_workContext.CurrentProduct, JsonRequestBehavior.AllowGet);
-        }
-
-        protected async Task GetProduct(string id)
-        {
-            var product = await _catalogApi.CatalogModuleProductsGetAsync(id);
-            _workContext.CurrentProduct = product.ToWebModel();
-            var ids = _workContext.CurrentProduct.Variations.Select(v => v.Id).ToList();
-            ids.Add(id);
-            foreach (var productId in ids)
-            {
-                var prices = await _pricingApi.PricingModuleGetProductPricesAsync(productId);
-                foreach (var price in prices)
-                {
-                    if (_workContext.CurrentProduct.Id == price.ProductId && _workContext.CurrentCurrency.CurrencyCode.ToString() == price.Currency)
-                        _workContext.CurrentProduct.Price = price.ToWebModel();
-
-                    var variation = _workContext.CurrentProduct.Variations.FirstOrDefault(v => v.Id == price.ProductId);
-                    if (variation != null)
-                        variation.Price = price.ToWebModel();
-                }
-            }
-
-
-            var inventories = await _inventoryApi.InventoryModuleGetProductsInventoriesAsync(ids);
-            foreach (var inventory in inventories)
-            {
-                if (_workContext.CurrentProduct.Id == inventory.ProductId)
-                    _workContext.CurrentProduct.Inventory = inventory.ToWebModel();
-
-                var variation = _workContext.CurrentProduct.Variations.FirstOrDefault(v => v.Id == inventory.ProductId);
-                if (variation != null)
-                    variation.Inventory = inventory.ToWebModel();
-            }
-
         }
     }
 }

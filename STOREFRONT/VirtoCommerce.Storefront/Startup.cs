@@ -6,7 +6,6 @@ using System.Reflection;
 using System.Web;
 using System.Web.Compilation;
 using System.Web.Hosting;
-using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Microsoft.Owin;
@@ -27,6 +26,8 @@ using VirtoCommerce.Storefront.Builders;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Owin;
+using VirtoCommerce.Storefront.Model.Services;
+using VirtoCommerce.Storefront.Services;
 
 [assembly: OwinStartup(typeof(Startup))]
 [assembly: PreApplicationStartMethod(typeof(Startup), "PreApplicationStart")]
@@ -72,7 +73,10 @@ namespace VirtoCommerce.Storefront
             container.RegisterType<IPricingModuleApi, PricingModuleApi>();
             container.RegisterType<IInventoryModuleApi, InventoryModuleApi>();
             container.RegisterType<IShoppingCartModuleApi, ShoppingCartModuleApi>();
+            container.RegisterType<IMarketingModuleApi, MarketingModuleApi>();
+
             container.RegisterType<ICartBuilder, CartBuilder>();
+            container.RegisterType<IProductService, ProductServiceImpl>();
             container.RegisterType<IAuthenticationManager>(new InjectionFactory((context) => HttpContext.Current.GetOwinContext().Authentication));
 
             container.RegisterType<IStorefrontUrlBuilder, StorefrontUrlBuilder>();
