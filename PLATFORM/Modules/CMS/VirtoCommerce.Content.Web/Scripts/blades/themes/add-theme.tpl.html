@@ -1,6 +1,6 @@
 ﻿<div class="blade-static __bottom">
 	<button class="btn" ng-click="blade.save()" ng-disabled="formScope.$invalid">
-		<span>Create</span>
+		<span>{{ 'platform.commands.create' | translate }}</span>
 	</button>
 </div>
 
@@ -8,21 +8,21 @@
 	<div class="blade-inner">
 		<div class="inner-block">
 			<form class="form" name="contextEntityDetailForm">
-				<div class="sub-t">Theme name</div>
+				<div class="sub-t">{{ 'content.blades.add-theme.labels.theme-name' | translate }}</div>
 
 				<div class="form-group" ng-init="setForm(contextEntityDetailForm)">
 					<div class="form-input">
-						<input focus-on="" required class="form-control" ng-model="blade.name" placeholder="Enter theme name" />
+						<input focus-on="" required class="form-control" ng-model="blade.name" placeholder="{{ 'content.blades.add-theme.placeholders.theme-name' | translate }}" />
 						<input required type="hidden" ng-model="blade.themeFileUrl" />
 					</div>
 				</div>
 
-				<div class="sub-t">Load theme</div>
+				<div class="sub-t">{{ 'content.blades.add-theme.labels.load-theme' | translate }}</div>
 
 				<div class="form-group">
 					<div class="tile-group triple" ng-show="blade.themeLoaded">
 						<div class="tile triple wide mini __informer">
-							<p>Theme file uploaded</p>
+							<p>{{ 'content.blades.add-theme.labels.theme-file-uploaded' | translate }}</p>
 						</div>
 					</div>
 				</div>
@@ -39,7 +39,7 @@
 			</form>
 
 			<div ng-show="uploader.isUploading" class="ng-hide">
-				<div class="sub-t">Progress</div>
+				<div class="sub-t">{{ 'content.blades.add-theme.labels.progress' | translate }}</div>
 				<div class="progress-bar __aqua" ng-style="{'width': uploader.progress + '%'}" style="width: 0%;"></div>
 			</div>
 		</div>

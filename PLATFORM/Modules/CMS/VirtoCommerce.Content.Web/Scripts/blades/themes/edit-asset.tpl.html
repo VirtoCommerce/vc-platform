@@ -1,15 +1,15 @@
 ﻿<div class="blade-static __expanded" ng-if="blade.newAsset">
 	<div class="form-group">
-		<label class="form-label">Asset name:</label>
+		<label class="form-label">{{ 'content.blades.edit-asset.labels.asset-name' | translate }}</label>
 		<div class="form-input">
-			<input focus-on="" required class="form-control" ng-model="blade.currentEntity.name" placeholder="Enter asset name" />
+			<input focus-on="" required class="form-control" ng-model="blade.currentEntity.name" placeholder="{{ 'content.blades.edit-asset.placeholders.asset-name' | translate }}" />
 		</div>
 	</div>
 </div>
 
 <div class="blade-static __collapsed" ng-if="!blade.newAsset">
 	<div class="form-group">
-		<label>{{blade.currentEntity.name}}</label> | <a href="http://docs.virtocommerce.com/display/vc2devguide/Liquid+Reference" target="_blank">Liquid Documentation</a>
+		<label>{{blade.currentEntity.name}}</label> | <a href="http://docs.virtocommerce.com/display/vc2devguide/Liquid+Reference" target="_blank">{{ 'content.blades.edit-asset.labels.liquid-documentation' | translate }}</a>
 	</div>
 </div>
 

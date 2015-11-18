@@ -17,7 +17,7 @@
 			storeId: blade.currentEntityId,
 			parentWidget: $scope.widget,
 			title: blade.title,
-			subtitle: 'Link Lists',
+			subtitle: 'content.widgets.menu.blade-subtitle',
 			controller: 'virtoCommerce.contentModule.linkListsController',
 			template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/menu/link-lists.tpl.html'
 		};

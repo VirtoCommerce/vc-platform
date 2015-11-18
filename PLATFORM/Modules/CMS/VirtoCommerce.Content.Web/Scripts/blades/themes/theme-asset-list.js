@@ -82,7 +82,8 @@
 				choosenFolder: data.folderName,
 				newAsset: false,
 				title: asset.id,
-				subtitle: 'Edit ' + asset.name,
+				subtitle: 'content.blades.edit-asset.subtitle',
+				subtitleValues: { name: asset.name },
 				controller: 'virtoCommerce.contentModule.editAssetController',
 				template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/edit-asset.tpl.html'
 			};
@@ -97,7 +98,8 @@
 				choosenFolder: data.folderName,
 				newAsset: false,
 				title: asset.id,
-				subtitle: 'Edit ' + asset.name,
+				subtitle: 'content.blades.edit-image-asset.subtitle',
+				subtitleValues: { name: asset.name },
 				controller: 'virtoCommerce.contentModule.editImageAssetController',
 				template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/edit-image-asset.tpl.html'
 			};
@@ -135,8 +137,10 @@
 				choosenFolder: data.folderName,
 				newAsset: true,
 				currentEntity: { id: undefined, content: undefined, contentType: contentType, assetUrl: undefined, name: name },
-				title: 'New ' + folder.oneItemName,
-				subtitle: 'Create new ' + folder.oneItemName,
+				titleValues: { name: folder.oneItemName },
+				subtitle: { name: folder.oneItemName },
+				title: 'content.blades.edit-asset.title-new',
+				subtitle: 'content.blades.edit-asset.subtitle-new',
 				controller: 'virtoCommerce.contentModule.editAssetController',
 				template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/edit-asset.tpl.html'
 			};
@@ -150,8 +154,10 @@
 				choosenFolder: data.folderName,
 				newAsset: true,
 				currentEntity: { id: undefined, content: undefined, contentType: undefined, assetUrl: undefined, name: undefined },
-				title: 'New ' + folder.oneItemName,
-				subtitle: 'Create new ' + folder.oneItemName,
+				titleValues: { name: folder.oneItemName },
+				subtitle: { name: folder.oneItemName },
+				title: 'content.blades.edit-image-asset.title-new',
+				subtitle: 'content.blades.edit-image-asset.subtitle-new',
 				controller: 'virtoCommerce.contentModule.editImageAssetController',
 				template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/edit-image-asset.tpl.html'
 			};

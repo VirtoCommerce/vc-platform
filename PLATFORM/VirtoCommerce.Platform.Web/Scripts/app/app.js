@@ -24,13 +24,31 @@
 ];
 
 angular.module('platformWebApp', AppDependencies).
-  controller('platformWebApp.appCtrl', ['$scope', '$window', 'platformWebApp.pushNotificationService', '$translate', 'platformWebApp.settings', function ($scope, $window, pushNotificationService, $translate, settings) {
-      $scope.platformVersion = $window.platformVersion;
-      pushNotificationService.run();
+  controller('platformWebApp.appCtrl', ['$rootScope', '$scope', '$window', 'platformWebApp.pushNotificationService', '$translate', 'platformWebApp.settings', 'virtoCommerce.coreModule.common.countries', 'platformWebApp.mainMenuService',
+ function ($rootScope, $scope, $window, pushNotificationService, $translate, settings, countries, mainMenuService) {
+     $scope.platformVersion = $window.platformVersion;
+     pushNotificationService.run();
 
-      $scope.$translate = $translate;
-      $scope.managerLanguages = settings.getValues({ id: 'VirtoCommerce.Platform.General.ManagerLanguages' });
-  }])
+     $rootScope.$on('loginStatusChanged', function (event, authContext) {
+         if (authContext.isAuthenticated) {
+             settings.getValues({ id: 'VirtoCommerce.Platform.General.ManagerLanguages' },
+                function (result) {
+                    var otherLangs = _.reject(result, function (x) { return x === $translate.use(); });
+                    otherLangs.sort();
+                    _.each(_.union([$translate.use()], otherLangs), function (x, i) {
+                        var foundLang = countries.getLanguageByCode(x);
+                        mainMenuService.addMenuItem({
+                            path: 'langs/' + x,
+                            title: foundLang ? foundLang.nativeName : x,
+                            priority: i,
+                            action: function () { $translate.use(x) }
+                        });
+                    });
+                }
+            );
+         }
+     });
+ }])
 // Specify SignalR server URL (application URL)
 .factory('platformWebApp.signalRServerName', ['$location', function apiTokenFactory($location) {
     var retVal = $location.url() ? $location.absUrl().slice(0, -$location.url().length - 1) : $location.absUrl();
@@ -118,12 +136,21 @@ angular.module('platformWebApp', AppDependencies).
 
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
+
+        var langMenuItem = {
+            path: 'langs',
+            title: 'Langs',
+            icon: 'fa fa-globe',
+            priority: 0
+        };
+        mainMenuService.addMenuItem(langMenuItem);
+
         var homeMenuItem = {
             path: 'home',
             title: 'platform.menu.home',
             icon: 'fa fa-home',
             action: function () { $state.go('workspace'); },
-            priority: 0
+            priority: 1
         };
         mainMenuService.addMenuItem(homeMenuItem);
 

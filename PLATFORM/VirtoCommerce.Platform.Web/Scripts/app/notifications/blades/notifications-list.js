@@ -31,7 +31,7 @@
 	blade.editTemplate = function (type) {
 		var newBlade = {
 			id: 'editTemplate',
-			title: 'platform.blades.new-notification-templates-list.title',
+			title: 'platform.blades.notifications-edit-template.title-new',
 			notificationType: type,
 			objectId: blade.objectId,
 			objectTypeId: blade.objectTypeId,

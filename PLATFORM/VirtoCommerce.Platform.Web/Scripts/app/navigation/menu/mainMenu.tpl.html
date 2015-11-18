@@ -37,7 +37,7 @@
                         <i class="list-ico" ng-class="menuItem.icon">
                             <i ng-if="menuItem.icon == 'fa fa-user'"></i>
                         </i>
-                        <span translate>{{menuItem.title}}</span>
+                        {{menuItem.title | translate}}
                     </a>
                     <ng-include src='menuItem.template'> </ng-include>
                 </li>

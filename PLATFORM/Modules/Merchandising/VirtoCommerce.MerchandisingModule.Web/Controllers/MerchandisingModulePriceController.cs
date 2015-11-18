@@ -60,7 +60,8 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		[ResponseType(typeof(Price[]))]
 		[ArrayInput(ParameterName = "priceLists")]
 		[ArrayInput(ParameterName = "products")]
-		[Route("prices")]
+        [ClientCache(Duration = 60)]
+        [Route("prices")]
 		public IHttpActionResult GetProductPrices([FromUri] string[] priceLists, [FromUri] string[] products)
 		{
 			var retVal = new List<Price>();
