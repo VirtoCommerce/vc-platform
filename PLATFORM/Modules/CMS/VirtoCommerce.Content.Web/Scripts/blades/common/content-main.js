@@ -233,8 +233,8 @@
 	            choosenStoreId: data.store.id,
 	            currentEntity: { name: null, content: null },
 	            newPage: true,
-	            title: 'content.blades.edit-page.title',
-	            subtitle: 'content.blades.edit-page.subtitle',
+	            title: 'content.blades.edit-page.title-new',
+	            subtitle: 'content.blades.edit-page.subtitle-new',
 	            controller: 'virtoCommerce.contentModule.editPageController',
 	            template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/pages/edit-page.tpl.html',
 	        };

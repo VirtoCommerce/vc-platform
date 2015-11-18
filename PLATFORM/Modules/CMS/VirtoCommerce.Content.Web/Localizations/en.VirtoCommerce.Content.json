@@ -11,7 +11,7 @@
         "subtitle": "Content service",
         "labels": {
           "no-active-theme": "No active theme, click to choose",
-          "active-theme:": "Active theme:",
+          "active-theme": "Active theme:",
           "edit-css-html": "Edit CSS/HTML",
           "preview-theme": "Preview theme",
           "customize-theme": "Customize theme",
@@ -202,6 +202,7 @@
       "add-link": "Add link",
       "add-list": "Add list",
       "add-blog": "Add blog",
+      "add-page": "Add page",
       "add-file": "Add file",
       "save-list": "Save list",
       "save-page": "Save page",

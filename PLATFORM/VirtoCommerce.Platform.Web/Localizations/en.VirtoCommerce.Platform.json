@@ -135,6 +135,18 @@
           "actions": "Actions"
         }
       },
+      "asset-upload": {
+        "title": "Asset upload",
+        "labels": {
+          "select-files": "Select files",
+          "drag-note": "Drag and drop files here",
+          "progress": "Progress",
+          "asset-uploaded": "Asset(s) uploaded."
+        },
+        "placeholders": {
+          "image-url": "Paste file URL here"
+        }
+      },
       "operation-list": {
         "labels": {
           "login": "Login",
@@ -150,6 +162,7 @@
         }
       },
       "dynamicProperty-detail": {
+        "title": "Manage property",
         "subtitle": "Manage property",
         "subtitle-new": "New property",
         "labels": {
