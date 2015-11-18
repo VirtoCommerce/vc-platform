@@ -35,16 +35,16 @@
       <ul class="inline-list product-meta">
         <li>
             <span id="productPrice" class="h1" ng-if="product.Price.SalePrice.InternalAmount > 0">
-                {( product.Price.SalePrice.InternalAmount )}
+                {( product.Price.SalePrice.InternalAmount | currency: product.Price.SalePrice.CurrencySymbol )}
             </span>
             <span id="productPrice" class="h1" ng-if="product.Price.SalePrice.InternalAmount == 0">
-                {( product.Price.ListPrice.InternalAmount )}
+                {( product.Price.ListPrice.InternalAmount | currency: product.Price.SalePrice.CurrencySymbol )}
             </span>
         </li>
         {% if current_product.price.sale_price.internal_amount > 0 %}
             <li>
                 <span id="comparePrice" class="sale-tag large">
-                    {( product.Price.ListPrice.InternalAmount - product.Price.SalePrice.InternalAmount )}
+                    {( product.Price.ListPrice.InternalAmount - product.Price.SalePrice.InternalAmount | currency: product.Price.SalePrice.CurrencySymbol )}
                 </span>
             </li>
         {% endif %}
