@@ -105,12 +105,29 @@ angular.module('platformWebApp', AppDependencies).
 
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
+
+        var langMenuItem = {
+            path: 'langs',
+            title: 'Langs',
+            icon: 'fa fa-globe',
+            priority: 0
+        };
+        mainMenuService.addMenuItem(langMenuItem);
+
+        var menuItem = {
+            path: 'langs/en',
+            title: 'English',
+            priority: 20,
+            action: function () {}
+        };
+        mainMenuService.addMenuItem(menuItem);
+
         var homeMenuItem = {
             path: 'home',
             title: 'platform.menu.home',
             icon: 'fa fa-home',
             action: function () { $state.go('workspace'); },
-            priority: 0
+            priority: 1
         };
         mainMenuService.addMenuItem(homeMenuItem);
 
