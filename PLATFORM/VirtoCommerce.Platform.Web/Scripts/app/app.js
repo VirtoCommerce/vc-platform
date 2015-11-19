@@ -139,7 +139,7 @@ angular.module('platformWebApp', AppDependencies).
 
         var langMenuItem = {
             path: 'langs',
-            title: 'Langs',
+            title: 'platform.menu.language',
             icon: 'fa fa-globe',
             priority: 0
         };
