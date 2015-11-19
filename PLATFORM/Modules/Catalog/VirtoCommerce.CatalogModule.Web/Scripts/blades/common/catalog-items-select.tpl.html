@@ -25,44 +25,6 @@
                  ]})">
             <div class="table-wrapper">
                 <div ui-grid="gridOptions" ui-grid-save-state ui-grid-selection ui-grid-resize-columns ui-grid-move-columns></div>
-                <!--<table class="table">
-                    <thead>
-                        <tr>
-                            <th class="table-col __product-control">
-                                <label class="form-control __checkbox" ng-if="options.showCheckingMultiple">
-                                    <input type="checkbox" ng-model="blade.selectedAll" ng-change="toggleAll()" />
-                                    <span class="check"></span>
-                                </label>
-                            </th>
-                            <th class="table-col __product-img">{{ 'catalog.blades.catalog-items-select.labels.picture' | translate }}</th>
-                            <th class="table-col __product-name">{{ 'catalog.blades.catalog-items-select.labels.name' | translate }}</th>
-                            <th class="table-col __product-code">{{ 'catalog.blades.catalog-items-select.labels.sku' | translate }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="table-item" ng-repeat="data in items track by data.id" ng-class="{'__selected': data.id === selectedNodeId}" context-menu data-target="cil_menu_{{data.id+blade.level}}">
-                            <td class="table-col">
-                                <label class="form-control __checkbox" ng-if="canCheck(data)">
-                                    <input type="checkbox" ng-model="data.selected" ng-change="checkItem(data)">
-                                    <span class="check"></span>
-                                </label>
-                            </td>
-                            <td class="table-col" ng-click='selectItem($event, data)'>
-                                <div class="product-img">
-                                    <div class="image" style="background-image: url({{data.imageUrl}})" ng-if="data.type!=='category' && data.imageUrl"></div>
-                                    <i class="table-ico fa" ng-class="data.type == 'category' ? ' fa-folder' : ' fa-image'" ng-if="!data.imageUrl"></i>
-                                </div>
-                            </td>
-                            <td class="table-col __product-name" ng-click='selectItem($event, data)' class="product-name">
-                                {{data.name}}
-
-                            </td>
-                            <td class="table-col __product-code" ng-click='selectItem($event, data)'>
-                                {{data.type!=='category'?data.code:''}}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>-->
             </div>
         </div>
     </div>

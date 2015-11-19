@@ -44,11 +44,7 @@
 
             bladeNavigationService.showBlade(newBlade, blade);
         };
-
-        function isItemsChecked() {
-            return blade.currentEntities && _.any(blade.currentEntities, function (x) { return x.$selected; });
-        }
-
+        
         function deleteChecked() {
             var dialog = {
                 id: "confirmDeleteItem",
