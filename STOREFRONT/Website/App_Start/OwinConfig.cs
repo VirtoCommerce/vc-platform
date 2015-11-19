@@ -15,6 +15,7 @@ using Owin;
 using VirtoCommerce.ApiClient.DataContracts;
 using VirtoCommerce.ApiClient.DataContracts.Stores;
 using VirtoCommerce.ApiClient.Extensions;
+using VirtoCommerce.Web.Caching;
 using VirtoCommerce.Web.Extensions;
 using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Models.Cms;
@@ -92,7 +93,11 @@ namespace VirtoCommerce.Web
                 // 1st: initialize some sort of context, especially get a list of all shops first
                 // other methods will rely on that to be performance efficient
                 // 2nd: find current shop from url, which context with shops will be used for
-                ctx.Shops = await commerceService.GetShopsAsync();
+                var shopsCacheKey = CacheKey.Create("shops");
+                ctx.Shops = await ctx.CacheManager.GetAsync(shopsCacheKey, TimeSpan.FromMinutes(10), async () =>
+                {
+                    return await commerceService.GetShopsAsync();
+                });
 
                 // Get current language
                 var language = this.GetLanguage(context).ToSpecificLangCode();
@@ -114,7 +119,12 @@ namespace VirtoCommerce.Web
                 var currency = GetStoreCurrency(context, shop);
                 shop.Currency = currency;
                 ctx.Shop = shop;
-                ctx.Themes = await commerceService.GetThemesAsync(SiteContext.Current);
+
+                var themesCacheKey = CacheKey.Create("themes");
+                ctx.Themes = await ctx.CacheManager.GetAsync(themesCacheKey, TimeSpan.FromMinutes(10), async () =>
+                {
+                    return await commerceService.GetThemesAsync(SiteContext.Current);
+                });
 
                 if (ctx.Themes == null || !ctx.Themes.Any())
                 {
@@ -135,6 +145,13 @@ namespace VirtoCommerce.Web
                     ctx.Language = language;
                 }
 
+                var themeName = this.ResolveTheme(shop, context);
+                var themeCacheKey = CacheKey.Create("currentTheme", themeName);
+                ctx.Theme = await ctx.CacheManager.GetAsync(themeCacheKey, TimeSpan.FromMinutes(30), async () =>
+                {
+                    return await Task.Run(() => commerceService.GetTheme(SiteContext.Current, themeName));
+                });
+
                 if (!this.IsResourceFile()) // only load settings for resource files, no need for other contents
                 {
                     // save info to the cookies
@@ -153,8 +170,11 @@ namespace VirtoCommerce.Web
 
                     if (context.Authentication.User != null && context.Authentication.User.Identity.IsAuthenticated)
                     {
-                        ctx.Customer =
-                            await customerService.GetCustomerAsync(context.Authentication.User.Identity.Name, shop.StoreId);
+                        var customerCacheKey = CacheKey.Create("customer", context.Authentication.User.Identity.Name);
+                        ctx.Customer = await ctx.CacheManager.GetAsync(customerCacheKey, TimeSpan.FromMinutes(10), async () =>
+                        {
+                            return await customerService.GetCustomerAsync(context.Authentication.User.Identity.Name, shop.StoreId);
+                        });
 
                         if (ctx.Customer == null)
                         {
@@ -184,25 +204,43 @@ namespace VirtoCommerce.Web
 
                     // TODO: detect if shop exists, user has access
                     // TODO: store anonymous customer id in cookie and update and merge cart once customer is logged in
-
-                    ctx.Linklists = await commerceService.GetListsAsync(SiteContext.Current);
+                    var linkCacheKey = CacheKey.Create("linklists");
+                    ctx.Linklists = await ctx.CacheManager.GetAsync(linkCacheKey, TimeSpan.FromMinutes(30), async () =>
+                    {
+                        return await commerceService.GetListsAsync(SiteContext.Current);
+                    });
+             
                     ctx.PageTitle = ctx.Shop.Name;
-                    ctx.Collections = await commerceService.GetCollectionsAsync(SiteContext.Current);
+
+                    var collectionsCacheKey = CacheKey.Create("collections");
+                    ctx.Collections = await ctx.CacheManager.GetAsync(collectionsCacheKey, TimeSpan.FromMinutes(30), async () =>
+                    {
+                        return await commerceService.GetCollectionsAsync(SiteContext.Current);
+                    });
+                  
                     ctx.Pages = new PageCollection();
                     ctx.Forms = commerceService.GetForms();
 
-                    var cart = await commerceService.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
-
-                    if (cart == null)
+                    var cartCacheKey = CacheKey.Create("cart", SiteContext.Current.CustomerId);
+                    ctx.Cart = await ctx.CacheManager.GetAsync(cartCacheKey, TimeSpan.FromDays(1), async () =>
                     {
-                        cart = new Cart(SiteContext.Current.StoreId, SiteContext.Current.CustomerId, SiteContext.Current.Shop.Currency, SiteContext.Current.Language);
-                    }
+                        var cart = await commerceService.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
 
-                    ctx.Cart = cart;
+                        if (cart == null)
+                        {
+                            cart = new Cart(SiteContext.Current.StoreId, SiteContext.Current.CustomerId, SiteContext.Current.Shop.Currency, SiteContext.Current.Language);
+                        }
+                        return cart;
+                    });
 
                     if (ctx.Shop.QuotesEnabled)
                     {
-                        ctx.ActualQuoteRequest = await _quoteService.GetCurrentQuoteRequestAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
+                        var quoteCacheKey = CacheKey.Create("quote", SiteContext.Current.CustomerId);
+                        ctx.ActualQuoteRequest = await ctx.CacheManager.GetAsync(quoteCacheKey, TimeSpan.FromDays(1), async () =>
+                        {
+                            return await _quoteService.GetCurrentQuoteRequestAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
+                           
+                        });
                         if (ctx.ActualQuoteRequest == null)
                         {
                             ctx.ActualQuoteRequest = new QuoteRequest(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
@@ -214,6 +252,7 @@ namespace VirtoCommerce.Web
                             ctx.ActualQuoteRequest.CustomerName = ctx.Customer.Name;
                         }
                     }
+                    
 
                     if (context.Authentication.User.Identity.IsAuthenticated)
                     {
@@ -257,24 +296,38 @@ namespace VirtoCommerce.Web
                         context.Response.Cookies.Delete(AnonymousCookie);
                     }
 
-                    ctx.PriceLists =
-                        await commerceService.GetPriceListsAsync(ctx.Shop.Catalog, shop.Currency, new TagQuery());
-                    ctx.Theme = commerceService.GetTheme(SiteContext.Current, this.ResolveTheme(shop, context));
+                    var priceListsCacheKey = CacheKey.Create("priceLists", SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
+                    ctx.PriceLists = await ctx.CacheManager.GetAsync(priceListsCacheKey, TimeSpan.FromDays(1), async () =>
+                    {
+                        return await commerceService.GetPriceListsAsync(ctx.Shop.Catalog, shop.Currency, new TagQuery());
 
-                    // update theme files
-                    await commerceService.UpdateThemeCacheAsync(SiteContext.Current);
+                    });
 
-                    ctx.Blogs = commerceService.GetBlogs(SiteContext.Current);
+                
+                    var updateThemeCacheKey = CacheKey.Create("updateTheme");
+                    var dummyVar = await ctx.CacheManager.GetAsync(updateThemeCacheKey, TimeSpan.FromMinutes(30), async () =>
+                    {
+                        // update theme files
+                        await commerceService.UpdateThemeCacheAsync(SiteContext.Current);
+                        return "";
+
+                    });
+
+                    var blogCacheKey = CacheKey.Create("blogs", ctx.StoreId);
+                    ctx.Blogs = await ctx.CacheManager.GetAsync(blogCacheKey, TimeSpan.FromHours(1), async () =>
+                    {
+                        return await Task.Run(() => commerceService.GetBlogs(SiteContext.Current));
+                    });
+                 
                 }
-                else
+ 
+                var settingsCacheKey = CacheKey.Create("settings", themeName, this.IsResourceFile().ToString());
+                ctx.Settings = await ctx.CacheManager.GetAsync(settingsCacheKey, TimeSpan.FromMinutes(30), async () =>
                 {
-                    ctx.Theme = commerceService.GetTheme(SiteContext.Current, this.ResolveTheme(shop, context));
-                }
+                    return commerceService.GetSettings(themeName, context.Request.Path.HasValue && context.Request.Path.Value.Contains(".scss") ? "''" : null);
+                });
 
-                ctx.Settings = commerceService.GetSettings(
-                    ctx.Theme.ToString(),
-                    context.Request.Path.HasValue && context.Request.Path.Value.Contains(".scss") ? "''" : null);
-
+         
                 ctx.CountryOptionTags = commerceService.GetCountryTags();
 
                 if (ctx.Shop.Currency.Equals("GBP", StringComparison.OrdinalIgnoreCase)
