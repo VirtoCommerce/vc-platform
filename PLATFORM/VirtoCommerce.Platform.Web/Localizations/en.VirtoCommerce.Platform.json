@@ -616,14 +616,15 @@
       },
       "new-account-wizard": {
         "labels": {
-          "summary": "Summary",
-          "name": "Name",
-          "description": "Description",
-          "assign-permissions": "Assign permissions"
+          "login": "Login",
+          "password": "Password",
+          "repeat-password": "Repeat password",
+          "assign-roles": "Assign roles"
         },
         "placeholders": {
-          "name": "Enter name",
-          "description": "Enter description"
+          "login": "Enter login",
+          "password": "Enter new password",
+          "repeat-password": "Repeat new password"
         }
       },
       "security-main": {
