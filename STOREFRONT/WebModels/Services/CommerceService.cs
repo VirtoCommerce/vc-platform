@@ -865,8 +865,6 @@ namespace VirtoCommerce.Web.Models.Services
 
         public async Task UpdateThemeCacheAsync(SiteContext context)
         {
-            return;
-
             var store = context.StoreId;
             var theme = context.Theme.Name;
             var themePath = String.Format("{0}\\{1}", _themesCacheStoragePath, context.Theme.Path);
