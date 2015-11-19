@@ -12,7 +12,7 @@
         if (!blade.isNew) {
             $scope.blade.toolbarCommands = [
 				{
-				    name: "Save", icon: 'fa fa-save',
+				    name: "platform.commands.save", icon: 'fa fa-save',
 				    executeMethod: function () {
 				        blade.saveChanges();
 				    },
@@ -22,7 +22,7 @@
 				    permission: 'marketing:update'
 				},
                 {
-                    name: "Reset", icon: 'fa fa-undo',
+                    name: "platform.commands.reset", icon: 'fa fa-undo',
                     executeMethod: function () {
                         blade.entity = angular.copy(blade.originalEntity);
                     },
@@ -32,12 +32,12 @@
                     permission: 'marketing:update'
                 },
 				{
-				    name: "Delete", icon: 'fa fa-trash',
+				    name: "platform.commands.delete", icon: 'fa fa-trash',
 				    executeMethod: function () {
 				    	var dialog = {
 				    		id: "confirmDeleteContentItem",
-				    		title: "Delete confirmation",
-				    		message: "Are you sure want to delete content item?",
+				    		title: "marketing.dialogs.content-item-delete.title",
+				    		message: "marketing.dialogs.content-item-delete.message",
 				    		callback: function (remove) {
 				    			if (remove) {
 				    				blade.delete();
@@ -57,7 +57,7 @@
 
         $scope.blade.toolbarCommands.push(
             {
-                name: "Manage type properties", icon: 'fa fa-edit',
+                name: "marketing.commands.manage-type-properties", icon: 'fa fa-edit',
                 executeMethod: function () {
             	    var newBlade = {
             		    id: 'dynamicPropertyList',

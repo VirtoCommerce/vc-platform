@@ -119,6 +119,7 @@
           "additional-currencies": "Additional currencies"
         },
         "placeholders": {
+          "code": "Enter code",
           "name": "Enter name",
           "catalog": "Select...",
           "state": "Select...",

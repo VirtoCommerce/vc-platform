@@ -5,7 +5,7 @@
         <div class="inner-block">
             <form name="formScope" class="form">
                 <div class="form-group" ng-init="setForm(formScope);">
-                    <label class="form-label" for="">{{ 'catalog.blades.new-item-property.labels.property-name' | translate }}</label>
+                    <label class="form-label" for="">{{ 'catalog.blades.item-property-detail.labels.property-name' | translate }}</label>
                     <div class="form-input">
                         <input focus-on="" required class="form-control" ng-model="blade.currentEntity.name" />
                     </div>
@@ -13,7 +13,7 @@
             </form>
             <ul class="list __items">
                 <li class="list-item" ng-class="{'__selected': currentChild === 'valType'}" ng-click='openChild("valType")'>
-                    <span class="list-t">{{ 'catalog.blades.new-item-property.labels.value-type' | translate }}</span>
+                    <span class="list-t">{{ 'catalog.blades.item-property-detail.labels.value-type' | translate }}</span>
                     <span class="list-descr">{{blade.currentEntity.valueType}}</span>
                 </li>
             </ul>

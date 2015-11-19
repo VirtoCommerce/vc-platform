@@ -17,7 +17,7 @@
 			storeId: blade.currentEntityId,
 			parentWidget: $scope.widget,
 			title: blade.title,
-			subtitle: 'Pages List',
+			subtitle: 'content.widgets.pades.blade-subtitle',
 			controller: 'virtoCommerce.contentModule.pagesListController',
 			template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/pages/pages-list.tpl.html'
 		};

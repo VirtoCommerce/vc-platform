@@ -16,7 +16,7 @@
 
             $scope.blade.toolbarCommands = [
 			{
-			    name: "Save", icon: 'fa fa-save',
+			    name: "platform.commands.save", icon: 'fa fa-save',
 			    executeMethod: function () {
 			        blade.saveChanges();
 			    },
@@ -26,7 +26,7 @@
 			    permission: 'content:update'
 			},
 			{
-			    name: "Reset", icon: 'fa fa-undo',
+			    name: "platform.commands.reset", icon: 'fa fa-undo',
 			    executeMethod: function () {
 			        angular.copy(blade.origEntity, blade.currentEntity);
 			    },
@@ -36,7 +36,7 @@
 			    permission: 'content:update'
 			},
 			{
-			    name: "Delete", icon: 'fa fa-trash-o',
+			    name: "platform.commands.delete", icon: 'fa fa-trash-o',
 			    executeMethod: function () {
 			        deleteEntry();
 			    },
@@ -52,7 +52,7 @@
 
             $scope.blade.toolbarCommands = [
 			{
-			    name: "Save", icon: 'fa fa-save',
+			    name: "platform.commands.save", icon: 'fa fa-save',
 			    executeMethod: function () {
 			        blade.saveChanges();
 			    },
@@ -115,8 +115,8 @@
     function deleteEntry() {
         var dialog = {
             id: "confirmDelete",
-            title: "Delete confirmation",
-            message: "Are you sure you want to delete this asset?",
+            title: "content.dialogs.asset-delete.title",
+            message: "content.dialogs.asset-delete.meessage",
             callback: function (remove) {
                 if (remove) {
                     $scope.blade.isLoading = true;

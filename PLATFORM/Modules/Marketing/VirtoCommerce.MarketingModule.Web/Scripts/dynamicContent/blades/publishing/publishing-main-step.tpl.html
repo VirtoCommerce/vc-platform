@@ -1,6 +1,6 @@
 ﻿<div class="blade-static __bottom" ng-if="blade.isNew">
     <button class="btn" ng-click="blade.saveChanges()" ng-disabled="!blade.availableSave()">
-        <span>Create</span>
+        <span>{{ 'platform.commands.create' | translate }}</span>
     </button>
 </div>
 
@@ -11,15 +11,15 @@
                 <fieldset ng-init="setForm(contextEntityDetailForm)">
 
                     <div class="form-group">
-                        <label class="form-label">Name</label>
+                        <label class="form-label">{{ 'marketing.blades.publishing.publishing-main-step.labels.name' | translate }}</label>
                         <div class="form-input">
-                            <input focus-on="" ng-focus="blade.focusNameInput = true;" ng-blur="blade.focusNameInput = false; blade.autogenerateName();" required class="form-control" ng-model="blade.entity.name" placeholder="Enter publishing name" />
+                            <input focus-on="" ng-focus="blade.focusNameInput = true;" ng-blur="blade.focusNameInput = false; blade.autogenerateName();" required class="form-control" ng-model="blade.entity.name" placeholder="{{ 'marketing.blades.publishing.publishing-main-step.placeholders.name' | translate }}" />
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Description</label>
+                        <label class="form-label">{{ 'marketing.blades.publishing.publishing-main-step.labels.description' | translate }}</label>
                         <div class="form-input">
-                            <textarea cols="60" rows="30" ng-model="blade.entity.description" placeholder="Enter publishing description"></textarea>
+                            <textarea cols="60" rows="30" ng-model="blade.entity.description" placeholder="{{ 'marketing.blades.publishing.publishing-main-step.placeholders.description' | translate }}"></textarea>
                         </div>
                     </div>
 
@@ -27,10 +27,10 @@
                         <div class="columns clearfix">
                             <div class="column">
                                 <div class="form-group">
-                                    <label class="form-label">Store</label>
+                                    <label class="form-label">{{ 'marketing.blades.publishing.publishing-main-step.labels.store' | translate }}</label>
                                     <div class="form-input">
                                         <ui-select ng-model="blade.entity.storeId" required>
-                                            <ui-select-match placeholder="Select...">{{$select.selected.name}}</ui-select-match>
+                                            <ui-select-match placeholder="{{ 'marketing.blades.publishing.publishing-main-step.placeholders.store' | translate }}">{{$select.selected.name}}</ui-select-match>
                                             <ui-select-choices repeat="store.id as store in stores | filter: { name: $select.search }">
                                                 <span ng-bind-html="store.name | highlight: $select.search"></span>
                                             </ui-select-choices>
@@ -40,7 +40,7 @@
                             </div>
                             <div class="column">
                                 <div class="form-group">
-                                    <label class="form-label">Is active</label>
+                                    <label class="form-label">{{ 'marketing.blades.publishing.publishing-main-step.labels.is-active' | translate }}</label>
                                     <div class="form-input">
                                         <label class="form-label __switch">
                                             <input type="checkbox" ng-model="blade.entity.isActive" />
@@ -55,9 +55,9 @@
                         <div class="columns clearfix">
                             <div class="column">
                                 <div class="form-group">
-                                    <label class="form-label">Start date</label>
+                                    <label class="form-label">{{ 'marketing.blades.publishing.publishing-main-step.labels.start-date' | translate }}</label>
                                     <div class="form-input __calendar">
-                                        <input type="text" class="form-control" ng-model="blade.entity.startDate" datepicker-popup="{{format}}" name="startDate" is-open="datepickers.startDate" datepicker-options="dateOptions" close-text="Close" placeholder="Enter value" />
+                                        <input type="text" class="form-control" ng-model="blade.entity.startDate" datepicker-popup="{{format}}" name="startDate" is-open="datepickers.startDate" datepicker-options="dateOptions" close-text="Close" placeholder="{{ 'marketing.blades.publishing.publishing-main-step.placeholders.start-date' | translate }}" />
                                         <button class="btn" type="button" ng-click="open($event,'startDate')">
                                             <i class="btn-ico fa fa-calendar"></i>
                                         </button>
@@ -66,9 +66,9 @@
                             </div>
                             <div class="column">
                                 <div class="form-group">
-                                    <label class="form-label">End date</label>
+                                    <label class="form-label">{{ 'marketing.blades.publishing.publishing-main-step.labels.end-date' | translate }}</label>
                                     <div class="form-input __calendar">
-                                        <input type="text" class="form-control" ng-model="blade.entity.endDate" datepicker-popup="{{format}}" name="endDate" is-open="datepickers.endDate" min-date="blade.entity.startDate" datepicker-options="dateOptions" close-text="Close" placeholder="Enter value" />
+                                        <input type="text" class="form-control" ng-model="blade.entity.endDate" datepicker-popup="{{format}}" name="endDate" is-open="datepickers.endDate" min-date="blade.entity.startDate" datepicker-options="dateOptions" close-text="Close" placeholder="{{ 'marketing.blades.publishing.publishing-main-step.placeholders.end-date' | translate }}" />
                                         <button class="btn" type="button" ng-click="open($event,'endDate')">
                                             <i class="btn-ico fa fa-calendar"></i>
                                         </button>
@@ -81,12 +81,12 @@
             </form>
             <ul class="list __items">
                 <li class="list-item" ng-click="blade.addPlaceholders()">
-                    <span class="list-t">Placeholders</span>
-                    <span class="list-descr">Chosen {{blade.entity.contentPlaces.length}} placeholders</span>
+                    <span class="list-t">{{ 'marketing.blades.publishing.publishing-main-step.menu.placeholders.title' | translate }}</span>
+                    <span class="list-descr">{{ 'marketing.blades.publishing.publishing-main-step.menu.placeholders.description' | translate:{quantity:blade.entity.contentPlaces.length} }}</span>
                 </li>
 				<li class="list-item" ng-click="blade.addContentItems()">
-					<span class="list-t">Content items</span>
-					<span class="list-descr">Chosen {{blade.entity.contentItems.length}} content items</span>
+					<span class="list-t">{{ 'marketing.blades.publishing.publishing-main-step.menu.content-items.title' | translate }}</span>
+					<span class="list-descr">{{ 'marketing.blades.publishing.publishing-main-step.menu.content-items.description' | translate:{quantity:blade.entity.contentItems.length} }}</span>
 				</li>
                 <!--<li class="list-item __disabled" ng-click="" ng-disabled="true">
                     <span class="list-t">Other settings</span>
@@ -95,7 +95,7 @@
             </ul>
 
             <fieldset>
-                <legend>Publishing conditions</legend>
+                <legend>{{ 'marketing.blades.publishing.publishing-main-step.labels.publishing-conditions' | translate }}</legend>
                 <div class="dynamic-expression">
                     <va-dynamic-expression-tree source="blade.entity.dynamicExpression"></va-dynamic-expression-tree>
                 </div>

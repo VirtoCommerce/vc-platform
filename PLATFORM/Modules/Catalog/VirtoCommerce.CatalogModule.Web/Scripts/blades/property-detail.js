@@ -42,16 +42,16 @@
                 newBlade.template = 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/property-attributes.tpl.html';
                 break;
             case 'valType':
-                newBlade.title = 'catalog.blades.property-value-type.title';
+                newBlade.title = 'catalog.blades.property-valueType.title';
                 newBlade.titleValues = {name: b.origEntity.name ? b.origEntity.name : b.currentEntity.name};
-                newBlade.subtitle = 'catalog.blades.property-value-type.subtitle';
+                newBlade.subtitle = 'catalog.blades.property-valueType.subtitle';
                 newBlade.controller = 'virtoCommerce.catalogModule.propertyValueTypeController';
                 newBlade.template = 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/property-valueType.tpl.html';
                 break;
             case 'appliesto':
-                newBlade.title = 'catalog.blades.property-applies.title';
+                newBlade.title = 'catalog.blades.property-type.title';
                 newBlade.titleValues = { name: b.origEntity.name ? b.origEntity.name : b.currentEntity.name };
-                newBlade.subtitle = 'catalog.blades.property-applies.subtitle';
+                newBlade.subtitle = 'catalog.blades.property-type.subtitle';
                 newBlade.controller = 'virtoCommerce.catalogModule.propertyTypeController';
                 newBlade.template = 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/property-type.tpl.html';
                 newBlade.availablePropertyTypes = b.catalogId ? ['Product', 'Variation', 'Category', 'Catalog'] : ['Product', 'Variation', 'Category'];

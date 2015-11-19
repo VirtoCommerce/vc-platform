@@ -35,7 +35,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         [HttpPost]
         [ResponseType(typeof(webModel.PromotionReward[]))]
         [Route("promotions/evaluate")]
-        [ClientCache(Duration = 1)]
+        [ClientCache(Duration = 30)]
         public IHttpActionResult EvaluatePromotions(coreModel.PromotionEvaluationContext context)
         {
             // DOESN'T WORK

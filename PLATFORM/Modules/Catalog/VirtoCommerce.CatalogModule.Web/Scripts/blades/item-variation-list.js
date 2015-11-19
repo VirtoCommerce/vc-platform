@@ -26,7 +26,7 @@
             itemId: listItem.id,
             productType: listItem.productType,
             title: listItem.code,
-            subtitle: 'catalog.blades.variation.subtitle',
+            subtitle: 'catalog.blades.item-detail.subtitle-variation',
             controller: 'virtoCommerce.catalogModule.itemDetailController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/item-detail.tpl.html'
         };
@@ -60,8 +60,8 @@
 	                 var newBlade = {
 	                     id: 'variationDetail',
 	                     item: data,
-	                     title: "catalog.blades.new-variation.title",
-	                     subtitle: 'catalog.blades.new-variation.subtitle',
+	                     title: "catalog.wizards.new-variation.title",
+	                     subtitle: 'catalog.wizards.new-variation.subtitle',
 	                     controller: 'virtoCommerce.catalogModule.newProductWizardController',
 	                     template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/wizards/newProduct/new-variation-wizard.tpl.html'
 	                 };

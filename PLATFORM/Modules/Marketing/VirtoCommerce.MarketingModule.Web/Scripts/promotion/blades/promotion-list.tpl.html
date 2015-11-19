@@ -1,17 +1,24 @@
 ﻿<div class="blade-static">
     <div class="form-group">
         <div class="form-input __search">
-            <input type="text" placeholder="Search keyword..." ng-model="filter.searchKeyword" ng-keyup="$event.which === 13 && blade.refresh()">
+            <input type="text" placeholder="{{'platform.placeholders.search-keyword' | translate}}" ng-model="filter.searchKeyword" ng-keyup="$event.which === 13 && blade.refresh()">
         </div>
-        <p class="form-count">Count: <span class="count">{{pageSettings.totalItems}}</span></p>
+        <p class="form-count">{{ 'platform.list.count' | translate }}: <span class="count">{{pageSettings.totalItems}}</span></p>
     </div>
 </div>
 <div class="blade-static __bottom" ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems" ng-include="'pagerTemplate.html'"></div>
 <div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
-            <div class="table-wrapper">
-                <table class="table">
+            <div class="table-wrapper" ng-init="setGridOptions({
+                    rowTemplate: 'promotion-list.row.html',
+                    rowHeight: 59,
+                    columnDefs: [
+                            { name: 'name', displayName: 'marketing.blades.promotion-list.labels.name', cellTemplate: 'promotion-list-name.cell.html' },
+                            { name: 'modifiedDate', displayName: 'marketing.blades.promotion-list.labels.last-modified', width: 87, cellTemplate: 'am-time-ago.cell.html' }
+                        ]})">
+                <div ui-grid="gridOptions" ui-grid-save-state ui-grid-selection ui-grid-resize-columns ui-grid-move-columns></div>
+                <!--<table class="table">
                     <thead>
                         <tr>
                             <th class="table-col __product-control">
@@ -20,8 +27,8 @@
                                     <span class="check"></span>
                                 </label>
                             </th>
-                            <th class="table-col __product-name">Name</th>
-                            <th class="table-col __date">Last modified</th>
+                            <th class="table-col __product-name">{{ 'marketing.blades.promotion-list.labels.name' | translate }}</th>
+                            <th class="table-col __date">{{ 'marketing.blades.promotion-list.labels.last-modified' | translate }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -41,8 +48,19 @@
                             </td>
                         </tr>
                     </tbody>
-                </table>
+                </table>-->
             </div>
         </div>
     </div>
 </div>
+
+<script type="text/ng-template" id="promotion-list.row.html">
+    <div ng-click='grid.appScope.selectNode(row.entity)' ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'" class="ui-grid-cell" ng-class="{'ui-grid-row-header-cell': col.isRowHeader, '__selected': row.entity.id===grid.appScope.selectedNodeId }" role="{{col.isRowHeader ? 'rowheader' : 'gridcell' }}" ui-grid-cell style='cursor:pointer'></div>
+</script>
+<script type="text/ng-template" id="promotion-list-name.cell.html">
+    <i class="table-ico fa" ng-class="row.entity.type == 'DynamicPromotion' ? 'fa-asterisk' : ' fa-file-code-o'" title="{{row.entity.type == 'DynamicPromotion' ? 'Dynamic promotion' : 'Promotion defined in code'}}"></i>
+    <span class="table-t">{{COL_FIELD}}</span>
+</script>
+<script type="text/ng-template" id="am-time-ago.cell.html">
+    <span class="table-date" am-time-ago="COL_FIELD"></span>
+</script>

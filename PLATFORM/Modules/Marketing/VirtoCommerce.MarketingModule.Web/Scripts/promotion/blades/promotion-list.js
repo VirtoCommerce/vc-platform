@@ -1,148 +1,142 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('virtoCommerce.marketingModule.promotionListController', ['$scope', 'virtoCommerce.marketingModule.promotions', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function ($scope, promotions, bladeNavigationService, dialogService) {
-    var selectedNode = null;
-    //pagination settings
-    $scope.pageSettings = {};
-    $scope.pageSettings.totalItems = 0;
-    $scope.pageSettings.currentPage = 1;
-    $scope.pageSettings.numPages = 5;
-    $scope.pageSettings.itemsPerPageCount = 20;
+.controller('virtoCommerce.marketingModule.promotionListController', ['$scope', 'virtoCommerce.marketingModule.promotions', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'uiGridConstants', 'platformWebApp.uiGridHelper',
+    function ($scope, promotions, bladeNavigationService, dialogService, uiGridConstants, uiGridHelper) {
+        var blade = $scope.blade;
 
-    $scope.filter = { searchKeyword: undefined };
+        //pagination settings
+        $scope.pageSettings = {};
+        $scope.pageSettings.totalItems = 0;
+        $scope.pageSettings.currentPage = 1;
+        $scope.pageSettings.numPages = 5;
+        $scope.pageSettings.itemsPerPageCount = 20;
 
-    $scope.blade.refresh = function () {
-        $scope.blade.isLoading = true;
-        $scope.blade.selectedAll = false;
+        $scope.filter = { searchKeyword: undefined };
 
-        promotions.search({
-            respGroup: 'withPromotions',
-            keyword: $scope.filter.searchKeyword,
-            start: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
-            count: $scope.pageSettings.itemsPerPageCount
-        }, function (data) {
-            $scope.blade.isLoading = false;
+        blade.refresh = function () {
+            blade.isLoading = true;
 
-            $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
-            $scope.blade.currentEntities = data.promotions;
+            promotions.search({
+                respGroup: 'withPromotions',
+                keyword: $scope.filter.searchKeyword,
+                start: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
+                count: $scope.pageSettings.itemsPerPageCount
+            }, function (data) {
+                blade.isLoading = false;
 
-            if (selectedNode != null) {
-                //select the node in the new list
-                angular.forEach($scope.blade.currentEntities, function (node) {
-                    if (selectedNode.id === node.id) {
-                        selectedNode = node;
-                    }
-                });
-            }
-        }, function (error) {
-            bladeNavigationService.setError('Error ' + error.status, $scope.blade);
-        });
-    };
-
-    $scope.selectNode = function (node) {
-        selectedNode = node;
-        $scope.selectedNodeId = selectedNode.id;
-
-        var newBlade = {
-            id: 'listItemChild',
-            currentEntityId: selectedNode.id,
-            title: selectedNode.name,
-            subtitle: $scope.blade.subtitle,
-            controller: 'virtoCommerce.marketingModule.promotionDetailController',
-            template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/promotion/blades/promotion-detail.tpl.html'
+                $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
+                blade.currentEntities = data.promotions;
+                uiGridHelper.onDataLoaded($scope.gridOptions, blade.currentEntities);
+            }, function (error) {
+                bladeNavigationService.setError('Error ' + error.status, blade);
+            });
         };
 
-        bladeNavigationService.showBlade(newBlade, $scope.blade);
-    };
+        $scope.selectNode = function (node) {
+            $scope.selectedNodeId = node.id;
 
-    $scope.toggleAll = function () {
-        angular.forEach($scope.blade.currentEntities, function (item) {
-            if (item.type === 'DynamicPromotion') {
-                item.selected = $scope.blade.selectedAll;
-            }
-        });
-    };
+            var newBlade = {
+                id: 'listItemChild',
+                currentEntityId: node.id,
+                title: node.name,
+                subtitle: blade.subtitle,
+                controller: 'virtoCommerce.marketingModule.promotionDetailController',
+                template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/promotion/blades/promotion-detail.tpl.html'
+            };
 
-    function isItemsChecked() {
-        return $scope.blade.currentEntities && _.any($scope.blade.currentEntities, function (x) { return x.selected; });
-    }
+            bladeNavigationService.showBlade(newBlade, blade);
+        };
 
-    function deleteChecked() {
-        var dialog = {
-            id: "confirmDeleteItem",
-            title: "Delete confirmation",
-            message: "Are you sure you want to delete selected Promitions?",
-            callback: function (remove) {
-                if (remove) {
-                    closeChildrenBlades();
+        //$scope.toggleAll = function () {
+        //    angular.forEach(blade.currentEntities, function (item) {
+        //        if (item.type === 'DynamicPromotion') {
+        //            item.selected = blade.selectedAll;
+        //        }
+        //    });
+        //};
 
-                    var selection = _.where($scope.blade.currentEntities, { selected: true });
-                    var itemIds = _.pluck(selection, 'id');
-                    promotions.remove({ ids: itemIds }, function (data, headers) {
-                        $scope.blade.refresh();
-                    }, function (error) {
-                        bladeNavigationService.setError('Error ' + error.status, $scope.blade);
-                    });
+        function deleteChecked() {
+            var dialog = {
+                id: "confirmDeleteItem",
+                title: "marketing.dialogs.promotions-delete.title",
+                message: "marketing.dialogs.promotions-delete.message",
+                callback: function (remove) {
+                    if (remove) {
+                        closeChildrenBlades();
+
+                        var selection = $scope.gridApi.selection.getSelectedRows();
+                        var itemIds = _.pluck(selection, 'id');
+                        promotions.remove({ ids: itemIds }, function (data, headers) {
+                            blade.refresh();
+                        }, function (error) {
+                            bladeNavigationService.setError('Error ' + error.status, blade);
+                        });
+                    }
                 }
             }
+            dialogService.showConfirmationDialog(dialog);
         }
-        dialogService.showConfirmationDialog(dialog);
-    }
 
-    function closeChildrenBlades() {
-        angular.forEach($scope.blade.childrenBlades.slice(), function (child) {
-            bladeNavigationService.closeBlade(child);
-        });
-    }
+        function closeChildrenBlades() {
+            angular.forEach(blade.childrenBlades.slice(), function (child) {
+                bladeNavigationService.closeBlade(child);
+            });
+        }
 
-    $scope.blade.headIcon = 'fa-area-chart';
+        blade.headIcon = 'fa-area-chart';
 
-    $scope.blade.toolbarCommands = [
-        {
-            name: "Refresh", icon: 'fa fa-refresh',
-            executeMethod: function () {
-                $scope.blade.refresh();
+        blade.toolbarCommands = [
+            {
+                name: "platform.commands.refresh", icon: 'fa fa-refresh',
+                executeMethod: function () {
+                    blade.refresh();
+                },
+                canExecuteMethod: function () {
+                    return true;
+                }
             },
-            canExecuteMethod: function () {
-                return true;
+            {
+                name: "platform.commands.add", icon: 'fa fa-plus',
+                executeMethod: function () {
+                    closeChildrenBlades();
+
+                    var newBlade = {
+                        id: 'listItemChild',
+                        title: 'marketing.blades.promotion-detail.title-new',
+                        subtitle: blade.subtitle,
+                        isNew: true,
+                        controller: 'virtoCommerce.marketingModule.promotionDetailController',
+                        template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/promotion/blades/promotion-detail.tpl.html'
+                    };
+                    bladeNavigationService.showBlade(newBlade, blade);
+                },
+                canExecuteMethod: function () {
+                    return true;
+                },
+                permission: 'marketing:create'
+            },
+            {
+                name: "platform.commands.delete", icon: 'fa fa-trash-o',
+                executeMethod: function () {
+                    deleteChecked();
+                },
+                canExecuteMethod: function () {
+                    return $scope.gridApi && _.any($scope.gridApi.selection.getSelectedRows());
+                },
+                permission: 'marketing:delete'
             }
-        },
-        {
-            name: "Add", icon: 'fa fa-plus',
-            executeMethod: function () {
-                closeChildrenBlades();
+        ];
 
-                var newBlade = {
-                    id: 'listItemChild',
-                    title: 'New Promotion list',
-                    subtitle: $scope.blade.subtitle,
-                    isNew: true,
-                    controller: 'virtoCommerce.marketingModule.promotionDetailController',
-                    template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/promotion/blades/promotion-detail.tpl.html'
-                };
-                bladeNavigationService.showBlade(newBlade, $scope.blade);
-            },
-            canExecuteMethod: function () {
-                return true;
-            },
-            permission: 'marketing:create'
-        },
-        {
-            name: "Delete", icon: 'fa fa-trash-o',
-            executeMethod: function () {
-                deleteChecked();
-            },
-            canExecuteMethod: function () {
-                return isItemsChecked();
-            },
-            permission: 'marketing:delete'
-        }
-    ];
+        // ui-grid
+        $scope.setGridOptions = function (gridOptions) {
+            uiGridHelper.initialize($scope, gridOptions);
+        };
 
-    $scope.$watch('pageSettings.currentPage', function () {
-        $scope.blade.refresh();
-    });
 
-    // actions on load
-    //No need to call this because page 'pageSettings.currentPage' is watched!!! It would trigger subsequent duplicated req...
-    //$scope.blade.refresh();
-}]);
+        $scope.$watch('pageSettings.currentPage', function () {
+            blade.refresh();
+        });
+
+        // actions on load
+        //No need to call this because page 'pageSettings.currentPage' is watched!!! It would trigger subsequent duplicated req...
+        //blade.refresh();
+    }]);

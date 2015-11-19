@@ -9,9 +9,23 @@
 </div>
 <div class="blade-content __medium-wide" ng-if="!isCatalogSelectMode()">
     <div class="blade-inner">
-        <div class="inner-block" ng-if="blade.catalogId">
+        <div class="inner-block" ng-if="blade.catalogId" ng-init="setGridOptions({
+                data: 'items',
+                rowTemplate: 'item-list.row.html',
+                rowHeight: 61,
+                enableSelectionBatchEvent: false,
+                columnDefs: [
+                        {
+                            name: 'imageUrl', displayName: 'catalog.blades.catalog-items-select.labels.picture',
+                            enableColumnResizing: false, enableSorting: false, width: 60,
+                            cellTemplate: 'item-list-icon.cell.html'
+                        },
+                        { name: 'name', displayName: 'catalog.blades.catalog-items-select.labels.name' },
+                        { name: 'code', displayName: 'catalog.blades.catalog-items-select.labels.sku', width: 170, cellTemplate: 'item-list-SKU.cell.html' }
+                 ]})">
             <div class="table-wrapper">
-                <table class="table">
+                <div ui-grid="gridOptions" ui-grid-save-state ui-grid-selection ui-grid-resize-columns ui-grid-move-columns></div>
+                <!--<table class="table">
                     <thead>
                         <tr>
                             <th class="table-col __product-control">
@@ -20,13 +34,13 @@
                                     <span class="check"></span>
                                 </label>
                             </th>
-                            <th class="table-col __product-img">{{ 'catalog.blades.item-selection.labels.picture' | translate }}</th>
-                            <th class="table-col __product-name">{{ 'catalog.blades.item-selection.labels.name' | translate }}</th>
-                            <th class="table-col __product-code">{{ 'catalog.blades.item-selection.labels.sku' | translate }}</th>
+                            <th class="table-col __product-img">{{ 'catalog.blades.catalog-items-select.labels.picture' | translate }}</th>
+                            <th class="table-col __product-name">{{ 'catalog.blades.catalog-items-select.labels.name' | translate }}</th>
+                            <th class="table-col __product-code">{{ 'catalog.blades.catalog-items-select.labels.sku' | translate }}</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="table-item" ng-repeat="data in items track by data.id" ng-class="{'__selected': data.id === selectedItem.id}" context-menu data-target="cil_menu_{{data.id+blade.level}}">
+                        <tr class="table-item" ng-repeat="data in items track by data.id" ng-class="{'__selected': data.id === selectedNodeId}" context-menu data-target="cil_menu_{{data.id+blade.level}}">
                             <td class="table-col">
                                 <label class="form-control __checkbox" ng-if="canCheck(data)">
                                     <input type="checkbox" ng-model="data.selected" ng-change="checkItem(data)">
@@ -48,7 +62,7 @@
                             </td>
                         </tr>
                     </tbody>
-                </table>
+                </table>-->
             </div>
         </div>
     </div>
@@ -59,12 +73,25 @@
     <div class="blade-inner">
         <div class="inner-block clearfix">
             <ul class="list __items">
-                <li class="list-item" ng-repeat="data in items track by data.id" ng-class="{'__selected': data.id === selectedItem.id}" ng-click='selectItem($event, data)'>
+                <li class="list-item" ng-repeat="data in items track by data.id" ng-class="{'__selected': data.id === selectedNodeId}" ng-click='selectItem($event, data)'>
                     <i class="list-ico fa" ng-class="data.virtual ? 'fa-cloud' : 'fa-folder'"></i>
-                    <span class="list-name" ng-show="data.virtual">{{ 'catalog.blades.item-selection.labels.virtual' | translate:{ name: data.name } }}</span>
+                    <span class="list-name" ng-show="data.virtual">{{ 'catalog.blades.catalog-items-select.labels.virtual' | translate:{ name: data.name } }}</span>
                     <span class="list-name" ng-hide="data.virtual">{{data.name}}</span>
                 </li>
             </ul>
         </div>
     </div>
 </div>
+
+<script type="text/ng-template" id="item-list.row.html">
+    <div ng-click='grid.appScope.selectItem($event, row.entity)' ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'" class="ui-grid-cell" ng-class="{'ui-grid-row-header-cell': col.isRowHeader, '__selected': row.entity.id===grid.appScope.selectedNodeId }" role="{{col.isRowHeader ? 'rowheader' : 'gridcell' }}" ui-grid-cell style='cursor:pointer'></div>
+</script>
+<script type="text/ng-template" id="item-list-icon.cell.html">
+    <div class="product-img">
+        <div class="image" style="background-image: url('{{COL_FIELD}}')" ng-if="row.entity.type!=='category' && COL_FIELD"></div>
+        <i class="table-ico fa" ng-class="row.entity.type == 'category' ? 'fa-folder' : 'fa-image'" ng-if="!COL_FIELD"></i>
+    </div>
+</script>
+<script type="text/ng-template" id="item-list-SKU.cell.html">
+    <div class="ui-grid-cell-contents">{{row.entity.type!=='category'?COL_FIELD:''}}</div>
+</script>

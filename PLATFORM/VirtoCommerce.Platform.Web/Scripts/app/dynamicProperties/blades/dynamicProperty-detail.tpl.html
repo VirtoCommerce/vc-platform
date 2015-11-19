@@ -54,7 +54,7 @@
             <ul class="list __items">
                 <li class="list-item" ng-class="{'__selected': currentChild === 'valType', '__disabled': !blade.isNew}" ng-click='openChild("valType")'>
                     <span class="list-t">{{ 'platform.blades.dynamicProperty-detail.labels.value-type' | translate }}</span>
-                    <span class="list-descr">{{blade.currentEntity.valueType | dynamicPropertyValueTypeToText}}</span>
+                    <span class="list-descr">{{blade.currentEntity.valueType | translate}}</span>
                 </li>
                 <li class="list-item" ng-class="{'__selected': currentChild === 'dict', '__disabled': !blade.currentEntity.isDictionary}" ng-click='openChild("dict")'>
                     <span class="list-t">{{ 'platform.blades.dynamicProperty-detail.labels.dictionary-values' | translate }}</span>

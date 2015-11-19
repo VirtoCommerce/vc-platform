@@ -5,18 +5,18 @@
 				<div class="columns clearfix">
 					<div class="column">
 						<div class="form-group">
-							<label class="form-label">Name</label>
+							<label class="form-label">{{ 'content.blades.menu-link-list.labels.name' | translate }}</label>
 							<div class="form-input">
-								<input focus-on="" required class="form-control" ng-model="blade.currentEntity.name" placeholder="Enter page name" />
+								<input focus-on="" required class="form-control" ng-model="blade.currentEntity.name" placeholder="{{ 'content.blades.menu-link-list.placeholders.name' | translate }}" />
 							</div>
 						</div>
 					</div>
 					<div class="column">
 						<div class="form-group">
-							<label class="form-label">Language</label>
+							<label class="form-label">{{ 'content.blades.menu-link-list.labels.language' | translate }}</label>
 							<div class="form-input">
 								<ui-select ng-model="blade.currentEntity.language">
-									<ui-select-match placeholder="Select...">{{$select.selected}}</ui-select-match>
+									<ui-select-match placeholder="{{ 'content.blades.menu-link-list.placeholders.language' | translate }}">{{$select.selected}}</ui-select-match>
 									<ui-select-choices repeat="x in blade.languages">
 										<span class="flag flag-{{blade.getFlag(x)}}"></span>
 										<span ng-bind-html="x"></span>
@@ -31,9 +31,9 @@
 				<table class="table __normal">
 					<thead>
 						<tr>
-							<th class="table-col">IsActive</th>
-							<th class="table-col">Link Title</th>
-							<th class="table-col">Links to...</th>
+							<th class="table-col">{{ 'content.blades.menu-link-list.labels.is-active' | translate }}</th>
+							<th class="table-col">{{ 'content.blades.menu-link-list.labels.link-title' | translate }}</th>
+							<th class="table-col">{{ 'content.blades.menu-link-list.labels.links-to' | translate }}</th>
 						</tr>
 					</thead>
 					<tbody ui-sortable="sortableOptions" ng-model="blade.currentEntity.menuLinks">
@@ -45,7 +45,7 @@
 								</label>
 								<ul class="menu __context" role="menu" id="ipl_menu_{{data.id}}">
 									<li class="menu-item" ng-click='deleteLink(data)'>
-										<i class="menu-ico fa fa-trash-o"></i> Delete
+										<i class="menu-ico fa fa-trash-o"></i> {{ 'platform.commands.delete' | translate }}
 									</li>
 								</ul>
 							</td>

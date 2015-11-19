@@ -8,55 +8,55 @@
                         <div class="tile-image"></div>
                     </div>
                     <div class="tile quadro wide mini __informer" ng-if="!data.defaultThemeName" ng-click="blade.openThemes(data.store.id, data.store.name)">
-                        <p>No active theme, click to choose</p>
+                        <p>{{ 'content.blades.content-main.labels.no-active-theme' | translate }}</p>
                     </div>
                     <div class="tile quadro wide mini" ng-if="data.defaultThemeName">
-                        <div class="tile-t">Active theme: {{data.defaultThemeName}}</div>
+                        <div class="tile-t">{{ 'content.blades.content-main.labels.active-theme' | translate }} {{data.defaultThemeName}}</div>
                         <ul class="menu __inline __theme-links">
                             <li class="menu-item" ng-click="blade.openTheme(data); $event.stopPropagation();">
                                 <a class="menu-link">
                                     <i class="menu-ico fa fa-edit"></i>
-                                    Edit CSS/HTML
+                                    {{ 'content.blades.content-main.labels.edit-css-html' | translate }}
                                 </a>
                             </li>
                             <li class="menu-item" ng-click="blade.previewTheme(data); $event.stopPropagation();">
                                 <a class="menu-link">
                                     <i class="menu-ico fa fa-eye"></i>
-                                    Preview theme
+                                    {{ 'content.blades.content-main.labels.preview-theme' | translate }}
                                 </a>
                             </li>
                             <li class="menu-item" ng-click="blade.customizeTheme(data); $event.stopPropagation();">
                                 <a class="menu-link">
                                     <i class="menu-ico fa fa-wrench"></i>
-                                    Customize theme
+                                    {{ 'content.blades.content-main.labels.customize-theme' | translate }}
                                 </a>
                             </li>
                         </ul>
                     </div>
                     <div class="tile" ng-click="blade.openThemes(data.store.id, data.store.name)">
-                        <div class="tile-descr">Themes</div>
+                        <div class="tile-descr">{{ 'content.blades.content-main.labels.themes' | translate }}</div>
                         <div class="tile-count">{{data.themesCount}}</div>
-                        <a class="btn" ng-click="blade.addNewTheme(data); $event.stopPropagation();">Add</a>
+                        <a class="btn" ng-click="blade.addNewTheme(data); $event.stopPropagation();">{{ 'platform.commands.add' | translate }}</a>
                     </div>
                     <div class="tile" ng-click="blade.openPages(data)">
-                        <div class="tile-descr">Pages</div>
+                        <div class="tile-descr">{{ 'content.blades.content-main.labels.pages' | translate }}</div>
                         <div class="tile-count">{{data.pagesCount}}</div>
-                        <a class="btn" ng-click="blade.addNewPage(data); $event.stopPropagation();">Add</a>
+                        <a class="btn" ng-click="blade.addNewPage(data); $event.stopPropagation();">{{ 'platform.commands.add' | translate }}</a>
                     </div>
                     <div class="tile" ng-click="blade.openLinkLists(data)">
-                        <div class="tile-descr">Link lists</div>
+                        <div class="tile-descr">{{ 'content.blades.content-main.labels.link-lists' | translate }}</div>
                         <div class="tile-count">{{data.listLinksCount}}</div>
-                        <a class="btn" ng-click="blade.addNewLinkList(data); $event.stopPropagation();">Add</a>
+                        <a class="btn" ng-click="blade.addNewLinkList(data); $event.stopPropagation();">{{ 'platform.commands.add' | translate }}</a>
                     </div>
                     <div class="tile" ng-click="blade.openBlogs(data)">
-                        <div class="tile-descr">Blogs</div>
+                        <div class="tile-descr">{{ 'content.blades.content-main.labels.blogs' | translate }}</div>
                         <div class="tile-count">{{data.blogsCount}}</div>
-                        <a class="btn" ng-click="blade.addBlog(data); $event.stopPropagation();">Add</a>
+                        <a class="btn" ng-click="blade.addBlog(data); $event.stopPropagation();">{{ 'platform.commands.add' | translate }}</a>
                     </div>
                 </div>
             </div>
             <p class="text" ng-if="!blade.currentEntities.length">
-                You can configure Stores content here, but there were no Stores found. Open STORES menu to create one.
+                {{ 'content.blades.content-main.labels.no-stores' | translate }}
                 <!--<span va-permission="!store:create">and you have insufficient permissions to create a Store.</span>-->
                 <div va-permission="store:access" ng-if="!blade.currentEntities.length"><a class="list-link" ng-click="openStoresModule()"><i class="form-ico fa fa-archive"></i> Stores</a></div>
             </p>

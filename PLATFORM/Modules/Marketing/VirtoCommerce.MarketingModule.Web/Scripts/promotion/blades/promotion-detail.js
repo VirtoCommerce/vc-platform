@@ -85,8 +85,8 @@
         if (isDirty() && !$scope.blade.isNew) {
             var dialog = {
                 id: "confirmCurrentBladeClose",
-                title: "Save changes",
-                message: "The promotion has been modified. Do you want to save changes?"
+                title: "marketing.dialogs.promotion-save.title",
+                message: "marketing.dialogs.promotion-save.message"
             };
             dialog.callback = function (needSave) {
                 if (needSave) {
@@ -113,7 +113,7 @@
         if (!$scope.blade.isNew) {
             $scope.blade.toolbarCommands = [
                 {
-                    name: "Save",
+                    name: "platform.commands.save",
                     icon: 'fa fa-save',
                     executeMethod: function () {
                         $scope.saveChanges();
@@ -122,7 +122,7 @@
                     permission: 'marketing:update'
                 },
                 {
-                    name: "Reset",
+                    name: "platform.commands.reset",
                     icon: 'fa fa-undo',
                     executeMethod: function () {
                         angular.copy($scope.blade.origEntity, $scope.blade.currentEntity);

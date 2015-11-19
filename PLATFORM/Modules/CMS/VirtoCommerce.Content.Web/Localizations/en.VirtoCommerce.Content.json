@@ -1,0 +1,222 @@
+﻿{
+  "content": {
+    "main-menu-title": "Content",
+    "blades": {
+      "scope-value-pick-from-simple-list": {
+        "title": "Only for selected stores",
+        "subtitle": "Select stores"
+      },
+      "content-main": {
+        "title": "Content",
+        "subtitle": "Content service",
+        "labels": {
+          "no-active-theme": "No active theme, click to choose",
+          "active-theme": "Active theme:",
+          "edit-css-html": "Edit CSS/HTML",
+          "preview-theme": "Preview theme",
+          "customize-theme": "Customize theme",
+          "themes": "Themes",
+          "pages": "Pages",
+          "link-lists": "Link lists",
+          "blogs": "Blogs",
+          "stores": "Stores",
+          "no-stores": "You can configure Stores content here, but there were no Stores found. Open STORES menu to create one."
+        }
+      },
+      "themes-list": {
+        "title": "{{name}} themes list",
+        "subtitle": "Themes List",
+        "labels": {
+          "no-data": "No themes yet"
+        }
+      },
+      "edit-asset": {
+        "subtitle": "Edit {{name}}",
+        "title-new": "New {{name}}",
+        "subtitle-new": "Create new {{name}}",
+        "labels": {
+          "asset-name": "Asset name",
+          "upload-new-file": "Upload new file",
+          "progress": "Progress"
+        },
+        "placeholders": {
+          "asset-name": "Enter asset name"
+        }
+      },
+      "edit-image-asset": {
+        "subtitle": "Edit {{name}}",
+        "title-new": "New {{name}}",
+        "subtitle-new": "Create new {{name}}",
+        "labels": {
+          "asset-name": "Asset name:",
+          "liquid-documentation": "Liquid Documentation"
+        },
+        "placeholders": {
+          "asset-name": "Enter asset name"
+        }
+      },
+      "pages-list": {
+        "title-pages": "{{name}} pages list",
+        "subtitle-pages": "Pages List",
+        "title-blogs": "{{name}} pages list",
+        "subtitle-blogs": "Blogs List",
+        "labels": {
+          "name": "Name",
+          "modified": "Modified"
+        }
+      },
+      "link-lists": {
+        "title": "{{name}} link Lists",
+        "subtitle": "Link Lists",
+        "labels": {
+          "name": "Name",
+          "language": "Language",
+          "no-data": "No Link Lists Yet"
+        }
+      },
+      "add-theme": {
+        "title": "New theme asset",
+        "subtitle": "Create new theme",
+        "labels": {
+          "theme-name": "Theme name",
+          "load-theme": "Load theme",
+          "theme-file-uploaded": "Theme file uploaded",
+          "progress": "Progress"
+        },
+        "placeholders": {
+          "theme-name": "Enter theme name"
+        }
+      },
+      "edit-page": {
+        "title": "Edit '{{name}}'",
+        "subtitle": "Page edit",
+        "title-new": "Add new page",
+        "subtitle-new": "Create new page",
+        "title-new-file": "Add new file",
+        "subtitle-new-file": "Create new file",
+        "labels": {
+          "name": "Name",
+          "language": "Language",
+          "drag-note": "Drag and drop file here",
+          "progress": "Progress",
+          "markdown": "Markdown",
+          "metadata": "Metadata"
+        },
+        "placeholders": {
+          "name": "Enter page name",
+          "language": "Select...",
+          "metadata": "Enter metadata"
+        }
+      },
+      "menu-link-list": {
+        "title": "Edit '{{name}}' list",
+        "subtitle": "Link list edit",
+        "title-new": "Add new list",
+        "subtitle-new": "Create new list",
+        "labels": {
+          "name": "Name",
+          "language": "Language",
+          "is-active": "IsActive",
+          "link-title": "Link Title",
+          "links-to": "Links to..."
+        },
+        "placeholders": {
+          "name": "Enter page name",
+          "language": "Select..."
+        }
+      },
+      "edit-blog": {
+        "title-new": "Add blog",
+        "subtitle-new": "Create new blog",
+        "labels": {
+          "blog-name": "Blog name:"
+        },
+        "placeholders": {
+          "blog-name": "Enter blog name"
+        }
+      },
+      "theme-asset-list": {
+        "title": "Edit {{path}}",
+        "subtitle": "Theme asset list",
+        "labels": {
+          "add-new": "Add new",
+          "nodata": "No Assets yet"
+        }
+      }
+    },
+    "widgets": {
+      "menu": {
+        "title": "Link Lists",
+        "blade-subtitle": "Link Lists"
+      },
+      "pages": {
+        "title": "Pages",
+        "blade-subtitle": "Pages List"
+      },
+      "themes": {
+        "title": "Themes"
+      }
+    },
+    "dialogs": {
+      "link-list-delete": {
+        "title": "Delete confirmation",
+        "message": "Are you sure you want to delete this link list?"
+      },
+      "links-delete": {
+        "title": "Delete confirmation",
+        "message": "Are you sure you want to delete this links?"
+      },
+      "blog-delete": {
+        "title": "Delete confirmation",
+        "message": "Are you sure want to delete blog?"
+      },
+      "theme-delete": {
+        "title": "Delete confirmation",
+        "message": "Are you sure you want to delete '{{name}}'?",
+        "message-last-one": "This theme is the last one. If you delete it, you could break your storefront. Are you sure you want to delete '{{name}}'?"
+      },
+      "asset-delete": {
+        "title": "Delete confirmation",
+        "message": "Are you sure you want to delete this asset?"
+      },
+      "asset-save": {
+        "title": "Save changes",
+        "message": "The asset has been modified. Do you want to save changes?"
+      },
+      "link-list-save": {
+        "title": "Save changes",
+        "message": "The menu link list has been modified. Do you want to save changes?"
+      },
+      "set-store-url": {
+        "title": "Url is not set for store",
+        "message": "Please, set store url, before preview theme!"
+      },
+      "name-must-unique": {
+        "title": "Name not unique",
+        "message": "Name must be unique for this language!"
+      }
+    },
+    "commands": {
+      "add-link": "Add link",
+      "add-list": "Add list",
+      "add-blog": "Add blog",
+      "add-page": "Add page",
+      "add-file": "Add file",
+      "save-list": "Save list",
+      "save-page": "Save page",
+      "delete-links": "Delete links",
+      "delete-list": "Delete list",
+      "delete-page": "Delete page",
+      "delete-theme": "Delete theme",
+      "reset-list": "Reset list",
+      "reset-page": "Reset page",
+      "manage-blog": "Manage blog",
+      "edit-as-markdown": "Edit as markdown",
+      "edit-as-html": "Edit as html",
+      "preview-theme": "Preview theme",
+      "edit-css-html": "Edit CSS/HTML",
+      "add-default-theme": "Add default theme",
+      "set-active": "Set Active"
+    }
+  }
+}

@@ -11,7 +11,7 @@
                     currentEntityId: $scope.currentBlade.currentEntityId,
                     currentEntities: $scope.currentBlade.item.associations,
                     title: $scope.currentBlade.title,
-                    subtitle: 'catalog.blades.associations.subtitle',
+                    subtitle: 'catalog.widgets.itemAssociations.blade-subtitle',
                     controller: 'virtoCommerce.catalogModule.itemAssociationsListController',
                     template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/item-associations-list.tpl.html'
                 };

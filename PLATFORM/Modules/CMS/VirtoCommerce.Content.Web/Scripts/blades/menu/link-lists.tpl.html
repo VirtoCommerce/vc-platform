@@ -5,8 +5,8 @@
 				<table class="table">
 					<thead>
 						<tr>
-							<th class="table-col">Language</th>
-							<th class="table-col">Name</th>
+							<th class="table-col">{{ 'content.blades.link-lists.labels.language' | translate }}</th>
+							<th class="table-col">{{ 'content.blades.link-lists.labels.name' | translate }}</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -24,7 +24,7 @@
 					</tbody>
 				</table>
 			</div>
-			<p class="text" ng-if="!blade.currentEntities.length">No Link Lists Yet</p>
+			<p class="text" ng-if="!blade.currentEntities.length">{{ 'content.blades.link-lists.labels.no-data' | translate }}</p>
 		</div>
 	</div>
 </div>
