@@ -46,14 +46,6 @@
             bladeNavigationService.showBlade(newBlade, blade);
         };
 
-        //$scope.toggleAll = function () {
-        //    angular.forEach(blade.currentEntities, function (item) {
-        //        if (item.type === 'DynamicPromotion') {
-        //            item.selected = blade.selectedAll;
-        //        }
-        //    });
-        //};
-
         function deleteChecked() {
             var dialog = {
                 id: "confirmDeleteItem",

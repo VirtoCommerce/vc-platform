@@ -25,55 +25,6 @@
                  ]})">
             <div class="table-wrapper" ng-if="items.length > 0">                
                 <div ui-grid="gridOptions" ui-grid-save-state ui-grid-selection ui-grid-resize-columns ui-grid-move-columns></div>
-                <!--<table class="table">
-                    <thead>
-                        <tr>
-                            <th class="table-col __product-control">
-                                <label class="form-control __checkbox">
-                                    <input type="checkbox" ng-model="selectedAll" ng-change="checkAll(selectedAll)" />
-                                    <span class="check"></span>
-                                </label>
-                            </th>
-                            <th class="table-col __product-img">{{'catalog.blades.categories-items-list.labels.picture' | translate}}</th>
-                            <th class="table-col __product-name">{{'catalog.blades.categories-items-list.labels.name' | translate}}</th>
-                            <th class="table-col __product-code">{{'catalog.blades.categories-items-list.labels.sku' | translate}}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="table-item" ng-repeat="data in items track by data.id" ng-class="{'__selected': data.id === selectedItem.id}" context-menu data-target="cil_menu_{{data.id+blade.level}}">
-                            <td class="table-col">
-                                <label class="form-control __checkbox">
-                                    <input type="checkbox" ng-model="data.selected">
-                                    <span class="check"></span>
-                                </label>
-                            </td>
-                            <td class="table-col" ng-click='selectItem($event, data)'>
-                                <div class="product-img">
-                                    <div class="image" ng-style="{'background-image': 'url(' + data.imageUrl + ')' }" ng-if="data.type!=='category' && data.imageUrl"></div>
-                                    <i class="table-ico fa" ng-class="data.type == 'category' ? ' fa-folder' : ' fa-image'" ng-if="!data.imageUrl"></i>
-                                </div>
-                            </td>
-                            <td class="table-col __product-name" ng-click='selectItem($event, data)'>
-                                <i class="table-ico fa fa-link" ng-if="hasLinks(data)" title="This category is linked"></i>
-                                <div class="table-t">{{data.name}}</div>
-                                <span class="table-status" ng-if="data.type==='category' && !data.isActive">{{ 'catalog.blades.categories-items-list.labels.inactive' | translate }}</span>
-                                <div class="table-descr">{{data.productType}}</div>
-
-                                <ul class="menu __context" role="menu" id="cil_menu_{{data.id+blade.level}}">
-                                    <li class="menu-item" ng-click='edit(data)'>
-                                        <i class="menu-ico fa fa-edit"></i> {{ 'platform.commands.manage' | translate }}
-                                    </li>
-                                    <li class="menu-item" ng-click='delete()'>
-                                        <i class="menu-ico fa fa-trash-o"></i> {{ 'platform.commands.delete' | translate }}
-                                    </li>
-                                </ul>
-                            </td>
-                            <td class="table-col __product-code" ng-click='selectItem($event, data)'>
-                                {{data.type!=='category'?data.code:''}}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>-->
             </div>
             <div class="note" ng-if="!items.length">{{ 'platform.list.no-data' | translate }}</div>
             </div>

@@ -97,7 +97,7 @@ angular.module('platformWebApp', AppDependencies).
 
       datepickerConfig.showWeeks = false;
 
-      $provide.decorator('GridOptions', function ($delegate) {
+      $provide.decorator('GridOptions', ['$delegate', function ($delegate) {
           var gridOptions = angular.copy($delegate);
           gridOptions.initialize = function (options) {
               var initOptions = $delegate.initialize(options);
@@ -116,7 +116,7 @@ angular.module('platformWebApp', AppDependencies).
               return initOptions;
           };
           return gridOptions;
-      });
+      }]);
 
       //Localization
       // var defaultLanguage = settings.getValues({ id: 'VirtoCommerce.Platform.General.ManagerDefaultLanguage' });

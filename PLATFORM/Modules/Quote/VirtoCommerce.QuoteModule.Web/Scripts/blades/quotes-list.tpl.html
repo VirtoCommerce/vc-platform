@@ -24,58 +24,6 @@
                         }
                     ]})">
                 <div ui-grid="gridOptions" ui-grid-save-state ui-grid-selection ui-grid-resize-columns ui-grid-move-columns></div>
-                <!--<table class="table">
-                    <thead>
-                        <tr>
-                            <th class="table-col __product-control">
-                                <label class="form-control __checkbox">
-                                    <input type="checkbox" ng-model="blade.selectedAll" ng-change="toggleAll()" />
-                                    <span class="check"></span>
-                                </label>
-                            </th>
-                            <th class="table-col">{{ 'quotes.blades.quotes-list.labels.quote-number' | translate }}</th>
-                            <th class="table-col">{{ 'quotes.blades.quotes-list.labels.status' | translate }}</th>
-                            <th class="table-col">{{ 'quotes.blades.quotes-list.labels.items-count' | translate }}</th>
-                            <th class="table-col">{{ 'quotes.blades.quotes-list.labels.customer' | translate }}</th>
-                            <th class="table-col __date">{{ 'quotes.blades.quotes-list.labels.created' | translate }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="table-item" ng-repeat="data in blade.currentEntities track by data.id" ng-class="{'__selected': data.id === selectedNodeId}" context-menu data-target="ql_menu_{{data.id}}">
-                            <td class="table-col">
-                                <label class="form-control __checkbox">
-                                    <input type="checkbox" ng-model="data.$selected">
-                                    <span class="check"></span>
-                                </label>
-                            </td>
-                            <td class="table-col" ng-click='selectNode(data)'>
-                                <span>{{data.number}}</span>
-                            </td>
-                            <td class="table-col" ng-click='selectNode(data)'>
-                                <span>{{data.status}}</span>
-                            </td>
-                            <td class="table-col" ng-click='selectNode(data)'>
-                                <span>{{data.items.length}}</span>
-                            </td>
-                            <td class="table-col" ng-click='selectNode(data)'>
-                                <span>{{data.customerName}}</span>
-                                <span class="table-descr" ng-if="data.organizationName">{{data.organizationName}}</span>
-                                <span class="table-descr" ng-if="data.customerEmail">{{data.customerEmail}}</span>
-                            </td>
-                            <td class="table-col" ng-click='selectNode(data)'>
-                                <span class="table-date" am-time-ago="data.createdDate"></span>
-                                <ul role="menu" class="menu __context" id="ql_menu_{{data.id}}">
-                                    <li class="menu-item" ng-click='edit(data)'>
-                                        <i class="menu-ico fa fa-edit"></i> {{'platform.commands.manage' | translate}}
-                                    </li>
-                                    <li class="menu-item" ng-click='delete()'>
-                                        <i class="menu-ico fa fa-trash-o"></i> {{'platform.commands.delete' | translate}}
-                                    </li>
-                                </ul>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>-->
             </div>
             <p class="text" ng-if="!blade.currentEntities.length">{{ 'quotes.blades.quotes-list.labels.no-quotes' | translate }}</p>
         </div>
@@ -86,8 +34,5 @@
     <div ng-click='grid.appScope.selectNode(row.entity)' ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'" class="ui-grid-cell" ng-class="{'ui-grid-row-header-cell': col.isRowHeader, '__selected': row.entity.id===grid.appScope.selectedNodeId }" role="{{col.isRowHeader ? 'rowheader' : 'gridcell' }}" ui-grid-cell style='cursor:pointer'></div>
 </script>
 <script type="text/ng-template" id="am-time-ago.cell.html">
-        <span class="table-date" am-time-ago="COL_FIELD"></span>
-    <!--<div class="ui-grid-cell-contents">
-        <span class="table-date" am-time-ago="COL_FIELD"></span>
-    </div>-->
+    <span class="table-date" am-time-ago="COL_FIELD"></span>
 </script>

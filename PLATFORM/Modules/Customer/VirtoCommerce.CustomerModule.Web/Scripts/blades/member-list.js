@@ -14,7 +14,7 @@
         var preventOrganizationListingOnce; // prevent from unwanted additional actions after command was activated from context menu
 
         var blade = $scope.blade;
-    blade.title = 'customer.blades.member-list.title';
+        blade.title = 'customer.blades.member-list.title';
 
         blade.refresh = function () {
             blade.isLoading = true;
@@ -30,7 +30,7 @@
                 $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
                 $scope.listEntries = data.members;
                 uiGridHelper.onDataLoaded($scope.gridOptions, $scope.listEntries);
-                
+
                 //Set navigation breadcrumbs
                 setBreadcrumbs();
             }, function (error) {
@@ -117,27 +117,19 @@
                 currentEntityId: listItem.id,
                 isOrganization: false,
                 title: title,
-            subtitle: 'customer.blades.customer-detail.subtitle',
+                subtitle: 'customer.blades.customer-detail.subtitle',
                 controller: 'virtoCommerce.customerModule.memberDetailController',
                 template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/customer-detail.tpl.html'
             };
 
             if (listItem.memberType === 'Organization') {
                 newBlade.isOrganization = true;
-            newBlade.subtitle = 'customer.blades.organization-detail.subtitle';
+                newBlade.subtitle = 'customer.blades.organization-detail.subtitle';
                 newBlade.template = 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/organization-detail.tpl.html';
             }
 
             bladeNavigationService.showBlade(newBlade, blade);
         };
-
-        function isSingleChecked() {
-            return _.where($scope.listEntries, { selected: true }).length == 1;
-        }
-
-        function getFirstChecked() {
-            return _.findWhere($scope.listEntries, { selected: true });
-        }
 
         $scope.delete = function (data) {
             deleteList([data]);
@@ -148,8 +140,8 @@
         function deleteList(selection) {
             var dialog = {
                 id: "confirmDeleteItem",
-            title: "customer.dialogs.organizations-delete.title",
-            message: "customer.dialogs.organizations-delete.subtitle",
+                title: "customer.dialogs.organizations-delete.title",
+                message: "customer.dialogs.organizations-delete.subtitle",
                 callback: function (remove) {
                     if (remove) {
                         bladeNavigationService.closeChildrenBlades(blade, function () {
@@ -187,8 +179,8 @@
                     var newBlade = {
                         id: 'memberList',
                         breadcrumbs: blade.breadcrumbs,
-                    subtitle: 'customer.blades.member-list.subtitle',
-                    subtitleValues: { name: listItem.displayName },
+                        subtitle: 'customer.blades.member-list.subtitle',
+                        subtitleValues: { name: listItem.displayName },
                         currentEntity: listItem,
                         disableOpenAnimation: true,
                         controller: blade.controller,
@@ -206,7 +198,7 @@
 
         blade.toolbarCommands = [
             {
-            name: "platform.commands.refresh", icon: 'fa fa-refresh',
+                name: "platform.commands.refresh", icon: 'fa fa-refresh',
                 executeMethod: function () {
                     blade.refresh();
                 },
@@ -215,12 +207,12 @@
                 }
             },
             {
-            name: "platform.commands.add", icon: 'fa fa-plus',
+                name: "platform.commands.add", icon: 'fa fa-plus',
                 executeMethod: function () {
                     var newBlade = {
                         id: 'listItemChild',
-                    title: 'customer.blades.member-add.title',
-                    subtitle: 'customer.blades.member-add.subtitle',
+                        title: 'customer.blades.member-add.title',
+                        subtitle: 'customer.blades.member-add.subtitle',
                         controller: 'virtoCommerce.customerModule.memberAddController',
                         template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/member-add.tpl.html'
                     };
@@ -232,16 +224,18 @@
                 permission: 'customer:create'
             },
             {
-            name: "platform.commands.manage", icon: 'fa fa-edit',
+                name: "platform.commands.manage", icon: 'fa fa-edit',
                 executeMethod: function () {
-                    var listItem = getFirstChecked();
+                    var listItem = $scope.gridApi.selection.getSelectedRows()[0];
                     blade.showDetailBlade(listItem, listItem.displayName);
                 },
-                canExecuteMethod: isSingleChecked,
+                canExecuteMethod: function () {
+                    return $scope.gridApi && $scope.gridApi.selection.getSelectedRows().length === 1;
+                },
                 permission: 'customer:update'
             },
             {
-            name: "platform.commands.delete", icon: 'fa fa-trash-o',
+                name: "platform.commands.delete", icon: 'fa fa-trash-o',
                 executeMethod: function () { deleteList($scope.gridApi.selection.getSelectedRows()); },
                 canExecuteMethod: function () {
                     return $scope.gridApi && _.any($scope.gridApi.selection.getSelectedRows());

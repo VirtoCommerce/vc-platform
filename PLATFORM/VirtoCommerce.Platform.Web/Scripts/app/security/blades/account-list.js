@@ -16,7 +16,6 @@ function ($scope, accounts, bladeNavigationService, dialogService, uiGridConstan
 
     blade.refresh = function () {
         blade.isLoading = true;
-        blade.selectedAll = false;
 
         accounts.search({
             keyword: $scope.filter.searchKeyword,
