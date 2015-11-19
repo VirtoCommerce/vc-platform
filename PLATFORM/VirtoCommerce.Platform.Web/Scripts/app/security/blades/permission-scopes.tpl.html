@@ -18,7 +18,7 @@
                                 </label>
                             </td>
                             <td class="table-col"  ng-click="blade.selectNode(data, true)">
-                                <span class="table-t">{{data.title}}</span>
+                                <span class="table-t">{{data.title | translate}}</span>
                                 <span class="table-descr alt-description">{{data.assignedScopesLabels.length > 0 ? data.assignedScopesLabels.join() : 'none'}}</span>
                             </td>
                         </tr>

@@ -11,7 +11,7 @@
         if (!blade.isNew) {
             $scope.blade.toolbarCommands = [
 			    {
-			        name: "Save", icon: 'fa fa-save',
+			        name: "platform.commands.save", icon: 'fa fa-save',
 			        executeMethod: function () {
 			            blade.saveChanges();
 			        },
@@ -21,7 +21,7 @@
 			        permission: 'marketing:update'
 			    },
                 {
-                    name: "Reset", icon: 'fa fa-undo',
+                    name: "platform.commands.reset", icon: 'fa fa-undo',
                     executeMethod: function () {
                         blade.entity = angular.copy(blade.originalEntity);
                     },
@@ -31,12 +31,12 @@
                     permission: 'marketing:update'
                 },
 			    {
-				    name: "Delete", icon: 'fa fa-trash',
+			        name: "platform.commands.delete", icon: 'fa fa-trash',
 				    executeMethod: function () {
 				    	var dialog = {
 				    		id: "confirmDeleteContentPlaceholdersFolder",
-				    		title: "Delete confirmation",
-				    		message: "Are you sure want to delete content placeholders folder?",
+				    		title: "marketing.dialogs.placeholders-folder-delete.title",
+				    		message: "marketing.dialogs.placeholders-folder-delete.message",
 				    		callback: function (remove) {
 				    			if (remove) {
 				    				blade.deleteFolder(blade.entity);

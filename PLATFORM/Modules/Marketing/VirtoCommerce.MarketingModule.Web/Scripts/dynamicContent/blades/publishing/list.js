@@ -19,8 +19,8 @@
 
         var newBlade = {
             id: 'add_publishing_element',
-            title: 'New publishing element',
-            subtitle: 'New publishing element',
+            title: 'marketing.blades.publishing.publishing-main-step.title-new',
+            subtitle: 'marketing.blades.publishing.publishing-main-step.subtitle-new',
             isNew: true,
             controller: 'virtoCommerce.marketingModule.addPublishingFirstStepController',
             template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/publishing/publishing-main-step.tpl.html'
@@ -33,8 +33,8 @@
 
         var newBlade = {
             id: 'edit_publishing_element',
-            title: 'Edit publishing element',
-            subtitle: 'Edit publishing element',
+            title: 'marketing.blades.publishing.publishing-main-step.title',
+            subtitle: 'marketing.blades.publishing.publishing-main-step.subtitle',
             entity: data,
             isNew: false,
             controller: 'virtoCommerce.marketingModule.addPublishingFirstStepController',
@@ -59,7 +59,7 @@
 
     $scope.blade.toolbarCommands = [
         {
-            name: "Add", icon: 'fa fa-plus',
+            name: "platform.commands.add", icon: 'fa fa-plus',
             executeMethod: function () {
                 blade.addNewPublishing();
             },

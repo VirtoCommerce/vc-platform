@@ -108,6 +108,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\images\noimage.png" />
+    <Content Include="Localizations\en.VirtoCommerce.Marketing.json" />
     <None Include="packages.config" />
     <Content Include="module.manifest">
       <SubType>Designer</SubType>

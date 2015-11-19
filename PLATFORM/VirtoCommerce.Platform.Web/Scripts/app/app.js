@@ -9,15 +9,13 @@
   'ngAnimate',
   'ngStorage',
   'ngResource',
-  //'xeditable',
   'fiestah.money',
   'ngCookies',
   'angularMoment',
   'angularFileUpload',
   'ngSanitize',
   'ng-context-menu',
-  //'ui.grid',
-  //'ui.grid.selection',
+  'ui.grid', 'ui.grid.resizeColumns', 'ui.grid.moveColumns', 'ui.grid.saveState', 'ui.grid.selection', 'ui.grid.pagination',
   'ui.codemirror',
   'focusOn',
   'textAngular',
@@ -26,14 +24,31 @@
 ];
 
 angular.module('platformWebApp', AppDependencies).
-  controller('platformWebApp.appCtrl', ['$scope', '$window', '$state', 'platformWebApp.pushNotificationService', function ($scope, $window, $state, pushNotificationService) {
-      $scope.platformVersion = $window.platformVersion;
-      pushNotificationService.run();
+  controller('platformWebApp.appCtrl', ['$rootScope', '$scope', '$window', 'platformWebApp.pushNotificationService', '$translate', 'platformWebApp.settings', 'virtoCommerce.coreModule.common.countries', 'platformWebApp.mainMenuService',
+ function ($rootScope, $scope, $window, pushNotificationService, $translate, settings, countries, mainMenuService) {
+     $scope.platformVersion = $window.platformVersion;
+     pushNotificationService.run();
 
-      $scope.curentStateName = function () {
-          return $state.current.name;
-      };
-  }])
+     $rootScope.$on('loginStatusChanged', function (event, authContext) {
+         if (authContext.isAuthenticated) {
+             settings.getValues({ id: 'VirtoCommerce.Platform.General.ManagerLanguages' },
+                function (result) {
+                    var otherLangs = _.reject(result, function (x) { return x === $translate.use(); });
+                    otherLangs.sort();
+                    _.each(_.union([$translate.use()], otherLangs), function (x, i) {
+                        var foundLang = countries.getLanguageByCode(x);
+                        mainMenuService.addMenuItem({
+                            path: 'langs/' + x,
+                            title: foundLang ? foundLang.nativeName : x,
+                            priority: i,
+                            action: function () { $translate.use(x) }
+                        });
+                    });
+                }
+            );
+         }
+     });
+ }])
 // Specify SignalR server URL (application URL)
 .factory('platformWebApp.signalRServerName', ['$location', function apiTokenFactory($location) {
     var retVal = $location.url() ? $location.absUrl().slice(0, -$location.url().length - 1) : $location.absUrl();
@@ -69,7 +84,7 @@ angular.module('platformWebApp', AppDependencies).
     };
 })
 .config(
-  ['$stateProvider', '$httpProvider', 'uiSelectConfig', 'datepickerConfig', '$translateProvider', function ($stateProvider, $httpProvider, uiSelectConfig, datepickerConfig, $translateProvider) {
+  ['$stateProvider', '$httpProvider', 'uiSelectConfig', 'datepickerConfig', '$provide', 'uiGridConstants', '$translateProvider', function ($stateProvider, $httpProvider, uiSelectConfig, datepickerConfig, $provide, uiGridConstants, $translateProvider) {
       $stateProvider.state('workspace', {
           url: '/workspace',
           templateUrl: '$(Platform)/Scripts/app/workspace.tpl.html'
@@ -82,12 +97,35 @@ angular.module('platformWebApp', AppDependencies).
 
       datepickerConfig.showWeeks = false;
 
+      $provide.decorator('GridOptions', ['$delegate', function ($delegate) {
+          var gridOptions = angular.copy($delegate);
+          gridOptions.initialize = function (options) {
+              var initOptions = $delegate.initialize(options);
+              angular.extend(initOptions, {
+                  data: _.any(initOptions.data) ? initOptions.data : 'blade.currentEntities',
+                  rowHeight: initOptions.rowHeight === 30 ? 40 : initOptions.rowHeight,
+                  enableGridMenu: true,
+                  enableVerticalScrollbar: uiGridConstants.scrollbars.NEVER,
+                  //enableHorizontalScrollbar: uiGridConstants.scrollbars.NEVER,
+                  //selectionRowHeaderWidth: 35,
+                  saveFocus: false,
+                  saveFilter: false,
+                  savePinning: false,
+                  saveSelection: false
+              });
+              return initOptions;
+          };
+          return gridOptions;
+      }]);
+
       //Localization
+      // var defaultLanguage = settings.getValues({ id: 'VirtoCommerce.Platform.General.ManagerDefaultLanguage' });
       $translateProvider.useUrlLoader('api/platform/localization')
         .useLoaderCache(true)
         .useSanitizeValueStrategy('escapeParameters')
         .preferredLanguage('en')
-        .fallbackLanguage('en');
+        .fallbackLanguage('en')
+        .useLocalStorage();
   }])
 
 .run(
@@ -98,12 +136,21 @@ angular.module('platformWebApp', AppDependencies).
 
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
+
+        var langMenuItem = {
+            path: 'langs',
+            title: 'Langs',
+            icon: 'fa fa-globe',
+            priority: 0
+        };
+        mainMenuService.addMenuItem(langMenuItem);
+
         var homeMenuItem = {
             path: 'home',
             title: 'platform.menu.home',
             icon: 'fa fa-home',
             action: function () { $state.go('workspace'); },
-            priority: 0
+            priority: 1
         };
         mainMenuService.addMenuItem(homeMenuItem);
 
@@ -179,4 +226,67 @@ angular.module('platformWebApp', AppDependencies).
         ['justifyLeft', 'justifyCenter', 'justifyRight', 'indent', 'outdent', 'html', 'insertImage', 'insertLink', 'insertVideo']];
 
     }
-  ]);
+  ])
+.factory('platformWebApp.uiGridHelper', ['$localStorage', '$timeout', 'uiGridConstants', '$translate', function ($localStorage, $timeout, uiGridConstants, $translate) {
+    var retVal = {};
+    retVal.initialize = function ($scope, gridOptions, externalRegisterApiCallback) {
+        var savedState = $localStorage['gridState:' + $scope.blade.template];
+        if (savedState) {
+            // extend saved columns with custom columnDef information (e.g. cellTemplate, displayName)
+            var foundDef;
+            _.each(savedState.columns, function (x) {
+                if (foundDef = _.findWhere(gridOptions.columnDefs, { name: x.name })) {
+                    var customSort = x.sort;
+                    _.extend(x, foundDef);
+                    x.sort = customSort;
+                }
+            });
+            gridOptions.columnDefs = savedState.columns;
+        }
+
+        // translate filter
+        _.each(gridOptions.columnDefs, function (x) { x.headerCellFilter = 'translate'; })
+
+        $scope.gridOptions = angular.extend({
+            gridMenuTitleFilter: $translate,
+            onRegisterApi: function (gridApi) {
+                //set gridApi on scope
+                $scope.gridApi = gridApi;
+
+                if (savedState) {
+                    $timeout(function () {
+                        gridApi.saveState.restore($scope, savedState);
+                    }, 10);
+                }
+
+                gridApi.colResizable.on.columnSizeChanged($scope, saveState);
+                gridApi.colMovable.on.columnPositionChanged($scope, saveState);
+                gridApi.core.on.columnVisibilityChanged($scope, saveState);
+                gridApi.core.on.sortChanged($scope, saveState);
+                function saveState() {
+                    $localStorage['gridState:' + $scope.blade.template] = gridApi.saveState.save();
+                }
+
+                if (externalRegisterApiCallback) {
+                    externalRegisterApiCallback(gridApi);
+                }
+            }
+        }, gridOptions);
+    };
+
+    retVal.onDataLoaded = function (gridOptions, currentEntities) {
+        gridOptions.minRowsToShow = currentEntities.length;
+
+        if (!gridOptions.columnDefsGenerated && _.any(currentEntities)) {
+            // generate columnDefs for each undefined property
+            _.each(_.keys(currentEntities[0]), function (x) {
+                if (!_.findWhere(gridOptions.columnDefs, { name: x })) {
+                    gridOptions.columnDefs.push({ name: x, visible: false });
+                }
+            });
+            gridOptions.columnDefsGenerated = true;
+        }
+    };
+
+    return retVal;
+}]);

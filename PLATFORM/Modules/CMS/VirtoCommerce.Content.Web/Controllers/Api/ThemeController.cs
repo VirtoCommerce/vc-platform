@@ -161,7 +161,8 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		[HttpGet]
 		[ResponseType(typeof(Theme[]))]
 		[Route("themes")]
-		public IHttpActionResult GetThemes(string storeId)
+        [ClientCache(Duration = 60)]
+        public IHttpActionResult GetThemes(string storeId)
 		{
             base.CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Read, new ContentScopeObject { StoreId = storeId });
 

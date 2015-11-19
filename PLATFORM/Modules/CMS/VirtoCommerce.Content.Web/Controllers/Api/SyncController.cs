@@ -8,6 +8,7 @@ using System.Web.Http.Description;
 using VirtoCommerce.Content.Data.Services;
 using VirtoCommerce.Content.Web.Converters;
 using VirtoCommerce.Content.Web.Models;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Settings;
 using GetPagesCriteria = VirtoCommerce.Content.Data.Models.GetPagesCriteria;
 using GetThemeAssetsCriteria = VirtoCommerce.Content.Data.Models.GetThemeAssetsCriteria;
@@ -62,6 +63,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
         [HttpGet]
         [ResponseType(typeof(SyncAssetGroup[]))]
         [Route("stores/{storeId}/assets")]
+        [ClientCache(Duration = 60)]
         public IHttpActionResult SyncAssets(string storeId, string theme, DateTime? themeUpdated, DateTime? pagesUpdated)
         {
             var themeItems = this._themeService.GetThemeAssets(storeId, theme, new GetThemeAssetsCriteria() { LoadContent = true, LastUpdateDate = themeUpdated});

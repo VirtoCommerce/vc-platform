@@ -121,7 +121,7 @@
             id: 'settingDetailChild',
             isApiSave: true,
             currentEntityId: 'VirtoCommerce.Core.General.TaxTypes',
-            title: 'catalog.blades.tax-types.title',
+            title: 'catalog.blades.setting-dictionary-tax.title',
             parentRefresh: function(data) { $scope.taxTypes = data; },
             controller: 'platformWebApp.settingDictionaryController',
             template: '$(Platform)/Scripts/app/settings/blades/setting-dictionary.tpl.html'

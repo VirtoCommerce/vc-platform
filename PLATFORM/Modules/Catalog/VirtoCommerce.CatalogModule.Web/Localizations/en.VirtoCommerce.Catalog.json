@@ -2,15 +2,21 @@
   "catalog": {
     "main-menu-title": "Catalog",
     "main-blade-title": "Catalog",
+    "properties": {
+          "catalog": "Catalog properties",
+          "product": "Product properties",
+          "variation": "Variation properties",
+          "category": "Category properties"
+    },
     "blades": {
-      "catalogs": {
+      "catalogs-list": {
         "title": "Catalog",
         "subtitle": "Manage catalogs",
         "labels": {
           "virtual": "{{name}} (virtual)"
         }
       },
-      "new-catalog-type": {
+      "catalog-add": {
         "title": "New catalog",
         "subtitle": "Choose new catalog type",
         "menu": {
@@ -24,16 +30,12 @@
           }
         }
       },
-      "new-catalog": {
-        "title": "New catalog",
-        "subtitle": "Catalog details"
-      },
-      "new-virtual-catalog": {
-        "title": "New virtual catalog",
-        "subtitle": "Virtual catalog details"
-      },
-      "catalog-details": {
+      "catalog-detail": {
         "subtitle": "Catalog details",
+        "title-new": "New catalog",
+        "subtitle-new": "Catalog details",
+        "title-new-virtual": "New virtual catalog",
+        "subtitle-virtual": "Virtual catalog details",
         "labels": {
           "catalog-name": "Catalog name"
         },
@@ -43,7 +45,6 @@
       },
       "catalog-languages": {
         "subtitle": "Manage languages",
-        "widget-title": "Languages",
         "labels": {
           "default-language": "Default language",
           "additional-languages": "Additional languages"
@@ -52,13 +53,12 @@
           "select": "Select..."
         }
       },
-      "virtual-catalog-details": {
-        "subtitle": "Virtual catalog details"
-      },
 
-      "categories": {
+      "categories-items-list": {
         "title": "Categories & Items",
         "subtitle": "Browsing {{name}}",
+        "title-mapping": "Choose Categories & Items for mapping",
+        "subtitle-mapping": "Creating a Link inside virtual catalog",
         "labels": {
           "inactive": "Inactive",
           "picture": "Pic",
@@ -66,30 +66,24 @@
           "sku": "SKU"
         }
       },
-      "new-category": {
-        "title": "New category",
-        "subtitle": "Fill category information",
+      "category-detail": {
+        "subtitle": "Category details",
         "labels": {
+          "is-active": "Is active",
           "name": "Name",
-          "code": "Code"
+          "code": "Code",
+          "tax-type": "Tax type"
         },
         "validations": {
           "code": "Code can't contain $+;=%{}[]|\/@ ~#!^*&()?:'<>, characters"
         },
         "placeholders": {
           "name": "Enter category name",
-          "code": "Enter category code"
+          "code": "Enter category code",
+          "select": "Select..."
         }
       },
-      "add-linked-category": {
-        "title": "Select Catalog",
-        "subtitle": "Creating a Link inside virtual catalog"
-      },
-      "mapping": {
-        "title": "Choose Categories & Items for mapping",
-        "subtitle": "Creating a Link inside virtual catalog"
-      },
-      "new-category-type": {
+      "categories-items-add": {
         "title": "New category item",
         "subtitle": "Choose new item type",
         "menu": {
@@ -115,54 +109,24 @@
         "virtual-catalog-item-name": "Virtual catalog",
         "virtual-catalog-item-description": "A subset of products and categories found in master catalogs."
       },
-      "category-details": {
-        "subtitle": "Category details",
-        "labels": {
-          "is-active": "Is active",
-          "name": "Name",
-          "code": "Code",
-          "tax-type": "Tax type"
-        },
-        "validations": {
-          "code": "Code can't contain $+;=%{}[]|\/@ ~#!^*&()?:'<>, characters"
-        },
-        "placeholders": {
-          "name": "Enter category name",
-          "code": "Enter category code",
-          "select": "Select..."
-        }
-      },
 
-      "catalog-properties": {
+      "catalog-property-list": {
         "subtitle": "Catalog properties",
-        "widget-title": "Properties",
         "labels": {
-          "catalog-properties": "Catalog properties",
-          "product-properties": "Product properties",
-          "variation-properties": "Variation properties",
-          "category-properties": "Category properties",
           "empty-list": "None"
         }
       },
-      "catalog-property": {
-        "title": "Edit catalog property",
-        "subtitle": "Enter property information"
-      },
-      "category-properties": {
-        "subtitle": "Category properties",
-        "widget-title": "Properties"
-      },
-      "category-property": {
-        "title": "Edit category property",
-        "subtitle": "Enter property information"
-      },
-      "item-properties": {
-        "subtitle": "item properties",
-        "widget-title": "Properties"
-      },
-      "item-property": {
-        "title": "Edit item property",
-        "subtitle": "Enter property information",
+      "property-detail": {
+        "title-catalog": "Edit catalog property",
+        "subtitle-catalog": "Enter property information",
+        "title-catalog-new": "New catalog property",
+        "subtitle-catalog-new": "Enter property information",
+        "title-category": "Edit category property",
+        "subtitle-category": "Enter property information",
+        "title-category-new": "New category property",
+        "subtitle-category-new": "Enter property information",
+        "title-item": "Edit item property",
+        "subtitle-item": "Enter property information",
         "labels": {
           "property-name": "Property name",
           "display-name": "Display name",
@@ -180,23 +144,33 @@
           "display-name": "Enter display name..."
         }
       },
-      "new-item-property": {
-        "title": "New item property",
+      "category-property-detail": {
+        "subtitle": "Category properties",
+        "labels": {
+          "empty-list": "None"
+        }
+      },
+      "item-property-list": {
+        "subtitle": "item properties",
+        "labels": {
+          "empty-list": "None"
+        }
+      },
+      "item-property-detail": {
+        "title": "Edit item property",
+        "title-new": "New item property",
+        "subtitle": "Enter property information",
         "labels": {
           "property-name": "Property name",
           "value-type": "Value Type"
         }
       },
-      "new-catalog-property": {
-        "title": "New catalog property",
-        "subtitle": "Enter property information"
-      },
-      "new-category-property": {
-        "title": "New category property",
-        "subtitle": "Enter property information"
+      "catalogs-select": {
+        "title": "Select Catalog",
+        "subtitle": "Creating a Link inside virtual catalog"
       },
 
-      "property-value-type": {
+      "property-valueType": {
         "title": "{{name}} value type",
         "subtitle": "Change value type"
       },
@@ -219,7 +193,7 @@
           "value": "Please enter value"
         }
       },
-      "property-applies": {
+      "property-type": {
         "title": "{{name}} applies to",
         "subtitle": "Change to what it applies"
       },
@@ -242,9 +216,9 @@
         }
       },
 
-      "item": {
+      "item-detail": {
         "title": "",
-        "subtitle": "",
+        "subtitle-variation": "Variation details",
         "labels": {
           "sku": "SKU",
           "name": "Name",
@@ -270,8 +244,10 @@
           "download-type": "Select..."
         }
       },
-      "item-selection": {
+      "catalog-items-select": {
         "title": "Select categories",
+        "title-association": "Select items to associate",
+        "subtitle-association": "Adding Associations to product",
         "labels": {
           "picture": "Pic",
           "name": "Name",
@@ -279,59 +255,8 @@
           "virtual": "{{name}} (virtual)"
         }
       },
-      "new-product": {
-        "title": "New product",
-        "subtitle": "Fill all product information",
-        "labels": {
-          "sku": "SKU",
-          "name": "Name",
-          "fill-properties": "Fill properties",
-          "fill-properties-summary": "{{ count }} of {{total}} properties filled",
-          "upload-images": "Upload images",
-          "upload-images-summary": "{{ count }} image(s) uploaded",
-          "add-review": "Add editorial review",
-          "add-review-summary": "{{ count }} review(s) added",
-          "seo-information": "Define seo information",
-          "seo-information-summary-defined": "Seo information defined",
-          "seo-information-summary-undefined": "Seo information undefined"
-        },
-        "validations": {
-          "sku": "SKU can't contain $+;=%{}[]|\/@ ~#!^*&()?:'<>, characters",
-          "sku-required": "Required",
-          "name-required": "Required"
-        },
-        "placeholders": {
-          "name": "Enter item name",
-          "sku": "Enter item sku"
-        }
-      },
-      "variation": {
-        "subtitle": "Variation details"
-      },
-      "new-variation": {
-        "title": "New variation",
-        "subtitle": "Fill variation information",
-        "labels": {
-          "sku": "SKU",
-          "name": "Name",
-          "fill-properties": "Fill properties",
-          "fill-properties-summary": "{{ count }} of {{total}} properties filled",
-          "upload-images": "Upload images",
-          "upload-images-summary": "{{ count }} image(s) uploaded"
-        },
-        "validations": {
-          "sku": "SKU can't contain $+;=%{}[]|\/@ ~#!^*&()?:'<>, characters",
-          "sku-required": "Required",
-          "name-required": "Required"
-        },
-        "placeholders": {
-          "name": "Enter item name",
-          "sku": "Enter item sku"
-        }
-      },
-      "variations": {
+      "item-variation-list": {
         "subtitle": "Item variations",
-        "widget-title": "Variations",
         "labels": {
           "no-items": "No Variations yet",
           "picture": "Pic",
@@ -339,18 +264,14 @@
           "sku": "SKU"
         }
       },
-      "item-images": {
-        "subtitle": "item images"
-      },
 
-      "reviews": {
+      "editorialReviews-list": {
         "subtitle": "Product Editorial Reviews",
-        "widget-title": "Editorial Reviews",
         "labels": {
           "no-reviews": "No Editorial Reviews yet"
         }
       },
-      "review": {
+      "editorialReview-detail": {
         "title": "Review",
         "subtitle": "Product Review",
         "labels": {
@@ -364,15 +285,15 @@
           "language": "Select language"
         }
       },
-      "catalog-import": {
+      "importers-list": {
         "title": "Catalog import",
         "subtitle": "Choose data format & start import"
       },
-      "catalog-export": {
+      "exporter-list": {
         "title": "Data export",
         "subtitle": "Choose data format & start export"
       },
-      "tax-types": {
+      "setting-dictionary-tax": {
         "title": "Tax types"
       },
       "images": {
@@ -389,9 +310,8 @@
           "image-url": "Paste image URL here"
         }
       },
-      "assets": {
+      "item-asset-detail": {
         "subtitle": "item assets",
-        "widget-title": "Assets",
         "labels": {
           "copy-url-prompt": "Copy to clipboard: Ctrl+C, Enter",
           "select-files": "Select files",
@@ -404,9 +324,8 @@
           "copy-link": "Copy link"
         }
       },
-      "associations": {
+      "item-associations-list": {
         "subtitle": "Associations",
-        "widget-title": "Associations",
         "labels": {
           "sorting-prompt": "Set the order how associated items appear sorted in web store. Drag and drop the products to change the order.",
           "picture": "Img",
@@ -414,29 +333,10 @@
           "group": "Group"
         }
       },
-      "association-groups": {
+      "setting-dictionary-association": {
         "title": "Association Groups"
       },
-      "new-association": {
-        "title": "New Association",
-        "labels": {
-          "group-name": "Group name",
-          "products": "Products",
-          "products-selected": "product(s) selected"
-        },
-        "placeholders": {
-          "group-name": "Select..."
-        }
-      },
-      "add-association": {
-        "title": "Select items to associate",
-        "subtitle": "Adding Associations to product"
-      },
-      "seo": {
-        "subtitle": "SEO information",
-        "widget-title": "SEO"
-      },
-      "seo-details": {
+      "seo-detail": {
         "subtitle": "Seo details",
         "labels": {
           "url-keyword": "URL keyword",
@@ -451,10 +351,10 @@
           "alternative-text": "Enter text"
         }
       },
-      "search-results": {
+      "advanced-search-results": {
         "title": "Search results"
       },
-      "csv-export": {
+      "catalog-CSV-export": {
         "title": "Catalog {{name}} to csv export",
         "labels": {
           "select-fulfillment": "Select fulfillment center for exported inventory",
@@ -475,7 +375,7 @@
           "select-pricelist": "Select price list or leave empty for default..."
         }
       },
-      "csv-import": {
+      "catalog-CSV-import": {
         "title": "Importing from csv",
         "labels": {
           "select-fulfillment": "Select fulfillment center for exported inventory",
@@ -487,30 +387,48 @@
           "errors-count": "Error count",
           "errors": "Errors"
         }
+      }
+    },
+    "widgets": {
+      "catalogLanguages": {
+        "blade-subtitle": "Manage languages",
+        "title": "Languages",
+        "default-language": "Default language"
       },
-      "csv-import-wizard": {
-        "title": "Import catalog from csv",
-        "subtitle": "All products will be added to '{{name}}' catalog",
-        "labels": {
-          "auto-mapping": "CSV fields automatically mapped to same product properties",
-          "chose-map": "Chose map CSV columns with product fields",
-          "product-property": "Product property",
-          "csv-column": "CSV column",
-          "custom-value": "Custom value",
-          "delimiter": "Csv column delimiter",
-          "upload": "Upload Csv file",
-          "upload-progress": "Upload progress",
-          "map-columns": "Map columns",
-          "define-columns": "Define column mapping"
-        },
-        "placeholders": {
-          "select-column-name": "Select ...",
-          "select-custom-value": "Default value..."
-        }
+      "catalogProperty": {
+        "blade-subtitle": "Catalog properties",
+        "title": "Properties"
       },
-      "column-mapping": {
-        "title": "Column mapping",
-        "subtitle": "Manual map product properties to csv columns"
+      "categoryProperty": {
+        "blade-subtitle": "Category properties",
+        "title": "Properties"
+      },
+      "editorialReview": {
+        "blade-subtitle": "Product Editorial Reviews",
+        "title": "Editorial Reviews"
+      },
+      "itemAsset": {
+        "blade-subtitle": "item assets",
+        "title": "Assets"
+      },
+      "itemAssociations": {
+        "blade-subtitle": "Associations",
+        "title": "Associations"
+      },
+      "itemImage": {
+        "blade-subtitle": "Manage images",
+          "no-images": "No images"
+      },
+      "itemProperty": {
+        "blade-subtitle": "item properties",
+        "title": "Properties"
+      },
+      "itemVariation": {
+        "blade-subtitle": "Item variations",
+        "title": "Variations"
+      },
+      "seo": {
+        "title": "SEO"
       }
     },
     "dialogs": {
@@ -599,6 +517,109 @@
         "message": "The SEO information has been modified. Do you want to save changes?"
       }
 
+    },
+    "wizards": {
+      "category": {
+        "title": "New category",
+        "subtitle": "Fill category information",
+        "labels": {
+          "name": "Name",
+          "code": "Code"
+        },
+        "validations": {
+          "code": "Code can't contain $+;=%{}[]|\/@ ~#!^*&()?:'<>, characters"
+        },
+        "placeholders": {
+          "name": "Enter category name",
+          "code": "Enter category code"
+        }
+      },
+      "new-product": {
+        "title": "New product",
+        "subtitle": "Fill all product information",
+        "labels": {
+          "sku": "SKU",
+          "name": "Name",
+          "fill-properties": "Fill properties",
+          "fill-properties-summary": "{{ count }} of {{total}} properties filled",
+          "upload-images": "Upload images",
+          "upload-images-summary": "{{ count }} image(s) uploaded",
+          "add-review": "Add editorial review",
+          "add-review-summary": "{{ count }} review(s) added",
+          "seo-information": "Define seo information",
+          "seo-information-summary-defined": "Seo information defined",
+          "seo-information-summary-undefined": "Seo information undefined"
+        },
+        "validations": {
+          "sku": "SKU can't contain $+;=%{}[]|\/@ ~#!^*&()?:'<>, characters",
+          "sku-required": "Required",
+          "name-required": "Required"
+        },
+        "placeholders": {
+          "name": "Enter item name",
+          "sku": "Enter item sku"
+        }
+      },
+      "new-variation": {
+        "title": "New variation",
+        "subtitle": "Fill variation information",
+        "labels": {
+          "sku": "SKU",
+          "name": "Name",
+          "fill-properties": "Fill properties",
+          "fill-properties-summary": "{{ count }} of {{total}} properties filled",
+          "upload-images": "Upload images",
+          "upload-images-summary": "{{ count }} image(s) uploaded"
+        },
+        "validations": {
+          "sku": "SKU can't contain $+;=%{}[]|\/@ ~#!^*&()?:'<>, characters",
+          "sku-required": "Required",
+          "name-required": "Required"
+        },
+        "placeholders": {
+          "name": "Enter item name",
+          "sku": "Enter item sku"
+        }
+      },
+      "item-images": {
+        "subtitle": "item images"
+      },
+      "association": {
+        "title": "New Association",
+        "labels": {
+          "group-name": "Group name",
+          "products": "Products",
+          "products-selected": "product(s) selected"
+        },
+        "placeholders": {
+          "group-name": "Select..."
+        }
+      },
+      "catalog-CSV-import": {
+        "title": "Import catalog from csv",
+        "subtitle": "All products will be added to '{{name}}' catalog",
+        "labels": {
+          "auto-mapping": "CSV fields automatically mapped to same product properties",
+          "chose-map": "Chose map CSV columns with product fields",
+          "product-property": "Product property",
+          "csv-column": "CSV column",
+          "custom-value": "Custom value",
+          "delimiter": "Csv column delimiter",
+          "upload": "Upload Csv file",
+          "upload-progress": "Upload progress",
+          "map-columns": "Map columns",
+          "define-columns": "Define column mapping"
+        },
+        "placeholders": {
+          "delimiter": "Select ...",
+          "select-column-name": "Select ...",
+          "select-custom-value": "Default value..."
+        }
+      },
+      "catalog-CSV-import-wizard-mapping-step": {
+        "title": "Column mapping",
+        "subtitle": "Manual map product properties to csv columns"
+      }
     },
     "commands": {
       "start-export": "Start export",

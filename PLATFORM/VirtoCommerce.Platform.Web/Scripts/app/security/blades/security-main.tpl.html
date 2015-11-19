@@ -4,7 +4,7 @@
             <ul class="list __items">
                 <li class="list-item" ng-click="blade.openBlade(data)" ng-repeat="data in blade.currentEntities track by data.name" ng-class="{'__selected': data.name === selectedNodeId}">
                     <span class="list-name">
-                        {{data.name}}
+                        {{data.name | translate}}
                     </span>
                 </li>
             </ul>

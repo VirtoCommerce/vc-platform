@@ -119,7 +119,7 @@
         ];
     }
 
-    blade.subtitle = 'catalog.blades.seo.subtitle';
+    blade.subtitle = 'catalog.blades.seo-detail.subtitle';
 
     $scope.$watch('blade.parentBlade.currentEntity', initializeBlade); // for category
     $scope.$watch('blade.parentBlade.item', initializeBlade);          // for item

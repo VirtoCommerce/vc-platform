@@ -33,7 +33,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
         /// <param name="storeId">Store id</param>
 		[HttpGet]
 		[ResponseType(typeof(IEnumerable<MenuLinkList>))]
-		[ClientCache(Duration = 30)]
+		[ClientCache(Duration = 60)]
 		[Route("menu")]
 		public IHttpActionResult GetLists(string storeId)
 		{
@@ -55,7 +55,8 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		[HttpGet]
 		[ResponseType(typeof(MenuLinkList))]
 		[Route("menu/{listId}")]
-		public IHttpActionResult GetList(string storeId, string listId)
+        [ClientCache(Duration = 60)]
+        public IHttpActionResult GetList(string storeId, string listId)
 		{
             base.CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Read, new ContentScopeObject { StoreId = storeId });
 

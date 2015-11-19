@@ -2,8 +2,8 @@
 .controller('virtoCommerce.catalogModule.catalogCSVimportWizardController', ['$scope', '$localStorage', 'platformWebApp.bladeNavigationService', 'FileUploader', 'virtoCommerce.catalogModule.import', function ($scope, $localStorage, bladeNavigationService, FileUploader, importResource) {
     var blade = $scope.blade;
     blade.isLoading = false;
-    blade.title = 'catalog.blades.csv-import-wizard.title';
-    blade.subtitle = 'catalog.blades.csv-import-wizard.subtitle';
+    blade.title = 'catalog.wizards.catalog-CSV-import.title';
+    blade.subtitle = 'catalog.wizards.catalog-CSV-import.subtitle';
     blade.subtitleVales = { name: blade.catalog.name };
 
     $scope.columnDelimiters = [
@@ -71,8 +71,8 @@
         var newBlade = {
             id: "importMapping",
             importConfiguration: blade.importConfiguration,
-            title: 'catalog.blades.column-mapping.title',
-            subtitle: 'catalog.blades.column-mapping.subtitle',
+            title: 'catalog.blades.catalog-CSV-import-wizard-mapping-step.title',
+            subtitle: 'catalog.blades.catalog-CSV-import-wizard-mapping-step.subtitle',
             controller: 'virtoCommerce.catalogModule.catalogCSVimportWizardMappingStepController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/import/wizard/catalog-CSV-import-wizard-mapping-step.tpl.html'
         };

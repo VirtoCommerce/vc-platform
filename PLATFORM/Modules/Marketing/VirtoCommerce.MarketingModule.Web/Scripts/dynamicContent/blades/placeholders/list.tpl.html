@@ -9,9 +9,9 @@
 				<table class="table" ng-if="blade.currentEntity && (blade.currentEntity.childrenFolders.length > 0 || blade.currentEntity.placeholders.length > 0)">
 					<thead>
 						<tr>
-							<th class="table-col">Pic</th>
-							<th class="table-col">Name</th>
-							<th class="table-col">Description</th>
+							<th class="table-col">{{ 'marketing.blades.placeholders.list.labels.picture' | translate }}</th>
+							<th class="table-col">{{ 'marketing.blades.placeholders.list.labels.name' | translate }}</th>
+							<th class="table-col">{{ 'marketing.blades.placeholders.list.labels.description' | translate }}</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -25,10 +25,10 @@
 								{{data.name}}
 								<ul class="menu __context" role="menu" id="ipl_menu_{{data.id}}">
 									<li class="menu-item" ng-click='blade.deleteFolder(data); $event.stopPropagation();'>
-										<i class="menu-ico fa fa-trash-o"></i> Delete
+										<i class="menu-ico fa fa-trash-o"></i> {{ 'platform.commands.delete' | translate }}
 									</li>
 									<li class="menu-item" ng-click='blade.editFolder(data); $event.stopPropagation();'>
-										<i class="menu-ico fa fa-pencil-square-o"></i> Edit
+										<i class="menu-ico fa fa-pencil-square-o"></i> {{ 'platform.commands.edit' | translate }}
 									</li>
 								</ul>
 							</td>
@@ -53,7 +53,7 @@
 				</table>
 			</div>
 			<div class="note" ng-if="(blade.currentEntity.childrenFolders.length === 0 && blade.currentEntity.placeholders.length === 0)">
-				No data
+                {{ 'marketing.blades.placeholders.list.labels.no-data' | translate }}
 			</div>
 		</div>
 	</div>

@@ -22,8 +22,9 @@
 			choosenStoreId: blade.storeId,
 			choosenListId: data.id,
 			newList: false,
-			title: 'Edit ' + data.name + ' list',
-			subtitle: 'Link list edit',
+			title: 'content.blades.menu-link-list.title',
+			titleValues: { name: data.name },
+			subtitle: 'content.blades.menu-link-list.subtitle',
 			controller: 'virtoCommerce.contentModule.menuLinkListController',
 			template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/menu/menu-link-list.tpl.html'
 		};
@@ -37,8 +38,8 @@
 			id: 'addMenuLinkListBlade',
 			choosenStoreId: blade.storeId,
 			newList: true,
-			title: 'Add new list',
-			subtitle: 'Create new list',
+			title: 'content.blades.menu-link-list.title-new',
+			subtitle: 'content.blades.menu-link-list.subtitle-new',
 			controller: 'virtoCommerce.contentModule.menuLinkListController',
 			template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/menu/menu-link-list.tpl.html'
 		};
@@ -85,7 +86,7 @@
 
 	$scope.blade.toolbarCommands = [
         {
-        	name: "Add list", icon: 'fa fa-plus',
+        	name: "content.commands.add-list", icon: 'fa fa-plus',
         	executeMethod: function () {
         		openBladeNew();
         	},

@@ -1,80 +1,108 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.modulesListController', ['$rootScope', '$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.modules', function ($rootScope, $scope, bladeNavigationService, dialogService, modules) {
-    $scope.selectedEntityId = null;
+.controller('platformWebApp.modulesListController', ['$scope', 'filterFilter', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.modules', 'uiGridConstants', 'platformWebApp.uiGridHelper',
+    function ($scope, filterFilter, bladeNavigationService, dialogService, modules, uiGridConstants, uiGridHelper) {
+        $scope.uiGridConstants = uiGridConstants;
+        var blade = $scope.blade;
 
-    $scope.blade.refresh = function () {
-        $scope.blade.isLoading = true;
+        blade.refresh = function () {
+            blade.isLoading = true;
 
-        modules.getModules({}, function (results) {
-            $scope.blade.isLoading = false;
-            $scope.blade.currentEntities = results;
-        }, function (error) {
-            bladeNavigationService.setError('Error ' + error.status, $scope.blade);
-        });
-    };
-
-    $scope.blade.selectItem = function (id) {
-        $scope.selectedEntityId = id;
-
-        var newBlade = {
-            id: 'moduleDetails',
-            title: 'platform.blades.module-detail.title',
-            currentEntityId: id,
-            controller: 'platformWebApp.moduleDetailController',
-            template: '$(Platform)/Scripts/app/packaging/blades/module-detail.tpl.html'
+            modules.getModules({}, function (results) {
+                blade.isLoading = false;
+                blade.currentEntities = results;
+                uiGridHelper.onDataLoaded($scope.gridOptions, blade.currentEntities);
+            }, function (error) {
+                bladeNavigationService.setError('Error ' + error.status, blade);
+            });
         };
 
-        bladeNavigationService.showBlade(newBlade, $scope.blade);
-    }
+        blade.selectNode = function (id) {
+            $scope.selectedNodeId = id;
 
-    $scope.blade.onClose = function (closeCallback) {
-        closeChildrenBlades();
-        closeCallback();
-    };
+            var newBlade = {
+                id: 'moduleDetails',
+                title: 'platform.blades.module-detail.title',
+                currentEntityId: id,
+                controller: 'platformWebApp.moduleDetailController',
+                template: '$(Platform)/Scripts/app/packaging/blades/module-detail.tpl.html'
+            };
 
-    function closeChildrenBlades() {
-        angular.forEach($scope.blade.childrenBlades.slice(), function (child) {
-            bladeNavigationService.closeBlade(child);
-        });
-    }
-
-    $scope.blade.headIcon = 'fa-cubes';
-
-    $scope.blade.toolbarCommands = [
-        {
-            name: "platform.commands.refresh", icon: 'fa fa-refresh',
-            executeMethod: function () {
-                $scope.blade.refresh();
-            },
-            canExecuteMethod: function () {
-                return true;
-            }
-        },
-        {
-            name: "platform.commands.install", icon: 'fa fa-plus',
-            executeMethod: function () {
-                openAddEntityBlade();
-            },
-            canExecuteMethod: function () {
-                return true;
-            },
-            permission: 'platform:module:manage'
+            bladeNavigationService.showBlade(newBlade, blade);
         }
-    ];
 
-    function openAddEntityBlade() {
-        closeChildrenBlades();
+        function closeChildrenBlades() {
+            angular.forEach(blade.childrenBlades.slice(), function (child) {
+                bladeNavigationService.closeBlade(child);
+            });
+        }
 
-        var newBlade = {
-            id: "moduleWizard",
-            title: "platform.blades.module-detail.title-install",
-            // subtitle: '',
-            mode: 'install',
-            controller: 'platformWebApp.installWizardController',
-            template: '$(Platform)/Scripts/app/packaging/blades/module-detail.tpl.html'
+        blade.headIcon = 'fa-cubes';
+
+        blade.toolbarCommands = [
+            {
+                name: "platform.commands.refresh", icon: 'fa fa-refresh',
+                executeMethod: function () {
+                    blade.refresh();
+                },
+                canExecuteMethod: function () {
+                    return true;
+                }
+            },
+            {
+                name: "platform.commands.install", icon: 'fa fa-plus',
+                executeMethod: function () {
+                    openAddEntityBlade();
+                },
+                canExecuteMethod: function () {
+                    return true;
+                },
+                permission: 'platform:module:manage'
+            }
+        ];
+
+        function openAddEntityBlade() {
+            closeChildrenBlades();
+
+            var newBlade = {
+                id: "moduleWizard",
+                title: "platform.blades.module-detail.title-install",
+                // subtitle: '',
+                mode: 'install',
+                controller: 'platformWebApp.installWizardController',
+                template: '$(Platform)/Scripts/app/packaging/blades/module-detail.tpl.html'
+            };
+            bladeNavigationService.showBlade(newBlade, blade);
+        }
+
+        // ui-grid
+        $scope.setGridOptions = function (gridOptions) {
+            uiGridHelper.initialize($scope, gridOptions,
+            function (gridApi) {
+                gridApi.grid.registerRowsProcessor($scope.singleFilter, 90);
+            });
         };
-        bladeNavigationService.showBlade(newBlade, $scope.blade);
-    }
 
-    $scope.blade.refresh();
-}]);
+        $scope.singleFilter = function (renderableRows) {
+            //var matcher = new RegExp(blade.searchText);
+            var visibleCount = 0;
+            renderableRows.forEach(function (row) {
+                row.visible = _.any(filterFilter([row.entity], blade.searchText));
+                if (row.visible) visibleCount++;
+                //var match = false;
+                //['title', 'version', 'authors'].forEach(function (field) {                    
+                //    if (row.entity[field].match(matcher)) {
+                //        match = true;
+                //    }
+                //});
+                //if (!match) {
+                //    row.visible = false;
+                //}
+            });
+
+            $scope.filteredEntitiesCount = visibleCount;
+            return renderableRows;
+        };
+
+
+        blade.refresh();
+    }]);

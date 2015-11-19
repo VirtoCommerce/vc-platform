@@ -9,10 +9,23 @@
 </div>
 <div class="blade-static __bottom" ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems" ng-include="'pagerTemplate.html'"></div>
 <div class="blade-content __medium-wide">
-    <div class="blade-inner">
-        <div class="inner-block">
-            <div class="table-wrapper" ng-if="items.length > 0">
-                <table class="table">
+    <div class="blade-inner">        
+        <div class="inner-block" ng-init="setGridOptions({
+                data: 'items',
+                rowTemplate: 'item-list.row.html',
+                rowHeight: 61,
+                columnDefs: [
+                        {
+                            name: 'imageUrl', displayName: 'catalog.blades.categories-items-list.labels.picture',
+                            enableColumnResizing: false, enableSorting: false, width: 60,
+                            cellTemplate: 'item-list-icon.cell.html'
+                        },
+                        { name: 'name', displayName: 'catalog.blades.categories-items-list.labels.name', cellTemplate: 'item-list-name.cell.html' },
+                        { name: 'code', displayName: 'catalog.blades.categories-items-list.labels.sku', width: 170, cellTemplate: 'item-list-SKU.cell.html' }
+                 ]})">
+            <div class="table-wrapper" ng-if="items.length > 0">                
+                <div ui-grid="gridOptions" ui-grid-save-state ui-grid-selection ui-grid-resize-columns ui-grid-move-columns></div>
+                <!--<table class="table">
                     <thead>
                         <tr>
                             <th class="table-col __product-control">
@@ -21,9 +34,9 @@
                                     <span class="check"></span>
                                 </label>
                             </th>
-                            <th class="table-col __product-img">{{'catalog.blades.categories.labels.picture' | translate}}</th>
-                            <th class="table-col __product-name">{{'catalog.blades.categories.labels.name' | translate}}</th>
-                            <th class="table-col __product-code">{{'catalog.blades.categories.labels.sku' | translate}}</th>
+                            <th class="table-col __product-img">{{'catalog.blades.categories-items-list.labels.picture' | translate}}</th>
+                            <th class="table-col __product-name">{{'catalog.blades.categories-items-list.labels.name' | translate}}</th>
+                            <th class="table-col __product-code">{{'catalog.blades.categories-items-list.labels.sku' | translate}}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -43,7 +56,7 @@
                             <td class="table-col __product-name" ng-click='selectItem($event, data)'>
                                 <i class="table-ico fa fa-link" ng-if="hasLinks(data)" title="This category is linked"></i>
                                 <div class="table-t">{{data.name}}</div>
-                                <span class="table-status" ng-if="data.type==='category' && !data.isActive">{{ 'catalog.blades.categories.labels.inactive' | translate }}</span>
+                                <span class="table-status" ng-if="data.type==='category' && !data.isActive">{{ 'catalog.blades.categories-items-list.labels.inactive' | translate }}</span>
                                 <div class="table-descr">{{data.productType}}</div>
 
                                 <ul class="menu __context" role="menu" id="cil_menu_{{data.id+blade.level}}">
@@ -60,9 +73,39 @@
                             </td>
                         </tr>
                     </tbody>
-                </table>
+                </table>-->
             </div>
-            <div class="note" ng-if="items.length == 0">{{ 'platform.list.no-data' | translate }}</div>
+            <div class="note" ng-if="!items.length">{{ 'platform.list.no-data' | translate }}</div>
+            </div>
         </div>
-    </div>
 </div>
+
+<script type="text/ng-template" id="item-list.row.html">
+    <ul class="menu __context" role="menu" id="cil_menu_{{row.entity.id+grid.appScope.blade.level}}">
+        <li class="menu-item" ng-click='grid.appScope.edit(row.entity)'>
+            <i class="menu-ico fa fa-edit"></i> Manage
+        </li>
+        <li class="menu-item" ng-click='grid.appScope.delete(row.entity)'>
+            <i class="menu-ico fa fa-trash-o"></i> Delete
+        </li>
+    </ul>
+    <div ng-click='grid.appScope.selectItem($event, row.entity)' ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'" class="ui-grid-cell" ng-class="{'ui-grid-row-header-cell': col.isRowHeader, '__selected': row.entity.id===grid.appScope.selectedNodeId }" role="{{col.isRowHeader ? 'rowheader' : 'gridcell' }}" ui-grid-cell style='cursor:pointer' context-menu data-target="cil_menu_{{row.entity.id+grid.appScope.blade.level}}"></div>    
+</script>
+<script type="text/ng-template" id="item-list-icon.cell.html">
+    <div class="product-img">
+        <div class="image" style="background-image: url('{{COL_FIELD}}')" ng-if="row.entity.type!=='category' && COL_FIELD"></div>
+        <i class="table-ico fa" ng-class="row.entity.type == 'category' ? 'fa-folder' : 'fa-image'" ng-if="!COL_FIELD"></i>
+    </div>
+</script>
+<script type="text/ng-template" id="item-list-name.cell.html">
+    <div class="ui-grid-cell-contents">
+        <i class="table-ico fa fa-link" ng-if="grid.appScope.hasLinks(row.entity)" title="This category is linked"></i>
+        <div class="table-t">{{COL_FIELD}}</div>
+        <span class="table-status" ng-if="row.entity.type==='category' && !row.entity.isActive">Inactive</span>
+        <div class="table-descr" ng-if="row.entity.productType">{{row.entity.productType}}</div>
+    </div>
+</script>
+
+<script type="text/ng-template" id="item-list-SKU.cell.html">
+    <div class="ui-grid-cell-contents">{{row.entity.type!=='category'?COL_FIELD:''}}</div>
+</script>
