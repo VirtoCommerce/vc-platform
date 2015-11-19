@@ -21,40 +21,6 @@
                         { displayName: 'platform.blades.account-list.labels.state', name: 'userState' }
                     ]})">
                 <div ui-grid="gridOptions" ui-grid-save-state ui-grid-selection ui-grid-resize-columns ui-grid-move-columns></div>
-                <!--<table class="table">
-                    <thead>
-                    <tr>
-                        <th class="table-col __product-control">
-                            <label class="form-control __checkbox">
-                                <input type="checkbox" ng-model="blade.selectedAll" ng-change="toggleAll()"/>
-                                <span class="check"></span>
-                            </label>
-                        </th>
-                            <th class="table-col __product-name">{{ 'platform.blades.account-list.labels.name' | translate }}</th>
-                            <th class="table-col __product-code">{{ 'platform.blades.account-list.labels.account-type' | translate }}</th>
-                            <th class="table-col __product-code">{{ 'platform.blades.account-list.labels.state' | translate }}</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr class="table-item" ng-repeat="data in blade.currentEntities track by data.id" ng-class="{'__selected': data.userName === selectedNodeId}">
-                        <td class="table-col">
-                            <label class="form-control __checkbox">
-                                <input type="checkbox" ng-model="data.selected">
-                                <span class="check"></span>
-                            </label>
-                        </td>
-                        <td class="table-col __product-name" ng-click='blade.selectNode(data)'>
-                            <span class="table-t">{{data.userName}}</span>
-                        </td>
-                        <td class="table-col" ng-click='blade.selectNode(data)'>
-                            <span>{{data.userType}}</span>
-                        </td>
-                        <td class="table-col" ng-click='blade.selectNode(data)'>
-                            <span>{{data.userState}}</span>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>-->
             </div>
         </div>
     </div>
