@@ -504,7 +504,7 @@ ol
 {
     background: #333;
     display: none;
-    /*position: fixed;*/
+    position: fixed;
     padding: 10px 0;
     z-index: 100;
 }

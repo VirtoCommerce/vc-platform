@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 using DotLiquid;
+using VirtoCommerce.Web.Caching;
 using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Models.Cms;
 using VirtoCommerce.Web.Models.Lists;
@@ -18,6 +19,7 @@ namespace VirtoCommerce.Web
     {
         #region Fields
         private readonly Dictionary<string, object> _storage;
+        private readonly CacheManager _cacheManager;
 
         private readonly string[] _poweredLinks = {
                                              "<a href=\"http://virtocommerce.com\" rel=\"nofollow\" target=\"_blank\">.NET ecommerce platform</a> by Virto",
@@ -39,6 +41,7 @@ namespace VirtoCommerce.Web
         {
             this._storage = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
 
+            _cacheManager = new CacheManager(new HttpCacheProvider());
             // set defaults
             this.Layout = "theme";
             this.Template = "index";
@@ -70,7 +73,14 @@ namespace VirtoCommerce.Web
                 return new SiteContext();
             }
         }
-
+        public CacheManager CacheManager
+        {
+            get
+            {
+                return _cacheManager;
+            }
+        }
+        
         public string ErrorMessage
         {
             get

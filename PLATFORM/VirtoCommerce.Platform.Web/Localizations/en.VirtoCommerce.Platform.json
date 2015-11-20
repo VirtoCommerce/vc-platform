@@ -9,6 +9,7 @@
       "security": "Security",
       "modules": "Modules",
       "notifications": "Notifications",
+      "user-profile": "User profile",
       "export-import": "Export & Import",
       "assets": "Assets"
     },
@@ -17,6 +18,7 @@
       "assign": "Assign",
       "cancel": "Cancel",
       "clear-all": "Clear all",
+      "close": "Close",
       "confirm": "Confirm",
       "copy-link": "Copy link",
       "create": "Create",
@@ -42,10 +44,12 @@
       "restart": "Restart",
       "save": "Save",
       "send": "Send",
+      "select-all": "Select All",
       "settings": "Settings",
       "sign-out": "Sign out",
       "undo": "Undo",
       "uninstall": "Uninstall",
+      "unselect-all": "Unselect All",
       "update": "Update",
       "upload": "Upload",
       "yes": "Yes",
@@ -229,6 +233,7 @@
       "export-main": {
         "title": "Data export",
         "labels": {
+          "select-file": "Select file to import",
           "platform-entries": "Platform entries",
           "choose-modules": "Choose modules to export",
           "download-url": "Download Url",
@@ -611,14 +616,15 @@
       },
       "new-account-wizard": {
         "labels": {
-          "summary": "Summary",
-          "name": "Name",
-          "description": "Description",
-          "assign-permissions": "Assign permissions"
+          "login": "Login",
+          "password": "Password",
+          "repeat-password": "Repeat password",
+          "assign-roles": "Assign roles"
         },
         "placeholders": {
-          "name": "Enter name",
-          "description": "Enter description"
+          "login": "Enter login",
+          "password": "Enter new password",
+          "repeat-password": "Repeat new password"
         }
       },
       "security-main": {
@@ -650,6 +656,12 @@
       },
       "settingGroup-list": {
         "title": "Settings"
+      },
+      "user-profile": {
+        "title": "User profile",
+        "labels": {
+          "set-language": "Set Commerce Manager language"
+        }
       }
     },
     "templates": {
@@ -663,6 +675,7 @@
       "sampleDataInitialization": {
         "labels": {
           "sample-data-initialization": "Sample data initialization",
+          "starting-initialization": "Starting sample data initialization...",
           "errors": "Errors",
           "start": "Start",
           "end": "End"
