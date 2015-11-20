@@ -26,18 +26,20 @@ namespace VirtoCommerce.CatalogModule.Web.Binders
 
             var result = new coreModel.SearchCriteria();
 
-            var respGroup = qs["respGroup"].EmptyToNull();
+            var respGroup = qs["criteria.responseGroup"].EmptyToNull();
             result.ResponseGroup = EnumUtility.SafeParse<coreModel.ResponseGroup>(respGroup, coreModel.ResponseGroup.Full);
 
-            result.Keyword = qs["q"].EmptyToNull();
+            result.Keyword = qs["criteria.keyword"].EmptyToNull();
 
-            result.CatalogId = qs["catalog"].EmptyToNull();
-            result.CategoryId = qs["category"].EmptyToNull();
-            result.LanguageCode = qs["language"].EmptyToNull();
-            result.Currency = qs["currency"].EmptyToNull();
+            result.GetAllCategories = qs["criteria.getAllCategories"].TryParse(false);
+
+            result.CatalogId = qs["criteria.catalogId"].EmptyToNull();
+            result.CategoryId = qs["criteria.categoryId"].EmptyToNull();
+            result.LanguageCode = qs["criteria.languageCode"].EmptyToNull();
+            result.Currency = qs["criteria.currency"].EmptyToNull();
  
-            result.Count = qs["count"].TryParse(20);
-            result.Start = qs["start"].TryParse(0);
+            result.Count = qs["criteria.count"].TryParse(20);
+            result.Start = qs["criteria.start"].TryParse(0);
             bindingContext.Model = result;
             return true;
         } 

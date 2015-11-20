@@ -7,8 +7,10 @@ using VirtoCommerce.Storefront.Model.Catalog;
 
 namespace VirtoCommerce.Storefront.Model.Services
 {
-    public interface IProductService
+    public interface ICategoryService
     {
-        Task<Product> GetProductById(string id, string currencyCode, ItemResponseGroup responseGroup);
+        Task<Category> GetCategoryById(string id, string catalogId, string language, string currencyCode);
+
+        Task<Category[]> GetCategoriesByCatalog(string catalogId);
     }
 }

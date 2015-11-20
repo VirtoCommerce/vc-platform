@@ -30,9 +30,9 @@ namespace VirtoCommerce.Storefront.Services
             _marketingModuleApi = marketingModuleApi;
         }
 
-        public Product GetProductById(string id, string currencyCode, ItemResponseGroup responseGroup = ItemResponseGroup.ItemInfo)
+        public async Task<Product> GetProductById(string id, string currencyCode, ItemResponseGroup responseGroup = ItemResponseGroup.ItemInfo)
         {
-            var item = _catalogModuleApi.CatalogModuleProductsGet(id).ToWebModel();
+            var item = (await _catalogModuleApi.CatalogModuleProductsGetAsync(id)).ToWebModel();
 
             var taskList = new List<Task>();
 

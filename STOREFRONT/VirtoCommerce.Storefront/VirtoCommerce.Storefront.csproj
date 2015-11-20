@@ -228,6 +228,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AssetsController.cs" />
     <Compile Include="Controllers\CartController.cs" />
+    <Compile Include="Controllers\CatalogController.cs" />
     <Compile Include="Controllers\CommonController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
@@ -235,6 +236,7 @@
     <Compile Include="Converters\AssetConverter.cs" />
     <Compile Include="Converters\CartConverter.cs" />
     <Compile Include="Converters\CartLineItemConverter.cs" />
+    <Compile Include="Converters\CategoryConverter.cs" />
     <Compile Include="Converters\CustomerConverter.cs" />
     <Compile Include="Converters\InventoryConverter.cs" />
     <Compile Include="Converters\PriceConverter.cs" />
@@ -250,6 +252,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routing\SeoRoute.cs" />
     <Compile Include="Routing\SeoRouteExtensions.cs" />
+    <Compile Include="Services\CategoryServiceImpl.cs" />
     <Compile Include="Services\ProductServiceImpl.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>

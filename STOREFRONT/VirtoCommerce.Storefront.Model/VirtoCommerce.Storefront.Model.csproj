@@ -79,6 +79,7 @@
     <Compile Include="ResetPassword.cs" />
     <Compile Include="Catalog\ProductProperty.cs" />
     <Compile Include="SeoInfo.cs" />
+    <Compile Include="Services\ICategoryService.cs" />
     <Compile Include="Services\IProductService.cs" />
     <Compile Include="ShipmentMethod.cs" />
     <Compile Include="Cart\CartSummary.cs" />
