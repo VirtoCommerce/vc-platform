@@ -31,6 +31,13 @@ namespace VirtoCommerce.Client.Model {
 
     
     /// <summary>
+    /// Gets or Sets SearchInChildrens
+    /// </summary>
+    [DataMember(Name="searchInChildrens", EmitDefaultValue=false)]
+    public bool? SearchInChildrens { get; set; }
+
+    
+    /// <summary>
     /// Gets or Sets CategoryId
     /// </summary>
     [DataMember(Name="categoryId", EmitDefaultValue=false)]
@@ -80,13 +87,6 @@ namespace VirtoCommerce.Client.Model {
 
     
     /// <summary>
-    /// Gets or Sets SeoKeyword
-    /// </summary>
-    [DataMember(Name="seoKeyword", EmitDefaultValue=false)]
-    public string SeoKeyword { get; set; }
-
-    
-    /// <summary>
     /// Gets or Sets Sort
     /// </summary>
     [DataMember(Name="sort", EmitDefaultValue=false)]
@@ -101,10 +101,10 @@ namespace VirtoCommerce.Client.Model {
 
     
     /// <summary>
-    /// Gets or Sets HideDirectLinedCategories
+    /// Gets or Sets HideDirectLinkedCategories
     /// </summary>
-    [DataMember(Name="hideDirectLinedCategories", EmitDefaultValue=false)]
-    public bool? HideDirectLinedCategories { get; set; }
+    [DataMember(Name="hideDirectLinkedCategories", EmitDefaultValue=false)]
+    public bool? HideDirectLinkedCategories { get; set; }
 
     
     /// <summary>
@@ -135,13 +135,6 @@ namespace VirtoCommerce.Client.Model {
     public DateTime? IndexDate { get; set; }
 
     
-    /// <summary>
-    /// Gets or Sets GetAllCategories
-    /// </summary>
-    [DataMember(Name="getAllCategories", EmitDefaultValue=false)]
-    public bool? GetAllCategories { get; set; }
-
-    
 
     /// <summary>
     /// Get the string presentation of the object
@@ -154,6 +147,8 @@ namespace VirtoCommerce.Client.Model {
       sb.Append("  ResponseGroup: ").Append(ResponseGroup).Append("\n");
       
       sb.Append("  Keyword: ").Append(Keyword).Append("\n");
+      
+      sb.Append("  SearchInChildrens: ").Append(SearchInChildrens).Append("\n");
       
       sb.Append("  CategoryId: ").Append(CategoryId).Append("\n");
       
@@ -169,13 +164,11 @@ namespace VirtoCommerce.Client.Model {
       
       sb.Append("  Code: ").Append(Code).Append("\n");
       
-      sb.Append("  SeoKeyword: ").Append(SeoKeyword).Append("\n");
-      
       sb.Append("  Sort: ").Append(Sort).Append("\n");
       
       sb.Append("  Facets: ").Append(Facets).Append("\n");
       
-      sb.Append("  HideDirectLinedCategories: ").Append(HideDirectLinedCategories).Append("\n");
+      sb.Append("  HideDirectLinkedCategories: ").Append(HideDirectLinkedCategories).Append("\n");
       
       sb.Append("  PropertyValues: ").Append(PropertyValues).Append("\n");
       
@@ -184,8 +177,6 @@ namespace VirtoCommerce.Client.Model {
       sb.Append("  Count: ").Append(Count).Append("\n");
       
       sb.Append("  IndexDate: ").Append(IndexDate).Append("\n");
-      
-      sb.Append("  GetAllCategories: ").Append(GetAllCategories).Append("\n");
       
       sb.Append("}\n");
       return sb.ToString();
