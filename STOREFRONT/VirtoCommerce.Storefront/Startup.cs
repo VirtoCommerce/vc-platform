@@ -77,6 +77,7 @@ namespace VirtoCommerce.Storefront
 
             container.RegisterType<ICartBuilder, CartBuilder>();
             container.RegisterType<IProductService, ProductServiceImpl>();
+            container.RegisterType<ICategoryService, CategoryServiceImpl>();
             container.RegisterType<IAuthenticationManager>(new InjectionFactory((context) => HttpContext.Current.GetOwinContext().Authentication));
 
             container.RegisterType<IStorefrontUrlBuilder, StorefrontUrlBuilder>();

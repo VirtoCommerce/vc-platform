@@ -22,17 +22,17 @@ namespace VirtoCommerce.Storefront.Controllers
         }
 
         [HttpGet]
-        public ActionResult ProductDetails(string productid)
+        public async Task<ActionResult> ProductDetails(string productid)
         {
-            _workContext.CurrentProduct = _productService.GetProductById(productid, _workContext.CurrentCurrency.Code, Model.Catalog.ItemResponseGroup.ItemLarge);
+            _workContext.CurrentProduct = await _productService.GetProductById(productid, _workContext.CurrentCurrency.Code, Model.Catalog.ItemResponseGroup.ItemLarge);
             return View("product", _workContext);
         }
 
         [Route("{id}")]
         [HttpGet]
-        public ActionResult GetProductById(string id)
+        public async Task<ActionResult> GetProductById(string id)
         {
-            _workContext.CurrentProduct = _productService.GetProductById(id, _workContext.CurrentCurrency.Code, Model.Catalog.ItemResponseGroup.ItemLarge);
+            _workContext.CurrentProduct = await _productService.GetProductById(id, _workContext.CurrentCurrency.Code, Model.Catalog.ItemResponseGroup.ItemLarge);
             return Json(_workContext.CurrentProduct, JsonRequestBehavior.AllowGet);
         }
     }
