@@ -27,6 +27,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
         IQueryable<foundation.CategoryRelation> CategoryLinks { get; }
 
 		foundation.Category[] GetAllCategoryParents(foundation.Category categoryId);
+        string[] GetAllChildrenCategoriesIds(string[] categoryIds);
 		foundation.Catalog GetCatalogById(string catalogId);
 		foundation.Category GetCategoryById(string categoryId);
 		foundation.Category[] GetCategoriesByIds(string[] categoryIds);

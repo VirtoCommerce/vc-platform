@@ -13,21 +13,62 @@ namespace VirtoCommerce.Domain.Catalog.Model
         }
         public ResponseGroup ResponseGroup { get; set; }
         public string Keyword { get; set; }
+      
+        /// <summary>
+        /// Search  in all children categories for specified catalog or categories
+        /// </summary>
+        public bool SearchInChildrens { get; set; }
+
         public string CategoryId { get; set; }
-        public string[] CategoriesIds { get; set; }
+
+        private string[] _categoriesIds;
+        public string[] CategoriesIds
+        {
+            get
+            {
+                if (_categoriesIds == null && !String.IsNullOrEmpty(CategoryId))
+                {
+                    _categoriesIds = new string[] { CategoryId };
+                }
+                return _categoriesIds;
+            }
+            set
+            {
+                _categoriesIds = value;
+            }
+
+        }
+
         public string CatalogId { get; set; }
-        public string[] CatalogsIds { get; set; }
+
+        private string[] _catalogIds;
+        public string[] CatalogsIds
+        {
+            get
+            {
+                if(_catalogIds == null && !String.IsNullOrEmpty(CatalogId))
+                {
+                    _catalogIds = new string[] { CatalogId };
+                }
+                return _catalogIds;
+            }
+            set
+            {
+                _catalogIds = value;
+            }
+
+        }
         public string LanguageCode { get; set; }
         public string Currency { get; set; }
         /// <summary>
         /// Product ore category code
         /// </summary>
 		public string Code { get; set; }
-		public string SeoKeyword { get; set; }
+	
         public string Sort { get; set; }
         public string[] Facets { get; set; }
 		//Hides direct linked categories in virtual category displayed only linked category content without itself
-		public bool HideDirectLinedCategories { get; set; }
+		public bool HideDirectLinkedCategories { get; set; }
         public List<PropertyValue> PropertyValues { get; set; }
 
         public int Start { get; set; }
@@ -39,15 +80,7 @@ namespace VirtoCommerce.Domain.Catalog.Model
 		/// </summary>
 		public DateTime? IndexDate { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether [get all categories]. Needed not to filter root categories only
-        /// Flat structure is returned and tree constructed by using ParentId in frontend sitemap
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if [get all categories]; otherwise, <c>false</c>.
-        /// </value>
-        public bool GetAllCategories { get; set; }
-
+    
 		public override string ToString()
 		{
 			var parts = new string[]
@@ -58,7 +91,7 @@ namespace VirtoCommerce.Domain.Catalog.Model
 				CatalogId, 
 				Start.ToString(), 
 				Count.ToString(), 
-				GetAllCategories.ToString(), 
+				SearchInChildrens.ToString(), 
 				PropertyValues != null ? string.Join(";", PropertyValues.Select(x=>x.ToString())) : null
 			};
 			return string.Join("-", parts.Where(x=>!String.IsNullOrEmpty(x)).ToArray());

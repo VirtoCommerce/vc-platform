@@ -201,7 +201,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 
 
             const ResponseGroup responseGroup = ResponseGroup.WithCatalogs | ResponseGroup.WithCategories | ResponseGroup.WithProducts;
-            var searchResponse = _catalogSearchService.Search(new SearchCriteria { Count = int.MaxValue, GetAllCategories = true, Start = 0, ResponseGroup = responseGroup });
+            var searchResponse = _catalogSearchService.Search(new SearchCriteria { Count = int.MaxValue, Start = 0, ResponseGroup = responseGroup });
 
             var retVal = new BackupObject();
 

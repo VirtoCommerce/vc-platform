@@ -108,7 +108,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
             var searchCriteria = new SearchCriteria
             {
                 ResponseGroup = ResponseGroup.WithCategories,
-                SeoKeyword = keyword,
+                //SeoKeyword = keyword,
                 CatalogId = catalog
             };
 
@@ -146,9 +146,9 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
                 CategoryId = parentId,
                 Start = 0,
                 Count = int.MaxValue,
-                HideDirectLinedCategories = true,
+                HideDirectLinkedCategories = true,
                 ResponseGroup = moduleModel.ResponseGroup.WithCategories,
-                GetAllCategories = false //string.IsNullOrEmpty(parentId)
+                SearchInChildrens = false //string.IsNullOrEmpty(parentId)
             };
             var result = this._searchService.Search(criteria);
             var categories = result.Categories.Where(x => x.IsActive ?? true);

@@ -39,7 +39,7 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 
             if (product.Variations != null)
             {
-                retVal.Variations = product.Variations.Select(x => x.ToWebModel(blobUrlResolver)).ToList();
+                retVal.Variations = product.Variations.Select(x => x.ToWebModel(blobUrlResolver, properties)).ToList();
             }
 
             if (product.Links != null)
