@@ -21,7 +21,7 @@ namespace VirtoCommerce.Storefront.Services
 
         public async Task<Category[]> GetCategoriesByCatalog(string catalogId)
         {
-            var result = await _catalogModuleApi.CatalogModuleSearchSearchAsync("WithCategories", null, null, null, catalogId, null, null, null, null, null, null, null, null, null, 0, 100, null, false);
+            var result = await _catalogModuleApi.CatalogModuleSearchSearchAsync("WithCategories", null, null, null, null, null, null, null, null, null, null, null, null, null, 0, 100, null);
 
             return result.Categories.Select(c => c.ToWebModel()).ToArray();
         }
@@ -30,7 +30,7 @@ namespace VirtoCommerce.Storefront.Services
         {
             var category = await _catalogModuleApi.CatalogModuleCategoriesGetAsync(id);
 
-            var result = await _catalogModuleApi.CatalogModuleSearchSearchAsync("1", null, id, null, null, null, language, currencyCode, null, null, null, null, null, null, 0, 5, null, true);
+            var result = await _catalogModuleApi.CatalogModuleSearchSearchAsync("WithCategories", null, null, null, null, null, null, null, null, null, null, null, null, null, 0, 100, null);
 
             return category.ToWebModel(result.Products.ToArray());
         }
