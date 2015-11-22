@@ -13,9 +13,9 @@ namespace VirtoCommerce.Storefront.Controllers
     public class ProductController : Controller
     {
         private readonly WorkContext _workContext;
-        private readonly IProductService _productService;
+        private readonly ICatalogService _productService;
 
-        public ProductController(WorkContext context, IProductService productService)
+        public ProductController(WorkContext context, ICatalogService productService)
         {
             _workContext = context;
             _productService = productService;
@@ -24,7 +24,7 @@ namespace VirtoCommerce.Storefront.Controllers
         [HttpGet]
         public async Task<ActionResult> ProductDetails(string productid)
         {
-            _workContext.CurrentProduct = await _productService.GetProductById(productid, _workContext.CurrentCurrency.Code, Model.Catalog.ItemResponseGroup.ItemLarge);
+            _workContext.CurrentProduct = await _productService.GetProduct(productid, _workContext.CurrentCurrency.Code, Model.Catalog.ItemResponseGroup.ItemLarge);
             return View("product", _workContext);
         }
 
@@ -32,7 +32,7 @@ namespace VirtoCommerce.Storefront.Controllers
         [HttpGet]
         public async Task<ActionResult> GetProductById(string id)
         {
-            _workContext.CurrentProduct = await _productService.GetProductById(id, _workContext.CurrentCurrency.Code, Model.Catalog.ItemResponseGroup.ItemLarge);
+            _workContext.CurrentProduct = await _productService.GetProduct(id, _workContext.CurrentCurrency.Code, Model.Catalog.ItemResponseGroup.ItemLarge);
             return Json(_workContext.CurrentProduct, JsonRequestBehavior.AllowGet);
         }
     }

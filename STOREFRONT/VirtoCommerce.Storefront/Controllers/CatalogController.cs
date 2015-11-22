@@ -11,24 +11,24 @@ namespace VirtoCommerce.Storefront.Controllers
 {
     public class CatalogController : Controller
     {
-        private readonly ICategoryService _categoryService;
+        private readonly ICatalogService _categoryService;
         private readonly WorkContext _workContext;
 
-        public CatalogController(ICategoryService categoryService, WorkContext workContext)
+        public CatalogController(ICatalogService categoryService, WorkContext workContext)
         {
             _categoryService = categoryService;
             _workContext = workContext;
         }
 
-        public async Task<ActionResult> Category(string categoryid)
+        public ActionResult Category(string categoryid)
         {
-            _workContext.CurrentCategory = await _categoryService.GetCategoryById(categoryid, _workContext.CurrentStore.Catalog, _workContext.CurrentLanguage.CultureName, _workContext.CurrentCurrency.Code);
+            //_workContext.CurrentCategory = await _categoryService.GetCategoryById(categoryid, _workContext.CurrentStore.Catalog, _workContext.CurrentLanguage.CultureName, _workContext.CurrentCurrency.Code);
             return View("collection", _workContext);
         }
 
-        public async Task<ActionResult> AllCategories()
+        public ActionResult AllCategories()
         {
-            _workContext.AllCategories = await _categoryService.GetCategoriesByCatalog(_workContext.CurrentStore.Catalog);
+            //_workContext.AllCategories = await _categoryService.GetCategoriesByCatalog(_workContext.CurrentStore.Catalog);
             return View("collection.list", _workContext);
         }
     }
