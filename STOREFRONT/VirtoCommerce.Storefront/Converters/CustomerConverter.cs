@@ -9,10 +9,11 @@ namespace VirtoCommerce.Storefront.Converters
     {
         private static readonly char[] _nameSeparator = { ' ' };
 
-        public static Customer ToWebModel(this VirtoCommerceCustomerModuleWebModelContact contact)
+        public static Customer ToWebModel(this VirtoCommerceCustomerModuleWebModelContact contact, string userName)
         {
             var customer = new Customer();
             customer.InjectFrom(contact);
+            customer.UserName = userName;
 
             if (contact.Addresses != null)
             {
@@ -27,8 +28,15 @@ namespace VirtoCommerce.Storefront.Converters
             {
                 var nameParts = contact.FullName.Split(_nameSeparator, 2);
 
-                customer.FirstName = nameParts[0];
-                customer.LastName = nameParts[1];
+                if (nameParts.Length > 0)
+                {
+                    customer.FirstName = nameParts[0];
+                }
+
+                if (nameParts.Length > 1)
+                {
+                    customer.LastName = nameParts[1];
+                }
             }
 
             if (contact.Emails != null)
