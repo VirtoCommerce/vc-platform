@@ -79,7 +79,8 @@ namespace VirtoCommerce.Storefront.Owin
                     }
                 }
             }
-            else
+
+            if (!customer.HasAccount)
             {
                 customer.Id = context.Request.Cookies[StorefrontConstants.AnonymousCustomerIdCookie];
                 customer.Name = "Anonymous";
@@ -92,7 +93,7 @@ namespace VirtoCommerce.Storefront.Owin
         {
             string anonymousCustomerId = context.Request.Cookies[StorefrontConstants.AnonymousCustomerIdCookie];
 
-            if (context.Authentication.User.Identity.IsAuthenticated)
+            if (workContext.CurrentCustomer.HasAccount)
             {
                 if (!string.IsNullOrEmpty(anonymousCustomerId))
                 {
