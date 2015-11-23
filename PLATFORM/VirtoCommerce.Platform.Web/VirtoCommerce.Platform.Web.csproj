@@ -601,7 +601,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Assets\" />
-    <Folder Include="App_Data\Localizations\" />
+    <Folder Include="App_Data\LocalizationSources\" />
+    <Folder Include="App_Data\Localization\" />
     <Folder Include="App_Data\Modules\" />
     <Folder Include="Filters\" />
     <Folder Include="Views\Notifications\" />
