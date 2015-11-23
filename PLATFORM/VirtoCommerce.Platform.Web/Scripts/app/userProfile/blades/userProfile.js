@@ -6,7 +6,7 @@
     blade.currentLanguage = $translate.use();
 
     function initializeBlade() {
-        userProfileApi.querry(null,
+        userProfileApi.query(
            function (result) {
                blade.isLoading = false;
                result.sort();
