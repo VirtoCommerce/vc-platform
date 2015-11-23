@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using NLog;
+using VirtoCommerce.Storefront.Controllers;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Common;
 
@@ -23,14 +24,19 @@ namespace VirtoCommerce.Storefront
 
             if (httpException != null)
             {
-                //Need redirect to requested store and language error pages  
-                var urlBuilder = DependencyResolver.Current.GetService<IStorefrontUrlBuilder>();
-                var workContext = DependencyResolver.Current.GetService<WorkContext>();
-
-                switch (httpException.GetHttpCode())
+                 switch (httpException.GetHttpCode())
                 {
                     case 404:
-                        Context.Response.Redirect(urlBuilder.ToAppRelative(workContext, "~/Errors/404", workContext.CurrentStore, workContext.CurrentLanguage));
+                        RouteData routeData = new RouteData();
+                        routeData.Values.Add("controller", "Error");
+                        routeData.Values.Add("action", "Http404");
+                        // Clear the error, otherwise, we will always get the default error page.
+                        Server.ClearError();
+
+                        // Call the controller with the route
+                        IController errorController = new ErrorController();
+                        errorController.Execute(new RequestContext(new HttpContextWrapper(Context), routeData));
+                    
                         break;
                 }
             }
