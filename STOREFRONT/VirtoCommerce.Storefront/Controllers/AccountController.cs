@@ -263,7 +263,7 @@ namespace VirtoCommerce.Storefront.Controllers
 
             await _customerApi.CustomerModuleUpdateContactAsync(contact);
 
-            return Redirect("~/account");
+            return View("customers/account", _workContext);
         }
 
         [HttpPost]
