@@ -178,7 +178,8 @@ namespace VirtoCommerce.Storefront.Model.Common
 
 		public static bool operator !=(Money first, Money second)
 		{
-			return !first.Equals(second);
+            return !(first == second);
+			//return !first.Equals(second);
 		}
 
 		public static bool operator >(Money first, Money second)

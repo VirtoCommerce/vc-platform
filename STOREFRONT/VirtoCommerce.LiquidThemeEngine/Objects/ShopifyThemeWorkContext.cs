@@ -17,7 +17,6 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         public ShopifyThemeWorkContext(IStorefrontUrlBuilder urlBuilder)
         {
             _urlBuilder = urlBuilder;
-
         }
 
         #region Aliases for shopify theme compliance
@@ -57,7 +56,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         {
             get
             {
-                return new Cart(CurrentCart);
+                return new Cart(this, _urlBuilder, CurrentCart);
             }
         }
 

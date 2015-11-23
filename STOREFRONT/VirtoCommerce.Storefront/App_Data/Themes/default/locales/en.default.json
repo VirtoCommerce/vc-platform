@@ -1,4 +1,74 @@
 {
+    "checkout": {
+        "title": "Checkout",
+        "description": "Description",
+        "price": "Price",
+        "discount": "Discount",
+        "apply": "Apply",
+        "subtotal": "Subtotal",
+        "shipping": "Shipping",
+        "taxes": "Taxes",
+        "total": "Total",
+        "cart": "Cart",
+        "copyright_text": "All rights reserved",
+        "optional_field_sign": "(optional)",
+        "secure_field": "Secure field",
+        "shipping_address": "Shipping address",
+        "edit_shipping_address": "Edit shipping address",
+        "customer_subscribes_marketing": "Subscribe to our newsletter",
+        "mobile": {
+            "show_order_summary": "Show order summary",
+            "hide_order_summary": "Hide order summary"
+        },
+        "customer_information": {
+            "title": "Customer information",
+            "email": "Email",
+            "email_suggestion_text": "Did you mean <a href=\"{{ email }}\"></a>?",
+            "has_account_text": "Already have an account with us?",
+            "log_in": "Log in",
+            "save_information_text": "Save this information for faster checkout next time",
+            "continue_text": "Continue to shipping method",
+            "return_text": "Return to cart"
+        },
+        "shipping_method": {
+            "title": "Shipping method",
+            "continue_text": "Continue to payment method",
+            "return_text": "Return to customer information"
+        },
+        "payment_method": {
+            "title": "Payment method",
+            "subtitle": "All transactions are secure and encrypted. Credit card information is never stored.",
+            "credit_card": "Credit card",
+            "card_number": "Card number",
+            "cardholder_name": "Name on card",
+            "expiry_month": "Expiry month",
+            "expiry_year": "Expiry year",
+            "expiry_date": "MM / YY",
+            "cvv": "CVV",
+            "cvv_unknown_tooltip_text": "3-digit security code usually found on the back of your card. American Express cards have a 4-digit code located on the front.",
+            "cvv_amex_tooltip_text": "4-digit security code on the front of your card.",
+            "cvv_other_tooltip_text": "3-digit security code on the back of your card.",
+            "order_payed_by_gift_card": "Your order is covered by your gift cards.",
+            "order_is_free": "Your order is <strong>free</strong>. No payment is required.",
+            "billing_address": "Billing address",
+            "billing_address_equals_shipping": "Same as shipping address",
+            "billing_address_different": "Use a different billing address",
+            "continue_text": "Complete order",
+            "return_text": "Return to shipping method"
+        },
+        "address": {
+            "first_name": "First name",
+            "last_name": "Last name",
+            "company": "Company",
+            "address1": "Address",
+            "address2": "Apt, suite, etc.",
+            "city": "City",
+            "country": "Country",
+            "province": "State",
+            "zip": "Zip code",
+            "phone": "Phone"
+        }
+    },
     "date_formats": {
         "month_day_year": "%b %d, %Y"
     },
@@ -284,7 +354,7 @@
             "cart": "Cart"
         },
         "quotes": {
-            "quotes":  "Quotes"
+            "quotes": "Quotes"
         },
         "customer": {
             "view_account": "View Account",
@@ -314,35 +384,35 @@
             "newsletter_email_placeholder": "Email Address"
         }
     },
-  "products": {
-    "general": {
-      "share_on_facebook": "Share",
-      "share_on_twitter": "Tweet",
-      "share_on_pinterest": "Pin it",
-      "share_on_fancy": "Fancy",
-      "related_products": "We Also Recommend",
-        "save_html": "Save {{ saved_amount }}",
-        "add_to_cart": "Add to cart",
-        "add_to_quote": "Add to quote"
+    "products": {
+        "general": {
+            "share_on_facebook": "Share",
+            "share_on_twitter": "Tweet",
+            "share_on_pinterest": "Pin it",
+            "share_on_fancy": "Fancy",
+            "related_products": "We Also Recommend",
+            "save_html": "Save {{ saved_amount }}",
+            "add_to_cart": "Add to cart",
+            "add_to_quote": "Add to quote"
+        },
+        "product": {
+            "sold_out": "Sold Out",
+            "unavailable": "Unavailable",
+            "only_left": "Only {{ count }} left!",
+            "quantity": "Quantity",
+            "add_to_cart": "Add to Cart"
+        }
     },
-    "product": {
-      "sold_out": "Sold Out",
-      "unavailable": "Unavailable",
-      "only_left": "Only {{ count }} left!",
-      "quantity": "Quantity",
-      "add_to_cart": "Add to Cart"
+    "gift_cards": {
+        "issued": {
+            "title": "Here's your {{ value }} gift card for {{ shop }}!",
+            "subtext": "Here's your gift card!",
+            "disabled": "Disabled",
+            "expired": "Expired on {{ expiry }}",
+            "active": "Expires on {{ expiry }}",
+            "redeem": "Use this code at checkout to redeem your gift card",
+            "shop_link": "Start shopping",
+            "print": "Print"
+        }
     }
-  },
-  "gift_cards": {
-    "issued": {
-      "title": "Here's your {{ value }} gift card for {{ shop }}!",
-      "subtext": "Here's your gift card!",
-      "disabled": "Disabled",
-      "expired": "Expired on {{ expiry }}",
-      "active": "Expires on {{ expiry }}",
-      "redeem": "Use this code at checkout to redeem your gift card",
-      "shop_link": "Start shopping",
-      "print": "Print"
-    }
-  }
 }

@@ -1,10 +1,26 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Model.Cart
 {
     public class ShoppingCart : Entity
     {
+        public ShoppingCart(string storeId, string customerId, string customerName, string name, string currencyCode)
+        {
+            Currency = new Currency(EnumUtility.SafeParse(currencyCode, CurrencyCodes.USD));
+            CustomerId = customerId;
+            CustomerName = customerName;
+            Name = name;
+            StoreId = storeId;
+
+            Discounts = new List<Discount>();
+            Items = new List<LineItem>();
+            Payments = new List<Payment>();
+            Shipments = new List<Shipment>();
+            TaxDetails = new List<TaxDetail>();
+        }
+
         /// <summary>
         /// Gets or sets the value of shopping cart name
         /// </summary>
@@ -115,34 +131,74 @@ namespace VirtoCommerce.Storefront.Model.Cart
         public decimal? Width { get; set; }
 
         /// <summary>
-        /// Gets or sets the value of shopping cart total cost
+        /// Gets the value of shopping cart total cost
         /// </summary>
-        public decimal Total { get; set; }
+        public Money Total
+        {
+            get
+            {
+                decimal total = SubTotal.Amount + ShippingTotal.Amount + TaxTotal.Amount - DiscountTotal.Amount;
+
+                return new Money(total, Currency.Code);
+            }
+        }
 
         /// <summary>
-        /// Gets or sets the value of shopping cart subtotal
+        /// Gets the value of shopping cart subtotal
         /// </summary>
-        public decimal SubTotal { get; set; }
+        public Money SubTotal
+        {
+            get
+            {
+                decimal subTotal = Items.Sum(i => i.ExtendedPrice.Amount);
+
+                return new Money(subTotal, Currency.Code);
+            }
+        }
 
         /// <summary>
-        /// Gets or sets the value of shipping total cost
+        /// Gets the value of shipping total cost
         /// </summary>
-        public decimal ShippingTotal { get; set; }
+        public Money ShippingTotal
+        {
+            get
+            {
+                decimal shippingTotal = Shipments.Sum(s => s.Total.Amount);
+
+                return new Money(shippingTotal, Currency.Code);
+            }
+        }
 
         /// <summary>
         /// Gets or sets the value of handling total cost
         /// </summary>
-        public decimal HandlingTotal { get; set; }
+        public Money HandlingTotal { get; set; }
 
         /// <summary>
-        /// Gets or sets the value of total discount amount
+        /// Gets the value of total discount amount
         /// </summary>
-        public decimal DiscountTotal { get; set; }
+        public Money DiscountTotal
+        {
+            get
+            {
+                decimal discountsTotal = Discounts.Sum(d => d.DiscountAmount.Amount);
+
+                return new Money(discountsTotal, Currency.Code);
+            }
+        }
 
         /// <summary>
         /// Gets or sets the value of total tax cost
         /// </summary>
-        public decimal TaxTotal { get; set; }
+        public Money TaxTotal
+        {
+            get
+            {
+                decimal taxTotal = TaxDetails.Sum(td => td.Amount.Amount);
+
+                return new Money(taxTotal, Currency.Code);
+            }
+        }
 
         /// <summary>
         /// Gets or sets the collection of shopping cart addresses

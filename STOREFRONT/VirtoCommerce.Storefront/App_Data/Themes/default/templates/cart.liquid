@@ -1,5 +1,5 @@
 {% if cart.item_count > 0 %}
-    <form action="{{ shop.simplified_url }}/cart" method="post" novalidate>
+    <form action="{{ 'cart' | absolute_url }}" method="post" novalidate>
         <h1 class="h2">{{ 'cart.general.title' | t }}</h1>
         {% for item in cart.items %}
             <div class="cart-row" data-id="{{ item.id }}">
@@ -46,7 +46,7 @@
                                 </span>
                             </div>
                             <div class="grid-item one-sixth medium-down--one-third text-right">
-                                <a href="{{ shop.simplified_url }}/cart/change?line={{ forloop.index }}&amp;quantity=0" data-id="{{ item.id }}" class="icon-fallback-text btn-secondary remove">
+                                <a href="{{ 'cart/change?line=' | absolute_url }}{{ forloop.index }}&amp;quantity=0" data-id="{{ item.id }}" class="icon-fallback-text btn-secondary remove">
                                     <span class="icon icon-x" aria-hidden="true"></span>
                                     <span class="fallback-text">{{ 'cart.general.remove' | t }}</span>
                                 </a>

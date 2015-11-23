@@ -53,11 +53,8 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 			};
 
 			var searchResult = this._searchService.Search(criteria);
-			var retVal = searchResult.ShopingCarts.FirstOrDefault(x=>x.Name == "default");
-			if(retVal == null)
-			{
-				return NotFound();
-			}
+			var retVal = searchResult.ShopingCarts.FirstOrDefault(x => !string.IsNullOrEmpty(x.Name) && x.Name.Equals("default", StringComparison.OrdinalIgnoreCase));
+
 			return Ok(retVal.ToWebModel());
 		}
 

@@ -6,12 +6,22 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
     /// <summary>
     /// Represents shopping cart's line item
     /// </summary>
+    /// <remarks>
+    /// https://docs.shopify.com/themes/liquid-documentation/objects/line_item
+    /// </remarks>
     public class LineItem : Drop
     {
+        private readonly Storefront.Model.WorkContext _workContext;
+        private readonly Storefront.Model.Common.IStorefrontUrlBuilder _urlBuilder;
         private readonly Storefront.Model.Cart.LineItem _lineItem;
 
-        public LineItem(Storefront.Model.Cart.LineItem lineItem)
+        public LineItem(
+            Storefront.Model.WorkContext workContext,
+            Storefront.Model.Common.IStorefrontUrlBuilder urlBuilder,
+            Storefront.Model.Cart.LineItem lineItem)
         {
+            _workContext = workContext;
+            _urlBuilder = urlBuilder;
             _lineItem = lineItem;
         }
 
@@ -56,6 +66,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         {
             get
             {
+                // TODO: Populate
                 return null;
             }
         }
@@ -67,7 +78,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         {
             get
             {
-                return _lineItem.ExtendedPrice;
+                return _lineItem.ExtendedPrice != null ? _lineItem.ExtendedPrice.Amount : 0M;
             }
         }
 
@@ -78,7 +89,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         {
             get
             {
-                return _lineItem.PlacedPrice;
+                return _lineItem.PlacedPrice != null ? _lineItem.PlacedPrice.Amount : 0M;
             }
         }
 
@@ -101,8 +112,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         {
             get
             {
-                // TODO: Populate
-                return null;
+                return _lineItem.ProductId;
             }
         }
 
@@ -192,8 +202,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         {
             get
             {
-                // TODO: Populate
-                return null;
+                return _urlBuilder.ToAbsolute(_workContext, string.Format("~/products/{0}", _lineItem.ProductId), _workContext.CurrentStore, _workContext.CurrentLanguage);
             }
         }
 
@@ -204,7 +213,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         {
             get
             {
-                // TODO: populate
+                // TODO: Populate
                 return null;
             }
         }

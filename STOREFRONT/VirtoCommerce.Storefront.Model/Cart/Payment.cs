@@ -25,7 +25,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// <summary>
         /// Gets or sets the value of payment amount
         /// </summary>
-        public decimal Amount { get; set; }
+        public Money Amount { get; set; }
 
         /// <summary>
         /// Gets or sets the billing address

@@ -1,7 +1,6 @@
 ﻿using DotLiquid;
 using System.Collections.Generic;
 using System.Linq;
-using VirtoCommerce.Storefront.Model.Cart;
 
 namespace VirtoCommerce.LiquidThemeEngine.Objects
 {
@@ -13,10 +12,17 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
     /// </remarks>
     public class Cart : Drop
     {
-        private readonly ShoppingCart _cart;
+        private readonly Storefront.Model.WorkContext _workContext;
+        private readonly Storefront.Model.Common.IStorefrontUrlBuilder _urlBuilder;
+        private readonly Storefront.Model.Cart.ShoppingCart _cart;
 
-        public Cart(ShoppingCart cart)
+        public Cart(
+            Storefront.Model.WorkContext workContext,
+            Storefront.Model.Common.IStorefrontUrlBuilder urlBuilder,
+            Storefront.Model.Cart.ShoppingCart cart)
         {
+            _workContext = workContext;
+            _urlBuilder = urlBuilder;
             _cart = cart;
         }
 
@@ -39,7 +45,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         {
             get
             {
-                return _cart.Items.Select(i => new LineItem(i)).ToList();
+                return _cart.Items.Select(i => new LineItem(_workContext, _urlBuilder, i)).ToList();
             }
         }
 
@@ -72,7 +78,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         {
             get
             {
-                return _cart.Total;
+                return _cart.Total != null ? _cart.Total.Amount : 0M;
             }
         }
 

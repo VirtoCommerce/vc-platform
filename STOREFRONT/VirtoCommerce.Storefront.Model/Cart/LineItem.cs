@@ -1,10 +1,17 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Model.Cart
 {
     public class LineItem : Entity
     {
+        public LineItem()
+        {
+            Discounts = new List<Discount>();
+            TaxDetails = new List<TaxDetail>();
+        }
+
         /// <summary>
         /// Gets or sets the value of product id
         /// </summary>
@@ -142,32 +149,64 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// <summary>
         /// Gets or sets the value of line item original price
         /// </summary>
-        public decimal ListPrice { get; set; }
+        public Money ListPrice { get; set; }
 
         /// <summary>
         /// Gets or sets the value of line item sale price (include static discount)
         /// </summary>
-        public decimal SalePrice { get; set; }
+        public Money SalePrice { get; set; }
 
         /// <summary>
-        /// Gets or sets the value of line item actual price (include all types of discounts)
+        /// Gets the value of line item actual price (include all types of discounts)
         /// </summary>
-        public decimal PlacedPrice { get; set; }
+        public Money PlacedPrice
+        {
+            get
+            {
+                decimal placedPrice = (SalePrice.Amount > 0 ? SalePrice.Amount : ListPrice.Amount) - DiscountTotal.Amount;
+
+                return new Money(placedPrice, Currency.Code);
+            }
+        }
 
         /// <summary>
-        /// Gets or sets the value of line item subtotal price (actual price * line item quantity)
+        /// Gets the value of line item subtotal price (actual price * line item quantity)
         /// </summary>
-        public decimal ExtendedPrice { get; set; }
+        public Money ExtendedPrice
+        {
+            get
+            {
+                decimal extendedPrice = PlacedPrice.Amount * Quantity;
+
+                return new Money(extendedPrice, Currency.Code);
+            }
+        }
 
         /// <summary>
-        /// Gets or sets the value of line item total discount amount
+        /// Gets the value of line item total discount amount
         /// </summary>
-        public decimal DiscountTotal { get; set; }
+        public Money DiscountTotal
+        {
+            get
+            {
+                decimal discountsAmount = Discounts.Sum(d => d.DiscountAmount.Amount);
+
+                return new Money(discountsAmount, Currency.Code);
+            }
+        }
 
         /// <summary>
-        /// Gets or sets the value of line item total tax amount
+        /// Gets the value of line item total tax amount
         /// </summary>
-        public decimal TaxTotal { get; set; }
+        public Money TaxTotal
+        {
+            get
+            {
+                decimal taxesAmount = TaxDetails.Sum(td => td.Amount.Amount);
+
+                return new Money(taxesAmount, Currency.Code);
+            }
+        }
 
         /// <summary>
         /// Gets or sets the value of line item tax type

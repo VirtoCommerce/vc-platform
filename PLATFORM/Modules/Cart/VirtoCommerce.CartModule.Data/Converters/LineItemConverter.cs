@@ -59,7 +59,7 @@ namespace VirtoCommerce.CartModule.Data.Converters
 			if (target == null)
 				throw new ArgumentNullException("target");
 
-			var patchInjection = new PatchInjection<LineItemEntity>(x => x.Quantity, x => x.SalePrice, x => x.PlacedPrice, x => x.ListPrice, x => x.TaxIncluded, x => x.TaxTotal, x => x.TaxType);
+			var patchInjection = new PatchInjection<LineItemEntity>(x => x.Quantity, x => x.SalePrice, x => x.PlacedPrice, x => x.ListPrice, x => x.ExtendedPrice, x => x.TaxIncluded, x => x.DiscountTotal, x => x.TaxTotal, x => x.TaxType);
 			target.InjectFrom(patchInjection, source);
 
 			if (!source.TaxDetails.IsNullCollection())
