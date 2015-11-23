@@ -15,6 +15,7 @@ using VirtoCommerce.Web.Models.Services;
 using VirtoCommerce.Web.Models.Tagging;
 using VirtoCommerce.Web.Views.Engines.Liquid.Extensions;
 using VirtoCommerce.ApiClient.DataContracts.Marketing;
+using VirtoCommerce.Web.Caching;
 
 #endregion
 
@@ -183,14 +184,18 @@ namespace VirtoCommerce.Web.Models
             }
 
             var searchQuery = new BrowseQuery() { SortProperty = sortProperty, SortDirection = sortDirection, Filters = filters, Skip = from, Take = pageSize.Value, Outline = Id == "All" ? "" : this.BuildSearchOutline() };
-            var response =
-                Task.Run(() => service.SearchAsync<Product>(context, 
-                    searchQuery, this, responseGroups: ItemResponseGroups.ItemSmall | ItemResponseGroups.Variations)).Result;
+            var searchCacheKey = CacheKey.Create("Collection.LoadSlice", searchQuery.ToString());
+            var response = Task.Run(() => context.CacheManager.GetAsync(searchCacheKey, TimeSpan.FromMinutes(5), async () =>
+            {
+                return await Task.Run(() => service.SearchAsync<Product>(context,
+                 searchQuery, this, responseGroups: ItemResponseGroups.ItemSmall | ItemResponseGroups.Variations));
+            })).Result;
 
+            
             // populate tags with facets returned
             if (response.Facets != null && response.Facets.Any())
             {
-                var values = response.Facets.SelectMany(f => f.Values.Select(v => v.AsWebModel(f.Field)));
+                var values = response.Facets.Where(x=>x.Values != null).SelectMany(f => f.Values.Select(v => v.AsWebModel(f.Field))).ToArray();
                 this.Tags = new TagCollection(values);
             }
 

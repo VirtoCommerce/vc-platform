@@ -1,7 +1,6 @@
 ﻿{
   "platform": {
     "menu": {
-      "language": "Language",
       "home": "Home",
       "browse": "Browse",
       "configuration": "Configuration",
@@ -10,6 +9,7 @@
       "security": "Security",
       "modules": "Modules",
       "notifications": "Notifications",
+      "user-profile": "User profile",
       "export-import": "Export & Import",
       "assets": "Assets"
     },
@@ -656,6 +656,12 @@
       },
       "settingGroup-list": {
         "title": "Settings"
+      },
+      "user-profile": {
+        "title": "User profile",
+        "labels": {
+          "set-language": "Set Commerce Manager language"
+        }
       }
     },
     "templates": {

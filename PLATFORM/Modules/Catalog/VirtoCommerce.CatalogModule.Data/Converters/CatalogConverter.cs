@@ -30,10 +30,14 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
             retVal.InjectFrom(catalog);
             retVal.Languages = new List<coreModel.CatalogLanguage>();
 
-            foreach (var catalogLanguage in catalog.CatalogLanguages.Select(x => x.ToCoreModel(retVal)))
+            var defaultLanguage = (new dataModel.CatalogLanguage { Language = string.IsNullOrEmpty(catalog.DefaultLanguage) ? "en-us" : catalog.DefaultLanguage }).ToCoreModel(retVal);
+            defaultLanguage.IsDefault = true;
+            retVal.Languages = new List<coreModel.CatalogLanguage>();
+            retVal.Languages.Add(defaultLanguage);
+            //populate additional languages
+            foreach (var catalogLanguage in catalog.CatalogLanguages.Where(x => x.Language != defaultLanguage.LanguageCode).Select(x => x.ToCoreModel(retVal)))
             {
                 catalogLanguage.Catalog = retVal;
-                catalogLanguage.IsDefault = catalog.DefaultLanguage == catalogLanguage.LanguageCode;
                 retVal.Languages.Add(catalogLanguage);
             }
             retVal.PropertyValues = catalog.CatalogPropertyValues.Select(x => x.ToCoreModel(catalog.Properties.ToArray())).ToList();

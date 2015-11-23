@@ -25,7 +25,7 @@
 
     $scope.addImageFromUrl = function () {
         if (blade.newExternalImageUrl) {
-            assets.uploadFromUrl({ folderUrl: 'catalog', url: blade.newExternalImageUrl }, function (data) {
+            assets.uploadFromUrl({ folderUrl: 'catalog/' + $scope.origItem.code, url: blade.newExternalImageUrl }, function (data) {
                 blade.currentEntity.images.push(data);
                 blade.newExternalImageUrl = undefined;
             });

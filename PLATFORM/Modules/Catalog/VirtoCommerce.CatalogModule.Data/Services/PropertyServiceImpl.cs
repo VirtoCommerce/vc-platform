@@ -54,7 +54,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 			{
 				var dbCatalog = repository.GetCatalogById(catalogId);
 				var catalog = dbCatalog.ToCoreModel();
-				retVal = dbCatalog.Properties.Select(x => x.ToCoreModel(catalog, null)).ToArray();
+				retVal = dbCatalog.Properties.Where(x=>x.CategoryId == null).Select(x => x.ToCoreModel(catalog, null)).ToArray();
 			}
 			return retVal;
 		}
