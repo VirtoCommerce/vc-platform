@@ -6,8 +6,6 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using NLog;
 using VirtoCommerce.Storefront.Controllers;
-using VirtoCommerce.Storefront.Model;
-using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront
 {
