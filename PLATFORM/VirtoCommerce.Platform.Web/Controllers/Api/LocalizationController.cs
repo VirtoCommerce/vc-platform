@@ -12,7 +12,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly string _localizationPath;
         public LocalizationController()
         {
-            _localizationPath = HostingEnvironment.MapPath("~/App_Data/Localizations/");
+            _localizationPath = HostingEnvironment.MapPath("~/App_Data/Localization/");
         }
 
         /// <summary>
@@ -20,30 +20,30 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </summary>
         /// <returns>json</returns>
         [System.Web.Http.HttpGet]
-        [System.Web.Http.Route("")]
+        [System.Web.Http.Route("file")]
         [AllowAnonymous]
         public JObject GetLocalizationFile(string lang = "en")
         {
             DirectoryInfo directory = new DirectoryInfo(_localizationPath);
-            var files = directory.GetFiles().Where(x => x.Name.StartsWith(lang)).ToList();
-
-            // move custom file to the end of file list
-            //var custom = string.Format("{0}.custom.json", lang);
-            //var customFile = files.FirstOrDefault(x => x.Name.ToLower() == custom);
-            //if (customFile != null)
-            //{
-            //    files.Remove(customFile);
-            //    files.Add(customFile);
-            //}
-
-            var result = new JObject();
-            foreach (var file in files)
-            {
-                var part = JObject.Parse(File.ReadAllText(file.FullName));
-                result.Merge(part, new JsonMergeSettings { MergeArrayHandling = MergeArrayHandling.Concat });
-            }
+            var file = directory.GetFiles().FirstOrDefault(x => x.Name == string.Format("{0}.json", lang));
+            
+            var result = JObject.Parse(File.ReadAllText(file.FullName));
 
             return result; 
+        }
+
+        /// <summary>
+        /// Get all localization files by given language
+        /// </summary>
+        /// <returns>json</returns>
+        [System.Web.Http.HttpGet]
+        [System.Web.Http.Route("locales")]
+        public string[] GetLocales()
+        {
+            DirectoryInfo directory = new DirectoryInfo(_localizationPath);
+            var locales = directory.GetFiles().Select(x => x.Name.Substring(0, x.Name.IndexOf('.'))).Distinct().ToArray();
+
+            return locales;
         }
 
     }
