@@ -6,6 +6,7 @@ using VirtoCommerce.Client.Model;
 using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Cart;
+using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Builders
@@ -18,7 +19,7 @@ namespace VirtoCommerce.Storefront.Builders
         private Customer _customer;
         private Currency _currency;
 
-        private ShoppingCart _cart = new ShoppingCart();
+        private ShoppingCart _cart;
 
         public CartBuilder(IShoppingCartModuleApi cartApi)
         {
@@ -33,75 +34,47 @@ namespace VirtoCommerce.Storefront.Builders
             _customer = customer;
             _currency = currency;
 
-            try
+            cart = await _cartApi.CartModuleGetCurrentCartAsync(_store.Id, _customer.Id);
+            if (cart == null)
             {
-                cart = await _cartApi.CartModuleGetCurrentCartAsync(_store.Id, _customer.Id);
+                _cart = new ShoppingCart(_store.Id, _customer.Id, _customer.Name, "Default", _currency.Code);
             }
-            catch (Client.Client.ApiException exception)
+            else
             {
-                if (exception.ErrorCode != 404)
-                {
-                    throw new Exception(exception.Message, exception);
-                }
-            }
-            finally
-            {
-                // TODO: Remake with factory or something about it
-                cart = new VirtoCommerceCartModuleWebModelShoppingCart();
-                cart.Currency = _currency.Code;
-                cart.CustomerId = _customer.Id;
-                cart.CustomerName = _customer.Name;
-                cart.Name = "Default";
-                cart.StoreId = _store.Id;
-
                 _cart = cart.ToWebModel();
             }
 
             return this;
         }
 
-        public CartBuilder AddItem(LineItem lineItem)
+        public CartBuilder AddItem(Product product, int quantity)
         {
-            var existingLineItem = _cart.Items.FirstOrDefault(i => i.Sku == lineItem.Sku);
+            var existingLineItem = _cart.Items.FirstOrDefault(i => i.Sku == product.Sku);
             if (existingLineItem != null)
             {
-                existingLineItem.Quantity += lineItem.Quantity;
+                existingLineItem.Quantity += quantity;
             }
             else
             {
-                _cart.Items.Add(lineItem);
+                _cart.Items.Add(product.ToLineItem(quantity));
             }
 
             return this;
         }
 
-        public CartBuilder RemoveItem(string id)
+        public CartBuilder UpdateItem(int index, int quantity)
         {
-            var lineItem = _cart.Items.FirstOrDefault(i => i.Id == id);
+            var lineItem = _cart.Items.ElementAt(index);
             if (lineItem != null)
             {
-                _cart.Items.Remove(lineItem);
-            }
-
-            return this;
-        }
-
-        public CartBuilder UpdateItem(string id, int quantity)
-        {
-            var lineItem = _cart.Items.FirstOrDefault(i => i.Id == id);
-            if (lineItem != null)
-            {
-                lineItem.Quantity = quantity;
-            }
-
-            return this;
-        }
-
-        public CartBuilder MergeWith(ShoppingCart cart)
-        {
-            foreach (var lineItem in cart.Items)
-            {
-                AddItem(lineItem);
+                if (quantity > 0)
+                {
+                    lineItem.Quantity = quantity;
+                }
+                else
+                {
+                    _cart.Items.Remove(lineItem);
+                }
             }
 
             return this;
@@ -109,7 +82,16 @@ namespace VirtoCommerce.Storefront.Builders
 
         public async Task SaveAsync()
         {
-            await _cartApi.CartModuleUpdateAsync(_cart.ToServiceModel());
+            var cart = _cart.ToServiceModel();
+
+            if (_cart.IsTransient())
+            {
+                await _cartApi.CartModuleCreateAsync(cart);
+            }
+            else
+            {
+                await _cartApi.CartModuleUpdateAsync(cart);
+            }
         }
 
         public ShoppingCart Cart

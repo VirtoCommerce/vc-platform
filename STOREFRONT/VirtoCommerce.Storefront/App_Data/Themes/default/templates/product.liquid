@@ -60,6 +60,7 @@
       <link itemprop="availability" href="http://schema.org/{% if current_product.available %}InStock{% else %}OutOfStock{% endif %}">
 
       <form action="{{ 'cart/add' | absolute_url }}" method="post" enctype="multipart/form-data" id="addToCartForm" ng-if="product.Variations">
+        <input id="id" name="id" type="hidden" value="{{ product.id }}" />
         <div class="selector-wrapper" ng-repeat="propertyKey in Object.keys(properties)">
             <label>{( propertyKey )}</label>
             <select class="single-option-selector" ng-model="properties[propertyKey].selectedValue" ng-change="rebuildSkuSelector()" required="">

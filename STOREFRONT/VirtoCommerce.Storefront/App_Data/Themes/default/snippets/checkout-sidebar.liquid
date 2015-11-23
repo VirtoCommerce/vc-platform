@@ -1,0 +1,119 @@
+﻿<div class="sidebar__header">
+    <a class="logo logo--left" href="{{ shop.url }}">
+        <h1 class="logo__text">{{ shop.name }}</h1>
+    </a>
+</div>
+<div class="sidebar__content">
+    <div class="order-summary order-summary--is-collapsed">
+        <div class="order-summary__section order-summary__section--product-list">
+            <table class="product-table">
+                <thead>
+                    <tr>
+                        <th scope="col">
+                            <span class="visually-hidden">{{ 'checkout.description' | t }}</span>
+                        </th>
+                        <th scope="col">
+                            <span class="visually-hidden">{{ 'checkout.price' | t }}</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="product" ng-repeat="lineIten in cart.Items">
+                        <td class="product__image">
+                            <div class="product__image__inner">
+                                <span class="product__quantity">{( lineItem.Quantity )}</span>
+                                <img alt="{( lineItem.Name )}" src="{( lineItem.ImageUrl )}" />
+                            </div>
+                        </td>
+                        <td class="product__description">
+                            <span class="product__description__name order-summary__emphasis">{( lineItem.Name )}</span>
+                            <span class="product__description__variant order-summary__small-text">
+                                <!-- TODO: Add properties -->
+                            </span>
+                        </td>
+                        <td class="product__price">
+                            <span class="order-summary__emphasis">{( lineItem.ExtendedPrice.Amount | currency: lineItem.ExtendedPrice.CurrencySymbol )}</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="order-summary__section order-summary__section--discount">
+            <form accept-charset="UTF-8" action="" class="edit_checkout" method="post">
+                <div class="fieldset">
+                    <div class="field ">
+                        <label class="field__label" for="">{{ 'checkout.discount' | t }}</label>
+                        <div class="field__input-btn-wrapper">
+                            <div class="field__input-wrapper">
+                                <input class="field__input" id="" name="" placeholder="{{ 'checkout.discount' | t }}" size="30" type="text" />
+                            </div>
+                            <button class="field__input-btn btn btn--default btn--disabled" type="submit">
+                                <span class="btn__content visually-hidden-on-mobile">{{ 'checkout.apply' | t }}</span>
+                                <i class="btn__content shown-on-mobile icon icon--arrow"></i>
+                                <i class="btn__spinner icon icon--button-spinner"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="order-summary__section order-summary__section--total-lines">
+            <table class="total-line-table">
+                <thead>
+                    <tr>
+                        <th scope="col">
+                            <span class="visually-hidden">{{ 'checkout.description' | t }}</span>
+                        </th>
+                        <th scope="col">
+                            <span class="visually-hidden">{{ 'checkout.price' | t }}</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="total-line total-line--subtotal">
+                        <td class="total-line__name">{{ 'checkout.subtotal' | t }}</td>
+                        <td class="total-line__price">
+                            <span class="order-summary__emphasis">{( cart.Total.Amount | currency: cart.Total.CurrencySymbol )}</span>
+                        </td>
+                    </tr>
+                    <tr class="total-line total-line--shipping">
+                        <td class="total-line__name">{{ 'checkout.shipping' | t }}</td>
+                        <td class="total-line__price">
+                            <span class="order-summary__emphasis">{( cart.ShippingTotal.Amount | currency: cart.ShippingTotal.CurrencySymbol )}</span>
+                        </td>
+                    </tr>
+                    <tr class="total-line total-line--taxes">
+                        <td class="total-line__name">{{ 'checkout.taxes' | t }}</td>
+                        <td class="total-line__price">
+                            <span class="order-summary__emphasis">{( cart.TaxTotal.Amount | currency: cart.TaxTotal.CurrencySymbol )}</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="order-summary__section order-summary__section--total">
+            <table class="total-line-table">
+                <thead>
+                    <tr>
+                        <th scope="col">
+                            <span class="visually-hidden">{{ 'checkout.description' | t }}</span>
+                        </th>
+                        <th scope="col">
+                            <span class="visually-hidden">{{ 'checkout.price' | t }}</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="total-line">
+                        <td class="total-line__name payment-due-label">{{ 'checkout.total' | t }}</td>
+                        <td class="total-line__price payment-due">
+                            <!-- TODO: Translate -->
+                            <span class="payment-due__currency">CAD</span>
+                            <span class="payment-due__price">{( cart.Total.Amount | currency: cart.Total.CurrencySymbol )}</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

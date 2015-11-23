@@ -81,7 +81,6 @@
     <Compile Include="SeoInfo.cs" />
     <Compile Include="Services\IProductService.cs" />
     <Compile Include="ShipmentMethod.cs" />
-    <Compile Include="Cart\CartSummary.cs" />
     <Compile Include="Discount.cs" />
     <Compile Include="Cart\LineItem.cs" />
     <Compile Include="Cart\Payment.cs" />

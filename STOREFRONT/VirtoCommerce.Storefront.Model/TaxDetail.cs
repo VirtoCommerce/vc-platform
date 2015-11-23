@@ -6,7 +6,7 @@ namespace VirtoCommerce.Storefront.Model
     {
         public decimal Rate { get; set; }
 
-        public decimal Amount { get; set; }
+        public Money Amount { get; set; }
 
         public string Name { get; set; }
     }

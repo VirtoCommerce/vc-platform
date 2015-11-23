@@ -15,6 +15,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         private readonly Storefront.Model.Catalog.Product _product;
         private readonly Storefront.Model.WorkContext _context;
         private readonly Storefront.Model.Common.IStorefrontUrlBuilder _urlBuilder;
+
         public Product(Storefront.Model.Catalog.Product product, Storefront.Model.Common.IStorefrontUrlBuilder urlBuilder, Storefront.Model.WorkContext context)
         {
             _product = product;

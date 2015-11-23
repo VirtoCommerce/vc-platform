@@ -1,0 +1,14 @@
+﻿<ul class="breadcrumb">
+    <li class="breadcrumb__item breadcrumb__item--completed">
+        <a class="breadcrumb__link" href="{{ 'cart' | absolute_url }}">{{ 'checkout.cart' | t }}</a>
+    </li>
+    <li class="breadcrumb__item breadcrumb__item--completed">
+        <a class="breadcrumb__link" href="">{{ 'checkout.customer_information.title' | t }}</a>
+    </li>
+    <li class="breadcrumb__item breadcrumb__item--completed">
+        <a class="breadcrumb__link" href="">{{ 'checkout.shipping_method.title' | t }}</a>
+    </li>
+    <li class="breadcrumb__item breadcrumb__item--current">
+        {{ 'checkout.payment_method.title' | t }}
+    </li>
+</ul>

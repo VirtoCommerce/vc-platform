@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Model.Cart
@@ -34,7 +35,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// <value>
         /// Currency code in ISO 4217 format
         /// </value>
-        public CurrencyCodes Currency { get; set; }
+        public Currency Currency { get; set; }
 
         /// <summary>
         /// Gets or sets the value of volumetric weight
@@ -79,32 +80,62 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// <summary>
         /// Gets or sets the value of shipping price
         /// </summary>
-        public decimal ShippingPrice { get; set; }
+        public Money ShippingPrice { get; set; }
 
         /// <summary>
-        /// Gets or sets the value of total shipping price
+        /// Gets the value of total shipping price
         /// </summary>
-        public decimal Total { get; set; }
+        public Money Total
+        {
+            get
+            {
+                return Subtotal + TaxTotal - DiscountTotal;
+            }
+        }
 
         /// <summary>
-        /// Gets or sets the value of total shipping discount amount
+        /// Gets the value of total shipping discount amount
         /// </summary>
-        public decimal DiscountTotal { get; set; }
+        public Money DiscountTotal
+        {
+            get
+            {
+                decimal discountsTotal = Discounts.Sum(d => d.DiscountAmount.Amount);
+
+                return new Money(discountsTotal, Currency.Code);
+            }
+        }
 
         /// <summary>
-        /// Gets or sets the value of total shipping tax amount
+        /// Gets the value of total shipping tax amount
         /// </summary>
-        public decimal TaxTotal { get; set; }
+        public Money TaxTotal
+        {
+            get
+            {
+                decimal taxTotal = TaxDetails.Sum(td => td.Amount.Amount);
+
+                return new Money(taxTotal, Currency.Code);
+            }
+        }
 
         /// <summary>
-        /// Gets or sets the value of shipping items subtotal
+        /// Gets the value of shipping items subtotal
         /// </summary>
-        public decimal ItemSubtotal { get; set; }
+        public Money ItemSubtotal
+        {
+            get
+            {
+                decimal subTotal = Items.Sum(i => i.ExtendedPrice.Amount);
+
+                return new Money(subTotal, Currency.Code);
+            }
+        }
 
         /// <summary>
         /// Gets or sets the value of shipping subtotal
         /// </summary>
-        public decimal Subtotal { get; set; }
+        public Money Subtotal { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of shipping discounts

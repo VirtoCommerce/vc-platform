@@ -1,0 +1,416 @@
+﻿<div class="step" ng-if="checkoutStep.step == 'customer-information'">
+    <form accept-charset="UTF-8" action="" class="edit_checkout animate-floating-labels" method="post">
+        <div class="step__sections">
+            <div class="section section--contact-information">
+                <div class="section__header">
+                    <h2 class="section__title">{{ 'checkout.customer_information.title' | t }}</h2>
+                </div>
+                <div class="section__content">
+                    <div class="fieldset">
+                        <div class="field field--required field--show-floating-label">
+                            <div class="field__input-wrapper">
+                                <label class="field__label" for="">{{ 'checkout.customer_information.email' | t }}</label>
+                                <input class="field__input" id="" name="" size="30" placeholder="{{ 'checkout.customer_information.email' | t }}" type="email" value="" />
+                            </div>
+                            <p class="field__message--warning hidden">{{ 'checkout.customer_information.email_suggestion_text' | t: email }}</p>
+                        </div>
+                    </div>
+                    <p class="section__content__text">
+                        {{ 'checkout.customer_information.has_account_text' | t }}
+                        <a href="{{ 'account/login' | absolute_url }}">{{ 'checkout.customer_information.log_in' | t }}</a>
+                    </p>
+                </div>
+            </div>
+            <div class="section section--shipping-address">
+                <div class="section__header">
+                    <h2 class="section__title">{{ 'checkout.shipping_address' | t }}</h2>
+                </div>
+                <div class="section__content">
+                    <div class="fieldset">
+                        <div class="field--half field field--optional field--show-floating-label">
+                            <div class="field__input-wrapper">
+                                <label class="field__label" for="">{{ 'checkout.address.first_name' | t }}</label>
+                                <input class="field__input" id="" name="" placeholder="{{ 'checkout.address.first_name' | t }}" size="30" type="text" value="" />
+                            </div>
+                        </div>
+                        <div class="field--half field field--required field--show-floating-label">
+                            <div class="field__input-wrapper">
+                                <label class="field__label" for="">{{ 'checkout.address.last_name' | t }}</label>
+                                <input class="field__input" id="" name="" placeholder="{{ 'checkout.address.last_name' | t }}" size="30" type="text" value="" />
+                            </div>
+                        </div>
+                        <div class="field field--optional">
+                            <div class="field__input-wrapper">
+                                <label class="field__label" for="">{{ 'checkout.address.company' | t }} {{ 'checkout.optional_field_sign' | t }}</label>
+                                <input class="field__input" id="" name="" placeholder="{{ 'checkout.address.company' | t }} {{ 'checkout.optional_field_sign' | t }}" size="30" type="text" value="" />
+                            </div>
+                        </div>
+                        <div class="field--two-thirds field field--required field--show-floating-label">
+                            <div class="field__input-wrapper">
+                                <label class="field__label" for="">{{ 'checkout.address.address1' | t }}</label>
+                                <input class="field__input" id="" name="" placeholder="{{ 'checkout.address.address1' | t }}" size="30" type="text" value="" />
+                            </div>
+                        </div>
+                        <div class="field--third field field--optional">
+                            <div class="field__input-wrapper">
+                                <label class="field__label" for="">{{ 'checkout.address.address2' | t }} {{ 'checkout.optional_field_sign' | t }}</label>
+                                <input class="field__input" id="" name="" placeholder="{{ 'checkout.address.address2' | t }} {{ 'checkout.optional_field_sign' | t }}" size="30" type="text" value="" />
+                            </div>
+                        </div>
+                        <div class="field field--required field--show-floating-label">
+                            <div class="field__input-wrapper">
+                                <label class="field__label" for="">{{ 'checkout.address.city' | t }}</label>
+                                <input class="field__input" id="" name="" placeholder="{{ 'checkout.address.city' | t }}" size="30" type="text" value="" />
+                            </div>
+                        </div>
+                        <div class="field field--required field--three-eights field--show-floating-label">
+                            <div class="field__input-wrapper field__input-wrapper--select">
+                                <label class="field__label" for="">{{ 'checkout.address.country' | t }}</label>
+                                <select class="field__input field__input--select" id="" name="" size="1">
+                                    <!-- TODO: Populate countries -->
+                                </select>
+                            </div>
+                        </div>
+                        <input class="visually-hidden" name="" size="30" tabindex="-1" type="text" />
+                        <div class="field field--required field--three-eights field--show-floating-label">
+                            <div class="field__input-wrapper field__input-wrapper--select">
+                                <label class="field__label" for="">{{ 'checkout.address.province' | t }}</label>
+                                <select class="field__input field__input--select" id="" name="" placeholder="{{ 'checkout.address.province' | t }}">
+                                    <!-- TODO: Populate provinces -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="field field--required field--quarter field--show-floating-label">
+                            <div class="field__input-wrapper">
+                                <label class="field__label" for="">{{ 'checkout.address.zip' | t }}</label>
+                                <input class="field__input" id="" name="" placeholder="{{ 'checkout.address.zip' | t }}" size="30" type="text" value="" />
+                            </div>
+                        </div>
+                        <div class="field field--optional">
+                            <div class="field__input-wrapper">
+                                <label class="field__label" for="">{{ 'checkout.address.phone' | t }} {{ 'checkout.optional_field_sign' | t }}</label>
+                                <input class="field__input" id="" name="" placeholder="{{ 'checkout.address.phone' | t }} {{ 'checkout.optional_field_sign' | t }}" size="30" type="tel" value="" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="section section--optional">
+                <div class="section__content">
+                    <div class="checkbox-wrapper">
+                        <div class="checkbox__input">
+                            <input class="input-checkbox" id="" name="" type="checkbox" />
+                        </div>
+                        <label class="checkbox__label" for="checkout_activate_customer_account">
+                            {{ 'checkout.customer_information.save_information_text' | t }}
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="step__footer">
+            <button class="step__footer__continue-btn btn" name="button" type="submit">
+                <span class="btn__content">{{ 'checkout.customer_information.continue_text' | t }}</span>
+                <i class="btn__spinner icon icon--button-spinner"></i>
+            </button>
+            <a class="step__footer__previous-link" href="{{ 'cart' | absolute_url }}">
+                <svg class="previous-link__icon icon--chevron icon" height="11.3" width="6.7" viewBox="0 0 6.7 11.3" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M 6.7 1.1 l -1 -1.1 l -4.6 4.6 l -1.1 1.1 l 1.1 1 l 4.6 4.6 l 1 -1 l -4.6 -4.6 Z"></path>
+                </svg>
+                {{ 'checkout.customer_information.return_text' | t }}
+            </a>
+        </div>
+    </form>
+</div>
+
+<div class="step" ng-if="checkoutStep.step == 'shipping-method'">
+    <form accept-charset="UTF-8" action="" class="edit_checkout animate-floating-labels" method="post">
+        <div class="step__sections">
+            <div class="section section--shipping-address-recap">
+                <div class="section__header">
+                    <h2 class="section__title">{{ 'checkout.shipping_address' | t }}</h2>
+                </div>
+                <div class="section__content">
+                    <p>
+                        qwe qwe<br />
+                        qwe<br />
+                        qwe, AL, 36310<br />
+                        United States
+                        <a class="edit-link edit-link--small" href="">{{ 'checkout.edit_shipping_address' | t }}</a>
+                    </p>
+                </div>
+            </div>
+            <div class="section section--shipping-method">
+                <div class="section__header">
+                    <h2 class="section__title">{{ 'checkout.shipping_method.title' | t }}</h2>
+                </div>
+                <div class="section__content">
+                    <div class="content-box" ng-repeat="shippingMethod in cart.AvailableShippingMethods">
+                        <div class="content-box__row">
+                            <div class="radio-wrapper">
+                                <div class="radio__input">
+                                    <input class="input-radio" id="" name="" type="radio" value="" />
+                                </div>
+                                <label class="radio__label" for="">{( shippingMethod.Name )}</label>
+                                <span class="radio__accessory content-box__emphasis">{( shippingMethod.Price.Amount | currency: shippingMethod.Price.CurrencySymbol )}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="step__footer">
+            <button class="step__footer__continue-btn btn" name="button" type="submit">
+                <span class="btn__content">{{ 'checkout.shipping_method.continue_text' | t }}</span>
+                <i class="btn__spinner icon icon--button-spinner"></i>
+            </button>
+            <a class="step__footer__previous-link" href="">
+                <svg class="previous-link__icon icon--chevron icon" height="11.3" width="6.7" viewBox="0 0 6.7 11.3" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M 6.7 1.1 l -1 -1.1 l -4.6 4.6 l -1.1 1.1 l 1.1 1 l 4.6 4.6 l 1 -1 l -4.6 -4.6 Z"></path>
+                </svg>
+                {{ 'checkout.shipping_method.return_text' | t }}
+            </a>
+        </div>
+    </form>
+</div>
+
+<div class="step" ng-if="checkoutStep.step == 'payment-method'">
+    <div class="step__sections">
+        <div class="section section--reductions hidden-on-desktop">
+            <div class="section__header">
+                <h2 class="section__title">{{ 'checkout.discount' | t }}</h2>
+            </div>
+            <div class="section__content">
+                <div>
+                    <form accept-charset="UTF-8" action="" class="edit_checkout animate-floating-labels" method="post">
+                        <div class="fieldset">
+                            <div class="field">
+                                <div class="field__input-btn-wrapper">
+                                    <div class="field__input-wrapper">
+                                        <label class="field__label" for="checkout_reduction_code">{{ 'checkout.discount' | t }}</label>
+                                        <input class="field__input" id="" name="" placeholder="{{ 'checkout.discount' | t }}" size="30" type="text" />
+                                    </div>
+                                    <button class="field__input-btn btn btn--default btn--disabled" type="submit">
+                                        <span class="btn__content visually-hidden-on-mobile">{{ 'checkout.apply' | t }}</span>
+                                        <i class="btn__content shown-on-mobile icon icon--arrow"></i>
+                                        <i class="btn__spinner icon icon--button-spinner"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <form accept-charset="UTF-8" action="" class="edit_checkout animate-floating-labels" method="post">
+        <div class="step__sections">
+            <div class="section section--payment-method">
+                <div class="section__header">
+                    <h2 class="section__title">{{ 'checkout.payment_method.title' | t }}</h2>
+                    <p class="section__text">{{ 'checkout.payment_method.subtitle' | t }}</p>
+                </div>
+                <div class="section__content">
+                    <div>
+                        <div class="content-box">
+                            <div class="radio-wrapper content-box__row ">
+                                <label class="radio__label content-box__emphasis" for="">{{ 'checkout.payment_method.credit_card' | t }}</label>
+                                <div class="radio__accessory">
+                                    <div class="payment-icon payment-icon--bogus">
+                                        <span class="visually-hidden">Bogus</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="radio-wrapper content-box__row content-box__row--secondary">
+                                <div class="fieldset " dir="ltr">
+                                    <div class="field field--required">
+                                        <div class="field__input-wrapper">
+                                            <label class="field__label" for="">{{ 'checkout.payment_method.card_number' | t }}</label>
+                                            <input class="field__input" id="" name="" placeholder="{{ 'checkout.payment_method.card_number' | t }}" size="30" type="tel" value="" />
+                                            <span class="field__icon icon icon--lock">
+                                                <span class="visually-hidden">{{ 'checkout.secure_field' | t }}</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="field--half field field--required">
+                                        <div class="field__input-wrapper">
+                                            <label class="field__label" for="">{{ 'checkout.payment_method.cardholder_name' | t }}</label>
+                                            <input class="field__input" id="" name="" placeholder="{{ 'checkout.payment_method.cardholder_name' | t }}" size="30" type="text" />
+                                        </div>
+                                    </div>
+                                    <div class="field field--required visually-hidden">
+                                        <div class="field__input-wrapper field__input-wrapper--select">
+                                            <label class="field__label" for="">{{ 'checkout.payment_method.expiry_month' | t }}</label>
+                                            <select class="field__input field__input--select" id="" name="" tabindex="-1">
+                                                <option value="">{{ 'checkout.payment_method.expiry_month' | t }}</option>
+                                                {% for month in (1..12) %}
+                                                <option value="{{ month }}">
+                                                    {% if i < 10 %}0{{ i }}{% else %}i{% endif %}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="field field--required visually-hidden">
+                                        <div class="field__input-wrapper field__input-wrapper--select">
+                                            <label class="field__label" for="">{{ 'checkout.payment_method.expiry_year' | t }}</label>
+                                            <select class="field__input field__input--select" id="" name="" tabindex="-1">
+                                                <option value="">Expiry year</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="field--quarter field field--required">
+                                        <div class="field__input-wrapper">
+                                            <label class="field__label" for="">{{ 'checkout.payment_method.expiry_date' | t }}</label>
+                                            <input class="field__input" id="" placeholder="{{ 'checkout.payment_method.expiry_date' | t }}" size="30" type="tel" />
+                                        </div>
+                                    </div>
+                                    <div class="field--quarter field field--required">
+                                        <div class="field__input-wrapper">
+                                            <label class="field__label" for="">{{ 'checkout.payment_method.cvv' | t }}</label>
+                                            <input class="field__input" id="" maxlength="4" name="" placeholder="{{ 'checkout.payment_method.cvv' | t }}" size="30" type="tel" />
+                                            <span class="field__icon icon icon--question has-tooltip" role="tooltip" tabindex="0">
+                                                <span class="tooltip">
+                                                    <span data-cvv-tooltip="unknown">{{ 'checkout.payment_method.cvv_unknown_tooltip_text' | t }}</span>
+                                                    <span class="hidden" data-cvv-tooltip="amex">{{ 'checkout.payment_method.cvv_amex_tooltip_text' | t }}</span>
+                                                    <span class="hidden" data-cvv-tooltip="other">{{ 'checkout.payment_method.cvv_other_tooltip_text' | t }}</span>
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hidden">
+                        <div class="content-box blank-slate">
+                            <div class="content-box__row">
+                                <i class="blank-slate__icon icon icon--free-tag"></i>
+                                <p>{{ 'checkout.payment_method.order_payed_by_gift_card' | t }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hidden">
+                        <div class="content-box blank-slate">
+                            <div class="content-box__row">
+                                <i class="blank-slate__icon icon icon--free-tag"></i>
+                                <p>{{ 'checkout.payment_method.order_free' | t }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="section section--billing-address">
+                <div class="section__header">
+                    <h2 class="section__title">{{ 'checkout.payment_method.billing_address' | t }}</h2>
+                </div>
+                <div class="section__content">
+                    <div class="content-box">
+                        <div class="radio-wrapper content-box__row">
+                            <div class="radio__input">
+                                <input checked="checked" class="input-radio" id="" name="" type="radio" />
+                            </div>
+                            <label class="radio__label content-box__emphasis" for="">{{ 'checkout.payment_method.billing_address_equals_shipping' | t }}</label>
+                        </div>
+                        <div class="radio-wrapper content-box__row">
+                            <div class="radio__input">
+                                <input class="input-radio" id="" name="" type="radio" />
+                            </div>
+                            <label class="radio__label content-box__emphasis" for="">{{ 'checkout.payment_method.billing_address_different' | t }}</label>
+                        </div>
+                        <div class="radio-group__row content-box__row content-box__row--secondary hidden">
+                            <div class="fieldset">
+                                <div class="field--half field field--optional">
+                                    <div class="field__input-wrapper">
+                                        <label class="field__label" for="">{{ 'checkout.address.first_name' | t }}</label>
+                                        <input class="field__input" id="" name="" placeholder="{{ 'checkout.address.first_name' | t }}" size="30" type="text" />
+                                    </div>
+                                </div>
+                                <div class="field--half field field--required">
+                                    <div class="field__input-wrapper">
+                                        <label class="field__label" for="">{{ 'checkout.address.last_name' | t }}</label>
+                                        <input class="field__input" id="" name="" placeholder="{{ 'checkout.address.last_name' | t }}" size="30" type="text" />
+                                    </div>
+                                </div>
+                                <div class="field field--optional">
+                                    <div class="field__input-wrapper">
+                                        <label class="field__label" for="">{{ 'checkout.address.company' | t }} {{ 'checkout.optional_field_sign' | t }}</label>
+                                        <input class="field__input" id="" name="" placeholder="{{ 'checkout.address.company' | t }} {{ 'checkout.optional_field_sign' | t }}" size="30" type="text" />
+                                    </div>
+                                </div>
+                                <div class="field--two-thirds field field--required">
+                                    <div class="field__input-wrapper">
+                                        <label class="field__label" for="">{{ 'checkout.address.address1' | t }}</label>
+                                        <input class="field__input" id="" name="" placeholder="{{ 'checkout.address.address1' | t }}" size="30" type="text" />
+                                    </div>
+                                </div>
+                                <div class="field--third field field--optional">
+                                    <div class="field__input-wrapper">
+                                        <label class="field__label" for="">{{ 'checkout.address.address2' | t }} {{ 'checkout.optional_field_sign' | t }}</label>
+                                        <input class="field__input" name="" id="" placeholder="{{ 'checkout.address.address2' | t }} {{ 'checkout.optional_field_sign' | t }}" size="30" type="text" />
+                                    </div>
+                                </div>
+                                <div class="field field--required">
+                                    <div class="field__input-wrapper">
+                                        <label class="field__label" for="">{{ 'checkout.address.city' | t }}</label>
+                                        <input class="field__input" id="" name="" placeholder="{{ 'checkout.address.city' | t }}" size="30" type="text" />
+                                    </div>
+                                </div>
+                                <div class="field field--required field--three-eights field--show-floating-label">
+                                    <div class="field__input-wrapper field__input-wrapper--select">
+                                        <label class="field__label" for="">{{ 'checkout.address.country' | t }}</label>
+                                        <select class="field__input field__input--select" id="" name="" size="1">
+                                            <!-- TODO: Populate countries -->
+                                        </select>
+                                    </div>
+                                </div>
+                                <input class="visually-hidden" name="" size="30" tabindex="-1" type="text" />
+                                <div class="field field--required field--three-eights field--show-floating-label">
+                                    <div class="field__input-wrapper field__input-wrapper--select">
+                                        <label class="field__label" for="">{{ 'checkout.address.province' | t }}</label>
+                                        <select class="field__input field__input--select" id="" name="" placeholder="{{ 'checkout.address.province' | t }}">
+                                            <!-- TODO: Populate provinces -->
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="field field--required field--quarter">
+                                    <div class="field__input-wrapper">
+                                        <label class="field__label" for="">{{ 'checkout.address.zip' | t }}</label>
+                                        <input class="field__input" id="" name="" placeholder="{{ 'checkout.address.zip' | t }}" size="30" type="text" />
+                                    </div>
+                                </div>
+                                <div class="field field--optional">
+                                    <div class="field__input-wrapper">
+                                        <label class="field__label" for="">{{ 'checkout.address.phone' | t }} {{ 'checkout.optional_field_sign' | t }}</label>
+                                        <input class="field__input" id="" name="" placeholder="{{ 'checkout.address.phone' | t }} {{ 'checkout.optional_field_sign' | t }}" size="30" type="tel" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="section section--optional">
+                <div class="section__content">
+                    <div class="checkbox-wrapper">
+                        <div class="checkbox__input">
+                            <input checked="checked" class="input-checkbox" id="" name="" type="checkbox" />
+                        </div>
+                        <label class="checkbox__label" for="">{{ 'checkout.customer_subscribes_marketing' | t }}</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="step__footer">
+            <button class="step__footer__continue-btn btn" name="button" type="submit">
+                <span class="btn__content">{{ 'checkout.payment_method.continue_text' | t }}</span>
+                <i class="btn__spinner icon icon--button-spinner"></i>
+            </button>
+            <a class="step__footer__previous-link" href="">
+                <svg class="previous-link__icon icon--chevron icon" height="11.3" width="6.7" viewBox="0 0 6.7 11.3" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M 6.7 1.1 l -1 -1.1 l -4.6 4.6 l -1.1 1.1 l 1.1 1 l 4.6 4.6 l 1 -1 l -4.6 -4.6 Z"></path>
+                </svg>
+                {{ 'checkout.payment_method.return_text' | t }}
+            </a>
+        </div>
+    </form>
+</div>

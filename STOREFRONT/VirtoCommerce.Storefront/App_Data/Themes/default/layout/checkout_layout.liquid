@@ -1,0 +1,74 @@
+﻿<!DOCTYPE html>
+<html lang="en" dir="ltr" class="no-js multi-step windows chrome desktop page--no-banner page--logo-main page--show" ng-app="cartApp">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, height=device-height, minimum-scale=1.0, user-scalable=0" />
+
+    <title>{{ shop.name }} - {{ 'checkout.title' | t }}</title>
+
+    {{ 'checkout.css' | asset_url | stylesheet_tag }}
+
+    {{ '//ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.min.js' | script_tag }}
+    {{ '//ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular-resource.min.js' | script_tag }}
+    {{ 'cart.js' | asset_url | script_tag }}
+
+    {{ content_for_header }}
+</head>
+<body ng-controller="cartController">
+    <div class="banner" data-header>
+        <div class="wrap">
+            <a class="logo logo--left" href="{{ shop.url }}">
+                <h1 class="logo__text">{{ shop.name }}</h1>
+            </a>
+        </div>
+    </div>
+    <button class="order-summary-toggle order-summary-toggle--show">
+        <div class="wrap">
+            <div class="order-summary-toggle__inner">
+                <div class="order-summary-toggle__icon-wrapper">
+                    <svg class="order-summary-toggle__icon" height="19" width="20" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M17.178 13.088H5.453c-.454 0-.91-.364-.91-.818L3.727 1.818H0V0h4.544c.455 0 .91.364.91.818l.09 1.272h13.45c.274 0 .547.09.73.364.18.182.27.454.18.727l-1.817 9.18c-.09.455-.455.728-.91.728zM6.27 11.27h10.09l1.454-7.362H5.634l.637 7.362zm.092 7.715c1.004 0 1.818-.813 1.818-1.817s-.814-1.818-1.818-1.818-1.818.814-1.818 1.818.814 1.817 1.818 1.817zm9.18 0c1.004 0 1.817-.813 1.817-1.817s-.814-1.818-1.818-1.818-1.818.814-1.818 1.818.814 1.817 1.818 1.817z"></path>
+                    </svg>
+                </div>
+                <div class="order-summary-toggle__text order-summary-toggle__text--show">
+                    <span>{{ 'checkout.mobile.show_order_summary' | t }}</span>
+                    <svg class="order-summary-toggle__dropdown" fill="#000" height="6" width="11" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M.504 1.813l4.358 3.845.496.438.496-.438 4.642-4.096L9.504.438 4.862 4.534h.992L1.496.69.504 1.812z"></path>
+                    </svg>
+                </div>
+                <div class="order-summary-toggle__text order-summary-toggle__text--hide">
+                    <span>{{ 'checkout.mobile.hide_order_summary' }}</span>
+                    <svg class="order-summary-toggle__dropdown" fill="#000" height="7" width="11" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6.138.876L5.642.438l-.496.438L.504 4.972l.992 1.124L6.138 2l-.496.436 3.862 3.408.992-1.122L6.138.876z"></path>
+                    </svg>
+                </div>
+                <div class="order-summary-toggle__total-recap total-recap">
+                    <span class="total-recap__final-price">{( cart.Total )}</span>
+                </div>
+            </div>
+        </div>
+    </button>
+    <div class="content">
+        <div class="wrap">
+            <div class="sidebar">
+                {% include 'checkout-sidebar' %}
+            </div>
+            <div class="main" role="main">
+                <div class="main__header">
+                    <a class="logo logo--left" href="{{ shop.url }}">
+                        <h1 class="logo__text">{{ shop.name }}</h1>
+                    </a>
+                    {% include 'checkout-breadcrumbs' %}
+                </div>
+                <div class="main__content">
+                    {{ content_for_layout }}
+                </div>
+                <div class="main__footer" role="contentinfo">
+                    {% include 'checkout-footer' %}
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
