@@ -98,8 +98,10 @@ angular.module('platformWebApp', AppDependencies).
       }]);
 
       //Localization
+      // https://angular-translate.github.io/docs/#/guide
       // var defaultLanguage = settings.getValues({ id: 'VirtoCommerce.Platform.General.ManagerDefaultLanguage' });
-      $translateProvider.useUrlLoader('api/platform/localization')
+      //$translateProvider.useStaticFilesLoader({ prefix: '/localization/', suffix: '.json' })
+      $translateProvider.useUrlLoader('api/platform/localization/file')
         .useLoaderCache(true)
         .useSanitizeValueStrategy('escapeParameters')
         .preferredLanguage('en')
@@ -238,6 +240,14 @@ angular.module('platformWebApp', AppDependencies).
                     $localStorage['gridState:' + $scope.blade.template] = gridApi.saveState.save();
                 }
 
+                // setting 'blade.gridScrollNeeded'
+                gridApi.grid.registerDataChangeCallback(function (grid) {
+                    var headerHeight = $('.ui-grid-header').height();
+                    var gridDataHeight = (headerHeight ? headerHeight : 40) + gridApi.core.getVisibleRows(grid).length * $scope.gridOptions.rowHeight;
+                    $scope.blade.gridScrollNeeded = $('.blade-inner').height() < 1 + gridDataHeight;
+                    console.log($('.blade-inner').height() + ' < ' + (1 + gridDataHeight) + ' blade.gridScrollNeeded: ' + $scope.blade.gridScrollNeeded);
+                }, [uiGridConstants.dataChange.ROW]);
+
                 if (externalRegisterApiCallback) {
                     externalRegisterApiCallback(gridApi);
                 }
@@ -246,7 +256,7 @@ angular.module('platformWebApp', AppDependencies).
     };
 
     retVal.onDataLoaded = function (gridOptions, currentEntities) {
-        gridOptions.minRowsToShow = currentEntities.length;
+        //gridOptions.minRowsToShow = currentEntities.length;
 
         if (!gridOptions.columnDefsGenerated && _.any(currentEntities)) {
             // generate columnDefs for each undefined property

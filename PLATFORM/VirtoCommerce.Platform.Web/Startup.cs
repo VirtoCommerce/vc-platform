@@ -55,6 +55,8 @@ using VirtoCommerce.Platform.Web.Controllers.Api;
 using VirtoCommerce.Platform.Web.Resources;
 using VirtoCommerce.Platform.Web.SignalR;
 using WebGrease.Extensions;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 #endregion
 
@@ -65,6 +67,8 @@ namespace VirtoCommerce.Platform.Web
     public class Startup
     {
         private static string _assembliesPath;
+        private const string _localizationSourcePath = "/App_Data/LocalizationSources";
+        private const string _localizationPath = "/App_Data/Localization";
 
         public static bool IsApplication { get; private set; }
         public static string VirtualRoot { get; private set; }
@@ -80,7 +84,7 @@ namespace VirtoCommerce.Platform.Web
             VirtualRoot = virtualRoot;
 
             _assembliesPath = HostingEnvironment.MapPath(VirtualRoot + "/App_Data/Modules");
-            var localizationsPath = HostingEnvironment.MapPath(VirtualRoot + "/App_Data/Localizations");
+            var localizationsPath = HostingEnvironment.MapPath(VirtualRoot + _localizationSourcePath);
             var platformPath = HostingEnvironment.MapPath(VirtualRoot).EnsureEndSeparator();
             var modulesVirtualPath = VirtualRoot + "/Modules";
             var modulesPhysicalPath = HostingEnvironment.MapPath(modulesVirtualPath).EnsureEndSeparator();
@@ -101,6 +105,7 @@ namespace VirtoCommerce.Platform.Web
             //Initialize Platform dependencies
             const string connectionStringName = "VirtoCommerce";
             InitializePlatform(app, container, connectionStringName);
+            LocalizationPlatform();
 
             var moduleManager = container.Resolve<IModuleManager>();
             var moduleCatalog = container.Resolve<IModuleCatalog>();
@@ -118,6 +123,16 @@ namespace VirtoCommerce.Platform.Web
                 FileSystem = new Microsoft.Owin.FileSystems.PhysicalFileSystem(scriptsRelativePath)
             });
 
+            //var localizationPhysicalPath = HostingEnvironment.MapPath(VirtualRoot + "/Test/Localization").EnsureEndSeparator();
+            //var localizatioinRelativePath = MakeRelativePath(applicationBase, localizationPhysicalPath);
+
+            //var localizationUrlRewriterOptions = new UrlRewriterOptions();
+            //localizationUrlRewriterOptions.Items.Add(PathString.FromUriComponent("/Localization"), "/Test/Localization");
+            //app.Use<UrlRewriterOwinMiddleware>(localizationUrlRewriterOptions);
+            //app.UseStaticFiles(new StaticFileOptions
+            //{
+            //    FileSystem = new Microsoft.Owin.FileSystems.PhysicalFileSystem(localizatioinRelativePath)
+            //});
             // Register URL rewriter before modules initialization
             if (Directory.Exists(modulesPhysicalPath))
             {
@@ -228,6 +243,32 @@ namespace VirtoCommerce.Platform.Web
             return assembly;
         }
 
+        private static void LocalizationPlatform()
+        {
+            var localizationPath = HostingEnvironment.MapPath(VirtualRoot + _localizationPath);
+            var sourceLocalizationPath = HostingEnvironment.MapPath(VirtualRoot + _localizationSourcePath);
+
+            DirectoryInfo directory = new DirectoryInfo(sourceLocalizationPath);
+            var files = directory.GetFiles().Where(x=>x.Extension==".json").ToArray();
+            var locales = files.Select(x => x.Name.Substring(0, x.Name.IndexOf('.'))).Distinct().ToArray();
+
+            foreach (var locale in locales)
+            {
+                var licaleFiles = files.Where(x => x.Name.StartsWith(locale)).ToArray();
+                var result = new JObject();
+                foreach (var file in licaleFiles)
+                {
+                    var part = JObject.Parse(File.ReadAllText(file.FullName));
+                    result.Merge(part, new JsonMergeSettings { MergeArrayHandling = MergeArrayHandling.Concat });
+                    var localization = JsonConvert.SerializeObject(result);
+                    var filePath = Path.Combine(localizationPath, string.Format("{0}.{1}", locale, "json"));
+                    using (StreamWriter outputFile = new StreamWriter(filePath))
+                    {
+                        outputFile.Write(localization);
+                    }
+                }
+            }
+        }
         private static void InitializePlatform(IAppBuilder app, IUnityContainer container, string connectionStringName)
         {
             #region Setup database
