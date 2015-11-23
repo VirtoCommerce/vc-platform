@@ -261,6 +261,7 @@ namespace VirtoCommerce.Platform.Web
                     var part = JObject.Parse(File.ReadAllText(file.FullName));
                     result.Merge(part, new JsonMergeSettings { MergeArrayHandling = MergeArrayHandling.Concat });
                     var localization = JsonConvert.SerializeObject(result);
+                    Directory.CreateDirectory(localizationPath);
                     var filePath = Path.Combine(localizationPath, string.Format("{0}.{1}", locale, "json"));
                     using (StreamWriter outputFile = new StreamWriter(filePath))
                     {
