@@ -1,12 +1,12 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.userProfile.userProfileController', ['$scope', 'platformWebApp.bladeNavigationService', '$translate', 'platformWebApp.settings', 'platformWebApp.common.worldLanguages', function ($scope, bladeNavigationService, $translate, settings, worldLanguages) {
+.controller('platformWebApp.userProfile.userProfileController', ['$scope', 'platformWebApp.bladeNavigationService', '$translate', 'platformWebApp.userProfileApi', 'platformWebApp.common.worldLanguages', function ($scope, bladeNavigationService, $translate, userProfileApi, worldLanguages) {
     var blade = $scope.blade;
     blade.headIcon = 'fa-user';
     blade.title = 'platform.blades.user-profile.title';
     blade.currentLanguage = $translate.use();
 
     function initializeBlade() {
-        settings.getValues({ id: 'VirtoCommerce.Platform.General.ManagerLanguages' },
+        userProfileApi.querry(null,
            function (result) {
                blade.isLoading = false;
                result.sort();
