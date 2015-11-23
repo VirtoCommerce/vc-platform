@@ -79,7 +79,7 @@ namespace VirtoCommerce.Storefront.Controllers
 
             if (string.IsNullOrEmpty(update))
             {
-                return Redirect("~/cart/customer_information");
+                return Redirect("~/cart/customer-information");
             }
 
             return RedirectToAction("Index", "Cart");
@@ -90,6 +90,11 @@ namespace VirtoCommerce.Storefront.Controllers
         [Route("{step}")]
         public ActionResult Checkout(string step)
         {
+            if (_workContext.CurrentCart.Items.Count == 0)
+            {
+                return RedirectToAction("Index", "Cart");
+            }
+
             return View("checkout", "checkout_layout", _workContext);
         }
 

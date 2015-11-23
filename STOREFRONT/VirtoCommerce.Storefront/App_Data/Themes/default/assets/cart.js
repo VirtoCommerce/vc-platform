@@ -6,6 +6,9 @@
     .controller('cartController', ['$scope', '$location', 'cartApi', function ($scope, $location, cartApi) {
         cartApi.get(null, function (jsonCart) {
             $scope.cart = jsonCart;
+            $scope.isCustomerInformationStep = $location.path().indexOf('/cart/customer-information') >= 0;
+            $scope.isShippingMethodStep = $location.path().indexOf('/cart/shipping-method') >= 0;
+            $scope.isPaymentMethodStep = $location.path().indexOf('/cart/payment-method') >= 0;
             $scope.location = $location;
         });
     }])
