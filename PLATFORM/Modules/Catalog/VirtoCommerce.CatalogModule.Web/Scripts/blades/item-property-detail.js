@@ -20,9 +20,9 @@
         
         switch (childType) {
             case 'valType':
-                newBlade.title = 'catalog.blades.property-value-type.title';
+                newBlade.title = 'catalog.blades.property-valueType.title';
                 newBlade.titleValues = {name: b.origEntity.name ? b.origEntity.name : b.currentEntity.name};
-                newBlade.subtitle = 'catalog.blades.property-value-type.subtitle';
+                newBlade.subtitle = 'catalog.blades.property-valueType.subtitle';
                 newBlade.controller = 'virtoCommerce.catalogModule.propertyValueTypeController';
                 newBlade.template = 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/property-valueType.tpl.html';
                 break;

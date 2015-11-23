@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Model
@@ -14,6 +11,7 @@ namespace VirtoCommerce.Storefront.Model
             DynamicProperties = new List<DynamicProperty>();
         }
 
+        public string UserName { get; set; }
         /// <summary>
         /// Returns the email address of the customer.
         /// </summary>

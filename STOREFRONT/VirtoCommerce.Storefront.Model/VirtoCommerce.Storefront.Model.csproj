@@ -45,6 +45,8 @@
     <Compile Include="AddressType.cs" />
     <Compile Include="Catalog\Asset.cs" />
     <Compile Include="Catalog\ItemResponseGroup.cs" />
+    <Compile Include="Catalog\SearchCriteria.cs" />
+    <Compile Include="Catalog\SearchResult.cs" />
     <Compile Include="Catalog\TierPrice.cs" />
     <Compile Include="Image.cs" />
     <Compile Include="Catalog\Inventory.cs" />
@@ -74,12 +76,14 @@
     <Compile Include="Catalog\Product.cs" />
     <Compile Include="Login.cs" />
     <Compile Include="PaymentMethod.cs" />
+    <Compile Include="Profile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Register.cs" />
+    <Compile Include="ChangePassword.cs" />
     <Compile Include="ResetPassword.cs" />
     <Compile Include="Catalog\ProductProperty.cs" />
     <Compile Include="SeoInfo.cs" />
-    <Compile Include="Services\IProductService.cs" />
+    <Compile Include="Services\ICatalogService.cs" />
     <Compile Include="ShipmentMethod.cs" />
     <Compile Include="Discount.cs" />
     <Compile Include="Cart\LineItem.cs" />

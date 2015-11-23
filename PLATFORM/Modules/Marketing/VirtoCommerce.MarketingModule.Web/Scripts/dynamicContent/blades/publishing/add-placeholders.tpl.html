@@ -2,9 +2,9 @@
 	<div class="blade-inner">
 		<div class="inner-block">
 			<fieldset>
-				<legend class="ng-binding">Chosen placeholders</legend>
+				<legend class="ng-binding">{{ 'marketing.blades.publishing.add-placeholders.labels.chosen-placeholders' | translate }}</legend>
 				<div class="form-group">
-					<a class="clear text-mini __link" ng-click="blade.deleteAllPlaceholder()" ng-if="blade.entity.contentPlaces.length > 0">Clear all</a>
+					<a class="clear text-mini __link" ng-click="blade.deleteAllPlaceholder()" ng-if="blade.entity.contentPlaces.length > 0">{{ 'platform.commands.clear-all' | translate }}</a>
 					<ul class="list __inline __chosen">
 						<li class="list-item" ng-repeat="place in blade.entity.contentPlaces">
 							<a class="list-remove" ng-click="blade.deletePlaceholder(place)">×</a>
@@ -14,16 +14,16 @@
 				</div>
 			</fieldset>
 			<fieldset>
-				<legend class="ng-binding">Content placeholders</legend>
+				<legend class="ng-binding">{{ 'marketing.blades.publishing.add-placeholders.labels.content-placeholders' | translate }}</legend>
 				<va-breadcrumb ng-model="blade.breadcrumbs" blade-id="blade.id"></va-breadcrumb>
 
 				<div class="table-wrapper">
 					<table class="table" ng-if="blade.currentEntity && (blade.currentEntity.childrenFolders.length > 0 || blade.currentEntity.placeholders.length > 0)">
 						<thead>
 							<tr>
-								<th class="table-col">Pic</th>
-								<th class="table-col">Name</th>
-								<th class="table-col">Description</th>
+								<th class="table-col">{{ 'marketing.blades.publishing.add-placeholders.labels.picture' | translate }}</th>
+								<th class="table-col">{{ 'marketing.blades.publishing.add-placeholders.labels.name' | translate }}</th>
+								<th class="table-col">{{ 'marketing.blades.publishing.add-placeholders.labels.description' | translate }}</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -57,7 +57,7 @@
 					</table>
 				</div>
 				<div class="note" ng-if="(blade.currentEntity.childrenFolders.length === 0 && blade.currentEntity.placeholders.length === 0)">
-					No data
+					{{ 'marketing.blades.publishing.add-placeholders.labels.no-data' | translate }}
 				</div>
 			</fieldset>
 		</div>

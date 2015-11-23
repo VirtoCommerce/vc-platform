@@ -123,6 +123,10 @@
     <Compile Include="Migrations\201511141422518_PropertyShemaChanges.Designer.cs">
       <DependentUpon>201511141422518_PropertyShemaChanges.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201511191415000_Fix.cs" />
+    <Compile Include="Migrations\201511191415000_Fix.Designer.cs">
+      <DependentUpon>201511191415000_Fix.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Asset.cs" />
     <Compile Include="Model\Association.cs" />
@@ -210,6 +214,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201511141422518_PropertyShemaChanges.resx">
       <DependentUpon>201511141422518_PropertyShemaChanges.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201511191415000_Fix.resx">
+      <DependentUpon>201511191415000_Fix.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

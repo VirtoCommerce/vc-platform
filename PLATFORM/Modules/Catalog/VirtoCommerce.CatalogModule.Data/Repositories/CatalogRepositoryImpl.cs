@@ -238,6 +238,18 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             return retVal.ToArray();
         }
 
+        public string[] GetAllChildrenCategoriesIds(string[] categoryIds)
+        {
+            var retVal = new List<string>();
+            var childs = Categories.Where(x => categoryIds.Contains(x.ParentCategoryId)).Select(x => x.Id).Distinct().ToList();
+            if (childs.Any())
+            {
+                retVal.AddRange(GetAllChildrenCategoriesIds(retVal.ToArray()));
+            }
+            retVal.AddRange(childs);
+            return retVal.ToArray();
+        }
+
         public dataModel.Category GetCategoryById(string categoryId)
         {
             var result = Categories.Include(x => x.CategoryPropertyValues)
@@ -394,7 +406,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             if (ids == null || !ids.Any())
                 return;
 
-            var allCategoriesIds = GetAllCategoriesChildrenIdsRecursive(ids).Concat(ids);
+            var allCategoriesIds = GetAllChildrenCategoriesIds(ids).Concat(ids);
             const string queryPattern =
             @"DELETE CI FROM CatalogImage CI INNER JOIN Category C ON C.Id = CI.CategoryId WHERE C.Id IN ({0}) 
             DELETE PV FROM PropertyValue PV INNER JOIN Category C ON C.Id = PV.CategoryId WHERE C.Id IN ({0}) 
@@ -437,20 +449,6 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 
         }
         #endregion
-
-
-        private string[] GetAllCategoriesChildrenIdsRecursive(string[] categoryIds)
-        {
-            var retVal = new List<string>();
-            var childs = Categories.Where(x => categoryIds.Contains(x.ParentCategoryId)).Select(x => x.Id).Distinct().ToList();
-            if (childs.Any())
-            {
-                retVal.AddRange(GetAllCategoriesChildrenIdsRecursive(retVal.ToArray()));
-            }
-            retVal.AddRange(childs);
-            return retVal.ToArray();
-        }
-
 
     }
 }

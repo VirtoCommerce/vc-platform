@@ -18,9 +18,9 @@ angular.module(catalogsModuleName, [
 
                       var blade = {
                           id: 'categories',
-                          title: 'catalog.blades.catalogs.title',
+                          title: 'catalog.blades.catalogs-list.title',
                           breadcrumbs: [],
-                          subtitle: 'catalog.blades.catalogs.subtitle',
+                          subtitle: 'catalog.blades.catalogs-list.subtitle',
                           controller: 'virtoCommerce.catalogModule.catalogsListController',
                           template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/catalogs-list.tpl.html',
                           isClosingDisabled: true
@@ -261,7 +261,7 @@ angular.module(catalogsModuleName, [
 	            var scopeOriginal = this.scopeOriginal;
 	            var newBlade = {
 	                id: "CatalogItemsSelect",
-	                title: "catalog.blade.item-selection.title",
+	                title: "catalog.blade.catalog-items-select.title",
 	                controller: 'virtoCommerce.catalogModule.catalogItemSelectController',
 	                template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/common/catalog-items-select.tpl.html',
 	                options: options,

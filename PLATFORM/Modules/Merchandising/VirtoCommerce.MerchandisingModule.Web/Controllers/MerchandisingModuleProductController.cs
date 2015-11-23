@@ -177,7 +177,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
             var searchCriteria = new SearchCriteria
             {
                 ResponseGroup = ResponseGroup.WithProducts | ResponseGroup.WithVariations,
-                SeoKeyword = keyword,
+                //SeoKeyword = keyword,
                 //CatalogId = fullLoadedStore.Catalog
             };
 

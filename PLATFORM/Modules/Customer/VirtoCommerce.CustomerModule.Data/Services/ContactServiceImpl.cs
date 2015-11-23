@@ -64,18 +64,16 @@ namespace VirtoCommerce.CustomerModule.Data.Services
             {
                 foreach (var contact in contacts)
                 {
-                    var sourceEntity = contact.ToDataModel();
                     var targetEntity = repository.GetContactById(contact.Id);
-
-                    if (targetEntity == null)
+                    if (targetEntity != null)
                     {
-                        throw new NullReferenceException("targetEntity");
+                        changeTracker.Attach(targetEntity);
+
+                        var sourceEntity = contact.ToDataModel();
+                        sourceEntity.Patch(targetEntity);
+
+                        _dynamicPropertyService.SaveDynamicPropertyValues(contact);
                     }
-
-                    changeTracker.Attach(targetEntity);
-                    sourceEntity.Patch(targetEntity);
-
-                    _dynamicPropertyService.SaveDynamicPropertyValues(contact);
                 }
 
                 CommitChanges(repository);

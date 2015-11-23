@@ -8,7 +8,7 @@
             currentEntityId: $scope.currentBlade.currentEntityId,
             currentEntities: $scope.currentBlade.item.reviews,
             title: $scope.currentBlade.title,
-            subtitle: 'catalog.blades.reviews.subtitle',
+            subtitle: 'catalog.widgets.editorialReview.blade-subtitle',
             controller: 'virtoCommerce.catalogModule.editorialReviewsListController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/editorialReviews-list.tpl.html'
         };

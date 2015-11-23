@@ -9,6 +9,7 @@
       "security": "Security",
       "modules": "Modules",
       "notifications": "Notifications",
+      "user-profile": "User profile",
       "export-import": "Export & Import",
       "assets": "Assets"
     },
@@ -16,12 +17,15 @@
       "add": "Add",
       "assign": "Assign",
       "cancel": "Cancel",
+      "clear-all": "Clear all",
+      "close": "Close",
       "confirm": "Confirm",
       "copy-link": "Copy link",
       "create": "Create",
       "cut": "Cut",
       "delete": "Delete",
       "download": "Download",
+      "edit": "Edit",
       "export": "Export",
       "generate": "Generate",
       "import": "Import",
@@ -33,16 +37,19 @@
       "ok": "Ok",
       "paste": "Paste",
       "preview": "Preview",
+      "redo": "Redo",
       "refresh": "Refresh",
       "remove": "Remove",
       "reset": "Reset",
       "restart": "Restart",
       "save": "Save",
       "send": "Send",
+      "select-all": "Select All",
       "settings": "Settings",
       "sign-out": "Sign out",
       "undo": "Undo",
       "uninstall": "Uninstall",
+      "unselect-all": "Unselect All",
       "update": "Update",
       "upload": "Upload",
       "yes": "Yes",
@@ -101,7 +108,7 @@
       }
     },
     "genericValueInput": {
-      "placeholder": {
+      "placeholders": {
         "short-text": "Enter short text",
         "secure-string": "Enter secret text",
         "long-text": "Enter long text",
@@ -132,6 +139,18 @@
           "actions": "Actions"
         }
       },
+      "asset-upload": {
+        "title": "Asset upload",
+        "labels": {
+          "select-files": "Select files",
+          "drag-note": "Drag and drop files here",
+          "progress": "Progress",
+          "asset-uploaded": "Asset(s) uploaded."
+        },
+        "placeholders": {
+          "image-url": "Paste file URL here"
+        }
+      },
       "operation-list": {
         "labels": {
           "login": "Login",
@@ -147,6 +166,7 @@
         }
       },
       "dynamicProperty-detail": {
+        "title": "Manage property",
         "subtitle": "Manage property",
         "subtitle-new": "New property",
         "labels": {
@@ -213,6 +233,7 @@
       "export-main": {
         "title": "Data export",
         "labels": {
+          "select-file": "Select file to import",
           "platform-entries": "Platform entries",
           "choose-modules": "Choose modules to export",
           "download-url": "Download Url",
@@ -276,7 +297,7 @@
             "description": "Data will be saved out to a file so it can later be imported."
           },
           "import": {
-            "title": "v",
+            "title": "Import",
             "description": "Import data from an exported file."
           }
         }
@@ -333,7 +354,7 @@
         "subtitle": "Enter test data for {{type}}",
         "labels": {
           "test": "Test",
-          "Enter-test-data": "Enter test data"
+          "enter-test-data": "Enter test data"
         }
       },
       "notifications-test-send": {
@@ -473,7 +494,7 @@
           "new-password": "Old and new passwords are the same!",
           "repeat-password": "New passwords doesn't match!"
         },
-        "placeholder": {
+        "placeholders": {
           "current-password": "Enter current password",
           "new-password": "Enter new password",
           "repeat-password": "Repeat new password"
@@ -491,7 +512,7 @@
         "validations": {
           "repeat-password": "New passwords doesn't match!"
         },
-        "placeholder": {
+        "placeholders": {
           "new-password": "Enter new password",
           "repeat-password": "Repeat new password"
         }
@@ -586,20 +607,11 @@
       },
       "login": {
         "labels": {
-          "Sign-in": "Sign in to Virto Commerce Manager",
+          "sign-in": "Sign in to Virto Commerce Manager",
           "login": "Login",
           "password": "Password",
           "remember-me": "Remember me",
-          "Log-in": "Log in"
-        }
-      },
-      "loginToolbar": {
-        "labels": {
-          "Sign-in": "Sign in to Virto Commerce Manager",
-          "login": "Login",
-          "password": "Password",
-          "remember-me": "Remember me",
-          "Log-in": "Log in"
+          "log-in": "Log in"
         }
       },
       "new-account-wizard": {
@@ -609,7 +621,7 @@
           "repeat-password": "Repeat password",
           "assign-roles": "Assign roles"
         },
-        "placeholder": {
+        "placeholders": {
           "login": "Enter login",
           "password": "Enter new password",
           "repeat-password": "Repeat new password"
@@ -627,16 +639,16 @@
       "setting-dictionary": {
         "subtitle": "Manage dictionary values",
         "labels": {
-          "new-value": "Please enter value"
+          "new-value": "Please enter value",
+          "current-values": "Current values",
+          "value": "Value"
         },
         "validations": {
           "new-value-required": "Required",
           "new-value": "Duplicate value found"
         },
-        "placeholder": {
-          "login": "Enter login",
-          "password": "Enter new password",
-          "repeat-password": "Repeat new password"
+        "placeholders": {
+          "new-value": "Please enter value"
         }
       },
       "settings-detail": {
@@ -644,6 +656,12 @@
       },
       "settingGroup-list": {
         "title": "Settings"
+      },
+      "user-profile": {
+        "title": "User profile",
+        "labels": {
+          "set-language": "Set Commerce Manager language"
+        }
       }
     },
     "templates": {
@@ -657,6 +675,7 @@
       "sampleDataInitialization": {
         "labels": {
           "sample-data-initialization": "Sample data initialization",
+          "starting-initialization": "Starting sample data initialization...",
           "errors": "Errors",
           "start": "Start",
           "end": "End"
@@ -742,6 +761,5 @@
         "message": "Are you sure you want to delete this API key?"
       }
     }
-
   }
 }

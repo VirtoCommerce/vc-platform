@@ -8,6 +8,52 @@
 
 <div class="grid">
 
+  <div class="grid-item one-half medium-down--one-whole">
+      <h4>{{ 'customer.edit_profile.title' | t }}</h4>
+      <form action="{{'~/account/profile' | absolute_url}}" method="post">
+      {% include 'form-errors-custom' %}
+
+      <label for="first_name" class="hidden-label">{{ 'customer.edit_profile.first_name' | t }}</label>
+      <input type="text" value="{{customer.first_name}}" name="firstName" id="first_name" placeholder="{{ 'customer.edit_profile.first_name' | t }}" {% if form.errors contains "first_name" %} class="error"{% endif %} autocapitalize="words" autofocus>
+
+      <label for="last_name" class="hidden-label">{{ 'customer.edit_profile.last_name' | t }}</label>
+      <input type="text" value="{{customer.last_name}}" name="lastName" id="last_name" placeholder="{{ 'customer.edit_profile.last_name' | t }}" {% if form.errors contains "last_name" %} class="error"{% endif %} autocapitalize="words">
+
+      <label for="email" class="hidden-label">{{ 'customer.edit_profile.email' | t }}</label>
+      <input type="email" value="{{customer.email}}" name="email" id="email" placeholder="{{ 'customer.edit_profile.email' | t }}" {% if form.errors contains "email" %} class="error"{% endif %} autocorrect="off" autocapitalize="off">
+
+      <div class="text-center">
+        <input type="submit" class="btn" value="{{ 'customer.edit_profile.submit' | t }}">
+      </div>
+    </form>
+  </div>
+
+  <div class="grid-item one-half medium-down--one-whole">
+      <h4>{{ 'customer.change_password.title' | t }}</h4>
+      <form action="{{'~/account/password' | absolute_url}}" method="post">
+        {% include 'form-errors-custom' %}
+
+        <label for="old_password" class="hidden-label">{{ 'customer.change_password.old_password' | t }}</label>
+        <input type="password" value="" name="oldPassword" id="old_password" placeholder="{{ 'customer.change_password.old_password' | t }}" {% if form.errors contains "old_password" %} class="error"{% endif %}>
+
+        <label for="new_password" class="hidden-label">{{ 'customer.change_password.new_password' | t }}</label>
+        <input type="password" value="" name="newPassword" id="new_password" placeholder="{{ 'customer.change_password.new_password' | t }}" {% if form.errors contains "new_password" %} class="error"{% endif %}>
+
+        <label for="new_password_confirm" class="hidden-label">{{ 'customer.change_password.new_password_confirm' | t }}</label>
+        <input type="password" value="" name="newPasswordConfirm" id="new_password_confirm" placeholder="{{ 'customer.change_password.new_password_confirm' | t }}" {% if form.errors contains "new_password_confirm" %} class="error"{% endif %}>
+
+        <div class="text-center">
+          <input type="submit" class="btn" value="{{ 'customer.change_password.submit' | t }}">
+        </div>
+      </form>
+  </div>
+
+</div>
+
+<hr class="hr--small">
+
+<div class="grid">
+
   <div class="grid-item two-thirds medium-down--one-whole">
     <h4>{{ 'customer.orders.title' | t }}</h4>
 

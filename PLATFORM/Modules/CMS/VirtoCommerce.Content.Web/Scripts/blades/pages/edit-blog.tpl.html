@@ -1,6 +1,6 @@
 ﻿<div class="blade-static __bottom" ng-if="blade.isNew">
     <button class="btn" ng-click="blade.saveChanges()" ng-disabled="formScope.$invalid">
-        <span>Create</span>
+        <span>{{ 'platform.commands.create' | translate }}</span>
     </button>
 </div>
 
@@ -9,9 +9,9 @@
         <div class="inner-block">
             <form class="form" name="formScope">
                 <div class="form-group" ng-init="setForm(formScope)">
-                    <label class="form-label">Blog name:</label>
+                    <label class="form-label">{{ 'content.blades.edit-blog.labels.blog-name' | translate }}</label>
                     <div class="form-input">
-                        <input focus-on="" required class="form-control" ng-model="blade.entity.name" placeholder="Enter blog name" />
+                        <input focus-on="" required class="form-control" ng-model="blade.entity.name" placeholder="{{ 'content.blades.edit-blog.placeholders.blog-name' | translate }}" />
                     </div>
                 </div>
             </form>

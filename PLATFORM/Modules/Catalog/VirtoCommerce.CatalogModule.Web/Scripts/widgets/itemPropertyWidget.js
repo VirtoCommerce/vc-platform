@@ -12,7 +12,7 @@
             id: "itemProperty",
             itemId: blade.item.id,
             title: blade.origItem.name,
-            subtitle: 'catalog.blades.item-properties.subtitle',
+            subtitle: 'catalog.widgets.itemProperty.blade-subtitle',
             controller: 'virtoCommerce.catalogModule.itemPropertyListController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/item-property-list.tpl.html'
         };

@@ -74,14 +74,16 @@ namespace VirtoCommerce.Storefront.Owin
                     var contact = await _customerApi.CustomerModuleGetContactByIdAsync(user.Id);
                     if (contact != null)
                     {
-                        customer = contact.ToWebModel();
+                        customer = contact.ToWebModel(user.UserName);
                         customer.HasAccount = true;
                     }
                 }
             }
-            else
+
+            if (!customer.HasAccount)
             {
                 customer.Id = context.Request.Cookies[StorefrontConstants.AnonymousCustomerIdCookie];
+                customer.UserName = "Anonymous";
                 customer.Name = "Anonymous";
             }
 
@@ -92,7 +94,7 @@ namespace VirtoCommerce.Storefront.Owin
         {
             string anonymousCustomerId = context.Request.Cookies[StorefrontConstants.AnonymousCustomerIdCookie];
 
-            if (context.Authentication.User.Identity.IsAuthenticated)
+            if (workContext.CurrentCustomer.HasAccount)
             {
                 if (!string.IsNullOrEmpty(anonymousCustomerId))
                 {

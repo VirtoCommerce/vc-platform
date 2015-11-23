@@ -62,12 +62,15 @@ namespace VirtoCommerce.Storefront.Model
         public int CurrentPage { get; set; }
         public string ErrorMessage { get; set; }
 
-        /// <summary>
-        /// List of categories
-        /// </summary>
-        public Category[] AllCategories { get; set; } 
+        #region Catalog Properties
 
         public Product CurrentProduct { get; set; }
+
+        public Category CurrentCategory { get; set; }
+
+        public Category[] AllCategories { get; set; }
+
+        #endregion
 
         #region IDisposable Implementation
 

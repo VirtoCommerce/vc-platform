@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using VirtoCommerce.Web.Caching;
 using VirtoCommerce.Web.Convertors;
 using VirtoCommerce.Web.Models;
 
@@ -22,6 +23,8 @@ namespace VirtoCommerce.Web.Controllers
         [Route("add")]
         public async Task<ActionResult> AddItem(string variantId)
         {
+            ClearCache();
+
             var product = await Service.GetProductAsync(Context, variantId);
 
             var quoteItem = product.ToQuoteItem();
@@ -38,6 +41,8 @@ namespace VirtoCommerce.Web.Controllers
         [Route("remove")]
         public async Task<ActionResult> RemoveItem(string id)
         {
+            ClearCache();
+
             Context.ActualQuoteRequest.RemoveItem(id);
 
             Context.ActualQuoteRequest = await QuoteService.UpdateQuoteRequestAsync(Context.ActualQuoteRequest);
@@ -66,6 +71,8 @@ namespace VirtoCommerce.Web.Controllers
         [Route("submit")]
         public async Task<ActionResult> Submit(QuoteRequest model)
         {
+            ClearCache();
+
             if (User.Identity.IsAuthenticated && string.IsNullOrEmpty(model.Email))
             {
                 return Json(new { errorMessage = "Field \"Email\" is required" });
@@ -131,6 +138,12 @@ namespace VirtoCommerce.Web.Controllers
             }
 
             return Json(new { redirectUrl = VirtualPathUtility.ToAbsolute("~/account/quote/" + Context.ActualQuoteRequest.Number) });
+        }
+
+        private void ClearCache()
+        {
+            var quoteCacheKey = CacheKey.Create("quote", SiteContext.Current.CustomerId);
+            base.Context.CacheManager.Remove(quoteCacheKey);
         }
     }
 }

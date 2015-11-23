@@ -376,6 +376,31 @@ namespace VirtoCommerce.Platform.Web
                                     DefaultValue = AccountType.Manager.ToString()
                                 }
                             }
+                        },
+                         new ModuleSettingsGroup
+                        {
+                            Name = "Platform|General",
+                            Settings = new []
+                            {
+                                //new ModuleSetting
+                                //{
+                                //    Name = "VirtoCommerce.Platform.General.ManagerDefaultLanguage",
+                                //    ValueType = ModuleSetting.TypeString,
+                                //    Title = "Commerce Manager's default language",
+                                //    Description = "The default language that Commerce Manager is displayed in",
+                                //    DefaultValue = "en"
+                                //},
+                                new ModuleSetting
+                                {
+                                    Name = "VirtoCommerce.Platform.General.ManagerLanguages",
+                                    ValueType = ModuleSetting.TypeString,
+                                    Title = "Commerce Manager languages",
+                                    Description = "Languages that the Commerce Manager is translated to",
+                                    IsArray = true,
+                                    ArrayValues = new [] { "en"},
+                                    DefaultValue = "en"
+                                }
+                            }
                         }
                     }
                 }

@@ -4,21 +4,20 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using VirtoCommerce.Client.Api;
-using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Services;
 using VirtoCommerce.Storefront.Converters;
 
 namespace VirtoCommerce.Storefront.Services
 {
-    public class ProductServiceImpl : IProductService
+    public class CatalogServiceImpl : ICatalogService
     {
         private readonly ICatalogModuleApi _catalogModuleApi;
         private readonly IPricingModuleApi _pricingModuleApi;
         private readonly IInventoryModuleApi _inventoryModuleApi;
         private readonly IMarketingModuleApi _marketingModuleApi;
 
-        public ProductServiceImpl(
+        public CatalogServiceImpl(
             ICatalogModuleApi catalogModuleApi,
             IPricingModuleApi pricingModuleApi,
             IInventoryModuleApi inventoryModuleApi,
@@ -30,9 +29,9 @@ namespace VirtoCommerce.Storefront.Services
             _marketingModuleApi = marketingModuleApi;
         }
 
-        public Product GetProductById(string id, string currencyCode, ItemResponseGroup responseGroup = ItemResponseGroup.ItemInfo)
+        public async Task<Product> GetProduct(string id, string currencyCode, ItemResponseGroup responseGroup = ItemResponseGroup.ItemInfo)
         {
-            var item = _catalogModuleApi.CatalogModuleProductsGet(id).ToWebModel();
+            var item = (await _catalogModuleApi.CatalogModuleProductsGetAsync(id)).ToWebModel();
 
             var taskList = new List<Task>();
 
@@ -48,6 +47,11 @@ namespace VirtoCommerce.Storefront.Services
             Task.WaitAll(taskList.ToArray());
 
             return item;
+        }
+
+        public Task<SearchResult> Search(SearchCriteria criteria)
+        {
+            throw new NotImplementedException();
         }
 
         private void GetPrices(Product product, string currencyCode)

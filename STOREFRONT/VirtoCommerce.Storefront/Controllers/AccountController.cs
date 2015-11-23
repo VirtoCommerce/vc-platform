@@ -15,6 +15,7 @@ using VirtoCommerce.Storefront.Model.Common;
 namespace VirtoCommerce.Storefront.Controllers
 {
     [RoutePrefix("account")]
+    [Authorize]
     public class AccountController : Controller
     {
         private readonly WorkContext _workContext;
@@ -22,14 +23,16 @@ namespace VirtoCommerce.Storefront.Controllers
         private readonly ICommerceCoreModuleApi _commerceCoreApi;
         private readonly ICustomerManagementModuleApi _customerApi;
         private readonly IAuthenticationManager _authenticationManager;
+        private readonly IVirtoCommercePlatformApi _platformApi;
 
-        public AccountController(WorkContext workContext, IStorefrontUrlBuilder urlBuilder, ICommerceCoreModuleApi commerceCoreApi, ICustomerManagementModuleApi customerApi, IAuthenticationManager authenticationManager)
+        public AccountController(WorkContext workContext, IStorefrontUrlBuilder urlBuilder, ICommerceCoreModuleApi commerceCoreApi, ICustomerManagementModuleApi customerApi, IAuthenticationManager authenticationManager, IVirtoCommercePlatformApi platformApi)
         {
             _workContext = workContext;
             _urlBuilder = urlBuilder;
             _commerceCoreApi = commerceCoreApi;
             _customerApi = customerApi;
             _authenticationManager = authenticationManager;
+            _platformApi = platformApi;
         }
 
         [HttpGet]
@@ -230,6 +233,60 @@ namespace VirtoCommerce.Storefront.Controllers
             }
 
             return View("customers/reset_password", _workContext);
+        }
+
+        [HttpPost]
+        [Route("profile")]
+        public async Task<ActionResult> UpdateProfile(Profile formModel)
+        {
+            var contact = new VirtoCommerceCustomerModuleWebModelContact
+            {
+                Id = _workContext.CurrentCustomer.Id
+            };
+
+            var fullName = string.Join(" ", formModel.FirstName, formModel.LastName).Trim();
+
+            if (string.IsNullOrEmpty(fullName))
+            {
+                fullName = formModel.Email;
+            }
+
+            if (!string.IsNullOrWhiteSpace(fullName))
+            {
+                contact.FullName = fullName;
+            }
+
+            if (!string.IsNullOrWhiteSpace(formModel.Email))
+            {
+                contact.Emails = new List<string> { formModel.Email };
+            }
+
+            await _customerApi.CustomerModuleUpdateContactAsync(contact);
+
+            return Redirect("~/account");
+        }
+
+        [HttpPost]
+        [Route("password")]
+        public async Task<ActionResult> ChangePassword(ChangePassword formModel)
+        {
+            var changePassword = new VirtoCommercePlatformWebModelSecurityChangePasswordInfo
+            {
+                OldPassword = formModel.OldPassword,
+                NewPassword = formModel.NewPassword,
+            };
+
+            var result = await _platformApi.SecurityChangePasswordAsync(_workContext.CurrentCustomer.UserName, changePassword);
+
+            if (result.Succeeded == true)
+            {
+                return Redirect("~/account");
+            }
+            else
+            {
+                ModelState.AddModelError("form", result.Errors.First());
+                return View("customers/account", _workContext);
+            }
         }
 
 

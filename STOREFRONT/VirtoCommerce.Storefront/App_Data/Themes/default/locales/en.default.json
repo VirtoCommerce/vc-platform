@@ -313,6 +313,22 @@
             "submit": "Create",
             "or": "or",
             "cancel": "Return to Store"
+        },
+        "edit_profile": {
+            "title": "Edit Profile",
+            "first_name": "First Name",
+            "last_name": "Last Name",
+            "email": "Email",
+            "submit": "Save",
+            "cancel": "Cancel"
+        },
+        "change_password": {
+            "title": "Change Password",
+            "old_password": "Old Password",
+            "new_password": "New Password",
+            "new_password_confirm": "Confirm New Password",
+            "submit": "Save",
+            "cancel": "Cancel"
         }
     },
     "homepage": {

@@ -34,20 +34,29 @@
 
       <ul class="inline-list product-meta">
         <li>
-            <span id="productPrice" class="h1" ng-if="product.Price.SalePrice.InternalAmount > 0">
-                {( product.Price.SalePrice.InternalAmount | currency: product.Price.SalePrice.CurrencySymbol )}
+            <span id="productPrice" class="h1 line-through" ng-if="selectedProduct.Price.SalePrice.InternalAmount > 0 || selectedProduct.Price.ActiveDiscount.DiscountAmount.InternalAmount > 0">
+                {( selectedProduct.Price.ListPrice.InternalAmount | currency: selectedProduct.Price.ListPrice.CurrencySymbol )}
             </span>
-            <span id="productPrice" class="h1" ng-if="product.Price.SalePrice.InternalAmount == 0">
-                {( product.Price.ListPrice.InternalAmount | currency: product.Price.SalePrice.CurrencySymbol )}
+            <span id="productPrice" class="h1" ng-if="selectedProduct.Price.SalePrice.InternalAmount == 0 && selectedProduct.Price.ActiveDiscount.DiscountAmount.InternalAmount == 0">
+                {( selectedProduct.Price.ListPrice.InternalAmount | currency: selectedProduct.Price.ListPrice.CurrencySymbol )}
             </span>
         </li>
-        {% if current_product.price.sale_price.internal_amount > 0 %}
-            <li>
+        <li ng-if="selectedProduct.Price.SalePrice.InternalAmount > 0 || selectedProduct.Price.ActiveDiscount.DiscountAmount > 0">
+            <span id="productPrice" class="h1" ng-if="selectedProduct.Price.SalePrice.InternalAmount > 0 && selectedProduct.Price.ActiveDiscount.DiscountAmount.InternalAmount > 0">
+                {( selectedProduct.Price.SalePrice.InternalAmount - selectedProduct.Price.ActiveDiscount.DiscountAmount.InternalAmount | currency: selectedProduct.Price.ListPrice.CurrencySymbol )}
+            </span>
+            <span id="productPrice" class="h1" ng-if="selectedProduct.Price.SalePrice.InternalAmount > 0 && selectedProduct.Price.ActiveDiscount.DiscountAmount.InternalAmount == 0">
+                {( selectedProduct.Price.SalePrice.InternalAmount | currency: selectedProduct.Price.ListPrice.CurrencySymbol )}
+            </span>
+            <span id="productPrice" class="h1" ng-if="selectedProduct.Price.ActiveDiscount.DiscountAmount.InternalAmount > 0 && selectedProduct.Price.SalePrice.InternalAmount == 0">
+                {( selectedProduct.Price.ListPrice.InternalAmount - selectedProduct.Price.ActiveDiscount.DiscountAmount.InternalAmount | currency: selectedProduct.Price.ListPrice.CurrencySymbol )}
+            </span>
+        </li>
+        <li ng-if="selectedProduct.Price.SalePrice.InternalAmount > 0 || selectedProduct.Price.ActiveDiscount.DiscountAmount > 0">
                 <span id="comparePrice" class="sale-tag large">
-                    {( product.Price.ListPrice.InternalAmount - product.Price.SalePrice.InternalAmount | currency: product.Price.SalePrice.CurrencySymbol )}
+                {( product.Price.ListPrice.InternalAmount - product.Price.SalePrice.InternalAmount - selectedProduct.Price.ActiveDiscount.DiscountAmount.InternalAmount | currency: product.Price.SalePrice.CurrencySymbol )}
                 </span>
             </li>
-        {% endif %}
         {% if settings.product_reviews_enable %}
           <li class="product-meta--review">
             <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
@@ -60,11 +69,10 @@
       <link itemprop="availability" href="http://schema.org/{% if current_product.available %}InStock{% else %}OutOfStock{% endif %}">
 
       <form action="{{ 'cart/add' | absolute_url }}" method="post" enctype="multipart/form-data" id="addToCartForm" ng-if="product.Variations">
-        <input id="id" name="id" type="hidden" value="{{ product.id }}" />
-        <div class="selector-wrapper" ng-repeat="propertyKey in Object.keys(properties)">
-            <label>{( propertyKey )}</label>
-            <select class="single-option-selector" ng-model="properties[propertyKey].selectedValue" ng-change="rebuildSkuSelector()" required="">
-                <option ng-repeat="value in properties[propertyKey]" value="{( value.value )}">{( value.value )}</option>
+        <div class="selector-wrapper" ng-repeat="(propertyName, propertyValues) in properties">
+            <label>{( propertyName )}</label>
+            <select class="single-option-selector" ng-model="propertyValues.selectedValue" ng-change="setSelectedProduct()" required="">
+                <option ng-repeat="value in propertyValues.values" value="{( value.value )}">{( value.value )}</option>
             </select>
         </div>
 

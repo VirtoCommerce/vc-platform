@@ -7,8 +7,10 @@ using VirtoCommerce.Storefront.Model.Catalog;
 
 namespace VirtoCommerce.Storefront.Model.Services
 {
-    public interface IProductService
+    public interface ICatalogService
     {
-        Product GetProductById(string id, string currencyCode, ItemResponseGroup responseGroup);
+        Task<Product> GetProduct(string id, string currencyCode, ItemResponseGroup responseGroup);
+
+        Task<SearchResult> Search(SearchCriteria criteria);
     }
 }

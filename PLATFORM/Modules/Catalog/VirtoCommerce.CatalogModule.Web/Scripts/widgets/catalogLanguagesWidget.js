@@ -6,7 +6,7 @@
         var newBlade = {
             id: "catalogChildBlade",
             title: blade.title,
-            subtitle: 'catalog.blades.catalog-languages.subtitle',
+            subtitle: 'catalog.widgets.catalogLanguages.blade-subtitle',
             controller: 'virtoCommerce.catalogModule.catalogLanguagesController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/catalog-languages.tpl.html'
         };

@@ -72,7 +72,7 @@
                permission: 'platform:security:update'
            },
             {
-                name: "platform.commands.Remove", icon: 'fa fa-trash-o',
+                name: "platform.commands.remove", icon: 'fa fa-trash-o',
                 executeMethod: function () {
                     deleteChecked();
                 },
