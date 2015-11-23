@@ -85,9 +85,9 @@ namespace VirtoCommerce.Storefront.Controllers
             return RedirectToAction("Index", "Cart");
         }
 
-        // GET: /cart?step=...
+        // GET: /cart/step
         [HttpGet]
-        [Route("")]
+        [Route("{step}")]
         public ActionResult Checkout(string step)
         {
             return View("checkout", "checkout_layout", _workContext);

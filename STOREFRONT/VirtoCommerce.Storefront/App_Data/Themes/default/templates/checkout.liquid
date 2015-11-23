@@ -1,4 +1,4 @@
-﻿<div class="step" ng-if="checkoutStep.step == 'customer-information'">
+﻿<div class="step" ng-if="location.path() == '/cart/customer-information'">
     <form accept-charset="UTF-8" action="" class="edit_checkout animate-floating-labels" method="post">
         <div class="step__sections">
             <div class="section section--contact-information">
@@ -123,7 +123,7 @@
     </form>
 </div>
 
-<div class="step" ng-if="checkoutStep.step == 'shipping-method'">
+<div class="step" ng-if="location.path() == '/cart/shipping-method'">
     <form accept-charset="UTF-8" action="" class="edit_checkout animate-floating-labels" method="post">
         <div class="step__sections">
             <div class="section section--shipping-address-recap">
@@ -174,7 +174,7 @@
     </form>
 </div>
 
-<div class="step" ng-if="checkoutStep.step == 'payment-method'">
+<div class="step" ng-if="location.path() == '/cart/payment-method'">
     <div class="step__sections">
         <div class="section section--reductions hidden-on-desktop">
             <div class="section__header">
