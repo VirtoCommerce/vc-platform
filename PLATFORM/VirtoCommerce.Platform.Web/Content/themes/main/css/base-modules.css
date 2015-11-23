@@ -4093,6 +4093,12 @@ tags-input .tags .tag-item .remove-button
                         color: #fff;
                     }
 
+                    .dropdown-content .__selected .list-link
+                    {
+                        background: none;
+                        color: #43b0e6;
+                    }
+
                         .dropdown-content .list-ico
                         {
                             font-size: 25px;
