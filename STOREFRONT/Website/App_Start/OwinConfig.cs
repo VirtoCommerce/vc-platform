@@ -320,13 +320,8 @@ namespace VirtoCommerce.Web
                     });
                  
                 }
- 
-                var settingsCacheKey = CacheKey.Create("settings", themeName, this.IsResourceFile().ToString());
-                ctx.Settings = await ctx.CacheManager.GetAsync(settingsCacheKey, TimeSpan.FromMinutes(30), async () =>
-                {
-                    return await Task.Run(()=> commerceService.GetSettings(themeName, context.Request.Path.HasValue && context.Request.Path.Value.Contains(".scss") ? "''" : null));
-                });
-
+             
+                ctx.Settings = commerceService.GetSettings(themeName, context.Request.Path.HasValue && context.Request.Path.Value.Contains(".scss") ? "''" : null);
          
                 ctx.CountryOptionTags = commerceService.GetCountryTags();
 
