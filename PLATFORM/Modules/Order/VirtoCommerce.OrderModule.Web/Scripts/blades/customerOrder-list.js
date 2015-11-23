@@ -12,7 +12,6 @@ function ($scope, order_res_customerOrders, bladeNavigationService, dialogServic
 
     $scope.filter = { searchKeyword: undefined };
 
-    $scope.selectedAll = false;
     var selectedNode = null;
 
     $scope.blade.refresh = function () {
@@ -29,7 +28,6 @@ function ($scope, order_res_customerOrders, bladeNavigationService, dialogServic
     function searchOrders(criteria) {
         order_res_customerOrders.search(criteria, function (data) {
             $scope.blade.isLoading = false;
-            $scope.selectedAll = false;
 
             $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
             $scope.objects = data.customerOrders;
@@ -68,13 +66,7 @@ function ($scope, order_res_customerOrders, bladeNavigationService, dialogServic
 
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     };
-
-    $scope.checkAll = function (selected) {
-        angular.forEach($scope.objects, function (item) {
-            item.selected = selected;
-        });
-    };
-
+    
     function deleteChecked() {
         var dialog = {
             id: "confirmDeleteItem",

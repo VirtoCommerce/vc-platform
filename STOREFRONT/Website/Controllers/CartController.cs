@@ -2,6 +2,7 @@
 using System;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using VirtoCommerce.Web.Caching;
 using VirtoCommerce.Web.Models;
 
 #endregion
@@ -15,6 +16,8 @@ namespace VirtoCommerce.Web.Controllers
         [Route("add")]
         public async Task<ActionResult> AddAsync(string id)
         {
+            ClearCache();
+
             await this.Service.Cart.AddAsync(id);
             return new RedirectResult("~/cart");
         }
@@ -23,6 +26,7 @@ namespace VirtoCommerce.Web.Controllers
         [Route("add.js")]
         public async Task<ActionResult> AddToCartAsync(string id, decimal quantity = 1)
         {
+            ClearCache();
             var item = await this.Service.Cart.AddAsync(id);
             return this.Json(item);
         }
@@ -38,6 +42,8 @@ namespace VirtoCommerce.Web.Controllers
         // Post: Cart
         public async Task<ActionResult> ChangeAsync(int line, int quantity, string id)
         {
+            ClearCache();
+
             if (!String.IsNullOrEmpty(id))
             {
                 await this.Service.Cart.ChangeAsync(id, quantity);
@@ -54,6 +60,8 @@ namespace VirtoCommerce.Web.Controllers
         [Route("change.js")]
         public async Task<ActionResult> ChangeItemCartAsync(int line, int quantity)
         {
+            ClearCache();
+
             var item = await this.Service.Cart.ChangeAsync(line - 1, quantity);
             return this.Json(item);
         }
@@ -62,6 +70,8 @@ namespace VirtoCommerce.Web.Controllers
         [Route("change.js")]
         public async Task<ActionResult> ChangeItemCartAsync(string id, int quantity = 1)
         {
+            ClearCache();
+
             var item = await this.Service.Cart.ChangeAsync(id, quantity);
             return this.Json(item);
         }
@@ -70,6 +80,8 @@ namespace VirtoCommerce.Web.Controllers
         [Route("clear.js")]
         public async Task<ActionResult> ClearCartAsync()
         {
+            ClearCache();
+
             var cart = await this.Service.Cart.ClearAsync();
             return this.Json(cart);
         }
@@ -88,6 +100,8 @@ namespace VirtoCommerce.Web.Controllers
         // Post: Cart
         public async Task<ActionResult> UpdateAsync(int[] updates, string note, string action, string update = null, string checkout = null)
         {
+            ClearCache();
+
             var item = await this.Service.Cart.UpdateAsync(updates, note, action);
 
             if (update != null)
@@ -96,5 +110,11 @@ namespace VirtoCommerce.Web.Controllers
             return RedirectToAction("Step1", "Checkout");
         }
         #endregion
+
+        private void ClearCache()
+        {
+            var cartKey = CacheKey.Create("cart", Context.CustomerId);
+            base.Context.CacheManager.Remove(cartKey);
+        }
     }
 }
