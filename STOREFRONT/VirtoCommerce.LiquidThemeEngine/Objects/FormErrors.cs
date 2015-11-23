@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Mvc;
 using DotLiquid;
 
@@ -14,11 +11,14 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
     /// </summary>
     public class FormErrors : Drop, IEnumerable<string>
     {
-      
+
         public FormErrors(ModelStateDictionary modelState)
         {
-            _fields = modelState.Keys;
-            Messages = modelState.ToDictionary(x => x.Key, x => x.Value.Errors.Select(y => y.ErrorMessage).FirstOrDefault());
+            Messages = modelState
+                .Where(x => x.Value.Errors.Any())
+                .ToDictionary(x => x.Key, x => x.Value.Errors.Select(y => y.ErrorMessage).FirstOrDefault());
+
+            _fields = Messages.Keys;
         }
 
         private ICollection<string> _fields { get; set; }
