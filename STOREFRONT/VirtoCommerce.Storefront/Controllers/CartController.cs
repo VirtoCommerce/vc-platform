@@ -12,16 +12,16 @@ namespace VirtoCommerce.Storefront.Controllers
     {
         private readonly WorkContext _workContext;
         private readonly ICartBuilder _cartBuilder;
-        private readonly IProductService _productService;
+        private readonly ICatalogService _catalogService;
 
         public CartController(
             WorkContext workContext,
             ICartBuilder cartBuilder,
-            IProductService productService)
+            ICatalogService catalogService)
         {
             _workContext = workContext;
             _cartBuilder = cartBuilder;
-            _productService = productService;
+            _catalogService = catalogService;
         }
 
         #region "Methods for compatibility with Shopify themes"
@@ -42,7 +42,7 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(_workContext.CurrentStore, _workContext.CurrentCustomer, _workContext.CurrentCurrency);
 
-            var product = _productService.GetProductById(id, _workContext.CurrentCurrency.CurrencyCode.ToString(), Model.Catalog.ItemResponseGroup.ItemLarge);
+            var product = await _catalogService.GetProduct(id, _workContext.CurrentCurrency.Code, Model.Catalog.ItemResponseGroup.ItemLarge);
             if (product != null)
             {
                 await _cartBuilder.AddItem(product, quantity).SaveAsync();
