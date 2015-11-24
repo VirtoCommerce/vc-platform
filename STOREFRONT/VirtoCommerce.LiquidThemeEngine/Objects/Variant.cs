@@ -262,7 +262,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         {
             get
             {
-                return _urlBuilder.ToAbsolute(_workContext, string.Format("~/products/{0}?variant={1}", _mainProductId, _product.Id), _workContext.CurrentStore, _workContext.CurrentLanguage);
+                return _urlBuilder.ToAppAbsolute(_workContext, string.Format("~/products/{0}?variant={1}", _mainProductId, _product.Id), _workContext.CurrentStore, _workContext.CurrentLanguage);
             }
         }
 

@@ -6,6 +6,7 @@ using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Client.Model;
 using Omu.ValueInjecter;
 using VirtoCommerce.Storefront.Model.Common;
+using VirtoCommerce.Storefront.Model.Catalog;
 
 namespace VirtoCommerce.Storefront.Converters
 {

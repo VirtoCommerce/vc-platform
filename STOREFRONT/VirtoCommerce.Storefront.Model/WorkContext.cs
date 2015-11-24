@@ -72,6 +72,26 @@ namespace VirtoCommerce.Storefront.Model
 
         #endregion
 
+        private DateTime _utcNow;
+        /// <summary>
+        /// Represent current storefront datetime in UTC
+        /// </summary>
+        public DateTime StorefrontUtcNow
+        {
+            get
+            {
+                if(_utcNow == null)
+                {
+                    return DateTime.UtcNow;
+                }
+                return _utcNow;
+            }
+
+            set
+            {
+                _utcNow = value;
+            }
+        }
         #region IDisposable Implementation
 
         public void Dispose()
