@@ -4793,6 +4793,13 @@
 
     <script>
         $(function () {
+
+            $('.__items .list-item .list-ico').on('mouseover', function () {
+                $(this).addClass('fa-folder-open');
+            }).on('mouseleave', function () {
+                $(this).removeClass('fa-folder-open');
+            });
+
             $('select').chosen();
 
             animateNotify();

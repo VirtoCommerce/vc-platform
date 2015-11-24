@@ -15,7 +15,7 @@
   'angularFileUpload',
   'ngSanitize',
   'ng-context-menu',
-  'ui.grid', 'ui.grid.resizeColumns', 'ui.grid.moveColumns', 'ui.grid.saveState', 'ui.grid.selection', 'ui.grid.pagination',
+  'ui.grid', 'ui.grid.expandable', 'ui.grid.resizeColumns', 'ui.grid.moveColumns', 'ui.grid.saveState', 'ui.grid.selection', 'ui.grid.pagination',
   'ui.codemirror',
   'focusOn',
   'textAngular',
@@ -240,12 +240,18 @@ angular.module('platformWebApp', AppDependencies).
                     $localStorage['gridState:' + $scope.blade.template] = gridApi.saveState.save();
                 }
 
-                // setting 'blade.gridScrollNeeded'
-                gridApi.grid.registerDataChangeCallback(function (grid) {
+                gridApi.core.on.renderingComplete($scope, function () {
+                    // setting 'blade.gridScrollNeeded'
+                    //gridApi.grid.registerDataChangeCallback(function (grid) {
                     var headerHeight = $('.ui-grid-header').height();
-                    var gridDataHeight = (headerHeight ? headerHeight : 40) + gridApi.core.getVisibleRows(grid).length * $scope.gridOptions.rowHeight;
+                    var gridDataHeight = (headerHeight ? headerHeight : 40) + gridApi.core.getVisibleRows(gridApi.grid).length * $scope.gridOptions.rowHeight;
                     $scope.blade.gridScrollNeeded = $('.blade-inner').height() < 1 + gridDataHeight;
-                    console.log($('.blade-inner').height() + ' < ' + (1 + gridDataHeight) + ' blade.gridScrollNeeded: ' + $scope.blade.gridScrollNeeded);
+
+                    if ($scope.blade.gridScrollNeeded)
+                        $('.ui-grid').addClass('__scrolled');
+                    else
+                        $('.ui-grid').removeClass('__scrolled');
+                    //console.log($('.blade-inner').height() + ' < ' + (1 + gridDataHeight) + ' blade.gridScrollNeeded: ' + $scope.blade.gridScrollNeeded);
                 }, [uiGridConstants.dataChange.ROW]);
 
                 if (externalRegisterApiCallback) {
