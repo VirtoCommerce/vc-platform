@@ -5043,6 +5043,7 @@ tags-input .tags .tag-item .remove-button
 .ui-grid-viewport
 {
     height: auto !important;
+    overflow-x: auto !important;
 }
 
 .ui-grid-top-panel
@@ -5104,6 +5105,12 @@ tags-input .tags .tag-item .remove-button
 .ui-grid-row:nth-child(2n):hover .image
 {
     background-color: #ecf7fc !important;
+}
+
+.ui-grid-row:nth-child(2n) .ui-grid-cell.__selected .image,
+.ui-grid-row:nth-child(2n+1) .ui-grid-cell.__selected .image
+{
+    background-color: #d9effa !important;
 }
 
 .ui-grid-pinned-container.ui-grid-pinned-container-left .ui-grid-row:hover .ui-grid-cell,
@@ -5172,9 +5179,49 @@ tags-input .tags .tag-item .remove-button
     display: inline-block;
     font-size: 14px;
     height: auto;
+    padding: 5px 0 5px 5px;
     text-shadow: 1px 1px #fff;
     vertical-align: middle;
     width: 100%;
+}
+
+.ui-grid-icon-cancel::before
+{
+    visibility: hidden;
+}
+
+.ui-grid-menu .ui-grid-menu-inner
+{
+    border: none;
+
+    -webkit-box-shadow: none;
+            box-shadow: none;
+}
+
+.ui-grid-menu-button .ui-grid-menu .ui-grid-menu-mid
+{
+    max-height: 100%;
+    overflow: auto;
+}
+
+.ui-grid-menu .ui-grid-menu-inner ul li button:hover,
+.ui-grid-menu .ui-grid-menu-inner ul li button:focus
+{
+    background: #ecf7fc;
+
+    -webkit-box-shadow: none;
+            box-shadow: none;
+}
+
+.ui-grid-menu .ui-grid-menu-inner ul li button
+{
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.ui-grid-menu .ui-grid-menu-inner
+{
+    background: #fff;
 }
 
 .ui-grid-row:nth-child(2n) .ui-grid-cell.__selected
@@ -5305,16 +5352,12 @@ input.ui-grid-filter-input[type="text"]
 .ui-grid-menu-button
 {
     right: 4px;
+    top: 4px;
 }
 
-.blade-inner:hover .ui-grid-menu-button
+.blade-inner:hover .ui-grid.__scrolled .ui-grid-menu-button
 {
     right: 20px;
-}
-
-.ui-grid-menu-button
-{
-    top: 4px;
 }
 
 .ui-grid-menu-button
