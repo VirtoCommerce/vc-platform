@@ -32,10 +32,12 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
         /// <summary>
         /// Get shopping cart by store id and customer id
         /// </summary>
+        /// <remarks>
+        /// Returns shopping cart or null if it is not found
+        /// </remarks>
         /// <param name="storeId">Store id</param>
         /// <param name="customerId">Customer id</param>
         /// <response code="200"></response>
-        /// <response code="404">Shopping cart not found</response>
         [HttpGet]
 		[ResponseType(typeof(webModel.ShoppingCart))]
 		[Route("{storeId}/{customerId}/carts/current")]
@@ -57,7 +59,7 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 
             if (retVal == null)
             {
-                return NotFound();
+                return Ok();
             }
 
 			return Ok(retVal.ToWebModel());
