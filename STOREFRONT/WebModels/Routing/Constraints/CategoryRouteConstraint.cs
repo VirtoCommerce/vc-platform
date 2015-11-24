@@ -1,4 +1,5 @@
 ﻿#region
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -6,6 +7,7 @@ using System.Web;
 using System.Web.Routing;
 using VirtoCommerce.ApiClient;
 using VirtoCommerce.ApiClient.Extensions;
+using VirtoCommerce.Web.Caching;
 
 #endregion
 
@@ -49,13 +51,21 @@ namespace VirtoCommerce.Web.Models.Routing.Constraints
             {
                 return false;
             }
-            
 
-            var client = ClientContext.Clients.CreateBrowseClient();
-            var category = Task.Run(() => client.GetCategoryByKeywordAsync(storeId, language, childCategorySlug)).Result;
+            var categoryRouteCacheKey = CacheKey.Create("CategoryRouteConstraint", storeId, language, childCategorySlug);
+            var category = Task.Run(() => SiteContext.Current.CacheManager.GetAsync(categoryRouteCacheKey, TimeSpan.FromHours(1), async () =>
+            {
+                var client = ClientContext.Clients.CreateBrowseClient();
+                var retVal = await client.GetCategoryByKeywordAsync(storeId, language, childCategorySlug);
 
-            if(category == null)
-                category = Task.Run(() => client.GetCategoryByCodeAsync(storeId, language, childCategorySlug)).Result;
+                if (retVal == null)
+                    retVal = await client.GetCategoryByCodeAsync(storeId, language, childCategorySlug);
+
+                return retVal;
+
+            })).Result;
+
+        
 
             //var outline = category.AsWebModel().BuildOutline(language);
             //return category != null && this.ValidateCategoryPath(outline, categoryPath);

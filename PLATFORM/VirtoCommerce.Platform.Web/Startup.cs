@@ -249,7 +249,7 @@ namespace VirtoCommerce.Platform.Web
             var sourceLocalizationPath = HostingEnvironment.MapPath(VirtualRoot + _localizationSourcePath);
 
             DirectoryInfo directory = new DirectoryInfo(sourceLocalizationPath);
-            var files = directory.GetFiles().Where(x=>x.Extension==".json").ToArray();
+            var files = directory.GetFiles().Where(x => x.Extension == ".json").ToArray();
             var locales = files.Select(x => x.Name.Substring(0, x.Name.IndexOf('.'))).Distinct().ToArray();
 
             foreach (var locale in locales)
@@ -261,6 +261,7 @@ namespace VirtoCommerce.Platform.Web
                     var part = JObject.Parse(File.ReadAllText(file.FullName));
                     result.Merge(part, new JsonMergeSettings { MergeArrayHandling = MergeArrayHandling.Concat });
                     var localization = JsonConvert.SerializeObject(result);
+                    Directory.CreateDirectory(localizationPath);
                     var filePath = Path.Combine(localizationPath, string.Format("{0}.{1}", locale, "json"));
                     using (StreamWriter outputFile = new StreamWriter(filePath))
                     {
@@ -368,32 +369,32 @@ namespace VirtoCommerce.Platform.Web
                                     DefaultValue = AccountType.Manager.ToString()
                                 }
                             }
-                        },
-                         new ModuleSettingsGroup
-                        {
-                            Name = "Platform|General",
-                            Settings = new []
-                            {
-                                //new ModuleSetting
-                                //{
-                                //    Name = "VirtoCommerce.Platform.General.ManagerDefaultLanguage",
-                                //    ValueType = ModuleSetting.TypeString,
-                                //    Title = "Commerce Manager's default language",
-                                //    Description = "The default language that Commerce Manager is displayed in",
-                                //    DefaultValue = "en"
-                                //},
-                                new ModuleSetting
-                                {
-                                    Name = "VirtoCommerce.Platform.General.ManagerLanguages",
-                                    ValueType = ModuleSetting.TypeString,
-                                    Title = "Commerce Manager languages",
-                                    Description = "Languages that the Commerce Manager is translated to",
-                                    IsArray = true,
-                                    ArrayValues = new [] { "en"},
-                                    DefaultValue = "en"
-                                }
-                            }
                         }
+                        // new ModuleSettingsGroup
+                        //{
+                        //    Name = "Platform|General",
+                        //    Settings = new []
+                        //    {
+                        //        new ModuleSetting
+                        //        {
+                        //            Name = "VirtoCommerce.Platform.General.ManagerDefaultLanguage",
+                        //            ValueType = ModuleSetting.TypeString,
+                        //            Title = "Commerce Manager's default language",
+                        //            Description = "The default language that Commerce Manager is displayed in",
+                        //            DefaultValue = "en"
+                        //        },
+                        //        new ModuleSetting
+                        //        {
+                        //            Name = "VirtoCommerce.Platform.General.ManagerLanguages",
+                        //            ValueType = ModuleSetting.TypeString,
+                        //            Title = "Commerce Manager languages",
+                        //            Description = "Languages that the Commerce Manager is translated to",
+                        //            IsArray = true,
+                        //            ArrayValues = new [] { "en"},
+                        //            DefaultValue = "en"
+                        //        }
+                        //    }
+                        //}
                     }
                 }
             };
