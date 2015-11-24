@@ -601,6 +601,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Assets\" />
+    <Folder Include="App_Data\Localizations\" />
     <Folder Include="App_Data\Modules\" />
     <Folder Include="Filters\" />
     <Folder Include="Views\Notifications\" />
@@ -608,7 +609,6 @@
   <ItemGroup>
     <Content Include="Content\themes\main\fonts\fontawesome-webfont.woff2" />
     <Content Include="Localizations\en.VirtoCommerce.Platform.json" />
-    <Content Include="Localizations\en.Custom.json" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>

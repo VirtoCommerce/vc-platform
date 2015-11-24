@@ -3,45 +3,90 @@ using System.IO;
 using System.Linq;
 using System.Web.Hosting;
 using System.Web.Http;
+using VirtoCommerce.Platform.Core.Modularity;
+using WebGrease.Extensions;
+using System;
+using System.Collections.Generic;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
     [System.Web.Http.RoutePrefix("api/platform/localization")]
     public class LocalizationController : ApiController
     {
+        private readonly IModuleManifestProvider _manifestProvider;
         private readonly string _localizationPath;
-        public LocalizationController()
+        public LocalizationController(IModuleManifestProvider manifestProvider)
         {
-            _localizationPath = HostingEnvironment.MapPath("~/App_Data/Localization/");
+            _manifestProvider = manifestProvider;
         }
 
         /// <summary>
-        /// Get all localization files by given language
+        /// Return all localization files by given locale
         /// </summary>
         /// <returns>json</returns>
         [System.Web.Http.HttpGet]
-        [System.Web.Http.Route("file")]
+        [System.Web.Http.Route("locale")]
         [AllowAnonymous]
-        public JObject GetLocalizationFile(string lang = "en")
+        public JObject GetLocalization(string locale = "en")
         {
-            DirectoryInfo directory = new DirectoryInfo(_localizationPath);
-            var file = directory.GetFiles().FirstOrDefault(x => x.Name == string.Format("{0}.json", lang));
-            
-            var result = JObject.Parse(File.ReadAllText(file.FullName));
+            var searchPattern = string.Format("{0}.*.json", locale);
+            var files = GetAllLocalizationFiles(searchPattern);
 
-            return result; 
+            var result = new JObject();
+            foreach (var file in files)
+            {
+                var part = JObject.Parse(File.ReadAllText(file));
+                result.Merge(part, new JsonMergeSettings { MergeArrayHandling = MergeArrayHandling.Merge });
+            }
+            return result;
+        }
+
+        private string[] GetAllLocalizationFiles(string searchPattern) {
+            var files = new List<string>();
+
+
+            // Get platform localization files
+            var platformPath = HostingEnvironment.MapPath("~").EnsureEndSeparator();
+            var platformFileNames = GetLocalizationFilesByPath(platformPath, searchPattern);
+            files.AddRange(platformFileNames);
+
+            // Get modules localization files
+            var modulesFileNames = new List<string>();
+            foreach (var pair in _manifestProvider.GetModuleManifests())
+            {
+                var modulePath = Path.GetDirectoryName(pair.Key);
+                var moduleFileNames = GetLocalizationFilesByPath(modulePath, searchPattern);
+                files.AddRange(moduleFileNames);
+            }
+
+            // Get user defined localization files from App_Data/Localizations folder
+            var userLocalizationPath = HostingEnvironment.MapPath("~/App_Data").EnsureEndSeparator();
+            var userFileNames = GetLocalizationFilesByPath(userLocalizationPath, searchPattern);
+            files.AddRange(userFileNames);
+            return files.ToArray();
+        }
+
+        private string[] GetLocalizationFilesByPath(string path, string searchPattern, string localizationSubfolder = "Localizations")
+        {
+            var sourceDirectoryPath = Path.Combine(path, localizationSubfolder).EnsureEndSeparator();
+
+            return Directory.Exists(sourceDirectoryPath)
+                ? Directory.EnumerateFiles(sourceDirectoryPath, searchPattern, SearchOption.AllDirectories).ToArray()
+                : new string[0];
         }
 
         /// <summary>
-        /// Get all localization files by given language
+        /// Return all aviable locales
         /// </summary>
         /// <returns>json</returns>
         [System.Web.Http.HttpGet]
         [System.Web.Http.Route("locales")]
         public string[] GetLocales()
         {
-            DirectoryInfo directory = new DirectoryInfo(_localizationPath);
-            var locales = directory.GetFiles().Select(x => x.Name.Substring(0, x.Name.IndexOf('.'))).Distinct().ToArray();
+            var files = GetAllLocalizationFiles("*.json");
+            var locales = files
+                .Select(x=>Path.GetFileName(x))
+                .Select(x => x.Substring(0, x.IndexOf('.'))).Distinct().ToArray();
 
             return locales;
         }
