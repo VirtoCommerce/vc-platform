@@ -187,7 +187,7 @@ namespace VirtoCommerce.Client.Api
         /// Get shopping cart by store id and customer id
         /// </summary>
         /// <remarks>
-        /// 
+        /// Returns shopping cart or null if it is not found
         /// </remarks>
         /// <param name="storeId">Store id</param>
         /// <param name="customerId">Customer id</param>
@@ -198,7 +198,7 @@ namespace VirtoCommerce.Client.Api
         /// Get shopping cart by store id and customer id
         /// </summary>
         /// <remarks>
-        /// 
+        /// Returns shopping cart or null if it is not found
         /// </remarks>
         /// <param name="storeId">Store id</param>
         /// <param name="customerId">Customer id</param>
@@ -1081,7 +1081,7 @@ namespace VirtoCommerce.Client.Api
         }
         
         /// <summary>
-        /// Get shopping cart by store id and customer id 
+        /// Get shopping cart by store id and customer id Returns shopping cart or null if it is not found
         /// </summary>
         /// <param name="storeId">Store id</param> 
         /// <param name="customerId">Customer id</param> 
@@ -1139,7 +1139,7 @@ namespace VirtoCommerce.Client.Api
         }
     
         /// <summary>
-        /// Get shopping cart by store id and customer id 
+        /// Get shopping cart by store id and customer id Returns shopping cart or null if it is not found
         /// </summary>
         /// <param name="storeId">Store id</param>
         /// <param name="customerId">Customer id</param>

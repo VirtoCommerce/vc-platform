@@ -31,10 +31,10 @@ namespace VirtoCommerce.Client.Model {
 
     
     /// <summary>
-    /// Gets or Sets SearchInChildrens
+    /// Gets or Sets SearchInChildren
     /// </summary>
-    [DataMember(Name="searchInChildrens", EmitDefaultValue=false)]
-    public bool? SearchInChildrens { get; set; }
+    [DataMember(Name="searchInChildren", EmitDefaultValue=false)]
+    public bool? SearchInChildren { get; set; }
 
     
     /// <summary>
@@ -148,7 +148,7 @@ namespace VirtoCommerce.Client.Model {
       
       sb.Append("  Keyword: ").Append(Keyword).Append("\n");
       
-      sb.Append("  SearchInChildrens: ").Append(SearchInChildrens).Append("\n");
+      sb.Append("  SearchInChildren: ").Append(SearchInChildren).Append("\n");
       
       sb.Append("  CategoryId: ").Append(CategoryId).Append("\n");
       
