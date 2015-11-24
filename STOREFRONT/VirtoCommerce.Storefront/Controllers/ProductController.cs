@@ -5,35 +5,35 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using VirtoCommerce.Storefront.Model;
+using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Services;
 
 namespace VirtoCommerce.Storefront.Controllers
 {
     [RoutePrefix("product")]
-    public class ProductController : Controller
+    public class ProductController : StorefrontControllerBase
     {
-        private readonly WorkContext _workContext;
         private readonly ICatalogService _productService;
 
-        public ProductController(WorkContext context, ICatalogService productService)
+        public ProductController(WorkContext context, IStorefrontUrlBuilder urlBuilder, ICatalogService productService)
+            :base(context, urlBuilder)
         {
-            _workContext = context;
             _productService = productService;
         }
 
         [HttpGet]
         public async Task<ActionResult> ProductDetails(string productid)
         {
-            _workContext.CurrentProduct = await _productService.GetProduct(productid, _workContext.CurrentCurrency.Code, Model.Catalog.ItemResponseGroup.ItemLarge);
-            return View("product", _workContext);
+            base.WorkContext.CurrentProduct = await _productService.GetProduct(productid, base.WorkContext.CurrentCurrency.Code, Model.Catalog.ItemResponseGroup.ItemLarge);
+            return View("product", base.WorkContext);
         }
 
         [Route("{id}")]
         [HttpGet]
         public async Task<ActionResult> GetProductById(string id)
         {
-            _workContext.CurrentProduct = await _productService.GetProduct(id, _workContext.CurrentCurrency.Code, Model.Catalog.ItemResponseGroup.ItemLarge);
-            return Json(_workContext.CurrentProduct, JsonRequestBehavior.AllowGet);
+            base.WorkContext.CurrentProduct = await _productService.GetProduct(id, base.WorkContext.CurrentCurrency.Code, Model.Catalog.ItemResponseGroup.ItemLarge);
+            return Json(base.WorkContext.CurrentProduct, JsonRequestBehavior.AllowGet);
         }
     }
 }

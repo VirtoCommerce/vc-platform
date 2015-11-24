@@ -16,19 +16,16 @@ namespace VirtoCommerce.Storefront.Controllers
 {
     [RoutePrefix("account")]
     [Authorize]
-    public class AccountController : Controller
+    public class AccountController : StorefrontControllerBase
     {
-        private readonly WorkContext _workContext;
-        private IStorefrontUrlBuilder _urlBuilder;
         private readonly ICommerceCoreModuleApi _commerceCoreApi;
         private readonly ICustomerManagementModuleApi _customerApi;
         private readonly IAuthenticationManager _authenticationManager;
         private readonly IVirtoCommercePlatformApi _platformApi;
 
         public AccountController(WorkContext workContext, IStorefrontUrlBuilder urlBuilder, ICommerceCoreModuleApi commerceCoreApi, ICustomerManagementModuleApi customerApi, IAuthenticationManager authenticationManager, IVirtoCommercePlatformApi platformApi)
+            : base(workContext, urlBuilder)
         {
-            _workContext = workContext;
-            _urlBuilder = urlBuilder;
             _commerceCoreApi = commerceCoreApi;
             _customerApi = customerApi;
             _authenticationManager = authenticationManager;
@@ -41,11 +38,11 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             if (HttpContext.User.Identity.IsAuthenticated)
             {
-                _workContext.CurrentPage = page;
-                return View("customers/account", _workContext);
+                base.WorkContext.CurrentPage = page;
+                return View("customers/account", base.WorkContext);
             }
 
-            return Redirect("~/account/login");
+            return StoreFrontRedirect("~/account/login");
         }
 
         [HttpGet]
@@ -53,7 +50,7 @@ namespace VirtoCommerce.Storefront.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
-            return View("customers/register", _workContext);
+            return View("customers/register", base.WorkContext);
         }
 
         [HttpPost]
@@ -92,14 +89,14 @@ namespace VirtoCommerce.Storefront.Controllers
 
                 var identity = CreateClaimsIdentity(formModel.Email);
                 _authenticationManager.SignIn(identity);
-                return Redirect("~/account");
+                return StoreFrontRedirect("~/account");
             }
             else
             {
                 ModelState.AddModelError("form", result.Errors.First());
             }
 
-            return View("customers/register", _workContext);
+            return View("customers/register", base.WorkContext);
         }
 
         [HttpGet]
@@ -112,9 +109,9 @@ namespace VirtoCommerce.Storefront.Controllers
                 _authenticationManager.SignOut();
             }
 
-            _workContext.Login = new Login();
+            base.WorkContext.Login = new Login();
 
-            return View("customers/login", _workContext);
+            return View("customers/login", base.WorkContext);
         }
 
         [HttpPost]
@@ -129,15 +126,15 @@ namespace VirtoCommerce.Storefront.Controllers
                 case "success":
                     var identity = CreateClaimsIdentity(formModel.Email);
                     _authenticationManager.SignIn(identity);
-                    return Redirect(returnUrl);
+                    return StoreFrontRedirect(returnUrl);
                 case "lockedOut":
-                    return View("lockedout", _workContext);
+                    return View("lockedout", base.WorkContext);
                 case "requiresVerification":
-                    return Redirect("~/account/sendcode");
+                    return StoreFrontRedirect("~/account/sendcode");
                 case "failure":
                 default:
                     ModelState.AddModelError("form", "Login attempt failed.");
-                    return View("customers/login", _workContext);
+                    return View("customers/login", base.WorkContext);
             }
         }
 
@@ -146,7 +143,7 @@ namespace VirtoCommerce.Storefront.Controllers
         public ActionResult Logout()
         {
             _authenticationManager.SignOut();
-            return Redirect("~/");
+            return StoreFrontRedirect("~/");
         }
 
         [HttpPost]
@@ -161,14 +158,14 @@ namespace VirtoCommerce.Storefront.Controllers
                 string callbackUrl = Url.Action("ResetPassword", "Account",
                     new { UserId = user.Id, Code = "token" }, protocol: Request.Url.Scheme);
 
-                await _commerceCoreApi.StorefrontSecurityGenerateResetPasswordTokenAsync(user.Id, _workContext.CurrentStore.Id, _workContext.CurrentLanguage.CultureName, callbackUrl);
+                await _commerceCoreApi.StorefrontSecurityGenerateResetPasswordTokenAsync(user.Id, base.WorkContext.CurrentStore.Id, base.WorkContext.CurrentLanguage.CultureName, callbackUrl);
             }
             else
             {
                 ModelState.AddModelError("form", "User not found");
             }
 
-            return Redirect("~/account/login#recover");
+            return StoreFrontRedirect("~/account/login#recover");
         }
 
         [HttpGet]
@@ -178,16 +175,16 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             if (string.IsNullOrEmpty(code) && string.IsNullOrEmpty(userId))
             {
-                _workContext.ErrorMessage = "Error in URL format";
+                base.WorkContext.ErrorMessage = "Error in URL format";
 
-                return View("error", _workContext);
+                return View("error", base.WorkContext);
             }
 
             var user = await _commerceCoreApi.StorefrontSecurityGetUserByIdAsync(userId);
             if (user == null)
             {
-                _workContext.ErrorMessage = "User was not found.";
-                return View("error", _workContext);
+                base.WorkContext.ErrorMessage = "User was not found.";
+                return View("error", base.WorkContext);
             }
 
             var tokenCookie = new HttpCookie(StorefrontConstants.PasswordResetTokenCookie, code);
@@ -198,7 +195,7 @@ namespace VirtoCommerce.Storefront.Controllers
             customerIdCookie.Expires = DateTime.UtcNow.AddDays(1);
             HttpContext.Response.Cookies.Add(customerIdCookie);
 
-            return View("customers/reset_password", _workContext);
+            return View("customers/reset_password", base.WorkContext);
         }
 
         [HttpPost]
@@ -214,8 +211,8 @@ namespace VirtoCommerce.Storefront.Controllers
 
             if (userId == null && token == null)
             {
-                _workContext.ErrorMessage = "Not enough info for reseting password";
-                return View("error", _workContext);
+                base.WorkContext.ErrorMessage = "Not enough info for reseting password";
+                return View("error", base.WorkContext);
             }
 
             var result = await _commerceCoreApi.StorefrontSecurityResetPasswordAsync(userId, token, formModel.Password);
@@ -225,14 +222,14 @@ namespace VirtoCommerce.Storefront.Controllers
                 HttpContext.Response.Cookies.Add(new HttpCookie(StorefrontConstants.CustomerIdCookie) { Expires = DateTime.UtcNow.AddDays(-1) });
                 HttpContext.Response.Cookies.Add(new HttpCookie(StorefrontConstants.PasswordResetTokenCookie) { Expires = DateTime.UtcNow.AddDays(-1) });
 
-                return View("customers/reset_password_confirmation", _workContext);
+                return View("customers/reset_password_confirmation", base.WorkContext);
             }
             else
             {
                 ModelState.AddModelError("form", result.Errors.First());
             }
 
-            return View("customers/reset_password", _workContext);
+            return View("customers/reset_password", base.WorkContext);
         }
 
         [HttpPost]
@@ -241,7 +238,7 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             var contact = new VirtoCommerceCustomerModuleWebModelContact
             {
-                Id = _workContext.CurrentCustomer.Id
+                Id = base.WorkContext.CurrentCustomer.Id
             };
 
             var fullName = string.Join(" ", formModel.FirstName, formModel.LastName).Trim();
@@ -263,7 +260,7 @@ namespace VirtoCommerce.Storefront.Controllers
 
             await _customerApi.CustomerModuleUpdateContactAsync(contact);
 
-            return View("customers/account", _workContext);
+            return View("customers/account", base.WorkContext);
         }
 
         [HttpPost]
@@ -276,26 +273,19 @@ namespace VirtoCommerce.Storefront.Controllers
                 NewPassword = formModel.NewPassword,
             };
 
-            var result = await _platformApi.SecurityChangePasswordAsync(_workContext.CurrentCustomer.UserName, changePassword);
+            var result = await _platformApi.SecurityChangePasswordAsync(base.WorkContext.CurrentCustomer.UserName, changePassword);
 
             if (result.Succeeded == true)
             {
-                return Redirect("~/account");
+                return StoreFrontRedirect("~/account");
             }
             else
             {
                 ModelState.AddModelError("form", result.Errors.First());
-                return View("customers/account", _workContext);
+                return View("customers/account", base.WorkContext);
             }
         }
 
-
-        protected override RedirectResult Redirect(string url)
-        {
-            var newUrl = Url.IsLocalUrl(url) ? url : "~/";
-            var appRelativeUrl = _urlBuilder.ToAppRelative(_workContext, newUrl, _workContext.CurrentStore, _workContext.CurrentLanguage);
-            return base.Redirect(appRelativeUrl);
-        }
 
 
         private ClaimsIdentity CreateClaimsIdentity(string userName)

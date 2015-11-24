@@ -232,11 +232,12 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AssetsController.cs" />
     <Compile Include="Controllers\CartController.cs" />
-    <Compile Include="Controllers\CatalogController.cs" />
+    <Compile Include="Controllers\CatalogSearchController.cs" />
     <Compile Include="Controllers\CommonController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
+    <Compile Include="Controllers\StorefrontControllerBase.cs" />
     <Compile Include="Converters\AddressConverter.cs" />
     <Compile Include="Converters\AssetConverter.cs" />
     <Compile Include="Converters\CartConverter.cs" />
@@ -395,6 +396,7 @@
     <Folder Include="Views\Account\" />
     <Folder Include="Views\Common\" />
     <Folder Include="Views\Error\" />
+    <Folder Include="Views\Storefront\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\dotliquid\src\DotLiquid\DotLiquid.csproj">

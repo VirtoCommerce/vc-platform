@@ -32,7 +32,10 @@ namespace VirtoCommerce.Storefront.Model.Common
                 {
                     //Check that store exist for not exist store use current
                     store = context.AllStores.Contains(store) ? store : context.CurrentStore;
-                    retVal += store.Id + "/";
+                    if (!virtualPath.Contains("/" + store.Id + "/"))
+                    {
+                        retVal += store.Id + "/";
+                    }
                 }
             }
 
@@ -40,7 +43,10 @@ namespace VirtoCommerce.Storefront.Model.Common
             if (language != null && store != null && store.Languages.Count() > 1)
             {
                 language = store.Languages.Contains(language) ? language : store.DefaultLanguage;
-                retVal += language.CultureName + "/";
+                if (!virtualPath.Contains("/" + language.CultureName + "/"))
+                {
+                    retVal += language.CultureName + "/";
+                }
             }
 
             retVal += virtualPath.TrimStart('/');

@@ -10,14 +10,12 @@ using VirtoCommerce.Storefront.Model.Common;
 namespace VirtoCommerce.Storefront.Controllers
 {
     [RoutePrefix("common")]
-    public class CommonController : Controller
+    public class CommonController : StorefrontControllerBase
     {
-        private WorkContext _workContext;
-        private IStorefrontUrlBuilder _storefrontUrlBuilder;
+
         public CommonController(WorkContext workContext, IStorefrontUrlBuilder urlBuilder)
+            : base(workContext, urlBuilder)
         {
-            _workContext = workContext;
-            _storefrontUrlBuilder = urlBuilder;
         }
 
         /// <summary>
@@ -40,10 +38,10 @@ namespace VirtoCommerce.Storefront.Controllers
             //home page  and prevent open redirection attack
             if (String.IsNullOrEmpty(returnUrl) || !Url.IsLocalUrl(returnUrl))
             {
-                returnUrl = _storefrontUrlBuilder.ToAbsolute(_workContext, "~/", _workContext.CurrentStore, _workContext.CurrentLanguage);
+                returnUrl = "~/";
             }
 
-            return Redirect(returnUrl);
+            return StoreFrontRedirect(returnUrl);
         }
 
     }
