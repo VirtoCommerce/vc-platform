@@ -26,16 +26,16 @@ namespace VirtoCommerce.Storefront.Controllers
         [Route("")]
         public ActionResult Index()
         {
-            return View("cart", base.WorkContext);
+            return View("cart", WorkContext);
         }
-     
+
 
         // GET: /cart/json
         [HttpGet]
         [Route("json")]
         public async Task<ActionResult> CartJson()
         {
-            await _cartBuilder.GetOrCreateNewTransientCartAsync(base.WorkContext.CurrentStore, base.WorkContext.CurrentCustomer, base.WorkContext.CurrentCurrency);
+            await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentCurrency);
 
             return Json(_cartBuilder.Cart, JsonRequestBehavior.AllowGet);
         }
