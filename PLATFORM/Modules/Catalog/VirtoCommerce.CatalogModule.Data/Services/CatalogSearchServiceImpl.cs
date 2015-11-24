@@ -64,7 +64,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 
 			    //Get list of search in categories
                 var searchCategoryIds = criteria.CategoriesIds;
-                if (searchCategoryIds != null && criteria.SearchInChildrens)
+                if (searchCategoryIds != null && criteria.SearchInChildren)
                 {
                     searchCategoryIds = searchCategoryIds.Concat(repository.GetAllChildrenCategoriesIds(searchCategoryIds)).ToArray();
                 }
@@ -91,7 +91,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 				}
                 else if (criteria.CatalogsIds != null)
                 {
-                    query = query.Where(x => (criteria.CatalogsIds.Contains(x.CatalogId) && (x.ParentCategoryId == null || criteria.SearchInChildrens)) || (x.OutgoingLinks.Any(y => y.TargetCategoryId == null && criteria.CatalogsIds.Contains(y.TargetCatalogId))));
+                    query = query.Where(x => (criteria.CatalogsIds.Contains(x.CatalogId) && (x.ParentCategoryId == null || criteria.SearchInChildren)) || (x.OutgoingLinks.Any(y => y.TargetCategoryId == null && criteria.CatalogsIds.Contains(y.TargetCatalogId))));
 
                 }
 
@@ -144,7 +144,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 			         
                 //list of search categories
                 var searchCategoryIds = criteria.CategoriesIds;
-                if(searchCategoryIds != null && criteria.SearchInChildrens)
+                if(searchCategoryIds != null && criteria.SearchInChildren)
                 {
                     searchCategoryIds = searchCategoryIds.Concat(repository.GetAllChildrenCategoriesIds(searchCategoryIds)).ToArray();
                 }
@@ -161,7 +161,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                 }
 				else if (criteria.CatalogsIds != null)
 				{
-					query = query.Where(x => criteria.CatalogsIds.Contains(x.CatalogId) && (criteria.SearchInChildrens || x.CategoryId == null));
+					query = query.Where(x => criteria.CatalogsIds.Contains(x.CatalogId) && (criteria.SearchInChildren || x.CategoryId == null));
 				}
 
 				if (!String.IsNullOrEmpty(criteria.Code))

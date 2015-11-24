@@ -144,7 +144,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 
 			if ((exportedCategories == null || !exportedCategories.Any()) && (exportedProducts == null || !exportedProducts.Any()))
 			{
-				var result = _searchService.Search(new SearchCriteria { CatalogId = catalogId, SearchInChildrens = true, Start = 0, Count = int.MaxValue, ResponseGroup = ResponseGroup.WithProducts });
+				var result = _searchService.Search(new SearchCriteria { CatalogId = catalogId, SearchInChildren = true, Start = 0, Count = int.MaxValue, ResponseGroup = ResponseGroup.WithProducts });
 				productIds = result.Products.Select(x => x.Id).ToList();
 			}
 

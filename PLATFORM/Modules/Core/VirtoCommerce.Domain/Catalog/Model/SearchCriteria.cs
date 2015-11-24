@@ -17,7 +17,7 @@ namespace VirtoCommerce.Domain.Catalog.Model
         /// <summary>
         /// Search  in all children categories for specified catalog or categories
         /// </summary>
-        public bool SearchInChildrens { get; set; }
+        public bool SearchInChildren { get; set; }
 
         public string CategoryId { get; set; }
 
@@ -91,7 +91,7 @@ namespace VirtoCommerce.Domain.Catalog.Model
 				CatalogId, 
 				Start.ToString(), 
 				Count.ToString(), 
-				SearchInChildrens.ToString(), 
+				SearchInChildren.ToString(), 
 				PropertyValues != null ? string.Join(";", PropertyValues.Select(x=>x.ToString())) : null
 			};
 			return string.Join("-", parts.Where(x=>!String.IsNullOrEmpty(x)).ToArray());

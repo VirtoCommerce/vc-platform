@@ -31,7 +31,7 @@ namespace VirtoCommerce.CatalogModule.Web.Binders
 
             result.Keyword = qs["criteria.keyword"].EmptyToNull();
 
-            result.SearchInChildrens = qs["criteria.searchInChildrens"].TryParse(false);
+            result.SearchInChildren = qs["criteria.searchInChildrens"].TryParse(false);
 
             result.CatalogId = qs["criteria.catalogId"].EmptyToNull();
             result.CategoryId = qs["criteria.categoryId"].EmptyToNull();
