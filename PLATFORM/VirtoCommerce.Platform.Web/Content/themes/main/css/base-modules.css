@@ -2556,8 +2556,22 @@ button.btn
             font-size: 14px;
             font-weight: 500;
             position: relative;
-            vertical-align: top;
+            vertical-align: middle;
             z-index: 25;
+        }
+
+        .__items .list-img
+        {
+            background-blend-mode: darken;
+            background-position: 50% 50%;
+            background-repeat: no-repeat;
+            background-size: contain;
+            display: inline-block;
+            height: 30px;
+            margin: 0 15px 0 0;
+            position: relative;
+            vertical-align: middle;
+            width: 30px;
         }
 
         .__items .list-item:hover .list-name,
