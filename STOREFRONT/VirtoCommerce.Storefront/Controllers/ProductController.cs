@@ -16,7 +16,7 @@ namespace VirtoCommerce.Storefront.Controllers
         private readonly ICatalogService _productService;
 
         public ProductController(WorkContext context, IStorefrontUrlBuilder urlBuilder, ICatalogService productService)
-            :base(context, urlBuilder)
+            : base(context, urlBuilder)
         {
             _productService = productService;
         }
