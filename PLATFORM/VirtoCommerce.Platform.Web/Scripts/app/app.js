@@ -247,10 +247,12 @@ angular.module('platformWebApp', AppDependencies).
                     var gridDataHeight = (headerHeight ? headerHeight : 40) + gridApi.core.getVisibleRows(gridApi.grid).length * $scope.gridOptions.rowHeight;
                     $scope.blade.gridScrollNeeded = $('.blade-inner').height() < 1 + gridDataHeight;
 
-                    if ($scope.blade.gridScrollNeeded)
-                        $('.ui-grid').addClass('__scrolled');
-                    else
-                        $('.ui-grid').removeClass('__scrolled');
+                    if ($scope.blade.gridScrollNeeded) {
+                      $('.ui-grid').addClass('__scrolled');
+                    } 
+                    else {
+                      $('.ui-grid').removeClass('__scrolled');
+                    }
                     //console.log($('.blade-inner').height() + ' < ' + (1 + gridDataHeight) + ' blade.gridScrollNeeded: ' + $scope.blade.gridScrollNeeded);
                 }, [uiGridConstants.dataChange.ROW]);
 
