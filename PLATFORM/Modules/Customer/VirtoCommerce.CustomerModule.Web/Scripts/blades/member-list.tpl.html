@@ -47,9 +47,14 @@
     <div ui-grid-expandable-row ng-if="expandableRow.shouldRenderExpand()" class="expandableRow"></div>
 </script>
 <script type="text/ng-template" id="expandableRowTemplate.html">
-    <a class="menu-link" title="{{'platform.commands.manage' | translate}}" ng-click="showDetailBlade(row.entity, row.entity.displayName)">
-        <i class="menu-ico fa fa-edit"></i>
-    </a>
+    <ul class="menu">
+        <li class="menu-item">
+            <a class="menu-link" title="{{'platform.commands.manage' | translate}}" ng-click="showDetailBlade(row.entity, row.entity.displayName)">
+                <i class="menu-ico fa fa-edit"></i>
+                Manage
+            </a>
+        </li>
+    </ul>
 </script>
 
 <script type="text/ng-template" id="member-list.row.html">
