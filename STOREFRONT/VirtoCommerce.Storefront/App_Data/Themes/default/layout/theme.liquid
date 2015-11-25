@@ -53,11 +53,11 @@
                         <div class="h1 header-logo" itemscope itemtype="http://schema.org/Organization">
                     {% endif %}
                     {% if settings.logo_use_image %}
-                        <a href="{{ '/' | absolute_url }}" target="_self" itemprop="url">
+                        <a href="{{ '/' | absolute_url }}" itemprop="url">
                             <img alt="{{ shop.name }}" src="{{ 'logo.png' | asset_url }}" itemprop="logo" />
                         </a>
                     {% else %}
-                        <a href="{{ '/' | absolute_url }}" target="_self" itemprop="url">{{ shop.name }}</a>
+                        <a href="{{ '/' | absolute_url }}" itemprop="url">{{ shop.name }}</a>
                     {% endif %}
                     {% if template == 'index' %}
                         </h1>

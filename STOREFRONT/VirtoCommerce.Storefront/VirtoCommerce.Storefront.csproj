@@ -185,7 +185,6 @@
     <Content Include="App_Data\Themes\default\assets\arrow.svg" />
     <Content Include="App_Data\Themes\default\assets\arrow_switch.png" />
     <Content Include="App_Data\Themes\default\assets\blank.gif" />
-    <Content Include="App_Data\Themes\default\assets\cart.js" />
     <Content Include="App_Data\Themes\default\assets\cart.svg" />
     <Content Include="App_Data\Themes\default\assets\collection-view-grid.svg" />
     <Content Include="App_Data\Themes\default\assets\collection-view-list.svg" />

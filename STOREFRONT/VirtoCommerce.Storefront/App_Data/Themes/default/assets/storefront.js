@@ -11,8 +11,7 @@
         }
     }])
 
-    .controller('cartController', ['$scope', '$http', '$route', 'cartApi', function ($scope, $http, $route, cartApi) {
-        $scope.$route = $route;
+    .controller('cartController', ['$scope', '$http', 'cartApi', function ($scope, $http, cartApi) {
         $scope.cart = cartApi.get();
         $scope.addLineItem = function (productId, quantity) {
             $http.post('/cart/additem', { id: productId, quantity: quantity })
@@ -34,6 +33,11 @@
                     $scope.cart = jsonCart;
                 });
         }
+    }])
+
+    .controller('checkoutController', ['$scope', '$route', 'cartApi', function ($scope, $route, cartApi) {
+        $scope.$route = $route;
+        $scope.cart = cartApi.get();
     }])
 
     .controller('checkoutCustomerInformationController', ['$scope', function ($scope) {
