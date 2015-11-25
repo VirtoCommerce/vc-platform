@@ -32,6 +32,16 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
             return BuildHtmlLink("customer_logout_link", "~/account/logout", input);
         }
 
+        public static string EditCustomerAddressLink(string input, string id)
+        {
+            return BuildOnClickLink(input, "Shopify.CustomerAddress.toggleForm({0});return false", id);
+        }
+
+        public static string DeleteCustomerAddressLink(string input, string id)
+        {
+            return BuildOnClickLink(input, "Shopify.CustomerAddress.destroy({0});return false", id);
+        }
+
         /// <summary>
         /// Returns the URL of a file in the "assets" folder of a theme.
         /// {{ 'shop.css' | asset_url }}
@@ -109,6 +119,17 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
             return retVal;
         }
 
+
+        private static string BuildOnClickLink(string title, string onclickFormat, params object[] onclickArgs)
+        {
+            var onClick = string.Format(CultureInfo.InvariantCulture, onclickFormat, onclickArgs);
+
+            var result = string.Format(CultureInfo.InvariantCulture, "<a href=\"#\" onclick=\"{0}\">{1}</a>",
+               HttpUtility.HtmlAttributeEncode(onClick),
+               HttpUtility.HtmlEncode(title));
+
+            return result;
+        }
 
         private static string BuildHtmlLink(string id, string virtualUrl, string title)
         {

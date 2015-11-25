@@ -32,7 +32,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Tags
             //Generates a form for submitting an email through the Liquid contact form.
             _formsMap["create_customer"] = "~/account/register";
             //Generates a form for creating or editing customer account addresses on the addresses.liquid template. When creating a new address, include the parameter customer.new_address. When editing an existing address, include the parameter address.
-            _formsMap["customer_address"] = "~/account/NewAddress";
+            _formsMap["customer_address"] = "~/account/addresses";
             //Generates a form for logging into Customer Accounts on the login.liquid template.
             _formsMap["customer_login"] = "~/account/login";
             //Generates a form for recovering a lost password on the login.liquid template.

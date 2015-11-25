@@ -46,6 +46,27 @@ namespace VirtoCommerce.Storefront.Controllers
         }
 
         [HttpGet]
+        [Route("addresses")]
+        public ActionResult GetAddresses()
+        {
+            return View("customers/addresses", WorkContext);
+        }
+
+        [HttpPost]
+        [Route("addresses")]
+        public ActionResult AddAddress(Address formModel)
+        {
+            return View("customers/addresses", WorkContext);
+        }
+
+        [HttpDelete]
+        [Route("addresses/{id}")]
+        public ActionResult DeleteAddress(string id)
+        {
+            return View("customers/addresses", WorkContext);
+        }
+
+        [HttpGet]
         [Route("register")]
         [AllowAnonymous]
         public ActionResult Register()
