@@ -97,7 +97,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         {
             get
             {
-                if (base.CurrentCatalogSearchResult != null)
+                if (base.CurrentCatalogSearchResult != null && base.CurrentCatalogSearchResult.Products != null)
                 {
                     return new Collection(base.CurrentCatalogSearchResult.Products, _urlBuilder, this);
                 }
@@ -110,7 +110,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
             get
             {
                 Collections retVal = null;
-                if(base.CurrentCatalogSearchResult.Categories != null)
+                if(base.CurrentCatalogSearchResult != null && base.CurrentCatalogSearchResult.Categories != null)
                 {
                     var collections = base.CurrentCatalogSearchResult.Categories.Select(x => new Collection(x, _urlBuilder, this));
                     retVal = new Collections(collections);
