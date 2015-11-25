@@ -2,13 +2,11 @@
     <button class="ajaxifyCart--close" title="Close Cart" ng-click="toggleCartModal(cartModalToggled)">Close Cart</button>
     <div class="ajaxifyCart--content" id="ajaxifyCart">
         <span ng-if="!cart.Items.length">
-            <h2>Your cart is currently empty.</h2>
-            <span>
-                Continue browsing <a href="/collections/all">here</a>.
-            </span>
+            <h2>{{ 'cart.general.empty' | t }}</h2>
+            <span>{{ 'cart.general.continue_browsing_html' | t }}</span>
         </span>
         <span ng-if="cart.Items.length">
-            <h1 class="h2">Shopping Cart</h1>
+            <h1 class="h2">{{ 'cart.general.title' | t }}</h1>
             <div class="cart-row" ng-repeat="lineItem in cart.Items">
                 <div class="grid">
                     <div class="grid-item large--seven-twelfths">
@@ -49,7 +47,7 @@
                 <div class="grid">
                     <div class="grid-item text-right ">
                         <div class="cart-subtotal">
-                            Subtotal
+                            {{ 'cart.general.subtotal' | t }}
                             <span class="h1 cart-subtotal--price">
                                 <small>{( cart.SubTotal.Amount | currency: cart.SubTotal.CurrencySymbol )}</small>
                             </span>
@@ -57,7 +55,7 @@
                         <input class="btn-secondary update-cart" type="button" value="Update cart" />
                         <button name="checkout" class="btn" type="button" ng-click="checkout()">
                             <span class="icon icon-cart"></span>
-                            Checkout
+                            {{ 'cart.general.checkout' | t }}
                         </button>
                     </div>
                 </div>
