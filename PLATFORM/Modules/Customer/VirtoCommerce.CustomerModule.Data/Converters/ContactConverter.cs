@@ -24,10 +24,10 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
             var retVal = new coreModel.Contact();
             retVal.InjectFrom(dbEntity);
 
-            retVal.Addresses = dbEntity.Addresses.Select(x => x.ToCoreModel()).ToList();
-            retVal.Emails = dbEntity.Emails.Select(x => x.Address).ToList();
-            retVal.Notes = dbEntity.Notes.Select(x => x.ToCoreModel()).ToList();
-            retVal.Phones = dbEntity.Phones.Select(x => x.Number).ToList();
+            retVal.Addresses = dbEntity.Addresses.OrderBy(x=>x.Id).Select(x => x.ToCoreModel()).ToList();
+            retVal.Emails = dbEntity.Emails.OrderBy(x => x.Id).Select(x => x.Address).ToList();
+            retVal.Notes = dbEntity.Notes.OrderBy(x => x.Id).Select(x => x.ToCoreModel()).ToList();
+            retVal.Phones = dbEntity.Phones.OrderBy(x => x.Id).Select(x => x.Number).ToList();
             retVal.Organizations = dbEntity.MemberRelations.Select(x => x.Ancestor).OfType<dataModel.Organization>().Select(x => x.Id).ToList();
             return retVal;
 
