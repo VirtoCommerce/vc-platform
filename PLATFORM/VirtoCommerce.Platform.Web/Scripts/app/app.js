@@ -211,9 +211,10 @@ angular.module('platformWebApp', AppDependencies).
                     var customSort = x.sort;
                     _.extend(x, foundDef);
                     x.sort = customSort;
+                    gridOptions.columnDefs.splice(gridOptions.columnDefs.indexOf(foundDef), 1);
                 }
             });
-            gridOptions.columnDefs = savedState.columns;
+            gridOptions.columnDefs = _.union(gridOptions.columnDefs, savedState.columns);
         }
 
         // translate filter
@@ -239,19 +240,26 @@ angular.module('platformWebApp', AppDependencies).
                     $localStorage['gridState:' + $scope.blade.template] = gridApi.saveState.save();
                 }
 
-                gridApi.core.on.renderingComplete($scope, function () {
-                    // setting 'blade.gridScrollNeeded'
-                    //gridApi.grid.registerDataChangeCallback(function (grid) {
-                    var headerHeight = $('.ui-grid-header').height();
-                    var gridDataHeight = (headerHeight ? headerHeight : 40) + gridApi.core.getVisibleRows(gridApi.grid).length * $scope.gridOptions.rowHeight;
-                    $scope.blade.gridScrollNeeded = $('.blade-inner').height() < 1 + gridDataHeight;
+                // update grid menu behavior
+                gridApi.grid.registerDataChangeCallback(updateGridStyles, [uiGridConstants.dataChange.ROW]);
+                if ($scope.gridOptions.paginationPageSize > 0) {
+                    gridApi.pagination.on.paginationChanged($scope, updateGridStyles);
+                }
+                function updateGridStyles() {
+                    $timeout(function () {
+                        var headerHeight = $('.ui-grid-header').height();
+                        var gridDataHeight = (headerHeight ? headerHeight : 40) + gridApi.core.getVisibleRows(gridApi.grid).length * $scope.gridOptions.rowHeight;
+                        $scope.blade.gridScrollNeeded = $('.blade-inner').height() < 1 + gridDataHeight;
 
-                    if ($scope.blade.gridScrollNeeded)
-                        $('.ui-grid').addClass('__scrolled');
-                    else
-                        $('.ui-grid').removeClass('__scrolled');
-                    //console.log($('.blade-inner').height() + ' < ' + (1 + gridDataHeight) + ' blade.gridScrollNeeded: ' + $scope.blade.gridScrollNeeded);
-                }, [uiGridConstants.dataChange.ROW]);
+                        if ($scope.blade.gridScrollNeeded) {
+                            $('.ui-grid').addClass('__scrolled');
+                        }
+                        else {
+                            $('.ui-grid').removeClass('__scrolled');
+                        }
+                    }, 10);
+                }
+
 
                 if (externalRegisterApiCallback) {
                     externalRegisterApiCallback(gridApi);

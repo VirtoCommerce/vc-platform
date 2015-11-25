@@ -80,6 +80,7 @@
 
             $scope.edit = function (listItem) {
                 if (listItem.type === 'category') {
+                    /// TODO: remove if not using context menu anymore
                     preventCategoryListingOnce = true;
                 }
                 edit(listItem);
@@ -88,11 +89,11 @@
             function edit(listItem) {
                 closeChildrenBlades();
 
-                blade.setSelectedItem(listItem);
                 if (listItem.type === 'category') {
+                    blade.setSelectedItem(listItem);
                     blade.showCategoryBlade(listItem);
-                }
-                // else do nothing as item is opened on selecting it.
+                } else
+                    $scope.selectItem(null, listItem);
             };
 
             blade.showCategoryBlade = function (listItem) {
@@ -238,7 +239,7 @@
                             breadcrumbs: blade.breadcrumbs,
                             title: 'catalog.blades.categories-items-list.title',
                             subtitle: 'catalog.blades.categories-items-list.subtitle',
-                            subtitleValues: listItem.name != null ? {name: listItem.name} : '',
+                            subtitleValues: listItem.name != null ? { name: listItem.name } : '',
                             catalogId: blade.catalogId,
                             catalog: blade.catalog,
                             categoryId: listItem.id,
@@ -268,7 +269,7 @@
                     bladeNavigationService.showBlade(newBlade, blade);
                 }
             };
-            
+
             $scope.hasLinks = function (listEntry) {
                 return blade.catalog.virtual && listEntry.links && (listEntry.type === 'category' ? listEntry.links.length > 0 : listEntry.links.length > 1);
             }
@@ -303,7 +304,7 @@
                         edit(_.find($scope.gridApi.selection.getSelectedRows()));
                     },
                     canExecuteMethod: function () {
-                        return isItemsChecked();
+                        return $scope.gridApi && $scope.gridApi.selection.getSelectedRows().length === 1;
                     },
                     permission: 'catalog:read'
                 },
