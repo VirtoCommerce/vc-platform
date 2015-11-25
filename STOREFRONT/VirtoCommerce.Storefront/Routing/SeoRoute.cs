@@ -6,6 +6,7 @@ using System.Web.Routing;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Client.Model;
 using VirtoCommerce.Storefront.Model;
+using VirtoCommerce.Storefront.Model.Catalog;
 
 namespace VirtoCommerce.Storefront.Routing
 {
@@ -87,10 +88,11 @@ namespace VirtoCommerce.Storefront.Routing
                                     data.Values["slug"] = seoRecord.SemanticUrl;
                                     break;
                                 case "Category":
-                                    data.Values["controller"] = "Catalog";
-                                    data.Values["action"] = "Category";
-                                    data.Values["categoryid"] = seoRecord.ObjectId;
-                                    data.Values["slug"] = seoRecord.SemanticUrl;
+                                    workContext.CurrentCatalogSearchCriteria.CategoryId = seoRecord.ObjectId;
+                                    data.Values["controller"] = "CatalogSearch";
+                                    data.Values["action"] = "SearchProducts";
+                                    data.Values["searchCriteria"] = workContext.CurrentCatalogSearchCriteria;
+
                                     break;
                             }
                         }

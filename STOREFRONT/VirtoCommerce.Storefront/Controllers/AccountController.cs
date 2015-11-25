@@ -38,7 +38,6 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             if (HttpContext.User.Identity.IsAuthenticated)
             {
-                WorkContext.CurrentPage = page;
                 return View("customers/account", WorkContext);
             }
 

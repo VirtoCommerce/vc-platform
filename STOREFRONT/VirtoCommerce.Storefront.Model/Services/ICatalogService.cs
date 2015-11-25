@@ -8,10 +8,10 @@ using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Model.Services
 {
-    public interface ICatalogService
+    public interface ICatalogSearchService
     {
         Task<Product> GetProductAsync(string id, ItemResponseGroup responseGroup);
 
-        Task<SearchResult> SearchAsync(SearchCriteria criteria);
+        Task<CatalogSearchResult> SearchAsync(CatalogSearchCriteria criteria);
     }
 }

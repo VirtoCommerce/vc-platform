@@ -13,9 +13,9 @@ namespace VirtoCommerce.Storefront.Controllers
     [RoutePrefix("product")]
     public class ProductController : StorefrontControllerBase
     {
-        private readonly ICatalogService _productService;
+        private readonly ICatalogSearchService _productService;
 
-        public ProductController(WorkContext context, IStorefrontUrlBuilder urlBuilder, ICatalogService productService)
+        public ProductController(WorkContext context, IStorefrontUrlBuilder urlBuilder, ICatalogSearchService productService)
             : base(context, urlBuilder)
         {
             _productService = productService;

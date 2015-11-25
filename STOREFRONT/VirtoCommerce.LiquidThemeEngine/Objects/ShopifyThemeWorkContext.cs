@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
 using DotLiquid;
@@ -17,6 +18,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         public ShopifyThemeWorkContext(IStorefrontUrlBuilder urlBuilder)
         {
             _urlBuilder = urlBuilder;
+            CurrentPage = 1;
         }
 
         #region Aliases for shopify theme compliance
@@ -88,6 +90,32 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
             }
         }
 
+        /// <summary>
+        /// The collection https://docs.shopify.com/themes/liquid-documentation/objects/collection
+        /// </summary>
+        public Collection Collection
+        {
+            get
+            {
+                return new Collection(base.CurrentCatalogSearchResult.Products, _urlBuilder, this);
+            }
+        }
+
+        public Collections Collections
+        {
+            get
+            {
+                Collections retVal = null;
+                if(base.CurrentCatalogSearchResult.Categories != null)
+                {
+                    var collections = base.CurrentCatalogSearchResult.Categories.Select(x => new Collection(x, _urlBuilder, this));
+                    retVal = new Collections(collections);
+                }
+                return retVal;
+            }
+        }
+
+        public int CurrentPage { get; set; }
         #endregion
 
         #region ILiquidizable members

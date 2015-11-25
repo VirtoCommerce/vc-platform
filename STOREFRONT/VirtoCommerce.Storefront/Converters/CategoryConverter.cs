@@ -5,7 +5,7 @@ using System.Web;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Client.Model;
 using Omu.ValueInjecter;
-
+using VirtoCommerce.Storefront.Common;
 namespace VirtoCommerce.Storefront.Converters
 {
     public static class CategoryConverter
@@ -13,24 +13,18 @@ namespace VirtoCommerce.Storefront.Converters
         public static Category ToWebModel(this VirtoCommerceCatalogModuleWebModelCategory category, VirtoCommerceCatalogModuleWebModelProduct[] products = null)
         {
             var retVal = new Category();
-            retVal.InjectFrom(category);
-
-            if (category.Parents != null)
-                retVal.Parents = category.Parents;
+            retVal.InjectFrom<NullableAndEnumValueInjection>(category);
 
             if (category.SeoInfos != null)
-                retVal.SeoInfos = category.SeoInfos.Select(s => s.ToWebModel()).ToArray();
+                retVal.SeoInfo = category.SeoInfos.Select(s => s.ToWebModel()).FirstOrDefault();
 
             if (category.Images != null)
-                retVal.Images = category.Images.Select(s => s.ToWebModel()).ToArray();
+            {
+                retVal.Images = category.Images.Select(i => i.ToWebModel()).ToArray();
+                retVal.PrimaryImage = retVal.Images.FirstOrDefault();
+            }
 
-            if (category.Children != null)
-                retVal.Children = category.Children.Select(c => c.ToWebModel(null)).ToArray();
-
-            if (products != null)
-                retVal.Products = products.Select(p => p.ToWebModel()).ToArray();
-
-
+       
             return retVal;
         }
     }

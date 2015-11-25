@@ -33,7 +33,6 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         }
 
 
-        //public Collections Collections { get; set; }
 
         public decimal CompareAtPrice
         {
@@ -104,7 +103,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
             get
             {
                 if (_product.Images != null && _product.Images.Any())
-                    return new Image(_product.Images.First(), _product);
+                    return new Image(_product.Images.First());
                 return null;
             }
         }
@@ -127,11 +126,11 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
             }
         }
 
-        public ItemCollection<Image> Images
+        public Image[] Images
         {
             get
             {
-                return new ItemCollection<Image>(_product.Images.Select(i => new Image(i, _product)));
+                return _product.Images.Select(i => new Image(i)).ToArray();
             }
         }
 
@@ -200,15 +199,11 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         {
             get
             {
-                var queryString = System.Web.HttpContext.Current.Request.QueryString;
-
-                return queryString["variant"] != null ?
-                    this.Variants.FirstOrDefault(v => v.Id == queryString["variant"]) :
-                    this.Variants.FirstOrDefault(v => v.Id == Handle);
+                return this.Variants.FirstOrDefault();
             }
         }
 
-        public ItemCollection<string> Tags { get; set; }
+        public string[] Tags { get; set; }
 
         public string TemplateSuffix
         {
