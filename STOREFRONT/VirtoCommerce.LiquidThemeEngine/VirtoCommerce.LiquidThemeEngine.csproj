@@ -39,6 +39,10 @@
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
@@ -91,10 +95,14 @@
     <Compile Include="Filters\CommerceFilters.cs" />
     <Compile Include="Filters\CommonFilters.cs" />
     <Compile Include="Objects\Cart.cs" />
+    <Compile Include="Objects\Collection.cs" />
+    <Compile Include="Objects\Collections.cs" />
     <Compile Include="Objects\Form.cs" />
     <Compile Include="Objects\FormErrors.cs" />
     <Compile Include="Objects\Fulfillment.cs" />
     <Compile Include="Objects\LineItem.cs" />
+    <Compile Include="Objects\Paginate.cs" />
+    <Compile Include="Objects\Part.cs" />
     <Compile Include="Tags\FormTag.cs" />
     <Compile Include="Objects\Image.cs" />
     <Compile Include="Objects\ItemCollections.cs" />
@@ -107,6 +115,7 @@
     <Compile Include="ShopifyLiquidThemeEngine.cs" />
     <Compile Include="Objects\ShopifyThemeWorkContext.cs" />
     <Compile Include="Tags\LayoutTag.cs" />
+    <Compile Include="Tags\PaginateTag.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Blocks\" />

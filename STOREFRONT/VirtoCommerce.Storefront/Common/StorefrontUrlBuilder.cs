@@ -5,8 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Hosting;
+using VirtoCommerce.Storefront.Model;
+using VirtoCommerce.Storefront.Model.Common;
 
-namespace VirtoCommerce.Storefront.Model.Common
+namespace VirtoCommerce.Storefront.Common
 {
     /// <summary>
     /// Create storefront url with all localization and store information

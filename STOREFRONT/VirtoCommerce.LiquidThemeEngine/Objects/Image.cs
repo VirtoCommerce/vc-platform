@@ -13,12 +13,10 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
     public class Image : Drop
     {
         private readonly Storefront.Model.Image _image;
-        private readonly Storefront.Model.Catalog.Product _product;
 
-        public Image(Storefront.Model.Image image, Storefront.Model.Catalog.Product product)
+        public Image(Storefront.Model.Image image)
         {
             _image = image;
-            _product = product;
         }
 
         public string Alt
@@ -42,7 +40,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         {
             get
             {
-                return _product.Id;
+                return "";
             }
         }
 

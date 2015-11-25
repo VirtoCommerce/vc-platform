@@ -90,9 +90,9 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         {
             get
             {
-                if(_product.Images != null && _product.Images.Any())
+                if(_product.Images != null && _product.PrimaryImage != null)
                 {
-                    return new Image(_product.Images.First(), _product);
+                    return new Image(_product.PrimaryImage);
                 }
                 return null;
             }

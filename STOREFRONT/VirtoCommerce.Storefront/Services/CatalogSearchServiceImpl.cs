@@ -8,10 +8,12 @@ using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Services;
 using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
+using VirtoCommerce.Storefront.Model.Common;
+using VirtoCommerce.Storefront.Common;
 
 namespace VirtoCommerce.Storefront.Services
 {
-    public class CatalogServiceImpl : ICatalogService
+    public class CatalogSearchServiceImpl : ICatalogSearchService
     {
         private readonly ICatalogModuleApi _catalogModuleApi;
         private readonly IPricingModuleApi _pricingModuleApi;
@@ -19,7 +21,7 @@ namespace VirtoCommerce.Storefront.Services
         private readonly IMarketingModuleApi _marketingModuleApi;
         private readonly WorkContext _workContext;
 
-        public CatalogServiceImpl(WorkContext workContext, ICatalogModuleApi catalogModuleApi, IPricingModuleApi pricingModuleApi, IInventoryModuleApi inventoryModuleApi,
+        public CatalogSearchServiceImpl(WorkContext workContext, ICatalogModuleApi catalogModuleApi, IPricingModuleApi pricingModuleApi, IInventoryModuleApi inventoryModuleApi,
                                   IMarketingModuleApi marketingModuleApi)
         {
             _workContext = workContext;
@@ -51,9 +53,36 @@ namespace VirtoCommerce.Storefront.Services
             return item;
         }
 
-        public Task<SearchResult> SearchAsync(SearchCriteria criteria)
+        public async Task<CatalogSearchResult> SearchAsync(CatalogSearchCriteria criteria)
         {
-            throw new NotImplementedException();
+            var retVal = new CatalogSearchResult();
+            var result = await _catalogModuleApi.CatalogModuleSearchSearchAsync(criteria.ResponseGroup.ToString(), null, true, criteria.CategoryId, null, criteria.CatalogId, null, null,
+                                                                                 _workContext.CurrentCurrency.Code,
+                                                                                 null, null, null, true, null, criteria.PageSize * (criteria.PageNumber - 1), criteria.PageSize, null);
+            if(result != null)
+            {
+                if (result.Products != null && result.Products.Any())
+                {
+                    var products = result.Products.Select(x => x.ToWebModel()).ToArray();
+                    retVal.Products = new StorefrontPagedList<Product>(products, criteria.PageNumber, criteria.PageSize, result.TotalCount.Value, (x) =>
+                    {
+                        //Generate links to next pages
+                        return _workContext.RequestUrl.AddParameter("page", x.ToString()).ToString();
+                    });
+
+                    LoadProductsPrices(retVal.Products.ToArray());
+                    LoadProductsInventories(retVal.Products.ToArray());
+                }
+
+                if (result.Categories != null && result.Categories.Any())
+                {
+                    retVal.Categories = result.Categories.Select(x => x.ToWebModel());
+                   
+                }
+
+            }
+
+            return retVal;
         }
 
         private void LoadProductsPrices(Product[] products)
@@ -62,7 +91,7 @@ namespace VirtoCommerce.Storefront.Services
             foreach (var item in products)
             {
                 item.Prices = result.Where(x => x.ProductId == item.Id).Select(x => x.ToWebModel()).ToList();
-                item.Price = item.Prices.FirstOrDefault(x => x.Currency == _workContext.CurrentCurrency);
+                item.Price = item.Prices.FirstOrDefault(x => x.Currency.Equals(_workContext.CurrentCurrency));
             }
         }
 

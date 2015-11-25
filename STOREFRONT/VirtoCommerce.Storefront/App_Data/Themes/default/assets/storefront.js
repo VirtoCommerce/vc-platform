@@ -35,7 +35,34 @@
         }
     }])
 
+    .controller('checkoutController', ['$scope', '$route', 'cartApi', function ($scope, $route, cartApi) {
+        $scope.$route = $route;
+        $scope.cart = cartApi.get();
+    }])
+
+    .controller('checkoutCustomerInformationController', ['$scope', function ($scope) {
+    }])
+
+    .controller('checkoutShippingMethodController', ['$scope', function ($scope) {
+    }])
+
+    .controller('checkoutPaymentMethodController', ['$scope', function ($scope) {
+    }])
+
     .config(['$interpolateProvider', '$routeProvider', '$locationProvider', function ($interpolateProvider, $routeProvider, $locationProvider) {
+        $routeProvider
+            .when('/cart/checkout/customer-information', {
+                controller: 'checkoutCustomerInformationController',
+                templateUrl: 'storefront.checkout.customerInformation.tpl'
+            })
+            .when('/cart/checkout/shipping-method', {
+                controller: 'checkoutShippingMethodController',
+                templateUrl: 'storefront.checkout.shippingMethod.tpl'
+            })
+            .when('/cart/checkout/payment-method', {
+                controller: 'checkoutPaymentMethodController',
+                templateUrl: 'storefront.checkout.paymentMethod.tpl'
+            });
 
         $locationProvider.html5Mode(true);
 

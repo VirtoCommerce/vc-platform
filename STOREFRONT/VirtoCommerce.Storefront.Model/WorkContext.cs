@@ -11,6 +11,11 @@ namespace VirtoCommerce.Storefront.Model
     /// </summary>
     public class WorkContext : IDisposable
     {
+        /// <summary>
+        /// Current request url example: http:/host/app/store/en-us/search?page=2
+        /// </summary>
+        public Uri RequestUrl { get; set; }
+
         public Login Login { get; set; }
         /// <summary>
         /// Current customer
@@ -59,22 +64,27 @@ namespace VirtoCommerce.Storefront.Model
         /// List of all supported stores
         /// </summary>
         public Store[] AllStores { get; set; }
-        public int CurrentPage { get; set; }
         public string ErrorMessage { get; set; }
 
         #region Catalog Properties
-
+        /// <summary>
+        /// Represent current product
+        /// </summary>
         public Product CurrentProduct { get; set; }
 
         public Category CurrentCategory { get; set; }
 
-        public Category[] AllCategories { get; set; }
+        /// <summary>
+        /// Current search catalog criterias
+        /// </summary>
+        public CatalogSearchCriteria CurrentCatalogSearchCriteria { get; set; }
 
+        public CatalogSearchResult CurrentCatalogSearchResult { get; set; }
         #endregion
 
         private DateTime _utcNow;
         /// <summary>
-        /// Represent current storefront datetime in UTC
+        /// Represent current storefront datetime in UTC (may be changes to test in future or past events)
         /// </summary>
         public DateTime StorefrontUtcNow
         {

@@ -6,6 +6,7 @@ using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Client.Model;
 using Omu.ValueInjecter;
 using VirtoCommerce.Storefront.Model.Catalog;
+using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Converters
 {
@@ -14,6 +15,7 @@ namespace VirtoCommerce.Storefront.Converters
         public static Product ToWebModel(this VirtoCommerceCatalogModuleWebModelProduct product)
         {
             var retVal = new Product();
+            retVal.Price = new ProductPrice();
 
             retVal.InjectFrom(product);
 

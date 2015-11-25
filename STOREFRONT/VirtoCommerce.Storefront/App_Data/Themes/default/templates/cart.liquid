@@ -1,5 +1,5 @@
-﻿<span ng-app="cartApp" ng-controller="cartController">
-    <form action="" method="post" ng-if="cart.Items">
+﻿<span ng-controller="cartController">
+    <form action="" method="post" ng-if="cart.Items.length">
         <h1 class="h2">{{ 'cart.general.title' | t }}</h1>
         <div class="cart-row" ng-repeat="lineItem in cart.Items">
             <div class="grid">
@@ -54,7 +54,6 @@
                             <small>{( cart.SubTotal.Amount | currency: cart.SubTotal.CurrencySymbol )}</small>
                         </span>
                     </div>
-                    <input class="btn-secondary update-cart" type="button" value="{{ 'cart.general.update' | t }}" ng-click="updateCart()" />
                     <button class="btn" type="button">
                         <span class="icon icon-cart"></span>
                         {{ 'cart.general.checkout' | t }}
@@ -63,7 +62,7 @@
             </div>
         </div>
     </form>
-    <span ng-if="!cart.Items">
+    <span ng-if="!cart.Items.length">
         <h2>{{ 'cart.general.empty' | t }}</h2>
         <p>{{ 'cart.general.continue_browsing_html' | t }}</p>
     </span>

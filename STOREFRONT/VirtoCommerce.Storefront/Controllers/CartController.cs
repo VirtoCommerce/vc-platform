@@ -11,9 +11,9 @@ namespace VirtoCommerce.Storefront.Controllers
     public class CartController : StorefrontControllerBase
     {
         private readonly ICartBuilder _cartBuilder;
-        private readonly ICatalogService _catalogService;
+        private readonly ICatalogSearchService _catalogService;
 
-        public CartController(WorkContext workContext, IStorefrontUrlBuilder urlBuilder, ICartBuilder cartBuilder, ICatalogService catalogService)
+        public CartController(WorkContext workContext, IStorefrontUrlBuilder urlBuilder, ICartBuilder cartBuilder, ICatalogSearchService catalogService)
             : base(workContext, urlBuilder)
         {
             _cartBuilder = cartBuilder;
@@ -83,6 +83,11 @@ namespace VirtoCommerce.Storefront.Controllers
         [Route("checkout/{step}")]
         public ActionResult Checkout(string step)
         {
+            //if (WorkContext.CurrentCart.Items.Count == 0)
+            //{
+            //    return StoreFrontRedirect("~/cart");
+            //}
+
             return View("checkout", "checkout_layout", WorkContext);
         }
     }

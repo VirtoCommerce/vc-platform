@@ -113,7 +113,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
             {
                 language = store.Languages.FirstOrDefault(x => string.Equals(x.CultureName, languageCode, StringComparison.InvariantCultureIgnoreCase));
             }
-            language = language ?? store.DefaultLanguage;
+            language = language ?? themeAdaptor.WorkContext.CurrentLanguage;
 
             var retVal = themeAdaptor.UrlBuilder.ToAppAbsolute(themeAdaptor.WorkContext, input, store, language);
             return retVal;

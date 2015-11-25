@@ -125,6 +125,10 @@
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\RestSharp.105.2.3\lib\net451\RestSharp.dll</HintPath>
       <Private>True</Private>
@@ -181,7 +185,6 @@
     <Content Include="App_Data\Themes\default\assets\arrow.svg" />
     <Content Include="App_Data\Themes\default\assets\arrow_switch.png" />
     <Content Include="App_Data\Themes\default\assets\blank.gif" />
-    <Content Include="App_Data\Themes\default\assets\cart.js" />
     <Content Include="App_Data\Themes\default\assets\cart.svg" />
     <Content Include="App_Data\Themes\default\assets\collection-view-grid.svg" />
     <Content Include="App_Data\Themes\default\assets\collection-view-list.svg" />
@@ -231,6 +234,7 @@
     <Compile Include="Common\DownloadResult.cs" />
     <Compile Include="Common\FileExtensionMapper.cs" />
     <Compile Include="Common\StorefrontUrlBuilder.cs" />
+    <Compile Include="Common\UriExtensions.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AssetsController.cs" />
     <Compile Include="Controllers\CartController.cs" />
@@ -264,7 +268,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routing\SeoRoute.cs" />
     <Compile Include="Routing\SeoRouteExtensions.cs" />
-    <Compile Include="Services\CatalogServiceImpl.cs" />
+    <Compile Include="Services\CatalogSearchServiceImpl.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>

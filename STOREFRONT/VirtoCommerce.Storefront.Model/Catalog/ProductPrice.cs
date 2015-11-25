@@ -10,6 +10,11 @@ namespace VirtoCommerce.Storefront.Model.Catalog
 {
     public class ProductPrice : ValueObject<ProductPrice>
     {
+        public ProductPrice()
+        {
+            ListPrice = new Money();
+            SalePrice = new Money();
+        }
         /// <summary>
         /// Price list id
         /// </summary>

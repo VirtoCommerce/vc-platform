@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -44,10 +48,13 @@
     <Compile Include="Address.cs" />
     <Compile Include="AddressType.cs" />
     <Compile Include="Catalog\Asset.cs" />
+    <Compile Include="Catalog\CatalogSearchResponseGroup.cs" />
+    <Compile Include="Catalog\CatalogSearchResult.cs" />
     <Compile Include="Catalog\ItemResponseGroup.cs" />
-    <Compile Include="Catalog\SearchCriteria.cs" />
-    <Compile Include="Catalog\SearchResult.cs" />
+    <Compile Include="Catalog\CatalogSearchCriteria.cs" />
     <Compile Include="Catalog\TierPrice.cs" />
+    <Compile Include="Common\IStorefrontPagedList.cs" />
+    <Compile Include="Common\StoreFrontPagedList.cs" />
     <Compile Include="Image.cs" />
     <Compile Include="Catalog\Inventory.cs" />
     <Compile Include="Catalog\ProductPrice.cs" />
@@ -94,7 +101,9 @@
     <Compile Include="TaxDetail.cs" />
     <Compile Include="WorkContext.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

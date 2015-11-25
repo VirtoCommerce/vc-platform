@@ -10,7 +10,7 @@
 
   {% capture collection_title %}{{ collections[featured].title | escape }}{% endcapture %}
 
-  <a href="{{ collections[featured].url }}" title="{{ 'collections.general.link_title' | t: title: collection_title }}" class="featured-box">
+  <a href="{{ collections[featured].url | absolute_url}}" title="{{ 'collections.general.link_title' | t: title: collection_title }}" class="featured-box">
     <div class="featured-box--inner">
       <div class="featured-box--image">
         {% if collections[featured].image %}

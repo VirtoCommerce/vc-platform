@@ -11,6 +11,7 @@ using VirtoCommerce.Storefront.Builders;
 using VirtoCommerce.Storefront.Common;
 using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
+using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Owin
@@ -39,6 +40,7 @@ namespace VirtoCommerce.Storefront.Owin
         public override async Task Invoke(IOwinContext context)
         {
             var workContext = _container.Resolve<WorkContext>();
+            workContext.RequestUrl = context.Request.Uri;
             // Initialize common properties: stores, user profile
             workContext.AllStores = await GetAllStoresAsync();
             workContext.CurrentCustomer = await GetCustomerAsync(context);
@@ -50,7 +52,9 @@ namespace VirtoCommerce.Storefront.Owin
             workContext.CurrentCurrency = GetCurrency(context, workContext.CurrentStore);
             workContext.CurrentCart = (await _cartBuilder.GetOrCreateNewTransientCartAsync(workContext.CurrentStore, workContext.CurrentCustomer, workContext.CurrentCurrency)).Cart;
 
-            workContext.CurrentPage = 1;
+
+            //Initialize catalog search context
+            workContext.CurrentCatalogSearchCriteria = GetSearchCriteria(workContext);
 
             await Next.Invoke(context);
         }
@@ -62,6 +66,20 @@ namespace VirtoCommerce.Storefront.Owin
             return result;
         }
 
+        protected virtual CatalogSearchCriteria GetSearchCriteria(WorkContext workContext)
+        {
+            var retVal = new CatalogSearchCriteria
+            {
+                CatalogId = workContext.CurrentStore.Catalog,
+                Currency = workContext.CurrentCurrency,
+                Language = workContext.CurrentLanguage
+            };
+            var qs = HttpUtility.ParseQueryString(workContext.RequestUrl.Query);
+            retVal.PageNumber = Convert.ToInt32(qs.Get("page") ?? "1");
+            retVal.Keyword = qs.Get("keyword");
+            //TODO: get other parameters from query sting
+            return retVal;
+        }
         protected virtual async Task<Customer> GetCustomerAsync(IOwinContext context)
         {
             var customer = new Customer();

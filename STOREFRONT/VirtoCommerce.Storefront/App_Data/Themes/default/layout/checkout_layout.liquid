@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="en" dir="ltr" class="no-js multi-step windows chrome desktop page--no-banner page--logo-main page--show" ng-app="cartApp">
+<html lang="en" dir="ltr" class="no-js multi-step windows chrome desktop page--no-banner page--logo-main page--show" ng-app="storefrontApp">
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
@@ -11,17 +11,18 @@
 
     <base href="{{ '/' | absolute_url }}" />
 
+    {{ '//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js' | script_tag }}
     {{ '//ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.min.js' | script_tag }}
     {{ '//ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular-route.min.js' | script_tag }}
     {{ '//ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular-resource.min.js' | script_tag }}
-    {{ 'cart.js' | asset_url | script_tag }}
+    {{ 'storefront.js' | asset_url | script_tag }}
 
     {{ content_for_header }}
 </head>
-<body ng-controller="cartController">
+<body ng-controller="checkoutController">
     <div class="banner" data-header>
         <div class="wrap">
-            <a class="logo logo--left" href="{{ shop.url }}">
+            <a class="logo logo--left" href="{{ '/' | absolute_url }}">
                 <h1 class="logo__text">{{ shop.name }}</h1>
             </a>
         </div>
@@ -47,7 +48,7 @@
                     </svg>
                 </div>
                 <div class="order-summary-toggle__total-recap total-recap">
-                    <span class="total-recap__final-price">{( cart.Total )}</span>
+                    <span class="total-recap__final-price">{( cart.Total.Amount | currency: cart.Total.CurrencySymbol )}</span>
                 </div>
             </div>
         </div>
@@ -59,7 +60,7 @@
             </div>
             <div class="main" role="main">
                 <div class="main__header">
-                    <a class="logo logo--left" href="{{ shop.url }}">
+                    <a class="logo logo--left" href="{{ '/' | absolute_url }}">
                         <h1 class="logo__text">{{ shop.name }}</h1>
                     </a>
                     {% include 'checkout-breadcrumbs' %}
