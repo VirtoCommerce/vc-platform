@@ -13,6 +13,12 @@
 
     .controller('cartController', ['$scope', '$http', 'cartApi', function ($scope, $http, cartApi) {
         $scope.cart = cartApi.get();
+        $scope.addLineItem = function (productId, quantity) {
+            $http.post('/cart/additem', { id: productId, quantity: quantity })
+                .success(function (jsonCart) {
+                    $scope.cart = jsonCart;
+                });
+        }
         $scope.changeLineItem = function (lineItemId, quantity) {
             if (quantity >= 1) {
                 $http.post('/cart/changeitem', { id: lineItemId, quantity: quantity })

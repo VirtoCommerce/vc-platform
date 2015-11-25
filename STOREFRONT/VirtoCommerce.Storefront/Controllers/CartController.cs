@@ -2,7 +2,6 @@
 using System.Web.Mvc;
 using VirtoCommerce.Storefront.Builders;
 using VirtoCommerce.Storefront.Model;
-using VirtoCommerce.Storefront.Model.Cart;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Services;
 
@@ -35,6 +34,22 @@ namespace VirtoCommerce.Storefront.Controllers
         public async Task<ActionResult> CartJson()
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentCurrency);
+
+            return Json(_cartBuilder.Cart, JsonRequestBehavior.AllowGet);
+        }
+
+        // POST: /cart/additem?id=...&quantity=...
+        [HttpPost]
+        [Route("additem")]
+        public async Task<ActionResult> AddItemJson(string id, int quantity = 1)
+        {
+            await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentCurrency);
+
+            var product = await _catalogService.GetProductAsync(id, Model.Catalog.ItemResponseGroup.ItemLarge);
+            if (product != null)
+            {
+                await _cartBuilder.AddItem(product, quantity).SaveAsync();
+            }
 
             return Json(_cartBuilder.Cart, JsonRequestBehavior.AllowGet);
         }
