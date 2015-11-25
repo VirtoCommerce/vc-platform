@@ -212,9 +212,10 @@ angular.module('platformWebApp', AppDependencies).
                     var customSort = x.sort;
                     _.extend(x, foundDef);
                     x.sort = customSort;
+                    gridOptions.columnDefs.splice(gridOptions.columnDefs.indexOf(foundDef), 1);
                 }
             });
-            gridOptions.columnDefs = savedState.columns;
+            gridOptions.columnDefs = _.union(gridOptions.columnDefs, savedState.columns);
         }
 
         // translate filter
