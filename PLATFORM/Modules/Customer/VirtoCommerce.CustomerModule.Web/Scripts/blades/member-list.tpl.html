@@ -18,6 +18,7 @@
                     expandableRowTemplate: 'expandableRowTemplate.html',
                     expandableRowHeight: 25,
                     columnDefs: [
+                                { name: 'actions', displayName: 'platform.blades.asset-list.labels.actions', enableColumnResizing: false, enableSorting: false, width: 80, cellTemplate: 'member-list-actions.cell.html' },
                                 {
                                     name: 'memberType', displayName: 'customer.blades.member-list.labels.type', headerTooltip: 'Organization or individual Customer',
                                     sort: { direction: uiGridConstants.DESC, priority: 1 },
@@ -27,7 +28,7 @@
                         ]})">
                 <!--{ name: 'customAddress', displayName: 'customer.blades.member-list.labels.address', field: 'grid.appScope.getMainAddress(row)' },
                 { name: 'customEmail', displayName: 'customer.blades.member-list.labels.email' }-->
-                <div ui-grid="gridOptions" ui-grid-save-state ui-grid-expandable ui-grid-selection ui-grid-resize-columns ui-grid-move-columns></div>
+                <div ui-grid="gridOptions" ui-grid-save-state ui-grid-selection ui-grid-resize-columns ui-grid-move-columns></div>
             </div>
         </div>
     </div>
@@ -58,7 +59,30 @@
 </script>
 
 <script type="text/ng-template" id="member-list.row.html">
-    <div ng-click='col.isRowHeader || grid.appScope.selectNode(row.entity)' ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'" class="ui-grid-cell" ng-class="{'ui-grid-row-header-cell': col.isRowHeader, '__selected': row.entity.id===grid.appScope.selectedNodeId }" role="{{col.isRowHeader ? 'rowheader' : 'gridcell' }}" ui-grid-cell style='cursor:pointer'></div>
+    <div ng-click='(col.isRowHeader || col.name === "actions") || grid.appscope.selectnode(row.entity)' ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'" class="ui-grid-cell" ng-class="{'ui-grid-row-header-cell': col.isRowHeader, '__selected': row.entity.id===grid.appScope.selectedNodeId }" role="{{col.isRowHeader ? 'rowheader' : 'gridcell' }}" ui-grid-cell style='cursor:pointer'>{{col.name}}</div>
+</script>
+<script type="text/ng-template" id="member-list-actions.cell.html">
+    <!--<div class="ui-grid-cell-contents">
+        <i class="fa fa-angle-double-right"></i>
+    </div>-->
+    <div ng-init="menuVisible=false" ng-click="menuVisible=!menuVisible">
+        <i class="fa fa-angle-double-right"></i>
+    </div>
+    <ul class="menu __actions" ng-if="menuVisible">
+        <li class="menu-item">
+            <a class="menu-link" title="{{'platform.commands.manage' | translate}}" ng-click="showDetailBlade(row.entity, row.entity.displayName)">
+                <i class="menu-ico fa fa-edit"></i>
+                {{'platform.commands.manage' | translate}}
+            </a>
+        </li>
+        <li class="menu-item">
+            <a class="menu-link" title="{{'platform.commands.delete' | translate}}">
+                <i class="menu-ico fa fa-trash-o"></i>
+                {{'platform.commands.delete' | translate}}
+            </a>
+        </li>
+    </ul>
+
 </script>
 <script type="text/ng-template" id="member-list-icon.cell.html">
     <div class="product-img" ng-attr-title="{{COL_FIELD}}">
