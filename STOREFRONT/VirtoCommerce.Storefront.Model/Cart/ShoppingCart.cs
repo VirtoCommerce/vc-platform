@@ -14,6 +14,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
             Name = name;
             StoreId = storeId;
 
+            Addresses = new List<Address>();
             Discounts = new List<Discount>();
             Items = new List<LineItem>();
             Payments = new List<Payment>();

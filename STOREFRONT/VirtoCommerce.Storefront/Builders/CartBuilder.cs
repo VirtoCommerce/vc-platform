@@ -91,6 +91,13 @@ namespace VirtoCommerce.Storefront.Builders
             return this;
         }
 
+        public CartBuilder AddAddress(Address address)
+        {
+            _cart.Addresses.Add(address);
+
+            return this;
+        }
+
         public async Task SaveAsync()
         {
             var cart = _cart.ToServiceModel();

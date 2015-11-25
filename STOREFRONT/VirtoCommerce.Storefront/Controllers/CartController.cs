@@ -90,5 +90,17 @@ namespace VirtoCommerce.Storefront.Controllers
 
             return View("checkout", "checkout_layout", WorkContext);
         }
+
+        // POST: /cart/checkout/customer-information
+        [HttpPost]
+        [Route("checkout/customer-information")]
+        public async Task<ActionResult> CustomerInformationJson(Address address)
+        {
+            await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentCurrency);
+
+            await _cartBuilder.AddAddress(address).SaveAsync();
+
+            return Json(_cartBuilder.Cart, JsonRequestBehavior.AllowGet);
+        }
     }
 }

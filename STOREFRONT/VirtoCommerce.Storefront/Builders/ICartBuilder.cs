@@ -16,6 +16,8 @@ namespace VirtoCommerce.Storefront.Builders
 
         CartBuilder RemoveItem(string id);
 
+        CartBuilder AddAddress(Address address);
+
         Task SaveAsync();
 
         ShoppingCart Cart { get; }

@@ -2,7 +2,8 @@
 
 <script id="storefront.checkout.customerInformation.tpl" type="text/ng-template">
     <div class="step">
-        <form accept-charset="UTF-8" action="" class="edit_checkout animate-floating-labels" method="post">
+        <form accept-charset="UTF-8" action="" class="edit_checkout animate-floating-labels" name="formShippingAddress" novalidate="novalidate" method="post" ng-submit="setShippingAddress()">
+            <input id="AddressType" name="AddressType" type="hidden" ng-model="shippingAddress.AddressType" />
             <div class="step__sections">
                 <div class="section section--contact-information">
                     <div class="section__header">
@@ -10,12 +11,14 @@
                     </div>
                     <div class="section__content">
                         <div class="fieldset">
-                            <div class="field field--required field--show-floating-label">
+                            <div class="field field--required" ng-class="{ 'field--error': formShippingAddress.Email.$dirty && formShippingAddress.Email.$error.required && shippingAddress.submitted }">
                                 <div class="field__input-wrapper">
-                                    <label class="field__label" for="">{{ 'checkout.customer_information.email' | t }}</label>
-                                    <input class="field__input" id="" name="" size="30" placeholder="{{ 'checkout.customer_information.email' | t }}" type="email" value="" />
+                                    <label class="field__label" for="Email">{{ 'checkout.customer_information.email' | t }}</label>
+                                    <input class="field__input" id="Email" name="Email" size="30" placeholder="{{ 'checkout.customer_information.email' | t }}" required="required" type="text" ng-model="shippingAddress.Email" floating-label="" />
                                 </div>
-                                <p class="field__message--warning hidden">{{ 'checkout.customer_information.email_suggestion_text' | t: email }}</p>
+                                <p class="field__message field__message--error" ng-show="formShippingAddress.Email.$dirty && formShippingAddress.Email.$error.required && shippingAddress.submitted">
+                                    Please enter a valid email address
+                                </p>
                             </div>
                         </div>
                         <p class="section__content__text">
@@ -30,69 +33,85 @@
                     </div>
                     <div class="section__content">
                         <div class="fieldset">
-                            <div class="field--half field field--optional field--show-floating-label">
+                            <div class="field--half field field--required" ng-class="{ 'field--error': formShippingAddress.FirstName.$dirty && formShippingAddress.FirstName.$error.required }">
                                 <div class="field__input-wrapper">
-                                    <label class="field__label" for="">{{ 'checkout.address.first_name' | t }}</label>
-                                    <input class="field__input" id="" name="" placeholder="{{ 'checkout.address.first_name' | t }}" size="30" type="text" value="" />
+                                    <label class="field__label" for="FirstName">{{ 'checkout.address.first_name' | t }}</label>
+                                    <input class="field__input" id="FirstName" name="FirstName" placeholder="{{ 'checkout.address.first_name' | t }}" required="required" size="30" type="text" ng-model="shippingAddress.FirstName" floating-label="" />
                                 </div>
+                                <p class="field__message field__message--error" ng-show="formShippingAddress.FirstName.$dirty && formShippingAddress.FirstName.$error.required">
+                                    Please enter your first name
+                                </p>
                             </div>
-                            <div class="field--half field field--required field--show-floating-label">
+                            <div class="field--half field field--required" ng-class="{ 'field--error': formShippingAddress.LastName.$dirty && formShippingAddress.LastName.$error.required }">
                                 <div class="field__input-wrapper">
-                                    <label class="field__label" for="">{{ 'checkout.address.last_name' | t }}</label>
-                                    <input class="field__input" id="" name="" placeholder="{{ 'checkout.address.last_name' | t }}" size="30" type="text" value="" />
+                                    <label class="field__label" for="LastName">{{ 'checkout.address.last_name' | t }}</label>
+                                    <input class="field__input" id="LastName" name="LastName" placeholder="{{ 'checkout.address.last_name' | t }}" required="required" size="30" type="text" ng-model="shippingAddress.LastName" floating-label="" />
                                 </div>
+                                <p class="field__message field__message--error" ng-show="formShippingAddress.LastName.$dirty && formShippingAddress.LastName.$error.required">
+                                    Please enter your last name
+                                </p>
                             </div>
                             <div class="field field--optional">
                                 <div class="field__input-wrapper">
-                                    <label class="field__label" for="">{{ 'checkout.address.company' | t }} {{ 'checkout.optional_field_sign' | t }}</label>
-                                    <input class="field__input" id="" name="" placeholder="{{ 'checkout.address.company' | t }} {{ 'checkout.optional_field_sign' | t }}" size="30" type="text" value="" />
+                                    <label class="field__label" for="Organization">{{ 'checkout.address.company' | t }} {{ 'checkout.optional_field_sign' | t }}</label>
+                                    <input class="field__input" id="Organization" name="Organization" placeholder="{{ 'checkout.address.company' | t }} {{ 'checkout.optional_field_sign' | t }}" size="30" type="text" ng-model="shippingAddress.Organization" floating-label="" />
                                 </div>
                             </div>
-                            <div class="field--two-thirds field field--required field--show-floating-label">
+                            <div class="field--two-thirds field field--required" ng-class="{ 'field--error': formShippingAddress.Line1.$dirty && formShippingAddress.Line1.$error.required }">
                                 <div class="field__input-wrapper">
-                                    <label class="field__label" for="">{{ 'checkout.address.address1' | t }}</label>
-                                    <input class="field__input" id="" name="" placeholder="{{ 'checkout.address.address1' | t }}" size="30" type="text" value="" />
+                                    <label class="field__label" for="Line1">{{ 'checkout.address.address1' | t }}</label>
+                                    <input class="field__input" id="Line1" name="Line1" placeholder="{{ 'checkout.address.address1' | t }}" required="required" size="30" type="text" ng-model="shippingAddress.Line1" floating-label="" />
                                 </div>
+                                <p class="field__message field__message--error" ng-show="formShippingAddress.Line1.$dirty && formShippingAddress.Line1.$error.required">
+                                    Please enter your address
+                                </p>
                             </div>
                             <div class="field--third field field--optional">
                                 <div class="field__input-wrapper">
-                                    <label class="field__label" for="">{{ 'checkout.address.address2' | t }} {{ 'checkout.optional_field_sign' | t }}</label>
-                                    <input class="field__input" id="" name="" placeholder="{{ 'checkout.address.address2' | t }} {{ 'checkout.optional_field_sign' | t }}" size="30" type="text" value="" />
+                                    <label class="field__label" for="Line2">{{ 'checkout.address.address2' | t }} {{ 'checkout.optional_field_sign' | t }}</label>
+                                    <input class="field__input" id="Line2" name="Line2" placeholder="{{ 'checkout.address.address2' | t }} {{ 'checkout.optional_field_sign' | t }}" size="30" type="text" ng-model="shippingAddress.Line2" floating-label="" />
                                 </div>
                             </div>
-                            <div class="field field--required field--show-floating-label">
+                            <div class="field field--required" ng-class="{ 'field--error': formShippingAddress.City.$dirty && formShippingAddress.City.$error.required }">
                                 <div class="field__input-wrapper">
-                                    <label class="field__label" for="">{{ 'checkout.address.city' | t }}</label>
-                                    <input class="field__input" id="" name="" placeholder="{{ 'checkout.address.city' | t }}" size="30" type="text" value="" />
+                                    <label class="field__label" for="City">{{ 'checkout.address.city' | t }}</label>
+                                    <input class="field__input" id="City" name="City" placeholder="{{ 'checkout.address.city' | t }}" required="required" size="30" type="text" ng-model="shippingAddress.City" floating-label="" />
+                                </div>
+                                <p class="field__message field__message--error" ng-show="formShippingAddress.City.$dirty && formShippingAddress.City.$error.required">
+                                    Please enter your city
+                                </p>
+                            </div>
+                            <div class="field field--required field--three-eights field--show-floating-label">
+                                <div class="field__input-wrapper field__input-wrapper--select">
+                                    <label class="field__label" for="CountryName">{{ 'checkout.address.country' | t }}</label>
+                                    <select class="field__input field__input--select" id="CountryName" name="CountryName" required="required" size="1" ng-model="shippingAddress.CountryName">
+                                        <option value="Canada">Canada</option>
+                                    </select>
+                                    <input id="CountryCode" name="CountryCode" type="hidden"  ng-model="shippingAddress.CountryCode" />
                                 </div>
                             </div>
                             <div class="field field--required field--three-eights field--show-floating-label">
                                 <div class="field__input-wrapper field__input-wrapper--select">
-                                    <label class="field__label" for="">{{ 'checkout.address.country' | t }}</label>
-                                    <select class="field__input field__input--select" id="" name="" size="1">
-                                         TODO: Populate countries 
+                                    <label class="field__label" for="RegionName">{{ 'checkout.address.province' | t }}</label>
+                                    <select class="field__input field__input--select" id="RegionName" name="RegionName" placeholder="{{ 'checkout.address.province' | t }}" required="required" ng-model="shippingAddress.RegionName">
+                                        <option value="Newfoundland">Newfoundland</option>
                                     </select>
+                                    <input id="RegionId" name="RegionId" type="hidden" ng-model="shippingAddress.RegionId" />
                                 </div>
                             </div>
-                            <input class="visually-hidden" name="" size="30" tabindex="-1" type="text" />
-                            <div class="field field--required field--three-eights field--show-floating-label">
-                                <div class="field__input-wrapper field__input-wrapper--select">
-                                    <label class="field__label" for="">{{ 'checkout.address.province' | t }}</label>
-                                    <select class="field__input field__input--select" id="" name="" placeholder="{{ 'checkout.address.province' | t }}">
-                                         TODO: Populate provinces 
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="field field--required field--quarter field--show-floating-label">
+                            <div class="field field--required field--quarter" ng-class="{ 'field--error': formShippingAddress.PostalCode.$dirty && formShippingAddress.PostalCode.$error.required }">
                                 <div class="field__input-wrapper">
-                                    <label class="field__label" for="">{{ 'checkout.address.zip' | t }}</label>
-                                    <input class="field__input" id="" name="" placeholder="{{ 'checkout.address.zip' | t }}" size="30" type="text" value="" />
+                                    <label class="field__label" for="PostalCode">{{ 'checkout.address.zip' | t }}</label>
+                                    <input class="field__input" id="PostalCode" name="PostalCode" placeholder="{{ 'checkout.address.zip' | t }}" required="required" size="30" type="text" ng-model="shippingAddress.PostalCode" floating-label="" />
                                 </div>
+                                <p class="field__message field__message--error" ng-show="formShippingAddress.PostalCode.$dirty && formShippingAddress.PostalCode.$error.required">
+                                    Please enter your zip / postal code
+                                </p>
                             </div>
                             <div class="field field--optional">
                                 <div class="field__input-wrapper">
-                                    <label class="field__label" for="">{{ 'checkout.address.phone' | t }} {{ 'checkout.optional_field_sign' | t }}</label>
-                                    <input class="field__input" id="" name="" placeholder="{{ 'checkout.address.phone' | t }} {{ 'checkout.optional_field_sign' | t }}" size="30" type="tel" value="" />
+                                    <label class="field__label" for="Phone">{{ 'checkout.address.phone' | t }} {{ 'checkout.optional_field_sign' | t }}</label>
+                                    <input class="field__input" id="Phone" name="Phone" placeholder="{{ 'checkout.address.phone' | t }} {{ 'checkout.optional_field_sign' | t }}" size="30" type="text" ng-model="shippingAddress.Phone" floating-label="" />
                                 </div>
                             </div>
                         </div>
@@ -112,7 +131,7 @@
                 </div>
             </div>
             <div class="step__footer">
-                <button class="step__footer__continue-btn btn" name="button" type="submit">
+                <button class="step__footer__continue-btn btn" type="submit">
                     <span class="btn__content">{{ 'checkout.customer_information.continue_text' | t }}</span>
                     <i class="btn__spinner icon icon--button-spinner"></i>
                 </button>
