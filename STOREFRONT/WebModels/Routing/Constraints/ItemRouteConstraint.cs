@@ -1,4 +1,5 @@
 ﻿#region
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
@@ -6,6 +7,7 @@ using System.Web.Routing;
 using VirtoCommerce.ApiClient;
 using VirtoCommerce.ApiClient.DataContracts;
 using VirtoCommerce.ApiClient.Extensions;
+using VirtoCommerce.Web.Caching;
 
 #endregion
 
@@ -46,27 +48,23 @@ namespace VirtoCommerce.Web.Models.Routing.Constraints
                 return false;
             }
 
-            var client = ClientContext.Clients.CreateBrowseClient();
-            var item = Task.Run(() => client.GetProductByKeywordAsync(storeId, language, productSlug, ItemResponseGroups.ItemMedium)).Result;
-
-            if (item == null)
+            var itemRouteCacheKey = CacheKey.Create("ItemRouteConstraint", storeId, language, productSlug);
+            var retVal = Task.Run(() => SiteContext.Current.CacheManager.GetAsync(itemRouteCacheKey, TimeSpan.FromHours(1), async () =>
             {
-                item = Task.Run(() => client.GetProductByCodeAsync(storeId, language, productSlug)).Result;
+                var client = ClientContext.Clients.CreateBrowseClient();
+                var item = await client.GetProductByKeywordAsync(storeId, language, productSlug, ItemResponseGroups.ItemMedium);
                 if (item == null)
-                    return false;
-            }
+                {
+                    item =await client.GetProductByCodeAsync(storeId, language, productSlug);
+                    if (item == null)
+                        return false;
+                }
+                return true;
+            })).Result;
 
-            //Check if category is correct
-            //if (values.ContainsKey(Constants.Category))
-            //{
-            //    encoded = values[Constants.Category].ToString();
-            //    //var decoded = SettingsHelper.SeoDecode(encoded, SeoUrlKeywordTypes.Category, values.ContainsKey(Constants.Language) ? values[Constants.Language].ToString() : null);
 
-            //    //Todo mark valid outline somehow
-            //    return ValidateCategoryPath(item.Outline, decoded);
-            //}
+            return retVal;
 
-            return true;
         }
         #endregion
     }

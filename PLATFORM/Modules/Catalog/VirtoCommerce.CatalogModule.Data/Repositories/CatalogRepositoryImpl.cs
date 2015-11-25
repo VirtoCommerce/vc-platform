@@ -340,7 +340,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             return null;
         }
 
-
+        //Load all category properties with inherited from parents categories and catalog
         public dataModel.Property[] GetAllCategoryProperties(dataModel.Category category)
         {
             var retVal = new List<dataModel.Property>();
@@ -359,7 +359,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             {
                 category.Catalog = GetCatalogById(category.CatalogId);
             }
-            retVal.AddRange(category.Catalog.Properties);
+            retVal.AddRange(category.Catalog.Properties.Where(x=>x.CategoryId == null));
             return retVal.Distinct().ToArray();
         }
 
