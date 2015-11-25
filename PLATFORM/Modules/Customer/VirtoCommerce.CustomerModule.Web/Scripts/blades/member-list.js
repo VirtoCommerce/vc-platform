@@ -141,7 +141,7 @@
             var dialog = {
                 id: "confirmDeleteItem",
                 title: "customer.dialogs.organizations-delete.title",
-                message: "customer.dialogs.organizations-delete.subtitle",
+                message: "customer.dialogs.organizations-delete.message",
                 callback: function (remove) {
                     if (remove) {
                         bladeNavigationService.closeChildrenBlades(blade, function () {

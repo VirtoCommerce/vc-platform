@@ -729,6 +729,10 @@
         "title": "Delete confirmation",
         "message": "Are you sure you want to delete selected Accounts?"
       },
+      "dynamic-property-delete": {
+        "title": "Delete confirmation",
+        "message": "Are you sure you want to delete this dynamic property?"
+      },
       "settings-value-delete": {
         "title": "Delete confirmation",
         "message": "Are you sure you want to delete selected Values?"

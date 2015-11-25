@@ -179,8 +179,8 @@
                 executeMethod: function () {
                     var dialog = {
                         id: "confirmDelete",
-                        title: "Proposal confirmation",
-                        message: "Only limited modifications are available after proposal is sent. Are you sure you want to send this proposal to customer? ",
+                        title: "quotes.dialogs.proposal-delete.title",
+                        message: "quotes.dialogs.proposal-delete.message",
                         callback: function (ok) {
                             if (ok) {
                                 blade.currentEntity.status = 'Proposal sent';

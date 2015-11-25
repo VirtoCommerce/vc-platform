@@ -100,7 +100,6 @@ angular.module('platformWebApp', AppDependencies).
       //Localization
       // https://angular-translate.github.io/docs/#/guide
       // var defaultLanguage = settings.getValues({ id: 'VirtoCommerce.Platform.General.ManagerDefaultLanguage' });
-      //$translateProvider.useStaticFilesLoader({ prefix: '/localization/', suffix: '.json' })
       $translateProvider.useUrlLoader('api/platform/localization/locale')
         .useLoaderCache(true)
         .useSanitizeValueStrategy('escapeParameters')
