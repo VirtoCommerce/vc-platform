@@ -97,7 +97,11 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         {
             get
             {
-                return new Collection(base.CurrentCatalogSearchResult.Products, _urlBuilder, this);
+                if (base.CurrentCatalogSearchResult != null)
+                {
+                    return new Collection(base.CurrentCatalogSearchResult.Products, _urlBuilder, this);
+                }
+                return null;
             }
         }
 
