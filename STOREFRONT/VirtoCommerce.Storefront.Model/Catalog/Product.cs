@@ -12,7 +12,7 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         public Product()
         {
             Properties = new List<ProductProperty>();
-            TierPrices = new List<TierPrice>();
+            Prices = new List<ProductPrice>();
             Assets = new List<Asset>();
             Variations = new List<Product>();
             Images = new List<Image>();
@@ -190,10 +190,10 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         public ProductPrice Price { get; set; }
 
         /// <summary>
-        /// Tier prices 
+        /// Product prices foe other currencies
         /// </summary>
-        public ICollection<TierPrice> TierPrices { get; set; }
-
+        public ICollection<ProductPrice> Prices { get; set; }
+      
         /// <summary>
         /// Inventory info
         /// </summary>

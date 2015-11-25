@@ -65,7 +65,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Tags
             if (_formsMap.TryGetValue(formName, out actionUrl))
             {
                 var themeEngine = (ShopifyLiquidThemeEngine)Template.FileSystem;
-                var actionAbsoluteUrl = themeEngine.UrlBuilder.ToAbsolute(themeEngine.WorkContext, actionUrl, themeEngine.WorkContext.CurrentStore, themeEngine.WorkContext.CurrentLanguage);
+                var actionAbsoluteUrl = themeEngine.UrlBuilder.ToAppAbsolute(themeEngine.WorkContext, actionUrl, themeEngine.WorkContext.CurrentStore, themeEngine.WorkContext.CurrentLanguage);
                 result.WriteLine("<form accept-charset=\"UTF-8\" action=\"{0}\" method=\"post\" id=\"{1}\">", actionAbsoluteUrl, formName);
                 this.RenderAll(this.NodeList, context, result);
                 result.WriteLine("</form>");

@@ -226,6 +226,7 @@
     <Compile Include="App_Start\UnityMvcActivator.cs" />
     <Compile Include="Builders\CartBuilder.cs" />
     <Compile Include="Builders\ICartBuilder.cs" />
+    <Compile Include="Common\Injections\NullableAndEnumInjection.cs" />
     <Compile Include="Common\StorefrontConstants.cs" />
     <Compile Include="Common\DownloadResult.cs" />
     <Compile Include="Common\FileExtensionMapper.cs" />

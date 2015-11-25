@@ -7,6 +7,7 @@ using VirtoCommerce.Client.Api;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Services;
 using VirtoCommerce.Storefront.Converters;
+using VirtoCommerce.Storefront.Model;
 
 namespace VirtoCommerce.Storefront.Services
 {
@@ -16,32 +17,33 @@ namespace VirtoCommerce.Storefront.Services
         private readonly IPricingModuleApi _pricingModuleApi;
         private readonly IInventoryModuleApi _inventoryModuleApi;
         private readonly IMarketingModuleApi _marketingModuleApi;
+        private readonly WorkContext _workContext;
 
-        public CatalogServiceImpl(
-            ICatalogModuleApi catalogModuleApi,
-            IPricingModuleApi pricingModuleApi,
-            IInventoryModuleApi inventoryModuleApi,
-            IMarketingModuleApi marketingModuleApi)
+        public CatalogServiceImpl(WorkContext workContext, ICatalogModuleApi catalogModuleApi, IPricingModuleApi pricingModuleApi, IInventoryModuleApi inventoryModuleApi,
+                                  IMarketingModuleApi marketingModuleApi)
         {
+            _workContext = workContext;
             _catalogModuleApi = catalogModuleApi;
             _pricingModuleApi = pricingModuleApi;
             _inventoryModuleApi = inventoryModuleApi;
             _marketingModuleApi = marketingModuleApi;
         }
 
-        public async Task<Product> GetProduct(string id, string currencyCode, ItemResponseGroup responseGroup = ItemResponseGroup.ItemInfo)
+        public async Task<Product> GetProductAsync(string id, ItemResponseGroup responseGroup = ItemResponseGroup.ItemInfo)
         {
             var item = (await _catalogModuleApi.CatalogModuleProductsGetAsync(id)).ToWebModel();
+
+            var allProducts = new[] { item }.Concat(item.Variations).ToArray();
 
             var taskList = new List<Task>();
 
             if ((responseGroup | ItemResponseGroup.ItemWithPrices) == responseGroup)
             {
-                taskList.Add(Task.Factory.StartNew(() => GetPrices(item, currencyCode)));
+                taskList.Add(Task.Factory.StartNew(() => LoadProductsPrices(allProducts)));
             }
             if ((responseGroup | ItemResponseGroup.ItemWithInventories) == responseGroup)
             {
-                taskList.Add(Task.Factory.StartNew(() => GetInventories(item)));
+                taskList.Add(Task.Factory.StartNew(() => LoadProductsInventories(allProducts)));
             }
 
             Task.WaitAll(taskList.ToArray());
@@ -49,43 +51,27 @@ namespace VirtoCommerce.Storefront.Services
             return item;
         }
 
-        public Task<SearchResult> Search(SearchCriteria criteria)
+        public Task<SearchResult> SearchAsync(SearchCriteria criteria)
         {
             throw new NotImplementedException();
         }
 
-        private void GetPrices(Product product, string currencyCode)
+        private void LoadProductsPrices(Product[] products)
         {
-            var ids = product.Variations.Select(v => v.Id).ToList();
-            ids.Add(product.Id);
-            foreach (var productId in ids)
+            var result =  _pricingModuleApi.PricingModuleEvaluatePrices(_workContext.CurrentStore.Id, _workContext.CurrentStore.Catalog, products.Select(x=> x.Id).ToList(), null, null, _workContext.CurrentCustomer.Id, null, _workContext.StorefrontUtcNow, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+            foreach (var item in products)
             {
-                var prices = _pricingModuleApi.PricingModuleGetProductPrices(productId);
-                foreach (var price in prices.Where(p => p.Currency == currencyCode))
-                {
-                    if (product.Id == price.ProductId)
-                        product.Price = price.ToWebModel();
-
-                    var variation = product.Variations.FirstOrDefault(v => v.Id == price.ProductId);
-                    if (variation != null)
-                        variation.Price = price.ToWebModel();
-                }
+                item.Prices = result.Where(x => x.ProductId == item.Id).Select(x => x.ToWebModel()).ToList();
+                item.Price = item.Prices.FirstOrDefault(x => x.Currency == _workContext.CurrentCurrency);
             }
         }
 
-        private void GetInventories(Product product)
+        private void LoadProductsInventories(Product[] products)
         {
-            var ids = product.Variations.Select(v => v.Id).ToList();
-            ids.Add(product.Id);
-            var inventories = _inventoryModuleApi.InventoryModuleGetProductsInventories(ids);
-            foreach (var inventory in inventories)
+            var inventories = _inventoryModuleApi.InventoryModuleGetProductsInventories(products.Select(x => x.Id).ToList());
+            foreach (var item in products)
             {
-                if (product.Id == inventory.ProductId)
-                    product.Inventory = inventory.ToWebModel();
-
-                var variation = product.Variations.FirstOrDefault(v => v.Id == inventory.ProductId);
-                if (variation != null)
-                    variation.Inventory = inventory.ToWebModel();
+                item.Inventory = inventories.Where(x=>x.ProductId == item.Id).Select(x=>x.ToWebModel()).FirstOrDefault();
             }
         }
     }

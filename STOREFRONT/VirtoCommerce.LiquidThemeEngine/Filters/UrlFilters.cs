@@ -105,7 +105,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
             }
             language = language ?? store.DefaultLanguage;
 
-            var retVal = themeAdaptor.UrlBuilder.ToAbsolute(themeAdaptor.WorkContext, input, store, language);
+            var retVal = themeAdaptor.UrlBuilder.ToAppAbsolute(themeAdaptor.WorkContext, input, store, language);
             return retVal;
         }
 
@@ -126,7 +126,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
         {
             var themeEngine = (ShopifyLiquidThemeEngine)Template.FileSystem;
             var workContext = themeEngine.WorkContext;
-            var result = themeEngine.UrlBuilder.ToAbsolute(workContext, virtualUrl, workContext.CurrentStore, workContext.CurrentLanguage);
+            var result = themeEngine.UrlBuilder.ToAppAbsolute(workContext, virtualUrl, workContext.CurrentStore, workContext.CurrentLanguage);
             return result;
         }
     }

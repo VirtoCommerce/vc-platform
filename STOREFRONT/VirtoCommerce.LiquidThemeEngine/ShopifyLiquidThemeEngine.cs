@@ -294,7 +294,7 @@ namespace VirtoCommerce.LiquidThemeEngine
         /// <returns></returns>
         public string GetAssetAbsoluteUrl(string assetName)
         {
-            return _storeFrontUrlBuilder.ToAbsolute(WorkContext, _themesAssetsRelativeUrl.TrimEnd('/') + "/" + assetName.TrimStart('/'), WorkContext.CurrentStore, WorkContext.CurrentLanguage);
+            return _storeFrontUrlBuilder.ToAppAbsolute(WorkContext, _themesAssetsRelativeUrl.TrimEnd('/') + "/" + assetName.TrimStart('/'), WorkContext.CurrentStore, WorkContext.CurrentLanguage);
         }
 
     }

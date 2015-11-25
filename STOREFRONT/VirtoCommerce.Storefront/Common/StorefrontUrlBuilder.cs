@@ -14,7 +14,7 @@ namespace VirtoCommerce.Storefront.Model.Common
     public class StorefrontUrlBuilder : IStorefrontUrlBuilder
     {
         #region IStorefrontUrlBuilder members
-        public string ToAbsolute(WorkContext context, string virtualPath, Store store, Language language)
+        public string ToAppAbsolute(WorkContext context, string virtualPath, Store store, Language language)
         {
             var retVal = VirtualPathUtility.ToAbsolute(ToAppRelative(context, virtualPath, store, language));
             return retVal;

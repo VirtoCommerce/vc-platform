@@ -131,7 +131,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         {
             get
             {
-                return string.IsNullOrEmpty(_store.Url) ? _urlBuilder.ToAbsolute(_context, "~/", _store, _context.CurrentLanguage) : _store.Url;
+                return string.IsNullOrEmpty(_store.Url) ? _urlBuilder.ToAppAbsolute(_context, "~/", _store, _context.CurrentLanguage) : _store.Url;
             }
         }
 

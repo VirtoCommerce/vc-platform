@@ -28,7 +28,7 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             return View("cart", WorkContext);
         }
-
+     
         // GET: /cart/json
         [HttpGet]
         [Route("json")]

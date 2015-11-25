@@ -1,51 +1,95 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web.Hosting;
 using System.Web.Http;
 using System.Web.Http.Description;
 using Newtonsoft.Json.Linq;
+using VirtoCommerce.Platform.Core.Modularity;
+using WebGrease.Extensions;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
     [System.Web.Http.RoutePrefix("api/platform/localization")]
     public class LocalizationController : ApiController
     {
-        private readonly string _localizationPath;
-        public LocalizationController()
+        private readonly IModuleManifestProvider _manifestProvider;
+        public LocalizationController(IModuleManifestProvider manifestProvider)
         {
-            _localizationPath = HostingEnvironment.MapPath("~/App_Data/Localizations/");
+            _manifestProvider = manifestProvider;
         }
 
         /// <summary>
-        /// Get all localization files by given language
+        /// Return all localization files by given locale
         /// </summary>
         /// <returns>json</returns>
         [System.Web.Http.HttpGet]
-        [System.Web.Http.Route("")]
+        [System.Web.Http.Route("locale")]
         [ResponseType(typeof(object))]
         [AllowAnonymous]
-        public JObject GetLocalizationFile(string lang = "en")
+        public JObject GetLocalization(string locale = "en")
         {
-            DirectoryInfo directory = new DirectoryInfo(_localizationPath);
-            var files = directory.GetFiles().Where(x => x.Name.StartsWith(lang)).ToList();
-
-            // move custom file to the end of file list
-            //var custom = string.Format("{0}.custom.json", lang);
-            //var customFile = files.FirstOrDefault(x => x.Name.ToLower() == custom);
-            //if (customFile != null)
-            //{
-            //    files.Remove(customFile);
-            //    files.Add(customFile);
-            //}
+            var searchPattern = string.Format("{0}.*.json", locale);
+            var files = GetAllLocalizationFiles(searchPattern);
 
             var result = new JObject();
             foreach (var file in files)
             {
-                var part = JObject.Parse(File.ReadAllText(file.FullName));
-                result.Merge(part, new JsonMergeSettings { MergeArrayHandling = MergeArrayHandling.Concat });
+                var part = JObject.Parse(File.ReadAllText(file));
+                result.Merge(part, new JsonMergeSettings { MergeArrayHandling = MergeArrayHandling.Merge });
+            }
+            return result;
+        }
+
+        private string[] GetAllLocalizationFiles(string searchPattern)
+        {
+            var files = new List<string>();
+
+
+            // Get platform localization files
+            var platformPath = HostingEnvironment.MapPath("~").EnsureEndSeparator();
+            var platformFileNames = GetLocalizationFilesByPath(platformPath, searchPattern);
+            files.AddRange(platformFileNames);
+
+            // Get modules localization files
+            var modulesFileNames = new List<string>();
+            foreach (var pair in _manifestProvider.GetModuleManifests())
+            {
+                var modulePath = Path.GetDirectoryName(pair.Key);
+                var moduleFileNames = GetLocalizationFilesByPath(modulePath, searchPattern);
+                files.AddRange(moduleFileNames);
             }
 
-            return result; 
+            // Get user defined localization files from App_Data/Localizations folder
+            var userLocalizationPath = HostingEnvironment.MapPath("~/App_Data").EnsureEndSeparator();
+            var userFileNames = GetLocalizationFilesByPath(userLocalizationPath, searchPattern);
+            files.AddRange(userFileNames);
+            return files.ToArray();
+        }
+
+        private string[] GetLocalizationFilesByPath(string path, string searchPattern, string localizationSubfolder = "Localizations")
+        {
+            var sourceDirectoryPath = Path.Combine(path, localizationSubfolder).EnsureEndSeparator();
+
+            return Directory.Exists(sourceDirectoryPath)
+                ? Directory.EnumerateFiles(sourceDirectoryPath, searchPattern, SearchOption.AllDirectories).ToArray()
+                : new string[0];
+        }
+
+        /// <summary>
+        /// Return all aviable locales
+        /// </summary>
+        /// <returns>json</returns>
+        [System.Web.Http.HttpGet]
+        [System.Web.Http.Route("locales")]
+        public string[] GetLocales()
+        {
+            var files = GetAllLocalizationFiles("*.json");
+            var locales = files
+                .Select(x => Path.GetFileName(x))
+                .Select(x => x.Substring(0, x.IndexOf('.'))).Distinct().ToArray();
+
+            return locales;
         }
     }
 }

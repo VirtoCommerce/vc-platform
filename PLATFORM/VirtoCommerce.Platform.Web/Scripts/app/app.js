@@ -15,7 +15,7 @@
   'angularFileUpload',
   'ngSanitize',
   'ng-context-menu',
-  'ui.grid', 'ui.grid.resizeColumns', 'ui.grid.moveColumns', 'ui.grid.saveState', 'ui.grid.selection', 'ui.grid.pagination',
+  'ui.grid', 'ui.grid.expandable', 'ui.grid.resizeColumns', 'ui.grid.moveColumns', 'ui.grid.saveState', 'ui.grid.selection', 'ui.grid.pagination',
   'ui.codemirror',
   'focusOn',
   'textAngular',
@@ -98,8 +98,10 @@ angular.module('platformWebApp', AppDependencies).
       }]);
 
       //Localization
+      // https://angular-translate.github.io/docs/#/guide
       // var defaultLanguage = settings.getValues({ id: 'VirtoCommerce.Platform.General.ManagerDefaultLanguage' });
-      $translateProvider.useUrlLoader('api/platform/localization')
+      //$translateProvider.useStaticFilesLoader({ prefix: '/localization/', suffix: '.json' })
+      $translateProvider.useUrlLoader('api/platform/localization/locale')
         .useLoaderCache(true)
         .useSanitizeValueStrategy('escapeParameters')
         .preferredLanguage('en')
@@ -238,6 +240,27 @@ angular.module('platformWebApp', AppDependencies).
                     $localStorage['gridState:' + $scope.blade.template] = gridApi.saveState.save();
                 }
 
+                // update grid menu behavior
+                gridApi.grid.registerDataChangeCallback(updateGridStyles, [uiGridConstants.dataChange.ROW]);
+                if ($scope.gridOptions.paginationPageSize > 0) {
+                    gridApi.pagination.on.paginationChanged($scope, updateGridStyles);
+                }
+                function updateGridStyles() {
+                    $timeout(function () {
+                        var headerHeight = $('.ui-grid-header').height();
+                        var gridDataHeight = (headerHeight ? headerHeight : 40) + gridApi.core.getVisibleRows(gridApi.grid).length * $scope.gridOptions.rowHeight;
+                        $scope.blade.gridScrollNeeded = $('.blade-inner').height() < 1 + gridDataHeight;
+
+                        if ($scope.blade.gridScrollNeeded) {
+                            $('.ui-grid').addClass('__scrolled');
+                        }
+                        else {
+                            $('.ui-grid').removeClass('__scrolled');
+                        }
+                    }, 10);
+                }
+
+
                 if (externalRegisterApiCallback) {
                     externalRegisterApiCallback(gridApi);
                 }
@@ -246,7 +269,7 @@ angular.module('platformWebApp', AppDependencies).
     };
 
     retVal.onDataLoaded = function (gridOptions, currentEntities) {
-        gridOptions.minRowsToShow = currentEntities.length;
+        //gridOptions.minRowsToShow = currentEntities.length;
 
         if (!gridOptions.columnDefsGenerated && _.any(currentEntities)) {
             // generate columnDefs for each undefined property

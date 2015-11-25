@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Storefront.Model.Catalog;
+using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Model.Services
 {
     public interface ICatalogService
     {
-        Task<Product> GetProduct(string id, string currencyCode, ItemResponseGroup responseGroup);
+        Task<Product> GetProductAsync(string id, ItemResponseGroup responseGroup);
 
-        Task<SearchResult> Search(SearchCriteria criteria);
+        Task<SearchResult> SearchAsync(SearchCriteria criteria);
     }
 }

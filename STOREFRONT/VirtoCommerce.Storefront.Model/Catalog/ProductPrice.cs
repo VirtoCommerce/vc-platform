@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
 
-namespace VirtoCommerce.Storefront.Model
+namespace VirtoCommerce.Storefront.Model.Catalog
 {
     public class ProductPrice : ValueObject<ProductPrice>
     {
@@ -47,5 +48,10 @@ namespace VirtoCommerce.Storefront.Model
         /// It defines the minimum quantity of products
         /// </summary>
         public int? MinQuantity { get; set; }
+
+        /// <summary>
+        /// Tier prices 
+        /// </summary>
+        public ICollection<TierPrice> TierPrices { get; set; }
     }
 }
