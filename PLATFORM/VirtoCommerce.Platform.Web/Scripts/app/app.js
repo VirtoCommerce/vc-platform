@@ -100,7 +100,6 @@ angular.module('platformWebApp', AppDependencies).
       //Localization
       // https://angular-translate.github.io/docs/#/guide
       // var defaultLanguage = settings.getValues({ id: 'VirtoCommerce.Platform.General.ManagerDefaultLanguage' });
-      //$translateProvider.useStaticFilesLoader({ prefix: '/localization/', suffix: '.json' })
       $translateProvider.useUrlLoader('api/platform/localization/locale')
         .useLoaderCache(true)
         .useSanitizeValueStrategy('escapeParameters')
@@ -212,9 +211,10 @@ angular.module('platformWebApp', AppDependencies).
                     var customSort = x.sort;
                     _.extend(x, foundDef);
                     x.sort = customSort;
+                    gridOptions.columnDefs.splice(gridOptions.columnDefs.indexOf(foundDef), 1);
                 }
             });
-            gridOptions.columnDefs = savedState.columns;
+            gridOptions.columnDefs = _.union(gridOptions.columnDefs, savedState.columns);
         }
 
         // translate filter

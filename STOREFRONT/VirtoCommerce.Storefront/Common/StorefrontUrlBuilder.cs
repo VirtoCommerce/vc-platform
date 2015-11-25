@@ -26,7 +26,7 @@ namespace VirtoCommerce.Storefront.Common
         {
             virtualPath = virtualPath.Replace("~/", String.Empty);
             var retVal = "~/";
-       
+
             if (store != null)
             {
                 //Do not use store in url if it single
@@ -53,8 +53,8 @@ namespace VirtoCommerce.Storefront.Common
 
             retVal += virtualPath.TrimStart('/');
 
-            return retVal;
-        } 
+            return retVal.TrimEnd('/');
+        }
 
         public string ToLocalPath(string virtualPath)
         {

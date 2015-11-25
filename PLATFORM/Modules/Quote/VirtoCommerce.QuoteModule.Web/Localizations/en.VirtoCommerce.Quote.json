@@ -123,6 +123,10 @@
         }
 
       },
+      "proposal-delete": {
+        "title": "Proposal confirmation",
+        "message": "Only limited modifications are available after proposal is sent. Are you sure you want to send this proposal to customer?"
+      },
       "hold-confirmation": {
         "title": "On Hold confirmation",
         "message-release": "Are you sure you want to release Hold from this quote?",

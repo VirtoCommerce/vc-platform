@@ -60,8 +60,8 @@ function ($scope, accounts, bladeNavigationService, dialogService, uiGridConstan
     function deleteChecked() {
         var dialog = {
             id: "confirmDeleteItem",
-            title: "Delete confirmation",
-            message: "Are you sure you want to delete selected Accounts?",
+            title: "platform.dialogs.account-delete.title",
+            message: "platform.dialogs.account-delete.message",
             callback: function (remove) {
                 if (remove) {
                     closeChildrenBlades();
@@ -89,7 +89,7 @@ function ($scope, accounts, bladeNavigationService, dialogService, uiGridConstan
 
     blade.toolbarCommands = [
         {
-            name: "Refresh", icon: 'fa fa-refresh',
+            name: "platform.commands.refresh", icon: 'fa fa-refresh',
             executeMethod: function () {
                 blade.refresh();
             },
@@ -98,7 +98,7 @@ function ($scope, accounts, bladeNavigationService, dialogService, uiGridConstan
             }
         },
         {
-            name: "Add", icon: 'fa fa-plus',
+            name: "platform.commands.add", icon: 'fa fa-plus',
             executeMethod: function () {
                 closeChildrenBlades();
 
@@ -118,7 +118,7 @@ function ($scope, accounts, bladeNavigationService, dialogService, uiGridConstan
             permission: 'platform:security:create'
         },
         {
-            name: "Delete", icon: 'fa fa-trash-o',
+            name: "platform.commands.delete", icon: 'fa fa-trash-o',
             executeMethod: function () {
                 deleteChecked();
             },

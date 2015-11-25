@@ -261,8 +261,8 @@
     blade.deleteEntry = function() {
         var dialog = {
             id: "confirmDelete",
-            title: "Delete confirmation",
-            message: "Are you sure you want to delete this page?",
+            title: "content.dialogs.page-delete.title",
+            message: "content.dialogs.page-delete.message",
             callback: function (remove) {
                 if (remove) {
                     blade.isLoading = true;
@@ -295,8 +295,8 @@
         if ((blade.isDirty() && !blade.newPage) || (isCanSave() && blade.newPage)) {
             var dialog = {
                 id: "confirmCurrentBladeClose",
-                title: "Save changes",
-                message: "The page has been modified. Do you want to save changes?"
+                title: "content.dialogs.page-save.title",
+                message: "content.dialogs.page-save.message"
             };
 
             dialog.callback = function (needSave) {
