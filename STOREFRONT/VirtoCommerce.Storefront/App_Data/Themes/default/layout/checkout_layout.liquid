@@ -9,7 +9,10 @@
 
     {{ 'checkout.css' | asset_url | stylesheet_tag }}
 
+    <base href="{{ '/' | absolute_url }}" />
+
     {{ '//ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.min.js' | script_tag }}
+    {{ '//ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular-route.min.js' | script_tag }}
     {{ '//ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular-resource.min.js' | script_tag }}
     {{ 'cart.js' | asset_url | script_tag }}
 

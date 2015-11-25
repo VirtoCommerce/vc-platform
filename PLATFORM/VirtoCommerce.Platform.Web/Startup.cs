@@ -80,7 +80,6 @@ namespace VirtoCommerce.Platform.Web
             VirtualRoot = virtualRoot;
 
             _assembliesPath = HostingEnvironment.MapPath(VirtualRoot + "/App_Data/Modules");
-            var localizationsPath = HostingEnvironment.MapPath(VirtualRoot + "/App_Data/Localizations");
             var platformPath = HostingEnvironment.MapPath(VirtualRoot).EnsureEndSeparator();
             var modulesVirtualPath = VirtualRoot + "/Modules";
             var modulesPhysicalPath = HostingEnvironment.MapPath(modulesVirtualPath).EnsureEndSeparator();
@@ -88,7 +87,7 @@ namespace VirtoCommerce.Platform.Web
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
 
             //Modules initialization
-            var bootstrapper = new VirtoCommercePlatformWebBootstrapper(modulesVirtualPath, modulesPhysicalPath, _assembliesPath, localizationsPath, platformPath);
+            var bootstrapper = new VirtoCommercePlatformWebBootstrapper(modulesVirtualPath, modulesPhysicalPath, _assembliesPath, platformPath);
             bootstrapper.Run();
 
             var container = bootstrapper.Container;
@@ -118,6 +117,16 @@ namespace VirtoCommerce.Platform.Web
                 FileSystem = new Microsoft.Owin.FileSystems.PhysicalFileSystem(scriptsRelativePath)
             });
 
+            //var localizationPhysicalPath = HostingEnvironment.MapPath(VirtualRoot + "/Test/Localization").EnsureEndSeparator();
+            //var localizatioinRelativePath = MakeRelativePath(applicationBase, localizationPhysicalPath);
+
+            //var localizationUrlRewriterOptions = new UrlRewriterOptions();
+            //localizationUrlRewriterOptions.Items.Add(PathString.FromUriComponent("/Localization"), "/Test/Localization");
+            //app.Use<UrlRewriterOwinMiddleware>(localizationUrlRewriterOptions);
+            //app.UseStaticFiles(new StaticFileOptions
+            //{
+            //    FileSystem = new Microsoft.Owin.FileSystems.PhysicalFileSystem(localizatioinRelativePath)
+            //});
             // Register URL rewriter before modules initialization
             if (Directory.Exists(modulesPhysicalPath))
             {
@@ -376,32 +385,32 @@ namespace VirtoCommerce.Platform.Web
                                     DefaultValue = AccountType.Manager.ToString()
                                 }
                             }
-                        },
-                         new ModuleSettingsGroup
-                        {
-                            Name = "Platform|General",
-                            Settings = new []
-                            {
-                                //new ModuleSetting
-                                //{
-                                //    Name = "VirtoCommerce.Platform.General.ManagerDefaultLanguage",
-                                //    ValueType = ModuleSetting.TypeString,
-                                //    Title = "Commerce Manager's default language",
-                                //    Description = "The default language that Commerce Manager is displayed in",
-                                //    DefaultValue = "en"
-                                //},
-                                new ModuleSetting
-                                {
-                                    Name = "VirtoCommerce.Platform.General.ManagerLanguages",
-                                    ValueType = ModuleSetting.TypeString,
-                                    Title = "Commerce Manager languages",
-                                    Description = "Languages that the Commerce Manager is translated to",
-                                    IsArray = true,
-                                    ArrayValues = new [] { "en"},
-                                    DefaultValue = "en"
-                                }
-                            }
                         }
+                        // new ModuleSettingsGroup
+                        //{
+                        //    Name = "Platform|General",
+                        //    Settings = new []
+                        //    {
+                        //        new ModuleSetting
+                        //        {
+                        //            Name = "VirtoCommerce.Platform.General.ManagerDefaultLanguage",
+                        //            ValueType = ModuleSetting.TypeString,
+                        //            Title = "Commerce Manager's default language",
+                        //            Description = "The default language that Commerce Manager is displayed in",
+                        //            DefaultValue = "en"
+                        //        },
+                        //        new ModuleSetting
+                        //        {
+                        //            Name = "VirtoCommerce.Platform.General.ManagerLanguages",
+                        //            ValueType = ModuleSetting.TypeString,
+                        //            Title = "Commerce Manager languages",
+                        //            Description = "Languages that the Commerce Manager is translated to",
+                        //            IsArray = true,
+                        //            ArrayValues = new [] { "en"},
+                        //            DefaultValue = "en"
+                        //        }
+                        //    }
+                        //}
                     }
                 }
             };

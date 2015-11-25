@@ -12,7 +12,9 @@ namespace VirtoCommerce.Storefront.Builders
 
         CartBuilder AddItem(Product product, int quantity);
 
-        CartBuilder UpdateItem(int index, int quantity);
+        CartBuilder UpdateItem(string id, int quantity);
+
+        CartBuilder RemoveItem(string id);
 
         Task SaveAsync();
 

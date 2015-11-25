@@ -217,7 +217,6 @@
       },
 
       "item-detail": {
-        "title": "",
         "subtitle-variation": "Variation details",
         "labels": {
           "sku": "SKU",

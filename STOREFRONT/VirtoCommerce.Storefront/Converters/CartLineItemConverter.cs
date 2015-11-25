@@ -35,6 +35,7 @@ namespace VirtoCommerce.Storefront.Converters
             lineItemWebModel.Length = (decimal?)product.Length;
             lineItemWebModel.MeasureUnit = product.MeasureUnit;
             lineItemWebModel.Name = product.Name;
+            lineItemWebModel.Product = product;
             lineItemWebModel.ProductId = product.Id;
             lineItemWebModel.Quantity = quantity;
             lineItemWebModel.Sku = product.Sku;

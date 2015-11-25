@@ -437,7 +437,9 @@ Shopify.OptionSelectorsFromDOM.prototype.createProductFromSelector = function(do
 // SingleOptionSelector
 // takes option name and values and creates a option selector from them
 // ---------------------------------------------------------------------------
-Shopify.SingleOptionSelector = function(multiSelector, index, name, values) {
+Shopify.SingleOptionSelector = function (multiSelector, index, name, values) {
+  if (!values)
+	return;
   this.multiSelector = multiSelector;
   this.values = values;
   this.index = index;
