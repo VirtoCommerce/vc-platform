@@ -28,6 +28,7 @@ using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Owin;
 using VirtoCommerce.Storefront.Model.Services;
 using VirtoCommerce.Storefront.Services;
+using VirtoCommerce.Storefront.Common;
 
 [assembly: OwinStartup(typeof(Startup))]
 [assembly: PreApplicationStartMethod(typeof(Startup), "PreApplicationStart")]
@@ -76,7 +77,7 @@ namespace VirtoCommerce.Storefront
             container.RegisterType<IMarketingModuleApi, MarketingModuleApi>();
 
             container.RegisterType<ICartBuilder, CartBuilder>();
-            container.RegisterType<ICatalogService, CatalogServiceImpl>();
+            container.RegisterType<ICatalogSearchService, CatalogSearchServiceImpl>();
             container.RegisterType<IAuthenticationManager>(new InjectionFactory((context) => HttpContext.Current.GetOwinContext().Authentication));
 
             container.RegisterType<IStorefrontUrlBuilder, StorefrontUrlBuilder>();

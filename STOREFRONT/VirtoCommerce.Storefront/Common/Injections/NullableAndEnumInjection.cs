@@ -49,10 +49,6 @@ namespace VirtoCommerce.Storefront.Common
                 retVal = !source.PropertyType.IsArray && !target.PropertyType.IsArray;
             }
 
-            if(retVal)
-            {
-                retVal = source.PropertyType.GetInterface(typeof(IEnumerable<>).FullName) == null && target.PropertyType.GetInterface(typeof(IEnumerable<>).FullName) == null;
-            }
             if (retVal)
             {
                 retVal = !target.PropertyType.IsArray && !target.PropertyType.IsArray;

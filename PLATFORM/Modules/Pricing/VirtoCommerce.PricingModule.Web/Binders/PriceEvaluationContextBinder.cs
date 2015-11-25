@@ -27,18 +27,36 @@ namespace VirtoCommerce.CatalogModule.Web.Binders
 
             var result = new coreModel.PriceEvaluationContext();
 
-            result.StoreId = qs.Get("store");
+            result.StoreId = qs.Get("store") ?? qs.Get("evalContext.storeId");
 
-            result.CatalogId = qs.Get("catalog");
+            result.CatalogId = qs.Get("catalog") ?? qs.Get("evalContext.catalogId");
             result.ProductIds = qs.GetValues("products");
+            if(result.ProductIds == null)
+            {
+                var productIds = qs.Get("evalContext.productIds");
+                if(!String.IsNullOrEmpty(productIds))
+                {
+                    result.ProductIds = productIds.Split(',');
+                }
+            }
+         
             result.PricelistIds = qs.GetValues("pricelists");
-            var currency = qs.Get("currency");
+            if (result.PricelistIds == null)
+            {
+                var pricelistIds = qs.Get("evalContext.pricelistIds");
+                if (!String.IsNullOrEmpty(pricelistIds))
+                {
+                    result.PricelistIds = pricelistIds.Split(',');
+                }
+            }
+
+            var currency = qs.Get("currency") ?? qs.Get("evalContext.currency");
             if (currency != null)
             {
                 result.Currency = EnumUtility.SafeParse(currency, CurrencyCodes.USD);
             }
             result.Quantity = qs.GetValue<decimal>("quantity", 0);
-            result.CustomerId = qs.Get("customer");
+            result.CustomerId = qs.Get("customer") ?? qs.Get("evalContext.customerId");
             result.OrganizationId = qs.Get("organization");
             var certainDate = qs.Get("date");
             if(certainDate != null)

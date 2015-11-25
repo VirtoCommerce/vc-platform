@@ -9,16 +9,22 @@ namespace VirtoCommerce.Storefront.Model.Catalog
 {
     public class Category : Entity
     {
+        public Category()
+        {
+            Images = new List<Image>();
+        }
         public string CatalogId { get; set; }
         public string ParentId { get; set; }
         public string Code { get; set; }
         public string TaxType { get; set; }
         public string Name { get; set; }
         public string Path { get; set; }
-        public Dictionary<string, string> Parents { get; set; }
-        public Category[] Children { get; set; }
-        public SeoInfo[] SeoInfos { get; set; }
-        public Image[] Images { get; set; }
-        public Product[] Products { get; set; }
+
+        public SeoInfo SeoInfo { get; set; }
+        /// <summary>
+        /// Category main image
+        /// </summary>
+        public Image PrimaryImage { get; set; }
+        public ICollection<Image> Images { get; set; }
     }
 }

@@ -66,6 +66,8 @@ namespace VirtoCommerce.LiquidThemeEngine
 
             Template.RegisterTag<LayoutTag>("layout");
             Template.RegisterTag<FormTag>("form");
+            Template.RegisterTag<PaginateTag>("paginate");
+
             var contextType = typeof(WorkContext);
 
             //Register WorkingContext properties as DropBased 
