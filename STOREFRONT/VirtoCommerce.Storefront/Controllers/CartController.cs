@@ -83,6 +83,11 @@ namespace VirtoCommerce.Storefront.Controllers
         [Route("checkout/{step}")]
         public ActionResult Checkout(string step)
         {
+            //if (WorkContext.CurrentCart.Items.Count == 0)
+            //{
+            //    return StoreFrontRedirect("~/cart");
+            //}
+
             return View("checkout", "checkout_layout", WorkContext);
         }
     }
