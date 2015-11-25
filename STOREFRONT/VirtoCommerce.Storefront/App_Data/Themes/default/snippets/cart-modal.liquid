@@ -1,0 +1,68 @@
+<div class="ajaxify-modal" id="ajaxifyModal" style="margin-left: -380px; opacity: 1;" ng-class="{ 'is-visible': cartModalToggled }" ng-controller="cartController">
+    <button class="ajaxifyCart--close" title="Close Cart" ng-click="toggleCartModal(cartModalToggled)">Close Cart</button>
+    <div class="ajaxifyCart--content" id="ajaxifyCart">
+        <span ng-if="!cart.Items.length">
+            <h2>Your cart is currently empty.</h2>
+            <span>
+                Continue browsing <a href="/collections/all">here</a>.
+            </span>
+        </span>
+        <span ng-if="cart.Items.length">
+            <h1 class="h2">Shopping Cart</h1>
+            <div class="cart-row" ng-repeat="lineItem in cart.Items">
+                <div class="grid">
+                    <div class="grid-item large--seven-twelfths">
+                        <div class="grid">
+                            <div class="grid-item one-third large--one-quarter">
+                                <a class="cart-image" href="">
+                                    <img alt="{( lineItem.Name )}" src="{( lineItem.ImageUrl )}" />
+                                </a>
+                            </div>
+                            <div class="grid-item two-thirds large--three-quarters">
+                                <a href="">{( lineItem.Name )}</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid-item large--five-twelfths medium--two-thirds push--medium--one-third">
+                        <div class="grid">
+                            <div class="grid-item one-half medium-down--one-third text-right">
+                                <div class="ajaxifyCart--qty">
+                                    <input class="ajaxifyCart--num" type="text" ng-model="lineItem.Quantity" />
+                                    <span class="ajaxifyCart--qty-adjuster ajaxifyCart--add" ng-click="changeLineItem(lineItem.Id, lineItem.Quantity + 1)">+</span>
+                                    <span class="ajaxifyCart--qty-adjuster ajaxifyCart--minus" ng-click="changeLineItem(lineItem.Id, lineItem.Quantity - 1)">-</span>
+                                </div>
+                            </div>
+                            <div class="grid-item one-third medium-down--one-third medium-down--text-left text-right">
+                                <span class="h2">{( lineItem.PlacedPrice.Amount | currency: lineItem.PlacedPrice.CurrencySymbol )}</span>
+                            </div>
+                            <div class="grid-item one-sixth medium-down--one-third text-right">
+                                <a class="icon-fallback-text btn-secondary remove ajaxifyCart--remove" href="" ng-click="removeLineItem(lineItem.Id)">
+                                    <span class="icon icon-x" aria-hidden="true"></span>
+                                    <span class="fallback-text">Remove</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cart-row">
+                <div class="grid">
+                    <div class="grid-item text-right ">
+                        <div class="cart-subtotal">
+                            Subtotal
+                            <span class="h1 cart-subtotal--price">
+                                <small>{( cart.SubTotal.Amount | currency: cart.SubTotal.CurrencySymbol )}</small>
+                            </span>
+                        </div>
+                        <input class="btn-secondary update-cart" type="button" value="Update cart" />
+                        <button name="checkout" class="btn" type="button" ng-click="checkout()">
+                            <span class="icon icon-cart"></span>
+                            Checkout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </span>
+    </div>
+</div>
+<div id="ajaxifyCart-overlay" ng-controller="cartModalController" ng-if="cartModalToggled"></div>

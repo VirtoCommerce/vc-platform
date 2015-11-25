@@ -202,6 +202,7 @@
     <Content Include="App_Data\Themes\default\assets\remove.svg" />
     <Content Include="App_Data\Themes\default\assets\respond-proxy.html" />
     <Content Include="App_Data\Themes\default\assets\respond.min.js" />
+    <Content Include="App_Data\Themes\default\assets\storefront.js" />
     <Content Include="App_Data\Themes\default\assets\shopify_common.js" />
     <Content Include="App_Data\Themes\default\assets\slide_1.jpg" />
     <Content Include="App_Data\Themes\default\assets\slide_2.jpg" />
@@ -289,7 +290,7 @@
     <Content Include="App_Data\Themes\default\locales\fr.json" />
     <Content Include="App_Data\Themes\default\locales\pt-BR.json" />
     <Content Include="App_Data\Themes\default\locales\pt-PT.json" />
-    <Content Include="App_Data\Themes\default\snippets\ajax-cart-template.liquid" />
+    <Content Include="App_Data\Themes\default\snippets\cart-modal.liquid" />
     <Content Include="App_Data\Themes\default\snippets\blog-sidebar.liquid" />
     <Content Include="App_Data\Themes\default\snippets\breadcrumb.liquid" />
     <Content Include="App_Data\Themes\default\snippets\checkout_totals.liquid" />
@@ -347,7 +348,6 @@
     <Content Include="App_Data\Themes\default\templates\banners\ProductsWithinCategory.liquid" />
     <Content Include="App_Data\Themes\default\templates\banners\Slider.liquid" />
     <Content Include="App_Data\Themes\default\templates\blog.liquid" />
-    <Content Include="App_Data\Themes\default\templates\cart.liquid" />
     <Content Include="App_Data\Themes\default\templates\collection.liquid" />
     <Content Include="App_Data\Themes\default\templates\collection.list.liquid" />
     <Content Include="App_Data\Themes\default\templates\confirmation-done.liquid" />
@@ -384,6 +384,7 @@
     <Content Include="App_Data\Themes\default\snippets\checkout-sidebar.liquid" />
     <Content Include="App_Data\Themes\default\snippets\checkout-breadcrumbs.liquid" />
     <Content Include="App_Data\Themes\default\templates\checkout.liquid" />
+    <Content Include="App_Data\Themes\default\templates\cart.liquid" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

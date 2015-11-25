@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Model.Cart
@@ -11,6 +12,11 @@ namespace VirtoCommerce.Storefront.Model.Cart
             Discounts = new List<Discount>();
             TaxDetails = new List<TaxDetail>();
         }
+
+        /// <summary>
+        /// Gets or sets the product corresponding to line item
+        /// </summary>
+        public Product Product { get; set; }
 
         /// <summary>
         /// Gets or sets the value of product id

@@ -15,7 +15,7 @@ namespace VirtoCommerce.Storefront.Converters
             var currency = new Currency(EnumUtility.SafeParse(cart.Currency, CurrencyCodes.USD));
 
             cartWebModel.InjectFrom(cart);
-            cartWebModel.Currency = currency;
+            //cartWebModel.Currency = currency;
             cartWebModel.HandlingTotal = new Money(cart.HandlingTotal ?? 0, currency.Code);
 
             if (cart.Addresses != null)

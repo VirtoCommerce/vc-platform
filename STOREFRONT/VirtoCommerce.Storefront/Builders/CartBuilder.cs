@@ -62,9 +62,9 @@ namespace VirtoCommerce.Storefront.Builders
             return this;
         }
 
-        public CartBuilder UpdateItem(int index, int quantity)
+        public CartBuilder UpdateItem(string id, int quantity)
         {
-            var lineItem = _cart.Items.ElementAt(index);
+            var lineItem = _cart.Items.FirstOrDefault(i => i.Id == id);
             if (lineItem != null)
             {
                 if (quantity > 0)
@@ -75,6 +75,17 @@ namespace VirtoCommerce.Storefront.Builders
                 {
                     _cart.Items.Remove(lineItem);
                 }
+            }
+
+            return this;
+        }
+
+        public CartBuilder RemoveItem(string id)
+        {
+            var lineItem = _cart.Items.FirstOrDefault(i => i.Id == id);
+            if (lineItem != null)
+            {
+                _cart.Items.Remove(lineItem);
             }
 
             return this;
