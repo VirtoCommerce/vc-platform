@@ -47,7 +47,7 @@
             var dialog = {
                 id: "confirmItemChange",
                 title: "catalog.dialogs.category-save.title",
-                message: "catalog.dialogs.category-save.subtitle",
+                message: "catalog.dialogs.category-save.message",
                 callback: function (needSave) {
                     if (needSave) {
                         saveChanges();

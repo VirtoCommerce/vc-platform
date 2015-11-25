@@ -170,7 +170,15 @@
         "title": "Delete confirmation",
         "message": "Are you sure want to delete blog?"
       },
-      "theme-delete": {
+       "page-delete": {
+        "title": "Delete confirmation",
+        "message": "Are you sure you want to delete this page?"
+      },
+      "page-save": {
+        "title": "Save changes",
+        "message": "The page has been modified. Do you want to save changes?"
+      },
+     "theme-delete": {
         "title": "Delete confirmation",
         "message": "Are you sure you want to delete '{{name}}'?",
         "message-last-one": "This theme is the last one. If you delete it, you could break your storefront. Are you sure you want to delete '{{name}}'?"

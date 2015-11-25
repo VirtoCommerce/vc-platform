@@ -59,24 +59,21 @@
 </script>
 
 <script type="text/ng-template" id="member-list.row.html">
-    <div ng-click='(col.isRowHeader || col.name === "actions") || grid.appscope.selectnode(row.entity)' ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'" class="ui-grid-cell" ng-class="{'ui-grid-row-header-cell': col.isRowHeader, '__selected': row.entity.id===grid.appScope.selectedNodeId }" role="{{col.isRowHeader ? 'rowheader' : 'gridcell' }}" ui-grid-cell style='cursor:pointer'>{{col.name}}</div>
+    <div ng-click="col.isRowHeader || col.name=='actions' || grid.appScope.selectNode(row.entity)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'" class="ui-grid-cell" ng-class="{'ui-grid-row-header-cell': col.isRowHeader, '__selected': row.entity.id===grid.appScope.selectedNodeId }" role="{{col.isRowHeader ? 'rowheader' : 'gridcell' }}" ui-grid-cell style='cursor:pointer'></div>
 </script>
 <script type="text/ng-template" id="member-list-actions.cell.html">
-    <!--<div class="ui-grid-cell-contents">
-        <i class="fa fa-angle-double-right"></i>
-    </div>-->
     <div ng-init="menuVisible=false" ng-click="menuVisible=!menuVisible">
         <i class="fa fa-angle-double-right"></i>
     </div>
-    <ul class="menu __actions" ng-if="menuVisible">
+    <ul class="menu" ng-if="menuVisible">
         <li class="menu-item">
-            <a class="menu-link" title="{{'platform.commands.manage' | translate}}" ng-click="showDetailBlade(row.entity, row.entity.displayName)">
+            <a class="menu-link" title="{{'platform.commands.manage' | translate}}" ng-click="grid.appScope.blade.showDetailBlade(row.entity, row.entity.displayName)">
                 <i class="menu-ico fa fa-edit"></i>
                 {{'platform.commands.manage' | translate}}
             </a>
         </li>
         <li class="menu-item">
-            <a class="menu-link" title="{{'platform.commands.delete' | translate}}">
+            <a class="menu-link" title="{{'platform.commands.delete' | translate}}" ng-click="grid.appScope.delete(row.entity)">
                 <i class="menu-ico fa fa-trash-o"></i>
                 {{'platform.commands.delete' | translate}}
             </a>
