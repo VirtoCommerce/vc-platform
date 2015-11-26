@@ -6,7 +6,7 @@
 
   {% capture collection_title %}{{ collection.title | escape }}{% endcapture %}
 
-  <a href="{{ collection.url }}" title="{{ 'collections.general.link_title' | t: title: collection_title }}">
+  <a href="{{ collection.url | absolute_url }}" title="{{ 'collections.general.link_title' | t: title: collection_title }}">
     {% if collection.image %}
       {{ collection.image.src | img_url: 'large' | img_tag: collection_title }}
     {% else %}

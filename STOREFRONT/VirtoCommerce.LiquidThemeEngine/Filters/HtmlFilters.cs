@@ -42,42 +42,12 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
         /// <param name="alt"></param>
         /// <param name="css"></param>
         /// <returns></returns>
-        public static string ImgTag(object input, string alt = "", string css = "")
+        public static string ImgTag(string input, string alt = "", string css = "")
         {
-            return input == null ? null : GetImageTag(GetImageUrl(input), alt, css);
+            return input == null ? null : GetImageTag(input, alt, css);
         }
 
-        public static string ImgUrl(object input, string type)
-        {
-            return input == null ? null : GetImageUrl(input);
-        }
-
-        private static string GetImageUrl(object input)
-        {
-            if (input is Product)
-            {
-                return (input as Product).FeaturedImage.Src;
-            }
-            if (input is Image)
-            {
-                return (input as Image).Src;
-            }
-            if (input is Variant)
-            {
-                return (input as Variant).Image.Src;
-            }
-            //if (input is Collection)
-            //{
-            //    return (input as Collection).Image.Src;
-            //}
-            //if (input is LineItem)
-            //{
-            //    var lineItem = input as LineItem;
-            //    return lineItem.Image;
-            //}
-            return input.ToString();
-        }
-
+             
         private static string GetImageTag(string src, string alt, string css)
         {
             return String.Format("<img src=\"{0}\" alt=\"{1}\" class=\"{2}\" />", src, alt, css);

@@ -322,7 +322,6 @@
     <Content Include="App_Data\Themes\default\snippets\pagination-custom.liquid" />
     <Content Include="App_Data\Themes\default\snippets\price-sale.liquid" />
     <Content Include="App_Data\Themes\default\snippets\price.liquid" />
-    <Content Include="App_Data\Themes\default\snippets\price_custom.liquid" />
     <Content Include="App_Data\Themes\default\snippets\product-grid-item.liquid" />
     <Content Include="App_Data\Themes\default\snippets\product-list-item.liquid" />
     <Content Include="App_Data\Themes\default\snippets\quote-informer.liquid" />

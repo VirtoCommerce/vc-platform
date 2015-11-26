@@ -181,7 +181,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                                    .Select(x => x.Id)
                                    .ToArray();
 
-				var productResponseGroup = coreModel.ItemResponseGroup.ItemInfo | coreModel.ItemResponseGroup.ItemAssets | ItemResponseGroup.Links;
+				var productResponseGroup = coreModel.ItemResponseGroup.ItemInfo | coreModel.ItemResponseGroup.ItemAssets | ItemResponseGroup.Links | ItemResponseGroup.Seo;
 				if ((criteria.ResponseGroup & coreModel.ResponseGroup.WithProperties) ==coreModel.ResponseGroup.WithProperties)
 				{
 					productResponseGroup |= coreModel.ItemResponseGroup.ItemProperties;

@@ -23,7 +23,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         {
             get
             {
-                return _image.AlternateText;
+                return _image.Alt;
             }
         }
 

@@ -1,19 +1,30 @@
 {% include 'breadcrumb' %}
 {% include 'quote-informer' %}
-<div class="grid" itemscope itemtype="http://schema.org/Product" ng-app="productApp" ng-controller="productController">
-  <meta itemprop="url" content="{{ current_product.main_seo.slug | absolute_url : '', store_language.culture_name}}">
-  <meta itemprop="image" content="{{ current_product.img_src }}">
+<div class="grid" itemscope itemtype="http://schema.org/Product">
+  <meta itemprop="url" content="{{ product.url | absolute_url}}">
+  <meta itemprop="image" content="{{ product.featured_image.src | img_url: 'grande' }}">
+
   <div class="grid-item large--two-fifths">
     <div class="grid">
       <div class="grid-item large--eleven-twelfths text-center">
         <div class="product-photo-container" id="productPhoto">
-          <img id="productPhotoImg" ng-src="{( selectedImage.Url )}" src="{{ current_product.images[0].url }}" alt="{{ current_product.name }}">
+          {% assign featured_image = product.selected_or_first_available_variant.featured_image | default: product.featured_image %}
+          <img id="productPhotoImg" src="{{ featured_image | img_url: 'large' }}" alt="{{ featured_image.alt | escape }}" {% if settings.product_image_zoom_enable %} data-zoom="{{ featured_image | img_url: '1024x1024' }}"{% endif %}>
         </div>
-        <ul class="product-photo-thumbs grid-uniform" id="productThumbs">
-            <li ng-repeat="image in product.Images" class="grid-item medium--down-one-quarter large--one-quarter" ng-click="selectImage(image)">
-                <img ng-src="{( image.Url )}" alt="{( product.Name )}">
-            </li>
-        </ul>
+        {% if product.images.size > 1 %}
+          <ul class="product-photo-thumbs grid-uniform" id="productThumbs">
+
+            {% for image in product.images %}
+              <li class="grid-item medium--down-one-quarter large--one-quarter">
+                <a href="{{ image.src | img_url: 'large' }}" class="product-photo-thumb">
+                  <img src="{{ image.src | img_url: 'compact' }}" alt="{{ image.alt | escape }}">
+                </a>
+              </li>
+            {% endfor %}
+
+          </ul>
+        {% endif %}
+
       </div>
     </div>
 
@@ -21,42 +32,34 @@
 
   <div class="grid-item large--three-fifths">
 
-    <h2 itemprop="name">{{ current_product.name }}</h2>
+    <h2 itemprop="name">{{ product.title }}</h2>
 
     <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
 
-      <meta itemprop="priceCurrency" content="{{ current_product.price.list_price.currency_code }}">
-      <meta itemprop="price" content="{% if current_product.price.sale_price.internal_amount > 0 %} {{ current_product.price.list_price.internal_amount | money }} {% else %} {{ current_product.price.list_price.internal_amount | money }} {% endif %}">
+      {% assign variant = product.selected_or_first_available_variant %}
+
+      <meta itemprop="priceCurrency" content="{{ shop.currency }}">
+      <meta itemprop="price" content="{{ variant.price | money }}">
 
       {% if settings.product_vendor_enable %}
-        <p class="product-meta" itemprop="brand">{{ current_product.vendor }}</p>
+        <p class="product-meta" itemprop="brand">{{ product.vendor }}</p>
       {% endif %}
 
       <ul class="inline-list product-meta">
         <li>
-            <span id="productPrice" class="h1 line-through" ng-if="selectedProduct.Price.SalePrice.InternalAmount > 0 || selectedProduct.Price.ActiveDiscount.DiscountAmount.InternalAmount > 0">
-                {( selectedProduct.Price.ListPrice.InternalAmount | currency: selectedProduct.Price.ListPrice.CurrencySymbol )}
-            </span>
-            <span id="productPrice" class="h1" ng-if="selectedProduct.Price.SalePrice.InternalAmount == 0 && selectedProduct.Price.ActiveDiscount.DiscountAmount.InternalAmount == 0">
-                {( selectedProduct.Price.ListPrice.InternalAmount | currency: selectedProduct.Price.ListPrice.CurrencySymbol )}
-            </span>
+          <span id="productPrice" class="h1">
+            {% include 'price' with variant.price %}
+          </span>
         </li>
-        <li ng-if="selectedProduct.Price.SalePrice.InternalAmount > 0 || selectedProduct.Price.ActiveDiscount.DiscountAmount > 0">
-            <span id="productPrice" class="h1" ng-if="selectedProduct.Price.SalePrice.InternalAmount > 0 && selectedProduct.Price.ActiveDiscount.DiscountAmount.InternalAmount > 0">
-                {( selectedProduct.Price.SalePrice.InternalAmount - selectedProduct.Price.ActiveDiscount.DiscountAmount.InternalAmount | currency: selectedProduct.Price.ListPrice.CurrencySymbol )}
-            </span>
-            <span id="productPrice" class="h1" ng-if="selectedProduct.Price.SalePrice.InternalAmount > 0 && selectedProduct.Price.ActiveDiscount.DiscountAmount.InternalAmount == 0">
-                {( selectedProduct.Price.SalePrice.InternalAmount | currency: selectedProduct.Price.ListPrice.CurrencySymbol )}
-            </span>
-            <span id="productPrice" class="h1" ng-if="selectedProduct.Price.ActiveDiscount.DiscountAmount.InternalAmount > 0 && selectedProduct.Price.SalePrice.InternalAmount == 0">
-                {( selectedProduct.Price.ListPrice.InternalAmount - selectedProduct.Price.ActiveDiscount.DiscountAmount.InternalAmount | currency: selectedProduct.Price.ListPrice.CurrencySymbol )}
-            </span>
+        {% if product.compare_at_price_max > product.price %}
+        <li>
+          <span id="comparePrice" class="sale-tag large">
+            {% assign compare_price = variant.compare_at_price %}
+            {% assign product_price = variant.price %}
+            {% include 'price-sale' %}
+          </span>
         </li>
-        <li ng-if="selectedProduct.Price.SalePrice.InternalAmount > 0 || selectedProduct.Price.ActiveDiscount.DiscountAmount > 0">
-                <span id="comparePrice" class="sale-tag large">
-                {( product.Price.ListPrice.InternalAmount - product.Price.SalePrice.InternalAmount - selectedProduct.Price.ActiveDiscount.DiscountAmount.InternalAmount | currency: product.Price.SalePrice.CurrencySymbol )}
-                </span>
-            </li>
+        {% endif %}
         {% if settings.product_reviews_enable %}
           <li class="product-meta--review">
             <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
@@ -64,17 +67,24 @@
         {% endif %}
       </ul>
 
-      <hr id="variantBreak" class="hr--clear hr--small" ng-if="isSkuSelectorAvailable">
+      <hr id="variantBreak" class="hr--clear hr--small">
 
-      <link itemprop="availability" href="http://schema.org/{% if current_product.available %}InStock{% else %}OutOfStock{% endif %}">
+      <link itemprop="availability" href="http://schema.org/{% if product.available %}InStock{% else %}OutOfStock{% endif %}">
 
-      <form action="{{ 'cart/add' | absolute_url }}" method="post" enctype="multipart/form-data" id="addToCartForm" ng-if="product.Variations">
-        <div class="selector-wrapper" ng-repeat="(propertyName, propertyValues) in properties">
-            <label>{( propertyName )}</label>
-            <select class="single-option-selector" ng-model="propertyValues.selectedValue" ng-change="setSelectedProduct()" required="">
-                <option ng-repeat="value in propertyValues.values" value="{( value.value )}">{( value.value )}</option>
-            </select>
-        </div>
+      <form action={{ 'cart/add' | absolute_url }}" method="post" enctype="multipart/form-data" id="addToCartForm">
+        <select name="id" id="productSelect" class="product-variants">
+          {% for variant in product.variants %}
+            {% if variant.available %}
+
+              <option {% if variant == product.selected_or_first_available_variant %} selected="selected" {% endif %} value="{{ variant.id }}">{{ variant.title }} - {{ variant.price | money_with_currency }}</option>
+
+            {% else %}
+              <option disabled="disabled">
+                {{ variant.title }} - {{ 'products.product.sold_out' | t }}
+              </option>
+            {% endif %}
+          {% endfor %}
+        </select>
 
         {% if settings.product_quantity_enable %}
           <label for="quantity" class="quantity-selector">{{ 'products.product.quantity' | t }}</label>
@@ -100,8 +110,8 @@
 
     </div>
 
-    <div class="product-description rte" itemprop="description" ng-bind-html="trustedDescription">
-      {{ current_product.description | strip_html }}
+    <div class="product-description rte" itemprop="description">
+      {{ product.description | strip_html }}
     </div>
 
     {% if settings.social_sharing_products %}
@@ -124,12 +134,3 @@
 {% if settings.product_image_zoom_enable %}
   {{ 'jquery.zoom.min.js' | asset_url | script_tag }}
 {% endif %}
-
-<script>
-    window.productId = '{{ current_product.id }}';
-</script>
-
-{{ '//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js' | script_tag }}
-{{ '//ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.min.js' | script_tag }}
-{{ '//ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular-resource.js' | script_tag }}
-{{ 'productDetails.js' | asset_url | script_tag }}
