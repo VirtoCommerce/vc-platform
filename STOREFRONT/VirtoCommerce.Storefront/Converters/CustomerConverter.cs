@@ -20,8 +20,8 @@ namespace VirtoCommerce.Storefront.Converters
                 customer.Addresses = contact.Addresses.Select(a => a.ToWebModel()).ToList();
             }
 
-            customer.DefaultBillingAddress = customer.Addresses.FirstOrDefault(a => (a.AddressType & AddressType.Billing) == AddressType.Billing);
-            customer.DefaultShippingAddress = customer.Addresses.FirstOrDefault(a => (a.AddressType & AddressType.Shipping) == AddressType.Shipping);
+            customer.DefaultBillingAddress = customer.Addresses.FirstOrDefault(a => (a.Type & AddressType.Billing) == AddressType.Billing);
+            customer.DefaultShippingAddress = customer.Addresses.FirstOrDefault(a => (a.Type & AddressType.Shipping) == AddressType.Shipping);
 
             // TODO: Need separate properties for first, middle and last name
             if (!string.IsNullOrEmpty(contact.FullName))

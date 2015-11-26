@@ -224,6 +224,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\AuthConfig.cs" />
     <Compile Include="App_Start\UnityConfig.cs" />
@@ -388,7 +389,9 @@
     <Content Include="App_Data\Themes\default\layout\checkout_layout.liquid" />
     <Content Include="App_Data\Themes\default\snippets\checkout-sidebar.liquid" />
     <Content Include="App_Data\Themes\default\snippets\checkout-breadcrumbs.liquid" />
-    <Content Include="App_Data\Themes\default\templates\checkout.liquid" />
+    <Content Include="App_Data\Themes\default\templates\checkout.liquid">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="App_Data\Themes\default\templates\cart.liquid" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

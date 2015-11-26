@@ -1,7 +1,7 @@
 ﻿using Omu.ValueInjecter;
+using System;
 using VirtoCommerce.Client.Model;
 using VirtoCommerce.Storefront.Model;
-using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Converters
 {
@@ -10,7 +10,9 @@ namespace VirtoCommerce.Storefront.Converters
         public static Address ToWebModel(this VirtoCommerceCustomerModuleWebModelAddress address)
         {
             var customerAddress = new Address();
+
             customerAddress.InjectFrom(address);
+
             return customerAddress;
         }
 
@@ -19,6 +21,7 @@ namespace VirtoCommerce.Storefront.Converters
             var addressWebModel = new Address();
 
             addressWebModel.InjectFrom(address);
+            addressWebModel.Type = (AddressType)Enum.Parse(typeof(AddressType), address.Type, true);
 
             return addressWebModel;
         }
@@ -28,6 +31,7 @@ namespace VirtoCommerce.Storefront.Converters
             var addressServiceModel = new VirtoCommerceCartModuleWebModelAddress();
 
             addressServiceModel.InjectFrom(address);
+            addressServiceModel.Type = address.Type.ToString();
 
             return addressServiceModel;
         }

@@ -97,7 +97,7 @@ namespace VirtoCommerce.Storefront
             // Shopify model binders convert Shopify form fields with bad names to VirtoCommerce model properties.
             container.RegisterType<IModelBinderProvider, ShopifyModelBinderProvider>("shopify");
 
-            //FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
+            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes, () => container.Resolve<WorkContext>(), container.Resolve<ICommerceCoreModuleApi>());
             AuthConfig.ConfigureAuth(app);
 
