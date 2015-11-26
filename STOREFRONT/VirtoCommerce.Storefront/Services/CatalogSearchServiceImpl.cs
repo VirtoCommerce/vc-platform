@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using VirtoCommerce.Client.Api;
-using VirtoCommerce.Storefront.Model.Catalog;
-using VirtoCommerce.Storefront.Model.Services;
+using VirtoCommerce.LiquidThemeEngine.Extensions;
 using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
+using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
-using VirtoCommerce.Storefront.Common;
+using VirtoCommerce.Storefront.Model.Services;
 
 namespace VirtoCommerce.Storefront.Services
 {
@@ -59,16 +57,12 @@ namespace VirtoCommerce.Storefront.Services
             var result = await _catalogModuleApi.CatalogModuleSearchSearchAsync(criteria.ResponseGroup.ToString(), null, true, criteria.CategoryId, null, criteria.CatalogId, null, null,
                                                                                  _workContext.CurrentCurrency.Code,
                                                                                  null, null, null, true, null, criteria.PageSize * (criteria.PageNumber - 1), criteria.PageSize, null);
-            if(result != null)
+            if (result != null)
             {
                 if (result.Products != null && result.Products.Any())
                 {
                     var products = result.Products.Select(x => x.ToWebModel()).ToArray();
-                    retVal.Products = new StorefrontPagedList<Product>(products, criteria.PageNumber, criteria.PageSize, result.TotalCount.Value, (x) =>
-                    {
-                        //Generate links to next pages
-                        return _workContext.RequestUrl.AddParameter("page", x.ToString()).ToString();
-                    });
+                    retVal.Products = new StorefrontPagedList<Product>(products, criteria.PageNumber, criteria.PageSize, result.TotalCount.Value, (page, workContext) => workContext.RequestUrl.AddParameter("page", page.ToString()).ToString());
 
                     LoadProductsPrices(retVal.Products.ToArray());
                     LoadProductsInventories(retVal.Products.ToArray());
@@ -77,7 +71,7 @@ namespace VirtoCommerce.Storefront.Services
                 if (result.Categories != null && result.Categories.Any())
                 {
                     retVal.Categories = result.Categories.Select(x => x.ToWebModel());
-                   
+
                 }
 
             }
@@ -87,7 +81,7 @@ namespace VirtoCommerce.Storefront.Services
 
         private void LoadProductsPrices(Product[] products)
         {
-            var result =  _pricingModuleApi.PricingModuleEvaluatePrices(_workContext.CurrentStore.Id, _workContext.CurrentStore.Catalog, products.Select(x=> x.Id).ToList(), null, null, _workContext.CurrentCustomer.Id, null, _workContext.StorefrontUtcNow, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+            var result = _pricingModuleApi.PricingModuleEvaluatePrices(_workContext.CurrentStore.Id, _workContext.CurrentStore.Catalog, products.Select(x => x.Id).ToList(), null, null, _workContext.CurrentCustomer.Id, null, _workContext.StorefrontUtcNow, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
             foreach (var item in products)
             {
                 item.Prices = result.Where(x => x.ProductId == item.Id).Select(x => x.ToWebModel()).ToList();
@@ -100,7 +94,7 @@ namespace VirtoCommerce.Storefront.Services
             var inventories = _inventoryModuleApi.InventoryModuleGetProductsInventories(products.Select(x => x.Id).ToList());
             foreach (var item in products)
             {
-                item.Inventory = inventories.Where(x=>x.ProductId == item.Id).Select(x=>x.ToWebModel()).FirstOrDefault();
+                item.Inventory = inventories.Where(x => x.ProductId == item.Id).Select(x => x.ToWebModel()).FirstOrDefault();
             }
         }
     }

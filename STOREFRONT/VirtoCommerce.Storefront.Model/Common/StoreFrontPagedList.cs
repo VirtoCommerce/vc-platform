@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using PagedList;
 
 namespace VirtoCommerce.Storefront.Model.Common
@@ -13,21 +10,22 @@ namespace VirtoCommerce.Storefront.Model.Common
     /// <typeparam name="T"></typeparam>
     public class StorefrontPagedList<T> : StaticPagedList<T>, IStorefrontPagedList<T>
     {
-        private readonly Func<int, string> _pageUrlGetter;
-        public StorefrontPagedList(IEnumerable<T> subset, IPagedList metaData, Func<int, string> pageUrlGetter)
-			: this(subset, metaData.PageNumber, metaData.PageSize, metaData.TotalItemCount, pageUrlGetter)
-		{
+        private readonly Func<int, WorkContext, string> _pageUrlGetter;
+
+        public StorefrontPagedList(IEnumerable<T> subset, IPagedList metaData, Func<int, WorkContext, string> pageUrlGetter)
+            : this(subset, metaData.PageNumber, metaData.PageSize, metaData.TotalItemCount, pageUrlGetter)
+        {
         }
-   
-        public StorefrontPagedList(IEnumerable<T> subset, int pageNumber, int pageSize, int totalItemCount, Func<int, string> pageUrlGetter)
-			: base(subset, pageNumber, pageSize, totalItemCount)
-		{
+
+        public StorefrontPagedList(IEnumerable<T> subset, int pageNumber, int pageSize, int totalItemCount, Func<int, WorkContext, string> pageUrlGetter)
+            : base(subset, pageNumber, pageSize, totalItemCount)
+        {
             _pageUrlGetter = pageUrlGetter;
         }
 
-        public string GetPageUrl(int pageIndex)
+        public string GetPageUrl(int pageIndex, WorkContext workContext)
         {
-            return _pageUrlGetter(pageIndex);
+            return _pageUrlGetter(pageIndex, workContext);
         }
     }
 }

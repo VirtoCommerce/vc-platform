@@ -117,8 +117,8 @@
       <HintPath>..\packages\NLog.4.2.0\lib\net45\NLog.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Omu.ValueInjecter, Version=3.1.0.0, Culture=neutral, PublicKeyToken=c7694541b0ac80e4, processorArchitecture=MSIL">
-      <HintPath>..\packages\valueinjecter.3.1\lib\net45\Omu.ValueInjecter.dll</HintPath>
+    <Reference Include="Omu.ValueInjecter, Version=3.1.1.0, Culture=neutral, PublicKeyToken=c7694541b0ac80e4, processorArchitecture=MSIL">
+      <HintPath>..\packages\valueinjecter.3.1.1\lib\net40\Omu.ValueInjecter.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
@@ -231,12 +231,10 @@
     <Compile Include="App_Start\UnityMvcActivator.cs" />
     <Compile Include="Builders\CartBuilder.cs" />
     <Compile Include="Builders\ICartBuilder.cs" />
-    <Compile Include="Common\Injections\NullableAndEnumInjection.cs" />
     <Compile Include="Common\StorefrontConstants.cs" />
     <Compile Include="Common\DownloadResult.cs" />
     <Compile Include="Common\FileExtensionMapper.cs" />
     <Compile Include="Common\StorefrontUrlBuilder.cs" />
-    <Compile Include="Common\UriExtensions.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AssetsController.cs" />
     <Compile Include="Controllers\CartController.cs" />
