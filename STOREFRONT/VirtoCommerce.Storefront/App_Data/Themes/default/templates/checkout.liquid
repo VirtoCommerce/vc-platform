@@ -11,12 +11,12 @@
                     </div>
                     <div class="section__content">
                         <div class="fieldset">
-                            <div class="field field--required" ng-class="{ 'field--error': formShippingAddress.Email.$dirty && formShippingAddress.Email.$error.required && shippingAddress.submitted }">
+                            <div class="field field--required" ng-class="{ 'field--error': formShippingAddress.Email.$dirty && formShippingAddress.Email.$error.required }">
                                 <div class="field__input-wrapper">
                                     <label class="field__label" for="Email">{{ 'checkout.customer_information.email' | t }}</label>
                                     <input class="field__input" id="Email" name="Email" size="30" placeholder="{{ 'checkout.customer_information.email' | t }}" required="required" type="text" ng-model="shippingAddress.Email" floating-label="" />
                                 </div>
-                                <p class="field__message field__message--error" ng-show="formShippingAddress.Email.$dirty && formShippingAddress.Email.$error.required && shippingAddress.submitted">
+                                <p class="field__message field__message--error" ng-show="formShippingAddress.Email.$dirty && formShippingAddress.Email.$error.required">
                                     Please enter a valid email address
                                 </p>
                             </div>
