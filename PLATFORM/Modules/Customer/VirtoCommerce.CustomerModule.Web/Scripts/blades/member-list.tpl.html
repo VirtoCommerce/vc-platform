@@ -15,10 +15,8 @@
                     data: 'listEntries',
                     rowTemplate: 'member-list.row.html',
                     rowHeight: 61,
-                    expandableRowTemplate: 'expandableRowTemplate.html',
-                    expandableRowHeight: 25,
                     columnDefs: [
-                                { name: 'actions', displayName: 'platform.blades.asset-list.labels.actions', enableColumnResizing: false, enableSorting: false, width: 80, cellTemplate: 'member-list-actions.cell.html' },
+                                { name: 'actions', displayName: '...', enableColumnResizing: false, enableSorting: false, width: 30, cellTemplate: 'member-list-actions.cell.html' },
                                 {
                                     name: 'memberType', displayName: 'customer.blades.member-list.labels.type', headerTooltip: 'Organization or individual Customer',
                                     sort: { direction: uiGridConstants.DESC, priority: 1 },
@@ -34,54 +32,23 @@
     </div>
 </div>
 
-<script type="text/ng-template" id="ui-grid/expandableTopRowHeader">
-    <div class="ui-grid-row-header-cell ui-grid-expandable-buttons-cell"><div class="ui-grid-cell-contents"><i ng-class="{ 'ui-grid-icon-plus-squared' : !grid.expandable.expandedAll, 'fa fa-edit' : grid.expandable.expandedAll }" ng-click="grid.api.expandable.toggleAllRows()"></i></div></div>
-</script>
-<script type="text/ng-template" id="ui-grid/expandableRowHeader">
-    <div class="ui-grid-row-header-cell ui-grid-expandable-buttons-cell" ng-click="grid.api.expandable.toggleRowExpansion(row.entity)">
-        <div class="ui-grid-cell-contents">
-            <i class="fa fa-edit"></i>
-        </div>
-    </div>
-</script>
-<script type="text/ng-template" id="ui-grid/expandableRow">
-    <div ui-grid-expandable-row ng-if="expandableRow.shouldRenderExpand()" class="expandableRow"></div>
-</script>
-<script type="text/ng-template" id="expandableRowTemplate.html">
-    <ul class="menu">
-        <li class="menu-item">
-            <a class="menu-link" title="{{'platform.commands.manage' | translate}}" ng-click="showDetailBlade(row.entity, row.entity.displayName)">
-                <i class="menu-ico fa fa-edit"></i>
-                Manage
-            </a>
+<script type="text/ng-template" id="member-list.row.html">
+    <div ng-click="col.isRowHeader || col.name=='actions' || grid.appScope.selectNode(row.entity)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'" class="ui-grid-cell" ng-class="{'ui-grid-row-header-cell': col.isRowHeader, '__selected': row.entity.id===grid.appScope.selectedNodeId }" role="{{col.isRowHeader ? 'rowheader' : 'gridcell' }}" ui-grid-cell style='cursor:pointer' context-menu data-target="cml_menu_{{row.entity.id}}"></div>
+    <ul class="menu __context" role="menu" id="cml_menu_{{row.entity.id}}">
+        <li class="menu-item" ng-click='grid.appScope.blade.showDetailBlade(row.entity, row.entity.displayName)'>
+            <i class="menu-ico fa fa-edit"></i> {{'platform.commands.manage' | translate}}
+        </li>
+        <li class="menu-item" ng-click='grid.appScope.delete(row.entity)'>
+            <i class="menu-ico fa fa-trash-o"></i> {{'platform.commands.delete' | translate}}
         </li>
     </ul>
 </script>
 
-<script type="text/ng-template" id="member-list.row.html">
-    <div ng-click="col.isRowHeader || col.name=='actions' || grid.appScope.selectNode(row.entity)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'" class="ui-grid-cell" ng-class="{'ui-grid-row-header-cell': col.isRowHeader, '__selected': row.entity.id===grid.appScope.selectedNodeId }" role="{{col.isRowHeader ? 'rowheader' : 'gridcell' }}" ui-grid-cell style='cursor:pointer'></div>
-</script>
 <script type="text/ng-template" id="member-list-actions.cell.html">
-    <div class="ui-grid-actions" ng-init="menuVisible=false" ng-click="menuVisible=!menuVisible">
+    <!--ng-init="menuVisible=false" ng-click="menuVisible=!menuVisible"-->
+    <div class="ui-grid-actions" left-click-menu data-target="cml_menu_{{row.entity.id}}">
         <i class="fa fa-ellipsis-v"></i>
     </div>
-
-        <!-- <ul class="menu">
-            <li class="menu-item">
-                <a class="menu-link" title="{{'platform.commands.manage' | translate}}" ng-click="grid.appScope.blade.showDetailBlade(row.entity, row.entity.displayName)">
-                    <i class="menu-ico fa fa-edit"></i>
-                    {{'platform.commands.manage' | translate}}
-                </a>
-            </li>
-            <li class="menu-item">
-                <a class="menu-link" title="{{'platform.commands.delete' | translate}}" ng-click="grid.appScope.delete(row.entity)">
-                    <i class="menu-ico fa fa-trash-o"></i>
-                    {{'platform.commands.delete' | translate}}
-                </a>
-            </li>
-        </ul> -->
-
-
 </script>
 <script type="text/ng-template" id="member-list-icon.cell.html">
     <div class="product-img" ng-attr-title="{{COL_FIELD}}">

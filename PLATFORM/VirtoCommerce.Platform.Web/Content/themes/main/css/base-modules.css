@@ -5417,46 +5417,6 @@ input.ui-grid-filter-input[type="text"]
     display: none;
 }
 
-.ui-grid .expandableRow
-{
-    background: #333;
-    height: 100%;
-    position: absolute;
-    top: 0;
-}
-
-.expandableRow .menu,
-.expandableRow .menu-item
-{
-    height: 100%;
-}
-
-.expandableRow .menu-item::after
-{
-    content: ' ';
-    display: inline-block;
-    height: 100%;
-    vertical-align: middle;
-}
-
-.expandableRow .menu-ico
-{
-    margin: 0 5px 0 0;
-}
-
-.expandableRow .menu-link
-{
-    color: #fff;
-    display: inline-block;
-    padding: 0 20px;
-    vertical-align: middle;
-}
-
-.expandableRow .menu-link:hover
-{
-    color: #43b0e6;
-}
-
 .ui-grid-actions
 {
     height: 100%;

@@ -246,7 +246,6 @@
 
         // ui-grid
         $scope.setGridOptions = function (gridOptions) {
-            gridOptions.expandableRowScope = { showDetailBlade: blade.showDetailBlade },
             uiGridHelper.initialize($scope, gridOptions);
         };
 
