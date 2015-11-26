@@ -103,12 +103,12 @@
     	if(!blade.newPage){
     		$scope.blade.toolbarCommands.push(
 				{
-				    name: "Save page", icon: 'fa fa-save',
+				    name: "content.commands.save-page", icon: 'fa fa-save',
 					executeMethod: function () { $scope.saveChanges(); }, canExecuteMethod: function () { return blade.isDirty(); }, permission: 'content:update'
 				});
     		$scope.blade.toolbarCommands.push(
 				{
-				    name: "Reset page", icon: 'fa fa-undo',
+				    name: "content.commands.reset-page", icon: 'fa fa-undo',
 				    executeMethod: function () {
 				        angular.copy(blade.origEntity, blade.currentEntity);
 				        var parts = blade.currentEntity.content.split('---');
@@ -126,12 +126,12 @@
 				});
     		$scope.blade.toolbarCommands.push(
 				{
-				    name: "Delete page", icon: 'fa fa-trash-o',
+				    name: "content.commands.delete-page", icon: 'fa fa-trash-o',
 				    executeMethod: function () { blade.deleteEntry(); }, canExecuteMethod: function () { return true; }, permission: 'content:delete'
 				});
     		$scope.blade.toolbarCommands.push(
                 {
-                    name: "Edit as markdown", icon: 'fa fa-code',
+                    name: "content.commands.edit-as-markdown", icon: 'fa fa-code',
                     executeMethod: function () {
                         blade.editAsMarkdown = true;
                         blade.editAsHtml = false;
@@ -142,7 +142,7 @@
                 });
     		$scope.blade.toolbarCommands.push(
                 {
-                    name: "Edit as html", icon: 'fa fa-code',
+                    name: "content.commands.edit-as-html", icon: 'fa fa-code',
                     executeMethod: function () {
                         blade.editAsHtml = true;
                         blade.editAsMarkdown = false;
@@ -155,7 +155,7 @@
             else {
     		$scope.blade.toolbarCommands.push(
 				{
-				    name: "Create", icon: 'fa fa-save',
+				    name: "platform.commands.create", icon: 'fa fa-save',
 					executeMethod: function () { $scope.saveChanges(); }, canExecuteMethod: function () { return blade.isDirty(); }, permission: 'content:update'
 				});
     	}
@@ -229,8 +229,8 @@
                     blade.isLoading = false;
                     var dialog = {
                         id: "errorInName",
-                        title: "Name not unique",
-                        message: "Name must be unique for this language!",
+                        title: "content.dialogs.name-must-unique.title",
+                        message: "content.dialogs.name-must-unique.message",
                         callback: function (remove) {
 
                         }
@@ -261,8 +261,8 @@
     blade.deleteEntry = function() {
         var dialog = {
             id: "confirmDelete",
-            title: "Delete confirmation",
-            message: "Are you sure you want to delete this page?",
+            title: "content.dialogs.page-delete.title",
+            message: "content.dialogs.page-delete.message",
             callback: function (remove) {
                 if (remove) {
                     blade.isLoading = true;
@@ -295,8 +295,8 @@
         if ((blade.isDirty() && !blade.newPage) || (isCanSave() && blade.newPage)) {
             var dialog = {
                 id: "confirmCurrentBladeClose",
-                title: "Save changes",
-                message: "The page has been modified. Do you want to save changes?"
+                title: "content.dialogs.page-save.title",
+                message: "content.dialogs.page-save.message"
             };
 
             dialog.callback = function (needSave) {

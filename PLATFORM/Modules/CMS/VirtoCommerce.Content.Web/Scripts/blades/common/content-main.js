@@ -154,8 +154,9 @@
 	        var newBlade = {
 	            id: "themesListBlade",
 	            storeId: storeId,
-	            title: storeName + ' themes list',
-	            subtitle: 'Themes List',
+	            title: 'content.blades.themes-list.subtitle',
+	            titleValues: { name: storeName },
+	            subtitle: 'content.blades.themes-list.subtitle',
 	            controller: 'virtoCommerce.contentModule.themesListController',
 	            template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/themes-list.tpl.html',
 	        };
@@ -168,9 +169,10 @@
 	        var newBlade = {
 	            id: "pagesListBlade",
 	            storeId: data.store.id,
-	            title: data.store.name + ' pages list',
+	            title: 'content.blades.pages-list.title-pages',
+	            titleValues: { name: data.store.name },
+	            subtitle: 'content.blades.pages-list.subtitle-pages',
 	            type: 'pages',
-	            subtitle: 'Pages List',
 	            controller: 'virtoCommerce.contentModule.pagesListController',
 	            template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/pages/pages-list.tpl.html',
 	        };
@@ -183,8 +185,9 @@
 	        var newBlade = {
 	            id: "linkListBlade",
 	            storeId: data.store.id,
-	            title: data.store.name + ' link Lists',
-	            subtitle: 'Link Lists',
+	            title: 'content.blades.link-lists.title',
+	            titleValues: { name: data.store.name },
+	            subtitle: 'content.blades.link-lists.subtitle',
 	            controller: 'virtoCommerce.contentModule.linkListsController',
 	            template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/menu/link-lists.tpl.html',
 	        };
@@ -197,9 +200,10 @@
 	        var newBlade = {
 	            id: "blogsListBlade",
 	            storeId: data.store.id,
-	            title: data.store.name + ' link Lists',
+	            title: 'content.blades.pages-list.title-blogs',
+	            titleValues: { name: data.store.name },
+	            subtitle: 'content.blades.pages-list.subtitle-blogs',
 	            type: 'blogs',
-	            subtitle: 'Blogs List',
 	            controller: 'virtoCommerce.contentModule.pagesListController',
 	            template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/pages/pages-list.tpl.html',
 	        };
@@ -213,8 +217,8 @@
 	            id: 'addTheme',
 	            choosenStoreId: data.store.id,
 	            currentEntity: {},
-	            title: 'New theme asset',
-	            subtitle: 'Create new theme',
+	            title: 'content.blades.add-theme.title',
+	            subtitle: 'content.blades.add-theme.subtitle',
 	            controller: 'virtoCommerce.contentModule.addThemeController',
 	            template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/add-theme.tpl.html',
 	        };
@@ -229,8 +233,8 @@
 	            choosenStoreId: data.store.id,
 	            currentEntity: { name: null, content: null },
 	            newPage: true,
-	            title: 'Add new page',
-	            subtitle: 'Create new page',
+	            title: 'content.blades.edit-page.title-new',
+	            subtitle: 'content.blades.edit-page.subtitle-new',
 	            controller: 'virtoCommerce.contentModule.editPageController',
 	            template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/pages/edit-page.tpl.html',
 	        };
@@ -244,8 +248,8 @@
 	            id: 'addMenuLinkListBlade',
 	            choosenStoreId: data.store.id,
 	            newList: true,
-	            title: 'Add new list',
-	            subtitle: 'Create new list',
+	            title: 'content.blades.menu-link-list.title-new',
+	            subtitle: 'content.blades.menu-link-list.subtitle-new',
 	            controller: 'virtoCommerce.contentModule.menuLinkListController',
 	            template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/menu/menu-link-list.tpl.html',
 	        };
@@ -260,8 +264,8 @@
 	            choosenStoreId: data.store.id,
 	            isNew: true,
 	            entity: { name: undefined },
-	            title: 'Add blog',
-	            subtitle: 'Create new blog',
+	            title: 'content.blades.edit-blog.title-new',
+	            subtitle: 'content.blades.edit-blog.subtitle-new',
 	            controller: 'virtoCommerce.contentModule.editBlogController',
 	            template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/pages/edit-blog.tpl.html',
 	        };
@@ -276,8 +280,9 @@
 	            choosenThemeId: data.defaultTheme.name,
 	            choosenStoreId: data.store.id,
 	            choosenTheme: data.defaultTheme,
-	            title: 'Edit ' + data.defaultTheme.path,
-	            subtitle: 'Theme asset list',
+	            title: 'content.blades.theme-asset-list.subtitle',
+	            titleValues: { path: data.defaultTheme.path },
+	            subtitle: 'content.blades.theme-asset-list.subtitle',
 	            controller: 'virtoCommerce.contentModule.themeAssetListController',
 	            template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/theme-asset-list.tpl.html',
 	        };
@@ -291,8 +296,8 @@
 	        else {
 	            var dialog = {
 	                id: "noUrlInStore",
-	                title: "Url is not set for store",
-	                message: "Please, set store url, before preview theme!",
+	                title: "content.dialogs.set-store-url.title",
+	                message: "content.dialogs.set-store-url.message",
 	                callback: function (remove) {
 
 	                }

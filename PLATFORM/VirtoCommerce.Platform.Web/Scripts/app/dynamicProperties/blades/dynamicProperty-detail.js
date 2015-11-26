@@ -2,7 +2,7 @@
 .controller('platformWebApp.dynamicPropertyDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.settings', 'platformWebApp.dynamicProperties.api', 'platformWebApp.dynamicProperties.dictionaryItemsApi', function ($scope, bladeNavigationService, dialogService, settings, dynamicPropertiesApi, dictionaryItemsApi) {
     var blade = $scope.blade;
     blade.headIcon = 'fa-plus-square-o';
-    blade.title = 'Manage property';
+    blade.title = 'platform.blades.dynamicProperty-detail.title';
     $scope.languages = [];
     var localDictionaryValues = [];
 
@@ -102,8 +102,8 @@
     function deleteEntry() {
         var dialog = {
             id: "confirmDelete",
-            title: "Delete confirmation",
-            message: "Are you sure you want to delete this dynamic property?",
+            title: "platform.dialogs.dynamic-property-delete.title",
+            message: "platform.dialogs.dynamic-property-delete.message",
             callback: function (remove) {
                 if (remove) {
                     dynamicPropertiesApi.delete({ id: blade.objectType, propertyId: blade.currentEntity.id },
@@ -121,7 +121,7 @@
     if (!blade.isNew) {
         blade.toolbarCommands = [
         {
-            name: "Save", icon: 'fa fa-save',
+            name: "platform.commands.save", icon: 'fa fa-save',
             executeMethod: function () {
                 $scope.saveChanges();
             },
@@ -131,7 +131,7 @@
             permission: 'platform:dynamic_properties:update'
         },
         {
-            name: "Reset", icon: 'fa fa-undo',
+            name: "platform.commands.reset", icon: 'fa fa-undo',
             executeMethod: function () {
                 angular.copy(blade.origEntity, blade.currentEntity);
             },
@@ -141,7 +141,7 @@
             permission: 'platform:dynamic_properties:update'
         },
         {
-            name: "Delete", icon: 'fa fa-trash-o',
+            name: "platform.commands.delete", icon: 'fa fa-trash-o',
             executeMethod: function () {
                 deleteEntry();
             },

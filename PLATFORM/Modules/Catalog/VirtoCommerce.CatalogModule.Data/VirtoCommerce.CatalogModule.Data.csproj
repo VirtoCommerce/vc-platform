@@ -119,31 +119,31 @@
     <Compile Include="Migrations\201507021035491_TaxTypeToCategory.Designer.cs">
       <DependentUpon>201507021035491_TaxTypeToCategory.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201511141422518_PropertyShemaChanges.cs" />
+    <Compile Include="Migrations\201511141422518_PropertyShemaChanges.Designer.cs">
+      <DependentUpon>201511141422518_PropertyShemaChanges.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201511191415000_Fix.cs" />
+    <Compile Include="Migrations\201511191415000_Fix.Designer.cs">
+      <DependentUpon>201511191415000_Fix.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Asset.cs" />
     <Compile Include="Model\Association.cs" />
     <Compile Include="Model\AssociationGroup.cs" />
     <Compile Include="Model\Catalog.cs" />
-    <Compile Include="Model\CatalogBase.cs" />
     <Compile Include="Model\CatalogLanguage.cs" />
-    <Compile Include="Model\CatalogPropertyValue.cs" />
     <Compile Include="Model\Category.cs" />
     <Compile Include="Model\CategoryItemRelation.cs" />
     <Compile Include="Model\CategoryRelation.cs" />
-    <Compile Include="Model\CategoryPropertyValue.cs" />
     <Compile Include="Model\EditorialReview.cs" />
     <Compile Include="Model\Image.cs" />
     <Compile Include="Model\Item.cs" />
-    <Compile Include="Model\ItemPropertyValue.cs" />
     <Compile Include="Model\ItemRelation.cs" />
-    <Compile Include="Model\Product.cs" />
     <Compile Include="Model\Property.cs" />
     <Compile Include="Model\PropertyAttribute.cs" />
-    <Compile Include="Model\PropertySet.cs" />
-    <Compile Include="Model\PropertySetProperty.cs" />
+    <Compile Include="Model\PropertyDictionaryValue.cs" />
     <Compile Include="Model\PropertyValue.cs" />
-    <Compile Include="Model\PropertyValueBase.cs" />
-    <Compile Include="Model\VirtualCatalog.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\CatalogRepositoryImpl.cs" />
     <Compile Include="Repositories\ICatalogRepository.cs" />
@@ -211,6 +211,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201507021035491_TaxTypeToCategory.resx">
       <DependentUpon>201507021035491_TaxTypeToCategory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201511141422518_PropertyShemaChanges.resx">
+      <DependentUpon>201511141422518_PropertyShemaChanges.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201511191415000_Fix.resx">
+      <DependentUpon>201511191415000_Fix.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

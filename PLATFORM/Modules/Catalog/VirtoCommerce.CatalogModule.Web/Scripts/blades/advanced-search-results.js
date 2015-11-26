@@ -6,10 +6,7 @@
     $scope.pageSettings.currentPage = 1;
     $scope.pageSettings.numPages = 5;
     $scope.pageSettings.itemsPerPageCount = 20;
-
-    $scope.selectedAll = false;
-    $scope.selectedItem = null;
-
+    
     $scope.blade.refresh = function () {
         $scope.blade.isLoading = true;
         var skip = ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount;
@@ -26,11 +23,6 @@
 		    $scope.blade.isLoading = false;
 		    $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
 		    $scope.items = data.listEntries;
-		    $scope.selectedAll = false;
-
-		    if ($scope.selectedItem != null) {
-		        $scope.selectedItem = $scope.findItem($scope.selectedItem.id);
-		    }
 		}, function (error) {
 		    bladeNavigationService.setError('Error ' + error.status, $scope.blade);
 		});
@@ -61,17 +53,7 @@
     $scope.selectItem = function (listItem) {
         $scope.selectedItem = listItem;
     };
-
-    $scope.findItem = function (id) {
-        var retVal;
-        angular.forEach($scope.items, function (item) {
-            if (item.id == id)
-                retVal = item;
-        });
-
-        return retVal;
-    }
-
+    
     $scope.blade.onClose = function (closeCallback) {
         if ($scope.blade.childrenBlades.length > 0) {
             var callback = function () {
@@ -117,13 +99,7 @@
           }
       }
     ];
-
-    $scope.checkAll = function (selected) {
-        angular.forEach($scope.items, function (item) {
-            item.selected = selected;
-        });
-    };
-
+    
     //No need to call this because page 'pageSettings.currentPage' is watched!!! It would trigger subsequent duplicated req...
     //$scope.blade.refresh();
 }]);

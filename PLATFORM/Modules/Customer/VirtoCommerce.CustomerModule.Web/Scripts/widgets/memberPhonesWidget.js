@@ -6,7 +6,7 @@
         var newBlade = {
             id: "customerChildBlade",
             title: $scope.blade.title,
-            subtitle: 'Manage customer phones',
+            subtitle: 'customer.widgets.member-phones-list.blade-subtitle',
             controller: 'virtoCommerce.customerModule.memberPhonesListController',
             template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/member-phones-list.tpl.html'
         };

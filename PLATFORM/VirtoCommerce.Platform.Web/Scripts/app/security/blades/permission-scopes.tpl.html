@@ -2,13 +2,13 @@
 <div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
-            <div class="sub-t">Select bounded scopes</div>
+            <div class="sub-t">{{ 'platform.blades.permission-scopes.labels.select-bounded-scopes' | translate }}</div>
             <div class="table-wrapper">
                 <table class="table">
                     <tbody>
                         <tr>
-                            <th class="table-col">Selected</th>
-                            <th class="table-col">Scope name and parameters</th>
+                            <th class="table-col">{{ 'platform.blades.permission-scopes.labels.selected' | translate }}</th>
+                            <th class="table-col">{{ 'platform.blades.permission-scopes.labels.scope-name' | translate }}</th>
                         </tr>
                         <tr class="table-item" ng-repeat="data in availableScopes track by data.type" ng-class="{'__selected': data.type === selectedNodeId}">
                             <td class="table-col">
@@ -18,14 +18,14 @@
                                 </label>
                             </td>
                             <td class="table-col"  ng-click="blade.selectNode(data, true)">
-                                <span class="table-t">{{data.title}}</span>
+                                <span class="table-t">{{data.title | translate}}</span>
                                 <span class="table-descr alt-description">{{data.assignedScopesLabels.length > 0 ? data.assignedScopesLabels.join() : 'none'}}</span>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            <p class="text" ng-if="!availableScopes.length">No scopes.</p>
+            <p class="text" ng-if="!availableScopes.length">{{ 'platform.blades.permission-scopes.labels.no-scopes' | translate }}</p>
         </div>
     </div>
 </div>

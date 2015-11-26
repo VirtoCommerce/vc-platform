@@ -7,7 +7,7 @@
             id: "fulfillmentDetailChild",
             data: blade.currentEntity,
             title: blade.title,
-            subtitle: 'core.widgets.fulfillment-center-contact.blade-subtitle',
+            subtitle: 'core.widgets.fulfillmentCenterContact.blade-subtitle',
             controller: 'virtoCommerce.coreModule.fulfillment.fulfillmentCenterContactController',
             template: 'Modules/$(VirtoCommerce.Core)/Scripts/fulfillment/blades/fulfillment-center-contact.tpl.html'
         };

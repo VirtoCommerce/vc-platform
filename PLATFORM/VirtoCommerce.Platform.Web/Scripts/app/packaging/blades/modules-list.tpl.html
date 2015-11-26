@@ -1,30 +1,51 @@
 ﻿<div class="blade-static">
     <div class="form-group">
         <div class="form-input __search">
-            <input placeholder="Search keyword..." ng-model="searchText">
+            <input placeholder="{{ 'platform.placeholders.search-keyword' | translate }}" ng-model="blade.searchText" ng-keyup="gridApi.grid.queueGridRefresh()">
         </div>
-        <p class="form-count">Count: <span class="count">{{filteredEntities.length}}</span></p>
+        <p class="form-count">{{ 'platform.list.count' | translate }}: <span class="count">{{filteredEntitiesCount}}</span></p>
     </div>
 </div>
 <div class="blade-content __medium-wide">
     <div class="blade-inner">
-        <div class="inner-block">
-            <div class="text" ng-if="blade.currentEntities.length == 0">No Modules found. Check if virtual directory with alias Modules is configured as described in <a href="http://docs.virtocommerce.com/display/vc2devguide/Source+Code+Getting+Started#SourceCodeGettingStarted-ConfigureIIS" target="_blank">the documentation</a>.</div>
+        <div class="inner-block" ng-init="setGridOptions({
+                    rowTemplate: 'modules-list.row.html',
+                    virtualizationThreshold: 1000,
+                    rowHeight: 61,
+                    columnDefs: [
+                                {
+                                    displayName: 'platform.blades.modules-list.labels.icon', name: 'iconUrl',
+                                    enableColumnResizing: false, width: 70,
+                                    cellTemplate: 'modules-list-icon.cell.html'
+                                },
+                                {
+                                    displayName: 'platform.blades.modules-list.labels.module', name: 'customColumn', field: 'title',
+                                    sort: { direction: uiGridConstants.ASC }, width: '50%',
+                                    cellTemplate: 'modules-list-name.cell.html'
+                                },
+                                { name: 'version', displayName: 'platform.blades.modules-list.labels.version', width: 80 },
+                                {
+                                    displayName: 'platform.blades.modules-list.labels.author', name: 'authors',
+                                    cellTemplate: 'modules-list-authors.cell.html'
+                                }
+                    ]})">
+            <div class="text" ng-if="blade.currentEntities.length == 0">{{ 'platform.blades.modules-list.labels.no-modules-part1' | translate }} <a href="http://docs.virtocommerce.com/display/vc2devguide/Source+Code+Getting+Started#SourceCodeGettingStarted-ConfigureIIS" target="_blank">{{ 'platform.blades.modules-list.labels.no-modules-part2' | translate }}</a>.</div>
             <div class="table-wrapper" ng-show="blade.currentEntities.length > 0">
-                <table class="table __normal">
+                <div ui-grid="gridOptions" ui-grid-save-state ui-grid-resize-columns ui-grid-move-columns></div>
+                <!--<table class="table __normal">
                     <thead>
                         <tr>
-                            <th class="table-col __product-img">Icon</th>
-                            <th class="table-col">Module</th>
-                            <th class="table-col __version">Version</th>
-                            <th class="table-col __author">Author</th>
+                            <th class="table-col __product-img">{{ 'platform.blades.modules-list.labels.icon' | translate }}</th>
+                            <th class="table-col">{{ 'platform.blades.modules-list.labels.module' | translate }}</th>
+                            <th class="table-col __version">{{ 'platform.blades.modules-list.labels.version' | translate }}</th>
+                            <th class="table-col __author">{{ 'platform.blades.modules-list.labels.author' | translate }}</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="table-item" ng-repeat="data in blade.currentEntities | filter:searchText as filteredEntities track by data.id" ng-class="{'__selected': data.id === selectedEntityId}" ng-click='blade.selectItem(data.id)'>
+                        <tr class="table-item" ng-repeat="data in blade.currentEntities | filter:searchText as filteredEntities track by data.id" ng-class="{'__selected': data.id === selectedNodeId}" ng-click='blade.selectNode(data.id)'>
                             <td class="table-col">
                                 <div class="product-img">
-                                     <div class="image" style="background-image: url('{{data.iconUrl}}')" ng-if="data.iconUrl"></div> 
+                                     <div class="image" style="background-image: url('{{data.iconUrl}}')" ng-if="data.iconUrl"></div>
                                 </div>
                             </td>
                             <td class="table-col">
@@ -39,8 +60,27 @@
                             </td>
                         </tr>
                     </tbody>
-                </table>
+                </table>-->
             </div>
         </div>
     </div>
 </div>
+
+<script type="text/ng-template" id="modules-list.row.html">
+    <div ng-click='grid.appScope.blade.selectNode(row.entity.id)' ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'" class="ui-grid-cell" ng-class="{'ui-grid-row-header-cell': col.isRowHeader, '__selected': row.entity.id===grid.appScope.selectedNodeId }" role="{{col.isRowHeader ? 'rowheader' : 'gridcell' }}" ui-grid-cell style='cursor:pointer'></div>
+</script>
+
+<script type="text/ng-template" id="modules-list-icon.cell.html">
+    <div class="product-img">
+        <div class="image" style="background-image: url('{{COL_FIELD}}');"></div>
+    </div>
+</script>
+<script type="text/ng-template" id="modules-list-name.cell.html">
+    <div class="ui-grid-cell-contents">
+        <span class="table-t" title="{{COL_FIELD}}">{{COL_FIELD}}</span>
+        <span class="table-descr" title="{{row.entity.description}}" style="overflow: hidden; text-overflow: ellipsis;">{{row.entity.description}}</span>
+    </div>
+</script>
+<script type="text/ng-template" id="modules-list-authors.cell.html">
+    <div class="ui-grid-cell-contents"><span ng-repeat="x in COL_FIELD">{{x}} </span></div>
+</script>

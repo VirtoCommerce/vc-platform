@@ -1,0 +1,18 @@
+﻿<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <form class="form">
+                <fieldset>
+                    <legend>{{ 'platform.blades.user-profile.labels.set-language' | translate }}</legend>
+                    <div class="list __items">
+                        <label class="list-item" ng-repeat="data in managerLanguages">
+                            <input type="radio" ng-model="blade.currentLanguage" value="{{data.value}}" ng-change="setLanguage()">
+                            <span class="switch"></span>
+                            <span class="list-name">{{data.title}}</span>
+                        </label>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>

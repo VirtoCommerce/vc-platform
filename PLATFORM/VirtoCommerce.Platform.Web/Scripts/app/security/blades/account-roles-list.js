@@ -15,7 +15,7 @@
             id: 'roleDetails',
             data: node,
             title: node.name,
-            subtitle: 'Role details',
+            subtitle: 'platform.blades.role-detail.subtitle',
             controller: 'platformWebApp.roleDetailController',
             template: '$(Platform)/Scripts/app/security/blades/role-detail.tpl.html'
         };
@@ -53,13 +53,13 @@
 
     blade.toolbarCommands = [
            {
-               name: "Assign", icon: 'fa fa-plus',
+               name: "platform.commands.assign", icon: 'fa fa-plus',
                executeMethod: function () {
                    var newBlade = {
                        id: "accountChildBladeChild",
                        promise: blade.promise,
                        title: blade.title,
-                       subtitle: 'Assign roles',
+                       subtitle: 'platform.blades.account-roles.subtitle',
                        controller: 'platformWebApp.accountRolesController',
                        template: '$(Platform)/Scripts/app/security/blades/account-roles.tpl.html'
                    };
@@ -72,7 +72,7 @@
                permission: 'platform:security:update'
            },
             {
-                name: "Remove", icon: 'fa fa-trash-o',
+                name: "platform.commands.remove", icon: 'fa fa-trash-o',
                 executeMethod: function () {
                     deleteChecked();
                 },

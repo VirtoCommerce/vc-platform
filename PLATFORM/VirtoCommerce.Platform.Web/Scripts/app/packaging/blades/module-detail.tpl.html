@@ -5,12 +5,12 @@
                 <!--blade.currentEntity.validationErrors.length>0 ||-->
                 <input type="checkbox" ng-model="blade.currentEntity.licenseAccepted" ng-disabled="!blade.currentEntity || isInstalling">
                 <span class="check"></span>
-                <span class="name">I accept the <a ng-href="{{blade.currentEntity.licenseUrl}}" ng-if="blade.currentEntity.licenseUrl" target="_blank">License</a> agreement</span>
+                <span class="name">{{ 'platform.blades.module-detail.labels.i-accept-the' | translate }} <a ng-href="{{blade.currentEntity.licenseUrl}}" ng-if="blade.currentEntity.licenseUrl" target="_blank">{{ 'platform.blades.module-detail.labels.license-link' | translate }}</a> {{ 'platform.blades.module-detail.labels.agreement' | translate }}</span>
             </label>
         </div>
     </div>
     <button class="btn" ng-click="submit()" ng-disabled="!blade.currentEntity || isInstalling || (blade.currentEntity.requireLicenseAcceptance && !blade.currentEntity.licenseAccepted)">
-        <span>{{actionButtonTitle}}</span>
+        <span>{{actionButtonTitle | translate}}</span>
     </button>
 </div>
 <div class="blade-content">
@@ -18,7 +18,7 @@
         <div class="inner-block">
             <div class="form" ng-if="!blade.currentEntity && !blade.isLoading">
                 <div class="form-group">
-                    <label class="form-label">Select module file</label>
+                    <label class="form-label">{{ 'platform.blades.module-detail.labels.select-module-file' | translate }}</label>
                     <div class="form-input">
                         <input type="file" uploader="uploader" nv-file-select>
                         <input type="text" readonly="">
@@ -29,44 +29,44 @@
                 </div>                
             </div>
             <div ng-show="uploader.isUploading">
-                <div class="sub-t">Upload progress</div>
+                <div class="sub-t">{{ 'platform.blades.module-detail.labels.upload-progress' | translate }}</div>
                 <div class="progress-bar __aqua" ng-style="{'width': uploader.progress + '%'}"></div>
             </div>
             <div ng-if="blade.currentEntity">
-                <div class="t __divider">Module info</div>
+                <div class="t __divider">{{ 'platform.blades.module-detail.labels.module-info' | translate }}</div>
                 <ul class="list __info">
                     <li class="list-item">
-                        <div class="list-t">Title</div>
+                        <div class="list-t">{{ 'platform.blades.module-detail.labels.title' | translate }}</div>
                         <div class="list-descr">{{blade.currentEntity.title}}</div>
                     </li>
                     <li class="list-item">
-                        <div class="list-t">Author</div>
+                        <div class="list-t">{{ 'platform.blades.module-detail.labels.author' | translate }}</div>
                         <div class="list-descr">
                             <span ng-repeat="x in blade.currentEntity.authors">{{x}}</span>
                         </div>
                     </li>
                     <li class="list-item">
-                        <div class="list-t">ID</div>
+                        <div class="list-t">{{ 'platform.blades.module-detail.labels.id' | translate }}</div>
                         <div class="list-descr">{{blade.currentEntity.id}}</div>
                     </li>
                     <li class="list-item">
-                        <div class="list-t">Version</div>
+                        <div class="list-t">{{ 'platform.blades.module-detail.labels.version' | translate }}</div>
                         <div class="list-descr">{{blade.currentEntity.version}}</div>
                     </li>
                     <li class="list-item">
-                        <a class="list-link" ng-if="blade.currentEntity.licenseUrl" ng-href="{{blade.currentEntity.licenseUrl}}" target="_blank">License</a>
-                        <a class="list-link" ng-if="blade.currentEntity.projectUrl" ng-href="{{blade.currentEntity.projectUrl}}" target="_blank">Project Information</a>
+                        <a class="list-link" ng-if="blade.currentEntity.licenseUrl" ng-href="{{blade.currentEntity.licenseUrl}}" target="_blank">{{ 'platform.blades.module-detail.labels.license' | translate }}</a>
+                        <a class="list-link" ng-if="blade.currentEntity.projectUrl" ng-href="{{blade.currentEntity.projectUrl}}" target="_blank">{{ 'platform.blades.module-detail.labels.project-information' | translate }}</a>
                     </li>
                     <li class="list-item">
-                        <div class="list-t">Description</div>
+                        <div class="list-t">{{ 'platform.blades.module-detail.labels.description' | translate }}</div>
                         <div class="list-descr">{{blade.currentEntity.description}}</div>
                     </li>
                     <li class="list-item">
-                        <div class="list-t">Platform Version</div>
+                        <div class="list-t">{{ 'platform.blades.module-detail.labels.platform-version' | translate }}</div>
                         <div class="list-descr">{{blade.currentEntity.platformVersion}}</div>
                     </li>
                     <li class="list-item" ng-if="blade.currentEntity.dependencies">
-                        <div class="list-t">Dependencies</div>
+                        <div class="list-t">{{ 'platform.blades.module-detail.labels.dependencies' | translate }}</div>
                         <div class="list-descr">
                             <div ng-repeat="dependency in blade.currentEntity.dependencies">
                                 <a class="__link" ng-click="openModule(dependency.id)">{{dependency.id}}</a> {{dependency.version}}
@@ -74,7 +74,7 @@
                         </div>
                     </li>
                     <li class="list-item">
-                        <div class="list-t">Tags</div>
+                        <div class="list-t">{{ 'platform.blades.module-detail.labels.tags' | translate }}</div>
                         <ul class="list __tags">
                             <li class="list-item" ng-repeat="tag in blade.currentEntity.tags track by $index">
                                 <i class="list-ico fa fa-tags"></i>
@@ -83,7 +83,7 @@
                         </ul>
                     </li>
                     <li class="list-item" ng-if="blade.currentEntity.validationErrors.length>0">
-                        <div class="list-t">Errors</div>
+                        <div class="list-t">{{ 'platform.blades.module-detail.labels.errors' | translate }}</div>
                         <div class="list-descr">
                             <span ng-repeat="x in blade.currentEntity.validationErrors">{{x}}<br></span>
                         </div>

@@ -41,7 +41,7 @@
 
 	$scope.blade.toolbarCommands = [
         {
-        	name: "Add", icon: 'fa fa-plus',
+            name: "platform.commands.add", icon: 'fa fa-plus',
         	executeMethod: function () {
         		blade.openBladeNew();
         	},
@@ -51,7 +51,7 @@
         	permission: 'content:create'
         },
 		{
-			name: "Set Active", icon: 'fa fa-pencil-square-o',
+		    name: "content.commands.set-active", icon: 'fa fa-pencil-square-o',
 			executeMethod: function () {
 				blade.setThemeAsActive();
 			},
@@ -61,7 +61,7 @@
 			permission: 'content:update'
 		},
 		{
-			name: "Delete theme", icon: 'fa fa-trash-o',
+		    name: "content.commands.delete-theme", icon: 'fa fa-trash-o',
 			executeMethod: function () {
 				blade.deleteTheme();
 			},
@@ -71,7 +71,7 @@
 			permission: 'content:delete'
 		},
 		{
-			name: "Preview theme", icon: 'fa fa-eye',
+		    name: "content.commands.preview-theme", icon: 'fa fa-eye',
 			executeMethod: function () {
 				blade.previewTheme();
 			},
@@ -80,7 +80,7 @@
 			}
 		},
 		{
-			name: "Edit CSS/HTML", icon: 'fa fa-code',
+		    name: "content.commands.edit-css-html", icon: 'fa fa-code',
 			executeMethod: function () {
 				blade.editTheme();
 			},
@@ -95,7 +95,7 @@
 	blade.deleteTheme = function () {
 		var dialog = {
 			id: "confirmDelete",
-			title: "Delete confirmation",
+			title: "content.dialogs.theme-delete.title",
 			callback: function (remove) {
 				if (remove) {
 					blade.isLoading = true;
@@ -110,12 +110,12 @@
 		}
 
 		if (blade.currentEntities.length > 1) {
-			dialog.message = "Are you sure you want to delete " + blade.choosenTheme.name + "?";
+		    dialog.message = "content.dialogs.theme-delete.message";
 		}
 		else {
-			dialog.message = "This theme is the last one. If you delete it, you could break your storefront. Are you sure you want to delete " + blade.choosenTheme.name + "?";
+		    dialog.message = "content.dialogs.theme-delete.message-last-one";
 		}
-
+		dialog.messageValues = { name: blade.choosenTheme.name };
 		dialogService.showConfirmationDialog(dialog);
 	}
 
@@ -144,8 +144,8 @@
 		else {
 			var dialog = {
 				id: "noUrlInStore",
-				title: "Url is not set for store",
-				message: "Please, set store url, before preview theme!",
+				title: "content.dialogs.set-store-url.title",
+				message: "content.dialogs.set-store-url.message",
 				callback: function (remove) {
 
 				}
@@ -165,8 +165,9 @@
 			choosenThemeId: blade.choosenTheme.name,
 			choosenStoreId: blade.storeId,
 			choosenTheme: blade.choosenTheme,
-			title: 'Edit ' + blade.choosenTheme.path,
-			subtitle: 'Theme asset list',
+			title: 'content.blades.theme-asset-list.title',
+			titleValues: { name: blade.choosenTheme.path },
+			subtitle: 'content.blades.theme-asset-list.subtitle',
 			controller: 'virtoCommerce.contentModule.themeAssetListController',
 			template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/theme-asset-list.tpl.html',
 		};
@@ -218,8 +219,8 @@
 			id: 'addTheme',
 			choosenStoreId: blade.storeId,
 			currentEntity: {},
-			title: 'New theme asset',
-			subtitle: 'Create new theme',
+			title: 'content.blades.add-theme.title',
+			subtitle: 'content.blades.add-theme.subtitle',
 			controller: 'virtoCommerce.contentModule.addThemeController',
 			template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/add-theme.tpl.html',
 		};

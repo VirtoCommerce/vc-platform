@@ -1,6 +1,6 @@
 ﻿<fieldset>
     <div data-role="input-control" class="input-control text">
-        <input type="text" placeholder="Search keyword..." ng-model="filter.searchKeyword" ng-keyup="$event.which === 13 && blade.refresh()">
+        <input type="text" placeholder="{{'platform.placeholders.search-keyword' | translate}}" ng-model="filter.searchKeyword" ng-keyup="$event.which === 13 && blade.refresh()">
         <button tabindex="-1" class="btn-clear" type="button" ng-click="filter.searchKeyword = null;blade.refresh()"></button>
     </div>
 </fieldset>

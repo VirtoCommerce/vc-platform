@@ -44,7 +44,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 												 .ToArray();
 					var allParents = repository.GetAllCategoryParents(dbCategory);
 
-					retVal = dbCategory.ToCoreModel(catalog, properties, allParents);
+					retVal = dbCategory.ToCoreModel(catalog, allParents);
 					retVal.SeoInfos = _commerceService.GetObjectsSeo(new string[] { categoryId }).ToList();
 				}
             }

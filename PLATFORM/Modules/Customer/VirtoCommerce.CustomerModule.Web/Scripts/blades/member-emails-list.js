@@ -23,8 +23,8 @@
         if (isDirty()) {
             var dialog = {
                 id: "confirmItemChange",
-                title: "Save changes",
-                message: "The Email has been modified. Do you want to save changes?"
+                title: "customer.dialogs.email-save.title",
+                message: "customer.dialogs.email-save.message"
             };
             dialog.callback = function (needSave) {
                 if (needSave) {
@@ -58,7 +58,7 @@
 
     $scope.blade.toolbarCommands = [
         {
-            name: "Add", icon: 'fa fa-plus',
+            name: "platform.commands.add", icon: 'fa fa-plus',
             executeMethod: function () {
                 $scope.blade.currentEntities.push(transformDataElement(''));
             },
@@ -68,7 +68,7 @@
             permission: 'customer:update'
         },
         {
-            name: "Reset", icon: 'fa fa-undo',
+            name: "platform.commands.reset", icon: 'fa fa-undo',
             executeMethod: function () {
                 angular.copy($scope.blade.origEntity, $scope.blade.currentEntities);
             },
@@ -78,7 +78,7 @@
             permission: 'customer:update'
         },
         {
-            name: "Delete", icon: 'fa fa-trash-o',
+            name: "platform.commands.delete", icon: 'fa fa-trash-o',
             executeMethod: function () {
                 var idx = $scope.blade.currentEntities.indexOf($scope.selectedItem);
                 if (idx >= 0) {

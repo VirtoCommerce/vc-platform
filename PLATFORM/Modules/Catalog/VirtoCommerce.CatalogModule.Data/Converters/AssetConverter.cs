@@ -56,12 +56,8 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 				throw new ArgumentNullException("image");
 
 			var retVal = new dataModel.Image();
-			var id = retVal.Id;
 			retVal.InjectFrom(image);
-			if (image.Id == null)
-			{
-				retVal.Id = id;
-			}
+	
 			return retVal;
 		}
 
@@ -74,12 +70,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 				throw new ArgumentNullException("asset");
 
 			var retVal = new dataModel.Asset();
-			var id = retVal.Id;
 			retVal.InjectFrom(asset);
-			if (asset.Id == null)
-			{
-				retVal.Id = id;
-			}
 			return retVal;
 		}
 

@@ -164,14 +164,10 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// <returns></returns>
 		public static dataModel.Item ToDataModel(this coreModel.CatalogProduct product)
 		{
-			var retVal = new dataModel.Product();
+			var retVal = new dataModel.Item();
 			var id = retVal.Id;
 			retVal.InjectFrom(product);
-			if (product.Id == null)
-			{
-				retVal.Id = id;
-			}
-
+		
 			if(product.StartDate == default(DateTime))
 			{
 				retVal.StartDate = DateTime.UtcNow;
@@ -196,13 +192,9 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			#region ItemPropertyValues
 			if (product.PropertyValues != null)
 			{
-				retVal.ItemPropertyValues = new ObservableCollection<dataModel.ItemPropertyValue>();
-				foreach (var propValue in product.PropertyValues)
-				{
-					var dbPropValue = propValue.ToDataModel<dataModel.ItemPropertyValue>() as dataModel.ItemPropertyValue;
-					retVal.ItemPropertyValues.Add(dbPropValue);
-					dbPropValue.ItemId = retVal.Id;
-				}
+				retVal.ItemPropertyValues = new ObservableCollection<dataModel.PropertyValue>();
+                retVal.ItemPropertyValues.AddRange(product.PropertyValues.Select(x => x.ToDataModel()));
+			
 			}
 			#endregion
 
@@ -322,7 +314,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 					var dbParent = source.MainProduct.ToDataModel();
 					var parentPropValues = dbParent.ItemPropertyValues.ToLookup(x => x.Name + "-" + x.ToString());
 					var variationPropValues = dbSource.ItemPropertyValues.ToLookup(x => x.Name + "-" + x.ToString());
-					dbSource.ItemPropertyValues = new ObservableCollection<dataModel.ItemPropertyValue>(variationPropValues.Where(x => !parentPropValues.Contains(x.Key)).SelectMany(x => x));
+					dbSource.ItemPropertyValues = new ObservableCollection<dataModel.PropertyValue>(variationPropValues.Where(x => !parentPropValues.Contains(x.Key)).SelectMany(x => x));
 				}
 
 				dbSource.ItemPropertyValues.Patch(target.ItemPropertyValues, (sourcePropValue, targetPropValue) => sourcePropValue.Patch(targetPropValue));

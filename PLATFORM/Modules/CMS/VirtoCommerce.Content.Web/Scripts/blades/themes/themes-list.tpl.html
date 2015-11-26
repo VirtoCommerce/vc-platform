@@ -9,10 +9,10 @@
 				</li>
 			</ul>
 			<div class="note" ng-if="blade.currentEntities.length <= 0">
-				No themes yet
+				{{ 'content.blades.themes-list.labels.no-data' | translate }}
 				<br />
 				<br />
-				<button class="btn" ng-click="blade.createDefaultTheme()">Add default theme</button>
+				<button class="btn" ng-click="blade.createDefaultTheme()">{{ 'content.commands.add-default-theme' | translate }}</button>
 			</div>
 		</div>
 	</div>

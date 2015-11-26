@@ -8,7 +8,7 @@
               controller: ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
                   var blade = {
                       id: 'settings',
-                      title: 'Settings',
+                      title: 'platform.blades.settingGroup-list.title',
                       //subtitle: 'Manage settings',
                       controller: 'platformWebApp.settingGroupListController',
                       template: '$(Platform)/Scripts/app/settings/blades/settingGroup-list.tpl.html',

@@ -12,7 +12,7 @@
                 blade.currentEntity = { title: undefined, language: blade.defaultStoreLanguage, storeId: blade.choosenStoreId, menuLinks: [] };
                 blade.choosenListId = blade.currentEntity.id;
                 $scope.blade.toolbarCommands = [{
-                    name: "Add link", icon: 'fa fa-plus',
+                    name: "content.commands.add-link", icon: 'fa fa-plus',
                     executeMethod: function () {
                         var newEntity = { url: undefined, title: undefined, type: undefined, priority: 0, isActive: false, language: undefined, menuLinkListId: blade.choosenListId };
                         blade.currentEntity.menuLinks.push(newEntity);
@@ -24,7 +24,7 @@
                     permission: 'content:update'
                 },
 				{
-				    name: "Save list", icon: 'fa fa-save',
+				    name: "content.commands.save-list", icon: 'fa fa-save',
 				    executeMethod: function () {
 				        blade.saveChanges();
 				    },
@@ -45,7 +45,7 @@
                     blade.isLoading = false;
 
                     $scope.blade.toolbarCommands = [{
-                        name: "Add link", icon: 'fa fa-plus',
+                        name: "content.commands.add-link", icon: 'fa fa-plus',
                         executeMethod: function () {
                             var newEntity = { url: undefined, title: undefined, isActive: false, priority: 0, menuLinkListId: blade.choosenListId };
                             blade.currentEntity.menuLinks.push(newEntity);
@@ -57,7 +57,7 @@
                         permission: 'content:update'
                     },
 					{
-					    name: "Save list", icon: 'fa fa-save',
+					    name: "content.commands.save-list", icon: 'fa fa-save',
 					    executeMethod: function () {
 					        blade.saveChanges();
 					    },
@@ -67,7 +67,7 @@
 					    permission: 'content:update'
 					},
 					{
-					    name: "Reset list", icon: 'fa fa-undo',
+					    name: "content.commands.reset-list", icon: 'fa fa-undo',
 					    executeMethod: function () {
 					        angular.copy(blade.origEntity, blade.currentEntity);
 					    },
@@ -77,7 +77,7 @@
 					    permission: 'content:update'
 					},
 					{
-					    name: "Delete list", icon: 'fa fa-trash-o',
+					    name: "content.commands.delete-list", icon: 'fa fa-trash-o',
 					    executeMethod: function () {
 					        blade.deleteList();
 					    },
@@ -87,7 +87,7 @@
 					    permission: 'content:delete'
 					},
 					{
-					    name: "Delete links", icon: 'fa fa-trash-o',
+					    name: "content.commands.delete-links", icon: 'fa fa-trash-o',
 					    executeMethod: function () {
 					        blade.deleteLinks();
 					    },
@@ -126,8 +126,8 @@
                 blade.isLoading = false;
                 var dialog = {
                     id: "errorInName",
-                    title: "Name not unique",
-                    message: "Name must be unique for this language!",
+                    title: "content.dialogs.name-must-unique.title",
+                    message: "content.dialogs.name-must-unique.message",
                     callback: function (remove) {
 
                     }
@@ -152,8 +152,8 @@
     blade.deleteList = function () {
         var dialog = {
             id: "confirmDelete",
-            title: "Delete confirmation",
-            message: "Are you sure you want to delete this link list?",
+            title: "content.dialogs.link-list-delete.title",
+            message: "content.dialogs.link-list-delete.message",
             callback: function (remove) {
                 if (remove) {
                     blade.isLoading = true;
@@ -172,8 +172,8 @@
     blade.deleteLinks = function () {
         var dialog = {
             id: "confirmDelete",
-            title: "Delete confirmation",
-            message: "Are you sure you want to delete this links?",
+            title: "content.dialogs.links-delete.title",
+            message: "content.dialogs.links-delete.message",
             callback: function (remove) {
                 if (remove) {
                     for (var i = 0; i < blade.selectedItemIds.length; i++) {
@@ -193,8 +193,8 @@
         if (canSave()) {
             var dialog = {
                 id: "confirmCurrentBladeClose",
-                title: "Save changes",
-                message: "The menu link list has been modified. Do you want to save changes?",
+                title: "content.dialogs.link-list-save.title",
+                message: "content.dialogs.link-list-save.message",
                 callback: function (needSave) {
                     if (needSave) {
                         blade.saveChanges();

@@ -2,66 +2,87 @@
     <va-breadcrumb ng-model="blade.breadcrumbs" blade-id="blade.id"></va-breadcrumb>
     <div class="form-group">
         <div class="form-input __search">
-            <input type="text" placeholder="Search keyword..." ng-model="filter.searchKeyword" ng-keyup="$event.which === 13 && blade.refresh()">
+            <input type="text" placeholder="{{ 'platform.placeholders.search-keyword' | translate }}" ng-model="filter.searchKeyword" ng-keyup="$event.which === 13 && blade.refresh()">
         </div>
-        <p class="form-count">Count: <span class="count">{{pageSettings.totalItems}}</span></p>
+        <p class="form-count">{{ 'platform.list.count' | translate }}: <span class="count">{{pageSettings.totalItems}}</span></p>
     </div>
 </div>
 <div class="blade-static __bottom" ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems" ng-include="'pagerTemplate.html'"></div>
 <div class="blade-content __medium-wide">
     <div class="blade-inner">
         <div class="inner-block">
-            <div class="table-wrapper">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th class="table-col __product-control">
-                                <label class="form-control __checkbox">
-                                    <input type="checkbox" ng-model="pageSettings.selectedAll" ng-change="checkAll(pageSettings.selectedAll)" />
-                                    <span class="check"></span>
-                                </label>
-                            </th>
-                            <th class="table-col __product-img" title="Organization or individual Customer">Type</th>
-                            <th class="table-col __product-name">Name</th>
-                            <th class="table-col">Address</th>
-                            <th class="table-col">Email</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="table-item" ng-repeat="data in listEntries track by data.id" ng-class="{'__selected': data.id === selectedNodeId}" context-menu data-target="cml_menu_{{data.id}}">
-                            <td class="table-col">
-                                <label class="form-control __checkbox">
-                                    <input type="checkbox" ng-model="data.selected">
-                                    <span class="check"></span>
-                                </label>
-                            </td>
-                            <td class="table-col" ng-attr-title="{{data.memberType}}" ng-click='selectNode(data)'>
-                                <div class="product-img">
-                                    <i class="table-ico fa" ng-class="data.memberType === 'Organization' ? 'fa-university' : 'fa-user'"></i>
-                                </div>
-                            </td>
-                            <td class="table-col __product-name" ng-click='selectNode(data)'>
-                                <span class="table-t">{{data.displayName}}</span>
-                                <!--<span class="table-descr" ng-if="data.statusId">{{data.statusId}}</span>-->
-                            </td>
-                            <td class="table-col" ng-click='selectNode(data)'>
-                                <span>{{getMainAddress(data)}}</span>
-                            </td>
-                            <td class="table-col" ng-click='selectNode(data)'>
-                                <span>{{getMainEmail(data)}}</span>
-                                <ul class="menu __context" role="menu" id="cml_menu_{{data.id}}">
-                                    <li class="menu-item" ng-click='edit(data)'>
-                                        <i class="menu-ico fa fa-edit"></i> Manage
-                                    </li>
-                                    <li class="menu-item" ng-click='delete(data)'>
-                                        <i class="menu-ico fa fa-trash-o"></i> Delete
-                                    </li>
-                                </ul>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="table-wrapper" ng-init="setGridOptions({
+                    data: 'listEntries',
+                    rowTemplate: 'member-list.row.html',
+                    rowHeight: 61,
+                    expandableRowTemplate: 'expandableRowTemplate.html',
+                    expandableRowHeight: 25,
+                    columnDefs: [
+                                { name: 'actions', displayName: 'platform.blades.asset-list.labels.actions', enableColumnResizing: false, enableSorting: false, width: 80, cellTemplate: 'member-list-actions.cell.html' },
+                                {
+                                    name: 'memberType', displayName: 'customer.blades.member-list.labels.type', headerTooltip: 'Organization or individual Customer',
+                                    sort: { direction: uiGridConstants.DESC, priority: 1 },
+                                    enableColumnResizing: false, width: 60, cellTemplate: 'member-list-icon.cell.html'
+                                },
+                                { name: 'displayName', displayName: 'customer.blades.member-list.labels.name', sort: { direction: uiGridConstants.ASC, priority: 2 } }
+                        ]})">
+                <!--{ name: 'customAddress', displayName: 'customer.blades.member-list.labels.address', field: 'grid.appScope.getMainAddress(row)' },
+                { name: 'customEmail', displayName: 'customer.blades.member-list.labels.email' }-->
+                <div ui-grid="gridOptions" ui-grid-save-state ui-grid-selection ui-grid-resize-columns ui-grid-move-columns></div>
             </div>
         </div>
     </div>
 </div>
+
+<script type="text/ng-template" id="ui-grid/expandableTopRowHeader">
+    <div class="ui-grid-row-header-cell ui-grid-expandable-buttons-cell"><div class="ui-grid-cell-contents"><i ng-class="{ 'ui-grid-icon-plus-squared' : !grid.expandable.expandedAll, 'fa fa-edit' : grid.expandable.expandedAll }" ng-click="grid.api.expandable.toggleAllRows()"></i></div></div>
+</script>
+<script type="text/ng-template" id="ui-grid/expandableRowHeader">
+    <div class="ui-grid-row-header-cell ui-grid-expandable-buttons-cell" ng-click="grid.api.expandable.toggleRowExpansion(row.entity)">
+        <div class="ui-grid-cell-contents">
+            <i class="fa fa-edit"></i>
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="ui-grid/expandableRow">
+    <div ui-grid-expandable-row ng-if="expandableRow.shouldRenderExpand()" class="expandableRow"></div>
+</script>
+<script type="text/ng-template" id="expandableRowTemplate.html">
+    <ul class="menu">
+        <li class="menu-item">
+            <a class="menu-link" title="{{'platform.commands.manage' | translate}}" ng-click="showDetailBlade(row.entity, row.entity.displayName)">
+                <i class="menu-ico fa fa-edit"></i>
+                Manage
+            </a>
+        </li>
+    </ul>
+</script>
+
+<script type="text/ng-template" id="member-list.row.html">
+    <div ng-click="col.isRowHeader || col.name=='actions' || grid.appScope.selectNode(row.entity)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'" class="ui-grid-cell" ng-class="{'ui-grid-row-header-cell': col.isRowHeader, '__selected': row.entity.id===grid.appScope.selectedNodeId }" role="{{col.isRowHeader ? 'rowheader' : 'gridcell' }}" ui-grid-cell style='cursor:pointer'></div>
+</script>
+<script type="text/ng-template" id="member-list-actions.cell.html">
+    <div ng-init="menuVisible=false" ng-click="menuVisible=!menuVisible">
+        <i class="fa fa-angle-double-right"></i>
+    </div>
+    <ul class="menu" ng-if="menuVisible">
+        <li class="menu-item">
+            <a class="menu-link" title="{{'platform.commands.manage' | translate}}" ng-click="grid.appScope.blade.showDetailBlade(row.entity, row.entity.displayName)">
+                <i class="menu-ico fa fa-edit"></i>
+                {{'platform.commands.manage' | translate}}
+            </a>
+        </li>
+        <li class="menu-item">
+            <a class="menu-link" title="{{'platform.commands.delete' | translate}}" ng-click="grid.appScope.delete(row.entity)">
+                <i class="menu-ico fa fa-trash-o"></i>
+                {{'platform.commands.delete' | translate}}
+            </a>
+        </li>
+    </ul>
+
+</script>
+<script type="text/ng-template" id="member-list-icon.cell.html">
+    <div class="product-img" ng-attr-title="{{COL_FIELD}}">
+        <i class="table-ico fa" ng-class="'{{COL_FIELD}}' === 'Organization' ? 'fa-university' : 'fa-user'"></i>
+    </div>
+</script>

@@ -16,8 +16,8 @@
             id: 'editorialReviewWizard',
             currentEntity: data,
             languages: $scope.wizardBlade.parentBlade.catalog.languages,
-            title: 'catalog.blades.review.title',
-            subtitle: 'catalog.blades.review.subtitle',
+            title: 'catalog.blades.editorialReview-detail.title',
+            subtitle: 'catalog.blades.editorialReview-detail.subtitle',
             bottomTemplate: '$(Platform)/Scripts/common/templates/ok.tpl.html',
             controller: 'virtoCommerce.catalogModule.editorialReviewDetailWizardStepController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/editorialReview-detail.tpl.html'

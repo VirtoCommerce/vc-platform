@@ -12,7 +12,7 @@ angular.module(moduleName, [])
 		var menuItem = {
 			path: 'browse/content',
 			icon: 'fa fa-code',
-			title: 'Content',
+			title: 'content.main-menu-title',
 			priority: 111,
 			action: function () { $state.go('workspace.content'); },
 			permission: 'content:access'
@@ -33,8 +33,8 @@ angular.module(moduleName, [])
 			selectFn: function (blade, callback) {
 				var newBlade = {
 					id: 'store-pick',
-					title: this.title,
-					subtitle: 'Select stores',
+					title: 'content.blades.scope-value-pick-from-simple-list.title',
+					subtitle: 'content.blades.scope-value-pick-from-simple-list.subtitle',
 					currentEntity: this,
 					onChangesConfirmedFn: callback,
 					dataPromise: stores.query().$promise,
@@ -55,8 +55,8 @@ angular.module(moduleName, [])
 				'$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
 					var blade = {
 						id: 'content',
-						title: 'Content',
-						subtitle: 'Content service',
+						title: 'content.blades.content-main.title',
+						subtitle: 'content.blades.content-main.subtitle',
 						controller: 'virtoCommerce.contentModule.contentMainController',
 						template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/common/content-main.tpl.html',
 						isClosingDisabled: true

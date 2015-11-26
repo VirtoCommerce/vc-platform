@@ -8,7 +8,7 @@
 
     $scope.selectNode = function (node) {
         var newBlade = {
-            subtitle: 'API key',
+            subtitle: 'platform.blades.account-api.title',
             origEntity: node,
             deleteFn: function (entry) {
                 var idx = $scope.blade.currentEntities.indexOf(entry);
@@ -36,11 +36,11 @@
 
     $scope.blade.toolbarCommands = [
        {
-           name: "Add", icon: 'fa fa-plus',
+           name: "platform.commands.add", icon: 'fa fa-plus',
            executeMethod: function () {
                $scope.blade.selectedData = undefined;
                var newBlade = {
-                   subtitle: 'New API key',
+                   subtitle: 'platform.blades.account-api.title-new',
                    isNew: true,
                    confirmChangesFn: function (entry) {
                        $scope.blade.currentEntities.push(entry);

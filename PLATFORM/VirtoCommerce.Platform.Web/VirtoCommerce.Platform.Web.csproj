@@ -353,6 +353,10 @@
     </CodeAnalysisDictionary>
     <Content Include="Content\angular-gridster.css" />
     <Content Include="Content\themes\main\css\font-awesome.css" />
+    <Content Include="Content\ui-grid.eot" />
+    <Content Include="Content\ui-grid.svg" />
+    <Content Include="Content\ui-grid.ttf" />
+    <Content Include="Content\ui-grid.woff" />
     <Content Include="gulpfile.js" />
     <Content Include="Scripts\allPackages.js" />
     <Content Include="Content\allStyles.css" />
@@ -383,9 +387,14 @@
     <Content Include="Scripts\app\security\blades\permission-scopes.js" />
     <Content Include="Scripts\app\security\blades\permission-scopes.tpl.html" />
     <Content Include="Scripts\app\security\services\permissionScopeResolver.js" />
+    <Content Include="Scripts\app\userProfile\blades\userProfile.js" />
+    <Content Include="Scripts\app\userProfile\blades\userProfile.tpl.html" />
+    <Content Include="Scripts\app\userProfile\resources\userProfileApi.js" />
+    <Content Include="Scripts\app\userProfile\userProfileConfig.js" />
     <Content Include="Scripts\codemirror\gfm.js" />
     <Content Include="Scripts\codemirror\markdown.js" />
     <Content Include="Scripts\codemirror\overlay.js" />
+    <Content Include="Scripts\common\worldLanguages.js" />
     <Content Include="Scripts\common\dialogs\galleryDialog.js" />
     <Content Include="Scripts\common\dialogs\galleryDialog.tpl.html" />
     <Content Include="Scripts\common\directives\genericValueInput.js" />
@@ -528,7 +537,7 @@
     <Content Include="Scripts\app\security\blades\account-roles.js" />
     <Content Include="Scripts\app\security\blades\security-main.js" />
     <Content Include="Scripts\app\security\blades\security-main.tpl.html" />
-    <Content Include="Scripts\app\security\login\login.js" />
+    <Content Include="Scripts\app\security\login\loginToolbar.js" />
     <Content Include="Scripts\app\security\login\login.tpl.html" />
     <Content Include="Scripts\app\security\login\loginToolbar.tpl.html" />
     <Content Include="Scripts\app\security\blades\role-detail.js" />
@@ -600,7 +609,6 @@
   <ItemGroup>
     <Content Include="Content\themes\main\fonts\fontawesome-webfont.woff2" />
     <Content Include="Localizations\en.VirtoCommerce.Platform.json" />
-    <Content Include="Localizations\en.Custom.json" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>

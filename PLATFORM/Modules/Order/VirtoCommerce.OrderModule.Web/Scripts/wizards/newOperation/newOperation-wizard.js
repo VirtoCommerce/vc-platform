@@ -4,8 +4,8 @@
 	$scope.blade.isLoading = false;
 	var shipmentOperation =
 		{
-		    name: 'orders.blades.new-operation-wizard.menu.shipment-operation.title',
-		    descr: 'orders.blades.new-operation-wizard.menu.shipment-operation.description',
+		    name: 'orders.blades.newOperation-wizard.menu.shipment-operation.title',
+		    descr: 'orders.blades.newOperation-wizard.menu.shipment-operation.description',
 			action: function () {
 
 				order_res_customerOrders.getNewShipment({ id: $scope.blade.customerOrder.id }, function (result) {
@@ -36,8 +36,8 @@
 
 	var paymentOperation =
 	{
-	    name: 'orders.blades.new-operation-wizard.menu.payment-operation.title',
-	    descr: 'orders.blades.new-operation-wizard.menu.payment-operation.description',
+	    name: 'orders.blades.newOperation-wizard.menu.payment-operation.title',
+	    descr: 'orders.blades.newOperation-wizard.menu.payment-operation.description',
 	    action: function () {
 
 			order_res_customerOrders.getNewPayment({ id: $scope.blade.customerOrder.id }, function (result) {

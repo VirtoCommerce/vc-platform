@@ -17,13 +17,13 @@
         blade.isLoading = false;
     };
 
-    $scope.openModule = function (module) {
-        blade.parentBlade.selectItem(module);
+    $scope.openModule = function (id) {
+        blade.parentBlade.selectNode(id);
     }
 
     $scope.blade.toolbarCommands = [
         {
-            name: "Update", icon: 'fa fa-upload',
+            name: "platform.commands.update", icon: 'fa fa-upload',
             executeMethod: function () {
                 openUpdateEntityBlade();
             },
@@ -33,7 +33,7 @@
             permission: 'platform:module:manage'
         },
         {
-            name: "Uninstall", icon: 'fa fa-trash-o',
+            name: "platform.commands.uninstall", icon: 'fa fa-trash-o',
             executeMethod: function () {
                 openDeleteEntityBlade();
             },
@@ -43,12 +43,12 @@
             permission: 'platform:module:manage'
         },
         {
-            name: "Settings", icon: 'fa fa-wrench',
+            name: "platform.commands.settings", icon: 'fa fa-wrench',
             executeMethod: function () {
                 var newBlade = {
                     id: 'moduleSettingsSection',
                     moduleId: blade.currentEntityId,
-                    title: 'Module settings',
+                    title: 'platform.blades.module-settings-detail.title',
                     //subtitle: '',
                     controller: 'platformWebApp.settingsDetailController',
                     template: '$(Platform)/Scripts/app/settings/blades/settings-detail.tpl.html'
@@ -64,7 +64,7 @@
     function openUpdateEntityBlade() {
         var newBlade = {
             id: "moduleWizard",
-            title: "Module update",
+            title: "platform.blades.module-detail.title-update",
             // subtitle: '',
             mode: 'update',
             controller: 'platformWebApp.installWizardController',
@@ -76,8 +76,8 @@
     function openDeleteEntityBlade() {
         var dialog = {
             id: "confirmDelete",
-            title: "Delete confirmation",
-            message: "Are you sure you want to uninstall this Module?",
+            title: "platform.dialogs.module-delete.title",
+            message: "platform.dialogs.module-delete.message",
             callback: function (remove) {
                 if (remove) {
                     blade.isLoading = true;
@@ -87,7 +87,7 @@
                             id: 'moduleInstallProgress',
                             currentEntity: data,
                             currentEntityId: data.id,
-                            title: 'Module uninstall',
+                            title: 'platform.blades.module-wizard-progress-step.title',
                             controller: 'platformWebApp.moduleInstallProgressController',
                             template: '$(Platform)/Scripts/app/packaging/wizards/newModule/module-wizard-progress-step.tpl.html'
                         };

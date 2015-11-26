@@ -6,6 +6,7 @@ using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using DotLiquid;
 using VirtoCommerce.ApiClient.DataContracts;
+using VirtoCommerce.Web.Caching;
 using VirtoCommerce.Web.Models.Services;
 using VirtoCommerce.Web.Views.Engines.Liquid.Extensions;
 
@@ -70,7 +71,14 @@ namespace VirtoCommerce.Web.Models
             var siteContext = SiteContext.Current;
             var service = CommerceService.Create();
             var searchQuery = new BrowseQuery() { Skip = skip, Take = pageSize, Search = terms};
-            var response = Task.Run(() => service.SearchAsync<object>(siteContext, searchQuery)).Result;
+
+            var searchCacheKey = CacheKey.Create("Search.LoadSearchResults", searchQuery.ToString());
+            var response = Task.Run(()=> SiteContext.Current.CacheManager.GetAsync(searchCacheKey, TimeSpan.FromMinutes(5), async () =>
+            {
+                return await Task.Run(() => service.SearchAsync<object>(siteContext, searchQuery));
+            })).Result;
+
+       
             this.Results = response;
 
             this._ResultsLoaded = true;

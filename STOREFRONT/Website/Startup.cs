@@ -13,7 +13,6 @@ using VirtoCommerce.Web;
 
 [assembly: OwinStartup(typeof(Startup))]
 [assembly: PreApplicationStartMethod(typeof(Startup), "PreApplicationStart")]
-
 namespace VirtoCommerce.Web
 {
     public partial class Startup

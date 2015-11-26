@@ -47,7 +47,7 @@
             var dialog = {
                 id: "confirmItemChange",
                 title: "catalog.dialogs.category-save.title",
-                message: "catalog.dialogs.category-save.subtitle",
+                message: "catalog.dialogs.category-save.message",
                 callback: function (needSave) {
                     if (needSave) {
                         saveChanges();
@@ -72,8 +72,8 @@
         var newBlade = {
             id: 'editCategoryProperty',
             currentEntityId: prop.id,
-            title: 'catalog.blades.category-property.title',
-            subtitle: 'catalog.blades.category-property.subtitle',
+            title: 'catalog.blades.property-detail.title-category',
+            subtitle: 'catalog.blades.property-detail.subtitle-category',
             controller: 'virtoCommerce.catalogModule.propertyDetailController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/property-detail.tpl.html'
         };
@@ -119,8 +119,8 @@
 		      	var newBlade = {
 		      		id: 'editCategoryProperty',
 		      		categoryId: $scope.blade.currentEntity.id,
-		      		title: 'catalog.blades.new-category-property.title',
-		      		subtitle: 'catalog.blades.new-category-property.subtitle',
+		      		title: 'catalog.blades.property-detail.title-category-new',
+		      		subtitle: 'catalog.blades.property-detail.subtitle-category-new',
 		      		controller: 'virtoCommerce.catalogModule.propertyDetailController',
 		      		template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/property-detail.tpl.html'
 		      	};

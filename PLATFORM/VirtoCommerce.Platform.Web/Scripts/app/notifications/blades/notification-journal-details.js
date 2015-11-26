@@ -23,7 +23,7 @@
 
 	$scope.blade.toolbarCommands = [
 		{
-			name: "Stop sending", icon: 'fa fa-stop',
+		    name: "platform.commands.stop-sending", icon: 'fa fa-stop',
 			executeMethod: function () {
 				blade.stopNotification(blade.currentEntity.id);
 			},

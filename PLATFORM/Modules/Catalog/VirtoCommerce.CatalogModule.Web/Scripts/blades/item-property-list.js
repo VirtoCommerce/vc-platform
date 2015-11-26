@@ -66,15 +66,15 @@
             var newBlade = {
                 id: 'editCategoryProperty',
                 currentEntityId: prop.id,
-                title: 'catalog.blades.item-property.tittle',
-                subtitle: 'catalog.blades.item-property.subtitle',
+                title: 'catalog.blades.property-detail.title-item',
+                subtitle: 'catalog.blades.property-detail.subtitle-item',
                 controller: 'virtoCommerce.catalogModule.propertyDetailController',
                 template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/property-detail.tpl.html'
             };
             bladeNavigationService.showBlade(newBlade, blade);
         } else {
             editUnmanageable({
-                title: 'catalog.blades.item-property.tittle',
+                title: 'catalog.blades.item-property-detail.title',
                 origEntity: prop
             });
         }
@@ -83,7 +83,7 @@
     function editUnmanageable(bladeData) {
         var newBlade = {
             id: 'editItemProperty',
-            subtitle: 'catalog.blades.item-property.subtitle',
+            subtitle: 'catalog.blades.item-property-detail.subtitle',
             controller: 'virtoCommerce.catalogModule.itemPropertyDetailController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/item-property-detail.tpl.html'
         };
@@ -131,7 +131,7 @@
 		    executeMethod: function () {
 		        editUnmanageable({
 		            isNew: true,
-		            title: 'catalog.blades.new-item-property.title',
+		            title: 'catalog.blades.item-property-detail.title-new',
 		            origEntity: {
 		                type: "Product",
 		                valueType: "ShortText",

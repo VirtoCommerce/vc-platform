@@ -5,7 +5,7 @@
 	$scope.openAddressesBlade = function () {
 		var newBlade = {
 			id: 'orderOperationAddresses',
-			title: 'orders.widgets.customer-order-address.blade-title',
+			title: 'orders.widgets.customerOrder-address.blade-title',
 			currentEntities: $scope.operation.addresses,
 			controller: 'virtoCommerce.coreModule.common.coreAddressListController',
 			template: 'Modules/$(VirtoCommerce.Core)/Scripts/common/blades/address-list.tpl.html'

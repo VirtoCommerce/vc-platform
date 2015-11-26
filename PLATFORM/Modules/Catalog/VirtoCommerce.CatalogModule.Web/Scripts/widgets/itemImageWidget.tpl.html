@@ -2,7 +2,7 @@
     <div class="gridster-cnt" ng-click="openBlade()">
         <div class="cnt-inner" ng-if="currentEntities.length == 0">
             <i class="gallery-ico fa fa-image"></i>
-            <div class="gallery-descr">{{ 'catalog.blades.images.labels.no-images' | translate }}</div>
+            <div class="gallery-descr">{{ 'catalog.widgets.itemImage.no-images' | translate }}</div>
         </div>
         <div class="gallery-img" ng-class="{'__main' : $first, '__solo' : currentEntities.length == 1 }" ng-repeat="image in currentEntities | limitTo : 11 track by image.url">
             <img ng-src="{{image.url ? image.url : ''}}" />

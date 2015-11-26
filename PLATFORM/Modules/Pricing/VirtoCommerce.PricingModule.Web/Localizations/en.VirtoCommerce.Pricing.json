@@ -18,8 +18,8 @@
         "subtitle": "Merchandise management",
         "labels": {
           "name": "Name",
-          "prices-count": "Prices count",
-          "last-modified": "Last modified"
+          "currency": "Currency",
+          "last-modified": "Modified"
         }
       },
       "pricelist-detail": {
@@ -27,11 +27,15 @@
           "name": "Name",
           "currency": "Currency",
           "description": "Description"
+        },
+        "placeholders": {
+          "name": "Enter name",
+          "currency": "Select...",
+          "description": "Enter description"
         }
       },
       "pricelist-item-list": {
         "subtitle": "Select Price list to manage prices",
-        "widget-title": "Prices",
         "labels": {
           "item-name": "Item name",
           "item-code": "Item code",
@@ -50,25 +54,25 @@
           "list-price": "List price",
           "sale-price": "Sale price",
           "min-quantity": "Min. quantity",
-          "last-modified": "Last modified"
+          "last-modified": "Modified"
         }
       },
       "pricelist-assignment-list": {
         "subtitle": "Manage assigned catalogs",
-        "widget-title": "Assigned catalog",
         "labels": {
           "assignment-name": "Assignment name",
           "catalog": "Catalog",
           "priority": "Priority"
         }
       },
-      "assignments": {
+      "assignment-list": {
         "subtitle": "Merchandise management",
         "labels": {
           "name": "Name",
           "catalog": "Catalog",
           "priority": "Priority",
-          "last-modified": "Last modified"
+          "last-modified": "Modified",
+          "modified-by": "Modified by"
         }
       },
       "assignment-detail": {
@@ -84,6 +88,12 @@
           "enable-date": "Enable date (leave blank if always available)",
           "expiration-date": "Expiration date (leave blank if always available)",
           "eligible-shoppers": "Eligible shoppers"
+        },
+        "placeholders": {
+          "assignment-name": "Enter name",
+          "price-list": "Select...",
+          "catalog": "Select...",
+          "description": "Enter description"
         }
       },
       "item-pricelists-list": {
@@ -91,6 +101,17 @@
         "labels": {
           "no-pricelists": "No Pricelists yet"
         }
+      }
+    },
+    "widgets": {
+      "assignments": {
+        "title": "Assigned catalog"
+      },
+      "itemPricesWidget": {
+        "title": "Price"
+      },
+      "prices": {
+        "title": "Prices"
       }
     },
     "dialogs": {

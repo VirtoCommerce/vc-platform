@@ -16,7 +16,7 @@ angular.module(moduleName, [])
                   '$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
                       var blade = {
                           id: 'marketing',
-                          title: 'Marketing',
+                          title: 'marketing.blades.marketing-main.title',
                           controller: 'virtoCommerce.marketingModule.marketingMainController',
                           template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/common/marketing-main.tpl.html',
                           isClosingDisabled: true
@@ -51,7 +51,7 @@ angular.module(moduleName, [])
       var menuItem = {
           path: 'browse/marketing',
           icon: 'fa fa-flag',
-          title: 'Marketing',
+          title: 'marketing.main-menu-title',
           priority: 40,
           action: function () { $state.go('workspace.marketing'); },
           permission: 'marketing:access'

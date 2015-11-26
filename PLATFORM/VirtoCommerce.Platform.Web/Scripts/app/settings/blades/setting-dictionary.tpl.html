@@ -3,27 +3,27 @@
         <div class="inner-block">
             <form class="form" ng-submit="add(pdForm)" name="pdForm" novalidate autocomplete="off">
                 <fieldset>
-                    <legend>New value</legend>
+                    <legend>{{ 'platform.blades.setting-dictionary.labels.new-value' | translate }}</legend>
                     <div class="form-group">
-                        <label class="form-label">New value</label>
+                        <label class="form-label">{{ 'platform.blades.setting-dictionary.labels.new-value' | translate }}</label>
                         <div class="form-input" ng-if="blade.currentEntity.valueType !== 'Number'">
-                            <input ng-class="{'error' : pdForm.dictValue.$invalid && !pdForm.dictValue.$pristine}" required ng-model="newValue.value" ui-validate=" 'dictValueValidator($value)' " name="dictValue" focus-on="" type="text" placeholder="Please enter value" />
+                            <input ng-class="{'error' : pdForm.dictValue.$invalid && !pdForm.dictValue.$pristine}" required ng-model="newValue.value" ui-validate=" 'dictValueValidator($value)' " name="dictValue" focus-on="" type="text" placeholder="{{ 'platform.blades.setting-dictionary.placeholders.new-value' | translate }}" />
                         </div>
                         <div class="form-input" ng-if="blade.currentEntity.valueType === 'Number'">
-                            <input ng-class="{'error' : pdForm.dictValue.$invalid && !pdForm.dictValue.$pristine}" required ng-model="newValue.value" ui-validate=" 'dictValueValidator($value)' " name="dictValue" focus-on="" type="text" placeholder="Please enter value" />
+                            <input ng-class="{'error' : pdForm.dictValue.$invalid && !pdForm.dictValue.$pristine}" required ng-model="newValue.value" ui-validate=" 'dictValueValidator($value)' " name="dictValue" focus-on="" type="text" placeholder="{{ 'platform.blades.setting-dictionary.placeholders.new-value' | translate }}" />
                         </div>
                         <div class="form-error" ng-if="pdForm.dictValue.$dirty && pdForm.dictValue.$invalid">
-                            <span ng-if="pdForm.dictValue.$error.required">Required</span>
-                            <span ng-if="pdForm.dictValue.$error.validator">Duplicate value found</span>
+                            <span ng-if="pdForm.dictValue.$error.required">{{ 'platform.blades.setting-dictionary.validations.new-value-required' | translate }}</span>
+                            <span ng-if="pdForm.dictValue.$error.validator">{{ 'platform.blades.setting-dictionary.validations.new-value' | translate }}</span>
                         </div>
                     </div>
                     <div class="form-group">
-                        <button class="btn" ng-disabled="pdForm.$invalid" type="submit">Add</button>
+                        <button class="btn" ng-disabled="pdForm.$invalid" type="submit">{{ 'platform.commands.add' | translate }}</button>
                     </div>
                 </fieldset>
             </form>
             <fieldset ng-if="blade.currentEntity.arrayValues.length > 0">
-                <legend>Current values</legend>
+                <legend>{{ 'platform.blades.setting-dictionary.labels.current-values' | translate }}</legend>
                 <div class="table-wrapper">
                     <form name="formScope" class="form">
                         <table class="table" ng-init="setForm(formScope)">
@@ -35,7 +35,7 @@
                                             <span class="check"></span>
                                         </label>
                                     </th>
-                                    <th class="table-col">Value</th>
+                                    <th class="table-col">{{ 'platform.blades.setting-dictionary.labels.value' | translate }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -55,7 +55,7 @@
                                         </div>
                                         <ul role="menu" class="menu __context" id="pd_menu_{{$index}}">
                                             <li class="menu-item" ng-click='delete($index)'>
-                                                <i class="menu-ico fa fa-trash-o"></i> Delete
+                                                <i class="menu-ico fa fa-trash-o"></i> {{ 'platform.commands.delete' | translate }}
                                             </li>
                                         </ul>
                                     </td>

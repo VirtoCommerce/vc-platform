@@ -18,7 +18,7 @@
                 id: 'storeDetails',
                 currentEntityId: store.id,
                 title: store.name,
-                subtitle: 'Store details',
+                subtitle: 'customer.blades.store-detail.subtitle',
                 controller: 'virtoCommerce.storeModule.storeDetailController',
                 template: 'Modules/$(VirtoCommerce.Store)/Scripts/blades/store-detail.tpl.html'
             };
