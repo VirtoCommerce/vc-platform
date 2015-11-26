@@ -3,7 +3,7 @@
 <script id="storefront.checkout.customerInformation.tpl" type="text/ng-template">
     <div class="step">
         <form accept-charset="UTF-8" action="" class="edit_checkout animate-floating-labels" name="formShippingAddress" novalidate="novalidate" method="post" ng-submit="setShippingAddress()">
-            <input id="AddressType" name="AddressType" type="hidden" ng-model="shippingAddress.AddressType" />
+            <input id="Type" name="Type" type="hidden" ng-model="shippingAddress.Type" value="Shipping" />
             <div class="step__sections">
                 <div class="section section--contact-information">
                     <div class="section__header">
@@ -85,18 +85,18 @@
                                 <div class="field__input-wrapper field__input-wrapper--select">
                                     <label class="field__label" for="CountryName">{{ 'checkout.address.country' | t }}</label>
                                     <select class="field__input field__input--select" id="CountryName" name="CountryName" required="required" size="1" ng-model="shippingAddress.CountryName">
-                                        <option value="Canada">Canada</option>
+                                        <option selectd="selected" value="Canada">Canada</option>
                                     </select>
-                                    <input id="CountryCode" name="CountryCode" type="hidden"  ng-model="shippingAddress.CountryCode" />
+                                    <input id="CountryCode" name="CountryCode" type="hidden" ng-model="shippingAddress.CountryCode" value="CAN" />
                                 </div>
                             </div>
                             <div class="field field--required field--three-eights field--show-floating-label">
                                 <div class="field__input-wrapper field__input-wrapper--select">
                                     <label class="field__label" for="RegionName">{{ 'checkout.address.province' | t }}</label>
                                     <select class="field__input field__input--select" id="RegionName" name="RegionName" placeholder="{{ 'checkout.address.province' | t }}" required="required" ng-model="shippingAddress.RegionName">
-                                        <option value="Newfoundland">Newfoundland</option>
+                                        <option selected="selected" value="Newfoundland">Newfoundland</option>
                                     </select>
-                                    <input id="RegionId" name="RegionId" type="hidden" ng-model="shippingAddress.RegionId" />
+                                    <input id="RegionId" name="RegionId" type="hidden" ng-model="shippingAddress.RegionId" value="NL" />
                                 </div>
                             </div>
                             <div class="field field--required field--quarter" ng-class="{ 'field--error': formShippingAddress.PostalCode.$dirty && formShippingAddress.PostalCode.$error.required }">
@@ -131,7 +131,7 @@
                 </div>
             </div>
             <div class="step__footer">
-                <button class="step__footer__continue-btn btn" type="submit">
+                <button class="step__footer__continue-btn btn" type="submit" ng-class="{ 'btn--disabled': formShippingAddress.$invalid }" ng-disabled="formShippingAddress.$invalid">
                     <span class="btn__content">{{ 'checkout.customer_information.continue_text' | t }}</span>
                     <i class="btn__spinner icon icon--button-spinner"></i>
                 </button>

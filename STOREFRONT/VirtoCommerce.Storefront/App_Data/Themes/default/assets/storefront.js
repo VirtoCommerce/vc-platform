@@ -63,19 +63,15 @@
     .controller('checkoutController', ['$scope', '$route', '$location', 'cartApi', function ($scope, $route, $location, cartApi) {
         $scope.$route = $route;
         $scope.cart = {};
-        $scope.shippingAddress = {
-            AddressType: 2
-        };
-        $scope.billingAddress = {
-            AddressType: 1
-        };
+        $scope.shippingAddress = {};
+        $scope.billingAddress = {};
         cartApi.get(null, function (data) {
             $scope.cart = data;
-            var shippingAddresses = _.where($scope.cart.Addresses, { AddressType: 2 });
+            var shippingAddresses = _.where($scope.cart.Addresses, { Type: "Shipping" });
             if (shippingAddresses.length) {
                 $scope.shippingAddress = shippingAddresses[0];
             }
-            var billingAddresses = _.where($scope.cart.Addresses, { AddressType: 1 });
+            var billingAddresses = _.where($scope.cart.Addresses, { Type: "Billing" });
             if (billingAddresses.length) {
                 $scope.billingAddress = billingAddresses[0];
             }

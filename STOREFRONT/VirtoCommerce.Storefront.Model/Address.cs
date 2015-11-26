@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using VirtoCommerce.Storefront.Model.Common;
+﻿using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Model
 {
     public class Address : ValueObject<Address>
     {
-        public AddressType AddressType { get; set; }
+        public AddressType Type { get; set; }
         public string Name { get; set; }
         public string Organization { get; set; }
         public string CountryCode { get; set; }
