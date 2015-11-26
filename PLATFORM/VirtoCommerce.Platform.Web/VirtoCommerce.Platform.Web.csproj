@@ -578,6 +578,7 @@
     <Content Include="Scripts\app\navigation\blade\bladeNavigation.js" />
     <Content Include="Scripts\codemirror\ui-codemirror.js" />
     <Content Include="Scripts\codemirror\xml.js" />
+    <Content Include="Scripts\ng-context-menu.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
