@@ -30,6 +30,16 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         public string ProductId { get; set; }
 
         /// <summary>
+        /// Absilute price benefit. You save 40.00 USD
+        /// </summary>
+        public Money AbsoluteBenefit { get; set; }
+
+        /// <summary>
+        /// Relative benefit. 30% 
+        /// </summary>
+        public decimal RelativeBenefit { get; set; }
+
+        /// <summary>
         /// Original product price (old price)
         /// </summary>
         public Money ListPrice { get; set; }

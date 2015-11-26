@@ -9,6 +9,10 @@ namespace VirtoCommerce.Storefront.Controllers
 {
     public class ErrorController : Controller
     {
+        /// <summary>
+        /// Do not rename this method because it have references in Global.asax and SeoRoute.cs
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public ActionResult Http404()
         {

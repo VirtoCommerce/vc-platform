@@ -89,7 +89,7 @@ namespace VirtoCommerce.CoreModule.Data.Repositories
 			using (var repository = _repositoryFactory())
 			{
 				var sourceEntry = seo.ToDataModel();
-				var targetEntry = repository.SeoUrlKeywords.FirstOrDefault(x => x.Id == seo.Id || (x.ObjectId == sourceEntry.ObjectId && x.ObjectType == sourceEntry.ObjectType));
+				var targetEntry = repository.SeoUrlKeywords.FirstOrDefault(x => x.Id == seo.Id || (x.ObjectId == sourceEntry.ObjectId && x.ObjectType == sourceEntry.ObjectType && x.Language == sourceEntry.Language));
 				if (targetEntry == null)
 				{
 					repository.Add(sourceEntry);

@@ -24,7 +24,7 @@ namespace VirtoCommerce.Storefront.Model
         /// <summary>
         /// Image alt text
         /// </summary>
-        public string AlternateText { get; set; }
+        public string Alt { get; set; }
 
       
     }

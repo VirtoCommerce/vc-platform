@@ -3,7 +3,8 @@ using System.Globalization;
 using System.Linq;
 using System.Web;
 using DotLiquid;
-using VirtoCommerce.Storefront.Model;
+using storefrontModel = VirtoCommerce.Storefront.Model;
+using shopifyModel = VirtoCommerce.LiquidThemeEngine.Objects;
 
 namespace VirtoCommerce.LiquidThemeEngine.Filters
 {
@@ -40,6 +41,41 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
         public static string DeleteCustomerAddressLink(string input, string id)
         {
             return BuildOnClickLink(input, "Shopify.CustomerAddress.destroy({0});return false", id);
+        }
+
+        /// <summary>
+        /// Returns the URL of an image. Accepts an image size as a parameter. The img_url filter can be used on the following objects:
+        /// product, variant,  line item, collection, image
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static string ImgUrl(object input, string type = null)
+        {
+            var retVal = input.ToString();
+            var product = input as shopifyModel.Product;
+            var image = input as shopifyModel.Image;
+            var variant = input as shopifyModel.Variant;
+            var collection = input as shopifyModel.Collection;
+
+            if (product != null)
+            {
+                retVal = product.FeaturedImage != null ? product.FeaturedImage.Src : null;
+            }
+            if (image != null)
+            {
+                retVal = image.Src;
+            }
+            if (variant != null)
+            {
+                retVal = variant.FeaturedImage != null ? variant.FeaturedImage.Src : null;
+            }
+            if (collection != null)
+            {
+                retVal = collection.Image != null ? collection.Image.Src : null;
+            }
+
+            return retVal;
         }
 
         /// <summary>
@@ -101,8 +137,8 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
         public static string AbsoluteUrl(string input, string storeId = null, string languageCode = null)
         {
             var themeAdaptor = (ShopifyLiquidThemeEngine)Template.FileSystem;
-            Store store = null;
-            Language language = null;
+            storefrontModel.Store store = null;
+            storefrontModel.Language language = null;
             if (!string.IsNullOrEmpty(storeId))
             {
                 store = themeAdaptor.WorkContext.AllStores.FirstOrDefault(x => string.Equals(x.Id, storeId, StringComparison.InvariantCultureIgnoreCase));
@@ -143,6 +179,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
             return result;
         }
 
+     
         private static string BuildAbsoluteUrl(string virtualUrl)
         {
             var themeEngine = (ShopifyLiquidThemeEngine)Template.FileSystem;

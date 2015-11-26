@@ -21,18 +21,32 @@ namespace VirtoCommerce.Storefront.Controllers
             _productService = productService;
         }
 
+        //This method created specially for routing from SeoRoute.cs (because ASP.NET routing does not work for  actions with RouteAttributes)
+        //http://stackoverflow.com/questions/19545898/asp-net-web-api-2-attribute-routing-controller-name
         [HttpGet]
-        public async Task<ActionResult> ProductDetails(string productid)
+        public async Task<ActionResult> ProductDetails(string productId)
         {
-            base.WorkContext.CurrentProduct = await _productService.GetProductAsync(productid, Model.Catalog.ItemResponseGroup.ItemLarge);
+            return await GetProductDetails(productId);
+        }
+
+        /// <summary>
+        /// This action used by storefront to get product details by product id
+        /// </summary>
+        /// <param name="productId"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("{productId}")]
+        public async Task<ActionResult> GetProductDetails(string productId)
+        {
+            base.WorkContext.CurrentProduct = await _productService.GetProductAsync(productId, Model.Catalog.ItemResponseGroup.ItemLarge);
             return View("product", base.WorkContext);
         }
 
-        [Route("{id}")]
+        [Route("json/{productId}")]
         [HttpGet]
-        public async Task<ActionResult> GetProductById(string id)
+        public async Task<ActionResult> GetProductJsonById(string productId)
         {
-            base.WorkContext.CurrentProduct = await _productService.GetProductAsync(id, Model.Catalog.ItemResponseGroup.ItemLarge);
+            base.WorkContext.CurrentProduct = await _productService.GetProductAsync(productId, Model.Catalog.ItemResponseGroup.ItemLarge);
             return Json(base.WorkContext.CurrentProduct, JsonRequestBehavior.AllowGet);
         }
     }

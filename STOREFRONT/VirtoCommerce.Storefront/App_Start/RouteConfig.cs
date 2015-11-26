@@ -16,11 +16,6 @@ namespace VirtoCommerce.Storefront
 
             routes.MapMvcAttributeRoutes();
 
-            routes.MapRoute(
-              name: "Storefront_Error",
-              url: "Error/{code}",
-              defaults: new { controller = "Error", action = "Index", code = 500 });
-
             routes.MapSeoRoute(workContextFactory, commerceCoreApi, "SeoRoute", "{*path}", new { controller = "Common", action = "GenericUrl" });
         }
     }

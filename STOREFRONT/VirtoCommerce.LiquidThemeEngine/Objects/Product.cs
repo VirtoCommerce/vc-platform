@@ -102,9 +102,13 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         {
             get
             {
-                if (_product.Images != null && _product.Images.Any())
-                    return new Image(_product.Images.First());
-                return null;
+                Image retVal = null;
+                if (_product.PrimaryImage != null)
+                {
+                    retVal = new Image(_product.PrimaryImage);
+                }
+
+                return retVal;
             }
         }
 
@@ -155,6 +159,9 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
             }
         }
 
+        /// <summary>
+        /// Returns the price of the product. Use one of the money filters to return the value in a monetary format.
+        /// </summary>
         public decimal Price
         {
             get
@@ -163,6 +170,9 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
             }
         }
 
+        /// <summary>
+        /// Returns the highest price of the product. Use one of the money filters to return the value in a monetary format.
+        /// </summary>
         public decimal PriceMax
         {
             get
@@ -171,6 +181,9 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
             }
         }
 
+        /// <summary>
+        /// Returns the lowest price of the product. Use one of the money filters to return the value in a monetary format.
+        /// </summary>
         public decimal PriceMin
         {
             get
@@ -234,7 +247,12 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         {
             get
             {
-                return _urlBuilder.ToAppAbsolute(_context, string.Format("~/products/{0}", _product.Id), _context.CurrentStore, _context.CurrentLanguage);
+                var url = "~/product/" + _product.Id;
+                if (_product.SeoInfo != null)
+                {
+                    url = _product.SeoInfo.Slug;
+                }
+                return _urlBuilder.ToAppAbsolute(_context, url, _context.CurrentStore, _context.CurrentLanguage);
             }
         }
 

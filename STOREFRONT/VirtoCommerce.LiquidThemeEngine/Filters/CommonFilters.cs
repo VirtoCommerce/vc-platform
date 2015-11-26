@@ -13,13 +13,9 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
     public class CommonFilters
     {
         #region Public Methods and Operators
-        public static string Default(object input, object value)
+        public static object Default(object input, object value)
         {
-            if (input == null)
-            {
-                return value == null ? null : value.ToString();
-            }
-            return input.ToString();
+            return input ?? value;
         }
  
         public static string Json(object input)

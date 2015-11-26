@@ -34,8 +34,8 @@ namespace VirtoCommerce.Storefront.Routing
                 if (seoRecord == null)
                 {
                     // Slug not found
-                    data.Values["controller"] = "Common";
-                    data.Values["action"] = "PageNotFound";
+                    data.Values["controller"] = "Error";
+                    data.Values["action"] = "Http404";
                 }
                 else
                 {
@@ -50,8 +50,8 @@ namespace VirtoCommerce.Storefront.Routing
                         if (string.IsNullOrWhiteSpace(activeSlug))
                         {
                             // No active slug found
-                            data.Values["controller"] = "Common";
-                            data.Values["action"] = "PageNotFound";
+                            data.Values["controller"] = "Error";
+                            data.Values["action"] = "Http404";
                         }
                         else
                         {
@@ -84,8 +84,7 @@ namespace VirtoCommerce.Storefront.Routing
                                 case "CatalogProduct":
                                     data.Values["controller"] = "Product";
                                     data.Values["action"] = "ProductDetails";
-                                    data.Values["productid"] = seoRecord.ObjectId;
-                                    data.Values["slug"] = seoRecord.SemanticUrl;
+                                    data.Values["productId"] = seoRecord.ObjectId;
                                     break;
                                 case "Category":
                                     workContext.CurrentCatalogSearchCriteria.CategoryId = seoRecord.ObjectId;
