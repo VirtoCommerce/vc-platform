@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Reflection;
 using DotLiquid;
-using VirtoCommerce.LiquidThemeEngine.Converters;
-using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.LiquidThemeEngine.Objects
@@ -20,12 +16,12 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         /// Merchants can specify a page_description.
         /// </summary>
         public string PageDescription { get; set; }
-     
+
         /// <summary>
         /// The liquid object page_title returns the title of the current page.
         /// </summary>
         public string PageTitle { get; set; }
-      
+
         /// <summary>
         /// The liquid object shop returns information about your shop
         /// </summary>
@@ -44,27 +40,20 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
 
         public Product Product { get; set; }
 
-    
+
         /// <summary>
         /// Returns logged in customer or null.
         /// </summary>
         public Customer Customer { get; set; }
 
-        private string _countryOptionTags;
-        public string CountryOptionTags
-        {
-            get
-            {
-                return _countryOptionTags ?? (_countryOptionTags = string.Join("\r\n", Countries.OrderBy(c => c.Name).Select(c => c.ToOptionTag())));
-            }
-        }
+        public string CountryOptionTags { get; set; }
 
         /// <summary>
         /// The collection https://docs.shopify.com/themes/liquid-documentation/objects/collection
         /// </summary>
         public Collection Collection { get; set; }
 
-    
+
         public Collections Collections { get; set; }
 
         public int CurrentPage { get; set; }
@@ -74,7 +63,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
 
         public Currency CurrentCurrency { get; set; }
 
-        public Shop[] AllStores { get; set; } 
+        public Shop[] AllStores { get; set; }
         #endregion
         /// <summary>
         /// template returns the name of the template used to render the current page, with the .liquid extension omitted.
