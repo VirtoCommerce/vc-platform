@@ -40,7 +40,9 @@ namespace VirtoCommerce.LiquidThemeEngine
                 throw new ArgumentNullException("viewContext");
 
             var shopifyContext = _themeAdaptor.WorkContext as ShopifyThemeWorkContext;
-
+            //Set current template
+            shopifyContext.Template = _viewName;
+            
             var formErrors = new FormErrors(viewContext.ViewData.ModelState);
             //Set single Form object with errors for shopify compilance
             shopifyContext.Form = new Form();

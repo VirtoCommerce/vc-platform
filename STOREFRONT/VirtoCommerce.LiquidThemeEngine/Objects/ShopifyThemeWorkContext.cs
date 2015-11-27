@@ -120,6 +120,11 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         }
 
         public int CurrentPage { get; set; }
+
+        /// <summary>
+        /// template returns the name of the template used to render the current page, with the .liquid extension omitted.
+        /// </summary>
+        public string Template { get; set; }
         #endregion
 
         #region ILiquidizable members
