@@ -203,7 +203,7 @@ namespace VirtoCommerce.Storefront.Owin
             }
             var retVal = store.DefaultLanguage;
             //Get store default language if language not in the supported by stores list
-            if (!String.IsNullOrEmpty(languageCode))
+            if (!string.IsNullOrEmpty(languageCode))
             {
                 var language = new Language(languageCode);
                 retVal = store.Languages.Contains(language) ? language : retVal;
@@ -235,16 +235,16 @@ namespace VirtoCommerce.Storefront.Owin
             //Get currency from request url
             var currencyCode = context.Request.Query.Get("currency");
             //Next try get from Cookies
-            if (String.IsNullOrEmpty(currencyCode))
+            if (string.IsNullOrEmpty(currencyCode))
             {
                 currencyCode = context.Request.Cookies[StorefrontConstants.CurrencyCookie];
             }
 
             var retVal = store.DefaultCurrency;
             //Get store default currency if currency not in the supported by stores list
-            if (!String.IsNullOrEmpty(currencyCode))
+            if (!string.IsNullOrEmpty(currencyCode))
             {
-                var currency = new Currency(EnumUtility.SafeParse<CurrencyCodes>(currencyCode, store.DefaultCurrency.CurrencyCode));
+                var currency = new Currency(EnumUtility.SafeParse(currencyCode, store.DefaultCurrency.CurrencyCode));
                 retVal = store.Currencies.Contains(currency) ? currency : retVal;
             }
             return retVal;
