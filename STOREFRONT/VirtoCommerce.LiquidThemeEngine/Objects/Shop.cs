@@ -15,179 +15,73 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
     /// </summary>
     public class Shop : Drop
     {
-        private readonly Store _store;
-        private readonly IStorefrontUrlBuilder _urlBuilder;
-        private readonly WorkContext _context;
-        public Shop(Store store, IStorefrontUrlBuilder urlBuilder, WorkContext context)
-        {
-            _store = store;
-            _urlBuilder = urlBuilder;
-            _context = context;
-
-            CustomerAccountsEnabled = true;
-            CustomerAccountsOptional = true;
-        }
-
+     
         /// <summary>
         /// Returns the shop's currency in three-letter format (ex: USD).
         /// </summary>
-        public string Currency
-        {
-            get
-            {
-                return _context.CurrentCurrency.Code;
-            }
-        }
+        public string Currency { get; set; }
 
         /// <summary>
         /// Returns the number of collections in a shop.
         /// </summary>
-        public string CollectionsCount
-        {
-            get
-            {
-                return "0";
-            }
-        }
+        public string CollectionsCount { get; set; }
 
         /// <summary>
         /// Returns the description of the shop.
         /// </summary>
-        public string Description
-        {
-            get
-            {
-                return _store.Description;
-            }
-        }
+        public string Description { get; set; }
 
         /// <summary>
         /// Returns the primary domain of the shop.
         /// </summary>
-        public string Domain
-        {
-            get
-            {
-                return _store.Url;
-            }
-        }
+        public string Domain { get; set; }
 
         /// <summary>
         /// Returns the shop's email address.
         /// </summary>
-        public string Email
-        {
-            get
-            {
-                return _store.Email;
-            }
-        }
+        public string Email { get; set; }
 
         /// <summary>
         /// Returns a string that is used by Shopify to format money without showing the currency.
         /// </summary>
-        public string MoneyFormat
-        {
-            get
-            {
-                if (Currency.Equals("GBP", StringComparison.OrdinalIgnoreCase)
-                   || Currency.Equals("USD", StringComparison.OrdinalIgnoreCase))
-                {
-                    return _context.CurrentCurrency.Symbol + "{{ amount }}";
-                }
-                else
-                {
-                    return "{{ amount }} " + _context.CurrentCurrency.Symbol;
-                }
-            }
-        }
+        public string MoneyFormat { get; set; }
 
         /// <summary>
         /// Returns a string that is used by Shopify to format money while also displaying the currency.
         /// </summary>
-        public string MoneyWithCurrencyFormat
-        {
-            get
-            {
-                return MoneyFormat;
-            }
-        }
+        public string MoneyWithCurrencyFormat { get; set; }
 
         /// <summary>
         /// Returns the shop's name.
         /// </summary>
-        public string Name
-        {
-            get
-            {
-                return _store.Name;
-            }
-        }
-
+        public string Name { get; set; }
         /// <summary>
         /// Returns the full URL of a shop.
         /// </summary>
-        public string Url
-        {
-            get
-            {
-                return string.IsNullOrEmpty(_store.Url) ? _urlBuilder.ToAppAbsolute(_context, "~/", _store, _context.CurrentLanguage) : _store.Url;
-            }
-        }
+        public string Url { get; set; }
 
-        public string SimplifiedUrl
-        {
-            get
-            {
-                return Url;
-            }
-        }
+        public string SimplifiedUrl { get; set; }
 
         /// <summary>
         /// All shop currencies
         /// </summary>
-        public string[] Currencies
-        {
-            get
-            {
-                return _store.Currencies.Select(x => x.Code).ToArray();
-            }
-        }
+        public string[] Currencies { get; set; }
 
         /// <summary>
         /// All shop languages
         /// </summary>
-        public string[] Languages
-        {
-            get
-            {
-                return _store.Languages.Select(x => x.CultureName).ToArray();
-            }
-        }
+        public Language[] Languages { get; set; }
 
         /// <summary>
         /// Shop catalog
         /// </summary>
-        public string Catalog
-        {
-            get
-            {
-                return _store.Catalog;
-            }
-        }
+        public string Catalog { get; set; }
 
         /// <summary>
         /// Shop metafields
         /// </summary>
-        public MetaFieldNamespacesCollection Metafields
-        {
-            get
-            {
-                var fieldsCollection = new MetafieldsCollection("global", _store.DynamicProperties);
-                return new MetaFieldNamespacesCollection(new[] { fieldsCollection });
-
-            }
-        }
+        public MetaFieldNamespacesCollection Metafields { get; set; }
+     
 
         public bool CustomerAccountsEnabled { get; set; }
         public bool CustomerAccountsOptional { get; set; }

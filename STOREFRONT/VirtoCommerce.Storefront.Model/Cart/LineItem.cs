@@ -130,7 +130,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// <summary>
         /// Gets or sets the value of line item weight
         /// </summary>
-        public decimal? Weight { get; set; }
+        public decimal Weight { get; set; }
 
         /// <summary>
         /// Gets or sets the value of line item measurement unit
@@ -140,17 +140,17 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// <summary>
         /// Gets or sets the value of line item height
         /// </summary>
-        public decimal? Height { get; set; }
+        public decimal Height { get; set; }
 
         /// <summary>
         /// Gets or sets the value of line item length
         /// </summary>
-        public decimal? Length { get; set; }
+        public decimal Length { get; set; }
 
         /// <summary>
         /// Gets or sets the value of line item width
         /// </summary>
-        public decimal? Width { get; set; }
+        public decimal Width { get; set; }
 
         /// <summary>
         /// Gets or sets the value of line item original price

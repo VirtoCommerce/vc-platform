@@ -246,6 +246,7 @@
     <Compile Include="Controllers\StorefrontControllerBase.cs" />
     <Compile Include="Converters\AddressConverter.cs" />
     <Compile Include="Converters\AssetConverter.cs" />
+    <Compile Include="Converters\EditorialReviewConverter.cs" />
     <Compile Include="Converters\CartConverter.cs" />
     <Compile Include="Converters\CartLineItemConverter.cs" />
     <Compile Include="Converters\CategoryConverter.cs" />

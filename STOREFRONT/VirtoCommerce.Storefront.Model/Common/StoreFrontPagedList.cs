@@ -10,22 +10,22 @@ namespace VirtoCommerce.Storefront.Model.Common
     /// <typeparam name="T"></typeparam>
     public class StorefrontPagedList<T> : StaticPagedList<T>, IStorefrontPagedList<T>
     {
-        private readonly Func<int, WorkContext, string> _pageUrlGetter;
+        private readonly Func<int, string> _pageUrlGetter;
 
-        public StorefrontPagedList(IEnumerable<T> subset, IPagedList metaData, Func<int, WorkContext, string> pageUrlGetter)
+        public StorefrontPagedList(IEnumerable<T> subset, IPagedList metaData, Func<int, string> pageUrlGetter)
             : this(subset, metaData.PageNumber, metaData.PageSize, metaData.TotalItemCount, pageUrlGetter)
         {
         }
 
-        public StorefrontPagedList(IEnumerable<T> subset, int pageNumber, int pageSize, int totalItemCount, Func<int, WorkContext, string> pageUrlGetter)
+        public StorefrontPagedList(IEnumerable<T> subset, int pageNumber, int pageSize, int totalItemCount, Func<int, string> pageUrlGetter)
             : base(subset, pageNumber, pageSize, totalItemCount)
         {
             _pageUrlGetter = pageUrlGetter;
         }
 
-        public string GetPageUrl(int pageIndex, WorkContext workContext)
+        public string GetPageUrl(int pageIndex)
         {
-            return _pageUrlGetter(pageIndex, workContext);
+            return _pageUrlGetter(pageIndex);
         }
     }
 }

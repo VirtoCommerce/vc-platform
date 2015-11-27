@@ -11,7 +11,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
 {
     public static class CustomerConverter
     {
-        public static Customer ToShopifyModel(this storefrontModel.Customer customer)
+        public static Customer ToShopifyModel(this storefrontModel.Customer customer, storefrontModel.WorkContext workContext)
         {
             var result = new Customer();
             result.InjectFrom<NullableAndEnumValueInjection>(customer);
@@ -37,7 +37,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                     id++;
                 }
 
-                result.Addresses = new StorefrontPagedList<Address>(addresses, 1, addresses.Count, addresses.Count, (page, workContext) => workContext.RequestUrl.AddParameter("page", page.ToString()).ToString());
+                result.Addresses = new StorefrontPagedList<Address>(addresses, 1, addresses.Count, addresses.Count, (page) => workContext.RequestUrl.AddParameter("page", page.ToString()).ToString());
             }
 
             return result;

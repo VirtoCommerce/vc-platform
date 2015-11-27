@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using DotLiquid;
 using DotLiquid.FileSystems;
+using VirtoCommerce.LiquidThemeEngine.Converters;
 using VirtoCommerce.LiquidThemeEngine.Extensions;
 using VirtoCommerce.LiquidThemeEngine.Objects;
 using VirtoCommerce.Storefront.Model;
@@ -39,7 +40,7 @@ namespace VirtoCommerce.LiquidThemeEngine
             if (viewContext == null)
                 throw new ArgumentNullException("viewContext");
 
-            var shopifyContext = _themeAdaptor.WorkContext as ShopifyThemeWorkContext;
+            var shopifyContext = _themeAdaptor.WorkContext.ToShopifyModel();
             //Set current template
             shopifyContext.Template = _viewName;
             

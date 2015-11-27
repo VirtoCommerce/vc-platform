@@ -99,7 +99,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// <summary>
         /// Gets or sets the value of volumetric weight
         /// </summary>
-        public decimal? VolumetricWeight { get; set; }
+        public decimal VolumetricWeight { get; set; }
 
         /// <summary>
         /// Gets or sets the value of weight unit
@@ -109,7 +109,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// <summary>
         /// Gets or sets the value of shopping cart weight
         /// </summary>
-        public decimal? Weight { get; set; }
+        public decimal Weight { get; set; }
 
         /// <summary>
         /// Gets or sets the value of measurement unit
@@ -119,17 +119,17 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// <summary>
         /// Gets or sets the value of height
         /// </summary>
-        public decimal? Height { get; set; }
+        public decimal Height { get; set; }
 
         /// <summary>
         /// Gets or sets the value of length
         /// </summary>
-        public decimal? Length { get; set; }
+        public decimal Length { get; set; }
 
         /// <summary>
         /// Gets or sets the value of width
         /// </summary>
-        public decimal? Width { get; set; }
+        public decimal Width { get; set; }
 
         /// <summary>
         /// Gets the value of shopping cart total cost

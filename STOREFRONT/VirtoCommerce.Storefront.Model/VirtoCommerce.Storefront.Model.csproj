@@ -52,7 +52,9 @@
     <Compile Include="Catalog\CatalogSearchResult.cs" />
     <Compile Include="Catalog\ItemResponseGroup.cs" />
     <Compile Include="Catalog\CatalogSearchCriteria.cs" />
+    <Compile Include="Catalog\EditorialReview.cs" />
     <Compile Include="Catalog\TierPrice.cs" />
+    <Compile Include="Common\CollectionExtensions.cs" />
     <Compile Include="Common\IStorefrontPagedList.cs" />
     <Compile Include="Common\StoreFrontPagedList.cs" />
     <Compile Include="Image.cs" />

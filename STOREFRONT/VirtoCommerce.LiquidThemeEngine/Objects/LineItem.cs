@@ -11,110 +11,44 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
     /// </remarks>
     public class LineItem : Drop
     {
-        private readonly Storefront.Model.WorkContext _workContext;
-        private readonly Storefront.Model.Common.IStorefrontUrlBuilder _urlBuilder;
-        private readonly Storefront.Model.Cart.LineItem _lineItem;
-
-        public LineItem(
-            Storefront.Model.WorkContext workContext,
-            Storefront.Model.Common.IStorefrontUrlBuilder urlBuilder,
-            Storefront.Model.Cart.LineItem lineItem)
-        {
-            _workContext = workContext;
-            _urlBuilder = urlBuilder;
-            _lineItem = lineItem;
-        }
-
         /// <summary>
         /// Gets line item fulfillment info
         /// </summary>
-        public Fulfillment Fulfillment
-        {
-            get
-            {
-                // TODO: Populate with fulfillment info
-                return null;
-            }
-        }
+        public Fulfillment Fulfillment { get; set; }
 
         /// <summary>
         /// Gets line item weight
         /// </summary>
-        public decimal Grams
-        {
-            get
-            {
-                return _lineItem.Weight.HasValue ? _lineItem.Weight.Value : 0M;
-            }
-        }
-
+        public decimal Grams { get; set; }
         /// <summary>
         /// Gets line item id
         /// </summary>
-        public string Id
-        {
-            get
-            {
-                return _lineItem.Id;
-            }
-        }
+        public string Id { get; set; }
 
         /// <summary>
         /// Gets line item image
         /// </summary>
-        public Image Image
-        {
-            get
-            {
-                // TODO: Populate
-                return null;
-            }
-        }
+        public Image Image { get; set; }
 
         /// <summary>
         /// Gets line item subtotal
         /// </summary>
-        public decimal LinePrice
-        {
-            get
-            {
-                return _lineItem.ExtendedPrice != null ? _lineItem.ExtendedPrice.Amount : 0M;
-            }
-        }
+        public decimal LinePrice { get; set; }
 
         /// <summary>
         /// Gets line item price
         /// </summary>
-        public decimal Price
-        {
-            get
-            {
-                return _lineItem.PlacedPrice != null ? _lineItem.PlacedPrice.Amount : 0M;
-            }
-        }
+        public decimal Price { get; set; }
 
         /// <summary>
         /// Gets product associated with the line item
         /// </summary>
-        public Product Product
-        {
-            get
-            {
-                // TODO: Populate
-                return null;
-            }
-        }
+        public Product Product { get; set; }
 
         /// <summary>
         /// Gets ID of the product that associated with the line item
         /// </summary>
-        public string ProductId
-        {
-            get
-            {
-                return _lineItem.ProductId;
-            }
-        }
+        public string ProductId { get; set; }
 
         /// <summary>
         /// Gets line item custom information
@@ -131,115 +65,50 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         /// <summary>
         /// Gets line item quantity
         /// </summary>
-        public int Quantity
-        {
-            get
-            {
-                return _lineItem.Quantity;
-            }
-        }
+        public int Quantity { get; set; }
 
         /// <summary>
         /// Gets sign that line item requires shipping
         /// </summary>
-        public bool RequiresShipping
-        {
-            get
-            {
-                return _lineItem.RequiredShipping;
-            }
-        }
+        public bool RequiresShipping { get; set; }
 
         /// <summary>
         /// Gets line item SKU
         /// </summary>
-        public string Sku
-        {
-            get
-            {
-                return _lineItem.Sku;
-            }
-        }
-
+        public string Sku { get; set; }
         /// <summary>
         /// Gets sign that line item includes taxes
         /// </summary>
-        public bool Taxable
-        {
-            get
-            {
-                return _lineItem.TaxIncluded;
-            }
-        }
+        public bool Taxable { get; set; }
 
         /// <summary>
         /// Gets line item title
         /// </summary>
-        public string Title
-        {
-            get
-            {
-                return _lineItem.Name;
-            }
-        }
+        public string Title { get; set; }
 
         /// <summary>
         /// Gets line item type
         /// </summary>
-        public string Type
-        {
-            get
-            {
-                // TODO: Populate
-                return null;
-            }
-        }
+        public string Type { get; set; }
 
         /// <summary>
         /// Gets line item product URL
         /// </summary>
-        public string Url
-        {
-            get
-            {
-                return _urlBuilder.ToAppAbsolute(_workContext, string.Format("~/products/{0}", _lineItem.ProductId), _workContext.CurrentStore, _workContext.CurrentLanguage);
-            }
-        }
+        public string Url { get; set; }
 
         /// <summary>
         /// Gets the product variant that associated with the line item
         /// </summary>
-        public Variant Variant
-        {
-            get
-            {
-                // TODO: Populate
-                return null;
-            }
-        }
+        public Variant Variant { get; set; }
 
         /// <summary>
         /// Gets the ID of product variant that associated with line item
         /// </summary>
-        public string VariantId
-        {
-            get
-            {
-                // TODO: Populate
-                return null;
-            }
-        }
+        public string VariantId { get; set; }
 
         /// <summary>
         /// Gets line item product vendor
         /// </summary>
-        public string Vendor
-        {
-            get
-            {
-                // TODO: Populate from dynamic properties
-                return null;
-            }
-        }
+        public string Vendor { get; set; }
     }
 }

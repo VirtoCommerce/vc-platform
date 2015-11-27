@@ -42,7 +42,7 @@ namespace VirtoCommerce.Storefront.Converters
                 retVal.SeoInfo = product.SeoInfos.Select(s => s.ToWebModel()).FirstOrDefault();
 
             if (product.Reviews != null)
-                retVal.Description = product.Reviews.Select(r => r.Content).FirstOrDefault();
+                retVal.EditorialReviews = product.Reviews.Select(r => r.ToWebModel()).ToList();
 
             return retVal;
         }

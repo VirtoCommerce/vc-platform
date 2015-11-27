@@ -87,6 +87,14 @@
     <Compile Include="Binders\RegisterModelBinder.cs" />
     <Compile Include="Binders\ResetPasswordModelBinder.cs" />
     <Compile Include="Binders\ShopifyModelBinderProvider.cs" />
+    <Compile Include="Converters\CartConverter.cs" />
+    <Compile Include="Converters\CollectionConverter.cs" />
+    <Compile Include="Converters\CurrencyConverter.cs" />
+    <Compile Include="Converters\ImageConverter.cs" />
+    <Compile Include="Converters\LanguageConverters.cs" />
+    <Compile Include="Converters\ProductConverter.cs" />
+    <Compile Include="Converters\ShopConverter.cs" />
+    <Compile Include="Converters\ShopifyContextConverter.cs" />
     <Compile Include="Converters\AddressConverter.cs" />
     <Compile Include="Converters\CustomerConverter.cs" />
     <Compile Include="Converters\Injections\NullableAndEnumInjection.cs" />
@@ -106,10 +114,12 @@
     <Compile Include="Objects\Cart.cs" />
     <Compile Include="Objects\Collection.cs" />
     <Compile Include="Objects\Collections.cs" />
+    <Compile Include="Objects\Currency.cs" />
     <Compile Include="Objects\Customer.cs" />
     <Compile Include="Objects\Form.cs" />
     <Compile Include="Objects\FormErrors.cs" />
     <Compile Include="Objects\Fulfillment.cs" />
+    <Compile Include="Objects\Language.cs" />
     <Compile Include="Objects\LineItem.cs" />
     <Compile Include="Objects\Paginate.cs" />
     <Compile Include="Objects\Part.cs" />

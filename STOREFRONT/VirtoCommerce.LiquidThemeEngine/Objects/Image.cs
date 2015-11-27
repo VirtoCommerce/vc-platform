@@ -12,70 +12,19 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
     /// </summary>
     public class Image : Drop
     {
-        private readonly Storefront.Model.Image _image;
+      
+        public string Alt { get; set; }
 
-        public Image(Storefront.Model.Image image)
-        {
-            _image = image;
-        }
+        public bool? AttachedToVariant { get; set; }
 
-        public string Alt
-        {
-            get
-            {
-                return _image.Alt;
-            }
-        }
+        public string ProductId { get; set; }
 
-        public bool? AttachedToVariant
-        {
-            get
-            {
-                //TODO no info about it
-                return true;
-            }
-        }
+        public int Position { get; set; }
 
-        public string ProductId
-        {
-            get
-            {
-                return "";
-            }
-        }
+        public string Src { get; set; }
 
-        public int Position
-        {
-            get
-            {
-                //TODO no info about it
-                return 0;
-            }
-        }
+        public string Name { get; set; }
 
-        public string Src
-        {
-            get
-            {
-                return _image.Url;
-            }
-        }
-
-        public string Name
-        {
-            get
-            {
-                return _image.Title;
-            }
-        }
-
-        public IEnumerable<Variant> Variants
-        {
-            get
-            {
-                //TODO no info
-                return null;
-            }
-        }
+        public Variant[] Variants { get; set; }
     }
 }

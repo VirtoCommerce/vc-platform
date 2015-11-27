@@ -29,19 +29,19 @@ namespace VirtoCommerce.Storefront.Converters
                 lineItemWebModel.ThumbnailImageUrl = product.PrimaryImage.Url;
             }
 
-            lineItemWebModel.Height = (decimal?)product.Height;
+            lineItemWebModel.Height = product.Height;
             lineItemWebModel.ImageUrl = product.PrimaryImage != null ?
                 product.PrimaryImage.Url : null;
-            lineItemWebModel.Length = (decimal?)product.Length;
+            lineItemWebModel.Length = product.Length;
             lineItemWebModel.MeasureUnit = product.MeasureUnit;
             lineItemWebModel.Name = product.Name;
             lineItemWebModel.Product = product;
             lineItemWebModel.ProductId = product.Id;
             lineItemWebModel.Quantity = quantity;
             lineItemWebModel.Sku = product.Sku;
-            lineItemWebModel.Weight = (decimal?)product.Weight;
+            lineItemWebModel.Weight = product.Weight;
             lineItemWebModel.WeightUnit = product.WeightUnit;
-            lineItemWebModel.Width = (decimal?)product.Width;
+            lineItemWebModel.Width = product.Width;
 
             return lineItemWebModel;
         }

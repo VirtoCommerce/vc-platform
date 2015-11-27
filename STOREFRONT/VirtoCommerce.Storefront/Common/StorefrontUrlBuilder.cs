@@ -15,14 +15,19 @@ namespace VirtoCommerce.Storefront.Common
     /// </summary>
     public class StorefrontUrlBuilder : IStorefrontUrlBuilder
     {
-        #region IStorefrontUrlBuilder members
-        public string ToAppAbsolute(WorkContext context, string virtualPath, Store store, Language language)
+        private readonly WorkContext _workContext;
+        public StorefrontUrlBuilder(WorkContext workContext)
         {
-            var retVal = VirtualPathUtility.ToAbsolute(ToAppRelative(context, virtualPath, store, language));
+            _workContext = workContext;
+        }
+        #region IStorefrontUrlBuilder members
+        public string ToAppAbsolute(string virtualPath, Store store, Language language)
+        {
+            var retVal = VirtualPathUtility.ToAbsolute(ToAppRelative(virtualPath, store, language));
             return retVal;
         }
 
-        public string ToAppRelative(WorkContext context, string virtualPath, Store store, Language language)
+        public string ToAppRelative(string virtualPath, Store store, Language language)
         {
             virtualPath = virtualPath.Replace("~/", String.Empty);
             var retVal = "~/";
@@ -30,10 +35,10 @@ namespace VirtoCommerce.Storefront.Common
             if (store != null)
             {
                 //Do not use store in url if it single
-                if (context.AllStores.Count() > 1)
+                if (_workContext.AllStores.Count() > 1)
                 {
                     //Check that store exist for not exist store use current
-                    store = context.AllStores.Contains(store) ? store : context.CurrentStore;
+                    store = _workContext.AllStores.Contains(store) ? store : _workContext.CurrentStore;
                     if (!virtualPath.Contains("/" + store.Id + "/"))
                     {
                         retVal += store.Id + "/";

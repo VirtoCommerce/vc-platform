@@ -42,13 +42,13 @@ namespace VirtoCommerce.LiquidThemeEngine
         private static Regex _templateRegex = new Regex(@"[a-zA-Z0-9]+$", RegexOptions.Compiled);
         private string _themesRelativeUrl;
         private string _themesAssetsRelativeUrl;
-        private Func<WorkContext> _workContextFactory;
-        private IStorefrontUrlBuilder _storeFrontUrlBuilder;
+        private readonly Func<WorkContext> _workContextFactory;
+        private readonly Func<IStorefrontUrlBuilder> _storeFrontUrlBuilderFactory;
 
-        public ShopifyLiquidThemeEngine(Func<WorkContext> workContextFactory, IStorefrontUrlBuilder storeFrontUrlBuilder, string themesRealtiveUrl, string themesAssetsRelativeUrl)
+        public ShopifyLiquidThemeEngine(Func<WorkContext> workContextFactory, Func<IStorefrontUrlBuilder> storeFrontUrlBuilderFactory, string themesRealtiveUrl, string themesAssetsRelativeUrl)
         {
             _workContextFactory = workContextFactory;
-            _storeFrontUrlBuilder = storeFrontUrlBuilder;
+            _storeFrontUrlBuilderFactory = storeFrontUrlBuilderFactory;
             _themesRelativeUrl = themesRealtiveUrl;
             _themesAssetsRelativeUrl = themesAssetsRelativeUrl;
 
@@ -67,30 +67,16 @@ namespace VirtoCommerce.LiquidThemeEngine
             Template.RegisterTag<LayoutTag>("layout");
             Template.RegisterTag<FormTag>("form");
             Template.RegisterTag<PaginateTag>("paginate");
-
-            var contextType = typeof(WorkContext);
-
-            //Register WorkingContext properties as DropBased 
-            foreach (var contextProperty in contextType.GetTypePropsRecursively((x) => x.PropertyType.Assembly == contextType.Assembly))
-            {
-                var dropType = contextProperty.PropertyType.IsArray ? contextProperty.PropertyType.GetElementType() : contextProperty.PropertyType;
-                var allowedProperties = dropType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                                                .Select(x => x.Name)
-                                                .ToArray();
-
-                Template.RegisterSafeType(dropType, allowedProperties);
-            }
-         
         }
 
         /// <summary>
         /// Main work context
         /// </summary>
-        public ShopifyThemeWorkContext WorkContext
+        public WorkContext WorkContext
         {
             get
             {
-                return _workContextFactory() as ShopifyThemeWorkContext;
+                return _workContextFactory();
             }
         }
         /// <summary>
@@ -100,7 +86,7 @@ namespace VirtoCommerce.LiquidThemeEngine
         {
             get
             {
-                return _storeFrontUrlBuilder;
+                return _storeFrontUrlBuilderFactory();
             }
         }
         /// <summary>
@@ -143,7 +129,7 @@ namespace VirtoCommerce.LiquidThemeEngine
         {
             get
             {
-                return _storeFrontUrlBuilder.ToLocalPath(ThemeRelativeUrl);
+                return UrlBuilder.ToLocalPath(ThemeRelativeUrl);
             }
         }
         /// <summary>
@@ -153,7 +139,7 @@ namespace VirtoCommerce.LiquidThemeEngine
         {
             get
             {
-                return _storeFrontUrlBuilder.ToAppRelative(WorkContext, _themesAssetsRelativeUrl, WorkContext.CurrentStore, WorkContext.CurrentLanguage);
+                return UrlBuilder.ToAppRelative(_themesAssetsRelativeUrl, WorkContext.CurrentStore, WorkContext.CurrentLanguage);
             }
         }
 
@@ -296,7 +282,7 @@ namespace VirtoCommerce.LiquidThemeEngine
         /// <returns></returns>
         public string GetAssetAbsoluteUrl(string assetName)
         {
-            return _storeFrontUrlBuilder.ToAppAbsolute(WorkContext, _themesAssetsRelativeUrl.TrimEnd('/') + "/" + assetName.TrimStart('/'), WorkContext.CurrentStore, WorkContext.CurrentLanguage);
+            return UrlBuilder.ToAppAbsolute(_themesAssetsRelativeUrl.TrimEnd('/') + "/" + assetName.TrimStart('/'), WorkContext.CurrentStore, WorkContext.CurrentLanguage);
         }
 
     }

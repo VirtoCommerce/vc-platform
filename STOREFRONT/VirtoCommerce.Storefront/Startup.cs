@@ -88,9 +88,9 @@ namespace VirtoCommerce.Storefront
             }
 
             // Create new work context for each request
-            container.RegisterType<WorkContext, ShopifyThemeWorkContext>(new PerRequestLifetimeManager());
+            container.RegisterType<WorkContext, WorkContext>(new PerRequestLifetimeManager());
 
-            container.RegisterInstance(new ShopifyLiquidThemeEngine(() => container.Resolve<WorkContext>(), container.Resolve<IStorefrontUrlBuilder>(), "~/App_data/themes", "~/themes/assets"));
+            container.RegisterInstance(new ShopifyLiquidThemeEngine(() => container.Resolve<WorkContext>(), () => container.Resolve<IStorefrontUrlBuilder>(), "~/App_data/themes", "~/themes/assets"));
             //Register liquid engine
             ViewEngines.Engines.Add(new DotLiquidThemedViewEngine(container.Resolve<ShopifyLiquidThemeEngine>()));
 

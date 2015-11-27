@@ -23,6 +23,10 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters.Injections
                         var value = Enum.Parse(targetProperty.PropertyType, sourceProperty.GetValue(source).ToString(), true);
                         targetProperty.SetValue(target, value);
                     }
+                    if(targetProperty.PropertyType == typeof(string) && sourceProperty.PropertyType.IsEnum)
+                    {
+                        targetProperty.SetValue(target, sourceProperty.GetValue(source).ToString());
+                    }
                     else
                     {
                         targetProperty.SetValue(target, sourceProperty.GetValue(source, null), null);

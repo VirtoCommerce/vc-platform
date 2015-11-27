@@ -12,56 +12,26 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
     /// <summary>
     /// https://docs.shopify.com/themes/liquid-documentation/objects
     /// </summary>
-    public class ShopifyThemeWorkContext : WorkContext, ILiquidizable
+    public class ShopifyThemeWorkContext : ILiquidizable
     {
-        private readonly IStorefrontUrlBuilder _urlBuilder;
-
-        public ShopifyThemeWorkContext(IStorefrontUrlBuilder urlBuilder)
-        {
-            _urlBuilder = urlBuilder;
-            CurrentPage = 1;
-        }
-
         #region Aliases for shopify theme compliance
 
         /// <summary>
         /// Merchants can specify a page_description.
         /// </summary>
-        public string PageDescription
-        {
-            get
-            {
-                return CurrentPageSeo != null ? CurrentPageSeo.MetaDescription : String.Empty;
-            }
-        }
+        public string PageDescription { get; set; }
+     
         /// <summary>
         /// The liquid object page_title returns the title of the current page.
         /// </summary>
-        public string PageTitle
-        {
-            get
-            {
-                return CurrentPageSeo != null ? CurrentPageSeo.Title : String.Empty;
-            }
-        }
+        public string PageTitle { get; set; }
+      
         /// <summary>
         /// The liquid object shop returns information about your shop
         /// </summary>
-        public Shop Shop
-        {
-            get
-            {
-                return new Shop(CurrentStore, _urlBuilder, this);
-            }
-        }
+        public Shop Shop { get; set; }
 
-        public Cart Cart
-        {
-            get
-            {
-                return new Cart(this, _urlBuilder, CurrentCart);
-            }
-        }
+        public Cart Cart { get; set; }
 
         /// <summary>
         /// Current single form value  created in DotLiquidThemedView with ModelState errors
@@ -72,58 +42,31 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
             get; set;
         }
 
-        public Product Product
-        {
-            get
-            {
-                return new Product(CurrentProduct, _urlBuilder, this);
-            }
-        }
+        public Product Product { get; set; }
 
-        private Customer _customer;
-
+    
         /// <summary>
         /// Returns logged in customer or null.
         /// </summary>
-        public Customer Customer
-        {
-            get
-            {
-                return _customer ?? (_customer = CurrentCustomer.HasAccount ? CurrentCustomer.ToShopifyModel() : null);
-            }
-        }
+        public Customer Customer { get; set; }
 
         /// <summary>
         /// The collection https://docs.shopify.com/themes/liquid-documentation/objects/collection
         /// </summary>
-        public Collection Collection
-        {
-            get
-            {
-                if (CurrentCatalogSearchResult != null && CurrentCatalogSearchResult.Products != null)
-                {
-                    return new Collection(CurrentCatalogSearchResult.Products, _urlBuilder, this);
-                }
-                return null;
-            }
-        }
+        public Collection Collection { get; set; }
 
-        public Collections Collections
-        {
-            get
-            {
-                Collections retVal = null;
-                if (CurrentCatalogSearchResult != null && CurrentCatalogSearchResult.Categories != null)
-                {
-                    var collections = CurrentCatalogSearchResult.Categories.Select(x => new Collection(x, _urlBuilder, this));
-                    retVal = new Collections(collections);
-                }
-                return retVal;
-            }
-        }
+    
+        public Collections Collections { get; set; }
 
         public int CurrentPage { get; set; }
 
+        #region Custom properties
+        public Language CurrentLanguage { get; set; }
+
+        public Currency CurrentCurrency { get; set; }
+
+        public Shop[] AllStores { get; set; } 
+        #endregion
         /// <summary>
         /// template returns the name of the template used to render the current page, with the .liquid extension omitted.
         /// </summary>

@@ -16,6 +16,7 @@ namespace VirtoCommerce.Storefront.Model.Catalog
             Assets = new List<Asset>();
             Variations = new List<Product>();
             Images = new List<Image>();
+            EditorialReviews = new List<Catalog.EditorialReview>();
         }
 
         /// <summary>
@@ -66,27 +67,27 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         /// <summary>
         /// Indicating whether this product is buyable
         /// </summary>
-        public bool? IsBuyable { get; set; }
+        public bool IsBuyable { get; set; }
 
         /// <summary>
         /// Indicating whether this product is active
         /// </summary>
-        public bool? IsActive { get; set; }
+        public bool IsActive { get; set; }
 
         /// <summary>
         /// Indicating whether this product inventory is tracked
         /// </summary>
-        public bool? TrackInventory { get; set; }
+        public bool TrackInventory { get; set; }
 
         /// <summary>
         /// Maximum quantity of the product that a customer can buy
         /// </summary>
-        public int? MaxQuantity { get; set; }
+        public int MaxQuantity { get; set; }
 
         /// <summary>
         /// Minimum quantity of the product that a customer can buy
         /// </summary>
-        public int? MinQuantity { get; set; }
+        public int MinQuantity { get; set; }
 
         /// <summary>
         /// Type of product (can be Physical, Digital or Subscription)
@@ -101,7 +102,7 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         /// <summary>
         /// Weight of product (for physical product only)
         /// </summary>
-        public double? Weight { get; set; }
+        public decimal Weight { get; set; }
 
         /// <summary>
         /// Dimensions measure unit of size (for physical product only)
@@ -111,27 +112,27 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         /// <summary>
         /// Height of product size (for physical product only)
         /// </summary>
-        public double? Height { get; set; }
+        public decimal Height { get; set; }
 
         /// <summary>
         /// Length of product size (for physical product only)
         /// </summary>
-        public double? Length { get; set; }
+        public decimal Length { get; set; }
 
         /// <summary>
         /// Width of product size (for physical product only)
         /// </summary>
-        public double? Width { get; set; }
+        public decimal Width { get; set; }
 
         /// <summary>
         /// Indicating whether this product can be reviewed in storefront
         /// </summary>
-        public bool? EnableReview { get; set; }
+        public decimal EnableReview { get; set; }
 
         /// <summary>
         /// Maximum number of downloads of product (for digital product only)
         /// </summary>
-        public int? MaxNumberOfDownload { get; set; }
+        public decimal MaxNumberOfDownload { get; set; }
 
         /// <summary>
         /// Download expiration date (for digital product only)
@@ -146,7 +147,7 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         /// <summary>
         /// Indicating whether this product has user agreement (for digital product only)
         /// </summary>
-        public bool? HasUserAgreement { get; set; }
+        public decimal HasUserAgreement { get; set; }
 
         /// <summary>
         /// Type of product shipping
@@ -163,6 +164,8 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         /// </summary>
         public string Vendor { get; set; }
 
+
+      
         /// <summary>
         /// List of product properties
         /// </summary>
@@ -180,9 +183,9 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         public List<Product> Variations { get; set; }
 
         /// <summary>
-        /// Product description
+        /// Product editorial reviews
         /// </summary>
-        public string Description { get; set; }
+        public List<EditorialReview> EditorialReviews { get; set; }
 
         /// <summary>
         /// Current product price
