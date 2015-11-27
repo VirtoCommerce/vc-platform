@@ -37,7 +37,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                     id++;
                 }
 
-                result.Addresses = new StorefrontPagedList<Address>(addresses, 1, addresses.Count, addresses.Count, (page) => workContext.RequestUrl.AddParameter("page", page.ToString()).ToString());
+                result.Addresses = new StorefrontPagedList<Address>(addresses, 1, 10, addresses.Count, (page) => workContext.RequestUrl.AddParameter("page", page.ToString()).ToString());
             }
 
             return result;

@@ -13,20 +13,25 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
         public static Collection ToShopifyModel(this storefrontModel.Catalog.CatalogSearchResult searchResult, storefrontModel.WorkContext workContext)
         {
             var result = new Collection();
+            if(searchResult.Category != null)
+            {
+                result = searchResult.Category.ToShopifyModel(workContext);
+            }
 
             if (searchResult.Products != null)
             {
-                result.Products = new StorefrontPagedList<Product>(searchResult.Products.Select(x => x.ToShopifyModel(workContext)), searchResult.Products, searchResult.Products.GetPageUrl);
+                result.Products = new StorefrontPagedList<Product>(searchResult.Products.Select(x => x.ToShopifyModel(workContext)),
+                                                                   searchResult.Products, searchResult.Products.GetPageUrl);
                 result.ProductsCount = searchResult.Products.TotalItemCount;
                 result.AllProductsCount = searchResult.Products.TotalItemCount;
             }
+
             return result;
         }
 
         public static Collection ToShopifyModel(this storefrontModel.Catalog.Category category, storefrontModel.WorkContext workContext)
         {
             var result = new Collection();
-
             result.Description = category.Name;
             result.Handle = category.SeoInfo != null ? category.SeoInfo.Slug : category.Id;
             result.Image = category.PrimaryImage != null ? category.PrimaryImage.ToShopifyModel() : null;
@@ -36,7 +41,6 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             {
                 result.Url = "~/" + category.SeoInfo.Slug;
             }
-
             return result;
         }
 

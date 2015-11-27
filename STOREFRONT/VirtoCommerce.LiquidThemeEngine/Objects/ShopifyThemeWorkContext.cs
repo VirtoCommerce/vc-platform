@@ -10,6 +10,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
     /// </summary>
     public class ShopifyThemeWorkContext : ILiquidizable
     {
+      
         #region Aliases for shopify theme compliance
 
         /// <summary>

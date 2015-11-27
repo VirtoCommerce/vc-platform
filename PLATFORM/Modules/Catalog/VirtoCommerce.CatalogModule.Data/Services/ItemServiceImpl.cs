@@ -46,10 +46,12 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 				SeoInfo[] seoInfos = null;
 				if ((respGroup & coreModel.ItemResponseGroup.Seo) == coreModel.ItemResponseGroup.Seo)
 				{
-					seoInfos = _commerceService.GetObjectsSeo(dbItems.Select(x => x.Id).ToArray()).ToArray();
-				}
+                    var seoObjectIds = dbItems.Select(x => x.Id).ToList();
+                    seoObjectIds.AddRange(dbItems.Select(x => x.CategoryId).Distinct());
+                    seoInfos = _commerceService.GetObjectsSeo(seoObjectIds.ToArray()).ToArray();
+                }
 
-				var categoriesIds = dbItems.SelectMany(x => x.CategoryLinks).Select(x => x.CategoryId).Distinct().ToArray();
+                var categoriesIds = dbItems.SelectMany(x => x.CategoryLinks).Select(x => x.CategoryId).Distinct().ToArray();
 				var dbCategories = repository.GetCategoriesByIds(categoriesIds);
 
 				foreach (var dbItem in dbItems)
@@ -74,7 +76,8 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 					{
 						var allParents = repository.GetAllCategoryParents(dbItem.Category).ToArray();
 						category = dbItem.Category.ToCoreModel(catalog, allParents);
-					}
+                        category.SeoInfos = seoInfos != null ? seoInfos.Where(x => x.ObjectId == category.Id).ToList() : null;
+                    }
 				
 					var item = dbItem.ToCoreModel(catalog: catalog, category: category, associatedProducts: associatedProducts.ToArray());
 					item.SeoInfos = seoInfos != null ? seoInfos.Where(x => x.ObjectId == dbItem.Id).ToList() : null;

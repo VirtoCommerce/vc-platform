@@ -7,7 +7,7 @@
     {% if collection %}
       <span class="divider" aria-hidden="true">&rsaquo;</span>
       {% if collection.handle %}
-        {% capture url %}/collections/{{ collection.handle }}{% endcapture %}
+        {% capture url %}{{ collection.handle | absolute_url }}{% endcapture %}
         {{ collection.title | link_to: url }}
       {% endif %}
     {% endif %}

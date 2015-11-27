@@ -44,6 +44,7 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         /// </summary>
         public string CatalogId { get; set; }
 
+        public Category Category { get; set; }
         /// <summary>
         /// Category id of this product
         /// </summary>
