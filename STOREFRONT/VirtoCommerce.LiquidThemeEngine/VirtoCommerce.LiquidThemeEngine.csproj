@@ -82,12 +82,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Binders\AddressModelBinder.cs" />
     <Compile Include="Binders\BaseModelBinder.cs" />
     <Compile Include="Binders\LoginModelBinder.cs" />
     <Compile Include="Binders\RegisterModelBinder.cs" />
     <Compile Include="Binders\ResetPasswordModelBinder.cs" />
     <Compile Include="Binders\ShopifyModelBinderProvider.cs" />
     <Compile Include="Converters\AddressConverter.cs" />
+    <Compile Include="Converters\CountryConverter.cs" />
     <Compile Include="Converters\CustomerConverter.cs" />
     <Compile Include="Converters\Injections\NullableAndEnumInjection.cs" />
     <Compile Include="DotLiquidThemedView.cs" />

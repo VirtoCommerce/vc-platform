@@ -21,6 +21,12 @@ namespace VirtoCommerce.Storefront.Owin
     /// </summary>
     public class WorkContextOwinMiddleware : OwinMiddleware
     {
+        private static readonly Country[] _countries =
+            {
+                new Country { Name = "Russian Federation" },
+                new Country { Name = "United States", Regions = new[] { "Delaware", "Pennsylvania", "New Jersey", "Georgia", "Connecticut", "Massachusetts", "Maryland", "South Carolina", "New Hampshire", "Virginia", "New York", "North Carolina", "Rhode Island", "Vermont", "Kentucky", "Tennessee", "Ohio", "Louisiana", "Indiana", "Mississippi", "Illinois", "Alabama", "Maine", "Missouri", "Arkansas", "Michigan", "Florida", "Texas", "Iowa", "Wisconsin", "California", "Minnesota", "Oregon", "Kansas", "West Virginia", "Nevada", "Nebraska", "Colorado", "North Dakota", "South Dakota", "Montana", "Washington", "Idaho", "Wyoming", "Utah", "Oklahoma", "New Mexico", "Arizona", "Alaska", "Hawaii" } }
+            };
+
         private readonly IStoreModuleApi _storeApi;
         private readonly IVirtoCommercePlatformApi _platformApi;
         private readonly ICustomerManagementModuleApi _customerApi;
@@ -40,13 +46,15 @@ namespace VirtoCommerce.Storefront.Owin
         public override async Task Invoke(IOwinContext context)
         {
             var workContext = _container.Resolve<WorkContext>();
+
+            // Initialize common properties
             workContext.RequestUrl = context.Request.Uri;
-            // Initialize common properties: stores, user profile
+            workContext.Countries = _countries;
             workContext.AllStores = await GetAllStoresAsync();
             workContext.CurrentCustomer = await GetCustomerAsync(context);
             MaintainAnonymousCustomerCookie(context, workContext);
 
-            // Initialize request specific properties: store, language, currency, cart
+            // Initialize request specific properties
             workContext.CurrentStore = GetStore(context, workContext.AllStores);
             workContext.CurrentLanguage = GetLanguage(context, workContext.AllStores, workContext.CurrentStore);
             workContext.CurrentCurrency = GetCurrency(context, workContext.CurrentStore);
@@ -58,6 +66,7 @@ namespace VirtoCommerce.Storefront.Owin
 
             await Next.Invoke(context);
         }
+
 
         protected virtual async Task<Store[]> GetAllStoresAsync()
         {
