@@ -46,6 +46,13 @@
         </arrayValues>
       </setting>
       <setting>
+        <name>Quotes.QuoteRequestNewNumberTemplate</name>
+        <valueType>string</valueType>
+        <defaultValue>RFQ{0:yyMMdd}-{1:D5}</defaultValue>
+        <title>New Quote Request number template</title>
+        <description>The template (pattern) that will be used to generate the number for new Quote Request</description>
+      </setting>
+      <setting>
         <name>Quotes.ExportImport.Description</name>
         <valueType>string</valueType>
         <defaultValue>Export/Import Request for quotes (RFQs)</defaultValue>

@@ -11,6 +11,7 @@ using VirtoCommerce.OrderModule.Data.Repositories;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.Events;
+using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Infrastructure;
 
 namespace VirtoCommerce.OrderModule.Data.Services
@@ -23,8 +24,9 @@ namespace VirtoCommerce.OrderModule.Data.Services
         private readonly IItemService _productService;
         private readonly IEventPublisher<OrderChangeEvent> _eventPublisher;
         private readonly IDynamicPropertyService _dynamicPropertyService;
+        private readonly ISettingsManager _settingManager;
 
-        public CustomerOrderServiceImpl(Func<IOrderRepository> orderRepositoryFactory, IUniqueNumberGenerator uniqueNumberGenerator, IEventPublisher<OrderChangeEvent> eventPublisher, IShoppingCartService shoppingCartService, IItemService productService, IDynamicPropertyService dynamicPropertyService)
+        public CustomerOrderServiceImpl(Func<IOrderRepository> orderRepositoryFactory, IUniqueNumberGenerator uniqueNumberGenerator, IEventPublisher<OrderChangeEvent> eventPublisher, IShoppingCartService shoppingCartService, IItemService productService, IDynamicPropertyService dynamicPropertyService, ISettingsManager settingManager)
         {
             _repositoryFactory = orderRepositoryFactory;
             _shoppingCartService = shoppingCartService;
@@ -32,6 +34,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
             _eventPublisher = eventPublisher;
             _productService = productService;
             _dynamicPropertyService = dynamicPropertyService;
+            _settingManager = settingManager;
         }
 
         #region ICustomerOrderService Members
@@ -172,7 +175,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
         {
             using (var repository = _repositoryFactory())
             {
-             
+
                 foreach (var orderId in orderIds)
                 {
                     var order = repository.GetCustomerOrderById(orderId, CustomerOrderResponseGroup.Full);
@@ -193,14 +196,15 @@ namespace VirtoCommerce.OrderModule.Data.Services
                 if (operation.Number == null)
                 {
                     var objectTypeName = operation.GetType().Name;
-                    // take upercase chars to form operation type, or just take 2 first chars. (CustomerOrder => CO, PaymentIn => PI, Shipment => SH)
+                    // take uppercase chars to form operation type, or just take 2 first chars. (CustomerOrder => CO, PaymentIn => PI, Shipment => SH)
                     var objectType = string.Concat(objectTypeName.Select(c => char.IsUpper(c) ? c.ToString() : ""));
                     if (objectType.Length < 2)
                     {
                         objectType = objectTypeName.Substring(0, 2).ToUpper();
                     }
 
-                    operation.Number = _uniqueNumberGenerator.GenerateNumber(objectType + "{0:yyMMdd}-{1:D5}");
+                    var numberTemplate = _settingManager.GetValue("Order." + objectTypeName + "NewNumberTemplate", objectType + "{0:yyMMdd}-{1:D5}");
+                    operation.Number = _uniqueNumberGenerator.GenerateNumber(numberTemplate);
                 }
             }
 
