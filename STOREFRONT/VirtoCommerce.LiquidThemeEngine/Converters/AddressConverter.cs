@@ -15,6 +15,15 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             {
                 result = new Address();
                 result.InjectFrom<NullableAndEnumValueInjection>(address);
+
+                result.Address1 = address.Line1;
+                result.Address2 = address.Line2;
+                result.Street = string.Join(", ", result.Address1, result.Address2).Trim(',', ' ');
+                result.Company = address.Organization;
+                result.Province = address.RegionName;
+                result.ProvinceCode = address.RegionId;
+                result.Zip = address.PostalCode;
+                result.Country = address.CountryName;
             }
 
             return result;
