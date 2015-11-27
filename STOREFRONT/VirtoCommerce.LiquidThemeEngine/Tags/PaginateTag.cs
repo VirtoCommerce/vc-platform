@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using DotLiquid;
 using DotLiquid.Exceptions;
 using DotLiquid.Util;
-using PagedList;
 using VirtoCommerce.LiquidThemeEngine.Objects;
 using VirtoCommerce.Storefront.Model.Common;
 
@@ -21,14 +16,15 @@ namespace VirtoCommerce.LiquidThemeEngine.Tags
     /// </summary>
     public class PaginateTag : Block
     {
-        private static readonly Regex Syntax = R.B(R.Q(@"({0})\s*by\s*({0}+)?"), DotLiquid.Liquid.QuotedFragment);
+        private static readonly Regex _syntax = R.B(R.Q(@"({0})\s*by\s*({0}+)?"), DotLiquid.Liquid.QuotedFragment);
 
         private string _collectionName;
-       
+
         #region Public Methods and Operators
+
         public override void Initialize(string tagName, string markup, List<string> tokens)
         {
-            var match = Syntax.Match(markup);
+            var match = _syntax.Match(markup);
 
             if (match.Success)
             {
@@ -44,23 +40,25 @@ namespace VirtoCommerce.LiquidThemeEngine.Tags
 
         public override void Render(Context context, TextWriter result)
         {
-            var pagedList = context[this._collectionName] as IStorefrontPagedList;
+            var pagedList = context[_collectionName] as IStorefrontPagedList;
             if (pagedList == null)
             {
                 return;
             }
+
+            var themeEngine = (ShopifyLiquidThemeEngine)Template.FileSystem;
+            var workContext = themeEngine.WorkContext;
+
             var paginate = new Paginate(pagedList);
             context["paginate"] = paginate;
-       
+
             for (int i = 1; i <= pagedList.PageCount; i++)
             {
-                paginate.Parts.Add(new Part { IsLink = i != pagedList.PageNumber, Title = i.ToString(), Url = pagedList.GetPageUrl(i) });
+                paginate.Parts.Add(new Part { IsLink = i != pagedList.PageNumber, Title = i.ToString(), Url = pagedList.GetPageUrl(i, workContext) });
             }
-            this.RenderAll(this.NodeList, context, result);
+            RenderAll(NodeList, context, result);
         }
-        #endregion
 
-        
-      
+        #endregion
     }
 }

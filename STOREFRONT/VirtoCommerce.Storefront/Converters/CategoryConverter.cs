@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using VirtoCommerce.Storefront.Model.Catalog;
-using VirtoCommerce.Client.Model;
+﻿using System.Linq;
 using Omu.ValueInjecter;
-using VirtoCommerce.Storefront.Common;
+using VirtoCommerce.Client.Model;
+using VirtoCommerce.LiquidThemeEngine.Converters.Injections;
+using VirtoCommerce.Storefront.Model.Catalog;
 namespace VirtoCommerce.Storefront.Converters
 {
     public static class CategoryConverter
@@ -24,7 +21,7 @@ namespace VirtoCommerce.Storefront.Converters
                 retVal.PrimaryImage = retVal.Images.FirstOrDefault();
             }
 
-       
+
             return retVal;
         }
     }

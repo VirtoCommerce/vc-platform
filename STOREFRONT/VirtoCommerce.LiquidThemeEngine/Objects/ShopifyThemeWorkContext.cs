@@ -1,8 +1,9 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using DotLiquid;
+using VirtoCommerce.LiquidThemeEngine.Converters;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Common;
 
@@ -66,7 +67,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         /// Current single form value  created in DotLiquidThemedView with ModelState errors
         /// The form object is used within the form tag. It contains attributes of its parent form.
         /// </summary>
-        public Objects.Form Form
+        public Form Form
         {
             get; set;
         }
@@ -79,6 +80,8 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
             }
         }
 
+        private Customer _customer;
+
         /// <summary>
         /// Returns logged in customer or null.
         /// </summary>
@@ -86,7 +89,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         {
             get
             {
-                return CurrentCustomer.HasAccount ? CurrentCustomer : null;
+                return _customer ?? (_customer = CurrentCustomer.HasAccount ? CurrentCustomer.ToShopifyModel() : null);
             }
         }
 
@@ -97,9 +100,9 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         {
             get
             {
-                if (base.CurrentCatalogSearchResult != null && base.CurrentCatalogSearchResult.Products != null)
+                if (CurrentCatalogSearchResult != null && CurrentCatalogSearchResult.Products != null)
                 {
-                    return new Collection(base.CurrentCatalogSearchResult.Products, _urlBuilder, this);
+                    return new Collection(CurrentCatalogSearchResult.Products, _urlBuilder, this);
                 }
                 return null;
             }
@@ -110,9 +113,9 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
             get
             {
                 Collections retVal = null;
-                if(base.CurrentCatalogSearchResult != null && base.CurrentCatalogSearchResult.Categories != null)
+                if (CurrentCatalogSearchResult != null && CurrentCatalogSearchResult.Categories != null)
                 {
-                    var collections = base.CurrentCatalogSearchResult.Categories.Select(x => new Collection(x, _urlBuilder, this));
+                    var collections = CurrentCatalogSearchResult.Categories.Select(x => new Collection(x, _urlBuilder, this));
                     retVal = new Collections(collections);
                 }
                 return retVal;
@@ -132,7 +135,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         public object ToLiquid()
         {
             var retVal = new Dictionary<string, object>();
-            foreach (var propertyInfo in this.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
+            foreach (var propertyInfo in GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
                 retVal.Add(propertyInfo.Name.Decamelize(), propertyInfo.GetValue(this));
             }

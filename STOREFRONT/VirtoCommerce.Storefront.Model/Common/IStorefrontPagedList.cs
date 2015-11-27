@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using PagedList;
+﻿using PagedList;
 
 namespace VirtoCommerce.Storefront.Model.Common
 {
     public interface IStorefrontPagedList : IPagedList
     {
-        string GetPageUrl(int pageIndex);
+        string GetPageUrl(int pageIndex, WorkContext workContext);
     }
 
     public interface IStorefrontPagedList<T> : IPagedList<T>, IStorefrontPagedList

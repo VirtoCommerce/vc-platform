@@ -39,6 +39,10 @@
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Omu.ValueInjecter, Version=3.1.1.0, Culture=neutral, PublicKeyToken=c7694541b0ac80e4, processorArchitecture=MSIL">
+      <HintPath>..\packages\valueinjecter.3.1.1\lib\net40\Omu.ValueInjecter.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
       <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
       <Private>True</Private>
@@ -83,10 +87,14 @@
     <Compile Include="Binders\RegisterModelBinder.cs" />
     <Compile Include="Binders\ResetPasswordModelBinder.cs" />
     <Compile Include="Binders\ShopifyModelBinderProvider.cs" />
+    <Compile Include="Converters\AddressConverter.cs" />
+    <Compile Include="Converters\CustomerConverter.cs" />
+    <Compile Include="Converters\Injections\NullableAndEnumInjection.cs" />
     <Compile Include="DotLiquidThemedView.cs" />
     <Compile Include="DotLiquidThemedViewEngine.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\TemplateExtensions.cs" />
+    <Compile Include="Extensions\UriExtensions.cs" />
     <Compile Include="Filters\HtmlFilters.cs" />
     <Compile Include="Filters\MoneyFilters.cs" />
     <Compile Include="Filters\StringFilters.cs" />
@@ -94,9 +102,11 @@
     <Compile Include="Filters\TranslationFilter.cs" />
     <Compile Include="Filters\CommerceFilters.cs" />
     <Compile Include="Filters\CommonFilters.cs" />
+    <Compile Include="Objects\Address.cs" />
     <Compile Include="Objects\Cart.cs" />
     <Compile Include="Objects\Collection.cs" />
     <Compile Include="Objects\Collections.cs" />
+    <Compile Include="Objects\Customer.cs" />
     <Compile Include="Objects\Form.cs" />
     <Compile Include="Objects\FormErrors.cs" />
     <Compile Include="Objects\Fulfillment.cs" />
@@ -119,7 +129,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Blocks\" />
-    <Folder Include="Converters\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">

@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Web;
-using Omu.ValueInjecter;
 using Omu.ValueInjecter.Injections;
-using VirtoCommerce.Storefront.Model.Common;
+using Omu.ValueInjecter.Utils;
 
-namespace VirtoCommerce.Storefront.Common
+namespace VirtoCommerce.LiquidThemeEngine.Converters.Injections
 {
     public class NullableAndEnumValueInjection : ValueInjection
     {
@@ -21,8 +17,8 @@ namespace VirtoCommerce.Storefront.Common
                 var targetProperty = targetType.GetProperty(sourceProperty.Name);
                 if (targetProperty != null && PropertyMatch(sourceProperty, targetProperty))
                 {
-               
-                    if(targetProperty.PropertyType.IsEnum)
+
+                    if (targetProperty.PropertyType.IsEnum)
                     {
                         var value = Enum.Parse(targetProperty.PropertyType, sourceProperty.GetValue(source).ToString(), true);
                         targetProperty.SetValue(target, value);
@@ -59,11 +55,12 @@ namespace VirtoCommerce.Storefront.Common
                 retVal = source.PropertyType == target.PropertyType || source.PropertyType == Nullable.GetUnderlyingType(target.PropertyType)
                         || Nullable.GetUnderlyingType(source.PropertyType) == target.PropertyType;
 
-                if(!retVal)
+                if (!retVal)
                 {
                     retVal = source.PropertyType.IsEnum || target.PropertyType.IsEnum;
                 }
             }
+
             return retVal;
         }
     }
