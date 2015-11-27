@@ -30,27 +30,31 @@ angular
           function open(event, menuElement) {
             menuElement.addClass('open');
 
-            var doc = $document[0].documentElement;
-            var docLeft = (window.pageXOffset || doc.scrollLeft) -
-                          (doc.clientLeft || 0),
-                docTop = (window.pageYOffset || doc.scrollTop) -
-                         (doc.clientTop || 0),
-                elementWidth = menuElement[0].scrollWidth,
-                elementHeight = menuElement[0].scrollHeight;
-            var docWidth = doc.clientWidth + docLeft,
-              docHeight = doc.clientHeight + docTop,
-              totalWidth = elementWidth + event.pageX,
-              totalHeight = elementHeight + event.pageY,
-              left = Math.max(event.pageX - docLeft, 0),
-              top = Math.max(event.pageY - docTop, 0);
+            // var doc = $document[0].documentElement;
+            // var docLeft = (window.pageXOffset || doc.scrollLeft) -
+            //               (doc.clientLeft || 0),
+            //     docTop = (window.pageYOffset || doc.scrollTop) -
+            //              (doc.clientTop || 0),
+            //     elementWidth = menuElement[0].scrollWidth,
+            //     elementHeight = menuElement[0].scrollHeight;
 
-            if (totalWidth > docWidth) {
-              left = left - (totalWidth - docWidth);
-            }
+            // var docWidth = doc.clientWidth + docLeft,
+            //   docHeight = doc.clientHeight + docTop,
+            //   totalWidth = elementWidth + event.pageX,
+            //   totalHeight = elementHeight + event.pageY,
+            //   left = Math.max(event.pageX - docLeft, 0),
+            //   top = Math.max(event.pageY - docTop, 0);
 
-            if (totalHeight > docHeight) {
-              top = top - (totalHeight - docHeight);
-            }
+            // if (totalWidth > docWidth) {
+            //   left = left - (totalWidth - docWidth);
+            // }
+
+            // if (totalHeight > docHeight) {
+            //   top = top - (totalHeight - docHeight);
+            // }
+
+            var left = event.clientX + window.pageXOffset - 90; //Left Position of Mouse Pointer
+            var top = event.clientY + window.pageYOffset - 305 + $(menuElement).height(); //Top Position of Mouse 
 
             menuElement.css('top', top + 'px');
             menuElement.css('left', left + 'px');
