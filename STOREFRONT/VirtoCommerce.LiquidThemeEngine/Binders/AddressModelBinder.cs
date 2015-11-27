@@ -9,12 +9,12 @@ namespace VirtoCommerce.LiquidThemeEngine.Binders
         {
             model.FirstName = request["address[first_name]"];
             model.LastName = request["address[last_name]"];
-            model.Organization = request["address[company]"];
-            model.Line1 = request["address[address1]"];
-            model.Line2 = request["address[address2]"];
+            model.Company = request["address[company]"];
+            model.Address1 = request["address[address1]"];
+            model.Address2 = request["address[address2]"];
             model.City = request["address[city]"];
-            model.CountryName = request["address[country]"];
-            model.RegionName = request["address[province]"];
+            model.Country = request["address[country]"];
+            model.Province = request["address[province]"];
             model.Zip = request["address[zip]"];
             model.Phone = request["address[phone]"];
 
