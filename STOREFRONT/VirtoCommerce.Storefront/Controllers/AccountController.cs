@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using Microsoft.Owin.Security;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Client.Model;
 using VirtoCommerce.Storefront.Common;
+using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Common;
 using shopifyModel = VirtoCommerce.LiquidThemeEngine.Objects;
@@ -54,8 +56,48 @@ namespace VirtoCommerce.Storefront.Controllers
 
         [HttpPost]
         [Route("addresses/{id?}")]
-        public ActionResult UpdateAddress(string id, shopifyModel.Address formModel)
+        public async Task<ActionResult> UpdateAddress(string id, shopifyModel.Address formModel)
         {
+            var contact = await _customerApi.CustomerModuleGetContactByIdAsync(WorkContext.CurrentCustomer.Id);
+            var updateContact = false;
+
+            if (contact != null)
+            {
+                if (string.IsNullOrEmpty(id))
+                {
+                    // Add new address
+                    contact.Addresses.Add(formModel.ToServiceModel());
+                    updateContact = true;
+                }
+                else
+                {
+                    int addressIndex;
+                    if (int.TryParse(id, NumberStyles.Integer, CultureInfo.InvariantCulture, out addressIndex))
+                    {
+                        if (addressIndex > 0 && addressIndex <= contact.Addresses.Count)
+                        {
+                            if (string.Equals(formModel.Method, "delete", StringComparison.OrdinalIgnoreCase))
+                            {
+                                // Delete address
+                                contact.Addresses.RemoveAt(addressIndex - 1);
+                                updateContact = true;
+                            }
+                            else
+                            {
+                                // Update address
+                                contact.Addresses[addressIndex].CopyFrom(formModel);
+                                updateContact = true;
+                            }
+                        }
+                    }
+                }
+
+                if (updateContact)
+                {
+                    await _customerApi.CustomerModuleUpdateContactAsync(contact);
+                }
+            }
+
             return StoreFrontRedirect("~/account/addresses");
         }
 

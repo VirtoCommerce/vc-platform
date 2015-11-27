@@ -35,12 +35,12 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
 
         public static string EditCustomerAddressLink(string input, string id)
         {
-            return BuildOnClickLink(input, "Shopify.CustomerAddress.toggleForm({0});return false", id);
+            return BuildOnClickLink(input, "Shopify.CustomerAddress.toggleForm('{0}');return false", id);
         }
 
         public static string DeleteCustomerAddressLink(string input, string id)
         {
-            return BuildOnClickLink(input, "Shopify.CustomerAddress.destroy({0});return false", id);
+            return BuildOnClickLink(input, "Shopify.CustomerAddress.destroy('{0}');return false", id);
         }
 
         /// <summary>
@@ -179,7 +179,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
             return result;
         }
 
-     
+
         private static string BuildAbsoluteUrl(string virtualUrl)
         {
             var themeEngine = (ShopifyLiquidThemeEngine)Template.FileSystem;
