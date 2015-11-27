@@ -99,7 +99,7 @@ namespace VirtoCommerce.Storefront.Model
             }
         }
 
-        public ICollection<Country> Countries { get; set; }
+        public Country[] Countries { get; set; }
 
         #region IDisposable Implementation
 
