@@ -49,8 +49,8 @@
         <name>Quotes.QuoteRequestNewNumberTemplate</name>
         <valueType>string</valueType>
         <defaultValue>RFQ{0:yyMMdd}-{1:D5}</defaultValue>
-        <title>New Quote Request number template</title>
-        <description>The template (pattern) that will be used to generate the number for new Quote Request</description>
+        <title>New Quote Request number template (e.g., "RFQ{0:yyMMdd}-{1:D5}")</title>
+        <description>The template (pattern) that will be used to generate the number for new Quote Request. Parameters: 0 - date (the UTC time of number generation); 1 - the sequence number.</description>
       </setting>
       <setting>
         <name>Quotes.ExportImport.Description</name>

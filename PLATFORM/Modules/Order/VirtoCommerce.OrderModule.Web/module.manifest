@@ -84,22 +84,22 @@
 			<name>Order.CustomerOrderNewNumberTemplate</name>
 			<valueType>string</valueType>
 			<defaultValue>CO{0:yyMMdd}-{1:D5}</defaultValue>
-			<title>New Customer Order number template</title>
-			<description>The template (pattern) that will be used to generate the number for new Customer Order</description>
+			<title>New Customer Order number template (e.g., "CO{0:yyMMdd}-{1:D5}")</title>
+			<description>The template (pattern) that will be used to generate the number for new Customer Order. Parameters: 0 - date (the UTC time of number generation); 1 - the sequence number.</description>
 		  </setting>
 		  <setting>
 			<name>Order.ShipmentNewNumberTemplate</name>
 			<valueType>string</valueType>
 			<defaultValue>SH{0:yyMMdd}-{1:D5}</defaultValue>
-			<title>New Shipment number template</title>
-			<description>The template (pattern) that will be used to generate the number for new Shipment</description>
+			<title>New Shipment number template (e.g., "SH{0:yyMMdd}-{1:D5}")</title>
+			<description>The template (pattern) that will be used to generate the number for new Shipment. Parameters: 0 - date (the UTC time of number generation); 1 - the sequence number.</description>
 		  </setting>
 		  <setting>
 			<name>Order.PaymentInNewNumberTemplate</name>
 			<valueType>string</valueType>
 			<defaultValue>PI{0:yyMMdd}-{1:D5}</defaultValue>
-			<title>New incoming Payment number template</title>
-			<description>The template (pattern) that will be used to generate the number for new incoming Payment</description>
+			<title>New incoming Payment number template (e.g., "PI{0:yyMMdd}-{1:D5}")</title>
+			<description>The template (pattern) that will be used to generate the number for new incoming Payment. Parameters: 0 - date (the UTC time of number generation); 1 - the sequence number.</description>
 		  </setting>
 			<setting>
 				<name>Order.ExportImport.Description</name>

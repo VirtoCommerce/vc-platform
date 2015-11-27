@@ -29,9 +29,9 @@ namespace VirtoCommerce.CoreModule.Data.Services
         }
 
         /// <summary>
-        /// Generates unique number using given template. E.g. GenerateNumber("Order{0:yyMMdd}-{1:D5}")
+        /// Generates unique number using given template, e.g., GenerateNumber("Order{0:yyMMdd}-{1:D5}");
         /// </summary>
-        /// <param name="numberTemplate">The number template. Pass the format to be used in string.Format function. The supplied parameters: 0 - date (the UTC time of name generation); 1 - the sequence number.</param>
+        /// <param name="numberTemplate">The number template. Pass the format to be used in string.Format function. Passable parameters: 0 - date (the UTC time of number generation); 1 - the sequence number.</param>
         /// <returns></returns>
         public string GenerateNumber(string numberTemplate)
         {
