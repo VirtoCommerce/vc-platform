@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using VirtoCommerce.Storefront.Model.Cart;
 using VirtoCommerce.Storefront.Model.Catalog;
@@ -82,7 +83,7 @@ namespace VirtoCommerce.Storefront.Model
         public CatalogSearchResult CurrentCatalogSearchResult { get; set; }
         #endregion
 
-        private DateTime _utcNow;
+        private DateTime? _utcNow;
         /// <summary>
         /// Represent current storefront datetime in UTC (may be changes to test in future or past events)
         /// </summary>
@@ -90,18 +91,16 @@ namespace VirtoCommerce.Storefront.Model
         {
             get
             {
-                if(_utcNow == null)
-                {
-                    return DateTime.UtcNow;
-                }
-                return _utcNow;
+                return _utcNow == null ? DateTime.UtcNow : _utcNow.Value;
             }
-
             set
             {
                 _utcNow = value;
             }
         }
+
+        public ICollection<Country> Countries { get; set; }
+
         #region IDisposable Implementation
 
         public void Dispose()

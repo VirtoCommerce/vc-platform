@@ -50,6 +50,15 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         /// </summary>
         public Customer Customer { get; set; }
 
+        private string _countryOptionTags;
+        public string CountryOptionTags
+        {
+            get
+            {
+                return _countryOptionTags ?? (_countryOptionTags = string.Join("\r\n", Countries.OrderBy(c => c.Name).Select(c => c.ToOptionTag())));
+            }
+        }
+
         /// <summary>
         /// The collection https://docs.shopify.com/themes/liquid-documentation/objects/collection
         /// </summary>

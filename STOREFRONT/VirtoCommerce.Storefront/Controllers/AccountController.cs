@@ -11,6 +11,7 @@ using VirtoCommerce.Client.Model;
 using VirtoCommerce.Storefront.Common;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Common;
+using shopifyModel = VirtoCommerce.LiquidThemeEngine.Objects;
 
 namespace VirtoCommerce.Storefront.Controllers
 {
@@ -52,17 +53,10 @@ namespace VirtoCommerce.Storefront.Controllers
         }
 
         [HttpPost]
-        [Route("addresses")]
-        public ActionResult AddAddress(Address formModel)
+        [Route("addresses/{id?}")]
+        public ActionResult UpdateAddress(string id, shopifyModel.Address formModel)
         {
-            return View("customers/addresses", WorkContext);
-        }
-
-        [HttpDelete]
-        [Route("addresses/{id}")]
-        public ActionResult DeleteAddress(string id)
-        {
-            return View("customers/addresses", WorkContext);
+            return StoreFrontRedirect("~/account/addresses");
         }
 
         [HttpGet]

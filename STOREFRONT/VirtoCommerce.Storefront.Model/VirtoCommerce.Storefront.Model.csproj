@@ -57,6 +57,7 @@
     <Compile Include="Common\CollectionExtensions.cs" />
     <Compile Include="Common\IStorefrontPagedList.cs" />
     <Compile Include="Common\StoreFrontPagedList.cs" />
+    <Compile Include="Country.cs" />
     <Compile Include="Image.cs" />
     <Compile Include="Catalog\Inventory.cs" />
     <Compile Include="Catalog\ProductPrice.cs" />

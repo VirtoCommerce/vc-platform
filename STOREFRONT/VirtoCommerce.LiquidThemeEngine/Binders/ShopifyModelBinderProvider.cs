@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Web.Mvc;
 using VirtoCommerce.Storefront.Model;
+using shopifyModel = VirtoCommerce.LiquidThemeEngine.Objects;
 
 namespace VirtoCommerce.LiquidThemeEngine.Binders
 {
@@ -10,11 +11,12 @@ namespace VirtoCommerce.LiquidThemeEngine.Binders
     /// </summary>
     public class ShopifyModelBinderProvider : IModelBinderProvider
     {
-        private static Dictionary<Type, IModelBinder> _binders = new Dictionary<Type, IModelBinder>
+        private static readonly Dictionary<Type, IModelBinder> _binders = new Dictionary<Type, IModelBinder>
         {
             { typeof(Login), new LoginModelBinder() },
             { typeof(Register), new RegisterModelBinder() },
             { typeof(ResetPassword), new ResetPasswordModelBinder() },
+            { typeof(shopifyModel.Address), new AddressModelBinder() },
         };
 
         public IModelBinder GetBinder(Type modelType)
