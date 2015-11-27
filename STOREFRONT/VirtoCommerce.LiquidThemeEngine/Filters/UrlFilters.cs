@@ -79,6 +79,17 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
         }
 
         /// <summary>
+        /// Generates an HTML link. The first parameter is the URL of the link, and the optional second parameter is the title of the link.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static string LinkTo(object input, string link, string title = "")
+        {
+            return String.Format("<a href=\"{0}\" title=\"{1}\">{2}</a>", link, title, input);
+        }
+
+        /// <summary>
         /// Returns the URL of a file in the "assets" folder of a theme.
         /// {{ 'shop.css' | asset_url }}
         /// </summary>

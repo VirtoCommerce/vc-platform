@@ -57,6 +57,15 @@ namespace VirtoCommerce.Storefront.Services
             var result = await _catalogModuleApi.CatalogModuleSearchSearchAsync(criteria.ResponseGroup.ToString(), null, true, criteria.CategoryId, null, criteria.CatalogId, null, null,
                                                                                  _workContext.CurrentCurrency.Code,
                                                                                  null, null, null, true, null, criteria.PageSize * (criteria.PageNumber - 1), criteria.PageSize, null);
+            if(criteria.CategoryId != null)
+            {
+                var category = await _catalogModuleApi.CatalogModuleCategoriesGetAsync(criteria.CategoryId);
+                if(category != null)
+                {
+                    retVal.Category = category.ToWebModel();
+                }
+            }
+
             if (result != null)
             {
                 if (result.Products != null && result.Products.Any())
@@ -71,7 +80,6 @@ namespace VirtoCommerce.Storefront.Services
                 if (result.Categories != null && result.Categories.Any())
                 {
                     retVal.Categories = result.Categories.Select(x => x.ToWebModel());
-
                 }
 
             }

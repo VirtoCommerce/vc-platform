@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using VirtoCommerce.LiquidThemeEngine.Objects;
+using VirtoCommerce.Storefront.Model.Common;
 using storefrontModel = VirtoCommerce.Storefront.Model;
 
 namespace VirtoCommerce.LiquidThemeEngine.Converters
@@ -23,15 +25,23 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             result.CurrentCurrency = workContext.CurrentCurrency.ToShopifyModel();
             result.CurrentLanguage = workContext.CurrentLanguage.ToShopifyModel();
 
-            if (workContext.CurrentCatalogSearchResult != null)
+            if(workContext.CurrentProduct != null && workContext.CurrentProduct.Category != null)
             {
-                result.Collection = workContext.CurrentCatalogSearchResult.ToShopifyModel(workContext);
-                if (workContext.CurrentCatalogSearchResult.Categories != null)
+                result.Collection = workContext.CurrentProduct.Category.ToShopifyModel(workContext);
+            }
+
+            var searchResult = workContext.CurrentCatalogSearchResult;
+            if (searchResult != null)
+            {
+                result.Collection = searchResult.ToShopifyModel(workContext);
+ 
+                if (searchResult.Categories != null)
                 {
-                    result.Collections = new Collections(workContext.CurrentCatalogSearchResult.Categories.Select(x => x.ToShopifyModel(workContext)));
+                    result.Collections = new Collections(searchResult.Categories.Select(x => x.ToShopifyModel(workContext)));
                 }
             }
 
+            
             return result;
         }
     }

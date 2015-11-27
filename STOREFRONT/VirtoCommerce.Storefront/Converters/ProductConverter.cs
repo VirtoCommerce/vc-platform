@@ -21,6 +21,11 @@ namespace VirtoCommerce.Storefront.Converters
 
             retVal.Sku = product.Code;
 
+            if(product.Category != null)
+            {
+                retVal.Category = product.Category.ToWebModel();
+            }
+
             if (product.Properties != null)
                 retVal.Properties = product.Properties.Select(p => p.ToWebModel()).ToList();
 
