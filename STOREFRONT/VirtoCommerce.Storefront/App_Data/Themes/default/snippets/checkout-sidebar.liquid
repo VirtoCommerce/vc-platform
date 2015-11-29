@@ -18,7 +18,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="product" ng-repeat="lineIten in cart.Items">
+                    <tr class="product" ng-repeat="lineItem in cart.Items">
                         <td class="product__image">
                             <div class="product__image__inner">
                                 <span class="product__quantity">{( lineItem.Quantity )}</span>
@@ -73,7 +73,7 @@
                     <tr class="total-line total-line--subtotal">
                         <td class="total-line__name">{{ 'checkout.subtotal' | t }}</td>
                         <td class="total-line__price">
-                            <span class="order-summary__emphasis">{( cart.Total.Amount | currency: cart.Total.CurrencySymbol )}</span>
+                            <span class="order-summary__emphasis">{( cart.SubTotal.Amount | currency: cart.SubTotal.CurrencySymbol )}</span>
                         </td>
                     </tr>
                     <tr class="total-line total-line--shipping">

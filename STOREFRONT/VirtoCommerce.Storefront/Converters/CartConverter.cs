@@ -15,7 +15,7 @@ namespace VirtoCommerce.Storefront.Converters
             var currency = new Currency(EnumUtility.SafeParse(cart.Currency, CurrencyCodes.USD));
 
             cartWebModel.InjectFrom(cart);
-            //cartWebModel.Currency = currency;
+
             cartWebModel.HandlingTotal = new Money(cart.HandlingTotal ?? 0, currency.Code);
 
             if (cart.Addresses != null)
@@ -85,6 +85,7 @@ namespace VirtoCommerce.Storefront.Converters
 
             if (cart.Shipments != null)
             {
+                cartServiceModel.Shipments = cart.Shipments.Select(s => s.ToServiceModel()).ToList();
             }
 
             if (cart.TaxDetails != null)

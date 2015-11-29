@@ -58,6 +58,9 @@
     <Compile Include="Common\IStorefrontPagedList.cs" />
     <Compile Include="Common\StoreFrontPagedList.cs" />
     <Compile Include="Country.cs" />
+    <Compile Include="DynamicObjectProperty.cs" />
+    <Compile Include="DynamicPropertyName.cs" />
+    <Compile Include="DynamicPropertyObjectValue.cs" />
     <Compile Include="Image.cs" />
     <Compile Include="Catalog\Inventory.cs" />
     <Compile Include="Catalog\ProductPrice.cs" />
@@ -85,6 +88,13 @@
     <Compile Include="Language.cs" />
     <Compile Include="Catalog\Product.cs" />
     <Compile Include="Login.cs" />
+    <Compile Include="Order\CustomerOrder.cs" />
+    <Compile Include="Order\LineItem.cs" />
+    <Compile Include="Order\Operation.cs" />
+    <Compile Include="Order\PaymentIn.cs" />
+    <Compile Include="Order\Shipment.cs" />
+    <Compile Include="Order\ShipmentItem.cs" />
+    <Compile Include="Order\ShipmentPackage.cs" />
     <Compile Include="PaymentMethod.cs" />
     <Compile Include="Profile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -94,7 +104,7 @@
     <Compile Include="Catalog\ProductProperty.cs" />
     <Compile Include="SeoInfo.cs" />
     <Compile Include="Services\ICatalogService.cs" />
-    <Compile Include="ShipmentMethod.cs" />
+    <Compile Include="ShippingMethod.cs" />
     <Compile Include="Discount.cs" />
     <Compile Include="Cart\LineItem.cs" />
     <Compile Include="Cart\Payment.cs" />
@@ -107,6 +117,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

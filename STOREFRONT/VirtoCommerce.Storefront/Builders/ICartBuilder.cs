@@ -18,6 +18,10 @@ namespace VirtoCommerce.Storefront.Builders
 
         CartBuilder AddAddress(Address address);
 
+        CartBuilder AddShipment(ShippingMethod shippingMethod);
+
+        CartBuilder AddPayment(PaymentMethod paymentMethod);
+
         Task SaveAsync();
 
         ShoppingCart Cart { get; }

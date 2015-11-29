@@ -98,6 +98,26 @@ namespace VirtoCommerce.Storefront.Builders
             return this;
         }
 
+        public CartBuilder AddShipment(ShippingMethod shippingMethod)
+        {
+            var shipment = shippingMethod.ToShipmentModel(_currency);
+
+            _cart.Shipments.Clear();
+            _cart.Shipments.Add(shipment);
+
+            return this;
+        }
+
+        public CartBuilder AddPayment(PaymentMethod paymentMethod)
+        {
+            var payment = paymentMethod.ToPaymentModel(_cart.Total, _currency);
+
+            _cart.Payments.Clear();
+            _cart.Payments.Add(payment);
+
+            return this;
+        }
+
         public async Task SaveAsync()
         {
             var cart = _cart.ToServiceModel();

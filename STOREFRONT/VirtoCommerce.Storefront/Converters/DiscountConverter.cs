@@ -1,6 +1,7 @@
 ﻿using Omu.ValueInjecter;
 using VirtoCommerce.Client.Model;
 using VirtoCommerce.Storefront.Model;
+using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Converters
 {
@@ -22,6 +23,17 @@ namespace VirtoCommerce.Storefront.Converters
             discountServiceModel.InjectFrom(discount);
 
             return discountServiceModel;
+        }
+
+        public static Discount ToWebModel(this VirtoCommerceOrderModuleWebModelDiscount discount, Currency currency)
+        {
+            var webModel = new Discount();
+
+            webModel.InjectFrom(discount);
+
+            webModel.DiscountAmount = new Money(discount.DiscountAmount ?? 0, currency.Code);
+
+            return webModel;
         }
     }
 }

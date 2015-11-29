@@ -20,7 +20,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// <value>
         /// Currency code in ISO 4217 format
         /// </value>
-        public CurrencyCodes Currency { get; set; }
+        public Currency Currency { get; set; }
 
         /// <summary>
         /// Gets or sets the value of payment amount
