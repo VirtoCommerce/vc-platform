@@ -6,6 +6,13 @@ namespace VirtoCommerce.Storefront.Model.Cart
 {
     public class Shipment : Entity
     {
+        public Shipment()
+        {
+            Discounts = new List<Discount>();
+            Items = new List<LineItem>();
+            TaxDetails = new List<TaxDetail>();
+        }
+
         /// <summary>
         /// Gets or sets the value of shipping method code
         /// </summary>
@@ -89,7 +96,9 @@ namespace VirtoCommerce.Storefront.Model.Cart
         {
             get
             {
-                return Subtotal + TaxTotal - DiscountTotal;
+                decimal total = Subtotal.Amount + TaxTotal.Amount - DiscountTotal.Amount;
+
+                return new Money(total, Currency.Code);
             }
         }
 
@@ -100,9 +109,9 @@ namespace VirtoCommerce.Storefront.Model.Cart
         {
             get
             {
-                decimal discountsTotal = Discounts.Sum(d => d.DiscountAmount.Amount);
+                decimal discountTotal = Discounts.Sum(d => d.DiscountAmount.Amount);
 
-                return new Money(discountsTotal, Currency.Code);
+                return new Money(discountTotal, Currency.Code);
             }
         }
 
@@ -126,16 +135,24 @@ namespace VirtoCommerce.Storefront.Model.Cart
         {
             get
             {
-                decimal subTotal = Items.Sum(i => i.ExtendedPrice.Amount);
+                decimal itemSubtotal = Items.Sum(i => i.ExtendedPrice.Amount);
 
-                return new Money(subTotal, Currency.Code);
+                return new Money(itemSubtotal, Currency.Code);
             }
         }
 
         /// <summary>
-        /// Gets or sets the value of shipping subtotal
+        /// Gets the value of shipping subtotal
         /// </summary>
-        public Money Subtotal { get; set; }
+        public Money Subtotal
+        {
+            get
+            {
+                decimal subtotal = ShippingPrice.Amount;
+
+                return new Money(subtotal, Currency.Code);
+            }
+        }
 
         /// <summary>
         /// Gets or sets the collection of shipping discounts

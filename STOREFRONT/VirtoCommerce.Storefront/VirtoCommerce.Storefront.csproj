@@ -246,19 +246,28 @@
     <Compile Include="Controllers\StorefrontControllerBase.cs" />
     <Compile Include="Converters\AddressConverter.cs" />
     <Compile Include="Converters\AssetConverter.cs" />
+    <Compile Include="Converters\CartPaymentMethodConverter.cs" />
+    <Compile Include="Converters\CartShipmentMethodConverter.cs" />
+    <Compile Include="Converters\DynamicPropertyConverter.cs" />
     <Compile Include="Converters\EditorialReviewConverter.cs" />
     <Compile Include="Converters\CartConverter.cs" />
     <Compile Include="Converters\CartLineItemConverter.cs" />
     <Compile Include="Converters\CategoryConverter.cs" />
     <Compile Include="Converters\CustomerConverter.cs" />
     <Compile Include="Converters\DiscountConverter.cs" />
+    <Compile Include="Converters\InPaymentConverter.cs" />
     <Compile Include="Converters\InventoryConverter.cs" />
+    <Compile Include="Converters\OperationConverter.cs" />
+    <Compile Include="Converters\OrderConverter.cs" />
+    <Compile Include="Converters\OrderLineItemConverter.cs" />
     <Compile Include="Converters\PaymentConverter.cs" />
     <Compile Include="Converters\PriceConverter.cs" />
     <Compile Include="Converters\ProductConverter.cs" />
     <Compile Include="Converters\PropertyConverter.cs" />
     <Compile Include="Converters\SeoInfoConverter.cs" />
     <Compile Include="Converters\ShipmentConverter.cs" />
+    <Compile Include="Converters\ShipmentItemConverter.cs" />
+    <Compile Include="Converters\ShipmentPackageConverter.cs" />
     <Compile Include="Converters\StoreConverter.cs" />
     <Compile Include="Converters\TaxDetailConverter.cs" />
     <Compile Include="Exceptions\SaasCompileException.cs" />
@@ -392,6 +401,7 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="App_Data\Themes\default\templates\cart.liquid" />
+    <Content Include="App_Data\Themes\default\templates\thanks.liquid" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

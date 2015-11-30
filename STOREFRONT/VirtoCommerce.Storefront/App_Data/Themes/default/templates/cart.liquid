@@ -21,7 +21,7 @@
                     <div class="grid">
                         <div class="grid-item one-half medium-down--one-third text-right">
                             <div class="js-qty">
-                                <input class="js-num" type="text" ng-model="lineItem.Quantity" />
+                                <input class="js-num" disabled="disabled" type="text" ng-model="lineItem.Quantity" />
                                 <span class="js--qty-adjuster js--add" ng-click="changeLineItem(lineItem.Id, lineItem.Quantity + 1)">+</span>
                                 <span class="js--qty-adjuster js--minus" ng-click="changeLineItem(lineItem.Id, lineItem.Quantity - 1)">-</span>
                             </div>
@@ -54,7 +54,7 @@
                             <small>{( cart.SubTotal.Amount | currency: cart.SubTotal.CurrencySymbol )}</small>
                         </span>
                     </div>
-                    <button class="btn" type="button">
+                    <button class="btn" type="button" ng-click="go('{{ '/cart/checkout/customer-information' | absolute_url }}')">
                         <span class="icon icon-cart"></span>
                         {{ 'cart.general.checkout' | t }}
                     </button>

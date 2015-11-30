@@ -42,7 +42,7 @@
     {{ 'shopify_common.js' | shopify_asset_url | script_tag }}
     {{ 'customer_area.js'  | shopify_asset_url | script_tag }}
 </head>
-<body id="{{ page_title | handle }}" class="{% if customer %}customer-logged-in {% endif %}template-{{ template | replace: '.', ' ' | truncatewords: 1, '' | handle }}" ng-controller="storefrontController">
+<body id="{{ page_title | handle }}" class="{% if customer %}customer-logged-in {% endif %}template-{{ template | replace: '.', ' ' | truncatewords: 1, '' | handle }}" ng-controller="mainController">
     {% if settings.store_selector_enable %}
         {% include 'top-header-selector' %}
     {% endif %}
@@ -94,7 +94,7 @@
                         <br class="medium-down--hide" />
                     {% endif %}
                     {% include 'search-bar' %}
-                    <a class="header-cart-btn cart-toggle" id="btn-cart-toggle" ng-click="toggleCartModal(cartModalToggled)">
+                    <a class="header-cart-btn cart-toggle" id="btn-cart-toggle" ng-click="showCartModal()">
                         <span class="icon icon-cart"></span>
                         {{ 'layout.cart.cart' | t }} <span id="cartCount" ng-class="{ 'hidden-count': !cart.Items.length }">{( cart.Items.length )}</span>
                     </a>

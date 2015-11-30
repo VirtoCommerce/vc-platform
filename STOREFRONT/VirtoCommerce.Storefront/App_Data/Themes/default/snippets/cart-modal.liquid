@@ -1,5 +1,5 @@
-<div class="ajaxify-modal" id="ajaxifyModal" style="margin-left: -380px; opacity: 1;" ng-class="{ 'is-visible': cartModalToggled }" ng-controller="cartController">
-    <button class="ajaxifyCart--close" title="Close Cart" ng-click="toggleCartModal(cartModalToggled)">Close Cart</button>
+<div class="ajaxify-modal" id="ajaxifyModal" style="margin-left: -380px; opacity: 1;" ng-controller="cartModalController" ng-class="{ 'is-visible': isCartModalVisible }">
+    <button class="ajaxifyCart--close" title="Close Cart" ng-click="closeModal()">Close Cart</button>
     <div class="ajaxifyCart--content" id="ajaxifyCart">
         <span ng-if="!cart.Items.length">
             <h2>{{ 'cart.general.empty' | t }}</h2>
@@ -25,7 +25,7 @@
                         <div class="grid">
                             <div class="grid-item one-half medium-down--one-third text-right">
                                 <div class="ajaxifyCart--qty">
-                                    <input class="ajaxifyCart--num" type="text" ng-model="lineItem.Quantity" />
+                                    <input class="ajaxifyCart--num" disabled="disabled" type="text" ng-model="lineItem.Quantity" ng-change="manualChangeLineItem(lineItem.Id)" />
                                     <span class="ajaxifyCart--qty-adjuster ajaxifyCart--add" ng-click="changeLineItem(lineItem.Id, lineItem.Quantity + 1)">+</span>
                                     <span class="ajaxifyCart--qty-adjuster ajaxifyCart--minus" ng-click="changeLineItem(lineItem.Id, lineItem.Quantity - 1)">-</span>
                                 </div>
@@ -53,7 +53,7 @@
                             </span>
                         </div>
                         <input class="btn-secondary update-cart" type="button" value="Update cart" />
-                        <button name="checkout" class="btn" type="button" ng-click="checkout()">
+                        <button name="checkout" class="btn" type="button" ng-click="go('{{ 'cart/checkout/customer-information' | absolute_url }}')">
                             <span class="icon icon-cart"></span>
                             {{ 'cart.general.checkout' | t }}
                         </button>
@@ -63,4 +63,4 @@
         </span>
     </div>
 </div>
-<div id="ajaxifyCart-overlay" ng-controller="cartModalController" ng-if="cartModalToggled"></div>
+<div id="ajaxifyCart-overlay" ng-controller="cartModalController" ng-if="isCartModalVisible"></div>

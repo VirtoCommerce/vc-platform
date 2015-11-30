@@ -42,8 +42,8 @@ namespace VirtoCommerce.Storefront.Controllers
             return View("product", base.WorkContext);
         }
 
-        [Route("json/{productId}")]
         [HttpGet]
+        [Route("{productId}/json")]
         public async Task<ActionResult> GetProductJsonById(string productId)
         {
             base.WorkContext.CurrentProduct = await _productService.GetProductAsync(productId, Model.Catalog.ItemResponseGroup.ItemLarge);

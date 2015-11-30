@@ -1,6 +1,6 @@
 {% include 'breadcrumb' %}
 {% include 'quote-informer' %}
-<div class="grid" itemscope itemtype="http://schema.org/Product">
+<div class="grid" itemscope itemtype="http://schema.org/Product" ng-controller="productController">
   <meta itemprop="url" content="{{ product.url | absolute_url}}">
   <meta itemprop="image" content="{{ product.featured_image.src | img_url: 'grande' }}">
 
@@ -89,7 +89,7 @@
           <input type="number" id="quantity" name="quantity" value="1" min="1" class="quantity-selector">
         {% endif %}
 
-        <button type="submit" name="add" id="addToCart" class="btn">
+        <button type="button" name="add" id="addToCart" class="btn" ng-click="addToCart('{{ product.id }}', 1)">
           <span class="icon icon-cart"></span>
           <span id="addToCartText">{{ 'products.product.add_to_cart' | t }}</span>
         </button>
@@ -118,6 +118,10 @@
 
   </div>
 </div>
+
+<script>
+    window.productId = "{{ product.id }}";
+</script>
 
 {% if settings.related_products_enable %}
   {% assign grid_item_width = 'large--one-fifth medium--one-third small--one-half' %}
