@@ -296,24 +296,42 @@ namespace VirtoCommerce.Client.Api
         System.Threading.Tasks.Task<VirtoCommercePlatformWebModelJobsJob> JobsGetStatusAsync (string id);
         
         /// <summary>
-        /// Get all localization files by given language
+        /// Return all localization files by given locale
         /// </summary>
         /// <remarks>
         /// 
         /// </remarks>
-        /// <param name="lang"></param>
+        /// <param name="locale"></param>
         /// <returns>InlineResponse200</returns>
-        InlineResponse200 LocalizationGetLocalizationFile (string lang);
+        InlineResponse200 LocalizationGetLocalization (string locale);
   
         /// <summary>
-        /// Get all localization files by given language
+        /// Return all localization files by given locale
         /// </summary>
         /// <remarks>
         /// 
         /// </remarks>
-        /// <param name="lang"></param>
+        /// <param name="locale"></param>
         /// <returns>InlineResponse200</returns>
-        System.Threading.Tasks.Task<InlineResponse200> LocalizationGetLocalizationFileAsync (string lang);
+        System.Threading.Tasks.Task<InlineResponse200> LocalizationGetLocalizationAsync (string locale);
+        
+        /// <summary>
+        /// Return all aviable locales
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <returns></returns>
+        List<string> LocalizationGetLocales ();
+  
+        /// <summary>
+        /// Return all aviable locales
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <returns></returns>
+        System.Threading.Tasks.Task<List<string>> LocalizationGetLocalesAsync ();
         
         /// <summary>
         /// Get installed modules
@@ -2635,15 +2653,15 @@ namespace VirtoCommerce.Client.Api
         }
         
         /// <summary>
-        /// Get all localization files by given language 
+        /// Return all localization files by given locale 
         /// </summary>
-        /// <param name="lang"></param> 
+        /// <param name="locale"></param> 
         /// <returns>InlineResponse200</returns>            
-        public InlineResponse200 LocalizationGetLocalizationFile (string lang)
+        public InlineResponse200 LocalizationGetLocalization (string locale)
         {
             
     
-            var path_ = "/api/platform/localization";
+            var path_ = "/api/platform/localization/locale";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -2664,7 +2682,7 @@ namespace VirtoCommerce.Client.Api
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
             
-            if (lang != null) queryParams.Add("lang", ApiClient.ParameterToString(lang)); // query parameter
+            if (locale != null) queryParams.Add("locale", ApiClient.ParameterToString(locale)); // query parameter
             
             
             
@@ -2677,23 +2695,23 @@ namespace VirtoCommerce.Client.Api
             IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling LocalizationGetLocalizationFile: " + response.Content, response.Content);
+                throw new ApiException ((int)response.StatusCode, "Error calling LocalizationGetLocalization: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling LocalizationGetLocalizationFile: " + response.ErrorMessage, response.ErrorMessage);
+                throw new ApiException ((int)response.StatusCode, "Error calling LocalizationGetLocalization: " + response.ErrorMessage, response.ErrorMessage);
     
             return (InlineResponse200) ApiClient.Deserialize(response, typeof(InlineResponse200));
         }
     
         /// <summary>
-        /// Get all localization files by given language 
+        /// Return all localization files by given locale 
         /// </summary>
-        /// <param name="lang"></param>
+        /// <param name="locale"></param>
         /// <returns>InlineResponse200</returns>
-        public async System.Threading.Tasks.Task<InlineResponse200> LocalizationGetLocalizationFileAsync (string lang)
+        public async System.Threading.Tasks.Task<InlineResponse200> LocalizationGetLocalizationAsync (string locale)
         {
             
     
-            var path_ = "/api/platform/localization";
+            var path_ = "/api/platform/localization/locale";
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
@@ -2714,7 +2732,7 @@ namespace VirtoCommerce.Client.Api
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
             
-            if (lang != null) queryParams.Add("lang", ApiClient.ParameterToString(lang)); // query parameter
+            if (locale != null) queryParams.Add("locale", ApiClient.ParameterToString(locale)); // query parameter
             
             
             
@@ -2726,9 +2744,102 @@ namespace VirtoCommerce.Client.Api
             // make the HTTP request
             IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
             if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling LocalizationGetLocalizationFile: " + response.Content, response.Content);
+                throw new ApiException ((int)response.StatusCode, "Error calling LocalizationGetLocalization: " + response.Content, response.Content);
 
             return (InlineResponse200) ApiClient.Deserialize(response, typeof(InlineResponse200));
+        }
+        
+        /// <summary>
+        /// Return all aviable locales 
+        /// </summary>
+        /// <returns></returns>            
+        public List<string> LocalizationGetLocales ()
+        {
+            
+    
+            var path_ = "/api/platform/localization/locales";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                "application/json", "text/json"
+            };
+            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            
+            
+            
+            
+    
+            // authentication setting, if any
+            String[] authSettings = new String[] {  };
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+    
+            if (((int)response.StatusCode) >= 400)
+                throw new ApiException ((int)response.StatusCode, "Error calling LocalizationGetLocales: " + response.Content, response.Content);
+            else if (((int)response.StatusCode) == 0)
+                throw new ApiException ((int)response.StatusCode, "Error calling LocalizationGetLocales: " + response.ErrorMessage, response.ErrorMessage);
+    
+            return (List<string>) ApiClient.Deserialize(response, typeof(List<string>));
+        }
+    
+        /// <summary>
+        /// Return all aviable locales 
+        /// </summary>
+        /// <returns></returns>
+        public async System.Threading.Tasks.Task<List<string>> LocalizationGetLocalesAsync ()
+        {
+            
+    
+            var path_ = "/api/platform/localization/locales";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                "application/json", "text/json"
+            };
+            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            
+            
+            
+            
+    
+            // authentication setting, if any
+            String[] authSettings = new String[] {  };
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            if (((int)response.StatusCode) >= 400)
+                throw new ApiException ((int)response.StatusCode, "Error calling LocalizationGetLocales: " + response.Content, response.Content);
+
+            return (List<string>) ApiClient.Deserialize(response, typeof(List<string>));
         }
         
         /// <summary>

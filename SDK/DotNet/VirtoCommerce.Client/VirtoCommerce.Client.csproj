@@ -212,6 +212,7 @@
     <Compile Include="Model\VirtoCommerceOrderModuleWebModelMoney.cs" />
     <Compile Include="Model\VirtoCommerceOrderModuleWebModelOperation.cs" />
     <Compile Include="Model\VirtoCommerceOrderModuleWebModelPaymentIn.cs" />
+    <Compile Include="Model\VirtoCommerceOrderModuleWebModelProcessPaymentResult.cs" />
     <Compile Include="Model\VirtoCommerceOrderModuleWebModelQuarterPeriodMoney.cs" />
     <Compile Include="Model\VirtoCommerceOrderModuleWebModelSearchResult.cs" />
     <Compile Include="Model\VirtoCommerceOrderModuleWebModelShipment.cs" />

@@ -222,8 +222,8 @@ namespace VirtoCommerce.Client.Api
         /// <param name="bankCardInfo">banking card information</param>
         /// <param name="orderId">customer order id</param>
         /// <param name="paymentId">payment id</param>
-        /// <returns>VirtoCommerceOrderModuleWebModelCustomerOrder</returns>
-        VirtoCommerceOrderModuleWebModelCustomerOrder OrderModuleProcessOrderPayments (VirtoCommerceDomainPaymentModelBankCardInfo bankCardInfo, string orderId, string paymentId);
+        /// <returns>VirtoCommerceOrderModuleWebModelProcessPaymentResult</returns>
+        VirtoCommerceOrderModuleWebModelProcessPaymentResult OrderModuleProcessOrderPayments (VirtoCommerceDomainPaymentModelBankCardInfo bankCardInfo, string orderId, string paymentId);
   
         /// <summary>
         /// Registration customer order payment in external payment system
@@ -234,8 +234,8 @@ namespace VirtoCommerce.Client.Api
         /// <param name="bankCardInfo">banking card information</param>
         /// <param name="orderId">customer order id</param>
         /// <param name="paymentId">payment id</param>
-        /// <returns>VirtoCommerceOrderModuleWebModelCustomerOrder</returns>
-        System.Threading.Tasks.Task<VirtoCommerceOrderModuleWebModelCustomerOrder> OrderModuleProcessOrderPaymentsAsync (VirtoCommerceDomainPaymentModelBankCardInfo bankCardInfo, string orderId, string paymentId);
+        /// <returns>VirtoCommerceOrderModuleWebModelProcessPaymentResult</returns>
+        System.Threading.Tasks.Task<VirtoCommerceOrderModuleWebModelProcessPaymentResult> OrderModuleProcessOrderPaymentsAsync (VirtoCommerceDomainPaymentModelBankCardInfo bankCardInfo, string orderId, string paymentId);
         
         /// <summary>
         /// Get a some order statistic information for Commerce manager dashboard
@@ -1268,8 +1268,8 @@ namespace VirtoCommerce.Client.Api
         /// <param name="bankCardInfo">banking card information</param> 
         /// <param name="orderId">customer order id</param> 
         /// <param name="paymentId">payment id</param> 
-        /// <returns>VirtoCommerceOrderModuleWebModelCustomerOrder</returns>            
-        public VirtoCommerceOrderModuleWebModelCustomerOrder OrderModuleProcessOrderPayments (VirtoCommerceDomainPaymentModelBankCardInfo bankCardInfo, string orderId, string paymentId)
+        /// <returns>VirtoCommerceOrderModuleWebModelProcessPaymentResult</returns>            
+        public VirtoCommerceOrderModuleWebModelProcessPaymentResult OrderModuleProcessOrderPayments (VirtoCommerceDomainPaymentModelBankCardInfo bankCardInfo, string orderId, string paymentId)
         {
             
             // verify the required parameter 'bankCardInfo' is set
@@ -1322,7 +1322,7 @@ namespace VirtoCommerce.Client.Api
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling OrderModuleProcessOrderPayments: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommerceOrderModuleWebModelCustomerOrder) ApiClient.Deserialize(response, typeof(VirtoCommerceOrderModuleWebModelCustomerOrder));
+            return (VirtoCommerceOrderModuleWebModelProcessPaymentResult) ApiClient.Deserialize(response, typeof(VirtoCommerceOrderModuleWebModelProcessPaymentResult));
         }
     
         /// <summary>
@@ -1331,8 +1331,8 @@ namespace VirtoCommerce.Client.Api
         /// <param name="bankCardInfo">banking card information</param>
         /// <param name="orderId">customer order id</param>
         /// <param name="paymentId">payment id</param>
-        /// <returns>VirtoCommerceOrderModuleWebModelCustomerOrder</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceOrderModuleWebModelCustomerOrder> OrderModuleProcessOrderPaymentsAsync (VirtoCommerceDomainPaymentModelBankCardInfo bankCardInfo, string orderId, string paymentId)
+        /// <returns>VirtoCommerceOrderModuleWebModelProcessPaymentResult</returns>
+        public async System.Threading.Tasks.Task<VirtoCommerceOrderModuleWebModelProcessPaymentResult> OrderModuleProcessOrderPaymentsAsync (VirtoCommerceDomainPaymentModelBankCardInfo bankCardInfo, string orderId, string paymentId)
         {
             // verify the required parameter 'bankCardInfo' is set
             if (bankCardInfo == null) throw new ApiException(400, "Missing required parameter 'bankCardInfo' when calling OrderModuleProcessOrderPayments");
@@ -1379,7 +1379,7 @@ namespace VirtoCommerce.Client.Api
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling OrderModuleProcessOrderPayments: " + response.Content, response.Content);
 
-            return (VirtoCommerceOrderModuleWebModelCustomerOrder) ApiClient.Deserialize(response, typeof(VirtoCommerceOrderModuleWebModelCustomerOrder));
+            return (VirtoCommerceOrderModuleWebModelProcessPaymentResult) ApiClient.Deserialize(response, typeof(VirtoCommerceOrderModuleWebModelProcessPaymentResult));
         }
         
         /// <summary>
