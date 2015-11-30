@@ -1,11 +1,15 @@
 ﻿angular.module('platformWebApp')
-.directive('vaLoginToolbar', ['$document', '$timeout', 'platformWebApp.authService', function ($document, $timeout, authService) {
+.directive('vaLoginToolbar', ['$document', '$timeout', '$state', 'platformWebApp.authService', function ($document, $timeout, $state, authService) {
     return {
         templateUrl: '$(Platform)/Scripts/app/security/login/loginToolbar.tpl.html',
         restrict: 'E',
         replace: true,
         scope: true,
         link: function ($scope, $element, $attrs, $controller) {
+            $scope.openProfile = function () {
+                $state.go('workspace.userProfile');
+            };
+
             //$scope.isAuthenticated = authService.isAuthenticated;
             $scope.logout = authService.logout;
             $scope.$watch(function () {
@@ -21,7 +25,7 @@
                 $scope.$apply("isMenuVisible = false");
                 $document.off("click", onDocumentClick);
             };
-            
+
             $scope.showMenu = function () {
                 $document.off("click", onDocumentClick);
                 $scope.isMenuVisible = !$scope.isMenuVisible;

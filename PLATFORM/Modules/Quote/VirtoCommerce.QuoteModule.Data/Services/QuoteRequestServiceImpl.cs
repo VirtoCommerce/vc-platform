@@ -11,6 +11,7 @@ using VirtoCommerce.Platform.Core.ChangeLog;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.Events;
+using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.QuoteModule.Data.Converters;
 using VirtoCommerce.QuoteModule.Data.Model;
@@ -25,14 +26,16 @@ namespace VirtoCommerce.QuoteModule.Data.Services
 		private readonly IDynamicPropertyService _dynamicPropertyService;
 		private readonly IEventPublisher<QuoteRequestChangeEvent> _eventPublisher;
         private readonly IChangeLogService _changeLogService;
+        private readonly ISettingsManager _settingManager;
 
-        public QuoteRequestServiceImpl(Func<IQuoteRepository> quoteRepositoryFactory, IUniqueNumberGenerator uniqueNumberGenerator, IDynamicPropertyService dynamicPropertyService, IEventPublisher<QuoteRequestChangeEvent> eventPublisher, IChangeLogService changeLogService)
+        public QuoteRequestServiceImpl(Func<IQuoteRepository> quoteRepositoryFactory, IUniqueNumberGenerator uniqueNumberGenerator, IDynamicPropertyService dynamicPropertyService, IEventPublisher<QuoteRequestChangeEvent> eventPublisher, IChangeLogService changeLogService, ISettingsManager settingManager)
 		{
 			_repositoryFactory = quoteRepositoryFactory;
 			_uniqueNumberGenerator = uniqueNumberGenerator;
 			_dynamicPropertyService = dynamicPropertyService;
 			_eventPublisher = eventPublisher;
             _changeLogService = changeLogService;
+            _settingManager = settingManager;
         }
 
 		#region IQuoteRequestService Members
@@ -170,9 +173,10 @@ namespace VirtoCommerce.QuoteModule.Data.Services
 		{
 			foreach (var quoteRequest in quoteRequests)
 			{
-				if (String.IsNullOrEmpty(quoteRequest.Number))
+				if (string.IsNullOrEmpty(quoteRequest.Number))
 				{
-					quoteRequest.Number = _uniqueNumberGenerator.GenerateNumber("RFQ{0:yyMMdd}-{1:D5}");
+                    var numberTemplate = _settingManager.GetValue("Quotes.QuoteRequestNewNumberTemplate", "RFQ{0:yyMMdd}-{1:D5}");
+                    quoteRequest.Number = _uniqueNumberGenerator.GenerateNumber(numberTemplate);
 				}
 			}
 		}
