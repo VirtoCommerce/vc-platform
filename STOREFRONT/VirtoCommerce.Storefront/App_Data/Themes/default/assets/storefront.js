@@ -150,7 +150,7 @@ app.controller('checkoutController', ['$scope', '$route', '$location', 'cartServ
     $scope.selectedPaymentMethod = {};
     $scope.order = {};
 
-    $scope.cart = null;
+    $scope.cart = {};
     cartService.getCart().then(function (response) {
         $scope.cart = response;
         var shippingAddresses = _.where($scope.cart.Addresses, { Type: "Shipping" });
@@ -220,7 +220,13 @@ app.controller('checkoutController', ['$scope', '$route', '$location', 'cartServ
     }
 }]);
 
-app.config(['$interpolateProvider', '$routeProvider', '$locationProvider', function ($interpolateProvider, $routeProvider, $locationProvider) {
+app.config(['$interpolateProvider', '$routeProvider', '$locationProvider', '$httpProvider', function ($interpolateProvider, $routeProvider, $locationProvider, $httpProvider) {
+    $httpProvider.defaults.cache = false;
+    if (!$httpProvider.defaults.headers.get) {
+        $httpProvider.defaults.headers.get = {};
+    }
+    $httpProvider.defaults.headers.get['If-Modified-Since'] = '0';
+
     $routeProvider
         .when('/cart/checkout/customer-information', {
             templateUrl: 'storefront.checkout.customerInformation.tpl'

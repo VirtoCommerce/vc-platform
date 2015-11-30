@@ -93,6 +93,7 @@
     <Compile Include="Converters\CurrencyConverter.cs" />
     <Compile Include="Converters\ImageConverter.cs" />
     <Compile Include="Converters\LanguageConverters.cs" />
+    <Compile Include="Converters\LineItemConverter.cs" />
     <Compile Include="Converters\ProductConverter.cs" />
     <Compile Include="Converters\ShopConverter.cs" />
     <Compile Include="Converters\ShopifyContextConverter.cs" />

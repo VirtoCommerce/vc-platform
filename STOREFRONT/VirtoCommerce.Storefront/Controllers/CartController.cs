@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using VirtoCommerce.Client.Api;
@@ -47,6 +48,8 @@ namespace VirtoCommerce.Storefront.Controllers
         public async Task<ActionResult> CartJson()
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentCurrency);
+
+            _cartBuilder.Cart.Items.OrderBy(i => i.CreatedDate);
 
             return Json(_cartBuilder.Cart, JsonRequestBehavior.AllowGet);
         }
@@ -123,7 +126,7 @@ namespace VirtoCommerce.Storefront.Controllers
             //    return StoreFrontRedirect("~/cart");
             //}
 
-            return View("checkout", "checkout_layout", WorkContext);
+            return View("checkout", "checkout_layout", _cartBuilder.Cart);
         }
 
         // POST: /cart/add_address
@@ -180,6 +183,7 @@ namespace VirtoCommerce.Storefront.Controllers
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentCurrency);
 
             var order = await _orderApi.OrderModuleCreateOrderFromCartAsync(cartId);
+            await _cartApi.CartModuleDeleteCartsAsync(new List<string> { cartId });
 
             return Json(order.ToWebModel(), JsonRequestBehavior.AllowGet);
         }
