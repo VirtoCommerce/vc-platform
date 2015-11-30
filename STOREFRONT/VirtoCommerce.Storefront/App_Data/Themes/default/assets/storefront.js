@@ -3,57 +3,57 @@
 app.service('cartService', ['$http', function ($http) {
     return {
         getCart: function () {
-            return $http.get('/cart/json').then(function (response) {
+            return $http.get('cart/json').then(function (response) {
                 return response.data;
             });
         },
         addLineItem: function (productId, quantity) {
-            return $http.post('/cart/add_item', { productId: productId, quantity: quantity }).then(function (response) {
+            return $http.post('cart/add_item', { productId: productId, quantity: quantity }).then(function (response) {
                 return response.data;
             });
         },
         changeLineItem: function (lineItemId, quantity) {
-            return $http.post('/cart/change_item', { lineItemId: lineItemId, quantity: quantity }).then(function (response) {
+            return $http.post('cart/change_item', { lineItemId: lineItemId, quantity: quantity }).then(function (response) {
                 return response.data;
             });
         },
         removeLineItem: function (lineItemId) {
-            return $http.post('/cart/remove_item', { lineItemId: lineItemId }).then(function (response) {
+            return $http.post('cart/remove_item', { lineItemId: lineItemId }).then(function (response) {
                 return response.data;
             });
         },
         addAddress: function (address) {
-            return $http.post('/cart/add_address', { address: address }).then(function (response) {
+            return $http.post('cart/add_address', { address: address }).then(function (response) {
                 return response.data;
             });
         },
         getShippingMethods: function (cartId) {
-            return $http.get('/cart/' + cartId + '/shipping_methods/json').then(function (response) {
+            return $http.get('cart/' + cartId + '/shipping_methods/json').then(function (response) {
                 return response.data;
             });
         },
         getPaymentMethods: function (cartId) {
-            return $http.get('/cart/' + cartId + '/payment_methods/json').then(function (response) {
+            return $http.get('cart/' + cartId + '/payment_methods/json').then(function (response) {
                 return response.data;
             });
         },
         setShippingMethod: function (shippingMethodCode) {
-            return $http.post('/cart/shipping_method', { shippingMethodCode: shippingMethodCode }).then(function (response) {
+            return $http.post('cart/shipping_method', { shippingMethodCode: shippingMethodCode }).then(function (response) {
                 return response.data;
             });
         },
         setPaymentMethod: function (paymentMethodCode) {
-            return $http.post('/cart/payment_method', { paymentMethodCode: paymentMethodCode }).then(function (response) {
+            return $http.post('cart/payment_method', { paymentMethodCode: paymentMethodCode }).then(function (response) {
                 return response.data;
             });
         },
         createOrder: function (cartId) {
-            return $http.post('/cart/' + cartId + '/create_order').then(function (response) {
+            return $http.post('cart/' + cartId + '/create_order').then(function (response) {
                 return response.data;
             });
         },
         processPayment: function (orderId, paymentId) {
-            return $http.post('/cart/process_payment', { orderId: orderId, paymentId: paymentId }).then(function (response) {
+            return $http.post('cart/process_payment', { orderId: orderId, paymentId: paymentId }).then(function (response) {
                 return response.data;
             });
         }
