@@ -15,7 +15,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
     /// </summary>
     public class Shop : Drop
     {
-     
+
         /// <summary>
         /// Returns the shop's currency in three-letter format (ex: USD).
         /// </summary>
@@ -60,8 +60,6 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         /// </summary>
         public string Url { get; set; }
 
-        public string SimplifiedUrl { get; set; }
-
         /// <summary>
         /// All shop currencies
         /// </summary>
@@ -81,7 +79,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         /// Shop metafields
         /// </summary>
         public MetaFieldNamespacesCollection Metafields { get; set; }
-     
+
 
         public bool CustomerAccountsEnabled { get; set; }
         public bool CustomerAccountsOptional { get; set; }

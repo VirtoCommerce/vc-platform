@@ -120,7 +120,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 		/// <param name="orderId">customer order id</param>
 		/// <param name="paymentId">payment id</param>
         [HttpPost]
-        [ResponseType(typeof(webModel.CustomerOrder))]
+        [ResponseType(typeof(webModel.ProcessPaymentResult))]
         [Route("{orderId}/processPayment/{paymentId}")]
         public IHttpActionResult ProcessOrderPayments([FromBody]BankCardInfo bankCardInfo, string orderId, string paymentId)
         {

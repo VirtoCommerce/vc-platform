@@ -22,7 +22,6 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             result.MoneyFormat = "";
             result.MoneyWithCurrencyFormat = "";
             result.Url = store.Url ?? "~/";
-            result.SimplifiedUrl = store.Url;
             result.Currencies = store.Currencies.Select(x => x.Code).ToArray();
             result.Languages = store.Languages.Select(x => x.ToShopifyModel()).ToArray();
             result.Catalog = store.Catalog;

@@ -96,10 +96,10 @@
                 <div class="grid-item three-thirds medium-down--one-whole">
                     <div class="cart-btn--block">
                         {% unless quote_request.status == 'Proposal sent' and quote_request.status == 'Rejected' %}
-                            <a class="btn-secondary" href="{{ shop.simplified_url }}/account/quote/edit/{{ quote_request.number }}" id="btn-edit-quote-request">Edit request</a>
+                            <a class="btn-secondary" href="{{ '/account/quote/edit/' + quote_request.number | absolute_url }}" id="btn-edit-quote-request">Edit request</a>
                         {% endunless %}
                         {% if quote_request.status == 'Proposal sent' %}
-                            <a class="btn-secondary" href="{{ shop.simplified_url }}/account/quote/reject/{{ quote_request.number }}" id="btn-reject-quote-proposal">Reject proposal</a>
+                            <a class="btn-secondary" href="{{ '/account/quote/reject/' + quote_request.number | absolute_url }}" id="btn-reject-quote-proposal">Reject proposal</a>
                             {% unless quote_request.status == 'On hold' and quote_request.status == 'Rejected' and quote_request.is_cancelled %}
                                 <button class="btn large--right" id="btn-checkout-quote-request">Confirm and checkout</button>
                             {% endunless %}
