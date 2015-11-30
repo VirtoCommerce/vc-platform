@@ -72,7 +72,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 		/// <summary>
 		/// Find customer order by id
 		/// </summary>
-		/// <remarks>Return a single customer order with all nested documents</remarks>
+		/// <remarks>Return a single customer order with all nested documents or null if order was not founded</remarks>
 		/// <param name="id">customer order id</param>
         [HttpGet]
         [ResponseType(typeof(webModel.CustomerOrder))]
