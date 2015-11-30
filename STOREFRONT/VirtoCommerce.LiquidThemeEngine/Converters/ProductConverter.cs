@@ -27,7 +27,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             result.CompareAtPriceMin = result.Variants.Select(x => x.CompareAtPrice).Min();
             result.CompareAtPriceVaries = result.CompareAtPriceMax != result.CompareAtPriceMin;
 
-
+            result.CompareAtPrice = product.Price.ListPrice.Amount;
             result.Price = product.Price.SalePrice.Amount;
             result.PriceMax = result.Variants.Select(x => x.Price).Max();
             result.PriceMin = result.Variants.Select(x => x.Price).Min();

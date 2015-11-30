@@ -23,7 +23,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         /// and their inventory_policy is not set to "Allow users to purchase this item, even if it is no longer in stock."
         /// </summary>
         public bool Available { get; set; }
-
+        public decimal CompareAtPrice { get; set; }
         /// <summary>
         /// Returns the highest compare at price. Use one of the money filters to return the value in a monetary format.
         /// </summary>
