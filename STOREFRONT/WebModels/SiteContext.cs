@@ -42,7 +42,7 @@ namespace VirtoCommerce.Web
             this._storage = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
 
             _cacheManager = new CacheManager(new HttpCacheProvider());
-            // set defaults
+            // set defaults testCI
             this.Layout = "theme";
             this.Template = "index";
 
