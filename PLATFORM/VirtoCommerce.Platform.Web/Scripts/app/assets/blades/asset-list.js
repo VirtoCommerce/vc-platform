@@ -25,7 +25,6 @@
                 },
             function (data) {
                 $scope.pageSettings.totalItems = data.length;
-                uiGridHelper.onDataLoaded($scope.gridOptions, data);
                 _.each(data, function (x) { x.isImage = x.contentType && x.contentType.startsWith('image/'); });
                 $scope.listEntries = data;
                 blade.isLoading = false;

@@ -31,7 +31,6 @@ function ($scope, order_res_customerOrders, bladeNavigationService, dialogServic
 
             $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
             $scope.objects = data.customerOrders;
-            uiGridHelper.onDataLoaded($scope.gridOptions, $scope.objects);
 
             if (selectedNode != null) {
                 //select the node in the new list

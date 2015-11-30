@@ -9,7 +9,6 @@ function ($scope, pricelists, bladeNavigationService, dialogService, uiGridConst
         pricelists.query({}, function (data) {
             blade.isLoading = false;
             blade.currentEntities = data;
-            uiGridHelper.onDataLoaded($scope.gridOptions, blade.currentEntities);
         }, function (error) {
             bladeNavigationService.setError('Error ' + error.status, blade);
         });
