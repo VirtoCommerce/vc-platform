@@ -3,9 +3,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using VirtoCommerce.Client.Api;
+using VirtoCommerce.Client.Model;
 using VirtoCommerce.Storefront.Builders;
 using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
+using VirtoCommerce.Storefront.Model.Cart;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Services;
 
@@ -18,6 +20,7 @@ namespace VirtoCommerce.Storefront.Controllers
         private readonly ICatalogSearchService _catalogService;
         private readonly IShoppingCartModuleApi _cartApi;
         private readonly IOrderModuleApi _orderApi;
+        private readonly IMarketingModuleApi _marketingApi;
 
         public CartController(
             WorkContext workContext,
@@ -25,13 +28,15 @@ namespace VirtoCommerce.Storefront.Controllers
             IOrderModuleApi orderApi,
             IStorefrontUrlBuilder urlBuilder,
             ICartBuilder cartBuilder,
-            ICatalogSearchService catalogService)
+            ICatalogSearchService catalogService,
+            IMarketingModuleApi marketingApi)
             : base(workContext, urlBuilder)
         {
             _cartBuilder = cartBuilder;
             _catalogService = catalogService;
             _cartApi = cartApi;
             _orderApi = orderApi;
+            _marketingApi = marketingApi;
         }
 
         // GET: /cart
@@ -129,6 +134,34 @@ namespace VirtoCommerce.Storefront.Controllers
             return View("checkout", "checkout_layout", _cartBuilder.Cart);
         }
 
+        // POST: /cart/add_coupon/{couponCode}
+        [HttpPost]
+        [Route("add_coupon/{couponCode}")]
+        public async Task<ActionResult> AddCouponJson(string couponCode)
+        {
+            await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentCurrency);
+
+            var validPromotionRewards = await EvaluatePromotionsAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, _cartBuilder.Cart, couponCode);
+
+            await _cartBuilder.UpdateDiscounts(validPromotionRewards).SaveAsync();
+
+            return Json(_cartBuilder.Cart, JsonRequestBehavior.AllowGet);
+        }
+
+        // POST: /cart/remove_coupon
+        [HttpPost]
+        [Route("remove_coupon")]
+        public async Task<ActionResult> RemoveCouponJson()
+        {
+            await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentCurrency);
+
+            var validPromotionRewards = await EvaluatePromotionsAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, _cartBuilder.Cart, null);
+
+            await _cartBuilder.UpdateDiscounts(validPromotionRewards).SaveAsync();
+
+            return Json(_cartBuilder.Cart, JsonRequestBehavior.AllowGet);
+        }
+
         // POST: /cart/add_address
         [HttpPost]
         [Route("add_address")]
@@ -158,12 +191,14 @@ namespace VirtoCommerce.Storefront.Controllers
             return Json(_cartBuilder.Cart, JsonRequestBehavior.AllowGet);
         }
 
-        // POST: /cart/payment_method?paymentMethodCode=...
+        // POST: /cart/payment_method?paymentMethodCode=...&billingAddress=...
         [HttpPost]
         [Route("payment_method")]
-        public async Task<ActionResult> SetPaymentMethodsJson(string paymentMethodCode)
+        public async Task<ActionResult> SetPaymentMethodsJson(string paymentMethodCode, Address billingAddress)
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentCurrency);
+
+            _cartBuilder.AddAddress(billingAddress);
 
             var paymentMethods = await _cartApi.CartModuleGetPaymentMethodsAsync(WorkContext.CurrentCart.Id);
             var paymentMethod = paymentMethods.FirstOrDefault(pm => pm.GatewayCode == paymentMethodCode);
@@ -200,9 +235,9 @@ namespace VirtoCommerce.Storefront.Controllers
             return Json(processingResult, JsonRequestBehavior.AllowGet);
         }
 
-        // GET: /cart/thanks?id=...
+        // GET: /cart/checkout/thanks?id=...
         [HttpGet]
-        [Route("thanks")]
+        [Route("checkout/thanks")]
         public async Task<ActionResult> Thanks(string id)
         {
             var order = await _orderApi.OrderModuleGetByIdAsync(id);
@@ -213,6 +248,32 @@ namespace VirtoCommerce.Storefront.Controllers
             }
 
             return View("thanks");
+        }
+
+        private async Task<IEnumerable<VirtoCommerceMarketingModuleWebModelPromotionReward>> EvaluatePromotionsAsync(Store store, Customer customer, ShoppingCart cart, string couponCode)
+        {
+            var promotionContext = new VirtoCommerceDomainMarketingModelPromotionEvaluationContext
+            {
+                CustomerId = customer.Id,
+                Coupon = couponCode,
+                StoreId = store.Id
+            };
+
+            promotionContext.CartPromoEntries = new List<VirtoCommerceDomainMarketingModelProductPromoEntry>();
+            foreach (var lineItem in cart.Items)
+            {
+                promotionContext.CartPromoEntries.Add(lineItem.ToPromotionItem());
+            }
+
+            promotionContext.PromoEntries = new List<VirtoCommerceDomainMarketingModelProductPromoEntry>();
+            foreach (var lineItem in cart.Items)
+            {
+                promotionContext.PromoEntries.Add(lineItem.ToPromotionItem());
+            }
+
+            var promotionResult = await _marketingApi.MarketingModulePromotionEvaluatePromotionsAsync(promotionContext);
+
+            return promotionResult.Where(pr => pr.IsValid.HasValue && pr.IsValid.Value);
         }
     }
 }

@@ -1,6 +1,6 @@
 {% include 'breadcrumb' %}
 {% include 'quote-informer' %}
-<div class="grid" itemscope itemtype="http://schema.org/Product" ng-controller="productController">
+<div class="grid" itemscope itemtype="http://schema.org/Product">
   <meta itemprop="url" content="{{ product.url | absolute_url}}">
   <meta itemprop="image" content="{{ product.featured_image.src | img_url: 'grande' }}">
 

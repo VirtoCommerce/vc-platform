@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using VirtoCommerce.Client.Model;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Cart;
 using VirtoCommerce.Storefront.Model.Catalog;
@@ -15,6 +17,8 @@ namespace VirtoCommerce.Storefront.Builders
         CartBuilder UpdateItem(string id, int quantity);
 
         CartBuilder RemoveItem(string id);
+
+        CartBuilder UpdateDiscounts(IEnumerable<VirtoCommerceMarketingModuleWebModelPromotionReward> promotionRewards);
 
         CartBuilder AddAddress(Address address);
 

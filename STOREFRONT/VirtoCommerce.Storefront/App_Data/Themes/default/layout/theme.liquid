@@ -43,86 +43,88 @@
     {{ 'customer_area.js'  | shopify_asset_url | script_tag }}
 </head>
 <body id="{{ page_title | handle }}" class="{% if customer %}customer-logged-in {% endif %}template-{{ template | replace: '.', ' ' | truncatewords: 1, '' | handle }}" ng-controller="mainController">
-    {% if settings.store_selector_enable %}
-        {% include 'top-header-selector' %}
-    {% endif %}
-    <header class="site-header" role="banner">
-        <div class="wrapper">
-            <div class="grid--full">
-                <div class="grid-item large--one-third">
-                    {% if template == 'index' %}
-                        <h1 class="header-logo" itemscope itemtype="http://schema.org/Organization">
-                    {% else %}
-                        <div class="h1 header-logo" itemscope itemtype="http://schema.org/Organization">
-                    {% endif %}
-                    {% if settings.logo_use_image %}
-                        <a href="{{ '/' | absolute_url }}" itemprop="url">
-                            <img alt="{{ shop.name }}" src="{{ 'logo.png' | asset_url }}" itemprop="logo" />
-                        </a>
-                    {% else %}
-                        <a href="{{ '/' | absolute_url }}" itemprop="url">{{ shop.name }}</a>
-                    {% endif %}
-                    {% if template == 'index' %}
-                        </h1>
-                    {% else %}
-                        </div>
-                    {% endif %}
-                </div>
-                <div class="grid-item large--two-third text-center large--text-right">
-                    {% if settings.header_message != blank or shop.customer_accounts_enabled %}
-                        <div class="site-header--text-links{% if settings.header_message == blank %} medium-down--hide{% endif %}">
-                            {% if settings.header_message != blank %}
-                                {{ settings.header_message }}
-                            {% endif %}
-                            {% if shop.customer_accounts_enabled %}
-                                <span class="site-header--meta-links medium-down--hide">
-                                    {% if customer %}
-                                        {% capture first_name %}
-                                            <a href="{{ 'account' | absolute_url }}">{{ customer.first_name }}</a>
-                                        {% endcapture %}
-                                        {{ 'layout.customer.logged_in_as_html' | t: first_name: first_name }} &middot; {{ 'layout.customer.log_out' | t | customer_logout_link }}
-                                    {% else %}
-                                        {{ 'layout.customer.sign_in' | t | customer_login_link }}
-                                        {% if shop.customer_accounts_optional %}
-                                            <span class="site-header--spacer">{{ 'layout.customer.or' | t }}</span>
-                                            {{ 'layout.customer.create_account' | t | customer_register_link }}
+    <span ng-controller="cartController">
+        {% if settings.store_selector_enable %}
+            {% include 'top-header-selector' %}
+        {% endif %}
+        <header class="site-header" role="banner">
+            <div class="wrapper">
+                <div class="grid--full">
+                    <div class="grid-item large--one-third">
+                        {% if template == 'index' %}
+                            <h1 class="header-logo" itemscope itemtype="http://schema.org/Organization">
+                        {% else %}
+                            <div class="h1 header-logo" itemscope itemtype="http://schema.org/Organization">
+                        {% endif %}
+                        {% if settings.logo_use_image %}
+                            <a href="{{ '/' | absolute_url }}" itemprop="url">
+                                <img alt="{{ shop.name }}" src="{{ 'logo.png' | asset_url }}" itemprop="logo" />
+                            </a>
+                        {% else %}
+                            <a href="{{ '/' | absolute_url }}" itemprop="url">{{ shop.name }}</a>
+                        {% endif %}
+                        {% if template == 'index' %}
+                            </h1>
+                        {% else %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="grid-item large--two-third text-center large--text-right">
+                        {% if settings.header_message != blank or shop.customer_accounts_enabled %}
+                            <div class="site-header--text-links{% if settings.header_message == blank %} medium-down--hide{% endif %}">
+                                {% if settings.header_message != blank %}
+                                    {{ settings.header_message }}
+                                {% endif %}
+                                {% if shop.customer_accounts_enabled %}
+                                    <span class="site-header--meta-links medium-down--hide">
+                                        {% if customer %}
+                                            {% capture first_name %}
+                                                <a href="{{ 'account' | absolute_url }}">{{ customer.first_name }}</a>
+                                            {% endcapture %}
+                                            {{ 'layout.customer.logged_in_as_html' | t: first_name: first_name }} &middot; {{ 'layout.customer.log_out' | t | customer_logout_link }}
+                                        {% else %}
+                                            {{ 'layout.customer.sign_in' | t | customer_login_link }}
+                                            {% if shop.customer_accounts_optional %}
+                                                <span class="site-header--spacer">{{ 'layout.customer.or' | t }}</span>
+                                                {{ 'layout.customer.create_account' | t | customer_register_link }}
+                                            {% endif %}
                                         {% endif %}
-                                    {% endif %}
-                                </span>
-                            {% endif %}
-                        </div>
-                        <br class="medium-down--hide" />
-                    {% endif %}
-                    {% include 'search-bar' %}
-                    <a class="header-cart-btn cart-toggle" id="btn-cart-toggle" ng-click="showCartModal()">
-                        <span class="icon icon-cart"></span>
-                        {{ 'layout.cart.cart' | t }} <span id="cartCount" ng-class="{ 'hidden-count': !cart.Items.length }">{( cart.Items.length )}</span>
-                    </a>
+                                    </span>
+                                {% endif %}
+                            </div>
+                            <br class="medium-down--hide" />
+                        {% endif %}
+                        {% include 'search-bar' %}
+                        <a class="header-cart-btn cart-toggle" id="btn-cart-toggle" ng-click="showCartModal()">
+                            <span class="icon icon-cart"></span>
+                            {{ 'layout.cart.cart' | t }} <span id="cartCount" ng-class="{ 'hidden-count': !cart.Items.length }">{( cart.Items.length )}</span>
+                        </a>
+                    </div>
                 </div>
             </div>
+        </header>
+        <nav class="nav-bar" role="navigation">
+            <div class="wrapper">
+                {% include 'search-bar' %}
+                {% include 'site-nav' %}
+            </div>
+        </nav>
+        <div id="mobileNavBar">
+            <div class="display-table-cell">
+                <a class="menu-toggle mobileNavBar-link">{{ 'layout.navigation.mobile_menu' | t }}</a>
+            </div>
+            <div class="display-table-cell">
+                <a class="cart-toggle mobileNavBar-link" href="" ng-click="toggleCartModal(cartModalToggled)">
+                    <span class="icon icon-cart"></span>
+                    {{ 'layout.cart.cart' | t }}
+                </a>
+            </div>
         </div>
-    </header>
-    <nav class="nav-bar" role="navigation">
-        <div class="wrapper">
-            {% include 'search-bar' %}
-            {% include 'site-nav' %}
-        </div>
-    </nav>
-    <div id="mobileNavBar">
-        <div class="display-table-cell">
-            <a class="menu-toggle mobileNavBar-link">{{ 'layout.navigation.mobile_menu' | t }}</a>
-        </div>
-        <div class="display-table-cell">
-            <a class="cart-toggle mobileNavBar-link" href="" ng-click="toggleCartModal(cartModalToggled)">
-                <span class="icon icon-cart"></span>
-                {{ 'layout.cart.cart' | t }}
-            </a>
-        </div>
-    </div>
-    <main class="wrapper main-content" role="main">
-        {{ content_for_layout }}
-    </main>
-    {% include 'footer' %}
-    {% include 'cart-modal' %}
+        <main class="wrapper main-content" role="main">
+            {{ content_for_layout }}
+        </main>
+        {% include 'footer' %}
+        {% include 'cart-modal' %}
+    </span>
 </body>
 </html>

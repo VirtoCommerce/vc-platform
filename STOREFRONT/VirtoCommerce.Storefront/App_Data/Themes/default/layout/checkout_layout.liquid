@@ -26,7 +26,7 @@
             </a>
         </div>
     </div>
-    <button class="order-summary-toggle order-summary-toggle--show">
+    <button class="order-summary-toggle" ng-class="{ 'order-summary-toggle--show': !isOrderSummaryExpanded, 'order-summary-toggle--hide': isOrderSummaryExpanded }" ng-click="toggleOrderSummary(isOrderSummaryExpanded)">
         <div class="wrap">
             <div class="order-summary-toggle__inner">
                 <div class="order-summary-toggle__icon-wrapper">
@@ -41,7 +41,7 @@
                     </svg>
                 </div>
                 <div class="order-summary-toggle__text order-summary-toggle__text--hide">
-                    <span>{{ 'checkout.mobile.hide_order_summary' }}</span>
+                    <span>{{ 'checkout.mobile.hide_order_summary' | t }}</span>
                     <svg class="order-summary-toggle__dropdown" fill="#000" height="7" width="11" xmlns="http://www.w3.org/2000/svg">
                         <path d="M6.138.876L5.642.438l-.496.438L.504 4.972l.992 1.124L6.138 2l-.496.436 3.862 3.408.992-1.122L6.138.876z"></path>
                     </svg>

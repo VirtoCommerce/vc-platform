@@ -1,231 +1,225 @@
-﻿var app = angular.module('storefrontApp', ['ngRoute']);
-
-app.service('cartService', ['$http', function ($http) {
+﻿angular.module('storefrontApp', ['ngRoute'])
+.service('cartService', ['$http', function ($http) {
     return {
         getCart: function () {
-            return $http.get('cart/json').then(function (response) {
-                return response.data;
-            });
+            return $http.get('cart/json');
         },
         addLineItem: function (productId, quantity) {
-            return $http.post('cart/add_item', { productId: productId, quantity: quantity }).then(function (response) {
-                return response.data;
-            });
+            return $http.post('cart/add_item', { productId: productId, quantity: quantity });
         },
         changeLineItem: function (lineItemId, quantity) {
-            return $http.post('cart/change_item', { lineItemId: lineItemId, quantity: quantity }).then(function (response) {
-                return response.data;
-            });
+            return $http.post('cart/change_item', { lineItemId: lineItemId, quantity: quantity });
         },
         removeLineItem: function (lineItemId) {
-            return $http.post('cart/remove_item', { lineItemId: lineItemId }).then(function (response) {
-                return response.data;
-            });
+            return $http.post('cart/remove_item', { lineItemId: lineItemId });
+        },
+        addCoupon: function (couponCode) {
+            return $http.post('cart/add_coupon/' + couponCode);
+        },
+        removeCoupon: function () {
+            return $http.post('cart/remove_coupon');
         },
         addAddress: function (address) {
-            return $http.post('cart/add_address', { address: address }).then(function (response) {
-                return response.data;
-            });
+            return $http.post('cart/add_address', { address: address });
         },
-        getShippingMethods: function (cartId) {
-            return $http.get('cart/' + cartId + '/shipping_methods/json').then(function (response) {
-                return response.data;
-            });
+        getAvailableShippingMethods: function (cartId) {
+            return $http.get('cart/' + cartId + '/shipping_methods/json');
         },
-        getPaymentMethods: function (cartId) {
-            return $http.get('cart/' + cartId + '/payment_methods/json').then(function (response) {
-                return response.data;
-            });
+        getAvailablePaymentMethods: function (cartId) {
+            return $http.get('cart/' + cartId + '/payment_methods/json');
         },
         setShippingMethod: function (shippingMethodCode) {
-            return $http.post('cart/shipping_method', { shippingMethodCode: shippingMethodCode }).then(function (response) {
-                return response.data;
-            });
+            return $http.post('cart/shipping_method', { shippingMethodCode: shippingMethodCode });
         },
-        setPaymentMethod: function (paymentMethodCode) {
-            return $http.post('cart/payment_method', { paymentMethodCode: paymentMethodCode }).then(function (response) {
-                return response.data;
-            });
+        setPaymentMethod: function (paymentMethodCode, billingAddress) {
+            return $http.post('cart/payment_method', { paymentMethodCode: paymentMethodCode, billingAddress: billingAddress });
         },
         createOrder: function (cartId) {
-            return $http.post('cart/' + cartId + '/create_order').then(function (response) {
-                return response.data;
-            });
+            return $http.post('cart/' + cartId + '/create_order');
         },
         processPayment: function (orderId, paymentId) {
-            return $http.post('cart/process_payment', { orderId: orderId, paymentId: paymentId }).then(function (response) {
-                return response.data;
-            });
+            return $http.post('cart/process_payment', { orderId: orderId, paymentId: paymentId });
         }
     }
-}]);
+}])
 
-app.directive('floatingLabel', function () {
-    return {
-        restrict: 'A',
-        link: function (scope, element, attrs) {
-            if (element[0].tagName !== 'input'.toUpperCase()) {
-                return;
-            }
-            var targetElement = element[0].parentElement;
-            var className = ' field--show-floating-label';
-            scope.$watch(attrs.ngModel, function (value) {
-                targetElement.className = targetElement.className.replace(className, '');
-                if (value) {
-                    targetElement.className += className;
-                }
-            });
-        }
+.controller('mainController', ['$scope', '$window', function ($scope, $window) {
+    $scope.go = function (url) {
+        $window.location.href = url;
     }
-});
+}])
 
-app.controller('mainController', ['$scope', '$window', 'cartService', function ($scope, $window, cartService) {
+.controller('cartController', ['$scope', 'cartService', function ($scope, cartService) {
     $scope.cart = null;
-    cartService.getCart().then(function (response) {
-        $scope.cart = response;
+    $scope.isCartModalVisible = false;
+
+    var cartPromise = cartService.getCart();
+    cartPromise.then(function (response) {
+        $scope.cart = response.data;
     });
 
-    $scope.isCartModalVisible = false;
     $scope.showCartModal = function () {
         $scope.isCartModalVisible = true;
     }
+    $scope.hideCartModal = function () {
+        $scope.isCartModalVisible = false;
+    }
+    $scope.addToCart = function (productId, quantity) {
+        cartService.addLineItem(productId, quantity).then(function (response) {
+            $scope.cart = response.data;
+            $scope.isCartModalVisible = true;
+        });
+    }
+    $scope.changeLineItem = function (lineItemId, quantity) {
+        if (quantity >= 1) {
+            cartService.changeLineItem(lineItemId, quantity).then(function (response) {
+                $scope.cart = response.data;
+            });
+        }
+    }
+    $scope.removeLineItem = function (lineItemId) {
+        cartService.removeLineItem(lineItemId).then(function (response) {
+            $scope.cart = response.data;
+        });
+    }
+}])
+
+.controller('checkoutController', ['$scope', '$route', '$window', 'cartService', function ($scope, $route, $window, cartService) {
+    $scope.$route = $route;
+    $scope.cart = null;
+    $scope.order = null;
+    $scope.couponProcessing = false;
+    $scope.couponWasAdded = false;
+    $scope.couponHasError = false;
+    $scope.shippingAddress = {};
+    $scope.billingAddress = {};
+    $scope.billingAddressEqualsShipping = true;
+    $scope.availableShippingMethods = null;
+    $scope.selectedShippingMethod = {};
+    $scope.availablePaymentMethods = null;
+    $scope.selectedPaymentMethod = {};
+    $scope.isOrderSummaryExpanded = false;
+    $scope.orderProcessing = false;
+
+    var cartPromise = cartService.getCart();
+    cartPromise.then(function (response) {
+        var cart = response.data;
+        $scope.cart = cart;
+        $scope.couponCode = cart.Coupon;
+        $scope.couponWasAdded = cart.Coupon.length;
+
+        var shippingAddresses = _.where(cart.Addresses, { Type: "Shipping" });
+        if (shippingAddresses.length) {
+            $scope.shippingAddress = shippingAddresses[0];
+        }
+
+        var billingAddresses = _.where(cart.Addresses, { Type: "Billing" });
+        if (billingAddresses.length) {
+            $scope.billingAddress = billingAddresses[0];
+        }
+
+        $scope.setBillingAddressEqualsShipping();
+
+        var availableShippingMethodsPromise = cartService.getAvailableShippingMethods(cart.Id);
+        availableShippingMethodsPromise.then(function (response) {
+            var availableShippingMethods = response.data;
+            $scope.availableShippingMethods = availableShippingMethods;
+            var shippingMethod = cart.Shipments.length ? cart.Shipments[0] : null;
+            if (shippingMethod) {
+                var matchedShippingMethods = _.where(availableShippingMethods, { ShipmentMethodCode: shippingMethod.ShipmentMethodCode });
+                $scope.selectedShippingMethod = matchedShippingMethods.length ? matchedShippingMethods[0] : {};
+            }
+        });
+
+        var availablePaymentMethodsPromise = cartService.getAvailablePaymentMethods(cart.Id);
+        availablePaymentMethodsPromise.then(function (response) {
+            $scope.availablePaymentMethods = response.data;
+        });
+    });
 
     $scope.go = function (url) {
         $window.location.href = url;
     }
-}]);
-
-app.controller('cartModalController', ['$scope', 'cartService', function ($scope, cartService) {
-    $scope.changeLineItem = function (lineItemId, quantity) {
-        if (quantity >= 1) {
-            cartService.changeLineItem(lineItemId, quantity).then(function (response) {
-                $scope.$parent.cart = response;
-            });
-        }
+    $scope.toggleOrderSummary = function (isExpanded) {
+        $scope.isOrderSummaryExpanded = !isExpanded;
     }
-    $scope.removeLineItem = function (lineItemId) {
-        cartService.removeLineItem(lineItemId).then(function (response) {
-            $scope.cart = response;
-            $scope.$parent.cart = response;
+    $scope.addCoupon = function (couponCode) {
+        $scope.couponProcessing = true;
+        var cartPromise = cartService.addCoupon(couponCode);
+        cartPromise.then(function (response) {
+            var cart = response.data;
+            $scope.couponWasAdded = true;
+            $scope.couponHasError = cart.DiscountTotal.Amount == $scope.cart.DiscountTotal.Amount;
+            $scope.cart = cart;
+            $scope.couponProcessing = false;
         });
     }
-    $scope.closeModal = function () {
-        $scope.$parent.isCartModalVisible = false;
-    }
-}]);
-
-app.controller('productController', ['$scope', 'cartService', function ($scope, cartService) {
-    $scope.addToCart = function (productId, quantity) {
-        if (quantity >= 1) {
-            cartService.addLineItem(productId, quantity).then(function (response) {
-                $scope.$parent.cart = response;
-                $scope.$parent.isCartModalVisible = true;
-            });
-        }
-    }
-}]);
-
-app.controller('cartController', ['$scope', 'cartService', function ($scope, cartService) {
-    $scope.changeLineItem = function (lineItemId, quantity) {
-        if (quantity >= 1) {
-            cartService.changeLineItem(lineItemId, quantity).then(function (response) {
-                $scope.$parent.cart = response;
-            });
-        }
-    }
-    $scope.removeLineItem = function (lineItemId) {
-        cartService.removeLineItem(lineItemId).then(function (response) {
-            $scope.cart = response;
-            $scope.$parent.cart = response;
+    $scope.removeCoupon = function () {
+        $scope.couponProcessing = true;
+        var cartPromise = cartService.removeCoupon();
+        cartPromise.then(function (response) {
+            var cart = response.data;
+            $scope.couponWasAdded = false;
+            $scope.couponHasError = false;
+            $scope.cart = cart;
+            $scope.couponProcessing = false;
         });
     }
-}]);
-
-app.controller('checkoutController', ['$scope', '$route', '$location', '$window', 'cartService', function ($scope, $route, $location, $window, cartService) {
-    $scope.$route = $route;
-    $scope.shippingAddress = {};
-    $scope.availableShippingMethods = [];
-    $scope.availablePaymentMethods = [];
-    $scope.selectedShippingMethod = {};
-    $scope.selectedPaymentMethod = {};
-    $scope.order = {};
-
-    $scope.cart = {};
-    cartService.getCart().then(function (response) {
-        $scope.cart = response;
-        var shippingAddresses = _.where($scope.cart.Addresses, { Type: "Shipping" });
-        if (shippingAddresses.length) {
-            $scope.shippingAddress = shippingAddresses[0];
-        }
-        cartService.getShippingMethods($scope.cart.Id).then(function (response) {
-            $scope.availableShippingMethods = response;
-            if ($scope.cart.Shipments.length) {
-                for (var i = 0; i < $scope.availableShippingMethods.length; i++) {
-                    var availableShippingMethod = $scope.availableShippingMethods[i];
-                    var shipments = _.where($scope.cart.Shipments, { ShipmentMethodCode: availableShippingMethod.ShipmentMethodCode });
-                    if (shipments.length) {
-                        $scope.selectedShippingMethod = availableShippingMethod;
-                        break;
-                    }
-                }
-            }
-        });
-        cartService.getPaymentMethods($scope.cart.Id).then(function (response) {
-            $scope.availablePaymentMethods = response;
-            if ($scope.cart.Payments.length) {
-                for (var i = 0; i < cart.Payments.length; i++) {
-                    var availablePaymentMethod = $scope.availablePaymentMethods[i];
-                    var payments = _.where($scope.cart.Payments, { PaymentGatewayCode: availableShippingMethod.GatewayCode });
-                    if (payments.length) {
-                        $scope.selectedPaymentMethod = availablePaymentMethod;
-                        break;
-                    }
-                }
-            }
-        });
-    });
-
     $scope.setShippingAddress = function () {
-        cartService.addAddress($scope.shippingAddress).then(function (response) {
-            $scope.cart = response;
-            $location.path('/cart/checkout/shipping-method');
+        var cartPromise = cartService.addAddress($scope.shippingAddress);
+        cartPromise.then(function (response) {
+            $scope.cart = response.data;
+            $scope.go('shipping-method');
         });
     }
-
-    $scope.setShippingMethod = function (shippingMethodCode) {
-        cartService.setShippingMethod(shippingMethodCode).then(function (response) {
-            $scope.cart = response;
+    $scope.setShippingMethod = function () {
+        var cartPromise = cartService.setShippingMethod($scope.selectedShippingMethod.ShipmentMethodCode);
+        cartPromise.then(function (response) {
+            $scope.cart = response.data;
         });
     }
-
-    $scope.setShippingMethods = function () {
-        $location.path('/cart/checkout/payment-method');
-    }
-
-    $scope.setPaymentMethods = function (paymentMethodCode) {
-        cartService.setPaymentMethod(paymentMethodCode).then(function (response) {
-            $scope.cart = response;
-            cartService.createOrder($scope.cart.Id).then(function (response) {
-                $scope.order = response;
-                if ($scope.order.InPayments.length) {
-                    var payment = $scope.order.InPayments[0];
-                    cartService.processPayment($scope.order.Id, payment.Id).then(function (response) {
-                        if (response.isSuccess) {
-                            if (response.paymentMethodType == "Unknown") {
-                                $window.location.href = '/cart/thanks?id=' + $scope.order.Id;
-                            }
-                        }
+    $scope.completeOrder = function () {
+        $scope.orderProcessing = true;
+        var cartPromise = cartService.setPaymentMethod($scope.selectedPaymentMethod.GatewayCode, $scope.billingAddress);
+        cartPromise.then(function (response) {
+            var cart = response.data;
+            $scope.cart = cart;
+            var orderPromise = cartService.createOrder(cart.Id);
+            orderPromise.then(function (response) {
+                var order = response.data;
+                $scope.order = order;
+                var payment = order.InPayments.length ? order.InPayments[0] : null;
+                if (payment) {
+                    var paymentPromise = cartService.processPayment(order.Id, payment.Id);
+                    paymentPromise.then(function (response) {
+                        handlePaymentResult(response.data);
+                        $scope.orderProcessing = false;
                     });
                 }
             });
         });
     }
+    $scope.handlePaymentResult = function (paymentResult) {
 
-    $scope.createOrder = function () {
     }
-}]);
+    $scope.setBillingAddressEqualsShipping = function () {
+        $scope.billingAddressEqualsShipping = true;
+        $scope.billingAddress = $scope.shippingAddress;
+        $scope.billingAddress.Type = "Billing";
+    }
 
-app.config(['$interpolateProvider', '$routeProvider', '$locationProvider', '$httpProvider', function ($interpolateProvider, $routeProvider, $locationProvider, $httpProvider) {
+    var handlePaymentResult = function (paymentResult) {
+        if (paymentResult.isSuccess) {
+            switch (paymentResult.paymentMethodType) {
+                case "Unknown":
+                    $scope.go('thanks?id=' + $scope.order.Id);
+                    break;
+            }
+        }
+    }
+}])
+
+.config(['$interpolateProvider', '$routeProvider', '$locationProvider', '$httpProvider', function ($interpolateProvider, $routeProvider, $locationProvider, $httpProvider) {
     $httpProvider.defaults.cache = false;
     if (!$httpProvider.defaults.headers.get) {
         $httpProvider.defaults.headers.get = {};
