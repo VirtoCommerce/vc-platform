@@ -82,7 +82,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
             var retVal = _customerOrderService.GetById(id, coreModel.CustomerOrderResponseGroup.Full);
             if (retVal == null)
             {
-                return NotFound();
+                return Ok();
             }
             //Scope bound security check
             var scopes = _permissionScopeService.GetObjectPermissionScopeStrings(retVal).ToArray();
