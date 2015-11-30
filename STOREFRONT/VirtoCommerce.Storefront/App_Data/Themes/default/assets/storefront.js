@@ -141,7 +141,7 @@ app.controller('cartController', ['$scope', 'cartService', function ($scope, car
     }
 }]);
 
-app.controller('checkoutController', ['$scope', '$route', '$location', 'cartService', function ($scope, $route, $location, cartService) {
+app.controller('checkoutController', ['$scope', '$route', '$location', '$window', 'cartService', function ($scope, $route, $location, $window, cartService) {
     $scope.$route = $route;
     $scope.shippingAddress = {};
     $scope.availableShippingMethods = [];
@@ -210,6 +210,11 @@ app.controller('checkoutController', ['$scope', '$route', '$location', 'cartServ
                 if ($scope.order.InPayments.length) {
                     var payment = $scope.order.InPayments[0];
                     cartService.processPayment($scope.order.Id, payment.Id).then(function (response) {
+                        if (response.isSuccess) {
+                            if (response.paymentMethodType == "Unknown") {
+                                $window.location.href = '/cart/thanks?id=' + $scope.order.Id;
+                            }
+                        }
                     });
                 }
             });

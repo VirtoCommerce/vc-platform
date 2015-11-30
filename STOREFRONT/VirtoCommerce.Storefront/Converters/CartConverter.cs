@@ -81,6 +81,7 @@ namespace VirtoCommerce.Storefront.Converters
 
             if (cart.Payments != null)
             {
+                cartServiceModel.Payments = cart.Payments.Select(i => i.ToServiceModel()).ToList();
             }
 
             if (cart.Shipments != null)

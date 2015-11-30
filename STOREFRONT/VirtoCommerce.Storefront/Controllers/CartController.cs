@@ -121,10 +121,10 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentCurrency);
 
-            //if (WorkContext.CurrentCart.Items.Count == 0)
-            //{
-            //    return StoreFrontRedirect("~/cart");
-            //}
+            if (WorkContext.CurrentCart.Items.Count == 0)
+            {
+                return StoreFrontRedirect("~/cart");
+            }
 
             return View("checkout", "checkout_layout", _cartBuilder.Cart);
         }
@@ -193,9 +193,26 @@ namespace VirtoCommerce.Storefront.Controllers
         [Route("process_payment")]
         public async Task<ActionResult> ProcessPaymentJson(string orderId, string paymentId)
         {
-            var order = await _orderApi.OrderModuleProcessOrderPaymentsAsync(null, orderId, paymentId);
+            var bankCardInfo = new Client.Model.VirtoCommerceDomainPaymentModelBankCardInfo();
 
-            return Json("", JsonRequestBehavior.AllowGet);
+            var processingResult = await _orderApi.OrderModuleProcessOrderPaymentsAsync(bankCardInfo, orderId, paymentId);
+
+            return Json(processingResult, JsonRequestBehavior.AllowGet);
+        }
+
+        // GET: /cart/thanks?id=...
+        [HttpGet]
+        [Route("thanks")]
+        public async Task<ActionResult> Thanks(string id)
+        {
+            var order = await _orderApi.OrderModuleGetByIdAsync(id);
+
+            if (order == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View("thanks");
         }
     }
 }
