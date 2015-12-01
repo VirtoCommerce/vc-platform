@@ -24,7 +24,6 @@
 
                 $scope.pageSettings.totalItems = data.totalCount;
                 blade.currentEntities = data.quoteRequests;
-                uiGridHelper.onDataLoaded($scope.gridOptions, blade.currentEntities);
             }, function (error) {
                 bladeNavigationService.setError('Error ' + error.status, blade);
             });

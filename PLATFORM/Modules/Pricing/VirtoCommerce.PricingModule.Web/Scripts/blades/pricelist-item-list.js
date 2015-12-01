@@ -1,38 +1,46 @@
 ﻿angular.module('virtoCommerce.pricingModule')
-.controller('virtoCommerce.pricingModule.pricelistItemListController', ['$scope', '$filter', 'platformWebApp.bladeNavigationService', function ($scope, $filter, bladeNavigationService) {
-    var selectedNode = null;
+.controller('virtoCommerce.pricingModule.pricelistItemListController', ['$scope', '$filter', 'platformWebApp.bladeNavigationService', 'filterFilter', 'uiGridConstants', 'platformWebApp.uiGridHelper', function ($scope, $filter, bladeNavigationService, filterFilter, uiGridConstants, uiGridHelper) {
+    $scope.uiGridConstants = uiGridConstants;
+    var blade = $scope.blade;
+
+    //pagination settings
+    $scope.pageSettings = {};
+    $scope.pageSettings.totalItems = 0;
+    $scope.pageSettings.currentPage = 1;
+    $scope.pageSettings.numPages = 5;
+    $scope.pageSettings.itemsPerPageCount = 20;
 
     function initializeBlade(data) {
-        $scope.blade.currentEntities = data;
-        $scope.blade.isLoading = false;
+        blade.currentEntities = data;
+        $scope.pageSettings.totalItems = data.length;
+        blade.isLoading = false;
     };
 
     $scope.selectNode = function (node) {
-        selectedNode = node;
-        $scope.selectedNodeId = selectedNode.productId;
+        $scope.selectedNodeId = node.productId;
 
         var newBlade = {
             id: 'pricelistChildChild',
-            itemId: selectedNode.productId,
-            data: selectedNode,
-            currency: $scope.blade.currency,
+            itemId: node.productId,
+            data: node,
+            currency: blade.currency,
             title: 'pricing.blades.prices-list.title',
-            titleValues: { name: selectedNode.productName },
+            titleValues: { name: node.productName },
             subtitle: 'pricing.blades.prices-list.subtitle',
             controller: 'virtoCommerce.pricingModule.pricesListController',
             template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/blades/prices-list.tpl.html'
         };
 
-        bladeNavigationService.showBlade(newBlade, $scope.blade);
+        bladeNavigationService.showBlade(newBlade, blade);
     };
 
-    $scope.blade.onClose = function (closeCallback) {
+    blade.onClose = function (closeCallback) {
         closeChildrenBlades();
         closeCallback();
     };
 
     function closeChildrenBlades() {
-        angular.forEach($scope.blade.childrenBlades.slice(), function (child) {
+        angular.forEach(blade.childrenBlades.slice(), function (child) {
             bladeNavigationService.closeBlade(child);
         });
     }
@@ -77,26 +85,26 @@
             }
         };
 
-        bladeNavigationService.showBlade(newBlade, $scope.blade);
+        bladeNavigationService.showBlade(newBlade, blade);
     }
 
     function addProductsToPricelist(products) {
         angular.forEach(products, function (product) {
-            if (_.all($scope.blade.currentEntities, function (x) { return x.productId != product.id; })) {
+            if (_.all(blade.currentEntities, function (x) { return x.productId != product.id; })) {
                 var newPricelistItem =
                 {
                     productName: product.name,
                     productId: product.id,
                     prices: []
                 };
-                $scope.blade.currentEntities.push(newPricelistItem);
+                blade.currentEntities.push(newPricelistItem);
             }
         });
     }
 
-    $scope.blade.headIcon = 'fa-usd';
+    blade.headIcon = 'fa-usd';
 
-    $scope.blade.toolbarCommands = [
+    blade.toolbarCommands = [
     {
         name: "platform.commands.add", icon: 'fa fa-plus',
         executeMethod: function () {
@@ -124,10 +132,27 @@
         return retVal;
     }
 
-    $scope.$watch('blade.parentBlade.currentEntity.productPrices', function (currentEntities) {
-        // $scope.blade.data = currentEntities;
-        initializeBlade(currentEntities);
-    });
+    // ui-grid
+    $scope.setGridOptions = function (gridOptions) {
+        uiGridHelper.initialize($scope, gridOptions,
+        function (gridApi) {
+            gridApi.grid.registerRowsProcessor($scope.singleFilter, 90);
+            $scope.$watch('pageSettings.currentPage', gridApi.pagination.seek);
+        });
+    };
+
+    $scope.singleFilter = function (renderableRows) {
+        var visibleCount = 0;
+        renderableRows.forEach(function (row) {
+            row.visible = _.any(filterFilter([row.entity], blade.searchText));
+            if (row.visible) visibleCount++;
+        });
+
+        $scope.filteredEntitiesCount = visibleCount;
+        return renderableRows;
+    };
+
+    $scope.$watch('blade.parentBlade.currentEntity.productPrices', initializeBlade);
 
     // actions on load
     // $scope.$watch('blade.parentBlade.currentEntity.productPrices' gets fired

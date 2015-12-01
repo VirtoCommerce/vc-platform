@@ -38,7 +38,6 @@
                     $scope.blade.isLoading = false;
                     $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
                     $scope.items = data.listEntries;
-                    uiGridHelper.onDataLoaded($scope.gridOptions, $scope.items);
 
                     //check already selected elements
                     if ($scope.options.selectedItemIds) {

@@ -20,6 +20,7 @@ using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.DynamicProperties;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Platform.Data.Repositories;
+using VirtoCommerce.Platform.Data.Settings;
 
 namespace PaymentMethods.Tests
 {
@@ -99,8 +100,9 @@ namespace PaymentMethods.Tests
             var cartEventPublisher = new EventPublisher<CartChangeEvent>(Enumerable.Empty<IObserver<CartChangeEvent>>().ToArray());
             var cartService = new ShoppingCartServiceImpl(repositoryFactory, cartEventPublisher, null);
             var dynamicPropertyService = new DynamicPropertyService(platformRepositoryFactory);
+            var settingManager = new SettingsManager(null, null, null, null);
 
-            var orderService = new CustomerOrderServiceImpl(orderRepositoryFactory, new TimeBasedNumberGeneratorImpl(), orderEventPublisher, cartService, GetItemService(), dynamicPropertyService);
+            var orderService = new CustomerOrderServiceImpl(orderRepositoryFactory, new TimeBasedNumberGeneratorImpl(), orderEventPublisher, cartService, GetItemService(), dynamicPropertyService, settingManager);
             return orderService;
         }
 

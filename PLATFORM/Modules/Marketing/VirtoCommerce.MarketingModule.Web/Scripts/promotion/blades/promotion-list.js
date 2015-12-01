@@ -25,7 +25,6 @@
 
                 $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
                 blade.currentEntities = data.promotions;
-                uiGridHelper.onDataLoaded($scope.gridOptions, blade.currentEntities);
             }, function (error) {
                 bladeNavigationService.setError('Error ' + error.status, blade);
             });

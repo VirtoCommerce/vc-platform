@@ -14,6 +14,7 @@
     "angular-moment": "0.10.3",
     "angular-resource": "1.4.4",
     "angular-ui-grid": "3.0.7",
+    "ui-grid-draggable-rows": "0.2.2",
     "angular-ui-router": "0.2.15",
     "angular-ui-select": "0.12.1",
     "angular-ui-sortable": "0.13.4",
@@ -29,7 +30,6 @@
     "ngstorage": "0.3.9",
     "textAngular": "1.4.5",
     "ng-focus-on": "0.2.2",
-    "ng-context-menu": "1.0.1",
     "modernizr": "2.8.3",
     "underscore": "1.8.3"
   },
