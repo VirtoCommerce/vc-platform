@@ -36,8 +36,8 @@
     function deleteEntry() {
         var dialog = {
             id: "confirmDelete",
-            title: "platform.dialog.api-key-delete.title",
-            message: "platform.dialog.api-key-delete.message",
+            title: "platform.dialogs.api-key-delete.title",
+            message: "platform.dialogs.api-key-delete.message",
             callback: function (remove) {
                 if (remove) {
                     if ($scope.blade.deleteFn) {
