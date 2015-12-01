@@ -86,7 +86,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <returns></returns>
         [HttpGet]
         [Route("value/{name}")]
-        [ResponseType(typeof(object))]
+        [ResponseType(typeof(object))] // Produces invalid response type in generated client
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IHttpActionResult GetValue(string name)
         {
             var value = _settingsManager.GetValue<object>(name, null);
