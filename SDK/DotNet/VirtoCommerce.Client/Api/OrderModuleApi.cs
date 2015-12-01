@@ -31,7 +31,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="criteriaStart"></param>
         /// <param name="criteriaCount"></param>
         /// <returns>VirtoCommerceOrderModuleWebModelSearchResult</returns>
-        VirtoCommerceOrderModuleWebModelSearchResult OrderModuleSearch (string criteriaResponseGroup, string criteriaKeyword, string criteriaCustomerId, string criteriaEmployeeId, List<string> criteriaStoreIds, DateTime? criteriaStartDate, DateTime? criteriaEndDate, int? criteriaStart, int? criteriaCount);
+        VirtoCommerceOrderModuleWebModelSearchResult OrderModuleSearch (string criteriaResponseGroup = null, string criteriaKeyword = null, string criteriaCustomerId = null, string criteriaEmployeeId = null, List<string> criteriaStoreIds = null, DateTime? criteriaStartDate = null, DateTime? criteriaEndDate = null, int? criteriaStart = null, int? criteriaCount = null);
   
         /// <summary>
         /// Search customer orders by given criteria
@@ -49,7 +49,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="criteriaStart"></param>
         /// <param name="criteriaCount"></param>
         /// <returns>VirtoCommerceOrderModuleWebModelSearchResult</returns>
-        System.Threading.Tasks.Task<VirtoCommerceOrderModuleWebModelSearchResult> OrderModuleSearchAsync (string criteriaResponseGroup, string criteriaKeyword, string criteriaCustomerId, string criteriaEmployeeId, List<string> criteriaStoreIds, DateTime? criteriaStartDate, DateTime? criteriaEndDate, int? criteriaStart, int? criteriaCount);
+        System.Threading.Tasks.Task<VirtoCommerceOrderModuleWebModelSearchResult> OrderModuleSearchAsync (string criteriaResponseGroup = null, string criteriaKeyword = null, string criteriaCustomerId = null, string criteriaEmployeeId = null, List<string> criteriaStoreIds = null, DateTime? criteriaStartDate = null, DateTime? criteriaEndDate = null, int? criteriaStart = null, int? criteriaCount = null);
         
         /// <summary>
         /// Update a existing customer order
@@ -115,7 +115,7 @@ namespace VirtoCommerce.Client.Api
         /// Find customer order by id
         /// </summary>
         /// <remarks>
-        /// Return a single customer order with all nested documents
+        /// Return a single customer order with all nested documents or null if order was not found
         /// </remarks>
         /// <param name="id">customer order id</param>
         /// <returns>VirtoCommerceOrderModuleWebModelCustomerOrder</returns>
@@ -125,7 +125,7 @@ namespace VirtoCommerce.Client.Api
         /// Find customer order by id
         /// </summary>
         /// <remarks>
-        /// Return a single customer order with all nested documents
+        /// Return a single customer order with all nested documents or null if order was not found
         /// </remarks>
         /// <param name="id">customer order id</param>
         /// <returns>VirtoCommerceOrderModuleWebModelCustomerOrder</returns>
@@ -246,7 +246,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="start">start interval date</param>
         /// <param name="end">end interval date</param>
         /// <returns>VirtoCommerceOrderModuleWebModelDashboardStatisticsResult</returns>
-        VirtoCommerceOrderModuleWebModelDashboardStatisticsResult OrderModuleGetDashboardStatistics (DateTime? start, DateTime? end);
+        VirtoCommerceOrderModuleWebModelDashboardStatisticsResult OrderModuleGetDashboardStatistics (DateTime? start = null, DateTime? end = null);
   
         /// <summary>
         /// Get a some order statistic information for Commerce manager dashboard
@@ -257,7 +257,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="start">start interval date</param>
         /// <param name="end">end interval date</param>
         /// <returns>VirtoCommerceOrderModuleWebModelDashboardStatisticsResult</returns>
-        System.Threading.Tasks.Task<VirtoCommerceOrderModuleWebModelDashboardStatisticsResult> OrderModuleGetDashboardStatisticsAsync (DateTime? start, DateTime? end);
+        System.Threading.Tasks.Task<VirtoCommerceOrderModuleWebModelDashboardStatisticsResult> OrderModuleGetDashboardStatisticsAsync (DateTime? start = null, DateTime? end = null);
         
     }
   
@@ -318,7 +318,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="criteriaStart"></param> 
         /// <param name="criteriaCount"></param> 
         /// <returns>VirtoCommerceOrderModuleWebModelSearchResult</returns>            
-        public VirtoCommerceOrderModuleWebModelSearchResult OrderModuleSearch (string criteriaResponseGroup, string criteriaKeyword, string criteriaCustomerId, string criteriaEmployeeId, List<string> criteriaStoreIds, DateTime? criteriaStartDate, DateTime? criteriaEndDate, int? criteriaStart, int? criteriaCount)
+        public VirtoCommerceOrderModuleWebModelSearchResult OrderModuleSearch (string criteriaResponseGroup = null, string criteriaKeyword = null, string criteriaCustomerId = null, string criteriaEmployeeId = null, List<string> criteriaStoreIds = null, DateTime? criteriaStartDate = null, DateTime? criteriaEndDate = null, int? criteriaStart = null, int? criteriaCount = null)
         {
             
     
@@ -384,7 +384,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="criteriaStart"></param>
         /// <param name="criteriaCount"></param>
         /// <returns>VirtoCommerceOrderModuleWebModelSearchResult</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceOrderModuleWebModelSearchResult> OrderModuleSearchAsync (string criteriaResponseGroup, string criteriaKeyword, string criteriaCustomerId, string criteriaEmployeeId, List<string> criteriaStoreIds, DateTime? criteriaStartDate, DateTime? criteriaEndDate, int? criteriaStart, int? criteriaCount)
+        public async System.Threading.Tasks.Task<VirtoCommerceOrderModuleWebModelSearchResult> OrderModuleSearchAsync (string criteriaResponseGroup = null, string criteriaKeyword = null, string criteriaCustomerId = null, string criteriaEmployeeId = null, List<string> criteriaStoreIds = null, DateTime? criteriaStartDate = null, DateTime? criteriaEndDate = null, int? criteriaStart = null, int? criteriaCount = null)
         {
             
     
@@ -743,7 +743,7 @@ namespace VirtoCommerce.Client.Api
         }
         
         /// <summary>
-        /// Find customer order by id Return a single customer order with all nested documents
+        /// Find customer order by id Return a single customer order with all nested documents or null if order was not found
         /// </summary>
         /// <param name="id">customer order id</param> 
         /// <returns>VirtoCommerceOrderModuleWebModelCustomerOrder</returns>            
@@ -796,7 +796,7 @@ namespace VirtoCommerce.Client.Api
         }
     
         /// <summary>
-        /// Find customer order by id Return a single customer order with all nested documents
+        /// Find customer order by id Return a single customer order with all nested documents or null if order was not found
         /// </summary>
         /// <param name="id">customer order id</param>
         /// <returns>VirtoCommerceOrderModuleWebModelCustomerOrder</returns>
@@ -1388,7 +1388,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="start">start interval date</param> 
         /// <param name="end">end interval date</param> 
         /// <returns>VirtoCommerceOrderModuleWebModelDashboardStatisticsResult</returns>            
-        public VirtoCommerceOrderModuleWebModelDashboardStatisticsResult OrderModuleGetDashboardStatistics (DateTime? start, DateTime? end)
+        public VirtoCommerceOrderModuleWebModelDashboardStatisticsResult OrderModuleGetDashboardStatistics (DateTime? start = null, DateTime? end = null)
         {
             
     
@@ -1440,7 +1440,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="start">start interval date</param>
         /// <param name="end">end interval date</param>
         /// <returns>VirtoCommerceOrderModuleWebModelDashboardStatisticsResult</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceOrderModuleWebModelDashboardStatisticsResult> OrderModuleGetDashboardStatisticsAsync (DateTime? start, DateTime? end)
+        public async System.Threading.Tasks.Task<VirtoCommerceOrderModuleWebModelDashboardStatisticsResult> OrderModuleGetDashboardStatisticsAsync (DateTime? start = null, DateTime? end = null)
         {
             
     

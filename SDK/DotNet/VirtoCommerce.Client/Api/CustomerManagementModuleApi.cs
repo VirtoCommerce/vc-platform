@@ -106,7 +106,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="criteriaStart">It used to skip some first search results</param>
         /// <param name="criteriaCount">It used to limit the number of search results</param>
         /// <returns>VirtoCommerceCustomerModuleWebModelSearchResult</returns>
-        VirtoCommerceCustomerModuleWebModelSearchResult CustomerModuleSearch (string criteriaKeyword, string criteriaOrganizationId, int? criteriaStart, int? criteriaCount);
+        VirtoCommerceCustomerModuleWebModelSearchResult CustomerModuleSearch (string criteriaKeyword = null, string criteriaOrganizationId = null, int? criteriaStart = null, int? criteriaCount = null);
   
         /// <summary>
         /// Get members
@@ -119,7 +119,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="criteriaStart">It used to skip some first search results</param>
         /// <param name="criteriaCount">It used to limit the number of search results</param>
         /// <returns>VirtoCommerceCustomerModuleWebModelSearchResult</returns>
-        System.Threading.Tasks.Task<VirtoCommerceCustomerModuleWebModelSearchResult> CustomerModuleSearchAsync (string criteriaKeyword, string criteriaOrganizationId, int? criteriaStart, int? criteriaCount);
+        System.Threading.Tasks.Task<VirtoCommerceCustomerModuleWebModelSearchResult> CustomerModuleSearchAsync (string criteriaKeyword = null, string criteriaOrganizationId = null, int? criteriaStart = null, int? criteriaCount = null);
         
         /// <summary>
         /// Get organizations
@@ -683,7 +683,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="criteriaStart">It used to skip some first search results</param> 
         /// <param name="criteriaCount">It used to limit the number of search results</param> 
         /// <returns>VirtoCommerceCustomerModuleWebModelSearchResult</returns>            
-        public VirtoCommerceCustomerModuleWebModelSearchResult CustomerModuleSearch (string criteriaKeyword, string criteriaOrganizationId, int? criteriaStart, int? criteriaCount)
+        public VirtoCommerceCustomerModuleWebModelSearchResult CustomerModuleSearch (string criteriaKeyword = null, string criteriaOrganizationId = null, int? criteriaStart = null, int? criteriaCount = null)
         {
             
     
@@ -739,7 +739,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="criteriaStart">It used to skip some first search results</param>
         /// <param name="criteriaCount">It used to limit the number of search results</param>
         /// <returns>VirtoCommerceCustomerModuleWebModelSearchResult</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceCustomerModuleWebModelSearchResult> CustomerModuleSearchAsync (string criteriaKeyword, string criteriaOrganizationId, int? criteriaStart, int? criteriaCount)
+        public async System.Threading.Tasks.Task<VirtoCommerceCustomerModuleWebModelSearchResult> CustomerModuleSearchAsync (string criteriaKeyword = null, string criteriaOrganizationId = null, int? criteriaStart = null, int? criteriaCount = null)
         {
             
     

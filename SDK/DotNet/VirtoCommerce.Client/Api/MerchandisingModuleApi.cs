@@ -25,7 +25,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="code">Category code</param>
         /// <param name="language">Culture name (default value is \&quot;en-us\&quot;)</param>
         /// <returns>VirtoCommerceMerchandisingModuleWebModelCategory</returns>
-        VirtoCommerceMerchandisingModuleWebModelCategory MerchandisingModuleCategoryGetCategoryByCode (string store, string code, string language);
+        VirtoCommerceMerchandisingModuleWebModelCategory MerchandisingModuleCategoryGetCategoryByCode (string store, string code, string language = null);
   
         /// <summary>
         /// Get store category by code
@@ -37,7 +37,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="code">Category code</param>
         /// <param name="language">Culture name (default value is \&quot;en-us\&quot;)</param>
         /// <returns>VirtoCommerceMerchandisingModuleWebModelCategory</returns>
-        System.Threading.Tasks.Task<VirtoCommerceMerchandisingModuleWebModelCategory> MerchandisingModuleCategoryGetCategoryByCodeAsync (string store, string code, string language);
+        System.Threading.Tasks.Task<VirtoCommerceMerchandisingModuleWebModelCategory> MerchandisingModuleCategoryGetCategoryByCodeAsync (string store, string code, string language = null);
         
         /// <summary>
         /// Search for store categories
@@ -49,7 +49,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="language">Culture name (default value is \&quot;en-us\&quot;)</param>
         /// <param name="parentId">Parent category id</param>
         /// <returns>VirtoCommerceMerchandisingModuleWebModelCategoryResponseCollection</returns>
-        VirtoCommerceMerchandisingModuleWebModelCategoryResponseCollection MerchandisingModuleCategorySearchCategory (string store, string language, string parentId);
+        VirtoCommerceMerchandisingModuleWebModelCategoryResponseCollection MerchandisingModuleCategorySearchCategory (string store, string language = null, string parentId = null);
   
         /// <summary>
         /// Search for store categories
@@ -61,7 +61,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="language">Culture name (default value is \&quot;en-us\&quot;)</param>
         /// <param name="parentId">Parent category id</param>
         /// <returns>VirtoCommerceMerchandisingModuleWebModelCategoryResponseCollection</returns>
-        System.Threading.Tasks.Task<VirtoCommerceMerchandisingModuleWebModelCategoryResponseCollection> MerchandisingModuleCategorySearchCategoryAsync (string store, string language, string parentId);
+        System.Threading.Tasks.Task<VirtoCommerceMerchandisingModuleWebModelCategoryResponseCollection> MerchandisingModuleCategorySearchCategoryAsync (string store, string language = null, string parentId = null);
         
         /// <summary>
         /// Get store category by id
@@ -73,7 +73,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="store">Store id</param>
         /// <param name="language">Culture name (default value is \&quot;en-us\&quot;)</param>
         /// <returns>VirtoCommerceMerchandisingModuleWebModelCategory</returns>
-        VirtoCommerceMerchandisingModuleWebModelCategory MerchandisingModuleCategoryGetCategoryById (string category, string store, string language);
+        VirtoCommerceMerchandisingModuleWebModelCategory MerchandisingModuleCategoryGetCategoryById (string category, string store, string language = null);
   
         /// <summary>
         /// Get store category by id
@@ -85,7 +85,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="store">Store id</param>
         /// <param name="language">Culture name (default value is \&quot;en-us\&quot;)</param>
         /// <returns>VirtoCommerceMerchandisingModuleWebModelCategory</returns>
-        System.Threading.Tasks.Task<VirtoCommerceMerchandisingModuleWebModelCategory> MerchandisingModuleCategoryGetCategoryByIdAsync (string category, string store, string language);
+        System.Threading.Tasks.Task<VirtoCommerceMerchandisingModuleWebModelCategory> MerchandisingModuleCategoryGetCategoryByIdAsync (string category, string store, string language = null);
         
         /// <summary>
         /// Get dynamic content for given placeholders
@@ -98,7 +98,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="tags">Array of tags</param>
         /// <param name="language">Culture name (devault value is \&quot;en-us\&quot;)</param>
         /// <returns>VirtoCommerceMerchandisingModuleWebModelDynamicContentItemGroupResponseCollection</returns>
-        VirtoCommerceMerchandisingModuleWebModelDynamicContentItemGroupResponseCollection MerchandisingModuleMarketingGetDynamicContent (string store, List<string> placeHolders, List<string> tags, string language);
+        VirtoCommerceMerchandisingModuleWebModelDynamicContentItemGroupResponseCollection MerchandisingModuleMarketingGetDynamicContent (string store, List<string> placeHolders, List<string> tags, string language = null);
   
         /// <summary>
         /// Get dynamic content for given placeholders
@@ -111,7 +111,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="tags">Array of tags</param>
         /// <param name="language">Culture name (devault value is \&quot;en-us\&quot;)</param>
         /// <returns>VirtoCommerceMerchandisingModuleWebModelDynamicContentItemGroupResponseCollection</returns>
-        System.Threading.Tasks.Task<VirtoCommerceMerchandisingModuleWebModelDynamicContentItemGroupResponseCollection> MerchandisingModuleMarketingGetDynamicContentAsync (string store, List<string> placeHolders, List<string> tags, string language);
+        System.Threading.Tasks.Task<VirtoCommerceMerchandisingModuleWebModelDynamicContentItemGroupResponseCollection> MerchandisingModuleMarketingGetDynamicContentAsync (string store, List<string> placeHolders, List<string> tags, string language = null);
         
         /// <summary>
         /// Evaluate promotions
@@ -183,7 +183,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="currency">Currency code</param>
         /// <param name="tags">Array of tags</param>
         /// <returns></returns>
-        List<string> MerchandisingModulePriceGetPriceListStack (string catalog, string currency, List<string> tags);
+        List<string> MerchandisingModulePriceGetPriceListStack (string catalog, string currency = null, List<string> tags = null);
   
         /// <summary>
         /// Get collection of pricelists for given catalog
@@ -195,7 +195,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="currency">Currency code</param>
         /// <param name="tags">Array of tags</param>
         /// <returns></returns>
-        System.Threading.Tasks.Task<List<string>> MerchandisingModulePriceGetPriceListStackAsync (string catalog, string currency, List<string> tags);
+        System.Threading.Tasks.Task<List<string>> MerchandisingModulePriceGetPriceListStackAsync (string catalog, string currency = null, List<string> tags = null);
         
         /// <summary>
         /// Get prices collection by product ids and pricelist ids
@@ -229,7 +229,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="ids">Product ids</param>
         /// <param name="responseGroup">Response detalization scale (default value is ItemInfo)</param>
         /// <returns></returns>
-        List<VirtoCommerceMerchandisingModuleWebModelCatalogItem> MerchandisingModuleProductGetProductsByIds (string store, List<string> ids, string responseGroup);
+        List<VirtoCommerceMerchandisingModuleWebModelCatalogItem> MerchandisingModuleProductGetProductsByIds (string store, List<string> ids, string responseGroup = null);
   
         /// <summary>
         /// Get store products collection by their ids
@@ -241,7 +241,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="ids">Product ids</param>
         /// <param name="responseGroup">Response detalization scale (default value is ItemInfo)</param>
         /// <returns></returns>
-        System.Threading.Tasks.Task<List<VirtoCommerceMerchandisingModuleWebModelCatalogItem>> MerchandisingModuleProductGetProductsByIdsAsync (string store, List<string> ids, string responseGroup);
+        System.Threading.Tasks.Task<List<VirtoCommerceMerchandisingModuleWebModelCatalogItem>> MerchandisingModuleProductGetProductsByIdsAsync (string store, List<string> ids, string responseGroup = null);
         
         /// <summary>
         /// Search for store products
@@ -264,7 +264,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="requestTerms">Gets or sets search terms collection\r\n            Item format: name:value1,value2,value3</param>
         /// <param name="requestFacets">Gets or sets the facets collection\r\n            Item format: name:value1,value2,value3</param>
         /// <returns>VirtoCommerceMerchandisingModuleWebModelProductSearchResult</returns>
-        VirtoCommerceMerchandisingModuleWebModelProductSearchResult MerchandisingModuleProductSearch (string requestStore, List<string> requestPricelists, string requestResponseGroup, string requestOutline, string requestLanguage, string requestCurrency, string requestSearchPhrase, string requestSort, string requestSortOrder, DateTime? requestStartDateFrom, int? requestSkip, int? requestTake, List<string> requestTerms, List<string> requestFacets);
+        VirtoCommerceMerchandisingModuleWebModelProductSearchResult MerchandisingModuleProductSearch (string requestStore = null, List<string> requestPricelists = null, string requestResponseGroup = null, string requestOutline = null, string requestLanguage = null, string requestCurrency = null, string requestSearchPhrase = null, string requestSort = null, string requestSortOrder = null, DateTime? requestStartDateFrom = null, int? requestSkip = null, int? requestTake = null, List<string> requestTerms = null, List<string> requestFacets = null);
   
         /// <summary>
         /// Search for store products
@@ -287,7 +287,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="requestTerms">Gets or sets search terms collection\r\n            Item format: name:value1,value2,value3</param>
         /// <param name="requestFacets">Gets or sets the facets collection\r\n            Item format: name:value1,value2,value3</param>
         /// <returns>VirtoCommerceMerchandisingModuleWebModelProductSearchResult</returns>
-        System.Threading.Tasks.Task<VirtoCommerceMerchandisingModuleWebModelProductSearchResult> MerchandisingModuleProductSearchAsync (string requestStore, List<string> requestPricelists, string requestResponseGroup, string requestOutline, string requestLanguage, string requestCurrency, string requestSearchPhrase, string requestSort, string requestSortOrder, DateTime? requestStartDateFrom, int? requestSkip, int? requestTake, List<string> requestTerms, List<string> requestFacets);
+        System.Threading.Tasks.Task<VirtoCommerceMerchandisingModuleWebModelProductSearchResult> MerchandisingModuleProductSearchAsync (string requestStore = null, List<string> requestPricelists = null, string requestResponseGroup = null, string requestOutline = null, string requestLanguage = null, string requestCurrency = null, string requestSearchPhrase = null, string requestSort = null, string requestSortOrder = null, DateTime? requestStartDateFrom = null, int? requestSkip = null, int? requestTake = null, List<string> requestTerms = null, List<string> requestFacets = null);
         
         /// <summary>
         /// Get store product by id
@@ -300,7 +300,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="responseGroup">Response detalization scale (default value is ItemLarge)</param>
         /// <param name="language">Culture name (default value is \&quot;en-us\&quot;)</param>
         /// <returns>VirtoCommerceMerchandisingModuleWebModelCatalogItem</returns>
-        VirtoCommerceMerchandisingModuleWebModelCatalogItem MerchandisingModuleProductGetProduct (string store, string product, string responseGroup, string language);
+        VirtoCommerceMerchandisingModuleWebModelCatalogItem MerchandisingModuleProductGetProduct (string store, string product, string responseGroup = null, string language = null);
   
         /// <summary>
         /// Get store product by id
@@ -313,7 +313,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="responseGroup">Response detalization scale (default value is ItemLarge)</param>
         /// <param name="language">Culture name (default value is \&quot;en-us\&quot;)</param>
         /// <returns>VirtoCommerceMerchandisingModuleWebModelCatalogItem</returns>
-        System.Threading.Tasks.Task<VirtoCommerceMerchandisingModuleWebModelCatalogItem> MerchandisingModuleProductGetProductAsync (string store, string product, string responseGroup, string language);
+        System.Threading.Tasks.Task<VirtoCommerceMerchandisingModuleWebModelCatalogItem> MerchandisingModuleProductGetProductAsync (string store, string product, string responseGroup = null, string language = null);
         
         /// <summary>
         /// Get stores
@@ -408,7 +408,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="code">Category code</param> 
         /// <param name="language">Culture name (default value is \&quot;en-us\&quot;)</param> 
         /// <returns>VirtoCommerceMerchandisingModuleWebModelCategory</returns>            
-        public VirtoCommerceMerchandisingModuleWebModelCategory MerchandisingModuleCategoryGetCategoryByCode (string store, string code, string language)
+        public VirtoCommerceMerchandisingModuleWebModelCategory MerchandisingModuleCategoryGetCategoryByCode (string store, string code, string language = null)
         {
             
             // verify the required parameter 'store' is set
@@ -468,7 +468,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="code">Category code</param>
         /// <param name="language">Culture name (default value is \&quot;en-us\&quot;)</param>
         /// <returns>VirtoCommerceMerchandisingModuleWebModelCategory</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceMerchandisingModuleWebModelCategory> MerchandisingModuleCategoryGetCategoryByCodeAsync (string store, string code, string language)
+        public async System.Threading.Tasks.Task<VirtoCommerceMerchandisingModuleWebModelCategory> MerchandisingModuleCategoryGetCategoryByCodeAsync (string store, string code, string language = null)
         {
             // verify the required parameter 'store' is set
             if (store == null) throw new ApiException(400, "Missing required parameter 'store' when calling MerchandisingModuleCategoryGetCategoryByCode");
@@ -523,7 +523,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="language">Culture name (default value is \&quot;en-us\&quot;)</param> 
         /// <param name="parentId">Parent category id</param> 
         /// <returns>VirtoCommerceMerchandisingModuleWebModelCategoryResponseCollection</returns>            
-        public VirtoCommerceMerchandisingModuleWebModelCategoryResponseCollection MerchandisingModuleCategorySearchCategory (string store, string language, string parentId)
+        public VirtoCommerceMerchandisingModuleWebModelCategoryResponseCollection MerchandisingModuleCategorySearchCategory (string store, string language = null, string parentId = null)
         {
             
             // verify the required parameter 'store' is set
@@ -580,7 +580,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="language">Culture name (default value is \&quot;en-us\&quot;)</param>
         /// <param name="parentId">Parent category id</param>
         /// <returns>VirtoCommerceMerchandisingModuleWebModelCategoryResponseCollection</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceMerchandisingModuleWebModelCategoryResponseCollection> MerchandisingModuleCategorySearchCategoryAsync (string store, string language, string parentId)
+        public async System.Threading.Tasks.Task<VirtoCommerceMerchandisingModuleWebModelCategoryResponseCollection> MerchandisingModuleCategorySearchCategoryAsync (string store, string language = null, string parentId = null)
         {
             // verify the required parameter 'store' is set
             if (store == null) throw new ApiException(400, "Missing required parameter 'store' when calling MerchandisingModuleCategorySearchCategory");
@@ -633,7 +633,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="store">Store id</param> 
         /// <param name="language">Culture name (default value is \&quot;en-us\&quot;)</param> 
         /// <returns>VirtoCommerceMerchandisingModuleWebModelCategory</returns>            
-        public VirtoCommerceMerchandisingModuleWebModelCategory MerchandisingModuleCategoryGetCategoryById (string category, string store, string language)
+        public VirtoCommerceMerchandisingModuleWebModelCategory MerchandisingModuleCategoryGetCategoryById (string category, string store, string language = null)
         {
             
             // verify the required parameter 'category' is set
@@ -693,7 +693,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="store">Store id</param>
         /// <param name="language">Culture name (default value is \&quot;en-us\&quot;)</param>
         /// <returns>VirtoCommerceMerchandisingModuleWebModelCategory</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceMerchandisingModuleWebModelCategory> MerchandisingModuleCategoryGetCategoryByIdAsync (string category, string store, string language)
+        public async System.Threading.Tasks.Task<VirtoCommerceMerchandisingModuleWebModelCategory> MerchandisingModuleCategoryGetCategoryByIdAsync (string category, string store, string language = null)
         {
             // verify the required parameter 'category' is set
             if (category == null) throw new ApiException(400, "Missing required parameter 'category' when calling MerchandisingModuleCategoryGetCategoryById");
@@ -749,7 +749,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="tags">Array of tags</param> 
         /// <param name="language">Culture name (devault value is \&quot;en-us\&quot;)</param> 
         /// <returns>VirtoCommerceMerchandisingModuleWebModelDynamicContentItemGroupResponseCollection</returns>            
-        public VirtoCommerceMerchandisingModuleWebModelDynamicContentItemGroupResponseCollection MerchandisingModuleMarketingGetDynamicContent (string store, List<string> placeHolders, List<string> tags, string language)
+        public VirtoCommerceMerchandisingModuleWebModelDynamicContentItemGroupResponseCollection MerchandisingModuleMarketingGetDynamicContent (string store, List<string> placeHolders, List<string> tags, string language = null)
         {
             
             // verify the required parameter 'store' is set
@@ -814,7 +814,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="tags">Array of tags</param>
         /// <param name="language">Culture name (devault value is \&quot;en-us\&quot;)</param>
         /// <returns>VirtoCommerceMerchandisingModuleWebModelDynamicContentItemGroupResponseCollection</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceMerchandisingModuleWebModelDynamicContentItemGroupResponseCollection> MerchandisingModuleMarketingGetDynamicContentAsync (string store, List<string> placeHolders, List<string> tags, string language)
+        public async System.Threading.Tasks.Task<VirtoCommerceMerchandisingModuleWebModelDynamicContentItemGroupResponseCollection> MerchandisingModuleMarketingGetDynamicContentAsync (string store, List<string> placeHolders, List<string> tags, string language = null)
         {
             // verify the required parameter 'store' is set
             if (store == null) throw new ApiException(400, "Missing required parameter 'store' when calling MerchandisingModuleMarketingGetDynamicContent");
@@ -1179,7 +1179,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="currency">Currency code</param> 
         /// <param name="tags">Array of tags</param> 
         /// <returns></returns>            
-        public List<string> MerchandisingModulePriceGetPriceListStack (string catalog, string currency, List<string> tags)
+        public List<string> MerchandisingModulePriceGetPriceListStack (string catalog, string currency = null, List<string> tags = null)
         {
             
             // verify the required parameter 'catalog' is set
@@ -1236,7 +1236,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="currency">Currency code</param>
         /// <param name="tags">Array of tags</param>
         /// <returns></returns>
-        public async System.Threading.Tasks.Task<List<string>> MerchandisingModulePriceGetPriceListStackAsync (string catalog, string currency, List<string> tags)
+        public async System.Threading.Tasks.Task<List<string>> MerchandisingModulePriceGetPriceListStackAsync (string catalog, string currency = null, List<string> tags = null)
         {
             // verify the required parameter 'catalog' is set
             if (catalog == null) throw new ApiException(400, "Missing required parameter 'catalog' when calling MerchandisingModulePriceGetPriceListStack");
@@ -1400,7 +1400,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="ids">Product ids</param> 
         /// <param name="responseGroup">Response detalization scale (default value is ItemInfo)</param> 
         /// <returns></returns>            
-        public List<VirtoCommerceMerchandisingModuleWebModelCatalogItem> MerchandisingModuleProductGetProductsByIds (string store, List<string> ids, string responseGroup)
+        public List<VirtoCommerceMerchandisingModuleWebModelCatalogItem> MerchandisingModuleProductGetProductsByIds (string store, List<string> ids, string responseGroup = null)
         {
             
             // verify the required parameter 'store' is set
@@ -1460,7 +1460,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="ids">Product ids</param>
         /// <param name="responseGroup">Response detalization scale (default value is ItemInfo)</param>
         /// <returns></returns>
-        public async System.Threading.Tasks.Task<List<VirtoCommerceMerchandisingModuleWebModelCatalogItem>> MerchandisingModuleProductGetProductsByIdsAsync (string store, List<string> ids, string responseGroup)
+        public async System.Threading.Tasks.Task<List<VirtoCommerceMerchandisingModuleWebModelCatalogItem>> MerchandisingModuleProductGetProductsByIdsAsync (string store, List<string> ids, string responseGroup = null)
         {
             // verify the required parameter 'store' is set
             if (store == null) throw new ApiException(400, "Missing required parameter 'store' when calling MerchandisingModuleProductGetProductsByIds");
@@ -1526,7 +1526,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="requestTerms">Gets or sets search terms collection\r\n            Item format: name:value1,value2,value3</param> 
         /// <param name="requestFacets">Gets or sets the facets collection\r\n            Item format: name:value1,value2,value3</param> 
         /// <returns>VirtoCommerceMerchandisingModuleWebModelProductSearchResult</returns>            
-        public VirtoCommerceMerchandisingModuleWebModelProductSearchResult MerchandisingModuleProductSearch (string requestStore, List<string> requestPricelists, string requestResponseGroup, string requestOutline, string requestLanguage, string requestCurrency, string requestSearchPhrase, string requestSort, string requestSortOrder, DateTime? requestStartDateFrom, int? requestSkip, int? requestTake, List<string> requestTerms, List<string> requestFacets)
+        public VirtoCommerceMerchandisingModuleWebModelProductSearchResult MerchandisingModuleProductSearch (string requestStore = null, List<string> requestPricelists = null, string requestResponseGroup = null, string requestOutline = null, string requestLanguage = null, string requestCurrency = null, string requestSearchPhrase = null, string requestSort = null, string requestSortOrder = null, DateTime? requestStartDateFrom = null, int? requestSkip = null, int? requestTake = null, List<string> requestTerms = null, List<string> requestFacets = null)
         {
             
     
@@ -1602,7 +1602,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="requestTerms">Gets or sets search terms collection\r\n            Item format: name:value1,value2,value3</param>
         /// <param name="requestFacets">Gets or sets the facets collection\r\n            Item format: name:value1,value2,value3</param>
         /// <returns>VirtoCommerceMerchandisingModuleWebModelProductSearchResult</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceMerchandisingModuleWebModelProductSearchResult> MerchandisingModuleProductSearchAsync (string requestStore, List<string> requestPricelists, string requestResponseGroup, string requestOutline, string requestLanguage, string requestCurrency, string requestSearchPhrase, string requestSort, string requestSortOrder, DateTime? requestStartDateFrom, int? requestSkip, int? requestTake, List<string> requestTerms, List<string> requestFacets)
+        public async System.Threading.Tasks.Task<VirtoCommerceMerchandisingModuleWebModelProductSearchResult> MerchandisingModuleProductSearchAsync (string requestStore = null, List<string> requestPricelists = null, string requestResponseGroup = null, string requestOutline = null, string requestLanguage = null, string requestCurrency = null, string requestSearchPhrase = null, string requestSort = null, string requestSortOrder = null, DateTime? requestStartDateFrom = null, int? requestSkip = null, int? requestTake = null, List<string> requestTerms = null, List<string> requestFacets = null)
         {
             
     
@@ -1665,7 +1665,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="responseGroup">Response detalization scale (default value is ItemLarge)</param> 
         /// <param name="language">Culture name (default value is \&quot;en-us\&quot;)</param> 
         /// <returns>VirtoCommerceMerchandisingModuleWebModelCatalogItem</returns>            
-        public VirtoCommerceMerchandisingModuleWebModelCatalogItem MerchandisingModuleProductGetProduct (string store, string product, string responseGroup, string language)
+        public VirtoCommerceMerchandisingModuleWebModelCatalogItem MerchandisingModuleProductGetProduct (string store, string product, string responseGroup = null, string language = null)
         {
             
             // verify the required parameter 'store' is set
@@ -1727,7 +1727,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="responseGroup">Response detalization scale (default value is ItemLarge)</param>
         /// <param name="language">Culture name (default value is \&quot;en-us\&quot;)</param>
         /// <returns>VirtoCommerceMerchandisingModuleWebModelCatalogItem</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceMerchandisingModuleWebModelCatalogItem> MerchandisingModuleProductGetProductAsync (string store, string product, string responseGroup, string language)
+        public async System.Threading.Tasks.Task<VirtoCommerceMerchandisingModuleWebModelCatalogItem> MerchandisingModuleProductGetProductAsync (string store, string product, string responseGroup = null, string language = null)
         {
             // verify the required parameter 'store' is set
             if (store == null) throw new ApiException(400, "Missing required parameter 'store' when calling MerchandisingModuleProductGetProduct");

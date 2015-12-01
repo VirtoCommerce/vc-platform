@@ -31,7 +31,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="criteriaStart"></param>
         /// <param name="criteriaCount"></param>
         /// <returns>VirtoCommerceDomainQuoteModelQuoteRequestSearchResult</returns>
-        VirtoCommerceDomainQuoteModelQuoteRequestSearchResult QuoteModuleSearch (string criteriaKeyword, string criteriaCustomerId, string criteriaStoreId, DateTime? criteriaStartDate, DateTime? criteriaEndDate, string criteriaStatus, string criteriaTag, int? criteriaStart, int? criteriaCount);
+        VirtoCommerceDomainQuoteModelQuoteRequestSearchResult QuoteModuleSearch (string criteriaKeyword = null, string criteriaCustomerId = null, string criteriaStoreId = null, DateTime? criteriaStartDate = null, DateTime? criteriaEndDate = null, string criteriaStatus = null, string criteriaTag = null, int? criteriaStart = null, int? criteriaCount = null);
   
         /// <summary>
         /// Search RFQ by given criteria
@@ -49,7 +49,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="criteriaStart"></param>
         /// <param name="criteriaCount"></param>
         /// <returns>VirtoCommerceDomainQuoteModelQuoteRequestSearchResult</returns>
-        System.Threading.Tasks.Task<VirtoCommerceDomainQuoteModelQuoteRequestSearchResult> QuoteModuleSearchAsync (string criteriaKeyword, string criteriaCustomerId, string criteriaStoreId, DateTime? criteriaStartDate, DateTime? criteriaEndDate, string criteriaStatus, string criteriaTag, int? criteriaStart, int? criteriaCount);
+        System.Threading.Tasks.Task<VirtoCommerceDomainQuoteModelQuoteRequestSearchResult> QuoteModuleSearchAsync (string criteriaKeyword = null, string criteriaCustomerId = null, string criteriaStoreId = null, DateTime? criteriaStartDate = null, DateTime? criteriaEndDate = null, string criteriaStatus = null, string criteriaTag = null, int? criteriaStart = null, int? criteriaCount = null);
         
         /// <summary>
         /// Update a existing RFQ
@@ -230,7 +230,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="criteriaStart"></param> 
         /// <param name="criteriaCount"></param> 
         /// <returns>VirtoCommerceDomainQuoteModelQuoteRequestSearchResult</returns>            
-        public VirtoCommerceDomainQuoteModelQuoteRequestSearchResult QuoteModuleSearch (string criteriaKeyword, string criteriaCustomerId, string criteriaStoreId, DateTime? criteriaStartDate, DateTime? criteriaEndDate, string criteriaStatus, string criteriaTag, int? criteriaStart, int? criteriaCount)
+        public VirtoCommerceDomainQuoteModelQuoteRequestSearchResult QuoteModuleSearch (string criteriaKeyword = null, string criteriaCustomerId = null, string criteriaStoreId = null, DateTime? criteriaStartDate = null, DateTime? criteriaEndDate = null, string criteriaStatus = null, string criteriaTag = null, int? criteriaStart = null, int? criteriaCount = null)
         {
             
     
@@ -296,7 +296,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="criteriaStart"></param>
         /// <param name="criteriaCount"></param>
         /// <returns>VirtoCommerceDomainQuoteModelQuoteRequestSearchResult</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceDomainQuoteModelQuoteRequestSearchResult> QuoteModuleSearchAsync (string criteriaKeyword, string criteriaCustomerId, string criteriaStoreId, DateTime? criteriaStartDate, DateTime? criteriaEndDate, string criteriaStatus, string criteriaTag, int? criteriaStart, int? criteriaCount)
+        public async System.Threading.Tasks.Task<VirtoCommerceDomainQuoteModelQuoteRequestSearchResult> QuoteModuleSearchAsync (string criteriaKeyword = null, string criteriaCustomerId = null, string criteriaStoreId = null, DateTime? criteriaStartDate = null, DateTime? criteriaEndDate = null, string criteriaStatus = null, string criteriaTag = null, int? criteriaStart = null, int? criteriaCount = null)
         {
             
     

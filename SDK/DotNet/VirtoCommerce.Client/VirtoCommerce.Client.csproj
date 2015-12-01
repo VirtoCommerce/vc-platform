@@ -72,7 +72,6 @@
     <Compile Include="Client\Configuration.cs" />
     <Compile Include="HmacApiClient.cs" />
     <Compile Include="HmacUtility.cs" />
-    <Compile Include="Model\InlineResponse200.cs" />
     <Compile Include="Model\VirtoCommerceCartModuleWebModelAddress.cs" />
     <Compile Include="Model\VirtoCommerceCartModuleWebModelDiscount.cs" />
     <Compile Include="Model\VirtoCommerceCartModuleWebModelLineItem.cs" />

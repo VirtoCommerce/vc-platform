@@ -278,7 +278,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="fileUrl">The file URL.</param>
         /// <param name="delimiter">The CSV delimiter.</param>
         /// <returns>VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration</returns>
-        VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration CatalogModuleExportImportGetMappingConfiguration (string fileUrl, string delimiter);
+        VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration CatalogModuleExportImportGetMappingConfiguration (string fileUrl, string delimiter = null);
   
         /// <summary>
         /// Gets the CSV mapping configuration.
@@ -289,7 +289,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="fileUrl">The file URL.</param>
         /// <param name="delimiter">The CSV delimiter.</param>
         /// <returns>VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration</returns>
-        System.Threading.Tasks.Task<VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration> CatalogModuleExportImportGetMappingConfigurationAsync (string fileUrl, string delimiter);
+        System.Threading.Tasks.Task<VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration> CatalogModuleExportImportGetMappingConfigurationAsync (string fileUrl, string delimiter = null);
         
         /// <summary>
         /// Searches for the items by complex criteria.
@@ -304,7 +304,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="criteriaStart">Gets or sets the start index of total results from which entries should be returned.</param>
         /// <param name="criteriaCount">Gets or sets the maximum count of results to return.</param>
         /// <returns>VirtoCommerceCatalogModuleWebModelListEntrySearchResult</returns>
-        VirtoCommerceCatalogModuleWebModelListEntrySearchResult CatalogModuleListEntryListItemsSearch (string criteriaResponseGroup, string criteriaKeyword, string criteriaCategoryId, string criteriaCatalogId, int? criteriaStart, int? criteriaCount);
+        VirtoCommerceCatalogModuleWebModelListEntrySearchResult CatalogModuleListEntryListItemsSearch (string criteriaResponseGroup = null, string criteriaKeyword = null, string criteriaCategoryId = null, string criteriaCatalogId = null, int? criteriaStart = null, int? criteriaCount = null);
   
         /// <summary>
         /// Searches for the items by complex criteria.
@@ -319,7 +319,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="criteriaStart">Gets or sets the start index of total results from which entries should be returned.</param>
         /// <param name="criteriaCount">Gets or sets the maximum count of results to return.</param>
         /// <returns>VirtoCommerceCatalogModuleWebModelListEntrySearchResult</returns>
-        System.Threading.Tasks.Task<VirtoCommerceCatalogModuleWebModelListEntrySearchResult> CatalogModuleListEntryListItemsSearchAsync (string criteriaResponseGroup, string criteriaKeyword, string criteriaCategoryId, string criteriaCatalogId, int? criteriaStart, int? criteriaCount);
+        System.Threading.Tasks.Task<VirtoCommerceCatalogModuleWebModelListEntrySearchResult> CatalogModuleListEntryListItemsSearchAsync (string criteriaResponseGroup = null, string criteriaKeyword = null, string criteriaCategoryId = null, string criteriaCatalogId = null, int? criteriaStart = null, int? criteriaCount = null);
         
         /// <summary>
         /// Move categories or products to another location.
@@ -530,7 +530,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="propertyId">The property id.</param>
         /// <param name="keyword">The keyword. (Optional)</param>
         /// <returns></returns>
-        List<VirtoCommerceCatalogModuleWebModelPropertyValue> CatalogModulePropertiesGetPropertyValues (string propertyId, string keyword);
+        List<VirtoCommerceCatalogModuleWebModelPropertyValue> CatalogModulePropertiesGetPropertyValues (string propertyId, string keyword = null);
   
         /// <summary>
         /// Gets all dictionary values that specified property can have.
@@ -541,7 +541,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="propertyId">The property id.</param>
         /// <param name="keyword">The keyword. (Optional)</param>
         /// <returns></returns>
-        System.Threading.Tasks.Task<List<VirtoCommerceCatalogModuleWebModelPropertyValue>> CatalogModulePropertiesGetPropertyValuesAsync (string propertyId, string keyword);
+        System.Threading.Tasks.Task<List<VirtoCommerceCatalogModuleWebModelPropertyValue>> CatalogModulePropertiesGetPropertyValuesAsync (string propertyId, string keyword = null);
         
         /// <summary>
         /// Searches for the items by complex criteria.
@@ -567,7 +567,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="criteriaCount"></param>
         /// <param name="criteriaIndexDate"></param>
         /// <returns>VirtoCommerceCatalogModuleWebModelCatalogSearchResult</returns>
-        VirtoCommerceCatalogModuleWebModelCatalogSearchResult CatalogModuleSearchSearch (string criteriaResponseGroup, string criteriaKeyword, bool? criteriaSearchInChildren, string criteriaCategoryId, List<string> criteriaCategoriesIds, string criteriaCatalogId, List<string> criteriaCatalogsIds, string criteriaLanguageCode, string criteriaCurrency, string criteriaCode, string criteriaSort, List<string> criteriaFacets, bool? criteriaHideDirectLinkedCategories, List<string> criteriaPropertyValues, int? criteriaStart, int? criteriaCount, DateTime? criteriaIndexDate);
+        VirtoCommerceCatalogModuleWebModelCatalogSearchResult CatalogModuleSearchSearch (string criteriaResponseGroup = null, string criteriaKeyword = null, bool? criteriaSearchInChildren = null, string criteriaCategoryId = null, List<string> criteriaCategoriesIds = null, string criteriaCatalogId = null, List<string> criteriaCatalogsIds = null, string criteriaLanguageCode = null, string criteriaCurrency = null, string criteriaCode = null, string criteriaSort = null, List<string> criteriaFacets = null, bool? criteriaHideDirectLinkedCategories = null, List<string> criteriaPropertyValues = null, int? criteriaStart = null, int? criteriaCount = null, DateTime? criteriaIndexDate = null);
   
         /// <summary>
         /// Searches for the items by complex criteria.
@@ -593,7 +593,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="criteriaCount"></param>
         /// <param name="criteriaIndexDate"></param>
         /// <returns>VirtoCommerceCatalogModuleWebModelCatalogSearchResult</returns>
-        System.Threading.Tasks.Task<VirtoCommerceCatalogModuleWebModelCatalogSearchResult> CatalogModuleSearchSearchAsync (string criteriaResponseGroup, string criteriaKeyword, bool? criteriaSearchInChildren, string criteriaCategoryId, List<string> criteriaCategoriesIds, string criteriaCatalogId, List<string> criteriaCatalogsIds, string criteriaLanguageCode, string criteriaCurrency, string criteriaCode, string criteriaSort, List<string> criteriaFacets, bool? criteriaHideDirectLinkedCategories, List<string> criteriaPropertyValues, int? criteriaStart, int? criteriaCount, DateTime? criteriaIndexDate);
+        System.Threading.Tasks.Task<VirtoCommerceCatalogModuleWebModelCatalogSearchResult> CatalogModuleSearchSearchAsync (string criteriaResponseGroup = null, string criteriaKeyword = null, bool? criteriaSearchInChildren = null, string criteriaCategoryId = null, List<string> criteriaCategoriesIds = null, string criteriaCatalogId = null, List<string> criteriaCatalogsIds = null, string criteriaLanguageCode = null, string criteriaCurrency = null, string criteriaCode = null, string criteriaSort = null, List<string> criteriaFacets = null, bool? criteriaHideDirectLinkedCategories = null, List<string> criteriaPropertyValues = null, int? criteriaStart = null, int? criteriaCount = null, DateTime? criteriaIndexDate = null);
         
         /// <summary>
         /// Gets the template for a new category.
@@ -604,7 +604,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="catalogId">The catalog id.</param>
         /// <param name="parentCategoryId">The parent category id. (Optional)</param>
         /// <returns>VirtoCommerceCatalogModuleWebModelCategory</returns>
-        VirtoCommerceCatalogModuleWebModelCategory CatalogModuleCategoriesGetNewCategory (string catalogId, string parentCategoryId);
+        VirtoCommerceCatalogModuleWebModelCategory CatalogModuleCategoriesGetNewCategory (string catalogId, string parentCategoryId = null);
   
         /// <summary>
         /// Gets the template for a new category.
@@ -615,7 +615,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="catalogId">The catalog id.</param>
         /// <param name="parentCategoryId">The parent category id. (Optional)</param>
         /// <returns>VirtoCommerceCatalogModuleWebModelCategory</returns>
-        System.Threading.Tasks.Task<VirtoCommerceCatalogModuleWebModelCategory> CatalogModuleCategoriesGetNewCategoryAsync (string catalogId, string parentCategoryId);
+        System.Threading.Tasks.Task<VirtoCommerceCatalogModuleWebModelCategory> CatalogModuleCategoriesGetNewCategoryAsync (string catalogId, string parentCategoryId = null);
         
         /// <summary>
         /// Gets the template for a new product (inside category).
@@ -2034,7 +2034,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="fileUrl">The file URL.</param> 
         /// <param name="delimiter">The CSV delimiter.</param> 
         /// <returns>VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration</returns>            
-        public VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration CatalogModuleExportImportGetMappingConfiguration (string fileUrl, string delimiter)
+        public VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration CatalogModuleExportImportGetMappingConfiguration (string fileUrl, string delimiter = null)
         {
             
             // verify the required parameter 'fileUrl' is set
@@ -2089,7 +2089,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="fileUrl">The file URL.</param>
         /// <param name="delimiter">The CSV delimiter.</param>
         /// <returns>VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration> CatalogModuleExportImportGetMappingConfigurationAsync (string fileUrl, string delimiter)
+        public async System.Threading.Tasks.Task<VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration> CatalogModuleExportImportGetMappingConfigurationAsync (string fileUrl, string delimiter = null)
         {
             // verify the required parameter 'fileUrl' is set
             if (fileUrl == null) throw new ApiException(400, "Missing required parameter 'fileUrl' when calling CatalogModuleExportImportGetMappingConfiguration");
@@ -2144,7 +2144,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="criteriaStart">Gets or sets the start index of total results from which entries should be returned.</param> 
         /// <param name="criteriaCount">Gets or sets the maximum count of results to return.</param> 
         /// <returns>VirtoCommerceCatalogModuleWebModelListEntrySearchResult</returns>            
-        public VirtoCommerceCatalogModuleWebModelListEntrySearchResult CatalogModuleListEntryListItemsSearch (string criteriaResponseGroup, string criteriaKeyword, string criteriaCategoryId, string criteriaCatalogId, int? criteriaStart, int? criteriaCount)
+        public VirtoCommerceCatalogModuleWebModelListEntrySearchResult CatalogModuleListEntryListItemsSearch (string criteriaResponseGroup = null, string criteriaKeyword = null, string criteriaCategoryId = null, string criteriaCatalogId = null, int? criteriaStart = null, int? criteriaCount = null)
         {
             
     
@@ -2204,7 +2204,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="criteriaStart">Gets or sets the start index of total results from which entries should be returned.</param>
         /// <param name="criteriaCount">Gets or sets the maximum count of results to return.</param>
         /// <returns>VirtoCommerceCatalogModuleWebModelListEntrySearchResult</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceCatalogModuleWebModelListEntrySearchResult> CatalogModuleListEntryListItemsSearchAsync (string criteriaResponseGroup, string criteriaKeyword, string criteriaCategoryId, string criteriaCatalogId, int? criteriaStart, int? criteriaCount)
+        public async System.Threading.Tasks.Task<VirtoCommerceCatalogModuleWebModelListEntrySearchResult> CatalogModuleListEntryListItemsSearchAsync (string criteriaResponseGroup = null, string criteriaKeyword = null, string criteriaCategoryId = null, string criteriaCatalogId = null, int? criteriaStart = null, int? criteriaCount = null)
         {
             
     
@@ -3284,7 +3284,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="propertyId">The property id.</param> 
         /// <param name="keyword">The keyword. (Optional)</param> 
         /// <returns></returns>            
-        public List<VirtoCommerceCatalogModuleWebModelPropertyValue> CatalogModulePropertiesGetPropertyValues (string propertyId, string keyword)
+        public List<VirtoCommerceCatalogModuleWebModelPropertyValue> CatalogModulePropertiesGetPropertyValues (string propertyId, string keyword = null)
         {
             
             // verify the required parameter 'propertyId' is set
@@ -3339,7 +3339,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="propertyId">The property id.</param>
         /// <param name="keyword">The keyword. (Optional)</param>
         /// <returns></returns>
-        public async System.Threading.Tasks.Task<List<VirtoCommerceCatalogModuleWebModelPropertyValue>> CatalogModulePropertiesGetPropertyValuesAsync (string propertyId, string keyword)
+        public async System.Threading.Tasks.Task<List<VirtoCommerceCatalogModuleWebModelPropertyValue>> CatalogModulePropertiesGetPropertyValuesAsync (string propertyId, string keyword = null)
         {
             // verify the required parameter 'propertyId' is set
             if (propertyId == null) throw new ApiException(400, "Missing required parameter 'propertyId' when calling CatalogModulePropertiesGetPropertyValues");
@@ -3405,7 +3405,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="criteriaCount"></param> 
         /// <param name="criteriaIndexDate"></param> 
         /// <returns>VirtoCommerceCatalogModuleWebModelCatalogSearchResult</returns>            
-        public VirtoCommerceCatalogModuleWebModelCatalogSearchResult CatalogModuleSearchSearch (string criteriaResponseGroup, string criteriaKeyword, bool? criteriaSearchInChildren, string criteriaCategoryId, List<string> criteriaCategoriesIds, string criteriaCatalogId, List<string> criteriaCatalogsIds, string criteriaLanguageCode, string criteriaCurrency, string criteriaCode, string criteriaSort, List<string> criteriaFacets, bool? criteriaHideDirectLinkedCategories, List<string> criteriaPropertyValues, int? criteriaStart, int? criteriaCount, DateTime? criteriaIndexDate)
+        public VirtoCommerceCatalogModuleWebModelCatalogSearchResult CatalogModuleSearchSearch (string criteriaResponseGroup = null, string criteriaKeyword = null, bool? criteriaSearchInChildren = null, string criteriaCategoryId = null, List<string> criteriaCategoriesIds = null, string criteriaCatalogId = null, List<string> criteriaCatalogsIds = null, string criteriaLanguageCode = null, string criteriaCurrency = null, string criteriaCode = null, string criteriaSort = null, List<string> criteriaFacets = null, bool? criteriaHideDirectLinkedCategories = null, List<string> criteriaPropertyValues = null, int? criteriaStart = null, int? criteriaCount = null, DateTime? criteriaIndexDate = null)
         {
             
     
@@ -3487,7 +3487,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="criteriaCount"></param>
         /// <param name="criteriaIndexDate"></param>
         /// <returns>VirtoCommerceCatalogModuleWebModelCatalogSearchResult</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceCatalogModuleWebModelCatalogSearchResult> CatalogModuleSearchSearchAsync (string criteriaResponseGroup, string criteriaKeyword, bool? criteriaSearchInChildren, string criteriaCategoryId, List<string> criteriaCategoriesIds, string criteriaCatalogId, List<string> criteriaCatalogsIds, string criteriaLanguageCode, string criteriaCurrency, string criteriaCode, string criteriaSort, List<string> criteriaFacets, bool? criteriaHideDirectLinkedCategories, List<string> criteriaPropertyValues, int? criteriaStart, int? criteriaCount, DateTime? criteriaIndexDate)
+        public async System.Threading.Tasks.Task<VirtoCommerceCatalogModuleWebModelCatalogSearchResult> CatalogModuleSearchSearchAsync (string criteriaResponseGroup = null, string criteriaKeyword = null, bool? criteriaSearchInChildren = null, string criteriaCategoryId = null, List<string> criteriaCategoriesIds = null, string criteriaCatalogId = null, List<string> criteriaCatalogsIds = null, string criteriaLanguageCode = null, string criteriaCurrency = null, string criteriaCode = null, string criteriaSort = null, List<string> criteriaFacets = null, bool? criteriaHideDirectLinkedCategories = null, List<string> criteriaPropertyValues = null, int? criteriaStart = null, int? criteriaCount = null, DateTime? criteriaIndexDate = null)
         {
             
     
@@ -3551,7 +3551,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="catalogId">The catalog id.</param> 
         /// <param name="parentCategoryId">The parent category id. (Optional)</param> 
         /// <returns>VirtoCommerceCatalogModuleWebModelCategory</returns>            
-        public VirtoCommerceCatalogModuleWebModelCategory CatalogModuleCategoriesGetNewCategory (string catalogId, string parentCategoryId)
+        public VirtoCommerceCatalogModuleWebModelCategory CatalogModuleCategoriesGetNewCategory (string catalogId, string parentCategoryId = null)
         {
             
             // verify the required parameter 'catalogId' is set
@@ -3606,7 +3606,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="catalogId">The catalog id.</param>
         /// <param name="parentCategoryId">The parent category id. (Optional)</param>
         /// <returns>VirtoCommerceCatalogModuleWebModelCategory</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceCatalogModuleWebModelCategory> CatalogModuleCategoriesGetNewCategoryAsync (string catalogId, string parentCategoryId)
+        public async System.Threading.Tasks.Task<VirtoCommerceCatalogModuleWebModelCategory> CatalogModuleCategoriesGetNewCategoryAsync (string catalogId, string parentCategoryId = null)
         {
             // verify the required parameter 'catalogId' is set
             if (catalogId == null) throw new ApiException(400, "Missing required parameter 'catalogId' when calling CatalogModuleCategoriesGetNewCategory");

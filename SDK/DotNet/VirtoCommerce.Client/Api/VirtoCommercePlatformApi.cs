@@ -24,7 +24,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="folderUrl"></param>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        List<VirtoCommercePlatformWebModelAssetAssetListItem> AssetsSearchAssetItems (string folderUrl, string keyword);
+        List<VirtoCommercePlatformWebModelAssetAssetListItem> AssetsSearchAssetItems (string folderUrl = null, string keyword = null);
   
         /// <summary>
         /// Search asset folders and blobs
@@ -35,7 +35,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="folderUrl"></param>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        System.Threading.Tasks.Task<List<VirtoCommercePlatformWebModelAssetAssetListItem>> AssetsSearchAssetItemsAsync (string folderUrl, string keyword);
+        System.Threading.Tasks.Task<List<VirtoCommercePlatformWebModelAssetAssetListItem>> AssetsSearchAssetItemsAsync (string folderUrl = null, string keyword = null);
         
         /// <summary>
         /// Upload assets to the folder
@@ -46,7 +46,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="folderUrl">Parent folder url (relative or absolute).</param>
         /// <param name="url">Url for uploaded remote resource (optional)</param>
         /// <returns></returns>
-        List<VirtoCommercePlatformWebModelAssetBlobInfo> AssetsUploadAsset (string folderUrl, string url);
+        List<VirtoCommercePlatformWebModelAssetBlobInfo> AssetsUploadAsset (string folderUrl, string url = null);
   
         /// <summary>
         /// Upload assets to the folder
@@ -57,7 +57,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="folderUrl">Parent folder url (relative or absolute).</param>
         /// <param name="url">Url for uploaded remote resource (optional)</param>
         /// <returns></returns>
-        System.Threading.Tasks.Task<List<VirtoCommercePlatformWebModelAssetBlobInfo>> AssetsUploadAssetAsync (string folderUrl, string url);
+        System.Threading.Tasks.Task<List<VirtoCommercePlatformWebModelAssetBlobInfo>> AssetsUploadAssetAsync (string folderUrl, string url = null);
         
         /// <summary>
         /// Delete blobs by urls
@@ -294,26 +294,6 @@ namespace VirtoCommerce.Client.Api
         /// <param name="id">Job ID.</param>
         /// <returns>VirtoCommercePlatformWebModelJobsJob</returns>
         System.Threading.Tasks.Task<VirtoCommercePlatformWebModelJobsJob> JobsGetStatusAsync (string id);
-        
-        /// <summary>
-        /// Return all localization files by given locale
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="locale"></param>
-        /// <returns>InlineResponse200</returns>
-        InlineResponse200 LocalizationGetLocalization (string locale);
-  
-        /// <summary>
-        /// Return all localization files by given locale
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="locale"></param>
-        /// <returns>InlineResponse200</returns>
-        System.Threading.Tasks.Task<InlineResponse200> LocalizationGetLocalizationAsync (string locale);
         
         /// <summary>
         /// Return all aviable locales
@@ -717,7 +697,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="criteriaCount"></param>
         /// <param name="criteriaOrderBy"></param>
         /// <returns>VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult</returns>
-        VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult PushNotificationSearch (List<string> criteriaIds, bool? criteriaOnlyNew, DateTime? criteriaStartDate, DateTime? criteriaEndDate, int? criteriaStart, int? criteriaCount, string criteriaOrderBy);
+        VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult PushNotificationSearch (List<string> criteriaIds = null, bool? criteriaOnlyNew = null, DateTime? criteriaStartDate = null, DateTime? criteriaEndDate = null, int? criteriaStart = null, int? criteriaCount = null, string criteriaOrderBy = null);
   
         /// <summary>
         /// Search push notifications
@@ -733,7 +713,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="criteriaCount"></param>
         /// <param name="criteriaOrderBy"></param>
         /// <returns>VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult</returns>
-        System.Threading.Tasks.Task<VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult> PushNotificationSearchAsync (List<string> criteriaIds, bool? criteriaOnlyNew, DateTime? criteriaStartDate, DateTime? criteriaEndDate, int? criteriaStart, int? criteriaCount, string criteriaOrderBy);
+        System.Threading.Tasks.Task<VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult> PushNotificationSearchAsync (List<string> criteriaIds = null, bool? criteriaOnlyNew = null, DateTime? criteriaStartDate = null, DateTime? criteriaEndDate = null, int? criteriaStart = null, int? criteriaCount = null, string criteriaOrderBy = null);
         
         /// <summary>
         /// Mark all notifications as read
@@ -857,7 +837,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="requestSkipCount"></param>
         /// <param name="requestTakeCount"></param>
         /// <returns>VirtoCommercePlatformCoreSecurityRoleSearchResponse</returns>
-        VirtoCommercePlatformCoreSecurityRoleSearchResponse SecuritySearchRoles (string requestKeyword, int? requestSkipCount, int? requestTakeCount);
+        VirtoCommercePlatformCoreSecurityRoleSearchResponse SecuritySearchRoles (string requestKeyword = null, int? requestSkipCount = null, int? requestTakeCount = null);
   
         /// <summary>
         /// Search roles by keyword
@@ -869,7 +849,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="requestSkipCount"></param>
         /// <param name="requestTakeCount"></param>
         /// <returns>VirtoCommercePlatformCoreSecurityRoleSearchResponse</returns>
-        System.Threading.Tasks.Task<VirtoCommercePlatformCoreSecurityRoleSearchResponse> SecuritySearchRolesAsync (string requestKeyword, int? requestSkipCount, int? requestTakeCount);
+        System.Threading.Tasks.Task<VirtoCommercePlatformCoreSecurityRoleSearchResponse> SecuritySearchRolesAsync (string requestKeyword = null, int? requestSkipCount = null, int? requestTakeCount = null);
         
         /// <summary>
         /// Add a new role or update an existing role
@@ -942,7 +922,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="requestSkipCount"></param>
         /// <param name="requestTakeCount"></param>
         /// <returns>VirtoCommercePlatformCoreSecurityUserSearchResponse</returns>
-        VirtoCommercePlatformCoreSecurityUserSearchResponse SecuritySearchUsersAsync (List<string> requestAccountTypes, string requestKeyword, int? requestSkipCount, int? requestTakeCount);
+        VirtoCommercePlatformCoreSecurityUserSearchResponse SecuritySearchUsersAsync (List<string> requestAccountTypes = null, string requestKeyword = null, int? requestSkipCount = null, int? requestTakeCount = null);
   
         /// <summary>
         /// Search users by keyword
@@ -955,7 +935,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="requestSkipCount"></param>
         /// <param name="requestTakeCount"></param>
         /// <returns>VirtoCommercePlatformCoreSecurityUserSearchResponse</returns>
-        System.Threading.Tasks.Task<VirtoCommercePlatformCoreSecurityUserSearchResponse> SecuritySearchUsersAsyncAsync (List<string> requestAccountTypes, string requestKeyword, int? requestSkipCount, int? requestTakeCount);
+        System.Threading.Tasks.Task<VirtoCommercePlatformCoreSecurityUserSearchResponse> SecuritySearchUsersAsyncAsync (List<string> requestAccountTypes = null, string requestKeyword = null, int? requestSkipCount = null, int? requestTakeCount = null);
         
         /// <summary>
         /// Update user details by user ID
@@ -1140,26 +1120,6 @@ namespace VirtoCommerce.Client.Api
         System.Threading.Tasks.Task<List<VirtoCommercePlatformWebModelSettingsSetting>> SettingGetModuleSettingsAsync (string id);
         
         /// <summary>
-        /// Get non-array setting value by name
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="name">Setting system name.</param>
-        /// <returns>InlineResponse200</returns>
-        InlineResponse200 SettingGetValue (string name);
-  
-        /// <summary>
-        /// Get non-array setting value by name
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="name">Setting system name.</param>
-        /// <returns>InlineResponse200</returns>
-        System.Threading.Tasks.Task<InlineResponse200> SettingGetValueAsync (string name);
-        
-        /// <summary>
         /// Get array setting values by name
         /// </summary>
         /// <remarks>
@@ -1251,7 +1211,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="folderUrl"></param> 
         /// <param name="keyword"></param> 
         /// <returns></returns>            
-        public List<VirtoCommercePlatformWebModelAssetAssetListItem> AssetsSearchAssetItems (string folderUrl, string keyword)
+        public List<VirtoCommercePlatformWebModelAssetAssetListItem> AssetsSearchAssetItems (string folderUrl = null, string keyword = null)
         {
             
     
@@ -1303,7 +1263,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="folderUrl"></param>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        public async System.Threading.Tasks.Task<List<VirtoCommercePlatformWebModelAssetAssetListItem>> AssetsSearchAssetItemsAsync (string folderUrl, string keyword)
+        public async System.Threading.Tasks.Task<List<VirtoCommercePlatformWebModelAssetAssetListItem>> AssetsSearchAssetItemsAsync (string folderUrl = null, string keyword = null)
         {
             
     
@@ -1352,7 +1312,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="folderUrl">Parent folder url (relative or absolute).</param> 
         /// <param name="url">Url for uploaded remote resource (optional)</param> 
         /// <returns></returns>            
-        public List<VirtoCommercePlatformWebModelAssetBlobInfo> AssetsUploadAsset (string folderUrl, string url)
+        public List<VirtoCommercePlatformWebModelAssetBlobInfo> AssetsUploadAsset (string folderUrl, string url = null)
         {
             
             // verify the required parameter 'folderUrl' is set
@@ -1407,7 +1367,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="folderUrl">Parent folder url (relative or absolute).</param>
         /// <param name="url">Url for uploaded remote resource (optional)</param>
         /// <returns></returns>
-        public async System.Threading.Tasks.Task<List<VirtoCommercePlatformWebModelAssetBlobInfo>> AssetsUploadAssetAsync (string folderUrl, string url)
+        public async System.Threading.Tasks.Task<List<VirtoCommercePlatformWebModelAssetBlobInfo>> AssetsUploadAssetAsync (string folderUrl, string url = null)
         {
             // verify the required parameter 'folderUrl' is set
             if (folderUrl == null) throw new ApiException(400, "Missing required parameter 'folderUrl' when calling AssetsUploadAsset");
@@ -2650,103 +2610,6 @@ namespace VirtoCommerce.Client.Api
                 throw new ApiException ((int)response.StatusCode, "Error calling JobsGetStatus: " + response.Content, response.Content);
 
             return (VirtoCommercePlatformWebModelJobsJob) ApiClient.Deserialize(response, typeof(VirtoCommercePlatformWebModelJobsJob));
-        }
-        
-        /// <summary>
-        /// Return all localization files by given locale 
-        /// </summary>
-        /// <param name="locale"></param> 
-        /// <returns>InlineResponse200</returns>            
-        public InlineResponse200 LocalizationGetLocalization (string locale)
-        {
-            
-    
-            var path_ = "/api/platform/localization/locale";
-    
-            var pathParams = new Dictionary<String, String>();
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            String postBody = null;
-
-            // to determine the Accept header
-            String[] http_header_accepts = new String[] {
-                "application/json", "text/json"
-            };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
-            if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
-
-            // set "format" to json by default
-            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
-            pathParams.Add("format", "json");
-            
-            if (locale != null) queryParams.Add("locale", ApiClient.ParameterToString(locale)); // query parameter
-            
-            
-            
-            
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
-    
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling LocalizationGetLocalization: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling LocalizationGetLocalization: " + response.ErrorMessage, response.ErrorMessage);
-    
-            return (InlineResponse200) ApiClient.Deserialize(response, typeof(InlineResponse200));
-        }
-    
-        /// <summary>
-        /// Return all localization files by given locale 
-        /// </summary>
-        /// <param name="locale"></param>
-        /// <returns>InlineResponse200</returns>
-        public async System.Threading.Tasks.Task<InlineResponse200> LocalizationGetLocalizationAsync (string locale)
-        {
-            
-    
-            var path_ = "/api/platform/localization/locale";
-    
-            var pathParams = new Dictionary<String, String>();
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            String postBody = null;
-
-            // to determine the Accept header
-            String[] http_header_accepts = new String[] {
-                "application/json", "text/json"
-            };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
-            if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
-
-            // set "format" to json by default
-            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
-            pathParams.Add("format", "json");
-            
-            if (locale != null) queryParams.Add("locale", ApiClient.ParameterToString(locale)); // query parameter
-            
-            
-            
-            
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling LocalizationGetLocalization: " + response.Content, response.Content);
-
-            return (InlineResponse200) ApiClient.Deserialize(response, typeof(InlineResponse200));
         }
         
         /// <summary>
@@ -4738,7 +4601,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="criteriaCount"></param> 
         /// <param name="criteriaOrderBy"></param> 
         /// <returns>VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult</returns>            
-        public VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult PushNotificationSearch (List<string> criteriaIds, bool? criteriaOnlyNew, DateTime? criteriaStartDate, DateTime? criteriaEndDate, int? criteriaStart, int? criteriaCount, string criteriaOrderBy)
+        public VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult PushNotificationSearch (List<string> criteriaIds = null, bool? criteriaOnlyNew = null, DateTime? criteriaStartDate = null, DateTime? criteriaEndDate = null, int? criteriaStart = null, int? criteriaCount = null, string criteriaOrderBy = null)
         {
             
     
@@ -4800,7 +4663,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="criteriaCount"></param>
         /// <param name="criteriaOrderBy"></param>
         /// <returns>VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult</returns>
-        public async System.Threading.Tasks.Task<VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult> PushNotificationSearchAsync (List<string> criteriaIds, bool? criteriaOnlyNew, DateTime? criteriaStartDate, DateTime? criteriaEndDate, int? criteriaStart, int? criteriaCount, string criteriaOrderBy)
+        public async System.Threading.Tasks.Task<VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult> PushNotificationSearchAsync (List<string> criteriaIds = null, bool? criteriaOnlyNew = null, DateTime? criteriaStartDate = null, DateTime? criteriaEndDate = null, int? criteriaStart = null, int? criteriaCount = null, string criteriaOrderBy = null)
         {
             
     
@@ -5432,7 +5295,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="requestSkipCount"></param> 
         /// <param name="requestTakeCount"></param> 
         /// <returns>VirtoCommercePlatformCoreSecurityRoleSearchResponse</returns>            
-        public VirtoCommercePlatformCoreSecurityRoleSearchResponse SecuritySearchRoles (string requestKeyword, int? requestSkipCount, int? requestTakeCount)
+        public VirtoCommercePlatformCoreSecurityRoleSearchResponse SecuritySearchRoles (string requestKeyword = null, int? requestSkipCount = null, int? requestTakeCount = null)
         {
             
     
@@ -5486,7 +5349,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="requestSkipCount"></param>
         /// <param name="requestTakeCount"></param>
         /// <returns>VirtoCommercePlatformCoreSecurityRoleSearchResponse</returns>
-        public async System.Threading.Tasks.Task<VirtoCommercePlatformCoreSecurityRoleSearchResponse> SecuritySearchRolesAsync (string requestKeyword, int? requestSkipCount, int? requestTakeCount)
+        public async System.Threading.Tasks.Task<VirtoCommercePlatformCoreSecurityRoleSearchResponse> SecuritySearchRolesAsync (string requestKeyword = null, int? requestSkipCount = null, int? requestTakeCount = null)
         {
             
     
@@ -5845,7 +5708,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="requestSkipCount"></param> 
         /// <param name="requestTakeCount"></param> 
         /// <returns>VirtoCommercePlatformCoreSecurityUserSearchResponse</returns>            
-        public VirtoCommercePlatformCoreSecurityUserSearchResponse SecuritySearchUsersAsync (List<string> requestAccountTypes, string requestKeyword, int? requestSkipCount, int? requestTakeCount)
+        public VirtoCommercePlatformCoreSecurityUserSearchResponse SecuritySearchUsersAsync (List<string> requestAccountTypes = null, string requestKeyword = null, int? requestSkipCount = null, int? requestTakeCount = null)
         {
             
     
@@ -5901,7 +5764,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="requestSkipCount"></param>
         /// <param name="requestTakeCount"></param>
         /// <returns>VirtoCommercePlatformCoreSecurityUserSearchResponse</returns>
-        public async System.Threading.Tasks.Task<VirtoCommercePlatformCoreSecurityUserSearchResponse> SecuritySearchUsersAsyncAsync (List<string> requestAccountTypes, string requestKeyword, int? requestSkipCount, int? requestTakeCount)
+        public async System.Threading.Tasks.Task<VirtoCommercePlatformCoreSecurityUserSearchResponse> SecuritySearchUsersAsyncAsync (List<string> requestAccountTypes = null, string requestKeyword = null, int? requestSkipCount = null, int? requestTakeCount = null)
         {
             
     
@@ -6873,108 +6736,6 @@ namespace VirtoCommerce.Client.Api
                 throw new ApiException ((int)response.StatusCode, "Error calling SettingGetModuleSettings: " + response.Content, response.Content);
 
             return (List<VirtoCommercePlatformWebModelSettingsSetting>) ApiClient.Deserialize(response, typeof(List<VirtoCommercePlatformWebModelSettingsSetting>));
-        }
-        
-        /// <summary>
-        /// Get non-array setting value by name 
-        /// </summary>
-        /// <param name="name">Setting system name.</param> 
-        /// <returns>InlineResponse200</returns>            
-        public InlineResponse200 SettingGetValue (string name)
-        {
-            
-            // verify the required parameter 'name' is set
-            if (name == null) throw new ApiException(400, "Missing required parameter 'name' when calling SettingGetValue");
-            
-    
-            var path_ = "/api/platform/settings/value/{name}";
-    
-            var pathParams = new Dictionary<String, String>();
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            String postBody = null;
-
-            // to determine the Accept header
-            String[] http_header_accepts = new String[] {
-                "application/json", "text/json"
-            };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
-            if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
-
-            // set "format" to json by default
-            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
-            pathParams.Add("format", "json");
-            if (name != null) pathParams.Add("name", ApiClient.ParameterToString(name)); // path parameter
-            
-            
-            
-            
-            
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
-    
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling SettingGetValue: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling SettingGetValue: " + response.ErrorMessage, response.ErrorMessage);
-    
-            return (InlineResponse200) ApiClient.Deserialize(response, typeof(InlineResponse200));
-        }
-    
-        /// <summary>
-        /// Get non-array setting value by name 
-        /// </summary>
-        /// <param name="name">Setting system name.</param>
-        /// <returns>InlineResponse200</returns>
-        public async System.Threading.Tasks.Task<InlineResponse200> SettingGetValueAsync (string name)
-        {
-            // verify the required parameter 'name' is set
-            if (name == null) throw new ApiException(400, "Missing required parameter 'name' when calling SettingGetValue");
-            
-    
-            var path_ = "/api/platform/settings/value/{name}";
-    
-            var pathParams = new Dictionary<String, String>();
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            String postBody = null;
-
-            // to determine the Accept header
-            String[] http_header_accepts = new String[] {
-                "application/json", "text/json"
-            };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
-            if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
-
-            // set "format" to json by default
-            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
-            pathParams.Add("format", "json");
-            if (name != null) pathParams.Add("name", ApiClient.ParameterToString(name)); // path parameter
-            
-            
-            
-            
-            
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling SettingGetValue: " + response.Content, response.Content);
-
-            return (InlineResponse200) ApiClient.Deserialize(response, typeof(InlineResponse200));
         }
         
         /// <summary>

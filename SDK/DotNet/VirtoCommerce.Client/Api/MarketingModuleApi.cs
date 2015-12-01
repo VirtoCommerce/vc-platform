@@ -483,7 +483,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="criteriaStart"></param>
         /// <param name="criteriaCount"></param>
         /// <returns>VirtoCommerceMarketingModuleWebModelMarketingSearchResult</returns>
-        VirtoCommerceMarketingModuleWebModelMarketingSearchResult MarketingModuleSearch (string criteriaFolderId, string criteriaResponseGroup, string criteriaKeyword, int? criteriaStart, int? criteriaCount);
+        VirtoCommerceMarketingModuleWebModelMarketingSearchResult MarketingModuleSearch (string criteriaFolderId = null, string criteriaResponseGroup = null, string criteriaKeyword = null, int? criteriaStart = null, int? criteriaCount = null);
   
         /// <summary>
         /// Search marketing objects by given criteria
@@ -497,7 +497,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="criteriaStart"></param>
         /// <param name="criteriaCount"></param>
         /// <returns>VirtoCommerceMarketingModuleWebModelMarketingSearchResult</returns>
-        System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelMarketingSearchResult> MarketingModuleSearchAsync (string criteriaFolderId, string criteriaResponseGroup, string criteriaKeyword, int? criteriaStart, int? criteriaCount);
+        System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelMarketingSearchResult> MarketingModuleSearchAsync (string criteriaFolderId = null, string criteriaResponseGroup = null, string criteriaKeyword = null, int? criteriaStart = null, int? criteriaCount = null);
         
     }
   
@@ -2892,7 +2892,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="criteriaStart"></param> 
         /// <param name="criteriaCount"></param> 
         /// <returns>VirtoCommerceMarketingModuleWebModelMarketingSearchResult</returns>            
-        public VirtoCommerceMarketingModuleWebModelMarketingSearchResult MarketingModuleSearch (string criteriaFolderId, string criteriaResponseGroup, string criteriaKeyword, int? criteriaStart, int? criteriaCount)
+        public VirtoCommerceMarketingModuleWebModelMarketingSearchResult MarketingModuleSearch (string criteriaFolderId = null, string criteriaResponseGroup = null, string criteriaKeyword = null, int? criteriaStart = null, int? criteriaCount = null)
         {
             
     
@@ -2950,7 +2950,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="criteriaStart"></param>
         /// <param name="criteriaCount"></param>
         /// <returns>VirtoCommerceMarketingModuleWebModelMarketingSearchResult</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelMarketingSearchResult> MarketingModuleSearchAsync (string criteriaFolderId, string criteriaResponseGroup, string criteriaKeyword, int? criteriaStart, int? criteriaCount)
+        public async System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelMarketingSearchResult> MarketingModuleSearchAsync (string criteriaFolderId = null, string criteriaResponseGroup = null, string criteriaKeyword = null, int? criteriaStart = null, int? criteriaCount = null)
         {
             
     

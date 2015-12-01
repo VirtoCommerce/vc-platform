@@ -27,7 +27,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="criteriaStart">Gets or sets the value of search criteria skip records count</param>
         /// <param name="criteriaCount">Gets or sets the value of search criteria page size</param>
         /// <returns>VirtoCommerceCartModuleWebModelSearchResult</returns>
-        VirtoCommerceCartModuleWebModelSearchResult CartModuleSearchCarts (string criteriaKeyword, string criteriaCustomerId, string criteriaStoreId, int? criteriaStart, int? criteriaCount);
+        VirtoCommerceCartModuleWebModelSearchResult CartModuleSearchCarts (string criteriaKeyword = null, string criteriaCustomerId = null, string criteriaStoreId = null, int? criteriaStart = null, int? criteriaCount = null);
   
         /// <summary>
         /// Search for shopping carts by criteria
@@ -41,7 +41,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="criteriaStart">Gets or sets the value of search criteria skip records count</param>
         /// <param name="criteriaCount">Gets or sets the value of search criteria page size</param>
         /// <returns>VirtoCommerceCartModuleWebModelSearchResult</returns>
-        System.Threading.Tasks.Task<VirtoCommerceCartModuleWebModelSearchResult> CartModuleSearchCartsAsync (string criteriaKeyword, string criteriaCustomerId, string criteriaStoreId, int? criteriaStart, int? criteriaCount);
+        System.Threading.Tasks.Task<VirtoCommerceCartModuleWebModelSearchResult> CartModuleSearchCartsAsync (string criteriaKeyword = null, string criteriaCustomerId = null, string criteriaStoreId = null, int? criteriaStart = null, int? criteriaCount = null);
         
         /// <summary>
         /// Update shopping cart
@@ -260,7 +260,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="criteriaStart">Gets or sets the value of search criteria skip records count</param> 
         /// <param name="criteriaCount">Gets or sets the value of search criteria page size</param> 
         /// <returns>VirtoCommerceCartModuleWebModelSearchResult</returns>            
-        public VirtoCommerceCartModuleWebModelSearchResult CartModuleSearchCarts (string criteriaKeyword, string criteriaCustomerId, string criteriaStoreId, int? criteriaStart, int? criteriaCount)
+        public VirtoCommerceCartModuleWebModelSearchResult CartModuleSearchCarts (string criteriaKeyword = null, string criteriaCustomerId = null, string criteriaStoreId = null, int? criteriaStart = null, int? criteriaCount = null)
         {
             
     
@@ -318,7 +318,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="criteriaStart">Gets or sets the value of search criteria skip records count</param>
         /// <param name="criteriaCount">Gets or sets the value of search criteria page size</param>
         /// <returns>VirtoCommerceCartModuleWebModelSearchResult</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceCartModuleWebModelSearchResult> CartModuleSearchCartsAsync (string criteriaKeyword, string criteriaCustomerId, string criteriaStoreId, int? criteriaStart, int? criteriaCount)
+        public async System.Threading.Tasks.Task<VirtoCommerceCartModuleWebModelSearchResult> CartModuleSearchCartsAsync (string criteriaKeyword = null, string criteriaCustomerId = null, string criteriaStoreId = null, int? criteriaStart = null, int? criteriaCount = null)
         {
             
     

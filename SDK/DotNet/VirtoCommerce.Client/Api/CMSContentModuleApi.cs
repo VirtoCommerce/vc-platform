@@ -116,7 +116,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="language">Language of menu link list</param>
         /// <param name="id">Menu link list id</param>
         /// <returns>VirtoCommerceContentWebModelsCheckNameResult</returns>
-        VirtoCommerceContentWebModelsCheckNameResult MenuCheckName (string storeId, string name, string language, string id);
+        VirtoCommerceContentWebModelsCheckNameResult MenuCheckName (string storeId, string name, string language, string id = null);
   
         /// <summary>
         /// Checking name of menu link list
@@ -129,7 +129,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="language">Language of menu link list</param>
         /// <param name="id">Menu link list id</param>
         /// <returns>VirtoCommerceContentWebModelsCheckNameResult</returns>
-        System.Threading.Tasks.Task<VirtoCommerceContentWebModelsCheckNameResult> MenuCheckNameAsync (string storeId, string name, string language, string id);
+        System.Threading.Tasks.Task<VirtoCommerceContentWebModelsCheckNameResult> MenuCheckNameAsync (string storeId, string name, string language, string id = null);
         
         /// <summary>
         /// Get menu link list by id
@@ -162,7 +162,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="storeId">Store Id</param>
         /// <param name="criteriaLastUpdateDate">Max value of last updated date, if it&#39;s null returns all pages for store</param>
         /// <returns></returns>
-        List<VirtoCommerceContentWebModelsPage> PagesGetPages (string storeId, DateTime? criteriaLastUpdateDate);
+        List<VirtoCommerceContentWebModelsPage> PagesGetPages (string storeId, DateTime? criteriaLastUpdateDate = null);
   
         /// <summary>
         /// Search pages
@@ -173,7 +173,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="storeId">Store Id</param>
         /// <param name="criteriaLastUpdateDate">Max value of last updated date, if it&#39;s null returns all pages for store</param>
         /// <returns></returns>
-        System.Threading.Tasks.Task<List<VirtoCommerceContentWebModelsPage>> PagesGetPagesAsync (string storeId, DateTime? criteriaLastUpdateDate);
+        System.Threading.Tasks.Task<List<VirtoCommerceContentWebModelsPage>> PagesGetPagesAsync (string storeId, DateTime? criteriaLastUpdateDate = null);
         
         /// <summary>
         /// Save page
@@ -452,7 +452,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="criteriaLoadContent">If true - returns array of theme assets including binary or text content, if false - returns array of theme assets without content</param>
         /// <param name="criteriaLastUpdateDate">Max value of last updated date, if it&#39;s null returns all pages for store</param>
         /// <returns></returns>
-        List<VirtoCommerceContentWebModelsThemeAsset> ThemeSearchThemeAssets (string storeId, string themeId, bool? criteriaLoadContent, DateTime? criteriaLastUpdateDate);
+        List<VirtoCommerceContentWebModelsThemeAsset> ThemeSearchThemeAssets (string storeId, string themeId, bool? criteriaLoadContent = null, DateTime? criteriaLastUpdateDate = null);
   
         /// <summary>
         /// Search theme assets
@@ -465,7 +465,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="criteriaLoadContent">If true - returns array of theme assets including binary or text content, if false - returns array of theme assets without content</param>
         /// <param name="criteriaLastUpdateDate">Max value of last updated date, if it&#39;s null returns all pages for store</param>
         /// <returns></returns>
-        System.Threading.Tasks.Task<List<VirtoCommerceContentWebModelsThemeAsset>> ThemeSearchThemeAssetsAsync (string storeId, string themeId, bool? criteriaLoadContent, DateTime? criteriaLastUpdateDate);
+        System.Threading.Tasks.Task<List<VirtoCommerceContentWebModelsThemeAsset>> ThemeSearchThemeAssetsAsync (string storeId, string themeId, bool? criteriaLoadContent = null, DateTime? criteriaLastUpdateDate = null);
         
         /// <summary>
         /// Save theme asset
@@ -1070,7 +1070,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="language">Language of menu link list</param> 
         /// <param name="id">Menu link list id</param> 
         /// <returns>VirtoCommerceContentWebModelsCheckNameResult</returns>            
-        public VirtoCommerceContentWebModelsCheckNameResult MenuCheckName (string storeId, string name, string language, string id)
+        public VirtoCommerceContentWebModelsCheckNameResult MenuCheckName (string storeId, string name, string language, string id = null)
         {
             
             // verify the required parameter 'storeId' is set
@@ -1135,7 +1135,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="language">Language of menu link list</param>
         /// <param name="id">Menu link list id</param>
         /// <returns>VirtoCommerceContentWebModelsCheckNameResult</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceContentWebModelsCheckNameResult> MenuCheckNameAsync (string storeId, string name, string language, string id)
+        public async System.Threading.Tasks.Task<VirtoCommerceContentWebModelsCheckNameResult> MenuCheckNameAsync (string storeId, string name, string language, string id = null)
         {
             // verify the required parameter 'storeId' is set
             if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling MenuCheckName");
@@ -1303,7 +1303,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="storeId">Store Id</param> 
         /// <param name="criteriaLastUpdateDate">Max value of last updated date, if it&#39;s null returns all pages for store</param> 
         /// <returns></returns>            
-        public List<VirtoCommerceContentWebModelsPage> PagesGetPages (string storeId, DateTime? criteriaLastUpdateDate)
+        public List<VirtoCommerceContentWebModelsPage> PagesGetPages (string storeId, DateTime? criteriaLastUpdateDate = null)
         {
             
             // verify the required parameter 'storeId' is set
@@ -1358,7 +1358,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="storeId">Store Id</param>
         /// <param name="criteriaLastUpdateDate">Max value of last updated date, if it&#39;s null returns all pages for store</param>
         /// <returns></returns>
-        public async System.Threading.Tasks.Task<List<VirtoCommerceContentWebModelsPage>> PagesGetPagesAsync (string storeId, DateTime? criteriaLastUpdateDate)
+        public async System.Threading.Tasks.Task<List<VirtoCommerceContentWebModelsPage>> PagesGetPagesAsync (string storeId, DateTime? criteriaLastUpdateDate = null)
         {
             // verify the required parameter 'storeId' is set
             if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling PagesGetPages");
@@ -2760,7 +2760,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="criteriaLoadContent">If true - returns array of theme assets including binary or text content, if false - returns array of theme assets without content</param> 
         /// <param name="criteriaLastUpdateDate">Max value of last updated date, if it&#39;s null returns all pages for store</param> 
         /// <returns></returns>            
-        public List<VirtoCommerceContentWebModelsThemeAsset> ThemeSearchThemeAssets (string storeId, string themeId, bool? criteriaLoadContent, DateTime? criteriaLastUpdateDate)
+        public List<VirtoCommerceContentWebModelsThemeAsset> ThemeSearchThemeAssets (string storeId, string themeId, bool? criteriaLoadContent = null, DateTime? criteriaLastUpdateDate = null)
         {
             
             // verify the required parameter 'storeId' is set
@@ -2822,7 +2822,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="criteriaLoadContent">If true - returns array of theme assets including binary or text content, if false - returns array of theme assets without content</param>
         /// <param name="criteriaLastUpdateDate">Max value of last updated date, if it&#39;s null returns all pages for store</param>
         /// <returns></returns>
-        public async System.Threading.Tasks.Task<List<VirtoCommerceContentWebModelsThemeAsset>> ThemeSearchThemeAssetsAsync (string storeId, string themeId, bool? criteriaLoadContent, DateTime? criteriaLastUpdateDate)
+        public async System.Threading.Tasks.Task<List<VirtoCommerceContentWebModelsThemeAsset>> ThemeSearchThemeAssetsAsync (string storeId, string themeId, bool? criteriaLoadContent = null, DateTime? criteriaLastUpdateDate = null)
         {
             // verify the required parameter 'storeId' is set
             if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling ThemeSearchThemeAssets");
