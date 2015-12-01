@@ -90,6 +90,7 @@ namespace VirtoCommerce.Storefront.Controllers
             if (product != null)
             {
                 await _cartBuilder.AddItem(product, quantity).SaveAsync();
+                await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentCurrency);
             }
 
             return Json(_cartBuilder.Cart, JsonRequestBehavior.AllowGet);
