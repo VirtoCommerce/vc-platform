@@ -312,33 +312,24 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 
         public dataModel.Property[] GetPropertiesByIds(string[] propIds)
         {
-            var retVal = Properties.Include(x => x.Catalog)
-                                        .Include(x => x.DictionaryValues)
-                                        .Include(x => x.PropertyAttributes)
-                                        .Where(x => propIds.Contains(x.Id))
-                                        .ToArray();
+            //Used breaking query EF performance concept https://msdn.microsoft.com/en-us/data/hh949853.aspx#8
+            var retVal = Properties.Include(x=>x.PropertyAttributes).Where(x => propIds.Contains(x.Id)).ToArray();
+
+            var catalogIds = retVal.Select(x => x.CatalogId).Distinct().ToArray();
+            var categoryIds = retVal.Select(x => x.CategoryId).Where(x => x != null).Distinct().ToArray();
+            if (catalogIds.Any())
+            {
+                var catalogs = Catalogs.Include(x => x.CatalogLanguages).Where(x => catalogIds.Contains(x.Id)).ToArray();
+            }
+            if (categoryIds.Any())
+            {
+                var categories = Categories.Where(x => categoryIds.Contains(x.Id)).ToArray();
+            }
+            var dictValues = PropertyDictionaryValues.Where(x => propIds.Contains(x.PropertyId)).ToArray();
             return retVal;
         }
 
-        public dataModel.Catalog GetPropertyCatalog(string propId)
-        {
-            var catalogId = Properties.Where(x => x.Id == propId).Select(x => x.CatalogId).FirstOrDefault();
-            if (catalogId != null)
-            {
-                return GetCatalogById(catalogId);
-            }
-            return null;
-        }
-
-        public dataModel.Category GetPropertyCategory(string propId)
-        {
-            var categoryId = Properties.Where(x => x.Id == propId).Select(x => x.CategoryId).FirstOrDefault();
-            if (categoryId != null)
-            {
-                return GetCategoryById(categoryId);
-            }
-            return null;
-        }
+     
 
         //Load all category properties with inherited from parents categories and catalog
         public dataModel.Property[] GetAllCategoryProperties(dataModel.Category category)

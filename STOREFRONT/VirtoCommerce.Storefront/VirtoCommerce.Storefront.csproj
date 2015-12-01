@@ -208,8 +208,6 @@
     <Content Include="App_Data\Themes\default\assets\respond.min.js" />
     <Content Include="App_Data\Themes\default\assets\storefront.js" />
     <Content Include="App_Data\Themes\default\assets\shopify_common.js" />
-    <Content Include="App_Data\Themes\default\assets\slide_1.jpg" />
-    <Content Include="App_Data\Themes\default\assets\slide_2.jpg" />
     <Content Include="App_Data\Themes\default\assets\storefront.css" />
     <None Include="App_Data\Themes\default\snippets\checkout-footer.liquid" />
     <Content Include="App_Data\Themes\default\social\shopify-social.svg" />
@@ -249,7 +247,6 @@
     <Compile Include="Converters\CartPaymentMethodConverter.cs" />
     <Compile Include="Converters\CartShipmentMethodConverter.cs" />
     <Compile Include="Converters\DynamicPropertyConverter.cs" />
-    <Compile Include="Converters\EditorialReviewConverter.cs" />
     <Compile Include="Converters\CartConverter.cs" />
     <Compile Include="Converters\CartLineItemConverter.cs" />
     <Compile Include="Converters\CategoryConverter.cs" />

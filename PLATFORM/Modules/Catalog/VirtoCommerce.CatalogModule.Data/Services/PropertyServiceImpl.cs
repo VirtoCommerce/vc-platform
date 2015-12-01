@@ -7,6 +7,7 @@ using coreModel = VirtoCommerce.Domain.Catalog.Model;
 using dataModel = VirtoCommerce.CatalogModule.Data.Model;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Core.Caching;
+using System.Collections.Generic;
 
 namespace VirtoCommerce.CatalogModule.Data.Services
 {
@@ -18,43 +19,38 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 			_catalogRepositoryFactory = catalogRepositoryFactory;
 		}
 
-
 		#region IPropertyService Members
 
 		public coreModel.Property GetById(string propertyId)
 		{
-			coreModel.Property retVal = null;
-			using (var repository = _catalogRepositoryFactory())
-			{
-				var dbProperty = repository.GetPropertiesByIds(new string[] { propertyId }).FirstOrDefault();
-				if (dbProperty != null)
-				{
-					dataModel.Catalog dbCatalog = null;
-					dataModel.Category dbCategory = null;
-					dbCatalog = repository.GetPropertyCatalog(dbProperty.Id);
-					if (dbCatalog == null)
-					{
-						dbCategory = repository.GetPropertyCategory(dbProperty.Id);
-						dbCatalog = repository.GetCatalogById(dbCategory.CatalogId) as dataModel.Catalog;
-					}
-		
-					var catalog = dbCatalog.ToCoreModel();
-					var category = dbCategory != null ? dbCategory.ToCoreModel(catalog) : null;
-
-					retVal = dbProperty.ToCoreModel(catalog, category);
-				}
-			}
-			return retVal;
+            return GetByIds(new[] { propertyId }).FirstOrDefault();
 		}
 
-		public coreModel.Property[] GetCatalogProperties(string catalogId)
+        public coreModel.Property[] GetByIds(string[] propertyIds)
+        {
+            var retVal = new List<coreModel.Property>();
+            using (var repository = _catalogRepositoryFactory())
+            {
+                var dbProperties = repository.GetPropertiesByIds(propertyIds);
+                foreach (var dbProperty in dbProperties)
+                {
+                    var catalog = dbProperty.Catalog.ToCoreModel();
+                    var category = dbProperty.Category != null ? dbProperty.Category.ToCoreModel(catalog) : null;
+                    var property = dbProperty.ToCoreModel(catalog, category);
+                    retVal.Add(property);
+                }
+            }
+            return retVal.ToArray();
+        }
+
+        public coreModel.Property[] GetCatalogProperties(string catalogId)
 		{
 			coreModel.Property[] retVal = null;
 			using (var repository = _catalogRepositoryFactory())
 			{
 				var dbCatalog = repository.GetCatalogById(catalogId);
 				var catalog = dbCatalog.ToCoreModel();
-				retVal = dbCatalog.Properties.Where(x=>x.CategoryId == null).Select(x => x.ToCoreModel(catalog, null)).ToArray();
+                retVal = GetByIds(dbCatalog.Properties.Where(x => x.CategoryId == null).Select(x => x.Id).ToArray());
 			}
 			return retVal;
 		}
@@ -76,7 +72,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 				var propertyGroups = dbProperties.Select((x, index) => new { PropertyName = x.Name.ToLowerInvariant(), Property = x, Index = index }).GroupBy(x => x.PropertyName);
 				dbProperties = propertyGroups.Select(x => x.OrderBy(y => y.Index).First().Property).ToArray();
 
-				retVal = dbProperties.Select(x => x.ToCoreModel(catalog, category)).ToArray();
+				retVal = retVal = GetByIds(dbProperties.Select(x => x.Id).ToArray()); 
 			}
 			return retVal;
 		}

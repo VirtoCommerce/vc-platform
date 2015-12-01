@@ -9,6 +9,11 @@ namespace VirtoCommerce.Storefront.Model.Catalog
 {
     public class ProductProperty : Entity
     {
+        public ProductProperty()
+        {
+            LocalizedValues = new List<LocalizedString>();
+            DisplayNames = new List<LocalizedString>();
+        }
         /// <summary>
         /// Property name
         /// </summary>
@@ -24,7 +29,20 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         /// </summary>
         public string ValueType { get; set; }
 
+        /// <summary>
+        /// Dictionary value id
+        /// </summary>
         public string ValueId { get; set; }
+        /// <summary>
+        /// Property values for all languages
+        /// </summary>
+        public ICollection<LocalizedString> LocalizedValues { get; set; }
+        /// <summary>
+        /// Property value in current language
+        /// </summary>
         public string Value { get; set; }
+
+        public string DisplayName { get; set; }
+        public ICollection<LocalizedString> DisplayNames { get; set; }
     }
 }

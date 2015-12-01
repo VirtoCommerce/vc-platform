@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Core.Asset;
+using VirtoCommerce.Platform.Core.Common;
 using moduleModel = VirtoCommerce.Domain.Catalog.Model;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
 
@@ -85,7 +86,17 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 						property = new webModel.Property(propValue, product.CatalogId, product.CategoryId, moduleModel.PropertyType.Product);
                         retVal.Properties.Add(property);
                     }
-					property.Values.Add(propValue);
+                    //Need leave dictionary values for each language for multilanguage dictionary property
+                    if (property.Dictionary && property.Multilanguage)
+                    {
+                        property.DictionaryValues = property.DictionaryValues.Where(x => x.Alias == propValue.Alias).ToList();
+                    }
+                    else
+                    {
+                        //reset dict values (not necessary in web)
+                        property.DictionaryValues = null;
+                    }
+                    property.Values.Add(propValue);
                 }
             }
 

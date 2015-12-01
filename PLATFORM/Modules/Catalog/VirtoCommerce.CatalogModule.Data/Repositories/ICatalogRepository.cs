@@ -33,8 +33,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 		foundation.Category[] GetCategoriesByIds(string[] categoryIds);
 		foundation.Item[] GetItemByIds(string[] itemIds, moduleModel.ItemResponseGroup respGroup);
 		foundation.Property[] GetPropertiesByIds(string[] propIds);
-		foundation.Catalog GetPropertyCatalog(string propId);
-		foundation.Category GetPropertyCategory(string propId);
+	
 		foundation.Property[] GetAllCategoryProperties(foundation.Category category);
 	
 		void RemoveItems(string[] ids);
