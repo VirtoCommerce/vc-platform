@@ -89,8 +89,8 @@
     $scope.cart = null;
     $scope.order = null;
     $scope.couponProcessing = false;
-    $scope.couponWasAdded = false;
-    $scope.couponHasError = false;
+    $scope.couponApplied = false;
+    $scope.couponHasEror = false;
     $scope.shippingAddress = {};
     $scope.billingAddress = {};
     $scope.billingAddressEqualsShipping = true;
@@ -105,8 +105,7 @@
     cartPromise.then(function (response) {
         var cart = response.data;
         $scope.cart = cart;
-        $scope.couponCode = cart.Coupon;
-        $scope.couponWasAdded = cart.Coupon.length;
+        $scope.couponApplied = cart.Coupon ? cart.Coupon.length > 0 : false;
 
         var shippingAddresses = _.where(cart.Addresses, { Type: "Shipping" });
         if (shippingAddresses.length) {
@@ -118,7 +117,7 @@
             $scope.billingAddress = billingAddresses[0];
         }
 
-        $scope.setBillingAddressEqualsShipping();
+        $scope.billingAddress = $scope.shippingAddress;
 
         var availableShippingMethodsPromise = cartService.getAvailableShippingMethods(cart.Id);
         availableShippingMethodsPromise.then(function (response) {
@@ -148,8 +147,8 @@
         var cartPromise = cartService.addCoupon(couponCode);
         cartPromise.then(function (response) {
             var cart = response.data;
-            $scope.couponWasAdded = true;
             $scope.couponHasError = cart.DiscountTotal.Amount == $scope.cart.DiscountTotal.Amount;
+            $scope.couponApplied = !$scope.couponHasEror;
             $scope.cart = cart;
             $scope.couponProcessing = false;
         });
@@ -159,9 +158,9 @@
         var cartPromise = cartService.removeCoupon();
         cartPromise.then(function (response) {
             var cart = response.data;
-            $scope.couponWasAdded = false;
-            $scope.couponHasError = false;
             $scope.cart = cart;
+            $scope.couponHasEror = false;
+            $scope.couponApplied = false;
             $scope.couponProcessing = false;
         });
     }
@@ -198,9 +197,6 @@
                 }
             });
         });
-    }
-    $scope.handlePaymentResult = function (paymentResult) {
-
     }
     $scope.setBillingAddressEqualsShipping = function () {
         $scope.billingAddressEqualsShipping = true;
