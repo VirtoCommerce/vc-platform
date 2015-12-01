@@ -22,14 +22,8 @@ namespace VirtoCommerce.Storefront.Controllers
         private readonly IOrderModuleApi _orderApi;
         private readonly IMarketingModuleApi _marketingApi;
 
-        public CartController(
-            WorkContext workContext,
-            IShoppingCartModuleApi cartApi,
-            IOrderModuleApi orderApi,
-            IStorefrontUrlBuilder urlBuilder,
-            ICartBuilder cartBuilder,
-            ICatalogSearchService catalogService,
-            IMarketingModuleApi marketingApi)
+        public CartController(WorkContext workContext, IShoppingCartModuleApi cartApi, IOrderModuleApi orderApi, IStorefrontUrlBuilder urlBuilder,
+                              ICartBuilder cartBuilder, ICatalogSearchService catalogService, IMarketingModuleApi marketingApi)
             : base(workContext, urlBuilder)
         {
             _cartBuilder = cartBuilder;
@@ -248,7 +242,7 @@ namespace VirtoCommerce.Storefront.Controllers
                 return HttpNotFound();
             }
 
-            return View("thanks");
+            return View("thanks", base.WorkContext);
         }
 
         private async Task<IEnumerable<VirtoCommerceMarketingModuleWebModelPromotionReward>> EvaluatePromotionsAsync(Store store, Customer customer, ShoppingCart cart, string couponCode)

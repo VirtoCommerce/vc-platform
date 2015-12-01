@@ -106,7 +106,13 @@ namespace VirtoCommerce.Storefront.Model.Common
 				return (decimal)((long)Math.Truncate(amount * this.DecimalDigits)) / this.DecimalDigits;
 			}
 		}
-
+        public string FormatedAmount
+        {
+            get
+            {
+                return ToString();
+            }
+        }
 		public string CurrencyCode
 		{
 			get { return Currency.Get(this.currencyCode).Code; }

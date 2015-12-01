@@ -52,7 +52,6 @@
     <Compile Include="Catalog\CatalogSearchResult.cs" />
     <Compile Include="Catalog\ItemResponseGroup.cs" />
     <Compile Include="Catalog\CatalogSearchCriteria.cs" />
-    <Compile Include="Catalog\EditorialReview.cs" />
     <Compile Include="Catalog\TierPrice.cs" />
     <Compile Include="Common\CollectionExtensions.cs" />
     <Compile Include="Common\IStorefrontPagedList.cs" />
@@ -86,6 +85,7 @@
     <Compile Include="ForgotPassword.cs" />
     <Compile Include="Language.cs" />
     <Compile Include="Catalog\Product.cs" />
+    <Compile Include="LocalizedString.cs" />
     <Compile Include="Login.cs" />
     <Compile Include="Order\CustomerOrder.cs" />
     <Compile Include="Order\LineItem.cs" />
@@ -102,7 +102,7 @@
     <Compile Include="ResetPassword.cs" />
     <Compile Include="Catalog\ProductProperty.cs" />
     <Compile Include="SeoInfo.cs" />
-    <Compile Include="Services\ICatalogService.cs" />
+    <Compile Include="Services\ICatalogSearchService.cs" />
     <Compile Include="ShippingMethod.cs" />
     <Compile Include="Discount.cs" />
     <Compile Include="Cart\LineItem.cs" />
