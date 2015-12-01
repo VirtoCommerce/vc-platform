@@ -96,7 +96,7 @@ namespace VirtoCommerce.Storefront.Converters
 
             if (shipment.Discount != null)
             {
-                webModel.Discount = shipment.Discount.ToWebModel(currency);
+                webModel.Discount = shipment.Discount.ToWebModel();
             }
 
             webModel.DiscountAmount = new Money(shipment.DiscountAmount ?? 0, currency.Code);

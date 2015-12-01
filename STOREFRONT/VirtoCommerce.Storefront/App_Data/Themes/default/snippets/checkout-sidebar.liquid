@@ -4,7 +4,7 @@
     </a>
 </div>
 <div class="sidebar__content">
-    <div class="order-summary order-summary--is-collapsed">
+    <div class="order-summary" ng-class="{ 'order-summary--is-expanded': isOrderSummaryExpanded, 'order-summary--is-collapsed': !isOrderSummaryExpanded }">
         <div class="order-summary__section order-summary__section--product-list">
             <table class="product-table">
                 <thead>
@@ -39,20 +39,25 @@
             </table>
         </div>
         <div class="order-summary__section order-summary__section--discount">
-            <form accept-charset="UTF-8" action="" class="edit_checkout" method="post">
+            <form accept-charset="UTF-8" action="" class="edit_checkout animate-floating-labels" method="post" name="formCoupon">
                 <div class="fieldset">
-                    <div class="field ">
-                        <label class="field__label" for="">{{ 'checkout.discount' | t }}</label>
+                    <div class="field" ng-class="{ 'field--show-floating-label': cart.Coupon.length, 'field--error': couponWasAdded && couponHasError && !cart.Coupon.length }">
                         <div class="field__input-btn-wrapper">
                             <div class="field__input-wrapper">
-                                <input class="field__input" id="" name="" placeholder="{{ 'checkout.discount' | t }}" size="30" type="text" />
+                                <label class="field__label" for="Coupon" ng-if="!couponWasAdded || couponWasAdded && couponHasError">{{ 'checkout.discount' | t }}</label>
+                                <input class="field__input" id="Coupon" name="Coupon" placeholder="{{ 'checkout.discount' | t }}" required="required" size="30" type="text" ng-model="cart.Coupon" ng-if="!couponWasAdded || couponWasAdded && couponHasError" />
+                                <span style="font-size: 1.71em; font-weight: 500; line-height: 40px;" ng-if="couponWasAdded && !couponHasError">{( cart.Coupon )}</span>
                             </div>
-                            <button class="field__input-btn btn btn--default btn--disabled" type="submit">
-                                <span class="btn__content visually-hidden-on-mobile">{{ 'checkout.apply' | t }}</span>
+                            <button class="field__input-btn btn btn--default" type="button" ng-class="{ 'btn--disabled': formCoupon.$invalid, 'btn--loading': couponProcessing }" ng-disabled="formCoupon.$invalid" ng-click="couponWasAdded && !couponHasError ? removeCoupon() : addCoupon(cart.Coupon)">
+                                <span class="btn__content visually-hidden-on-mobile" ng-if="!couponWasAdded || couponWasAdded && couponHasError">{{ 'checkout.apply' | t }}</span>
+                                <span class="btn__content visually-hidden-on-mobile" ng-if="couponWasAdded && !couponHasError">Remove</span>
                                 <i class="btn__content shown-on-mobile icon icon--arrow"></i>
                                 <i class="btn__spinner icon icon--button-spinner"></i>
                             </button>
                         </div>
+                        <p class="field__message field__message--error" ng-if="couponWasAdded && couponHasError">
+                            This code did not match any active gift card or discount. Was it entered correctly?
+                        </p>
                     </div>
                 </div>
             </form>
@@ -74,6 +79,12 @@
                         <td class="total-line__name">{{ 'checkout.subtotal' | t }}</td>
                         <td class="total-line__price">
                             <span class="order-summary__emphasis">{( cart.SubTotal.Amount | currency: cart.SubTotal.CurrencySymbol )}</span>
+                        </td>
+                    </tr>
+                    <tr class="total-line total-line--subtotal">
+                        <td class="total-line__name">{{ 'checkout.discount' | t }}</td>
+                        <td class="total-line__price">
+                            <span class="order-summary__emphasis">{( cart.DiscountTotal.Amount | currency: cart.DiscountTotal.CurrencySymbol )}</span>
                         </td>
                     </tr>
                     <tr class="total-line total-line--shipping">

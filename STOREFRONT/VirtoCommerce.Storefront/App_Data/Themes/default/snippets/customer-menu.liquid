@@ -1,7 +1,7 @@
 ﻿<div class="buttons">
-    <a class="btn-secondary" href="{{ shop.simplified_url }}/account">{{ 'Orders' }}</a>
+    <a class="btn-secondary" href="{{ '/account' | absolute_url }}">{{ 'Orders' }}</a>
     {% if shop.quotes_enabled %}
-        <a class="btn-secondary" href="{{ shop.simplified_url }}/account/quotes">{{ 'Quotes' }}</a>
+        <a class="btn-secondary" href="{{ '/account/quotes' | absolute_url }}">{{ 'Quotes' }}</a>
     {% endif %}
-    <a class="btn-secondary" href="{{ shop.simplified_url }}/account/addresses">{{ 'Addresses' }}</a>
+    <a class="btn-secondary" href="{{ '/account/addresses' | absolute_url }}">{{ 'Addresses' }}</a>
 </div>

@@ -2,13 +2,16 @@
     <li class="breadcrumb__item breadcrumb__item--completed">
         <a class="breadcrumb__link" href="{{ 'cart' | absolute_url }}" target="_self">{{ 'checkout.cart' | t }}</a>
     </li>
-    <li class="breadcrumb__item breadcrumb__item--completed">
-        <a class="breadcrumb__link" href="{{ 'cart/checkout/customer-information' | absolute_url }}" target="_self">{{ 'checkout.customer_information.title' | t }}</a>
+    <li class="breadcrumb__item" ng-class="{ 'breadcrumb__item--current': $route.current.templateUrl == 'storefront.checkout.customerInformation.tpl', 'breadcrumb__item--completed': $route.current.templateUrl != 'storefront.checkout.customerInformation.tpl' }">
+        <a class="breadcrumb__link" href="{{ 'cart/checkout/customer-information' | absolute_url }}" target="_self" ng-if="$route.current.templateUrl != 'storefront.checkout.customerInformation.tpl'">{{ 'checkout.customer_information.title' | t }}</a>
+        <span ng-if="$route.current.templateUrl == 'storefront.checkout.customerInformation.tpl'">{{ 'checkout.customer_information.title' | t }}</span>
     </li>
-    <li class="breadcrumb__item breadcrumb__item--completed">
-        <a class="breadcrumb__link" href="{{ 'cart/checkout/shipping-method' | absolute_url }}" target="_self">{{ 'checkout.shipping_method.title' | t }}</a>
+    <li class="breadcrumb__item" ng-class="{ 'breadcrumb__item--current': $route.current.templateUrl == 'storefront.checkout.shippingMethod.tpl', 'breadcrumb__item--completed': $route.current.templateUrl != 'storefront.checkout.shippingMethod.tpl' }">
+        <a class="breadcrumb__link" href="{{ 'cart/checkout/shipping-method' | absolute_url }}" target="_self" ng-if="$route.current.templateUrl != 'storefront.checkout.shippingMethod.tpl'">{{ 'checkout.shipping_method.title' | t }}</a>
+        <span ng-if="$route.current.templateUrl == 'storefront.checkout.shippingMethod.tpl'">{{ 'checkout.shipping_method.title' | t }}</span>
     </li>
-    <li class="breadcrumb__item breadcrumb__item--completed">
-        <a class="breadcrumb__link" href="{{ 'cart/checkout/payment-method' | absolute_url }}" target="_self">{{ 'checkout.payment_method.title' | t }}</a>
+    <li class="breadcrumb__item" ng-class="{ 'breadcrumb__item--current': $route.current.templateUrl == 'storefront.checkout.paymentMethod.tpl', 'breadcrumb__item--completed': $route.current.templateUrl != 'storefront.checkout.paymentMethod.tpl' }">
+        <a class="breadcrumb__link" href="{{ 'cart/checkout/payment-method' | absolute_url }}" target="_self" ng-if="$route.current.templateUrl != 'storefront.checkout.paymentMethod.tpl'">{{ 'checkout.payment_method.title' | t }}</a>
+        <span ng-if="$route.current.templateUrl == 'storefront.checkout.paymentMethod.tpl'">{{ 'checkout.payment_method.title' | t }}</span>
     </li>
 </ul>

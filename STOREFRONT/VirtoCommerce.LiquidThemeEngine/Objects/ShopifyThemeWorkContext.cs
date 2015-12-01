@@ -28,16 +28,16 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         /// </summary>
         public Shop Shop { get; set; }
 
+        /// <summary>
+        /// The liquid object cart returns information about customer shopping cart
+        /// </summary>
         public Cart Cart { get; set; }
 
         /// <summary>
         /// Current single form value  created in DotLiquidThemedView with ModelState errors
         /// The form object is used within the form tag. It contains attributes of its parent form.
         /// </summary>
-        public Form Form
-        {
-            get; set;
-        }
+        public Form Form { get; set; }
 
         public Product Product { get; set; }
 

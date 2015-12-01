@@ -90,7 +90,7 @@
             Good for /collections/all collection and regular collections
           {% endcomment %}
           {% if collection.handle %}
-            <a href="{{ shop.simplified_url }}/collections/{{ collection.handle }}">
+            <a href="{{ '/collections/' + collection.handle | absolute_url }}">
               {{ 'collections.sidebar.all' | t }}
               {% unless collection.title == 'Products' %}
               {{ collection.title }}

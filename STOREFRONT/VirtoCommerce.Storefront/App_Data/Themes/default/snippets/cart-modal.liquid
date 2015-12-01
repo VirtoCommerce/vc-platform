@@ -1,5 +1,5 @@
-<div class="ajaxify-modal" id="ajaxifyModal" style="margin-left: -380px; opacity: 1;" ng-controller="cartModalController" ng-class="{ 'is-visible': isCartModalVisible }">
-    <button class="ajaxifyCart--close" title="Close Cart" ng-click="closeModal()">Close Cart</button>
+<div class="ajaxify-modal" id="ajaxifyModal" style="margin-left: -380px; opacity: 1;" ng-class="{ 'is-visible': isCartModalVisible }">
+    <button class="ajaxifyCart--close" title="Close Cart" ng-click="hideCartModal()">Close Cart</button>
     <div class="ajaxifyCart--content" id="ajaxifyCart">
         <span ng-if="!cart.Items.length">
             <h2>{{ 'cart.general.empty' | t }}</h2>

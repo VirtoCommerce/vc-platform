@@ -9,31 +9,48 @@ namespace VirtoCommerce.Storefront.Converters
     {
         public static Discount ToWebModel(this VirtoCommerceCartModuleWebModelDiscount discount)
         {
-            var discountWebModel = new Discount();
+            var webModel = new Discount();
 
-            discountWebModel.InjectFrom(discount);
+            webModel.InjectFrom(discount);
 
-            return discountWebModel;
+            webModel.DiscountAmount = new Money(discount.DiscountAmount ?? 0, discount.Currency);
+
+            return webModel;
         }
 
         public static VirtoCommerceCartModuleWebModelDiscount ToServiceModel(this Discount discount)
         {
-            var discountServiceModel = new VirtoCommerceCartModuleWebModelDiscount();
+            var serviceModel = new VirtoCommerceCartModuleWebModelDiscount();
 
-            discountServiceModel.InjectFrom(discount);
+            serviceModel.InjectFrom(discount);
 
-            return discountServiceModel;
+            serviceModel.Currency = discount.DiscountAmount.CurrencyCode;
+            serviceModel.DiscountAmount = (double)discount.DiscountAmount.Amount;
+
+            return serviceModel;
         }
 
-        public static Discount ToWebModel(this VirtoCommerceOrderModuleWebModelDiscount discount, Currency currency)
+        public static Discount ToWebModel(this VirtoCommerceOrderModuleWebModelDiscount discount)
         {
             var webModel = new Discount();
 
             webModel.InjectFrom(discount);
 
-            webModel.DiscountAmount = new Money(discount.DiscountAmount ?? 0, currency.Code);
+            webModel.DiscountAmount = new Money(discount.DiscountAmount ?? 0, discount.Currency);
 
             return webModel;
+        }
+
+        public static Discount ToDiscountWebModel(this VirtoCommerceMarketingModuleWebModelPromotionReward promotionReward, Currency currency)
+        {
+            var discountModel = new Discount();
+
+            discountModel.InjectFrom(promotionReward);
+
+            discountModel.DiscountAmount = new Money(promotionReward.Amount ?? 0, currency.Code);
+            discountModel.PromotionId = promotionReward.Promotion.Id;
+
+            return discountModel;
         }
     }
 }

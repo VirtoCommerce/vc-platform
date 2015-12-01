@@ -4,7 +4,7 @@
             var defaultCustomerAddress = {% if actual_quote_request.shipping_address == nil %}{{ customer.default_address | json }}{% else %}null{% endif %};
         </script>
     {% endunless %}
-    <form action="{{ shop.simplified_url }}/quotes" method="post" novalidate>
+    <form action="{{ '/quotes' | absolute_url }}" method="post" novalidate>
         <input id="actual-quote-request-id" type="hidden" value="{{ actual_quote_request.id }}" />
         <h1 class="h2">{{ 'quotes.general.title' | t }}</h1>
         {% unless customer == nil %}
@@ -73,7 +73,7 @@
                                 {% endfor %}
                             </div>
                             <div class="grid-item one-sixth medium-down--one-third text-right">
-                                <a class="icon-fallback-text btn-secondary remove" data-id="{{ item.id }}" href="{{shop.simplified_url}}/quote/remove?id={{item.id}}">
+                                <a class="icon-fallback-text btn-secondary remove" data-id="{{ item.id }}" href="{{ '/quote/remove?id=' + item.id | absolute_url }}">
                                     <span aria-hidden="true" class="icon icon-x"></span>
                                     <span class="fallback-text">{{ 'quotes.general.remove' | t }}</span>
                                 </a>

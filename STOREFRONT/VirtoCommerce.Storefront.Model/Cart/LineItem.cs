@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
@@ -12,6 +13,11 @@ namespace VirtoCommerce.Storefront.Model.Cart
             Discounts = new List<Discount>();
             TaxDetails = new List<TaxDetail>();
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public DateTime CreatedDate { get; set; }
 
         /// <summary>
         /// Gets or sets the product corresponding to line item

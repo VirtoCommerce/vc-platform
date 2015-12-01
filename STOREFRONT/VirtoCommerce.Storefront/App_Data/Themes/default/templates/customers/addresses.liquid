@@ -14,7 +14,7 @@
 <div class="grid">
 
   <div class="grid-item one-third medium-down--one-whole">
-    <p><a href="{{ shop.simplified_url }}/account">{{ 'customer.account.return' | t }}</a></p>
+    <p><a href="{{ '/account' | absolute_url }}">{{ 'customer.account.return' | t }}</a></p>
   </div>
   <div class="grid-item two-thirds medium-down--one-whole">
 
@@ -120,46 +120,46 @@
             <div class="grid">
 
               <div class="grid-item one-half small--one-whole">
-                <label for="address_first_name_{{ form.id }}">{{ 'customer.addresses.first_name' | t }}</label>
-                <input type="text" id="address_first_name_{{ form.id }}" class="address_form" name="address[first_name]" value="{{ form.first_name }}" autocapitalize="words">
+                <label for="address_first_name_{{ address.id }}">{{ 'customer.addresses.first_name' | t }}</label>
+                <input type="text" id="address_first_name_{{ address.id }}" class="address_form" name="address[first_name]" value="{{ address.first_name }}" autocapitalize="words">
               </div>
 
               <div class="grid-item one-half small--one-whole">
-                <label for="address_last_name_{{ form.id }}">{{ 'customer.addresses.last_name' | t }}</label>
-                <input type="text" id="address_last_name_{{ form.id }}" class="address_form" name="address[last_name]" value="{{ form.last_name }}" autocapitalize="words">
+                <label for="address_last_name_{{ address.id }}">{{ 'customer.addresses.last_name' | t }}</label>
+                <input type="text" id="address_last_name_{{ address.id }}" class="address_form" name="address[last_name]" value="{{ address.last_name }}" autocapitalize="words">
               </div>
 
             </div>
 
-            <label for="address_company_{{ form.id }}">{{ 'customer.addresses.company' | t }}</label>
-            <input type="text" id="address_company_{{ form.id }}" class="address_form" name="address[company]" value="{{ form.company }}" autocapitalize="words">
+            <label for="address_company_{{ address.id }}">{{ 'customer.addresses.company' | t }}</label>
+            <input type="text" id="address_company_{{ address.id }}" class="address_form" name="address[company]" value="{{ address.company }}" autocapitalize="words">
 
-            <label for="address_address1_{{ form.id }}">{{ 'customer.addresses.address1' | t }}</label>
-            <input type="text" id="address_address1_{{ form.id }}" class="address_form" name="address[address1]" value="{{ form.address1 }}" autocapitalize="words">
+            <label for="address_address1_{{ address.id }}">{{ 'customer.addresses.address1' | t }}</label>
+            <input type="text" id="address_address1_{{ address.id }}" class="address_form" name="address[address1]" value="{{ address.address1 }}" autocapitalize="words">
 
-            <label for="address_address2_{{ form.id }}">{{ 'customer.addresses.address2' | t }}</label>
-            <input type="text" id="address_address2_{{ form.id }}" class="address_form" name="address[address2]" value="{{ form.address2 }}" autocapitalize="words">
+            <label for="address_address2_{{ address.id }}">{{ 'customer.addresses.address2' | t }}</label>
+            <input type="text" id="address_address2_{{ address.id }}" class="address_form" name="address[address2]" value="{{ address.address2 }}" autocapitalize="words">
 
-            <label for="address_city_{{ form.id }}">{{ 'customer.addresses.city' | t }}</label>
-            <input type="text" id="address_city_{{ form.id }}" class="address_form" name="address[city]" value="{{ form.city }}" autocapitalize="words">
+            <label for="address_city_{{ address.id }}">{{ 'customer.addresses.city' | t }}</label>
+            <input type="text" id="address_city_{{ address.id }}" class="address_form" name="address[city]" value="{{ address.city }}" autocapitalize="words">
 
-            <label for="address_country_{{ form.id }}">{{ 'customer.addresses.country' | t }}</label>
-            <select id="address_country_{{ form.id }}" name="address[country]" data-default="{{ form.country }}">{{ country_option_tags }}</select>
+            <label for="address_country_{{ address.id }}">{{ 'customer.addresses.country' | t }}</label>
+            <select id="address_country_{{ address.id }}" name="address[country]" data-default="{{ address.country }}">{{ country_option_tags }}</select>
 
-            <div id="address_province_container_{{ form.id }}" style="display:none">
-              <label for="address_province_{{ form.id }}">{{ 'customer.addresses.province' | t }}</label>
-              <select id="address_province_{{ form.id }}" class="address_form" name="address[province]" data-default="{{ form.province }}"></select>
+            <div id="address_province_container_{{ address.id }}" style="display:none">
+              <label for="address_province_{{ address.id }}">{{ 'customer.addresses.province' | t }}</label>
+              <select id="address_province_{{ address.id }}" class="address_form" name="address[province]" data-default="{{ address.province }}"></select>
             </div>
 
             <div class="grid">
               <div class="grid-item one-half small--one-whole">
-                <label for="address_zip_{{ form.id }}">{{ 'customer.addresses.province' | t }}</label>
-                <input type="text" id="address_zip_{{ form.id }}" class="address_form" name="address[zip]" value="{{ form.zip }}" autocapitalize="characters">
+                <label for="address_zip_{{ address.id }}">{{ 'customer.addresses.province' | t }}</label>
+                <input type="text" id="address_zip_{{ address.id }}" class="address_form" name="address[zip]" value="{{ address.zip }}" autocapitalize="characters">
               </div>
 
               <div class="grid-item one-half small--one-whole">
-                <label for="address_phone_{{ form.id }}">{{ 'customer.addresses.phone' | t }}</label>
-                <input type="tel" id="address_phone_{{ form.id }}" class="address_form" name="address[phone]" value="{{ form.phone }}" placeholder="555-555-1234">
+                <label for="address_phone_{{ address.id }}">{{ 'customer.addresses.phone' | t }}</label>
+                <input type="tel" id="address_phone_{{ address.id }}" class="address_form" name="address[phone]" value="{{ address.phone }}" placeholder="555-555-1234">
               </div>
             </div>
 
@@ -169,7 +169,7 @@
             </p>
 
             <input type="submit" class="btn" value="{{ 'customer.addresses.update' | t }}">
-            or <a href="#" onclick="Shopify.CustomerAddress.toggleForm({{ form.id }}); return false;">{{ 'customer.addresses.cancel' | t }}</a>
+            or <a href="#" onclick="Shopify.CustomerAddress.toggleForm({{ address.id }}); return false;">{{ 'customer.addresses.cancel' | t }}</a>
 
             <hr>
           {% endform %}
@@ -206,9 +206,7 @@
   Shopify.CustomerAddress = {
     toggleForm: function(id) {
       var editEl = document.getElementById('edit_address_'+id);
-      var viewEl = document.getElementById('view_address_'+id);
       editEl.style.display = editEl.style.display == 'none' ? '' : 'none';
-      viewEl.style.display = viewEl.style.display == 'none' ? '' : 'none';
       return false;
     },
 

@@ -53,14 +53,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         /// <summary>
         /// Gets line item custom information
         /// </summary>
-        public IDictionary<string, string> Properties
-        {
-            get
-            {
-                // TODO: Populate from dynamic properties
-                return null;
-            }
-        }
+        public IDictionary<string, string> Properties { get; set; }
 
         /// <summary>
         /// Gets line item quantity

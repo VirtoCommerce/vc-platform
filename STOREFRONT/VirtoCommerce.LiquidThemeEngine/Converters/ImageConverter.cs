@@ -1,24 +1,22 @@
 ﻿using Omu.ValueInjecter;
-using System.Linq;
 using VirtoCommerce.LiquidThemeEngine.Converters.Injections;
 using VirtoCommerce.LiquidThemeEngine.Objects;
-using storefrontModel = VirtoCommerce.Storefront.Model;
-using VirtoCommerce.Platform.Core.Common;
+using StorefrontModel = VirtoCommerce.Storefront.Model;
 
 namespace VirtoCommerce.LiquidThemeEngine.Converters
 {
     public static class ImageConverter
     {
-        public static Image ToShopifyModel(this storefrontModel.Image image)
+        public static Image ToShopifyModel(this StorefrontModel.Image image)
         {
-            var result = new Image();
-            result.InjectFrom<NullableAndEnumValueInjection>(image);
-            result.Name = image.Title;
-            result.Src = image.Url;
-        
-            return result;
-        }
+            var shopifyModel = new Image();
 
+            shopifyModel.InjectFrom<NullableAndEnumValueInjection>(image);
+
+            shopifyModel.Name = image.Title;
+            shopifyModel.Src = image.Url;
+        
+            return shopifyModel;
+        }
     }
 }
-

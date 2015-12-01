@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using VirtoCommerce.Client.Api;
@@ -87,6 +87,16 @@ namespace VirtoCommerce.Storefront.Builders
             {
                 _cart.Items.Remove(lineItem);
             }
+
+            return this;
+        }
+
+        public CartBuilder UpdateDiscounts(IEnumerable<VirtoCommerceMarketingModuleWebModelPromotionReward> promotionRewards)
+        {
+            var couponReward = promotionRewards.FirstOrDefault(pr => pr.Promotion != null && pr.Promotion.Coupons != null && pr.Promotion.Coupons.Count > 0);
+
+            _cart.Coupon = couponReward != null ? couponReward.Promotion.Coupons.First() : null;
+            _cart.Discounts = promotionRewards.Select(pr => pr.ToDiscountWebModel(_currency)).ToList();
 
             return this;
         }

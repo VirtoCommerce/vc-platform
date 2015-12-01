@@ -17,7 +17,7 @@
                     {% for quote in customer.quotes %}
                         <tr>
                             <td>
-                                <a href="{{ shop.simplified_url }}/account/quote/{{ quote.number }}">{{ quote.number }}</a>
+                                <a href="{{ '/account/quote/' + quote.number | absolute_url }}">{{ quote.number }}</a>
                             </td>
                             <td>{{ quote.created_at }}</td>
                             <td>{{ quote.status }}</td>

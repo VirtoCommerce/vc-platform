@@ -97,5 +97,18 @@ namespace VirtoCommerce.Storefront.Converters
 
             return lineItemServiceModel;
         }
+
+        public static VirtoCommerceDomainMarketingModelProductPromoEntry ToPromotionItem(this LineItem lineItem)
+        {
+            var promoItem = new VirtoCommerceDomainMarketingModelProductPromoEntry();
+
+            promoItem.InjectFrom(lineItem);
+
+            promoItem.Discount = (double)lineItem.DiscountTotal.Amount;
+            promoItem.Price = (double)lineItem.PlacedPrice.Amount;
+            promoItem.Variations = null; // TODO
+
+            return promoItem;
+        }
     }
 }
