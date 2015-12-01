@@ -35,31 +35,31 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         private readonly ICustomerOrderSearchService _searchService;
         private readonly IUniqueNumberGenerator _uniqueNumberGenerator;
         private readonly IStoreService _storeService;
-		private readonly CacheManager _cacheManager;
-		private readonly Func<IOrderRepository> _repositoryFactory;
+        private readonly CacheManager _cacheManager;
+        private readonly Func<IOrderRepository> _repositoryFactory;
         private readonly ISecurityService _securityService;
         private readonly IPermissionScopeService _permissionScopeService;
         private readonly ISettingsManager _settingManager;
         private static object _lockObject = new object();
 
-        public OrderModuleController(ICustomerOrderService customerOrderService, ICustomerOrderSearchService searchService, IStoreService storeService, IUniqueNumberGenerator numberGenerator, 
+        public OrderModuleController(ICustomerOrderService customerOrderService, ICustomerOrderSearchService searchService, IStoreService storeService, IUniqueNumberGenerator numberGenerator,
                                      CacheManager cacheManager, Func<IOrderRepository> repositoryFactory, IPermissionScopeService permissionScopeService, ISecurityService securityService, ISettingsManager settingManager)
         {
             _customerOrderService = customerOrderService;
             _searchService = searchService;
             _uniqueNumberGenerator = numberGenerator;
             _storeService = storeService;
-			_cacheManager = cacheManager;
-			_repositoryFactory = repositoryFactory;
+            _cacheManager = cacheManager;
+            _repositoryFactory = repositoryFactory;
             _securityService = securityService;
             _permissionScopeService = permissionScopeService;
             _settingManager = settingManager;
         }
 
-		/// <summary>
-		/// Search customer orders by given criteria
-		/// </summary>
-		/// <param name="criteria">criteria</param>
+        /// <summary>
+        /// Search customer orders by given criteria
+        /// </summary>
+        /// <param name="criteria">criteria</param>
         [HttpGet]
         [ResponseType(typeof(webModel.SearchResult))]
         [Route("")]
@@ -72,11 +72,11 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
             return Ok(retVal.ToWebModel());
         }
 
-		/// <summary>
-		/// Find customer order by id
-		/// </summary>
-		/// <remarks>Return a single customer order with all nested documents or null if order was not founded</remarks>
-		/// <param name="id">customer order id</param>
+        /// <summary>
+        /// Find customer order by id
+        /// </summary>
+        /// <remarks>Return a single customer order with all nested documents or null if order was not found</remarks>
+        /// <param name="id">customer order id</param>
         [HttpGet]
         [ResponseType(typeof(webModel.CustomerOrder))]
         [Route("{id}")]
@@ -101,27 +101,27 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
             return Ok(result);
         }
 
-		/// <summary>
-		/// Create new customer order based on shopping cart.
-		/// </summary>
-		/// <param name="id">shopping cart id</param>
+        /// <summary>
+        /// Create new customer order based on shopping cart.
+        /// </summary>
+        /// <param name="id">shopping cart id</param>
         [HttpPost]
         [ResponseType(typeof(webModel.CustomerOrder))]
         [Route("{id}")]
         [CheckPermission(Permission = OrderPredefinedPermissions.Create)]
         public IHttpActionResult CreateOrderFromCart(string id)
         {
-			var retVal = _customerOrderService.CreateByShoppingCart(id);
+            var retVal = _customerOrderService.CreateByShoppingCart(id);
             return Ok(retVal.ToWebModel());
         }
 
-		/// <summary>
-		/// Registration customer order payment in external payment system
-		/// </summary>
-		/// <remarks>Used in front-end checkout or manual order payment registration</remarks>
-		/// <param name="bankCardInfo">banking card information</param>
-		/// <param name="orderId">customer order id</param>
-		/// <param name="paymentId">payment id</param>
+        /// <summary>
+        /// Registration customer order payment in external payment system
+        /// </summary>
+        /// <remarks>Used in front-end checkout or manual order payment registration</remarks>
+        /// <param name="bankCardInfo">banking card information</param>
+        /// <param name="orderId">customer order id</param>
+        /// <param name="paymentId">payment id</param>
         [HttpPost]
         [ResponseType(typeof(webModel.ProcessPaymentResult))]
         [Route("{orderId}/processPayment/{paymentId}")]
@@ -149,7 +149,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
                 Order = order,
                 Payment = payment,
                 Store = store,
-				BankCardInfo = bankCardInfo
+                BankCardInfo = bankCardInfo
             };
 
             var result = paymentMethod.ProcessPayment(context);
@@ -163,11 +163,11 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
             return Ok(retVal);
         }
 
-		/// <summary>
-		/// Add new customer order to system
-		/// </summary>
-		/// <param name="customerOrder">customer order</param>
-		[HttpPost]
+        /// <summary>
+        /// Add new customer order to system
+        /// </summary>
+        /// <param name="customerOrder">customer order</param>
+        [HttpPost]
         [ResponseType(typeof(webModel.CustomerOrder))]
         [Route("")]
         [CheckPermission(Permission = OrderPredefinedPermissions.Create)]
@@ -177,16 +177,16 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
             return Ok(retVal.ToWebModel());
         }
 
-		/// <summary>
-		///  Update a existing customer order 
-		/// </summary>
-		/// <param name="customerOrder">customer order</param>
+        /// <summary>
+        ///  Update a existing customer order 
+        /// </summary>
+        /// <param name="customerOrder">customer order</param>
         [HttpPut]
         [ResponseType(typeof(void))]
         [Route("")]
-		public IHttpActionResult Update(webModel.CustomerOrder customerOrder)
+        public IHttpActionResult Update(webModel.CustomerOrder customerOrder)
         {
-			var coreOrder = customerOrder.ToCoreModel();
+            var coreOrder = customerOrder.ToCoreModel();
 
             //Check scope bound permission
             var scopes = _permissionScopeService.GetObjectPermissionScopeStrings(coreOrder).ToArray();
@@ -199,11 +199,11 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-		/// <summary>
-		/// Get new shipment for specified customer order
-		/// </summary>
-		/// <remarks>Return new shipment document with populates all required properties.</remarks>
-		/// <param name="id">customer order id </param>
+        /// <summary>
+        /// Get new shipment for specified customer order
+        /// </summary>
+        /// <remarks>Return new shipment document with populates all required properties.</remarks>
+        /// <param name="id">customer order id </param>
         [HttpGet]
         [ResponseType(typeof(webModel.Shipment))]
         [Route("{id}/shipments/new")]
@@ -225,19 +225,19 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
                 var shippedLineItemIds = order.Shipments.SelectMany(x => x.Items).Select(x => x.LineItemId);
 
                 //TODO Add check for digital products (don't add to shipment)
-				retVal.Items = order.Items.Where(x => !shippedLineItemIds.Contains(x.Id))
-							  .Select(x => new coreModel.ShipmentItem(x)).ToList();
+                retVal.Items = order.Items.Where(x => !shippedLineItemIds.Contains(x.Id))
+                              .Select(x => new coreModel.ShipmentItem(x)).ToList();
                 return Ok(retVal.ToWebModel());
             }
 
             return NotFound();
         }
 
-		/// <summary>
-		/// Get new payment for specified customer order
-		/// </summary>
-		/// <remarks>Return new payment  document with populates all required properties.</remarks>
-		/// <param name="id">customer order id </param>
+        /// <summary>
+        /// Get new payment for specified customer order
+        /// </summary>
+        /// <remarks>Return new payment  document with populates all required properties.</remarks>
+        /// <param name="id">customer order id </param>
         [HttpGet]
         [ResponseType(typeof(webModel.PaymentIn))]
         [Route("{id}/payments/new")]
@@ -261,10 +261,10 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
             return NotFound();
         }
 
-		/// <summary>
-		///  Delete a whole customer orders
-		/// </summary>
-		/// <param name="ids">customer order ids for delete</param>
+        /// <summary>
+        ///  Delete a whole customer orders
+        /// </summary>
+        /// <param name="ids">customer order ids for delete</param>
         [HttpDelete]
         [ResponseType(typeof(void))]
         [Route("")]
@@ -275,11 +275,11 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-		/// <summary>
-		///  Delete a concrete customer order operation (document) 
-		/// </summary>
-		/// <param name="id">customer order id</param>
-		/// <param name="operationId">operation id</param>
+        /// <summary>
+        ///  Delete a concrete customer order operation (document) 
+        /// </summary>
+        /// <param name="id">customer order id</param>
+        /// <param name="operationId">operation id</param>
         [HttpDelete]
         [ResponseType(typeof(void))]
         [Route("~/api/order/customerOrders/{id}/operations/{operationId}")]
@@ -313,24 +313,24 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-		/// <summary>
-		///  Get a some order statistic information for Commerce manager dashboard
-		/// </summary>
-		/// <param name="start">start interval date</param>
-		/// <param name="end">end interval date</param>
-		[HttpGet]
-		[ResponseType(typeof(webModel.DashboardStatisticsResult))]
-		[Route("~/api/order/dashboardStatistics")]
+        /// <summary>
+        ///  Get a some order statistic information for Commerce manager dashboard
+        /// </summary>
+        /// <param name="start">start interval date</param>
+        /// <param name="end">end interval date</param>
+        [HttpGet]
+        [ResponseType(typeof(webModel.DashboardStatisticsResult))]
+        [Route("~/api/order/dashboardStatistics")]
         [OverrideAuthorization]
-		public IHttpActionResult GetDashboardStatistics([FromUri]DateTime? start = null, [FromUri]DateTime? end = null)
-		{
+        public IHttpActionResult GetDashboardStatistics([FromUri]DateTime? start = null, [FromUri]DateTime? end = null)
+        {
             webModel.DashboardStatisticsResult retVal = null;
             start = start ?? DateTime.UtcNow.AddYears(-1);
-			end = end ?? DateTime.UtcNow;
+            end = end ?? DateTime.UtcNow;
 
             // Hack: to compinsate for incorrect Local dates to UTC
             end = end.Value.AddDays(2);
-			var cacheKey = CacheKey.Create("Statistic", start.Value.ToString("yyyy-MM-dd"), end.Value.ToString("yyyy-MM-dd"));
+            var cacheKey = CacheKey.Create("Statistic", start.Value.ToString("yyyy-MM-dd"), end.Value.ToString("yyyy-MM-dd"));
             lock (_lockObject)
             {
                 retVal = _cacheManager.Get(cacheKey, () =>
