@@ -29,7 +29,6 @@
                 blade.isLoading = false;
                 $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
                 $scope.listEntries = data.members;
-                uiGridHelper.onDataLoaded($scope.gridOptions, $scope.listEntries);
 
                 //Set navigation breadcrumbs
                 setBreadcrumbs();

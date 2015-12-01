@@ -10,7 +10,6 @@
             modules.getModules({}, function (results) {
                 blade.isLoading = false;
                 blade.currentEntities = results;
-                uiGridHelper.onDataLoaded($scope.gridOptions, blade.currentEntities);
             }, function (error) {
                 bladeNavigationService.setError('Error ' + error.status, blade);
             });
