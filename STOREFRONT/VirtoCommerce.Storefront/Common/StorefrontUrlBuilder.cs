@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.Hosting;
 using VirtoCommerce.Storefront.Model;
@@ -21,10 +18,21 @@ namespace VirtoCommerce.Storefront.Common
             _workContext = workContext;
         }
         #region IStorefrontUrlBuilder members
+
+        public string ToAppAbsolute(string virtualPath)
+        {
+            return ToAppAbsolute(virtualPath, _workContext.CurrentStore, _workContext.CurrentLanguage);
+        }
+
         public string ToAppAbsolute(string virtualPath, Store store, Language language)
         {
             var retVal = VirtualPathUtility.ToAbsolute(ToAppRelative(virtualPath, store, language));
             return retVal;
+        }
+
+        public string ToAppRelative(string virtualPath)
+        {
+            return ToAppRelative(virtualPath, _workContext.CurrentStore, _workContext.CurrentLanguage);
         }
 
         public string ToAppRelative(string virtualPath, Store store, Language language)
@@ -35,7 +43,7 @@ namespace VirtoCommerce.Storefront.Common
             if (store != null)
             {
                 //Do not use store in url if it single
-                if (_workContext.AllStores.Count() > 1)
+                if (_workContext.AllStores.Length > 1)
                 {
                     //Check that store exist for not exist store use current
                     store = _workContext.AllStores.Contains(store) ? store : _workContext.CurrentStore;
@@ -47,7 +55,7 @@ namespace VirtoCommerce.Storefront.Common
             }
 
             //Do not use language in url if it single for store
-            if (language != null && store != null && store.Languages.Count() > 1)
+            if (language != null && store != null && store.Languages.Count > 1)
             {
                 language = store.Languages.Contains(language) ? language : store.DefaultLanguage;
                 if (!virtualPath.Contains("/" + language.CultureName + "/"))

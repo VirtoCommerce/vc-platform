@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using VirtoCommerce.Storefront.Model.Common;
+using VirtoCommerce.Storefront.Model.Order;
 
 namespace VirtoCommerce.Storefront.Model
 {
@@ -50,7 +51,7 @@ namespace VirtoCommerce.Storefront.Model
         {
             get
             {
-                return this.Addresses == null ? 0 : this.Addresses.Count;
+                return Addresses == null ? 0 : Addresses.Count;
             }
         }
 
@@ -68,5 +69,7 @@ namespace VirtoCommerce.Storefront.Model
         /// Returns the list of tags associated with the customer.
         /// </summary>
         public ICollection<string> Tags { get; set; }
+        public ICollection<CustomerOrder> Orders { get; set; }
+        public int OrdersCount { get; set; }
     }
 }

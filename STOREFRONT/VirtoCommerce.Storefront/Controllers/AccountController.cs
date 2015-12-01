@@ -25,26 +25,29 @@ namespace VirtoCommerce.Storefront.Controllers
         private readonly ICustomerManagementModuleApi _customerApi;
         private readonly IAuthenticationManager _authenticationManager;
         private readonly IVirtoCommercePlatformApi _platformApi;
+        private readonly IOrderModuleApi _orderApi;
 
-        public AccountController(WorkContext workContext, IStorefrontUrlBuilder urlBuilder, ICommerceCoreModuleApi commerceCoreApi, ICustomerManagementModuleApi customerApi, IAuthenticationManager authenticationManager, IVirtoCommercePlatformApi platformApi)
+        public AccountController(WorkContext workContext, IStorefrontUrlBuilder urlBuilder, ICommerceCoreModuleApi commerceCoreApi, ICustomerManagementModuleApi customerApi, IAuthenticationManager authenticationManager, IVirtoCommercePlatformApi platformApi, IOrderModuleApi orderApi)
             : base(workContext, urlBuilder)
         {
             _commerceCoreApi = commerceCoreApi;
             _customerApi = customerApi;
             _authenticationManager = authenticationManager;
             _platformApi = platformApi;
+            _orderApi = orderApi;
         }
 
         [HttpGet]
         [Route("")]
-        public ActionResult Index(int page = 1)
+        public async Task<ActionResult> Index(int page = 1)
         {
-            if (HttpContext.User.Identity.IsAuthenticated)
-            {
-                return View("customers/account", WorkContext);
-            }
+            if (page < 1)
+                page = 1;
 
-            return StoreFrontRedirect("~/account/login");
+            var ordersResponse = await _orderApi.OrderModuleSearchAsync(criteriaCustomerId: WorkContext.CurrentCustomer.Id);
+            WorkContext.CurrentCustomer.OrdersCount = ordersResponse.TotalCount.Value;
+            WorkContext.CurrentCustomer.Orders = ordersResponse.CustomerOrders.Select(o => o.ToWebModel()).ToList();
+            return View("customers/account", WorkContext);
         }
 
         [HttpGet]
