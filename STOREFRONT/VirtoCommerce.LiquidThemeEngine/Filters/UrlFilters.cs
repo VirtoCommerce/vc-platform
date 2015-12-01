@@ -152,7 +152,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
             storefrontModel.Language language = null;
             if (!string.IsNullOrEmpty(storeId))
             {
-                store = themeAdaptor.WorkContext.AllStores.FirstOrDefault(x => string.Equals(x.Id, storeId, StringComparison.InvariantCultureIgnoreCase));
+                store = themeAdaptor.WorkContext.AllStores.FirstOrDefault(x => string.Equals(x.Name, storeId, StringComparison.InvariantCultureIgnoreCase));
             }
             store = store ?? themeAdaptor.WorkContext.CurrentStore;
 

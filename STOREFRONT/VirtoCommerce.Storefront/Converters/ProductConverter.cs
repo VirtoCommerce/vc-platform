@@ -41,7 +41,9 @@ namespace VirtoCommerce.Storefront.Converters
             }
 
             if (product.Variations != null)
+            {
                 retVal.Variations = product.Variations.Select(v => v.ToWebModel()).ToList();
+            }
 
             if (product.SeoInfos != null)
                 retVal.SeoInfo = product.SeoInfos.Select(s => s.ToWebModel()).FirstOrDefault();

@@ -64,7 +64,6 @@
     <Compile Include="Image.cs" />
     <Compile Include="Catalog\Inventory.cs" />
     <Compile Include="Catalog\ProductPrice.cs" />
-    <Compile Include="Catalog\ProductPropertyValue.cs" />
     <Compile Include="Catalog\Category.cs" />
     <Compile Include="Common\ArrayExtensions.cs" />
     <Compile Include="Common\DefaultableDictionary.cs" />

@@ -38,7 +38,7 @@ namespace VirtoCommerce.Storefront.Controllers
         [Route("{productId}")]
         public async Task<ActionResult> GetProductDetails(string productId)
         {
-            base.WorkContext.CurrentProduct = await _productService.GetProductAsync(productId, Model.Catalog.ItemResponseGroup.ItemLarge);
+            base.WorkContext.CurrentProduct = await _productService.GetProductAsync(productId, Model.Catalog.ItemResponseGroup.ItemInfo);
             return View("product", base.WorkContext);
         }
 

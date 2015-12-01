@@ -80,8 +80,8 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             }
             result.InventoryPolicy = "continue";
             result.InventoryQuantity = product.Inventory != null ? product.Inventory.InStockQuantity ?? 0 : 0;
-            result.Options = product.Properties.Where(x => string.Equals(x.Type, "variation", System.StringComparison.InvariantCultureIgnoreCase) && x.Values != null)
-                                               .Select(x => string.Join(";", x.Values.Select(y=>y.Value))).ToArray();
+            result.Options = product.Properties.Where(x => string.Equals(x.Type, "variation", System.StringComparison.InvariantCultureIgnoreCase) && x.Value != null)
+                                               .Select(x => string.Join(";", x.Value)).ToArray();
 
             result.Price = product.Price.SalePrice.Amount;
             result.Selected = false;

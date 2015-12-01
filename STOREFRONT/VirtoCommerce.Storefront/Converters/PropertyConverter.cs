@@ -17,17 +17,18 @@ namespace VirtoCommerce.Storefront.Converters
             retVal.InjectFrom(property);
             if (property.Values != null)
             {
-                retVal.Values = property.Values.Select(v => v.ToWebModel()).ToList();
+                var propValue = property.Values.Where(x => x.Value != null).FirstOrDefault();
+                if (propValue != null)
+                {
+                    //Use only one prop value (reserve multivalues to other scenarious)
+                    retVal.Value = propValue.Value.ToString();
+                    retVal.ValueId = propValue.ValueId;
+                }
             }
             
             return retVal;
         }
 
-        public static PropertyValue ToWebModel(this VirtoCommerceCatalogModuleWebModelPropertyValue propertyValue)
-        {
-            var retVal = new PropertyValue();
-            retVal.InjectFrom(propertyValue);
-            return retVal;
-        }
+     
     }
 }

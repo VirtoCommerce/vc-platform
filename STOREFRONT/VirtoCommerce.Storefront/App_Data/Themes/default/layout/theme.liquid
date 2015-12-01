@@ -17,7 +17,7 @@
     {% endif %}
 
     {% include 'open-graph-tags' %}
-    {% include 'twitter-card' %}
+    <!--{% include 'twitter-card' %}-->
 
     <link rel="canonical" href="{{ canonical_url }}" />
 
@@ -26,6 +26,7 @@
     {{ '//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css' | stylesheet_tag }}
     {{ 'ajaxify.scss.css' | asset_url | stylesheet_tag }}
     {{ 'default.scss.css' | asset_url | stylesheet_tag }}
+    {{ 'storefront.css' | asset_url | stylesheet_tag }}
     {% include 'google-fonts' %}
 
     {{ content_for_header }}

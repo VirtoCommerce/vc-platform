@@ -93,7 +93,11 @@ namespace VirtoCommerce.Storefront.Services
             foreach (var item in products)
             {
                 item.Prices = result.Where(x => x.ProductId == item.Id).Select(x => x.ToWebModel()).ToList();
-                item.Price = item.Prices.FirstOrDefault(x => x.Currency.Equals(_workContext.CurrentCurrency));
+                var price = item.Prices.FirstOrDefault(x => x.Currency.Equals(_workContext.CurrentCurrency));
+                if (price != null)
+                {
+                    item.Price = price;
+                }
             }
         }
 

@@ -165,28 +165,27 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         /// </summary>
         public string Vendor { get; set; }
 
-
       
         /// <summary>
         /// List of product properties
         /// </summary>
-        public List<ProductProperty> Properties { get; set; }
+        public ICollection<ProductProperty> Properties { get; set; }
 
 
         /// <summary>
         /// List of product assets
         /// </summary>
-        public List<Asset> Assets { get; set; }
+        public ICollection<Asset> Assets { get; set; }
 
         /// <summary>
         /// List of product variations
         /// </summary>
-        public List<Product> Variations { get; set; }
+        public ICollection<Product> Variations { get; set; }
 
         /// <summary>
         /// Product editorial reviews
         /// </summary>
-        public List<EditorialReview> EditorialReviews { get; set; }
+        public ICollection<EditorialReview> EditorialReviews { get; set; }
 
         /// <summary>
         /// Current product price

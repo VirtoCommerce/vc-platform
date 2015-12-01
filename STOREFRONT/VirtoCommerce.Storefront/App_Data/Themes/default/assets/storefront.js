@@ -1,59 +1,66 @@
 ﻿var app = angular.module('storefrontApp', ['ngRoute']);
 
+app.service('productService', ['$http', function ($http) {
+	return {
+		getProduct: function (productId) {
+			return $http.get('product/' + productId + '/json');
+		}
+	}
+}]);
 app.service('cartService', ['$http', function ($http) {
     return {
         getCart: function () {
-            return $http.get('/cart/json').then(function (response) {
+            return $http.get('cart/json').then(function (response) {
                 return response.data;
             });
         },
         addLineItem: function (productId, quantity) {
-            return $http.post('/cart/add_item', { productId: productId, quantity: quantity }).then(function (response) {
+            return $http.post('cart/add_item', { productId: productId, quantity: quantity }).then(function (response) {
                 return response.data;
             });
         },
         changeLineItem: function (lineItemId, quantity) {
-            return $http.post('/cart/change_item', { lineItemId: lineItemId, quantity: quantity }).then(function (response) {
+            return $http.post('cart/change_item', { lineItemId: lineItemId, quantity: quantity }).then(function (response) {
                 return response.data;
             });
         },
         removeLineItem: function (lineItemId) {
-            return $http.post('/cart/remove_item', { lineItemId: lineItemId }).then(function (response) {
+            return $http.post('cart/remove_item', { lineItemId: lineItemId }).then(function (response) {
                 return response.data;
             });
         },
         addAddress: function (address) {
-            return $http.post('/cart/add_address', { address: address }).then(function (response) {
+            return $http.post('cart/add_address', { address: address }).then(function (response) {
                 return response.data;
             });
         },
         getShippingMethods: function (cartId) {
-            return $http.get('/cart/' + cartId + '/shipping_methods/json').then(function (response) {
+            return $http.get('cart/' + cartId + '/shipping_methods/json').then(function (response) {
                 return response.data;
             });
         },
         getPaymentMethods: function (cartId) {
-            return $http.get('/cart/' + cartId + '/payment_methods/json').then(function (response) {
+            return $http.get('cart/' + cartId + '/payment_methods/json').then(function (response) {
                 return response.data;
             });
         },
         setShippingMethod: function (shippingMethodCode) {
-            return $http.post('/cart/shipping_method', { shippingMethodCode: shippingMethodCode }).then(function (response) {
+            return $http.post('cart/shipping_method', { shippingMethodCode: shippingMethodCode }).then(function (response) {
                 return response.data;
             });
         },
         setPaymentMethod: function (paymentMethodCode) {
-            return $http.post('/cart/payment_method', { paymentMethodCode: paymentMethodCode }).then(function (response) {
+            return $http.post('cart/payment_method', { paymentMethodCode: paymentMethodCode }).then(function (response) {
                 return response.data;
             });
         },
         createOrder: function (cartId) {
-            return $http.post('/cart/' + cartId + '/create_order').then(function (response) {
+            return $http.post('cart/' + cartId + '/create_order').then(function (response) {
                 return response.data;
             });
         },
         processPayment: function (orderId, paymentId) {
-            return $http.post('/cart/process_payment', { orderId: orderId, paymentId: paymentId }).then(function (response) {
+            return $http.post('cart/process_payment', { orderId: orderId, paymentId: paymentId }).then(function (response) {
                 return response.data;
             });
         }
@@ -218,6 +225,86 @@ app.controller('checkoutController', ['$scope', '$route', '$location', 'cartServ
 
     $scope.createOrder = function () {
     }
+}]);
+
+app.controller('productController', ['$scope', '$window', 'productService', function ($scope, $window, productService) {
+	$scope.origProduct = {};
+	$scope.product = {};
+	$scope.allVariationProperties = {};
+
+	function Initialize() {
+		productService.getProduct($window.productId).then(function (response) {
+			$scope.origProduct = response.data;
+			$scope.allVariationProperties = getFlatternDistinctAllProductVariationProperties($scope.origProduct);	
+		});
+	};
+
+	function getFlatternDistinctAllProductVariationProperties(product) {
+		var retVal = getProductVariationPropertyMap(product);
+		_.each(product.Variations, function (variation) {
+			var propertyMap = getProductVariationPropertyMap(variation);
+			//merge
+			_.each(_.keys(propertyMap), function (x) {
+				retVal[x] = _.uniq(_.union(retVal[x], propertyMap[x]), "Value");
+			});
+		});
+		return retVal;
+	};
+
+	function getProductVariationPropertyMap(product) {
+		var retVal = _.where(product.Properties, { Type: 'Variation' });
+		retVal = _.groupBy(retVal, function (x) { return x.Name });
+		return retVal;
+	};
+
+	function getSelectedPropsMap(allVariationProperties) {
+		var retVal = {};
+		_.each(_.keys(allVariationProperties), function (x) {
+			var property = _.find(allVariationProperties[x], function (y) {
+				return y.selected;
+			});
+			if (property) {
+				retVal[x] = [property];
+			}
+		});
+		return retVal;
+	};
+
+	function comparePropertyMaps(propMap1, propMap2) {
+		return _.every(_.keys(propMap1), function (x) {
+			var retVal = propMap2.hasOwnProperty(x);
+			if(retVal)
+			{
+				retVal = propMap1[x][0].Value == propMap2[x][0].Value;
+			}
+			return retVal;
+		});
+	};
+
+	function findSelectedVariation(product, selectedPropMap) {
+		var retVal = _.find(product.Variations, function (x) {
+			var productPropMap = getProductVariationPropertyMap(x);
+			return comparePropertyMaps(productPropMap, selectedPropMap);
+		});
+		return retVal;
+	};
+
+	$scope.checkProperty = function (property) {
+		var prevSelected = _.each($scope.allVariationProperties[property.Name], function (x) {
+			if (x != property) {
+				x.selected = false;
+			}
+			else {
+				x.selected = !x.selected;
+			}
+		});
+		var selectedPropsMap = getSelectedPropsMap($scope.allVariationProperties);
+		//try to find best match variation 
+		$scope.product = findSelectedVariation($scope.origProduct, selectedPropsMap);
+		
+	};
+
+	Initialize();
 }]);
 
 app.config(['$interpolateProvider', '$routeProvider', '$locationProvider', function ($interpolateProvider, $routeProvider, $locationProvider) {

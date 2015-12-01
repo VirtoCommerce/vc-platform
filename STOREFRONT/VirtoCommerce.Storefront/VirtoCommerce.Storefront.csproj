@@ -210,7 +210,7 @@
     <Content Include="App_Data\Themes\default\assets\shopify_common.js" />
     <Content Include="App_Data\Themes\default\assets\slide_1.jpg" />
     <Content Include="App_Data\Themes\default\assets\slide_2.jpg" />
-    <Content Include="App_Data\Themes\default\assets\productDetails.js" />
+    <Content Include="App_Data\Themes\default\assets\storefront.css" />
     <None Include="App_Data\Themes\default\snippets\checkout-footer.liquid" />
     <Content Include="App_Data\Themes\default\social\shopify-social.svg" />
     <Content Include="App_Data\Themes\default\social\social-icons.css" />

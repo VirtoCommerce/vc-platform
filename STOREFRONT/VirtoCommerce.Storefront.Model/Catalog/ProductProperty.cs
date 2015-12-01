@@ -24,9 +24,7 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         /// </summary>
         public string ValueType { get; set; }
 
-        /// <summary>
-        /// Current property values. Collection is used as a general placeholder to store both single and multi-value values.
-        /// </summary>
-        public List<PropertyValue> Values { get; set; }
+        public string ValueId { get; set; }
+        public string Value { get; set; }
     }
 }
