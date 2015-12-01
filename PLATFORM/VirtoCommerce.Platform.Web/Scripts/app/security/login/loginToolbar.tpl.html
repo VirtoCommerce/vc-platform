@@ -3,6 +3,10 @@
         <div class="first-name">{{fullName}}</div>
         <div class="last-name">{{userLogin}}</div>
     </div>
+    <a class="sign-out" href="" ng-click="openProfile()">
+        <i class="sign-ico fa fa-user"></i>
+        {{ 'platform.commands.manage-profile' | translate }}
+    </a>
     <a class="sign-out" href="" ng-click="logout()" >
         <i class="sign-ico fa fa-sign-out"></i>
         {{ 'platform.commands.sign-out' | translate }}

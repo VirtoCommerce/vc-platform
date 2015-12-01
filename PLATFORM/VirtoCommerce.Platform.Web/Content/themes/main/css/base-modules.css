@@ -5141,8 +5141,8 @@ tags-input .tags .tag-item .remove-button
 .ui-grid-cell,
 .ui-grid-cell .ui-grid-vertical-bar
 {
-    overflow: hidden;
-    position: relative;
+    overflow: visible;
+    position: static;
 }
 
 /*.ui-grid-row
@@ -5357,7 +5357,8 @@ input.ui-grid-filter-input[type="text"]
 .ui-grid-row > :first-child
 {
     height: 100%;
-    overflow: hidden;
+    overflow: visible;
+    position: relative;
 }
 
 .ui-grid-render-container-left .ui-grid-header-cell,
@@ -5416,21 +5417,30 @@ input.ui-grid-filter-input[type="text"]
     display: none;
 }
 
-.ui-grid .expandableRow
-{
-    background: #333;
-    height: 100%;
-    position: absolute;
-    top: 0;
-}
-
-.expandableRow .menu,
-.expandableRow .menu-item
+.ui-grid-actions
 {
     height: 100%;
+    position: relative;
+    text-align: center;
+    z-index: 50;
 }
 
-.expandableRow .menu-item::after
+.ui-grid-actions .fa
+{
+    color: #43b0e6;
+    font-size: 21px;
+    vertical-align: middle;
+
+    -webkit-transition: font .3s ease;
+            transition: font .3s ease;
+}
+
+.ui-grid-actions:hover .fa
+{
+    font-size: 28px;
+}
+
+.ui-grid-actions::after
 {
     content: ' ';
     display: inline-block;
@@ -5438,22 +5448,52 @@ input.ui-grid-filter-input[type="text"]
     vertical-align: middle;
 }
 
-.expandableRow .menu-ico
+.ui-grid-actions ~ .menu
 {
-    margin: 0 5px 0 0;
+    background: #dee9f0;
+    height: 100%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 0;
+    white-space: nowrap;
+    z-index: 10;
+
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+
+    -webkit-transition: width .35s ease .5s;
+            transition: width .35s ease .5s;
 }
 
-.expandableRow .menu-link
+.ui-grid-actions.__opened ~ .menu
 {
-    color: #fff;
+    width: calc(100% - 80px);
+}
+
+.ui-grid-actions ~ .menu::after
+{
+    content: ' ';
     display: inline-block;
-    padding: 0 20px;
+    height: 100%;
     vertical-align: middle;
 }
 
-.expandableRow .menu-link:hover
+.ui-grid-actions ~ .menu .menu-item
 {
-    color: #43b0e6;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.ui-grid-actions ~ .menu .menu-link
+{
+    display: block;
+    padding: 0 10px;
+}
+
+.ui-grid-actions ~ .menu .menu-ico
+{
+    width: 18px;
 }
 
 /* Image preview */

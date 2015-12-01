@@ -24,6 +24,7 @@ using VirtoCommerce.OrderModule.Web.BackgroundJobs;
 using VirtoCommerce.OrderModule.Data.Repositories;
 using VirtoCommerce.OrderModule.Web.Security;
 using System.Web;
+using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 {
@@ -38,10 +39,11 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 		private readonly Func<IOrderRepository> _repositoryFactory;
         private readonly ISecurityService _securityService;
         private readonly IPermissionScopeService _permissionScopeService;
+        private readonly ISettingsManager _settingManager;
         private static object _lockObject = new object();
 
         public OrderModuleController(ICustomerOrderService customerOrderService, ICustomerOrderSearchService searchService, IStoreService storeService, IUniqueNumberGenerator numberGenerator, 
-                                     CacheManager cacheManager, Func<IOrderRepository> repositoryFactory, IPermissionScopeService permissionScopeService, ISecurityService securityService)
+                                     CacheManager cacheManager, Func<IOrderRepository> repositoryFactory, IPermissionScopeService permissionScopeService, ISecurityService securityService, ISettingsManager settingManager)
         {
             _customerOrderService = customerOrderService;
             _searchService = searchService;
@@ -51,6 +53,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 			_repositoryFactory = repositoryFactory;
             _securityService = securityService;
             _permissionScopeService = permissionScopeService;
+            _settingManager = settingManager;
         }
 
 		/// <summary>
@@ -214,11 +217,12 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
                 {
                     Currency = order.Currency
                 };
-                retVal.Number = _uniqueNumberGenerator.GenerateNumber("SH{0:yyMMdd}-{1:D5}");
+                var numberTemplate = _settingManager.GetValue("Order.ShipmentNewNumberTemplate", "SH{0:yyMMdd}-{1:D5}");
+                retVal.Number = _uniqueNumberGenerator.GenerateNumber(numberTemplate);
 
                 //Detect not whole shipped items
                 //TODO: LineItem partial shipping
-                var shippedLineItemIds = order.Shipments.SelectMany(x => x.Items).Select(x=>x.LineItemId);
+                var shippedLineItemIds = order.Shipments.SelectMany(x => x.Items).Select(x => x.LineItemId);
 
                 //TODO Add check for digital products (don't add to shipment)
 				retVal.Items = order.Items.Where(x => !shippedLineItemIds.Contains(x.Id))
@@ -249,7 +253,8 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
                     Currency = order.Currency,
                     CustomerId = order.CustomerId
                 };
-                retVal.Number = _uniqueNumberGenerator.GenerateNumber("PI{0:yyMMdd}-{1:D5}");
+                var numberTemplate = _settingManager.GetValue("Order.PaymentInNewNumberTemplate", "PI{0:yyMMdd}-{1:D5}");
+                retVal.Number = _uniqueNumberGenerator.GenerateNumber(numberTemplate);
                 return Ok(retVal.ToWebModel());
             }
 
@@ -326,7 +331,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
             // Hack: to compinsate for incorrect Local dates to UTC
             end = end.Value.AddDays(2);
 			var cacheKey = CacheKey.Create("Statistic", start.Value.ToString("yyyy-MM-dd"), end.Value.ToString("yyyy-MM-dd"));
-            lock(_lockObject)
+            lock (_lockObject)
             {
                 retVal = _cacheManager.Get(cacheKey, () =>
                 {

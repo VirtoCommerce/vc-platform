@@ -26,7 +26,6 @@ function ($scope, accounts, bladeNavigationService, dialogService, uiGridConstan
 
             $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
             blade.currentEntities = data.users;
-            uiGridHelper.onDataLoaded($scope.gridOptions, blade.currentEntities);
 
             if (selectedNode != null) {
                 //select the node in the new list

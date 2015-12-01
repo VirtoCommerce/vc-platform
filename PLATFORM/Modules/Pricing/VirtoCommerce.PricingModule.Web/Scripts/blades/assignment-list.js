@@ -10,7 +10,6 @@ function ($scope, assignments, bladeNavigationService, dialogService, uiGridCons
         assignments.query({}, function (data) {
             blade.isLoading = false;
             blade.currentEntities = data;
-            uiGridHelper.onDataLoaded($scope.gridOptions, blade.currentEntities);
         }, function (error) {
             bladeNavigationService.setError('Error ' + error.status, blade);
         });

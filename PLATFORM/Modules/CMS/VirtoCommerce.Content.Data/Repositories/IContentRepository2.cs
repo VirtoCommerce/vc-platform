@@ -82,4 +82,23 @@ namespace VirtoCommerce.Content.Data.Repositories
 
         string LastCommitId { get; set; }
     }
+
+    public class ContentLoadCritetia : IContentLoadCriteria
+    {
+        public bool IsRecursive
+        {
+            get;
+            set;
+        }
+
+        public string LastCommitId
+        {
+            get; set;
+        }
+
+        public bool LoadContents
+        {
+            get; set;
+        }
+    }
 }

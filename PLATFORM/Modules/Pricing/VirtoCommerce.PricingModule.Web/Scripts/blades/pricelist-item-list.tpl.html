@@ -1,42 +1,34 @@
 ﻿<div class="blade-static">
     <div class="form-group">
         <div class="form-input __search">
-            <input placeholder="{{'pricing.blades.pricelist-item-list.placeholders.search-item' | translate}}" ng-model="searchText">
+            <input placeholder="{{'pricing.blades.pricelist-item-list.placeholders.search-item' | translate}}" ng-model="blade.searchText" ng-keyup="gridApi.grid.queueGridRefresh()">
         </div>
-        <p class="form-count">{{'platform.list.count' | translate}}: <span class="count">{{filteredEntities.length}}</span></p>
+        <p class="form-count">{{'platform.list.count' | translate}}: <span class="count">{{filteredEntitiesCount}}</span></p>
     </div>
 </div>
+<div class="blade-static __bottom" ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems" ng-include="'pagerTemplate.html'"></div>
 <div class="blade-content __large-wide">
     <div class="blade-inner">
         <div class="inner-block">
-            <div class="table-wrapper">
-                <table class="table __normal">
-                    <thead>
-                        <tr>
-                            <th class="table-col __product-name">{{'pricing.blades.pricelist-item-list.labels.item-name' | translate}}</th>
-                            <th class="table-col __product-code">{{'pricing.blades.pricelist-item-list.labels.item-code' | translate}}</th>
-                            <th class="table-col">{{'pricing.blades.pricelist-item-list.labels.price-range' | translate}}</th>
-                            <th class="table-col">{{'pricing.blades.pricelist-item-list.labels.prices-count' | translate}}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="table-item" ng-repeat="data in blade.currentEntities | orderBy:'productName' | filter:searchText as filteredEntities track by data.productId" ng-class="{'__selected': data.productId === selectedNodeId}" ng-click='selectNode(data)'>
-                            <td class="table-col __product-name">
-                                <span title="{{data.productName}}">{{data.productName}}</span>
-                            </td>
-                            <td class="table-col __product-code">
-                                <span>{{data.productId}}</span>
-                            </td>
-                            <td class="table-col">
-                                <span>{{getPriceRange(data)}}</span>
-                            </td>
-                            <td class="table-col">
-                                {{data.prices.length}}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="table-wrapper" ng-init="setGridOptions({
+                    rowTemplate: 'list.row.html',
+                    columnDefs: [
+                        { name: 'productName', displayName: 'pricing.blades.pricelist-item-list.labels.item-name', cellTooltip:true, sort: { direction: uiGridConstants.ASC }},
+                        { name: 'productId', displayName: 'pricing.blades.pricelist-item-list.labels.item-code' },
+                        { name: 'pricesLength', displayName: '#', headerTooltip: 'pricing.blades.pricelist-item-list.labels.prices-count', field: 'prices.length', width: 30},
+                        { name: 'prices', displayName: 'pricing.blades.pricelist-item-list.labels.price-range', headerTooltip: true, width: 90, cellTemplate: 'pricelistItems-list-priceRange.cell.html'}
+                    ],
+                    enablePaginationControls: false,
+                    paginationPageSize: pageSettings.itemsPerPageCount})">
+                <div ui-grid="gridOptions" ui-grid-save-state ui-grid-resize-columns ui-grid-move-columns ui-grid-pagination></div>
             </div>
         </div>
     </div>
 </div>
+
+<script type="text/ng-template" id="list.row.html">
+    <div ng-click='grid.appScope.selectNode(row.entity)' ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'" class="ui-grid-cell" ng-class="{'ui-grid-row-header-cell': col.isRowHeader, '__selected': row.entity.productId===grid.appScope.selectedNodeId }" role="{{col.isRowHeader ? 'rowheader' : 'gridcell' }}" ui-grid-cell style='cursor:pointer'></div>
+</script>
+<script type="text/ng-template" id="pricelistItems-list-priceRange.cell.html">
+    <div class="ui-grid-cell-contents">{{grid.appScope.getPriceRange(row.entity)}}</div>
+</script>

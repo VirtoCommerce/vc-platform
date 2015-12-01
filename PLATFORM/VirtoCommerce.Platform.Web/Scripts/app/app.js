@@ -15,7 +15,8 @@
   'angularFileUpload',
   'ngSanitize',
   'ng-context-menu',
-  'ui.grid', 'ui.grid.expandable', 'ui.grid.resizeColumns', 'ui.grid.moveColumns', 'ui.grid.saveState', 'ui.grid.selection', 'ui.grid.pagination',
+  'ui.grid', 'ui.grid.resizeColumns', 'ui.grid.moveColumns', 'ui.grid.saveState', 'ui.grid.selection', 'ui.grid.pagination',
+  'ui.grid.draggable-rows',
   'ui.codemirror',
   'focusOn',
   'textAngular',
@@ -100,7 +101,7 @@ angular.module('platformWebApp', AppDependencies).
       //Localization
       // https://angular-translate.github.io/docs/#/guide
       // var defaultLanguage = settings.getValues({ id: 'VirtoCommerce.Platform.General.ManagerDefaultLanguage' });
-      $translateProvider.useUrlLoader('api/platform/localization/locale')
+      $translateProvider.useUrlLoader('api/platform/localization')
         .useLoaderCache(true)
         .useSanitizeValueStrategy('escapeParameters')
         .preferredLanguage('en')
@@ -240,6 +241,8 @@ angular.module('platformWebApp', AppDependencies).
                     $localStorage['gridState:' + $scope.blade.template] = gridApi.saveState.save();
                 }
 
+                gridApi.grid.registerDataChangeCallback(generateMissingColumns, [uiGridConstants.dataChange.ROW]);
+
                 // update grid menu behavior
                 gridApi.grid.registerDataChangeCallback(updateGridStyles, [uiGridConstants.dataChange.ROW]);
                 if ($scope.gridOptions.paginationPageSize > 0) {
@@ -266,19 +269,20 @@ angular.module('platformWebApp', AppDependencies).
                 }
             }
         }, gridOptions);
-    };
 
-    retVal.onDataLoaded = function (gridOptions, currentEntities) {
-        //gridOptions.minRowsToShow = currentEntities.length;
+        function generateMissingColumns(grid) {
+            var gridOptions = grid.options;
+            //gridOptions.minRowsToShow = currentEntities.length;
 
-        if (!gridOptions.columnDefsGenerated && _.any(currentEntities)) {
-            // generate columnDefs for each undefined property
-            _.each(_.keys(currentEntities[0]), function (x) {
-                if (!_.findWhere(gridOptions.columnDefs, { name: x })) {
-                    gridOptions.columnDefs.push({ name: x, visible: false });
-                }
-            });
-            gridOptions.columnDefsGenerated = true;
+            if (!gridOptions.columnDefsGenerated && _.any(grid.rows)) {
+                // generate columnDefs for each undefined property
+                _.each(_.without(_.keys(grid.rows[0].entity), '$$hashKey'), function (x) {
+                    if (!_.findWhere(gridOptions.columnDefs, { name: x })) {
+                        gridOptions.columnDefs.push({ name: x, visible: false });
+                    }
+                });
+                gridOptions.columnDefsGenerated = true;
+            }
         }
     };
 

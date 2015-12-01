@@ -24,12 +24,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </summary>
         /// <returns>json</returns>
         [System.Web.Http.HttpGet]
-        [System.Web.Http.Route("locale")]
+        [System.Web.Http.Route("")]
         [ResponseType(typeof(object))]
         [AllowAnonymous]
-        public JObject GetLocalization(string locale = "en")
+        public JObject GetLocalization(string lang = "en")
         {
-            var searchPattern = string.Format("{0}.*.json", locale);
+            var searchPattern = string.Format("{0}.*.json", lang);
             var files = GetAllLocalizationFiles(searchPattern);
 
             var result = new JObject();

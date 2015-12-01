@@ -536,7 +536,7 @@
     <Content Include="Scripts\app\security\blades\account-roles.js" />
     <Content Include="Scripts\app\security\blades\security-main.js" />
     <Content Include="Scripts\app\security\blades\security-main.tpl.html" />
-    <Content Include="Scripts\app\security\login\login.js" />
+    <Content Include="Scripts\app\security\login\loginToolbar.js" />
     <Content Include="Scripts\app\security\login\login.tpl.html" />
     <Content Include="Scripts\app\security\login\loginToolbar.tpl.html" />
     <Content Include="Scripts\app\security\blades\role-detail.js" />
@@ -577,6 +577,7 @@
     <Content Include="Scripts\app\navigation\blade\bladeNavigation.js" />
     <Content Include="Scripts\codemirror\ui-codemirror.js" />
     <Content Include="Scripts\codemirror\xml.js" />
+    <Content Include="Scripts\common\directives\ng-context-menu.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
