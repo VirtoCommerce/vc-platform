@@ -17,16 +17,30 @@
 	margin: 20px 0;
 }
 
+.product-sku .informer
+{
+	background: #eee;
+	font-size: 12px;
+	display: inline-block;
+	border: 1px solid #ddd;
+	margin: -15px 0 15px;
+	padding: 5px;
+	vertical-align: top;
+}
+
 .product-sku .size,
 .product-sku .color
 {
 	margin: -10px 0 15px;
+	word-spacing: -5px;
 }
 
 .product-sku .size li,
 .product-sku .color li
 {
 	display: inline-block;
+	margin: 0 5px 5px 0;
+	word-spacing: 0;
 }
 
 .product-sku .size li a,
