@@ -16,13 +16,13 @@ namespace VirtoCommerce.Storefront.Model.Order
         }
 
         /// <summary>
-        /// Price with tax and without dicount
+        /// Price where tax and discount are not applied
         /// </summary>
         /// <value>Price with tax and without dicount</value>
         public Money BasePrice { get; set; }
 
         /// <summary>
-        /// Price with tax and discount
+        /// Price where tax is not applied and discount is applied
         /// </summary>
         /// <value>Price with tax and discount</value>
         public Money Price { get; set; }
@@ -108,7 +108,7 @@ namespace VirtoCommerce.Storefront.Model.Order
         /// <summary>
         /// Gets or Sets Weight
         /// </summary>
-        public double? Weight { get; set; }
+        public decimal? Weight { get; set; }
 
         /// <summary>
         /// Gets or Sets MeasureUnit

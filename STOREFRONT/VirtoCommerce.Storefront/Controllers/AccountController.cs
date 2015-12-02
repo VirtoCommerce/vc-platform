@@ -44,10 +44,19 @@ namespace VirtoCommerce.Storefront.Controllers
             if (page < 1)
                 page = 1;
 
-            var ordersResponse = await _orderApi.OrderModuleSearchAsync(criteriaCustomerId: WorkContext.CurrentCustomer.Id);
+            var ordersResponse = await _orderApi.OrderModuleSearchAsync(criteriaCustomerId: WorkContext.CurrentCustomer.Id, criteriaResponseGroup: "full");
             WorkContext.CurrentCustomer.OrdersCount = ordersResponse.TotalCount.Value;
             WorkContext.CurrentCustomer.Orders = ordersResponse.CustomerOrders.Select(o => o.ToWebModel()).ToList();
             return View("customers/account", WorkContext);
+        }
+
+        [HttpGet]
+        [Route("order/{id}")]
+        public async Task<ActionResult> GetAddressDetails(string id)
+        {
+            var order = await _orderApi.OrderModuleGetByIdAsync(id);
+            WorkContext.Order = order.ToWebModel();
+            return View("customers/order", WorkContext);
         }
 
         [HttpGet]

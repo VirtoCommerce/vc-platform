@@ -10,7 +10,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
     /// </summary>
     public class ShopifyThemeWorkContext : ILiquidizable
     {
-      
+
         #region Aliases for shopify theme compliance
 
         /// <summary>
@@ -70,6 +70,8 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         /// template returns the name of the template used to render the current page, with the .liquid extension omitted.
         /// </summary>
         public string Template { get; set; }
+
+        public Order Order { get; set; }
         #endregion
 
         #region ILiquidizable members
