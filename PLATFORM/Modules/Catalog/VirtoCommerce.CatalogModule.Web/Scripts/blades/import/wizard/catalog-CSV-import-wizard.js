@@ -7,10 +7,10 @@
     blade.subtitleVales = { name: blade.catalog.name };
 
     $scope.columnDelimiters = [
-        { name: "Space", value: " " },
-        { name: "Comma", value: "," },
-        { name: "Semicolon", value: ";" },
-        { name: "Tab", value: "\t" }
+        { name: "catalog.wizards.catalog-CSV-import.labels.space", value: " " },
+        { name: "catalog.wizards.catalog-CSV-import.labels.comma", value: "," },
+        { name: "catalog.wizards.catalog-CSV-import.labels.semicolon", value: ";" },
+        { name: "catalog.wizards.catalog-CSV-import.labels.tab", value: "\t" }
     ];
 
 

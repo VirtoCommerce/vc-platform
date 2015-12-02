@@ -15,6 +15,9 @@
         "title": "Rebuild Search Index",
         "message": "Current search index will be deleted and built from scratch. Are you sure you want to rebuild the index?"
       }
+    },
+    "commands": {
+      "rebuild-index": "Rebuild Index"
     }
   }
 }

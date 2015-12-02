@@ -409,7 +409,7 @@
                 // mappingSource
                 if (blade.mode === 'mappingSource') {
                     var mapCommand = {
-                        name: "Map",
+                        name: "catalog.commands.map",
                         icon: 'fa fa-link',
                         executeMethod: function () {
                             mapChecked();

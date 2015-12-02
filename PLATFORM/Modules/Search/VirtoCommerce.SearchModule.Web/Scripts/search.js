@@ -11,7 +11,7 @@ angular.module(moduleName, [
   ['platformWebApp.toolbarService', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function (toolbarService, bladeNavigationService, dialogService) {
 
       var rebuildIndexCommand = {
-          name: "Rebuild Index",
+          name: "search.commands.rebuild-index",
           icon: 'fa fa-recycle',
           index: 4,
           executeMethod: function (blade) {
