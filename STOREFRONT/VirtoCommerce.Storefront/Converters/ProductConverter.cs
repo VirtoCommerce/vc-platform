@@ -12,7 +12,7 @@ namespace VirtoCommerce.Storefront.Converters
 {
     public static class ProductConverter
     {
-        public static Product ToWebModel(this VirtoCommerceCatalogModuleWebModelProduct product)
+        public static Product ToWebModel(this VirtoCommerceCatalogModuleWebModelProduct product, Language currentLanguage)
         {
             var retVal = new Product();
             retVal.Price = new ProductPrice();
@@ -27,7 +27,7 @@ namespace VirtoCommerce.Storefront.Converters
             }
 
             if (product.Properties != null)
-                retVal.Properties = product.Properties.Select(p => p.ToWebModel()).ToList();
+                retVal.Properties = product.Properties.Select(p => p.ToWebModel(currentLanguage)).ToList();
 
             if (product.Images != null)
             {
@@ -42,14 +42,19 @@ namespace VirtoCommerce.Storefront.Converters
 
             if (product.Variations != null)
             {
-                retVal.Variations = product.Variations.Select(v => v.ToWebModel()).ToList();
+                retVal.Variations = product.Variations.Select(v => v.ToWebModel(currentLanguage)).ToList();
             }
 
             if (product.SeoInfos != null)
                 retVal.SeoInfo = product.SeoInfos.Select(s => s.ToWebModel()).FirstOrDefault();
 
             if (product.Reviews != null)
-                retVal.EditorialReviews = product.Reviews.Select(r => r.ToWebModel()).ToList();
+            {
+                retVal.Descriptions = product.Reviews.Select(r => new LocalizedString(new Language(r.LanguageCode), r.Content)).ToList();
+                retVal.Description = retVal.Descriptions.Where(x => x.Language.Equals(currentLanguage))
+                                                        .Select(x => x.Value)
+                                                        .FirstOrDefault();
+            }
 
             return retVal;
         }

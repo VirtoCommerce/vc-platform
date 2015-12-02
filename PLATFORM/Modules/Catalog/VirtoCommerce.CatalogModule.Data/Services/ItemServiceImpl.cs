@@ -36,8 +36,6 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 
 		public coreModel.CatalogProduct[] GetByIds(string[] itemIds, coreModel.ItemResponseGroup respGroup)
 		{
-			// TODO: Optimize performance (Sasha)
-			// Associations shouldn't be loaded always and must be optimized as well
 			var retVal = new List<coreModel.CatalogProduct>();
 			using (var repository = _catalogRepositoryFactory())
 			{

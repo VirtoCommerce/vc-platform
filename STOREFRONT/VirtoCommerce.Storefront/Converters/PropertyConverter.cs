@@ -11,10 +11,37 @@ namespace VirtoCommerce.Storefront.Converters
 {
     public static class PropertyConverter
     {
-        public static ProductProperty ToWebModel(this VirtoCommerceCatalogModuleWebModelProperty property)
+        public static ProductProperty ToWebModel(this VirtoCommerceCatalogModuleWebModelProperty property, Language currentLanguage)
         {
             var retVal = new ProductProperty();
             retVal.InjectFrom(property);
+            //Set display names and set current display name for requested language
+            if (property.DisplayNames != null)
+            {
+                retVal.DisplayNames = property.DisplayNames.Select(x => new LocalizedString(new Language(x.LanguageCode), x.Name)).ToList();
+                retVal.DisplayName = retVal.DisplayNames.Where(x => x.Language.Equals(currentLanguage))
+                                                        .Select(x => x.Value)
+                                                        .FirstOrDefault();
+            }
+            //if display name for requested language not set get system property name
+            if (String.IsNullOrEmpty(retVal.DisplayName))
+            {
+                retVal.DisplayName = property.Name;
+            }
+
+            //For multilingual properties need populate LocalizedValues collection and set value for requested language
+            if (property.Multilanguage ?? false)
+            {
+                if (property.Dictionary ?? false && property.DictionaryValues != null && property.DictionaryValues.Any())
+                {
+                    retVal.LocalizedValues = property.DictionaryValues.Select(x => new LocalizedString(new Language(x.LanguageCode), x.Value)).ToList();
+                }
+                else if(property.Values != null)
+                {
+                    retVal.LocalizedValues = property.Values.Where(x=>x.Value != null).Select(x => new LocalizedString(new Language(x.LanguageCode), x.Value.ToString())).ToList();
+                }
+            }
+            //Set property value
             if (property.Values != null)
             {
                 var propValue = property.Values.Where(x => x.Value != null).FirstOrDefault();
@@ -25,7 +52,14 @@ namespace VirtoCommerce.Storefront.Converters
                     retVal.ValueId = propValue.ValueId;
                 }
             }
-            
+            //Try to set value for requested language
+            if (retVal.LocalizedValues.Any())
+            {
+                retVal.Value = retVal.LocalizedValues.Where(x => x.Language.Equals(currentLanguage))
+                                                    .Select(x => x.Value ?? retVal.Value)
+                                                    .FirstOrDefault() ?? retVal.Value;
+            }
+
             return retVal;
         }
 

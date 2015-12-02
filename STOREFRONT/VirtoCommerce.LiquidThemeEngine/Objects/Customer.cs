@@ -49,5 +49,8 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
 
         public ICollection<string> Tags { get; set; }
         public ICollection<DynamicProperty> DynamicProperties { get; set; }
+
+        public IStorefrontPagedList<Order> Orders { get; set; }
+        public int OrdersCount { get; set; }
     }
 }

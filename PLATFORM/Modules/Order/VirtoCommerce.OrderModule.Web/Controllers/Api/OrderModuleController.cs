@@ -63,7 +63,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         [HttpGet]
         [ResponseType(typeof(webModel.SearchResult))]
         [Route("")]
-        public IHttpActionResult Search([ModelBinder(typeof(SearchCriteriaBinder))] coreModel.SearchCriteria criteria)
+        public IHttpActionResult Search([FromUri]coreModel.SearchCriteria criteria)
         {
             //Scope bound ACL filtration
             criteria = FilterOrderSearchCriteria(HttpContext.Current.User.Identity.Name, criteria);

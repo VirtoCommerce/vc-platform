@@ -14,7 +14,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
 
             if (country.Regions != null)
             {
-                regions = JsonConvert.SerializeObject(country.Regions.OrderBy(r => r));
+                regions = JsonConvert.SerializeObject(country.Regions.Select(r => r.Key));
             }
 
             return string.Format(CultureInfo.InvariantCulture, "<option value=\"{0}\" data-provinces=\"{1}\">{0}</option>",

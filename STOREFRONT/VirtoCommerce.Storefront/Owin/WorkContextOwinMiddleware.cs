@@ -21,11 +21,7 @@ namespace VirtoCommerce.Storefront.Owin
     /// </summary>
     public class WorkContextOwinMiddleware : OwinMiddleware
     {
-        private static readonly Country[] _countries =
-            {
-                new Country { Code = "RUS", Name = "Russian Federation" },
-                new Country { Code = "USA", Name = "United States", Regions = new[] { "Delaware", "Pennsylvania", "New Jersey", "Georgia", "Connecticut", "Massachusetts", "Maryland", "South Carolina", "New Hampshire", "Virginia", "New York", "North Carolina", "Rhode Island", "Vermont", "Kentucky", "Tennessee", "Ohio", "Louisiana", "Indiana", "Mississippi", "Illinois", "Alabama", "Maine", "Missouri", "Arkansas", "Michigan", "Florida", "Texas", "Iowa", "Wisconsin", "California", "Minnesota", "Oregon", "Kansas", "West Virginia", "Nevada", "Nebraska", "Colorado", "North Dakota", "South Dakota", "Montana", "Washington", "Idaho", "Wyoming", "Utah", "Oklahoma", "New Mexico", "Arizona", "Alaska", "Hawaii" } }
-            };
+        private static readonly Country[] _allCountries = GetAllCounries();
 
         private readonly IStoreModuleApi _storeApi;
         private readonly IVirtoCommercePlatformApi _platformApi;
@@ -49,7 +45,7 @@ namespace VirtoCommerce.Storefront.Owin
 
             // Initialize common properties
             workContext.RequestUrl = context.Request.Uri;
-            workContext.Countries = _countries;
+            workContext.AllCountries = _allCountries;
             workContext.AllStores = await GetAllStoresAsync();
             workContext.CurrentCustomer = await GetCustomerAsync(context);
             MaintainAnonymousCustomerCookie(context, workContext);
@@ -254,6 +250,81 @@ namespace VirtoCommerce.Storefront.Owin
         {
             context.Request.Path = newPath;
             HttpContext.Current.RewritePath("~" + newPath.Value);
+        }
+
+        private static Country[] GetAllCounries()
+        {
+            return new[]
+            {
+                new Country {Code = "RUS", Name = "Russian Federation"},
+                new Country
+                {
+                    Code = "USA",
+                    Name = "United States",
+                    Regions = new Dictionary<string, string>
+                    {
+                        {"Alabama", "AL"},
+                        {"Alaska", "AK"},
+                        {"American Samoa", "AS"},
+                        {"Arizona", "AZ"},
+                        {"Arkansas", "AR"},
+                        {"California", "CA"},
+                        {"Colorado", "CO"},
+                        {"Connecticut", "CT"},
+                        {"Delaware", "DE"},
+                        {"Federated States of Micronesia", "FM"},
+                        {"Florida", "FL"},
+                        {"Georgia", "GA"},
+                        {"Hawaii", "HI"},
+                        {"Idaho", "ID"},
+                        {"Illinois", "IL"},
+                        {"Indiana", "IN"},
+                        {"Iowa", "IA"},
+                        {"Kansas", "KS"},
+                        {"Kentucky", "KY"},
+                        {"Louisiana", "LA"},
+                        {"Maine", "ME"},
+                        {"Marshall Islands", "MH"},
+                        {"Maryland", "MD"},
+                        {"Massachusetts", "MA"},
+                        {"Michigan", "MI"},
+                        {"Minnesota", "MN"},
+                        {"Mississippi", "MS"},
+                        {"Missouri", "MO"},
+                        {"Montana", "MT"},
+                        {"Nebraska", "NE"},
+                        {"Nevada", "NV"},
+                        {"New Hampshire", "NH"},
+                        {"New Jersey", "NJ"},
+                        {"New Mexico", "NM"},
+                        {"New York", "NY"},
+                        {"North Carolina", "NC"},
+                        {"North Dakota", "ND"},
+                        {"Northern Mariana Islands", "MP"},
+                        {"Ohio", "OH"},
+                        {"Oklahoma", "OK"},
+                        {"Oregon", "OR"},
+                        {"Palau", "PW"},
+                        {"Pennsylvania", "PA"},
+                        {"Rhode Island", "RI"},
+                        {"South Carolina", "SC"},
+                        {"South Dakota", "SD"},
+                        {"Tennessee", "TN"},
+                        {"Texas", "TX"},
+                        {"Utah", "UT"},
+                        {"Vermont", "VT"},
+                        {"Virginia", "VA"},
+                        {"Washington", "WA"},
+                        {"Washington DC", "DC"},
+                        {"West Virginia", "WV"},
+                        {"Wisconsin", "WI"},
+                        {"Wyoming", "WY"},
+                        {"Armed Forces Americas", "AA"},
+                        {"Armed Forces Europe", "AE"},
+                        {"Armed Forces Pacific", "AP"},
+                    }
+                }
+            };
         }
     }
 }

@@ -33,7 +33,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             result.PriceMin = result.Variants.Select(x => x.Price).Min();
             result.PriceVaries = result.PriceMax != result.PriceMin;
 
-            result.Content = product.EditorialReviews.Where(x => x.Language.Equals(workContext.CurrentLanguage)).Select(x => x.Content).FirstOrDefault();
+            result.Content = product.Description;
             result.Description = result.Content;
             result.FeaturedImage = product.PrimaryImage != null ? product.PrimaryImage.ToShopifyModel() : null;
             if(result.FeaturedImage != null)
