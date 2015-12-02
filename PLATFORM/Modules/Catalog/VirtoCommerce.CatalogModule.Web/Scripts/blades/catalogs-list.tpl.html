@@ -3,6 +3,9 @@
         <div class="inner-block clearfix">
             <ul class="list __items">
                 <li class="list-item" ng-repeat="data in objects track by data.id" ng-class="{'__selected': data.id === selectedNodeId}" ng-click='selectNode(data)' context-menu data-target="cl_menu{{$index}}">
+                    <div class="list-action">
+                        <i class="list-ico fa"></i>
+                    </div>
                     <i class="list-ico fa" ng-class="data.virtual ? 'fa-cloud' : 'fa-folder'"></i>
                     <span class="list-name" ng-show="data.virtual">{{ 'catalog.blades.catalogs-list.labels.virtual' | translate:{ name: data.name } }}</span>
                     <span class="list-name" ng-hide="data.virtual">{{data.name}}</span>
