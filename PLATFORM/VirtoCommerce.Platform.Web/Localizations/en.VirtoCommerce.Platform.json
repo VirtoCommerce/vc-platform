@@ -501,9 +501,6 @@
           "repeat-password": "Repeat new password"
         }
       },
-      "account-setting-dictionary": {
-        "title": "Account types"
-      },
       "account-resetPassword": {
         "subtitle": "Change your password",
         "labels": {

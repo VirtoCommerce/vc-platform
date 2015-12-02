@@ -30,11 +30,9 @@
     		id: 'accountTypesDictionary',
     		isApiSave: true,
     		currentEntityId: 'VirtoCommerce.Platform.Security.AccountTypes',
-    		// parentWidget: $scope.widget,
-    		title: 'platform.blades.account-setting-dictionary.title',
     		parentRefresh: function (data) { $scope.accountTypes = data; },
     		controller: 'platformWebApp.settingDictionaryController',
-    		template: '$(Platform)/Scripts/app/settings/blades/account-setting-dictionary.tpl.html'
+    		template: '$(Platform)/Scripts/app/settings/blades/setting-dictionary.tpl.html'
     	};
     	bladeNavigationService.showBlade(newBlade, $scope.blade);
    

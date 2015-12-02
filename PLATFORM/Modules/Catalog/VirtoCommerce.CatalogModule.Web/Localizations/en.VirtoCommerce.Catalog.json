@@ -292,9 +292,6 @@
         "title": "Data export",
         "subtitle": "Choose data format & start export"
       },
-      "setting-dictionary-tax": {
-        "title": "Tax types"
-      },
       "images": {
         "subtitle": "Manage images",
         "labels": {
@@ -332,9 +329,6 @@
           "priority": "Priority",
           "group": "Group"
         }
-      },
-      "setting-dictionary-association": {
-        "title": "Association Groups"
       },
       "seo-detail": {
         "subtitle": "Seo details",
