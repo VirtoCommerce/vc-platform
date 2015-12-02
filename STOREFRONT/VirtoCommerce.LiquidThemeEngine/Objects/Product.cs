@@ -16,6 +16,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         public Product()
         {
             Variants = new List<Variant>();
+            Properties = new List<ProductProperty>();
  
         }
         /// <summary>
@@ -129,6 +130,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         public string Url { get; set; }
 
         public ICollection<Variant> Variants { get; set; }
+        public ICollection<ProductProperty> Properties { get; set; }
 
         public string Vendor { get; set; }
 

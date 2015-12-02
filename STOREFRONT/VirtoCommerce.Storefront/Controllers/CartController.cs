@@ -3,11 +3,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using VirtoCommerce.Client.Api;
-using VirtoCommerce.Client.Model;
 using VirtoCommerce.Storefront.Builders;
 using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
-using VirtoCommerce.Storefront.Model.Cart;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Services;
 
@@ -83,8 +81,8 @@ namespace VirtoCommerce.Storefront.Controllers
             var product = await _catalogService.GetProductAsync(productId, Model.Catalog.ItemResponseGroup.ItemLarge);
             if (product != null)
             {
-                await _cartBuilder.AddItem(product, quantity).SaveAsync();
-                await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentCurrency);
+                await _cartBuilder.AddItemAsync(product, quantity);
+                await _cartBuilder.SaveAsync();
             }
 
             return Json(_cartBuilder.Cart, JsonRequestBehavior.AllowGet);
@@ -97,7 +95,8 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentCurrency);
 
-            await _cartBuilder.UpdateItem(lineItemId, quantity).SaveAsync();
+            await _cartBuilder.ChangeItemQuantityAsync(lineItemId, quantity);
+            await _cartBuilder.SaveAsync();
 
             return Json(_cartBuilder.Cart, JsonRequestBehavior.AllowGet);
         }
@@ -109,7 +108,8 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentCurrency);
 
-            await _cartBuilder.RemoveItem(lineItemId).SaveAsync();
+            await _cartBuilder.RemoveItemAsync(lineItemId);
+            await _cartBuilder.SaveAsync();
 
             return Json(_cartBuilder.Cart, JsonRequestBehavior.AllowGet);
         }
@@ -136,9 +136,8 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentCurrency);
 
-            var validPromotionRewards = await EvaluatePromotionsAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, _cartBuilder.Cart, couponCode);
-
-            await _cartBuilder.UpdateDiscounts(validPromotionRewards).SaveAsync();
+            await _cartBuilder.AddCouponAsync(couponCode);
+            await _cartBuilder.SaveAsync();
 
             return Json(_cartBuilder.Cart, JsonRequestBehavior.AllowGet);
         }
@@ -150,9 +149,8 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentCurrency);
 
-            var validPromotionRewards = await EvaluatePromotionsAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, _cartBuilder.Cart, null);
-
-            await _cartBuilder.UpdateDiscounts(validPromotionRewards).SaveAsync();
+            await _cartBuilder.RemoveCouponAsync();
+            await _cartBuilder.SaveAsync();
 
             return Json(_cartBuilder.Cart, JsonRequestBehavior.AllowGet);
         }
@@ -164,7 +162,8 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentCurrency);
 
-            await _cartBuilder.AddAddress(address).SaveAsync();
+            await _cartBuilder.AddAddressAsync(address);
+            await _cartBuilder.SaveAsync();
 
             return Json(_cartBuilder.Cart, JsonRequestBehavior.AllowGet);
         }
@@ -180,26 +179,26 @@ namespace VirtoCommerce.Storefront.Controllers
             var shippingMethod = shippingMethods.FirstOrDefault(sm => sm.ShipmentMethodCode == shippingMethodCode);
             if (shippingMethod != null)
             {
-                await _cartBuilder.AddShipment(shippingMethod.ToWebModel()).SaveAsync();
+                await _cartBuilder.AddShipmentAsync(shippingMethod.ToWebModel());
+                await _cartBuilder.SaveAsync();
             }
 
             return Json(_cartBuilder.Cart, JsonRequestBehavior.AllowGet);
         }
 
-        // POST: /cart/payment_method?paymentMethodCode=...&billingAddress=...
+        // POST: /cart/payment_method?paymentMethodCode=
         [HttpPost]
         [Route("payment_method")]
-        public async Task<ActionResult> SetPaymentMethodsJson(string paymentMethodCode, Address billingAddress)
+        public async Task<ActionResult> SetPaymentMethodsJson(string paymentMethodCode)
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentCurrency);
-
-            _cartBuilder.AddAddress(billingAddress);
 
             var paymentMethods = await _cartApi.CartModuleGetPaymentMethodsAsync(WorkContext.CurrentCart.Id);
             var paymentMethod = paymentMethods.FirstOrDefault(pm => pm.GatewayCode == paymentMethodCode);
             if (paymentMethod != null)
             {
-                await _cartBuilder.AddPayment(paymentMethod.ToWebModel()).SaveAsync();
+                await _cartBuilder.AddPaymentAsync(paymentMethod.ToWebModel());
+                await _cartBuilder.SaveAsync();
             }
 
             return Json(_cartBuilder.Cart, JsonRequestBehavior.AllowGet);
@@ -243,32 +242,6 @@ namespace VirtoCommerce.Storefront.Controllers
             }
 
             return View("thanks", base.WorkContext);
-        }
-
-        private async Task<IEnumerable<VirtoCommerceMarketingModuleWebModelPromotionReward>> EvaluatePromotionsAsync(Store store, Customer customer, ShoppingCart cart, string couponCode)
-        {
-            var promotionContext = new VirtoCommerceDomainMarketingModelPromotionEvaluationContext
-            {
-                CustomerId = customer.Id,
-                Coupon = couponCode,
-                StoreId = store.Id
-            };
-
-            promotionContext.CartPromoEntries = new List<VirtoCommerceDomainMarketingModelProductPromoEntry>();
-            foreach (var lineItem in cart.Items)
-            {
-                promotionContext.CartPromoEntries.Add(lineItem.ToPromotionItem());
-            }
-
-            promotionContext.PromoEntries = new List<VirtoCommerceDomainMarketingModelProductPromoEntry>();
-            foreach (var lineItem in cart.Items)
-            {
-                promotionContext.PromoEntries.Add(lineItem.ToPromotionItem());
-            }
-
-            var promotionResult = await _marketingApi.MarketingModulePromotionEvaluatePromotionsAsync(promotionContext);
-
-            return promotionResult.Where(pr => pr.IsValid.HasValue && pr.IsValid.Value);
         }
     }
 }
