@@ -16,11 +16,6 @@
                 rowHeight: 61,
                 columnDefs: [
                         { name: 'actions', displayName: '', enableColumnResizing: false, enableSorting: false, width: 30, cellTemplate: 'item-list-actions.cell.html' },
-                        {
-                            name: 'imageUrl', displayName: 'catalog.blades.categories-items-list.labels.picture',
-                            enableColumnResizing: false, enableSorting: false, width: 60,
-                            cellTemplate: 'item-list-icon.cell.html'
-                        },
                         { name: 'name', displayName: 'catalog.blades.categories-items-list.labels.name', cellTemplate: 'item-list-name.cell.html' },
                         { name: 'code', displayName: 'catalog.blades.categories-items-list.labels.sku', width: 170, cellTemplate: 'item-list-SKU.cell.html' }
                  ]})">
@@ -48,14 +43,10 @@
         <i class="fa fa-ellipsis-v"></i>
     </div>
 </script>
-<script type="text/ng-template" id="item-list-icon.cell.html">
-    <div class="product-img">
-        <div class="image" style="background-image: url('{{COL_FIELD}}')" ng-if="row.entity.type!=='category' && COL_FIELD"></div>
-        <i class="table-ico fa" ng-class="row.entity.type == 'category' ? 'fa-folder' : 'fa-image'" ng-if="!COL_FIELD"></i>
-    </div>
-</script>
 <script type="text/ng-template" id="item-list-name.cell.html">
     <div class="ui-grid-cell-contents">
+        <div class="image" style="background-image: url('{{row.entity.imageUrl}}')" ng-if="row.entity.type!=='category' && row.entity.imageUrl"></div>
+        <i class="table-ico fa" ng-class="row.entity.type == 'category' ? 'fa-folder' : 'fa-image'" ng-if="!row.entity.imageUrl"></i>
         <i class="table-ico fa fa-link" ng-if="grid.appScope.hasLinks(row.entity)" title="This category is linked"></i>
         <div class="table-t">{{COL_FIELD}}</div>
         <span class="table-status" ng-if="row.entity.type==='category' && !row.entity.isActive">Inactive</span>
