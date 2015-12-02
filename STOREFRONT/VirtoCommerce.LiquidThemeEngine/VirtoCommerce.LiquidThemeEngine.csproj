@@ -94,6 +94,7 @@
     <Compile Include="Converters\ImageConverter.cs" />
     <Compile Include="Converters\LanguageConverters.cs" />
     <Compile Include="Converters\LineItemConverter.cs" />
+    <Compile Include="Converters\OrderConverter.cs" />
     <Compile Include="Converters\ProductConverter.cs" />
     <Compile Include="Converters\ShopConverter.cs" />
     <Compile Include="Converters\ShopifyContextConverter.cs" />
@@ -106,6 +107,7 @@
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\TemplateExtensions.cs" />
     <Compile Include="Extensions\UriExtensions.cs" />
+    <Compile Include="Filters\DateFilters.cs" />
     <Compile Include="Filters\HtmlFilters.cs" />
     <Compile Include="Filters\MoneyFilters.cs" />
     <Compile Include="Filters\StringFilters.cs" />
@@ -124,6 +126,7 @@
     <Compile Include="Objects\Fulfillment.cs" />
     <Compile Include="Objects\Language.cs" />
     <Compile Include="Objects\LineItem.cs" />
+    <Compile Include="Objects\Order.cs" />
     <Compile Include="Objects\Paginate.cs" />
     <Compile Include="Objects\Part.cs" />
     <Compile Include="Tags\FormTag.cs" />

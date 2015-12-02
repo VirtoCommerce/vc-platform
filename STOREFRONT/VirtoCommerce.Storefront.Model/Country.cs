@@ -6,6 +6,6 @@ namespace VirtoCommerce.Storefront.Model
     {
         public string Code { get; set; }
         public string Name { get; set; }
-        public string[] Regions { get; set; }
+        public IDictionary<string, string> Regions { get; set; }
     }
 }

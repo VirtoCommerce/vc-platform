@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text.RegularExpressions;
-using System.Web;
-using System.Web.Hosting;
-using System.Web.Mvc;
 using DotLiquid;
 using DotLiquid.Exceptions;
 using DotLiquid.FileSystems;
@@ -16,7 +10,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using VirtoCommerce.LiquidThemeEngine.Extensions;
 using VirtoCommerce.LiquidThemeEngine.Filters;
-using VirtoCommerce.LiquidThemeEngine.Objects;
 using VirtoCommerce.LiquidThemeEngine.Operators;
 using VirtoCommerce.LiquidThemeEngine.Tags;
 using VirtoCommerce.Storefront.Model;
@@ -38,10 +31,10 @@ namespace VirtoCommerce.LiquidThemeEngine
     {
         private const string _defaultMasterView = "theme";
         private const string _liquidTemplateFormat = "{0}.liquid";
-        private static string[] _templatesDiscoveryFolders = new string[] { "templates", "snippets", "layout", "assets" };
-        private static Regex _templateRegex = new Regex(@"[a-zA-Z0-9]+$", RegexOptions.Compiled);
-        private string _themesRelativeUrl;
-        private string _themesAssetsRelativeUrl;
+        private static readonly string[] _templatesDiscoveryFolders = { "templates", "snippets", "layout", "assets" };
+        private static readonly Regex _templateRegex = new Regex(@"[a-zA-Z0-9]+$", RegexOptions.Compiled);
+        private readonly string _themesRelativeUrl;
+        private readonly string _themesAssetsRelativeUrl;
         private readonly Func<WorkContext> _workContextFactory;
         private readonly Func<IStorefrontUrlBuilder> _storeFrontUrlBuilderFactory;
 
@@ -58,11 +51,12 @@ namespace VirtoCommerce.LiquidThemeEngine
             Template.RegisterFilter(typeof(CommerceFilters));
             Template.RegisterFilter(typeof(TranslationFilter));
             Template.RegisterFilter(typeof(UrlFilters));
+            Template.RegisterFilter(typeof(DateFilters));
             Template.RegisterFilter(typeof(MoneyFilters));
             Template.RegisterFilter(typeof(HtmlFilters));
             Template.RegisterFilter(typeof(StringFilters));
 
-            Condition.Operators["contains"] = (left, right) => CommonOperators.ContainsMethod(left, right);
+            Condition.Operators["contains"] = CommonOperators.ContainsMethod;
 
             Template.RegisterTag<LayoutTag>("layout");
             Template.RegisterTag<FormTag>("form");
@@ -184,10 +178,9 @@ namespace VirtoCommerce.LiquidThemeEngine
             {
                 throw new ArgumentNullException("templateName");
             }
-            string retVal = null;
 
             var templateContent = ReadTemplateByName(templateName);
-            retVal = RenderTemplate(templateContent, parameters);
+            var retVal = RenderTemplate(templateContent, parameters);
             return retVal;
         }
 
@@ -201,7 +194,6 @@ namespace VirtoCommerce.LiquidThemeEngine
             {
                 parameters = new Dictionary<string, object>();
             }
-            string retVal = null;
 
             Template.FileSystem = this;
 
@@ -209,9 +201,9 @@ namespace VirtoCommerce.LiquidThemeEngine
             {
                 LocalVariables = Hash.FromDictionary(parameters)
             };
-      
+
             var parsedTemplate = Template.Parse(templateContent);
-            retVal = parsedTemplate.RenderWithTracing(renderParams);
+            var retVal = parsedTemplate.RenderWithTracing(renderParams);
             return retVal;
         }
 
@@ -234,7 +226,7 @@ namespace VirtoCommerce.LiquidThemeEngine
                     currentSettings = settings["presets"][currentSettings.ToString()] as JObject;
                 }
 
-                if (currentSettings != null && currentSettings is JObject)
+                if (currentSettings != null)
                 {
                     var dict = currentSettings.ToObject<Dictionary<string, object>>().ToDictionary(x => x.Key, x => x.Value);
                     retVal = new DefaultableDictionary(dict, defaultValue);
@@ -246,12 +238,11 @@ namespace VirtoCommerce.LiquidThemeEngine
         /// <summary>
         /// Read localization resources 
         /// </summary>
-        /// <param name="language"></param>
         /// <returns></returns>
         public JObject ReadLocalization()
         {
             var localeDirectory = new DirectoryInfo(Path.Combine(ThemeLocalPath, "locales"));
-            var localeFilePath = Path.Combine(localeDirectory.FullName, String.Format("{0}.json", WorkContext.CurrentLanguage.TwoLetterLanguageName));
+            var localeFilePath = Path.Combine(localeDirectory.FullName, string.Concat(WorkContext.CurrentLanguage.TwoLetterLanguageName, ".json"));
             var localeDefaultPath = localeDirectory.GetFiles("*.default.json").Select(x => x.FullName).FirstOrDefault();
 
             JObject localeJson = null;
@@ -261,10 +252,12 @@ namespace VirtoCommerce.LiquidThemeEngine
             {
                 localeJson = JsonConvert.DeserializeObject<dynamic>(File.ReadAllText(localeFilePath));
             }
-            if (File.Exists(localeDefaultPath))
+
+            if (localeDefaultPath != null && File.Exists(localeDefaultPath))
             {
                 defaultJson = JsonConvert.DeserializeObject<dynamic>(File.ReadAllText(localeDefaultPath));
             }
+
             //Need merge default and requested localization json to resulting object
             var retVal = defaultJson ?? localeJson;
             if (defaultJson != null && localeJson != null)
