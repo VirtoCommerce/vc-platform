@@ -1,7 +1,6 @@
-﻿using Omu.ValueInjecter;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
+using Omu.ValueInjecter;
 using VirtoCommerce.Client.Model;
 using VirtoCommerce.LiquidThemeEngine.Converters.Injections;
 using VirtoCommerce.Storefront.Model;
@@ -36,7 +35,6 @@ namespace VirtoCommerce.Storefront.Converters
             result.PostalCode = address.Zip;
             result.Line1 = address.Address1;
             result.Line2 = address.Address2;
-            result.RegionId = address.ProvinceCode;
             result.RegionName = address.Province;
 
             result.Name = string.Join(" ", result.FirstName, result.LastName).Trim();
@@ -45,6 +43,11 @@ namespace VirtoCommerce.Storefront.Converters
             if (country != null)
             {
                 result.CountryCode = country.Code;
+
+                if (address.Province != null && country.Regions != null && country.Regions.ContainsKey(address.Province))
+                {
+                    result.RegionId = country.Regions[address.Province];
+                }
             }
 
             return result;

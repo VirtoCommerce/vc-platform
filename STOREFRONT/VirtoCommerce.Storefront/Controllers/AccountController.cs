@@ -69,7 +69,7 @@ namespace VirtoCommerce.Storefront.Controllers
                 if (string.IsNullOrEmpty(id))
                 {
                     // Add new address
-                    contact.Addresses.Add(formModel.ToServiceModel(WorkContext.Countries));
+                    contact.Addresses.Add(formModel.ToServiceModel(WorkContext.AllCountries));
                     updateContact = true;
                 }
                 else
@@ -88,7 +88,7 @@ namespace VirtoCommerce.Storefront.Controllers
                             else
                             {
                                 // Update address
-                                contact.Addresses[addressIndex].CopyFrom(formModel, WorkContext.Countries);
+                                contact.Addresses[addressIndex].CopyFrom(formModel, WorkContext.AllCountries);
                                 updateContact = true;
                             }
                         }
