@@ -32,19 +32,6 @@
         $scope.blade.refresh();
     });
     
-    $scope.delete = function () {
-        if (isItemsChecked()) {
-            deleteChecked();
-        } else {
-            var dialog = {
-                id: "notifyNoTargetCategory",
-                title: "catalog.dialogs.nothing-selected.title",
-                message: "catalog.dialogs.nothing-selected.message"
-            };
-            dialogService.showNotificationDialog(dialog);
-        }
-    };
-
     function isItemsChecked() {
         return $scope.items && _.any($scope.items, function (x) { return x.selected; });
     }
@@ -88,16 +75,7 @@
             canExecuteMethod: function () {
                 return $scope.selectedItem;
             }
-        },
-      {
-          name: "platform.commands.delete", icon: 'fa fa-trash-o',
-          executeMethod: function () {
-              deleteChecked();
-          },
-          canExecuteMethod: function () {
-              return isItemsChecked();
-          }
-      }
+        }      
     ];
     
     //No need to call this because page 'pageSettings.currentPage' is watched!!! It would trigger subsequent duplicated req...

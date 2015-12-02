@@ -329,6 +329,7 @@
           "sorting-prompt": "Set the order how associated items appear sorted in web store. Drag and drop the products to change the order.",
           "picture": "Img",
           "product": "Product",
+          "priority": "Priority",
           "group": "Group"
         }
       },
@@ -431,10 +432,6 @@
       }
     },
     "dialogs": {
-      "nothing-selected": {
-        "title": "Message",
-        "message": "Nothing selected. Check some Categories or Items first."
-      },
       "catalog-save": {
         "title": "Save changes",
         "message": "The catalog has been modified. Do you want to save changes?"
