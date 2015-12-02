@@ -136,7 +136,7 @@ namespace VirtoCommerce.Platform.Core.Common
 		LAK = 418,
 		LBP = 422,
 		LKR = 144,
-		LTL = 440,
+		//LTL = 440,
 		//    LVL = 428,
 		LYD = 434,
 		MAD = 504,
