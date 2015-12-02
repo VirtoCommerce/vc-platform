@@ -63,8 +63,8 @@
             if (isDirty()) {
                 var dialog = {
                     id: "confirmCurrentBladeClose",
-                    title: "prising.dialogs.pricelist-save.title",
-                    message: "prising.dialogs.pricelist-save.message"
+                    title: "pricing.dialogs.pricelist-save.title",
+                    message: "pricing.dialogs.pricelist-save.message"
                 };
                 dialog.callback = function (needSave) {
                     if (needSave) {
