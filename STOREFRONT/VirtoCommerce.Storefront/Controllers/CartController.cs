@@ -114,10 +114,10 @@ namespace VirtoCommerce.Storefront.Controllers
             return Json(_cartBuilder.Cart, JsonRequestBehavior.AllowGet);
         }
 
-        // GET: /cart/checkout/{step}
+        // GET: /cart/checkout
         [HttpGet]
-        [Route("checkout/{step}")]
-        public async Task<ActionResult> Checkout(string step)
+        [Route("checkout")]
+        public async Task<ActionResult> Checkout()
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentCurrency);
 

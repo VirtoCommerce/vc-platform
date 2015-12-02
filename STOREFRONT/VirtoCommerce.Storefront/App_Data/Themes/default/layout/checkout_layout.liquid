@@ -19,7 +19,7 @@
     {{ content_for_header }}
 </head>
 <body ng-controller="checkoutController">
-    <div class="banner" data-header>
+    <div class="banner" data-header ng-init="baseUrl='{{ '/' | absolute_url }}'">
         <div class="wrap">
             <a class="logo logo--left" href="{{ '/' | absolute_url }}">
                 <h1 class="logo__text">{{ shop.name }}</h1>

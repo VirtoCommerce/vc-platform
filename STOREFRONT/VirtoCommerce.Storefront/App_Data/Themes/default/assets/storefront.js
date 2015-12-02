@@ -51,10 +51,18 @@ app.service('cartService', ['$http', function ($http) {
 	}
 }]);
 
-app.controller('mainController', ['$scope', '$window', function ($scope, $window) {
-	$scope.go = function (url) {
-		$window.location.href = url;
-	}
+app.controller('mainController', ['$scope', '$location', '$window', function ($scope, $location, $window) {
+	//Base store url populated in layout and can be used for construction url inside controller
+	$scope.baseUrl = {};
+	//For outside app redirect (To reload the page after changing the URL, use the lower-level API)
+	$scope.outsideRedirect = function (absUrl) {
+		window.location.href = absUrl;
+	};
+	//change in the current URL or change the current URL in the browser (for app route)
+	$scope.insideRedirect = function (path) {
+		$location.path(path);
+	};
+
 }]);
 
 app.controller('cartController', ['$scope', 'cartService', function ($scope, cartService) {
@@ -92,8 +100,19 @@ app.controller('cartController', ['$scope', 'cartService', function ($scope, car
 	}
 }]);
 
-app.controller('checkoutController', ['$scope', '$route', '$window', 'cartService', function ($scope, $route, $window, cartService) {
-	$scope.$route = $route;
+app.controller('checkoutController', ['$scope', '$route', '$location', '$window', 'cartService', function ($scope, $route, $location, $window, cartService) {
+
+	//Base store url populated in layout and can be used for construction url inside controller
+	$scope.baseUrl = {};
+	//For outside app redirect (To reload the page after changing the URL, use the lower-level API)
+	$scope.outsideRedirect = function (absUrl) {
+		window.location.href = absUrl;
+	};
+	//change in the current URL or change the current URL in the browser (for app route)
+	$scope.insideRedirect = function (path) {
+		$location.path(path);
+	};
+
 	$scope.cart = null;
 	$scope.order = null;
 	$scope.couponProcessing = false;
@@ -143,10 +162,7 @@ app.controller('checkoutController', ['$scope', '$route', '$window', 'cartServic
 			$scope.availablePaymentMethods = response.data;
 		});
 	});
-
-	$scope.go = function (url) {
-		$window.location.href = url;
-	}
+	
 	$scope.toggleOrderSummary = function (isExpanded) {
 		$scope.isOrderSummaryExpanded = !isExpanded;
 	}
@@ -176,7 +192,7 @@ app.controller('checkoutController', ['$scope', '$route', '$window', 'cartServic
 		var cartPromise = cartService.addAddress($scope.shippingAddress);
 		cartPromise.then(function (response) {
 			$scope.cart = response.data;
-			$scope.go('shipping-method');
+			$scope.insideRedirect('shipping-method')
 		});
 	}
 	$scope.setShippingMethod = function () {
@@ -216,7 +232,7 @@ app.controller('checkoutController', ['$scope', '$route', '$window', 'cartServic
 		if (paymentResult.isSuccess) {
 			switch (paymentResult.paymentMethodType) {
 				case "Unknown":
-					$scope.go('thanks?id=' + $scope.order.Id);
+					$scope.outsideRedirect($scope.baseUrl + '/cart/checkout/thanks?id=' + $scope.order.Id);
 					break;
 			}
 		}
@@ -225,9 +241,9 @@ app.controller('checkoutController', ['$scope', '$route', '$window', 'cartServic
 
 app.controller('productController', ['$scope', '$window', 'productService', function ($scope, $window, productService) {
 	//TODO: prevent add to cart not selected variation
-	//display validator please select property
+	// display validator please select property
 	// display price range
-	//select variation if it one 
+
 	$scope.origProduct = {};
 	$scope.selectedVariation = {};
 	$scope.allVariationProperties = {};
@@ -236,6 +252,9 @@ app.controller('productController', ['$scope', '$window', 'productService', func
 		productService.getProduct($window.productId).then(function (response) {
 			$scope.origProduct = response.data;
 			$scope.allVariationProperties = getFlatternDistinctAllProductVariationProperties($scope.origProduct);
+			//try to select default variation
+			var selectedPropsMap = getSelectedPropsMap($scope.allVariationProperties);
+			$scope.selectedVariation = findSelectedVariation($scope.origProduct, selectedPropsMap);
 		});
 	};
 
@@ -247,6 +266,13 @@ app.controller('productController', ['$scope', '$window', 'productService', func
 			_.each(_.keys(propertyMap), function (x) {
 				retVal[x] = _.uniq(_.union(retVal[x], propertyMap[x]), "Value");
 			});
+		});
+		//Auto select variation properties values if it only one
+		_.each(_.keys(retVal), function (x) {
+		
+			if (retVal[x].length == 1) {
+				retVal[x][0].selected = true;
+			}
 		});
 		return retVal;
 	};
@@ -309,17 +335,17 @@ app.controller('productController', ['$scope', '$window', 'productService', func
 
 app.config(['$interpolateProvider', '$routeProvider', '$locationProvider', function ($interpolateProvider, $routeProvider, $locationProvider) {
 	$routeProvider
-        .when('/cart/checkout/customer-information', {
+        .when('/customer-information', {
         	templateUrl: 'storefront.checkout.customerInformation.tpl'
         })
-        .when('/cart/checkout/shipping-method', {
+        .when('/shipping-method', {
         	templateUrl: 'storefront.checkout.shippingMethod.tpl'
         })
-        .when('/cart/checkout/payment-method', {
+        .when('/payment-method', {
         	templateUrl: 'storefront.checkout.paymentMethod.tpl'
         });
 
-	$locationProvider.html5Mode(true);
+	//$locationProvider.html5Mode(false);
 
 	return $interpolateProvider.startSymbol('{(').endSymbol(')}');
 }]);
