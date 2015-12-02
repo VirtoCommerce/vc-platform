@@ -391,7 +391,7 @@
             "share_on_pinterest": "Pin it",
             "share_on_fancy": "Fancy",
             "related_products": "We Also Recommend",
-            "save_html": "Save {{ saved_amount }}",
+            "save_html": "- {{ saved_amount }}",
             "add_to_cart": "Add to cart",
             "add_to_quote": "Add to quote"
         },
@@ -400,7 +400,8 @@
             "unavailable": "Unavailable",
             "only_left": "Only {{ count }} left!",
             "quantity": "Quantity",
-            "add_to_cart": "Add to Cart"
+            "add_to_cart": "Add to Cart",
+            "details_tab" :  "Product details"
         }
     },
     "gift_cards": {

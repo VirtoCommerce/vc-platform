@@ -244,49 +244,47 @@ app.controller('productController', ['$scope', '$window', 'productService', func
 	// display validator please select property
 	// display price range
 
-	$scope.origProduct = {};
+	var allVarations = [];
 	$scope.selectedVariation = {};
-	$scope.allVariationProperties = {};
+	$scope.allVariationPropsMap = {};
 
 	function Initialize() {
 		productService.getProduct($window.productId).then(function (response) {
-			$scope.origProduct = response.data;
-			$scope.allVariationProperties = getFlatternDistinctAllProductVariationProperties($scope.origProduct);
-			//try to select default variation
-			var selectedPropsMap = getSelectedPropsMap($scope.allVariationProperties);
-			$scope.selectedVariation = findSelectedVariation($scope.origProduct, selectedPropsMap);
+			var product = response.data;
+			//Current product its also variation (titular)
+			allVarations = [ product ].concat(product.Variations);
+			$scope.allVariationPropsMap = getFlatternDistinctPropertiesMap(allVarations);
+
+			//Auto select initial product as default variation  (its possible because all our products is variations)
+			var propertyMap = getVariationPropertyMap(product);
+			_.each(_.keys(propertyMap), function (x) {
+				$scope.checkProperty(propertyMap[x][0])
+			});
+			$scope.selectedVariation = product;
 		});
 	};
 
-	function getFlatternDistinctAllProductVariationProperties(product) {
-		var retVal = getProductVariationPropertyMap(product);
-		_.each(product.Variations, function (variation) {
-			var propertyMap = getProductVariationPropertyMap(variation);
+	function getFlatternDistinctPropertiesMap(variations) {
+		var retVal = {};
+		_.each(variations, function (variation) {
+			var propertyMap = getVariationPropertyMap(variation);
 			//merge
 			_.each(_.keys(propertyMap), function (x) {
 				retVal[x] = _.uniq(_.union(retVal[x], propertyMap[x]), "Value");
 			});
 		});
-		//Auto select variation properties values if it only one
-		_.each(_.keys(retVal), function (x) {
-		
-			if (retVal[x].length == 1) {
-				retVal[x][0].selected = true;
-			}
-		});
 		return retVal;
 	};
 
-	function getProductVariationPropertyMap(product) {
-		var retVal = _.where(product.Properties, { Type: 'Variation' });
-		retVal = _.groupBy(retVal, function (x) { return x.DisplayName });
+	function getVariationPropertyMap(variation) {
+		retVal = _.groupBy(variation.VariationProperties, function (x) { return x.DisplayName });
 		return retVal;
 	};
 
-	function getSelectedPropsMap(allVariationProperties) {
+	function getSelectedPropsMap(variationPropsMap) {
 		var retVal = {};
-		_.each(_.keys(allVariationProperties), function (x) {
-			var property = _.find(allVariationProperties[x], function (y) {
+		_.each(_.keys(variationPropsMap), function (x) {
+			var property = _.find(variationPropsMap[x], function (y) {
 				return y.selected;
 			});
 			if (property) {
@@ -306,28 +304,24 @@ app.controller('productController', ['$scope', '$window', 'productService', func
 		});
 	};
 
-	function findSelectedVariation(product, selectedPropMap) {
-		var retVal = _.find(product.Variations, function (x) {
-			var productPropMap = getProductVariationPropertyMap(x);
+	function findVariationBySelectedProps(variations, selectedPropMap) {
+		var retVal = _.find(variations, function (x) {
+			var productPropMap = getVariationPropertyMap(x);
 			return comparePropertyMaps(productPropMap, selectedPropMap);
 		});
 		return retVal;
 	};
-	$scope.getFormatedSavedAmount = function (pattern, savedAmount) {
 
-	};
+	//Method called from View when user click to one of properties value
 	$scope.checkProperty = function (property) {
-		var prevSelected = _.each($scope.allVariationProperties[property.DisplayName], function (x) {
-			if (x != property) {
-				x.selected = false;
-			}
-			else {
-				x.selected = !x.selected;
-			}
+		//Select apropriate property and diselect previous selected
+		var prevSelected = _.each($scope.allVariationPropsMap[property.DisplayName], function (x) {
+			x.selected = x != property ? false : !x.selected;
 		});
-		var selectedPropsMap = getSelectedPropsMap($scope.allVariationProperties);
-		//try to find best match variation 
-		$scope.selectedVariation = findSelectedVariation($scope.origProduct, selectedPropsMap);
+
+		var selectedPropsMap = getSelectedPropsMap($scope.allVariationPropsMap);
+		//try to find best match variation for already selected properties
+		$scope.selectedVariation = findVariationBySelectedProps(allVarations, selectedPropsMap);
 	};
 
 	Initialize();
