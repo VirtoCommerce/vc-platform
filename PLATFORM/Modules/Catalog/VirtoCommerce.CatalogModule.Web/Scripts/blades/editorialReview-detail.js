@@ -1,34 +1,39 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.editorialReviewDetailController', ['$scope', '$filter', 'platformWebApp.dialogService', 'virtoCommerce.catalogModule.items', function ($scope, $filter, dialogService, items) {
-    $scope.types = ["QuickReview", "FullReview"];
+.controller('virtoCommerce.catalogModule.editorialReviewDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'virtoCommerce.catalogModule.items', 'platformWebApp.settings', function ($scope, bladeNavigationService, dialogService, items, settings) {
+    var blade = $scope.blade;
+    var promise = settings.getValues({ id: 'Catalog.EditorialReviewTypes' }).$promise;
 
     function initializeBlade(data) {
-        if (data.isNew) {
-            data.reviewType = $scope.types[0];
-        }
+        promise.then(function (promiseData) {
+            $scope.types = promiseData;
 
-        $scope.currentEntity = angular.copy(data);
-        $scope.blade.origEntity = data;
-        $scope.blade.isLoading = false;
+            if (data.isNew) {
+                data.reviewType = $scope.types[0];
+            }
+
+            $scope.currentEntity = angular.copy(data);
+            blade.origEntity = data;
+            blade.isLoading = false;
+        });
     };
 
     function isDirty() {
-        return !angular.equals($scope.currentEntity, $scope.blade.origEntity);
+        return !angular.equals($scope.currentEntity, blade.origEntity);
     };
 
     function saveChanges() {
-        $scope.blade.isLoading = true;
-        var entriesCopy = _.filter($scope.blade.parentBlade.currentEntities, function (ent) { return !angular.equals(ent, $scope.blade.origEntity); });
+        blade.isLoading = true;
+        var entriesCopy = _.filter(blade.parentBlade.currentEntities, function (ent) { return !angular.equals(ent, blade.origEntity); });
         entriesCopy.push($scope.currentEntity);
 
-        items.update({ id: $scope.blade.parentBlade.currentEntityId, reviews: entriesCopy }, function () {
-            angular.copy($scope.currentEntity, $scope.blade.origEntity);
-            $scope.blade.parentBlade.refresh(true);
+        items.update({ id: blade.parentBlade.currentEntityId, reviews: entriesCopy }, function () {
+            angular.copy($scope.currentEntity, blade.origEntity);
+            blade.parentBlade.refresh(true);
         },
-        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+        function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
     };
 
-    $scope.blade.onClose = function (closeCallback) {
+    blade.onClose = function (closeCallback) {
         if (isDirty() && $scope.currentEntity.content) {
             var dialog = {
                 id: "confirmCurrentBladeClose",
@@ -55,17 +60,17 @@
             message: "catalog.dialogs.review-delete.message",
             callback: function (remove) {
                 if (remove) {
-                    $scope.blade.isLoading = true;
+                    blade.isLoading = true;
 
-                    var idx = $scope.blade.parentBlade.currentEntities.indexOf($scope.blade.origEntity);
+                    var idx = blade.parentBlade.currentEntities.indexOf(blade.origEntity);
                     if (idx >= 0) {
-                        var entriesCopy = $scope.blade.parentBlade.currentEntities.slice();
+                        var entriesCopy = blade.parentBlade.currentEntities.slice();
                         entriesCopy.splice(idx, 1);
-                        items.update({ id: $scope.blade.parentBlade.currentEntityId, reviews: entriesCopy }, function () {
+                        items.update({ id: blade.parentBlade.currentEntityId, reviews: entriesCopy }, function () {
                             $scope.bladeClose();
-                            $scope.blade.parentBlade.refresh(true);
+                            blade.parentBlade.refresh(true);
                         },
-                        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+                        function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
                     }
                 }
             }
@@ -73,9 +78,9 @@
         dialogService.showConfirmationDialog(dialog);
     }
 
-    $scope.blade.headIcon = 'fa-comments';
+    blade.headIcon = 'fa-comments';
 
-    $scope.blade.toolbarCommands = [
+    blade.toolbarCommands = [
         {
             name: "platform.commands.save", icon: 'fa fa-save',
             executeMethod: function () {
@@ -89,7 +94,7 @@
         {
             name: "platform.commands.reset", icon: 'fa fa-undo',
             executeMethod: function () {
-                angular.copy($scope.blade.origEntity, $scope.currentEntity);
+                angular.copy(blade.origEntity, $scope.currentEntity);
             },
             canExecuteMethod: function () {
                 return isDirty();
@@ -102,14 +107,26 @@
                 deleteEntry();
             },
             canExecuteMethod: function () {
-                return $scope.blade.parentBlade.currentEntities.indexOf($scope.blade.origEntity) >= 0 && !isDirty();
+                return blade.parentBlade.currentEntities.indexOf(blade.origEntity) >= 0 && !isDirty();
             },
             permission: 'catalog:update'
         }
     ];
 
+    $scope.openDictionarySettingManagement = function () {
+        var newBlade = {
+            id: 'settingDetailChild',
+            isApiSave: true,
+            currentEntityId: 'Catalog.EditorialReviewTypes',
+            parentRefresh: function (data) { $scope.types = data; },
+            controller: 'platformWebApp.settingDictionaryController',
+            template: '$(Platform)/Scripts/app/settings/blades/setting-dictionary.tpl.html'
+        };
+        bladeNavigationService.showBlade(newBlade, blade);
+    };
+
     // on load
-    initializeBlade($scope.blade.currentEntity);
+    initializeBlade(blade.currentEntity);
     $scope.$watch('blade.parentBlade.currentEntities', function (newEntities, oldEntities) {
         if (!angular.equals(newEntities, oldEntities)) {
             var currentChild = angular.isDefined($scope.currentEntity.id)

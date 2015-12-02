@@ -16,7 +16,7 @@
                     rowTemplate: 'member-list.row.html',
                     rowHeight: 61,
                     columnDefs: [
-                                { name: 'actions', displayName: '...', enableColumnResizing: false, enableSorting: false, width: 30, cellTemplate: 'member-list-actions.cell.html' },
+                                { name: 'actions', displayName: '', enableColumnResizing: false, enableSorting: false, width: 30, cellTemplate: 'list-actions.cell.html' },
                                 {
                                     name: 'memberType', displayName: 'customer.blades.member-list.labels.type', headerTooltip: 'Organization or individual Customer',
                                     sort: { direction: uiGridConstants.DESC, priority: 1 },
@@ -27,26 +27,31 @@
                 <!--{ name: 'customAddress', displayName: 'customer.blades.member-list.labels.address', field: 'grid.appScope.getMainAddress(row)' },
                 { name: 'customEmail', displayName: 'customer.blades.member-list.labels.email' }-->
                 <div ui-grid="gridOptions" ui-grid-save-state ui-grid-selection ui-grid-resize-columns ui-grid-move-columns></div>
+                <ul class="menu __context" role="menu" id="cml_menu">
+                    <li class="menu-item" ng-click='blade.showDetailBlade(contextMenuEntity, contextMenuEntity.displayName)'>
+                        <i class="menu-ico fa fa-edit"></i> {{'platform.commands.manage' | translate}}
+                    </li>
+                    <li class="menu-item" ng-click='delete(contextMenuEntity)'>
+                        <i class="menu-ico fa fa-trash-o"></i> {{'platform.commands.delete' | translate}}
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
 </div>
 
-<script type="text/ng-template" id="member-list.row.html">
-    <div ng-click="col.isRowHeader || col.name=='actions' || grid.appScope.selectNode(row.entity)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'" class="ui-grid-cell" ng-class="{'ui-grid-row-header-cell': col.isRowHeader, '__selected': row.entity.id===grid.appScope.selectedNodeId }" role="{{col.isRowHeader ? 'rowheader' : 'gridcell' }}" ui-grid-cell style='cursor:pointer' context-menu data-target="cml_menu_{{row.entity.id}}"></div>
-    <ul class="menu __context" role="menu" id="cml_menu_{{row.entity.id}}">
-        <li class="menu-item" ng-click='grid.appScope.blade.showDetailBlade(row.entity, row.entity.displayName)'>
-            <i class="menu-ico fa fa-edit"></i> {{'platform.commands.manage' | translate}}
-        </li>
-        <li class="menu-item" ng-click='grid.appScope.delete(row.entity)'>
-            <i class="menu-ico fa fa-trash-o"></i> {{'platform.commands.delete' | translate}}
-        </li>
-    </ul>
+<script type="text/ng-template" id="ui-grid/selectionSelectAllButtons">
+    <div class="ui-grid-selection-row-header-buttons fa" ng-class="grid.selection.selectAll ? 'fa-check-square-o': 'fa-square-o'" ng-click="headerButtonClick($event)"></div>
+</script>
+<script type="text/ng-template" id="ui-grid/selectionRowHeaderButtons">
+    <div class="ui-grid-selection-row-header-buttons fa" ng-class="row.isSelected ? 'fa-check-square-o': 'fa-square-o'" ng-click="selectButtonClick(row, $event)">&nbsp;</div>
 </script>
 
-<script type="text/ng-template" id="member-list-actions.cell.html">
-    <!--ng-init="menuVisible=false" ng-click="menuVisible=!menuVisible"-->
-    <div class="ui-grid-actions" left-click-menu data-target="cml_menu_{{row.entity.id}}">
+<script type="text/ng-template" id="member-list.row.html">
+    <div ng-click="col.isRowHeader || grid.appScope.selectNode(row.entity)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'" class="ui-grid-cell" ng-class="{'ui-grid-row-header-cell': col.isRowHeader, '__selected': row.entity.id===grid.appScope.selectedNodeId }" role="{{col.isRowHeader ? 'rowheader' : 'gridcell' }}" ui-grid-cell style='cursor:pointer' context-menu="grid.appScope.contextMenuEntity = row.entity" data-target="cml_menu"></div>
+</script>
+<script type="text/ng-template" id="list-actions.cell.html">
+    <div class="ui-grid-actions" left-click-menu="grid.appScope.contextMenuEntity = row.entity" data-target="cml_menu">
         <i class="fa fa-ellipsis-v"></i>
     </div>
 </script>
