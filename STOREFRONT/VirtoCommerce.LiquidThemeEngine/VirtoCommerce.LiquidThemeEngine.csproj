@@ -96,6 +96,7 @@
     <Compile Include="Converters\LineItemConverter.cs" />
     <Compile Include="Converters\OrderConverter.cs" />
     <Compile Include="Converters\ProductConverter.cs" />
+    <Compile Include="Converters\ProductPropertyConverter.cs" />
     <Compile Include="Converters\ShopConverter.cs" />
     <Compile Include="Converters\ShopifyContextConverter.cs" />
     <Compile Include="Converters\AddressConverter.cs" />
@@ -129,6 +130,7 @@
     <Compile Include="Objects\Order.cs" />
     <Compile Include="Objects\Paginate.cs" />
     <Compile Include="Objects\Part.cs" />
+    <Compile Include="Objects\ProductProperty.cs" />
     <Compile Include="Tags\FormTag.cs" />
     <Compile Include="Objects\Image.cs" />
     <Compile Include="Objects\ItemCollections.cs" />

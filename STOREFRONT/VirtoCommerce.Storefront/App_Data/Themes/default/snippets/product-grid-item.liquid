@@ -37,6 +37,11 @@
 
     <div class="product-item--price">
       <span class="h1 medium--left">
+          {% if on_sale %}
+          <span class="old">
+              {% include 'price' with product.compare_at_price %}
+          </span>
+          {% endif %}
         {% include 'price' with product.price %}
       </span>
 
