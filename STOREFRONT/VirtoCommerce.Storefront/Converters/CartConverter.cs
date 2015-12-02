@@ -64,6 +64,11 @@ namespace VirtoCommerce.Storefront.Converters
             cartServiceModel.TaxTotal = (double)cart.TaxTotal.Amount;
             cartServiceModel.Total = (double)cart.Total.Amount;
 
+            if (cart.Coupon != null && cart.Coupon.AppliedSuccessfully)
+            {
+                cartServiceModel.Coupon = cart.Coupon.Code;
+            }
+
             if (cart.Addresses != null)
             {
                 cartServiceModel.Addresses = cart.Addresses.Select(a => a.ToServiceModel()).ToList();

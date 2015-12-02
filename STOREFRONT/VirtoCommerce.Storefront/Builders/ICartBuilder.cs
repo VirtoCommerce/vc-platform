@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using VirtoCommerce.Client.Model;
+﻿using System.Threading.Tasks;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Cart;
 using VirtoCommerce.Storefront.Model.Catalog;
@@ -12,19 +10,23 @@ namespace VirtoCommerce.Storefront.Builders
     {
         Task<CartBuilder> GetOrCreateNewTransientCartAsync(Store store, Customer customer, Currency currency);
 
-        CartBuilder AddItem(Product product, int quantity);
+        Task<CartBuilder> AddItemAsync(Product product, int quantity);
 
-        CartBuilder UpdateItem(string id, int quantity);
+        Task<CartBuilder> ChangeItemQuantityAsync(string lineItemId, int quantity);
 
-        CartBuilder RemoveItem(string id);
+        Task<CartBuilder> RemoveItemAsync(string lineItemId);
 
-        CartBuilder UpdateDiscounts(IEnumerable<VirtoCommerceMarketingModuleWebModelPromotionReward> promotionRewards);
+        Task<CartBuilder> AddCouponAsync(string couponCode);
 
-        CartBuilder AddAddress(Address address);
+        Task<CartBuilder> RemoveCouponAsync();
 
-        CartBuilder AddShipment(ShippingMethod shippingMethod);
+        Task<CartBuilder> AddAddressAsync(Address address);
 
-        CartBuilder AddPayment(PaymentMethod paymentMethod);
+        Task<CartBuilder> AddShipmentAsync(ShippingMethod shippingMethod);
+
+        Task<CartBuilder> AddPaymentAsync(PaymentMethod paymentMethod);
+
+        Task<CartBuilder> MergeWithCartAsync(ShoppingCart cart);
 
         Task SaveAsync();
 

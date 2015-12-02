@@ -71,7 +71,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// <value>
         /// Coupon object
         /// </value>
-        public string Coupon { get; set; }
+        public Coupon Coupon { get; set; }
 
         /// <summary>
         /// Gets or sets the value of shopping cart language code
