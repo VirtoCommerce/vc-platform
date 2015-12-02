@@ -29,6 +29,10 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
 
             result.CompareAtPrice = product.Price.ListPrice.Amount;
             result.Price = product.Price.SalePrice.Amount;
+            if(product.Price.ActiveDiscount != null)
+            {
+                result.Price = (result.Price - product.Price.ActiveDiscount.DiscountAmount).Amount;
+            }
             result.PriceMax = result.Variants.Select(x => x.Price).Max();
             result.PriceMin = result.Variants.Select(x => x.Price).Min();
             result.PriceVaries = result.PriceMax != result.PriceMin;
@@ -49,9 +53,13 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                 image.ProductId = product.Id;
                 image.AttachedToVariant = false;
             }
+            if(product.VariationProperties != null)
+            {
+                result.Options = product.VariationProperties.Select(x => x.Name).ToArray();
+            }
             if(product.Properties != null)
             {
-                result.Options = product.Properties.Where(x => string.Equals(x.Type, "variation", System.StringComparison.InvariantCultureIgnoreCase)).Select(x => x.Name).ToArray();
+                result.Properties = product.Properties.Select(x => x.ToShopifyModel()).ToList();
             }
             result.SelectedVariant = result.Variants.First();
             result.Title = product.Name;
@@ -70,7 +78,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             var result = new Variant();
             result.Available = true; //product.IsActive && product.IsBuyable;
             result.Barcode = product.Gtin;
-            result.CompareAtPrice = product.Price.ListPrice.Amount;
+      
             result.FeaturedImage = product.PrimaryImage != null ? product.PrimaryImage.ToShopifyModel() : null;
             if (result.FeaturedImage != null)
             {
@@ -83,7 +91,13 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             result.Options = product.Properties.Where(x => string.Equals(x.Type, "variation", System.StringComparison.InvariantCultureIgnoreCase) && x.Value != null)
                                                .Select(x => string.Join(";", x.Value)).ToArray();
 
+            result.CompareAtPrice = product.Price.ListPrice.Amount;
             result.Price = product.Price.SalePrice.Amount;
+            if (product.Price.ActiveDiscount != null)
+            {
+                result.Price = (result.Price - product.Price.ActiveDiscount.DiscountAmount).Amount;
+            }
+
             result.Selected = false;
             result.Sku = product.Sku;
             result.Title = product.Name;

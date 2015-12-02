@@ -27,8 +27,14 @@ namespace VirtoCommerce.Storefront.Converters
             }
 
             if (product.Properties != null)
-                retVal.Properties = product.Properties.Select(p => p.ToWebModel(currentLanguage)).ToList();
-
+            {
+                retVal.Properties = product.Properties.Where(x => !String.Equals(x.Type, "Variation", StringComparison.InvariantCultureIgnoreCase))
+                                                      .Select(p => p.ToWebModel(currentLanguage))
+                                                      .ToList();
+                retVal.VariationProperties = product.Properties.Where(x => String.Equals(x.Type, "Variation", StringComparison.InvariantCultureIgnoreCase))
+                                                      .Select(p => p.ToWebModel(currentLanguage))
+                                                      .ToList();
+            }
             if (product.Images != null)
             {
                 retVal.Images = product.Images.Select(i => i.ToWebModel()).ToArray();

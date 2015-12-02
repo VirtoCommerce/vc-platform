@@ -40,6 +40,11 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                 }
             }
 
+            if (workContext.Order != null)
+            {
+                result.Order = workContext.Order.ToShopifyModel(urlBuilder);
+            }
+
             return result;
         }
     }

@@ -31,5 +31,32 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
 
             return shopifyModel;
         }
+
+        public static LineItem ToShopifyModel(this StorefrontModel.Order.LineItem lineItem)
+        {
+            var result = new LineItem();
+
+            //result.Product = lineItem.Product.ToShopifyModel();
+            result.Fulfillment = null; // TODO
+            result.Grams = lineItem.Weight ?? 0m;
+            result.Id = lineItem.Id;
+            //result.Image = lineItem.Product.PrimaryImage != null ? lineItem.Product.PrimaryImage.ToShopifyModel() : null;
+            result.Quantity = lineItem.Quantity ?? 0;
+            result.Price = lineItem.Price.Amount;
+            result.LinePrice = result.Price * result.Quantity;
+            result.ProductId = lineItem.ProductId;
+            //result.RequiresShipping = lineItem.RequiredShipping;
+            result.Sku = lineItem.Name;
+            //result.Taxable = lineItem.TaxIncluded;
+            result.Title = lineItem.Name;
+            //result.Properties = null; // TODO
+            result.Type = null; // TODO
+            result.Url = null; // TODO
+            result.Variant = null; // TODO
+            result.VariantId = null; // TODO
+            result.Vendor = null; // TODO
+
+            return result;
+        }
     }
 }

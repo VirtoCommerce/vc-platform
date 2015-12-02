@@ -12,6 +12,15 @@
 	text-decoration: line-through;
 }
 
+.product-item--price .old
+{
+	color: #999;
+	display: inline-block;
+	font-size: 16px;
+	font-weight: normal;
+	text-decoration: line-through;
+}
+
 .product-sku
 {
 	margin: 20px 0;

@@ -12,6 +12,7 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         public Product()
         {
             Properties = new List<ProductProperty>();
+            VariationProperties = new List<ProductProperty>();
             Prices = new List<ProductPrice>();
             Assets = new List<Asset>();
             Variations = new List<Product>();
@@ -165,7 +166,10 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         /// </summary>
         public string Vendor { get; set; }
 
-      
+        /// <summary>
+        /// List og variation properties
+        /// </summary>
+        public ICollection<ProductProperty> VariationProperties { get; set; }
         /// <summary>
         /// List of product properties
         /// </summary>
