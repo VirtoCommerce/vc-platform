@@ -609,6 +609,7 @@
   <ItemGroup>
     <Content Include="Content\themes\main\fonts\fontawesome-webfont.woff2" />
     <Content Include="Localizations\en.VirtoCommerce.Platform.json" />
+    <Content Include="Localizations\en.VirtoCommerce.Common.json" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
