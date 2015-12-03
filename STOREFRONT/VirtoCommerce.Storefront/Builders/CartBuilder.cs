@@ -135,6 +135,12 @@ namespace VirtoCommerce.Storefront.Builders
 
         public async Task<CartBuilder> AddAddressAsync(Address address)
         {
+            var existingAddress = _cart.Addresses.FirstOrDefault(a => a.Type == address.Type);
+            if (existingAddress != null)
+            {
+                _cart.Addresses.Remove(existingAddress);
+            }
+
             _cart.Addresses.Add(address);
 
             await EvaluatePromotionsAsync();
@@ -226,9 +232,10 @@ namespace VirtoCommerce.Storefront.Builders
         {
             var promotionContext = new VirtoCommerceDomainMarketingModelPromotionEvaluationContext
             {
+                CartTotal = (double)_cart.Total.Amount,
                 Coupon = _cart.Coupon != null ? _cart.Coupon.Code : null,
                 CustomerId = _customer.Id,
-                StoreId = _store.Id
+                StoreId = _store.Id,
             };
 
             promotionContext.CartPromoEntries = _cart.Items.Select(i => i.ToPromotionItem()).ToList();
@@ -239,7 +246,7 @@ namespace VirtoCommerce.Storefront.Builders
 
             foreach (var validReward in validRewards)
             {
-                if (!string.IsNullOrEmpty(validReward.ProductId))
+                if (validReward.RewardType.Equals("CatalogItemAmountReward", StringComparison.OrdinalIgnoreCase) && !string.IsNullOrEmpty(validReward.ProductId))
                 {
                     var lineItem = _cart.Items.FirstOrDefault(i => i.ProductId == validReward.ProductId);
                     if (lineItem != null)
@@ -255,7 +262,7 @@ namespace VirtoCommerce.Storefront.Builders
                     }
                 }
 
-                if (!string.IsNullOrEmpty(validReward.CategoryId))
+                if (validReward.RewardType.Equals("CatalogItemAmountReward", StringComparison.OrdinalIgnoreCase) && !string.IsNullOrEmpty(validReward.CategoryId))
                 {
                     var categoryLineItems = _cart.Items.Where(i => i.CategoryId == validReward.CategoryId);
                     foreach (var categoryLineItem in categoryLineItems)
@@ -271,16 +278,35 @@ namespace VirtoCommerce.Storefront.Builders
                     }
                 }
 
-                _cart.Discounts.Clear();
-                if (validReward.Promotion.Coupons.Any())
+                if (validReward.RewardType.Equals("ShipmentReward", StringComparison.OrdinalIgnoreCase))
                 {
-                    _cart.Discounts.Add(new Discount
+                    var shipment = _cart.Shipments.FirstOrDefault();
+                    if (shipment != null)
                     {
-                        Amount = GetAbsoluteDiscountAmount(_cart.SubTotal.Amount, validReward),
-                        Description = validReward.Promotion.Description,
-                        PromotionId = validReward.Promotion.Id,
-                        ShoppingCartId = _cart.Id
-                    });
+                        shipment.Discounts.Clear();
+                        shipment.Discounts.Add(new Discount
+                        {
+                            Amount = GetAbsoluteDiscountAmount(_cart.SubTotal.Amount, validReward),
+                            Description = validReward.Promotion.Description,
+                            PromotionId = validReward.Promotion.Id,
+                            ShipmentId = shipment.Id
+                        });
+                    }
+                }
+
+                if (validReward.RewardType.Equals("CartSubtotalReward", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (validReward.Promotion.Coupons.Any())
+                    {
+                        _cart.Discounts.Clear();
+                        _cart.Discounts.Add(new Discount
+                        {
+                            Amount = GetAbsoluteDiscountAmount(_cart.SubTotal.Amount, validReward),
+                            Description = validReward.Promotion.Description,
+                            PromotionId = validReward.Promotion.Id,
+                            ShoppingCartId = _cart.Id
+                        });
+                    }
                 }
             }
         }

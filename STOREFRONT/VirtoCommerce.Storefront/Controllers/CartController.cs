@@ -164,10 +164,10 @@ namespace VirtoCommerce.Storefront.Controllers
             return Json(_cartBuilder.Cart, JsonRequestBehavior.AllowGet);
         }
 
-        // POST: /cart/shipping_method?shippingMethodCode=...
+        // POST: /cart/shipping_method?shippingMethodCode=...?isPreview=...
         [HttpPost]
         [Route("shipping_method")]
-        public async Task<ActionResult> SetShippingMethodsJson(string shippingMethodCode)
+        public async Task<ActionResult> SetShippingMethodsJson(string shippingMethodCode, bool isPreview)
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentCurrency);
 
@@ -176,7 +176,11 @@ namespace VirtoCommerce.Storefront.Controllers
             if (shippingMethod != null)
             {
                 await _cartBuilder.AddShipmentAsync(shippingMethod.ToWebModel());
-                await _cartBuilder.SaveAsync();
+
+                if (!isPreview)
+                {
+                    await _cartBuilder.SaveAsync();
+                }
             }
 
             return Json(_cartBuilder.Cart, JsonRequestBehavior.AllowGet);
