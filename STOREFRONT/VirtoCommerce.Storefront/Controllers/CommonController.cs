@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -12,10 +11,14 @@ namespace VirtoCommerce.Storefront.Controllers
     [RoutePrefix("common")]
     public class CommonController : StorefrontControllerBase
     {
+        private readonly Country[] _countriesWithoutRegions;
 
         public CommonController(WorkContext workContext, IStorefrontUrlBuilder urlBuilder)
             : base(workContext, urlBuilder)
         {
+            _countriesWithoutRegions = workContext.AllCountries
+                .Select(c => new Country { Name = c.Name, Code2 = c.Code2, Code3 = c.Code3 })
+                .ToArray();
         }
 
         /// <summary>
@@ -27,16 +30,18 @@ namespace VirtoCommerce.Storefront.Controllers
         [Route("setcurrency/{currency}")]
         public ActionResult SetCurrency(string currency, string returnUrl = "")
         {
-            var cookie = new HttpCookie(StorefrontConstants.CurrencyCookie);
-            cookie.HttpOnly = true;
-            cookie.Value = currency;
-            var cookieExpires = 24 * 365; //TODO make configurable
+            var cookie = new HttpCookie(StorefrontConstants.CurrencyCookie)
+            {
+                HttpOnly = true,
+                Value = currency
+            };
+            var cookieExpires = 24 * 365; // TODO make configurable
             cookie.Expires = DateTime.Now.AddHours(cookieExpires);
             HttpContext.Response.Cookies.Remove(StorefrontConstants.CurrencyCookie);
             HttpContext.Response.Cookies.Add(cookie);
 
             //home page  and prevent open redirection attack
-            if (String.IsNullOrEmpty(returnUrl) || !Url.IsLocalUrl(returnUrl))
+            if (string.IsNullOrEmpty(returnUrl) || !Url.IsLocalUrl(returnUrl))
             {
                 returnUrl = "~/";
             }
@@ -49,9 +54,7 @@ namespace VirtoCommerce.Storefront.Controllers
         [Route("getcountries/json")]
         public ActionResult GetCountries()
         {
-            var countries = WorkContext.AllCountries;
-
-            return Json(countries, JsonRequestBehavior.AllowGet);
+            return Json(_countriesWithoutRegions, JsonRequestBehavior.AllowGet);
         }
 
         // GET: /getregions/{countryCode}/json
@@ -59,10 +62,8 @@ namespace VirtoCommerce.Storefront.Controllers
         [Route("getregions/{countryCode}/json")]
         public ActionResult GetRegions(string countryCode)
         {
-            var country = WorkContext.AllCountries.FirstOrDefault(c => c.Code.Equals(countryCode, StringComparison.OrdinalIgnoreCase));
-            var regions = country != null && country.Regions != null ? country.Regions.ToList() : null;
-
-            return Json(regions, JsonRequestBehavior.AllowGet);
+            var country = WorkContext.AllCountries.FirstOrDefault(c => c.Code3.Equals(countryCode, StringComparison.OrdinalIgnoreCase));
+            return Json(country?.Regions, JsonRequestBehavior.AllowGet);
         }
     }
 }

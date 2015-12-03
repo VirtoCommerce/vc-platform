@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Hosting;
 using Microsoft.Owin;
 using Microsoft.Practices.Unity;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Storefront.Builders;
 using VirtoCommerce.Storefront.Common;
@@ -254,77 +259,58 @@ namespace VirtoCommerce.Storefront.Owin
 
         private static Country[] GetAllCounries()
         {
-            return new[]
+            var regions = CultureInfo.GetCultures(CultureTypes.SpecificCultures)
+                .Select(GetRegionInfo)
+                .Where(r => r != null)
+                .ToList();
+
+            var countriesJson = File.ReadAllText(HostingEnvironment.MapPath("~/App_Data/countries.json"));
+            var countriesDict = JsonConvert.DeserializeObject<Dictionary<string, JObject>>(countriesJson);
+
+            var countries = countriesDict
+                .Select(kvp => ParseCountry(kvp, regions))
+                .Where(c => c.Code3 != null)
+                .ToArray();
+
+            return countries;
+        }
+
+        private static RegionInfo GetRegionInfo(CultureInfo culture)
+        {
+            RegionInfo result = null;
+
+            try
             {
-                new Country {Code = "RUS", Name = "Russian Federation"},
-                new Country
-                {
-                    Code = "USA",
-                    Name = "United States",
-                    Regions = new Dictionary<string, string>
-                    {
-                        {"Alabama", "AL"},
-                        {"Alaska", "AK"},
-                        {"American Samoa", "AS"},
-                        {"Arizona", "AZ"},
-                        {"Arkansas", "AR"},
-                        {"California", "CA"},
-                        {"Colorado", "CO"},
-                        {"Connecticut", "CT"},
-                        {"Delaware", "DE"},
-                        {"Federated States of Micronesia", "FM"},
-                        {"Florida", "FL"},
-                        {"Georgia", "GA"},
-                        {"Hawaii", "HI"},
-                        {"Idaho", "ID"},
-                        {"Illinois", "IL"},
-                        {"Indiana", "IN"},
-                        {"Iowa", "IA"},
-                        {"Kansas", "KS"},
-                        {"Kentucky", "KY"},
-                        {"Louisiana", "LA"},
-                        {"Maine", "ME"},
-                        {"Marshall Islands", "MH"},
-                        {"Maryland", "MD"},
-                        {"Massachusetts", "MA"},
-                        {"Michigan", "MI"},
-                        {"Minnesota", "MN"},
-                        {"Mississippi", "MS"},
-                        {"Missouri", "MO"},
-                        {"Montana", "MT"},
-                        {"Nebraska", "NE"},
-                        {"Nevada", "NV"},
-                        {"New Hampshire", "NH"},
-                        {"New Jersey", "NJ"},
-                        {"New Mexico", "NM"},
-                        {"New York", "NY"},
-                        {"North Carolina", "NC"},
-                        {"North Dakota", "ND"},
-                        {"Northern Mariana Islands", "MP"},
-                        {"Ohio", "OH"},
-                        {"Oklahoma", "OK"},
-                        {"Oregon", "OR"},
-                        {"Palau", "PW"},
-                        {"Pennsylvania", "PA"},
-                        {"Rhode Island", "RI"},
-                        {"South Carolina", "SC"},
-                        {"South Dakota", "SD"},
-                        {"Tennessee", "TN"},
-                        {"Texas", "TX"},
-                        {"Utah", "UT"},
-                        {"Vermont", "VT"},
-                        {"Virginia", "VA"},
-                        {"Washington", "WA"},
-                        {"Washington DC", "DC"},
-                        {"West Virginia", "WV"},
-                        {"Wisconsin", "WI"},
-                        {"Wyoming", "WY"},
-                        {"Armed Forces Americas", "AA"},
-                        {"Armed Forces Europe", "AE"},
-                        {"Armed Forces Pacific", "AP"},
-                    }
-                }
+                result = new RegionInfo(culture.LCID);
+            }
+            catch
+            {
+                // ignored
+            }
+
+            return result;
+        }
+
+        private static Country ParseCountry(KeyValuePair<string, JObject> pair, List<RegionInfo> regions)
+        {
+            var region = regions.FirstOrDefault(r => string.Equals(r.EnglishName, pair.Key, StringComparison.OrdinalIgnoreCase));
+
+            var country = new Country
+            {
+                Name = pair.Key,
+                Code2 = region?.TwoLetterISORegionName,
+                Code3 = region?.ThreeLetterISORegionName,
             };
+
+            var provinceCodes = pair.Value["province_codes"].ToObject<Dictionary<string, string>>();
+            if (provinceCodes != null && provinceCodes.Any())
+            {
+                country.Regions = provinceCodes
+                    .Select(kvp => new CountryRegion { Name = kvp.Key, Code = kvp.Value })
+                    .ToArray();
+            }
+
+            return country;
         }
     }
 }
