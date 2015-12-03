@@ -9,10 +9,10 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
         {
             var ret = new shopifyModel.Discount
             {
-                Amount = discount.DiscountAmount.Amount,
+                Amount = discount.AbsoluteAmount.Amount,
                 Code = discount.PromotionId,
                 Id = discount.PromotionId,
-                Savings = -discount.DiscountAmount.Amount
+                Savings = -discount.AbsoluteAmount.Amount
             };
 
             return ret;

@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="Address.cs" />
     <Compile Include="AddressType.cs" />
+    <Compile Include="AmountType.cs" />
     <Compile Include="Catalog\Asset.cs" />
     <Compile Include="Catalog\CatalogSearchResponseGroup.cs" />
     <Compile Include="Catalog\CatalogSearchResult.cs" />

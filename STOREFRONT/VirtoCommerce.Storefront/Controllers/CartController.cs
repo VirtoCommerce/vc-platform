@@ -51,26 +51,6 @@ namespace VirtoCommerce.Storefront.Controllers
             return Json(_cartBuilder.Cart, JsonRequestBehavior.AllowGet);
         }
 
-        // GET: /cart/{cartId}/shipping_methods/json
-        [HttpGet]
-        [Route("{cartId}/shipping_methods/json")]
-        public async Task<ActionResult> CartShippingMethodsJson(string cartId)
-        {
-            var shippingMethods = await _cartApi.CartModuleGetShipmentMethodsAsync(cartId);
-
-            return Json(shippingMethods.Select(sm => sm.ToWebModel()), JsonRequestBehavior.AllowGet);
-        }
-
-        // GET: /cart/{cartId}/payment_methods/json
-        [HttpGet]
-        [Route("{cartId}/payment_methods/json")]
-        public async Task<ActionResult> CartPaymentMethodsJson(string cartId)
-        {
-            var paymentMethods = await _cartApi.CartModuleGetPaymentMethodsAsync(cartId);
-
-            return Json(paymentMethods.Select(pm => pm.ToWebModel()), JsonRequestBehavior.AllowGet);
-        }
-
         // POST: /cart/add_item?productId=...&quantity=...
         [HttpPost]
         [Route("add_item")]
@@ -83,6 +63,7 @@ namespace VirtoCommerce.Storefront.Controllers
             {
                 await _cartBuilder.AddItemAsync(product, quantity);
                 await _cartBuilder.SaveAsync();
+                await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentCurrency);
             }
 
             return Json(_cartBuilder.Cart, JsonRequestBehavior.AllowGet);
@@ -121,12 +102,27 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentCurrency);
 
-            if (WorkContext.CurrentCart.Items.Count == 0)
-            {
-                return StoreFrontRedirect("~/cart");
-            }
-
             return View("checkout", "checkout_layout", _cartBuilder.Cart);
+        }
+
+        // GET: /cart/{cartId}/shipping_methods/json
+        [HttpGet]
+        [Route("{cartId}/shipping_methods/json")]
+        public async Task<ActionResult> CartShippingMethodsJson(string cartId)
+        {
+            var shippingMethods = await _cartApi.CartModuleGetShipmentMethodsAsync(cartId);
+
+            return Json(shippingMethods.Select(sm => sm.ToWebModel()), JsonRequestBehavior.AllowGet);
+        }
+
+        // GET: /cart/{cartId}/payment_methods/json
+        [HttpGet]
+        [Route("{cartId}/payment_methods/json")]
+        public async Task<ActionResult> CartPaymentMethodsJson(string cartId)
+        {
+            var paymentMethods = await _cartApi.CartModuleGetPaymentMethodsAsync(cartId);
+
+            return Json(paymentMethods.Select(pm => pm.ToWebModel()), JsonRequestBehavior.AllowGet);
         }
 
         // POST: /cart/add_coupon/{couponCode}

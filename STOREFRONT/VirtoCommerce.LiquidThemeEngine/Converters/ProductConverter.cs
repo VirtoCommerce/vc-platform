@@ -31,7 +31,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             result.Price = product.Price.SalePrice.Amount;
             if(product.Price.ActiveDiscount != null)
             {
-                result.Price = result.Price - product.Price.ActiveDiscount.DiscountAmount.Amount;
+                result.Price = result.Price - product.Price.ActiveDiscount.AbsoluteAmount.Amount;
             }
             result.PriceMax = result.Variants.Select(x => x.Price).Max();
             result.PriceMin = result.Variants.Select(x => x.Price).Min();
@@ -95,7 +95,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             result.Price = product.Price.SalePrice.Amount;
             if (product.Price.ActiveDiscount != null)
             {
-                result.Price = result.Price - product.Price.ActiveDiscount.DiscountAmount.Amount;
+                result.Price = result.Price - product.Price.ActiveDiscount.AbsoluteAmount.Amount;
             }
 
             result.Selected = false;

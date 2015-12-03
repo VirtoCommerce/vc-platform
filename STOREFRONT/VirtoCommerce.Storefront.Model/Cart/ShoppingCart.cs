@@ -182,7 +182,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
         {
             get
             {
-                decimal discountsTotal = Discounts.Sum(d => d.DiscountAmount.Amount);
+                decimal discountsTotal = Discounts.Sum(d => d.AbsoluteAmount.Amount);
 
                 return new Money(discountsTotal, Currency.Code);
             }
@@ -210,12 +210,63 @@ namespace VirtoCommerce.Storefront.Model.Cart
         public ICollection<Address> Addresses { get; set; }
 
         /// <summary>
+        /// Gets default shipping address
+        /// </summary>
+        public Address DefaultShippingAddress
+        {
+            get
+            {
+                var defaultAddress = Addresses.FirstOrDefault(a => a.Type == AddressType.Shipping);
+                if (defaultAddress == null)
+                {
+                    defaultAddress = new Address
+                    {
+                        Type = AddressType.Shipping
+                    };
+                }
+
+                return defaultAddress;
+            }
+        }
+
+        /// <summary>
+        /// Gets default billing address
+        /// </summary>
+        public Address DefaultBillingAddress
+        {
+            get
+            {
+                var defaultAddress = Addresses.FirstOrDefault(a => a.Type == AddressType.Billing);
+                if (defaultAddress == null)
+                {
+                    defaultAddress = new Address
+                    {
+                        Type = AddressType.Billing
+                    };
+                }
+
+                return defaultAddress;
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the value of shopping cart line items
         /// </summary>
         /// <value>
         /// Collection of LineItem objects
         /// </value>
         public ICollection<LineItem> Items { get; set; }
+
+        /// <summary>
+        /// Gets shopping cart items quantity (sum of each line item quantity * items count)
+        /// </summary>
+        public int ItemsCount
+        {
+            get
+            {
+                return Items.Sum(i => i.Quantity) * Items.Count;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the collection of shopping cart payments

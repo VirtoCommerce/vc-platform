@@ -223,6 +223,7 @@ namespace VirtoCommerce.Storefront.Builders
 
             var rewards = await _marketingApi.MarketingModulePromotionEvaluatePromotionsAsync(promotionContext);
             var validRewards = rewards.Where(pr => pr.IsValid.HasValue && pr.IsValid.Value);
+
             _cart.Discounts = validRewards.Select(r => r.ToDiscountWebModel(_currency)).ToList();
 
             return validRewards;

@@ -13,7 +13,7 @@ namespace VirtoCommerce.Storefront.Converters
 
             webModel.InjectFrom(discount);
 
-            webModel.DiscountAmount = new Money(discount.DiscountAmount ?? 0, discount.Currency);
+            webModel.AbsoluteAmount = new Money(discount.DiscountAmount ?? 0, discount.Currency);
 
             return webModel;
         }
@@ -24,8 +24,8 @@ namespace VirtoCommerce.Storefront.Converters
 
             serviceModel.InjectFrom(discount);
 
-            serviceModel.Currency = discount.DiscountAmount.CurrencyCode;
-            serviceModel.DiscountAmount = (double)discount.DiscountAmount.Amount;
+            serviceModel.Currency = discount.AbsoluteAmount.CurrencyCode;
+            serviceModel.DiscountAmount = (double)discount.AbsoluteAmount.Amount;
 
             return serviceModel;
         }
@@ -36,7 +36,7 @@ namespace VirtoCommerce.Storefront.Converters
 
             webModel.InjectFrom(discount);
 
-            webModel.DiscountAmount = new Money(discount.DiscountAmount ?? 0, discount.Currency);
+            webModel.AbsoluteAmount = new Money(discount.DiscountAmount ?? 0, discount.Currency);
 
             return webModel;
         }
@@ -47,7 +47,19 @@ namespace VirtoCommerce.Storefront.Converters
 
             discountModel.InjectFrom(promotionReward);
 
-            discountModel.DiscountAmount = new Money(promotionReward.Amount ?? 0, currency.Code);
+            switch (promotionReward.AmountType)
+            {
+                case "Absolute":
+                    discountModel.AbsoluteAmount = new Money(promotionReward.Amount ?? 0, currency.Code);
+                    discountModel.Type = AmountType.Absolute;
+                    break;
+                case "Relative":
+                    discountModel.AbsoluteAmount = new Money(0, currency.Code);
+                    discountModel.RelativeAmount = promotionReward.Amount;
+                    discountModel.Type = AmountType.Relative;
+                    break;
+            }
+
             discountModel.PromotionId = promotionReward.Promotion.Id;
 
             return discountModel;
