@@ -57,6 +57,7 @@
     <Compile Include="Common\IStorefrontPagedList.cs" />
     <Compile Include="Common\StoreFrontPagedList.cs" />
     <Compile Include="Country.cs" />
+    <Compile Include="CountryRegion.cs" />
     <Compile Include="Coupon.cs" />
     <Compile Include="DynamicObjectProperty.cs" />
     <Compile Include="DynamicPropertyName.cs" />

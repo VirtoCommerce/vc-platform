@@ -180,7 +180,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\countries.js" />
+    <None Include="App_Data\countries.json" />
     <Content Include="App_Data\Themes\default\assets\arrow-left.svg" />
     <Content Include="App_Data\Themes\default\assets\arrow-right.svg" />
     <Content Include="App_Data\Themes\default\assets\arrow.svg" />
