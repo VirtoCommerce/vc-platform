@@ -9,7 +9,7 @@
     
     {{ 'catalog.dialogs.catalog-delete.instruction' | translate }}:
     <div class="form-input __mini">
-        <input ng-model="enteredText" ng-trim="false" />
+        <input ng-model="enteredText" ng-keyup="$event.which === 13 && name.substring(0,5) === enteredText && yes()" ng-trim="false" />
     </div>
 </div>
 <div class="modal-footer">

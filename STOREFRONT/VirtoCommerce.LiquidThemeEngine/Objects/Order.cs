@@ -13,7 +13,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         public DateTime CreatedAt { get; set; }
         public Customer Customer { get; set; }
         public string CustomerUrl { get; set; }
-        public object[] Discounts { get; set; }
+        public Discount[] Discounts { get; set; }
         public string Email { get; set; }
         public string FinancialStatus { get; set; }
         public string FinancialStatusLabel { get; set; }
@@ -26,10 +26,10 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         public string Note { get; set; }
         public string OrderNumber { get; set; }
         public Address ShippingAddress { get; set; }
-        public object[] ShippingMethods { get; set; }
+        public ShippingMethod[] ShippingMethods { get; set; }
         public decimal ShippingPrice { get; set; }
         public decimal SubtotalPrice { get; set; }
-        public object[] TaxLines { get; set; }
+        public TaxLine[] TaxLines { get; set; }
         public decimal TaxPrice { get; set; }
         public decimal TotalPrice { get; set; }
         public object[] Transactions { get; set; }

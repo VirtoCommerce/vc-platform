@@ -11,8 +11,6 @@
 
         $scope.filter = { searchKeyword: undefined };
 
-        var preventOrganizationListingOnce; // prevent from unwanted additional actions after command was activated from context menu
-
         var blade = $scope.blade;
         blade.title = 'customer.blades.member-list.title';
 
@@ -100,14 +98,6 @@
             return retVal;
         }
 
-        $scope.edit = function (listItem) {
-            if (listItem.memberType === 'Organization') {
-                preventOrganizationListingOnce = true;
-                blade.showDetailBlade(listItem, listItem.displayName);
-            }
-            // else do nothing as customer is opened on selecting it.
-        };
-
         blade.showDetailBlade = function (listItem, title) {
             blade.setSelectedNode(listItem);
 
@@ -132,8 +122,6 @@
 
         $scope.delete = function (data) {
             deleteList([data]);
-
-            preventOrganizationListingOnce = true;
         };
 
         function deleteList(selection) {
@@ -171,25 +159,21 @@
         $scope.selectNode = function (listItem) {
             blade.setSelectedNode(listItem);
 
-            if (preventOrganizationListingOnce) {
-                preventOrganizationListingOnce = false;
+            if (listItem.memberType === 'Organization') {
+                var newBlade = {
+                    id: 'memberList',
+                    breadcrumbs: blade.breadcrumbs,
+                    subtitle: 'customer.blades.member-list.subtitle',
+                    subtitleValues: { name: listItem.displayName },
+                    currentEntity: listItem,
+                    disableOpenAnimation: true,
+                    controller: blade.controller,
+                    template: blade.template,
+                    isClosingDisabled: true
+                };
+                bladeNavigationService.showBlade(newBlade, blade.parentBlade);
             } else {
-                if (listItem.memberType === 'Organization') {
-                    var newBlade = {
-                        id: 'memberList',
-                        breadcrumbs: blade.breadcrumbs,
-                        subtitle: 'customer.blades.member-list.subtitle',
-                        subtitleValues: { name: listItem.displayName },
-                        currentEntity: listItem,
-                        disableOpenAnimation: true,
-                        controller: blade.controller,
-                        template: blade.template,
-                        isClosingDisabled: true
-                    };
-                    bladeNavigationService.showBlade(newBlade, blade.parentBlade);
-                } else {
-                    blade.showDetailBlade(listItem, listItem.displayName);
-                }
+                blade.showDetailBlade(listItem, listItem.displayName);
             }
         };
 
@@ -221,17 +205,6 @@
                     return true;
                 },
                 permission: 'customer:create'
-            },
-            {
-                name: "platform.commands.manage", icon: 'fa fa-edit',
-                executeMethod: function () {
-                    var listItem = $scope.gridApi.selection.getSelectedRows()[0];
-                    blade.showDetailBlade(listItem, listItem.displayName);
-                },
-                canExecuteMethod: function () {
-                    return $scope.gridApi && $scope.gridApi.selection.getSelectedRows().length === 1;
-                },
-                permission: 'customer:update'
             },
             {
                 name: "platform.commands.delete", icon: 'fa fa-trash-o',

@@ -12,7 +12,7 @@
                     <ui-select required ng-model="blade.columnDelimiter">
                         <ui-select-match allow-clear="true" placeholder="{{ 'catalog.wizards.catalog-CSV-import.placeholders.delimiter' | translate }}">{{$select.selected.name}}</ui-select-match>
                         <ui-select-choices repeat="x.value as x in columnDelimiters | filter: $select.search ">
-                            <span ng-bind-html="x.name | highlight: $select.search"></span>
+                            <span ng-bind-html="x.name | translate | highlight: $select.search"></span>
                         </ui-select-choices>
                     </ui-select>
                 </fieldset>

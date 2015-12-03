@@ -12,6 +12,7 @@ namespace VirtoCommerce.Storefront.Model.Common
 	/// </summary>
 	public enum CurrencyCodes
     {
+        Undefined = 0,
         AED = 784,
         AFN = 971,
         AMD = 51,

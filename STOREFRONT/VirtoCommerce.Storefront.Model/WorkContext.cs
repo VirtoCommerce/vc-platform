@@ -4,6 +4,7 @@ using System.Linq;
 using VirtoCommerce.Storefront.Model.Cart;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
+using VirtoCommerce.Storefront.Model.Order;
 
 namespace VirtoCommerce.Storefront.Model
 {
@@ -100,6 +101,8 @@ namespace VirtoCommerce.Storefront.Model
         }
 
         public Country[] AllCountries { get; set; }
+
+        public CustomerOrder Order { get; set; }
 
         #region IDisposable Implementation
 
