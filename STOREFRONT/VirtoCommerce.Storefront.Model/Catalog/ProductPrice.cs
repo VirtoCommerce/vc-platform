@@ -12,8 +12,6 @@ namespace VirtoCommerce.Storefront.Model.Catalog
     {
         public ProductPrice()
         {
-            ListPrice = new Money();
-            SalePrice = new Money();
         }
         /// <summary>
         /// Price list id
