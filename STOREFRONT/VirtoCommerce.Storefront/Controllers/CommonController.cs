@@ -44,5 +44,24 @@ namespace VirtoCommerce.Storefront.Controllers
             return StoreFrontRedirect(returnUrl);
         }
 
+        // GET: /getcountries/json
+        [HttpGet]
+        [Route("getcountries/json")]
+        public ActionResult GetCountries()
+        {
+            var countries = WorkContext.AllCountries;
+
+            return Json(countries, JsonRequestBehavior.AllowGet);
+        }
+
+        // GET: /getregions/{countryCode}/json
+        [HttpGet]
+        [Route("getregions/{countryCode}/json")]
+        public ActionResult GetRegions(string countryCode)
+        {
+            var country = WorkContext.AllCountries.FirstOrDefault(c => c.Code.Equals(countryCode, StringComparison.OrdinalIgnoreCase));
+
+            return Json(country.Regions, JsonRequestBehavior.AllowGet);
+        }
     }
 }

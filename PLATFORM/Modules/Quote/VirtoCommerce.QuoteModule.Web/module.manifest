@@ -35,8 +35,8 @@
         <name>Quotes.Status</name>
         <valueType>string</valueType>
         <defaultValue>New</defaultValue>
-        <title>States</title>
-        <description>States that a quote can be in</description>
+        <title>Quote statuses</title>
+        <description>Dictionary of possible Statuses that a quote can be in</description>
         <isArray>true</isArray>
         <arrayValues>
           <value>New</value>

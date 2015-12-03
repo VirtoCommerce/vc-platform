@@ -53,9 +53,6 @@
           "url-keyword-invalid": "Invalid characters in URL found"
         }
       },
-      "setting-dictionary": {
-        "title": "Tax types"
-      },
       "shippingMethod-detail": {
         "subtitle": "Edit shipping method",
         "labels": {

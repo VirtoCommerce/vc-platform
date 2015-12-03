@@ -46,7 +46,6 @@
         var newBlade = {
             id: "settingDetailChild",
             currentEntityId: node.name,
-            title: $scope.blade.title,
             controller: 'platformWebApp.settingDictionaryController',
             template: '$(Platform)/Scripts/app/settings/blades/setting-dictionary.tpl.html'
         };

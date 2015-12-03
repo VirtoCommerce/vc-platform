@@ -11,8 +11,6 @@
 
             $scope.filter = { searchKeyword: undefined };
 
-            var preventCategoryListingOnce; // prevent from unwanted additional actions after command was activated from context menu
-
             var blade = $scope.blade;
 
             blade.refresh = function () {
@@ -78,14 +76,6 @@
             });
 
             $scope.edit = function (listItem) {
-                if (listItem.type === 'category') {
-                    /// TODO: remove if not using context menu anymore
-                    preventCategoryListingOnce = true;
-                }
-                edit(listItem);
-            };
-
-            function edit(listItem) {
                 closeChildrenBlades();
 
                 if (listItem.type === 'category') {
@@ -107,28 +97,15 @@
                 bladeNavigationService.showBlade(newBlade, blade);
             };
 
-            $scope.delete = function () {
-                if (isItemsChecked()) {
-                    deleteChecked();
-                } else {
-                    var dialog = {
-                        id: "notifyNoTargetCategory",
-                        title: "catalog.dialogs.nothing-selected.title",
-                        message: "catalog.dialogs.nothing-selected.message"
-                    };
-                    dialogService.showNotificationDialog(dialog);
-                }
-
-                preventCategoryListingOnce = true;
+            $scope.delete = function (data) {
+                deleteList([data]);
             };
 
             function isItemsChecked() {
                 return $scope.gridApi && _.any($scope.gridApi.selection.getSelectedRows());
             }
 
-            function deleteChecked() {
-                var selection = $scope.gridApi.selection.getSelectedRows();
-
+            function deleteList(selection) {
                 var listEntryLinks = [];
                 var categoryIds = [];
                 var itemIds = [];
@@ -227,34 +204,30 @@
                 blade.setSelectedItem(listItem);
                 var newBlade;
                 if (listItem.type === 'category') {
-                    if (preventCategoryListingOnce) {
-                        preventCategoryListingOnce = false;
-                    } else {
-                        newBlade = {
-                            id: 'itemsList' + (blade.level + (e.ctrlKey ? 1 : 0)),
-                            level: blade.level + (e.ctrlKey ? 1 : 0),
-                            mode: blade.mode,
-                            isBrowsingLinkedCategory: blade.isBrowsingLinkedCategory || $scope.hasLinks(listItem),
-                            breadcrumbs: blade.breadcrumbs,
-                            title: 'catalog.blades.categories-items-list.title',
-                            subtitle: 'catalog.blades.categories-items-list.subtitle',
-                            subtitleValues: listItem.name != null ? { name: listItem.name } : '',
-                            catalogId: blade.catalogId,
-                            catalog: blade.catalog,
-                            categoryId: listItem.id,
-                            category: listItem,
-                            disableOpenAnimation: true,
-                            controller: 'virtoCommerce.catalogModule.categoriesItemsListController',
-                            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/categories-items-list.tpl.html'
-                        };
+                    newBlade = {
+                        id: 'itemsList' + (blade.level + (e.ctrlKey ? 1 : 0)),
+                        level: blade.level + (e.ctrlKey ? 1 : 0),
+                        mode: blade.mode,
+                        isBrowsingLinkedCategory: blade.isBrowsingLinkedCategory || $scope.hasLinks(listItem),
+                        breadcrumbs: blade.breadcrumbs,
+                        title: 'catalog.blades.categories-items-list.title',
+                        subtitle: 'catalog.blades.categories-items-list.subtitle',
+                        subtitleValues: listItem.name != null ? { name: listItem.name } : '',
+                        catalogId: blade.catalogId,
+                        catalog: blade.catalog,
+                        categoryId: listItem.id,
+                        category: listItem,
+                        disableOpenAnimation: true,
+                        controller: 'virtoCommerce.catalogModule.categoriesItemsListController',
+                        template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/categories-items-list.tpl.html'
+                    };
 
-                        if (e.ctrlKey) {
-                            bladeNavigationService.showBlade(newBlade, blade);
-                        } else {
-                            bladeNavigationService.closeBlade(blade, function () {
-                                bladeNavigationService.showBlade(newBlade, blade.parentBlade);
-                            });
-                        }
+                    if (e.ctrlKey) {
+                        bladeNavigationService.showBlade(newBlade, blade);
+                    } else {
+                        bladeNavigationService.closeBlade(blade, function () {
+                            bladeNavigationService.showBlade(newBlade, blade.parentBlade);
+                        });
                     }
                 } else {
                     newBlade = {
@@ -296,23 +269,9 @@
                     }
                 },
                 {
-                    name: "platform.commands.manage",
-                    icon: 'fa fa-edit',
-                    executeMethod: function () {
-                        // the first selected node
-                        edit(_.find($scope.gridApi.selection.getSelectedRows()));
-                    },
-                    canExecuteMethod: function () {
-                        return $scope.gridApi && $scope.gridApi.selection.getSelectedRows().length === 1;
-                    },
-                    permission: 'catalog:read'
-                },
-                {
                     name: "platform.commands.delete",
                     icon: 'fa fa-trash-o',
-                    executeMethod: function () {
-                        deleteChecked();
-                    },
+                    executeMethod: function () { deleteList($scope.gridApi.selection.getSelectedRows()); },
                     canExecuteMethod: isItemsChecked,
                     permission: 'catalog:delete'
                 },
@@ -402,7 +361,7 @@
             ];
 
             if (blade.isBrowsingLinkedCategory) {
-                blade.toolbarCommands.splice(2, 5);
+                blade.toolbarCommands.splice(1, 5);
             }
 
             if (angular.isDefined(blade.mode)) {
@@ -416,7 +375,7 @@
                         },
                         canExecuteMethod: isItemsChecked
                     }
-                    blade.toolbarCommands.splice(1, 6, mapCommand);
+                    blade.toolbarCommands.splice(1, 5, mapCommand);
                 }
             } else if (authService.checkPermission('catalog:create')) {
                 blade.toolbarCommands.splice(1, 0, {
