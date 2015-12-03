@@ -100,9 +100,9 @@
                             <div class="field field--required field--show-floating-label field--three-eights" ng-if="checkout.regions && checkout.shippingAddress.CountryName">
                                 <div class="field__input-wrapper field__input-wrapper--select">
                                     <label class="field__label" for="RegionName">{{ 'checkout.address.province' | t }}</label>
-                                    <select class="field__input field__input--select" id="RegionName" name="RegionName" placeholder="{{ 'checkout.address.province' | t }}" required="required" ng-model="checkout.shippingAddress.RegionName" ng-change="setRegion(checkout.shippingAddress.Type, checkout.shippingAddress.RegionName)">
+                                    <select class="field__input field__input--select" id="RegionName" name="RegionName" placeholder="{{ 'checkout.address.province' | t }}" required="required" ng-model="checkout.shippingAddress.RegionName" ng-change="setCountryRegion(checkout.shippingAddress.Type, checkout.shippingAddress.RegionName)">
                                         <option disabled="disabled" selected="selected" value="">Selecet region</option>
-                                        <option ng-repeat="region in checkout.regions" ng-value="region.Key" ng-bind="region.Key"></option>
+                                        <option ng-repeat="region in checkout.regions" ng-value="region.Name" ng-bind="region.Name"></option>
                                     </select>
                                     <input id="RegionId" name="RegionId" type="hidden" ng-value="checkout.shippingAddress.RegionId" ng-model="checkout.shippingAddress.RegionId" ng-init="checkout.shippingAddress.RegionId" />
                                 </div>

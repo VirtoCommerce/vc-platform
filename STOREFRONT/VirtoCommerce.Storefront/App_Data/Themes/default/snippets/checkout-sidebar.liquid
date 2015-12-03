@@ -41,28 +41,28 @@
         <div class="order-summary__section order-summary__section--discount">
             <form accept-charset="UTF-8" action="" class="edit_checkout animate-floating-labels" method="post" name="formCoupon">
                 <div class="fieldset">
-                    <div class="field" ng-class="{ 'field--show-floating-label': cart.Coupon.length">
+                    <div class="field" ng-class="{ 'field--show-floating-label': checkout.cart.Coupon.Code.length, 'field--error': checkout.couponError == 'InvalidCouponCode' }" ng-if="!checkout.cart.Coupon.AppliedSuccessfully">
                         <div class="field__input-btn-wrapper">
                             <div class="field__input-wrapper">
                                 <label class="field__label" for="Coupon">{{ 'checkout.discount' | t }}</label>
-                                <input class="field__input" id="Coupon" name="Coupon" placeholder="{{ 'checkout.discount' | t }}" required="required" size="30" type="text" ng-model="checkout.cart.Coupon.Code" />
+                                <input class="field__input" id="Coupon" name="Coupon" placeholder="{{ 'checkout.discount' | t }}" required="required" size="30" type="text" ng-model="checkout.cart.Coupon.Code" ng-change="checkout.couponError = null" />
                             </div>
-                            <button class="field__input-btn btn btn--default" type="button" ng-click="addCoupon(cart.Coupon)" ng-class="{ 'btn--loading': checkout.couponProcessing }">
+                            <button class="field__input-btn btn btn--default" type="button" ng-click="addCoupon(checkout.cart.Coupon.Code)" ng-class="{ 'btn--loading': checkout.couponProcessing }">
                                 <span class="btn__content visually-hidden-on-mobile">{{ 'checkout.apply' | t }}</span>
                                 <i class="btn__content shown-on-mobile icon icon--arrow"></i>
                                 <i class="btn__spinner icon icon--button-spinner"></i>
                             </button>
                         </div>
-                        <p class="field__message field__message--error" ng-if="couponHasError">
+                        <p class="field__message field__message--error" ng-if="checkout.couponError == 'InvalidCouponCode'">
                             This code did not match any active gift card or discount. Was it entered correctly?
                         </p>
                     </div>
-                    <div class="field" ng-if="couponApplied && !couponHasError">
+                    <div class="field" ng-if="checkout.cart.Coupon.AppliedSuccessfully">
                         <div class="field__input-btn-wrapper">
                             <div class="field__input-wrapper">
-                                <span style="font-size: 1.71em; font-weight: 500; line-height: 40px;">{( cart.Coupon )}</span>
+                                <span style="font-size: 1.71em; font-weight: 500; line-height: 40px;" ng-bind="checkout.cart.Coupon.Code"></span>
                             </div>
-                            <button class="field__input-btn btn btn--default" type="button" ng-click="removeCoupon(cart.Coupon)" ng-class="{ 'btn--loading': couponProcessing }">
+                            <button class="field__input-btn btn btn--default" type="button" ng-click="removeCoupon()" ng-class="{ 'btn--loading': checkout.couponProcessing }">
                                 <span class="btn__content visually-hidden-on-mobile">Remove</span>
                                 <i class="btn__content shown-on-mobile icon icon--arrow"></i>
                                 <i class="btn__spinner icon icon--button-spinner"></i>
@@ -88,25 +88,25 @@
                     <tr class="total-line total-line--subtotal">
                         <td class="total-line__name">{{ 'checkout.subtotal' | t }}</td>
                         <td class="total-line__price">
-                            <span class="order-summary__emphasis">{( checkout.cart.SubTotal.Amount | currency: checkout.cart.SubTotal.CurrencySymbol )}</span>
+                            <span class="order-summary__emphasis" ng-bind="checkout.cart.SubTotal.FormatedAmount"></span>
                         </td>
                     </tr>
                     <tr class="total-line total-line--subtotal">
                         <td class="total-line__name">{{ 'checkout.discount' | t }}</td>
                         <td class="total-line__price">
-                            <span class="order-summary__emphasis">{( checkout.cart.DiscountTotal.Amount | currency: checkout.cart.DiscountTotal.CurrencySymbol )}</span>
+                            <span class="order-summary__emphasis" ng-bind="checkout.cart.DiscountTotal.FormatedAmount"></span>
                         </td>
                     </tr>
                     <tr class="total-line total-line--shipping">
                         <td class="total-line__name">{{ 'checkout.shipping' | t }}</td>
                         <td class="total-line__price">
-                            <span class="order-summary__emphasis">{( checkout.cart.ShippingTotal.Amount | currency: checkout.cart.ShippingTotal.CurrencySymbol )}</span>
+                            <span class="order-summary__emphasis" ng-bind="checkout.cart.ShippingTotal.FormatedAmount"></span>
                         </td>
                     </tr>
                     <tr class="total-line total-line--taxes">
                         <td class="total-line__name">{{ 'checkout.taxes' | t }}</td>
                         <td class="total-line__price">
-                            <span class="order-summary__emphasis">{( checkout.cart.TaxTotal.Amount | currency: checkout.cart.TaxTotal.CurrencySymbol )}</span>
+                            <span class="order-summary__emphasis" ng-bind="checkout.cart.TaxTotal.FormatedAmount"></span>
                         </td>
                     </tr>
                 </tbody>
@@ -130,7 +130,7 @@
                         <td class="total-line__price payment-due">
                             <!-- TODO: Translate -->
                             <span class="payment-due__currency">CAD</span>
-                            <span class="payment-due__price">{( checkout.cart.Total.Amount | currency: checkout.cart.Total.CurrencySymbol )}</span>
+                            <span class="payment-due__price" ng-bind="checkout.cart.Total.FormatedAmount"></span>
                         </td>
                     </tr>
                 </tbody>

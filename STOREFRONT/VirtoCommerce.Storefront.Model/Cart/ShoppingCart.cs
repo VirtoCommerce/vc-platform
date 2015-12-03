@@ -20,6 +20,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
             Payments = new List<Payment>();
             Shipments = new List<Shipment>();
             TaxDetails = new List<TaxDetail>();
+            Errors = new List<string>();
         }
 
         /// <summary>
@@ -182,7 +183,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
         {
             get
             {
-                decimal discountsTotal = Discounts.Sum(d => d.AbsoluteAmount.Amount);
+                decimal discountsTotal = Discounts.Sum(d => d.Amount.Amount) + Items.Sum(i => i.DiscountTotal.Amount) + Shipments.Sum(s => s.DiscountTotal.Amount);
 
                 return new Money(discountsTotal, Currency.Code);
             }
@@ -299,5 +300,10 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// Collection of TaxDetail objects
         /// </value>
         public ICollection<TaxDetail> TaxDetails { get; set; }
+
+        /// <summary>
+        /// Gets or sets the collection of shopping cart errors
+        /// </summary>
+        public ICollection<string> Errors { get; set; }
     }
 }

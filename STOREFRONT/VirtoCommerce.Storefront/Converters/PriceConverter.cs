@@ -19,7 +19,7 @@ namespace VirtoCommerce.Storefront.Converters
             retVal.Currency = new Currency(EnumUtility.SafeParse<CurrencyCodes>(price.Currency, CurrencyCodes.USD));
             retVal.ListPrice = new Money((decimal)(price.List ?? 0), price.Currency);
             retVal.SalePrice = price.Sale == null ? retVal.ListPrice : new Money((decimal)price.Sale, price.Currency);
-            retVal.ActiveDiscount = new Discount { AbsoluteAmount = new Money(0, price.Currency) };
+            retVal.ActiveDiscount = new Discount { Amount = new Money(0, price.Currency) };
             return retVal;
         }
     }

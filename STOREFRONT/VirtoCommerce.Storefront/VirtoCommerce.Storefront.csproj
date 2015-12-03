@@ -246,12 +246,12 @@
     <Compile Include="Converters\AssetConverter.cs" />
     <Compile Include="Converters\CartPaymentMethodConverter.cs" />
     <Compile Include="Converters\CartShipmentMethodConverter.cs" />
+    <Compile Include="Converters\DiscountConverter.cs" />
     <Compile Include="Converters\DynamicPropertyConverter.cs" />
     <Compile Include="Converters\CartConverter.cs" />
     <Compile Include="Converters\CartLineItemConverter.cs" />
     <Compile Include="Converters\CategoryConverter.cs" />
     <Compile Include="Converters\CustomerConverter.cs" />
-    <Compile Include="Converters\DiscountConverter.cs" />
     <Compile Include="Converters\InPaymentConverter.cs" />
     <Compile Include="Converters\InventoryConverter.cs" />
     <Compile Include="Converters\OperationConverter.cs" />

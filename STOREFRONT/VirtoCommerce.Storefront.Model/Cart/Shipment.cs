@@ -109,7 +109,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
         {
             get
             {
-                decimal discountTotal = Discounts.Sum(d => d.AbsoluteAmount.Amount);
+                decimal discountTotal = Discounts.Sum(d => d.Amount.Amount);
 
                 return new Money(discountTotal, Currency.Code);
             }
