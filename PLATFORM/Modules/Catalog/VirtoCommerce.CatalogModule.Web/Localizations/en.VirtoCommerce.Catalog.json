@@ -607,7 +607,11 @@
           "upload": "Upload Csv file",
           "upload-progress": "Upload progress",
           "map-columns": "Map columns",
-          "define-columns": "Define column mapping"
+          "define-columns": "Define column mapping",
+          "space": "Space",
+          "comma": "Comma",
+          "semicolon": "Semicolon",
+          "tab": "Tab"
         },
         "placeholders": {
           "delimiter": "Select ...",
@@ -625,7 +629,8 @@
       "start-import": "Start import",
       "clear-all": "Clear all",
       "add-property": "Add property",
-      "gallery": "Gallery"
+      "gallery": "Gallery",
+      "map": "Map"
     },
     "permissions": {
       "catalog-scope": {
