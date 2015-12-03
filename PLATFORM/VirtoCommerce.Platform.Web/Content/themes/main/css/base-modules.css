@@ -5367,10 +5367,9 @@ input.ui-grid-filter-input[type="text"]
 
 .ui-grid-cell .product-img
 {
+    display: inline-block;
     height: 40px;
     line-height: 40px;
-    margin: 10px auto;
-    width: auto;
 }
 
 .ui-grid-cell .product-img .pr-ico
