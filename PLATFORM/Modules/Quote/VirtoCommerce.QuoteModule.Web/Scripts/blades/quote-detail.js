@@ -117,7 +117,7 @@
                 }
             });
         };
-        
+
         blade.isLocked = function () {
             return blade.currentEntity && blade.currentEntity.isLocked;
         };
@@ -234,10 +234,7 @@
                 id: 'settingDetailChild',
                 isApiSave: true,
                 currentEntityId: 'Quotes.Status',
-                title: 'Quote statuses',
-                parentRefresh: function (data) {
-                    $scope.quoteStatuses = data;
-                },
+                parentRefresh: function (data) { $scope.quoteStatuses = data; },
                 controller: 'platformWebApp.settingDictionaryController',
                 template: '$(Platform)/Scripts/app/settings/blades/setting-dictionary.tpl.html'
             };
