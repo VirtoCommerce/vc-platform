@@ -1,6 +1,7 @@
 ﻿using Omu.ValueInjecter;
 using System.Linq;
 using VirtoCommerce.Client.Model;
+using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Cart;
 using VirtoCommerce.Storefront.Model.Common;
 
@@ -8,47 +9,56 @@ namespace VirtoCommerce.Storefront.Converters
 {
     public static class CartConverter
     {
-        public static ShoppingCart ToWebModel(this VirtoCommerceCartModuleWebModelShoppingCart cart)
+        public static ShoppingCart ToWebModel(this VirtoCommerceCartModuleWebModelShoppingCart serviceModel)
         {
-            var cartWebModel = new ShoppingCart(cart.StoreId, cart.CustomerId, cart.CustomerName, cart.Name, cart.Currency);
+            var webModel = new ShoppingCart(serviceModel.StoreId, serviceModel.CustomerId, serviceModel.CustomerName, serviceModel.Name, serviceModel.Currency);
 
-            var currency = new Currency(EnumUtility.SafeParse(cart.Currency, CurrencyCodes.USD));
+            var currency = new Currency(EnumUtility.SafeParse(serviceModel.Currency, CurrencyCodes.USD));
 
-            cartWebModel.InjectFrom(cart);
+            webModel.InjectFrom(serviceModel);
 
-            cartWebModel.HandlingTotal = new Money(cart.HandlingTotal ?? 0, currency.Code);
+            webModel.HandlingTotal = new Money(serviceModel.HandlingTotal ?? 0, currency.Code);
 
-            if (cart.Addresses != null)
+            if (serviceModel.Addresses != null)
             {
-                cartWebModel.Addresses = cart.Addresses.Select(a => a.ToWebModel()).ToList();
+                webModel.Addresses = serviceModel.Addresses.Select(a => a.ToWebModel()).ToList();
             }
 
-            if (cart.Discounts != null)
+            if (serviceModel.Discounts != null)
             {
-                cartWebModel.Discounts = cart.Discounts.Select(d => d.ToWebModel()).ToList();
+                webModel.Discounts = serviceModel.Discounts.Select(d => d.ToWebModel()).ToList();
             }
 
-            if (cart.Items != null)
+            if (serviceModel.Items != null)
             {
-                cartWebModel.Items = cart.Items.Select(i => i.ToWebModel()).ToList();
+                webModel.Items = serviceModel.Items.Select(i => i.ToWebModel()).ToList();
             }
 
-            if (cart.Payments != null)
+            if (serviceModel.Payments != null)
             {
-                cartWebModel.Payments = cart.Payments.Select(p => p.TowebModel()).ToList();
+                webModel.Payments = serviceModel.Payments.Select(p => p.TowebModel()).ToList();
             }
 
-            if (cart.Shipments != null)
+            if (serviceModel.Shipments != null)
             {
-                cartWebModel.Shipments = cart.Shipments.Select(s => s.ToWebModel()).ToList();
+                webModel.Shipments = serviceModel.Shipments.Select(s => s.ToWebModel()).ToList();
             }
 
-            if (cart.TaxDetails != null)
+            if (serviceModel.TaxDetails != null)
             {
-                cartWebModel.TaxDetails = cart.TaxDetails.Select(td => td.ToWebModel()).ToList();
+                webModel.TaxDetails = serviceModel.TaxDetails.Select(td => td.ToWebModel()).ToList();
             }
 
-            return cartWebModel;
+            if (!string.IsNullOrEmpty(serviceModel.Coupon))
+            {
+                webModel.Coupon = new Coupon
+                {
+                    AppliedSuccessfully = true,
+                    Code = serviceModel.Coupon
+                };
+            }
+
+            return webModel;
         }
 
         public static VirtoCommerceCartModuleWebModelShoppingCart ToServiceModel(this ShoppingCart cart)

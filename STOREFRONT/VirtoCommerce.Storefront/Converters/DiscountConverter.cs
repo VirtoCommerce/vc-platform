@@ -7,50 +7,38 @@ namespace VirtoCommerce.Storefront.Converters
 {
     public static class DiscountConverter
     {
-        public static Discount ToWebModel(this VirtoCommerceCartModuleWebModelDiscount discount)
+        public static Discount ToWebModel(this VirtoCommerceCartModuleWebModelDiscount serviceModel)
         {
             var webModel = new Discount();
 
-            webModel.InjectFrom(discount);
+            webModel.InjectFrom(serviceModel);
 
-            webModel.DiscountAmount = new Money(discount.DiscountAmount ?? 0, discount.Currency);
+            webModel.Amount = new Money(serviceModel.DiscountAmount ?? 0, serviceModel.Currency);
 
             return webModel;
         }
 
-        public static VirtoCommerceCartModuleWebModelDiscount ToServiceModel(this Discount discount)
+        public static VirtoCommerceCartModuleWebModelDiscount ToServiceModel(this Discount webModel)
         {
             var serviceModel = new VirtoCommerceCartModuleWebModelDiscount();
 
-            serviceModel.InjectFrom(discount);
+            serviceModel.InjectFrom(webModel);
 
-            serviceModel.Currency = discount.DiscountAmount.CurrencyCode;
-            serviceModel.DiscountAmount = (double)discount.DiscountAmount.Amount;
+            serviceModel.Currency = webModel.Amount.CurrencyCode;
+            serviceModel.DiscountAmount = (double)webModel.Amount.Amount;
 
             return serviceModel;
         }
 
-        public static Discount ToWebModel(this VirtoCommerceOrderModuleWebModelDiscount discount)
+        public static Discount ToWebModel(this VirtoCommerceOrderModuleWebModelDiscount serviceModel)
         {
             var webModel = new Discount();
 
-            webModel.InjectFrom(discount);
+            webModel.InjectFrom(serviceModel);
 
-            webModel.DiscountAmount = new Money(discount.DiscountAmount ?? 0, discount.Currency);
+            webModel.Amount = new Money(serviceModel.DiscountAmount ?? 0, serviceModel.Currency);
 
             return webModel;
-        }
-
-        public static Discount ToDiscountWebModel(this VirtoCommerceMarketingModuleWebModelPromotionReward promotionReward, Currency currency)
-        {
-            var discountModel = new Discount();
-
-            discountModel.InjectFrom(promotionReward);
-
-            discountModel.DiscountAmount = new Money(promotionReward.Amount ?? 0, currency.Code);
-            discountModel.PromotionId = promotionReward.Promotion.Id;
-
-            return discountModel;
         }
     }
 }

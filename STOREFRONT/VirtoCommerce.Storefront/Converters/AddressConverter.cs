@@ -39,14 +39,19 @@ namespace VirtoCommerce.Storefront.Converters
 
             result.Name = string.Join(" ", result.FirstName, result.LastName).Trim();
 
-            var country = countries.FirstOrDefault(c => c.Name == address.Country);
+            var country = countries.FirstOrDefault(c => string.Equals(c.Name, address.Country, StringComparison.OrdinalIgnoreCase));
             if (country != null)
             {
-                result.CountryCode = country.Code;
+                result.CountryCode = country.Code3;
 
-                if (address.Province != null && country.Regions != null && country.Regions.ContainsKey(address.Province))
+                if (address.Province != null && country.Regions != null)
                 {
-                    result.RegionId = country.Regions[address.Province];
+                    var region = country.Regions.FirstOrDefault(r => string.Equals(r.Name, address.Province, StringComparison.OrdinalIgnoreCase));
+
+                    if (region != null)
+                    {
+                        result.RegionId = region.Code;
+                    }
                 }
             }
 

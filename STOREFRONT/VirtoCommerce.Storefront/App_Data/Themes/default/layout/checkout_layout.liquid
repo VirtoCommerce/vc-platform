@@ -18,15 +18,15 @@
 
     {{ content_for_header }}
 </head>
-<body ng-controller="checkoutController">
-    <div class="banner" data-header ng-init="baseUrl='{{ '/' | absolute_url }}'">
+<body ng-controller="checkoutController" ng-init="baseUrl='{{ '/' | absolute_url }}'">
+    <div class="banner">
         <div class="wrap">
             <a class="logo logo--left" href="{{ '/' | absolute_url }}">
                 <h1 class="logo__text">{{ shop.name }}</h1>
             </a>
         </div>
     </div>
-    <button class="order-summary-toggle" ng-class="{ 'order-summary-toggle--show': !isOrderSummaryExpanded, 'order-summary-toggle--hide': isOrderSummaryExpanded }" ng-click="toggleOrderSummary(isOrderSummaryExpanded)">
+    <button class="order-summary-toggle" ng-class="{ 'order-summary-toggle--show': !checkout.orderSummaryExpanded, 'order-summary-toggle--hide': checkout.orderSummaryExpanded }" ng-click="toggleOrderSummary(checkout.orderSummaryExpanded)">
         <div class="wrap">
             <div class="order-summary-toggle__inner">
                 <div class="order-summary-toggle__icon-wrapper">

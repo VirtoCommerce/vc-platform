@@ -10,9 +10,9 @@ namespace VirtoCommerce.Storefront.Model
         public string PromotionId { get; set; }
 
         /// <summary>
-        /// Gets or sets the value of discount amount
+        /// Gets or sets the value of absolute discount amount
         /// </summary>
-        public Money DiscountAmount { get; set; }
+        public Money Amount { get; set; }
 
         /// <summary>
         /// Gets or sets the value of discount description

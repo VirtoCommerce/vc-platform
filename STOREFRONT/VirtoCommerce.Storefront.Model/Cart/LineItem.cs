@@ -15,7 +15,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
         }
 
         /// <summary>
-        /// 
+        /// Gets or sets line item created date
         /// </summary>
         public DateTime CreatedDate { get; set; }
 
@@ -201,7 +201,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
         {
             get
             {
-                decimal discountsAmount = Discounts.Sum(d => d.DiscountAmount.Amount);
+                decimal discountsAmount = Discounts.Sum(d => d.Amount.Amount);
 
                 return new Money(discountsAmount, Currency.Code);
             }

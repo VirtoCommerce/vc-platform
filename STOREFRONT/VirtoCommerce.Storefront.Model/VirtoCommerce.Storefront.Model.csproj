@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="Address.cs" />
     <Compile Include="AddressType.cs" />
+    <Compile Include="AmountType.cs" />
     <Compile Include="Catalog\Asset.cs" />
     <Compile Include="Catalog\CatalogSearchResponseGroup.cs" />
     <Compile Include="Catalog\CatalogSearchResult.cs" />
@@ -57,6 +58,7 @@
     <Compile Include="Common\IStorefrontPagedList.cs" />
     <Compile Include="Common\StoreFrontPagedList.cs" />
     <Compile Include="Country.cs" />
+    <Compile Include="CountryRegion.cs" />
     <Compile Include="Coupon.cs" />
     <Compile Include="DynamicObjectProperty.cs" />
     <Compile Include="DynamicPropertyName.cs" />
