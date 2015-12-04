@@ -794,7 +794,7 @@ h3
 /* Tables */
 .table-wrapper
 {
-    margin: 0 -20px 15px;
+    margin: 0 -20px 0;
 }
 
 .form .table-wrapper
@@ -2425,6 +2425,11 @@ button.btn
         display: block;
         padding: 10px 50px 10px 20px;
         position: relative;
+    }
+
+    .__items .list-item.__hovered
+    {
+        background: #ecf7fc;
     }
 
     .__items .list-group + .list.__sub
@@ -4988,7 +4993,7 @@ tags-input .tags .tag-item .remove-button
 
         .blade-inner .inner-block
         {
-            margin: 0 0 20px;
+            
             width: 380px;
         }
 
@@ -5071,7 +5076,7 @@ tags-input .tags .tag-item .remove-button
 
 .ui-grid-viewport
 {
-    height: auto !important;
+    
     overflow-x: auto !important;
 }
 
@@ -5178,16 +5183,6 @@ tags-input .tags .tag-item .remove-button
 {
     border-right: 1px solid #d9effa;
 }
-
-/*.ui-grid-row
-{
-    min-height: 40px;
-}*/
-
-/*.ui-grid-row .ui-grid-cell:not(.ui-grid-row-header-cell)
-{
-    padding: 10px;
-}*/
 
 .ui-grid-row-header-cell > :first-child
 {
