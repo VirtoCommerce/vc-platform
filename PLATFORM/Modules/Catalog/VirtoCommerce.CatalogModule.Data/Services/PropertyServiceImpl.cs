@@ -34,50 +34,23 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                 var dbProperties = repository.GetPropertiesByIds(propertyIds);
                 foreach (var dbProperty in dbProperties)
                 {
-                    var catalog = dbProperty.Catalog.ToCoreModel();
-                    var category = dbProperty.Category != null ? dbProperty.Category.ToCoreModel(catalog) : null;
-                    var property = dbProperty.ToCoreModel(catalog, category);
+                    var property = dbProperty.ToCoreModel();
                     retVal.Add(property);
                 }
             }
             return retVal.ToArray();
         }
 
-        public coreModel.Property[] GetCatalogProperties(string catalogId)
-		{
-			coreModel.Property[] retVal = null;
-			using (var repository = _catalogRepositoryFactory())
-			{
-				var dbCatalog = repository.GetCatalogById(catalogId);
-				var catalog = dbCatalog.ToCoreModel();
-                retVal = GetByIds(dbCatalog.Properties.Where(x => x.CategoryId == null).Select(x => x.Id).ToArray());
-			}
-			return retVal;
-		}
+        public coreModel.Property[] GetAllProperties()
+        {
+            using (var repository = _catalogRepositoryFactory())
+            {
+               return GetByIds(repository.Properties.Select(x=>x.Id).ToArray());
+            }
+        }
 
-		public coreModel.Property[] GetCategoryProperties(string categoryId)
-		{
-			coreModel.Property[] retVal = null;
-			using (var repository = _catalogRepositoryFactory())
-			{
-				var dbCategory = repository.GetCategoryById(categoryId);
-				var dbCatalog = repository.GetCatalogById(dbCategory.CatalogId);
-				var dbProperties = repository.GetAllCategoryProperties(dbCategory);
-			
-				var catalog = dbCatalog.ToCoreModel();
-				var category = dbCategory.ToCoreModel(catalog);
 
-				//property override - need leave only property has a min distance to target category 
-				//Algorithm based on index property in resulting list (property with min index will more closed to category)
-				var propertyGroups = dbProperties.Select((x, index) => new { PropertyName = x.Name.ToLowerInvariant(), Property = x, Index = index }).GroupBy(x => x.PropertyName);
-				dbProperties = propertyGroups.Select(x => x.OrderBy(y => y.Index).First().Property).ToArray();
-
-				retVal = retVal = GetByIds(dbProperties.Select(x => x.Id).ToArray()); 
-			}
-			return retVal;
-		}
-
-		public coreModel.Property Create(coreModel.Property property)
+        public coreModel.Property Create(coreModel.Property property)
 		{
 			if (property.CatalogId == null)
 			{
@@ -89,7 +62,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 			{
 				if (property.CategoryId != null)
 				{
-					var dbCategory = repository.GetCategoryById(property.CategoryId);
+					var dbCategory = repository.GetCategoriesByIds(new[] { property.CategoryId }, Domain.Catalog.Model.CategoryResponseGroup.Info).FirstOrDefault();
                     dbCategory.Properties.Add(dbProperty);
 				}
 				else

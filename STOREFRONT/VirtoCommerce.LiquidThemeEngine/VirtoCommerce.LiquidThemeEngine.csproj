@@ -135,6 +135,7 @@
     <Compile Include="Objects\Part.cs" />
     <Compile Include="Objects\ProductProperty.cs" />
     <Compile Include="Objects\ShippingMethod.cs" />
+    <Compile Include="Objects\Tag.cs" />
     <Compile Include="Objects\TaxLine.cs" />
     <Compile Include="Tags\FormTag.cs" />
     <Compile Include="Objects\Image.cs" />

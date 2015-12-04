@@ -21,16 +21,14 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
     {
         private readonly ICatalogService _catalogService;
         private readonly ICatalogSearchService _searchService;
-		private readonly IPropertyService _propertyService;
 		private readonly ISettingsManager _settingManager;
 
         public CatalogModuleCatalogsController(ICatalogService catalogService, ICatalogSearchService itemSearchService,
-								  ISettingsManager settingManager, IPropertyService propertyService, ISecurityService securityService, IPermissionScopeService permissionScopeService)
+								  ISettingsManager settingManager, ISecurityService securityService, IPermissionScopeService permissionScopeService)
             :base(securityService, permissionScopeService)
         {
             _catalogService = catalogService;
             _searchService = itemSearchService;
-			_propertyService = propertyService;
 			_settingManager = settingManager;
         }
 
@@ -45,7 +43,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         {
             var criteria = new moduleModel.SearchCriteria
             {
-                ResponseGroup = moduleModel.ResponseGroup.WithCatalogs
+                ResponseGroup = moduleModel.SearchResponseGroup.WithCatalogs
             };
             criteria = base.ChangeCriteriaToCurentUserPermissions(criteria);
             var serviceResult = _searchService.Search(criteria);
@@ -76,8 +74,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             }
             base.CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Read, catalog);
 
-			var allCatalogProperties = _propertyService.GetCatalogProperties(id);
-            var retVal = catalog.ToWebModel(allCatalogProperties);
+            var retVal = catalog.ToWebModel();
 
             retVal.SecurityScopes = base.GetObjectPermissionScopeStrings(retVal);
 

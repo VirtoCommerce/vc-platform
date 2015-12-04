@@ -24,7 +24,7 @@ namespace VirtoCommerce.SearchModule.Data.Services
 		private Category GetCategoryById(string categoryId)
 		{
 			var cacheKey = CacheKey.Create("CatalogOutlineBuilder.GetCategoryById", categoryId);
-			var retVal = _cacheManager.Get(cacheKey, () => _categoryService.GetById(categoryId));
+			var retVal = _cacheManager.Get(cacheKey, () => _categoryService.GetById(categoryId, CategoryResponseGroup.Full));
 			return retVal;
 		}
 

@@ -31,7 +31,7 @@ namespace VirtoCommerce.CatalogModule.Test
 			var searchService = GetSearchService();
 			var categoryService = GetCategoryService();
 			var itemService = GetItemService();
-			var result = searchService.Search(new SearchCriteria { CatalogId = "Sony", CategoryId = "66b58f4c-fd62-4c17-ab3b-2fb22e82704a", Start = 0, Count = 10, ResponseGroup = coreModel.ResponseGroup.WithProducts });
+			var result = searchService.Search(new SearchCriteria { CatalogId = "Sony", CategoryId = "66b58f4c-fd62-4c17-ab3b-2fb22e82704a", Start = 0, Count = 10, ResponseGroup = coreModel.SearchResponseGroup.WithProducts });
 			var importConfiguration = GetMapConfiguration();
 		
 			using (var csvWriter = new CsvWriter(new StreamWriter(@"c:\Projects\VCF\vc-community\PLATFORM\Modules\Catalog\VirtoCommerce.CatalogModule.Test\products.csv")))

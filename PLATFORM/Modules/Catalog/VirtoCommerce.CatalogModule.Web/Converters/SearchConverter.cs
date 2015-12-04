@@ -24,23 +24,23 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 		{
 			var retVal = new coreModel.SearchCriteria();
 			retVal.InjectFrom(criteria);
-			retVal.ResponseGroup = (coreModel.ResponseGroup)(int)criteria.ResponseGroup;
+			retVal.ResponseGroup = (coreModel.SearchResponseGroup)(int)criteria.ResponseGroup;
 			
 			return retVal;
 		}
 
-        public static webModel.CatalogSearchResult ToWebModel(this coreModel.SearchResult result, IBlobUrlResolver blobUrlResolver, coreModel.Property[] properties = null)
+        public static webModel.CatalogSearchResult ToWebModel(this coreModel.SearchResult result, IBlobUrlResolver blobUrlResolver)
         {
             var retVal = new webModel.CatalogSearchResult();
             retVal.InjectFrom(result);
 
             if(result.Products != null)
             {
-                retVal.Products = result.Products.Select(x => x.ToWebModel(blobUrlResolver, properties)).ToList();
+                retVal.Products = result.Products.Select(x => x.ToWebModel(blobUrlResolver)).ToList();
             }
             if(result.Categories != null)
             {
-                retVal.Categories = result.Categories.Select(x => x.ToWebModel(blobUrlResolver, properties)).ToList();
+                retVal.Categories = result.Categories.Select(x => x.ToWebModel(blobUrlResolver)).ToList();
             }
            
             return retVal;

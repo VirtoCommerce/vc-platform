@@ -3,7 +3,8 @@ namespace VirtoCommerce.Domain.Catalog.Services
 {
     public interface ICategoryService
     {
-		Category GetById(string categoryId);
+        Category[] GetByIds(string[] categoryIds, CategoryResponseGroup responseGroup);
+        Category GetById(string categoryId, CategoryResponseGroup responseGroup);
 		Category Create(Category category);
 		void Update(Category[] categories);
 		void Delete(string[] categoryIds);

@@ -121,7 +121,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 		[ResponseType(typeof(webModel.Property))]
         public IHttpActionResult GetNewCategoryProperty(string categoryId)
         {
-			var category = _categoryService.GetById(categoryId);
+			var category = _categoryService.GetById(categoryId, Domain.Catalog.Model.CategoryResponseGroup.Info);
 			var retVal = new webModel.Property
 			{
 				Id = Guid.NewGuid().ToString(),

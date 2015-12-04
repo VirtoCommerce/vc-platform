@@ -75,9 +75,9 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
 					var propertyCollection = retVal.Properties;
 					if (propertyValue != null)
 					{
-						if(properties != null)
+						if(product.Properties != null)
 						{
-							var propertyMetaInfo = properties.FirstOrDefault(x => string.Equals(propValueGroup.Key, x.Name, StringComparison.OrdinalIgnoreCase));
+							var propertyMetaInfo = product.Properties.FirstOrDefault(x => string.Equals(propValueGroup.Key, x.Name, StringComparison.OrdinalIgnoreCase));
 							if(propertyMetaInfo != null && propertyMetaInfo.DisplayNames != null)
 							{
 								//TODO: use display name for specific language

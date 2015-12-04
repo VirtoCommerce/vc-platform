@@ -14,6 +14,7 @@ namespace VirtoCommerce.CatalogModule.Web.Model
     {
 		public Property()
 		{
+       
 		}
 		/// <summary>
 		/// Create property meta information from property value
@@ -165,15 +166,6 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         /// </value>
 		public ICollection<PropertyDisplayName> DisplayNames { get; set; }
 
-		/// <summary>
-		/// Because we not have a direct link between prop values and properties we should
-		/// find property value meta information by comparing key properties like name and value type.
-		/// </summary>
-		/// <param name="propValue"></param>
-		/// <returns></returns>
-		public bool IsSuitableForValue(PropertyValue propValue)
-		{
-			return String.Equals(Name, propValue.PropertyName, StringComparison.InvariantCultureIgnoreCase) && ValueType == propValue.ValueType;
-		}
+		
     }
 }

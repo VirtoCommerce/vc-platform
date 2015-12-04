@@ -130,7 +130,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 						{
 							CatalogId = catalog.Id,
 							CategoryId = parentCategoryId,
-							ResponseGroup = ResponseGroup.WithCategories
+							ResponseGroup = SearchResponseGroup.WithCategories
 						};
 						category = _searchService.Search(searchCriteria).Categories.FirstOrDefault(x => x.Name == categoryName);
 					}
@@ -226,7 +226,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 					CatalogId = catalog.Id,
 					CategoryId = csvProduct.CategoryId,
 					Code = csvProduct.Code,
-					ResponseGroup = ResponseGroup.WithProducts | ResponseGroup.WithVariations
+					ResponseGroup = SearchResponseGroup.WithProducts | SearchResponseGroup.WithVariations
 				};
 				var result = _searchService.Search(criteria);
 				alreadyExistProduct = result.Products.FirstOrDefault();
@@ -254,7 +254,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 			csvProduct.SeoInfo.LanguageCode = defaultLanguge;
 			csvProduct.SeoInfo.SemanticUrl = String.IsNullOrEmpty(csvProduct.SeoInfo.SemanticUrl) ? csvProduct.Code : csvProduct.SeoInfo.SemanticUrl;
 
-			var properties = !String.IsNullOrEmpty(csvProduct.CategoryId) ? _propertyService.GetCategoryProperties(csvProduct.CategoryId) : _propertyService.GetCatalogProperties(csvProduct.CatalogId);
+			var properties = !String.IsNullOrEmpty(csvProduct.CategoryId) ? _categoryService.GetById(csvProduct.CategoryId, CategoryResponseGroup.WithProperties).Properties : _catalogService.GetById(csvProduct.CatalogId).Properties;
 
 			if (csvProduct.PropertyValues != null)
 			{

@@ -1,4 +1,5 @@
-﻿using VirtoCommerce.Domain.Commerce.Model;
+﻿using System;
+using VirtoCommerce.Domain.Commerce.Model;
 using VirtoCommerce.Platform.Core.Common;
 namespace VirtoCommerce.Domain.Catalog.Model
 {
@@ -17,5 +18,6 @@ namespace VirtoCommerce.Domain.Catalog.Model
 		{
 			return (PropertyName ?? "unknown") + ":" + (Value ?? "undefined");
 		}
-	}
+
+    }
 }

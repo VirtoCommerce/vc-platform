@@ -12,6 +12,7 @@ using coreModel = VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Domain.Commerce.Services;
 using VirtoCommerce.Domain.Commerce.Model;
+using System.Collections.Generic;
 
 namespace VirtoCommerce.CatalogModule.Data.Services
 {
@@ -26,29 +27,32 @@ namespace VirtoCommerce.CatalogModule.Data.Services
         }
 
         #region ICategoryService Members
-
-        public coreModel.Category GetById(string categoryId)
+        public coreModel.Category[] GetByIds(string[] categoryIds, coreModel.CategoryResponseGroup responseGroup)
         {
-			coreModel.Category retVal = null;
+            var retVal = new List<coreModel.Category>();
             using (var repository = _catalogRepositoryFactory())
-	        {
-                var dbCategory = repository.GetCategoryById(categoryId);
-				if (dbCategory != null)
-				{
-					var dbCatalog = repository.GetCatalogById(dbCategory.CatalogId);
-					var dbProperties = repository.GetAllCategoryProperties(dbCategory);
-					//var dbLinks = repository.GetCategoryLinks(categoryId);
+            {
+                var seoInfos = new List<SeoInfo>();
+                if ((responseGroup & coreModel.CategoryResponseGroup.WithSeo) == coreModel.CategoryResponseGroup.WithSeo)
+                {
+                    seoInfos = _commerceService.GetObjectsSeo(categoryIds).ToList();
+                }
 
-					var catalog = dbCatalog.ToCoreModel();
-					var properties = dbProperties.Select(x => x.ToCoreModel(catalog, dbCategory.ToCoreModel(catalog)))
-												 .ToArray();
-					var allParents = repository.GetAllCategoryParents(dbCategory);
+                var dbCategories = repository.GetCategoriesByIds(categoryIds, responseGroup);
+                foreach (var dbCategory in dbCategories)
+                {
+                    var category = dbCategory.ToCoreModel();
+                    retVal.Add(category);
+                    category.SeoInfos = seoInfos.Where(x => x.ObjectId == dbCategory.Id).ToList();
+                }
 
-					retVal = dbCategory.ToCoreModel(catalog, allParents);
-					retVal.SeoInfos = _commerceService.GetObjectsSeo(new string[] { categoryId }).ToList();
-				}
             }
-            return retVal;
+            return retVal.ToArray();
+        }
+
+        public coreModel.Category GetById(string categoryId, coreModel.CategoryResponseGroup responseGroup)
+        {
+            return GetByIds(new[] { categoryId }, responseGroup).FirstOrDefault();
         }
 
         public coreModel.Category Create(coreModel.Category category)
@@ -74,7 +78,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 				}
 			}
 			category.Id = dbCategory.Id;
-            return GetById(dbCategory.Id);
+            return GetById(dbCategory.Id, Domain.Catalog.Model.CategoryResponseGroup.Info);
         }
 
         public void Update(coreModel.Category[] categories)
@@ -84,7 +88,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
             {
 				foreach (var category in categories)
 				{
-					var dbCategory = repository.GetCategoryById(category.Id) as dataModel.Category;
+                    var dbCategory = repository.GetCategoriesByIds(new[] { category.Id }, Domain.Catalog.Model.CategoryResponseGroup.Full).FirstOrDefault();
 					
 					if (dbCategory == null)
 					{

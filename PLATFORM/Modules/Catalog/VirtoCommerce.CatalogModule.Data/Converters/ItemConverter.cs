@@ -18,18 +18,15 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// Converting to model type
 		/// </summary>
 		/// <returns></returns>
-		public static coreModel.CatalogProduct ToCoreModel(this dataModel.Item dbItem, coreModel.Catalog catalog,
-														  coreModel.Category category, coreModel.CatalogProduct[] associatedProducts)
+		public static coreModel.CatalogProduct ToCoreModel(this dataModel.Item dbItem)
 		{
 			var retVal = new coreModel.CatalogProduct();
 			retVal.InjectFrom(dbItem);
-			retVal.Catalog = catalog;
-			retVal.CatalogId = catalog.Id;
+			retVal.Catalog = dbItem.Catalog.ToCoreModel();
 
-			if (category != null)
+			if (dbItem.Category != null)
 			{
-				retVal.Category = category;
-				retVal.CategoryId = category.Id;
+                retVal.Category = dbItem.Category.ToCoreModel();
 			}
 
 			retVal.MainProductId = dbItem.ParentId;
@@ -42,72 +39,71 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			retVal.MinQuantity = (int)dbItem.MinQuantity;
 
 
-			#region Links
+			//Links
 			retVal.Links = dbItem.CategoryLinks.Select(x => x.ToCoreModel()).ToList();
-			#endregion
 
-			#region Images
+			//Images
 			if (dbItem.Images != null)
 			{
 				retVal.Images = dbItem.Images.OrderBy(x => x.SortOrder).Select(x => x.ToCoreModel()).ToList();
 			}
-			#endregion
-			#region Assets
+
+			//Assets
 			if (dbItem.Assets != null)
 			{
 				retVal.Assets = dbItem.Assets.OrderBy(x=>x.CreatedDate).Select(x => x.ToCoreModel()).ToList();
 			}
-			#endregion
-			#region Property values
+
+			// Property values
 			if (dbItem.ItemPropertyValues != null)
 			{
-				retVal.PropertyValues = dbItem.ItemPropertyValues.OrderBy(x=>x.Name).Select(x => x.ToCoreModel(null)).ToList();
+				retVal.PropertyValues = dbItem.ItemPropertyValues.OrderBy(x=>x.Name).Select(x => x.ToCoreModel()).ToList();
 			}
-			#endregion
 
-
-			#region Variations
+			// Variations
 			retVal.Variations = new List<coreModel.CatalogProduct>();
 			foreach (var variation in dbItem.Childrens)
 			{
-				var productVaraition = variation.ToCoreModel(catalog, category, associatedProducts: null);
+				var productVaraition = variation.ToCoreModel();
 				productVaraition.MainProduct = retVal;
 				productVaraition.MainProductId = retVal.Id;
 				
 				retVal.Variations.Add(productVaraition);
 			}
-			#endregion
 
-			#region EditorialReviews
-			if (dbItem.EditorialReviews != null)
-			{
-				retVal.Reviews = dbItem.EditorialReviews.Select(x => x.ToCoreModel()).ToList();
-			}
-			#endregion
+			// EditorialReviews
+			retVal.Reviews = dbItem.EditorialReviews.Select(x => x.ToCoreModel()).ToList();
 
-			#region Associations
-			if (dbItem.AssociationGroups != null && associatedProducts != null)
-			{
-				retVal.Associations = new List<coreModel.ProductAssociation>();
-				foreach (var association in dbItem.AssociationGroups.SelectMany(x => x.Associations))
-				{
-					var associatedProduct = associatedProducts.FirstOrDefault(x => x.Id == association.ItemId);
-					if (associatedProduct != null)
-					{
-						var productAssociation = association.ToCoreModel(associatedProduct);
-						retVal.Associations.Add(productAssociation);
-					}
-				}
-			}
-			#endregion
+            // Associations
+            retVal.Associations = dbItem.AssociationGroups.SelectMany(x => x.Associations).Select(x => x.ToCoreModel()).ToList();
 
-			//TaxType category inheritance
-			if(retVal.TaxType == null && category != null)
+            //TaxType category inheritance
+            if (retVal.TaxType == null && retVal.Category != null)
 			{
-				retVal.TaxType = category.TaxType;
+				retVal.TaxType = retVal.Category.TaxType;
 			}
-			#region Variation property, assets, review inheritance
-			if (dbItem.Parent != null)
+
+            retVal.Properties = new List<coreModel.Property>();
+        
+            //Properties
+            if (retVal.Category != null)
+            {
+                //Add inherited from category and catalog properties
+                retVal.Properties.AddRange(retVal.Category.Properties);
+            }
+            else
+            {
+                retVal.Properties.AddRange(retVal.Catalog.Properties);
+            }
+
+            //Next need set Property in PropertyValues objects
+            foreach (var propValue in retVal.PropertyValues)
+            {
+                propValue.Property = retVal.Properties.FirstOrDefault(x => x.IsSuitableForValue(propValue));
+            }
+
+            #region Variation property, assets, review inheritance
+            if (dbItem.Parent != null)
 			{
 				//TaxType from main product inheritance
 				if(dbItem.TaxType == null && dbItem.Parent.TaxType != null)
@@ -125,7 +121,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 					foreach (var dbInheritedPropertyValue in dbInheritedPropertyValues)
 					{
 						//Reset id for correct value override
-						var propertyValue = dbInheritedPropertyValue.ToCoreModel(null);
+						var propertyValue = dbInheritedPropertyValue.ToCoreModel();
 						propertyValue.Id = null;
 						retVal.PropertyValues.Add(propertyValue);
 					}

@@ -68,7 +68,10 @@
     <Compile Include="Catalog\Model\CatalogProduct.cs" />
     <Compile Include="Catalog\Model\Category.cs" />
     <Compile Include="Catalog\Model\CategoryLink.cs" />
+    <Compile Include="Catalog\Model\CategoryResponseGroup.cs" />
     <Compile Include="Catalog\Model\EditorialReview.cs" />
+    <Compile Include="Catalog\Model\Search\SearchAggregationRangeItem.cs" />
+    <Compile Include="Catalog\Model\Search\SearchAgregationItem.cs" />
     <Compile Include="Catalog\Model\PropertyDisplayName.cs" />
     <Compile Include="Commerce\Model\Address.cs" />
     <Compile Include="Commerce\Model\AddressType.cs" />
@@ -84,10 +87,10 @@
     <Compile Include="Catalog\Model\PropertyType.cs" />
     <Compile Include="Catalog\Model\PropertyValue.cs" />
     <Compile Include="Catalog\Model\PropertyValueType.cs" />
-    <Compile Include="Catalog\Model\ResponseGroup.cs" />
+    <Compile Include="Catalog\Model\Search\SearchResponseGroup.cs" />
     <Compile Include="Catalog\Model\ReviewState.cs" />
-    <Compile Include="Catalog\Model\SearchCriteria.cs" />
-    <Compile Include="Catalog\Model\SearchResult.cs" />
+    <Compile Include="Catalog\Model\Search\SearchCriteria.cs" />
+    <Compile Include="Catalog\Model\Search\SearchResult.cs" />
     <Compile Include="Catalog\Services\DefaultSkuGenerator.cs" />
     <Compile Include="Catalog\Services\ICatalogSearchService.cs" />
     <Compile Include="Catalog\Services\ICatalogService.cs" />

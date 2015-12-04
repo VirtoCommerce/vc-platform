@@ -134,7 +134,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 
             var searchCriteria = new SearchCriteria
             {
-                ResponseGroup = ResponseGroup.WithProducts | ResponseGroup.WithVariations,
+                ResponseGroup = SearchResponseGroup.WithProducts | SearchResponseGroup.WithVariations,
                 Code = code,
                 //CatalogId = fullLoadedStore.Catalog
             };
@@ -176,7 +176,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 
             var searchCriteria = new SearchCriteria
             {
-                ResponseGroup = ResponseGroup.WithProducts | ResponseGroup.WithVariations,
+                ResponseGroup = SearchResponseGroup.WithProducts | SearchResponseGroup.WithVariations,
                 //SeoKeyword = keyword,
                 //CatalogId = fullLoadedStore.Catalog
             };
@@ -404,18 +404,12 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 
             foreach (var product in products)
             {
-                coreModel.Property[] properties = null;
-                if ((responseGroup & ItemResponseGroup.ItemProperties) == ItemResponseGroup.ItemProperties)
-                {
-                    properties = GetAllProductProperies(product);
-                }
-
                 if (product != null)
                 {
-                    var webModelProduct = product.ToWebModel(_blobUrlResolver, properties);
+                    var webModelProduct = product.ToWebModel(_blobUrlResolver);
                     if (product.CategoryId != null)
                     {
-                        var category = _categoryService.GetById(product.CategoryId);
+                        var category = _categoryService.GetById(product.CategoryId, CategoryResponseGroup.Full);
                         webModelProduct.Outline = string.Join("/", category.Parents.Select(x => x.Id)) + "/" + category.Id;
                     }
                     retVal.Add(webModelProduct);
@@ -444,19 +438,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
             }
         }
 
-        private coreModel.Property[] GetAllProductProperies(coreModel.CatalogProduct product)
-        {
-            coreModel.Property[] retVal = null;
-            if (!String.IsNullOrEmpty(product.CategoryId))
-            {
-                retVal = _propertyService.GetCategoryProperties(product.CategoryId);
-            }
-            else
-            {
-                retVal = _propertyService.GetCatalogProperties(product.CatalogId);
-            }
-            return retVal;
-        }
+     
         #endregion
     }
 }

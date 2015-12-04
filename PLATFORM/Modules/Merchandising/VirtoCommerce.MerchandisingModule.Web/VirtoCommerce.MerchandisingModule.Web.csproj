@@ -100,11 +100,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Binders\CatalogItemSearchCriteriaBinder.cs" />
-    <Compile Include="Controllers\MerchandisingModuleReviewController.cs" />
-    <Compile Include="Controllers\MerchandisingModuleMarketingController.cs" />
-    <Compile Include="Controllers\MerchandisingModuleCategoryController.cs" />
-    <Compile Include="Controllers\MerchandisingModuleStoreController.cs" />
-    <Compile Include="Controllers\MerchandisingModulePriceController.cs" />
     <Compile Include="Controllers\MerchandisingModuleProductController.cs" />
     <Compile Include="Controllers\MerchandisingNotificationController.cs" />
     <Compile Include="Converters\AssetConverter.cs" />

@@ -8,6 +8,7 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Common;
 using VirtoCommerce.Platform.Data.Common.ConventionInjections;
 using VirtoCommerce.Domain.Commerce.Model;
+using System.Collections.Generic;
 
 namespace VirtoCommerce.CatalogModule.Data.Converters
 {
@@ -21,28 +22,22 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         /// <param name="properties">The properties.</param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentNullException">catalog</exception>
-        public static coreModel.Category ToCoreModel(this dataModel.Category dbCategory, coreModel.Catalog catalog,
-                                                     dataModel.Category[] allParents = null)
+        public static coreModel.Category ToCoreModel(this dataModel.Category dbCategory, bool convertProps = true)
         {
-            if (catalog == null)
-                throw new ArgumentNullException("catalog");
-
-			var retVal = new coreModel.Category();
+ 			var retVal = new coreModel.Category();
 			retVal.InjectFrom(dbCategory);
-			retVal.CatalogId = catalog.Id;
-			retVal.Catalog = catalog;
+			retVal.CatalogId = dbCategory.CatalogId;
+			retVal.Catalog = dbCategory.Catalog.ToCoreModel();
 			retVal.ParentId = dbCategory.ParentCategoryId;
 			retVal.IsActive = dbCategory.IsActive;
-
-
-			retVal.PropertyValues = dbCategory.CategoryPropertyValues.Select(x => x.ToCoreModel(dbCategory.Properties)).ToList();
-			retVal.Virtual = catalog.Virtual;
+		
+			retVal.Virtual = dbCategory.Catalog.Virtual;
 			retVal.Links = dbCategory.OutgoingLinks.Select(x => x.ToCoreModel(retVal)).ToList();
 
 
-            if (allParents != null)
+            if (dbCategory.AllParents != null)
             {
-                retVal.Parents = allParents.Select(x => x.ToCoreModel(catalog)).ToArray();
+                retVal.Parents = dbCategory.AllParents.Select(x => x.ToCoreModel()).ToArray();
             }
 
 			//Try to inherit taxType from parent category
@@ -51,15 +46,38 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 				retVal.TaxType = retVal.Parents.Select(x => x.TaxType).Where(x => x != null).FirstOrDefault();
 			}
 
-			#region Images
 			if (dbCategory.Images != null)
 			{
 				retVal.Images = dbCategory.Images.OrderBy(x => x.SortOrder).Select(x => x.ToCoreModel()).ToList();
 			}
-			#endregion
 
+            if (convertProps)
+            {
+                retVal.PropertyValues = dbCategory.CategoryPropertyValues.Select(x => x.ToCoreModel()).ToList();
+
+                var properties = new List<coreModel.Property>();
+                //Add inherited from catalog properties
+                properties.AddRange(retVal.Catalog.Properties);
+                //For parents categories
+                if (retVal.Parents != null)
+                {
+                    properties.AddRange(retVal.Parents.SelectMany(x => x.Properties));
+                }
+                //Self properties
+                properties.AddRange(dbCategory.Properties.Select(x => x.ToCoreModel()));
+
+                //property override - need leave only property has a min distance to target category 
+                //Algorithm based on index property in resulting list (property with min index will more closed to category)
+                var propertyGroups = properties.Select((x, index) => new { PropertyName = x.Name.ToLowerInvariant(), Property = x, Index = index }).GroupBy(x => x.PropertyName);
+                retVal.Properties = propertyGroups.Select(x => x.OrderBy(y => y.Index).First().Property).ToList();
+
+                //Next need set Property in PropertyValues objects
+                foreach (var propValue in retVal.PropertyValues)
+                {
+                    propValue.Property = retVal.Properties.FirstOrDefault(x => x.IsSuitableForValue(propValue));
+                }
+            }
             return retVal;
-
         }
 
         /// <summary>

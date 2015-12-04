@@ -174,7 +174,7 @@ namespace VirtoCommerce.SearchModule.Data.Services
 
         protected virtual void IndexItemCustomProperties(ref ResultDocument doc, CatalogProduct item)
         {
-            var properties = item.CategoryId != null ? _propertyService.GetCategoryProperties(item.CategoryId) : _propertyService.GetCatalogProperties(item.CatalogId);
+            var properties = item.Properties;
 
             foreach (var propValue in item.PropertyValues.Where(x => x.Value != null))
             {
@@ -256,7 +256,7 @@ namespace VirtoCommerce.SearchModule.Data.Services
 
             var criteria = new SearchCriteria
             {
-                ResponseGroup = ResponseGroup.WithProducts,
+                ResponseGroup = SearchResponseGroup.WithProducts,
                 Count = 0
             };
 

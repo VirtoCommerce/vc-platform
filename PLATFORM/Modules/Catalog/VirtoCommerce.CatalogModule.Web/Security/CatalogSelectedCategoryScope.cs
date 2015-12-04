@@ -49,7 +49,7 @@ namespace VirtoCommerce.CatalogModule.Web.Security
 
             if (categoryId != null)
             {
-                var resultCategory = _categoryService.GetById(categoryId);
+                var resultCategory = _categoryService.GetById(categoryId, CategoryResponseGroup.WithParents);
                 //Need to return scopes for all parent categories to support scope inheritance (permission defined on parent category should be active for children)
                 var retVal = new[] { resultCategory.Id }.Concat(resultCategory.Parents.Select(x => x.Id)).Select(x => Type + ":" + x);
                 return retVal;

@@ -70,7 +70,8 @@ namespace VirtoCommerce.Domain.Catalog.Model
 	    public DateTime StartDate { get; set; }
 		public DateTime? EndDate { get; set; }
 
-		public ICollection<PropertyValue> PropertyValues { get; set; }
+        public ICollection<Property> Properties { get; set; }
+        public ICollection<PropertyValue> PropertyValues { get; set; }
 		public ICollection<Image> Images { get; set; }
 		public ICollection<Asset> Assets { get; set; }
 		public ICollection<CategoryLink> Links { get; set; }
