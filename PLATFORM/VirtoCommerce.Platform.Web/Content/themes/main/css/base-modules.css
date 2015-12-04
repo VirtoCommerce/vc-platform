@@ -4022,8 +4022,8 @@ tags-input .tags .tag-item .remove-button
         -webkit-box-shadow: 5px 0 0 rgba(0,0,0,.25);
                 box-shadow: 5px 0 0 rgba(0,0,0,.25);
 
-        -webkit-transform: translateX(-270px);
-                transform: translateX(-270px);
+        -webkit-transform: translateX(-275px);
+                transform: translateX(-275px);
     }
 
     .nav-bar .dropdown.__opened
@@ -5071,12 +5071,10 @@ tags-input .tags .tag-item .remove-button
 .ui-grid-header
 {
     border-color: #dee9f0;
-    height: auto !important;
 }
 
 .ui-grid-viewport
 {
-    
     overflow-x: auto !important;
 }
 
@@ -5167,7 +5165,7 @@ tags-input .tags .tag-item .remove-button
 
 .ui-grid-canvas
 {
-    height: auto !important;
+    
     padding: 0;
 }
 
@@ -5200,9 +5198,16 @@ tags-input .tags .tag-item .remove-button
     display: inline-block;
     font-size: 14px;
     height: 100%;
+    padding: 0 0 0 5px;
     text-shadow: 1px 1px #fff;
     vertical-align: middle;
     width: 100%;
+}
+
+.ui-grid-cell-contents .inner-contents
+{
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .ui-grid-cell-contents::after
@@ -5211,6 +5216,11 @@ tags-input .tags .tag-item .remove-button
     display: inline-block;
     height: 100%;
     vertical-align: middle;
+}
+
+.ui-grid-row .ui-grid-cell:first-child .ui-grid-cell-contents
+{
+    text-align: center;
 }
 
 .ui-grid-icon-cancel::before
@@ -5228,7 +5238,7 @@ tags-input .tags .tag-item .remove-button
 
 .ui-grid-menu-button .ui-grid-menu .ui-grid-menu-mid
 {
-    max-height: 100%;
+    
     overflow: auto;
 }
 
@@ -5358,6 +5368,7 @@ input.ui-grid-filter-input[type="text"]
     display: inline-block;
     height: 40px;
     line-height: 40px;
+    vertical-align: middle;
 }
 
 .ui-grid-cell .product-img .pr-ico

@@ -58,10 +58,12 @@
 </script>
 <script type="text/ng-template" id="item-list-name.cell.html">
     <div class="ui-grid-cell-contents">
-        <i class="table-ico fa fa-link" ng-if="grid.appScope.hasLinks(row.entity)" title="This category is linked"></i>
-        <div class="table-t">{{COL_FIELD}}</div>
-        <span class="table-status" ng-if="row.entity.type==='category' && !row.entity.isActive">Inactive</span>
-        <div class="table-descr" ng-if="row.entity.productType">{{row.entity.productType}}</div>
+        <div class="inner-contents">
+            <i class="table-ico fa fa-link" ng-if="grid.appScope.hasLinks(row.entity)" title="This category is linked"></i>
+            <div class="table-t">{{COL_FIELD}}</div>
+            <span class="table-status" ng-if="row.entity.type==='category' && !row.entity.isActive">Inactive</span>
+            <div class="table-descr" ng-if="row.entity.productType">{{row.entity.productType}}</div>
+        </div>
     </div>
 </script>
 

@@ -85,7 +85,7 @@ angular.module('platformWebApp', AppDependencies).
                   data: _.any(initOptions.data) ? initOptions.data : 'blade.currentEntities',
                   rowHeight: initOptions.rowHeight === 30 ? 40 : initOptions.rowHeight,
                   enableGridMenu: true,
-                  enableVerticalScrollbar: uiGridConstants.scrollbars.NEVER,
+                  //enableVerticalScrollbar: uiGridConstants.scrollbars.NEVER,
                   //enableHorizontalScrollbar: uiGridConstants.scrollbars.NEVER,
                   //selectionRowHeaderWidth: 35,
                   saveFocus: false,
