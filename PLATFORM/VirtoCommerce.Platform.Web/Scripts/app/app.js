@@ -15,7 +15,7 @@
   'angularFileUpload',
   'ngSanitize',
   'ng-context-menu',
-  'ui.grid', 'ui.grid.resizeColumns', 'ui.grid.moveColumns', 'ui.grid.saveState', 'ui.grid.selection', 'ui.grid.pagination',
+  'ui.grid', 'ui.grid.resizeColumns', 'ui.grid.moveColumns', 'ui.grid.saveState', 'ui.grid.selection', 'ui.grid.pagination', 'ui.grid.pinning',
   'ui.grid.draggable-rows',
   'ui.codemirror',
   'focusOn',
@@ -212,10 +212,17 @@ angular.module('platformWebApp', AppDependencies).
                     var customSort = x.sort;
                     _.extend(x, foundDef);
                     x.sort = customSort;
+                    x.wasPredefined = true;
                     gridOptions.columnDefs.splice(gridOptions.columnDefs.indexOf(foundDef), 1);
+                } else {
+                    x.wasPredefined = false;
                 }
             });
+            savedState.columns = _.reject(savedState.columns, function (x) { return x.cellTemplate && !x.wasPredefined; });
             gridOptions.columnDefs = _.union(gridOptions.columnDefs, savedState.columns);
+        } else {
+            // mark predefined columns
+            _.each(gridOptions.columnDefs, function (x) { x.wasPredefined = true; })
         }
 
         // translate filter
@@ -241,7 +248,7 @@ angular.module('platformWebApp', AppDependencies).
                     $localStorage['gridState:' + $scope.blade.template] = gridApi.saveState.save();
                 }
 
-                gridApi.grid.registerDataChangeCallback(generateMissingColumns, [uiGridConstants.dataChange.ROW]);
+                gridApi.grid.registerDataChangeCallback(processMissingColumns, [uiGridConstants.dataChange.ROW]);
 
                 // update grid menu behavior
                 gridApi.grid.registerDataChangeCallback(updateGridStyles, [uiGridConstants.dataChange.ROW]);
@@ -270,13 +277,21 @@ angular.module('platformWebApp', AppDependencies).
             }
         }, gridOptions);
 
-        function generateMissingColumns(grid) {
+        function processMissingColumns(grid) {
             var gridOptions = grid.options;
             //gridOptions.minRowsToShow = currentEntities.length;
 
             if (!gridOptions.columnDefsGenerated && _.any(grid.rows)) {
+                var allKeysFromEntity = _.without(_.keys(grid.rows[0].entity), '$$hashKey');
+                // remove non-existing columns
+                _.each(gridOptions.columnDefs.slice(), function (x) {
+                    if (!_.contains(allKeysFromEntity, x.name) && !x.wasPredefined) {
+                        gridOptions.columnDefs = _.reject(gridOptions.columnDefs, function (d) { return d.name == x.name; });
+                    }
+                });
+
                 // generate columnDefs for each undefined property
-                _.each(_.without(_.keys(grid.rows[0].entity), '$$hashKey'), function (x) {
+                _.each(allKeysFromEntity, function (x) {
                     if (!_.findWhere(gridOptions.columnDefs, { name: x })) {
                         gridOptions.columnDefs.push({ name: x, visible: false });
                     }
