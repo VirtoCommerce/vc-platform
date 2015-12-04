@@ -50,13 +50,6 @@ namespace VirtoCommerce.Storefront.Builders
 
             await EvaluatePromotionsAsync();
 
-            var couponDiscount = _cart.Discounts.FirstOrDefault(d => !string.IsNullOrEmpty(d.ShoppingCartId));
-            if (couponDiscount != null)
-            {
-                _cart.Coupon.Amount = couponDiscount.Amount;
-                _cart.Coupon.AppliedSuccessfully = true;
-            }
-
             return this;
         }
 
@@ -107,19 +100,6 @@ namespace VirtoCommerce.Storefront.Builders
             };
 
             await EvaluatePromotionsAsync();
-
-            var couponDiscount = _cart.Discounts.FirstOrDefault(d => !string.IsNullOrEmpty(d.ShoppingCartId));
-            if (couponDiscount != null)
-            {
-                _cart.Coupon.Amount = couponDiscount.Amount;
-                _cart.Coupon.AppliedSuccessfully = true;
-            }
-            else
-            {
-                _cart.Errors.Clear();
-                _cart.Errors.Add("InvalidCouponCode");
-                _cart.Coupon.Code = null;
-            }
 
             return this;
         }
