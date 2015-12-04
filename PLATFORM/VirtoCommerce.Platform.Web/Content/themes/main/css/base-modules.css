@@ -2632,21 +2632,15 @@ button.btn
 
         .__items .list-action .list-ico
         {
-            color: #a1c0d4;
-            font-size: 17px;
+            color: #43b0e6;
+            font-size: 21px;
             margin: 0;
             width: auto;
         }
 
-        .__items .list-action .list-ico::before
+        .__items .list-item:hover .list-action .list-ico
         {
-            content: '';
-        }
-
-        .__items .list-action.__selected .list-ico::before
-        {
-            content: '';
-            margin: 0 0 0 4px;
+            color: #43b0e6;
         }
 
     .__items .list-ico ~ .list-t
@@ -5180,6 +5174,11 @@ tags-input .tags .tag-item .remove-button
     position: static;
 }
 
+.ui-grid-row .ui-grid-cell:first-child
+{
+    border-right: 1px solid #d9effa;
+}
+
 /*.ui-grid-row
 {
     min-height: 40px;
@@ -5189,12 +5188,6 @@ tags-input .tags .tag-item .remove-button
 {
     padding: 10px;
 }*/
-
-.ui-grid-row:last-child .ui-grid-cell
-{
-    border-color: #dee9f0;
-    border-width: 0 0 1px !important;
-}
 
 .ui-grid-row-header-cell > :first-child
 {
@@ -5347,7 +5340,7 @@ input.ui-grid-filter-input[type="text"]
 
 .ui-grid-pinned-container.ui-grid-pinned-container-left .ui-grid-header-cell:last-child
 {
-    border: none;
+    border-color: #dee9f0;
 }
 
 .ui-grid-pinned-container.ui-grid-pinned-container-left .ui-grid-cell
@@ -5367,10 +5360,9 @@ input.ui-grid-filter-input[type="text"]
 
 .ui-grid-cell .product-img
 {
+    display: inline-block;
     height: 40px;
     line-height: 40px;
-    margin: 10px auto;
-    width: auto;
 }
 
 .ui-grid-cell .product-img .pr-ico
@@ -5468,11 +5460,6 @@ input.ui-grid-filter-input[type="text"]
 
     -webkit-transition: font .3s ease;
             transition: font .3s ease;
-}
-
-.ui-grid-actions:hover .fa
-{
-    font-size: 28px;
 }
 
 .ui-grid-actions::after
