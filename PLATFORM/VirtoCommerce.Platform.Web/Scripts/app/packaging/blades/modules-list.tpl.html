@@ -11,11 +11,11 @@
         <div class="inner-block" ng-init="setGridOptions({
                     rowTemplate: 'modules-list.row.html',
                     virtualizationThreshold: 1000,
-                    rowHeight: 61,
+                    rowHeight: 60,
                     columnDefs: [
                                 {
                                     displayName: 'platform.blades.modules-list.labels.icon', name: 'iconUrl',
-                                    enableColumnResizing: false, width: 70,
+                                    enableColumnResizing: false, enableSorting: false, width: 60,
                                     cellTemplate: 'modules-list-icon.cell.html'
                                 },
                                 {
@@ -23,7 +23,7 @@
                                     sort: { direction: uiGridConstants.ASC }, width: '50%',
                                     cellTemplate: 'modules-list-name.cell.html'
                                 },
-                                { name: 'version', displayName: 'platform.blades.modules-list.labels.version', width: 80 },
+                                { name: 'version', displayName: 'platform.blades.modules-list.labels.version', width: 70 },
                                 {
                                     displayName: 'platform.blades.modules-list.labels.author', name: 'authors',
                                     cellTemplate: 'modules-list-authors.cell.html'
@@ -42,8 +42,10 @@
 </script>
 
 <script type="text/ng-template" id="modules-list-icon.cell.html">
-    <div class="product-img">
-        <div class="image" style="background-image: url('{{COL_FIELD}}');"></div>
+    <div class="ui-grid-cell-contents">
+        <div class="product-img">
+            <div class="image" style="background-image: url('{{COL_FIELD}}')"></div>
+        </div>
     </div>
 </script>
 <script type="text/ng-template" id="modules-list-name.cell.html">
