@@ -1,9 +1,9 @@
 ﻿<div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block clearfix">
-            <ul class="list __items">
-                <li class="list-item" ng-repeat="data in objects track by data.id" ng-class="{'__hovered': data.id === hoverNodeid, '__selected': data.id === selectedNodeId}" ng-click='selectNode(data)' context-menu='hoverNodeid = data.id' data-target="cl_menu{{$index}}">
-                    <div class="list-action" left-click-menu='hoverNodeid = data.id' data-target="cl_menu{{$index}}">
+            <ul class="list __items" ng-init="blade.hoverNodeid=null">
+                <li class="list-item" ng-repeat="data in objects track by data.id" ng-class="{'__hovered': data.id === blade.hoverNodeid, '__selected': data.id === selectedNodeId}" ng-click='selectNode(data)' context-menu='blade.hoverNodeid = data.id' data-target="cl_menu{{$index}}">
+                    <div class="list-action" left-click-menu='blade.hoverNodeid = data.id' data-target="cl_menu{{$index}}">
                         <i class="list-ico fa fa-ellipsis-v"></i>
                     </div>
                     <i class="list-ico fa" ng-class="data.virtual ? 'fa-cloud' : 'fa-folder'"></i>

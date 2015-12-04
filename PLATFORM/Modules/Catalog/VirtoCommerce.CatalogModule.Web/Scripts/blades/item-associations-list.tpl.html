@@ -36,9 +36,11 @@
     </div>
 </script>
 <script type="text/ng-template" id="icon.cell.html">
-    <div class="product-img">
-        <div class="image" style="background-image: url('{{COL_FIELD}}')" ng-if="COL_FIELD"></div>
-        <i class="table-ico fa fa-image" ng-if="!COL_FIELD"></i>
+    <div class="ui-grid-cell-contents">
+        <div class="product-img">
+            <div class="image" style="background-image: url('{{COL_FIELD}}')" ng-if="COL_FIELD"></div>
+            <i class="table-ico fa fa-image" ng-if="!COL_FIELD"></i>
+        </div>    
     </div>
 </script>
 <script type="text/ng-template" id="productName.cell.html">

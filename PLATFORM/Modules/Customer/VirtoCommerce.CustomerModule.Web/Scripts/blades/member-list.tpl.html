@@ -40,15 +40,8 @@
     </div>
 </div>
 
-<script type="text/ng-template" id="ui-grid/selectionSelectAllButtons">
-    <div class="ui-grid-selection-row-header-buttons fa" ng-class="grid.selection.selectAll ? 'fa-check-square-o': 'fa-square-o'" ng-click="headerButtonClick($event)"></div>
-</script>
-<script type="text/ng-template" id="ui-grid/selectionRowHeaderButtons">
-    <div class="ui-grid-selection-row-header-buttons fa" ng-class="row.isSelected ? 'fa-check-square-o': 'fa-square-o'" ng-click="selectButtonClick(row, $event)">&nbsp;</div>
-</script>
-
 <script type="text/ng-template" id="member-list.row.html">
-    <div ng-click="col.isRowHeader || grid.appScope.selectNode(row.entity)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'" class="ui-grid-cell" ng-class="{'ui-grid-row-header-cell': col.isRowHeader, '__selected': row.entity.id===grid.appScope.selectedNodeId }" role="{{col.isRowHeader ? 'rowheader' : 'gridcell' }}" ui-grid-cell style='cursor:pointer' context-menu="grid.appScope.contextMenuEntity = row.entity" data-target="cml_menu"></div>
+    <div ng-click="col.isRowHeader || grid.appScope.selectNode(row.entity)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'" class="ui-grid-cell" ng-class="{'ui-grid-row-header-cell': col.isRowHeader, '__hovered': grid.appScope.contextMenuEntity === row.entity, '__selected': row.entity.id===grid.appScope.selectedNodeId }" role="{{col.isRowHeader ? 'rowheader' : 'gridcell' }}" ui-grid-cell style='cursor:pointer' context-menu="grid.appScope.contextMenuEntity = row.entity" data-target="cml_menu"></div>
 </script>
 <script type="text/ng-template" id="list-actions.cell.html">
     <div class="ui-grid-actions" left-click-menu="grid.appScope.contextMenuEntity = row.entity" data-target="cml_menu">
@@ -56,7 +49,9 @@
     </div>
 </script>
 <script type="text/ng-template" id="member-list-icon.cell.html">
-    <div class="product-img" ng-attr-title="{{COL_FIELD}}">
-        <i class="table-ico fa" ng-class="'{{COL_FIELD}}' === 'Organization' ? 'fa-university' : 'fa-user'"></i>
+    <div class="ui-grid-cell-contents">
+        <div class="product-img" ng-attr-title="{{COL_FIELD}}">
+            <i class="table-ico fa" ng-class="'{{COL_FIELD}}' === 'Organization' ? 'fa-university' : 'fa-user'"></i>
+        </div>
     </div>
 </script>
