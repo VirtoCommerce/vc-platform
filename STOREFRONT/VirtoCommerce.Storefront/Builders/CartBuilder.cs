@@ -256,7 +256,6 @@ namespace VirtoCommerce.Storefront.Builders
                         {
                             Amount = GetAbsoluteDiscountAmount(lineItem.ExtendedPrice.Amount, validReward),
                             Description = validReward.Promotion.Description,
-                            LineItemId = lineItem.Id,
                             PromotionId = validReward.Promotion.Id
                         });
                     }
@@ -272,7 +271,6 @@ namespace VirtoCommerce.Storefront.Builders
                         {
                             Amount = GetAbsoluteDiscountAmount(categoryLineItem.ExtendedPrice.Amount, validReward),
                             Description = validReward.Promotion.Description,
-                            LineItemId = categoryLineItem.Id,
                             PromotionId = validReward.Promotion.Id
                         });
                     }
@@ -288,8 +286,7 @@ namespace VirtoCommerce.Storefront.Builders
                         {
                             Amount = GetAbsoluteDiscountAmount(_cart.SubTotal.Amount, validReward),
                             Description = validReward.Promotion.Description,
-                            PromotionId = validReward.Promotion.Id,
-                            ShipmentId = shipment.Id
+                            PromotionId = validReward.Promotion.Id
                         });
                     }
                 }
@@ -303,8 +300,7 @@ namespace VirtoCommerce.Storefront.Builders
                         {
                             Amount = GetAbsoluteDiscountAmount(_cart.SubTotal.Amount, validReward),
                             Description = validReward.Promotion.Description,
-                            PromotionId = validReward.Promotion.Id,
-                            ShoppingCartId = _cart.Id
+                            PromotionId = validReward.Promotion.Id
                         });
                     }
                 }
