@@ -47,11 +47,9 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			retVal.Links = dbItem.CategoryLinks.Select(x => x.ToCoreModel()).ToList();
 
             //Images
-            if (dbItem.Images.Any())
-            {
-                retVal.Images = dbItem.Images.OrderBy(x => x.SortOrder).Select(x => x.ToCoreModel()).ToList();
-            }//Inherit images from parent product (if its not set)
-            else if(retVal.MainProduct != null && retVal.MainProduct.Images != null)
+            retVal.Images = dbItem.Images.OrderBy(x => x.SortOrder).Select(x => x.ToCoreModel()).ToList();
+            //Inherit images from parent product (if its not set)
+            if(!retVal.Images.Any() && retVal.MainProduct != null && retVal.MainProduct.Images != null)
             {
                 retVal.Images = retVal.MainProduct.Images.Select(x=>x.Clone()).OfType<coreModel.Image>().ToList();
                 foreach(var image in retVal.Images)
@@ -61,13 +59,10 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
                 }
             }
 
-
-			//Assets
-			if (dbItem.Assets.Any())
-			{
-				retVal.Assets = dbItem.Assets.OrderBy(x=>x.CreatedDate).Select(x => x.ToCoreModel()).ToList();
-            }//Inherit images from parent product (if its not set)
-            else if (retVal.MainProduct != null && retVal.MainProduct.Assets != null)
+            //Assets
+            retVal.Assets = dbItem.Assets.OrderBy(x => x.CreatedDate).Select(x => x.ToCoreModel()).ToList();
+            //Inherit images from parent product (if its not set)
+            if (!retVal.Assets.Any()  && retVal.MainProduct != null && retVal.MainProduct.Assets != null)
             {
                 retVal.Assets = retVal.MainProduct.Assets.Select(x => x.Clone()).OfType<coreModel.Asset>().ToList();
                 foreach (var asset in retVal.Assets)
@@ -77,34 +72,11 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
                 }
             }
 
-            // Property values
-        	retVal.PropertyValues = dbItem.ItemPropertyValues.OrderBy(x=>x.Name).Select(x => x.ToCoreModel()).ToList();
-            //inherit not overriden property values from main product
-            if(retVal.MainProduct != null && retVal.MainProduct.PropertyValues != null)
-            {
-                var mainProductPopValuesGroups = retVal.MainProduct.PropertyValues.GroupBy(x => x.PropertyName);
-                foreach (var group in mainProductPopValuesGroups)
-                {
-                    //Inherit all values if not overriden
-                    if(!retVal.PropertyValues.Any(x => String.Equals(x.PropertyName, group.Key, StringComparison.InvariantCultureIgnoreCase)))
-                    {
-                        foreach(var inheritedpropValue in group)
-                        {
-                            inheritedpropValue.Id = null;
-                            inheritedpropValue.IsInherited = true;
-                            retVal.PropertyValues.Add(inheritedpropValue);
-                        }
-                    }
-                   
-                }
-            }
-
             // EditorialReviews
-            if (dbItem.EditorialReviews.Any())
-            {
-                retVal.Reviews = dbItem.EditorialReviews.Select(x => x.ToCoreModel()).ToList();
-            }//inherit editorial reviews from main product
-            else if (retVal.MainProduct != null && retVal.MainProduct.Reviews != null)
+            retVal.Reviews = dbItem.EditorialReviews.Select(x => x.ToCoreModel()).ToList();
+
+            //inherit editorial reviews from main product
+            if (!retVal.Reviews.Any() && retVal.MainProduct != null && retVal.MainProduct.Reviews != null)
             {
                 retVal.Reviews = retVal.MainProduct.Reviews.Select(x => x.Clone()).OfType<coreModel.EditorialReview>().ToList();
                 foreach (var review in retVal.Reviews)
@@ -124,8 +96,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			}
 
             retVal.Properties = new List<coreModel.Property>();
-        
-            //Properties
+            //Properties inheritance
             if (retVal.Category != null)
             {
                 //Add inherited from category and catalog properties
@@ -140,12 +111,49 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
                 property.IsInherited = true;
             }
 
-            //Next need set Property in PropertyValues objects
-            foreach (var propValue in retVal.PropertyValues)
+            //Self item property values
+            retVal.PropertyValues = new List<coreModel.PropertyValue>();
+            foreach(var propertyValue in dbItem.ItemPropertyValues.OrderBy(x => x.Name).Select(x=>x.ToCoreModel()))
             {
-                propValue.Property = retVal.Properties.FirstOrDefault(x => x.IsSuitableForValue(propValue));
+                //Try to find property meta information
+                propertyValue.Property = retVal.Properties.FirstOrDefault(x => x.IsSuitableForValue(propertyValue));
+                //Because multilingual dictionary values for all languages may not stored in db need add it in result manually from property dictionary values
+                var localizedDictValues = propertyValue.TryGetAllLocalizedDictValues();
+                if(localizedDictValues.Any())
+                {
+                    foreach (var localizedDictValue in localizedDictValues)
+                    {
+                        if (!retVal.PropertyValues.Any(x => x.ValueId == localizedDictValue.ValueId && x.LanguageCode == localizedDictValue.LanguageCode))
+                        {
+                            retVal.PropertyValues.Add(localizedDictValue);
+                        }
+                    }
+                 }
+                else
+                {
+                    retVal.PropertyValues.Add(propertyValue);
+                }
             }
 
+            //inherit not overriden property values from main product
+            if (retVal.MainProduct != null && retVal.MainProduct.PropertyValues != null)
+            {
+                var mainProductPopValuesGroups = retVal.MainProduct.PropertyValues.GroupBy(x => x.PropertyName);
+                foreach (var group in mainProductPopValuesGroups)
+                {
+                    //Inherit all values if not overriden
+                    if (!retVal.PropertyValues.Any(x => String.Equals(x.PropertyName, group.Key, StringComparison.InvariantCultureIgnoreCase)))
+                    {
+                        foreach (var inheritedpropValue in group)
+                        {
+                            inheritedpropValue.Id = null;
+                            inheritedpropValue.IsInherited = true;
+                            retVal.PropertyValues.Add(inheritedpropValue);
+                        }
+                    }
+                }
+            }
+           
             if (convertChildrens)
             {
                 // Variations
@@ -199,7 +207,6 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			{
 				retVal.ItemPropertyValues = new ObservableCollection<dataModel.PropertyValue>();
                 retVal.ItemPropertyValues.AddRange(product.PropertyValues.Where(x => !x.IsInherited).Select(x => x.ToDataModel()));
-
             }
 			#endregion
 

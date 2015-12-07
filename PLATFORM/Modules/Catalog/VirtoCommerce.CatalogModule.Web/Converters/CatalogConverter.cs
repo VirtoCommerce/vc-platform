@@ -29,6 +29,8 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
                     foreach (var property in catalog.Properties)
                     {
                         var webModelProperty = property.ToWebModel();
+                        //Reset dict values to decrease response size
+                        webModelProperty.DictionaryValues = null;
                         webModelProperty.Values = new List<webModel.PropertyValue>();
                         webModelProperty.IsManageable = true;
                         webModelProperty.IsReadOnly = property.Type != moduleModel.PropertyType.Catalog;
@@ -48,17 +50,7 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
                             property = new webModel.Property(propValue, catalog.Id, null, moduleModel.PropertyType.Catalog);
                             retVal.Properties.Add(property);
                         }
-                        //Need leave dictionary values for each language for multilanguage dictionary property
-                        if (property.Dictionary && property.Multilanguage)
-                        {
-                            property.DictionaryValues = property.DictionaryValues.Where(x => x.Alias == propValue.Alias).ToList();
-                        }
-                        else
-                        {
-                            //reset dict values (not necessary in web)
-                            property.DictionaryValues = null;
-                        }
-                        property.Values.Add(propValue);
+                       property.Values.Add(propValue);
                     }
                 }
             }

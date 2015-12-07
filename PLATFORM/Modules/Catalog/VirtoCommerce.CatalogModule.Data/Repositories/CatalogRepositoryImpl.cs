@@ -212,11 +212,14 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 
         public dataModel.Catalog GetCatalogById(string catalogId)
         {
-            dataModel.Catalog retVal = Catalogs.Include(x => x.CatalogLanguages)
-                                                         .Include(x => x.CatalogPropertyValues)
-                                                         .Include(x => x.IncommingLinks)
-                                                         .Include(x => x.Properties.Select(y => y.PropertyAttributes))
-                                                         .FirstOrDefault(x => x.Id == catalogId);
+            var retVal = Catalogs.Include(x => x.CatalogLanguages)
+                                 .Include(x => x.IncommingLinks)
+                                 .FirstOrDefault(x => x.Id == catalogId);
+
+            var propertyValues = PropertyValues.Where(x => x.CatalogId == catalogId && x.CategoryId == null).ToArray();
+            var properties = Properties.Include(x => x.PropertyAttributes)
+                                       .Include(x => x.DictionaryValues)
+                                       .Where(x => x.CatalogId == catalogId && x.CategoryId == null).ToArray();
             return retVal;
         }
 
@@ -281,16 +284,17 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
                 //Load property values by separate query
                 var propertyValues = PropertyValues.Where(x => categoriesIds.Contains(x.CategoryId)).ToArray();
                 //Need load inherited from parents categories and catalogs
-                var allCategoriesTree = result.SelectMany(x => x.AllParents).ToArray();
-                var allCategoriesTreeIds = allCategoriesTree.Select(x => x.Id).Distinct().ToArray();
-                var allCatalogsIds = allCategoriesTree.Select(x => x.CatalogId).Distinct().ToArray();
+                var allParents = result.SelectMany(x => x.AllParents).ToArray();
+                var allCategoriesTreeIds = allParents.Select(x => x.Id).Concat(categoriesIds).Distinct().ToArray();
+                var allCatalogsIds = result.Select(x=>x.CatalogId).Concat(allParents.Select(x => x.CatalogId)).Distinct().ToArray();
 
                 var categoriesProperties = Properties.Include(x => x.PropertyAttributes)
-                                           .Join(Categories, x => x.CategoryId, x => x.Id, (x, y) => x).ToArray();
+                                           .Include(x => x.DictionaryValues)
+                                           .Where(x=> allCategoriesTreeIds.Contains(x.CategoryId)).ToArray();
 
                 var catalogProperties = Properties.Include(x => x.PropertyAttributes)
-                                           .Where(x => x.CategoryId == null)
-                                           .Join(Catalogs, x => x.CatalogId, x => x.Id, (x, y) => x).ToArray();
+                                           .Include(x => x.DictionaryValues)
+                                           .Where(x => x.CategoryId == null && allCatalogsIds.Contains(x.CatalogId)).ToArray();
             }
             return result;
         }

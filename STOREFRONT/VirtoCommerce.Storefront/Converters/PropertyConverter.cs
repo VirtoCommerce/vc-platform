@@ -32,11 +32,7 @@ namespace VirtoCommerce.Storefront.Converters
             //For multilingual properties need populate LocalizedValues collection and set value for requested language
             if (property.Multilanguage ?? false)
             {
-                if (property.Dictionary ?? false && property.DictionaryValues != null && property.DictionaryValues.Any())
-                {
-                    retVal.LocalizedValues = property.DictionaryValues.Select(x => new LocalizedString(new Language(x.LanguageCode), x.Value)).ToList();
-                }
-                else if(property.Values != null)
+                if(property.Values != null)
                 {
                     retVal.LocalizedValues = property.Values.Where(x=>x.Value != null).Select(x => new LocalizedString(new Language(x.LanguageCode), x.Value.ToString())).ToList();
                 }

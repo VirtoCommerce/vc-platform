@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using VirtoCommerce.Domain.Commerce.Model;
 using VirtoCommerce.Platform.Core.Common;
 namespace VirtoCommerce.Domain.Catalog.Model
@@ -18,6 +21,28 @@ namespace VirtoCommerce.Domain.Catalog.Model
 		{
 			return (PropertyName ?? "unknown") + ":" + (Value ?? "undefined");
 		}
+
+        /// <summary>
+        /// Returns for current value all dictionary values in all defined languages 
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<PropertyValue> TryGetAllLocalizedDictValues()
+        {
+            var retVal = new List<PropertyValue>();
+           
+            if (Property != null && Property.Dictionary && Property.Multilanguage && Property.DictionaryValues != null)
+            {
+                foreach (var dictValue in Property.DictionaryValues.Where(x => x.Alias == Alias))
+                {
+                    var langDictPropValue = this.Clone() as PropertyValue;
+                    langDictPropValue.LanguageCode = dictValue.LanguageCode;
+                    langDictPropValue.Value = dictValue.Value;
+                    langDictPropValue.ValueId = dictValue.Id;
+                    retVal.Add(langDictPropValue);
+                }
+            }
+            return retVal;
+        }
 
         #region IInheritable Members
         public bool IsInherited { get; set; }

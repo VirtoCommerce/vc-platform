@@ -72,6 +72,8 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
                 foreach (var property in product.Properties)
                 {
                     var webModelProperty = property.ToWebModel();
+                    //Reset dict values to decrease response size
+                    webModelProperty.DictionaryValues = null;
                     webModelProperty.Category = null;
                     webModelProperty.Values = new List<webModel.PropertyValue>();
                     webModelProperty.IsManageable = true;
@@ -91,16 +93,6 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 						//Need add dummy property for each value without property
 						property = new webModel.Property(propValue, product.CatalogId, product.CategoryId, moduleModel.PropertyType.Product);
                         retVal.Properties.Add(property);
-                    }
-                    //Need leave dictionary values for each language for multilanguage dictionary property
-                    if (property.Dictionary && property.Multilanguage)
-                    {
-                        property.DictionaryValues = property.DictionaryValues.Where(x => x.Alias == propValue.Alias).ToList();
-                    }
-                    else
-                    {
-                        //reset dict values (not necessary in web)
-                        property.DictionaryValues = null;
                     }
                     property.Values.Add(propValue);
                 }

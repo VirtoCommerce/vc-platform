@@ -46,13 +46,7 @@ namespace VirtoCommerce.StoreModule.Web
 
         public override void PostInitialize()
         {
-			var cacheManager = _container.Resolve<CacheManager>();
-			var cacheSettings = new[] 
-			{
-				new CacheSettings("StoreModule", TimeSpan.FromHours(1))
-			};
-			cacheManager.AddCacheSettings(cacheSettings);
-
+					
             //Register bounded security scope types
             var securityScopeService = _container.Resolve<IPermissionScopeService>();
             securityScopeService.RegisterSope(() => new StoreSelectedScope());
