@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using VirtoCommerce.Client.Api;
@@ -42,7 +43,7 @@ namespace VirtoCommerce.Storefront.Builders
             cart = await _cartApi.CartModuleGetCurrentCartAsync(_store.Id, _customer.Id);
             if (cart == null)
             {
-                _cart = new ShoppingCart(_store.Id, _customer.Id, _customer.Name, "Default", _currency.Code);
+                _cart = new ShoppingCart(_store.Id, _customer.Id, _customer.UserName, "Default", _currency.Code);
             }
             else
             {
@@ -168,6 +169,8 @@ namespace VirtoCommerce.Storefront.Builders
             _cart.Payments = cart.Payments;
 
             await EvaluatePromotionsAsync();
+
+            await _cartApi.CartModuleDeleteCartsAsync(new List<string> { cart.Id });
 
             return this;
         }
