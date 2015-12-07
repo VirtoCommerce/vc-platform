@@ -74,6 +74,26 @@ namespace VirtoCommerce.Client.Api
         System.Threading.Tasks.Task<VirtoCommerceCoreModuleWebModelFulfillmentCenter> CommerceGetFulfillmentCenterAsync (string id);
         
         /// <summary>
+        /// Payment callback operation used by external payment services to inform post process payment in our system
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="orderId">customer order id</param>
+        /// <returns>VirtoCommerceDomainPaymentModelPostProcessPaymentResult</returns>
+        VirtoCommerceDomainPaymentModelPostProcessPaymentResult CommercePostProcessPayment (string orderId);
+  
+        /// <summary>
+        /// Payment callback operation used by external payment services to inform post process payment in our system
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="orderId">customer order id</param>
+        /// <returns>VirtoCommerceDomainPaymentModelPostProcessPaymentResult</returns>
+        System.Threading.Tasks.Task<VirtoCommerceDomainPaymentModelPostProcessPaymentResult> CommercePostProcessPaymentAsync (string orderId);
+        
+        /// <summary>
         /// Find all SEO records for object by slug
         /// </summary>
         /// <remarks>
@@ -588,6 +608,108 @@ namespace VirtoCommerce.Client.Api
                 throw new ApiException ((int)response.StatusCode, "Error calling CommerceGetFulfillmentCenter: " + response.Content, response.Content);
 
             return (VirtoCommerceCoreModuleWebModelFulfillmentCenter) ApiClient.Deserialize(response, typeof(VirtoCommerceCoreModuleWebModelFulfillmentCenter));
+        }
+        
+        /// <summary>
+        /// Payment callback operation used by external payment services to inform post process payment in our system 
+        /// </summary>
+        /// <param name="orderId">customer order id</param> 
+        /// <returns>VirtoCommerceDomainPaymentModelPostProcessPaymentResult</returns>            
+        public VirtoCommerceDomainPaymentModelPostProcessPaymentResult CommercePostProcessPayment (string orderId)
+        {
+            
+            // verify the required parameter 'orderId' is set
+            if (orderId == null) throw new ApiException(400, "Missing required parameter 'orderId' when calling CommercePostProcessPayment");
+            
+    
+            var path_ = "/api/paymentcallback";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                "application/json", "text/json"
+            };
+            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            if (orderId != null) queryParams.Add("orderId", ApiClient.ParameterToString(orderId)); // query parameter
+            
+            
+            
+            
+    
+            // authentication setting, if any
+            String[] authSettings = new String[] {  };
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+    
+            if (((int)response.StatusCode) >= 400)
+                throw new ApiException ((int)response.StatusCode, "Error calling CommercePostProcessPayment: " + response.Content, response.Content);
+            else if (((int)response.StatusCode) == 0)
+                throw new ApiException ((int)response.StatusCode, "Error calling CommercePostProcessPayment: " + response.ErrorMessage, response.ErrorMessage);
+    
+            return (VirtoCommerceDomainPaymentModelPostProcessPaymentResult) ApiClient.Deserialize(response, typeof(VirtoCommerceDomainPaymentModelPostProcessPaymentResult));
+        }
+    
+        /// <summary>
+        /// Payment callback operation used by external payment services to inform post process payment in our system 
+        /// </summary>
+        /// <param name="orderId">customer order id</param>
+        /// <returns>VirtoCommerceDomainPaymentModelPostProcessPaymentResult</returns>
+        public async System.Threading.Tasks.Task<VirtoCommerceDomainPaymentModelPostProcessPaymentResult> CommercePostProcessPaymentAsync (string orderId)
+        {
+            // verify the required parameter 'orderId' is set
+            if (orderId == null) throw new ApiException(400, "Missing required parameter 'orderId' when calling CommercePostProcessPayment");
+            
+    
+            var path_ = "/api/paymentcallback";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                "application/json", "text/json"
+            };
+            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            if (orderId != null) queryParams.Add("orderId", ApiClient.ParameterToString(orderId)); // query parameter
+            
+            
+            
+            
+    
+            // authentication setting, if any
+            String[] authSettings = new String[] {  };
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            if (((int)response.StatusCode) >= 400)
+                throw new ApiException ((int)response.StatusCode, "Error calling CommercePostProcessPayment: " + response.Content, response.Content);
+
+            return (VirtoCommerceDomainPaymentModelPostProcessPaymentResult) ApiClient.Deserialize(response, typeof(VirtoCommerceDomainPaymentModelPostProcessPaymentResult));
         }
         
         /// <summary>

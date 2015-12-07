@@ -156,6 +156,7 @@
     <Compile Include="Model\VirtoCommerceDomainMarketingModelPromotionEvaluationContext.cs" />
     <Compile Include="Model\VirtoCommerceDomainOrderModelSearchCriteria.cs" />
     <Compile Include="Model\VirtoCommerceDomainPaymentModelBankCardInfo.cs" />
+    <Compile Include="Model\VirtoCommerceDomainPaymentModelPostProcessPaymentResult.cs" />
     <Compile Include="Model\VirtoCommerceDomainPricingModelPrice.cs" />
     <Compile Include="Model\VirtoCommerceDomainPricingModelPriceEvaluationContext.cs" />
     <Compile Include="Model\VirtoCommerceDomainQuoteModelQuoteAttachment.cs" />
