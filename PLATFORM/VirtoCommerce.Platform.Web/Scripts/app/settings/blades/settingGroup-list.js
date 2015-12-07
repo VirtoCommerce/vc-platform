@@ -106,7 +106,7 @@ function ($injector, $scope, settings, bladeNavigationService) {
 
     blade.breadcrumbs = [{
         id: null,
-        name: "all",
+        name: "platform.navigation.bread-crumb-top",
         navigate: function () {
             $scope.selectNode({ groupName: null, children: settingsTree });
         }

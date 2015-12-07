@@ -90,7 +90,7 @@
         if (!blade.isNew) {
             blade.toolbarCommands = [
                 {
-                    name: "Save", icon: 'fa fa-save',
+                    name: "platform.commands.save", icon: 'fa fa-save',
                     executeMethod: function () {
                         $scope.saveChanges();
                     },
@@ -100,7 +100,7 @@
                     permission: 'catalog:update'
                 },
                 {
-                    name: "Reset", icon: 'fa fa-undo',
+                    name: "platform.commands.reset", icon: 'fa fa-undo',
                     executeMethod: function () {
                         angular.copy(blade.origEntity, blade.currentEntity);
                     },
@@ -108,35 +108,6 @@
                         return isDirty();
                     },
                     permission: 'catalog:update'
-                },
-                {
-                    name: "Delete", icon: 'fa fa-trash-o',
-                    executeMethod: function () {
-                        var dialog = {
-                            id: "confirmDelete",
-                            name: blade.origEntity.name,
-                            callback: function (remove) {
-                                if (remove) {
-                                    blade.isLoading = true;
-                                    catalogs.delete({ id: blade.currentEntityId }, function () {
-                                        $scope.cancelChanges();
-                                        if (blade.deleteFn) {
-                                            blade.deleteFn(blade.currentEntityId);
-                                        } else {
-                                            blade.parentBlade.refresh();
-                                        }
-                                    }, function (error) {
-                                        bladeNavigationService.setError('Error ' + error.status, blade);
-                                    });
-                                }
-                            }
-                        };
-                        dialogService.showDialog(dialog, 'Modules/$(VirtoCommerce.Catalog)/Scripts/dialogs/deleteCatalog-dialog.tpl.html', 'platformWebApp.confirmDialogController');
-                    },
-                    canExecuteMethod: function () {
-                        return true;
-                    },
-                    permission: 'catalog:delete'
                 }
             ];
         }

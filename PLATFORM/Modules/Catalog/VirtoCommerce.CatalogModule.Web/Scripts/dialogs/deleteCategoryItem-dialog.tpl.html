@@ -12,9 +12,9 @@
         <li ng-if="listCategoryLinkCount>0">{{'catalog.dialogs.catalog-items-delete.linked-category' | translate:{ count: listCategoryLinkCount } }}</li>
         <li ng-if="listItemLinkCount>0">{{'catalog.dialogs.catalog-items-delete.linked-item' | translate:{ count: listItemLinkCount } }} </li>
     </ul>
-    {{ 'catalog.dialogs.catalog-items-delete.instruction' | translate }}:
+    {{ 'catalog.dialogs.catalog-items-delete.instruction' | translate }}
     <div class="form-input __mini">
-        <input ng-model="enteredText" />
+        <input ng-model="enteredText" ng-keyup="$event.which === 13 && 'yes' === enteredText && yes()" />
     </div>
 </div>
 <div class="modal-footer">

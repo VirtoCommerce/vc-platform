@@ -69,7 +69,6 @@
             id: 'settingDetailChild',
             isApiSave: true,
             currentEntityId: 'Catalog.AssociationGroups',
-            title: 'catalog.blades.setting-dictionary-association.title',
             parentRefresh: function (data) { $scope.associationGroups = data; },
             controller: 'platformWebApp.settingDictionaryController',
             template: '$(Platform)/Scripts/app/settings/blades/setting-dictionary.tpl.html'

@@ -6,10 +6,8 @@
         <div class="inner-block">
             <form class="form">
                 <div class="form-group">
-                    <label class="form-label">{{ 'catalog.blades.editorialReview-detail.labels.type' | translate }}</label>
+                    <label class="form-label">{{ 'catalog.blades.editorialReview-detail.labels.type' | translate }} <a href="" ng-click="openDictionarySettingManagement()" va-permission="platform:setting:update"><i class="form-ico fa fa-pencil"></i></a></label>
                     <div class="form-input">
-                        <!-- <select ng-model="currentEntity.reviewType" ng-options="x for x in types"></select> -->
-
                         <ui-select ng-model="currentEntity.reviewType" ng-disabled="disabled">
                             <ui-select-match placeholder="{{'catalog.blades.editorialReview-detail.placeholders.type' | translate}}">{{$select.selected}}</ui-select-match>
                             <ui-select-choices repeat="x in types | filter: $select.search">
@@ -21,8 +19,6 @@
                 <div class="form-group">
                     <label class="form-label">{{ 'catalog.blades.editorialReview-detail.labels.language' | translate }}</label>
                     <div class="form-input">
-                        <!-- <select ng-model="currentEntity.languageCode" ng-options="lang.languageCode as lang.displayName for lang in blade.languages" required></select> -->
-
                         <ui-select ng-model="currentEntity.languageCode" ng-disabled="disabled">
                             <ui-select-match placeholder="{{'catalog.blades.editorialReview-detail.placeholders.language' | translate}}">{{$select.selected.displayName}}</ui-select-match>
                             <ui-select-choices repeat="lang.languageCode as lang in blade.languages | filter: {displayName: $select.search}">

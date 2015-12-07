@@ -4,7 +4,7 @@
     </a>
     <ul class="menu __inline">
         <li class="menu-item" ng-repeat-start="breadcrumb in breadcrumbs">
-            <a class="menu-link" ng-click='innerNavigate(breadcrumb)' ng-class="{'active': $last}" href="">{{breadcrumb.name}}</a>
+            <a class="menu-link" ng-click='innerNavigate(breadcrumb)' ng-class="{'active': $last}" href="">{{breadcrumb.name | translate}}</a>
         </li>
         <li class="menu-item __divider" ng-repeat-end ng-if="!$last"></li>
     </ul>

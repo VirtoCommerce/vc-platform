@@ -292,9 +292,6 @@
         "title": "Data export",
         "subtitle": "Choose data format & start export"
       },
-      "setting-dictionary-tax": {
-        "title": "Tax types"
-      },
       "images": {
         "subtitle": "Manage images",
         "labels": {
@@ -329,11 +326,9 @@
           "sorting-prompt": "Set the order how associated items appear sorted in web store. Drag and drop the products to change the order.",
           "picture": "Img",
           "product": "Product",
+          "priority": "Priority",
           "group": "Group"
         }
-      },
-      "setting-dictionary-association": {
-        "title": "Association Groups"
       },
       "seo-detail": {
         "subtitle": "Seo details",
@@ -431,10 +426,6 @@
       }
     },
     "dialogs": {
-      "nothing-selected": {
-        "title": "Message",
-        "message": "Nothing selected. Check some Categories or Items first."
-      },
       "catalog-save": {
         "title": "Save changes",
         "message": "The catalog has been modified. Do you want to save changes?"
@@ -607,7 +598,11 @@
           "upload": "Upload Csv file",
           "upload-progress": "Upload progress",
           "map-columns": "Map columns",
-          "define-columns": "Define column mapping"
+          "define-columns": "Define column mapping",
+          "space": "Space",
+          "comma": "Comma",
+          "semicolon": "Semicolon",
+          "tab": "Tab"
         },
         "placeholders": {
           "delimiter": "Select ...",
@@ -625,7 +620,8 @@
       "start-import": "Start import",
       "clear-all": "Clear all",
       "add-property": "Add property",
-      "gallery": "Gallery"
+      "gallery": "Gallery",
+      "map": "Map"
     },
     "permissions": {
       "catalog-scope": {
