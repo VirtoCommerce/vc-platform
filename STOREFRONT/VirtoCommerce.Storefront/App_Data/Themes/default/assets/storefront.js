@@ -209,7 +209,7 @@ app.controller('checkoutController', ['$scope', '$location', '$sce', 'cartServic
         setBillingAddressEqualsShipping();
     }
 
-    $scope.detectBankCardType = function getBankCardType(bankCardNumber) {
+    $scope.validateBankCardNumber = function (bankCardNumber) {
         var type = 'Unknown';
 
         var firstOneSymbol = bankCardNumber.substring(0, 1);

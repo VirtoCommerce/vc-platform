@@ -247,7 +247,7 @@
                                     <div class="field field--required" ng-class="{ 'field--show-floating-label': checkout.bankCardInfo.BankCardNumber.length, 'field--error': formPaymentMethod.CardNumber.$dirty && formPaymentMethod.CardNumber.$error.required }">
                                         <div class="field__input-wrapper">
                                             <label class="field__label" for="">{{ 'checkout.payment_method.card_number' | t }}</label>
-                                            <input class="field__input" id="CardNumber" name="CardNumber" placeholder="{{ 'checkout.payment_method.card_number' | t }}" required="required" size="30" type="text" ng-model="checkout.bankCardInfo.BankCardNumber" ng-change="detectBankCardType(checkout.bankCardInfo.BankCardNumber)" />
+                                            <input class="field__input" id="CardNumber" name="CardNumber" placeholder="{{ 'checkout.payment_method.card_number' | t }}" required="required" size="30" type="text" ng-model="checkout.bankCardInfo.BankCardNumber" ng-change="validateBankCardNumber(checkout.bankCardInfo.BankCardNumber)" />
                                             <span class="field__icon icon icon--lock">
                                                 <span class="visually-hidden">{{ 'checkout.secure_field' | t }}</span>
                                             </span>
