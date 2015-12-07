@@ -5182,6 +5182,11 @@ tags-input .tags .tag-item .remove-button
     position: static;
 }
 
+.ui-grid-scrollbar-placeholder
+{
+    height: 0 !important;
+}
+
 .ui-grid-row-header-cell > :first-child
 {
     height: 100%;
