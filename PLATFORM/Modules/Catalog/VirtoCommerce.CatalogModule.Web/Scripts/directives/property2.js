@@ -41,6 +41,9 @@
                         } else {
                             scope.currentEntity.values = newValue;
                         }
+                    	//reset inherited status to force property value override
+                        _.each(scope.currentEntity.values, function (x) { x.isInherited = false; });
+
                         ngModelController.$setViewValue(scope.currentEntity);
                     }
                 }

@@ -153,9 +153,11 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                 if (product.CatalogId != moveInfo.Catalog)
                 {
                     product.CatalogId = moveInfo.Catalog ?? String.Empty;
+                    product.CategoryId = null;
                     foreach (var variation in product.Variations)
                     {
                         variation.CatalogId = moveInfo.Catalog ?? String.Empty;
+                        variation.CategoryId = null;
                     }
                     
                 }

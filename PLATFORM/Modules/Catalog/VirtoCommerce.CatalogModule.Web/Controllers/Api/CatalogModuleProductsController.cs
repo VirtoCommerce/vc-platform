@@ -156,16 +156,11 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 
             foreach (var property in newVariation.Properties)
             {
-                //Need reset value ids
-                foreach (var val in property.Values.ToArray())
-                {
-                    val.Id = null;
-                }
-
-                // Mark variation property as required
+               // Mark variation property as required
                 if (property.Type == coreModel.PropertyType.Variation)
                 {
                     property.Required = true;
+                    property.Values.Clear();
                 }
 
                 property.IsManageable = true;

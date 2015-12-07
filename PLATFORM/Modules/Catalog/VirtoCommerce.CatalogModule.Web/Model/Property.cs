@@ -166,6 +166,9 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         /// </value>
 		public ICollection<PropertyDisplayName> DisplayNames { get; set; }
 
-		
+        /// <summary>
+        /// System flag used to mark that object was inherited from other
+        /// </summary>
+        public bool IsInherited { get; set; }
     }
 }

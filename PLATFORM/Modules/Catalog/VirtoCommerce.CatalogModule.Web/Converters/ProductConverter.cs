@@ -135,12 +135,15 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
                 retVal.PropertyValues = new List<moduleModel.PropertyValue>();
                 foreach (var property in product.Properties)
                 {
-                    foreach (var propValue in property.Values)
+                    if (property.Values != null)
                     {
-                        //Need populate required fields
-                        propValue.PropertyName = property.Name;
-                        propValue.ValueType = property.ValueType;
-                        retVal.PropertyValues.Add(propValue.ToModuleModel());
+                        foreach (var propValue in property.Values)
+                        {
+                            //Need populate required fields
+                            propValue.PropertyName = property.Name;
+                            propValue.ValueType = property.ValueType;
+                            retVal.PropertyValues.Add(propValue.ToModuleModel());
+                        }
                     }
                 }
             }

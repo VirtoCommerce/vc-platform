@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using VirtoCommerce.Domain.Commerce.Model;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Domain.Catalog.Model
 {
-	public class Property : AuditableEntity
-	{
+	public class Property : AuditableEntity, IInheritable, ICloneable
+    {
 		public string CatalogId { get; set; }
 		public Catalog Catalog { get; set; }
 		public string CategoryId { get; set; }
@@ -32,5 +33,42 @@ namespace VirtoCommerce.Domain.Catalog.Model
         {
             return String.Equals(Name, propValue.PropertyName, StringComparison.InvariantCultureIgnoreCase) && ValueType == propValue.ValueType;
         }
+
+        #region IInheritable Members
+        public bool IsInherited { get; set; }
+        #endregion
+
+            #region ICloneable members
+        public object Clone()
+        {
+            var retVal = new Property();
+            retVal.Id = Id;
+            retVal.CreatedBy = CreatedBy;
+            retVal.CreatedDate = CreatedDate;
+            retVal.ModifiedBy = ModifiedBy;
+            retVal.ModifiedDate = ModifiedDate;
+
+            retVal.CatalogId = CatalogId;
+            retVal.Catalog = Catalog;
+            retVal.CategoryId = CategoryId;
+            retVal.Category = Category;
+            retVal.Name = Name;
+            retVal.Required = Required;
+            retVal.Dictionary = Dictionary;
+            retVal.Multivalue = Multivalue;
+            retVal.Multilanguage = Multilanguage;
+            retVal.ValueType = ValueType;
+
+            retVal.Type = Type;
+            retVal.ValueType = ValueType;
+            retVal.Attributes = Attributes;
+            retVal.DictionaryValues = DictionaryValues;
+            retVal.DisplayNames = DisplayNames;
+
+            retVal.IsInherited = IsInherited;
+
+            return retVal;
+        }
+        #endregion
     }
 }

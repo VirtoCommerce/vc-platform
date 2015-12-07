@@ -135,13 +135,6 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 					var item = items.FirstOrDefault(x => x.Id == dbItem.Id);
 					if (item != null)
 					{
-						//Need skip inherited properties without overridden value
-						if (dbItem.ParentId != null && item.PropertyValues != null)
-						{
-							var dbParentItem = repository.GetItemByIds(new[] { dbItem.ParentId }, coreModel.ItemResponseGroup.ItemProperties).First();
-							item.MainProduct = dbParentItem.ToCoreModel();
-						}
-
 						changeTracker.Attach(dbItem);
 
 						item.Patch(dbItem);

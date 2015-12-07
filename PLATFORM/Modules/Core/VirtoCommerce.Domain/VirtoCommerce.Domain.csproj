@@ -75,6 +75,7 @@
     <Compile Include="Catalog\Model\PropertyDisplayName.cs" />
     <Compile Include="Commerce\Model\Address.cs" />
     <Compile Include="Commerce\Model\AddressType.cs" />
+    <Compile Include="Commerce\Model\IInheritable.cs" />
     <Compile Include="Commerce\Model\ILanguageSupport.cs" />
     <Compile Include="Catalog\Model\ILinkSupport.cs" />
     <Compile Include="Commerce\Model\ISeoSupport.cs" />
