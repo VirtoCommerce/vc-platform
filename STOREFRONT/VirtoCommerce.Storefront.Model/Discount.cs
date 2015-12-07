@@ -18,5 +18,10 @@ namespace VirtoCommerce.Storefront.Model
         /// Gets or sets the value of discount description
         /// </summary>
         public string Description { get; set; }
+
+        /// <summary>
+        /// Gets or sets the discount type
+        /// </summary>
+        public PromotionRewardType Type { get; set; }
     }
 }

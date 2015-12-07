@@ -61,55 +61,55 @@ namespace VirtoCommerce.Storefront.Converters
             return webModel;
         }
 
-        public static VirtoCommerceCartModuleWebModelShoppingCart ToServiceModel(this ShoppingCart cart)
+        public static VirtoCommerceCartModuleWebModelShoppingCart ToServiceModel(this ShoppingCart webModel)
         {
-            var cartServiceModel = new VirtoCommerceCartModuleWebModelShoppingCart();
+            var serviceModel = new VirtoCommerceCartModuleWebModelShoppingCart();
 
-            cartServiceModel.InjectFrom(cart);
-            cartServiceModel.Currency = cart.Currency.CurrencyCode.ToString();
-            cartServiceModel.DiscountTotal = (double)cart.DiscountTotal.Amount;
-            cartServiceModel.HandlingTotal = (double)(cart.HandlingTotal != null ? cart.HandlingTotal.Amount : 0);
-            cartServiceModel.ShippingTotal = (double)cart.ShippingTotal.Amount;
-            cartServiceModel.SubTotal = (double)cart.SubTotal.Amount;
-            cartServiceModel.TaxTotal = (double)cart.TaxTotal.Amount;
-            cartServiceModel.Total = (double)cart.Total.Amount;
+            serviceModel.InjectFrom(webModel);
+            serviceModel.Currency = webModel.Currency.CurrencyCode.ToString();
+            serviceModel.DiscountTotal = (double)webModel.DiscountTotal.Amount;
+            serviceModel.HandlingTotal = (double)(webModel.HandlingTotal != null ? webModel.HandlingTotal.Amount : 0);
+            serviceModel.ShippingTotal = (double)webModel.ShippingTotal.Amount;
+            serviceModel.SubTotal = (double)webModel.SubTotal.Amount;
+            serviceModel.TaxTotal = (double)webModel.TaxTotal.Amount;
+            serviceModel.Total = (double)webModel.Total.Amount;
 
-            if (cart.Coupon != null && cart.Coupon.AppliedSuccessfully)
+            if (webModel.Coupon != null && webModel.Coupon.AppliedSuccessfully)
             {
-                cartServiceModel.Coupon = cart.Coupon.Code;
+                serviceModel.Coupon = webModel.Coupon.Code;
             }
 
-            if (cart.Addresses != null)
+            if (webModel.Addresses != null)
             {
-                cartServiceModel.Addresses = cart.Addresses.Select(a => a.ToServiceModel()).ToList();
+                serviceModel.Addresses = webModel.Addresses.Select(a => a.ToServiceModel()).ToList();
             }
 
-            if (cart.Discounts != null)
+            if (webModel.Discounts != null)
             {
-                cartServiceModel.Discounts = cart.Discounts.Select(d => d.ToServiceModel()).ToList();
+                serviceModel.Discounts = webModel.Discounts.Select(d => d.ToServiceModel()).ToList();
             }
 
-            if (cart.Items != null)
+            if (webModel.Items != null)
             {
-                cartServiceModel.Items = cart.Items.Select(i => i.ToServiceModel()).ToList();
+                serviceModel.Items = webModel.Items.Select(i => i.ToServiceModel()).ToList();
             }
 
-            if (cart.Payments != null)
+            if (webModel.Payments != null)
             {
-                cartServiceModel.Payments = cart.Payments.Select(i => i.ToServiceModel()).ToList();
+                serviceModel.Payments = webModel.Payments.Select(i => i.ToServiceModel()).ToList();
             }
 
-            if (cart.Shipments != null)
+            if (webModel.Shipments != null)
             {
-                cartServiceModel.Shipments = cart.Shipments.Select(s => s.ToServiceModel()).ToList();
+                serviceModel.Shipments = webModel.Shipments.Select(s => s.ToServiceModel()).ToList();
             }
 
-            if (cart.TaxDetails != null)
+            if (webModel.TaxDetails != null)
             {
-                cartServiceModel.TaxDetails = cart.TaxDetails.Select(td => td.ToServiceModel()).ToList();
+                serviceModel.TaxDetails = webModel.TaxDetails.Select(td => td.ToServiceModel()).ToList();
             }
 
-            return cartServiceModel;
+            return serviceModel;
         }
     }
 }

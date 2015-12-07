@@ -20,17 +20,17 @@ namespace MeS.PaymentGatewaysModule.Web
 
         public override void Initialize()
         {
-			//var settings = _container.Resolve<ISettingsManager>().GetModuleSettings("MeS.PaymentGateway");
+            var settings = _container.Resolve<ISettingsManager>().GetModuleSettings("MeS.PaymentGateway");
 
-			//Func<MesPaymentMethod> meSPaymentMethodFactory = () => new MesPaymentMethod
-			//{
-			//	Name = "Merchant e-solutions payment gateway",
-			//	Description = "Merchant e-solutions payment gateway integration",
-			//	LogoUrl = "http://www.ebs-next.com/images/partners/partners-merchsolutions.jpg",
-			//	Settings = settings
-			//};
+            Func<MesPaymentMethod> meSPaymentMethodFactory = () => new MesPaymentMethod
+            {
+                Name = "Merchant e-solutions payment gateway",
+                Description = "Merchant e-solutions payment gateway integration",
+                LogoUrl = "http://www.ebs-next.com/images/partners/partners-merchsolutions.jpg",
+                Settings = settings
+            };
 
-			//_container.Resolve<IPaymentMethodsService>().RegisterPaymentMethod(meSPaymentMethodFactory);
+            _container.Resolve<IPaymentMethodsService>().RegisterPaymentMethod(meSPaymentMethodFactory);
         }
 
         #endregion

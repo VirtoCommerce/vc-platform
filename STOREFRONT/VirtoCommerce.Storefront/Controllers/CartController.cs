@@ -19,9 +19,10 @@ namespace VirtoCommerce.Storefront.Controllers
         private readonly IShoppingCartModuleApi _cartApi;
         private readonly IOrderModuleApi _orderApi;
         private readonly IMarketingModuleApi _marketingApi;
+        private readonly ICommerceCoreModuleApi _commerceApi;
 
         public CartController(WorkContext workContext, IShoppingCartModuleApi cartApi, IOrderModuleApi orderApi, IStorefrontUrlBuilder urlBuilder,
-                              ICartBuilder cartBuilder, ICatalogSearchService catalogService, IMarketingModuleApi marketingApi)
+                              ICartBuilder cartBuilder, ICatalogSearchService catalogService, IMarketingModuleApi marketingApi, ICommerceCoreModuleApi commerceApi)
             : base(workContext, urlBuilder)
         {
             _cartBuilder = cartBuilder;
@@ -29,6 +30,7 @@ namespace VirtoCommerce.Storefront.Controllers
             _cartApi = cartApi;
             _orderApi = orderApi;
             _marketingApi = marketingApi;
+            _commerceApi = commerceApi;
         }
 
         // GET: /cart
@@ -217,16 +219,26 @@ namespace VirtoCommerce.Storefront.Controllers
             return Json(order.ToWebModel(), JsonRequestBehavior.AllowGet);
         }
 
-        // POST: /cart/process_payment?orderId=...&paymentId=...
+        // POST: /cart/process_payment?orderId=...&paymentId=...&bankCardInfo=...
         [HttpPost]
         [Route("process_payment")]
-        public async Task<ActionResult> ProcessPaymentJson(string orderId, string paymentId)
+        public async Task<ActionResult> ProcessPaymentJson(string orderId, string paymentId, BankCardInfo bankCardInfo)
         {
-            var bankCardInfo = new Client.Model.VirtoCommerceDomainPaymentModelBankCardInfo();
+            var cardInfo = new BankCardInfo();
 
-            var processingResult = await _orderApi.OrderModuleProcessOrderPaymentsAsync(bankCardInfo, orderId, paymentId);
+            var processingResult = await _orderApi.OrderModuleProcessOrderPaymentsAsync(cardInfo.ToServiceModel(), orderId, paymentId);
 
             return Json(processingResult, JsonRequestBehavior.AllowGet);
+        }
+
+        // GET: /cart/checkout/external-payment-callback
+        [HttpGet]
+        [Route("checkout/external-payment-callback")]
+        public ActionResult ExternalPaymentCallback()
+        {
+            // TODO: Process callback from external payment gateway
+
+            return StoreFrontRedirect("~/cart/checkout/thanks");
         }
 
         // GET: /cart/checkout/thanks?id=...

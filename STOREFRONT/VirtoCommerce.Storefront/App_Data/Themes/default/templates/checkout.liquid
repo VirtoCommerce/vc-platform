@@ -87,7 +87,7 @@
                             <div class="field field--required field--show-floating-label" ng-class="{ 'field--three-eights': checkout.shippingAddress.CountryName && checkout.countryRegions, 'field--half': !checkout.countryRegions || !checkout.shippingAddress.CountryName }">
                                 <div class="field__input-wrapper field__input-wrapper--select">
                                     <label class="field__label" for="CountryName">{{ 'checkout.address.country' | t }}</label>
-                                    <select class="field__input field__input--select" id="CountryName" name="CountryName" required="required" size="1" ng-model="checkout.shippingAddress.CountryName" ng-change="setCountry(checkout.shippingAddress.Type, checkout.shippingAddress.CountryName)">
+                                    <select class="field__input field__input--select" id="CountryName" name="CountryName" required="required" size="1" ng-model="checkout.shippingAddress.CountryName" ng-change="setCountry('Shipping', checkout.shippingAddress.CountryName)">
                                         <option disabled="disabled" value="">Select country</option>
                                         <option ng-repeat="country in checkout.countries" ng-value="country.Name" ng-bind="country.Name" ng-selected="country.Name == checkout.shippingAddress.CountryName"></option>
                                     </select>
@@ -100,7 +100,7 @@
                             <div class="field field--required field--show-floating-label field--three-eights" ng-if="checkout.countryRegions && checkout.shippingAddress.CountryName">
                                 <div class="field__input-wrapper field__input-wrapper--select">
                                     <label class="field__label" for="RegionName">{{ 'checkout.address.province' | t }}</label>
-                                    <select class="field__input field__input--select" id="RegionName" name="RegionName" placeholder="{{ 'checkout.address.province' | t }}" required="required" ng-model="checkout.shippingAddress.RegionName" ng-change="setCountryRegion(checkout.shippingAddress.Type, checkout.shippingAddress.RegionName)">
+                                    <select class="field__input field__input--select" id="RegionName" name="RegionName" placeholder="{{ 'checkout.address.province' | t }}" required="required" ng-model="checkout.shippingAddress.RegionName" ng-change="setCountryRegion('Shipping', checkout.shippingAddress.RegionName)">
                                         <option disabled="disabled" value="">Selecet region</option>
                                         <option ng-repeat="region in checkout.countryRegions" ng-value="region.Name" ng-bind="region.Name" ng-selected="region.Name == checkout.shippingAddress.RegionName"></option>
                                     </select>
@@ -157,8 +157,9 @@
                         <p>
                             <span ng-bind="checkout.shippingAddress.FirstName"></span> <span ng-bind="checkout.shippingAddress.LastName"></span><br />
                             <span ng-bind="checkout.shippingAddress.Line1"></span><span ng-if="checkout.shippingAddress.Line2" ng-bind="', ' + checkout.shippingAddress.Line2"></span><br />
-                            <span ng-bind="checkout.shippingAddress.City"></span><span ng-if="checkout.shippingAddress.RegionName" ng-bind="', ' + checkout.shippingAddress.RegionName + ' (' + checkout.shippingAddress.RegionId + ')'"></span>, <span ng-bind="checkout.shippingAddress.PostalCode"></span><br />
-                            <span ng-bind="checkout.shippingAddress.CountryName"></span>
+                            <span ng-bind="checkout.shippingAddress.City"></span><span ng-if="checkout.shippingAddress.RegionName" ng-bind="', ' + checkout.shippingAddress.RegionName"></span>, <span ng-bind="checkout.shippingAddress.PostalCode"></span><br />
+                            <span ng-bind="checkout.shippingAddress.CountryName"></span><br ng-if="checkout.shippingAddress.Phone" />
+                            <span ng-if="checkout.shippingAddress.Phone" ng-bind="checkout.shippingAddress.Phone"></span>
                             <a class="edit-link edit-link--small" href="{{ 'cart/checkout/#/customer-information' | absolute_url }}">{{ 'checkout.edit_shipping_address' | t }}</a>
                         </p>
                     </div>
@@ -215,34 +216,40 @@
                         <p class="section__text">{{ 'checkout.payment_method.subtitle' | t }}</p>
                     </div>
                     <div class="section__content">
-                        <div class="content-box">
-                            <div class="radio-wrapper content-box__row" ng-repeat="availablePaymentMethod in checkout.availablePaymentMethods">
+                        <div class="content-box" ng-repeat="availablePaymentMethod in checkout.availablePaymentMethods">
+                            <div class="radio-wrapper content-box__row">
                                 <div class="radio__input">
                                     <input class="input-radio" id="{( availablePaymentMethod.GatewayCode )}" name="PaymentMethodCode" ng-required="!checkout.selectedPaymentMethod.GatewayCode" type="radio" ng-model="checkout.selectedPaymentMethod.GatewayCode" ng-value="availablePaymentMethod.GatewayCode" />
                                 </div>
                                 <label class="radio__label content-box__emphasis" for="{( availablePaymentMethod.GatewayCode )}" ng-bind="availablePaymentMethod.Name"></label>
-                                <!--<div class="radio__accessory">
-                                    <div class="payment-icon payment-icon--bogus">
-                                        <span class="visually-hidden">Bogus</span>
+                                <div class="radio__accessory">
+                                    <div class="payment-icon" ng-class="{ 'payment-icon--preparedform': availablePaymentMethod.Type == 'PreparedForm', 'payment-icon--standard': availablePaymentMethod.Type == 'Standard', 'payment-icon--unknown': availablePaymentMethod.Type == 'Unknown', 'payment-icon--redirection': availablePaymentMethod.Type == 'Redirection' }">
+                                        <span class="visually-hidden" ng-bind="availablePaymentMethod.Name"></span>
                                     </div>
-                                </div>-->
+                                </div>
                             </div>
-                            <!--<div class="radio-wrapper content-box__row content-box__row--secondary">
+                            <div class="radio-wrapper content-box__row content-box__row--secondary" ng-if="availablePaymentMethod.Type == 'Standard' && availablePaymentMethod.GatewayCode == checkout.selectedPaymentMethod.GatewayCode">
                                 <div class="fieldset " dir="ltr">
-                                    <div class="field field--required">
+                                    <div class="field field--required" ng-class="{ 'field--show-floating-label': checkout.bankCardInfo.BankCardNumber.length, 'field--error': formPaymentMethod.CardNumber.$dirty && formPaymentMethod.CardNumber.$error.required }">
                                         <div class="field__input-wrapper">
                                             <label class="field__label" for="">{{ 'checkout.payment_method.card_number' | t }}</label>
-                                            <input class="field__input" id="" name="" placeholder="{{ 'checkout.payment_method.card_number' | t }}" size="30" type="tel" value="" />
+                                            <input class="field__input" id="CardNumber" name="CardNumber" placeholder="{{ 'checkout.payment_method.card_number' | t }}" required="required" size="30" type="text" ng-model="checkout.bankCardInfo.BankCardNumber" />
                                             <span class="field__icon icon icon--lock">
                                                 <span class="visually-hidden">{{ 'checkout.secure_field' | t }}</span>
                                             </span>
                                         </div>
+                                        <p class="field__message field__message--error" ng-if="formPaymentMethod.CardNumber.$dirty && formPaymentMethod.CardNumber.$error.required">
+                                            Please enter number of your bank card
+                                        </p>
                                     </div>
-                                    <div class="field--half field field--required">
+                                    <div class="field--half field field--required" ng-class="{ 'field--show-floating-label': checkout.bankCardInfo.CardholderName.length, 'field--error': formPaymentMethod.CardholderName.$dirty && formPaymentMethod.CardholderName.$error.required }">
                                         <div class="field__input-wrapper">
-                                            <label class="field__label" for="">{{ 'checkout.payment_method.cardholder_name' | t }}</label>
-                                            <input class="field__input" id="" name="" placeholder="{{ 'checkout.payment_method.cardholder_name' | t }}" size="30" type="text" />
+                                            <label class="field__label" for="CardholderName">{{ 'checkout.payment_method.cardholder_name' | t }}</label>
+                                            <input class="field__input" id="CardholderName" name="CardholderName" placeholder="{{ 'checkout.payment_method.cardholder_name' | t }}" required="required" size="30" type="text" ng-model="checkout.bankCardInfo.CardholderName" ng-change="capitalizeString(checkout.bankCardInfo.CardholderName)" />
                                         </div>
+                                        <p class="field__message field__message--error" ng-if="formPaymentMethod.CardholderName.$dirty && formPaymentMethod.CardholderName.$error.required">
+                                            Please enter cardholder name (same as on your bank card)
+                                        </p>
                                     </div>
                                     <div class="field field--required visually-hidden">
                                         <div class="field__input-wrapper field__input-wrapper--select">
@@ -284,7 +291,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>-->
+                            </div>
                         </div>
                         <div class="hidden">
                             <div class="content-box blank-slate">
@@ -376,7 +383,7 @@
                                     <div class="field field--required field--show-floating-label" ng-class="{ 'field--three-eights': checkout.billingAddress.CountryName && checkout.countryRegions, 'field--half': !checkout.countryRegions || !checkout.billingAddress.CountryName }">
                                         <div class="field__input-wrapper field__input-wrapper--select">
                                             <label class="field__label" for="CountryName">{{ 'checkout.address.country' | t }}</label>
-                                            <select class="field__input field__input--select" id="CountryName" name="CountryName" placeholder="{{ 'checkout.address.country' | t }}" required="required" size="1" ng-model="checkout.billingAddress.CountryName", ng-change="setCountry(checkout.billingAddress.Type, checkout.billingAddress.CountryName)">
+                                            <select class="field__input field__input--select" id="CountryName" name="CountryName" placeholder="{{ 'checkout.address.country' | t }}" required="required" size="1" ng-model="checkout.billingAddress.CountryName", ng-change="setCountry('Billing', checkout.billingAddress.CountryName)">
                                                 <option disabled="disabled" value="">Select country</option>
                                                 <option ng-repeat="country in checkout.countries" ng-value="country.Name" ng-bind="country.Name" ng-selected="country.Name == checkout.billingAddress.CountryName"></option>
                                             </select>
@@ -389,14 +396,14 @@
                                     <div class="field field--required field--three-eights field--show-floating-label" ng-if="checkout.countryRegions && checkout.billingAddress.CountryName">
                                         <div class="field__input-wrapper field__input-wrapper--select">
                                             <label class="field__label" for="RegionName">{{ 'checkout.address.province' | t }}</label>
-                                            <select class="field__input field__input--select" id="RegionName" name="RegionName" placeholder="{{ 'checkout.address.province' | t }}" required="required" ng-model="checkout.billingAddress.RegionName" ng-change="setCountryRegion(checkout.billingAddress.Type, checkout.billingAddress.RegionName)">
+                                            <select class="field__input field__input--select" id="RegionName" name="RegionName" placeholder="{{ 'checkout.address.province' | t }}" required="required" ng-model="checkout.billingAddress.RegionName" ng-change="setCountryRegion('Billing', checkout.billingAddress.RegionName)">
                                                 <option disabled="disabled" value="">Select region</option>
                                                 <option ng-repeat="region in checkout.countryRegions" ng-value="region.Name" ng-bind="region.Name" ng-selected="region.Name == checkout.billingAddress.RegionName"></option>
                                             </select>
                                             <input id="RegionId" name="RegionId" type="hidden" ng-value="checkout.billingAddress.RegionId" ng-model="checkout.billingAddress.RegionId" ng-init="checkout.billingAddress.RegionId" />
                                         </div>
                                     </div>
-                                    <div class="field field--required field--quarter" ng-class="{ 'field--half': !checkout.countryRegions || !checkout.billingAddress.CountryName, 'field--quarter': checkout.countryRegions && checkout.billingAddress.CountryName, 'field--show-floating-label': checkout.billingAddress.PostalCode.length, 'field--error': formPaymentMethod.PostalCode.$dirty && formPaymentMethod.PostalCode.$error.required }">
+                                    <div class="field field--required" ng-class="{ 'field--half': !checkout.countryRegions || !checkout.billingAddress.CountryName, 'field--quarter': checkout.countryRegions && checkout.billingAddress.CountryName, 'field--show-floating-label': checkout.billingAddress.PostalCode.length, 'field--error': formPaymentMethod.PostalCode.$dirty && formPaymentMethod.PostalCode.$error.required }">
                                         <div class="field__input-wrapper">
                                             <label class="field__label" for="PostalCode">{{ 'checkout.address.zip' | t }}</label>
                                             <input class="field__input" id="PostalCode" name="PostalCode" placeholder="{{ 'checkout.address.zip' | t }}" required="required" size="30" type="text" ng-model="checkout.billingAddress.PostalCode" />
@@ -405,7 +412,7 @@
                                             Please enter your zip / postal code
                                         </p>
                                     </div>
-                                    <div class="field field--optional" ng-class="{ 'field--show-floating-label': billingAddress.Phone.length }">
+                                    <div class="field field--optional" ng-class="{ 'field--show-floating-label': checkout.billingAddress.Phone.length }">
                                         <div class="field__input-wrapper">
                                             <label class="field__label" for="Phone">{{ 'checkout.address.phone' | t }} {{ 'checkout.optional_field_sign' | t }}</label>
                                             <input class="field__input" id="Phone" name="Phone" placeholder="{{ 'checkout.address.phone' | t }} {{ 'checkout.optional_field_sign' | t }}" size="30" type="text" ng-model="checkout.billingAddress.Phone" />
@@ -428,7 +435,7 @@
                 </div>-->
             </div>
             <div class="step__footer">
-                <button class="step__footer__continue-btn btn" name="button" type="button" ng-class="{ 'btn--disabled': formPaymentMethod.$invalid, 'btn--loading': orderProcessing }" ng-click="completeOrder(selectedPaymentMethod.GatewayCode)" ng-disabled="formPaymentMethod.$invalid">
+                <button class="step__footer__continue-btn btn" name="button" type="button" ng-class="{ 'btn--disabled': formPaymentMethod.$invalid, 'btn--loading': checkout.orderProcessing }" ng-click="completeOrder(checkout.selectedPaymentMethod.GatewayCode)" ng-disabled="formPaymentMethod.$invalid">
                     <span class="btn__content">{{ 'checkout.payment_method.continue_text' | t }}</span>
                     <i class="btn__spinner icon icon--button-spinner"></i>
                 </button>
@@ -441,4 +448,8 @@
             </div>
         </form>
     </div>
+</script>
+
+<script id="storefront.checkout.paymentForm.tpl" type="text/ng-template">
+    <span ng-bind-html="checkout.paymentFormHtml"></span>
 </script>
