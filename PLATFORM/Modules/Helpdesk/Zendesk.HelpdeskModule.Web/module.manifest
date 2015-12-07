@@ -44,23 +44,13 @@
                 <title>Your Zendesk subdomain name</title>
                 <description>Subdomain name of your Zendesk helpdesk. It should be like 'https://{subdomain}.zendesk.com'</description>
             </setting>
-        </group>
-        <group name="Helpdesk|Zendesk|Zendesk Description">
-            <setting>
-                <name>Zendesk.Helpdesk.Description</name>
-                <valueType>string</valueType>
-                <defaultValue>Zendesk public site description</defaultValue>
-                <title>Description</title>
-                <description>Description of zendesk for public site</description>
-            </setting>
-            <setting>
-                <name>Zendesk.Helpdesk.LogoUrl</name>
-                <valueType>string</valueType>
-                <defaultValue>https://d16cvnquvjw7pr.cloudfront.net/www/img/p-brand/downloads/Logo/Zendesk_logo_on_green_RGB.png</defaultValue>
-                <title>Logo url</title>
-                <description>Zendesk logo url</description>
-            </setting>
-        </group>
+			<setting>
+				<name>Zendesk.Helpdesk.Credentials.Email</name>
+				<valueType>string</valueType>
+				<title>Your Zendesk customer email</title>
+				<description>Zendesk registration email</description>
+			</setting>
+        </group>        
     </settings>
     <permissions>
         <group name="Helpdesk">

@@ -5,8 +5,6 @@ namespace Zendesk.HelpdeskModule.Web.Services
     {
         string AccessToken { get; set; }
         string Subdomain { get; }
-        string Code { get; }
-        string Description { get; }
-        string LogoUrl { get; }
+        string CustomerEmail { get; }
     }
 }
