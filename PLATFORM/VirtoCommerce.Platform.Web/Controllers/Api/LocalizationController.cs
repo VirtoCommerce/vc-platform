@@ -5,7 +5,6 @@ using System.Web.Hosting;
 using System.Web.Http;
 using VirtoCommerce.Platform.Core.Modularity;
 using WebGrease.Extensions;
-using System;
 using System.Collections.Generic;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
@@ -19,11 +18,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             _manifestProvider = manifestProvider;
         }
-
         /// <summary>
-        /// Return all localization files by given locale
+        /// Return localization resource
         /// </summary>
-        /// <returns>json</returns>
+        /// <param name="lang">Language of localization resource (en by default)</param>
+        /// <returns></returns>
         [System.Web.Http.HttpGet]
         [System.Web.Http.Route("")]
         [AllowAnonymous]
@@ -39,6 +38,22 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 result.Merge(part, new JsonMergeSettings { MergeArrayHandling = MergeArrayHandling.Merge });
             }
             return result;
+        }
+
+        /// <summary>
+        /// Return available locales
+        /// </summary>
+        /// <returns></returns>
+        [System.Web.Http.HttpGet]
+        [System.Web.Http.Route("locales")]
+        public string[] GetLocales()
+        {
+            var files = GetAllLocalizationFiles("*.json");
+            var locales = files
+                .Select(x=>Path.GetFileName(x))
+                .Select(x => x.Substring(0, x.IndexOf('.'))).Distinct().ToArray();
+
+            return locales;
         }
 
         private string[] GetAllLocalizationFiles(string searchPattern) {
@@ -73,22 +88,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return Directory.Exists(sourceDirectoryPath)
                 ? Directory.EnumerateFiles(sourceDirectoryPath, searchPattern, SearchOption.AllDirectories).ToArray()
                 : new string[0];
-        }
-
-        /// <summary>
-        /// Return all aviable locales
-        /// </summary>
-        /// <returns>json</returns>
-        [System.Web.Http.HttpGet]
-        [System.Web.Http.Route("locales")]
-        public string[] GetLocales()
-        {
-            var files = GetAllLocalizationFiles("*.json");
-            var locales = files
-                .Select(x=>Path.GetFileName(x))
-                .Select(x => x.Substring(0, x.IndexOf('.'))).Distinct().ToArray();
-
-            return locales;
         }
 
     }
