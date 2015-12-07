@@ -265,7 +265,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
         {
             get
             {
-                return Items.Sum(i => i.Quantity) * Items.Count;
+                return Items.Sum(i => i.Quantity);
             }
         }
 
