@@ -141,7 +141,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
             {
                 decimal total = SubTotal.Amount + ShippingTotal.Amount + TaxTotal.Amount - DiscountTotal.Amount;
 
-                return new Money(total, Currency.Code);
+                return new Money(total >= 0 ? total : 0, Currency.Code);
             }
         }
 
