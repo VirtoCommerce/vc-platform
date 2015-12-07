@@ -58,15 +58,12 @@
 </script>
 <script type="text/ng-template" id="item-list-name.cell.html">
     <div class="ui-grid-cell-contents">
-        <div class="product-img">
-            <div class="image" style="background-image: url('{{row.entity.imageUrl}}')" ng-if="row.entity.type!=='category' && row.entity.imageUrl"></div>
-            <i class="table-ico fa" ng-class="row.entity.type == 'category' ? 'fa-folder' : 'fa-image'" ng-if="!row.entity.imageUrl"></i>
+        <div class="inner-contents">
             <i class="table-ico fa fa-link" ng-if="grid.appScope.hasLinks(row.entity)" title="This category is linked"></i>
+            <div class="table-t">{{COL_FIELD}}</div>
+            <span class="table-status" ng-if="row.entity.type==='category' && !row.entity.isActive">Inactive</span>
+            <div class="table-descr" ng-if="row.entity.productType">{{row.entity.productType}}</div>
         </div>
-        <div class="table-t">{{COL_FIELD}}</div>
-        <span class="table-status" ng-if="row.entity.type==='category' && !row.entity.isActive">Inactive</span>
-        <div class="table-descr" ng-if="row.entity.productType">{{row.entity.productType}}</div>
-    </div>
     </div>
 </script>
 
