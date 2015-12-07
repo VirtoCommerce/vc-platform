@@ -124,7 +124,7 @@ app.controller('checkoutController', ['$scope', '$location', '$sce', 'cartServic
         shippingMethodProcessing: false,
         availablePaymentMethods: [],
         selectedPaymentMethod: {},
-        bankCardInfo: { Type: 'Unknown', MinNumberLength: 12, MaxNumberLength: 19, CvvLength: 3 },
+        bankCardInfo: { Type: 'Unknown', ExpirationDate: null, BankCardMonth: null, BankCardYear: null },
         billingAddressEqualsShipping: true,
         orderProcessing: false,
         paymentFormHtml: null
@@ -213,9 +213,8 @@ app.controller('checkoutController', ['$scope', '$location', '$sce', 'cartServic
 
     $scope.validateBankCardNumber = function (bankCardNumber) {
         var type = 'Unknown';
-        var cvvLength = 3;
-        var minNumberLength = 12;
-        var maxNumberLength = 19;
+        var cardNumberPattern = /^\d{12,19}$/;
+        var cvvPattern = /^\d{3,3}$/;
 
         var firstOneSymbol = bankCardNumber.substring(0, 1);
         var firstTwoSymbols = bankCardNumber.substring(0, 2);
@@ -225,61 +224,83 @@ app.controller('checkoutController', ['$scope', '$location', '$sce', 'cartServic
 
         if (firstTwoSymbols == '34' || firstTwoSymbols == '37') {
             type = 'AmericanExpress';
-            minNumberLength = 15;
-            maxNumberLength = 15;
-            cvvLength = 4;
+            cardNumberPattern = /^\d{15}$/;
+            cvvPattern = /^\d{4,4}$/;
         }
         if (firstTwoSymbols == '62' || firstTwoSymbols == '88') {
             type = 'UnionPay';
-            minNumberLength = 16;
-            maxNumberLength = 19;
+            cardNumberPattern = /^\d{16,19}$/;
+            cvvPattern = /^\d{3,3}$/;
         }
         if (firstThreeSymbols >= '300' && firstThreeSymbols <= '305' || firstThreeSymbols == '309' || firstTwoSymbols == '36' || firstTwoSymbols == '38' || firstTwoSymbols == '39') {
             type = 'Diners';
-            minNumberLength = 14;
-            maxNumberLength = 16;
+            cardNumberPattern = /^\d{14,16}$/;
+            cvvPattern = /^\d{3,3}$/;
         }
         if (firstFourSymbols == '6011' || firstSixSymbols >= '622126' && firstSixSymbols <= '622925' || firstThreeSymbols >= '644' && firstThreeSymbols <= '649' || firstTwoSymbols == '65') {
             type = 'Discover';
-            minNumberLength = 16;
-            maxNumberLength = 16;
+            cardNumberPattern = /^\d{16}$/;
+            cvvPattern = /^\d{3,3}$/;
         }
         if (firstFourSymbols >= '3528' && firstFourSymbols <= '3589') {
             type = 'Jcb';
-            minNumberLength = 16;
-            maxNumberLength = 16;
+            cardNumberPattern = /^\d{16}$/;
+            cvvPattern = /^\d{3,3}$/;
         }
         if (firstFourSymbols == '6304' || firstFourSymbols == '6706' || firstFourSymbols == '6771' || firstFourSymbols == '6709') {
             type = 'Laser';
-            minNumberLength = 16;
-            maxNumberLength = 19;
+            cardNumberPattern = /^\d{16,19}$/;
+            cvvPattern = /^\d{3,3}$/;
         }
         if (firstFourSymbols == '5018' || firstFourSymbols == '5020' || firstFourSymbols == '5038' || firstFourSymbols == '5612' || firstFourSymbols == '5893' || firstFourSymbols == '6304' ||
             firstFourSymbols >= '6759' && firstFourSymbols <= '6763' || firstFourSymbols == '0604' || firstFourSymbols == '6390') {
             type = 'Maestro';
-            minNumberLength = 12;
-            maxNumberLength = 19;
+            cardNumberPattern = /^\d{12,19}$/;
+            cvvPattern = /^\d{3,3}$/;
         }
         if (firstFourSymbols == '5019') {
             type = 'Dankort';
-            minNumberLength = 16;
-            maxNumberLength = 16;
+            cardNumberPattern = /^\d{16}$/;
+            cvvPattern = /^\d{3,3}$/;
         }
         if (firstTwoSymbols >= '51' && firstTwoSymbols <= '55') {
             type = 'MasterCard';
-            minNumberLength = 16;
-            maxNumberLength = 16;
+            cardNumberPattern = /^\d{16}$/;
+            cvvPattern = /^\d{3,3}$/;
         }
         if (firstOneSymbol == '4') {
             type = 'Visa';
-            minNumberLength = 13 || 16;
-            maxNumberLength = 16;
+            cardNumberPattern = /^\d{13,16}$/;
+            cvvPattern = /^\d{3,3}$/;
         }
 
         $scope.checkout.bankCardInfo.Type = type;
-        $scope.checkout.bankCardInfo.MinNumberLength = minNumberLength;
-        $scope.checkout.bankCardInfo.MaxNumberLength = maxNumberLength;
-        $scope.checkout.bankCardInfo.CvvLength = cvvLength;
+        $scope.checkout.bankCardInfo.CardNumberPattern = cardNumberPattern;
+        $scope.checkout.bankCardInfo.CvvPattern = cvvPattern;
+    }
+
+    $scope.validateBankCardExpirationDate = function (date) {
+        $scope.checkout.bankCardInfo.BankCardMonth = null;
+        $scope.checkout.bankCardInfo.BankCardYear = null;
+        var separator = ' / ';
+        $scope.checkout.bankCardInfo.ExpirationDate = date;
+        if (date.length == 2) {
+            $scope.checkout.bankCardInfo.ExpirationDate += separator;
+        }
+        var dateParts = date.split(separator);
+        if (dateParts.length == 2) {
+            var currentYear = (new Date()).getFullYear();
+            var currentMonth = (new Date()).getMonth() + 1;
+            var expirationMonth = parseInt(dateParts[0]);
+            var expirationYear = parseInt(dateParts[1]) + 2000;
+            if (expirationMonth >= 1 && expirationMonth <= 12) {
+                if (expirationYear > currentYear || expirationYear == currentYear && expirationMonth >= currentMonth) {
+                    alert(expirationMonth + ' ' + expirationYear);
+                    $scope.checkout.bankCardInfo.BankCardMonth = expirationMonth;
+                    $scope.checkout.bankCardInfo.BankCardYear = expirationYear;
+                }
+            }
+        }
     }
 
     $scope.completeOrder = function (paymentMethodCode) {
