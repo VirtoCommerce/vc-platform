@@ -30,6 +30,11 @@ namespace VirtoCommerce.Storefront.Model.Cart
         public string ProductId { get; set; }
 
         /// <summary>
+        /// Gets or sets the type of product (can be Physical, Digital or Subscription)
+        /// </summary>
+        public string ProductType { get; set; }
+
+        /// <summary>
         /// Gets or sets the value of catalog id
         /// </summary>
         public string CatalogId { get; set; }

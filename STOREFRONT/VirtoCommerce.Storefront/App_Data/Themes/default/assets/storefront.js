@@ -108,6 +108,8 @@ app.controller('cartController', ['$scope', 'cartService', function ($scope, car
 
 app.controller('checkoutController', ['$scope', '$location', '$sce', 'cartService', function ($scope, $location, $sce, cartService) {
     $scope.checkout = {
+        hasCustomerInformation: false,
+        hasShippingMethod: false,
         cart: {},
         orderSummaryExpanded: false,
         shippingAddress: {},
@@ -122,7 +124,7 @@ app.controller('checkoutController', ['$scope', '$location', '$sce', 'cartServic
         shippingMethodProcessing: false,
         availablePaymentMethods: [],
         selectedPaymentMethod: {},
-        bankCardInfo: { Type: 'Unknown' },
+        bankCardInfo: { Type: 'Unknown', MinNumberLength: 12, MaxNumberLength: 19, CvvLength: 3 },
         billingAddressEqualsShipping: true,
         orderProcessing: false,
         paymentFormHtml: null
@@ -211,6 +213,9 @@ app.controller('checkoutController', ['$scope', '$location', '$sce', 'cartServic
 
     $scope.validateBankCardNumber = function (bankCardNumber) {
         var type = 'Unknown';
+        var cvvLength = 3;
+        var minNumberLength = 12;
+        var maxNumberLength = 19;
 
         var firstOneSymbol = bankCardNumber.substring(0, 1);
         var firstTwoSymbols = bankCardNumber.substring(0, 2);
@@ -220,37 +225,61 @@ app.controller('checkoutController', ['$scope', '$location', '$sce', 'cartServic
 
         if (firstTwoSymbols == '34' || firstTwoSymbols == '37') {
             type = 'AmericanExpress';
+            minNumberLength = 15;
+            maxNumberLength = 15;
+            cvvLength = 4;
         }
         if (firstTwoSymbols == '62' || firstTwoSymbols == '88') {
             type = 'UnionPay';
+            minNumberLength = 16;
+            maxNumberLength = 19;
         }
         if (firstThreeSymbols >= '300' && firstThreeSymbols <= '305' || firstThreeSymbols == '309' || firstTwoSymbols == '36' || firstTwoSymbols == '38' || firstTwoSymbols == '39') {
             type = 'Diners';
+            minNumberLength = 14;
+            maxNumberLength = 16;
         }
         if (firstFourSymbols == '6011' || firstSixSymbols >= '622126' && firstSixSymbols <= '622925' || firstThreeSymbols >= '644' && firstThreeSymbols <= '649' || firstTwoSymbols == '65') {
             type = 'Discover';
+            minNumberLength = 16;
+            maxNumberLength = 16;
         }
         if (firstFourSymbols >= '3528' && firstFourSymbols <= '3589') {
             type = 'Jcb';
+            minNumberLength = 16;
+            maxNumberLength = 16;
         }
         if (firstFourSymbols == '6304' || firstFourSymbols == '6706' || firstFourSymbols == '6771' || firstFourSymbols == '6709') {
             type = 'Laser';
+            minNumberLength = 16;
+            maxNumberLength = 19;
         }
         if (firstFourSymbols == '5018' || firstFourSymbols == '5020' || firstFourSymbols == '5038' || firstFourSymbols == '5612' || firstFourSymbols == '5893' || firstFourSymbols == '6304' ||
             firstFourSymbols >= '6759' && firstFourSymbols <= '6763' || firstFourSymbols == '0604' || firstFourSymbols == '6390') {
             type = 'Maestro';
+            minNumberLength = 12;
+            maxNumberLength = 19;
         }
         if (firstFourSymbols == '5019') {
             type = 'Dankort';
+            minNumberLength = 16;
+            maxNumberLength = 16;
         }
-        if (firstTwoSymbols >= '50' && firstTwoSymbols <= '55') {
+        if (firstTwoSymbols >= '51' && firstTwoSymbols <= '55') {
             type = 'MasterCard';
+            minNumberLength = 16;
+            maxNumberLength = 16;
         }
         if (firstOneSymbol == '4') {
             type = 'Visa';
+            minNumberLength = 13 || 16;
+            maxNumberLength = 16;
         }
 
         $scope.checkout.bankCardInfo.Type = type;
+        $scope.checkout.bankCardInfo.MinNumberLength = minNumberLength;
+        $scope.checkout.bankCardInfo.MaxNumberLength = maxNumberLength;
+        $scope.checkout.bankCardInfo.CvvLength = cvvLength;
     }
 
     $scope.completeOrder = function (paymentMethodCode) {
@@ -275,11 +304,41 @@ app.controller('checkoutController', ['$scope', '$location', '$sce', 'cartServic
 
     cartService.getCart().then(function (response) {
         var cart = response.data;
+        handleInnerRedirects(cart);
+        updateCheckout(cart);
+    });
+
+    function addressIsValid(address) {
+        var isValid = false;
+        if (address.FirstName && address.LastName && address.Email && address.Line1 && address.City && address.CountryCode && address.CountryName && address.PostalCode) {
+            isValid = true;
+        }
+        return isValid;
+    }
+
+    function handleInnerRedirects(cart) {
         if (!cart.ItemsCount) {
             $scope.outsideRedirect($scope.baseUrl + '/cart');
         }
-        updateCheckout(cart);
-    });
+        var hasCustomerInformation = addressIsValid(cart.DefaultShippingAddress);
+        var hasShippingMethod = cart.Shipments.length;
+        if (!cart.HasPhysicalProducts) {
+            $scope.insideRedirect('payment-method');
+        } else {
+            if (hasCustomerInformation && hasShippingMethod) {
+                $scope.insideRedirect('payment-method');
+                return;
+            }
+            if (hasCustomerInformation && !hasShippingMethod) {
+                $scope.insideRedirect('shipping-method');
+                return;
+            }
+            if (!hasCustomerInformation) {
+                $scope.insideRedirect('customer-information');
+                return;
+            }
+        }
+    }
 
     function updateCheckout(cart) {
         $scope.checkout.cart = cart;
@@ -298,6 +357,8 @@ app.controller('checkoutController', ['$scope', '$location', '$sce', 'cartServic
         $scope.checkout.customerInformationProcessing = false;
         $scope.checkout.shippingMethodProcessing = false;
         $scope.checkout.orderProcessing = false;
+        $scope.checkout.hasCustomerInformation = addressIsValid(cart.DefaultShippingAddress);
+        $scope.checkout.hasShippingMethod = cart.Shipments.length;
         cartService.getAvailableShippingMethods(cart.Id).then(function (response) {
             var availableShippingMethods = response.data;
             $scope.checkout.availableShippingMethods = availableShippingMethods;

@@ -57,6 +57,8 @@ namespace VirtoCommerce.Storefront.Converters
             lineItemWebModel.Quantity = lineItem.Quantity.HasValue ? lineItem.Quantity.Value : 0;
             lineItemWebModel.ListPrice = new Money(lineItem.ListPrice ?? 0, currency.Code);
             lineItemWebModel.SalePrice = new Money(lineItem.SalePrice ?? 0, currency.Code);
+            lineItemWebModel.ProductType = "Physical";
+            lineItemWebModel.RequiredShipping = (bool)lineItem.RequiredShipping;
 
             if (lineItem.Discounts != null)
             {
