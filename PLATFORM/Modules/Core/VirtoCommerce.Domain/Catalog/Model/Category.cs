@@ -26,6 +26,7 @@ namespace VirtoCommerce.Domain.Catalog.Model
 	    public bool? IsActive { get; set; }
 
         public ICollection<Category> Children { get; set; }
+        public ICollection<Property> Properties { get; set; }
 		public ICollection<PropertyValue> PropertyValues { get; set; }
 		public ICollection<CategoryLink> Links { get; set; }
 		public ICollection<SeoInfo> SeoInfos { get; set; }

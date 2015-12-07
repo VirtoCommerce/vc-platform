@@ -12,11 +12,13 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 {
 	public static class CategoryConverter
 	{
-		public static webModel.Category ToWebModel(this moduleModel.Category category, IBlobUrlResolver blobUrlResolver = null, moduleModel.Property[] properties = null)
+		public static webModel.Category ToWebModel(this moduleModel.Category category, IBlobUrlResolver blobUrlResolver = null, bool convertProps = true)
 		{
 			var retVal = new webModel.Category();
 			retVal.InjectFrom(category);
 			retVal.Catalog = category.Catalog.ToWebModel();
+            //Reset properties for size economy
+            retVal.Catalog.Properties = null;
 			retVal.SeoInfos = category.SeoInfos;
 	
 			if(category.Parents != null)
@@ -28,47 +30,38 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 			{
 				retVal.Links = category.Links.Select(x => x.ToWebModel()).ToList();
 			}
-			retVal.Properties = new List<webModel.Property>();
-			//Need add property for each meta info
-			if (properties != null)
-			{
-				retVal.Properties = new List<webModel.Property>();
-				foreach (var property in properties)
-				{
-					var webModelProperty = property.ToWebModel();
-					webModelProperty.Values = new List<webModel.PropertyValue>();
-					webModelProperty.IsManageable = true;
-					webModelProperty.IsReadOnly = property.Type != moduleModel.PropertyType.Category;
-					retVal.Properties.Add(webModelProperty);
-				}
-			}
 
-			//Populate property values
-			if (category.PropertyValues != null)
-			{
-				foreach (var propValue in category.PropertyValues.Select(x => x.ToWebModel()))
-				{
-					var property = retVal.Properties.FirstOrDefault(x => x.IsSuitableForValue(propValue));
-					if (property == null)
-					{
-						//Need add dummy property for each value without property
-						property = new webModel.Property(propValue, category.CatalogId, category.Id, moduleModel.PropertyType.Category);
-						retVal.Properties.Add(property);
-					}
-                    //Need leave dictionary values for each language for multilanguage dictionary property
-                    if (property.Dictionary && property.Multilanguage)
-                    {
-                        property.DictionaryValues = property.DictionaryValues.Where(x => x.Alias == propValue.Alias).ToList();
-                    }
-                    else
-                    {
-                        //reset dict values (not necessary in web)
-                        property.DictionaryValues = null;
-                    }
-                    property.Values.Add(propValue);
-				}
-			}
+            //Need add property for each meta info
+            retVal.Properties = new List<webModel.Property>();
+            if (convertProps)
+            {
+                foreach (var property in category.Properties)
+                {
+                    var webModelProperty = property.ToWebModel();
+                    //Reset dict values to decrease response size
+                    webModelProperty.DictionaryValues = null;
+                    webModelProperty.Values = new List<webModel.PropertyValue>();
+                    webModelProperty.IsManageable = true;
+                    webModelProperty.IsReadOnly = property.Type != moduleModel.PropertyType.Category;
+                    retVal.Properties.Add(webModelProperty);
+                }
 
+                //Populate property values
+                if (category.PropertyValues != null)
+                {
+                    foreach (var propValue in category.PropertyValues.Select(x => x.ToWebModel()))
+                    {
+                        var property = retVal.Properties.FirstOrDefault(x => x.Id == propValue.PropertyId);
+                        if (property == null)
+                        {
+                            //Need add dummy property for each value without property
+                            property = new webModel.Property(propValue, category.CatalogId, category.Id, moduleModel.PropertyType.Category);
+                            retVal.Properties.Add(property);
+                        }
+                        property.Values.Add(propValue);
+                    }
+                }
+            }
 			if (category.Images != null)
 			{
 				retVal.Images = category.Images.Select(x => x.ToWebModel(blobUrlResolver)).ToList();

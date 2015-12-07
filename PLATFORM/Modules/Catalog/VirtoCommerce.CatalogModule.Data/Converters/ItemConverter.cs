@@ -18,22 +18,23 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// Converting to model type
 		/// </summary>
 		/// <returns></returns>
-		public static coreModel.CatalogProduct ToCoreModel(this dataModel.Item dbItem, coreModel.Catalog catalog,
-														  coreModel.Category category, coreModel.CatalogProduct[] associatedProducts)
+		public static coreModel.CatalogProduct ToCoreModel(this dataModel.Item dbItem, bool convertChildrens = true)
 		{
 			var retVal = new coreModel.CatalogProduct();
 			retVal.InjectFrom(dbItem);
-			retVal.Catalog = catalog;
-			retVal.CatalogId = catalog.Id;
+			retVal.Catalog = dbItem.Catalog.ToCoreModel();
 
-			if (category != null)
+			if (dbItem.Category != null)
 			{
-				retVal.Category = category;
-				retVal.CategoryId = category.Id;
+                retVal.Category = dbItem.Category.ToCoreModel();
 			}
 
 			retVal.MainProductId = dbItem.ParentId;
-
+            if(dbItem.Parent != null)
+            {
+                retVal.MainProduct = dbItem.Parent.ToCoreModel(convertChildrens: false);
+            }
+  
 			retVal.IsActive = dbItem.IsActive;
 			retVal.IsBuyable = dbItem.IsBuyable;
 			retVal.TrackInventory = dbItem.TrackInventory;
@@ -42,118 +43,130 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			retVal.MinQuantity = (int)dbItem.MinQuantity;
 
 
-			#region Links
+			//Links
 			retVal.Links = dbItem.CategoryLinks.Select(x => x.ToCoreModel()).ToList();
-			#endregion
 
-			#region Images
-			if (dbItem.Images != null)
-			{
-				retVal.Images = dbItem.Images.OrderBy(x => x.SortOrder).Select(x => x.ToCoreModel()).ToList();
-			}
-			#endregion
-			#region Assets
-			if (dbItem.Assets != null)
-			{
-				retVal.Assets = dbItem.Assets.OrderBy(x=>x.CreatedDate).Select(x => x.ToCoreModel()).ToList();
-			}
-			#endregion
-			#region Property values
-			if (dbItem.ItemPropertyValues != null)
-			{
-				retVal.PropertyValues = dbItem.ItemPropertyValues.OrderBy(x=>x.Name).Select(x => x.ToCoreModel(null)).ToList();
-			}
-			#endregion
+            //Images
+            retVal.Images = dbItem.Images.OrderBy(x => x.SortOrder).Select(x => x.ToCoreModel()).ToList();
+            //Inherit images from parent product (if its not set)
+            if(!retVal.Images.Any() && retVal.MainProduct != null && retVal.MainProduct.Images != null)
+            {
+                retVal.Images = retVal.MainProduct.Images.Select(x=>x.Clone()).OfType<coreModel.Image>().ToList();
+                foreach(var image in retVal.Images)
+                {
+                    image.Id = null;
+                    image.IsInherited = true;
+                }
+            }
 
+            //Assets
+            retVal.Assets = dbItem.Assets.OrderBy(x => x.CreatedDate).Select(x => x.ToCoreModel()).ToList();
+            //Inherit images from parent product (if its not set)
+            if (!retVal.Assets.Any()  && retVal.MainProduct != null && retVal.MainProduct.Assets != null)
+            {
+                retVal.Assets = retVal.MainProduct.Assets.Select(x => x.Clone()).OfType<coreModel.Asset>().ToList();
+                foreach (var asset in retVal.Assets)
+                {
+                    asset.Id = null;
+                    asset.IsInherited = true;
+                }
+            }
 
-			#region Variations
-			retVal.Variations = new List<coreModel.CatalogProduct>();
-			foreach (var variation in dbItem.Childrens)
+            // EditorialReviews
+            retVal.Reviews = dbItem.EditorialReviews.Select(x => x.ToCoreModel()).ToList();
+
+            //inherit editorial reviews from main product
+            if (!retVal.Reviews.Any() && retVal.MainProduct != null && retVal.MainProduct.Reviews != null)
+            {
+                retVal.Reviews = retVal.MainProduct.Reviews.Select(x => x.Clone()).OfType<coreModel.EditorialReview>().ToList();
+                foreach (var review in retVal.Reviews)
+                {
+                    review.Id = null;
+                    review.IsInherited = true;
+                }
+            }
+
+            // Associations
+            retVal.Associations = dbItem.AssociationGroups.SelectMany(x => x.Associations).Select(x => x.ToCoreModel()).ToList();
+
+            //TaxType category inheritance
+            if (retVal.TaxType == null && retVal.Category != null)
 			{
-				var productVaraition = variation.ToCoreModel(catalog, category, associatedProducts: null);
-				productVaraition.MainProduct = retVal;
-				productVaraition.MainProductId = retVal.Id;
-				
-				retVal.Variations.Add(productVaraition);
+				retVal.TaxType = retVal.Category.TaxType;
 			}
-			#endregion
 
-			#region EditorialReviews
-			if (dbItem.EditorialReviews != null)
-			{
-				retVal.Reviews = dbItem.EditorialReviews.Select(x => x.ToCoreModel()).ToList();
-			}
-			#endregion
+            retVal.Properties = new List<coreModel.Property>();
+            //Properties inheritance
+            if (retVal.Category != null)
+            {
+                //Add inherited from category and catalog properties
+                retVal.Properties.AddRange(retVal.Category.Properties);
+            }
+            else
+            {
+                retVal.Properties.AddRange(retVal.Catalog.Properties);
+            }
+            foreach(var property in retVal.Properties)
+            {
+                property.IsInherited = true;
+            }
 
-			#region Associations
-			if (dbItem.AssociationGroups != null && associatedProducts != null)
-			{
-				retVal.Associations = new List<coreModel.ProductAssociation>();
-				foreach (var association in dbItem.AssociationGroups.SelectMany(x => x.Associations))
-				{
-					var associatedProduct = associatedProducts.FirstOrDefault(x => x.Id == association.ItemId);
-					if (associatedProduct != null)
-					{
-						var productAssociation = association.ToCoreModel(associatedProduct);
-						retVal.Associations.Add(productAssociation);
-					}
-				}
-			}
-			#endregion
+            //Self item property values
+            retVal.PropertyValues = new List<coreModel.PropertyValue>();
+            foreach(var propertyValue in dbItem.ItemPropertyValues.OrderBy(x => x.Name).Select(x=>x.ToCoreModel()))
+            {
+                //Try to find property meta information
+                propertyValue.Property = retVal.Properties.FirstOrDefault(x => x.IsSuitableForValue(propertyValue));
+                //Because multilingual dictionary values for all languages may not stored in db need add it in result manually from property dictionary values
+                var localizedDictValues = propertyValue.TryGetAllLocalizedDictValues();
+                if(localizedDictValues.Any())
+                {
+                    foreach (var localizedDictValue in localizedDictValues)
+                    {
+                        if (!retVal.PropertyValues.Any(x => x.ValueId == localizedDictValue.ValueId && x.LanguageCode == localizedDictValue.LanguageCode))
+                        {
+                            retVal.PropertyValues.Add(localizedDictValue);
+                        }
+                    }
+                 }
+                else
+                {
+                    retVal.PropertyValues.Add(propertyValue);
+                }
+            }
 
-			//TaxType category inheritance
-			if(retVal.TaxType == null && category != null)
-			{
-				retVal.TaxType = category.TaxType;
-			}
-			#region Variation property, assets, review inheritance
-			if (dbItem.Parent != null)
-			{
-				//TaxType from main product inheritance
-				if(dbItem.TaxType == null && dbItem.Parent.TaxType != null)
-				{
-					retVal.TaxType = dbItem.Parent.TaxType;
-				}
-				var allProductPropertyNames = dbItem.Parent.ItemPropertyValues.Select(x => x.Name).Distinct().ToArray();
-				//Property inheritance
-				if (allProductPropertyNames != null)
-				{
-					//Need copy not overridden property values from main product to variation
-					var overriddenPropertyNames = retVal.PropertyValues.Select(x => x.PropertyName).ToArray();
-					var inheritedPropertyNames = allProductPropertyNames.Except(overriddenPropertyNames);
-					var dbInheritedPropertyValues = dbItem.Parent.ItemPropertyValues.Where(x => inheritedPropertyNames.Contains(x.Name));
-					foreach (var dbInheritedPropertyValue in dbInheritedPropertyValues)
-					{
-						//Reset id for correct value override
-						var propertyValue = dbInheritedPropertyValue.ToCoreModel(null);
-						propertyValue.Id = null;
-						retVal.PropertyValues.Add(propertyValue);
-					}
-				}
-				//Image inheritance
-				if (!retVal.Images.Any() && dbItem.Parent.Images != null)
-				{
-					retVal.Images = dbItem.Parent.Images.OrderBy(x => x.SortOrder).Select(x => x.ToCoreModel()).ToList();
-					foreach (var image in retVal.Images)
-					{
-						//Reset id for correct override
-						image.Id = null;
-					}
-				}
-				//Review inheritance
-				if ((retVal.Reviews == null  || !retVal.Reviews.Any()) && dbItem.Parent.EditorialReviews != null)
-				{
-					retVal.Reviews = dbItem.Parent.EditorialReviews.Select(x => x.ToCoreModel()).ToList();
-					foreach (var review in retVal.Reviews)
-					{
-						//Reset id for correct override
-						review.Id = null;
-					}
-				}
+            //inherit not overriden property values from main product
+            if (retVal.MainProduct != null && retVal.MainProduct.PropertyValues != null)
+            {
+                var mainProductPopValuesGroups = retVal.MainProduct.PropertyValues.GroupBy(x => x.PropertyName);
+                foreach (var group in mainProductPopValuesGroups)
+                {
+                    //Inherit all values if not overriden
+                    if (!retVal.PropertyValues.Any(x => String.Equals(x.PropertyName, group.Key, StringComparison.InvariantCultureIgnoreCase)))
+                    {
+                        foreach (var inheritedpropValue in group)
+                        {
+                            inheritedpropValue.Id = null;
+                            inheritedpropValue.IsInherited = true;
+                            retVal.PropertyValues.Add(inheritedpropValue);
+                        }
+                    }
+                }
+            }
+           
+            if (convertChildrens)
+            {
+                // Variations
+                retVal.Variations = new List<coreModel.CatalogProduct>();
+                foreach (var variation in dbItem.Childrens)
+                {
+                    var productVariation = variation.ToCoreModel();
+                    productVariation.MainProduct = retVal;
+                    productVariation.MainProductId = retVal.Id;
 
-			}
-			#endregion
-
+                    retVal.Variations.Add(productVariation);
+                }
+            }
 			return retVal;
 		}
 
@@ -167,7 +180,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			var retVal = new dataModel.Item();
 			var id = retVal.Id;
 			retVal.InjectFrom(product);
-		
+	        
 			if(product.StartDate == default(DateTime))
 			{
 				retVal.StartDate = DateTime.UtcNow;
@@ -193,23 +206,22 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			if (product.PropertyValues != null)
 			{
 				retVal.ItemPropertyValues = new ObservableCollection<dataModel.PropertyValue>();
-                retVal.ItemPropertyValues.AddRange(product.PropertyValues.Select(x => x.ToDataModel()));
-			
-			}
+                retVal.ItemPropertyValues.AddRange(product.PropertyValues.Where(x => !x.IsInherited).Select(x => x.ToDataModel()));
+            }
 			#endregion
 
 			#region Assets
 			if (product.Assets != null)
 			{
-				retVal.Assets = new ObservableCollection<dataModel.Asset>(product.Assets.Select(x => x.ToDataModel()));
-			}
+                retVal.Assets = new ObservableCollection<dataModel.Asset>(product.Assets.Where(x => !x.IsInherited).Select(x => x.ToDataModel()));
+            }
 			#endregion
 
 			#region Images
 			if (product.Images != null)
 			{
-				retVal.Images = new ObservableCollection<dataModel.Image>(product.Images.Select(x => x.ToDataModel()));
-			}
+                retVal.Images = new ObservableCollection<dataModel.Image>(product.Images.Where(x => !x.IsInherited).Select(x => x.ToDataModel()));
+            }
 			#endregion
 
 			#region Links
@@ -224,8 +236,8 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			if (product.Reviews != null)
 			{
 				retVal.EditorialReviews = new ObservableCollection<dataModel.EditorialReview>();
-				retVal.EditorialReviews.AddRange(product.Reviews.Select(x => x.ToDataModel(retVal)));
-			}
+                retVal.EditorialReviews.AddRange(product.Reviews.Where(x => !x.IsInherited).Select(x => x.ToDataModel(retVal)));
+            }
 			#endregion
 
 			#region Associations
@@ -257,31 +269,30 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			return retVal;
 		}
 
+        /// <summary>
+        /// Patch changes
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="target"></param>
+        public static void Patch(this coreModel.CatalogProduct source, dataModel.Item target)
+        {
+            if (target == null)
+                throw new ArgumentNullException("target");
 
-		/// <summary>
-		/// Patch changes
-		/// </summary>
-		/// <param name="source"></param>
-		/// <param name="target"></param>
-		public static void Patch(this coreModel.CatalogProduct source, dataModel.Item target)
-		{
-			if (target == null)
-				throw new ArgumentNullException("target");
-
-			//TODO: temporary solution because partial update replaced not nullable properties in db entity
-			if (source.IsBuyable != null)
-				target.IsBuyable = source.IsBuyable.Value;
-			if (source.IsActive != null)
-				target.IsActive = source.IsActive.Value;
-			if (source.TrackInventory != null)
-				target.TrackInventory = source.TrackInventory.Value;
-			if (source.MinQuantity != null)
-				target.MinQuantity = source.MinQuantity.Value;
-			if (source.MaxQuantity != null)
-				target.MaxQuantity = source.MaxQuantity.Value;
+            //TODO: temporary solution because partial update replaced not nullable properties in db entity
+            if (source.IsBuyable != null)
+                target.IsBuyable = source.IsBuyable.Value;
+            if (source.IsActive != null)
+                target.IsActive = source.IsActive.Value;
+            if (source.TrackInventory != null)
+                target.TrackInventory = source.TrackInventory.Value;
+            if (source.MinQuantity != null)
+                target.MinQuantity = source.MinQuantity.Value;
+            if (source.MaxQuantity != null)
+                target.MaxQuantity = source.MaxQuantity.Value;
             //Handle three valuable states (null, empty and have value states) for case when need reset catalog or category
             if (source.CatalogId == String.Empty)
-                 target.CatalogId = null;
+                target.CatalogId = null;
             if (source.CategoryId == String.Empty)
                 target.CategoryId = null;
 
@@ -290,63 +301,53 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
                                                                           x => x.DownloadExpiration, x => x.DownloadType, x => x.HasUserAgreement, x => x.ShippingType, x => x.TaxType, x => x.Vendor, x => x.CatalogId, x => x.CategoryId);
 
             var dbSource = source.ToDataModel();
-			target.InjectFrom(patchInjectionPolicy, dbSource);
+            target.InjectFrom(patchInjectionPolicy, dbSource);
 
-			#region Assets
-			if (!dbSource.Assets.IsNullCollection())
-			{
-				dbSource.Assets.Patch(target.Assets, (sourceAsset, targetAsset) => sourceAsset.Patch(targetAsset));
-			}
-			#endregion
-			#region Images
-			if (!dbSource.Images.IsNullCollection())
-			{
-				dbSource.Images.Patch(target.Images, (sourceImage, targetImage) => sourceImage.Patch(targetImage));
-			}
-			#endregion
+            #region Assets
+            if (!dbSource.Assets.IsNullCollection())
+            {
+                dbSource.Assets.Patch(target.Assets, (sourceAsset, targetAsset) => sourceAsset.Patch(targetAsset));
+            }
+            #endregion
+            #region Images
+            if (!dbSource.Images.IsNullCollection())
+            {
+                dbSource.Images.Patch(target.Images, (sourceImage, targetImage) => sourceImage.Patch(targetImage));
+            }
+            #endregion
 
-			#region ItemPropertyValues
-			if (!dbSource.ItemPropertyValues.IsNullCollection())
-			{
-				//Need skip inherited properties without overridden value
-				if (source.MainProduct != null)
-				{
-					var dbParent = source.MainProduct.ToDataModel();
-					var parentPropValues = dbParent.ItemPropertyValues.ToLookup(x => x.Name + "-" + x.ToString());
-					var variationPropValues = dbSource.ItemPropertyValues.ToLookup(x => x.Name + "-" + x.ToString());
-					dbSource.ItemPropertyValues = new ObservableCollection<dataModel.PropertyValue>(variationPropValues.Where(x => !parentPropValues.Contains(x.Key)).SelectMany(x => x));
-				}
+            #region ItemPropertyValues
+            if (!dbSource.ItemPropertyValues.IsNullCollection())
+            {
+                dbSource.ItemPropertyValues.Patch(target.ItemPropertyValues, (sourcePropValue, targetPropValue) => sourcePropValue.Patch(targetPropValue));
+            }
+            #endregion
 
-				dbSource.ItemPropertyValues.Patch(target.ItemPropertyValues, (sourcePropValue, targetPropValue) => sourcePropValue.Patch(targetPropValue));
-			}
-
-			#endregion
-
-			#region Links
-			if (!dbSource.CategoryLinks.IsNullCollection())
-			{
-				dbSource.CategoryLinks.Patch(target.CategoryLinks, new CategoryItemRelationComparer(),
-										 (sourcePropValue, targetPropValue) => sourcePropValue.Patch(targetPropValue));
-			}
-			#endregion
+            #region Links
+            if (!dbSource.CategoryLinks.IsNullCollection())
+            {
+                dbSource.CategoryLinks.Patch(target.CategoryLinks, new CategoryItemRelationComparer(),
+                                         (sourcePropValue, targetPropValue) => sourcePropValue.Patch(targetPropValue));
+            }
+            #endregion
 
 
-			#region EditorialReviews
-			if (!dbSource.EditorialReviews.IsNullCollection())
-			{
-				dbSource.EditorialReviews.Patch(target.EditorialReviews, (sourcePropValue, targetPropValue) => sourcePropValue.Patch(targetPropValue));
-			}
-			#endregion
+            #region EditorialReviews
+            if (!dbSource.EditorialReviews.IsNullCollection())
+            {
+                dbSource.EditorialReviews.Patch(target.EditorialReviews, (sourcePropValue, targetPropValue) => sourcePropValue.Patch(targetPropValue));
+            }
+            #endregion
 
-			#region Association
-			if (!dbSource.AssociationGroups.IsNullCollection())
-			{
-				var associationComparer = AnonymousComparer.Create((dataModel.AssociationGroup x) => x.Name);
-				dbSource.AssociationGroups.Patch(target.AssociationGroups, associationComparer,
-										 (sourceGroup, targetGroup) => sourceGroup.Patch(targetGroup));
-			}
-			#endregion
-		}
+            #region Association
+            if (!dbSource.AssociationGroups.IsNullCollection())
+            {
+                var associationComparer = AnonymousComparer.Create((dataModel.AssociationGroup x) => x.Name);
+                dbSource.AssociationGroups.Patch(target.AssociationGroups, associationComparer,
+                                         (sourceGroup, targetGroup) => sourceGroup.Patch(targetGroup));
+            }
+            #endregion
+        }
 
-	}
+    }
 }

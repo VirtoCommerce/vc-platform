@@ -42,6 +42,11 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         /// The language code.
         /// </value>
 		public string LanguageCode { get; set; }
-	
-	}
+
+        /// <summary>
+        /// System flag used to mark that object was inherited from other
+        /// </summary>
+        public bool IsInherited { get; set; }
+
+    }
 }

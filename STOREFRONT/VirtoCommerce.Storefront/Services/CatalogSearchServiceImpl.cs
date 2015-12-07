@@ -31,7 +31,7 @@ namespace VirtoCommerce.Storefront.Services
 
         public async Task<Product> GetProductAsync(string id, ItemResponseGroup responseGroup = ItemResponseGroup.ItemInfo)
         {
-            var item = (await _catalogModuleApi.CatalogModuleProductsGetAsync(id)).ToWebModel(_workContext.CurrentLanguage);
+            var item = (await _catalogModuleApi.CatalogModuleProductsGetAsync(id)).ToWebModel(_workContext.CurrentLanguage, _workContext.CurrentCurrency);
 
             var allProducts = new[] { item }.Concat(item.Variations).ToArray();
 
@@ -70,7 +70,7 @@ namespace VirtoCommerce.Storefront.Services
             {
                 if (result.Products != null && result.Products.Any())
                 {
-                    var products = result.Products.Select(x => x.ToWebModel(_workContext.CurrentLanguage)).ToArray();
+                    var products = result.Products.Select(x => x.ToWebModel(_workContext.CurrentLanguage, _workContext.CurrentCurrency)).ToArray();
                     retVal.Products = new StorefrontPagedList<Product>(products, criteria.PageNumber, criteria.PageSize, result.TotalCount.Value, (page) => _workContext.RequestUrl.AddParameter("page", page.ToString()).ToString());
 
                     LoadProductsPrices(retVal.Products.ToArray());

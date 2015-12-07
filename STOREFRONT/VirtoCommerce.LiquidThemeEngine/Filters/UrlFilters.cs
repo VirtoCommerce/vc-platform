@@ -52,6 +52,9 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
         /// <returns></returns>
         public static string ImgUrl(object input, string type = null)
         {
+            if (input == null)
+                return null;
+
             var retVal = input.ToString();
             var product = input as shopifyModel.Product;
             var image = input as shopifyModel.Image;
@@ -152,7 +155,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
             storefrontModel.Language language = null;
             if (!string.IsNullOrEmpty(storeId))
             {
-                store = themeAdaptor.WorkContext.AllStores.FirstOrDefault(x => string.Equals(x.Name, storeId, StringComparison.InvariantCultureIgnoreCase));
+                store = themeAdaptor.WorkContext.AllStores.FirstOrDefault(x => string.Equals(x.Id, storeId, StringComparison.InvariantCultureIgnoreCase));
             }
             store = store ?? themeAdaptor.WorkContext.CurrentStore;
 

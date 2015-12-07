@@ -12,10 +12,10 @@ namespace VirtoCommerce.Storefront.Converters
 {
     public static class ProductConverter
     {
-        public static Product ToWebModel(this VirtoCommerceCatalogModuleWebModelProduct product, Language currentLanguage)
+        public static Product ToWebModel(this VirtoCommerceCatalogModuleWebModelProduct product, Language currentLanguage, Currency currentCurrency)
         {
             var retVal = new Product();
-            retVal.Price = new ProductPrice();
+            retVal.Price = new ProductPrice(currentCurrency);
 
             retVal.InjectFrom(product);
 
@@ -48,7 +48,7 @@ namespace VirtoCommerce.Storefront.Converters
 
             if (product.Variations != null)
             {
-                retVal.Variations = product.Variations.Select(v => v.ToWebModel(currentLanguage)).ToList();
+                retVal.Variations = product.Variations.Select(v => v.ToWebModel(currentLanguage, currentCurrency)).ToList();
             }
 
             if (product.SeoInfos != null)

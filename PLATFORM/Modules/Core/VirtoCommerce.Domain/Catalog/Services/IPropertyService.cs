@@ -6,12 +6,10 @@ namespace VirtoCommerce.Domain.Catalog.Services
 
 		Property GetById(string propertyId);
         Property[] GetByIds(string[] propertyIds);
-        Property[] GetCatalogProperties(string catalogId);
-		Property[] GetCategoryProperties(string categoryId);
-		Property Create(Property property);
+    	Property Create(Property property);
 		void Update(Property[] properties);
 		void Delete(string[] propertyIds);
-
-		PropertyDictionaryValue[] SearchDictionaryValues(string propertyId, string keyword);
+        Property[] GetAllProperties();
+        PropertyDictionaryValue[] SearchDictionaryValues(string propertyId, string keyword);
 	}
 }

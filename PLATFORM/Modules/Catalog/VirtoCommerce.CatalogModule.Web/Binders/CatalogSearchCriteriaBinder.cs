@@ -27,7 +27,7 @@ namespace VirtoCommerce.CatalogModule.Web.Binders
             var result = new coreModel.SearchCriteria();
 
             var respGroup = qs["criteria.responseGroup"].EmptyToNull();
-            result.ResponseGroup = EnumUtility.SafeParse<coreModel.ResponseGroup>(respGroup, coreModel.ResponseGroup.Full);
+            result.ResponseGroup = EnumUtility.SafeParse<coreModel.SearchResponseGroup>(respGroup, coreModel.SearchResponseGroup.Full);
 
             result.Keyword = qs["criteria.keyword"].EmptyToNull();
 

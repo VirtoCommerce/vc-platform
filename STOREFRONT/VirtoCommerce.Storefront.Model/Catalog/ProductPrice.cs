@@ -10,8 +10,11 @@ namespace VirtoCommerce.Storefront.Model.Catalog
 {
     public class ProductPrice : ValueObject<ProductPrice>
     {
-        public ProductPrice()
+        public ProductPrice(Currency currency)
         {
+            Currency = currency;
+            ListPrice = new Money(currency.Code);
+            SalePrice = new Money(currency.Code);
         }
         /// <summary>
         /// Price list id

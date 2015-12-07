@@ -200,7 +200,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
             progressCallback(progressInfo);
 
 
-            const ResponseGroup responseGroup = ResponseGroup.WithCatalogs | ResponseGroup.WithCategories | ResponseGroup.WithProducts;
+            const SearchResponseGroup responseGroup = SearchResponseGroup.WithCatalogs | SearchResponseGroup.WithCategories | SearchResponseGroup.WithProducts;
             var searchResponse = _catalogSearchService.Search(new SearchCriteria { Count = int.MaxValue, Start = 0, ResponseGroup = responseGroup });
 
             var retVal = new BackupObject();
@@ -213,9 +213,9 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 
             progressInfo.Description = String.Format("{0} categories loading", searchResponse.Categories.Count());
             progressCallback(progressInfo);
-
+          
             //Categories
-            retVal.Categories = searchResponse.Categories.Select(x => _categoryService.GetById(x.Id)).ToList();
+            retVal.Categories = _categoryService.GetByIds(searchResponse.Categories.Select(x=>x.Id).ToArray(), CategoryResponseGroup.Full);
             //Products
             for (int i = 0; i < searchResponse.Products.Count(); i += 50)
             {
@@ -255,14 +255,10 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
             }
 
             //Properties
-            var catalogsPropertiesIds = retVal.Catalogs.SelectMany(x => _propertyService.GetCatalogProperties(x.Id)).Select(x => x.Id).ToArray();
-            var categoriesPropertiesIds = retVal.Categories.SelectMany(x => _propertyService.GetCategoryProperties(x.Id)).Select(x => x.Id).ToArray();
-            var propertiesIds = catalogsPropertiesIds.Concat(categoriesPropertiesIds).Distinct().ToArray();
-
-            progressInfo.Description = String.Format("{0} properties loading", propertiesIds.Count());
+            progressInfo.Description = String.Format("Properties loading");
             progressCallback(progressInfo);
 
-            retVal.Properties = propertiesIds.Select(x => _propertyService.GetById(x)).ToList();
+            retVal.Properties = _propertyService.GetAllProperties();
             return retVal;
 
         }

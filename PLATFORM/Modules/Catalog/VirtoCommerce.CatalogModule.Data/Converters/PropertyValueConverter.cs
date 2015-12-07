@@ -21,7 +21,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         /// <param name="properties">The properties.</param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentNullException">dbPropValue</exception>
-        public static coreModel.PropertyValue ToCoreModel(this dataModel.PropertyValue dbPropValue, IEnumerable<dataModel.Property> properties)
+        public static coreModel.PropertyValue ToCoreModel(this dataModel.PropertyValue dbPropValue)
         {
             if (dbPropValue == null)
                 throw new ArgumentNullException("dbPropValue");
@@ -33,15 +33,6 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
             retVal.Value = GetPropertyValue(dbPropValue);
             retVal.ValueId = dbPropValue.KeyValue;
             retVal.ValueType = (coreModel.PropertyValueType)dbPropValue.ValueType;
-
-            if (properties != null)
-            {
-                var property = properties.FirstOrDefault(x => String.Equals(x.Name, dbPropValue.Name, StringComparison.InvariantCultureIgnoreCase));
-                if (property != null)
-                {
-                    retVal.PropertyId = property.Id;
-                }
-            }
             return retVal;
         }
 

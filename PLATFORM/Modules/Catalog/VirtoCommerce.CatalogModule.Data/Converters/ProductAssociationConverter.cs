@@ -19,20 +19,20 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// </summary>
 		/// <param name="catalogBase"></param>
 		/// <returns></returns>
-		public static coreModel.ProductAssociation ToCoreModel(this dataModel.Association dbAssociation, coreModel.CatalogProduct associatedProduct)
+		public static coreModel.ProductAssociation ToCoreModel(this dataModel.Association dbAssociation)
 		{
 			if (dbAssociation == null)
 				throw new ArgumentNullException("dbAssociation");
 
-			var retVal = new coreModel.ProductAssociation
-			{
-				Name = dbAssociation.AssociationGroup.Name,
-				Description = dbAssociation.AssociationGroup.Description,
-				Priority = dbAssociation.Priority,
-				AssociatedProductId = associatedProduct.Id,
+            var retVal = new coreModel.ProductAssociation
+            {
+                Name = dbAssociation.AssociationGroup.Name,
+                Description = dbAssociation.AssociationGroup.Description,
+                Priority = dbAssociation.Priority,
+                AssociatedProductId = dbAssociation.CatalogItem.Id,
                 Type = dbAssociation.AssociationType,
-				AssociatedProduct = associatedProduct
-			};
+                AssociatedProduct = dbAssociation.CatalogItem.ToCoreModel()
+            };
 			return retVal;
 		}
 

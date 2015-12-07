@@ -145,19 +145,19 @@ namespace VirtoCommerce.Storefront.Owin
         protected virtual Store GetStore(IOwinContext context, ICollection<Store> stores)
         {
             //Remove store name from url need to prevent writing store in routing
-            var storeName = RemoveStoreNameFromUrl(context, stores);
+            var storeId = RemoveStoreIdFromUrl(context, stores);
 
-            if (string.IsNullOrEmpty(storeName))
+            if (string.IsNullOrEmpty(storeId))
             {
-                storeName = context.Request.Cookies[StorefrontConstants.StoreCookie];
+                storeId = context.Request.Cookies[StorefrontConstants.StoreCookie];
             }
 
-            if (string.IsNullOrEmpty(storeName))
+            if (string.IsNullOrEmpty(storeId))
             {
-                storeName = ConfigurationManager.AppSettings["DefaultStore"];
+                storeId = ConfigurationManager.AppSettings["DefaultStore"];
             }
 
-            var store = stores.FirstOrDefault(s => string.Equals(s.Name, storeName, StringComparison.OrdinalIgnoreCase));
+            var store = stores.FirstOrDefault(s => string.Equals(s.Id, storeId, StringComparison.OrdinalIgnoreCase));
 
             if (store == null)
             {
@@ -167,17 +167,17 @@ namespace VirtoCommerce.Storefront.Owin
             return store;
         }
 
-        protected virtual string RemoveStoreNameFromUrl(IOwinContext context, ICollection<Store> stores)
+        protected virtual string RemoveStoreIdFromUrl(IOwinContext context, ICollection<Store> stores)
         {
             string removedStoreName = null;
 
             foreach (var store in stores)
             {
-                var pathString = new PathString("/" + store.Name);
+                var pathString = new PathString("/" + store.Id);
                 PathString remainingPath;
                 if (context.Request.Path.StartsWithSegments(pathString, out remainingPath))
                 {
-                    removedStoreName = store.Name;
+                    removedStoreName = store.Id;
                     RewritePath(context, remainingPath);
                     break;
                 }

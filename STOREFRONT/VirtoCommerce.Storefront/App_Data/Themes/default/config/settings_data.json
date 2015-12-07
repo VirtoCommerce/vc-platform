@@ -6,7 +6,7 @@
             "ajax_cart_method": "Modal",
             "cart_notes_enable": false,
             "collection_prod_image_sizes": "large",
-            "collection_sidebar_filters": "facets",
+            "collection_sidebar_filters": "groups",
             "color_accent": "#ffea00",
             "color_body_bg": "#fff",
             "color_body_text": "#585858",

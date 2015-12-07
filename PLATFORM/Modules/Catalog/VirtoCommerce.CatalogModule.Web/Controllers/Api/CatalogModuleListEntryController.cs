@@ -133,7 +133,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             //Move  categories
             foreach (var listEntryCategory in moveInfo.ListEntries.Where(x=>String.Equals(x.Type, webModel.ListEntryCategory.TypeName, StringComparison.InvariantCultureIgnoreCase)))
             {
-                var category = _categoryService.GetById(listEntryCategory.Id);
+                var category = _categoryService.GetById(listEntryCategory.Id, coreModel.CategoryResponseGroup.Info);
                 if (category.CatalogId != moveInfo.Catalog)
                 {
                     category.CatalogId = moveInfo.Catalog ?? String.Empty;
@@ -153,9 +153,11 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                 if (product.CatalogId != moveInfo.Catalog)
                 {
                     product.CatalogId = moveInfo.Catalog ?? String.Empty;
+                    product.CategoryId = null;
                     foreach (var variation in product.Variations)
                     {
                         variation.CatalogId = moveInfo.Catalog ?? String.Empty;
+                        variation.CategoryId = null;
                     }
                     
                 }
@@ -199,7 +201,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 
                 if (String.Equals(link.ListEntryType, webModel.ListEntryCategory.TypeName, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    changedObject = _categoryService.GetById(link.ListEntryId);
+                    changedObject = _categoryService.GetById(link.ListEntryId, coreModel.CategoryResponseGroup.Full);
                 }
                 else
                 {

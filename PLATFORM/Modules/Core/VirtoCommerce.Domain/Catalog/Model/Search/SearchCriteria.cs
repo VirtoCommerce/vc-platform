@@ -8,10 +8,9 @@ namespace VirtoCommerce.Domain.Catalog.Model
     {
         public SearchCriteria()
         {
-            PropertyValues = new List<PropertyValue>();
-            Count = 20;
+             Count = 20;
         }
-        public ResponseGroup ResponseGroup { get; set; }
+        public SearchResponseGroup ResponseGroup { get; set; }
         public string Keyword { get; set; }
       
         /// <summary>
@@ -59,17 +58,24 @@ namespace VirtoCommerce.Domain.Catalog.Model
 
         }
         public string LanguageCode { get; set; }
-        public string Currency { get; set; }
+    
         /// <summary>
         /// Product ore category code
         /// </summary>
 		public string Code { get; set; }
 	
         public string Sort { get; set; }
-        public string[] Facets { get; set; }
+
 		//Hides direct linked categories in virtual category displayed only linked category content without itself
 		public bool HideDirectLinkedCategories { get; set; }
-        public List<PropertyValue> PropertyValues { get; set; }
+        /// <summary>
+        /// For filtration by specified properties values
+        /// </summary>
+        public PropertyValue[] PropertyValues { get; set; }
+
+        public string Currency { get; set; }
+        public decimal? StartPrice { get; set; }
+        public decimal? EndPrice { get; set; }
 
         public int Start { get; set; }
 

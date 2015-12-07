@@ -10,6 +10,7 @@ using VirtoCommerce.Platform.Core.Caching;
 using dataModel = VirtoCommerce.CatalogModule.Data.Model;
 using coreModel = VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.Domain.Commerce.Services;
+using VirtoCommerce.CatalogModule.Data.Converters;
 
 namespace VirtoCommerce.CatalogModule.Data.Services
 {
@@ -36,15 +37,15 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 			var retVal = new coreModel.SearchResult();
 			var taskList = new List<Task>();
 
-			if ((criteria.ResponseGroup & coreModel.ResponseGroup.WithProducts) == coreModel.ResponseGroup.WithProducts)
+			if ((criteria.ResponseGroup & coreModel.SearchResponseGroup.WithProducts) == coreModel.SearchResponseGroup.WithProducts)
 			{
 				taskList.Add(Task.Factory.StartNew(() => SearchItems(criteria, retVal)));
 			}
-			if ((criteria.ResponseGroup & coreModel.ResponseGroup.WithCatalogs) == coreModel.ResponseGroup.WithCatalogs)
+			if ((criteria.ResponseGroup & coreModel.SearchResponseGroup.WithCatalogs) == coreModel.SearchResponseGroup.WithCatalogs)
 			{
 				taskList.Add(Task.Factory.StartNew(() => SearchCatalogs(criteria, retVal)));
 			}
-			if ((criteria.ResponseGroup & coreModel.ResponseGroup.WithCategories) == coreModel.ResponseGroup.WithCategories)
+			if ((criteria.ResponseGroup & coreModel.SearchResponseGroup.WithCategories) == coreModel.SearchResponseGroup.WithCategories)
 			{
 				taskList.Add(Task.Factory.StartNew(() => SearchCategories(criteria, retVal)));
 			}
@@ -96,21 +97,17 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                 }
 
                 var categoryIds = query.Select(x => x.Id).ToArray();
+                var categoryResponseGroup = coreModel.CategoryResponseGroup.Info | coreModel.CategoryResponseGroup.WithImages | coreModel.CategoryResponseGroup.WithSeo | CategoryResponseGroup.WithLinks | CategoryResponseGroup.WithParents;
+                if ((criteria.ResponseGroup & coreModel.SearchResponseGroup.WithProperties) == coreModel.SearchResponseGroup.WithProperties)
+                {
+                    categoryResponseGroup |= coreModel.CategoryResponseGroup.WithProperties;
+                }
 
-				var categories = new ConcurrentBag<coreModel.Category>();
-				var parallelOptions = new ParallelOptions
-				{
-					MaxDegreeOfParallelism = 10
-				};
-				Parallel.ForEach(categoryIds, parallelOptions, (x) =>
-				{
-					var category = _categoryService.GetById(x);
-
-					categories.Add(category);
-
-				});
-				//Must order by priority
-				result.Categories = categories.OrderByDescending(x => x.Priority).ThenBy(x => x.Name).ToList();
+                result.Categories = _categoryService.GetByIds(categoryIds, categoryResponseGroup)
+                                                    .OrderByDescending(x => x.Priority)
+                                                    .ThenBy(x => x.Name)
+                                                    .ToList();
+            
 			}
 		}
 
@@ -150,7 +147,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                 }
 
 				var query = repository.Items;
-				if ((criteria.ResponseGroup & coreModel.ResponseGroup.WithVariations) != coreModel.ResponseGroup.WithVariations)
+				if ((criteria.ResponseGroup & coreModel.SearchResponseGroup.WithVariations) != coreModel.SearchResponseGroup.WithVariations)
 				{
 					query = query.Where(x => x.ParentId == null);
 				}
@@ -173,6 +170,13 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 					query = query.Where(x => x.Name.Contains(criteria.Keyword) || x.Code.Contains(criteria.Keyword));
 				}
 
+                //Filter by property  dictionary values
+                if(criteria.PropertyValues != null && criteria.PropertyValues.Any())
+                {
+                    var propValueIds = criteria.PropertyValues.Select(x => x.ValueId).Distinct().ToArray();
+                    query = query.Where(x => x.ItemPropertyValues.Any(y => propValueIds.Contains(y.KeyValue)));
+                }
+
                 result.TotalCount = query.Count();
 
                 var itemIds = query.OrderByDescending(x => x.Name)
@@ -182,17 +186,39 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                                    .ToArray();
 
 				var productResponseGroup = coreModel.ItemResponseGroup.ItemInfo | coreModel.ItemResponseGroup.ItemAssets | ItemResponseGroup.Links | ItemResponseGroup.Seo;
-				if ((criteria.ResponseGroup & coreModel.ResponseGroup.WithProperties) ==coreModel.ResponseGroup.WithProperties)
+				if ((criteria.ResponseGroup & coreModel.SearchResponseGroup.WithProperties) ==coreModel.SearchResponseGroup.WithProperties)
 				{
 					productResponseGroup |= coreModel.ItemResponseGroup.ItemProperties;
 				}
-				if ((criteria.ResponseGroup & coreModel.ResponseGroup.WithVariations) == coreModel.ResponseGroup.WithVariations)
+				if ((criteria.ResponseGroup & coreModel.SearchResponseGroup.WithVariations) == coreModel.SearchResponseGroup.WithVariations)
 				{
 					productResponseGroup |= coreModel.ItemResponseGroup.Variations;
 				}
 
 				var products = _itemService.GetByIds(itemIds, productResponseGroup);
                 result.Products = products.OrderByDescending(x => x.Name).ToList();
+
+                ////TODO: Filter facet properties with related store settings, currently we display all dictionary properties
+                ////populate property values facets (only for resulting product range because its DB and its very expensive operation)
+                ////IS VERY NOT OPTIMAL SOLUTION
+                //var dictPropValues = result.Products.SelectMany(x => x.PropertyValues).Where(x => x.ValueId != null)
+                //                                       .GroupBy(x=>x.ValueId)
+                //                                       .Select(x=>x.First())
+                //                                       .ToArray();
+                //if(dictPropValues.Any())
+                //{
+                //    var propDictValueIds = dictPropValues.Select(x => x.ValueId).ToArray();
+                //    var propertyIds = repository.PropertyDictionaryValues.Where(x => propDictValueIds.Contains(x.Id))
+                //                                                         .Select(x => x.PropertyId)
+                //                                                         .Distinct()
+                //                                                         .ToArray();
+
+                //    var properties = repository.GetPropertiesByIds(propertyIds).Select(x=>x.ToCoreModel(x.Catalog.ToCoreModel(), x.Category != null ? x.Category.ToCoreModel() : null));
+                //    foreach(var dictProp in dictPropValues)
+                //    {
+                //        dictProp.Property = properties.FirstOrDefault(x => String.Equals(x.Name, dictProp.PropertyName, StringComparison.InvariantCultureIgnoreCase));
+                //    }
+                //}          
             }
         }
     }
