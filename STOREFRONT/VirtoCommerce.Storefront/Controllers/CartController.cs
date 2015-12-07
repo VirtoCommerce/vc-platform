@@ -231,12 +231,19 @@ namespace VirtoCommerce.Storefront.Controllers
             return Json(processingResult, JsonRequestBehavior.AllowGet);
         }
 
-        // GET: /cart/checkout/external-payment-callback
+        // GET: /cart/checkout/external_payment_callback?orderId=...
         [HttpGet]
-        [Route("checkout/external-payment-callback")]
-        public ActionResult ExternalPaymentCallback()
+        [Route("checkout/external_payment_callback")]
+        public async Task<ActionResult> ExternalPaymentCallback(string orderId)
         {
-            // TODO: Process callback from external payment gateway
+            var processingResult = await _commerceApi.CommercePostProcessPaymentAsync(orderId);
+
+            if (!processingResult.IsSuccess.HasValue || !processingResult.IsSuccess.Value)
+            {
+                return View("error");
+            }
+
+            var order = await _orderApi.OrderModuleGetByIdAsync(orderId);
 
             return StoreFrontRedirect("~/cart/checkout/thanks");
         }

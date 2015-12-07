@@ -223,7 +223,21 @@
                                 </div>
                                 <label class="radio__label content-box__emphasis" for="{( availablePaymentMethod.GatewayCode )}" ng-bind="availablePaymentMethod.Name"></label>
                                 <div class="radio__accessory">
-                                    <div class="payment-icon" ng-class="{ 'payment-icon--preparedform': availablePaymentMethod.Type == 'PreparedForm', 'payment-icon--standard': availablePaymentMethod.Type == 'Standard', 'payment-icon--unknown': availablePaymentMethod.Type == 'Unknown', 'payment-icon--redirection': availablePaymentMethod.Type == 'Redirection' }">
+                                    <div class="payment-icon" ng-class="
+                                         { 'payment-icon--preparedform': availablePaymentMethod.Type == 'PreparedForm',
+                                           'payment-icon--standard': availablePaymentMethod.Type == 'Standard' && checkout.bankCardInfo.Type == 'Unknown',
+                                           'payment-icon--unknown': availablePaymentMethod.Type == 'Unknown',
+                                           'payment-icon--redirection': availablePaymentMethod.Type == 'Redirection',
+                                           'payment-icon--american-express': availablePaymentMethod.Type == 'Standard' && checkout.bankCardInfo.Type == 'AmericanExpress',
+                                           'payment-icon--dankort': availablePaymentMethod.Type == 'Standard' && checkout.bankCardInfo.Type == 'Dankort',
+                                           'payment-icon--diners-club': availablePaymentMethod.Type == 'Standard' && checkout.bankCardInfo.Type == 'Diners',
+                                           'payment-icon--discover': availablePaymentMethod.Type == 'Standard' && checkout.bankCardInfo.Type == 'Discover',
+                                           'payment-icon--jcb': availablePaymentMethod.Type == 'Standard' && checkout.bankCardInfo.Type == 'Jcb',
+                                           'payment-icon--laser': availablePaymentMethod.Type == 'Standard' && checkout.bankCardInfo.Type == 'Laser',
+                                           'payment-icon--maestro': availablePaymentMethod.Type == 'Standard' && checkout.bankCardInfo.Type == 'Maestro',
+                                           'payment-icon--master': availablePaymentMethod.Type == 'Standard' && checkout.bankCardInfo.Type == 'MasterCard',
+                                           'payment-icon--unionpay': availablePaymentMethod.Type == 'Standard' && checkout.bankCardInfo.Type == 'UnionPay',
+                                           'payment-icon--visa': availablePaymentMethod.Type == 'Standard' && checkout.bankCardInfo.Type == 'Visa' }">
                                         <span class="visually-hidden" ng-bind="availablePaymentMethod.Name"></span>
                                     </div>
                                 </div>
@@ -233,7 +247,7 @@
                                     <div class="field field--required" ng-class="{ 'field--show-floating-label': checkout.bankCardInfo.BankCardNumber.length, 'field--error': formPaymentMethod.CardNumber.$dirty && formPaymentMethod.CardNumber.$error.required }">
                                         <div class="field__input-wrapper">
                                             <label class="field__label" for="">{{ 'checkout.payment_method.card_number' | t }}</label>
-                                            <input class="field__input" id="CardNumber" name="CardNumber" placeholder="{{ 'checkout.payment_method.card_number' | t }}" required="required" size="30" type="text" ng-model="checkout.bankCardInfo.BankCardNumber" />
+                                            <input class="field__input" id="CardNumber" name="CardNumber" placeholder="{{ 'checkout.payment_method.card_number' | t }}" required="required" size="30" type="text" ng-model="checkout.bankCardInfo.BankCardNumber" ng-change="detectBankCardType(checkout.bankCardInfo.BankCardNumber)" />
                                             <span class="field__icon icon icon--lock">
                                                 <span class="visually-hidden">{{ 'checkout.secure_field' | t }}</span>
                                             </span>
@@ -251,30 +265,10 @@
                                             Please enter cardholder name (same as on your bank card)
                                         </p>
                                     </div>
-                                    <div class="field field--required visually-hidden">
-                                        <div class="field__input-wrapper field__input-wrapper--select">
-                                            <label class="field__label" for="">{{ 'checkout.payment_method.expiry_month' | t }}</label>
-                                            <select class="field__input field__input--select" id="" name="" tabindex="-1">
-                                                <option value="">{{ 'checkout.payment_method.expiry_month' | t }}</option>
-                                                {% for month in (1..12) %}
-                                                <option value="{{ month }}">
-                                                    {% if i < 10 %}0{{ i }}{% else %}i{% endif %}</option>
-                                                {% endfor %}
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="field field--required visually-hidden">
-                                        <div class="field__input-wrapper field__input-wrapper--select">
-                                            <label class="field__label" for="">{{ 'checkout.payment_method.expiry_year' | t }}</label>
-                                            <select class="field__input field__input--select" id="" name="" tabindex="-1">
-                                                <option value="">Expiry year</option>
-                                            </select>
-                                        </div>
-                                    </div>
                                     <div class="field--quarter field field--required">
                                         <div class="field__input-wrapper">
-                                            <label class="field__label" for="">{{ 'checkout.payment_method.expiry_date' | t }}</label>
-                                            <input class="field__input" id="" placeholder="{{ 'checkout.payment_method.expiry_date' | t }}" size="30" type="tel" />
+                                            <label class="field__label" for="CardExpirationDate">{{ 'checkout.payment_method.expiry_date' | t }}</label>
+                                            <input class="field__input" id="CardExpirationDate" name="ExpirationDate" placeholder="{{ 'checkout.payment_method.expiry_date' | t }}" size="30" type="tel" />
                                         </div>
                                     </div>
                                     <div class="field--quarter field field--required">
@@ -283,9 +277,8 @@
                                             <input class="field__input" id="" maxlength="4" name="" placeholder="{{ 'checkout.payment_method.cvv' | t }}" size="30" type="tel" />
                                             <span class="field__icon icon icon--question has-tooltip" role="tooltip" tabindex="0">
                                                 <span class="tooltip">
-                                                    <span data-cvv-tooltip="unknown">{{ 'checkout.payment_method.cvv_unknown_tooltip_text' | t }}</span>
-                                                    <span class="hidden" data-cvv-tooltip="amex">{{ 'checkout.payment_method.cvv_amex_tooltip_text' | t }}</span>
-                                                    <span class="hidden" data-cvv-tooltip="other">{{ 'checkout.payment_method.cvv_other_tooltip_text' | t }}</span>
+                                                    <span ng-class="{ 'hidden': checkout.bankCardInfo.Type == 'AmericanExpress' }" data-cvv-tooltip="unknown">{{ 'checkout.payment_method.cvv_unknown_tooltip_text' | t }}</span>
+                                                    <span ng-class="{ 'hidden': checkout.bankCardInfo.Type != 'AmericanExpress' }" data-cvv-tooltip="amex" ng-if="checkout.bankCardInfo.Type == 'AmericanExpress'">{{ 'checkout.payment_method.cvv_amex_tooltip_text' | t }}</span>
                                                 </span>
                                             </span>
                                         </div>
@@ -451,5 +444,5 @@
 </script>
 
 <script id="storefront.checkout.paymentForm.tpl" type="text/ng-template">
-    <span ng-bind-html="checkout.paymentFormHtml"></span>
+    <span ng-bind-html="checkout.paymentFormHtml" ng-model="checkout.paymentFormHtml"></span>
 </script>

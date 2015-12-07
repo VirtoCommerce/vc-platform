@@ -1,4 +1,4 @@
-﻿var app = angular.module('storefrontApp', ['ngRoute']);
+﻿var app = angular.module('storefrontApp', ['ngRoute', 'ngSanitize']);
 
 app.service('productService', ['$http', function ($http) {
 	return {
@@ -107,19 +107,6 @@ app.controller('cartController', ['$scope', 'cartService', function ($scope, car
 }]);
 
 app.controller('checkoutController', ['$scope', '$location', '$sce', 'cartService', function ($scope, $location, $sce, cartService) {
-    //Base store url populated in layout and can be used for construction url inside controller
-    $scope.baseUrl = {};
-
-    //For outside app redirect (To reload the page after changing the URL, use the lower-level API)
-    $scope.outsideRedirect = function (absUrl) {
-        window.location.href = absUrl;
-    };
-
-    //change in the current URL or change the current URL in the browser (for app route)
-    $scope.insideRedirect = function (path) {
-        $location.path(path);
-    };
-
     $scope.checkout = {
         cart: {},
         orderSummaryExpanded: false,
@@ -135,7 +122,7 @@ app.controller('checkoutController', ['$scope', '$location', '$sce', 'cartServic
         shippingMethodProcessing: false,
         availablePaymentMethods: [],
         selectedPaymentMethod: {},
-        bankCardInfo: {},
+        bankCardInfo: { Type: 'Unknown' },
         billingAddressEqualsShipping: true,
         orderProcessing: false,
         paymentFormHtml: null
@@ -222,6 +209,50 @@ app.controller('checkoutController', ['$scope', '$location', '$sce', 'cartServic
         setBillingAddressEqualsShipping();
     }
 
+    $scope.detectBankCardType = function getBankCardType(bankCardNumber) {
+        var type = 'Unknown';
+
+        var firstOneSymbol = bankCardNumber.substring(0, 1);
+        var firstTwoSymbols = bankCardNumber.substring(0, 2);
+        var firstThreeSymbols = bankCardNumber.substring(0, 3);
+        var firstFourSymbols = bankCardNumber.substring(0, 4);
+        var firstSixSymbols = bankCardNumber.substring(0, 6);
+
+        if (firstTwoSymbols == '34' || firstTwoSymbols == '37') {
+            type = 'AmericanExpress';
+        }
+        if (firstTwoSymbols == '62' || firstTwoSymbols == '88') {
+            type = 'UnionPay';
+        }
+        if (firstThreeSymbols >= '300' && firstThreeSymbols <= '305' || firstThreeSymbols == '309' || firstTwoSymbols == '36' || firstTwoSymbols == '38' || firstTwoSymbols == '39') {
+            type = 'Diners';
+        }
+        if (firstFourSymbols == '6011' || firstSixSymbols >= '622126' && firstSixSymbols <= '622925' || firstThreeSymbols >= '644' && firstThreeSymbols <= '649' || firstTwoSymbols == '65') {
+            type = 'Discover';
+        }
+        if (firstFourSymbols >= '3528' && firstFourSymbols <= '3589') {
+            type = 'Jcb';
+        }
+        if (firstFourSymbols == '6304' || firstFourSymbols == '6706' || firstFourSymbols == '6771' || firstFourSymbols == '6709') {
+            type = 'Laser';
+        }
+        if (firstFourSymbols == '5018' || firstFourSymbols == '5020' || firstFourSymbols == '5038' || firstFourSymbols == '5612' || firstFourSymbols == '5893' || firstFourSymbols == '6304' ||
+            firstFourSymbols >= '6759' && firstFourSymbols <= '6763' || firstFourSymbols == '0604' || firstFourSymbols == '6390') {
+            type = 'Maestro';
+        }
+        if (firstFourSymbols == '5019') {
+            type = 'Dankort';
+        }
+        if (firstTwoSymbols >= '50' && firstTwoSymbols <= '55') {
+            type = 'MasterCard';
+        }
+        if (firstOneSymbol == '4') {
+            type = 'Visa';
+        }
+
+        $scope.checkout.bankCardInfo.Type = type;
+    }
+
     $scope.completeOrder = function (paymentMethodCode) {
         $scope.checkout.orderProcessing = true;
         cartService.addAddress($scope.checkout.billingAddress).then(function (response) {
@@ -298,12 +329,6 @@ app.controller('checkoutController', ['$scope', '$location', '$sce', 'cartServic
         $scope.checkout.billingAddress.Phone = $scope.checkout.shippingAddress.Phone;
         $scope.checkout.billingAddress.Email = $scope.checkout.shippingAddress.Email;
         $scope.checkout.billingAddressEqualsShipping = true;
-    }
-
-    function getBankCardType(bankCardNumber) {
-        var type = "unknown";
-
-        return type;
     }
 
     function handlePaymentProcessingResult(paymentProcessingResult, orderId) {
