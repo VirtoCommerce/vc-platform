@@ -3,13 +3,6 @@
     $scope.uiGridConstants = uiGridConstants;
     var blade = $scope.blade;
 
-    //pagination settings
-    $scope.pageSettings = {};
-    $scope.pageSettings.totalItems = 0;
-    $scope.pageSettings.currentPage = 1;
-    $scope.pageSettings.numPages = 5;
-    $scope.pageSettings.itemsPerPageCount = 20;
-
     blade.refresh = function () {
         blade.isLoading = true;
         blade.parentBlade.refresh().$promise.then(function (data) {
@@ -19,12 +12,10 @@
 
     function initializeBlade(data) {
         blade.currentEntities = angular.copy(data);
-        blade.origItem = data;
         blade.isLoading = false;
-        $scope.pageSettings.totalItems = data.length;
 
         blade.currentEntities.sort(function (a, b) {
-            return a.priority > b.priority;
+            return a.priority - b.priority;
         });
     };
 
@@ -84,9 +75,8 @@
     $scope.setGridOptions = function (gridOptions) {
         uiGridHelper.initialize($scope, gridOptions,
         function (gridApi) {
-            gridApi.grid.registerRowsProcessor($scope.singleFilter, 90);
-            $scope.$watch('pageSettings.currentPage', gridApi.pagination.seek);
-            gridApi.draggableRows.on.rowDropped($scope, function (info, dropTarget) {
+            // gridApi.grid.registerRowsProcessor($scope.singleFilter, 90);
+            gridApi.draggableRows.on.rowFinishDrag($scope, function () {
                 for (var i = 0; i < blade.currentEntities.length; i++) {
                     blade.currentEntities[i].priority = i + 1;
                 }
@@ -98,16 +88,16 @@
         });
     };
 
-    $scope.singleFilter = function (renderableRows) {
-        var visibleCount = 0;
-        renderableRows.forEach(function (row) {
-            row.visible = _.any(filterFilter([row.entity], blade.searchText));
-            if (row.visible) visibleCount++;
-        });
+    //$scope.singleFilter = function (renderableRows) {
+    //    var visibleCount = 0;
+    //    renderableRows.forEach(function (row) {
+    //        row.visible = _.any(filterFilter([row.entity], blade.searchText));
+    //        if (row.visible) visibleCount++;
+    //    });
 
-        $scope.filteredEntitiesCount = visibleCount;
-        return renderableRows;
-    };
+    //    $scope.filteredEntitiesCount = visibleCount;
+    //    return renderableRows;
+    //};
 
 
     initializeBlade(blade.currentEntities);

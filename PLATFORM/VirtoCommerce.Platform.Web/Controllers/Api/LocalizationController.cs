@@ -20,9 +20,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
-        /// Return all localization files by given locale
+        /// Return localization resource
         /// </summary>
-        /// <returns>json</returns>
+        /// <param name="lang">Language of localization resource (en by default)</param>
+        /// <returns></returns>
         [HttpGet]
         [Route("")]
         [ResponseType(typeof(object))] // Produces invalid response type in generated client
@@ -45,7 +46,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <summary>
         /// Return all aviable locales
         /// </summary>
-        /// <returns>json</returns>
+        /// <returns></returns>
         [HttpGet]
         [Route("locales")]
         [ResponseType(typeof(string[]))]

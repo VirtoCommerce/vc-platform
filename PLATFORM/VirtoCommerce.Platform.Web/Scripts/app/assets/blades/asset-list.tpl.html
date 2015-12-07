@@ -42,9 +42,11 @@
 </script>
 
 <script type="text/ng-template" id="asset-list-icon.cell.html">
-    <div class="product-img">
-        <div class="image" style="background-image: url('{{COL_FIELD}}')" ng-if="row.entity.isImage"></div>
-        <i class="table-ico fa" ng-class="row.entity.type == 'folder' ? 'fa-folder' : 'fa-file-text-o'" ng-if="!row.entity.isImage"></i>
+    <div class="ui-grid-cell-contents">
+        <div class="product-img">
+            <div class="image" style="background-image: url('{{COL_FIELD}}')" ng-if="row.entity.isImage"></div>
+            <i class="table-ico fa" ng-class="row.entity.type == 'folder' ? 'fa-folder' : 'fa-file-text-o'" ng-if="!row.entity.isImage"></i>
+        </div>
     </div>
 </script>
 <script type="text/ng-template" id="am-time-ago.cell.html">
