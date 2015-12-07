@@ -12,6 +12,7 @@ namespace VirtoCommerce.Platform.Data.Model
         public const string TypeDecimal = "Decimal";
         public const string TypeBoolean = "Boolean";
         public const string TypeDateTime = "DateTime";
+        public const string TypeSecureString = "SecureString";
 
         [Required]
         [StringLength(64)]
@@ -50,6 +51,7 @@ namespace VirtoCommerce.Platform.Data.Model
                 case TypeLongText:
                     return LongTextValue;
                 case TypeShortText:
+                case TypeSecureString:
                     return ShortTextValue;
                 default:
                     return null;
@@ -71,6 +73,7 @@ namespace VirtoCommerce.Platform.Data.Model
                 case TypeLongText:
                     return LongTextValue;
                 case TypeShortText:
+                case TypeSecureString:
                     return ShortTextValue;
                 default:
                     return base.ToString();
