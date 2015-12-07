@@ -14,6 +14,7 @@ using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Common;
 using shopifyModel = VirtoCommerce.LiquidThemeEngine.Objects;
+using VirtoCommerce.Storefront.Builders;
 
 namespace VirtoCommerce.Storefront.Controllers
 {
@@ -26,8 +27,11 @@ namespace VirtoCommerce.Storefront.Controllers
         private readonly IAuthenticationManager _authenticationManager;
         private readonly IVirtoCommercePlatformApi _platformApi;
         private readonly IOrderModuleApi _orderApi;
+        private readonly ICartBuilder _cartBuilder;
 
-        public AccountController(WorkContext workContext, IStorefrontUrlBuilder urlBuilder, ICommerceCoreModuleApi commerceCoreApi, ICustomerManagementModuleApi customerApi, IAuthenticationManager authenticationManager, IVirtoCommercePlatformApi platformApi, IOrderModuleApi orderApi)
+        public AccountController(WorkContext workContext, IStorefrontUrlBuilder urlBuilder, ICommerceCoreModuleApi commerceCoreApi,
+            ICustomerManagementModuleApi customerApi, IAuthenticationManager authenticationManager, IVirtoCommercePlatformApi platformApi,
+            IOrderModuleApi orderApi, ICartBuilder cartBuilder)
             : base(workContext, urlBuilder)
         {
             _commerceCoreApi = commerceCoreApi;
@@ -35,6 +39,7 @@ namespace VirtoCommerce.Storefront.Controllers
             _authenticationManager = authenticationManager;
             _platformApi = platformApi;
             _orderApi = orderApi;
+            _cartBuilder = cartBuilder;
         }
 
         [HttpGet]
@@ -187,6 +192,8 @@ namespace VirtoCommerce.Storefront.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> Login(Login formModel, string returnUrl)
         {
+            var anonymousShoppingCart = WorkContext.CurrentCart;
+
             var loginResult = await _commerceCoreApi.StorefrontSecurityPasswordSignInAsync(formModel.Email, formModel.Password);
 
             switch (loginResult.Status)
@@ -194,6 +201,20 @@ namespace VirtoCommerce.Storefront.Controllers
                 case "success":
                     var identity = CreateClaimsIdentity(formModel.Email);
                     _authenticationManager.SignIn(identity);
+
+                    if (anonymousShoppingCart.ItemsCount > 0)
+                    {
+                        var user = await _commerceCoreApi.StorefrontSecurityGetUserByNameAsync(formModel.Email);
+                        if (user != null)
+                        {
+                            var customer = await _customerApi.CustomerModuleGetContactByIdAsync(user.Id);
+
+                            await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, customer.ToWebModel(formModel.Email), WorkContext.CurrentCurrency);
+                            await _cartBuilder.MergeWithCartAsync(anonymousShoppingCart);
+                            await _cartBuilder.SaveAsync();
+                        }
+                    }
+
                     return StoreFrontRedirect(returnUrl);
                 case "lockedOut":
                     return View("lockedout", WorkContext);

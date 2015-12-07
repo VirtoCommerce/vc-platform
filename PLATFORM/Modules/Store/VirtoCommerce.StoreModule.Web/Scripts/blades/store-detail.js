@@ -20,8 +20,8 @@
             blade.currentEntityId = data.id;
             blade.title = data.name;
 
-            data.shippingMethods.sort(function (a, b) { return a.priority > b.priority; });
-            data.paymentMethods.sort(function (a, b) { return a.priority > b.priority; });
+            data.shippingMethods.sort(function (a, b) { return a.priority - b.priority; });
+            data.paymentMethods.sort(function (a, b) { return a.priority - b.priority; });
 
             _.each(data.shippingMethods, function (x) { settingsHelper.fixValues(x.settings); })
             _.each(data.paymentMethods, function (x) { settingsHelper.fixValues(x.settings); })

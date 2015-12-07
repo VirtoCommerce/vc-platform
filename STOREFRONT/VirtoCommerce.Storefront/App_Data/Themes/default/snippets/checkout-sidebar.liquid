@@ -21,18 +21,18 @@
                     <tr class="product" ng-repeat="lineItem in checkout.cart.Items">
                         <td class="product__image">
                             <div class="product__image__inner">
-                                <span class="product__quantity">{( lineItem.Quantity )}</span>
+                                <span class="product__quantity" ng-bind="lineItem.Quantity"></span>
                                 <img alt="{( lineItem.Name )}" ng-src="{( lineItem.ImageUrl )}" />
                             </div>
                         </td>
                         <td class="product__description">
-                            <span class="product__description__name order-summary__emphasis">{( lineItem.Name )}</span>
+                            <span class="product__description__name order-summary__emphasis" ng-bind="lineItem.Name"></span>
                             <span class="product__description__variant order-summary__small-text">
                                 <!-- TODO: Add properties -->
                             </span>
                         </td>
                         <td class="product__price">
-                            <span class="order-summary__emphasis">{( lineItem.ExtendedPrice.Amount | currency: lineItem.ExtendedPrice.CurrencySymbol )}</span>
+                            <span class="order-summary__emphasis" ng-bind="lineItem.ExtendedPrice.FormatedAmount"></span>
                         </td>
                     </tr>
                 </tbody>
@@ -61,6 +61,11 @@
                         <div class="field__input-btn-wrapper">
                             <div class="field__input-wrapper">
                                 <span style="font-size: 1.71em; font-weight: 500; line-height: 40px;" ng-bind="checkout.cart.Coupon.Code"></span>
+                                <span tabindex="0" class="field__icon icon icon--question has-tooltip" role="tooltip" ng-if="checkout.cart.Coupon.Description">
+                                    <span class="tooltip">
+                                        <span ng-bind="checkout.cart.Coupon.Description"></span>
+                                    </span>
+                                </span>
                             </div>
                             <button class="field__input-btn btn btn--default" type="button" ng-click="removeCoupon()" ng-class="{ 'btn--loading': checkout.couponProcessing }">
                                 <span class="btn__content visually-hidden-on-mobile">Remove</span>

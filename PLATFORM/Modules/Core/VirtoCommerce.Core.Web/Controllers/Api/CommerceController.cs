@@ -77,7 +77,6 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
         [HttpGet]
         [Route("paymentcallback")]
         [ResponseType(typeof(PostProcessPaymentResult))]
-        [ApiExplorerSettings(IgnoreApi = true)]
         public IHttpActionResult PostProcessPayment(string orderId)
         {
             var order = _customerOrderService.GetById(orderId, CustomerOrderResponseGroup.Full);

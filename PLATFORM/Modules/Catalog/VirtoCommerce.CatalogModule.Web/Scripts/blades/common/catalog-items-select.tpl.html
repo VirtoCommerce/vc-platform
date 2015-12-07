@@ -49,9 +49,11 @@
     <div ng-click='grid.appScope.selectItem($event, row.entity)' ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'" class="ui-grid-cell" ng-class="{'ui-grid-row-header-cell': col.isRowHeader, '__selected': row.entity.id===grid.appScope.selectedNodeId }" role="{{col.isRowHeader ? 'rowheader' : 'gridcell' }}" ui-grid-cell style='cursor:pointer'></div>
 </script>
 <script type="text/ng-template" id="item-list-icon.cell.html">
-    <div class="product-img">
-        <div class="image" style="background-image: url('{{COL_FIELD}}')" ng-if="row.entity.type!=='category' && COL_FIELD"></div>
-        <i class="table-ico fa" ng-class="row.entity.type == 'category' ? 'fa-folder' : 'fa-image'" ng-if="!COL_FIELD"></i>
+    <div class="ui-grid-cell-contents">
+        <div class="product-img">
+            <div class="image" style="background-image: url('{{COL_FIELD}}')" ng-if="row.entity.type!=='category' && COL_FIELD"></div>
+            <i class="table-ico fa" ng-class="row.entity.type == 'category' ? 'fa-folder' : 'fa-image'" ng-if="!COL_FIELD"></i>
+        </div>
     </div>
 </script>
 <script type="text/ng-template" id="item-list-SKU.cell.html">

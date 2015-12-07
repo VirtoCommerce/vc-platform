@@ -18,6 +18,11 @@ namespace VirtoCommerce.Storefront.Model
         public Money Amount { get; set; }
 
         /// <summary>
+        /// Gets or sets coupon description
+        /// </summary>
+        public string Description { get; set; }
+
+        /// <summary>
         /// Gets or sets the sign that coupon was applied successfully
         /// </summary>
         public bool AppliedSuccessfully { get; set; }

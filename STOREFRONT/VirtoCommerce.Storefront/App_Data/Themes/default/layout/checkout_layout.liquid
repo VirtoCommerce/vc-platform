@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="en" dir="ltr" class="multi-step windows chrome desktop page--no-banner page--logo-main page--show js flexbox flexboxlegacy rgba multiplebgs boxshadow opacity cssanimations csstransitions generatedcontent svg inlinesvg cors boxsizing display-table pointerevents placeholder mediaqueries floating-labels" ng-app="storefrontApp">
+<html lang="en" dir="ltr" class="multi-step windows chrome desktop page--no-banner page--logo-main page--show js flexbox flexboxlegacy rgba multiplebgs boxshadow opacity cssanimations csstransitions generatedcontent svg inlinesvg cors boxsizing display-table pointerevents placeholder mediaqueries floating-labels" ng-app="storefrontApp" ng-controller="mainController">
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
@@ -14,6 +14,7 @@
     {{ '//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js' | script_tag }}
     {{ '//ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.min.js' | script_tag }}
     {{ '//ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular-route.min.js' | script_tag }}
+    {{ '//ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular-sanitize.min.js' | script_tag }}
     {{ 'storefront.js' | asset_url | script_tag }}
 
     {{ content_for_header }}

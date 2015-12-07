@@ -90,7 +90,7 @@
         if (!blade.isNew) {
             blade.toolbarCommands = [
                 {
-                    name: "Save", icon: 'fa fa-save',
+                    name: "platform.commands.save", icon: 'fa fa-save',
                     executeMethod: function () {
                         $scope.saveChanges();
                     },
@@ -100,7 +100,7 @@
                     permission: 'catalog:update'
                 },
                 {
-                    name: "Reset", icon: 'fa fa-undo',
+                    name: "platform.commands.reset", icon: 'fa fa-undo',
                     executeMethod: function () {
                         angular.copy(blade.origEntity, blade.currentEntity);
                     },
