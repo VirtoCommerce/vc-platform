@@ -52,6 +52,14 @@ namespace VirtoCommerce.Client.Model
   
         
         /// <summary>
+        /// Gets or sets the value of product type (Digital, physical etc)
+        /// </summary>
+        /// <value>Gets or sets the value of product type (Digital, physical etc)</value>
+        [DataMember(Name="productType", EmitDefaultValue=false)]
+        public string ProductType { get; set; }
+  
+        
+        /// <summary>
         /// Gets or sets the value of line item name
         /// </summary>
         /// <value>Gets or sets the value of line item name</value>
@@ -331,6 +339,7 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  CatalogId: ").Append(CatalogId).Append("\n");
             sb.Append("  CategoryId: ").Append(CategoryId).Append("\n");
             sb.Append("  Sku: ").Append(Sku).Append("\n");
+            sb.Append("  ProductType: ").Append(ProductType).Append("\n");
             sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  Quantity: ").Append(Quantity).Append("\n");
             sb.Append("  Currency: ").Append(Currency).Append("\n");
@@ -421,6 +430,11 @@ namespace VirtoCommerce.Client.Model
                     this.Sku == other.Sku ||
                     this.Sku != null &&
                     this.Sku.Equals(other.Sku)
+                ) && 
+                (
+                    this.ProductType == other.ProductType ||
+                    this.ProductType != null &&
+                    this.ProductType.Equals(other.ProductType)
                 ) && 
                 (
                     this.Name == other.Name ||
@@ -617,6 +631,9 @@ namespace VirtoCommerce.Client.Model
                 
                 if (this.Sku != null)
                     hash = hash * 57 + this.Sku.GetHashCode();
+                
+                if (this.ProductType != null)
+                    hash = hash * 57 + this.ProductType.GetHashCode();
                 
                 if (this.Name != null)
                     hash = hash * 57 + this.Name.GetHashCode();

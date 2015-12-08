@@ -170,6 +170,14 @@ namespace VirtoCommerce.Client.Model
         public List<VirtoCommerceDomainCatalogModelPropertyDisplayName> DisplayNames { get; set; }
   
         
+        /// <summary>
+        /// System flag used to mark that object was inherited from other
+        /// </summary>
+        /// <value>System flag used to mark that object was inherited from other</value>
+        [DataMember(Name="isInherited", EmitDefaultValue=false)]
+        public bool? IsInherited { get; set; }
+  
+        
   
         /// <summary>
         /// Returns the string presentation of the object
@@ -198,6 +206,7 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  DictionaryValues: ").Append(DictionaryValues).Append("\n");
             sb.Append("  Attributes: ").Append(Attributes).Append("\n");
             sb.Append("  DisplayNames: ").Append(DisplayNames).Append("\n");
+            sb.Append("  IsInherited: ").Append(IsInherited).Append("\n");
             
             sb.Append("}\n");
             return sb.ToString();
@@ -329,6 +338,11 @@ namespace VirtoCommerce.Client.Model
                     this.DisplayNames == other.DisplayNames ||
                     this.DisplayNames != null &&
                     this.DisplayNames.SequenceEqual(other.DisplayNames)
+                ) && 
+                (
+                    this.IsInherited == other.IsInherited ||
+                    this.IsInherited != null &&
+                    this.IsInherited.Equals(other.IsInherited)
                 );
         }
 
@@ -400,6 +414,9 @@ namespace VirtoCommerce.Client.Model
                 
                 if (this.DisplayNames != null)
                     hash = hash * 57 + this.DisplayNames.GetHashCode();
+                
+                if (this.IsInherited != null)
+                    hash = hash * 57 + this.IsInherited.GetHashCode();
                 
                 return hash;
             }

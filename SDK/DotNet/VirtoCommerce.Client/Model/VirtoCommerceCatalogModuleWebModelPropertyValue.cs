@@ -35,6 +35,14 @@ namespace VirtoCommerce.Client.Model
   
         
         /// <summary>
+        /// Gets or sets the id of the property that this value belongs to.
+        /// </summary>
+        /// <value>Gets or sets the id of the property that this value belongs to.</value>
+        [DataMember(Name="propertyId", EmitDefaultValue=false)]
+        public string PropertyId { get; set; }
+  
+        
+        /// <summary>
         /// Gets or sets the language of this property value.
         /// </summary>
         /// <value>Gets or sets the language of this property value.</value>
@@ -74,6 +82,14 @@ namespace VirtoCommerce.Client.Model
         public Object Value { get; set; }
   
         
+        /// <summary>
+        /// System flag used to mark that object was inherited from other
+        /// </summary>
+        /// <value>System flag used to mark that object was inherited from other</value>
+        [DataMember(Name="isInherited", EmitDefaultValue=false)]
+        public bool? IsInherited { get; set; }
+  
+        
   
         /// <summary>
         /// Returns the string presentation of the object
@@ -85,11 +101,13 @@ namespace VirtoCommerce.Client.Model
             sb.Append("class VirtoCommerceCatalogModuleWebModelPropertyValue {\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
             sb.Append("  PropertyName: ").Append(PropertyName).Append("\n");
+            sb.Append("  PropertyId: ").Append(PropertyId).Append("\n");
             sb.Append("  LanguageCode: ").Append(LanguageCode).Append("\n");
             sb.Append("  Alias: ").Append(Alias).Append("\n");
             sb.Append("  ValueType: ").Append(ValueType).Append("\n");
             sb.Append("  ValueId: ").Append(ValueId).Append("\n");
             sb.Append("  Value: ").Append(Value).Append("\n");
+            sb.Append("  IsInherited: ").Append(IsInherited).Append("\n");
             
             sb.Append("}\n");
             return sb.ToString();
@@ -138,6 +156,11 @@ namespace VirtoCommerce.Client.Model
                     this.PropertyName.Equals(other.PropertyName)
                 ) && 
                 (
+                    this.PropertyId == other.PropertyId ||
+                    this.PropertyId != null &&
+                    this.PropertyId.Equals(other.PropertyId)
+                ) && 
+                (
                     this.LanguageCode == other.LanguageCode ||
                     this.LanguageCode != null &&
                     this.LanguageCode.Equals(other.LanguageCode)
@@ -161,6 +184,11 @@ namespace VirtoCommerce.Client.Model
                     this.Value == other.Value ||
                     this.Value != null &&
                     this.Value.Equals(other.Value)
+                ) && 
+                (
+                    this.IsInherited == other.IsInherited ||
+                    this.IsInherited != null &&
+                    this.IsInherited.Equals(other.IsInherited)
                 );
         }
 
@@ -182,6 +210,9 @@ namespace VirtoCommerce.Client.Model
                 if (this.PropertyName != null)
                     hash = hash * 57 + this.PropertyName.GetHashCode();
                 
+                if (this.PropertyId != null)
+                    hash = hash * 57 + this.PropertyId.GetHashCode();
+                
                 if (this.LanguageCode != null)
                     hash = hash * 57 + this.LanguageCode.GetHashCode();
                 
@@ -196,6 +227,9 @@ namespace VirtoCommerce.Client.Model
                 
                 if (this.Value != null)
                     hash = hash * 57 + this.Value.GetHashCode();
+                
+                if (this.IsInherited != null)
+                    hash = hash * 57 + this.IsInherited.GetHashCode();
                 
                 return hash;
             }

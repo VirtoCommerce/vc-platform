@@ -55,6 +55,13 @@ namespace VirtoCommerce.Client.Model
   
         
         /// <summary>
+        /// Gets or Sets IsInherited
+        /// </summary>
+        [DataMember(Name="isInherited", EmitDefaultValue=false)]
+        public bool? IsInherited { get; set; }
+  
+        
+        /// <summary>
         /// Gets or Sets SeoInfos
         /// </summary>
         [DataMember(Name="seoInfos", EmitDefaultValue=false)]
@@ -117,6 +124,7 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Group: ").Append(Group).Append("\n");
             sb.Append("  SortOrder: ").Append(SortOrder).Append("\n");
             sb.Append("  BinaryData: ").Append(BinaryData).Append("\n");
+            sb.Append("  IsInherited: ").Append(IsInherited).Append("\n");
             sb.Append("  SeoInfos: ").Append(SeoInfos).Append("\n");
             sb.Append("  LanguageCode: ").Append(LanguageCode).Append("\n");
             sb.Append("  CreatedDate: ").Append(CreatedDate).Append("\n");
@@ -187,6 +195,11 @@ namespace VirtoCommerce.Client.Model
                     this.BinaryData.Equals(other.BinaryData)
                 ) && 
                 (
+                    this.IsInherited == other.IsInherited ||
+                    this.IsInherited != null &&
+                    this.IsInherited.Equals(other.IsInherited)
+                ) && 
+                (
                     this.SeoInfos == other.SeoInfos ||
                     this.SeoInfos != null &&
                     this.SeoInfos.SequenceEqual(other.SeoInfos)
@@ -249,6 +262,9 @@ namespace VirtoCommerce.Client.Model
                 
                 if (this.BinaryData != null)
                     hash = hash * 57 + this.BinaryData.GetHashCode();
+                
+                if (this.IsInherited != null)
+                    hash = hash * 57 + this.IsInherited.GetHashCode();
                 
                 if (this.SeoInfos != null)
                     hash = hash * 57 + this.SeoInfos.GetHashCode();
