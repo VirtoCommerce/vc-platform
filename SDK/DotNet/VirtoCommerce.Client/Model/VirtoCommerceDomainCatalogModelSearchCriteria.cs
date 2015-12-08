@@ -76,13 +76,6 @@ namespace VirtoCommerce.Client.Model
   
         
         /// <summary>
-        /// Gets or Sets Currency
-        /// </summary>
-        [DataMember(Name="currency", EmitDefaultValue=false)]
-        public string Currency { get; set; }
-  
-        
-        /// <summary>
         /// Gets or Sets Code
         /// </summary>
         [DataMember(Name="code", EmitDefaultValue=false)]
@@ -97,13 +90,6 @@ namespace VirtoCommerce.Client.Model
   
         
         /// <summary>
-        /// Gets or Sets Facets
-        /// </summary>
-        [DataMember(Name="facets", EmitDefaultValue=false)]
-        public List<string> Facets { get; set; }
-  
-        
-        /// <summary>
         /// Gets or Sets HideDirectLinkedCategories
         /// </summary>
         [DataMember(Name="hideDirectLinkedCategories", EmitDefaultValue=false)]
@@ -115,6 +101,27 @@ namespace VirtoCommerce.Client.Model
         /// </summary>
         [DataMember(Name="propertyValues", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainCatalogModelPropertyValue> PropertyValues { get; set; }
+  
+        
+        /// <summary>
+        /// Gets or Sets Currency
+        /// </summary>
+        [DataMember(Name="currency", EmitDefaultValue=false)]
+        public string Currency { get; set; }
+  
+        
+        /// <summary>
+        /// Gets or Sets StartPrice
+        /// </summary>
+        [DataMember(Name="startPrice", EmitDefaultValue=false)]
+        public double? StartPrice { get; set; }
+  
+        
+        /// <summary>
+        /// Gets or Sets EndPrice
+        /// </summary>
+        [DataMember(Name="endPrice", EmitDefaultValue=false)]
+        public double? EndPrice { get; set; }
   
         
         /// <summary>
@@ -155,12 +162,13 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  CatalogId: ").Append(CatalogId).Append("\n");
             sb.Append("  CatalogsIds: ").Append(CatalogsIds).Append("\n");
             sb.Append("  LanguageCode: ").Append(LanguageCode).Append("\n");
-            sb.Append("  Currency: ").Append(Currency).Append("\n");
             sb.Append("  Code: ").Append(Code).Append("\n");
             sb.Append("  Sort: ").Append(Sort).Append("\n");
-            sb.Append("  Facets: ").Append(Facets).Append("\n");
             sb.Append("  HideDirectLinkedCategories: ").Append(HideDirectLinkedCategories).Append("\n");
             sb.Append("  PropertyValues: ").Append(PropertyValues).Append("\n");
+            sb.Append("  Currency: ").Append(Currency).Append("\n");
+            sb.Append("  StartPrice: ").Append(StartPrice).Append("\n");
+            sb.Append("  EndPrice: ").Append(EndPrice).Append("\n");
             sb.Append("  Start: ").Append(Start).Append("\n");
             sb.Append("  Count: ").Append(Count).Append("\n");
             sb.Append("  IndexDate: ").Append(IndexDate).Append("\n");
@@ -242,11 +250,6 @@ namespace VirtoCommerce.Client.Model
                     this.LanguageCode.Equals(other.LanguageCode)
                 ) && 
                 (
-                    this.Currency == other.Currency ||
-                    this.Currency != null &&
-                    this.Currency.Equals(other.Currency)
-                ) && 
-                (
                     this.Code == other.Code ||
                     this.Code != null &&
                     this.Code.Equals(other.Code)
@@ -257,11 +260,6 @@ namespace VirtoCommerce.Client.Model
                     this.Sort.Equals(other.Sort)
                 ) && 
                 (
-                    this.Facets == other.Facets ||
-                    this.Facets != null &&
-                    this.Facets.SequenceEqual(other.Facets)
-                ) && 
-                (
                     this.HideDirectLinkedCategories == other.HideDirectLinkedCategories ||
                     this.HideDirectLinkedCategories != null &&
                     this.HideDirectLinkedCategories.Equals(other.HideDirectLinkedCategories)
@@ -270,6 +268,21 @@ namespace VirtoCommerce.Client.Model
                     this.PropertyValues == other.PropertyValues ||
                     this.PropertyValues != null &&
                     this.PropertyValues.SequenceEqual(other.PropertyValues)
+                ) && 
+                (
+                    this.Currency == other.Currency ||
+                    this.Currency != null &&
+                    this.Currency.Equals(other.Currency)
+                ) && 
+                (
+                    this.StartPrice == other.StartPrice ||
+                    this.StartPrice != null &&
+                    this.StartPrice.Equals(other.StartPrice)
+                ) && 
+                (
+                    this.EndPrice == other.EndPrice ||
+                    this.EndPrice != null &&
+                    this.EndPrice.Equals(other.EndPrice)
                 ) && 
                 (
                     this.Start == other.Start ||
@@ -324,23 +337,26 @@ namespace VirtoCommerce.Client.Model
                 if (this.LanguageCode != null)
                     hash = hash * 57 + this.LanguageCode.GetHashCode();
                 
-                if (this.Currency != null)
-                    hash = hash * 57 + this.Currency.GetHashCode();
-                
                 if (this.Code != null)
                     hash = hash * 57 + this.Code.GetHashCode();
                 
                 if (this.Sort != null)
                     hash = hash * 57 + this.Sort.GetHashCode();
                 
-                if (this.Facets != null)
-                    hash = hash * 57 + this.Facets.GetHashCode();
-                
                 if (this.HideDirectLinkedCategories != null)
                     hash = hash * 57 + this.HideDirectLinkedCategories.GetHashCode();
                 
                 if (this.PropertyValues != null)
                     hash = hash * 57 + this.PropertyValues.GetHashCode();
+                
+                if (this.Currency != null)
+                    hash = hash * 57 + this.Currency.GetHashCode();
+                
+                if (this.StartPrice != null)
+                    hash = hash * 57 + this.StartPrice.GetHashCode();
+                
+                if (this.EndPrice != null)
+                    hash = hash * 57 + this.EndPrice.GetHashCode();
                 
                 if (this.Start != null)
                     hash = hash * 57 + this.Start.GetHashCode();

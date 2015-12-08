@@ -76,6 +76,13 @@ namespace VirtoCommerce.Client.Model
   
         
         /// <summary>
+        /// Gets or Sets IsInherited
+        /// </summary>
+        [DataMember(Name="isInherited", EmitDefaultValue=false)]
+        public bool? IsInherited { get; set; }
+  
+        
+        /// <summary>
         /// Gets or Sets CreatedDate
         /// </summary>
         [DataMember(Name="createdDate", EmitDefaultValue=false)]
@@ -127,6 +134,7 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Value: ").Append(Value).Append("\n");
             sb.Append("  ValueType: ").Append(ValueType).Append("\n");
             sb.Append("  LanguageCode: ").Append(LanguageCode).Append("\n");
+            sb.Append("  IsInherited: ").Append(IsInherited).Append("\n");
             sb.Append("  CreatedDate: ").Append(CreatedDate).Append("\n");
             sb.Append("  ModifiedDate: ").Append(ModifiedDate).Append("\n");
             sb.Append("  CreatedBy: ").Append(CreatedBy).Append("\n");
@@ -210,6 +218,11 @@ namespace VirtoCommerce.Client.Model
                     this.LanguageCode.Equals(other.LanguageCode)
                 ) && 
                 (
+                    this.IsInherited == other.IsInherited ||
+                    this.IsInherited != null &&
+                    this.IsInherited.Equals(other.IsInherited)
+                ) && 
+                (
                     this.CreatedDate == other.CreatedDate ||
                     this.CreatedDate != null &&
                     this.CreatedDate.Equals(other.CreatedDate)
@@ -271,6 +284,9 @@ namespace VirtoCommerce.Client.Model
                 
                 if (this.LanguageCode != null)
                     hash = hash * 57 + this.LanguageCode.GetHashCode();
+                
+                if (this.IsInherited != null)
+                    hash = hash * 57 + this.IsInherited.GetHashCode();
                 
                 if (this.CreatedDate != null)
                     hash = hash * 57 + this.CreatedDate.GetHashCode();

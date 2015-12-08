@@ -95,6 +95,20 @@ namespace VirtoCommerce.Client.Model
   
         
         /// <summary>
+        /// Gets or Sets Sku
+        /// </summary>
+        [DataMember(Name="sku", EmitDefaultValue=false)]
+        public string Sku { get; set; }
+  
+        
+        /// <summary>
+        /// Gets or Sets ProductType
+        /// </summary>
+        [DataMember(Name="productType", EmitDefaultValue=false)]
+        public string ProductType { get; set; }
+  
+        
+        /// <summary>
         /// Gets or Sets Name
         /// </summary>
         [DataMember(Name="name", EmitDefaultValue=false)]
@@ -292,6 +306,8 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  ProductId: ").Append(ProductId).Append("\n");
             sb.Append("  CatalogId: ").Append(CatalogId).Append("\n");
             sb.Append("  CategoryId: ").Append(CategoryId).Append("\n");
+            sb.Append("  Sku: ").Append(Sku).Append("\n");
+            sb.Append("  ProductType: ").Append(ProductType).Append("\n");
             sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  ImageUrl: ").Append(ImageUrl).Append("\n");
             sb.Append("  DisplayName: ").Append(DisplayName).Append("\n");
@@ -403,6 +419,16 @@ namespace VirtoCommerce.Client.Model
                     this.CategoryId == other.CategoryId ||
                     this.CategoryId != null &&
                     this.CategoryId.Equals(other.CategoryId)
+                ) && 
+                (
+                    this.Sku == other.Sku ||
+                    this.Sku != null &&
+                    this.Sku.Equals(other.Sku)
+                ) && 
+                (
+                    this.ProductType == other.ProductType ||
+                    this.ProductType != null &&
+                    this.ProductType.Equals(other.ProductType)
                 ) && 
                 (
                     this.Name == other.Name ||
@@ -572,6 +598,12 @@ namespace VirtoCommerce.Client.Model
                 
                 if (this.CategoryId != null)
                     hash = hash * 57 + this.CategoryId.GetHashCode();
+                
+                if (this.Sku != null)
+                    hash = hash * 57 + this.Sku.GetHashCode();
+                
+                if (this.ProductType != null)
+                    hash = hash * 57 + this.ProductType.GetHashCode();
                 
                 if (this.Name != null)
                     hash = hash * 57 + this.Name.GetHashCode();

@@ -48,6 +48,13 @@ namespace VirtoCommerce.Client.Model
   
         
         /// <summary>
+        /// Gets or Sets Properties
+        /// </summary>
+        [DataMember(Name="properties", EmitDefaultValue=false)]
+        public List<VirtoCommerceDomainCatalogModelProperty> Properties { get; set; }
+  
+        
+        /// <summary>
         /// Gets or Sets PropertyValues
         /// </summary>
         [DataMember(Name="propertyValues", EmitDefaultValue=false)]
@@ -74,6 +81,7 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Virtual: ").Append(Virtual).Append("\n");
             sb.Append("  DefaultLanguage: ").Append(DefaultLanguage).Append("\n");
             sb.Append("  Languages: ").Append(Languages).Append("\n");
+            sb.Append("  Properties: ").Append(Properties).Append("\n");
             sb.Append("  PropertyValues: ").Append(PropertyValues).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
             
@@ -134,6 +142,11 @@ namespace VirtoCommerce.Client.Model
                     this.Languages.SequenceEqual(other.Languages)
                 ) && 
                 (
+                    this.Properties == other.Properties ||
+                    this.Properties != null &&
+                    this.Properties.SequenceEqual(other.Properties)
+                ) && 
+                (
                     this.PropertyValues == other.PropertyValues ||
                     this.PropertyValues != null &&
                     this.PropertyValues.SequenceEqual(other.PropertyValues)
@@ -168,6 +181,9 @@ namespace VirtoCommerce.Client.Model
                 
                 if (this.Languages != null)
                     hash = hash * 57 + this.Languages.GetHashCode();
+                
+                if (this.Properties != null)
+                    hash = hash * 57 + this.Properties.GetHashCode();
                 
                 if (this.PropertyValues != null)
                     hash = hash * 57 + this.PropertyValues.GetHashCode();

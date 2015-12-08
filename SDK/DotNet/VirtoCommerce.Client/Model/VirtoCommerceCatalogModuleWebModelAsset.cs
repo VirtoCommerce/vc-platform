@@ -86,6 +86,14 @@ namespace VirtoCommerce.Client.Model
         public string LanguageCode { get; set; }
   
         
+        /// <summary>
+        /// System flag used to mark that object was inherited from other
+        /// </summary>
+        /// <value>System flag used to mark that object was inherited from other</value>
+        [DataMember(Name="isInherited", EmitDefaultValue=false)]
+        public bool? IsInherited { get; set; }
+  
+        
   
         /// <summary>
         /// Returns the string presentation of the object
@@ -104,6 +112,7 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Group: ").Append(Group).Append("\n");
             sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  LanguageCode: ").Append(LanguageCode).Append("\n");
+            sb.Append("  IsInherited: ").Append(IsInherited).Append("\n");
             
             sb.Append("}\n");
             return sb.ToString();
@@ -185,6 +194,11 @@ namespace VirtoCommerce.Client.Model
                     this.LanguageCode == other.LanguageCode ||
                     this.LanguageCode != null &&
                     this.LanguageCode.Equals(other.LanguageCode)
+                ) && 
+                (
+                    this.IsInherited == other.IsInherited ||
+                    this.IsInherited != null &&
+                    this.IsInherited.Equals(other.IsInherited)
                 );
         }
 
@@ -226,6 +240,9 @@ namespace VirtoCommerce.Client.Model
                 
                 if (this.LanguageCode != null)
                     hash = hash * 57 + this.LanguageCode.GetHashCode();
+                
+                if (this.IsInherited != null)
+                    hash = hash * 57 + this.IsInherited.GetHashCode();
                 
                 return hash;
             }

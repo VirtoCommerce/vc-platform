@@ -104,6 +104,13 @@ namespace VirtoCommerce.Client.Model
   
         
         /// <summary>
+        /// Gets or Sets Properties
+        /// </summary>
+        [DataMember(Name="properties", EmitDefaultValue=false)]
+        public List<VirtoCommerceDomainCatalogModelProperty> Properties { get; set; }
+  
+        
+        /// <summary>
         /// Gets or Sets PropertyValues
         /// </summary>
         [DataMember(Name="propertyValues", EmitDefaultValue=false)]
@@ -187,6 +194,7 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Priority: ").Append(Priority).Append("\n");
             sb.Append("  IsActive: ").Append(IsActive).Append("\n");
             sb.Append("  Children: ").Append(Children).Append("\n");
+            sb.Append("  Properties: ").Append(Properties).Append("\n");
             sb.Append("  PropertyValues: ").Append(PropertyValues).Append("\n");
             sb.Append("  Links: ").Append(Links).Append("\n");
             sb.Append("  SeoInfos: ").Append(SeoInfos).Append("\n");
@@ -294,6 +302,11 @@ namespace VirtoCommerce.Client.Model
                     this.Children.SequenceEqual(other.Children)
                 ) && 
                 (
+                    this.Properties == other.Properties ||
+                    this.Properties != null &&
+                    this.Properties.SequenceEqual(other.Properties)
+                ) && 
+                (
                     this.PropertyValues == other.PropertyValues ||
                     this.PropertyValues != null &&
                     this.PropertyValues.SequenceEqual(other.PropertyValues)
@@ -387,6 +400,9 @@ namespace VirtoCommerce.Client.Model
                 
                 if (this.Children != null)
                     hash = hash * 57 + this.Children.GetHashCode();
+                
+                if (this.Properties != null)
+                    hash = hash * 57 + this.Properties.GetHashCode();
                 
                 if (this.PropertyValues != null)
                     hash = hash * 57 + this.PropertyValues.GetHashCode();

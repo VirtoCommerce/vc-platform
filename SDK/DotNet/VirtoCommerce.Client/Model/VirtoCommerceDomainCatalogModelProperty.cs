@@ -118,6 +118,13 @@ namespace VirtoCommerce.Client.Model
   
         
         /// <summary>
+        /// Gets or Sets IsInherited
+        /// </summary>
+        [DataMember(Name="isInherited", EmitDefaultValue=false)]
+        public bool? IsInherited { get; set; }
+  
+        
+        /// <summary>
         /// Gets or Sets CreatedDate
         /// </summary>
         [DataMember(Name="createdDate", EmitDefaultValue=false)]
@@ -175,6 +182,7 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Attributes: ").Append(Attributes).Append("\n");
             sb.Append("  DictionaryValues: ").Append(DictionaryValues).Append("\n");
             sb.Append("  DisplayNames: ").Append(DisplayNames).Append("\n");
+            sb.Append("  IsInherited: ").Append(IsInherited).Append("\n");
             sb.Append("  CreatedDate: ").Append(CreatedDate).Append("\n");
             sb.Append("  ModifiedDate: ").Append(ModifiedDate).Append("\n");
             sb.Append("  CreatedBy: ").Append(CreatedBy).Append("\n");
@@ -288,6 +296,11 @@ namespace VirtoCommerce.Client.Model
                     this.DisplayNames.SequenceEqual(other.DisplayNames)
                 ) && 
                 (
+                    this.IsInherited == other.IsInherited ||
+                    this.IsInherited != null &&
+                    this.IsInherited.Equals(other.IsInherited)
+                ) && 
+                (
                     this.CreatedDate == other.CreatedDate ||
                     this.CreatedDate != null &&
                     this.CreatedDate.Equals(other.CreatedDate)
@@ -367,6 +380,9 @@ namespace VirtoCommerce.Client.Model
                 
                 if (this.DisplayNames != null)
                     hash = hash * 57 + this.DisplayNames.GetHashCode();
+                
+                if (this.IsInherited != null)
+                    hash = hash * 57 + this.IsInherited.GetHashCode();
                 
                 if (this.CreatedDate != null)
                     hash = hash * 57 + this.CreatedDate.GetHashCode();

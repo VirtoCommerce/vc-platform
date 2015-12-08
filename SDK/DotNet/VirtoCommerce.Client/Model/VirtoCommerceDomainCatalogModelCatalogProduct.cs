@@ -251,6 +251,13 @@ namespace VirtoCommerce.Client.Model
   
         
         /// <summary>
+        /// Gets or Sets Properties
+        /// </summary>
+        [DataMember(Name="properties", EmitDefaultValue=false)]
+        public List<VirtoCommerceDomainCatalogModelProperty> Properties { get; set; }
+  
+        
+        /// <summary>
         /// Gets or Sets PropertyValues
         /// </summary>
         [DataMember(Name="propertyValues", EmitDefaultValue=false)]
@@ -397,6 +404,7 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Vendor: ").Append(Vendor).Append("\n");
             sb.Append("  StartDate: ").Append(StartDate).Append("\n");
             sb.Append("  EndDate: ").Append(EndDate).Append("\n");
+            sb.Append("  Properties: ").Append(Properties).Append("\n");
             sb.Append("  PropertyValues: ").Append(PropertyValues).Append("\n");
             sb.Append("  Images: ").Append(Images).Append("\n");
             sb.Append("  Assets: ").Append(Assets).Append("\n");
@@ -615,6 +623,11 @@ namespace VirtoCommerce.Client.Model
                     this.EndDate.Equals(other.EndDate)
                 ) && 
                 (
+                    this.Properties == other.Properties ||
+                    this.Properties != null &&
+                    this.Properties.SequenceEqual(other.Properties)
+                ) && 
+                (
                     this.PropertyValues == other.PropertyValues ||
                     this.PropertyValues != null &&
                     this.PropertyValues.SequenceEqual(other.PropertyValues)
@@ -801,6 +814,9 @@ namespace VirtoCommerce.Client.Model
                 
                 if (this.EndDate != null)
                     hash = hash * 57 + this.EndDate.GetHashCode();
+                
+                if (this.Properties != null)
+                    hash = hash * 57 + this.Properties.GetHashCode();
                 
                 if (this.PropertyValues != null)
                     hash = hash * 57 + this.PropertyValues.GetHashCode();
