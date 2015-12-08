@@ -1,32 +1,34 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web.Hosting;
 using System.Web.Http;
+using System.Web.Http.Description;
+using Newtonsoft.Json.Linq;
 using VirtoCommerce.Platform.Core.Modularity;
 using WebGrease.Extensions;
-using System;
-using System.Collections.Generic;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
-    [System.Web.Http.RoutePrefix("api/platform/localization")]
+    [RoutePrefix("api/platform/localization")]
     public class LocalizationController : ApiController
     {
         private readonly IModuleManifestProvider _manifestProvider;
-        private readonly string _localizationPath;
         public LocalizationController(IModuleManifestProvider manifestProvider)
         {
             _manifestProvider = manifestProvider;
         }
 
         /// <summary>
-        /// Return all localization files by given locale
+        /// Return localization resource
         /// </summary>
-        /// <returns>json</returns>
-        [System.Web.Http.HttpGet]
-        [System.Web.Http.Route("")]
+        /// <param name="lang">Language of localization resource (en by default)</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("")]
+        [ResponseType(typeof(object))] // Produces invalid response type in generated client
         [AllowAnonymous]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public JObject GetLocalization(string lang = "en")
         {
             var searchPattern = string.Format("{0}.*.json", lang);
@@ -41,9 +43,27 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return result;
         }
 
-        private string[] GetAllLocalizationFiles(string searchPattern) {
-            var files = new List<string>();
+        /// <summary>
+        /// Return all aviable locales
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("locales")]
+        [ResponseType(typeof(string[]))]
+        public string[] GetLocales()
+        {
+            var files = GetAllLocalizationFiles("*.json");
+            var locales = files
+                .Select(Path.GetFileName)
+                .Select(x => x.Substring(0, x.IndexOf('.'))).Distinct().ToArray();
 
+            return locales;
+        }
+
+
+        private string[] GetAllLocalizationFiles(string searchPattern)
+        {
+            var files = new List<string>();
 
             // Get platform localization files
             var platformPath = HostingEnvironment.MapPath("~").EnsureEndSeparator();
@@ -51,7 +71,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             files.AddRange(platformFileNames);
 
             // Get modules localization files
-            var modulesFileNames = new List<string>();
             foreach (var pair in _manifestProvider.GetModuleManifests())
             {
                 var modulePath = Path.GetDirectoryName(pair.Key);
@@ -74,24 +93,5 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 ? Directory.EnumerateFiles(sourceDirectoryPath, searchPattern, SearchOption.AllDirectories).ToArray()
                 : new string[0];
         }
-
-        /// <summary>
-        /// Return all aviable locales
-        /// </summary>
-        /// <returns>json</returns>
-        [System.Web.Http.HttpGet]
-        [System.Web.Http.Route("locales")]
-        public string[] GetLocales()
-        {
-            var files = GetAllLocalizationFiles("*.json");
-            var locales = files
-                .Select(x=>Path.GetFileName(x))
-                .Select(x => x.Substring(0, x.IndexOf('.'))).Distinct().ToArray();
-
-            return locales;
-        }
-
     }
-
-
 }

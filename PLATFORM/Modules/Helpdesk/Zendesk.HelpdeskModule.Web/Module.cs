@@ -10,6 +10,7 @@ namespace Zendesk.HelpdeskModule.Web
     public class Module : ModuleBase
     {
         private const string _accessTokenPropertyName = "Zendesk.Helpdesk.Credentials.AccessToken";
+        private const string _customerEmailPropertyName = "Zendesk.Helpdesk.Credentials.Email";
         private const string _subdomainPropertyName = "Zendesk.Helpdesk.Subdomain";
 
         private readonly IUnityContainer _container;
@@ -24,13 +25,8 @@ namespace Zendesk.HelpdeskModule.Web
             base.Initialize();
 
             var settingsManager = _container.Resolve<ISettingsManager>();
-
-            var zendeskCode = settingsManager.GetValue("Zendesk.Helpdesk.Code", string.Empty);
-            var zendeskDescription = settingsManager.GetValue("Zendesk.Helpdesk.Description", string.Empty);
-            var zendeskLogoUrl = settingsManager.GetValue("Zendesk.Helpdesk.LogoUrl", string.Empty);
-
-
-            var zendeskHelpdesk = new ZendeskHelpdeskSettings(settingsManager, _accessTokenPropertyName, _subdomainPropertyName, zendeskCode, zendeskDescription, zendeskLogoUrl);
+            
+            var zendeskHelpdesk = new ZendeskHelpdeskSettings(settingsManager, _accessTokenPropertyName, _subdomainPropertyName, _customerEmailPropertyName);
             
             _container.RegisterInstance<IHelpdeskSettings>(zendeskHelpdesk);
             _container.RegisterType<ZendeskController>();
