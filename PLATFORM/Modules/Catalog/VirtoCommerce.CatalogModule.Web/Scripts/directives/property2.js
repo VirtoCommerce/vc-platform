@@ -30,25 +30,22 @@
                 }
             }, true);
 
-            scope.$watch('context.currentPropValues', function (newValue, oldValue) {
+            scope.$watch('context.currentPropValues', function (newValues) {
                 //reflect only real changes
-                if (newValue.length != scope.currentEntity.values.length || difference(newValue, scope.currentEntity.values).length > 0) {
-                    //Prevent reflect changing when use null value for empty initial values
-                    if (!(scope.currentEntity.values.length == 0 && newValue[0].value == null)) {
-                        if (scope.currentEntity.dictionary && scope.currentEntity.multilanguage) {
-                            if (scope.currentEntity.multivalue) {
-                                var realAliases = _.pluck(_.where(newValue, { languageCode: scope.currentEntity.catalog.defaultLanguage.languageCode }), 'alias');
-                                scope.currentEntity.values = _.filter(scope.context.allDictionaryValues, function (x) {
-                                    return _.contains(realAliases, x.alias);
-                                });
-                            } else {
-                                scope.currentEntity.values = _.where(scope.context.allDictionaryValues, { alias: newValue[0].alias });
-                            }
+                if (isValuesDifferent(newValues, scope.currentEntity.values)) {                    
+                    if (scope.currentEntity.dictionary && scope.currentEntity.multilanguage) {
+                        if (scope.currentEntity.multivalue) {
+                            var realAliases = _.pluck(_.where(newValues, { languageCode: scope.currentEntity.catalog.defaultLanguage.languageCode }), 'alias');
+                            scope.currentEntity.values = _.filter(scope.context.allDictionaryValues, function (x) {
+                                return _.contains(realAliases, x.alias);
+                            });
                         } else {
-                            scope.currentEntity.values = newValue;
+                            scope.currentEntity.values = _.where(scope.context.allDictionaryValues, { alias: newValues[0].alias });
                         }
-                        ngModelController.$setViewValue(scope.currentEntity);
+                    } else {
+                        scope.currentEntity.values = newValues;
                     }
+                    ngModelController.$setViewValue(scope.currentEntity);
                 }
             }, true);
 
@@ -70,14 +67,17 @@
                 chageValueTemplate(scope.currentEntity.valueType);
             };
 
-            var difference = function (one, two) {
-                var containsEquals = function (obj, target) {
-                    if (obj == null) return false;
-                    return _.any(obj, function (value) {
-                        return value.value == target.value
+            function isValuesDifferent(newValues, currentValues) {
+                var elementCountIsDifferent = newValues.length != currentValues.length;
+                var elementsNotEqual = _.any(newValues, function (x) {
+                    return _.all(currentValues, function (y) {
+                        return !(y.value === x.value && y.languageCode == x.languageCode);
                     });
-                };
-                return _.filter(one, function (value) { return !containsEquals(two, value); });
+                });
+                //Prevent reflecting the change when use null value for empty initial values
+                var notOnlyEmptyValues = _.any(currentValues) || newValues[0].value;
+
+                return (elementCountIsDifferent || elementsNotEqual) && notOnlyEmptyValues;
             };
 
             function needAddEmptyValue(property, values) {
@@ -111,7 +111,7 @@
                         };
                         scope.context.langValuesMap[language.languageCode] = langValuesGroup;
                     });
-                }              
+                }
             };
 
             function loadDictionaryValues() {
