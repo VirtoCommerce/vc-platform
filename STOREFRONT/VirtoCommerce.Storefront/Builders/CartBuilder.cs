@@ -34,20 +34,21 @@ namespace VirtoCommerce.Storefront.Builders
 
         public async Task<CartBuilder> GetOrCreateNewTransientCartAsync(Store store, Customer customer, Currency currency)
         {
-            VirtoCommerceCartModuleWebModelShoppingCart cart = null;
+            VirtoCommerceCartModuleWebModelShoppingCart cartSearchResult = null;
 
             _store = store;
             _customer = customer;
             _currency = currency;
 
-            cart = await _cartApi.CartModuleGetCurrentCartAsync(_store.Id, _customer.Id);
-            if (cart == null)
+            cartSearchResult = await _cartApi.CartModuleGetCurrentCartAsync(_store.Id, _customer.Id);
+            if (cartSearchResult == null)
             {
                 _cart = new ShoppingCart(_store.Id, _customer.Id, _customer.UserName, "Default", _currency.Code);
             }
             else
             {
-                _cart = cart.ToWebModel();
+                var detalizedCart = await _cartApi.CartModuleGetCartByIdAsync(cartSearchResult.Id);
+                _cart = detalizedCart.ToWebModel();
             }
 
             await EvaluatePromotionsAsync();

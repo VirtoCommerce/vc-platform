@@ -17,7 +17,12 @@ namespace VirtoCommerce.Storefront.Converters
 
             webModel.InjectFrom(serviceModel);
 
+            webModel.SubTotal = new Money(serviceModel.SubTotal ?? 0, currency.Code);
+            webModel.DiscountTotal = new Money(serviceModel.DiscountTotal ?? 0, currency.Code);
             webModel.HandlingTotal = new Money(serviceModel.HandlingTotal ?? 0, currency.Code);
+            webModel.ShippingTotal = new Money(serviceModel.ShippingTotal ?? 0, currency.Code);
+            webModel.TaxTotal = new Money(serviceModel.TaxTotal ?? 0, currency.Code);
+            webModel.Total = new Money(serviceModel.Total ?? 0, currency.Code);
 
             if (serviceModel.Addresses != null)
             {

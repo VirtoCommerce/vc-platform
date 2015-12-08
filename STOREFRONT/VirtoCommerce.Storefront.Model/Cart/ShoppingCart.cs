@@ -9,7 +9,9 @@ namespace VirtoCommerce.Storefront.Model.Cart
     {
         public ShoppingCart(string storeId, string customerId, string customerName, string name, string currencyCode)
         {
-            Currency = new Currency(EnumUtility.SafeParse(currencyCode, CurrencyCodes.USD));
+            var currency = EnumUtility.SafeParse(currencyCode, CurrencyCodes.USD);
+
+            Currency = new Currency(currency);
             CustomerId = customerId;
             CustomerName = customerName;
             Name = name;
@@ -22,6 +24,13 @@ namespace VirtoCommerce.Storefront.Model.Cart
             Shipments = new List<Shipment>();
             TaxDetails = new List<TaxDetail>();
             Errors = new List<string>();
+
+            DiscountTotal = new Money(0, currency);
+            HandlingTotal = new Money(0, currency);
+            ShippingTotal = new Money(0, currency);
+            SubTotal = new Money(0, currency);
+            TaxTotal = new Money(0, currency);
+            Total = new Money(0, currency);
         }
 
         /// <summary>
@@ -145,43 +154,19 @@ namespace VirtoCommerce.Storefront.Model.Cart
         public decimal Width { get; set; }
 
         /// <summary>
-        /// Gets the value of shopping cart total cost
+        /// Gets or sets the value of shopping cart total cost
         /// </summary>
-        public Money Total
-        {
-            get
-            {
-                decimal total = SubTotal.Amount + ShippingTotal.Amount + TaxTotal.Amount - DiscountTotal.Amount;
-
-                return new Money(total >= 0 ? total : 0, Currency.Code);
-            }
-        }
+        public Money Total { get; set; }
 
         /// <summary>
-        /// Gets the value of shopping cart subtotal
+        /// Gets or sets the value of shopping cart subtotal
         /// </summary>
-        public Money SubTotal
-        {
-            get
-            {
-                decimal subTotal = Items.Sum(i => i.ExtendedPrice.Amount);
-
-                return new Money(subTotal, Currency.Code);
-            }
-        }
+        public Money SubTotal { get; set; }
 
         /// <summary>
-        /// Gets the value of shipping total cost
+        /// Gets or sets the value of shipping total cost
         /// </summary>
-        public Money ShippingTotal
-        {
-            get
-            {
-                decimal shippingTotal = Shipments.Sum(s => s.Total.Amount);
-
-                return new Money(shippingTotal, Currency.Code);
-            }
-        }
+        public Money ShippingTotal { get; set; }
 
         /// <summary>
         /// Gets or sets the value of handling total cost
@@ -189,30 +174,14 @@ namespace VirtoCommerce.Storefront.Model.Cart
         public Money HandlingTotal { get; set; }
 
         /// <summary>
-        /// Gets the value of total discount amount
+        /// Gets or sets the value of total discount amount
         /// </summary>
-        public Money DiscountTotal
-        {
-            get
-            {
-                decimal discountsTotal = Discounts.Sum(d => d.Amount.Amount) + Items.Sum(i => i.DiscountTotal.Amount) + Shipments.Sum(s => s.DiscountTotal.Amount);
-
-                return new Money(discountsTotal, Currency.Code);
-            }
-        }
+        public Money DiscountTotal { get; set; }
 
         /// <summary>
         /// Gets or sets the value of total tax cost
         /// </summary>
-        public Money TaxTotal
-        {
-            get
-            {
-                decimal taxTotal = TaxDetails.Sum(td => td.Amount.Amount);
-
-                return new Money(taxTotal, Currency.Code);
-            }
-        }
+        public Money TaxTotal { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of shopping cart addresses
