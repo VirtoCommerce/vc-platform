@@ -7,6 +7,7 @@ using VirtoCommerce.LiquidThemeEngine.Objects;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Order;
+using Discount = VirtoCommerce.LiquidThemeEngine.Objects.Discount;
 
 namespace VirtoCommerce.LiquidThemeEngine.Converters
 {
@@ -25,7 +26,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             result.Name = order.Number;
             result.OrderNumber = order.Number;
             result.CustomerUrl = urlBuilder.ToAppAbsolute("/account/order/" + order.Id);
-            result.TotalPrice = order.Sum.Amount;
+
 
             if (order.Addresses != null)
             {
@@ -55,9 +56,12 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                     .FirstOrDefault();
             }
 
+            var discountTotal = order.DiscountAmount?.Amount;
+            var discounts = new List<Discount>();
+
             if (order.Discount != null)
             {
-                result.Discounts = new[] { order.Discount.ToShopifyModel() };
+                discounts.Add(order.Discount.ToShopifyModel());
             }
 
             var taxLines = new List<TaxLine>();
@@ -91,6 +95,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             if (order.Shipments != null)
             {
                 result.ShippingMethods = order.Shipments.Select(s => s.ToShopifyModel()).ToArray();
+                result.ShippingPrice = result.ShippingMethods.Sum(s => s.Price);
 
                 var orderShipment = order.Shipments.FirstOrDefault();
 
@@ -113,43 +118,83 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                     }
                 }
 
-                var taxableShipments = order.Shipments
+                var shipmentsWithTax = order.Shipments
                     .Where(s => s.Tax.Amount > 0)
                     .ToList();
 
-                if (taxableShipments.Count > 0)
+                if (shipmentsWithTax.Count > 0)
                 {
                     taxLines.Add(new TaxLine
                     {
                         Title = "Shipping",
-                        Price = taxableShipments.Sum(s => s.Tax.Amount),
-                        Rate = taxableShipments.Where(s => s.TaxDetails != null).Sum(i => i.TaxDetails.Sum(td => td.Rate)),
+                        Price = shipmentsWithTax.Sum(s => s.Tax.Amount),
+                        Rate = shipmentsWithTax.Where(s => s.TaxDetails != null).Sum(i => i.TaxDetails.Sum(td => td.Rate)),
+                    });
+                }
+
+                var shipmentsWithDiscount = order.Shipments
+                    .Where(s => s.DiscountAmount.Amount > 0)
+                    .ToList();
+
+                if (shipmentsWithDiscount.Any())
+                {
+                    var shipmentDiscount = shipmentsWithDiscount.Sum(s => s.DiscountAmount.Amount);
+                    discountTotal += shipmentDiscount;
+
+                    discounts.Add(new Discount
+                    {
+                        Type = "ShippingDiscount",
+                        Code = "Shipping",
+                        Amount = shipmentDiscount,
+                        Savings = -shipmentDiscount,
                     });
                 }
             }
 
             if (order.Items != null)
             {
-                result.LineItems = order.Items.Select(i => i.ToShopifyModel()).ToArray();
+                result.LineItems = order.Items.Select(i => i.ToShopifyModel(urlBuilder)).ToArray();
+                result.SubtotalPrice = result.LineItems.Sum(i => i.LinePrice);
 
-                var taxableLineItems = order.Items
+                var itemsWithTax = order.Items
                     .Where(i => i.Tax.Amount > 0m)
                     .ToList();
 
-                if (taxableLineItems.Any())
+                if (itemsWithTax.Any())
                 {
                     taxLines.Add(new TaxLine
                     {
                         Title = "Line items",
-                        Price = taxableLineItems.Sum(i => i.Tax.Amount),
-                        Rate = taxableLineItems.Where(i => i.TaxDetails != null).Sum(i => i.TaxDetails.Sum(td => td.Rate)),
+                        Price = itemsWithTax.Sum(i => i.Tax.Amount),
+                        Rate = itemsWithTax.Where(i => i.TaxDetails != null).Sum(i => i.TaxDetails.Sum(td => td.Rate)),
                     });
                 }
 
-                result.SubtotalPrice = result.LineItems.Sum(i => i.LinePrice);
+                var itemsWithDiscount = order.Items
+                    .Where(i => i.DiscountAmount.Amount > 0m)
+                    .ToList();
+
+                if (itemsWithDiscount.Any())
+                {
+                    var itemsDiscount = itemsWithDiscount.Sum(i => i.DiscountAmount.Amount);
+                    discountTotal += itemsDiscount;
+
+                    discounts.Add(new Discount
+                    {
+                        Type = "FixedAmountDiscount",
+                        Code = "Items",
+                        Amount = itemsDiscount,
+                        Savings = -itemsDiscount,
+                    });
+                }
             }
 
             result.TaxLines = taxLines.ToArray();
+            result.TaxPrice = taxLines.Sum(t => t.Price);
+
+            result.Discounts = discounts.ToArray();
+
+            result.TotalPrice = result.SubtotalPrice + result.ShippingPrice + result.TaxPrice - discountTotal ?? 0m;
 
             return result;
         }

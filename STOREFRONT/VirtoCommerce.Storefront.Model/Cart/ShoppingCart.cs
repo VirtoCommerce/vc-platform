@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using VirtoCommerce.Storefront.Model.Common;
 
@@ -37,6 +38,17 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// Gets or sets the value of channel id
         /// </summary>
         public string ChannelId { get; set; }
+
+        /// <summary>
+        /// Gets the sign that shopping cart contains line items which require shipping
+        /// </summary>
+        public bool HasPhysicalProducts
+        {
+            get
+            {
+                return Items.Any(i => i.ProductType.Equals("Physical", StringComparison.OrdinalIgnoreCase));
+            }
+        }
 
         /// <summary>
         /// Gets or sets the flag of shopping cart is anonymous
@@ -217,16 +229,27 @@ namespace VirtoCommerce.Storefront.Model.Cart
         {
             get
             {
-                var defaultAddress = Addresses.FirstOrDefault(a => a.Type == AddressType.Shipping);
-                if (defaultAddress == null)
+                Address shippingAddress = null;
+
+                if (!HasPhysicalProducts)
                 {
-                    defaultAddress = new Address
-                    {
-                        Type = AddressType.Shipping
-                    };
+                    return shippingAddress;
                 }
 
-                return defaultAddress;
+                shippingAddress = Addresses.FirstOrDefault(a => a.Type == AddressType.Shipping);
+                if (shippingAddress == null)
+                {
+                    shippingAddress = Addresses.FirstOrDefault();
+                    if (shippingAddress == null)
+                    {
+                        shippingAddress = new Address
+                        {
+                            Type = AddressType.Shipping
+                        };
+                    }
+                }
+
+                return shippingAddress;
             }
         }
 
@@ -237,16 +260,20 @@ namespace VirtoCommerce.Storefront.Model.Cart
         {
             get
             {
-                var defaultAddress = Addresses.FirstOrDefault(a => a.Type == AddressType.Billing);
-                if (defaultAddress == null)
+                var billingAddress = Addresses.FirstOrDefault(a => a.Type == AddressType.Billing);
+                if (billingAddress == null)
                 {
-                    defaultAddress = new Address
+                    billingAddress = Addresses.FirstOrDefault();
+                    if (billingAddress == null)
                     {
-                        Type = AddressType.Billing
-                    };
+                        billingAddress = new Address
+                        {
+                            Type = AddressType.Billing
+                        };
+                    }
                 }
 
-                return defaultAddress;
+                return billingAddress;
             }
         }
 

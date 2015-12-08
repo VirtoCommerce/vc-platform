@@ -218,7 +218,7 @@
 
     destroy: function(id, confirm_msg) {
       if (confirm(confirm_msg || {{ 'customer.addresses.delete_confirm' | t | json }})) {
-        Shopify.postLink('/account/addresses/'+id, {'parameters': {'_method': 'delete'}});
+        Shopify.postLink('{{ "/account/addresses" | absolute_url }}/' + id, {'parameters': {'_method': 'delete'}});
       }
     }
   }

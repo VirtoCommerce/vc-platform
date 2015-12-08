@@ -108,6 +108,8 @@ app.controller('cartController', ['$scope', 'cartService', function ($scope, car
 
 app.controller('checkoutController', ['$scope', '$location', '$sce', 'cartService', function ($scope, $location, $sce, cartService) {
     $scope.checkout = {
+        hasCustomerInformation: false,
+        hasShippingMethod: false,
         cart: {},
         orderSummaryExpanded: false,
         shippingAddress: {},
@@ -122,7 +124,7 @@ app.controller('checkoutController', ['$scope', '$location', '$sce', 'cartServic
         shippingMethodProcessing: false,
         availablePaymentMethods: [],
         selectedPaymentMethod: {},
-        bankCardInfo: { Type: 'Unknown' },
+        bankCardInfo: { Type: 'Unknown', ExpirationDate: null, BankCardMonth: null, BankCardYear: null },
         billingAddressEqualsShipping: true,
         orderProcessing: false,
         paymentFormHtml: null
@@ -209,8 +211,10 @@ app.controller('checkoutController', ['$scope', '$location', '$sce', 'cartServic
         setBillingAddressEqualsShipping();
     }
 
-    $scope.detectBankCardType = function getBankCardType(bankCardNumber) {
+    $scope.validateBankCardNumber = function (bankCardNumber) {
         var type = 'Unknown';
+        var cardNumberPattern = /^\d{12,19}$/;
+        var cvvPattern = /^\d{3,3}$/;
 
         var firstOneSymbol = bankCardNumber.substring(0, 1);
         var firstTwoSymbols = bankCardNumber.substring(0, 2);
@@ -220,37 +224,83 @@ app.controller('checkoutController', ['$scope', '$location', '$sce', 'cartServic
 
         if (firstTwoSymbols == '34' || firstTwoSymbols == '37') {
             type = 'AmericanExpress';
+            cardNumberPattern = /^\d{15}$/;
+            cvvPattern = /^\d{4,4}$/;
         }
         if (firstTwoSymbols == '62' || firstTwoSymbols == '88') {
             type = 'UnionPay';
+            cardNumberPattern = /^\d{16,19}$/;
+            cvvPattern = /^\d{3,3}$/;
         }
         if (firstThreeSymbols >= '300' && firstThreeSymbols <= '305' || firstThreeSymbols == '309' || firstTwoSymbols == '36' || firstTwoSymbols == '38' || firstTwoSymbols == '39') {
             type = 'Diners';
+            cardNumberPattern = /^\d{14,16}$/;
+            cvvPattern = /^\d{3,3}$/;
         }
         if (firstFourSymbols == '6011' || firstSixSymbols >= '622126' && firstSixSymbols <= '622925' || firstThreeSymbols >= '644' && firstThreeSymbols <= '649' || firstTwoSymbols == '65') {
             type = 'Discover';
+            cardNumberPattern = /^\d{16}$/;
+            cvvPattern = /^\d{3,3}$/;
         }
         if (firstFourSymbols >= '3528' && firstFourSymbols <= '3589') {
             type = 'Jcb';
+            cardNumberPattern = /^\d{16}$/;
+            cvvPattern = /^\d{3,3}$/;
         }
         if (firstFourSymbols == '6304' || firstFourSymbols == '6706' || firstFourSymbols == '6771' || firstFourSymbols == '6709') {
             type = 'Laser';
+            cardNumberPattern = /^\d{16,19}$/;
+            cvvPattern = /^\d{3,3}$/;
         }
         if (firstFourSymbols == '5018' || firstFourSymbols == '5020' || firstFourSymbols == '5038' || firstFourSymbols == '5612' || firstFourSymbols == '5893' || firstFourSymbols == '6304' ||
             firstFourSymbols >= '6759' && firstFourSymbols <= '6763' || firstFourSymbols == '0604' || firstFourSymbols == '6390') {
             type = 'Maestro';
+            cardNumberPattern = /^\d{12,19}$/;
+            cvvPattern = /^\d{3,3}$/;
         }
         if (firstFourSymbols == '5019') {
             type = 'Dankort';
+            cardNumberPattern = /^\d{16}$/;
+            cvvPattern = /^\d{3,3}$/;
         }
-        if (firstTwoSymbols >= '50' && firstTwoSymbols <= '55') {
+        if (firstTwoSymbols >= '51' && firstTwoSymbols <= '55') {
             type = 'MasterCard';
+            cardNumberPattern = /^\d{16}$/;
+            cvvPattern = /^\d{3,3}$/;
         }
         if (firstOneSymbol == '4') {
             type = 'Visa';
+            cardNumberPattern = /^\d{13,16}$/;
+            cvvPattern = /^\d{3,3}$/;
         }
 
         $scope.checkout.bankCardInfo.Type = type;
+        $scope.checkout.bankCardInfo.CardNumberPattern = cardNumberPattern;
+        $scope.checkout.bankCardInfo.CvvPattern = cvvPattern;
+    }
+
+    $scope.validateBankCardExpirationDate = function (date) {
+        $scope.checkout.bankCardInfo.BankCardMonth = null;
+        $scope.checkout.bankCardInfo.BankCardYear = null;
+        var separator = ' / ';
+        $scope.checkout.bankCardInfo.ExpirationDate = date;
+        if (date.length == 2) {
+            $scope.checkout.bankCardInfo.ExpirationDate += separator;
+        }
+        var dateParts = date.split(separator);
+        if (dateParts.length == 2) {
+            var currentYear = (new Date()).getFullYear();
+            var currentMonth = (new Date()).getMonth() + 1;
+            var expirationMonth = parseInt(dateParts[0]);
+            var expirationYear = parseInt(dateParts[1]) + 2000;
+            if (expirationMonth >= 1 && expirationMonth <= 12) {
+                if (expirationYear > currentYear || expirationYear == currentYear && expirationMonth >= currentMonth) {
+                    alert(expirationMonth + ' ' + expirationYear);
+                    $scope.checkout.bankCardInfo.BankCardMonth = expirationMonth;
+                    $scope.checkout.bankCardInfo.BankCardYear = expirationYear;
+                }
+            }
+        }
     }
 
     $scope.completeOrder = function (paymentMethodCode) {
@@ -275,11 +325,41 @@ app.controller('checkoutController', ['$scope', '$location', '$sce', 'cartServic
 
     cartService.getCart().then(function (response) {
         var cart = response.data;
+        handleInnerRedirects(cart);
+        updateCheckout(cart);
+    });
+
+    function addressIsValid(address) {
+        var isValid = false;
+        if (address.FirstName && address.LastName && address.Email && address.Line1 && address.City && address.CountryCode && address.CountryName && address.PostalCode) {
+            isValid = true;
+        }
+        return isValid;
+    }
+
+    function handleInnerRedirects(cart) {
         if (!cart.ItemsCount) {
             $scope.outsideRedirect($scope.baseUrl + '/cart');
         }
-        updateCheckout(cart);
-    });
+        var hasCustomerInformation = addressIsValid(cart.DefaultShippingAddress);
+        var hasShippingMethod = cart.Shipments.length;
+        if (!cart.HasPhysicalProducts) {
+            $scope.insideRedirect('payment-method');
+        } else {
+            if (hasCustomerInformation && hasShippingMethod) {
+                $scope.insideRedirect('payment-method');
+                return;
+            }
+            if (hasCustomerInformation && !hasShippingMethod) {
+                $scope.insideRedirect('shipping-method');
+                return;
+            }
+            if (!hasCustomerInformation) {
+                $scope.insideRedirect('customer-information');
+                return;
+            }
+        }
+    }
 
     function updateCheckout(cart) {
         $scope.checkout.cart = cart;
@@ -298,6 +378,8 @@ app.controller('checkoutController', ['$scope', '$location', '$sce', 'cartServic
         $scope.checkout.customerInformationProcessing = false;
         $scope.checkout.shippingMethodProcessing = false;
         $scope.checkout.orderProcessing = false;
+        $scope.checkout.hasCustomerInformation = addressIsValid(cart.DefaultShippingAddress);
+        $scope.checkout.hasShippingMethod = cart.Shipments.length;
         cartService.getAvailableShippingMethods(cart.Id).then(function (response) {
             var availableShippingMethods = response.data;
             $scope.checkout.availableShippingMethods = availableShippingMethods;
