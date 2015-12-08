@@ -43,7 +43,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             if (customer.Orders != null)
             {
                 var orders = customer.Orders.Select(o => o.ToShopifyModel(urlBuilder)).ToList();
-                result.Orders = new StorefrontPagedList<Order>(orders, 1, orders.Count, customer.OrdersCount, page => workContext.RequestUrl.AddParameter("page", page.ToString()).ToString());
+                result.Orders = new StorefrontPagedList<Order>(orders, 1, 10, customer.OrdersCount, page => workContext.RequestUrl.AddParameter("page", page.ToString()).ToString());
             }
 
             return result;

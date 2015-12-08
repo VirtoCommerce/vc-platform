@@ -112,26 +112,20 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
             }
 
             //Self item property values
-            retVal.PropertyValues = new List<coreModel.PropertyValue>();
-            foreach(var propertyValue in dbItem.ItemPropertyValues.OrderBy(x => x.Name).Select(x=>x.ToCoreModel()))
+            retVal.PropertyValues = dbItem.ItemPropertyValues.OrderBy(x => x.Name).Select(x => x.ToCoreModel()).ToList();
+            foreach (var propertyValue in retVal.PropertyValues.ToArray())
             {
                 //Try to find property meta information
                 propertyValue.Property = retVal.Properties.FirstOrDefault(x => x.IsSuitableForValue(propertyValue));
+                //Return each localized value for selecte dictionary value
                 //Because multilingual dictionary values for all languages may not stored in db need add it in result manually from property dictionary values
                 var localizedDictValues = propertyValue.TryGetAllLocalizedDictValues();
-                if(localizedDictValues.Any())
+                foreach (var localizedDictValue in localizedDictValues)
                 {
-                    foreach (var localizedDictValue in localizedDictValues)
+                    if (!retVal.PropertyValues.Any(x => x.ValueId == localizedDictValue.ValueId && x.LanguageCode == localizedDictValue.LanguageCode))
                     {
-                        if (!retVal.PropertyValues.Any(x => x.ValueId == localizedDictValue.ValueId && x.LanguageCode == localizedDictValue.LanguageCode))
-                        {
-                            retVal.PropertyValues.Add(localizedDictValue);
-                        }
+                        retVal.PropertyValues.Add(localizedDictValue);
                     }
-                 }
-                else
-                {
-                    retVal.PropertyValues.Add(propertyValue);
                 }
             }
 

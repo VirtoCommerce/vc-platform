@@ -43,7 +43,7 @@ namespace VirtoCommerce.OrderModule.Data.Model
         [Required]
         [StringLength(64)]
         public string Sku { get; set; }
-        [Required]
+
         [StringLength(64)]
         public string ProductType { get; set; }
         [Required]

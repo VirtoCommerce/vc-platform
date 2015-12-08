@@ -105,6 +105,10 @@
     <Compile Include="Migrations\201512080949087_AddProductTypeColumn.Designer.cs">
       <DependentUpon>201512080949087_AddProductTypeColumn.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201512081407299_ChangeRequiredForProductTypeColumn.cs" />
+    <Compile Include="Migrations\201512081407299_ChangeRequiredForProductTypeColumn.Designer.cs">
+      <DependentUpon>201512081407299_ChangeRequiredForProductTypeColumn.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\AddressEntity.cs" />
     <Compile Include="Model\CustomerOrderEntity.cs" />
@@ -179,6 +183,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201512080949087_AddProductTypeColumn.resx">
       <DependentUpon>201512080949087_AddProductTypeColumn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201512081407299_ChangeRequiredForProductTypeColumn.resx">
+      <DependentUpon>201512081407299_ChangeRequiredForProductTypeColumn.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
