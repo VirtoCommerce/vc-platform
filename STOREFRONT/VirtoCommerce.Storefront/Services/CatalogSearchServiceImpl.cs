@@ -54,13 +54,21 @@ namespace VirtoCommerce.Storefront.Services
         public async Task<CatalogSearchResult> SearchAsync(CatalogSearchCriteria criteria)
         {
             var retVal = new CatalogSearchResult();
-            var result = await _catalogModuleApi.CatalogModuleSearchSearchAsync(criteria.ResponseGroup.ToString(), null, true, criteria.CategoryId, null, criteria.CatalogId, null, null,
-                                                                                 _workContext.CurrentCurrency.Code,
-                                                                                 null, null, null, true, null, criteria.PageSize * (criteria.PageNumber - 1), criteria.PageSize, null);
-            if(criteria.CategoryId != null)
+
+            var result = await _catalogModuleApi.CatalogModuleSearchSearchAsync(
+                criteriaResponseGroup: criteria.ResponseGroup.ToString(),
+                criteriaSearchInChildren: true,
+                criteriaCategoryId: criteria.CategoryId,
+                criteriaCatalogId: criteria.CatalogId,
+                criteriaCurrency: _workContext.CurrentCurrency.Code,
+                criteriaHideDirectLinkedCategories: true,
+                criteriaStart: criteria.PageSize * (criteria.PageNumber - 1),
+                criteriaCount: criteria.PageSize);
+
+            if (criteria.CategoryId != null)
             {
                 var category = await _catalogModuleApi.CatalogModuleCategoriesGetAsync(criteria.CategoryId);
-                if(category != null)
+                if (category != null)
                 {
                     retVal.Category = category.ToWebModel();
                 }
@@ -71,7 +79,7 @@ namespace VirtoCommerce.Storefront.Services
                 if (result.Products != null && result.Products.Any())
                 {
                     var products = result.Products.Select(x => x.ToWebModel(_workContext.CurrentLanguage, _workContext.CurrentCurrency)).ToArray();
-                    retVal.Products = new StorefrontPagedList<Product>(products, criteria.PageNumber, criteria.PageSize, result.TotalCount.Value, (page) => _workContext.RequestUrl.AddParameter("page", page.ToString()).ToString());
+                    retVal.Products = new StorefrontPagedList<Product>(products, criteria.PageNumber, criteria.PageSize, result.TotalCount.Value, page => _workContext.RequestUrl.AddParameter("page", page.ToString()).ToString());
 
                     LoadProductsPrices(retVal.Products.ToArray());
                     LoadProductsInventories(retVal.Products.ToArray());
@@ -89,7 +97,7 @@ namespace VirtoCommerce.Storefront.Services
 
         private void LoadProductsPrices(Product[] products)
         {
-            var result = _pricingModuleApi.PricingModuleEvaluatePrices(_workContext.CurrentStore.Id, _workContext.CurrentStore.Catalog, products.Select(x => x.Id).ToList(), null, null, _workContext.CurrentCustomer.Id, null, _workContext.StorefrontUtcNow, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+            var result = _pricingModuleApi.PricingModuleEvaluatePrices(_workContext.CurrentStore.Id, _workContext.CurrentStore.Catalog, products.Select(x => x.Id).ToList(), null, null, _workContext.CurrentCustomer.Id, null, _workContext.StorefrontUtcNow);
             foreach (var item in products)
             {
                 item.Prices = result.Where(x => x.ProductId == item.Id).Select(x => x.ToWebModel()).ToList();

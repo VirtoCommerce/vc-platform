@@ -86,6 +86,24 @@ namespace VirtoCommerce.Domain.Catalog.Model
 		/// </summary>
 		public DateTime? IndexDate { get; set; }
 
+        public string PricelistId { get; set; }
+
+        private string[] _pricelistsIds;
+        public string[] PricelistsIds
+        {
+            get
+            {
+                if (_pricelistsIds == null && !String.IsNullOrEmpty(PricelistId))
+                {
+                    _pricelistsIds = new string[] { PricelistId };
+                }
+                return _pricelistsIds;
+            }
+            set
+            {
+                _pricelistsIds = value;
+            }
+        }
     
 		public override string ToString()
 		{
