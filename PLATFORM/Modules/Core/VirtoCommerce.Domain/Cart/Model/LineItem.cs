@@ -16,6 +16,7 @@ namespace VirtoCommerce.Domain.Cart.Model
 		public string CatalogId { get; set; }
 		public string CategoryId { get; set; }
 		public string Sku { get; set; }
+        public string ProductType { get; set; }
 
 		public string Name { get; set; }
 		public int Quantity { get; set; }

@@ -15,6 +15,10 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
     /// </summary>
     public class Shop : Drop
     {
+        /// <summary>
+        /// Shop id
+        /// </summary>
+        public string Id { get; set; }
 
         /// <summary>
         /// Returns the shop's currency in three-letter format (ex: USD).

@@ -319,7 +319,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             var catalogs = Catalogs.Include(x => x.CatalogLanguages).Where(x => catalogIds.Contains(x.Id)).ToArray();
 
             //Load product categories separately
-            var categoryIds = retVal.Select(x => x.CategoryId).Distinct().ToArray();
+            var categoryIds = retVal.Select(x => x.CategoryId).Where(x=>!String.IsNullOrEmpty(x)).Distinct().ToArray();
             var categories = Categories.Where(x => categoryIds.Contains(x.Id)).ToArray();
 
             if ((respGroup & coreModel.ItemResponseGroup.Links) == coreModel.ItemResponseGroup.Links)
