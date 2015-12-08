@@ -168,8 +168,7 @@
     }
 
     $scope.isUniqueQty = function (data) {
-        var foundPrices = _.where($scope.blade.currentEntities, { minQuantity: data.minQuantity });
-        return foundPrices.length < 2;
+        return Math.round(data.minQuantity) > 0 && _.all($scope.blade.currentEntities, function (x) { return x === data || Math.round(x.minQuantity) !== Math.round(data.minQuantity) });
     }
 
     // actions on load
