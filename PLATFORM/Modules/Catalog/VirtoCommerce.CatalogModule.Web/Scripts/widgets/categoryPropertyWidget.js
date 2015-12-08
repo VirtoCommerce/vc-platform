@@ -12,8 +12,8 @@
             currentEntity: $scope.currentBlade.currentEntity,
             title: $scope.currentBlade.title,
             subtitle: 'catalog.widgets.categoryProperty.blade-subtitle',
-            controller: 'virtoCommerce.catalogModule.categoryPropertyController',
-            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/category-property-detail.tpl.html'
+            controller: 'virtoCommerce.catalogModule.categoryPropertyListController',
+            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/category-property-list.tpl.html'
         };
 
 
