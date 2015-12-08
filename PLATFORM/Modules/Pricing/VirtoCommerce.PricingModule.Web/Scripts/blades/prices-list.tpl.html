@@ -31,7 +31,7 @@
                                 <td class="table-col">{{data.currency}}</td>
                                 <td class="table-col">
                                     <div class="form-input __mini">
-                                        <input money required ng-model="data.list" ng-class="{'error': !isListPriceValid(data)}" />
+                                        <input money required ng-model="data.list" ng-class="{'ng-invalid': !isListPriceValid(data)}" />
                                     </div>
                                 </td>
                                 <td class="table-col">
@@ -41,7 +41,7 @@
                                 </td>
                                 <td class="table-col">
                                     <div class="form-input __mini __number">
-                                        <input smart-float num-type="integer" required ng-model="data.minQuantity" ng-class="{'error': !isUniqueQty(data)}">
+                                        <input smart-float num-type="integer" required ng-model="data.minQuantity" ng-class="{'ng-invalid': !isUniqueQty(data)}">
                                     </div>
                                 </td>
                                 <td class="table-col __date">
