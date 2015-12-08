@@ -2465,6 +2465,10 @@ button.btn
                 transition: right .25s ease-in-out 0s;
     }
 
+    .__items.__reverse .list-item:after {
+        right:60px;
+        content: "\f053";
+    }
 
     .__items .list-item.__default:after
     {
@@ -2512,6 +2516,11 @@ button.btn
     .__items .list-item:hover:after
     {
         right: 25px;
+    }
+
+    .__items.__reverse .list-item:hover:after
+    {
+        right: 55px;
     }
 
     .__items .list-item.__default:hover:after

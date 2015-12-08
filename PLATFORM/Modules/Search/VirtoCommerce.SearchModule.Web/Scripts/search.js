@@ -8,7 +8,7 @@ angular.module(moduleName, [
     'ngSanitize'
 ])
 .run(
-  ['platformWebApp.toolbarService', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function (toolbarService, bladeNavigationService, dialogService) {
+  ['platformWebApp.toolbarService', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.widgetService', function (toolbarService, bladeNavigationService, dialogService, widgetService) {
 
       var rebuildIndexCommand = {
           name: "search.commands.rebuild-index",
@@ -35,7 +35,12 @@ angular.module(moduleName, [
           canExecuteMethod: function () { return true; },
           permission: 'VirtoCommerce.Search:Index:Rebuild'
       };
-
       toolbarService.register(rebuildIndexCommand, 'virtoCommerce.catalogModule.catalogsListController');
+
+      // filter properties in STORE details
+      widgetService.registerWidget({
+          controller: 'virtoCommerce.searchModule.storePropertiesWidgetController',
+          template: 'Modules/$(VirtoCommerce.Search)/Scripts/widgets/storePropertiesWidget.tpl.html'
+      }, 'storeDetail');
   }]
 );
