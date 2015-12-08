@@ -46,29 +46,22 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
             if (convertProps)
             {
                 retVal.PropertyValues = dbCatalog.CatalogPropertyValues.Select(x => x.ToCoreModel()).ToList();
-                retVal.Properties = new List<coreModel.Property>();
                 //Self properties
-                retVal.Properties.AddRange(dbCatalog.Properties.Where(x => x.CategoryId == null).Select(x => x.ToCoreModel()));
+                retVal.Properties = dbCatalog.Properties.Where(x => x.CategoryId == null).Select(x => x.ToCoreModel()).ToList();
 
                 //Next need set Property in PropertyValues objects
-                foreach (var propValue in retVal.PropertyValues)
+                foreach (var propValue in retVal.PropertyValues.ToArray())
                 {
                     propValue.Property = retVal.Properties.FirstOrDefault(x => x.IsSuitableForValue(propValue));
+                    //Return each localized value for selecte dictionary value
                     //Because multilingual dictionary values for all languages may not stored in db need add it in result manually from property dictionary values
                     var localizedDictValues = propValue.TryGetAllLocalizedDictValues();
-                    if (localizedDictValues.Any())
+                    foreach (var localizedDictValue in localizedDictValues)
                     {
-                        foreach (var localizedDictValue in localizedDictValues)
+                        if (!retVal.PropertyValues.Any(x => x.ValueId == localizedDictValue.ValueId && x.LanguageCode == localizedDictValue.LanguageCode))
                         {
-                            if (!retVal.PropertyValues.Any(x => x.ValueId == localizedDictValue.ValueId && x.LanguageCode == localizedDictValue.LanguageCode))
-                            {
-                                retVal.PropertyValues.Add(localizedDictValue);
-                            }
+                            retVal.PropertyValues.Add(localizedDictValue);
                         }
-                    }
-                    else
-                    {
-                        retVal.PropertyValues.Add(propValue);
                     }
                 }
             }
