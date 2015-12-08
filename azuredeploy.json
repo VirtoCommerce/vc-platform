@@ -151,7 +151,7 @@
                             },
                             {
                                 "Name": "VirtoCommerceBaseUrl",
-                                "ConnectionString": "[concat('http://', parameters('siteName'), '.azurewebsites.net/admin/api/')]",
+                                "ConnectionString": "[concat('http://', parameters('siteName'), '.azurewebsites.net/admin')]",
                                 "Type": 3
                             },
                             {
