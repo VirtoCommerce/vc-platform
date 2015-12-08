@@ -54,8 +54,9 @@
       <HintPath>..\..\..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="PayPalCoreSDK">
-      <HintPath>..\..\..\packages\PayPalCoreSDK.1.6.1\lib\net451\PayPalCoreSDK.dll</HintPath>
+    <Reference Include="PayPalCoreSDK, Version=1.6.2.0, Culture=neutral, PublicKeyToken=5b4afc1ccaef40fb, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\PayPalCoreSDK.1.6.2\lib\net451\PayPalCoreSDK.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="PayPalMerchantSDK">
       <HintPath>..\..\..\packages\PayPalMerchantSDK.2.15.117\lib\net20\PayPalMerchantSDK.dll</HintPath>
@@ -80,7 +81,9 @@
   <ItemGroup>
     <Content Include="Content\paypal_2014_logo.png" />
     <Content Include="module.manifest" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="app.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -90,7 +93,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Web.config" />
+    <None Include="Web.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Managers\PaypalDirectPaymentsPaymentMethod.cs" />
