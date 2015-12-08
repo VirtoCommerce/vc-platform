@@ -7,19 +7,14 @@ namespace Zendesk.HelpdeskModule.Web.Services
     {
         private readonly ISettingsManager _settingsManager;
         private readonly string _apiAccessTokenPropertyName;
-        private readonly string _code;
-        private readonly string _description;
-        private readonly string _logoUrl;
+        private readonly string _customerEmailPropertyName;        
         private readonly string _subdomainPropertyName;
 
-        public ZendeskHelpdeskSettings(ISettingsManager settingsManager, string apiAccessTokenPropertyName, string subdomainPropertyName, string code, string description, string logoUrl)
+        public ZendeskHelpdeskSettings(ISettingsManager settingsManager, string apiAccessTokenPropertyName, string subdomainPropertyName, string customerEmailPropertyName)
         {
-            _apiAccessTokenPropertyName = apiAccessTokenPropertyName;
-            _code = code;
-            _description = description;
-            _logoUrl = logoUrl;
+            _apiAccessTokenPropertyName = apiAccessTokenPropertyName;            
             _subdomainPropertyName = subdomainPropertyName;
-
+            _customerEmailPropertyName = customerEmailPropertyName;
             _settingsManager = settingsManager;
         }
 
@@ -36,19 +31,13 @@ namespace Zendesk.HelpdeskModule.Web.Services
             }
         }
 
-        public string Code
+        public string CustomerEmail
         {
-            get { return _code; }
-        }
-
-        public string Description
-        {
-            get { return _description; }
-        }
-
-        public string LogoUrl
-        {
-            get { return _logoUrl; }
+            get
+            {
+                var retVal = _settingsManager.GetValue(_customerEmailPropertyName, string.Empty);
+                return retVal;
+            }
         }
 
         public string Subdomain

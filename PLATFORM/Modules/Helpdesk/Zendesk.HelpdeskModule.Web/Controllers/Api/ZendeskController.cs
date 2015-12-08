@@ -18,9 +18,9 @@ namespace Zendesk.HelpdeskModule.Web.Controllers.Api
         public ZendeskController(IHelpdeskSettings zendeskSettings)
         {
             _zendeskSettings = zendeskSettings;
-            if (!string.IsNullOrEmpty(_zendeskSettings.AccessToken))
+            if (!string.IsNullOrEmpty(_zendeskSettings.AccessToken) && !string.IsNullOrEmpty(_zendeskSettings.Subdomain) && !string.IsNullOrEmpty(_zendeskSettings.CustomerEmail))
             {
-                _api = GetZendeskApi(_zendeskSettings.Subdomain, _zendeskSettings.AccessToken);
+                _api = GetZendeskApi(_zendeskSettings.Subdomain, _zendeskSettings.CustomerEmail, _zendeskSettings.AccessToken);
             }
         }
         
@@ -115,9 +115,9 @@ namespace Zendesk.HelpdeskModule.Web.Controllers.Api
 
         
 
-        private ZendeskApi GetZendeskApi(string subdomain, string token)
+        private ZendeskApi GetZendeskApi(string subdomain, string email, string token)
         {
-            return new ZendeskApi(string.Format("https://{0}.zendesk.com", subdomain), "", "", token);
+            return new ZendeskApi(string.Format("https://{0}.zendesk.com", subdomain), email, email, token);
         }
     }
 }
