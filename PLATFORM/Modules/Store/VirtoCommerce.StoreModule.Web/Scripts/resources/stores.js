@@ -3,7 +3,7 @@
     return $resource('api/stores', {}, {
         get: { url: 'api/stores/:id' },
         update: { method: 'PUT' },
-        queryFilterProperties: { url: 'api/stores/:id/filterproperties', isArray: true },
-        saveFilterProperties: { url: 'api/stores/:id/filterproperties', method: 'PUT' }
+        queryFilterProperties: { url: 'api/search/storefilterproperties/:id', isArray: true },
+        saveFilterProperties: { url: 'api/search/storefilterproperties/:id', method: 'PUT' }
     });
 }]);
