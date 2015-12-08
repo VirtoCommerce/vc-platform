@@ -23,7 +23,6 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
                 retVal.Catalog = product.Catalog.ToWebModel();
                 //Reset catalog properties and languages for response size economy
                 retVal.Catalog.Properties = null;
-                retVal.Catalog.Languages = null;
             }
 
             if (product.Category != null)

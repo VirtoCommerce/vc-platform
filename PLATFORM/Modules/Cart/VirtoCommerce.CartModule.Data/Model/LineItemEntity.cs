@@ -21,7 +21,6 @@ namespace VirtoCommerce.CartModule.Data.Model
 		[Required]
 		[StringLength(3)]
 		public string Currency { get; set; }
-
 		[Required]
 		[StringLength(64)]
 		public string ProductId { get; set; }
@@ -34,8 +33,10 @@ namespace VirtoCommerce.CartModule.Data.Model
 		[Required]
 		[StringLength(64)]
 		public string CategoryId { get; set; }
-
-		[Required]
+        [Required]
+        [StringLength(64)]
+        public string ProductType { get; set; }
+        [Required]
 		[StringLength(256)]
 		public string Name { get; set; }
 

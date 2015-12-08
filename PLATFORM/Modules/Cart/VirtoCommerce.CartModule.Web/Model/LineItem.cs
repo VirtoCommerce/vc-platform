@@ -29,6 +29,10 @@ namespace VirtoCommerce.CartModule.Web.Model
         public string Sku { get; set; }
 
         /// <summary>
+        /// Gets or sets the value of product type (Digital, physical etc)
+        /// </summary>
+        public string ProductType { get; set; }
+        /// <summary>
         /// Gets or sets the value of line item name
         /// </summary>
         public string Name { get; set; }

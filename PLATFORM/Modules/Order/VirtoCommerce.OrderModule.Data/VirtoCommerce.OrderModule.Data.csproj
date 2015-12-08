@@ -101,6 +101,10 @@
     <Compile Include="Migrations\201507240957387_RemoveOrderProperties.Designer.cs">
       <DependentUpon>201507240957387_RemoveOrderProperties.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201512080949087_AddProductTypeColumn.cs" />
+    <Compile Include="Migrations\201512080949087_AddProductTypeColumn.Designer.cs">
+      <DependentUpon>201512080949087_AddProductTypeColumn.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\AddressEntity.cs" />
     <Compile Include="Model\CustomerOrderEntity.cs" />
@@ -172,6 +176,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201507240957387_RemoveOrderProperties.resx">
       <DependentUpon>201507240957387_RemoveOrderProperties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201512080949087_AddProductTypeColumn.resx">
+      <DependentUpon>201512080949087_AddProductTypeColumn.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

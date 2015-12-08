@@ -43,6 +43,8 @@ namespace VirtoCommerce.Domain.Order.Model
 
         public string ProductId { get; set; }
         public CatalogProduct Product { get; set; }
+        public string Sku { get; set; }
+        public string ProductType { get; set; }
         public string CatalogId { get; set; }
         public string CategoryId { get; set; }
 
