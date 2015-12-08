@@ -49,6 +49,23 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
             return Ok(retVal);
         }
 
+
+        /// <summary>
+        /// Evaluate prices lists by given context
+        /// </summary>
+        /// <param name="evalContext">Pricing evaluation context</param>
+        /// <returns>Price lists array</returns>
+        [HttpGet]
+        [ResponseType(typeof(webModel.Price[]))]
+        [Route("api/pricing/pricelists/evaluate")]
+        public IHttpActionResult EvaluatePriceLists([ModelBinder(typeof(PriceEvaluationContextBinder))] coreModel.PriceEvaluationContext evalContext)
+        {
+            var retVal = _pricingService.EvaluatePriceLists(evalContext)
+                                        .Select(x => x.ToWebModel())
+                                        .ToArray();
+
+            return Ok(retVal);
+        }
         /// <summary>
         /// Get pricelist assignment
         /// </summary>
