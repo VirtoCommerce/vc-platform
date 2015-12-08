@@ -4,18 +4,18 @@
             <form name="contextEntityDetailForm" class="form">
                 <fieldset ng-repeat="propGroup in propGroups" ng-init="setForm(contextEntityDetailForm);">
                     <legend>
-                        {{ propGroup.title | translate }}: <span class="count">{{properties.length}}</span>
+                        {{propGroup.title | translate}}: <span class="count">{{properties.length}}</span>
                     </legend>
                     <div class="form-group" ng-repeat="prop in properties = (blade.currentEntity.properties | filter: {type:propGroup.type})">
-                        <label class="form-label" for="">
+                        <label class="form-label">
                             {{prop.name}}
-                            <a class="form-edit" ng-show="prop.isManageable" href="" ng-click="editProperty(prop)">
+                            <a ng-show="prop.isManageable" href="" ng-click="editProperty(prop)" class="form-edit">
                                 <i class="form-ico fa fa-pencil"></i>
                             </a>
                         </label>
-                        <va-property2 ng-model="prop" get-prop-values="getPropValues" />
+                        <va-property2 ng-model="prop" get-prop-values="getPropValues" ng-if="!prop.isReadOnly" />
                     </div>
-                    <div class="text" ng-if="properties.length == 0">{{ 'catalog.blades.category-property-detail.labels.empty-list' | translate }}</div>
+                    <div class="text" ng-if="properties.length == 0">{{'catalog.blades.category-property-detail.labels.empty-list' | translate}}</div>
                 </fieldset>
             </form>
         </div>

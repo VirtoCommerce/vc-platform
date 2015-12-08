@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.catalogLanguagesController', ['$scope', 'platformWebApp.settings', 'platformWebApp.dialogService', function ($scope, settings, dialogService) {
+.controller('virtoCommerce.catalogModule.catalogLanguagesController', ['$scope', 'platformWebApp.settings', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', function ($scope, settings, dialogService, bladeNavigationService) {
     var blade = $scope.blade;
     var promise = settings.getValues({ id: 'VirtoCommerce.Core.General.Languages' }).$promise;
     $scope.languages = [];
@@ -74,6 +74,18 @@
     };
 
     blade.headIcon = 'fa-language';
+
+    $scope.openDictionarySettingManagement = function () {
+        var newBlade = {
+            id: 'settingDetailChild',
+            isApiSave: true,
+            currentEntityId: 'VirtoCommerce.Core.General.Languages',
+            parentRefresh: function (data) { $scope.languages = data; },
+            controller: 'platformWebApp.settingDictionaryController',
+            template: '$(Platform)/Scripts/app/settings/blades/setting-dictionary.tpl.html'
+        };
+        bladeNavigationService.showBlade(newBlade, blade);
+    };
 
     $scope.$watch('blade.parentBlade.currentEntity', initializeBlade);
 

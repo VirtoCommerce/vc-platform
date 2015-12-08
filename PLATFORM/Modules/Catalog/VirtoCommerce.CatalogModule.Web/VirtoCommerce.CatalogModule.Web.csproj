@@ -247,8 +247,8 @@
     <Content Include="Scripts\blades\catalogs-list.js" />
     <Content Include="Scripts\blades\categories-items-list.js" />
     <Content Include="Scripts\blades\categories-items-list.tpl.html" />
-    <Content Include="Scripts\blades\category-property-detail.js" />
-    <Content Include="Scripts\blades\category-property-detail.tpl.html" />
+    <Content Include="Scripts\blades\category-property-list.js" />
+    <Content Include="Scripts\blades\category-property-list.tpl.html" />
     <Content Include="Scripts\blades\item-detail.js" />
     <Content Include="Scripts\blades\item-detail.tpl.html" />
     <Content Include="Scripts\blades\item-asset-detail.js" />
