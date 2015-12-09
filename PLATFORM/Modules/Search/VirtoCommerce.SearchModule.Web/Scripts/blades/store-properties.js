@@ -1,10 +1,10 @@
 ﻿angular.module('virtoCommerce.searchModule')
-.controller('virtoCommerce.searchModule.storePropertiesController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'virtoCommerce.storeModule.stores', function ($scope, dialogService, bladeNavigationService, properties) {
+.controller('virtoCommerce.searchModule.storePropertiesController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'virtoCommerce.searchModule.search', function ($scope, dialogService, bladeNavigationService, searchAPI) {
     var blade = $scope.blade;
 
     function initializeBlade() {
         // var results = [{ name: 'adsas', isSelected: true }, { name: 'adsas dsdc' }];
-        properties.queryFilterProperties({ id: blade.storeId }, function (results) {
+        searchAPI.queryFilterProperties({ id: blade.storeId }, function (results) {
             blade.currentEntities = angular.copy(results);
             blade.origEntity = results;
 
@@ -54,7 +54,7 @@
     $scope.saveChanges = function () {
         blade.isLoading = true;
 
-        properties.saveFilterProperties({ id: blade.storeId }, blade.selectedEntities, function (data) {
+        searchAPI.saveFilterProperties({ id: blade.storeId }, blade.selectedEntities, function (data) {
             angular.copy(blade.currentEntities, blade.origEntity);
             angular.copy(blade.selectedEntities, blade.origSelected);
             // $scope.bladeClose();

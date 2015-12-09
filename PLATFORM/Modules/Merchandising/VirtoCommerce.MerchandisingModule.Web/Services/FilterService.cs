@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Xml.Serialization;
 using VirtoCommerce.Domain.Search.Filters;
 using VirtoCommerce.Domain.Search.Model;
 using VirtoCommerce.Domain.Search.Services;
 using VirtoCommerce.Domain.Store.Model;
 using VirtoCommerce.Domain.Store.Services;
+using VirtoCommerce.Platform.Core.DynamicProperties;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Services
 {
@@ -20,11 +20,9 @@ namespace VirtoCommerce.MerchandisingModule.Web.Services
             _storeService = storeService;
         }
 
-        #region Public Methods and Operators
-
         public ISearchFilter[] GetFilters(IDictionary<string, object> context)
         {
-            if (this._filters != null)
+            if (_filters != null)
             {
                 return _filters;
             }
@@ -35,7 +33,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Services
             {
                 var store = _storeService.GetById(context["StoreId"].ToString());
 
-                var browsing = this.GetStoreBrowseFilters(store);
+                var browsing = GetFilteredBrowsing(store);
                 if (browsing != null)
                 {
                     if (browsing.Attributes != null)
@@ -57,32 +55,21 @@ namespace VirtoCommerce.MerchandisingModule.Web.Services
             return _filters;
         }
 
-        #endregion
 
-        #region Methods
-
-        /// <summary>
-        ///     Gets the store browse filters.
-        /// </summary>
-        /// <param name="store">The store.</param>
-        /// <returns>Filtered browsing</returns>
-        private FilteredBrowsing GetStoreBrowseFilters(Store store)
+        private static FilteredBrowsing GetFilteredBrowsing(Store store)
         {
-            if (store == null || store.DynamicProperties == null)
-                return null;
+            FilteredBrowsing result = null;
 
-            var filterSetting = store.DynamicProperties.FirstOrDefault(x => x.Name == "FilteredBrowsing");
-            if (filterSetting != null && filterSetting.Values != null && filterSetting.Values.Any())
+            var filterSettingValue = store.GetDynamicPropertyValue("FilteredBrowsing", string.Empty);
+
+            if (!string.IsNullOrEmpty(filterSettingValue))
             {
+                var reader = new StringReader(filterSettingValue);
                 var serializer = new XmlSerializer(typeof(FilteredBrowsing));
-                var reader = new StringReader(filterSetting.Values.First().Value.ToString());
-                var browsing = serializer.Deserialize(reader) as FilteredBrowsing;
-                return browsing;
+                result = serializer.Deserialize(reader) as FilteredBrowsing;
             }
 
-            return null;
+            return result;
         }
-
-        #endregion
     }
 }

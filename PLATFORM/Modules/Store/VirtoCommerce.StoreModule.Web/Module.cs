@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Data.Entity;
-using System.Linq;
 using Microsoft.Practices.Unity;
+using VirtoCommerce.Domain.Store.Security;
 using VirtoCommerce.Domain.Store.Services;
-using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
@@ -13,7 +11,6 @@ using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.StoreModule.Data.Repositories;
 using VirtoCommerce.StoreModule.Data.Services;
 using VirtoCommerce.StoreModule.Web.ExportImport;
-using VirtoCommerce.StoreModule.Web.Security;
 
 namespace VirtoCommerce.StoreModule.Web
 {
@@ -32,7 +29,7 @@ namespace VirtoCommerce.StoreModule.Web
         {
             using (var db = new StoreRepositoryImpl())
             {
-				var initializer = new SetupDatabaseInitializer<StoreRepositoryImpl, Data.Migrations.Configuration>();
+                var initializer = new SetupDatabaseInitializer<StoreRepositoryImpl, Data.Migrations.Configuration>();
 
                 initializer.InitializeDatabase(db);
             }
@@ -46,7 +43,7 @@ namespace VirtoCommerce.StoreModule.Web
 
         public override void PostInitialize()
         {
-					
+
             //Register bounded security scope types
             var securityScopeService = _container.Resolve<IPermissionScopeService>();
             securityScopeService.RegisterSope(() => new StoreSelectedScope());
@@ -55,27 +52,27 @@ namespace VirtoCommerce.StoreModule.Web
 
         #region ISupportExportModule Members
 
-		public void DoExport(System.IO.Stream outStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
+        public void DoExport(System.IO.Stream outStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
         {
             var exportJob = _container.Resolve<StoreExportImport>();
             exportJob.DoExport(outStream, progressCallback);
         }
 
-		public void DoImport(System.IO.Stream inputStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
+        public void DoImport(System.IO.Stream inputStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
         {
             var exportJob = _container.Resolve<StoreExportImport>();
             exportJob.DoImport(inputStream, progressCallback);
         }
 
-		public string ExportDescription
-		{
-			get 
-			{ 
-				var settingManager = _container.Resolve<ISettingsManager>();
-				return settingManager.GetValue("Stores.ExportImport.Description", String.Empty);
-			}
-		}
+        public string ExportDescription
+        {
+            get
+            {
+                var settingManager = _container.Resolve<ISettingsManager>();
+                return settingManager.GetValue("Stores.ExportImport.Description", String.Empty);
+            }
+        }
 
-		#endregion
-	}
+        #endregion
+    }
 }

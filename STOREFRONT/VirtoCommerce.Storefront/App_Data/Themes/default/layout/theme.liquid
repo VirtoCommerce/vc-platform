@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html class="no-touch no-js" ng-app="storefrontApp">
 <head>
     <meta charset="utf-8" />
@@ -21,7 +21,7 @@
 
     <link rel="canonical" href="{{ canonical_url }}" />
 
-    <base href="{{ '/' | absolute_url }}/" />
+    <base href="{{ '/' | absolute_url }}" />
 
     {{ '//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css' | stylesheet_tag }}
     {{ 'ajaxify.scss.css' | asset_url | stylesheet_tag }}
@@ -81,7 +81,7 @@
                                     <span class="site-header--meta-links medium-down--hide">
                                         {% if customer %}
                                             {% capture first_name %}
-                                                <a href="{{ 'account' | absolute_url }}">{{ customer.first_name }}</a>
+                                                <a href="{{ '/account' | absolute_url }}">{{ customer.first_name }}</a>
                                             {% endcapture %}
                                             {{ 'layout.customer.logged_in_as_html' | t: first_name: first_name }} &middot; {{ 'layout.customer.log_out' | t | customer_logout_link }}
                                         {% else %}

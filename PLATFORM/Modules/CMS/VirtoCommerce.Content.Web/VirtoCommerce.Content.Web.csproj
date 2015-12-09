@@ -125,7 +125,7 @@
     <Content Include="Default_Theme\Default\assets\respond.min.js" />
     <Content Include="Default_Theme\Default\assets\slide_1.jpg" />
     <Content Include="Default_Theme\Default\assets\slide_2.jpg" />
-    <Content Include="gulpfile.js" />
+    <None Include="gulpfile.js" />
     <Content Include="module.manifest" />
     <Content Include="Localizations\en.VirtoCommerce.Content.json" />
     <None Include="packages.config">
@@ -203,9 +203,9 @@
     <Content Include="Default_Theme\Default\templates\customers\reset_password.liquid" />
     <Content Include="Default_Theme\Default\assets\flexslider.css.liquid" />
     <Content Include="Default_Theme\Default\templates\quote.liquid" />
-    <Content Include=".bowerrc" />
-    <Content Include="bower.json" />
-    <Content Include="package.json" />
+    <None Include=".bowerrc" />
+    <None Include="bower.json" />
+    <None Include="package.json" />
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>

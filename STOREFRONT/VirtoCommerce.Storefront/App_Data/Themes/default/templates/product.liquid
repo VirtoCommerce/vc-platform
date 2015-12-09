@@ -83,7 +83,7 @@
 
             <link itemprop="availability" href="http://schema.org/{% if product.available %}InStock{% else %}OutOfStock{% endif %}">
 
-            <form action={{ 'cart/add' | absolute_url }}" method="post" enctype="multipart/form-data" id="addToCartForm">
+            <form action={{ '/cart/add' | absolute_url }}" method="post" enctype="multipart/form-data" id="addToCartForm">
 
                 <div class="product-sku">
                     <div ng-repeat="(propName, props) in allVariationPropsMap">
