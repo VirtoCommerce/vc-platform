@@ -1,4 +1,4 @@
-﻿namespace VirtoCommerce.StoreModule.Web.Security
+﻿namespace VirtoCommerce.Domain.Store.Security
 {
     public static class StorePredefinedPermissions
     {

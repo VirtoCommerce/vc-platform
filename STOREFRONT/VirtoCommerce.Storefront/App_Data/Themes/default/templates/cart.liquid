@@ -10,7 +10,7 @@
                         </a>
                     </div>
                     <div class="grid-item two-thirds large--three-quarters">
-                        <a href="{( lineItem.url )}">{( lineItem.Name )}</a>
+                        <a href="{( lineItem.url )}" ng-bind="lineItem.Name"></a>
                         <p ng-repeat="property in lineItem.Properties">
                         </p>
                     </div>
@@ -26,8 +26,28 @@
                         </div>
                     </div>
                     <div class="grid-item one-third medium-down--one-third medium-down--text-left text-right">
-                        <span class="h2">
-                            <small>{( lineItem.PlacedPrice.Amount | currency: lineItem.PlacedPrice.CurrencySymbol )}</small>
+                        <span ng-if="lineItem.ListPrice.Amount == lineItem.SalePrice.Amount && lineItem.DiscountTotal.Amount == 0">
+                            <span class="h2">
+                                <small ng-bind="lineItem.ListPrice.FormatedAmount"></small>
+                            </span>
+                        </span>
+                        <span ng-if="lineItem.ListPrice.Amount > lineItem.SalePrice.Amount && lineItem.DiscountTotal.Amount == 0">
+                            <span class="h2">
+                                <small ng-bind="lineItem.SalePrice.FormatedAmount"></small>
+                            </span>
+                            <span style="text-decoration: line-through;" ng-bind="lineItem.ListPrice.FormatedAmount"></span>
+                        </span>
+                        <span ng-if="lineItem.ListPrice.Amount == lineItem.SalePrice.Amount && lineItem.DiscountTotal.Amount > 0">
+                            <span class="h2">
+                                <small ng-bind="(lineItem.ListPrice.Amount - lineItem.DiscountTotal.Amount / lineItem.Quantity) | currency: lineItem.ListPrice.CurrencySymbol"></small>
+                            </span>
+                            <span style="text-decoration: line-through;" ng-bind="lineItem.ListPrice.FormatedAmount"></span>
+                        </span>
+                        <span ng-if="lineItem.ListPrice.Amount > lineItem.SalePrice.Amount && lineItem.DiscountTotal.Amount > 0">
+                            <span class="h2">
+                                <small ng-bind="(lineItem.SalePrice.Amount - lineItem.DiscountTotal.Amount / lineItem.Quantity) | currency: lineItem.SalePrice.CurrencySymbol"></small>
+                            </span>
+                            <span style="text-decoration: line-through;" ng-bind="lineItem.SalePrice.FormatedAmount"></span>
                         </span>
                     </div>
                     <div class="grid-item one-sixth medium-down--one-third text-right">
@@ -50,10 +70,10 @@
                 <div class="cart-subtotal">
                     {{ 'cart.general.subtotal' | t }}
                     <span class="h1 cart-subtotal--price">
-                        <small>{( cart.SubTotal.Amount | currency: cart.SubTotal.CurrencySymbol )}</small>
+                        <small ng-bind="cart.SubTotal.FormatedAmount"></small>
                     </span>
                 </div>
-                <button class="btn" type="button" ng-click="outsideRedirect('{{ '/cart/checkout/#/customer-information' | absolute_url }}')">
+                <button class="btn" type="button" ng-click="outerRedirect('{{ '/cart/checkout/#/customer-information' | absolute_url }}')">
                     <span class="icon icon-cart"></span>
                     {{ 'cart.general.checkout' | t }}
                 </button>

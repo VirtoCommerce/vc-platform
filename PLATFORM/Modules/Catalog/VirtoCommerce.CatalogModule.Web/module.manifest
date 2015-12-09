@@ -55,8 +55,8 @@
         <name>Catalog.EditorialReviewTypes</name>
         <valueType>string</valueType>
         <defaultValue>QuickReview</defaultValue>
-        <title>Editorial review types</title>
-        <description>Dictionary of possible types that item's Editorial Review can have</description>
+        <title>Item description types</title>
+        <description>Dictionary of possible types that item's Descriptions can have</description>
         <isArray>true</isArray>
         <arrayValues>
           <value>QuickReview</value>

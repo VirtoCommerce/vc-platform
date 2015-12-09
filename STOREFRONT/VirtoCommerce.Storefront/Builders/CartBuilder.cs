@@ -20,9 +20,8 @@ namespace VirtoCommerce.Storefront.Builders
         private Store _store;
         private Customer _customer;
         private Currency _currency;
+        private Language _language;
         private ShoppingCart _cart;
-
-        private const string CartSubtotalDiscount = "";
 
         public CartBuilder(
             IShoppingCartModuleApi cartApi,
@@ -32,23 +31,24 @@ namespace VirtoCommerce.Storefront.Builders
             _marketingApi = marketinApi;
         }
 
-        public async Task<CartBuilder> GetOrCreateNewTransientCartAsync(Store store, Customer customer, Currency currency)
+        public async Task<CartBuilder> GetOrCreateNewTransientCartAsync(Store store, Customer customer, Language language, Currency currency)
         {
             VirtoCommerceCartModuleWebModelShoppingCart cartSearchResult = null;
 
             _store = store;
             _customer = customer;
             _currency = currency;
+            _language = language;
 
             cartSearchResult = await _cartApi.CartModuleGetCurrentCartAsync(_store.Id, _customer.Id);
             if (cartSearchResult == null)
             {
-                _cart = new ShoppingCart(_store.Id, _customer.Id, _customer.UserName, "Default", _currency.Code);
+                _cart = CreateNewTransientCart();
             }
             else
             {
                 var detalizedCart = await _cartApi.CartModuleGetCartByIdAsync(cartSearchResult.Id);
-                _cart = detalizedCart.ToWebModel();
+                _cart = detalizedCart.ToWebModel(_currency, _language);
             }
 
             await EvaluatePromotionsAsync();
@@ -58,7 +58,7 @@ namespace VirtoCommerce.Storefront.Builders
 
         public async Task<CartBuilder> AddItemAsync(Product product, int quantity)
         {
-            AddLineItem(product.ToLineItem(quantity));
+            AddLineItem(product.ToLineItem(_language, quantity));
 
             await EvaluatePromotionsAsync();
 
@@ -212,8 +212,34 @@ namespace VirtoCommerce.Storefront.Builders
             }
         }
 
+        private ShoppingCart CreateNewTransientCart()
+        {
+            var cart = new ShoppingCart(_currency, _language);
+
+            cart.CustomerId = _customer.Id;
+            cart.CustomerName = _customer.Name;
+            cart.Name = "Default";
+            cart.StoreId = _store.Id;
+
+            return cart;
+        }
+
         private async Task EvaluatePromotionsAsync()
         {
+            _cart.Discounts.Clear();
+
+            foreach (var lineItem in _cart.Items)
+            {
+                lineItem.Discounts.Clear();
+            }
+
+            foreach (var shipment in _cart.Shipments)
+            {
+                shipment.Discounts.Clear();
+            }
+
+            CalculateTotals();
+
             var promotionContext = new VirtoCommerceDomainMarketingModelPromotionEvaluationContext
             {
                 CartTotal = (double)_cart.Total.Amount,
@@ -222,87 +248,104 @@ namespace VirtoCommerce.Storefront.Builders
                 StoreId = _store.Id,
             };
 
-            _cart.Discounts.Clear();
-            foreach (var lineItem in _cart.Items)
-            {
-                lineItem.Discounts.Clear();
-            }
-            foreach (var shipment in _cart.Shipments)
-            {
-                shipment.Discounts.Clear();
-            }
-
             promotionContext.CartPromoEntries = _cart.Items.Select(i => i.ToPromotionItem()).ToList();
             promotionContext.PromoEntries = promotionContext.CartPromoEntries;
 
             var rewards = await _marketingApi.MarketingModulePromotionEvaluatePromotionsAsync(promotionContext);
-            var validRewards = rewards.Where(pr => pr.IsValid.HasValue && pr.IsValid.Value);
-
-            foreach (var validReward in validRewards)
+            foreach (var reward in rewards)
             {
-                if (validReward.RewardType.Equals("CatalogItemAmountReward", StringComparison.OrdinalIgnoreCase) && !string.IsNullOrEmpty(validReward.ProductId))
+                if (reward.RewardType.Equals("CatalogItemAmountReward", StringComparison.OrdinalIgnoreCase) && reward.IsValid.HasValue && reward.IsValid.Value)
                 {
-                    var lineItem = _cart.Items.FirstOrDefault(i => i.ProductId == validReward.ProductId);
+                    var lineItem = _cart.Items.FirstOrDefault(i => i.ProductId == reward.ProductId);
                     if (lineItem != null)
                     {
-                        lineItem.Discounts.Add(new Discount
-                        {
-                            Amount = GetAbsoluteDiscountAmount(lineItem.ExtendedPrice.Amount, validReward),
-                            Description = validReward.Promotion.Description,
-                            PromotionId = validReward.Promotion.Id,
-                            Type = PromotionRewardType.CatalogItemAmountReward
-                        });
+                        var discount = CreateDiscount(lineItem.ExtendedPrice.Amount, PromotionRewardType.CatalogItemAmountReward, reward);
+                        lineItem.Discounts.Add(discount);
                     }
                 }
 
-                if (validReward.RewardType.Equals("ShipmentReward", StringComparison.OrdinalIgnoreCase))
+                if (reward.RewardType.Equals("ShipmentReward", StringComparison.OrdinalIgnoreCase) && reward.IsValid.HasValue && reward.IsValid.Value)
                 {
                     var shipment = _cart.Shipments.FirstOrDefault();
                     if (shipment != null)
                     {
-                        shipment.Discounts.Add(new Discount
-                        {
-                            Amount = GetAbsoluteDiscountAmount(_cart.SubTotal.Amount, validReward),
-                            Description = validReward.Promotion.Description,
-                            PromotionId = validReward.Promotion.Id,
-                            Type = PromotionRewardType.ShipmentReward
-                        });
+                        var discount = CreateDiscount(shipment.ShippingPrice.Amount, PromotionRewardType.ShipmentReward, reward);
+                        shipment.Discounts.Add(discount);
                     }
                 }
 
-                if (validReward.RewardType.Equals("CartSubtotalReward", StringComparison.OrdinalIgnoreCase))
+                if (reward.RewardType.Equals("CartSubtotalReward", StringComparison.OrdinalIgnoreCase))
                 {
-                    var coupon = validReward.Promotion.Coupons.FirstOrDefault();
-                    if (coupon != null)
+                    if (reward.IsValid.HasValue && reward.IsValid.Value)
                     {
-                        var absoluteAmount = GetAbsoluteDiscountAmount(_cart.SubTotal.Amount, validReward);
-                        _cart.Discounts.Add(new Discount
-                        {
-                            Amount = absoluteAmount,
-                            Description = validReward.Promotion.Description,
-                            PromotionId = validReward.Promotion.Id,
-                            Type = PromotionRewardType.CartSubtotalReward
-                        });
-
-                        _cart.Coupon = new Coupon
-                        {
-                            Amount = absoluteAmount,
-                            AppliedSuccessfully = true,
-                            Code = coupon,
-                            Description = validReward.Promotion.Description
-                        };
+                        var discount = CreateDiscount(_cart.SubTotal.Amount, PromotionRewardType.CartSubtotalReward, reward);
+                        _cart.Discounts.Add(discount);
                     }
+                }
+
+                if (reward.Promotion.Coupons.Any() && !string.IsNullOrEmpty(promotionContext.Coupon))
+                {
+                    bool isValid = reward.IsValid.HasValue && reward.IsValid.Value;
+
+                    _cart.Coupon = new Coupon
+                    {
+                        Amount = GetAbsoluteDiscountAmount(_cart.SubTotal.Amount, reward),
+                        AppliedSuccessfully = isValid,
+                        Code = promotionContext.Coupon,
+                        Description = reward.Promotion.Description,
+                        ErrorCode = isValid ? null : "InvalidCouponCode"
+                    };
                 }
             }
 
-            var couponDiscount = _cart.Discounts.FirstOrDefault(d => d.Type == PromotionRewardType.CartSubtotalReward);
-            if (_cart.Coupon != null && couponDiscount == null)
-            {
-                _cart.Errors.Add("InvalidCouponCode");
-            }
+            CalculateTotals();
         }
 
-        private Money GetAbsoluteDiscountAmount(decimal originalSum, VirtoCommerceMarketingModuleWebModelPromotionReward reward)
+        private void CalculateTotals()
+        {
+            var cartDiscountTotal = new Money(_currency.Code);
+            foreach (var discount in _cart.Discounts.ToList())
+            {
+                cartDiscountTotal += discount.Amount;
+            }
+
+            var lineItemsDiscountTotal = new Money(_currency.Code);
+            foreach (var lineItem in _cart.Items.ToList())
+            {
+                foreach (var discount in lineItem.Discounts.ToList())
+                {
+                    lineItemsDiscountTotal += discount.Amount;
+                }
+            }
+
+            var shipmentsDiscountTotal = new Money(_currency.Code);
+            foreach (var shipment in _cart.Shipments.ToList())
+            {
+                foreach (var discount in shipment.Discounts.ToList())
+                {
+                    shipmentsDiscountTotal += discount.Amount;
+                }
+            }
+
+            _cart.DiscountTotal = cartDiscountTotal + lineItemsDiscountTotal + shipmentsDiscountTotal;
+            _cart.ShippingTotal = new Money(_cart.Shipments.Sum(s => s.ShippingPrice.Amount), _currency.Code);
+            _cart.SubTotal = new Money(_cart.Items.Sum(i => i.ExtendedPrice.Amount), _currency.Code) - lineItemsDiscountTotal;
+            _cart.Total = _cart.SubTotal + _cart.ShippingTotal + _cart.TaxTotal - _cart.DiscountTotal;
+        }
+
+        private Discount CreateDiscount(decimal amount, PromotionRewardType type, VirtoCommerceMarketingModuleWebModelPromotionReward reward)
+        {
+            var discount = new Discount();
+
+            discount.Amount = GetAbsoluteDiscountAmount(amount, reward);
+            discount.Description = reward.Promotion.Description;
+            discount.PromotionId = reward.Promotion.Id;
+            discount.Type = type;
+
+            return discount;
+        }
+
+        private Money GetAbsoluteDiscountAmount(decimal amount, VirtoCommerceMarketingModuleWebModelPromotionReward reward)
         {
             decimal absoluteDiscountAmount = 0;
 
@@ -312,7 +355,7 @@ namespace VirtoCommerce.Storefront.Builders
             }
             if (reward.AmountType.Equals("Relative", StringComparison.OrdinalIgnoreCase))
             {
-                absoluteDiscountAmount = originalSum * (decimal)(reward.Amount ?? 0) / 100;
+                absoluteDiscountAmount = amount * (decimal)(reward.Amount ?? 0) / 100;
             }
 
             return new Money(absoluteDiscountAmount, _currency.Code);

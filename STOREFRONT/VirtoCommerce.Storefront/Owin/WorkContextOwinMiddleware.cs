@@ -59,15 +59,15 @@ namespace VirtoCommerce.Storefront.Owin
             workContext.CurrentStore = GetStore(context, workContext.AllStores);
             workContext.CurrentLanguage = GetLanguage(context, workContext.AllStores, workContext.CurrentStore);
             workContext.CurrentCurrency = GetCurrency(context, workContext.CurrentStore);
-            workContext.CurrentCart = (await _cartBuilder.GetOrCreateNewTransientCartAsync(workContext.CurrentStore, workContext.CurrentCustomer, workContext.CurrentCurrency)).Cart;
 
+            await _cartBuilder.GetOrCreateNewTransientCartAsync(workContext.CurrentStore, workContext.CurrentCustomer, workContext.CurrentLanguage, workContext.CurrentCurrency);
+            workContext.CurrentCart = _cartBuilder.Cart;
 
             //Initialize catalog search context
             workContext.CurrentCatalogSearchCriteria = GetSearchCriteria(workContext);
 
             await Next.Invoke(context);
         }
-
 
         protected virtual async Task<Store[]> GetAllStoresAsync()
         {

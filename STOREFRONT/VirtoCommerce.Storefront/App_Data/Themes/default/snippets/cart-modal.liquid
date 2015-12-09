@@ -1,5 +1,5 @@
 <div class="ajaxify-modal" id="ajaxifyModal" style="margin-left: -380px; opacity: 1;" ng-class="{ 'is-visible': isCartModalVisible }">
-    <button class="ajaxifyCart--close" title="Close Cart" ng-click="hideCartModal()">Close Cart</button>
+    <button class="ajaxifyCart--close" title="Close Cart" ng-click="hideCartModal()">{{ 'cart.general.close_cart' | t }}</button>
     <div class="ajaxifyCart--content" id="ajaxifyCart">
         <span ng-if="!cart.Items.length">
             <h2>{{ 'cart.general.empty' | t }}</h2>
@@ -17,7 +17,7 @@
                                 </a>
                             </div>
                             <div class="grid-item two-thirds large--three-quarters">
-                                <a href="">{( lineItem.Name )}</a>
+                                <a href="" ng-bind="lineItem.Name"></a>
                             </div>
                         </div>
                     </div>
@@ -31,12 +31,26 @@
                                 </div>
                             </div>
                             <div class="grid-item one-third medium-down--one-third medium-down--text-left text-right">
-                                <span class="h2">{( lineItem.PlacedPrice.Amount | currency: lineItem.PlacedPrice.CurrencySymbol )}</span>
+                                <span ng-if="lineItem.ListPrice.Amount == lineItem.SalePrice.Amount && lineItem.DiscountTotal.Amount == 0">
+                                    <span class="h2" ng-bind="lineItem.ListPrice.FormatedAmount"></span>
+                                </span>
+                                <span ng-if="lineItem.ListPrice.Amount > lineItem.SalePrice.Amount && lineItem.DiscountTotal.Amount == 0">
+                                    <span class="h2" ng-bind="lineItem.SalePrice.FormatedAmount"></span>
+                                    <span style="text-decoration: line-through;" ng-bind="lineItem.ListPrice.FormatedAmount"></span>
+                                </span>
+                                <span ng-if="lineItem.ListPrice.Amount == lineItem.SalePrice.Amount && lineItem.DiscountTotal.Amount > 0">
+                                    <span class="h2" ng-bind="(lineItem.ListPrice.Amount - lineItem.DiscountTotal.Amount / lineItem.Quantity) | currency: lineItem.ListPrice.CurrencySymbol"></span>
+                                    <span style="text-decoration: line-through;" ng-bind="lineItem.ListPrice.FormatedAmount"></span>
+                                </span>
+                                <span ng-if="lineItem.ListPrice.Amount > lineItem.SalePrice.Amount && lineItem.DiscountTotal.Amount > 0">
+                                    <span class="h2" ng-bind="(lineItem.SalePrice.Amount - lineItem.DiscountTotal.Amount / lineItem.Quantity) | currency: lineItem.SalePrice.CurrencySymbol"></span>
+                                    <span style="text-decoration: line-through;" ng-bind="lineItem.SalePrice.FormatedAmount"></span>
+                                </span>
                             </div>
                             <div class="grid-item one-sixth medium-down--one-third text-right">
                                 <a class="icon-fallback-text btn-secondary remove ajaxifyCart--remove" href="" ng-click="removeLineItem(lineItem.Id)">
                                     <span class="icon icon-x" aria-hidden="true"></span>
-                                    <span class="fallback-text">Remove</span>
+                                    <span class="fallback-text">{{ 'cart.general.remove' | t }}</span>
                                 </a>
                             </div>
                         </div>
@@ -49,11 +63,11 @@
                         <div class="cart-subtotal">
                             {{ 'cart.general.subtotal' | t }}
                             <span class="h1 cart-subtotal--price">
-                                <small>{( cart.SubTotal.Amount | currency: cart.SubTotal.CurrencySymbol )}</small>
+                                <small ng-bind="cart.SubTotal.FormatedAmount"></small>
                             </span>
                         </div>
                         <input class="btn-secondary update-cart" type="button" value="Update cart" />
-                        <button name="checkout" class="btn" type="button" ng-click="outsideRedirect('{{ '/cart/checkout/#/customer-information' | absolute_url }}')">
+                        <button name="checkout" class="btn" type="button" ng-click="outerRedirect('{{ '/cart/checkout/#/customer-information' | absolute_url }}')">
                             <span class="icon icon-cart"></span>
                             {{ 'cart.general.checkout' | t }}
                         </button>

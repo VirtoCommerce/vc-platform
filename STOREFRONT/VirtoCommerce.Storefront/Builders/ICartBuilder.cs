@@ -8,7 +8,7 @@ namespace VirtoCommerce.Storefront.Builders
 {
     public interface ICartBuilder
     {
-        Task<CartBuilder> GetOrCreateNewTransientCartAsync(Store store, Customer customer, Currency currency);
+        Task<CartBuilder> GetOrCreateNewTransientCartAsync(Store store, Customer customer, Language language, Currency currency);
 
         Task<CartBuilder> AddItemAsync(Product product, int quantity);
 

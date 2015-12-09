@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
 
@@ -8,8 +7,14 @@ namespace VirtoCommerce.Storefront.Model.Cart
 {
     public class LineItem : Entity
     {
-        public LineItem()
+        public LineItem(Currency currency, Language language)
         {
+            Currency = currency;
+            LanguageCode = language.CultureName;
+
+            DiscountTotal = new Money(currency.Code);
+            TaxTotal = new Money(currency.Code);
+
             Discounts = new List<Discount>();
             TaxDetails = new List<TaxDetail>();
         }
@@ -65,7 +70,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// <value>
         /// Currency code in ISO 4217 format
         /// </value>
-        public Currency Currency { get; set; }
+        public Currency Currency { get; private set; }
 
         /// <summary>
         /// Gets or sets the value of line item warehouse location
@@ -111,7 +116,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// <value>
         /// Culture name in ISO 3166-1 alpha-3 format
         /// </value>
-        public string LanguageCode { get; set; }
+        public string LanguageCode { get; private set; }
 
         /// <summary>
         /// Gets or sets the value of line item comment
@@ -174,56 +179,24 @@ namespace VirtoCommerce.Storefront.Model.Cart
         public Money SalePrice { get; set; }
 
         /// <summary>
-        /// Gets the value of line item actual price (include all types of discounts)
+        /// Gets or sets the value of line item actual price (include all types of discounts)
         /// </summary>
-        public Money PlacedPrice
-        {
-            get
-            {
-                decimal placedPrice = (SalePrice.Amount > 0 ? SalePrice.Amount : ListPrice.Amount) - DiscountTotal.Amount;
-
-                return new Money(placedPrice, Currency.Code);
-            }
-        }
+        public Money PlacedPrice { get; set; }
 
         /// <summary>
-        /// Gets the value of line item subtotal price (actual price * line item quantity)
+        /// Gets or sets the value of line item subtotal price (actual price * line item quantity)
         /// </summary>
-        public Money ExtendedPrice
-        {
-            get
-            {
-                decimal extendedPrice = PlacedPrice.Amount * Quantity;
-
-                return new Money(extendedPrice, Currency.Code);
-            }
-        }
+        public Money ExtendedPrice { get; set; }
 
         /// <summary>
-        /// Gets the value of line item total discount amount
+        /// Gets or sets the value of line item total discount amount
         /// </summary>
-        public Money DiscountTotal
-        {
-            get
-            {
-                decimal discountsAmount = Discounts.Sum(d => d.Amount.Amount);
-
-                return new Money(discountsAmount, Currency.Code);
-            }
-        }
+        public Money DiscountTotal { get; set; }
 
         /// <summary>
-        /// Gets the value of line item total tax amount
+        /// Gets or sets the value of line item total tax amount
         /// </summary>
-        public Money TaxTotal
-        {
-            get
-            {
-                decimal taxesAmount = TaxDetails.Sum(td => td.Amount.Amount);
-
-                return new Money(taxesAmount, Currency.Code);
-            }
-        }
+        public Money TaxTotal { get; set; }
 
         /// <summary>
         /// Gets or sets the value of line item tax type

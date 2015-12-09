@@ -63,6 +63,7 @@ namespace VirtoCommerce.Storefront.Controllers
         public ActionResult GetRegions(string countryCode)
         {
             var country = WorkContext.AllCountries.FirstOrDefault(c => c.Code3.Equals(countryCode, StringComparison.OrdinalIgnoreCase));
+
             return Json(country?.Regions, JsonRequestBehavior.AllowGet);
         }
     }

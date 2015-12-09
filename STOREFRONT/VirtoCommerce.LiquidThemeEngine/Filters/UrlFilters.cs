@@ -144,17 +144,6 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
         }
 
         /// <summary>
-        /// Url for <Base href=""/> html tag. Need add trailing "/" char
-        /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
-        public static string BaseUrl(string input)
-        {
-            var retVal = AbsoluteUrl(input);
-            retVal += "/";
-            return retVal;
-        }
-        /// <summary>
         /// Get absolute storefront url with specified store and language
         /// </summary>
         /// <param name="input"></param>

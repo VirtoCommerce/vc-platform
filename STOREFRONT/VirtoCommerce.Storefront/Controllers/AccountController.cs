@@ -209,7 +209,7 @@ namespace VirtoCommerce.Storefront.Controllers
                         {
                             var customer = await _customerApi.CustomerModuleGetContactByIdAsync(user.Id);
 
-                            await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, customer.ToWebModel(formModel.Email), WorkContext.CurrentCurrency);
+                            await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, customer.ToWebModel(formModel.Email), WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
                             await _cartBuilder.MergeWithCartAsync(anonymousShoppingCart);
                             await _cartBuilder.SaveAsync();
                         }

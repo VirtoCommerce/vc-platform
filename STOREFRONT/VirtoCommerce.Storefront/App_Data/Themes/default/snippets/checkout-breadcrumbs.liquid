@@ -1,16 +1,25 @@
-﻿<ul class="breadcrumb">
+﻿<ul class="breadcrumb" ng-if="checkout.hasPhysicalProducts">
     <li class="breadcrumb__item breadcrumb__item--completed">
         <a class="breadcrumb__link" href="{{ 'cart' | absolute_url }}" target="_self">{{ 'checkout.cart' | t }}</a>
     </li>
-    <li class="breadcrumb__item breadcrumb__item--completed" ng-if="checkout.cart.HasPhysicalProducts">
-        <a class="breadcrumb__link" href="{{ 'cart/checkout/#/customer-information' | absolute_url }}">{{ 'checkout.customer_information.title' | t }}</a>
+    <li class="breadcrumb__item" ng-class="{ 'breadcrumb__item--current': currentPath == 'customer-information', 'breadcrumb__item--completed': checkout.hasCustomerInformation }">
+        <a class="breadcrumb__link" href="" ng-click="innerRedirect('customer-information')" ng-if="currentPath != 'customer-information'">{{ 'checkout.customer_information.title' | t }}</a>
+        <span ng-if="currentPath == 'customer-information'" ng-class="{ 'current': currentPath == 'customer-information' }">{{ 'checkout.customer_information.title' | t }}</span>
     </li>
-    <li class="breadcrumb__item breadcrumb__item--completed" ng-if="checkout.cart.HasPhysicalProducts">
-        <a class="breadcrumb__link" href="{{ 'cart/checkout/#/shipping-method' | absolute_url }}" ng-if="checkout.hasCustomerInformation">{{ 'checkout.shipping_method.title' | t }}</a>
-        <span ng-if="!checkout.hasCustomerInformation">{{ 'checkout.shipping_method.title' | t }}</span>
+    <li class="breadcrumb__item" ng-class="{ 'breadcrumb__item--current': currentPath == 'shipping-method', 'breadcrumb__item--completed': checkout.hasShippingMethod }">
+        <a class="breadcrumb__link" href="" ng-click="innerRedirect('shipping-method')" ng-if="currentPath != 'shipping-method' && checkout.hasCustomerInformation">{{ 'checkout.shipping_method.title' | t }}</a>
+        <span ng-if="currentPath == 'shipping-method' || !checkout.hasCustomerInformation" ng-class="{ 'current': currentPath == 'shipping-method' }">{{ 'checkout.shipping_method.title' | t }}</span>
     </li>
+    <li class="breadcrumb__item" ng-class="{ 'breadcrumb__item--current': currentPath == 'payment-method', 'breadcrumb__item--completed': checkout.hasCustomerInformation && checkout.hasShippingMethod }">
+        <a class="breadcrumb__link" href="" ng-click="innerRedirect('payment-method')" ng-if="currentPath != 'payment-method' && checkout.hasCustomerInformation && checkout.hasShippingMethod">{{ 'checkout.payment_method.title' | t }}</a>
+        <span ng-if="currentPath == 'payment-method' || !checkout.hasCustomerInformation || !checkout.hasShippingMethod" ng-class="{ 'current': currentPath == 'payment-method' }">{{ 'checkout.payment_method.title' | t }}</span>
+    </li>
+</ul>
+<ul class="breadcrumb" ng-if="!checkout.hasPhysicalProducts">
     <li class="breadcrumb__item breadcrumb__item--completed">
-        <a class="breadcrumb__link" href="{{ 'cart/checkout/#/payment-method' | absolute_url }}" ng-if="checkout.hasCustomerInformation && checkout.hasShippingMethod">{{ 'checkout.payment_method.title' | t }}</a>
-        <span ng-if="!checkout.hasCustomerInformation || !checkout.hasShippingMethod">{{ 'checkout.payment_method.title' | t }}</span>
+        <a class="breadcrumb__link" href="{{ 'cart' | absolute_url }}" target="_self">{{ 'checkout.cart' | t }}</a>
+    </li>
+    <li class="breadcrumb__item breadcrumb__item--current">
+        <span class="current">{{ 'checkout.payment_method.title' | t }}</span>
     </li>
 </ul>

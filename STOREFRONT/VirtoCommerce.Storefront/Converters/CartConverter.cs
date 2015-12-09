@@ -1,4 +1,5 @@
 ﻿using Omu.ValueInjecter;
+using System;
 using System.Linq;
 using VirtoCommerce.Client.Model;
 using VirtoCommerce.Storefront.Model;
@@ -9,50 +10,11 @@ namespace VirtoCommerce.Storefront.Converters
 {
     public static class CartConverter
     {
-        public static ShoppingCart ToWebModel(this VirtoCommerceCartModuleWebModelShoppingCart serviceModel)
+        public static ShoppingCart ToWebModel(this VirtoCommerceCartModuleWebModelShoppingCart serviceModel, Currency currency, Language language)
         {
-            var webModel = new ShoppingCart(serviceModel.StoreId, serviceModel.CustomerId, serviceModel.CustomerName, serviceModel.Name, serviceModel.Currency);
-
-            var currency = new Currency(EnumUtility.SafeParse(serviceModel.Currency, CurrencyCodes.USD));
+            var webModel = new ShoppingCart(currency, language);
 
             webModel.InjectFrom(serviceModel);
-
-            webModel.SubTotal = new Money(serviceModel.SubTotal ?? 0, currency.Code);
-            webModel.DiscountTotal = new Money(serviceModel.DiscountTotal ?? 0, currency.Code);
-            webModel.HandlingTotal = new Money(serviceModel.HandlingTotal ?? 0, currency.Code);
-            webModel.ShippingTotal = new Money(serviceModel.ShippingTotal ?? 0, currency.Code);
-            webModel.TaxTotal = new Money(serviceModel.TaxTotal ?? 0, currency.Code);
-            webModel.Total = new Money(serviceModel.Total ?? 0, currency.Code);
-
-            if (serviceModel.Addresses != null)
-            {
-                webModel.Addresses = serviceModel.Addresses.Select(a => a.ToWebModel()).ToList();
-            }
-
-            if (serviceModel.Discounts != null)
-            {
-                webModel.Discounts = serviceModel.Discounts.Select(d => d.ToWebModel()).ToList();
-            }
-
-            if (serviceModel.Items != null)
-            {
-                webModel.Items = serviceModel.Items.Select(i => i.ToWebModel()).ToList();
-            }
-
-            if (serviceModel.Payments != null)
-            {
-                webModel.Payments = serviceModel.Payments.Select(p => p.TowebModel()).ToList();
-            }
-
-            if (serviceModel.Shipments != null)
-            {
-                webModel.Shipments = serviceModel.Shipments.Select(s => s.ToWebModel()).ToList();
-            }
-
-            if (serviceModel.TaxDetails != null)
-            {
-                webModel.TaxDetails = serviceModel.TaxDetails.Select(td => td.ToWebModel()).ToList();
-            }
 
             if (!string.IsNullOrEmpty(serviceModel.Coupon))
             {
@@ -63,6 +25,72 @@ namespace VirtoCommerce.Storefront.Converters
                 };
             }
 
+            if (serviceModel.Discounts != null)
+            {
+                webModel.Discounts = serviceModel.Discounts.Select(d => d.ToWebModel()).ToList();
+            }
+
+            if (serviceModel.Items != null)
+            {
+                webModel.Items = serviceModel.Items.Select(i => i.ToWebModel(currency, language)).ToList();
+                webModel.HasPhysicalProducts = webModel.Items.Any(i =>
+                    string.IsNullOrEmpty(i.ProductType) ||
+                    !string.IsNullOrEmpty(i.ProductType) && i.ProductType.Equals("Physical", StringComparison.OrdinalIgnoreCase));
+            }
+
+            if (serviceModel.Addresses != null)
+            {
+                webModel.Addresses = serviceModel.Addresses.Select(a => a.ToWebModel()).ToList();
+
+                var billingAddress = webModel.Addresses.FirstOrDefault(a => a.Type == AddressType.Billing);
+                if (billingAddress == null)
+                {
+                    billingAddress = new Address { Type = AddressType.Billing };
+                }
+                webModel.DefaultBillingAddress = billingAddress;
+
+                if (webModel.HasPhysicalProducts)
+                {
+                    var shippingAddress = webModel.Addresses.FirstOrDefault(a => a.Type == AddressType.Shipping);
+                    if (shippingAddress == null)
+                    {
+                        shippingAddress = new Address { Type = AddressType.Shipping };
+                    }
+                    webModel.DefaultShippingAddress = shippingAddress;
+                }
+            }
+
+            if (serviceModel.Payments != null)
+            {
+                webModel.Payments = serviceModel.Payments.Select(p => p.TowebModel()).ToList();
+            }
+
+            if (serviceModel.Shipments != null)
+            {
+                webModel.Shipments = serviceModel.Shipments.Select(s => s.ToWebModel(currency, language)).ToList();
+            }
+
+            if (serviceModel.TaxDetails != null)
+            {
+                webModel.TaxDetails = serviceModel.TaxDetails.Select(td => td.ToWebModel()).ToList();
+            }
+
+            webModel.DiscountTotal = new Money(serviceModel.DiscountTotal ?? 0, currency.Code);
+            webModel.HandlingTotal = new Money(serviceModel.HandlingTotal ?? 0, currency.Code);
+            webModel.Height = (decimal)(serviceModel.Height ?? 0);
+            webModel.IsAnonymous = (bool)serviceModel.IsAnonymous;
+            webModel.IsRecuring = (bool)serviceModel.IsRecuring;
+            webModel.ItemsCount = webModel.Items.Sum(i => i.Quantity);
+            webModel.Length = (decimal)(serviceModel.Length ?? 0);
+            webModel.ShippingTotal = new Money(serviceModel.ShippingTotal ?? 0, currency.Code);
+            webModel.SubTotal = new Money(serviceModel.SubTotal ?? 0, currency.Code);
+            webModel.TaxIncluded = (bool)serviceModel.TaxIncluded;
+            webModel.TaxTotal = new Money(serviceModel.TaxTotal ?? 0, currency.Code);
+            webModel.Total = new Money(serviceModel.Total ?? 0, currency.Code);
+            webModel.VolumetricWeight = (decimal)(serviceModel.VolumetricWeight ?? 0);
+            webModel.Weight = (decimal)(serviceModel.Weight ?? 0);
+            webModel.Width = (decimal)(serviceModel.Width ?? 0);
+
             return webModel;
         }
 
@@ -71,48 +99,26 @@ namespace VirtoCommerce.Storefront.Converters
             var serviceModel = new VirtoCommerceCartModuleWebModelShoppingCart();
 
             serviceModel.InjectFrom(webModel);
-            serviceModel.Currency = webModel.Currency.CurrencyCode.ToString();
+
+            serviceModel.Addresses = webModel.Addresses.Select(a => a.ToServiceModel()).ToList();
+            serviceModel.Coupon = webModel.Coupon != null && webModel.Coupon.AppliedSuccessfully ? webModel.Coupon.Code : null;
+            serviceModel.Currency = webModel.Currency.Code;
+            serviceModel.Discounts = webModel.Discounts.Select(d => d.ToServiceModel()).ToList();
             serviceModel.DiscountTotal = (double)webModel.DiscountTotal.Amount;
-            serviceModel.HandlingTotal = (double)(webModel.HandlingTotal != null ? webModel.HandlingTotal.Amount : 0);
+            serviceModel.HandlingTotal = (double)webModel.HandlingTotal.Amount;
+            serviceModel.Height = (double)webModel.Height;
+            serviceModel.Items = webModel.Items.Select(i => i.ToServiceModel()).ToList();
+            serviceModel.Length = (double)webModel.Length;
+            serviceModel.Payments = webModel.Payments.Select(p => p.ToServiceModel()).ToList();
+            serviceModel.Shipments = webModel.Shipments.Select(s => s.ToServiceModel()).ToList();
             serviceModel.ShippingTotal = (double)webModel.ShippingTotal.Amount;
             serviceModel.SubTotal = (double)webModel.SubTotal.Amount;
+            serviceModel.TaxDetails = webModel.TaxDetails.Select(td => td.ToServiceModel()).ToList();
             serviceModel.TaxTotal = (double)webModel.TaxTotal.Amount;
             serviceModel.Total = (double)webModel.Total.Amount;
-
-            if (webModel.Coupon != null && webModel.Coupon.AppliedSuccessfully)
-            {
-                serviceModel.Coupon = webModel.Coupon.Code;
-            }
-
-            if (webModel.Addresses != null)
-            {
-                serviceModel.Addresses = webModel.Addresses.Select(a => a.ToServiceModel()).ToList();
-            }
-
-            if (webModel.Discounts != null)
-            {
-                serviceModel.Discounts = webModel.Discounts.Select(d => d.ToServiceModel()).ToList();
-            }
-
-            if (webModel.Items != null)
-            {
-                serviceModel.Items = webModel.Items.Select(i => i.ToServiceModel()).ToList();
-            }
-
-            if (webModel.Payments != null)
-            {
-                serviceModel.Payments = webModel.Payments.Select(i => i.ToServiceModel()).ToList();
-            }
-
-            if (webModel.Shipments != null)
-            {
-                serviceModel.Shipments = webModel.Shipments.Select(s => s.ToServiceModel()).ToList();
-            }
-
-            if (webModel.TaxDetails != null)
-            {
-                serviceModel.TaxDetails = webModel.TaxDetails.Select(td => td.ToServiceModel()).ToList();
-            }
+            serviceModel.VolumetricWeight = (double)webModel.VolumetricWeight;
+            serviceModel.Weight = (double)webModel.Weight;
+            serviceModel.Width = (double)webModel.Width;
 
             return serviceModel;
         }

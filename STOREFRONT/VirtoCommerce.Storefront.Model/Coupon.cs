@@ -26,5 +26,10 @@ namespace VirtoCommerce.Storefront.Model
         /// Gets or sets the sign that coupon was applied successfully
         /// </summary>
         public bool AppliedSuccessfully { get; set; }
+
+        /// <summary>
+        /// Gets or sets coupon error code
+        /// </summary>
+        public string ErrorCode { get; set; }
     }
 }
