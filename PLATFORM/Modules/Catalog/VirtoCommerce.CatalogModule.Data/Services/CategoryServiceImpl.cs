@@ -32,21 +32,18 @@ namespace VirtoCommerce.CatalogModule.Data.Services
             var retVal = new List<coreModel.Category>();
             using (var repository = _catalogRepositoryFactory())
             {
-                var seoInfos = new List<SeoInfo>();
-                if ((responseGroup & coreModel.CategoryResponseGroup.WithSeo) == coreModel.CategoryResponseGroup.WithSeo)
-                {
-                    seoInfos = _commerceService.GetObjectsSeo(categoryIds).ToList();
-                }
-
                 var dbCategories = repository.GetCategoriesByIds(categoryIds, responseGroup);
                 foreach (var dbCategory in dbCategories)
                 {
                     var category = dbCategory.ToCoreModel();
+                    if ((responseGroup & coreModel.CategoryResponseGroup.WithSeo) == coreModel.CategoryResponseGroup.WithSeo)
+                    {
+                        _commerceService.LoadSeoForObject(category);
+                    }
                     retVal.Add(category);
-                    category.SeoInfos = seoInfos.Where(x => x.ObjectId == dbCategory.Id).ToList();
                 }
-
             }
+           
             return retVal.ToArray();
         }
 
@@ -67,17 +64,9 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                 repository.Add(dbCategory);
                 CommitChanges(repository);
             }
-			//Need add seo separately
-			if (category.SeoInfos != null)
-			{
-				foreach (var seoInfo in category.SeoInfos)
-				{
-					seoInfo.ObjectId = dbCategory.Id;
-					seoInfo.ObjectType = typeof(coreModel.Category).Name;
-					_commerceService.UpsertSeo(seoInfo);
-				}
-			}
-			category.Id = dbCategory.Id;
+            category.Id = dbCategory.Id;
+            //Need add seo separately
+            _commerceService.UpsertSeoForObjects(new[] { category });
             return GetById(dbCategory.Id, Domain.Catalog.Model.CategoryResponseGroup.Info);
         }
 
@@ -94,19 +83,6 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 					{
 						throw new NullReferenceException("dbCategory");
 					}
-
-					//Patch SeoInfo  separately
-					if (category.SeoInfos != null)
-					{
-						foreach(var seoInfo in category.SeoInfos)
-						{
-							seoInfo.ObjectId = category.Id;
-							seoInfo.ObjectType = typeof(coreModel.Category).Name;
-						}
-						var seoInfos = new ObservableCollection<SeoInfo>(_commerceService.GetObjectsSeo(new string[] { category.Id}));
-						seoInfos.ObserveCollection(x => _commerceService.UpsertSeo(x), x => _commerceService.DeleteSeo(new string[] { x.Id }));
-						category.SeoInfos.Patch(seoInfos, (source, target) => _commerceService.UpsertSeo(source));
-					}
 		
 					var dbCategoryChanged = category.ToDataModel();
 					changeTracker.Attach(dbCategory);
@@ -114,19 +90,22 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 					category.Patch(dbCategory);
 				}
 				CommitChanges(repository);
-
 			}
+            //Update seo
+            _commerceService.UpsertSeoForObjects(categories);
         }
 
         public void Delete(string[] categoryIds)
         {
+            var categories = GetByIds(categoryIds, coreModel.CategoryResponseGroup.WithSeo);
             using (var repository = _catalogRepositoryFactory())
             {
-                var seoInfos = _commerceService.GetObjectsSeo(categoryIds);
-                _commerceService.DeleteSeo(seoInfos.Select(x => x.Id).ToArray());
-
                 repository.RemoveCategories(categoryIds);
                 CommitChanges(repository);
+            }
+            foreach (var category in categories)
+            {
+                _commerceService.DeleteSeoForObject(category);
             }
         }
 

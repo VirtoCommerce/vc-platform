@@ -38,6 +38,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
             if (dbCategory.AllParents != null)
             {
                 retVal.Parents = dbCategory.AllParents.Select(x => x.ToCoreModel()).ToArray();
+                retVal.Level = retVal.Parents.Count();
             }
 
 			//Try to inherit taxType from parent category

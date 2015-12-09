@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.CoreModule.Data.Converters;
 using VirtoCommerce.Domain.Commerce.Services;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.CoreModule.Data.Repositories
 {
@@ -69,55 +70,92 @@ namespace VirtoCommerce.CoreModule.Data.Repositories
 			}
 		}
 
-		public IEnumerable<coreModel.SeoInfo> GetObjectsSeo(string[] ids)
-		{
-			var retVal = new List<coreModel.SeoInfo>();
-			using (var repository = _repositoryFactory())
-			{
-				retVal = repository.SeoUrlKeywords.Where(x => ids.Contains(x.ObjectId)).ToArray()
-								  .Select(x => x.ToCoreModel()).ToList();
-			}
-			return retVal;
-		}
 
-		public coreModel.SeoInfo UpsertSeo(coreModel.SeoInfo seo)
-		{
-			if (seo == null)
-				throw new ArgumentNullException("seo");
+        public void LoadSeoForObject(coreModel.ISeoSupport seoSupportObj)
+        {
+            if (seoSupportObj == null)
+            {
+                throw new ArgumentNullException("seoSupportObj");
+            }
 
-			coreModel.SeoInfo retVal = null;
-			using (var repository = _repositoryFactory())
-			{
-				var sourceEntry = seo.ToDataModel();
-				var targetEntry = repository.SeoUrlKeywords.FirstOrDefault(x => x.Id == seo.Id || (x.ObjectId == sourceEntry.ObjectId && x.ObjectType == sourceEntry.ObjectType && x.Language == sourceEntry.Language));
-				if (targetEntry == null)
-				{
-					repository.Add(sourceEntry);
-				}
-				else
-				{
-					sourceEntry.Patch(targetEntry);
-				}
-				CommitChanges(repository);
-				seo.Id = sourceEntry.Id ?? targetEntry.Id;
-				retVal = repository.SeoUrlKeywords.First(x => x.Id == seo.Id).ToCoreModel();
-			}
-			return retVal;
-		}
+            using (var repository = _repositoryFactory())
+            {
+                if (seoSupportObj.Id != null)
+                {
+                    var objectType = seoSupportObj.GetType().Name;
+                    seoSupportObj.SeoInfos = repository.GetObjectSeoUrlKeywords(objectType, seoSupportObj.Id)
+                                                           .Select(x => x.ToCoreModel()).ToList();
+                }
+            }
+        }
 
-		public void DeleteSeo(string[] ids)
-		{
-			using (var repository = _repositoryFactory())
-			{
-				foreach(var keyword in repository.SeoUrlKeywords.Where(x=>ids.Contains(x.Id)))
-				{
-					repository.Remove(keyword);
-				}
-			}
-		}
+        public void UpsertSeoForObjects(coreModel.ISeoSupport[] seoSupportObjects)
+        {
+            if (seoSupportObjects == null)
+            {
+                throw new ArgumentNullException("seoSupportObjects");
+            }
+            foreach (var seoObject in seoSupportObjects.Where(x => x.Id != null))
+            {
+                var objectType = seoObject.GetType().Name;
+
+                using (var repository = _repositoryFactory())
+                using (var changeTracker = GetChangeTracker(repository))
+                {
+                    if (seoObject.SeoInfos != null)
+                    {
+                        //Normalize seoInfo
+                        foreach (var seoInfo in seoObject.SeoInfos)
+                        {
+                            if (seoInfo.ObjectId == null)
+                                seoInfo.ObjectId = seoObject.Id;
+                            if (seoInfo.ObjectType == null)
+                                seoInfo.ObjectType = objectType;
+                        }
+                    }
+                    if (seoObject.SeoInfos != null && seoObject.SeoInfos.Any())
+                    {
+                        var target = new { SeoInfos = new ObservableCollection<dataModel.SeoUrlKeyword>(repository.GetObjectSeoUrlKeywords(objectType, seoObject.Id)) };
+                        var source = new { SeoInfos = new ObservableCollection<dataModel.SeoUrlKeyword>(seoObject.SeoInfos.Select(x => x.ToDataModel())) };
+
+                        changeTracker.Attach(target);
+
+                        source.SeoInfos.Patch(target.SeoInfos, new SeoUrlKeywordComparer(), (sourceSeoUrlKeyword, targetSeoUrlKeyword) => sourceSeoUrlKeyword.Patch(targetSeoUrlKeyword));
+                    }
+                    repository.UnitOfWork.Commit();
+                }
+            }
+        }
+
+        public void DeleteSeoForObject(coreModel.ISeoSupport seoSupportObject)
+        {
+            if (seoSupportObject == null)
+            {
+                throw new ArgumentNullException("seoSupportObjects");
+            }
+
+            if (seoSupportObject.Id != null)
+            {
+                using (var repository = _repositoryFactory())
+                {
+
+                    var objectType = seoSupportObject.GetType().Name;
+
+                    var objectId = seoSupportObject.Id;
+
+                    var seoUrlKeywords = repository.GetObjectSeoUrlKeywords(objectType, objectId);
+                    foreach (var seoUrlKeyword in seoUrlKeywords)
+                    {
+                        repository.Remove(seoUrlKeyword);
+                    }
+                    repository.UnitOfWork.Commit();
+                }
+            }
+        }
 
 
-		public IEnumerable<coreModel.SeoInfo> GetSeoByKeyword(string keyword)
+
+        public IEnumerable<coreModel.SeoInfo> GetSeoByKeyword(string keyword)
 		{
 			var retVal = new List<coreModel.SeoInfo>();
 			using (var repository = _repositoryFactory())
@@ -129,7 +167,8 @@ namespace VirtoCommerce.CoreModule.Data.Repositories
                 if(retVal.Any())
                 {
                     var objectIds = retVal.Select(x => x.ObjectId).Distinct().ToArray();
-                    retVal.AddRange(GetObjectsSeo(objectIds));
+                    var objectsSeo = repository.SeoUrlKeywords.Where(x => objectIds.Contains(x.Id)).ToArray().Select(x => x.ToCoreModel());
+                    retVal.AddRange(objectsSeo);
                 }
 			}
 			return retVal;

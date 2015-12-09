@@ -19,7 +19,7 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
             {
                 retVal.PropertyId = propValue.Property.Id;
             }
-		    retVal.Value = propValue.Value;
+		    retVal.Value = (propValue.Value ?? String.Empty).ToString();
 			retVal.ValueType = propValue.ValueType;
 		
 			return retVal;

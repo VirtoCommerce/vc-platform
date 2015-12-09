@@ -49,9 +49,15 @@ namespace VirtoCommerce.CoreModule.Data.Repositories
         {
             get { return GetAsQueryable<Sequence>(); }
         }
-		#endregion
 
-	
-	}
+        public SeoUrlKeyword[] GetObjectSeoUrlKeywords(string objectType, string objectId)
+        {
+            return SeoUrlKeywords.Where(x => x.ObjectId == objectId && x.ObjectType == objectType).OrderBy(x => x.Language).ToArray();
+        }
+
+        #endregion
+
+
+    }
 
 }

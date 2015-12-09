@@ -34,92 +34,70 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 			return results.Any() ? results.First() : null;
 		}
 
-		public coreModel.CatalogProduct[] GetByIds(string[] itemIds, coreModel.ItemResponseGroup respGroup)
-		{
-			var retVal = new List<coreModel.CatalogProduct>();
-			using (var repository = _catalogRepositoryFactory())
-			{
-               
+        public coreModel.CatalogProduct[] GetByIds(string[] itemIds, coreModel.ItemResponseGroup respGroup)
+        {
+            var retVal = new List<coreModel.CatalogProduct>();
+            using (var repository = _catalogRepositoryFactory())
+            {
                 var dbItems = repository.GetItemByIds(itemIds, respGroup);
-                //Load product seo informations for each items and item category
-                SeoInfo[] seoInfos = null;
-                if ((respGroup & coreModel.ItemResponseGroup.Seo) == coreModel.ItemResponseGroup.Seo)
-                {
-                    var categoryIds = dbItems.Select(x => x.CategoryId).Distinct().ToArray();
-                    seoInfos = _commerceService.GetObjectsSeo(itemIds.Concat(categoryIds).ToArray()).ToArray();
-                }
 
                 foreach (var dbItem in dbItems)
                 {
                     var product = dbItem.ToCoreModel();
                     retVal.Add(product);
                     //Populate product seo
-                    if (seoInfos != null)
+                    if ((respGroup & coreModel.ItemResponseGroup.Seo) == coreModel.ItemResponseGroup.Seo)
                     {
-                        product.SeoInfos = seoInfos.Where(x => x.ObjectId == product.Id).ToList();
+                        _commerceService.LoadSeoForObject(product);
                         if(product.Category != null)
                         {
-                            product.Category.SeoInfos = seoInfos.Where(x => x.ObjectId == product.Category.Id).ToList();
+                            _commerceService.LoadSeoForObject(product.Category);
                         }
                     }
                 }
             }
+            return retVal.ToArray();
+        }
 
-			return retVal.ToArray();
-		}
+        public void Create(coreModel.CatalogProduct[] items)
+        {
+            var newItemList = new List<KeyValuePair<coreModel.CatalogProduct, dataModel.Item>>();
+            using (var repository = _catalogRepositoryFactory())
+            {
+                foreach (var item in items)
+                {
+                    var dbItem = item.ToDataModel();
+                    repository.Add(dbItem);
+                    newItemList.Add(new KeyValuePair<coreModel.CatalogProduct, dataModel.Item>(item, dbItem));
+                    if (item.Variations != null)
+                    {
+                        foreach (var variation in item.Variations)
+                        {
+                            variation.MainProductId = dbItem.Id;
+                            variation.CatalogId = dbItem.CatalogId;
+                            var dbVariation = variation.ToDataModel();
+                            repository.Add(dbVariation);
+                            newItemList.Add(new KeyValuePair<coreModel.CatalogProduct, dataModel.Item>(variation, dbVariation));
+                        }
+                    }
+                }
+                CommitChanges(repository);
+            }
+            //Set id for new products generated in repository
+            foreach (var pair in newItemList)
+            {
+                pair.Key.Id = pair.Value.Id;
+            }
+            //Update SEO 
+            var itemsWithVariations = items.Concat(items.Where(x => x.Variations != null).SelectMany(x => x.Variations)).ToArray();
+            _commerceService.UpsertSeoForObjects(itemsWithVariations);
+        }
 
-		public coreModel.CatalogProduct Create(coreModel.CatalogProduct item)
+        public coreModel.CatalogProduct Create(coreModel.CatalogProduct item)
 		{
-			var dbItem = item.ToDataModel();
+            Create(new[] { item });
 
-			using (var repository = _catalogRepositoryFactory())
-			{
-				repository.Add(dbItem);
-				item.Id = dbItem.Id;
-
-				if (item.Variations != null)
-				{
-					foreach (var variation in item.Variations)
-					{
-						variation.MainProductId = dbItem.Id;
-						variation.CatalogId = dbItem.CatalogId;
-						var dbVariation = variation.ToDataModel();
-						repository.Add(dbVariation);
-						variation.Id = dbVariation.Id;
-					}
-				}
-
-				CommitChanges(repository);
-			}
-
-			//Need add seo separately
-			if (item.SeoInfos != null)
-			{
-				foreach (var seoInfo in item.SeoInfos)
-				{
-					seoInfo.ObjectId = dbItem.Id;
-					seoInfo.ObjectType = typeof(coreModel.CatalogProduct).Name;
-					_commerceService.UpsertSeo(seoInfo);
-				}
-			}
-
-			if (item.Variations != null)
-			{
-				foreach (var variation in item.Variations)
-				{
-					if (variation.SeoInfos != null)
-					{
-						foreach (var seoInfo in variation.SeoInfos)
-						{
-							seoInfo.ObjectId = variation.Id;
-							seoInfo.ObjectType = typeof(coreModel.CatalogProduct).Name;
-							_commerceService.UpsertSeo(seoInfo);
-						}
-					}
-				}
-			}
-
-			var retVal = GetById(dbItem.Id, coreModel.ItemResponseGroup.ItemLarge);
+			var retVal = GetById(item.Id, coreModel.ItemResponseGroup.ItemLarge);
 			return retVal;
 		}
 
@@ -139,36 +117,29 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 
 						item.Patch(dbItem);
 					}
-
-					//Patch seoInfo
-					if (item.SeoInfos != null)
-					{
-						foreach (var seoInfo in item.SeoInfos)
-						{
-							seoInfo.ObjectId = item.Id;
-							seoInfo.ObjectType = typeof(coreModel.CatalogProduct).Name;
-						}
-						var seoInfos = new ObservableCollection<SeoInfo>(_commerceService.GetObjectsSeo(new[] { item.Id }));
-						seoInfos.ObserveCollection(x => _commerceService.UpsertSeo(x), x => _commerceService.DeleteSeo(new[] { x.Id }));
-						item.SeoInfos.Patch(seoInfos, (source, target) => _commerceService.UpsertSeo(source));
-					}
 				}
 				CommitChanges(repository);
 			}
+
+            //Update seo for products
+            _commerceService.UpsertSeoForObjects(items);
 
 		}
 
 		public void Delete(string[] itemIds)
 		{
-			using (var repository = _catalogRepositoryFactory())
+            var items = GetByIds(itemIds, coreModel.ItemResponseGroup.Seo | coreModel.ItemResponseGroup.Variations);
+            using (var repository = _catalogRepositoryFactory())
 			{
-                var seoInfos = _commerceService.GetObjectsSeo(itemIds);
-                _commerceService.DeleteSeo(seoInfos.Select(x => x.Id).ToArray());
-
                 repository.RemoveItems(itemIds);
 				CommitChanges(repository);
 			}
-		}
+            var expandedItemsWithVariations = items.Concat(items.SelectMany(x=>x.Variations));
+            foreach (var item in expandedItemsWithVariations)
+            {
+                _commerceService.DeleteSeoForObject(item);
+            }
+        }
 		#endregion
 	}
 }

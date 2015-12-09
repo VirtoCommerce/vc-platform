@@ -6,7 +6,8 @@ namespace VirtoCommerce.Domain.Catalog.Services
 		CatalogProduct GetById(string itemId, ItemResponseGroup respGroup);
         CatalogProduct[] GetByIds(string[] itemIds, ItemResponseGroup respGroup);
 		CatalogProduct Create(CatalogProduct item);
-		void Update(CatalogProduct[] items);
+        void Create(CatalogProduct[] items);
+        void Update(CatalogProduct[] items);
 		void Delete(string[] itemIds);
     }
 }

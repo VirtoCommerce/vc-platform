@@ -31,6 +31,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 		dataModel.Catalog GetCatalogById(string catalogId);
 		dataModel.Category[] GetCategoriesByIds(string[] categoryIds, moduleModel.CategoryResponseGroup respGroup);
 		dataModel.Item[] GetItemByIds(string[] itemIds, moduleModel.ItemResponseGroup respGroup);
+        dataModel.Property[] GetAllCatalogProperties(string catalogId);
 		dataModel.Property[] GetPropertiesByIds(string[] propIds);
 	
 		void RemoveItems(string[] ids);

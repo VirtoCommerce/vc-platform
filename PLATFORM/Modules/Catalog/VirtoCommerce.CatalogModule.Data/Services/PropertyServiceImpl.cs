@@ -41,6 +41,17 @@ namespace VirtoCommerce.CatalogModule.Data.Services
             return retVal.ToArray();
         }
 
+        public coreModel.Property[] GetAllCatalogProperties(string catalogId)
+        {
+            var retVal = new List<coreModel.Property>();
+            using (var repository = _catalogRepositoryFactory())
+            {
+                retVal.AddRange(repository.GetAllCatalogProperties(catalogId).Select(x=>x.ToCoreModel()));
+            }
+            return retVal.ToArray();
+        }
+
+
         public coreModel.Property[] GetAllProperties()
         {
             using (var repository = _catalogRepositoryFactory())

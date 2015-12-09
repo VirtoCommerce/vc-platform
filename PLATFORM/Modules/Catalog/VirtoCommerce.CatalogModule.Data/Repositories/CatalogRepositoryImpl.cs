@@ -380,6 +380,41 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             return retVal;
         }
 
+        /// <summary>
+        /// Returned all properties belongs to specified catalog 
+        /// For virtual catalog also include all properties for categories linked to this virtual catalog 
+        /// </summary>
+        /// <param name="catalogId"></param>
+        /// <returns></returns>
+        public dataModel.Property[] GetAllCatalogProperties(string catalogId)
+        {
+            var retVal = new List<dataModel.Property>();
+            var catalog = Catalogs.FirstOrDefault(x => x.Id == catalogId);
+            if (catalog != null)
+            {
+                var propertyIds = Properties.Where(x => x.CatalogId == catalogId).Select(x => x.Id).ToArray();
+                if (catalog.Virtual)
+                {
+                    //get all category relations
+                    var linkedCategoryIds = CategoryLinks.Where(x => x.TargetCatalogId == catalogId)
+                                                         .Select(x=>x.SourceCategoryId)
+                                                         .Distinct()
+                                                         .ToArray();
+                    //linked product categories links
+                    var linkedProductCategoryIds = CategoryItemRelations.Where(x => x.CatalogId == catalogId)
+                                                             .Join(Items, link => link.ItemId, item => item.Id, (link, item) => item)
+                                                             .Select(x => x.CategoryId)
+                                                             .Distinct()
+                                                             .ToArray();
+                    linkedCategoryIds = linkedCategoryIds.Concat(linkedProductCategoryIds).Distinct().ToArray();
+                    var expandedFlatLinkedCategoryIds = linkedCategoryIds.Concat(GetAllChildrenCategoriesIds(linkedCategoryIds)).Distinct().ToArray();
+                    propertyIds = propertyIds.Concat(Properties.Where(x => expandedFlatLinkedCategoryIds.Contains(x.CategoryId)).Select(x => x.Id)).Distinct().ToArray();
+                }
+                retVal.AddRange(GetPropertiesByIds(propertyIds));
+            }
+            return retVal.ToArray();
+
+        }
 
         public void RemoveItems(string[] itemIds)
         {
@@ -436,10 +471,8 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             var query = String.Format(queryPattern, String.Join(", ", allCategoriesIds.Select(x => String.Format("'{0}'", x))));
             var queryBuilder = new StringBuilder(query);
             //Need remove categories in prior hierarchy order from  child to parent
-            foreach (var categoryId in allCategoriesIds)
-            {
-                queryBuilder.AppendLine(String.Format("DELETE FROM Category WHERE Id = '{0}'", categoryId));
-            }
+            queryBuilder.AppendLine(String.Format("DELETE FROM Category WHERE Id IN ({0})", String.Join(", ", allCategoriesIds.Select(x => String.Format("'{0}'", x)))));
+
             ObjectContext.ExecuteStoreCommand(queryBuilder.ToString());
         }
 

@@ -10,7 +10,7 @@ using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.Domain.Store.Model
 {
-    public class Store : AuditableEntity, IHasDynamicProperties
+    public class Store : AuditableEntity, IHasDynamicProperties, ISeoSupport
     {
         public string Name { get; set; }
         public string Description { get; set; }
@@ -38,7 +38,10 @@ namespace VirtoCommerce.Domain.Store.Model
         public ICollection<TaxProvider> TaxProviders { get; set; }
         public ICollection<PaymentMethod> PaymentMethods { get; set; }
         public ICollection<ShippingMethod> ShippingMethods { get; set; }
-        public ICollection<SeoInfo> SeoInfos { get; set; }
+
+        #region ISeoSupport Members
+        public ICollection<SeoInfo> SeoInfos { get; set; } 
+        #endregion
 
         #region IHasDynamicProperties Members
         public string ObjectType { get; set; }

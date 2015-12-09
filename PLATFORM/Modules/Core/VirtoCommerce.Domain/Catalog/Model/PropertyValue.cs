@@ -35,6 +35,7 @@ namespace VirtoCommerce.Domain.Catalog.Model
                 foreach (var dictValue in Property.DictionaryValues.Where(x => x.Alias == Alias))
                 {
                     var langDictPropValue = this.Clone() as PropertyValue;
+                    langDictPropValue.Id = null;
                     langDictPropValue.LanguageCode = dictValue.LanguageCode;
                     langDictPropValue.Value = dictValue.Value;
                     langDictPropValue.ValueId = dictValue.Id;

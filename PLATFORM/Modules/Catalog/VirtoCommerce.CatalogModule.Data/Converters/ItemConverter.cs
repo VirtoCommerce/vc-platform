@@ -117,7 +117,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
             {
                 //Try to find property meta information
                 propertyValue.Property = retVal.Properties.FirstOrDefault(x => x.IsSuitableForValue(propertyValue));
-                //Return each localized value for selecte dictionary value
+                //Return each localized value for selected dictionary value
                 //Because multilingual dictionary values for all languages may not stored in db need add it in result manually from property dictionary values
                 var localizedDictValues = propertyValue.TryGetAllLocalizedDictValues();
                 foreach (var localizedDictValue in localizedDictValues)

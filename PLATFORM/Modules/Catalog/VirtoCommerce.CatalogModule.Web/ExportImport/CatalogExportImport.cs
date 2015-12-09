@@ -62,6 +62,14 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
             var progressInfo = new ExportImportProgressInfo();
 
             var backupObject = backupStream.DeserializeJson<BackupObject>();
+            foreach(var category in backupObject.Categories)
+            {
+                category.Catalog = backupObject.Catalogs.FirstOrDefault(x => x.Id == category.CatalogId);
+                if(category.Parents != null)
+                {
+                    category.Level = category.Parents.Count();
+                }
+            }
             var originalObject = GetBackupObject(progressCallback, false);
 
             progressInfo.Description = String.Format("{0} catalogs importing...", backupObject.Catalogs.Count());
@@ -74,11 +82,11 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
             //Categories should be sorted right way 
             //first need to create virtual categories
             var orderedCategories = backupObject.Categories.Where(x => x.Catalog.Virtual)
-                                                             .OrderBy(x => x.Parents != null ? x.Parents.Count() : 0)
+                                                             .OrderBy(x => x.Level)
                                                              .ToList();
             //second need to create physical categories
             orderedCategories.AddRange(backupObject.Categories.Where(x => !x.Catalog.Virtual)
-                                                             .OrderBy(x => x.Parents != null ? x.Parents.Count() : 0));
+                                                             .OrderBy(x => x.Level));
 
             backupObject.Products = backupObject.Products.OrderBy(x => x.MainProductId).ToList();
             UpdateCategories(originalObject.Categories, orderedCategories);
@@ -178,7 +186,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
         private void UpdateCatalogProducts(ICollection<CatalogProduct> original, ICollection<CatalogProduct> backup)
         {
             var toUpdate = new List<CatalogProduct>();
-
+            var toCreate = new List<CatalogProduct>();
             backup.CompareTo(original, EqualityComparer<CatalogProduct>.Default, (state, x, y) =>
             {
                 switch (state)
@@ -187,11 +195,12 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
                         toUpdate.Add(x);
                         break;
                     case EntryState.Added:
-                        _itemService.Create(x);
+                        toCreate.Add(x);
                         break;
                 }
             });
             _itemService.Update(toUpdate.ToArray());
+            _itemService.Create(toCreate.ToArray());
         }
 
         private BackupObject GetBackupObject(Action<ExportImportProgressInfo> progressCallback, bool loadBinaryData)
@@ -216,6 +225,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
           
             //Categories
             retVal.Categories = _categoryService.GetByIds(searchResponse.Categories.Select(x=>x.Id).ToArray(), CategoryResponseGroup.Full);
+         
             //Products
             for (int i = 0; i < searchResponse.Products.Count(); i += 50)
             {
@@ -259,6 +269,35 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
             progressCallback(progressInfo);
 
             retVal.Properties = _propertyService.GetAllProperties();
+
+            //Reset some props to descrease resulting json size
+            foreach (var catalog in retVal.Catalogs)
+            {
+                catalog.Properties = null;
+            }
+
+            foreach (var category in retVal.Categories)
+            {
+                category.Catalog = null;
+                category.Properties = null;
+                category.Children = null;
+                category.Parents = null;
+                foreach (var propvalue in category.PropertyValues)
+                {
+                    propvalue.Property = null;
+                }
+            }
+            foreach (var product in retVal.Products.Concat(retVal.Products.SelectMany(x=>x.Variations)))
+            {
+                product.Catalog = null;
+                product.Category = null;
+                product.Properties = null;
+                product.MainProduct = null;
+                foreach (var propvalue in product.PropertyValues)
+                {
+                    propvalue.Property = null;
+                }
+            }
             return retVal;
 
         }

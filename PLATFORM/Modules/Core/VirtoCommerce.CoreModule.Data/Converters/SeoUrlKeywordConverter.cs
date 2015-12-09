@@ -54,4 +54,28 @@ namespace VirtoCommerce.CoreModule.Data.Converters
 
 
 	}
+
+    public class SeoUrlKeywordComparer : IEqualityComparer<dataModel.SeoUrlKeyword>
+    {
+        #region IEqualityComparer<dataModel.SeoUrlKeyword> Members
+
+        public bool Equals(dataModel.SeoUrlKeyword x, dataModel.SeoUrlKeyword y)
+        {
+            return GetHashCode(x) == GetHashCode(y);
+        }
+
+        public int GetHashCode(dataModel.SeoUrlKeyword obj)
+        {
+            var result = obj.Id;
+            if (String.IsNullOrEmpty(result))
+            {
+                result = String.Join(":", obj.ObjectId, obj.ObjectType, obj.Language);
+            }
+
+            return result.GetHashCode();
+        }
+
+
+        #endregion
+    }
 }

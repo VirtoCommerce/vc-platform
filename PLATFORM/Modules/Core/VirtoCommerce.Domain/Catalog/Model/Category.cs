@@ -19,6 +19,7 @@ namespace VirtoCommerce.Domain.Catalog.Model
 		public string Name { get; set; }
 		public string Path	{  get;  set; }
 		public bool Virtual { get; set; }
+        public int Level { get; set; }
 		public Category[] Parents { get; set; }
 	
 	    public int Priority { get; set; }

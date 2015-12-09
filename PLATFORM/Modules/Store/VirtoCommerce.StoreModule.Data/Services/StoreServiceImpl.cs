@@ -59,8 +59,8 @@ namespace VirtoCommerce.StoreModule.Data.Services
                     var fulfillmentCenters = _commerceService.GetAllFulfillmentCenters().ToList();
                     retVal.ReturnsFulfillmentCenter = fulfillmentCenters.FirstOrDefault(x => x.Id == entity.ReturnsFulfillmentCenterId);
                     retVal.FulfillmentCenter = fulfillmentCenters.FirstOrDefault(x => x.Id == entity.FulfillmentCenterId);
-                    retVal.SeoInfos = _commerceService.GetObjectsSeo(new[] { id }).ToList();
 
+                    _commerceService.LoadSeoForObject(retVal);
                     _settingManager.LoadEntitySettingsValues(retVal);
                     _dynamicPropertyService.LoadDynamicPropertyValues(retVal);
                 }
@@ -77,18 +77,11 @@ namespace VirtoCommerce.StoreModule.Data.Services
             {
                 repository.Add(dbStore);
                 CommitChanges(repository);
+                store.Id = dbStore.Id;
             }
 
             //Need add seo separately
-            if (store.SeoInfos != null)
-            {
-                foreach (var seoInfo in store.SeoInfos)
-                {
-                    seoInfo.ObjectId = dbStore.Id;
-                    seoInfo.ObjectType = typeof(coreModel.Store).Name;
-                    _commerceService.UpsertSeo(seoInfo);
-                }
-            }
+            _commerceService.UpsertSeoForObjects(new[] { store });
 
             //Deep save properties
             _dynamicPropertyService.SaveDynamicPropertyValues(store);
@@ -122,18 +115,7 @@ namespace VirtoCommerce.StoreModule.Data.Services
                     _settingManager.SaveEntitySettingsValues(store);
 
                     //Patch SeoInfo  separately
-                    if (store.SeoInfos != null)
-                    {
-                        foreach (var seoInfo in store.SeoInfos)
-                        {
-                            seoInfo.ObjectId = store.Id;
-                            seoInfo.ObjectType = typeof(coreModel.Store).Name;
-                        }
-
-                        var seoInfos = new ObservableCollection<SeoInfo>(_commerceService.GetObjectsSeo(new[] { store.Id }));
-                        seoInfos.ObserveCollection(x => _commerceService.UpsertSeo(x), x => _commerceService.DeleteSeo(new[] { x.Id }));
-                        store.SeoInfos.Patch(seoInfos, (source, target) => _commerceService.UpsertSeo(source));
-                    }
+                    _commerceService.UpsertSeoForObjects(stores);
 
                 }
 
@@ -148,6 +130,7 @@ namespace VirtoCommerce.StoreModule.Data.Services
                 foreach (var id in ids)
                 {
                     var store = GetById(id);
+                    _commerceService.DeleteSeoForObject(store);
                     _dynamicPropertyService.DeleteDynamicPropertyValues(store);
                     //Deep remove settings
                     _settingManager.RemoveEntitySettings(store);
