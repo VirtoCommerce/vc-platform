@@ -23,7 +23,7 @@
                         { name: 'customField', displayName: 'catalog.blades.item-associations-list.labels.product', field: 'productName', cellTemplate: 'productName.cell.html'},
                         { name: 'name', displayName: 'catalog.blades.item-associations-list.labels.group', cellTooltip: 'Association group name', width: 120 }                        
                     ]})" ng-if="blade.currentEntities.length">
-                <div ui-grid="gridOptions" ui-grid-save-state ui-grid-selection ui-grid-resize-columns ui-grid-move-columns ui-grid-draggable-rows></div>
+                <div ui-grid="gridOptions" ui-grid-save-state ui-grid-selection ui-grid-resize-columns ui-grid-move-columns ui-grid-draggable-rows ui-grid-height></div>
             </div>
             <div ng-if="blade.currentEntities.length == 0" class="note">No Associations yet</div>
         </div>

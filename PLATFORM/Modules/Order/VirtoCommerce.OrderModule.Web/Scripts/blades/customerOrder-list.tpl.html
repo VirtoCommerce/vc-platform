@@ -22,14 +22,14 @@
                             { name: 'customColumn2', displayName: 'orders.blades.customerOrder-list.labels.total', width: 76, field: 'sum', cellTemplate: 'total-list-name.cell.html' },
                             { name: 'createdDate', displayName: 'orders.blades.customerOrder-list.labels.created', width: 82, cellClass: 'table-date', cellFilter: 'date', sort: { direction: uiGridConstants.DESC } }
                 ]})">
-                <div ui-grid="gridOptions" ui-grid-save-state ui-grid-selection ui-grid-resize-columns ui-grid-move-columns></div>
+                <div ui-grid="gridOptions" ui-grid-save-state ui-grid-selection ui-grid-resize-columns ui-grid-move-columns ui-grid-height></div>
             </div>
         </div>
     </div>
 </div>
 
 <script type="text/ng-template" id="order-list.row.html">
-    <div ng-click='grid.appScope.selectNode(row.entity)' ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'" class="ui-grid-cell" ng-class="{'ui-grid-row-header-cell': col.isRowHeader, '__selected': row.entity.id===grid.appScope.selectedNodeId }" role="{{col.isRowHeader ? 'rowheader' : 'gridcell' }}" ui-grid-cell style='cursor:pointer' context-menu data-target="cil_menu_{{grid.appScope.id+grid.appScope.blade.level}}"></div>
+    <div ng-click='grid.appScope.selectNode(row.entity)' ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'" class="ui-grid-cell" ng-class="{'ui-grid-row-header-cell': col.isRowHeader, '__selected': row.entity.id===grid.appScope.selectedNodeId }" role="{{col.isRowHeader ? 'rowheader' : 'gridcell' }}" ui-grid-cell style='cursor:pointer'></div>
 </script>
 <script type="text/ng-template" id="order-list-name.cell.html">
     <div class="ui-grid-cell-contents">
