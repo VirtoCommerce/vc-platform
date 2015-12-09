@@ -229,7 +229,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
             //Products
             for (int i = 0; i < searchResponse.Products.Count(); i += 50)
             {
-                var products = _itemService.GetByIds(searchResponse.Products.Skip(i).Take(50).Select(x => x.Id).ToArray(), ItemResponseGroup.ItemMedium | ItemResponseGroup.Variations | ItemResponseGroup.Seo);
+                var products = _itemService.GetByIds(searchResponse.Products.Skip(i).Take(50).Select(x => x.Id).ToArray(), ItemResponseGroup.ItemLarge);
                 retVal.Products.AddRange(products);
 
                 progressInfo.Description = String.Format("{0} of {1} products loaded", Math.Min(searchResponse.TotalCount, i), searchResponse.TotalCount);
