@@ -1,58 +1,68 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.editorialReviewDetailWizardStepController', ['$scope', function ($scope)
-{
-    $scope.types = ["QuickReview", "FullReview"];
+.controller('virtoCommerce.catalogModule.editorialReviewDetailWizardStepController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', function ($scope, bladeNavigationService, settings) {
+    var blade = $scope.blade;
+    var promise = settings.getValues({ id: 'Catalog.EditorialReviewTypes' }).$promise;
 
-    function initializeBlade(data)
-    {
-        if (!data.reviewType) {
-            data.reviewType = $scope.types[0];
-        }
+    function initializeBlade(data) {
+        promise.then(function (promiseData) {
+            $scope.types = promiseData;
 
-        $scope.currentEntity = angular.copy(data);
-        $scope.blade.origEntity = data;
-        $scope.blade.isLoading = false;
+            if (!data.reviewType) {
+                data.reviewType = $scope.types[0];
+            }
+
+            $scope.currentEntity = angular.copy(data);
+            blade.origEntity = data;
+            blade.isLoading = false;
+        });
     };
 
-    $scope.saveChanges = function ()
-    {
-        if (angular.isUndefined($scope.blade.parentBlade.currentEntities))
-        {
+    $scope.saveChanges = function () {
+        if (angular.isUndefined(blade.parentBlade.currentEntities)) {
             //If there is no list of reviews save directly to item reviews
-            if (angular.isUndefined($scope.blade.parentBlade.item.reviews)) {
-                $scope.blade.parentBlade.item.reviews = [];
+            if (angular.isUndefined(blade.parentBlade.item.reviews)) {
+                blade.parentBlade.item.reviews = [];
             }
-            $scope.blade.parentBlade.item.reviews.push($scope.currentEntity);
+            blade.parentBlade.item.reviews.push($scope.currentEntity);
         } else {
-            var idx = $scope.blade.parentBlade.currentEntities.indexOf($scope.blade.origEntity);
-            $scope.blade.parentBlade.currentEntities.splice(idx, idx < 0 ? 0 : 1, $scope.currentEntity);
+            var idx = blade.parentBlade.currentEntities.indexOf(blade.origEntity);
+            blade.parentBlade.currentEntities.splice(idx, idx < 0 ? 0 : 1, $scope.currentEntity);
         }
 
         $scope.bladeClose();
     };
 
-    $scope.blade.toolbarCommands = [
+    blade.toolbarCommands = [
         {
             name: "platform.commands.delete", icon: 'fa fa-trash-o',
             executeMethod: function () {
-                if (angular.isDefined($scope.blade.parentBlade.currentEntities))
-                {
-                    var idx = $scope.blade.parentBlade.currentEntities.indexOf($scope.blade.origEntity);
-                    $scope.blade.parentBlade.currentEntities.splice(idx, 1);
+                if (angular.isDefined(blade.parentBlade.currentEntities)) {
+                    var idx = blade.parentBlade.currentEntities.indexOf(blade.origEntity);
+                    blade.parentBlade.currentEntities.splice(idx, 1);
                     $scope.bladeClose();
                 }
             },
-            canExecuteMethod: function ()
-            {
-                if (angular.isDefined($scope.blade.parentBlade.currentEntities)) {
-                    return $scope.blade.parentBlade.currentEntities.indexOf($scope.blade.origEntity) >= 0;
+            canExecuteMethod: function () {
+                if (angular.isDefined(blade.parentBlade.currentEntities)) {
+                    return blade.parentBlade.currentEntities.indexOf(blade.origEntity) >= 0;
                 }
                 return false;
             }
         }
     ];
 
-    // on load
-    initializeBlade($scope.blade.currentEntity);
+    $scope.openDictionarySettingManagement = function () {
+        var newBlade = {
+            id: 'settingDetailChild',
+            isApiSave: true,
+            currentEntityId: 'Catalog.EditorialReviewTypes',
+            parentRefresh: function (data) { $scope.types = data; },
+            controller: 'platformWebApp.settingDictionaryController',
+            template: '$(Platform)/Scripts/app/settings/blades/setting-dictionary.tpl.html'
+        };
+        bladeNavigationService.showBlade(newBlade, blade);
+    };
 
+    // on load
+    initializeBlade(blade.currentEntity);
 }]);
