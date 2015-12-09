@@ -1,6 +1,7 @@
 ﻿using Omu.ValueInjecter;
 using System.Linq;
 using VirtoCommerce.Client.Model;
+using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Cart;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
@@ -9,95 +10,83 @@ namespace VirtoCommerce.Storefront.Converters
 {
     public static class CartLineItemConverter
     {
-        public static LineItem ToLineItem(this Product product, int quantity)
+        public static LineItem ToLineItem(this Product product, Language language, int quantity)
         {
-            var lineItemWebModel = new LineItem();
+            var lineItemWebModel = new LineItem(product.Price.Currency, language);
 
-            lineItemWebModel.CatalogId = product.CatalogId;
-            lineItemWebModel.CategoryId = product.CategoryId;
+            lineItemWebModel.InjectFrom(product);
 
-            if (product.Price != null)
-            {
-                lineItemWebModel.Currency = product.Price.Currency;
-                lineItemWebModel.ListPrice = product.Price.ListPrice;
-                lineItemWebModel.SalePrice = product.Price.SalePrice;
-            }
+            var currency = product.Price.Currency;
 
-            if (product.PrimaryImage != null)
-            {
-                lineItemWebModel.ImageUrl = product.PrimaryImage.Url;
-                lineItemWebModel.ThumbnailImageUrl = product.PrimaryImage.Url;
-            }
-
-            lineItemWebModel.Height = product.Height;
-            lineItemWebModel.ImageUrl = product.PrimaryImage != null ?
-                product.PrimaryImage.Url : null;
-            lineItemWebModel.Length = product.Length;
-            lineItemWebModel.MeasureUnit = product.MeasureUnit;
-            lineItemWebModel.Name = product.Name;
-            lineItemWebModel.Product = product;
+            lineItemWebModel.ExtendedPrice = product.Price.SalePrice * quantity;
+            lineItemWebModel.ImageUrl = product.PrimaryImage.Url;
+            lineItemWebModel.ListPrice = product.Price.ListPrice;
+            lineItemWebModel.PlacedPrice = product.Price.SalePrice;
             lineItemWebModel.ProductId = product.Id;
             lineItemWebModel.Quantity = quantity;
-            lineItemWebModel.Sku = product.Sku;
-            lineItemWebModel.Weight = product.Weight;
-            lineItemWebModel.WeightUnit = product.WeightUnit;
-            lineItemWebModel.Width = product.Width;
+            lineItemWebModel.SalePrice = product.Price.SalePrice;
+            lineItemWebModel.TaxTotal = new Money(0, currency.Code);
+            lineItemWebModel.ThumbnailImageUrl = product.PrimaryImage.Url;
 
             return lineItemWebModel;
         }
 
-        public static LineItem ToWebModel(this VirtoCommerceCartModuleWebModelLineItem lineItem)
+        public static LineItem ToWebModel(this VirtoCommerceCartModuleWebModelLineItem serviceModel, Currency currency, Language language)
         {
-            var lineItemWebModel = new LineItem();
+            var webModel = new LineItem(currency, language);
 
-            var currency = new Currency(EnumUtility.SafeParse(lineItem.Currency, CurrencyCodes.USD));
+            webModel.InjectFrom(serviceModel);
 
-            lineItemWebModel.InjectFrom(lineItem);
-            lineItemWebModel.Currency = currency;
-            lineItemWebModel.Quantity = lineItem.Quantity.HasValue ? lineItem.Quantity.Value : 0;
-            lineItemWebModel.ListPrice = new Money(lineItem.ListPrice ?? 0, currency.Code);
-            lineItemWebModel.SalePrice = new Money(lineItem.SalePrice ?? 0, currency.Code);
-            lineItemWebModel.ProductType = "Physical";
-            lineItemWebModel.RequiredShipping = (bool)lineItem.RequiredShipping;
-
-            if (lineItem.Discounts != null)
+            if (serviceModel.Discounts != null)
             {
-                lineItemWebModel.Discounts = lineItem.Discounts.Select(d => d.ToWebModel()).ToList();
+                webModel.Discounts = serviceModel.Discounts.Select(d => d.ToWebModel()).ToList();
             }
 
-            if (lineItem.TaxDetails != null)
+            if (serviceModel.TaxDetails != null)
             {
-                lineItemWebModel.TaxDetails = lineItem.TaxDetails.Select(td => td.ToWebModel()).ToList();
+                webModel.TaxDetails = serviceModel.TaxDetails.Select(td => td.ToWebModel()).ToList();
             }
 
-            return lineItemWebModel;
+            webModel.DiscountTotal = new Money(serviceModel.DiscountTotal ?? 0, currency.Code);
+            webModel.ExtendedPrice = new Money(serviceModel.ExtendedPrice ?? 0, currency.Code);
+            webModel.IsGift = (bool)serviceModel.IsGift;
+            webModel.IsReccuring = (bool)serviceModel.IsReccuring;
+            webModel.Length = (decimal)(serviceModel.Length ?? 0);
+            webModel.ListPrice = new Money(serviceModel.ListPrice ?? 0, currency.Code);
+            webModel.PlacedPrice = new Money(serviceModel.PlacedPrice ?? 0, currency.Code);
+            webModel.Quantity = serviceModel.Quantity ?? 0;
+            webModel.RequiredShipping = (bool)serviceModel.RequiredShipping;
+            webModel.SalePrice = new Money(serviceModel.SalePrice ?? 0, currency.Code);
+            webModel.TaxIncluded = (bool)serviceModel.TaxIncluded;
+            webModel.Weight = (decimal)(serviceModel.Weight ?? 0);
+            webModel.Width = (decimal)(serviceModel.Width ?? 0);
+
+            return webModel;
         }
 
-        public static VirtoCommerceCartModuleWebModelLineItem ToServiceModel(this LineItem lineItem)
+        public static VirtoCommerceCartModuleWebModelLineItem ToServiceModel(this LineItem webModel)
         {
-            var lineItemServiceModel = new VirtoCommerceCartModuleWebModelLineItem();
+            var serviceModel = new VirtoCommerceCartModuleWebModelLineItem();
 
-            lineItemServiceModel.InjectFrom(lineItem);
-            lineItemServiceModel.Currency = lineItem.Currency.CurrencyCode.ToString();
-            lineItemServiceModel.Quantity = lineItem.Quantity;
-            lineItemServiceModel.ExtendedPrice = (double)lineItem.ExtendedPrice.Amount;
-            lineItemServiceModel.ListPrice = (double)lineItem.ListPrice.Amount;
-            lineItemServiceModel.PlacedPrice = (double)lineItem.PlacedPrice.Amount;
-            lineItemServiceModel.SalePrice = (double)lineItem.SalePrice.Amount;
-            lineItemServiceModel.DiscountTotal = (double)lineItem.DiscountTotal.Amount;
-            lineItemServiceModel.TaxTotal = (double)lineItem.TaxTotal.Amount;
+            serviceModel.InjectFrom(webModel);
 
-            if (lineItem.Discounts != null)
-            {
-                lineItemServiceModel.Discounts = lineItem.Discounts.Select(d => d.ToServiceModel()).ToList();
-            }
+            serviceModel.Currency = webModel.Currency.Code;
+            serviceModel.Discounts = webModel.Discounts.Select(d => d.ToServiceModel()).ToList();
+            serviceModel.DiscountTotal = (double)webModel.DiscountTotal.Amount;
+            serviceModel.ExtendedPrice = (double)webModel.ExtendedPrice.Amount;
+            serviceModel.Height = (double)webModel.Height;
+            serviceModel.Length = (double)webModel.Length;
+            serviceModel.ListPrice = (double)webModel.ListPrice.Amount;
+            serviceModel.PlacedPrice = (double)webModel.PlacedPrice.Amount;
+            serviceModel.Quantity = webModel.Quantity;
+            serviceModel.SalePrice = (double)webModel.SalePrice.Amount;
+            serviceModel.TaxDetails = webModel.TaxDetails.Select(td => td.ToServiceModel()).ToList();
+            serviceModel.TaxTotal = (double)webModel.TaxTotal.Amount;
+            serviceModel.VolumetricWeight = (double)(webModel.VolumetricWeight ?? 0);
+            serviceModel.Weight = (double)webModel.Weight;
+            serviceModel.Width = (double)webModel.Width;
 
-            if (lineItem.TaxDetails != null)
-            {
-                lineItemServiceModel.TaxDetails = lineItem.TaxDetails.Select(td => td.ToServiceModel()).ToList();
-            }
-
-            return lineItemServiceModel;
+            return serviceModel;
         }
 
         public static VirtoCommerceDomainMarketingModelProductPromoEntry ToPromotionItem(this LineItem lineItem)

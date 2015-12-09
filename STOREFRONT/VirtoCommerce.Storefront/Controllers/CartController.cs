@@ -46,55 +46,54 @@ namespace VirtoCommerce.Storefront.Controllers
         [Route("json")]
         public async Task<ActionResult> CartJson()
         {
-            await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentCurrency);
+            await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
 
             _cartBuilder.Cart.Items.OrderBy(i => i.CreatedDate);
 
             return Json(_cartBuilder.Cart, JsonRequestBehavior.AllowGet);
         }
 
-        // POST: /cart/add_item?productId=...&quantity=...
+        // POST: /cart/additem?productId=...&quantity=...
         [HttpPost]
-        [Route("add_item")]
+        [Route("additem")]
         public async Task<ActionResult> AddItemJson(string productId, int quantity = 1)
         {
-            await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentCurrency);
+            await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
 
             var product = await _catalogService.GetProductAsync(productId, Model.Catalog.ItemResponseGroup.ItemLarge);
             if (product != null)
             {
                 await _cartBuilder.AddItemAsync(product, quantity);
                 await _cartBuilder.SaveAsync();
-                await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentCurrency);
             }
 
-            return Json(_cartBuilder.Cart, JsonRequestBehavior.AllowGet);
+            return Json(null, JsonRequestBehavior.AllowGet);
         }
 
-        // POST: /cart/change_item?lineItemId=...&quantity=...
+        // POST: /cart/changeitem?lineItemId=...&quantity=...
         [HttpPost]
-        [Route("change_item")]
+        [Route("changeitem")]
         public async Task<ActionResult> ChangeItemJson(string lineItemId, int quantity)
         {
-            await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentCurrency);
+            await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
 
             await _cartBuilder.ChangeItemQuantityAsync(lineItemId, quantity);
             await _cartBuilder.SaveAsync();
 
-            return Json(_cartBuilder.Cart, JsonRequestBehavior.AllowGet);
+            return Json(null, JsonRequestBehavior.AllowGet);
         }
 
-        // POST: /cart/remove_item?lineItemId=...
+        // POST: /cart/removeitem?lineItemId=...
         [HttpPost]
-        [Route("remove_item")]
+        [Route("removeitem")]
         public async Task<ActionResult> RemoveItemJson(string lineItemId)
         {
-            await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentCurrency);
+            await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
 
             await _cartBuilder.RemoveItemAsync(lineItemId);
             await _cartBuilder.SaveAsync();
 
-            return Json(_cartBuilder.Cart, JsonRequestBehavior.AllowGet);
+            return Json(null, JsonRequestBehavior.AllowGet);
         }
 
         // GET: /cart/checkout
@@ -102,98 +101,98 @@ namespace VirtoCommerce.Storefront.Controllers
         [Route("checkout")]
         public async Task<ActionResult> Checkout()
         {
-            await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentCurrency);
+            await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
 
             return View("checkout", "checkout_layout", _cartBuilder.Cart);
         }
 
-        // GET: /cart/{cartId}/shipping_methods/json
+        // GET: /cart/shippingmethods/json
         [HttpGet]
-        [Route("{cartId}/shipping_methods/json")]
-        public async Task<ActionResult> CartShippingMethodsJson(string cartId)
+        [Route("shippingmethods/json")]
+        public async Task<ActionResult> CartShippingMethodsJson()
         {
-            var shippingMethods = await _cartApi.CartModuleGetShipmentMethodsAsync(cartId);
+            await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
+
+            var shippingMethods = await _cartApi.CartModuleGetShipmentMethodsAsync(_cartBuilder.Cart.Id);
 
             return Json(shippingMethods.Select(sm => sm.ToWebModel()), JsonRequestBehavior.AllowGet);
         }
 
-        // GET: /cart/{cartId}/payment_methods/json
+        // GET: /cart/paymentmethods/json
         [HttpGet]
-        [Route("{cartId}/payment_methods/json")]
-        public async Task<ActionResult> CartPaymentMethodsJson(string cartId)
+        [Route("paymentmethods/json")]
+        public async Task<ActionResult> CartPaymentMethodsJson()
         {
-            var paymentMethods = await _cartApi.CartModuleGetPaymentMethodsAsync(cartId);
+            await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
+
+            var paymentMethods = await _cartApi.CartModuleGetPaymentMethodsAsync(_cartBuilder.Cart.Id);
 
             return Json(paymentMethods.Select(pm => pm.ToWebModel()), JsonRequestBehavior.AllowGet);
         }
 
-        // POST: /cart/add_coupon/{couponCode}
+        // POST: /cart/addcoupon/{couponCode}
         [HttpPost]
-        [Route("add_coupon/{couponCode}")]
+        [Route("addcoupon/{couponCode}")]
         public async Task<ActionResult> AddCouponJson(string couponCode)
         {
-            await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentCurrency);
+            await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
 
             await _cartBuilder.AddCouponAsync(couponCode);
             await _cartBuilder.SaveAsync();
 
-            return Json(_cartBuilder.Cart, JsonRequestBehavior.AllowGet);
+            return Json(_cartBuilder.Cart.Coupon, JsonRequestBehavior.AllowGet);
         }
 
-        // POST: /cart/remove_coupon
+        // POST: /cart/removecoupon
         [HttpPost]
-        [Route("remove_coupon")]
+        [Route("removecoupon")]
         public async Task<ActionResult> RemoveCouponJson()
         {
-            await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentCurrency);
+            await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
 
             await _cartBuilder.RemoveCouponAsync();
             await _cartBuilder.SaveAsync();
 
-            return Json(_cartBuilder.Cart, JsonRequestBehavior.AllowGet);
+            return Json(null, JsonRequestBehavior.AllowGet);
         }
 
-        // POST: /cart/add_address
+        // POST: /cart/addaddress
         [HttpPost]
-        [Route("add_address")]
+        [Route("addaddress")]
         public async Task<ActionResult> AddAddressJson(Address address)
         {
-            await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentCurrency);
+            await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
 
             await _cartBuilder.AddAddressAsync(address);
             await _cartBuilder.SaveAsync();
 
-            return Json(_cartBuilder.Cart, JsonRequestBehavior.AllowGet);
+            return Json(null, JsonRequestBehavior.AllowGet);
         }
 
-        // POST: /cart/shipping_method?shippingMethodCode=...?isPreview=...
+        // POST: /cart/shippingmethod?shippingMethodCode=...
         [HttpPost]
-        [Route("shipping_method")]
-        public async Task<ActionResult> SetShippingMethodsJson(string shippingMethodCode, bool isPreview)
+        [Route("shippingmethod")]
+        public async Task<ActionResult> SetShippingMethodsJson(string shippingMethodCode)
         {
-            await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentCurrency);
+            await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
 
             var shippingMethods = await _cartApi.CartModuleGetShipmentMethodsAsync(WorkContext.CurrentCart.Id);
             var shippingMethod = shippingMethods.FirstOrDefault(sm => sm.ShipmentMethodCode == shippingMethodCode);
             if (shippingMethod != null)
             {
                 await _cartBuilder.AddShipmentAsync(shippingMethod.ToWebModel());
-
-                if (!isPreview)
-                {
-                    await _cartBuilder.SaveAsync();
-                }
+                await _cartBuilder.SaveAsync();
             }
 
-            return Json(_cartBuilder.Cart, JsonRequestBehavior.AllowGet);
+            return Json(null, JsonRequestBehavior.AllowGet);
         }
 
-        // POST: /cart/payment_method?paymentMethodCode=
+        // POST: /cart/paymentmethod?paymentMethodCode=
         [HttpPost]
-        [Route("payment_method")]
+        [Route("paymentmethod")]
         public async Task<ActionResult> SetPaymentMethodsJson(string paymentMethodCode)
         {
-            await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentCurrency);
+            await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
 
             var paymentMethods = await _cartApi.CartModuleGetPaymentMethodsAsync(WorkContext.CurrentCart.Id);
             var paymentMethod = paymentMethods.FirstOrDefault(pm => pm.GatewayCode == paymentMethodCode);
@@ -203,25 +202,25 @@ namespace VirtoCommerce.Storefront.Controllers
                 await _cartBuilder.SaveAsync();
             }
 
-            return Json(_cartBuilder.Cart, JsonRequestBehavior.AllowGet);
+            return Json(null, JsonRequestBehavior.AllowGet);
         }
 
-        // POST: /cart/{cartId}/create_order
+        // POST: /cart/createorder
         [HttpPost]
-        [Route("{cartId}/create_order")]
-        public async Task<ActionResult> CreateOrderJson(string cartId)
+        [Route("createorder")]
+        public async Task<ActionResult> CreateOrderJson()
         {
-            await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentCurrency);
+            await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
 
-            var order = await _orderApi.OrderModuleCreateOrderFromCartAsync(cartId);
-            await _cartApi.CartModuleDeleteCartsAsync(new List<string> { cartId });
+            var order = await _orderApi.OrderModuleCreateOrderFromCartAsync(_cartBuilder.Cart.Id);
+            await _cartApi.CartModuleDeleteCartsAsync(new List<string> { _cartBuilder.Cart.Id });
 
             return Json(order.ToWebModel(), JsonRequestBehavior.AllowGet);
         }
 
-        // POST: /cart/process_payment?orderId=...&paymentId=...&bankCardInfo=...
+        // POST: /cart/processpayment?orderId=...&paymentId=...&bankCardInfo=...
         [HttpPost]
-        [Route("process_payment")]
+        [Route("processpayment")]
         public async Task<ActionResult> ProcessPaymentJson(string orderId, string paymentId, BankCardInfo bankCardInfo)
         {
             var cardInfo = new BankCardInfo();
@@ -231,9 +230,9 @@ namespace VirtoCommerce.Storefront.Controllers
             return Json(processingResult, JsonRequestBehavior.AllowGet);
         }
 
-        // GET: /cart/checkout/external_payment_callback?orderId=...
+        // GET: /cart/externalpaymentcallback?orderId=...
         [HttpGet]
-        [Route("checkout/external_payment_callback")]
+        [Route("externalpaymentcallback")]
         public async Task<ActionResult> ExternalPaymentCallback(string orderId)
         {
             var processingResult = await _commerceApi.CommercePostProcessPaymentAsync(orderId);
@@ -248,19 +247,31 @@ namespace VirtoCommerce.Storefront.Controllers
             return StoreFrontRedirect("~/cart/checkout/thanks");
         }
 
-        // GET: /cart/checkout/thanks?id=...
+        // GET: /cart/thanks?orderId=...
         [HttpGet]
-        [Route("checkout/thanks")]
-        public async Task<ActionResult> Thanks(string id)
+        [Route("thanks")]
+        public async Task<ActionResult> Thanks(string orderId)
         {
-            var order = await _orderApi.OrderModuleGetByIdAsync(id);
+            var order = await _orderApi.OrderModuleGetByIdAsync(orderId);
 
             if (order == null)
             {
                 return HttpNotFound();
             }
 
-            return View("thanks", base.WorkContext);
+            WorkContext.Order = order.ToWebModel();
+
+            return View("thanks", WorkContext);
+        }
+
+        // GET: /cart/thanks/{orderId}/json
+        [HttpGet]
+        [Route("thanks/{orderId}/json")]
+        public async Task<ActionResult> ThanksJson(string orderId)
+        {
+            var order = await _orderApi.OrderModuleGetByIdAsync(orderId);
+
+            return Json("", JsonRequestBehavior.AllowGet);
         }
     }
 }

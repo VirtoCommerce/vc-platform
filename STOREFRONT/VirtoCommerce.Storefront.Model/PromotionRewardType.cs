@@ -6,6 +6,6 @@
         ShipmentReward,
         SpecialOfferReward,
         CatalogItemAmountReward,
-        GuftReward
+        GiftReward
     }
 }

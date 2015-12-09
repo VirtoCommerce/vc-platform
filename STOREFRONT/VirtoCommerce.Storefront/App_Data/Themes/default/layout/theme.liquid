@@ -99,7 +99,7 @@
                         {% include 'search-bar' %}
                         <a class="header-cart-btn cart-toggle" id="btn-cart-toggle" ng-click="showCartModal()">
                             <span class="icon icon-cart"></span>
-                            {{ 'layout.cart.cart' | t }} <span id="cartCount" ng-class="{ 'hidden-count': cart.ItemsCount == 0 }" ng-bind="cart.ItemsCount"></span>
+                            {{ 'layout.cart.cart' | t }} <span id="cartCount" ng-class="{ 'visible-count': cart.ItemsCount > 0 }" ng-bind="cart.ItemsCount"></span>
                         </a>
                     </div>
                 </div>

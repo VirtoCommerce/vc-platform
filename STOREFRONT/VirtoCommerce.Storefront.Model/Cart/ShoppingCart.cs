@@ -1,21 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Model.Cart
 {
     public class ShoppingCart : Entity
     {
-        public ShoppingCart(string storeId, string customerId, string customerName, string name, string currencyCode)
+        public ShoppingCart(Currency currency, Language language)
         {
-            var currency = EnumUtility.SafeParse(currencyCode, CurrencyCodes.USD);
-
-            Currency = new Currency(currency);
-            CustomerId = customerId;
-            CustomerName = customerName;
-            Name = name;
-            StoreId = storeId;
+            Currency = currency;
+            LanguageCode = language.CultureName;
+            DiscountTotal = new Money(currency.Code);
+            HandlingTotal = new Money(currency.Code);
+            ShippingTotal = new Money(currency.Code);
+            SubTotal = new Money(currency.Code);
+            TaxTotal = new Money(currency.Code);
+            Total = new Money(currency.Code);
 
             Addresses = new List<Address>();
             Discounts = new List<Discount>();
@@ -23,14 +22,6 @@ namespace VirtoCommerce.Storefront.Model.Cart
             Payments = new List<Payment>();
             Shipments = new List<Shipment>();
             TaxDetails = new List<TaxDetail>();
-            Errors = new List<string>();
-
-            DiscountTotal = new Money(0, currency);
-            HandlingTotal = new Money(0, currency);
-            ShippingTotal = new Money(0, currency);
-            SubTotal = new Money(0, currency);
-            TaxTotal = new Money(0, currency);
-            Total = new Money(0, currency);
         }
 
         /// <summary>
@@ -49,15 +40,9 @@ namespace VirtoCommerce.Storefront.Model.Cart
         public string ChannelId { get; set; }
 
         /// <summary>
-        /// Gets the sign that shopping cart contains line items which require shipping
+        /// Gets or sets the sign that shopping cart contains line items which require shipping
         /// </summary>
-        public bool HasPhysicalProducts
-        {
-            get
-            {
-                return Items.Any(i => i.ProductType.Equals("Physical", StringComparison.OrdinalIgnoreCase));
-            }
-        }
+        public bool HasPhysicalProducts { get; set; }
 
         /// <summary>
         /// Gets or sets the flag of shopping cart is anonymous
@@ -85,7 +70,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// <value>
         /// Currency code in ISO 4217 format
         /// </value>
-        public Currency Currency { get; set; }
+        public Currency Currency { get; private set; }
 
         /// <summary>
         /// Gets or sets the shopping cart coupon
@@ -101,7 +86,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// <value>
         /// Culture name in ISO 3166-1 alpha-3 format
         /// </value>
-        public string LanguageCode { get; set; }
+        public string LanguageCode { get; private set; }
 
         /// <summary>
         /// Gets or sets the flag of shopping cart has tax
@@ -192,59 +177,14 @@ namespace VirtoCommerce.Storefront.Model.Cart
         public ICollection<Address> Addresses { get; set; }
 
         /// <summary>
-        /// Gets default shipping address
+        /// Gets or sets the default shipping address
         /// </summary>
-        public Address DefaultShippingAddress
-        {
-            get
-            {
-                Address shippingAddress = null;
-
-                if (!HasPhysicalProducts)
-                {
-                    return shippingAddress;
-                }
-
-                shippingAddress = Addresses.FirstOrDefault(a => a.Type == AddressType.Shipping);
-                if (shippingAddress == null)
-                {
-                    shippingAddress = Addresses.FirstOrDefault();
-                    if (shippingAddress == null)
-                    {
-                        shippingAddress = new Address
-                        {
-                            Type = AddressType.Shipping
-                        };
-                    }
-                }
-
-                return shippingAddress;
-            }
-        }
+        public Address DefaultShippingAddress { get; set; }
 
         /// <summary>
-        /// Gets default billing address
+        /// Gets default the default billing address
         /// </summary>
-        public Address DefaultBillingAddress
-        {
-            get
-            {
-                var billingAddress = Addresses.FirstOrDefault(a => a.Type == AddressType.Billing);
-                if (billingAddress == null)
-                {
-                    billingAddress = Addresses.FirstOrDefault();
-                    if (billingAddress == null)
-                    {
-                        billingAddress = new Address
-                        {
-                            Type = AddressType.Billing
-                        };
-                    }
-                }
-
-                return billingAddress;
-            }
-        }
+        public Address DefaultBillingAddress { get; set; }
 
         /// <summary>
         /// Gets or sets the value of shopping cart line items
@@ -255,15 +195,9 @@ namespace VirtoCommerce.Storefront.Model.Cart
         public ICollection<LineItem> Items { get; set; }
 
         /// <summary>
-        /// Gets shopping cart items quantity (sum of each line item quantity * items count)
+        /// Gets or sets shopping cart items quantity (sum of each line item quantity * items count)
         /// </summary>
-        public int ItemsCount
-        {
-            get
-            {
-                return Items.Sum(i => i.Quantity);
-            }
-        }
+        public int ItemsCount { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of shopping cart payments
@@ -296,10 +230,5 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// Collection of TaxDetail objects
         /// </value>
         public ICollection<TaxDetail> TaxDetails { get; set; }
-
-        /// <summary>
-        /// Gets or sets the collection of shopping cart errors
-        /// </summary>
-        public ICollection<string> Errors { get; set; }
     }
 }
