@@ -1,16 +1,16 @@
 ﻿<ul class="breadcrumb">
     <li class="breadcrumb__item breadcrumb__item--completed">
-        <a class="breadcrumb__link" href="{{ 'cart' | absolute_url }}" target="_self">{{ 'checkout.cart' | t }}</a>
+        <a class="breadcrumb__link" href="{{ '/cart' | absolute_url }}" target="_self">{{ 'checkout.cart' | t }}</a>
     </li>
     <li class="breadcrumb__item breadcrumb__item--completed" ng-if="checkout.cart.HasPhysicalProducts">
-        <a class="breadcrumb__link" href="{{ 'cart/checkout/#/customer-information' | absolute_url }}">{{ 'checkout.customer_information.title' | t }}</a>
+        <a class="breadcrumb__link" href="{{ '/cart/checkout/#/customer-information' | absolute_url }}">{{ 'checkout.customer_information.title' | t }}</a>
     </li>
     <li class="breadcrumb__item breadcrumb__item--completed" ng-if="checkout.cart.HasPhysicalProducts">
-        <a class="breadcrumb__link" href="{{ 'cart/checkout/#/shipping-method' | absolute_url }}" ng-if="checkout.hasCustomerInformation">{{ 'checkout.shipping_method.title' | t }}</a>
+        <a class="breadcrumb__link" href="{{ '/cart/checkout/#/shipping-method' | absolute_url }}" ng-if="checkout.hasCustomerInformation">{{ 'checkout.shipping_method.title' | t }}</a>
         <span ng-if="!checkout.hasCustomerInformation">{{ 'checkout.shipping_method.title' | t }}</span>
     </li>
     <li class="breadcrumb__item breadcrumb__item--completed">
-        <a class="breadcrumb__link" href="{{ 'cart/checkout/#/payment-method' | absolute_url }}" ng-if="checkout.hasCustomerInformation && checkout.hasShippingMethod">{{ 'checkout.payment_method.title' | t }}</a>
+        <a class="breadcrumb__link" href="{{ '/cart/checkout/#/payment-method' | absolute_url }}" ng-if="checkout.hasCustomerInformation && checkout.hasShippingMethod">{{ 'checkout.payment_method.title' | t }}</a>
         <span ng-if="!checkout.hasCustomerInformation || !checkout.hasShippingMethod">{{ 'checkout.payment_method.title' | t }}</span>
     </li>
 </ul>

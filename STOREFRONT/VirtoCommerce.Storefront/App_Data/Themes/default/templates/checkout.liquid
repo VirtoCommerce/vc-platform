@@ -26,7 +26,7 @@
                         </div>
                         <p class="section__content__text">
                             {{ 'checkout.customer_information.has_account_text' | t }}
-                            <a href="{{ 'account/login' | absolute_url }}" target="_self">{{ 'checkout.customer_information.log_in' | t }}</a>
+                            <a href="{{ '/account/login' | absolute_url }}" target="_self">{{ 'checkout.customer_information.log_in' | t }}</a>
                         </p>
                     </div>
                 </div>
@@ -134,7 +134,7 @@
                     <span class="btn__content">{{ 'checkout.customer_information.continue_text' | t }}</span>
                     <i class="btn__spinner icon icon--button-spinner"></i>
                 </button>
-                <a class="step__footer__previous-link" href="{{ 'cart' | absolute_url }}" target="_self">
+                <a class="step__footer__previous-link" href="{{ '/cart' | absolute_url }}" target="_self">
                     <svg class="previous-link__icon icon--chevron icon" height="11.3" width="6.7" viewBox="0 0 6.7 11.3" xmlns="http://www.w3.org/2000/svg">
                         <path d="M 6.7 1.1 l -1 -1.1 l -4.6 4.6 l -1.1 1.1 l 1.1 1 l 4.6 4.6 l 1 -1 l -4.6 -4.6 Z"></path>
                     </svg>
@@ -160,7 +160,7 @@
                             <span ng-bind="checkout.shippingAddress.City"></span><span ng-if="checkout.shippingAddress.RegionName" ng-bind="', ' + checkout.shippingAddress.RegionName"></span>, <span ng-bind="checkout.shippingAddress.PostalCode"></span><br />
                             <span ng-bind="checkout.shippingAddress.CountryName"></span><br ng-if="checkout.shippingAddress.Phone" />
                             <span ng-if="checkout.shippingAddress.Phone" ng-bind="checkout.shippingAddress.Phone"></span>
-                            <a class="edit-link edit-link--small" href="{{ 'cart/checkout/#/customer-information' | absolute_url }}">{{ 'checkout.edit_shipping_address' | t }}</a>
+                            <a class="edit-link edit-link--small" href="{{ '/cart/checkout/#/customer-information' | absolute_url }}">{{ 'checkout.edit_shipping_address' | t }}</a>
                         </p>
                     </div>
                 </div>
@@ -188,7 +188,7 @@
                     <span class="btn__content">{{ 'checkout.shipping_method.continue_text' | t }}</span>
                     <i class="btn__spinner icon icon--button-spinner"></i>
                 </button>
-                <a class="step__footer__previous-link" href="{{ 'cart/checkout/#/customer-information' | absolute_url }}">
+                <a class="step__footer__previous-link" href="{{ '/cart/checkout/#/customer-information' | absolute_url }}">
                     <svg class="previous-link__icon icon--chevron icon" height="11.3" width="6.7" viewBox="0 0 6.7 11.3" xmlns="http://www.w3.org/2000/svg">
                         <path d="M 6.7 1.1 l -1 -1.1 l -4.6 4.6 l -1.1 1.1 l 1.1 1 l 4.6 4.6 l 1 -1 l -4.6 -4.6 Z"></path>
                     </svg>
@@ -444,7 +444,7 @@
                     <span class="btn__content">{{ 'checkout.payment_method.continue_text' | t }}</span>
                     <i class="btn__spinner icon icon--button-spinner"></i>
                 </button>
-                <a class="step__footer__previous-link" href="{{ 'cart/checkout/#/shipping-method' | absolute_url }}">
+                <a class="step__footer__previous-link" href="{{ '/cart/checkout/#/shipping-method' | absolute_url }}">
                     <svg class="previous-link__icon icon--chevron icon" height="11.3" width="6.7" viewBox="0 0 6.7 11.3" xmlns="http://www.w3.org/2000/svg">
                         <path d="M 6.7 1.1 l -1 -1.1 l -4.6 4.6 l -1.1 1.1 l 1.1 1 l 4.6 4.6 l 1 -1 l -4.6 -4.6 Z"></path>
                     </svg>
