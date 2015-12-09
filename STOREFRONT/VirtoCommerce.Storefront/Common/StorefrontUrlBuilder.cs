@@ -1,5 +1,5 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Hosting;
 using VirtoCommerce.Storefront.Model;
@@ -37,8 +37,7 @@ namespace VirtoCommerce.Storefront.Common
 
         public string ToAppRelative(string virtualPath, Store store, Language language)
         {
-            virtualPath = virtualPath.Replace("~/", String.Empty);
-            var retVal = "~/";
+            var result = new StringBuilder("~");
 
             if (store != null)
             {
@@ -49,7 +48,8 @@ namespace VirtoCommerce.Storefront.Common
                     store = _workContext.AllStores.Contains(store) ? store : _workContext.CurrentStore;
                     if (!virtualPath.Contains("/" + store.Id + "/"))
                     {
-                        retVal += store.Id + "/";
+                        result.Append("/");
+                        result.Append(store.Id);
                     }
                 }
             }
@@ -60,13 +60,15 @@ namespace VirtoCommerce.Storefront.Common
                 language = store.Languages.Contains(language) ? language : store.DefaultLanguage;
                 if (!virtualPath.Contains("/" + language.CultureName + "/"))
                 {
-                    retVal += language.CultureName + "/";
+                    result.Append("/");
+                    result.Append(language.CultureName);
                 }
             }
 
-            retVal += virtualPath.TrimStart('/');
+            result.Append("/");
+            result.Append(virtualPath.TrimStart('~', '/'));
 
-            return retVal.TrimEnd('/');
+            return result.ToString();
         }
 
         public string ToLocalPath(string virtualPath)
