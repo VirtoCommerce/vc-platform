@@ -263,15 +263,5 @@ namespace VirtoCommerce.Storefront.Controllers
 
             return View("thanks", WorkContext);
         }
-
-        // GET: /cart/thanks/{orderId}/json
-        [HttpGet]
-        [Route("thanks/{orderId}/json")]
-        public async Task<ActionResult> ThanksJson(string orderId)
-        {
-            var order = await _orderApi.OrderModuleGetByIdAsync(orderId);
-
-            return Json("", JsonRequestBehavior.AllowGet);
-        }
     }
 }
