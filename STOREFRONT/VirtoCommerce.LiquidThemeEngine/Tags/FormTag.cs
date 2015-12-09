@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+using System.Web;
 using DotLiquid;
 using DotLiquid.Exceptions;
 
@@ -12,14 +10,14 @@ namespace VirtoCommerce.LiquidThemeEngine.Tags
 {
     /// <summary>
     /// https://docs.shopify.com/themes/liquid-documentation/tags/theme-tags#form
-    /// Creates an HTML <form> element with all the necessary attributes (action, id, etc.) and <input> 
+    /// Creates an HTML &lt;form&gt; element with all the necessary attributes (action, id, etc.) and &lt;input&gt; 
     /// to submit the form successfully.
     /// </summary>
     public class FormTag : Block
     {
-        private static readonly Regex Syntax = new Regex(string.Format(@"^({0})\s*,?\s*({1}*)\s*", Liquid.QuotedFragment, Liquid.VariableSignature), RegexOptions.Compiled);
+        private static readonly Regex _syntax = new Regex(string.Format(@"^({0})\s*,?\s*({1}*)\s*", Liquid.QuotedFragment, Liquid.VariableSignature), RegexOptions.Compiled);
         private string _formName;
-        private static Dictionary<string, string> _formsMap = new Dictionary<string, string>();
+        private static readonly Dictionary<string, string> _formsMap = new Dictionary<string, string>();
 
         static FormTag()
         {
@@ -44,7 +42,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Tags
         #region Public Methods and Operators
         public override void Initialize(string tagName, string markup, List<string> tokens)
         {
-            var syntaxMatch = Syntax.Match(markup);
+            var syntaxMatch = _syntax.Match(markup);
 
             if (syntaxMatch.Success)
             {
@@ -60,19 +58,32 @@ namespace VirtoCommerce.LiquidThemeEngine.Tags
 
         public override void Render(Context context, TextWriter result)
         {
-            var formName = ((context[this._formName] ?? null) ?? this._formName).ToString();
+            var formName = (context[_formName] ?? _formName).ToString();
+
             string actionUrl;
             if (_formsMap.TryGetValue(formName, out actionUrl))
             {
                 var themeEngine = (ShopifyLiquidThemeEngine)Template.FileSystem;
+                var qs = HttpUtility.ParseQueryString(themeEngine.WorkContext.RequestUrl.Query);
+                var returnUrl = qs["ReturnUrl"];
                 var actionAbsoluteUrl = themeEngine.UrlBuilder.ToAppAbsolute(actionUrl, themeEngine.WorkContext.CurrentStore, themeEngine.WorkContext.CurrentLanguage);
-                result.WriteLine("<form accept-charset=\"UTF-8\" action=\"{0}\" method=\"post\" id=\"{1}\">", actionAbsoluteUrl, formName);
-                this.RenderAll(this.NodeList, context, result);
+
+                if (!string.IsNullOrEmpty(returnUrl))
+                {
+                    actionAbsoluteUrl += string.Concat("?ReturnUrl=", HttpUtility.UrlEncode(returnUrl));
+                }
+
+                result.WriteLine("<form accept-charset=\"UTF-8\" action=\"{0}\" method=\"post\" id=\"{1}\">",
+                    HttpUtility.HtmlAttributeEncode(actionAbsoluteUrl),
+                    HttpUtility.HtmlAttributeEncode(formName));
+
+                RenderAll(NodeList, context, result);
+
                 result.WriteLine("</form>");
             }
             else
             {
-                throw new SyntaxException(String.Format("Unknow form type {0}", _formName));
+                throw new SyntaxException(string.Concat("Unknow form type ", _formName));
             }
 
         }
