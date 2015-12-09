@@ -166,12 +166,12 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
         }
 
 
-        private string[] GetSelectedFilterProperties(Store store)
+        private static string[] GetSelectedFilterProperties(Store store)
         {
             var result = new List<string>();
 
             var browsing = GetFilteredBrowsing(store);
-            if (browsing != null && browsing.Attributes != null)
+            if (browsing?.Attributes != null)
             {
                 result.AddRange(browsing.Attributes.Select(a => a.Key));
             }
@@ -218,8 +218,7 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
 
         private Property[] GetAllCatalogProperties(string catalogId)
         {
-            //var properties = _propertyService.GetAllCatalogProperties(catalogId);
-            var properties = _propertyService.GetAllProperties();
+            var properties = _propertyService.GetAllCatalogProperties(catalogId);
 
             var result = properties
                 .GroupBy(p => p.Id)
