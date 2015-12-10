@@ -98,7 +98,7 @@ namespace PaymentMethods.Tests
 
             var orderEventPublisher = new EventPublisher<OrderChangeEvent>(Enumerable.Empty<IObserver<OrderChangeEvent>>().ToArray());
             var cartEventPublisher = new EventPublisher<CartChangeEvent>(Enumerable.Empty<IObserver<CartChangeEvent>>().ToArray());
-            var cartService = new ShoppingCartServiceImpl(repositoryFactory, cartEventPublisher, null);
+            var cartService = new ShoppingCartServiceImpl(repositoryFactory, cartEventPublisher, null, null);
             var dynamicPropertyService = new DynamicPropertyService(platformRepositoryFactory);
             var settingManager = new SettingsManager(null, null, null, null);
 

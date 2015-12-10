@@ -370,7 +370,7 @@ namespace VirtoCommerce.OrderModule.Test
             var dynamicPropertyService = new DynamicPropertyService(platformRepositoryFactory);
             var orderEventPublisher = new EventPublisher<OrderChangeEvent>(Enumerable.Empty<IObserver<OrderChangeEvent>>().ToArray());
             var cartEventPublisher = new EventPublisher<CartChangeEvent>(Enumerable.Empty<IObserver<CartChangeEvent>>().ToArray());
-            var cartService = new ShoppingCartServiceImpl(repositoryFactory, cartEventPublisher, null);
+            var cartService = new ShoppingCartServiceImpl(repositoryFactory, cartEventPublisher, null, dynamicPropertyService);
             var settingManager = new SettingsManager(null, platformRepositoryFactory, new CacheManager(new InMemoryCachingProvider(), null), null);
 
             var orderService = new CustomerOrderServiceImpl(GetOrderRepositoryFactory(), new TimeBasedNumberGeneratorImpl(), orderEventPublisher, cartService, null, dynamicPropertyService, settingManager);
