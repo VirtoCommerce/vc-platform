@@ -92,7 +92,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\DiBs.jpg" />
-    <Content Include="DIBS.Client.pdb" />
     <Content Include="packages.config" />
     <Content Include="module.manifest">
       <SubType>Designer</SubType>
@@ -105,7 +104,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\DibsController.cs" />

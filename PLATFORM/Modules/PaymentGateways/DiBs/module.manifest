@@ -16,7 +16,7 @@
     <owner>Virto Commerce</owner>
   </owners>
   <projectUrl>http://virtocommerce.com/</projectUrl>
-  <iconUrl>Modules/$(DiBs)/Content/DiBs.jpg</iconUrl>
+  <iconUrl>http://tech.dibspayment.com/sites/tech/files/pictures/LOGO/DIBS/PNG/DIBS_logo_blue_RGB.png</iconUrl>
   <releaseNotes>First version.</releaseNotes>
   <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
   <tags>dibs payment gateway</tags>
@@ -24,7 +24,7 @@
   <assemblyFile>DiBs.dll</assemblyFile>
   <moduleType>DiBs.Module, DiBs</moduleType>
   
-  <settings>
+  <settings>	  
     <group name="Payment methods|DiBs|Credentials">
 		<setting>
 			<name>DiBs.RedirectUrl</name>
@@ -73,7 +73,7 @@
 			</allowedValues>
 			<title>Mode</title>
 			<description>Set payment mode. 'test' for test purposes. 'live' - production setting.</description>
-		</setting>
+		</setting>		
     </group>
   </settings>
 </module>
