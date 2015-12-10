@@ -60,7 +60,7 @@ namespace VirtoCommerce.StoreModule.Data.Services
                     retVal.ReturnsFulfillmentCenter = fulfillmentCenters.FirstOrDefault(x => x.Id == entity.ReturnsFulfillmentCenterId);
                     retVal.FulfillmentCenter = fulfillmentCenters.FirstOrDefault(x => x.Id == entity.FulfillmentCenterId);
 
-                    _commerceService.LoadSeoForObject(retVal);
+                    _commerceService.LoadSeoForObjects(new[] { retVal });
                     _settingManager.LoadEntitySettingsValues(retVal);
                     _dynamicPropertyService.LoadDynamicPropertyValues(retVal);
                 }

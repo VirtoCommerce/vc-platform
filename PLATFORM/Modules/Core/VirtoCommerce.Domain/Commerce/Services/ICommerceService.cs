@@ -14,7 +14,7 @@ namespace VirtoCommerce.Domain.Commerce.Services
 		void DeleteFulfillmentCenter(string[] ids);
 
 		IEnumerable<SeoInfo> GetSeoByKeyword(string keyword);
-        void LoadSeoForObject(ISeoSupport seoSupportObj);
+        void LoadSeoForObjects(ISeoSupport[] seoSupportObjects);
         void UpsertSeoForObjects(ISeoSupport[] seoSupportObjects);
         void DeleteSeoForObject(ISeoSupport seoSupportObject);
 
