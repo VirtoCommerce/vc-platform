@@ -9,7 +9,7 @@ using webModel = VirtoCommerce.OrderModule.Web.Model;
 
 namespace VirtoCommerce.OrderModule.Web.Converters
 {
-	public static class CusgtomerOrderItemConverter
+	public static class CustomerOrderItemConverter
 	{
 		public static webModel.LineItem ToWebModel(this coreModel.LineItem orderItem)
 		{

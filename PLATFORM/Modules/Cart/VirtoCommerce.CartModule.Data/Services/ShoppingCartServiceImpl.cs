@@ -9,7 +9,7 @@ using VirtoCommerce.Domain.Cart.Events;
 using VirtoCommerce.Domain.Cart.Model;
 using VirtoCommerce.Domain.Cart.Services;
 using VirtoCommerce.Domain.Catalog.Services;
-using VirtoCommerce.Domain.Common;
+using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Data.Infrastructure;
 
@@ -22,13 +22,15 @@ namespace VirtoCommerce.CartModule.Data.Services
 		private Func<ICartRepository> _repositoryFactory;
 		private readonly IEventPublisher<CartChangeEvent> _eventPublisher;
 		private readonly IItemService _productService;
+        private readonly IDynamicPropertyService _dynamicPropertyService;
 
-		public ShoppingCartServiceImpl(Func<ICartRepository> repositoryFactory, IEventPublisher<CartChangeEvent> eventPublisher, IItemService productService)
+        public ShoppingCartServiceImpl(Func<ICartRepository> repositoryFactory, IEventPublisher<CartChangeEvent> eventPublisher, IItemService productService, IDynamicPropertyService dynamicPropertyService)
 		{
 			_repositoryFactory = repositoryFactory;
 			_eventPublisher = eventPublisher;
 			_productService = productService;
-		}
+            _dynamicPropertyService = dynamicPropertyService;
+        }
 
 		#region IShoppingCartService Members
 
@@ -57,7 +59,10 @@ namespace VirtoCommerce.CartModule.Data.Services
 				}
 			}
 
-			return retVal;
+            if (retVal != null)
+                _dynamicPropertyService.LoadDynamicPropertyValues(retVal);
+
+            return retVal;
 		}
 
 		public ShoppingCart Create(ShoppingCart cart)
@@ -73,7 +78,9 @@ namespace VirtoCommerce.CartModule.Data.Services
 				repository.Add(entity);
 				CommitChanges(repository);
 			}
-			retVal = GetById(entity.Id);
+            _dynamicPropertyService.SaveDynamicPropertyValues(cart);
+
+            retVal = GetById(entity.Id);
 			return retVal;
 		}
 
@@ -127,8 +134,10 @@ namespace VirtoCommerce.CartModule.Data.Services
 
 					changeTracker.Attach(targetCartEntity);
 					sourceCartEntity.Patch(targetCartEntity);
-				}
-				CommitChanges(repository);
+                    _dynamicPropertyService.SaveDynamicPropertyValues(changedCart);
+
+                }
+                CommitChanges(repository);
 			}
 
 		}
@@ -140,7 +149,8 @@ namespace VirtoCommerce.CartModule.Data.Services
 				foreach (var id in cartIds)
 				{
 					var cart = GetById(id);
-					_eventPublisher.Publish(new CartChangeEvent(Platform.Core.Common.EntryState.Deleted, cart, cart));
+                    _dynamicPropertyService.DeleteDynamicPropertyValues(cart);
+                    _eventPublisher.Publish(new CartChangeEvent(Platform.Core.Common.EntryState.Deleted, cart, cart));
 
 					var entity = repository.GetShoppingCartById(id);
 					if (entity != null)

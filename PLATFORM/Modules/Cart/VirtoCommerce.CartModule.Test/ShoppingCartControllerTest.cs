@@ -184,7 +184,7 @@ namespace VirtoCommerce.CartModule.Test
 			//Business logic for core model
 		
 
-			var cartService = new ShoppingCartServiceImpl(repositoryFactory, null, null);
+			var cartService = new ShoppingCartServiceImpl(repositoryFactory, null, null, null);
 			var searchService = new ShoppingCartSearchServiceImpl(repositoryFactory);
 			//var memoryPaymentGatewayManager = new InMemoryPaymentGatewayManagerImpl();
 

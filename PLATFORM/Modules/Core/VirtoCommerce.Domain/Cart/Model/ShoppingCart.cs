@@ -5,11 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Domain.Commerce.Model;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.DynamicProperties;
 
 namespace VirtoCommerce.Domain.Cart.Model
 {
-	public class ShoppingCart : AuditableEntity, IHaveTaxDetalization
-	{
+	public class ShoppingCart : AuditableEntity, IHaveTaxDetalization, IHasDynamicProperties
+    {
 		public string Name { get; set; }
 		public string StoreId { get; set; }
 		public string ChannelId { get; set; }
@@ -45,7 +46,12 @@ namespace VirtoCommerce.Domain.Cart.Model
 
 		#region IHaveTaxDetalization Members
 		public ICollection<TaxDetail> TaxDetails { get; set; }
-		#endregion
-	
-	}
+        #endregion
+
+        #region IHasDynamicProperties Members
+        public string ObjectType { get; set; }
+        public ICollection<DynamicObjectProperty> DynamicProperties { get; set; }
+
+        #endregion
+    }
 }
