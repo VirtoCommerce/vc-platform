@@ -277,8 +277,6 @@
     <Compile Include="Shipping\Services\ShippingServiceImpl.cs" />
     <Compile Include="Store\Model\Store.cs" />
     <Compile Include="Store\Model\StoreState.cs" />
-    <Compile Include="Store\Security\StorePredefinedPermissions.cs" />
-    <Compile Include="Store\Security\StoreSelectedScope.cs" />
     <Compile Include="Store\Services\IStoreService.cs" />
     <Compile Include="Tax\Model\TaxEvaluationContext.cs" />
     <Compile Include="Tax\Model\TaxLine.cs" />

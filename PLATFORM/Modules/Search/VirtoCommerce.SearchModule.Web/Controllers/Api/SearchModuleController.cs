@@ -13,7 +13,6 @@ using VirtoCommerce.Domain.Search.Filters;
 using VirtoCommerce.Domain.Search.Model;
 using VirtoCommerce.Domain.Search.Services;
 using VirtoCommerce.Domain.Store.Model;
-using VirtoCommerce.Domain.Store.Security;
 using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.Security;
@@ -89,7 +88,7 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
                 return NotFound();
             }
 
-            CheckCurrentUserHasPermissionForObjects(StorePredefinedPermissions.Read, store);
+            CheckCurrentUserHasPermissionForObjects("read", store);
 
             var allProperties = GetAllCatalogProperties(store.Catalog);
             var selectedPropertyNames = GetSelectedFilterProperties(store);
@@ -127,7 +126,7 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
                 return NotFound();
             }
 
-            CheckCurrentUserHasPermissionForObjects(StorePredefinedPermissions.Update, store);
+            CheckCurrentUserHasPermissionForObjects("read", store);
 
             var allProperties = GetAllCatalogProperties(store.Catalog);
 
