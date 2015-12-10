@@ -168,6 +168,11 @@ app.controller('checkoutController', ['$scope', '$location', '$sce', 'customerSe
         }
     }
 
+    $scope.selectAddress = function (addressType)
+    {
+        selectAddress(addressType);
+    }
+
     $scope.setCustomerInformation = function () {
         $scope.checkout.customerInformationProcessing = true;
         cartService.addAddress($scope.checkout.shippingAddress).then(function (response) {
@@ -227,12 +232,13 @@ app.controller('checkoutController', ['$scope', '$location', '$sce', 'customerSe
     }
 
     function initialize() {
-        getCurrentCustomer();
         $scope.checkout.orderSummaryExpanded = false;
         $scope.checkout.billingAddressEqualsShipping = true;
         $scope.checkout.shippingAddress = {};
         $scope.checkout.billingAddress = {};
         $scope.checkout.bankCardInfo = {};
+        $scope.checkout.selectedAddressId = 1;
+        getCurrentCustomer();
         getCountries();
         getAvailableShippingMethods();
         getAvailablePaymentMethods();
@@ -242,7 +248,23 @@ app.controller('checkoutController', ['$scope', '$location', '$sce', 'customerSe
     function getCurrentCustomer() {
         customerService.getCurrentCustomer().then(function (response) {
             $scope.customer = response.data;
+            for (var i = 0; i < $scope.customer.Addresses.length; i++) {
+                $scope.customer.Addresses[i].Id = i + 1;
+                $scope.customer.Addresses[i].StringifiedAddress = stringifyAddress($scope.customer.Addresses[i]);
+            }
         });
+    }
+
+    function stringifyAddress(address) {
+        var stringifiedAddress = address.FirstName + ' ' + address.LastName + ', ';
+        stringifiedAddress += address.Organization ? address.Organization + ', ' : '';
+        stringifiedAddress += address.CountryName + ', ';
+        stringifiedAddress += address.RegionName ? address.RegionName : '';
+        stringifiedAddress += address.City;
+        stringifiedAddress += address.Line1 + ', '
+        stringifiedAddress += address.Line2 ? address.Line2 : '';
+        stringifiedAddress += address.PostalCode;
+        return stringifiedAddress;
     }
 
     function refreshCheckout() {
@@ -313,7 +335,7 @@ app.controller('checkoutController', ['$scope', '$location', '$sce', 'customerSe
     }
 
     function getShippingAddress(cartAddress) {
-        $scope.checkout.shippingAddress.Email = $scope.checkout.shippingAddress.Email || cartAddress.Email;
+        $scope.checkout.shippingAddress.Email = $scope.checkout.shippingAddress.Email || $scope.customer.Email || cartAddress.Email;
         $scope.checkout.shippingAddress.FirstName = $scope.checkout.shippingAddress.FirstName || cartAddress.FirstName;
         $scope.checkout.shippingAddress.LastName = $scope.checkout.shippingAddress.LastName || cartAddress.LastName;
         $scope.checkout.shippingAddress.Organization = $scope.checkout.shippingAddress.Organization || cartAddress.Organization;
@@ -329,10 +351,11 @@ app.controller('checkoutController', ['$scope', '$location', '$sce', 'customerSe
         if ($scope.checkout.shippingAddress.CountryCode) {
             getRegions($scope.checkout.shippingAddress.CountryCode);
         }
+        selectAddress('Shipping');
     }
 
     function getBillingAddress(cartAddress) {
-        $scope.checkout.billingAddress.Email = $scope.checkout.billingAddress.Email || cartAddress.Email;
+        $scope.checkout.billingAddress.Email = $scope.checkout.billingAddress.Email || $scope.customer.Email || cartAddress.Email;
         $scope.checkout.billingAddress.FirstName = $scope.checkout.billingAddress.FirstName || cartAddress.FirstName;
         $scope.checkout.billingAddress.LastName = $scope.checkout.billingAddress.LastName || cartAddress.LastName;
         $scope.checkout.billingAddress.Organization = $scope.checkout.billingAddress.Organization || cartAddress.Organization;
@@ -349,6 +372,21 @@ app.controller('checkoutController', ['$scope', '$location', '$sce', 'customerSe
             getRegions($scope.checkout.billingAddress.CountryCode);
         }
         setBillingAddressEqualsShipping();
+        selectAddress('Billing');
+    }
+
+    function selectAddress(addressType) {
+        var address = _.find($scope.customer.Addresses, function (a) { return a.Id == $scope.checkout.selectedAddressId });
+        if (address) {
+            if (addressType == 'Shipping') {
+                $scope.checkout.shippingAddress = address;
+                $scope.checkout.shippingAddress.Type = 'Shipping';
+            }
+            if (addressType == 'Billing') {
+                $scope.checkout.billingAddress = address;
+                $scope.checkout.billingAddress.Type = 'Billing';
+            }
+        }
     }
 
     function setBillingAddressEqualsShipping() {

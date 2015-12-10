@@ -36,6 +36,15 @@
                     </div>
                     <div class="section__content">
                         <div class="fieldset">
+                            <div class="field field--optional field--show-floating-label" ng-if="customer.Addresses.length">
+                                <div class="field__input-wrapper field__input-wrapper--select">
+                                    <label class="field__label" for="Addresses">Customer addresses</label>
+                                    <select class="field__input field__input--select text-truncate" id="Addresses" name="Addresses" size="1" ng-model="checkout.selectedAddressId" ng-disabled="checkout.customerInformationProcessing" ng-change="selectAddress('Shipping')">
+                                        <option ng-repeat="address in customer.Addresses" ng-value="address.Id" ng-bind="address.StringifiedAddress" ng-selected="address.Id == 1"></option>
+                                    </select>
+                                    <input id="CountryCode" name="CountryCode" type="hidden" ng-value="checkout.shippingAddress.CountryCode" ng-model="checkout.shippingAddress.CountryCode" ng-init="checkout.shippingAddress.CountryCode" />
+                                </div>
+                            </div>
                             <div class="field--half field field--required" ng-class="{ 'field--show-floating-label': checkout.shippingAddress.FirstName.length, 'field--error': formCustomerInformation.FirstName.$dirty && formCustomerInformation.FirstName.$error.required }">
                                 <div class="field__input-wrapper">
                                     <label class="field__label" for="FirstName">{{ 'checkout.address.first_name' | t }}</label>
