@@ -1,5 +1,13 @@
 ﻿var app = angular.module('storefrontApp', ['ngRoute', 'ngSanitize']);
 
+app.service('customerService', ['$http', function ($http) {
+    return {
+        getCurrentCustomer: function () {
+            return $http.get('account/json?t=' + new Date().getTime());
+        }
+    }
+}]);
+
 app.service('productService', ['$http', function ($http) {
 	return {
 		getProduct: function (productId) {
@@ -122,7 +130,7 @@ app.controller('cartController', ['$scope', 'cartService', function ($scope, car
     }
 }]);
 
-app.controller('checkoutController', ['$scope', '$location', '$sce', 'cartService', function ($scope, $location, $sce, cartService) {
+app.controller('checkoutController', ['$scope', '$location', '$sce', 'customerService', 'cartService', function ($scope, $location, $sce, customerService, cartService) {
     $scope.checkout = {};
 
     initialize();
@@ -219,6 +227,7 @@ app.controller('checkoutController', ['$scope', '$location', '$sce', 'cartServic
     }
 
     function initialize() {
+        getCurrentCustomer();
         $scope.checkout.orderSummaryExpanded = false;
         $scope.checkout.billingAddressEqualsShipping = true;
         $scope.checkout.shippingAddress = {};
@@ -228,6 +237,12 @@ app.controller('checkoutController', ['$scope', '$location', '$sce', 'cartServic
         getAvailableShippingMethods();
         getAvailablePaymentMethods();
         refreshCheckout();
+    }
+
+    function getCurrentCustomer() {
+        customerService.getCurrentCustomer().then(function (response) {
+            $scope.customer = response.data;
+        });
     }
 
     function refreshCheckout() {

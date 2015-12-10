@@ -26,7 +26,7 @@
                         </div>
                         <p class="section__content__text">
                             {{ 'checkout.customer_information.has_account_text' | t }}
-                            <a href="{{ 'account/login' | absolute_url }}" target="_self">{{ 'checkout.customer_information.log_in' | t }}</a>
+                            <a href="{{ 'account/login?returnUrl=cart/checkout/#/customer-information' | absolute_url }}" target="_self">{{ 'checkout.customer_information.log_in' | t }}</a>
                         </p>
                     </div>
                 </div>
