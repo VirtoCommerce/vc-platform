@@ -65,7 +65,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 
 			    //Get list of search in categories
                 var searchCategoryIds = criteria.CategoriesIds;
-                if (searchCategoryIds != null && criteria.SearchInChildren)
+                if (searchCategoryIds != null && searchCategoryIds.Any() && criteria.SearchInChildren)
                 {
                     searchCategoryIds = searchCategoryIds.Concat(repository.GetAllChildrenCategoriesIds(searchCategoryIds)).ToArray();
                 }
@@ -75,7 +75,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 				{
 					query = query.Where(x => x.Name.Contains(criteria.Keyword) || x.Code.Contains(criteria.Keyword));
 				}
-				else if (searchCategoryIds != null)
+				else if (searchCategoryIds != null && searchCategoryIds.Any())
 				{
                     if (criteria.HideDirectLinkedCategories)
                     {
@@ -144,13 +144,13 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                 if(searchCategoryIds != null && criteria.SearchInChildren)
                 {
                     searchCategoryIds = searchCategoryIds.Concat(repository.GetAllChildrenCategoriesIds(searchCategoryIds)).ToArray();
+                    //linked categories
+                    var allLinkedCategories = repository.CategoryLinks.Where(x => searchCategoryIds.Contains(x.TargetCategoryId)).Select(x => x.SourceCategoryId).ToArray();
+                    searchCategoryIds = searchCategoryIds.Concat(allLinkedCategories).Distinct().ToArray();
                 }
-
-				var query = repository.Items;
-				if ((criteria.ResponseGroup & coreModel.SearchResponseGroup.WithVariations) != coreModel.SearchResponseGroup.WithVariations)
-				{
-					query = query.Where(x => x.ParentId == null);
-				}
+              
+                //Do not search in variations
+                var query = repository.Items.Where(x => x.ParentId == null);
 
                 if(searchCategoryIds != null)
                 {
@@ -197,28 +197,6 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 
 				var products = _itemService.GetByIds(itemIds, productResponseGroup);
                 result.Products = products.OrderByDescending(x => x.Name).ToList();
-
-                ////TODO: Filter facet properties with related store settings, currently we display all dictionary properties
-                ////populate property values facets (only for resulting product range because its DB and its very expensive operation)
-                ////IS VERY NOT OPTIMAL SOLUTION
-                //var dictPropValues = result.Products.SelectMany(x => x.PropertyValues).Where(x => x.ValueId != null)
-                //                                       .GroupBy(x=>x.ValueId)
-                //                                       .Select(x=>x.First())
-                //                                       .ToArray();
-                //if(dictPropValues.Any())
-                //{
-                //    var propDictValueIds = dictPropValues.Select(x => x.ValueId).ToArray();
-                //    var propertyIds = repository.PropertyDictionaryValues.Where(x => propDictValueIds.Contains(x.Id))
-                //                                                         .Select(x => x.PropertyId)
-                //                                                         .Distinct()
-                //                                                         .ToArray();
-
-                //    var properties = repository.GetPropertiesByIds(propertyIds).Select(x=>x.ToCoreModel(x.Catalog.ToCoreModel(), x.Category != null ? x.Category.ToCoreModel() : null));
-                //    foreach(var dictProp in dictPropValues)
-                //    {
-                //        dictProp.Property = properties.FirstOrDefault(x => String.Equals(x.Name, dictProp.PropertyName, StringComparison.InvariantCultureIgnoreCase));
-                //    }
-                //}          
             }
         }
     }
