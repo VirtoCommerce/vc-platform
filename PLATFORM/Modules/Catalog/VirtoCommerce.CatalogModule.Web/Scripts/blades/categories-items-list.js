@@ -97,6 +97,14 @@
                 bladeNavigationService.showBlade(newBlade, blade);
             };
 
+            $scope.cut = function (data) {
+                cutList([data]);
+            }
+
+            function cutList(selection) {
+                $storage.catalogClipboardContent = selection;
+            }
+
             $scope.delete = function (data) {
                 deleteList([data]);
             };
@@ -315,7 +323,7 @@
                      name: "platform.commands.cut",
                      icon: 'fa fa-cut',
                      executeMethod: function () {
-                         $storage.catalogClipboardContent = $scope.gridApi.selection.getSelectedRows();
+                         cutList($scope.gridApi.selection.getSelectedRows());
                      },
                      canExecuteMethod: isItemsChecked,
                      permission: 'catalog:create'

@@ -23,7 +23,7 @@
           title: 'platform.menu.assets',
           priority: 130,
           action: function () { $state.go('workspace.assets'); },
-          permission: 'platform:assets:access'
+          permission: 'platform:asset:access'
       };
       mainMenuService.addMenuItem(menuItem);
   }]);

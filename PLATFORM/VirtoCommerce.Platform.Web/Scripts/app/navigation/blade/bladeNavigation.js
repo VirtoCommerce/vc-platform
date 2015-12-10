@@ -10,7 +10,7 @@ angular.module('platformWebApp')
 
             map[toolbarController].push(toolbarItem);
             map[toolbarController].sort(function (a, b) {
-                return a.index > b.index;
+                return a.index - b.index;
             });
         },
         resolve: function (bladeCommands, toolbarController) {
@@ -238,15 +238,13 @@ angular.module('platformWebApp')
             blade.childrenBlades = [];
             //copy securityscopes from parent blade
             if (parentBlade != null && parentBlade.securityScopes) {
-				//need merge scopes
-            	if (angular.isArray(blade.securityScopes) && angular.isArray(parentBlade.securityScopes))
-            	{
-            		blade.securityScopes = parentBlade.securityScopes.concat(blade.securityScopes);
-            	}
-            	else
-            	{
-            		blade.securityScopes = parentBlade.securityScopes;
-            	}
+                //need merge scopes
+                if (angular.isArray(blade.securityScopes) && angular.isArray(parentBlade.securityScopes)) {
+                    blade.securityScopes = parentBlade.securityScopes.concat(blade.securityScopes);
+                }
+                else {
+                    blade.securityScopes = parentBlade.securityScopes;
+                }
             }
 
             var existingBlade = service.findBlade(blade.id);

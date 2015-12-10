@@ -30,7 +30,10 @@
                     <li class="menu-item" ng-click='edit(contextMenuEntity)'>
                         <i class="menu-ico fa fa-edit"></i> {{'platform.commands.manage' | translate}}
                     </li>
-                    <li class="menu-item" ng-click='delete(contextMenuEntity)'>
+                    <li class="menu-item" ng-click='cut(contextMenuEntity)' va-permission="catalog:create">
+                        <i class="menu-ico fa fa-edit"></i> {{'platform.commands.cut' | translate}}
+                    </li>
+                    <li class="menu-item" ng-click='delete(contextMenuEntity)' va-permission="catalog:delete">
                         <i class="menu-ico fa fa-trash-o"></i> {{'platform.commands.delete' | translate}}
                     </li>
                 </ul>

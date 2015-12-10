@@ -178,7 +178,7 @@
                 canExecuteMethod: function () {
                     return true;
                 },
-                permission: 'asset:create'
+                permission: 'platform:asset:create'
             },
             {
             name: "platform.commands.upload", icon: 'fa fa-upload',
@@ -195,37 +195,21 @@
                 canExecuteMethod: function () {
                     return true;
                 },
-                permission: 'asset:create'
+                permission: 'platform:asset:create'
             },
-            //{
-            //    name: "Download", icon: 'fa fa-download',
-            //    executeMethod: function () {
-            //        $scope.downloadUrl(getFirstChecked());
-            //    },
-            //    canExecuteMethod: function () {
-            //        return isSingleChecked() && getFirstChecked().type !== 'folder';
-            //    }
-            //},
-            //{
-            //    name: "Copy link", icon: 'fa fa-link',
-            //    executeMethod: function () {
-            //        $scope.copyUrl(getFirstChecked())
-            //    },
-            //    canExecuteMethod: isSingleChecked
-            //},
             //{
             //    name: "Rename", icon: 'fa fa-font',
             //    executeMethod: function () {
             //        rename(getFirstChecked())
             //    },
             //    canExecuteMethod: isSingleChecked,
-            //    permission: 'asset:update'
+            //    permission: 'platform:asset:update'
             //},
             {
             name: "platform.commands.delete", icon: 'fa fa-trash-o',
                 executeMethod: function () { deleteList($scope.gridApi.selection.getSelectedRows()); },
                 canExecuteMethod: isItemsChecked,
-                permission: 'asset:delete'
+                permission: 'platform:asset:delete'
             }
             //{
             //    name: "Cut",
