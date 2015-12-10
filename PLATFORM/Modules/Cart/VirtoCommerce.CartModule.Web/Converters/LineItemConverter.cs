@@ -16,7 +16,9 @@ namespace VirtoCommerce.CartModule.Web.Converters
 			var retVal = new webModel.LineItem();
 			retVal.InjectFrom(cartItem);
 			retVal.Currency = cartItem.Currency;
-			if (cartItem.Discounts != null)
+            if (cartItem.DynamicProperties != null)
+                retVal.DynamicProperties = cartItem.DynamicProperties;
+            if (cartItem.Discounts != null)
 				retVal.Discounts = cartItem.Discounts.Select(x => x.ToWebModel()).ToList();
 
 			retVal.TaxDetails = cartItem.TaxDetails;
@@ -30,7 +32,9 @@ namespace VirtoCommerce.CartModule.Web.Converters
 
 			retVal.Currency = cartItem.Currency;
 
-			if(cartItem.Discounts != null)
+            if (cartItem.DynamicProperties != null)
+                retVal.DynamicProperties = cartItem.DynamicProperties;
+            if (cartItem.Discounts != null)
 				retVal.Discounts = cartItem.Discounts.Select(x => x.ToCoreModel()).ToList();
 
 			retVal.TaxDetails = cartItem.TaxDetails;
