@@ -30,7 +30,10 @@ namespace VirtoCommerce.CartModule.Web.Converters
 
 			retVal.TaxDetails = cart.TaxDetails;
 
-			return retVal;
+            if (cart.DynamicProperties != null)
+                retVal.DynamicProperties = cart.DynamicProperties;
+
+            return retVal;
 		}
 
 		public static coreModel.ShoppingCart ToCoreModel(this webModel.ShoppingCart cart)
@@ -50,9 +53,11 @@ namespace VirtoCommerce.CartModule.Web.Converters
 				retVal.Shipments = cart.Shipments.Select(x => x.ToCoreModel()).ToList();
 			if(cart.Discounts != null)
 				retVal.Discounts = cart.Discounts.Select(x => x.ToCoreModel()).ToList();
-		
+            if (cart.DynamicProperties != null)
+                retVal.DynamicProperties = cart.DynamicProperties;
 
-			retVal.TaxDetails = cart.TaxDetails;
+
+            retVal.TaxDetails = cart.TaxDetails;
 			return retVal;
 		}
 
