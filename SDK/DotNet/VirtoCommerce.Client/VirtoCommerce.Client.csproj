@@ -64,6 +64,7 @@
     <Compile Include="Api\OrderModuleApi.cs" />
     <Compile Include="Api\PricingModuleApi.cs" />
     <Compile Include="Api\QuoteModuleApi.cs" />
+    <Compile Include="Api\SearchModuleApi.cs" />
     <Compile Include="Api\ShoppingCartModuleApi.cs" />
     <Compile Include="Api\StoreModuleApi.cs" />
     <Compile Include="Api\VirtoCommercePlatformApi.cs" />
@@ -86,6 +87,8 @@
     <Compile Include="Model\VirtoCommerceCatalogModuleWebExportImportCsvImportInfo.cs" />
     <Compile Include="Model\VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration.cs" />
     <Compile Include="Model\VirtoCommerceCatalogModuleWebExportImportCsvProductPropertyMap.cs" />
+    <Compile Include="Model\VirtoCommerceCatalogModuleWebModelAggregation.cs" />
+    <Compile Include="Model\VirtoCommerceCatalogModuleWebModelAggregationItem.cs" />
     <Compile Include="Model\VirtoCommerceCatalogModuleWebModelAsset.cs" />
     <Compile Include="Model\VirtoCommerceCatalogModuleWebModelCatalog.cs" />
     <Compile Include="Model\VirtoCommerceCatalogModuleWebModelCatalogLanguage.cs" />
@@ -243,6 +246,7 @@
     <Compile Include="Model\VirtoCommerceQuoteModuleWebModelQuoteRequestTotals.cs" />
     <Compile Include="Model\VirtoCommerceQuoteModuleWebModelShipmentMethod.cs" />
     <Compile Include="Model\VirtoCommerceQuoteModuleWebModelTierPrice.cs" />
+    <Compile Include="Model\VirtoCommerceSearchModuleWebModelFilterProperty.cs" />
     <Compile Include="Model\VirtoCommerceStoreModuleWebModelFulfillmentCenter.cs" />
     <Compile Include="Model\VirtoCommerceStoreModuleWebModelPaymentMethod.cs" />
     <Compile Include="Model\VirtoCommerceStoreModuleWebModelSetting.cs" />

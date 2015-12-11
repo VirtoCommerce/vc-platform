@@ -20,10 +20,10 @@ namespace VirtoCommerce.Client.Model
     {
         
         /// <summary>
-        /// Gets or Sets TotalCount
+        /// Gets or Sets ProductsTotalCount
         /// </summary>
-        [DataMember(Name="totalCount", EmitDefaultValue=false)]
-        public int? TotalCount { get; set; }
+        [DataMember(Name="productsTotalCount", EmitDefaultValue=false)]
+        public int? ProductsTotalCount { get; set; }
   
         
         /// <summary>
@@ -47,6 +47,13 @@ namespace VirtoCommerce.Client.Model
         public List<VirtoCommerceCatalogModuleWebModelCatalog> Catalogs { get; set; }
   
         
+        /// <summary>
+        /// Gets or Sets Aggregations
+        /// </summary>
+        [DataMember(Name="aggregations", EmitDefaultValue=false)]
+        public List<VirtoCommerceCatalogModuleWebModelAggregation> Aggregations { get; set; }
+  
+        
   
         /// <summary>
         /// Returns the string presentation of the object
@@ -56,10 +63,11 @@ namespace VirtoCommerce.Client.Model
         {
             var sb = new StringBuilder();
             sb.Append("class VirtoCommerceCatalogModuleWebModelCatalogSearchResult {\n");
-            sb.Append("  TotalCount: ").Append(TotalCount).Append("\n");
+            sb.Append("  ProductsTotalCount: ").Append(ProductsTotalCount).Append("\n");
             sb.Append("  Products: ").Append(Products).Append("\n");
             sb.Append("  Categories: ").Append(Categories).Append("\n");
             sb.Append("  Catalogs: ").Append(Catalogs).Append("\n");
+            sb.Append("  Aggregations: ").Append(Aggregations).Append("\n");
             
             sb.Append("}\n");
             return sb.ToString();
@@ -98,9 +106,9 @@ namespace VirtoCommerce.Client.Model
 
             return 
                 (
-                    this.TotalCount == other.TotalCount ||
-                    this.TotalCount != null &&
-                    this.TotalCount.Equals(other.TotalCount)
+                    this.ProductsTotalCount == other.ProductsTotalCount ||
+                    this.ProductsTotalCount != null &&
+                    this.ProductsTotalCount.Equals(other.ProductsTotalCount)
                 ) && 
                 (
                     this.Products == other.Products ||
@@ -116,6 +124,11 @@ namespace VirtoCommerce.Client.Model
                     this.Catalogs == other.Catalogs ||
                     this.Catalogs != null &&
                     this.Catalogs.SequenceEqual(other.Catalogs)
+                ) && 
+                (
+                    this.Aggregations == other.Aggregations ||
+                    this.Aggregations != null &&
+                    this.Aggregations.SequenceEqual(other.Aggregations)
                 );
         }
 
@@ -131,8 +144,8 @@ namespace VirtoCommerce.Client.Model
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
                 
-                if (this.TotalCount != null)
-                    hash = hash * 57 + this.TotalCount.GetHashCode();
+                if (this.ProductsTotalCount != null)
+                    hash = hash * 57 + this.ProductsTotalCount.GetHashCode();
                 
                 if (this.Products != null)
                     hash = hash * 57 + this.Products.GetHashCode();
@@ -142,6 +155,9 @@ namespace VirtoCommerce.Client.Model
                 
                 if (this.Catalogs != null)
                     hash = hash * 57 + this.Catalogs.GetHashCode();
+                
+                if (this.Aggregations != null)
+                    hash = hash * 57 + this.Aggregations.GetHashCode();
                 
                 return hash;
             }
