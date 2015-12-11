@@ -130,7 +130,7 @@ app.controller('cartController', ['$scope', 'cartService', function ($scope, car
     }
 }]);
 
-app.controller('checkoutController', ['$scope', '$location', '$sce', 'customerService', 'cartService', function ($scope, $location, $sce, customerService, cartService) {
+app.controller('checkoutController', ['$scope', '$location', '$sce', '$window', 'customerService', 'cartService', function ($scope, $location, $sce, $window, customerService, cartService) {
     $scope.checkout = {};
 
     initialize();
@@ -521,13 +521,21 @@ app.controller('checkoutController', ['$scope', '$location', '$sce', 'customerSe
             $scope.innerRedirect('payment-form');
         }
         if (paymentProcessingResult.paymentMethodType == 'Standard') {
-            $scope.outerRedirect($scope.baseUrl + '/cart/thanks?orderId=' + orderId);
+            if ($scope.customer.UserName == 'Anonymous') {
+                $scope.outerRedirect($scope.baseUrl + '/cart/thanks?orderId=' + orderId);
+            } else {
+                $scope.outerRedirect($scope.baseUrl + '/account/order/' + orderId);
+            }
         }
         if (paymentProcessingResult.paymentMethodType == 'Unknown') {
-            $scope.outerRedirect($scope.baseUrl + '/cart/thanks?orderId=' + orderId);
+            if ($scope.customer.UserName == 'Anonymous') {
+                $scope.outerRedirect($scope.baseUrl + '/cart/thanks?orderId=' + orderId);
+            } else {
+                $scope.outerRedirect($scope.baseUrl + '/account/order/' + orderId);
+            }
         }
         if (paymentProcessingResult.paymentMethodType == 'Redirection' && paymentProcessingResult.redirectUrl) {
-            window.location.href = paymentProcessingResult.redirectUrl;
+            $window.location.href = paymentProcessingResult.redirectUrl;
         }
     }
 
