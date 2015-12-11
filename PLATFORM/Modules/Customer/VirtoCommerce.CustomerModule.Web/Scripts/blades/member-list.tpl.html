@@ -31,7 +31,7 @@
                     <li class="menu-item" ng-click='blade.showDetailBlade(contextMenuEntity, contextMenuEntity.displayName)'>
                         <i class="menu-ico fa fa-edit"></i> {{'platform.commands.manage' | translate}}
                     </li>
-                    <li class="menu-item" ng-click='delete(contextMenuEntity)'>
+                    <li class="menu-item" ng-click='delete(contextMenuEntity)' va-permission="customer:delete">
                         <i class="menu-ico fa fa-trash-o"></i> {{'platform.commands.delete' | translate}}
                     </li>
                 </ul>
@@ -41,7 +41,7 @@
 </div>
 
 <script type="text/ng-template" id="member-list.row.html">
-    <div ng-click="col.isRowHeader || grid.appScope.selectNode(row.entity)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'" class="ui-grid-cell" ng-class="{'ui-grid-row-header-cell': col.isRowHeader, '__hovered': grid.appScope.contextMenuEntity === row.entity, '__selected': row.entity.id===grid.appScope.selectedNodeId }" role="{{col.isRowHeader ? 'rowheader' : 'gridcell' }}" ui-grid-cell style='cursor:pointer' context-menu="grid.appScope.contextMenuEntity = row.entity" data-target="cml_menu"></div>
+    <div ng-click="grid.appScope.selectNode(row.entity)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'" class="ui-grid-cell" ng-class="{'ui-grid-row-header-cell': col.isRowHeader, '__hovered': grid.appScope.contextMenuEntity === row.entity, '__selected': row.entity.id===grid.appScope.selectedNodeId }" role="{{col.isRowHeader ? 'rowheader' : 'gridcell' }}" ui-grid-cell style='cursor:pointer' context-menu="grid.appScope.contextMenuEntity = row.entity" data-target="cml_menu"></div>
 </script>
 <script type="text/ng-template" id="list-actions.cell.html">
     <div class="ui-grid-actions" left-click-menu="grid.appScope.contextMenuEntity = row.entity" data-target="cml_menu">

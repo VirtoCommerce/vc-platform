@@ -56,7 +56,11 @@ function ($scope, accounts, bladeNavigationService, dialogService, uiGridConstan
         bladeNavigationService.showBlade(newBlade, blade);
     };
     
-    function deleteChecked() {
+    $scope.delete = function (data) {
+        deleteList([data]);
+    };
+
+    function deleteList(selection) {
         var dialog = {
             id: "confirmDeleteItem",
             title: "platform.dialogs.account-delete.title",
@@ -65,7 +69,6 @@ function ($scope, accounts, bladeNavigationService, dialogService, uiGridConstan
                 if (remove) {
                     closeChildrenBlades();
 
-                    var selection = $scope.gridApi.selection.getSelectedRows();
                     var itemIds = _.pluck(selection, 'userName');
                     accounts.remove({ names: itemIds }, function (data, headers) {
                         blade.refresh();
@@ -118,9 +121,7 @@ function ($scope, accounts, bladeNavigationService, dialogService, uiGridConstan
         },
         {
             name: "platform.commands.delete", icon: 'fa fa-trash-o',
-            executeMethod: function () {
-                deleteChecked();
-            },
+            executeMethod: function () { deleteList($scope.gridApi.selection.getSelectedRows()); },
             canExecuteMethod: function () {
                 return $scope.gridApi && _.any($scope.gridApi.selection.getSelectedRows());
             },

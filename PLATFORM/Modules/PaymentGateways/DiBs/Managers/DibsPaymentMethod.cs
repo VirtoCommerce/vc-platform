@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Security.Cryptography;
@@ -13,6 +14,7 @@ namespace DiBs.Managers
     public class DibsPaymentMethod : PaymentMethod
     {
         private const string md5ParameterString = "merchant={0}&orderid={1}&currency={2}&amount={3}";
+        private const string md5ResponseString = "transact={0}&amount={1}&currency={2}";
 
         #region constants
 
@@ -34,6 +36,8 @@ namespace DiBs.Managers
         private const string currencyFormDataName = "currency";
         private const string testModeFormDataName = "test";
         private const string languageFormDataName = "lang";
+        private const string cancelUrlFormDataName = "cancelurl";
+        private const string decoratorFormDataName = "decorator";
 
         #endregion
 
@@ -110,7 +114,6 @@ namespace DiBs.Managers
             retVal.OuterId = context.Payment.OuterId = transactionId;
             context.Payment.AuthorizedDate = DateTime.UtcNow;
             retVal.IsSuccess = true;
-            retVal.ReturnUrl = string.Format("{0}/thanks?id={1}", context.Store.Url, context.Order.Id);
             
             return retVal;
         }
@@ -135,36 +138,40 @@ namespace DiBs.Managers
                 }
 
                 //get md5 hash passing the order number, currency ISO code and order total
-                var md5Hash = CalculateMD5Hash(context.Order.Number, (int) context.Order.Currency, (int)(context.Order.Sum * 100));
+                var md5Hash = CalculateMD5Hash(context.Order.Id, (int) context.Order.Currency, (int)(context.Order.Sum * 100));
 
                 var reqparm = new NameValueCollection();
                 reqparm.Add(acceptUrlFormDataName, AcceptUrl);
                 reqparm.Add(callbackUrlFormDataName, CallbackUrl);
+                reqparm.Add(cancelUrlFormDataName, AcceptUrl);
                 reqparm.Add(merchantIdFormDataName, MerchantId);
-                reqparm.Add(orderIdFormDataName, context.Order.Number);
-                reqparm.Add(orderInternalIdFormDataName, context.Order.Id);
+                reqparm.Add(orderIdFormDataName, context.Order.Id);
+                reqparm.Add(orderInternalIdFormDataName, context.Order.Number);
                 reqparm.Add(amountFormDataName, ((int)(context.Order.Sum * 100)).ToString());
                 reqparm.Add(currencyFormDataName, ((int)context.Order.Currency).ToString());
                 reqparm.Add(languageFormDataName, context.Store.DefaultLanguage.Substring(0, 2));
                 reqparm.Add(md5KeyFormDataName, md5Hash);
+                reqparm.Add(decoratorFormDataName, "responsive");
 
                 if (Mode == "test")
                 {
                     reqparm.Add(testModeFormDataName, "1");
                 }
 
+                //build form to post to FlexWin
                 var checkoutform = string.Empty;
+                                
+                checkoutform += string.Format("<form name='dibs' action='{0}' method='POST' charset='UTF-8'>", RedirectUrl);
+                checkoutform += "<p>You'll be redirected to DIBS payment in a moment...</p>";
 
-                checkoutform += string.Format("<form action='{0}' method='POST' charset='UTF-8' >", RedirectUrl);
                 const string paramTemplateString = "<INPUT TYPE='hidden' name='{0}' value='{1}'>";
-
                 foreach (string key in reqparm)
                     checkoutform += string.Format(paramTemplateString, key, reqparm[key]);
-
-                checkoutform += "<button type='submit'>Submit</button>";
-
-                checkoutform += "</form>";
                 
+                checkoutform += "</form>";
+
+                checkoutform += "<script language='javascript'>document.dibs.submit();</script>";
+                                
                 retVal.HtmlForm = checkoutform;
                 retVal.IsSuccess = true;
                 retVal.NewPaymentStatus = PaymentStatus.Pending;
@@ -181,7 +188,12 @@ namespace DiBs.Managers
         {
             var retVal = new ValidatePostProcessRequestResult();
             retVal.OuterId = queryString["transact"];
-            retVal.IsSuccess = true;
+
+            //calculate hash by transaction id, currency code and amount
+            var md5Hash = CalculateResponseMD5Hash(queryString["transact"], queryString["currency"], queryString["amount"]);
+
+            //compare calculated hash with the passed in response authkey field
+            retVal.IsSuccess = md5Hash.Equals(queryString["authkey"]);
 
             return retVal;
         }
@@ -220,6 +232,14 @@ namespace DiBs.Managers
         private string CalculateMD5Hash(string orderId, int currency, int amount)
         {
             var md5 = string.Format(md5ParameterString, MerchantId, orderId, currency, amount);
+            md5 = GetMD5Hash(MD5Key2 + GetMD5Hash(MD5Key1 + md5));
+
+            return md5;
+        }
+
+        private string CalculateResponseMD5Hash(string transact, string currency, string amount)
+        {
+            var md5 = string.Format(md5ResponseString, transact, amount, currency);
             md5 = GetMD5Hash(MD5Key2 + GetMD5Hash(MD5Key1 + md5));
 
             return md5;
