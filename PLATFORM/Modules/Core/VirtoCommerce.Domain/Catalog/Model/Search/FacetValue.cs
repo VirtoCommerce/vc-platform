@@ -1,4 +1,4 @@
-﻿namespace VirtoCommerce.MerchandisingModule.Web.Model
+﻿namespace VirtoCommerce.Domain.Catalog.Model
 {
     public class FacetValue
     {

@@ -4,14 +4,14 @@ using System.Linq;
 using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Domain.Search.Model;
 using VirtoCommerce.Domain.Search.Services;
-using VirtoCommerce.MerchandisingModule.Web.Converters;
-using VirtoCommerce.MerchandisingModule.Web.Model;
 using VirtoCommerce.Platform.Core.Asset;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.SearchModule.Web.Converters;
+using VirtoCommerce.SearchModule.Web.Model;
 using moduleModel = VirtoCommerce.Domain.Catalog.Model;
 
-namespace VirtoCommerce.MerchandisingModule.Web.Services
+namespace VirtoCommerce.SearchModule.Web.Services
 {
     public class ItemBrowsingService : IItemBrowsingService
     {
@@ -28,70 +28,23 @@ namespace VirtoCommerce.MerchandisingModule.Web.Services
             _blobUrlResolver = blobUrlResolver;
         }
 
-        public ProductSearchResult SearchItems(CatalogIndexedSearchCriteria criteria, moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemSmall)
+        public moduleModel.SearchResult SearchItems(CatalogIndexedSearchCriteria criteria, moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemSmall)
         {
             CatalogItemSearchResults results;
             var items = Search(criteria, out results, responseGroup);
-            var catalogItems = new List<Product>();
 
-            // go through items
-            foreach (var item in items)
-            {
-                var searchTags = results.Items[item.Id.ToLower()];
+            var response = new moduleModel.SearchResult();
 
-                var currentOutline = this.GetItemOutlineUsingContext(
-                    searchTags[criteria.OutlineField].ToString(),
-                    criteria.Catalog);
-                var catalogItem = item.ToWebModel(_blobUrlResolver) as Product;
-                catalogItem.Outline = this.StripCatalogFromOutline(currentOutline, criteria.Catalog);
+            response.Products.AddRange(items);
+            response.ProductsTotalCount = results.TotalCount;
 
-                int reviewTotal;
-                if (searchTags.ContainsKey(criteria.ReviewsTotalField)
-                    && int.TryParse(searchTags[criteria.ReviewsTotalField].ToString(), out reviewTotal))
-                {
-                    catalogItem.ReviewsTotal = reviewTotal;
-                }
-                double reviewAvg;
-                if (searchTags.ContainsKey(criteria.ReviewsAverageField)
-                    && double.TryParse(searchTags[criteria.ReviewsAverageField].ToString(), out reviewAvg))
-                {
-                    catalogItem.Rating = reviewAvg;
-                }
-
-                catalogItems.Add(catalogItem);
-            }
-
-            var response = new ProductSearchResult();
-
-            response.Items.AddRange(catalogItems);
-            response.TotalCount = results.TotalCount;
-
-            //TODO need better way to find applied filter values
+            // TODO need better way to find applied filter values
             var appliedFilters = criteria.CurrentFilters.SelectMany(x => x.GetValues()).Select(x => x.Id).ToArray();
-            response.Facets = results.FacetGroups == null ? null : results.FacetGroups.Select(g => g.ToWebModel(appliedFilters)).ToArray();
+            response.Aggregations = results.FacetGroups?.Select(g => g.ToModuleModel(appliedFilters)).ToArray();
             return response;
         }
 
 
-
-        /// <summary>
-        ///     Gets the context item outline based on what customer is browsing
-        /// </summary>
-        /// <param name="itemOutline"></param>
-        /// <param name="prefixOutline"></param>
-        /// <returns></returns>
-        private string GetItemOutlineUsingContext(string itemOutline, string prefixOutline)
-        {
-            if (String.IsNullOrEmpty(itemOutline))
-            {
-                return String.Empty;
-            }
-
-            var outline = itemOutline.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
-                .FirstOrDefault(x => x.StartsWith(prefixOutline, StringComparison.OrdinalIgnoreCase)) ?? string.Empty;
-
-            return outline;
-        }
 
         private IEnumerable<moduleModel.CatalogProduct> Search(CatalogIndexedSearchCriteria criteria, out CatalogItemSearchResults results, moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemSmall)
         {

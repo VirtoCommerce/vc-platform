@@ -210,7 +210,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 
 
             const SearchResponseGroup responseGroup = SearchResponseGroup.WithCatalogs | SearchResponseGroup.WithCategories | SearchResponseGroup.WithProducts;
-            var searchResponse = _catalogSearchService.Search(new SearchCriteria { Count = int.MaxValue, Start = 0, ResponseGroup = responseGroup });
+            var searchResponse = _catalogSearchService.Search(new SearchCriteria { Take = int.MaxValue, Skip = 0, ResponseGroup = responseGroup });
 
             var retVal = new BackupObject();
 
@@ -232,7 +232,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
                 var products = _itemService.GetByIds(searchResponse.Products.Skip(i).Take(50).Select(x => x.Id).ToArray(), ItemResponseGroup.ItemLarge);
                 retVal.Products.AddRange(products);
 
-                progressInfo.Description = String.Format("{0} of {1} products loaded", Math.Min(searchResponse.TotalCount, i), searchResponse.TotalCount);
+                progressInfo.Description = String.Format("{0} of {1} products loaded", Math.Min(searchResponse.ProductsTotalCount, i), searchResponse.ProductsTotalCount);
                 progressCallback(progressInfo);
             }
             //Binary data

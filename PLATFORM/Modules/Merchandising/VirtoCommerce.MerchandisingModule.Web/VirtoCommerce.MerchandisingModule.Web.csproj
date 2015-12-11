@@ -100,64 +100,27 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Binders\CatalogItemSearchCriteriaBinder.cs" />
-    <Compile Include="Controllers\MerchandisingModuleProductController.cs" />
     <Compile Include="Controllers\MerchandisingNotificationController.cs" />
-    <Compile Include="Converters\AssetConverter.cs" />
-    <Compile Include="Converters\AssociationConverter.cs" />
-    <Compile Include="Converters\CategoryConverter.cs" />
-    <Compile Include="Converters\ContentItemConverter.cs" />
-    <Compile Include="Converters\FacetConverters.cs" />
     <Compile Include="Converters\PriceConverter.cs" />
-    <Compile Include="Converters\ProductConverter.cs" />
     <Compile Include="Converters\PromotionConverter.cs" />
     <Compile Include="Converters\PromotionRewardConverter.cs" />
     <Compile Include="Converters\ResponseGroupConverter.cs" />
-    <Compile Include="Converters\InventoryConverter.cs" />
-    <Compile Include="Converters\SeoInfoConverter.cs" />
-    <Compile Include="Converters\StoreConverter.cs" />
     <Compile Include="Extensions\ItemServiceExtensions.cs" />
-    <Compile Include="Model\Asset.cs" />
-    <Compile Include="Model\CategoryResponseCollection.cs" />
-    <Compile Include="Model\DynamicContentItemGroup.cs" />
-    <Compile Include="Model\DynamicContentItemGroupResponseCollection.cs" />
-    <Compile Include="Model\Image.cs" />
-    <Compile Include="Model\Inventory.cs" />
     <Compile Include="Model\MarketingEvent.cs" />
     <Compile Include="Model\Notificaitons\DynamicMerchandisingNotification.cs" />
     <Compile Include="Model\Notificaitons\SendDynamicMerchandisingNotificationRequest.cs" />
     <Compile Include="Model\PaymentMethod.cs" />
     <Compile Include="Model\Price.cs" />
-    <Compile Include="Model\Association.cs" />
-    <Compile Include="Model\CategoryInfo.cs" />
-    <Compile Include="Model\Facet.cs" />
-    <Compile Include="Model\FacetValue.cs" />
     <Compile Include="Model\IFeedbackCounterSupport.cs" />
-    <Compile Include="Model\EditorialReview.cs" />
-    <Compile Include="Model\ProductSearchResult.cs" />
     <Compile Include="Model\Promotion.cs" />
     <Compile Include="Model\PromotionReward.cs" />
     <Compile Include="Model\Review.cs" />
     <Compile Include="Model\ReviewComment.cs" />
-    <Compile Include="Model\ProductSearchRequest.cs" />
-    <Compile Include="Model\SeoKeyword.cs" />
-    <Compile Include="Model\Store.cs" />
-    <Compile Include="Model\StringKeyValues.cs" />
     <Compile Include="Module.cs" />
-    <Compile Include="Model\CatalogItem.cs" />
-    <Compile Include="Model\Category.cs" />
-    <Compile Include="Model\DynamicContentItem.cs" />
     <Compile Include="Model\ItemCategory.cs" />
     <Compile Include="Model\ItemDisplayOptions.cs" />
     <Compile Include="Model\ItemResponseGroups.cs" />
-    <Compile Include="Model\Product.cs" />
-    <Compile Include="Model\ProductVariation.cs" />
-    <Compile Include="Model\ResponseCollection.cs" />
-    <Compile Include="Model\PropertyDictionary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\BrowseFilterServiceExtensions.cs" />
-    <Compile Include="Services\FilterService.cs" />
-    <Compile Include="Services\IItemBrowsingService.cs" />
-    <Compile Include="Services\ItemBrowsingService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -189,7 +152,9 @@
       <Name>VirtoCommerce.Domain</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Services\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

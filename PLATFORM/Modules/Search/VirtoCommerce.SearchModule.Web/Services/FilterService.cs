@@ -8,7 +8,7 @@ using VirtoCommerce.Domain.Store.Model;
 using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.Platform.Core.DynamicProperties;
 
-namespace VirtoCommerce.MerchandisingModule.Web.Services
+namespace VirtoCommerce.SearchModule.Web.Services
 {
     public class FilterService : IBrowseFilterService
     {

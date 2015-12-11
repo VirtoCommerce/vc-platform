@@ -50,10 +50,10 @@ namespace VirtoCommerce.SearchModule.Tests
 
         private SearchIndexController GetSearchIndexController()
         {
-            var cacheSettings = new[] 
-			{
-				new CacheSettings("CatalogItemIndexBuilder.IndexItemCategories", TimeSpan.FromMinutes(30))
-			};
+            var cacheSettings = new[]
+            {
+                new CacheSettings("CatalogItemIndexBuilder.IndexItemCategories", TimeSpan.FromMinutes(30))
+            };
 
             var settingManager = new Moq.Mock<ISettingsManager>();
             var cacheManager = new CacheManager(new InMemoryCachingProvider(), cacheSettings);
@@ -72,7 +72,7 @@ namespace VirtoCommerce.SearchModule.Tests
 
         private ICatalogSearchService GetSearchService()
         {
-            return new CatalogSearchServiceImpl(GetCatalogRepository, GetItemService(), GetCatalogService(), GetCategoryService(), null);
+            return new CatalogSearchServiceImpl(GetCatalogRepository, GetItemService(), GetCatalogService(), GetCategoryService());
         }
 
         private IPricingService GetPricingService()

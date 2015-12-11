@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -9,15 +10,20 @@ using System.Web.Http.Description;
 using System.Xml.Serialization;
 using VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.Domain.Catalog.Services;
+using VirtoCommerce.Domain.Commerce.Model;
+using VirtoCommerce.Domain.Inventory.Model;
+using VirtoCommerce.Domain.Inventory.Services;
 using VirtoCommerce.Domain.Search.Filters;
 using VirtoCommerce.Domain.Search.Model;
 using VirtoCommerce.Domain.Search.Services;
 using VirtoCommerce.Domain.Store.Model;
 using VirtoCommerce.Domain.Store.Security;
 using VirtoCommerce.Domain.Store.Services;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.SearchModule.Web.BackgroundJobs;
+using VirtoCommerce.SearchModule.Web.Services;
 using webModel = VirtoCommerce.SearchModule.Web.Model;
 
 namespace VirtoCommerce.SearchModule.Web.Controllers.Api
@@ -35,8 +41,11 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
         private readonly ISecurityService _securityService;
         private readonly IPermissionScopeService _permissionScopeService;
         private readonly IPropertyService _propertyService;
+        private readonly IBrowseFilterService _browseFilterService;
+        private readonly IItemBrowsingService _browseService;
+        private readonly IInventoryService _inventoryService;
 
-        public SearchModuleController(ISearchProvider searchProvider, ISearchConnection searchConnection, SearchIndexJobsScheduler scheduler, IStoreService storeService, ISecurityService securityService, IPermissionScopeService permissionScopeService, IPropertyService propertyService)
+        public SearchModuleController(ISearchProvider searchProvider, ISearchConnection searchConnection, SearchIndexJobsScheduler scheduler, IStoreService storeService, ISecurityService securityService, IPermissionScopeService permissionScopeService, IPropertyService propertyService, IBrowseFilterService browseFilterService, IItemBrowsingService browseService, IInventoryService inventoryService)
         {
             _searchProvider = searchProvider;
             _searchConnection = searchConnection;
@@ -45,6 +54,9 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
             _securityService = securityService;
             _permissionScopeService = permissionScopeService;
             _propertyService = propertyService;
+            _browseFilterService = browseFilterService;
+            _browseService = browseService;
+            _inventoryService = inventoryService;
         }
 
         [HttpGet]
@@ -154,6 +166,198 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
             return StatusCode(HttpStatusCode.NoContent);
         }
 
+        /// <summary>
+        /// Search for store products
+        /// </summary>
+        /// <param name="request">Search parameters</param>
+        [HttpGet]
+        [Route("")]
+        [ResponseType(typeof(SearchResult))]
+        [ClientCache(Duration = 30)]
+        public IHttpActionResult Search([FromUri] SearchCriteria request)
+        {
+            request = request ?? new SearchCriteria();
+            Normalize(request);
+
+            var context = new Dictionary<string, object>
+            {
+                { "StoreId", request.StoreId },
+            };
+
+            var store = _storeService.GetById(request.StoreId);
+            if (store == null)
+            {
+                throw new NullReferenceException(request.StoreId + " not found");
+            }
+
+            var catalog = store.Catalog;
+
+            string categoryId = null;
+
+            var criteria = new CatalogIndexedSearchCriteria
+            {
+                Locale = request.LanguageCode,
+                Catalog = catalog.ToLowerInvariant(),
+                IsFuzzySearch = true,
+            };
+
+            if (!string.IsNullOrWhiteSpace(request.Outline))
+            {
+                criteria.Outlines.Add(string.Format(CultureInfo.InvariantCulture, "{0}/{1}*", catalog, request.Outline));
+                categoryId = request.Outline.Split('/').Last();
+                context.Add("CategoryId", categoryId);
+            }
+
+            #region Filters
+            // Now fill in filters
+            var filters = _browseFilterService.GetFilters(context);
+
+            // Add all filters
+            foreach (var filter in filters)
+            {
+                criteria.Add(filter);
+            }
+
+            // apply terms
+            var terms = ParseKeyValues(request.Terms);
+            if (terms.Any())
+            {
+                var filtersWithValues = filters
+                    .Where(x => (!(x is PriceRangeFilter) || ((PriceRangeFilter)x).Currency.Equals(request.Currency, StringComparison.OrdinalIgnoreCase)))
+                    .Select(x => new { Filter = x, Values = x.GetValues() })
+                    .ToList();
+
+                foreach (var term in terms)
+                {
+                    var filter = filters.SingleOrDefault(x => x.Key.Equals(term.Key, StringComparison.OrdinalIgnoreCase)
+                        && (!(x is PriceRangeFilter) || ((PriceRangeFilter)x).Currency.Equals(request.Currency, StringComparison.OrdinalIgnoreCase)));
+
+                    // handle special filter term with a key = "tags", it contains just values and we need to determine which filter to use
+                    if (filter == null && term.Key == "tags")
+                    {
+                        foreach (var termValue in term.Values)
+                        {
+                            // try to find filter by value
+                            var foundFilter = filtersWithValues.FirstOrDefault(x => x.Values.Any(y => y.Id.Equals(termValue)));
+
+                            if (foundFilter != null)
+                            {
+                                filter = foundFilter.Filter;
+
+                                var appliedFilter = _browseFilterService.Convert(filter, term.Values);
+                                criteria.Apply(appliedFilter);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var appliedFilter = _browseFilterService.Convert(filter, term.Values);
+                        criteria.Apply(appliedFilter);
+                    }
+                }
+            }
+            #endregion
+
+            #region Facets
+            // apply facet filters
+            var facets = ParseKeyValues(request.Facets);
+            foreach (var facet in facets)
+            {
+                var filter = filters.SingleOrDefault(
+                    x => x.Key.Equals(facet.Key, StringComparison.OrdinalIgnoreCase)
+                        && (!(x is PriceRangeFilter)
+                            || ((PriceRangeFilter)x).Currency.Equals(request.Currency, StringComparison.OrdinalIgnoreCase)));
+
+                var appliedFilter = _browseFilterService.Convert(filter, facet.Values);
+                criteria.Apply(appliedFilter);
+            }
+            #endregion
+
+            //criteria.ClassTypes.Add("Product");
+            criteria.RecordsToRetrieve = request.Take <= 0 ? 10 : request.Take;
+            criteria.StartingRecord = request.Skip;
+            criteria.Pricelists = request.PricelistIds;
+            criteria.Currency = request.Currency;
+            criteria.StartDateFrom = request.StartDateFrom;
+            criteria.SearchPhrase = request.Keyword;
+
+            #region sorting
+
+            if (!string.IsNullOrEmpty(request.Sort))
+            {
+                var isDescending = "desc".Equals(request.SortOrder, StringComparison.OrdinalIgnoreCase);
+
+                SearchSort sortObject = null;
+
+                switch (request.Sort.ToLowerInvariant())
+                {
+                    case "price":
+                        if (criteria.Pricelists != null)
+                        {
+                            sortObject = new SearchSort(
+                                criteria.Pricelists.Select(
+                                    priceList =>
+                                        new SearchSortField(String.Format("price_{0}_{1}", criteria.Currency.ToLower(), priceList.ToLower()))
+                                        {
+                                            IgnoredUnmapped = true,
+                                            IsDescending = isDescending,
+                                            DataType = SearchSortField.DOUBLE
+                                        })
+                                    .ToArray());
+                        }
+                        break;
+                    case "position":
+                        sortObject =
+                            new SearchSort(
+                                new SearchSortField(string.Concat("sort", catalog, categoryId).ToLower())
+                                {
+                                    IgnoredUnmapped = true,
+                                    IsDescending = isDescending
+                                });
+                        break;
+                    case "name":
+                        sortObject = new SearchSort("name", isDescending);
+                        break;
+                    case "rating":
+                        sortObject = new SearchSort(criteria.ReviewsAverageField, isDescending);
+                        break;
+                    case "reviews":
+                        sortObject = new SearchSort(criteria.ReviewsTotalField, isDescending);
+                        break;
+                    default:
+                        sortObject = CatalogIndexedSearchCriteria.DefaultSortOrder;
+                        break;
+                }
+
+                criteria.Sort = sortObject;
+            }
+
+            #endregion
+
+            //Load ALL products 
+            var searchResults = _browseService.SearchItems(criteria, ItemResponseGroup.ItemInfo);
+
+            // populate inventory
+            //if ((request.ResponseGroup & ItemResponseGroup.ItemProperties) == ItemResponseGroup.ItemProperties)
+            if ((request.ResponseGroup & SearchResponseGroup.WithProperties) == SearchResponseGroup.WithProperties)
+            {
+                PopulateInventory(store.FulfillmentCenter, searchResults.Products);
+            }
+
+            return Ok(searchResults);
+        }
+
+        private static void Normalize(SearchCriteria request)
+        {
+            request.Keyword = request.Keyword.EmptyToNull();
+            request.Sort = request.Sort.EmptyToNull();
+            request.SortOrder = request.SortOrder.EmptyToNull();
+
+            if (!string.IsNullOrEmpty(request.Keyword))
+            {
+                request.Keyword = request.Keyword.EscapeSearchTerm();
+            }
+        }
 
         protected void CheckCurrentUserHasPermissionForObjects(string permission, params object[] objects)
         {
@@ -239,6 +443,42 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
                 .ToArray();
         }
 
+        private static List<StringKeyValues> ParseKeyValues(string[] items)
+        {
+            var result = new List<StringKeyValues>();
+
+            if (items != null)
+            {
+                var nameValueDelimeter = new[] { ':' };
+                var valuesDelimeter = new[] { ',' };
+
+                result.AddRange(items
+                    .Select(item => item.Split(nameValueDelimeter, 2))
+                    .Where(item => item.Length == 2)
+                    .Select(item => new StringKeyValues { Key = item[0], Values = item[1].Split(valuesDelimeter, StringSplitOptions.RemoveEmptyEntries) })
+                    .GroupBy(item => item.Key)
+                    .Select(g => new StringKeyValues { Key = g.Key, Values = g.SelectMany(i => i.Values).Distinct().ToArray() })
+                    );
+            }
+
+            return result;
+        }
+
+        private void PopulateInventory(FulfillmentCenter center, IEnumerable<CatalogProduct> products)
+        {
+            if (center == null || products == null || !products.Any())
+                return;
+
+            var inventories = _inventoryService.GetProductsInventoryInfos(products.Select(x => x.Id).ToArray()).ToList();
+
+            foreach (var product in products)
+            {
+                var productInventory = inventories.FirstOrDefault(x => x.ProductId == product.Id && x.FulfillmentCenterId == center.Id);
+                if (productInventory != null)
+                    product.Inventories = new List<InventoryInfo> { productInventory };
+            }
+        }
+
         private static webModel.FilterProperty ConvertToFilterProperty(Property property, string[] selectedPropertyNames)
         {
             return new webModel.FilterProperty
@@ -270,6 +510,12 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
             };
 
             return result;
+        }
+
+        private class StringKeyValues
+        {
+            public string Key { get; set; }
+            public string[] Values { get; set; }
         }
     }
 }
