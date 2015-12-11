@@ -1,0 +1,33 @@
+{% layout settings.customer_layout %}
+
+<div class="grid">
+
+  <div class="grid-item large--one-third push--large--one-third text-center">
+
+    <h1>{{ 'customer.register.title' | t }}</h1>
+
+    {% form 'create_customer' %}
+
+      {% include 'form-errors-custom' %}
+
+      <label for="first_name" class="hidden-label">{{ 'customer.register.first_name' | t }}</label>
+      <input type="text" value="" name="customer[first_name]" id="first_name" placeholder="{{ 'customer.register.first_name' | t }}" {% if form.errors contains "first_name" %} class="error"{% endif %} autocapitalize="words" autofocus>
+
+      <label for="last_name" class="hidden-label">{{ 'customer.register.last_name' | t }}</label>
+      <input type="text" value="" name="customer[last_name]" id="last_name" placeholder="{{ 'customer.register.last_name' | t }}" {% if form.errors contains "last_name" %} class="error"{% endif %} autocapitalize="words">
+
+      <label for="email" class="hidden-label">{{ 'customer.register.email' | t }}</label>
+      <input type="email" value="" name="customer[email]" id="email" placeholder="{{ 'customer.register.email' | t }}" {% if form.errors contains "email" %} class="error"{% endif %} autocorrect="off" autocapitalize="off">
+
+      <label for="password" class="hidden-label">{{ 'customer.register.password' | t }}</label>
+      <input type="password" value="" name="customer[password]" id="create_password" placeholder="{{ 'customer.register.password' | t }}" {% if form.errors contains "password" %} class="error"{% endif %}>
+      <p>
+        <input type="submit" value="{{ 'customer.register.submit' | t }}" class="btn">
+      </p>
+      {{ 'customer.register.or' | t }} <a href="{{ shop.url }}">{{ 'customer.register.cancel' | t }}</a>
+
+    {% endform %}
+
+  </div>
+
+</div>

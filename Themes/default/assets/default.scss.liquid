@@ -2136,7 +2136,7 @@ $shareBorderColor: #ececec;
 
 #cartCount,
 #quoteCount {
-  display: block;
+  display: none;
   position: absolute;
   top: -5px;
   right: -5px;
@@ -2152,8 +2152,8 @@ $shareBorderColor: #ececec;
   line-height: 20px;
   border-radius: 20px;
 
-  &.hidden-count {
-    display: none;
+  &.visible-count {
+    display: block;
   }
 }
 
@@ -3108,17 +3108,8 @@ $innerFilterIconWidth: 6px;
   color: $errorRed;
   background-color: $errorRedBg;
   border-color: $errorRed;
-  font-size: 13px;
-  text-align: left;
 }
 
-form .text-error {
-  color: $errorRed;
-  display: block;
-  font-size: 11px;
-  margin: -15px 0 20px;
-  text-align: left;
-}
 
 /*============================================================================
   #Cart Page
@@ -4490,4 +4481,9 @@ html[xmlns] .slides { display: block; }
 }
 .cart-btn--block .btn, .btn-secondary {
     margin: 5px 0 0;
+}
+
+/* New common styles */
+.line-through {
+    text-decoration:line-through;
 }
