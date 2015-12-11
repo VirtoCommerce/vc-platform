@@ -156,6 +156,28 @@ namespace VirtoCommerce.Client.Api
         System.Threading.Tasks.Task MarketingModuleDynamicContentDeleteDynamicContentsAsync (List<string> ids);
         
         /// <summary>
+        /// Get dynamic content for given placeholders
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="storeId"></param>
+        /// <param name="placeHolder"></param>
+        /// <returns></returns>
+        List<VirtoCommerceMarketingModuleWebModelDynamicContentItem> MarketingModuleDynamicContentEvaluateDynamicContent (string storeId, string placeHolder);
+  
+        /// <summary>
+        /// Get dynamic content for given placeholders
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="storeId"></param>
+        /// <param name="placeHolder"></param>
+        /// <returns></returns>
+        System.Threading.Tasks.Task<List<VirtoCommerceMarketingModuleWebModelDynamicContentItem>> MarketingModuleDynamicContentEvaluateDynamicContentAsync (string storeId, string placeHolder);
+        
+        /// <summary>
         /// Find dynamic content item object by id
         /// </summary>
         /// <remarks>
@@ -1261,6 +1283,117 @@ namespace VirtoCommerce.Client.Api
 
             
             return;
+        }
+        
+        /// <summary>
+        /// Get dynamic content for given placeholders 
+        /// </summary>
+        /// <param name="storeId"></param> 
+        /// <param name="placeHolder"></param> 
+        /// <returns></returns>            
+        public List<VirtoCommerceMarketingModuleWebModelDynamicContentItem> MarketingModuleDynamicContentEvaluateDynamicContent (string storeId, string placeHolder)
+        {
+            
+            // verify the required parameter 'storeId' is set
+            if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling MarketingModuleDynamicContentEvaluateDynamicContent");
+            
+            // verify the required parameter 'placeHolder' is set
+            if (placeHolder == null) throw new ApiException(400, "Missing required parameter 'placeHolder' when calling MarketingModuleDynamicContentEvaluateDynamicContent");
+            
+    
+            var path_ = "/api/marketing/contentitems/evaluate";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                "application/json", "text/json"
+            };
+            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            if (storeId != null) queryParams.Add("storeId", ApiClient.ParameterToString(storeId)); // query parameter
+            if (placeHolder != null) queryParams.Add("placeHolder", ApiClient.ParameterToString(placeHolder)); // query parameter
+            
+            
+            
+            
+    
+            // authentication setting, if any
+            String[] authSettings = new String[] {  };
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+    
+            if (((int)response.StatusCode) >= 400)
+                throw new ApiException ((int)response.StatusCode, "Error calling MarketingModuleDynamicContentEvaluateDynamicContent: " + response.Content, response.Content);
+            else if (((int)response.StatusCode) == 0)
+                throw new ApiException ((int)response.StatusCode, "Error calling MarketingModuleDynamicContentEvaluateDynamicContent: " + response.ErrorMessage, response.ErrorMessage);
+    
+            return (List<VirtoCommerceMarketingModuleWebModelDynamicContentItem>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceMarketingModuleWebModelDynamicContentItem>));
+        }
+    
+        /// <summary>
+        /// Get dynamic content for given placeholders 
+        /// </summary>
+        /// <param name="storeId"></param>
+        /// <param name="placeHolder"></param>
+        /// <returns></returns>
+        public async System.Threading.Tasks.Task<List<VirtoCommerceMarketingModuleWebModelDynamicContentItem>> MarketingModuleDynamicContentEvaluateDynamicContentAsync (string storeId, string placeHolder)
+        {
+            // verify the required parameter 'storeId' is set
+            if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling MarketingModuleDynamicContentEvaluateDynamicContent");
+            // verify the required parameter 'placeHolder' is set
+            if (placeHolder == null) throw new ApiException(400, "Missing required parameter 'placeHolder' when calling MarketingModuleDynamicContentEvaluateDynamicContent");
+            
+    
+            var path_ = "/api/marketing/contentitems/evaluate";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                "application/json", "text/json"
+            };
+            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            if (storeId != null) queryParams.Add("storeId", ApiClient.ParameterToString(storeId)); // query parameter
+            if (placeHolder != null) queryParams.Add("placeHolder", ApiClient.ParameterToString(placeHolder)); // query parameter
+            
+            
+            
+            
+    
+            // authentication setting, if any
+            String[] authSettings = new String[] {  };
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            if (((int)response.StatusCode) >= 400)
+                throw new ApiException ((int)response.StatusCode, "Error calling MarketingModuleDynamicContentEvaluateDynamicContent: " + response.Content, response.Content);
+
+            return (List<VirtoCommerceMarketingModuleWebModelDynamicContentItem>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceMarketingModuleWebModelDynamicContentItem>));
         }
         
         /// <summary>
