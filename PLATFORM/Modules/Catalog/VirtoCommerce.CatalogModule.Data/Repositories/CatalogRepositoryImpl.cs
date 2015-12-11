@@ -343,7 +343,10 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             if ((respGroup & coreModel.ItemResponseGroup.Variations) == coreModel.ItemResponseGroup.Variations)
             {
                 var variationIds = Items.Where(x => itemIds.Contains(x.ParentId)).Select(x => x.Id).ToArray();
-                var variations = GetItemByIds(variationIds, respGroup);
+                //For variations loads only info and images
+                var variations = Items.Include(x => x.Images).Where(x => variationIds.Contains(x.Id)).ToArray();
+                //load variations property values separately
+                var variationPropertyValues = PropertyValues.Where(x => variationIds.Contains(x.ItemId)).ToArray();
             }
             if ((respGroup & coreModel.ItemResponseGroup.ItemAssociations) == coreModel.ItemResponseGroup.ItemAssociations)
             {
