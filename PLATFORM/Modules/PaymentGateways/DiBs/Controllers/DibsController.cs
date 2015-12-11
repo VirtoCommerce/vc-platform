@@ -32,7 +32,7 @@ namespace Dibs.Controllers
         [AllowAnonymous]
         public IHttpActionResult RegisterPayment()
         {
-            var order = _customerOrderService.GetById(HttpContext.Current.Request.Form["orderinternalid"], CustomerOrderResponseGroup.Full);
+            var order = _customerOrderService.GetById(HttpContext.Current.Request.Form["orderid"], CustomerOrderResponseGroup.Full);
             if (order == null)
             {
                 throw new NullReferenceException("Order not found");
