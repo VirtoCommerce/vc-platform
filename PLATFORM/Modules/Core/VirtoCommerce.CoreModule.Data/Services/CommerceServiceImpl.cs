@@ -82,7 +82,7 @@ namespace VirtoCommerce.CoreModule.Data.Repositories
                                                         .ToArray();
                 foreach(var seoSupportObject in seoSupportObjects)
                 {
-                    seoSupportObject.SeoInfos = seoInfos.Where(x => x.Id == seoSupportObject.Id && x.ObjectType == seoSupportObject.GetType().Name).ToList();
+                    seoSupportObject.SeoInfos = seoInfos.Where(x => x.ObjectId == seoSupportObject.Id && x.ObjectType == seoSupportObject.GetType().Name).ToList();
                 }
             }
         }
