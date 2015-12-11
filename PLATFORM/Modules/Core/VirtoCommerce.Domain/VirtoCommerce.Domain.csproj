@@ -70,8 +70,8 @@
     <Compile Include="Catalog\Model\CategoryLink.cs" />
     <Compile Include="Catalog\Model\CategoryResponseGroup.cs" />
     <Compile Include="Catalog\Model\EditorialReview.cs" />
-    <Compile Include="Catalog\Model\Search\SearchAggregationRangeItem.cs" />
-    <Compile Include="Catalog\Model\Search\SearchAgregationItem.cs" />
+    <Compile Include="Catalog\Model\Search\Aggregation.cs" />
+    <Compile Include="Catalog\Model\Search\AggregationItem.cs" />
     <Compile Include="Catalog\Model\PropertyDisplayName.cs" />
     <Compile Include="Commerce\Model\Address.cs" />
     <Compile Include="Commerce\Model\AddressType.cs" />
@@ -277,8 +277,6 @@
     <Compile Include="Shipping\Services\ShippingServiceImpl.cs" />
     <Compile Include="Store\Model\Store.cs" />
     <Compile Include="Store\Model\StoreState.cs" />
-    <Compile Include="Store\Security\StorePredefinedPermissions.cs" />
-    <Compile Include="Store\Security\StoreSelectedScope.cs" />
     <Compile Include="Store\Services\IStoreService.cs" />
     <Compile Include="Tax\Model\TaxEvaluationContext.cs" />
     <Compile Include="Tax\Model\TaxLine.cs" />

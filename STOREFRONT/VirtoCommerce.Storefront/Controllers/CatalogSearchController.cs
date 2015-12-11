@@ -22,10 +22,15 @@ namespace VirtoCommerce.Storefront.Controllers
             _searchService = searchService;
         }
 
-        [HttpGet]
-        public async Task<ActionResult> SearchProducts(CatalogSearchCriteria searchCriteria)
+        /// <summary>
+        /// This method called from SeoRoute when url contains slug for category
+        /// </summary>
+        /// <param name="searchCriteria"></param>
+        /// <returns></returns>
+        public async Task<ActionResult> CategoryBrowsing(string categoryId)
         {
-            base.WorkContext.CurrentCatalogSearchResult = await _searchService.SearchAsync(searchCriteria);
+            base.WorkContext.CurrentCatalogSearchCriteria.CategoryId = categoryId;
+            base.WorkContext.CurrentCatalogSearchResult = await _searchService.SearchAsync(base.WorkContext.CurrentCatalogSearchCriteria);
             return View("collection", base.WorkContext);
         }
 

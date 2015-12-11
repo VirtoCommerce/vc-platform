@@ -4,11 +4,11 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using VirtoCommerce.Domain.Payment.Services;
 using VirtoCommerce.Domain.Shipping.Services;
-using VirtoCommerce.Domain.Store.Security;
 using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.Domain.Tax.Services;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.StoreModule.Web.Converters;
+using VirtoCommerce.StoreModule.Web.Security;
 using coreModel = VirtoCommerce.Domain.Store.Model;
 using webModel = VirtoCommerce.StoreModule.Web.Model;
 

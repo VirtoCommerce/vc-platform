@@ -8,6 +8,7 @@ using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System;
 using System.Text;
+using System.Diagnostics;
 
 namespace VirtoCommerce.CatalogModule.Data.Repositories
 {
@@ -310,7 +311,6 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             {
                 return new dataModel.Item[] { };
             }
-
             //Used breaking query EF performance concept https://msdn.microsoft.com/en-us/data/hh949853.aspx#8
             var retVal = Items.Include(x => x.Images).Where(x => itemIds.Contains(x.Id)).ToArray();
 
@@ -340,20 +340,19 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             {
                 var editorialReviews = EditorialReviews.Where(x => itemIds.Contains(x.ItemId)).ToArray();
             }
-            if ((respGroup & coreModel.ItemResponseGroup.ItemAssociations) == coreModel.ItemResponseGroup.ItemAssociations)
-            {
-                var associations = AssociationGroups.Include(x => x.Associations).Where(x => itemIds.Contains(x.ItemId)).ToArray();
-            }
             if ((respGroup & coreModel.ItemResponseGroup.Variations) == coreModel.ItemResponseGroup.Variations)
             {
                 var variationIds = Items.Where(x => itemIds.Contains(x.ParentId)).Select(x => x.Id).ToArray();
-                var variations = GetItemByIds(variationIds, respGroup);
+                //For variations loads only info and images
+                var variations = Items.Include(x => x.Images).Where(x => variationIds.Contains(x.Id)).ToArray();
+                //load variations property values separately
+                var variationPropertyValues = PropertyValues.Where(x => variationIds.Contains(x.ItemId)).ToArray();
             }
             if ((respGroup & coreModel.ItemResponseGroup.ItemAssociations) == coreModel.ItemResponseGroup.ItemAssociations)
             {
                 var assosiationGroups = AssociationGroups.Include(x => x.Associations).ToArray();
                 var assosiatedItemIds = assosiationGroups.SelectMany(x => x.Associations).Select(x => x.ItemId).Distinct().ToArray();
-                var assosiationItems = GetItemByIds(assosiatedItemIds, coreModel.ItemResponseGroup.ItemInfo);               
+                var assosiationItems = GetItemByIds(assosiatedItemIds, coreModel.ItemResponseGroup.ItemInfo);
             }
             //Load parents
             var parentIds = retVal.Where(x => x.Parent == null && x.ParentId != null).Select(x => x.ParentId).ToArray();

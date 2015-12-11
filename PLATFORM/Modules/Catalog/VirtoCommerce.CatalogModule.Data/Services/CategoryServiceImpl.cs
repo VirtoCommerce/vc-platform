@@ -32,16 +32,13 @@ namespace VirtoCommerce.CatalogModule.Data.Services
             var retVal = new List<coreModel.Category>();
             using (var repository = _catalogRepositoryFactory())
             {
-                var dbCategories = repository.GetCategoriesByIds(categoryIds, responseGroup);
-                foreach (var dbCategory in dbCategories)
+                var categories = repository.GetCategoriesByIds(categoryIds, responseGroup).Select(x => x.ToCoreModel()).ToArray();
+                retVal.AddRange(categories);
+                if ((responseGroup & coreModel.CategoryResponseGroup.WithSeo) == coreModel.CategoryResponseGroup.WithSeo)
                 {
-                    var category = dbCategory.ToCoreModel();
-                    if ((responseGroup & coreModel.CategoryResponseGroup.WithSeo) == coreModel.CategoryResponseGroup.WithSeo)
-                    {
-                        _commerceService.LoadSeoForObject(category);
-                    }
-                    retVal.Add(category);
+                    _commerceService.LoadSeoForObjects(categories);
                 }
+            
             }
            
             return retVal.ToArray();

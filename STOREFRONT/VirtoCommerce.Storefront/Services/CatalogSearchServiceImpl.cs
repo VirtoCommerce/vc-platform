@@ -62,8 +62,8 @@ namespace VirtoCommerce.Storefront.Services
                 criteriaCatalogId: criteria.CatalogId,
                 criteriaCurrency: _workContext.CurrentCurrency.Code,
                 criteriaHideDirectLinkedCategories: true,
-                criteriaStart: criteria.PageSize * (criteria.PageNumber - 1),
-                criteriaCount: criteria.PageSize);
+                criteriaSkip: criteria.PageSize * (criteria.PageNumber - 1),
+                criteriaTake: criteria.PageSize);
 
             if (criteria.CategoryId != null)
             {

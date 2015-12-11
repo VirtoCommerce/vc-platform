@@ -75,8 +75,8 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
             // EditorialReviews
             retVal.Reviews = dbItem.EditorialReviews.Select(x => x.ToCoreModel()).ToList();
 
-            //inherit editorial reviews from main product
-            if (!retVal.Reviews.Any() && retVal.MainProduct != null && retVal.MainProduct.Reviews != null)
+            //inherit editorial reviews from main product and do not inherit if variation loaded within product
+            if (!retVal.Reviews.Any() && retVal.MainProduct != null && retVal.MainProduct.Reviews != null && convertChildrens)
             {
                 retVal.Reviews = retVal.MainProduct.Reviews.Select(x => x.Clone()).OfType<coreModel.EditorialReview>().ToList();
                 foreach (var review in retVal.Reviews)
@@ -154,7 +154,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
                 retVal.Variations = new List<coreModel.CatalogProduct>();
                 foreach (var variation in dbItem.Childrens)
                 {
-                    var productVariation = variation.ToCoreModel();
+                    var productVariation = variation.ToCoreModel(convertChildrens: false);
                     productVariation.MainProduct = retVal;
                     productVariation.MainProductId = retVal.Id;
 

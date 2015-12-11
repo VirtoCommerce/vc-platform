@@ -20,6 +20,13 @@ namespace VirtoCommerce.Client.Model
     {
         
         /// <summary>
+        /// Gets or Sets StoreId
+        /// </summary>
+        [DataMember(Name="storeId", EmitDefaultValue=false)]
+        public string StoreId { get; set; }
+  
+        
+        /// <summary>
         /// Gets or Sets ResponseGroup
         /// </summary>
         [DataMember(Name="responseGroup", EmitDefaultValue=false)]
@@ -90,6 +97,13 @@ namespace VirtoCommerce.Client.Model
   
         
         /// <summary>
+        /// Gets or Sets SortOrder
+        /// </summary>
+        [DataMember(Name="sortOrder", EmitDefaultValue=false)]
+        public string SortOrder { get; set; }
+  
+        
+        /// <summary>
         /// Gets or Sets HideDirectLinkedCategories
         /// </summary>
         [DataMember(Name="hideDirectLinkedCategories", EmitDefaultValue=false)]
@@ -125,17 +139,17 @@ namespace VirtoCommerce.Client.Model
   
         
         /// <summary>
-        /// Gets or Sets Start
+        /// Gets or Sets Skip
         /// </summary>
-        [DataMember(Name="start", EmitDefaultValue=false)]
-        public int? Start { get; set; }
+        [DataMember(Name="skip", EmitDefaultValue=false)]
+        public int? Skip { get; set; }
   
         
         /// <summary>
-        /// Gets or Sets Count
+        /// Gets or Sets Take
         /// </summary>
-        [DataMember(Name="count", EmitDefaultValue=false)]
-        public int? Count { get; set; }
+        [DataMember(Name="take", EmitDefaultValue=false)]
+        public int? Take { get; set; }
   
         
         /// <summary>
@@ -143,6 +157,48 @@ namespace VirtoCommerce.Client.Model
         /// </summary>
         [DataMember(Name="indexDate", EmitDefaultValue=false)]
         public DateTime? IndexDate { get; set; }
+  
+        
+        /// <summary>
+        /// Gets or Sets PricelistId
+        /// </summary>
+        [DataMember(Name="pricelistId", EmitDefaultValue=false)]
+        public string PricelistId { get; set; }
+  
+        
+        /// <summary>
+        /// Gets or Sets PricelistIds
+        /// </summary>
+        [DataMember(Name="pricelistIds", EmitDefaultValue=false)]
+        public List<string> PricelistIds { get; set; }
+  
+        
+        /// <summary>
+        /// Gets or Sets Terms
+        /// </summary>
+        [DataMember(Name="terms", EmitDefaultValue=false)]
+        public List<string> Terms { get; set; }
+  
+        
+        /// <summary>
+        /// Gets or Sets Facets
+        /// </summary>
+        [DataMember(Name="facets", EmitDefaultValue=false)]
+        public List<string> Facets { get; set; }
+  
+        
+        /// <summary>
+        /// Gets or Sets Outline
+        /// </summary>
+        [DataMember(Name="outline", EmitDefaultValue=false)]
+        public string Outline { get; set; }
+  
+        
+        /// <summary>
+        /// Gets or Sets StartDateFrom
+        /// </summary>
+        [DataMember(Name="startDateFrom", EmitDefaultValue=false)]
+        public DateTime? StartDateFrom { get; set; }
   
         
   
@@ -154,6 +210,7 @@ namespace VirtoCommerce.Client.Model
         {
             var sb = new StringBuilder();
             sb.Append("class VirtoCommerceDomainCatalogModelSearchCriteria {\n");
+            sb.Append("  StoreId: ").Append(StoreId).Append("\n");
             sb.Append("  ResponseGroup: ").Append(ResponseGroup).Append("\n");
             sb.Append("  Keyword: ").Append(Keyword).Append("\n");
             sb.Append("  SearchInChildren: ").Append(SearchInChildren).Append("\n");
@@ -164,14 +221,21 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  LanguageCode: ").Append(LanguageCode).Append("\n");
             sb.Append("  Code: ").Append(Code).Append("\n");
             sb.Append("  Sort: ").Append(Sort).Append("\n");
+            sb.Append("  SortOrder: ").Append(SortOrder).Append("\n");
             sb.Append("  HideDirectLinkedCategories: ").Append(HideDirectLinkedCategories).Append("\n");
             sb.Append("  PropertyValues: ").Append(PropertyValues).Append("\n");
             sb.Append("  Currency: ").Append(Currency).Append("\n");
             sb.Append("  StartPrice: ").Append(StartPrice).Append("\n");
             sb.Append("  EndPrice: ").Append(EndPrice).Append("\n");
-            sb.Append("  Start: ").Append(Start).Append("\n");
-            sb.Append("  Count: ").Append(Count).Append("\n");
+            sb.Append("  Skip: ").Append(Skip).Append("\n");
+            sb.Append("  Take: ").Append(Take).Append("\n");
             sb.Append("  IndexDate: ").Append(IndexDate).Append("\n");
+            sb.Append("  PricelistId: ").Append(PricelistId).Append("\n");
+            sb.Append("  PricelistIds: ").Append(PricelistIds).Append("\n");
+            sb.Append("  Terms: ").Append(Terms).Append("\n");
+            sb.Append("  Facets: ").Append(Facets).Append("\n");
+            sb.Append("  Outline: ").Append(Outline).Append("\n");
+            sb.Append("  StartDateFrom: ").Append(StartDateFrom).Append("\n");
             
             sb.Append("}\n");
             return sb.ToString();
@@ -209,6 +273,11 @@ namespace VirtoCommerce.Client.Model
                 return false;
 
             return 
+                (
+                    this.StoreId == other.StoreId ||
+                    this.StoreId != null &&
+                    this.StoreId.Equals(other.StoreId)
+                ) && 
                 (
                     this.ResponseGroup == other.ResponseGroup ||
                     this.ResponseGroup != null &&
@@ -260,6 +329,11 @@ namespace VirtoCommerce.Client.Model
                     this.Sort.Equals(other.Sort)
                 ) && 
                 (
+                    this.SortOrder == other.SortOrder ||
+                    this.SortOrder != null &&
+                    this.SortOrder.Equals(other.SortOrder)
+                ) && 
+                (
                     this.HideDirectLinkedCategories == other.HideDirectLinkedCategories ||
                     this.HideDirectLinkedCategories != null &&
                     this.HideDirectLinkedCategories.Equals(other.HideDirectLinkedCategories)
@@ -285,19 +359,49 @@ namespace VirtoCommerce.Client.Model
                     this.EndPrice.Equals(other.EndPrice)
                 ) && 
                 (
-                    this.Start == other.Start ||
-                    this.Start != null &&
-                    this.Start.Equals(other.Start)
+                    this.Skip == other.Skip ||
+                    this.Skip != null &&
+                    this.Skip.Equals(other.Skip)
                 ) && 
                 (
-                    this.Count == other.Count ||
-                    this.Count != null &&
-                    this.Count.Equals(other.Count)
+                    this.Take == other.Take ||
+                    this.Take != null &&
+                    this.Take.Equals(other.Take)
                 ) && 
                 (
                     this.IndexDate == other.IndexDate ||
                     this.IndexDate != null &&
                     this.IndexDate.Equals(other.IndexDate)
+                ) && 
+                (
+                    this.PricelistId == other.PricelistId ||
+                    this.PricelistId != null &&
+                    this.PricelistId.Equals(other.PricelistId)
+                ) && 
+                (
+                    this.PricelistIds == other.PricelistIds ||
+                    this.PricelistIds != null &&
+                    this.PricelistIds.SequenceEqual(other.PricelistIds)
+                ) && 
+                (
+                    this.Terms == other.Terms ||
+                    this.Terms != null &&
+                    this.Terms.SequenceEqual(other.Terms)
+                ) && 
+                (
+                    this.Facets == other.Facets ||
+                    this.Facets != null &&
+                    this.Facets.SequenceEqual(other.Facets)
+                ) && 
+                (
+                    this.Outline == other.Outline ||
+                    this.Outline != null &&
+                    this.Outline.Equals(other.Outline)
+                ) && 
+                (
+                    this.StartDateFrom == other.StartDateFrom ||
+                    this.StartDateFrom != null &&
+                    this.StartDateFrom.Equals(other.StartDateFrom)
                 );
         }
 
@@ -312,6 +416,9 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
+                
+                if (this.StoreId != null)
+                    hash = hash * 57 + this.StoreId.GetHashCode();
                 
                 if (this.ResponseGroup != null)
                     hash = hash * 57 + this.ResponseGroup.GetHashCode();
@@ -343,6 +450,9 @@ namespace VirtoCommerce.Client.Model
                 if (this.Sort != null)
                     hash = hash * 57 + this.Sort.GetHashCode();
                 
+                if (this.SortOrder != null)
+                    hash = hash * 57 + this.SortOrder.GetHashCode();
+                
                 if (this.HideDirectLinkedCategories != null)
                     hash = hash * 57 + this.HideDirectLinkedCategories.GetHashCode();
                 
@@ -358,14 +468,32 @@ namespace VirtoCommerce.Client.Model
                 if (this.EndPrice != null)
                     hash = hash * 57 + this.EndPrice.GetHashCode();
                 
-                if (this.Start != null)
-                    hash = hash * 57 + this.Start.GetHashCode();
+                if (this.Skip != null)
+                    hash = hash * 57 + this.Skip.GetHashCode();
                 
-                if (this.Count != null)
-                    hash = hash * 57 + this.Count.GetHashCode();
+                if (this.Take != null)
+                    hash = hash * 57 + this.Take.GetHashCode();
                 
                 if (this.IndexDate != null)
                     hash = hash * 57 + this.IndexDate.GetHashCode();
+                
+                if (this.PricelistId != null)
+                    hash = hash * 57 + this.PricelistId.GetHashCode();
+                
+                if (this.PricelistIds != null)
+                    hash = hash * 57 + this.PricelistIds.GetHashCode();
+                
+                if (this.Terms != null)
+                    hash = hash * 57 + this.Terms.GetHashCode();
+                
+                if (this.Facets != null)
+                    hash = hash * 57 + this.Facets.GetHashCode();
+                
+                if (this.Outline != null)
+                    hash = hash * 57 + this.Outline.GetHashCode();
+                
+                if (this.StartDateFrom != null)
+                    hash = hash * 57 + this.StartDateFrom.GetHashCode();
                 
                 return hash;
             }

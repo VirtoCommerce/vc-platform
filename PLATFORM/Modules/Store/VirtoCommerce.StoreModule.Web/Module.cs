@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.Practices.Unity;
-using VirtoCommerce.Domain.Store.Security;
 using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Modularity;
@@ -11,6 +10,7 @@ using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.StoreModule.Data.Repositories;
 using VirtoCommerce.StoreModule.Data.Services;
 using VirtoCommerce.StoreModule.Web.ExportImport;
+using VirtoCommerce.StoreModule.Web.Security;
 
 namespace VirtoCommerce.StoreModule.Web
 {

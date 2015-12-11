@@ -87,11 +87,9 @@ namespace VirtoCommerce.Storefront.Routing
                                     data.Values["productId"] = seoRecord.ObjectId;
                                     break;
                                 case "Category":
-                                    workContext.CurrentCatalogSearchCriteria.CategoryId = seoRecord.ObjectId;
                                     data.Values["controller"] = "CatalogSearch";
-                                    data.Values["action"] = "SearchProducts";
-                                    data.Values["searchCriteria"] = workContext.CurrentCatalogSearchCriteria;
-
+                                    data.Values["action"] = "CategoryBrowsing";
+                                    data.Values["categoryId"] = seoRecord.ObjectId;
                                     break;
                             }
                         }

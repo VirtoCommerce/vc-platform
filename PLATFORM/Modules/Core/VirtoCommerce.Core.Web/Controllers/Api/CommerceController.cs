@@ -92,12 +92,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
             {
                 var paymentOuterId = paymentMethod.ValidatePostProcessRequest(HttpContext.Current.Request.QueryString).OuterId;
 
-                var payment = order.InPayments.FirstOrDefault(x => x.OuterId == paymentOuterId);
-                if (payment == null)
-                {
-                    throw new NullReferenceException("payment");
-                }
-
+                var payment = order.InPayments.FirstOrDefault(x => string.IsNullOrEmpty(x.OuterId) || x.OuterId == paymentOuterId);                
                 if (payment == null)
                 {
                     throw new NullReferenceException("appropriate paymentMethod not found");

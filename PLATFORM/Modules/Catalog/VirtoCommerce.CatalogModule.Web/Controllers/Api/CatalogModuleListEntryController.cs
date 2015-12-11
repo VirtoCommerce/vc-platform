@@ -7,13 +7,13 @@ using System.Web.Http.Description;
 using System.Web.Http.ModelBinding;
 using VirtoCommerce.CatalogModule.Web.Binders;
 using VirtoCommerce.CatalogModule.Web.Converters;
+using VirtoCommerce.CatalogModule.Web.Security;
 using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Platform.Core.Asset;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 using coreModel = VirtoCommerce.Domain.Catalog.Model;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
-using VirtoCommerce.Platform.Core.Common;
-using VirtoCommerce.CatalogModule.Web.Security;
 
 namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 {
@@ -23,12 +23,12 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         private readonly ICatalogSearchService _searchService;
         private readonly ICategoryService _categoryService;
         private readonly IItemService _itemService;
-		private readonly IBlobUrlResolver _blobUrlResolver;
+        private readonly IBlobUrlResolver _blobUrlResolver;
 
         public CatalogModuleListEntryController(ICatalogSearchService searchService,
                                    ICategoryService categoryService,
                                    IItemService itemService, IBlobUrlResolver blobUrlResolver, ISecurityService securityService, IPermissionScopeService permissionScopeService)
-            :base(securityService, permissionScopeService)
+            : base(securityService, permissionScopeService)
         {
             _searchService = searchService;
             _categoryService = categoryService;
@@ -47,8 +47,9 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         [ResponseType(typeof(webModel.ListEntrySearchResult))]
         public IHttpActionResult ListItemsSearch([ModelBinder(typeof(ListEntrySearchCriteriaBinder))]webModel.ListEntrySearchCriteria criteria)
         {
-            //Filter search criteria to the corresponding user permissions 
-            var searchCriteria = base.ChangeCriteriaToCurentUserPermissions(criteria.ToModuleModel());
+            var searchCriteria = criteria.ToModuleModel();
+            ApplyRestrictionsForCurrentUser(searchCriteria);
+
             var serviceResult = _searchService.Search(searchCriteria);
 
             var retVal = new webModel.ListEntrySearchResult();
@@ -57,10 +58,10 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             var count = criteria.Count;
 
             // all categories
-            var categories = serviceResult.Categories.Select(x => new webModel.ListEntryCategory(x.ToWebModel(_blobUrlResolver)));
+            var categories = serviceResult.Categories.Select(x => new webModel.ListEntryCategory(x.ToWebModel(_blobUrlResolver))).ToList();
             var products = serviceResult.Products.Select(x => new webModel.ListEntryProduct(x.ToWebModel(_blobUrlResolver)));
 
-            retVal.TotalCount = categories.Count() + serviceResult.TotalCount;
+            retVal.TotalCount = categories.Count() + serviceResult.ProductsTotalCount;
             retVal.ListEntries.AddRange(categories.Skip(start).Take(count));
 
             count -= categories.Count();
@@ -81,14 +82,14 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         public IHttpActionResult CreateLinks(webModel.ListEntryLink[] links)
         {
             //Scope bound security check
-            base.CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Create, links);
-           
+            CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Create, links);
+
             InnerUpdateLinks(links, (x, y) => x.Links.Add(y));
             return StatusCode(HttpStatusCode.NoContent);
         }
 
 
-        [ApiExplorerSettings(IgnoreApi=true)]
+        [ApiExplorerSettings(IgnoreApi = true)]
         [HttpGet]
         [Route("~/api/catalog/getslug")]
         [ResponseType(typeof(string))]
@@ -112,7 +113,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         public IHttpActionResult DeleteLinks(webModel.ListEntryLink[] links)
         {
             //Scope bound security check
-            base.CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Delete, links);
+            CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Delete, links);
 
             InnerUpdateLinks(links, (x, y) => x.Links.Remove(y));
             return StatusCode(HttpStatusCode.NoContent);
@@ -129,9 +130,9 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         public IHttpActionResult Move(webModel.MoveInfo moveInfo)
         {
             var categories = new List<coreModel.Category>();
-         
+
             //Move  categories
-            foreach (var listEntryCategory in moveInfo.ListEntries.Where(x=>String.Equals(x.Type, webModel.ListEntryCategory.TypeName, StringComparison.InvariantCultureIgnoreCase)))
+            foreach (var listEntryCategory in moveInfo.ListEntries.Where(x => String.Equals(x.Type, webModel.ListEntryCategory.TypeName, StringComparison.InvariantCultureIgnoreCase)))
             {
                 var category = _categoryService.GetById(listEntryCategory.Id, coreModel.CategoryResponseGroup.Info);
                 if (category.CatalogId != moveInfo.Catalog)
@@ -143,7 +144,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                     category.ParentId = moveInfo.Category ?? String.Empty;
                 }
                 categories.Add(category);
-            };
+            }
 
             var products = new List<coreModel.CatalogProduct>();
             //Move products
@@ -159,7 +160,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                         variation.CatalogId = moveInfo.Catalog ?? String.Empty;
                         variation.CategoryId = null;
                     }
-                    
+
                 }
                 if (product.CategoryId != moveInfo.Category)
                 {
@@ -170,17 +171,17 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                     }
                 }
                 products.Add(product);
-            };
+            }
 
             //Scope bound security check
-            base.CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Create, categories);
-            base.CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Create, products);
+            CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Create, categories);
+            CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Create, products);
 
             if (categories.Any())
             {
                 _categoryService.Update(categories.ToArray());
             }
-            if(products.Any())
+            if (products.Any())
             {
                 _itemService.Update(products.ToArray());
             }
