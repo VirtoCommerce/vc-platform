@@ -20,9 +20,11 @@ namespace VirtoCommerce.Storefront.Controllers
         private readonly IOrderModuleApi _orderApi;
         private readonly IMarketingModuleApi _marketingApi;
         private readonly ICommerceCoreModuleApi _commerceApi;
+        private readonly ICustomerManagementModuleApi _customerApi;
 
         public CartController(WorkContext workContext, IShoppingCartModuleApi cartApi, IOrderModuleApi orderApi, IStorefrontUrlBuilder urlBuilder,
-                              ICartBuilder cartBuilder, ICatalogSearchService catalogService, IMarketingModuleApi marketingApi, ICommerceCoreModuleApi commerceApi)
+                              ICartBuilder cartBuilder, ICatalogSearchService catalogService, IMarketingModuleApi marketingApi, ICommerceCoreModuleApi commerceApi,
+                              ICustomerManagementModuleApi customerApi)
             : base(workContext, urlBuilder)
         {
             _cartBuilder = cartBuilder;
@@ -31,6 +33,7 @@ namespace VirtoCommerce.Storefront.Controllers
             _orderApi = orderApi;
             _marketingApi = marketingApi;
             _commerceApi = commerceApi;
+            _customerApi = customerApi;
         }
 
         // GET: /cart
@@ -214,6 +217,18 @@ namespace VirtoCommerce.Storefront.Controllers
 
             var order = await _orderApi.OrderModuleCreateOrderFromCartAsync(_cartBuilder.Cart.Id);
             await _cartApi.CartModuleDeleteCartsAsync(new List<string> { _cartBuilder.Cart.Id });
+
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                var contact = await _customerApi.CustomerModuleGetContactByIdAsync(WorkContext.CurrentCustomer.Id);
+
+                foreach (var orderAddress in order.Addresses)
+                {
+                    contact.Addresses.Add(orderAddress.ToCustomerModel());
+                }
+
+                await _customerApi.CustomerModuleUpdateContactAsync(contact);
+            }
 
             return Json(order.ToWebModel(), JsonRequestBehavior.AllowGet);
         }
