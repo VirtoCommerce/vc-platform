@@ -4951,7 +4951,8 @@ tags-input .tags .tag-item .remove-button
     }
 
     .blade .blade-inner::-webkit-scrollbar,
-    .log::-webkit-scrollbar
+    .log::-webkit-scrollbar,
+    .ui-grid-viewport::-webkit-scrollbar
     {
         background: transparent;
     }
@@ -4968,12 +4969,14 @@ tags-input .tags .tag-item .remove-button
         background: #e6e6e6;
     }
 
-    .blade .__gray .blade-inner::-webkit-scrollbar-track-piece
+    .blade .__gray .blade-inner::-webkit-scrollbar-track-piece,
+    .ui-grid-viewport::-webkit-scrollbar-track-piece
     {
         background: #e9e9e9;
     }
 
-    .blade .__gray .blade-inner::-webkit-scrollbar-thumb
+    .blade .__gray .blade-inner::-webkit-scrollbar-thumb,
+    .ui-grid-viewport::-webkit-scrollbar-thumb
     {
         background: #d6d6d6;
     }
@@ -4987,7 +4990,8 @@ tags-input .tags .tag-item .remove-button
         -ms-scrollbar-track-color: #f9f9f9;
     }
 
-    .blade .__gray .blade-inner
+    .blade .__gray .blade-inner,
+    .ui-grid-viewport
     {
         -ms-scrollbar-arrow-color: #e9e9e9;
         -ms-scrollbar-face-color: #d6d6d6;
@@ -4998,6 +5002,11 @@ tags-input .tags .tag-item .remove-button
     .blade .blade-inner:hover
     {
         overflow-y: auto;
+    }
+
+    .blade .blade-inner.ui-grid-no-scroll:hover
+    {
+        overflow: visible;
     }
 
         .blade-inner .inner-block
@@ -5232,14 +5241,14 @@ tags-input .tags .tag-item .remove-button
     vertical-align: middle;
 }
 
-.ui-grid-row .ui-grid-cell:first-child .ui-grid-cell-contents
-{
-    text-align: center;
-}
-
 .ui-grid-icon-cancel::before
 {
     visibility: hidden;
+}
+
+.ui-grid-row:last-child .ui-grid-cell
+{
+    border-bottom-color: #dee9f0;
 }
 
 .ui-grid-menu .ui-grid-menu-inner
@@ -5252,7 +5261,7 @@ tags-input .tags .tag-item .remove-button
 
 .ui-grid-menu-button .ui-grid-menu .ui-grid-menu-mid
 {
-    
+    overflow-x: hidden;    
     overflow: auto;
 }
 
@@ -5447,6 +5456,7 @@ input.ui-grid-filter-input[type="text"]
 {
     margin: 6px -1px 0 0;
     padding: 0;
+    width: 160px;
 }
 
 .ui-grid-menu .ui-grid-menu-inner ul li

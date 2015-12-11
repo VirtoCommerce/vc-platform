@@ -96,10 +96,10 @@ namespace PaymentMethods.Tests
                 return new CartRepositoryImpl("VirtoCommerce", new AuditableInterceptor());
             };
 
+            var dynamicPropertyService = new DynamicPropertyService(platformRepositoryFactory);
             var orderEventPublisher = new EventPublisher<OrderChangeEvent>(Enumerable.Empty<IObserver<OrderChangeEvent>>().ToArray());
             var cartEventPublisher = new EventPublisher<CartChangeEvent>(Enumerable.Empty<IObserver<CartChangeEvent>>().ToArray());
-            var cartService = new ShoppingCartServiceImpl(repositoryFactory, cartEventPublisher, null);
-            var dynamicPropertyService = new DynamicPropertyService(platformRepositoryFactory);
+            var cartService = new ShoppingCartServiceImpl(repositoryFactory, cartEventPublisher, null, dynamicPropertyService);
             var settingManager = new SettingsManager(null, null, null, null);
 
             var orderService = new CustomerOrderServiceImpl(orderRepositoryFactory, new TimeBasedNumberGeneratorImpl(), orderEventPublisher, cartService, GetItemService(), dynamicPropertyService, settingManager);

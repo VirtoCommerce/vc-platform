@@ -12,48 +12,47 @@ using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Domain.Commerce.Model;
 using VirtoCommerce.Domain.Commerce.Services;
+using System.Diagnostics;
 
 namespace VirtoCommerce.CatalogModule.Data.Services
 {
-	public class ItemServiceImpl : ServiceBase, IItemService
-	{
-		private readonly Func<ICatalogRepository> _catalogRepositoryFactory;
+    public class ItemServiceImpl : ServiceBase, IItemService
+    {
+        private readonly Func<ICatalogRepository> _catalogRepositoryFactory;
         private readonly ICommerceService _commerceService;
 
-		public ItemServiceImpl(Func<ICatalogRepository> catalogRepositoryFactory, ICommerceService commerceService)
-		{
-			_catalogRepositoryFactory = catalogRepositoryFactory;
-			_commerceService = commerceService;
+        public ItemServiceImpl(Func<ICatalogRepository> catalogRepositoryFactory, ICommerceService commerceService)
+        {
+            _catalogRepositoryFactory = catalogRepositoryFactory;
+            _commerceService = commerceService;
         }
 
-		#region IItemService Members
+        #region IItemService Members
 
-		public coreModel.CatalogProduct GetById(string itemId, coreModel.ItemResponseGroup respGroup)
-		{
-			var results = this.GetByIds(new[] { itemId }, respGroup);
-			return results.Any() ? results.First() : null;
-		}
+        public coreModel.CatalogProduct GetById(string itemId, coreModel.ItemResponseGroup respGroup)
+        {
+            var results = this.GetByIds(new[] { itemId }, respGroup);
+            return results.Any() ? results.First() : null;
+        }
 
         public coreModel.CatalogProduct[] GetByIds(string[] itemIds, coreModel.ItemResponseGroup respGroup)
         {
+            Stopwatch main = Stopwatch.StartNew();
+
             var retVal = new List<coreModel.CatalogProduct>();
             using (var repository = _catalogRepositoryFactory())
             {
                 var dbItems = repository.GetItemByIds(itemIds, respGroup);
 
-                foreach (var dbItem in dbItems)
+                retVal.AddRange(dbItems.Select(x => x.ToCoreModel()));
+                //Populate product seo
+                if ((respGroup & coreModel.ItemResponseGroup.Seo) == coreModel.ItemResponseGroup.Seo)
                 {
-                    var product = dbItem.ToCoreModel();
-                    retVal.Add(product);
-                    //Populate product seo
-                    if ((respGroup & coreModel.ItemResponseGroup.Seo) == coreModel.ItemResponseGroup.Seo)
-                    {
-                        _commerceService.LoadSeoForObject(product);
-                        if(product.Category != null)
-                        {
-                            _commerceService.LoadSeoForObject(product.Category);
-                        }
-                    }
+                    var expandedProducts = retVal.Concat(retVal.Where(x => x.Variations != null).SelectMany(x => x.Variations)).ToArray();
+                    var allCategories = expandedProducts.Select(x => x.Category).Distinct().ToArray();
+                    var allSeoObjects = expandedProducts.OfType<ISeoSupport>().Concat(allCategories.OfType<ISeoSupport>()).ToArray();
+                    _commerceService.LoadSeoForObjects(allSeoObjects);
+
                 }
             }
             return retVal.ToArray();
@@ -94,52 +93,52 @@ namespace VirtoCommerce.CatalogModule.Data.Services
         }
 
         public coreModel.CatalogProduct Create(coreModel.CatalogProduct item)
-		{
+        {
             Create(new[] { item });
 
-			var retVal = GetById(item.Id, coreModel.ItemResponseGroup.ItemLarge);
-			return retVal;
-		}
+            var retVal = GetById(item.Id, coreModel.ItemResponseGroup.ItemLarge);
+            return retVal;
+        }
 
-		public void Update(coreModel.CatalogProduct[] items)
-		{
-			var now = DateTime.UtcNow;
-			using (var repository = _catalogRepositoryFactory())
-			using (var changeTracker = base.GetChangeTracker(repository))
-			{
-				var dbItems = repository.GetItemByIds(items.Select(x => x.Id).ToArray(), coreModel.ItemResponseGroup.ItemLarge);
-				foreach (var dbItem in dbItems)
-				{
-					var item = items.FirstOrDefault(x => x.Id == dbItem.Id);
-					if (item != null)
-					{
-						changeTracker.Attach(dbItem);
+        public void Update(coreModel.CatalogProduct[] items)
+        {
+            var now = DateTime.UtcNow;
+            using (var repository = _catalogRepositoryFactory())
+            using (var changeTracker = base.GetChangeTracker(repository))
+            {
+                var dbItems = repository.GetItemByIds(items.Select(x => x.Id).ToArray(), coreModel.ItemResponseGroup.ItemLarge);
+                foreach (var dbItem in dbItems)
+                {
+                    var item = items.FirstOrDefault(x => x.Id == dbItem.Id);
+                    if (item != null)
+                    {
+                        changeTracker.Attach(dbItem);
 
-						item.Patch(dbItem);
-					}
-				}
-				CommitChanges(repository);
-			}
+                        item.Patch(dbItem);
+                    }
+                }
+                CommitChanges(repository);
+            }
 
             //Update seo for products
             _commerceService.UpsertSeoForObjects(items);
 
-		}
+        }
 
-		public void Delete(string[] itemIds)
-		{
+        public void Delete(string[] itemIds)
+        {
             var items = GetByIds(itemIds, coreModel.ItemResponseGroup.Seo | coreModel.ItemResponseGroup.Variations);
             using (var repository = _catalogRepositoryFactory())
-			{
+            {
                 repository.RemoveItems(itemIds);
-				CommitChanges(repository);
-			}
-            var expandedItemsWithVariations = items.Concat(items.SelectMany(x=>x.Variations));
+                CommitChanges(repository);
+            }
+            var expandedItemsWithVariations = items.Concat(items.SelectMany(x => x.Variations));
             foreach (var item in expandedItemsWithVariations)
             {
                 _commerceService.DeleteSeoForObject(item);
             }
         }
-		#endregion
-	}
+        #endregion
+    }
 }

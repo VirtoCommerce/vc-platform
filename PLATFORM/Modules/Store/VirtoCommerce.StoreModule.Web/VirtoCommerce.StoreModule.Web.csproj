@@ -178,6 +178,8 @@
     <Compile Include="Model\TaxProvider.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Security\StorePredefinedPermissions.cs" />
+    <Compile Include="Security\StoreSelectedScope.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj">

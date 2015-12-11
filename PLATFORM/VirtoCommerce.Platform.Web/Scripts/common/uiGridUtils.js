@@ -131,8 +131,11 @@
             link: {
                 pre: function (scope, element) {
                     var setGridHeight = function () {
-                        var hh = $('.blade-inner').height();
+                        var bladeInner = $(element).parents('.blade-inner'),
+                            hh = bladeInner.height();
+
                         $(element).height(hh);
+                        bladeInner.addClass('ui-grid-no-scroll');
                     };
                     $timeout(setGridHeight);
                     angular.element($window).bind('resize', setGridHeight);

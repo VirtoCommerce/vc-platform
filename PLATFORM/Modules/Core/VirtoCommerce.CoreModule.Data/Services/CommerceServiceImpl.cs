@@ -71,20 +71,18 @@ namespace VirtoCommerce.CoreModule.Data.Repositories
 		}
 
 
-        public void LoadSeoForObject(coreModel.ISeoSupport seoSupportObj)
+        public void LoadSeoForObjects(coreModel.ISeoSupport[] seoSupportObjects)
         {
-            if (seoSupportObj == null)
-            {
-                throw new ArgumentNullException("seoSupportObj");
-            }
-
             using (var repository = _repositoryFactory())
             {
-                if (seoSupportObj.Id != null)
+                var objectIds = seoSupportObjects.Where(x => x.Id != null).Select(x => x.Id).ToArray();
+                var seoInfos = repository.SeoUrlKeywords.Where(x=> objectIds.Contains(x.ObjectId))
+                                                        .ToArray()
+                                                        .Select(x => x.ToCoreModel())
+                                                        .ToArray();
+                foreach(var seoSupportObject in seoSupportObjects)
                 {
-                    var objectType = seoSupportObj.GetType().Name;
-                    seoSupportObj.SeoInfos = repository.GetObjectSeoUrlKeywords(objectType, seoSupportObj.Id)
-                                                           .Select(x => x.ToCoreModel()).ToList();
+                    seoSupportObject.SeoInfos = seoInfos.Where(x => x.ObjectId == seoSupportObject.Id && x.ObjectType == seoSupportObject.GetType().Name).ToList();
                 }
             }
         }

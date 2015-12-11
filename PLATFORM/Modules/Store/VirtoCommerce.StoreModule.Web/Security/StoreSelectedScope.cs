@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using VirtoCommerce.Platform.Core.Security;
 
-namespace VirtoCommerce.Domain.Store.Security
+namespace VirtoCommerce.StoreModule.Web.Security
 {
     /// <summary>
     /// Restricted to permission within selected stores

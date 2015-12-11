@@ -12,6 +12,7 @@ using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Security.Identity;
 using VirtoCommerce.Platform.Data.Common;
 using VirtoCommerce.Platform.Core.Caching;
+using System.Threading.Tasks;
 
 namespace VirtoCommerce.Platform.Data.ExportImport
 {
@@ -214,13 +215,13 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                 //Roles
                 platformExportObj.Roles = _roleManagementService.SearchRoles(new RoleSearchRequest { SkipCount = 0, TakeCount = int.MaxValue }).Roles;
                 //users 
-                var usersResult = _securityService.SearchUsersAsync(new UserSearchRequest { TakeCount = int.MaxValue }).Result;
+                var usersResult = Task.Run(()=> _securityService.SearchUsersAsync(new UserSearchRequest { TakeCount = int.MaxValue })).Result;
                 progressInfo.Description = String.Format("Security: {0} users exporting...", usersResult.Users.Count());
                 progressCallback(progressInfo);
 
                 foreach (var user in usersResult.Users)
                 {
-                    var userExt = _securityService.FindByIdAsync(user.Id, UserDetails.Export).Result;
+                    var userExt = Task.Run(() => _securityService.FindByIdAsync(user.Id, UserDetails.Export)).Result;
                     if (userExt != null)
                     {
                         platformExportObj.Users.Add(userExt);

@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using VirtoCommerce.Domain.Commerce.Model;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.DynamicProperties;
 
 namespace VirtoCommerce.CartModule.Web.Model
 {
@@ -195,5 +196,15 @@ namespace VirtoCommerce.CartModule.Web.Model
         /// Collection of TaxDetail objects
         /// </value>
         public ICollection<TaxDetail> TaxDetails { get; set; }
+
+        /// <summary>
+        /// Used for dynamic properties management, contains object type string
+        /// </summary>
+        public string ObjectType { get; set; }
+        /// <summary>
+        /// Dynamic properties collections
+        /// </summary>
+        public ICollection<DynamicObjectProperty> DynamicProperties { get; set; }
+
     }
 }

@@ -15,6 +15,7 @@ using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Common;
 using shopifyModel = VirtoCommerce.LiquidThemeEngine.Objects;
 using VirtoCommerce.Storefront.Builders;
+using VirtoCommerce.Storefront.Model.Cart;
 
 namespace VirtoCommerce.Storefront.Controllers
 {
@@ -131,6 +132,8 @@ namespace VirtoCommerce.Storefront.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> Register(Register formModel)
         {
+            var anonymousShoppingCart = WorkContext.CurrentCart;
+
             var user = new VirtoCommercePlatformCoreSecurityApplicationUserExtended
             {
                 Email = formModel.Email,
@@ -162,6 +165,9 @@ namespace VirtoCommerce.Storefront.Controllers
 
                 var identity = CreateClaimsIdentity(formModel.Email);
                 _authenticationManager.SignIn(identity);
+
+                await MergeShoppingCartsAsync(formModel.Email, anonymousShoppingCart);
+
                 return StoreFrontRedirect("~/account");
             }
             else
@@ -201,20 +207,7 @@ namespace VirtoCommerce.Storefront.Controllers
                 case "success":
                     var identity = CreateClaimsIdentity(formModel.Email);
                     _authenticationManager.SignIn(identity);
-
-                    if (anonymousShoppingCart.ItemsCount > 0)
-                    {
-                        var user = await _commerceCoreApi.StorefrontSecurityGetUserByNameAsync(formModel.Email);
-                        if (user != null)
-                        {
-                            var customer = await _customerApi.CustomerModuleGetContactByIdAsync(user.Id);
-
-                            await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, customer.ToWebModel(formModel.Email), WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
-                            await _cartBuilder.MergeWithCartAsync(anonymousShoppingCart);
-                            await _cartBuilder.SaveAsync();
-                        }
-                    }
-
+                    await MergeShoppingCartsAsync(formModel.Email, anonymousShoppingCart);
                     return StoreFrontRedirect(returnUrl);
                 case "lockedOut":
                     return View("lockedout", WorkContext);
@@ -375,6 +368,30 @@ namespace VirtoCommerce.Storefront.Controllers
             }
         }
 
+        // GET: /account/json
+        [HttpGet]
+        [Route("json")]
+        [AllowAnonymous]
+        public ActionResult GetCurrentCustomer()
+        {
+            return Json(WorkContext.CurrentCustomer, JsonRequestBehavior.AllowGet);
+        }
+
+        private async Task MergeShoppingCartsAsync(string username, ShoppingCart anonymousShoppingCart)
+        {
+            if (anonymousShoppingCart.ItemsCount > 0)
+            {
+                var user = await _commerceCoreApi.StorefrontSecurityGetUserByNameAsync(username);
+                if (user != null)
+                {
+                    var customer = await _customerApi.CustomerModuleGetContactByIdAsync(user.Id);
+
+                    await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, customer.ToWebModel(username), WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
+                    await _cartBuilder.MergeWithCartAsync(anonymousShoppingCart);
+                    await _cartBuilder.SaveAsync();
+                }
+            }
+        }
 
         private ClaimsIdentity CreateClaimsIdentity(string userName)
         {
