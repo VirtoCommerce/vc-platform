@@ -5105,6 +5105,7 @@ tags-input .tags .tag-item .remove-button
     border-style: solid;
     border-width: 0 0 1px;
     font-size: 14px;
+    cursor: pointer;
 }
 
 .ui-grid-cell .table-descr
@@ -5451,7 +5452,7 @@ input.ui-grid-filter-input[type="text"]
 {
     margin: 6px -1px 0 0;
     padding: 0;
-    width: 160px;
+    min-width: 160px;
 }
 
 .ui-grid-menu .ui-grid-menu-inner ul li

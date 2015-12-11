@@ -55,9 +55,9 @@ function ($scope, order_res_customerOrders, bladeNavigationService, dialogServic
         $scope.selectedNodeId = selectedNode.id;
         var newBlade = {
             id: 'operationDetail',
-			title: 'orders.blades.customerOrder-detail.title',
-			titleValues: { customer: selectedNode.customerName },
-			subtitle: 'orders.blades.customerOrder-detail.subtitle',
+            title: 'orders.blades.customerOrder-detail.title',
+            titleValues: { customer: selectedNode.customerName },
+            subtitle: 'orders.blades.customerOrder-detail.subtitle',
             customerOrder: selectedNode,
             controller: 'virtoCommerce.orderModule.operationDetailController',
             template: 'Modules/$(VirtoCommerce.Orders)/Scripts/blades/customerOrder-detail.tpl.html'
@@ -65,18 +65,17 @@ function ($scope, order_res_customerOrders, bladeNavigationService, dialogServic
 
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     };
-    
-    function deleteChecked() {
+
+    $scope.deleteList = function (list) {
         var dialog = {
             id: "confirmDeleteItem",
-			title: "orders.dialogs.orders-delete.title",
-			message: "orders.dialogs.orders-delete.message",
+            title: "orders.dialogs.orders-delete.title",
+            message: "orders.dialogs.orders-delete.message",
             callback: function (remove) {
                 if (remove) {
                     closeChildrenBlades();
 
-                    var selection = $scope.gridApi.selection.getSelectedRows();
-                    var itemIds = _.pluck(selection, 'id');
+                    var itemIds = _.pluck(list, 'id');
                     order_res_customerOrders.remove({ ids: itemIds }, function (data, headers) {
                         $scope.blade.refresh();
                     },
@@ -108,7 +107,7 @@ function ($scope, order_res_customerOrders, bladeNavigationService, dialogServic
           {
               name: "platform.commands.delete", icon: 'fa fa-trash-o',
               executeMethod: function () {
-                  deleteChecked();
+                  $scope.deleteList($scope.gridApi.selection.getSelectedRows());
               },
               canExecuteMethod: function () {
                   return $scope.gridApi && _.any($scope.gridApi.selection.getSelectedRows());

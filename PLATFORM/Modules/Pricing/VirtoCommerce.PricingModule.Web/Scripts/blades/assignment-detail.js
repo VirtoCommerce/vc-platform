@@ -21,8 +21,8 @@
         blade.origEntity = data;
         blade.isLoading = false;
 
-        if (!$scope.blade.isNew) {
-            $scope.blade.toolbarCommands = [
+        if (!blade.isNew) {
+            blade.toolbarCommands = [
                 {
                     name: "platform.commands.save",
                     icon: 'fa fa-save',
@@ -38,7 +38,7 @@
                     name: "platform.commands.reset",
                     icon: 'fa fa-undo',
                     executeMethod: function () {
-                        angular.copy($scope.blade.origEntity, $scope.blade.currentEntity);
+                        angular.copy(blade.origEntity, blade.currentEntity);
                     },
                     canExecuteMethod: function () {
                         return isDirty();
@@ -111,7 +111,7 @@
         }
     };
 
-    $scope.blade.headIcon = 'fa-usd';
+    blade.headIcon = blade.parentBlade.headIcon;
 
     // datepicker
     $scope.datepickers = {
