@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using VirtoCommerce.Domain.Search.Model;
 
 namespace VirtoCommerce.Domain.Catalog.Model
 {
@@ -22,6 +23,6 @@ namespace VirtoCommerce.Domain.Catalog.Model
         /// <summary>
         /// Represent aggregations for product properties
         /// </summary>
-        public Facet[] Aggregations { get; set; }
+        public Aggregation[] Aggregations { get; set; }
     }
 }

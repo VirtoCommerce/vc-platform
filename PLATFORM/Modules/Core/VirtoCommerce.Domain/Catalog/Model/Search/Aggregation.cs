@@ -1,31 +1,28 @@
 ﻿namespace VirtoCommerce.Domain.Catalog.Model
 {
-    public class Facet
+    public class Aggregation
     {
         /// <summary>
-        /// Gets or sets the value of facet type
+        /// Gets or sets the value of the aggregation type
         /// </summary>
         /// <value>
         /// "Attribute", "PriceRange", "Range" or "Category"
         /// </value>
-        public string FacetType { get; set; }
+        public string AggregationType { get; set; }
 
         /// <summary>
-        /// Gets or sets the value of facet field
+        /// Gets or sets the value of the aggregation field
         /// </summary>
         public string Field { get; set; }
 
         /// <summary>
-        /// Gets or sets the value of facet label
+        /// Gets or sets the value of the aggregation label
         /// </summary>
         public string Label { get; set; }
 
         /// <summary>
-        /// Gets or sets the collection of facet values
+        /// Gets or sets the collection of the aggregation items
         /// </summary>
-        /// <value>
-        /// Array of FacetValue objects
-        /// </value>
-        public FacetValue[] Values { get; set; }
+        public AggregationItem[] Items { get; set; }
     }
 }

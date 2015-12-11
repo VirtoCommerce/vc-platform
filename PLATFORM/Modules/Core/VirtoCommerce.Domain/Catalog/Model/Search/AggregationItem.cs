@@ -1,24 +1,24 @@
 ﻿namespace VirtoCommerce.Domain.Catalog.Model
 {
-    public class FacetValue
+    public class AggregationItem
     {
         /// <summary>
-        /// Gets or sets the facet value count
+        /// Gets or sets the aggregation item count
         /// </summary>
         public int Count { get; set; }
 
         /// <summary>
-        /// Gets or sets the flag for facet value is applied
+        /// Gets or sets the flag for aggregation item is applied
         /// </summary>
         public bool IsApplied { get; set; }
 
         /// <summary>
-        /// Gets or sets the facet value label
+        /// Gets or sets the aggregation item label
         /// </summary>
         public string Label { get; set; }
 
         /// <summary>
-        /// Gets or sets the facet value
+        /// Gets or sets the aggregation item value
         /// </summary>
         public object Value { get; set; }
     }

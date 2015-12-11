@@ -8,7 +8,7 @@
         <dependency id="VirtoCommerce.Catalog" version="2.5.0" />
     </dependencies>
 
-    <title>Indexed search module</title>
+    <title>Search module</title>
     <description>Indexed search functionality with Lucene and ElasticSearch engines</description>
     <authors>
         <author>Virto Commerce</author>

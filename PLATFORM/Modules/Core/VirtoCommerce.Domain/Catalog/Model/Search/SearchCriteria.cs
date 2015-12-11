@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Domain.Catalog.Model
 {
@@ -26,7 +27,7 @@ namespace VirtoCommerce.Domain.Catalog.Model
         public string CategoryId { get; set; }
 
         private string[] _categoriesIds;
-        public string[] CategoriesIds
+        public string[] CategoryIds
         {
             get
             {
@@ -46,7 +47,7 @@ namespace VirtoCommerce.Domain.Catalog.Model
         public string CatalogId { get; set; }
 
         private string[] _catalogIds;
-        public string[] CatalogsIds
+        public string[] CatalogIds
         {
             get
             {
@@ -129,6 +130,22 @@ namespace VirtoCommerce.Domain.Catalog.Model
         public string Outline { get; set; }
 
         public DateTime? StartDateFrom { get; set; }
+
+        public void Normalize()
+        {
+            Keyword = Keyword.EmptyToNull();
+            Sort = Sort.EmptyToNull();
+            SortOrder = SortOrder.EmptyToNull();
+            CatalogId = CatalogId.EmptyToNull();
+            CategoryId = CategoryId.EmptyToNull();
+            Sort = Sort.EmptyToNull();
+            Sort = Sort.EmptyToNull();
+
+            if (!string.IsNullOrEmpty(Keyword))
+            {
+                Keyword = Keyword.EscapeSearchTerm();
+            }
+        }
 
         public override string ToString()
         {

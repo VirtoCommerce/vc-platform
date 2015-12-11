@@ -59,7 +59,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 				var query = repository.Categories;
 
 			    //Get list of search in categories
-                var searchCategoryIds = criteria.CategoriesIds;
+                var searchCategoryIds = criteria.CategoryIds;
                 if (searchCategoryIds != null && searchCategoryIds.Any() && criteria.SearchInChildren)
                 {
                     searchCategoryIds = searchCategoryIds.Concat(repository.GetAllChildrenCategoriesIds(searchCategoryIds)).ToArray();
@@ -85,9 +85,9 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 				{
 					query = query.Where(x => x.Code == criteria.Code);
 				}
-                else if (criteria.CatalogsIds != null)
+                else if (criteria.CatalogIds != null)
                 {
-                    query = query.Where(x => (criteria.CatalogsIds.Contains(x.CatalogId) && (x.ParentCategoryId == null || criteria.SearchInChildren)) || (x.OutgoingLinks.Any(y => y.TargetCategoryId == null && criteria.CatalogsIds.Contains(y.TargetCatalogId))));
+                    query = query.Where(x => (criteria.CatalogIds.Contains(x.CatalogId) && (x.ParentCategoryId == null || criteria.SearchInChildren)) || (x.OutgoingLinks.Any(y => y.TargetCategoryId == null && criteria.CatalogIds.Contains(y.TargetCatalogId))));
 
                 }
 
@@ -110,7 +110,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
         {
             using (var repository = _catalogRepositoryFactory())
             {
-                var catalogIds = criteria.CatalogsIds;
+                var catalogIds = criteria.CatalogIds;
                 if (catalogIds == null)
                 {
                     catalogIds = repository.Catalogs.Select(x => x.Id).ToArray();
@@ -137,7 +137,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
             using (var repository = _catalogRepositoryFactory())
             {
                 //list of search categories
-                var searchCategoryIds = criteria.CategoriesIds;
+                var searchCategoryIds = criteria.CategoryIds;
                 if (searchCategoryIds != null && criteria.SearchInChildren)
                 {
                     searchCategoryIds = searchCategoryIds.Concat(repository.GetAllChildrenCategoriesIds(searchCategoryIds)).ToArray();
@@ -153,9 +153,9 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                 {
                    query = query.Where(x => searchCategoryIds.Contains(x.CategoryId) || x.CategoryLinks.Any(c => searchCategoryIds.Contains(c.CategoryId)));
                 }
-				else if (criteria.CatalogsIds != null)
+				else if (criteria.CatalogIds != null)
 				{
-					query = query.Where(x => criteria.CatalogsIds.Contains(x.CatalogId) && (criteria.SearchInChildren || x.CategoryId == null));
+					query = query.Where(x => criteria.CatalogIds.Contains(x.CatalogId) && (criteria.SearchInChildren || x.CategoryId == null));
 				}
 
                 if (!string.IsNullOrEmpty(criteria.Code))

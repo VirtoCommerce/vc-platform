@@ -8,6 +8,8 @@ using System.Text;
 using System.Web.Http;
 using System.Web.Http.Description;
 using System.Xml.Serialization;
+using VirtoCommerce.CatalogModule.Web.Converters;
+using VirtoCommerce.CatalogModule.Web.Model;
 using VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Domain.Commerce.Model;
@@ -18,17 +20,20 @@ using VirtoCommerce.Domain.Search.Model;
 using VirtoCommerce.Domain.Search.Services;
 using VirtoCommerce.Domain.Store.Model;
 using VirtoCommerce.Domain.Store.Services;
+using VirtoCommerce.Platform.Core.Asset;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.SearchModule.Web.BackgroundJobs;
+using VirtoCommerce.SearchModule.Web.Security;
 using VirtoCommerce.SearchModule.Web.Services;
+using Property = VirtoCommerce.Domain.Catalog.Model.Property;
+using PropertyDictionaryValue = VirtoCommerce.Domain.Catalog.Model.PropertyDictionaryValue;
 using webModel = VirtoCommerce.SearchModule.Web.Model;
 
 namespace VirtoCommerce.SearchModule.Web.Controllers.Api
 {
     [RoutePrefix("api/search")]
-    [ApiExplorerSettings(IgnoreApi = true)]
     public class SearchModuleController : ApiController
     {
         private const string _filteredBrowsingPropertyName = "FilteredBrowsing";
@@ -43,8 +48,9 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
         private readonly IBrowseFilterService _browseFilterService;
         private readonly IItemBrowsingService _browseService;
         private readonly IInventoryService _inventoryService;
+        private readonly IBlobUrlResolver _blobUrlResolver;
 
-        public SearchModuleController(ISearchProvider searchProvider, ISearchConnection searchConnection, SearchIndexJobsScheduler scheduler, IStoreService storeService, ISecurityService securityService, IPermissionScopeService permissionScopeService, IPropertyService propertyService, IBrowseFilterService browseFilterService, IItemBrowsingService browseService, IInventoryService inventoryService)
+        public SearchModuleController(ISearchProvider searchProvider, ISearchConnection searchConnection, SearchIndexJobsScheduler scheduler, IStoreService storeService, ISecurityService securityService, IPermissionScopeService permissionScopeService, IPropertyService propertyService, IBrowseFilterService browseFilterService, IItemBrowsingService browseService, IInventoryService inventoryService, IBlobUrlResolver blobUrlResolver)
         {
             _searchProvider = searchProvider;
             _searchConnection = searchConnection;
@@ -56,13 +62,15 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
             _browseFilterService = browseFilterService;
             _browseService = browseService;
             _inventoryService = inventoryService;
+            _blobUrlResolver = blobUrlResolver;
         }
 
         [HttpGet]
         [Route("catalogitem")]
         [ResponseType(typeof(ISearchResults))]
-        [CheckPermission(Permission = "VirtoCommerce.Search:Debug")]
-        public IHttpActionResult Search([FromUri]CatalogIndexedSearchCriteria criteria)
+        [CheckPermission(Permission = SearchPredefinedPermissions.Debug)]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public IHttpActionResult Debug([FromUri]CatalogIndexedSearchCriteria criteria)
         {
             criteria = criteria ?? new CatalogIndexedSearchCriteria();
             var scope = _searchConnection.Scope;
@@ -72,7 +80,8 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
 
         [HttpGet]
         [Route("catalogitem/rebuild")]
-        [CheckPermission(Permission = "VirtoCommerce.Search:Index:Rebuild")]
+        [CheckPermission(Permission = SearchPredefinedPermissions.RebuildIndex)]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IHttpActionResult Rebuild()
         {
             var jobId = _scheduler.ScheduleRebuildIndex();
@@ -86,21 +95,21 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
         /// <remarks>
         /// Returns all store catalog properties: selected properties are ordered manually, unselected properties are ordered by name.
         /// </remarks>
-        /// <param name="id">Store ID</param>
+        /// <param name="storeId">Store ID</param>
         /// <responce code="404">Store not found</responce>
         /// <responce code="200"></responce>
         [HttpGet]
-        [Route("storefilterproperties/{id}")]
+        [Route("storefilterproperties/{storeId}")]
         [ResponseType(typeof(webModel.FilterProperty[]))]
-        public IHttpActionResult GetFilterProperties(string id)
+        public IHttpActionResult GetFilterProperties(string storeId)
         {
-            var store = _storeService.GetById(id);
+            var store = _storeService.GetById(storeId);
             if (store == null)
             {
                 return NotFound();
             }
 
-            CheckCurrentUserHasPermissionForObjects("read", store);
+            CheckCurrentUserHasPermissionForObjects(SearchPredefinedPermissions.ReadFilterProperties, store);
 
             var allProperties = GetAllCatalogProperties(store.Catalog);
             var selectedPropertyNames = GetSelectedFilterProperties(store);
@@ -123,22 +132,22 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
         /// <summary>
         /// Set filter properties for store
         /// </summary>
-        /// <param name="id">Store ID</param>
+        /// <param name="storeId">Store ID</param>
         /// <param name="filterProperties"></param>
         /// <responce code="404">Store not found</responce>
         /// <responce code="204"></responce>
         [HttpPut]
-        [Route("storefilterproperties/{id}")]
+        [Route("storefilterproperties/{storeId}")]
         [ResponseType(typeof(void))]
-        public IHttpActionResult SetFilterProperties(string id, webModel.FilterProperty[] filterProperties)
+        public IHttpActionResult SetFilterProperties(string storeId, webModel.FilterProperty[] filterProperties)
         {
-            var store = _storeService.GetById(id);
+            var store = _storeService.GetById(storeId);
             if (store == null)
             {
                 return NotFound();
             }
 
-            CheckCurrentUserHasPermissionForObjects("read", store);
+            CheckCurrentUserHasPermissionForObjects(SearchPredefinedPermissions.UpdateFilterProperties, store);
 
             var allProperties = GetAllCatalogProperties(store.Catalog);
 
@@ -166,44 +175,44 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
         }
 
         /// <summary>
-        /// Search for store products
+        /// Search for products and categories
         /// </summary>
-        /// <param name="request">Search parameters</param>
+        /// <param name="criteria">Search parameters</param>
         [HttpGet]
         [Route("")]
-        [ResponseType(typeof(SearchResult))]
+        [ResponseType(typeof(CatalogSearchResult))]
         [ClientCache(Duration = 30)]
-        public IHttpActionResult Search([FromUri] SearchCriteria request)
+        public IHttpActionResult Search([FromUri] SearchCriteria criteria)
         {
-            request = request ?? new SearchCriteria();
-            Normalize(request);
+            criteria = criteria ?? new SearchCriteria();
+            criteria.Normalize();
 
             var context = new Dictionary<string, object>
             {
-                { "StoreId", request.StoreId },
+                { "StoreId", criteria.StoreId },
             };
 
-            var store = _storeService.GetById(request.StoreId);
+            var store = _storeService.GetById(criteria.StoreId);
             if (store == null)
             {
-                throw new NullReferenceException(request.StoreId + " not found");
+                throw new NullReferenceException(criteria.StoreId + " not found");
             }
 
             var catalog = store.Catalog;
 
             string categoryId = null;
 
-            var criteria = new CatalogIndexedSearchCriteria
+            var serviceCriteria = new CatalogIndexedSearchCriteria
             {
-                Locale = request.LanguageCode,
+                Locale = criteria.LanguageCode,
                 Catalog = catalog.ToLowerInvariant(),
                 IsFuzzySearch = true,
             };
 
-            if (!string.IsNullOrWhiteSpace(request.Outline))
+            if (!string.IsNullOrWhiteSpace(criteria.Outline))
             {
-                criteria.Outlines.Add(string.Format(CultureInfo.InvariantCulture, "{0}/{1}*", catalog, request.Outline));
-                categoryId = request.Outline.Split('/').Last();
+                serviceCriteria.Outlines.Add(string.Format(CultureInfo.InvariantCulture, "{0}/{1}*", catalog, criteria.Outline));
+                categoryId = criteria.Outline.Split('/').Last();
                 context.Add("CategoryId", categoryId);
             }
 
@@ -214,22 +223,22 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
             // Add all filters
             foreach (var filter in filters)
             {
-                criteria.Add(filter);
+                serviceCriteria.Add(filter);
             }
 
             // apply terms
-            var terms = ParseKeyValues(request.Terms);
+            var terms = ParseKeyValues(criteria.Terms);
             if (terms.Any())
             {
                 var filtersWithValues = filters
-                    .Where(x => (!(x is PriceRangeFilter) || ((PriceRangeFilter)x).Currency.Equals(request.Currency, StringComparison.OrdinalIgnoreCase)))
+                    .Where(x => (!(x is PriceRangeFilter) || ((PriceRangeFilter)x).Currency.Equals(criteria.Currency, StringComparison.OrdinalIgnoreCase)))
                     .Select(x => new { Filter = x, Values = x.GetValues() })
                     .ToList();
 
                 foreach (var term in terms)
                 {
                     var filter = filters.SingleOrDefault(x => x.Key.Equals(term.Key, StringComparison.OrdinalIgnoreCase)
-                        && (!(x is PriceRangeFilter) || ((PriceRangeFilter)x).Currency.Equals(request.Currency, StringComparison.OrdinalIgnoreCase)));
+                        && (!(x is PriceRangeFilter) || ((PriceRangeFilter)x).Currency.Equals(criteria.Currency, StringComparison.OrdinalIgnoreCase)));
 
                     // handle special filter term with a key = "tags", it contains just values and we need to determine which filter to use
                     if (filter == null && term.Key == "tags")
@@ -244,14 +253,14 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
                                 filter = foundFilter.Filter;
 
                                 var appliedFilter = _browseFilterService.Convert(filter, term.Values);
-                                criteria.Apply(appliedFilter);
+                                serviceCriteria.Apply(appliedFilter);
                             }
                         }
                     }
                     else
                     {
                         var appliedFilter = _browseFilterService.Convert(filter, term.Values);
-                        criteria.Apply(appliedFilter);
+                        serviceCriteria.Apply(appliedFilter);
                     }
                 }
             }
@@ -259,44 +268,44 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
 
             #region Facets
             // apply facet filters
-            var facets = ParseKeyValues(request.Facets);
+            var facets = ParseKeyValues(criteria.Facets);
             foreach (var facet in facets)
             {
                 var filter = filters.SingleOrDefault(
                     x => x.Key.Equals(facet.Key, StringComparison.OrdinalIgnoreCase)
                         && (!(x is PriceRangeFilter)
-                            || ((PriceRangeFilter)x).Currency.Equals(request.Currency, StringComparison.OrdinalIgnoreCase)));
+                            || ((PriceRangeFilter)x).Currency.Equals(criteria.Currency, StringComparison.OrdinalIgnoreCase)));
 
                 var appliedFilter = _browseFilterService.Convert(filter, facet.Values);
-                criteria.Apply(appliedFilter);
+                serviceCriteria.Apply(appliedFilter);
             }
             #endregion
 
             //criteria.ClassTypes.Add("Product");
-            criteria.RecordsToRetrieve = request.Take <= 0 ? 10 : request.Take;
-            criteria.StartingRecord = request.Skip;
-            criteria.Pricelists = request.PricelistIds;
-            criteria.Currency = request.Currency;
-            criteria.StartDateFrom = request.StartDateFrom;
-            criteria.SearchPhrase = request.Keyword;
+            serviceCriteria.RecordsToRetrieve = criteria.Take <= 0 ? 10 : criteria.Take;
+            serviceCriteria.StartingRecord = criteria.Skip;
+            serviceCriteria.Pricelists = criteria.PricelistIds;
+            serviceCriteria.Currency = criteria.Currency;
+            serviceCriteria.StartDateFrom = criteria.StartDateFrom;
+            serviceCriteria.SearchPhrase = criteria.Keyword;
 
             #region sorting
 
-            if (!string.IsNullOrEmpty(request.Sort))
+            if (!string.IsNullOrEmpty(criteria.Sort))
             {
-                var isDescending = "desc".Equals(request.SortOrder, StringComparison.OrdinalIgnoreCase);
+                var isDescending = "desc".Equals(criteria.SortOrder, StringComparison.OrdinalIgnoreCase);
 
                 SearchSort sortObject = null;
 
-                switch (request.Sort.ToLowerInvariant())
+                switch (criteria.Sort.ToLowerInvariant())
                 {
                     case "price":
-                        if (criteria.Pricelists != null)
+                        if (serviceCriteria.Pricelists != null)
                         {
                             sortObject = new SearchSort(
-                                criteria.Pricelists.Select(
+                                serviceCriteria.Pricelists.Select(
                                     priceList =>
-                                        new SearchSortField(String.Format("price_{0}_{1}", criteria.Currency.ToLower(), priceList.ToLower()))
+                                        new SearchSortField(String.Format("price_{0}_{1}", serviceCriteria.Currency.ToLower(), priceList.ToLower()))
                                         {
                                             IgnoredUnmapped = true,
                                             IsDescending = isDescending,
@@ -318,45 +327,34 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
                         sortObject = new SearchSort("name", isDescending);
                         break;
                     case "rating":
-                        sortObject = new SearchSort(criteria.ReviewsAverageField, isDescending);
+                        sortObject = new SearchSort(serviceCriteria.ReviewsAverageField, isDescending);
                         break;
                     case "reviews":
-                        sortObject = new SearchSort(criteria.ReviewsTotalField, isDescending);
+                        sortObject = new SearchSort(serviceCriteria.ReviewsTotalField, isDescending);
                         break;
                     default:
                         sortObject = CatalogIndexedSearchCriteria.DefaultSortOrder;
                         break;
                 }
 
-                criteria.Sort = sortObject;
+                serviceCriteria.Sort = sortObject;
             }
 
             #endregion
 
             //Load ALL products 
-            var searchResults = _browseService.SearchItems(criteria, ItemResponseGroup.ItemInfo);
+            var searchResults = _browseService.SearchItems(serviceCriteria, ItemResponseGroup.ItemInfo);
 
             // populate inventory
             //if ((request.ResponseGroup & ItemResponseGroup.ItemProperties) == ItemResponseGroup.ItemProperties)
-            if ((request.ResponseGroup & SearchResponseGroup.WithProperties) == SearchResponseGroup.WithProperties)
+            if ((criteria.ResponseGroup & SearchResponseGroup.WithProperties) == SearchResponseGroup.WithProperties)
             {
                 PopulateInventory(store.FulfillmentCenter, searchResults.Products);
             }
 
-            return Ok(searchResults);
+            return Ok(searchResults.ToWebModel(_blobUrlResolver));
         }
 
-        private static void Normalize(SearchCriteria request)
-        {
-            request.Keyword = request.Keyword.EmptyToNull();
-            request.Sort = request.Sort.EmptyToNull();
-            request.SortOrder = request.SortOrder.EmptyToNull();
-
-            if (!string.IsNullOrEmpty(request.Keyword))
-            {
-                request.Keyword = request.Keyword.EscapeSearchTerm();
-            }
-        }
 
         protected void CheckCurrentUserHasPermissionForObjects(string permission, params object[] objects)
         {

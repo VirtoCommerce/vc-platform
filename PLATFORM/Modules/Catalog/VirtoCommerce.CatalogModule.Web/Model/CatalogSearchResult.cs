@@ -1,22 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace VirtoCommerce.CatalogModule.Web.Model
+﻿namespace VirtoCommerce.CatalogModule.Web.Model
 {
     public class CatalogSearchResult
     {
-        public CatalogSearchResult()
-        {
-            Products = new List<Product>();
-            Categories = new List<Category>();
-            Catalogs = new List<Catalog>();
-        }
-        public int TotalCount { get; set; }
-
-        public List<Product> Products { get; set; }
-        public List<Category> Categories { get; set; }
-        public List<Catalog> Catalogs { get; set; }
+        public int ProductsTotalCount { get; set; }
+        public Product[] Products { get; set; }
+        public Category[] Categories { get; set; }
+        public Catalog[] Catalogs { get; set; }
+        public Aggregation[] Aggregations { get; set; }
     }
 }
