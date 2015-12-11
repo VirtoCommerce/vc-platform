@@ -90,9 +90,11 @@
     <Compile Include="Services\IMenuService.cs" />
     <Compile Include="Services\IPagesService.cs" />
     <Compile Include="Services\IThemeService.cs" />
+    <Compile Include="Services\IThemeStorageProvider.cs" />
     <Compile Include="Services\MenuServiceImpl.cs" />
     <Compile Include="Services\PagesServiceImpl.cs" />
     <Compile Include="Services\ThemeServiceImpl.cs" />
+    <Compile Include="Services\ThemeStorageProviderImpl.cs" />
     <Compile Include="Utility\ContentTypeUtility.cs" />
   </ItemGroup>
   <ItemGroup>

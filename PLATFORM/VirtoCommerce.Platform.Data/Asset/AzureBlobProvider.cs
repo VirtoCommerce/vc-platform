@@ -29,6 +29,29 @@ namespace VirtoCommerce.Platform.Data.Asset
 
         #region IBlobStorageProvider Members
         /// <summary>
+        /// Get blog info by url
+        /// </summary>
+        /// <param name="blobUrl"></param>
+        /// <returns></returns>
+        public BlobInfo GetBlobInfo(string url)
+        {
+            if (string.IsNullOrEmpty(url))
+                throw new ArgumentNullException("url");
+
+            var uri = url.IsAbsoluteUrl() ? new Uri(url) : new Uri(_cloudBlobClient.BaseUri, url.TrimStart('/'));
+            var cloudBlob = _cloudBlobClient.GetBlobReferenceFromServer(uri);
+            var retVal = new BlobInfo
+            {
+                Url = Uri.EscapeUriString(cloudBlob.Uri.ToString()),
+                FileName = Path.GetFileName(Uri.UnescapeDataString(cloudBlob.Uri.ToString())),
+                ContentType = cloudBlob.Properties.ContentType,
+                Size = cloudBlob.Properties.Length,
+                ModifiedDate = cloudBlob.Properties.LastModified != null ? cloudBlob.Properties.LastModified.Value.DateTime : (DateTime?)null
+            };
+            return retVal;
+        }
+
+        /// <summary>
         /// Open blob for read by relative or absolute url
         /// </summary>
         /// <param name="url"></param>

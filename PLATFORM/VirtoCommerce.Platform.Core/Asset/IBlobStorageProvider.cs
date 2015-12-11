@@ -17,6 +17,13 @@ namespace VirtoCommerce.Platform.Core.Asset
         BlobSearchResult Search(string folderUrl, string keyword);
 
         /// <summary>
+        /// Get blog info by url
+        /// </summary>
+        /// <param name="blobUrl"></param>
+        /// <returns></returns>
+        BlobInfo GetBlobInfo(string blobUrl);
+
+        /// <summary>
         /// Create blob folder in specified provider
         /// </summary>
         /// <param name="folder"></param>

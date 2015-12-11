@@ -65,6 +65,10 @@ namespace VirtoCommerce.Content.Web
 
             #region Themes_Initialize
 
+            
+            IThemeStorageProvider themeProvider = new ThemeStorageProviderImpl(@"rootPath=~/Themes;publicUrl=http://localhost/admin/Themes");
+            _container.RegisterInstance(themeProvider);
+
             var githubMainPath = "Themes/";
             var fileSystemMainPath = HostingEnvironment.MapPath("~/App_Data/Themes/");
 
@@ -144,9 +148,7 @@ namespace VirtoCommerce.Content.Web
             var modulePath = options.GetModuleDirectoryPath("VirtoCommerce.Content");
             var themePath = Path.Combine(modulePath, "Default_Theme");
 
-            _container.RegisterType<ThemeController>(new InjectionConstructor(themesFactory, settingsManager, _container.Resolve<ISecurityService>(), 
-                                                                             _container.Resolve<IPermissionScopeService>(),
-                                                                              uploadPath, uploadPathFiles, themePath));
+         
 
             #endregion
 
@@ -200,9 +202,7 @@ namespace VirtoCommerce.Content.Web
 
             #endregion
 
-            #region Sync_Initialize
-            _container.RegisterType<SyncController>(new InjectionConstructor(themesFactory, pagesFactory, settingsManager));
-            #endregion
+        
         }
 
         public override void PostInitialize()

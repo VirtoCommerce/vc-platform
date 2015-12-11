@@ -39,6 +39,33 @@ namespace VirtoCommerce.Platform.Data.Asset
 
         #region IBlobStorageProvider members
         /// <summary>
+        /// Get blog info by url
+        /// </summary>
+        /// <param name="blobUrl"></param>
+        /// <returns></returns>
+        public BlobInfo GetBlobInfo(string url)
+        {
+            if (string.IsNullOrEmpty(url))
+                throw new ArgumentNullException("url");
+
+            BlobInfo retVal = null;
+            var filePath = GetStoragePathFromUrl(url);
+            if (File.Exists(filePath))
+            {
+                var fileInfo = new FileInfo(filePath);
+                retVal = new BlobInfo
+                {
+                    Url = GetAbsoluteUrlFromPath(filePath),
+                    ContentType = MimeTypeResolver.ResolveContentType(fileInfo.Name),
+                    Size = fileInfo.Length,
+                    FileName = fileInfo.Name,
+                    ModifiedDate = fileInfo.LastWriteTimeUtc
+                };
+            }
+            return retVal; 
+        }
+
+        /// <summary>
         /// Open blob for read by relative or absolute url
         /// </summary>
         /// <param name="url"></param>
