@@ -55,10 +55,10 @@ namespace VirtoCommerce.Client.Model
   
         
         /// <summary>
-        /// Gets or Sets CategoriesIds
+        /// Gets or Sets CategoryIds
         /// </summary>
-        [DataMember(Name="categoriesIds", EmitDefaultValue=false)]
-        public List<string> CategoriesIds { get; set; }
+        [DataMember(Name="categoryIds", EmitDefaultValue=false)]
+        public List<string> CategoryIds { get; set; }
   
         
         /// <summary>
@@ -69,10 +69,10 @@ namespace VirtoCommerce.Client.Model
   
         
         /// <summary>
-        /// Gets or Sets CatalogsIds
+        /// Gets or Sets CatalogIds
         /// </summary>
-        [DataMember(Name="catalogsIds", EmitDefaultValue=false)]
-        public List<string> CatalogsIds { get; set; }
+        [DataMember(Name="catalogIds", EmitDefaultValue=false)]
+        public List<string> CatalogIds { get; set; }
   
         
         /// <summary>
@@ -215,9 +215,9 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Keyword: ").Append(Keyword).Append("\n");
             sb.Append("  SearchInChildren: ").Append(SearchInChildren).Append("\n");
             sb.Append("  CategoryId: ").Append(CategoryId).Append("\n");
-            sb.Append("  CategoriesIds: ").Append(CategoriesIds).Append("\n");
+            sb.Append("  CategoryIds: ").Append(CategoryIds).Append("\n");
             sb.Append("  CatalogId: ").Append(CatalogId).Append("\n");
-            sb.Append("  CatalogsIds: ").Append(CatalogsIds).Append("\n");
+            sb.Append("  CatalogIds: ").Append(CatalogIds).Append("\n");
             sb.Append("  LanguageCode: ").Append(LanguageCode).Append("\n");
             sb.Append("  Code: ").Append(Code).Append("\n");
             sb.Append("  Sort: ").Append(Sort).Append("\n");
@@ -299,9 +299,9 @@ namespace VirtoCommerce.Client.Model
                     this.CategoryId.Equals(other.CategoryId)
                 ) && 
                 (
-                    this.CategoriesIds == other.CategoriesIds ||
-                    this.CategoriesIds != null &&
-                    this.CategoriesIds.SequenceEqual(other.CategoriesIds)
+                    this.CategoryIds == other.CategoryIds ||
+                    this.CategoryIds != null &&
+                    this.CategoryIds.SequenceEqual(other.CategoryIds)
                 ) && 
                 (
                     this.CatalogId == other.CatalogId ||
@@ -309,9 +309,9 @@ namespace VirtoCommerce.Client.Model
                     this.CatalogId.Equals(other.CatalogId)
                 ) && 
                 (
-                    this.CatalogsIds == other.CatalogsIds ||
-                    this.CatalogsIds != null &&
-                    this.CatalogsIds.SequenceEqual(other.CatalogsIds)
+                    this.CatalogIds == other.CatalogIds ||
+                    this.CatalogIds != null &&
+                    this.CatalogIds.SequenceEqual(other.CatalogIds)
                 ) && 
                 (
                     this.LanguageCode == other.LanguageCode ||
@@ -432,14 +432,14 @@ namespace VirtoCommerce.Client.Model
                 if (this.CategoryId != null)
                     hash = hash * 57 + this.CategoryId.GetHashCode();
                 
-                if (this.CategoriesIds != null)
-                    hash = hash * 57 + this.CategoriesIds.GetHashCode();
+                if (this.CategoryIds != null)
+                    hash = hash * 57 + this.CategoryIds.GetHashCode();
                 
                 if (this.CatalogId != null)
                     hash = hash * 57 + this.CatalogId.GetHashCode();
                 
-                if (this.CatalogsIds != null)
-                    hash = hash * 57 + this.CatalogsIds.GetHashCode();
+                if (this.CatalogIds != null)
+                    hash = hash * 57 + this.CatalogIds.GetHashCode();
                 
                 if (this.LanguageCode != null)
                     hash = hash * 57 + this.LanguageCode.GetHashCode();
