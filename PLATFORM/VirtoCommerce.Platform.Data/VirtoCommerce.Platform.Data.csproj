@@ -170,6 +170,7 @@
     <Compile Include="Infrastructure\Interceptors\ChangeInterceptor.cs" />
     <Compile Include="Infrastructure\Interceptors\ChangeLogPolicy.cs" />
     <Compile Include="Infrastructure\Interceptors\EntityPrimaryKeyGeneratorInterceptor.cs" />
+    <Compile Include="Infrastructure\Interceptors\GuidCombiPrimaryKeyGeneratorInterceptor.cs" />
     <Compile Include="Infrastructure\Interceptors\IInterceptor.cs" />
     <Compile Include="Infrastructure\Interceptors\InterceptionContext.cs" />
     <Compile Include="Infrastructure\Interceptors\ChangeLogInterceptor.cs">
