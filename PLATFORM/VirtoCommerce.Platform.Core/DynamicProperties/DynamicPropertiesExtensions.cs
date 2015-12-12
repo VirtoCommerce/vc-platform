@@ -49,5 +49,24 @@ namespace VirtoCommerce.Platform.Core.DynamicProperties
                 }
             }
         }
+
+        /// <summary>
+        /// Apply property values for those who have the same name and ValueType
+        /// </summary>
+        public static void ApplyDynamicPropertiesValues(this IHasDynamicProperties owner, IHasDynamicProperties source)
+        {
+            if (source.DynamicProperties != null && owner.DynamicProperties != null)
+            {
+                foreach (var sourceProperty in source.DynamicProperties)
+                {
+                    var ownerProperty = owner.DynamicProperties
+                        .FirstOrDefault(x => x.Name.Equals(sourceProperty.Name) && x.ValueType == sourceProperty.ValueType);
+                    if (ownerProperty != null && sourceProperty.Values != null)
+                    {
+                        ownerProperty.Values = sourceProperty.Values.Select(x => x.Clone()).ToArray();
+                    }
+                }
+            }
+        }
     }
 }
