@@ -17,12 +17,14 @@ namespace VirtoCommerce.Storefront.Controllers
             _marketingApi = marketingApi;
         }
 
-        // GET: /marketing/dynamiccontent/json
-        //[HttpGet]
-        //[Route("dynamiccontent/json")]
-        //public async Task<ActionResult> GetDynamicContentJson(string[] placeNames)
-        //{
-        //    return Json("", JsonRequestBehavior.AllowGet);
-        //}
+       // GET: /marketing/dynamiccontent/{placeName}/json
+       [HttpGet]
+       [Route("dynamiccontent/{placeName}/json")]
+        public async Task<ActionResult> GetDynamicContentJson(string placeName)
+        {
+            var dynamicContent = await _marketingApi.MarketingModuleDynamicContentEvaluateDynamicContentAsync(WorkContext.CurrentStore.Id, placeName);
+
+            return Json(dynamicContent, JsonRequestBehavior.AllowGet);
+        }
     }
 }

@@ -8,6 +8,14 @@ app.service('customerService', ['$http', function ($http) {
     }
 }]);
 
+app.service('marketingService', ['$http', function ($http) {
+    return {
+        getDynamicContent: function (placeName) {
+            return $http.get('marketing/dynamiccontent/' + placeName + '/json?t=' + new Date().getTime());
+        }
+    }
+}]);
+
 app.service('productService', ['$http', function ($http) {
 	return {
 		getProduct: function (productId) {
@@ -82,6 +90,24 @@ app.controller('mainController', ['$scope', '$location', '$window', function ($s
         $location.path(path);
         $scope.currentPath = $location.$$path.replace('/', '');
     };
+}]);
+
+app.directive('vcContentPlace', ['marketingService', function (marketingService) {
+    return {
+        restrict: 'E',
+        link: function (scope, element, attrs) {
+            var dynamicContent = marketingService.getDynamicContent(attrs.id).then(function (response) {
+                var dynamicContent = _.find(response.data, function (dc) { return dc.contentType == 'Html' });
+                if (dynamicContent) {
+                    var dynamicProperty = _.find(dynamicContent.dynamicProperties, function (dp) { return dp.name == dynamicContent.contentType });
+                    if (dynamicProperty) {
+                        element.html(dynamicProperty.values[0].value);
+                    }
+                }
+            });
+        },
+        replace: true
+    }
 }]);
 
 app.controller('cartController', ['$scope', 'cartService', function ($scope, cartService) {

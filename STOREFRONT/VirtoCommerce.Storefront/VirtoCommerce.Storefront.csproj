@@ -183,6 +183,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\countries.json" />
+    <Content Include="App_Data\Themes\default\assets\active-bg.png" />
     <Content Include="App_Data\Themes\default\assets\amazon-payments.svg" />
     <Content Include="App_Data\Themes\default\assets\amazon.svg" />
     <Content Include="App_Data\Themes\default\assets\american-express.svg" />
@@ -196,6 +197,7 @@
     <Content Include="App_Data\Themes\default\assets\bogus.svg" />
     <Content Include="App_Data\Themes\default\assets\boleto.svg" />
     <Content Include="App_Data\Themes\default\assets\breadcrumb-chevron-dark.svg" />
+    <Content Include="App_Data\Themes\default\assets\bullet.png" />
     <Content Include="App_Data\Themes\default\assets\button-spinner-light.svg" />
     <Content Include="App_Data\Themes\default\assets\cart-dark.svg" />
     <Content Include="App_Data\Themes\default\assets\cart.svg" />
@@ -233,17 +235,21 @@
     <Content Include="App_Data\Themes\default\assets\icon_facebook_32.png" />
     <Content Include="App_Data\Themes\default\assets\icon_google_32.png" />
     <Content Include="App_Data\Themes\default\assets\jcb.svg" />
-    <Content Include="App_Data\Themes\default\assets\jquery.flexslider.min.js" />
     <Content Include="App_Data\Themes\default\assets\jquery.zoom.min.js" />
+    <Content Include="App_Data\Themes\default\assets\js-image-slider.css" />
+    <Content Include="App_Data\Themes\default\assets\js-image-slider.js" />
     <Content Include="App_Data\Themes\default\assets\klarna-big.png" />
     <Content Include="App_Data\Themes\default\assets\laser.svg" />
     <Content Include="App_Data\Themes\default\assets\litecoin.svg" />
     <Content Include="App_Data\Themes\default\assets\loader_spinner.gif" />
+    <Content Include="App_Data\Themes\default\assets\loading.gif" />
     <Content Include="App_Data\Themes\default\assets\lock-dark.svg" />
     <Content Include="App_Data\Themes\default\assets\logo.png" />
     <Content Include="App_Data\Themes\default\assets\maestro.svg" />
     <Content Include="App_Data\Themes\default\assets\master.svg" />
     <Content Include="App_Data\Themes\default\assets\modernizr.min.js" />
+    <Content Include="App_Data\Themes\default\assets\navbuttons.gif" />
+    <Content Include="App_Data\Themes\default\assets\navbuttons2.gif" />
     <Content Include="App_Data\Themes\default\assets\offsite-small.svg" />
     <Content Include="App_Data\Themes\default\assets\offsite.svg" />
     <Content Include="App_Data\Themes\default\assets\option_selection.js" />
@@ -266,6 +272,7 @@
     <Content Include="App_Data\Themes\default\assets\shopify_common.js" />
     <Content Include="App_Data\Themes\default\assets\storefront.css" />
     <None Include="App_Data\Themes\default\snippets\checkout-footer.liquid" />
+    <Content Include="App_Data\Themes\default\assets\thumbs-bar.gif" />
     <Content Include="App_Data\Themes\default\assets\unionpay.svg" />
     <Content Include="App_Data\Themes\default\assets\vc-big.png" />
     <Content Include="App_Data\Themes\default\assets\visa.svg" />
@@ -348,7 +355,6 @@
     <Content Include="App_Data\Themes\default\assets\ajaxify.scss.liquid" />
     <Content Include="App_Data\Themes\default\assets\checkout.css.liquid" />
     <Content Include="App_Data\Themes\default\assets\default.scss.liquid" />
-    <Content Include="App_Data\Themes\default\assets\flexslider.css.liquid" />
     <Content Include="App_Data\Themes\default\assets\icons.eot" />
     <Content Include="App_Data\Themes\default\assets\icons.ttf" />
     <Content Include="App_Data\Themes\default\assets\icons.woff" />
