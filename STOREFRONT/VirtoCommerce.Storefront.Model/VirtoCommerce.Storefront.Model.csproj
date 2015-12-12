@@ -61,6 +61,8 @@
     <Compile Include="Country.cs" />
     <Compile Include="CountryRegion.cs" />
     <Compile Include="Coupon.cs" />
+    <Compile Include="MenuLink.cs" />
+    <Compile Include="MenuLinkList.cs" />
     <Compile Include="PromotionRewardType.cs" />
     <Compile Include="DynamicObjectProperty.cs" />
     <Compile Include="DynamicPropertyName.cs" />

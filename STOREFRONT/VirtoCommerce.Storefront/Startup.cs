@@ -76,12 +76,13 @@ namespace VirtoCommerce.Storefront
             container.RegisterType<IShoppingCartModuleApi, ShoppingCartModuleApi>();
             container.RegisterType<IOrderModuleApi, OrderModuleApi>();
             container.RegisterType<IMarketingModuleApi, MarketingModuleApi>();
+            container.RegisterType<ICMSContentModuleApi, CMSContentModuleApi>();
 
             container.RegisterType<ICartBuilder, CartBuilder>();
             container.RegisterType<ICatalogSearchService, CatalogSearchServiceImpl>();
             container.RegisterType<IAuthenticationManager>(new InjectionFactory((context) => HttpContext.Current.GetOwinContext().Authentication));
 
-            container.RegisterType<IStorefrontUrlBuilder, StorefrontUrlBuilder>();
+            container.RegisterType<IStorefrontUrlBuilder, StorefrontUrlBuilder>(new PerRequestLifetimeManager());
             if (_managerAssembly != null)
             {
                 AreaRegistration.RegisterAllAreas();

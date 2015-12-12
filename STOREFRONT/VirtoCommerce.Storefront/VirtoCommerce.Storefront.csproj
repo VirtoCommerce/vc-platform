@@ -323,6 +323,7 @@
     <Compile Include="Converters\CustomerConverter.cs" />
     <Compile Include="Converters\InPaymentConverter.cs" />
     <Compile Include="Converters\InventoryConverter.cs" />
+    <Compile Include="Converters\MenuLinkConverter.cs" />
     <Compile Include="Converters\OperationConverter.cs" />
     <Compile Include="Converters\OrderConverter.cs" />
     <Compile Include="Converters\OrderLineItemConverter.cs" />

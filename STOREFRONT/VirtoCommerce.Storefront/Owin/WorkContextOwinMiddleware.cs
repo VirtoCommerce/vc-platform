@@ -32,6 +32,7 @@ namespace VirtoCommerce.Storefront.Owin
         private readonly IVirtoCommercePlatformApi _platformApi;
         private readonly ICustomerManagementModuleApi _customerApi;
         private readonly ICartBuilder _cartBuilder;
+        private readonly ICMSContentModuleApi _cmsApi;
         private readonly UnityContainer _container;
 
         public WorkContextOwinMiddleware(OwinMiddleware next, UnityContainer container)
@@ -41,12 +42,14 @@ namespace VirtoCommerce.Storefront.Owin
             _platformApi = container.Resolve<IVirtoCommercePlatformApi>();
             _customerApi = container.Resolve<ICustomerManagementModuleApi>();
             _cartBuilder = container.Resolve<ICartBuilder>();
+            _cmsApi = container.Resolve<ICMSContentModuleApi>();
             _container = container;
         }
 
         public override async Task Invoke(IOwinContext context)
         {
             var workContext = _container.Resolve<WorkContext>();
+            var urlBuilder = _container.Resolve<IStorefrontUrlBuilder>();
 
             // Initialize common properties
             workContext.RequestUrl = context.Request.Uri;
@@ -62,6 +65,9 @@ namespace VirtoCommerce.Storefront.Owin
 
             await _cartBuilder.GetOrCreateNewTransientCartAsync(workContext.CurrentStore, workContext.CurrentCustomer, workContext.CurrentLanguage, workContext.CurrentCurrency);
             workContext.CurrentCart = _cartBuilder.Cart;
+
+            var linkLists = await _cmsApi.MenuGetListsAsync(workContext.CurrentStore.Id);
+            workContext.CurrentLinkLists = linkLists != null ? linkLists.Select(ll => ll.ToWebModel(urlBuilder)).ToList() : null;
 
             //Initialize catalog search context
             workContext.CurrentCatalogSearchCriteria = GetSearchCriteria(workContext);

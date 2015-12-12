@@ -10,7 +10,6 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
     /// </summary>
     public class ShopifyThemeWorkContext : ILiquidizable
     {
-
         #region Aliases for shopify theme compliance
 
         /// <summary>
@@ -38,6 +37,12 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         /// The form object is used within the form tag. It contains attributes of its parent form.
         /// </summary>
         public Form Form { get; set; }
+
+        /// <summary>
+        /// Contains a collection of all of the links in your shop.
+        /// You can access a linklist by calling its handle on linklists
+        /// </summary>
+        public Linklists Linklists { get; set; }
 
         public Product Product { get; set; }
 
