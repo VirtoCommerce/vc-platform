@@ -8,6 +8,14 @@ app.service('customerService', ['$http', function ($http) {
     }
 }]);
 
+app.service('marketingService', ['$http', function ($http) {
+    return {
+        getDynamicContent: function (placeName) {
+            return $http.get('marketing/dynamiccontent/' + placeName + '/json?t=' + new Date().getTime());
+        }
+    }
+}]);
+
 app.service('productService', ['$http', function ($http) {
 	return {
 		getProduct: function (productId) {
@@ -17,53 +25,50 @@ app.service('productService', ['$http', function ($http) {
 }]);
 
 app.service('cartService', ['$http', function ($http) {
-	return {
-		getCart: function () {
-		    return $http.get('cart/json?t=' + new Date().getTime());
-		},
-		addLineItem: function (productId, quantity) {
-			return $http.post('cart/additem', { productId: productId, quantity: quantity });
-		},
-		changeLineItem: function (lineItemId, quantity) {
-			return $http.post('cart/changeitem', { lineItemId: lineItemId, quantity: quantity });
-		},
-		removeLineItem: function (lineItemId) {
-			return $http.post('cart/removeitem', { lineItemId: lineItemId });
-		},
-		getCountries: function () {
-		    return $http.get('common/getcountries/json?t=' + new Date().getTime());
-		},
-		getCountryRegions: function (countryCode) {
-		    return $http.get('common/getregions/' + countryCode + '/json?t=' + new Date().getTime());
-		},
-		addCoupon: function (couponCode) {
-			return $http.post('cart/addcoupon/' + couponCode);
-		},
-		removeCoupon: function () {
-			return $http.post('cart/removecoupon');
-		},
-		addAddress: function (address) {
-			return $http.post('cart/addaddress', { address: address });
-		},
-		getAvailableShippingMethods: function () {
-		    return $http.get('cart/shippingmethods/json?t=' + new Date().getTime());
-		},
-		getAvailablePaymentMethods: function () {
-		    return $http.get('cart/paymentmethods/json?t=' + new Date().getTime());
-		},
-		setShippingMethod: function (shippingMethodCode) {
-			return $http.post('cart/shippingmethod', { shippingMethodCode: shippingMethodCode });
-		},
-		setPaymentMethod: function (paymentMethodCode, billingAddress) {
-			return $http.post('cart/paymentmethod', { paymentMethodCode: paymentMethodCode, billingAddress: billingAddress });
-		},
-		createOrder: function () {
-			return $http.post('cart/createorder');
-		},
-		processPayment: function (orderId, paymentId) {
-			return $http.post('cart/processpayment', { orderId: orderId, paymentId: paymentId });
-		}
-	}
+    return {
+        getCart: function () {
+            return $http.get('cart/json?t=' + new Date().getTime());
+        },
+        addLineItem: function (productId, quantity) {
+            return $http.post('cart/additem', { productId: productId, quantity: quantity });
+        },
+        changeLineItem: function (lineItemId, quantity) {
+            return $http.post('cart/changeitem', { lineItemId: lineItemId, quantity: quantity });
+        },
+        removeLineItem: function (lineItemId) {
+            return $http.post('cart/removeitem', { lineItemId: lineItemId });
+        },
+        getCountries: function () {
+            return $http.get('common/getcountries/json?t=' + new Date().getTime());
+        },
+        getCountryRegions: function (countryCode) {
+            return $http.get('common/getregions/' + countryCode + '/json?t=' + new Date().getTime());
+        },
+        addCoupon: function (couponCode) {
+            return $http.post('cart/addcoupon/' + couponCode);
+        },
+        removeCoupon: function () {
+            return $http.post('cart/removecoupon');
+        },
+        addAddress: function (address) {
+            return $http.post('cart/addaddress', { address: address });
+        },
+        getAvailableShippingMethods: function () {
+            return $http.get('cart/shippingmethods/json?t=' + new Date().getTime());
+        },
+        getAvailablePaymentMethods: function () {
+            return $http.get('cart/paymentmethods/json?t=' + new Date().getTime());
+        },
+        setShippingMethod: function (shippingMethodCode) {
+            return $http.post('cart/shippingmethod', { shippingMethodCode: shippingMethodCode });
+        },
+        setPaymentMethod: function (paymentMethodCode, billingAddress) {
+            return $http.post('cart/paymentmethod', { paymentMethodCode: paymentMethodCode, billingAddress: billingAddress });
+        },
+        createOrder: function (bankCardInfo) {
+            return $http.post('cart/createorder', { bankCardInfo: bankCardInfo });
+        }
+    }
 }]);
 
 app.controller('mainController', ['$scope', '$location', '$window', function ($scope, $location, $window) {
@@ -82,6 +87,18 @@ app.controller('mainController', ['$scope', '$location', '$window', function ($s
         $location.path(path);
         $scope.currentPath = $location.$$path.replace('/', '');
     };
+}]);
+
+app.directive('vcContentPlace', ['marketingService', function (marketingService) {
+    return {
+        restrict: 'E',
+        link: function (scope, element, attrs) {
+            marketingService.getDynamicContent(attrs.id).then(function (response) {
+                element.html(response.data);
+            });
+        },
+        replace: true
+    }
 }]);
 
 app.controller('cartController', ['$scope', 'cartService', function ($scope, cartService) {
@@ -216,16 +233,11 @@ app.controller('checkoutController', ['$scope', '$location', '$sce', '$window', 
         $scope.checkout.orderProcessing = true;
         cartService.setPaymentMethod($scope.checkout.selectedPaymentMethod.GatewayCode).then(function (response) {
             cartService.addAddress($scope.checkout.billingAddress).then(function (response) {
-                cartService.createOrder($scope.checkout.id).then(function (response) {
-                    var order = response.data;
-                    var payment = order.InPayments.length ? order.InPayments[0] : null;
-                    if (payment) {
-                        cartService.processPayment(order.Id, payment.Id, $scope.checkout.bankCardInfo).then(function (response) {
-                            var processingResult = response.data;
-                            handlePaymentProcessingResult(processingResult, order.Id);
-                            $scope.checkout.orderProcessing = false;
-                        });
-                    }
+                cartService.createOrder($scope.checkout.bankCardInfo).then(function (response) {
+                    var processingResult = response.data.processingResult;
+                    var orderId = response.data.orderId;
+                    handlePaymentProcessingResult(processingResult, orderId);
+                    $scope.checkout.orderProcessing = false;
                 });
             });
         });

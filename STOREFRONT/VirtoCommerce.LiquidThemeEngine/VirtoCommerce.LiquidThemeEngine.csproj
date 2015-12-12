@@ -99,6 +99,7 @@
     <Compile Include="Converters\ImageConverter.cs" />
     <Compile Include="Converters\LanguageConverters.cs" />
     <Compile Include="Converters\LineItemConverter.cs" />
+    <Compile Include="Converters\LinkListConverter.cs" />
     <Compile Include="Converters\OrderConverter.cs" />
     <Compile Include="Converters\ProductConverter.cs" />
     <Compile Include="Converters\ProductPropertyConverter.cs" />
@@ -136,6 +137,9 @@
     <Compile Include="Objects\ILiquidContains.cs" />
     <Compile Include="Objects\Language.cs" />
     <Compile Include="Objects\LineItem.cs" />
+    <Compile Include="Objects\Link.cs" />
+    <Compile Include="Objects\Linklist.cs" />
+    <Compile Include="Objects\Linklists.cs" />
     <Compile Include="Objects\Order.cs" />
     <Compile Include="Objects\Paginate.cs" />
     <Compile Include="Objects\Part.cs" />

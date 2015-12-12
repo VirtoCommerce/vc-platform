@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using VirtoCommerce.Client.Api;
+using VirtoCommerce.Client.Model;
 using VirtoCommerce.Storefront.Builders;
 using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
@@ -211,7 +212,7 @@ namespace VirtoCommerce.Storefront.Controllers
         // POST: /cart/createorder
         [HttpPost]
         [Route("createorder")]
-        public async Task<ActionResult> CreateOrderJson()
+        public async Task<ActionResult> CreateOrderJson(BankCardInfo bankCardInfo)
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
 
@@ -230,19 +231,14 @@ namespace VirtoCommerce.Storefront.Controllers
                 await _customerApi.CustomerModuleUpdateContactAsync(contact);
             }
 
-            return Json(order.ToWebModel(), JsonRequestBehavior.AllowGet);
-        }
+            VirtoCommerceOrderModuleWebModelProcessPaymentResult processingResult = null;
+            var incomingPayment = order.InPayments != null ? order.InPayments.FirstOrDefault() : null;
+            if (incomingPayment != null)
+            {
+                processingResult = await _orderApi.OrderModuleProcessOrderPaymentsAsync(bankCardInfo.ToServiceModel(), order.Id, incomingPayment.Id);
+            }
 
-        // POST: /cart/processpayment?orderId=...&paymentId=...&bankCardInfo=...
-        [HttpPost]
-        [Route("processpayment")]
-        public async Task<ActionResult> ProcessPaymentJson(string orderId, string paymentId, BankCardInfo bankCardInfo)
-        {
-            var cardInfo = new BankCardInfo();
-
-            var processingResult = await _orderApi.OrderModuleProcessOrderPaymentsAsync(cardInfo.ToServiceModel(), orderId, paymentId);
-
-            return Json(processingResult, JsonRequestBehavior.AllowGet);
+            return Json(new { processingResult = processingResult, orderId = order.Id }, JsonRequestBehavior.AllowGet);
         }
 
         // GET: /cart/externalpaymentcallback?orderId=...
