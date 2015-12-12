@@ -100,7 +100,7 @@ app.directive('vcContentPlace', ['marketingService', function (marketingService)
                 var dynamicContent = _.find(response.data, function (dc) { return dc.contentType == 'Html' });
                 if (dynamicContent) {
                     var dynamicProperty = _.find(dynamicContent.dynamicProperties, function (dp) { return dp.name == dynamicContent.contentType });
-                    if (dynamicProperty) {
+                    if (dynamicProperty && dynamicProperty.values.length) {
                         element.html(dynamicProperty.values[0].value);
                     }
                 }
