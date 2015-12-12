@@ -15,7 +15,7 @@ namespace VirtoCommerce.Storefront.Converters
 
             if (dynamicObjectProperty.Values != null)
             {
-                webModel.Values = dynamicObjectProperty.Values.Select(v => v.ToWebModel()).ToList();
+                webModel.Values = dynamicObjectProperty.Values.Select(ToWebModel).ToList();
             }
 
             return webModel;
@@ -28,6 +28,29 @@ namespace VirtoCommerce.Storefront.Converters
             webModel.InjectFrom(dynamicPropertyObjectValue);
 
             return webModel;
+        }
+
+        public static VirtoCommercePlatformCoreDynamicPropertiesDynamicObjectProperty ToServiceModel(this DynamicObjectProperty dynamicObjectProperty)
+        {
+            var serviceModel = new VirtoCommercePlatformCoreDynamicPropertiesDynamicObjectProperty();
+
+            serviceModel.InjectFrom(dynamicObjectProperty);
+
+            if (dynamicObjectProperty.Values != null)
+            {
+                serviceModel.Values = dynamicObjectProperty.Values.Select(ToServiceModel).ToList();
+            }
+
+            return serviceModel;
+        }
+
+        public static VirtoCommercePlatformCoreDynamicPropertiesDynamicPropertyObjectValue ToServiceModel(this DynamicPropertyObjectValue dynamicPropertyObjectValue)
+        {
+            var serviceModel = new VirtoCommercePlatformCoreDynamicPropertiesDynamicPropertyObjectValue();
+
+            serviceModel.InjectFrom(dynamicPropertyObjectValue);
+
+            return serviceModel;
         }
     }
 }

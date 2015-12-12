@@ -70,6 +70,11 @@ namespace VirtoCommerce.Storefront.Converters
                 webModel.Shipments = serviceModel.Shipments.Select(s => s.ToWebModel(currency, language)).ToList();
             }
 
+            if (serviceModel.DynamicProperties != null)
+            {
+                webModel.DynamicProperties = serviceModel.DynamicProperties.Select(dp => dp.ToWebModel()).ToList();
+            }
+
             if (serviceModel.TaxDetails != null)
             {
                 webModel.TaxDetails = serviceModel.TaxDetails.Select(td => td.ToWebModel()).ToList();
@@ -114,6 +119,7 @@ namespace VirtoCommerce.Storefront.Converters
             serviceModel.ShippingTotal = (double)webModel.ShippingTotal.Amount;
             serviceModel.SubTotal = (double)webModel.SubTotal.Amount;
             serviceModel.TaxDetails = webModel.TaxDetails.Select(td => td.ToServiceModel()).ToList();
+            serviceModel.DynamicProperties = webModel.DynamicProperties.Select(dp => dp.ToServiceModel()).ToList();
             serviceModel.TaxTotal = (double)webModel.TaxTotal.Amount;
             serviceModel.Total = (double)webModel.Total.Amount;
             serviceModel.VolumetricWeight = (double)webModel.VolumetricWeight;
