@@ -54,10 +54,11 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         /// </summary>
         public Collection Collection { get; set; }
 
-
         public Collections Collections { get; set; }
 
         public int CurrentPage { get; set; }
+
+        public TagCollection CurrentTags { get; set; }
 
         #region Custom properties
         public Language CurrentLanguage { get; set; }

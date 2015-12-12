@@ -1,10 +1,7 @@
-﻿using Omu.ValueInjecter;
-using System.Linq;
-using VirtoCommerce.LiquidThemeEngine.Converters.Injections;
+﻿using System.Linq;
 using VirtoCommerce.LiquidThemeEngine.Objects;
-using storefrontModel = VirtoCommerce.Storefront.Model;
-using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Storefront.Model.Common;
+using storefrontModel = VirtoCommerce.Storefront.Model;
 
 namespace VirtoCommerce.LiquidThemeEngine.Converters
 {
@@ -13,17 +10,27 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
         public static Collection ToShopifyModel(this storefrontModel.Catalog.CatalogSearchResult searchResult, storefrontModel.WorkContext workContext)
         {
             var result = new Collection();
-            if(searchResult.Category != null)
+
+            if (searchResult.Category != null)
             {
                 result = searchResult.Category.ToShopifyModel(workContext);
             }
 
             if (searchResult.Products != null)
             {
-                result.Products = new StorefrontPagedList<Product>(searchResult.Products.Select(x => x.ToShopifyModel(workContext)),
-                                                                   searchResult.Products, searchResult.Products.GetPageUrl);
+                result.Products = new StorefrontPagedList<Product>(searchResult.Products.Select(x => x.ToShopifyModel(workContext)), searchResult.Products, searchResult.Products.GetPageUrl);
                 result.ProductsCount = searchResult.Products.TotalItemCount;
                 result.AllProductsCount = searchResult.Products.TotalItemCount;
+            }
+
+            if (searchResult.Aggregations != null)
+            {
+                var tags = searchResult.Aggregations
+                    .Where(a => a.Items != null)
+                    .SelectMany(a => a.Items.Select(item => item.ToShopifyModel(a.Field, a.Label)))
+                    .ToList();
+
+                result.Tags = new TagCollection(tags);
             }
 
             return result;
@@ -31,19 +38,22 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
 
         public static Collection ToShopifyModel(this storefrontModel.Catalog.Category category, storefrontModel.WorkContext workContext)
         {
-            var result = new Collection();
-            result.Description = category.Name;
-            result.Handle = category.SeoInfo != null ? category.SeoInfo.Slug : category.Id;
-            result.Image = category.PrimaryImage != null ? category.PrimaryImage.ToShopifyModel() : null;
-            result.Title = category.Name;
-            result.Url = "~/category/" + category.Id;
+            var result = new Collection
+            {
+                Description = category.Name,
+                Handle = category.SeoInfo != null ? category.SeoInfo.Slug : category.Id,
+                Image = category.PrimaryImage?.ToShopifyModel(),
+                Title = category.Name,
+                Url = "~/category/" + category.Id
+            };
+
             if (category.SeoInfo != null)
             {
                 result.Url = "~/" + category.SeoInfo.Slug;
             }
+
             return result;
         }
-
     }
 }
 

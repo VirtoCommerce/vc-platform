@@ -195,7 +195,7 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
             var store = _storeService.GetById(criteria.StoreId);
             if (store == null)
             {
-                throw new NullReferenceException(criteria.StoreId + " not found");
+                throw new NullReferenceException("Cannot find store '" + criteria.StoreId + "'");
             }
 
             var catalog = store.Catalog;

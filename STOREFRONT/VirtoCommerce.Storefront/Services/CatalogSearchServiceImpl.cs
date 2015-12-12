@@ -17,16 +17,18 @@ namespace VirtoCommerce.Storefront.Services
         private readonly IPricingModuleApi _pricingModuleApi;
         private readonly IInventoryModuleApi _inventoryModuleApi;
         private readonly IMarketingModuleApi _marketingModuleApi;
+        private readonly ISearchModuleApi _searchApi;
         private readonly WorkContext _workContext;
 
         public CatalogSearchServiceImpl(WorkContext workContext, ICatalogModuleApi catalogModuleApi, IPricingModuleApi pricingModuleApi, IInventoryModuleApi inventoryModuleApi,
-                                  IMarketingModuleApi marketingModuleApi)
+                                  IMarketingModuleApi marketingModuleApi, ISearchModuleApi searchApi)
         {
             _workContext = workContext;
             _catalogModuleApi = catalogModuleApi;
             _pricingModuleApi = pricingModuleApi;
             _inventoryModuleApi = inventoryModuleApi;
             _marketingModuleApi = marketingModuleApi;
+            _searchApi = searchApi;
         }
 
         public async Task<Product> GetProductAsync(string id, ItemResponseGroup responseGroup = ItemResponseGroup.ItemInfo)
@@ -55,7 +57,8 @@ namespace VirtoCommerce.Storefront.Services
         {
             var retVal = new CatalogSearchResult();
 
-            var result = await _catalogModuleApi.CatalogModuleSearchSearchAsync(
+            var result = await _searchApi.SearchModuleSearchAsync(
+                criteriaStoreId: _workContext.CurrentStore.Id,
                 criteriaResponseGroup: criteria.ResponseGroup.ToString(),
                 criteriaSearchInChildren: true,
                 criteriaCategoryId: criteria.CategoryId,
@@ -90,6 +93,10 @@ namespace VirtoCommerce.Storefront.Services
                     retVal.Categories = result.Categories.Select(x => x.ToWebModel());
                 }
 
+                if (result.Aggregations != null)
+                {
+                    retVal.Aggregations = result.Aggregations.Select(x => x.ToWebModel()).ToArray();
+                }
             }
 
             return retVal;

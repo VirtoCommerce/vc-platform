@@ -3,8 +3,9 @@ using System.Globalization;
 using System.Linq;
 using System.Web;
 using DotLiquid;
-using storefrontModel = VirtoCommerce.Storefront.Model;
+using VirtoCommerce.Storefront.Model.Catalog;
 using shopifyModel = VirtoCommerce.LiquidThemeEngine.Objects;
+using storefrontModel = VirtoCommerce.Storefront.Model;
 
 namespace VirtoCommerce.LiquidThemeEngine.Filters
 {
@@ -63,7 +64,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
 
             if (product != null)
             {
-                retVal = product.FeaturedImage != null ? product.FeaturedImage.Src : null;
+                retVal = product.FeaturedImage?.Src;
             }
             if (image != null)
             {
@@ -71,11 +72,11 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
             }
             if (variant != null)
             {
-                retVal = variant.FeaturedImage != null ? variant.FeaturedImage.Src : null;
+                retVal = variant.FeaturedImage?.Src;
             }
             if (collection != null)
             {
-                retVal = collection.Image != null ? collection.Image.Src : null;
+                retVal = collection.Image?.Src;
             }
 
             return retVal;
@@ -85,11 +86,48 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
         /// Generates an HTML link. The first parameter is the URL of the link, and the optional second parameter is the title of the link.
         /// </summary>
         /// <param name="input"></param>
-        /// <param name="type"></param>
+        /// <param name="link"></param>
+        /// <param name="title"></param>
         /// <returns></returns>
         public static string LinkTo(object input, string link, string title = "")
         {
-            return String.Format("<a href=\"{0}\" title=\"{1}\">{2}</a>", link, title, input);
+            return string.Format("<a href=\"{0}\" title=\"{1}\">{2}</a>", link, title, input);
+        }
+
+        /// <summary>
+        /// Creates a link to all products in a collection that have a given tag.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="input"></param>
+        /// <param name="tag"></param>
+        /// <returns></returns>
+        public static string LinkToTag(Context context, object input, object tag)
+        {
+            return BuildTagLink(TagAction.Replace, tag, input);
+        }
+
+        /// <summary>
+        /// Creates a link to all products in a collection that have a given tag as well as any tags that have been already selected.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="input"></param>
+        /// <param name="tag"></param>
+        /// <returns></returns>
+        public static string LinkToAddTag(Context context, object input, object tag)
+        {
+            return BuildTagLink(TagAction.Add, tag, input);
+        }
+
+        /// <summary>
+        /// Generates a link to all products in a collection that have all the previous tags that might have been added already, excluding the given tag.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="input"></param>
+        /// <param name="tag"></param>
+        /// <returns></returns>
+        public static string LinkToRemoveTag(Context context, object input, object tag)
+        {
+            return BuildTagLink(TagAction.Remove, tag, input);
         }
 
         /// <summary>
@@ -125,7 +163,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
         /// <summary>
         /// Returns the URL of a global asset. Global assets are kept in a directory on Shopify's servers. Using global assets can improve the load times of your pages.
         /// In virtocommerce is a same asset folder
-        // </summary>
+        /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
         public static string GlobalAssetUrl(string input)
@@ -147,6 +185,8 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
         /// Get absolute storefront url with specified store and language
         /// </summary>
         /// <param name="input"></param>
+        /// <param name="storeId"></param>
+        /// <param name="languageCode"></param>
         /// <returns></returns>
         public static string AbsoluteUrl(string input, string storeId = null, string languageCode = null)
         {
@@ -175,8 +215,8 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
             var onClick = string.Format(CultureInfo.InvariantCulture, onclickFormat, onclickArgs);
 
             var result = string.Format(CultureInfo.InvariantCulture, "<a href=\"#\" onclick=\"{0}\">{1}</a>",
-               HttpUtility.HtmlAttributeEncode(onClick),
-               HttpUtility.HtmlEncode(title));
+                HttpUtility.HtmlAttributeEncode(onClick),
+                HttpUtility.HtmlEncode(title));
 
             return result;
         }
@@ -186,10 +226,130 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
             var href = BuildAbsoluteUrl(virtualUrl);
 
             var result = string.Format(CultureInfo.InvariantCulture, "<a href=\"{0}\" id=\"{1}\">{2}</a>",
-               HttpUtility.HtmlAttributeEncode(href),
-               HttpUtility.HtmlAttributeEncode(id),
-               HttpUtility.HtmlEncode(title));
+                HttpUtility.HtmlAttributeEncode(href),
+                HttpUtility.HtmlAttributeEncode(id),
+                HttpUtility.HtmlEncode(title));
 
+            return result;
+        }
+
+        private enum TagAction
+        {
+            Add,
+            Remove,
+            Replace
+        }
+
+        private static string BuildTagLink(TagAction action, object tagObject, object input)
+        {
+            var href = string.Empty;
+            var title = string.Empty;
+            var label = input.ToString();
+
+            if (tagObject == null)
+            {
+                title = "Remove all tags";
+            }
+            else
+            {
+                var tag = tagObject as shopifyModel.Tag;
+
+                if (tag != null)
+                {
+                    href = GetCurrentUrlWithTags(action, tag.GroupName, tag.Value);
+                    title = BuildTagActionTitle(action, tag.Label);
+
+                    label = tag.Label;
+
+                    if (tag.Count > 0)
+                    {
+                        label += $" ({tag.Count})";
+                    }
+                }
+                else
+                {
+                    // TODO: Parse tag string
+                }
+            }
+
+            var result = string.Format(CultureInfo.InvariantCulture, "<a href=\"{0}\" title=\"{1}\">{2}</a>",
+                HttpUtility.HtmlAttributeEncode(href),
+                HttpUtility.HtmlAttributeEncode(title),
+                HttpUtility.HtmlEncode(label));
+
+            return result;
+        }
+
+        private static string BuildTagActionTitle(TagAction action, string tagLabel)
+        {
+            switch (action)
+            {
+                case TagAction.Remove:
+                    return "Remove tag " + tagLabel;
+                default:
+                    return "Show products matching tag " + tagLabel;
+            }
+        }
+
+        private static string GetCurrentUrlWithTags(TagAction action, string groupName, string value)
+        {
+            var term = new Term { Name = groupName, Value = value };
+            var themeEngine = (ShopifyLiquidThemeEngine)Template.FileSystem;
+
+            var terms = themeEngine.WorkContext.CurrentCatalogSearchCriteria.Terms
+                .Select(t => new Term { Name = t.Name, Value = t.Value })
+                .ToList();
+
+            switch (action)
+            {
+                case TagAction.Add:
+                    terms.Add(term);
+                    break;
+                case TagAction.Remove:
+                    terms.RemoveAll(t =>
+                        string.Equals(t.Name, groupName, StringComparison.OrdinalIgnoreCase) &&
+                        string.Equals(t.Value, value, StringComparison.OrdinalIgnoreCase));
+                    break;
+                case TagAction.Replace:
+                    terms.Clear();
+                    terms.Add(term);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(action), action, null);
+            }
+
+            var request = HttpContext.Current.Request;
+            var qs = HttpUtility.ParseQueryString(request.Url.Query);
+
+            if (terms.Any())
+            {
+                // terms=name1:value1,value2,value3;name2:value1,value2,value3
+                qs["terms"] = string.Join(";",
+                    terms
+                        .OrderBy(t => t.Name)
+                        .GroupBy(t => t.Name, t => t, StringComparer.OrdinalIgnoreCase)
+                        .Select(
+                            g =>
+                                string.Join(":", g.Key,
+                                    string.Join(",",
+                                        g.Select(t => t.Value)
+                                            .Distinct(StringComparer.OrdinalIgnoreCase)
+                                            .OrderBy(v => v))))
+                    ).ToLowerInvariant();
+            }
+            else
+            {
+                qs.Remove("terms");
+            }
+
+            var virtualUrl = request.AppRelativeCurrentExecutionFilePath;
+
+            if (qs.HasKeys())
+            {
+                virtualUrl += "?" + qs;
+            }
+
+            var result = BuildAbsoluteUrl(virtualUrl);
             return result;
         }
 

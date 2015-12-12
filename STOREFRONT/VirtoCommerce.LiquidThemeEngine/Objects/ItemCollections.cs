@@ -2,71 +2,32 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DotLiquid;
 
 namespace VirtoCommerce.LiquidThemeEngine.Objects
 {
-    public class ItemCollection<T> : Drop, IEnumerable<T>, ICollection
+    public class ItemCollection<T> : Drop, IEnumerable<T>, ICollection, ILiquidContains
+        where T : class
     {
-        #region Fields
-        private readonly IEnumerable<T> _collection;
-        #endregion
-
-        #region Constructors and Destructors
         public ItemCollection(IEnumerable<T> collection)
         {
-            this._collection = collection ?? Enumerable.Empty<T>();
+            Root = (collection ?? Enumerable.Empty<T>()).ToList();
         }
 
-        #endregion
+        public IList<T> Root { get; }
 
-        #region Public Properties
-        public int Count
-        {
-            get
-            {
-                return this.TotalCount;
-            }
-        }
+        public object SyncRoot { get { return Root; } }
 
-        public bool IsSynchronized
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public int Size { get { return Root.Count; } }
 
-        public IEnumerable<T> Root
-        {
-            get
-            {
-                return this._collection;
-            }
-        }
+        public bool IsSynchronized { get { return true; } }
 
-        public int Size
-        {
-            get
-            {
-                return this.Root.Count();
-            }
-        }
 
-        public object SyncRoot
-        {
-            get
-            {
-                return this.Root;
-            }
-        }
+        public int Count { get { return TotalCount; } }
 
         public virtual int TotalCount { get; set; }
-        #endregion
 
-        #region Public Methods and Operators
+
         public static implicit operator ItemCollection<T>(string[] a)
         {
             return new ItemCollection<T>(a as IEnumerable<T>);
@@ -78,15 +39,17 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
 
         public IEnumerator<T> GetEnumerator()
         {
-            return this.Root.GetEnumerator();
+            return Root.GetEnumerator();
         }
-        #endregion
 
-        #region Explicit Interface Methods
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return this.Root.GetEnumerator();
+            return Root.GetEnumerator();
         }
-        #endregion
+
+        public bool Contains(object value)
+        {
+            return Root.Contains(value as T);
+        }
     }
 }

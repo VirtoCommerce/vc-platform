@@ -49,11 +49,14 @@
     <Compile Include="AddressType.cs" />
     <Compile Include="AmountType.cs" />
     <Compile Include="BankCardInfo.cs" />
+    <Compile Include="Catalog\Aggregation.cs" />
+    <Compile Include="Catalog\AggregationItem.cs" />
     <Compile Include="Catalog\Asset.cs" />
     <Compile Include="Catalog\CatalogSearchResponseGroup.cs" />
     <Compile Include="Catalog\CatalogSearchResult.cs" />
     <Compile Include="Catalog\ItemResponseGroup.cs" />
     <Compile Include="Catalog\CatalogSearchCriteria.cs" />
+    <Compile Include="Catalog\Term.cs" />
     <Compile Include="Catalog\TierPrice.cs" />
     <Compile Include="Common\CollectionExtensions.cs" />
     <Compile Include="Common\IStorefrontPagedList.cs" />

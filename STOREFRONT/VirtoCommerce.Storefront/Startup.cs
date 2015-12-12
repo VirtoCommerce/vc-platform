@@ -76,6 +76,7 @@ namespace VirtoCommerce.Storefront
             container.RegisterType<IShoppingCartModuleApi, ShoppingCartModuleApi>();
             container.RegisterType<IOrderModuleApi, OrderModuleApi>();
             container.RegisterType<IMarketingModuleApi, MarketingModuleApi>();
+            container.RegisterType<ISearchModuleApi, SearchModuleApi>();
 
             container.RegisterType<ICartBuilder, CartBuilder>();
             container.RegisterType<ICatalogSearchService, CatalogSearchServiceImpl>();
