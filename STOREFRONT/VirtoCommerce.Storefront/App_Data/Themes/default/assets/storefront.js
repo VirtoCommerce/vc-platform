@@ -93,14 +93,8 @@ app.directive('vcContentPlace', ['marketingService', function (marketingService)
     return {
         restrict: 'E',
         link: function (scope, element, attrs) {
-            var dynamicContent = marketingService.getDynamicContent(attrs.id).then(function (response) {
-                var dynamicContent = _.find(response.data, function (dc) { return dc.contentType == 'Html' });
-                if (dynamicContent) {
-                    var dynamicProperty = _.find(dynamicContent.dynamicProperties, function (dp) { return dp.name == dynamicContent.contentType });
-                    if (dynamicProperty && dynamicProperty.values.length) {
-                        element.html(dynamicProperty.values[0].value);
-                    }
-                }
+            marketingService.getDynamicContent(attrs.id).then(function (response) {
+                element.html(response.data);
             });
         },
         replace: true
