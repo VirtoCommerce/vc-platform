@@ -93,7 +93,7 @@
     }
 
     $scope.codeValidator = function (value) {
-        var pattern = /[$+;=%{}[\]|\\\/@ ~#!^*&()?:'<>,]/;
+        var pattern = /[$+;=%{}[\]|\\\/@ ~!^*&()?:'<>,]/;
         return !pattern.test(value);
     };
 

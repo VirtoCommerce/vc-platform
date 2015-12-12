@@ -34,6 +34,29 @@
         bladeNavigationService.showBlade(newBlade, blade);
     };
 
+    $scope.deleteList = function (list) {
+        bladeNavigationService.closeChildrenBlades(blade, function () {
+            var dialog = {
+                id: "confirmDeleteItem",
+                title: "catalog.dialogs.association-delete.title",
+                message: "catalog.dialogs.association-delete.message",
+                callback: function (remove) {
+                    if (remove) {
+                        blade.isLoading = true;
+
+                        var undeletedEntries = _.difference(blade.currentEntities, list);
+                        items.update({ id: blade.currentEntityId, associations: undeletedEntries }, function () {
+                            blade.refresh();
+                        },
+                        function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+                    }
+                }
+            }
+
+            dialogService.showConfirmationDialog(dialog);
+        });
+    }
+
     function openAddEntityWizard() {
         var newBlade = {
             id: "associationWizard",
@@ -58,26 +81,7 @@
         {
             name: "platform.commands.delete", icon: 'fa fa-trash-o',
             executeMethod: function () {
-                bladeNavigationService.closeChildrenBlades(blade, function () {
-                    var dialog = {
-                        id: "confirmDeleteItem",
-                        title: "catalog.dialogs.association-delete.title",
-                        message: "catalog.dialogs.association-delete.message",
-                        callback: function (remove) {
-                            if (remove) {
-                                blade.isLoading = true;
-
-                                var undeletedEntries = _.difference(blade.currentEntities, $scope.gridApi.selection.getSelectedRows());
-                                items.update({ id: blade.currentEntityId, associations: undeletedEntries }, function () {
-                                    blade.refresh();
-                                },
-                                function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
-                            }
-                        }
-                    }
-
-                    dialogService.showConfirmationDialog(dialog);
-                });
+                $scope.deleteList($scope.gridApi.selection.getSelectedRows());
             },
             canExecuteMethod: function () {
                 return $scope.gridApi && _.any($scope.gridApi.selection.getSelectedRows());
