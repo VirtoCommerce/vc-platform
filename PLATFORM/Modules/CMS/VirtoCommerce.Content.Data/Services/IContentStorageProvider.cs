@@ -7,7 +7,7 @@ using VirtoCommerce.Platform.Core.Asset;
 
 namespace VirtoCommerce.Content.Data.Services
 {
-    public interface IThemeStorageProvider : IBlobStorageProvider
+    public interface IContentStorageProvider : IBlobStorageProvider
     {
     }
 }

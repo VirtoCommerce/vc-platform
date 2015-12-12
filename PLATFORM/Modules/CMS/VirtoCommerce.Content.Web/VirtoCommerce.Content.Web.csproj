@@ -166,12 +166,9 @@
     <Compile Include="Controllers\Api\PagesController.cs" />
     <Compile Include="Controllers\Api\ThemeController.cs" />
     <Compile Include="Security\ContentPredefinedPermissions.cs" />
-    <Compile Include="Converters\GetPagesCriteriaConverter.cs" />
-    <Compile Include="Converters\GetThemeAssetsCriteriaConverter.cs" />
     <Compile Include="Converters\MenuLinkConverter.cs" />
     <Compile Include="Converters\MenuLinkListConverter.cs" />
     <Compile Include="Converters\PageConverter.cs" />
-    <Compile Include="Converters\SyncAssetConverter.cs" />
     <Compile Include="Converters\ThemeAssetConverter.cs" />
     <Compile Include="Converters\ThemeConverter.cs" />
     <Compile Include="ExportImport\ContentExportImport.cs" />

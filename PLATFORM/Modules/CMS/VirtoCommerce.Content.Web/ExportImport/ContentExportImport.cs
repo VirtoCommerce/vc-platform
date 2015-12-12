@@ -2,209 +2,162 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Web;
 using coreModels = VirtoCommerce.Content.Data.Models;
+using webModels = VirtoCommerce.Content.Web.Models;
 using VirtoCommerce.Content.Data.Services;
 using VirtoCommerce.Platform.Core.ExportImport;
-using Microsoft.Practices.ObjectBuilder2;
 using VirtoCommerce.Platform.Core.Common;
-using VirtoCommerce.Domain.Store.Services;
-using VirtoCommerce.Platform.Core.Settings;
-using System.Threading.Tasks;
-using Omu.ValueInjecter;
+using VirtoCommerce.Content.Web.Converters;
 
 namespace VirtoCommerce.Content.Web.ExportImport
 {
+    public class ContentFolder
+    {
+        public ContentFolder()
+        {
+            Folders = new List<ContentFolder>();
+            Files = new List<ContentFile>();
+        }
+        public string Url { get; set; }
+        public ICollection<ContentFolder> Folders { get; set; }
+        public ICollection<ContentFile> Files { get; set; }
+    }
+    public class ContentFile
+    {
+        public string Url { get; set; }
+        public byte[] Data { get; set; }
+    }
+
 	public sealed class BackupObject
 	{
-		public ICollection<MenuLinkList> MenuLinkLists { get; set; }
-        public ICollection<coreModels.ThemeAsset> ThemeAssets { get; set; }
-        public ICollection<coreModels.Page> Pages { get; set; }
+        public BackupObject()
+        {
+            MenuLinkLists = new List<webModels.MenuLinkList>();
+            ContentFolders = new List<ContentFolder>();
+        }
+		public ICollection<webModels.MenuLinkList> MenuLinkLists { get; set; }
+        public ICollection<ContentFolder> ContentFolders { get; set; }
 	}
 
 	public sealed class ContentExportImport
 	{
 		private readonly IMenuService _menuService;
-		private readonly IStoreService _storeService;
-		private readonly IThemeService _themeService;  
-		private readonly IPagesService _pagesService;
+		private readonly IContentStorageProvider _contentStorageProvider;  
 
-		public ContentExportImport(IMenuService menuService, Func<string, IThemeService> themeServiceFactory, Func<string, IPagesService> pagesServiceFactory, IStoreService storeService, ISettingsManager settingsManager)
+		public ContentExportImport(IMenuService menuService, IContentStorageProvider themesStorageProvider)
 		{
 			_menuService = menuService;
-			_storeService = storeService;
-
-            var pagesChosenRepository = settingsManager.GetValue(
-                "VirtoCommerce.Content.MainProperties.PagesRepositoryType",
-                string.Empty);
-
-            var themeChosenRepository = settingsManager.GetValue(
-                "VirtoCommerce.Content.MainProperties.ThemesRepositoryType",
-                string.Empty);
-
-            _pagesService = pagesServiceFactory.Invoke(pagesChosenRepository);
-		    _themeService = themeServiceFactory.Invoke(themeChosenRepository);
+		    _contentStorageProvider = themesStorageProvider;
 		}
 
 		public void DoExport(Stream backupStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
 		{
 			var backupObject = GetBackupObject(progressCallback, manifest.HandleBinaryData);
-
 			backupObject.SerializeJson(backupStream);
 		}
 
 		public void DoImport(Stream backupStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
 		{
 			var backupObject = backupStream.DeserializeJson<BackupObject>();
-			var originalObject = GetBackupObject(progressCallback, manifest.HandleBinaryData);
+			var originalObject = GetBackupObject(progressCallback, false);
 
 			var progressInfo = new ExportImportProgressInfo();
 			progressInfo.Description = String.Format("{0} menu link lists importing...", backupObject.MenuLinkLists.Count());
 			progressCallback(progressInfo);
+			UpdateMenuLinkLists(backupObject.MenuLinkLists);
 
-			UpdateMenuLinkLists(originalObject.MenuLinkLists, backupObject.MenuLinkLists);
-			if (manifest.HandleBinaryData)
-			{
-				progressInfo.Description = String.Format("importing binary data: {0} pages importing...", backupObject.Pages.Count());
-				progressCallback(progressInfo);
-
-				UpdatePages(originalObject.Pages, backupObject.Pages);
-
-				progressInfo.Description = String.Format("importing binary data: {0} theme assets importing...", backupObject.ThemeAssets.Count());
-				progressCallback(progressInfo);
-
-				UpdateThemeAssets(originalObject.ThemeAssets, backupObject.ThemeAssets);
-			}
-		}
-
-		private void UpdateMenuLinkLists(ICollection<MenuLinkList> original, ICollection<MenuLinkList> backup)
-		{
-			foreach (var item in backup)
-			{
-                var addedItem = ConvertToCoreModel(item);
-                _menuService.Update(addedItem);
-			}
-		}
-
-        private void UpdatePages(ICollection<coreModels.Page> original, ICollection<coreModels.Page> backup)
-		{
-			foreach (var item in backup)
-			{
-				_pagesService.SavePage(GetStoreIdForPage(item.FullPath), item);
-			}
-		}
-
-        private void UpdateThemeAssets(ICollection<coreModels.ThemeAsset> original, ICollection<coreModels.ThemeAsset> backup)
-		{
-			foreach (var item in backup)
-			{
-				_themeService.SaveThemeAsset(GetStoreIdForThemeAsset(item.Path), GetThemeIdForThemeAsset(item.Path), item);
-			}
-		}
-
-        private string GetStoreIdForPage(string path)
-		{
-            var pathSteps = path.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-
-            if (pathSteps.Length == 0)
+            if (manifest.HandleBinaryData)
             {
-                throw new NullReferenceException("path is incorrect");
+                progressInfo.Description = String.Format("importing binary data:  themes and pages importing...");
+                progressCallback(progressInfo);
+                foreach (var folder in backupObject.ContentFolders)
+                {
+                    SaveContentFolderRecursive(folder);
+                }
             }
-
-            return pathSteps[0];
 		}
 
-        private string GetThemeIdForThemeAsset(string path)
+		private void UpdateMenuLinkLists(ICollection<webModels.MenuLinkList> linkLIsts)
 		{
-            var pathSteps = path.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-
-            if (pathSteps.Length < 2)
-            {
-                throw new NullReferenceException("path is incorrect");
-            }
-
-            return pathSteps[1];
+			foreach (var item in linkLIsts.Select(x=>x.ToCoreModel()))
+			{
+                _menuService.Update(item);
+			}
 		}
 
-        private string GetStoreIdForThemeAsset(string path)
-		{
-            var pathSteps = path.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
 
-            if(pathSteps.Length == 0)
-            {
-                throw new NullReferenceException("path is incorrect");
-            }
-
-            return pathSteps[0];
-		}
 
 		private BackupObject GetBackupObject(Action<ExportImportProgressInfo> progressCallback, bool handleBynaryData)
 		{
+            var retVal = new BackupObject();
+
 			var progressInfo = new ExportImportProgressInfo();
 			progressInfo.Description = "cms content loading...";
 			progressCallback(progressInfo);
 
-			var stores = _storeService.GetStoreList();
-			var menuLinkLists = new List<MenuLinkList>();
-            var contentItems = new List<coreModels.ThemeAsset>();
-            var contentPages = new List<coreModels.Page>();
-			foreach(var store in stores)
-			{
-				var storeLists = _menuService.GetListsByStoreId(store.Id);
-				menuLinkLists.AddRange(storeLists.Select(s => ConvertToExportModel(s)));
+            retVal.MenuLinkLists = _menuService.GetAllLinkLists().Select(x=>x.ToWebModel()).ToList();
 
-				if (handleBynaryData)
-				{
-					var storePages = _pagesService.GetPages(store.Id, null);
-					contentPages.AddRange(storePages);
-
-					var storeThemes = _themeService.GetThemes(store.Id).ToArray();
-					foreach (var storeTheme in storeThemes)
-					{
-						var themeContentItems = _themeService.GetThemeAssets(store.Id, storeTheme.Name, null).ToArray();
-						contentItems.AddRange(themeContentItems);
-					}
-				}
-			}
-
-			return new BackupObject
-			{
-				MenuLinkLists = menuLinkLists,
-				ThemeAssets = contentItems,
-				Pages = contentPages
-			};
-		}
-
-        private MenuLinkList ConvertToExportModel(coreModels.MenuLinkList list)
-        {
-            var retVal = new MenuLinkList();
-
-            retVal.InjectFrom(list);
-
-            foreach (var link in list.MenuLinks)
+            if (handleBynaryData)
             {
-                var addedLink = new MenuLink();
-                addedLink.InjectFrom(link);
-                retVal.MenuLinks.Add(addedLink);
+                var result = _contentStorageProvider.Search("/", null);
+                foreach (var blobFolder in result.Folders)
+                {
+                    var contentFolder = new ContentFolder
+                    {
+                        Url = blobFolder.Url
+                    };
+                    ReadContentFoldersRecurive(contentFolder);
+                    retVal.ContentFolders.Add(contentFolder);
+                }
             }
 
             return retVal;
         }
 
-        private coreModels.MenuLinkList ConvertToCoreModel(MenuLinkList list)
+        private void SaveContentFolderRecursive(ContentFolder folder)
         {
-            var retVal = new coreModels.MenuLinkList();
-
-            retVal.InjectFrom(list);
-
-            foreach (var link in list.MenuLinks)
+            foreach (var childFolder in folder.Folders)
             {
-                var addedLink = new coreModels.MenuLink();
-                addedLink.InjectFrom(link);
-                retVal.MenuLinks.Add(addedLink);
+                SaveContentFolderRecursive(childFolder);
+            }
+            foreach (var folderFile in folder.Files)
+            {
+                using (var stream = _contentStorageProvider.OpenWrite(folderFile.Url))
+                using (var memStream = new MemoryStream(folderFile.Data))
+                {
+                    memStream.CopyTo(stream);
+                }
+            }
+        }
+
+        private void ReadContentFoldersRecurive(ContentFolder folder)
+        {
+            var result = _contentStorageProvider.Search(folder.Url, null);
+            foreach (var blobFolder in result.Folders)
+            {
+                var contentFolder = new ContentFolder()
+                {
+                    Url = blobFolder.Url
+                };
+                ReadContentFoldersRecurive(contentFolder);
+                folder.Folders.Add(contentFolder);
             }
 
-            return retVal;
+            foreach (var blobItem in result.Items)
+            {
+                var contentFile = new ContentFile
+                {
+                     Url = blobItem.Url                      
+                };
+                using (var stream = _contentStorageProvider.OpenRead(blobItem.Url))
+                {
+                    contentFile.Data = stream.ReadFully();
+                }
+                folder.Files.Add(contentFile);
+            }
         }
-	}
+
+
+    }
+
 }

@@ -615,7 +615,8 @@ namespace VirtoCommerce.Platform.Core.Common
                 {".xwd", "image/x-xwindowdump"},
                 {".z", "application/x-compress"},
                 {".zip", "application/zip"},
-                { ".liquid", "text/html" }
+                { ".liquid", "text/html" },
+                { ".md", "text/html" },
             
                 #endregion
 

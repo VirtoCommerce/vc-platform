@@ -9,7 +9,8 @@ namespace VirtoCommerce.Content.Data.Services
 {
 	public interface IMenuService
 	{
-		IEnumerable<MenuLinkList> GetListsByStoreId(string storeId);
+        IEnumerable<MenuLinkList> GetAllLinkLists();
+        IEnumerable<MenuLinkList> GetListsByStoreId(string storeId);
 		MenuLinkList GetListById(string listId);
 		void Update(MenuLinkList list);
 		void DeleteList(string listId);

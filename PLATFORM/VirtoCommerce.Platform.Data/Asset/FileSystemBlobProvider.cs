@@ -106,7 +106,10 @@ namespace VirtoCommerce.Platform.Data.Asset
             folderUrl = folderUrl ?? _basePublicUrl;
 
             var storageFolderPath = GetStoragePathFromUrl(folderUrl);
-
+            if(!Directory.Exists(storageFolderPath))
+            {
+                return retVal;
+            }
             var directories = String.IsNullOrEmpty(keyword) ? Directory.GetDirectories(storageFolderPath) : Directory.GetDirectories(storageFolderPath, "*" + keyword + "*", SearchOption.AllDirectories);
             foreach (var directory in directories)
             {

@@ -7,9 +7,9 @@ using VirtoCommerce.Platform.Data.Asset;
 
 namespace VirtoCommerce.Content.Data.Services
 {
-    public class ThemeStorageProviderImpl : FileSystemBlobProvider, IThemeStorageProvider
+    public class ContentStorageProviderImpl : FileSystemBlobProvider, IContentStorageProvider
     {
-        public ThemeStorageProviderImpl(string connectionString)
+        public ContentStorageProviderImpl(string connectionString)
             : base(connectionString)
         {
         }

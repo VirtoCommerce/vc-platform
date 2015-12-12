@@ -5,7 +5,7 @@ namespace VirtoCommerce.Content.Data.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    public sealed class Configuration : DbMigrationsConfiguration<VirtoCommerce.Content.Data.Repositories.DatabaseContentRepositoryImpl>
+    public sealed class Configuration : DbMigrationsConfiguration<VirtoCommerce.Content.Data.Repositories.ContentRepositoryImpl>
     {
         public Configuration()
         {
@@ -13,7 +13,7 @@ namespace VirtoCommerce.Content.Data.Migrations
             MigrationsDirectory = @"Migrations";
         }
 
-        protected override void Seed(VirtoCommerce.Content.Data.Repositories.DatabaseContentRepositoryImpl context)
+        protected override void Seed(VirtoCommerce.Content.Data.Repositories.ContentRepositoryImpl context)
         {
             //  This method will be called after migrating to the latest version.
 

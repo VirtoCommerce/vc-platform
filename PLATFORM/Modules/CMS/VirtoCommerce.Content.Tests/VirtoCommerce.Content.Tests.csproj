@@ -89,18 +89,9 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="ContentRepositoryScenarios2.cs" />
-    <Compile Include="ContentRepositoryScenarios.cs" />
     <Compile Include="MenuTests\MenuRepositoryTests.cs" />
     <Compile Include="MenuTests\MenuServiceTests.cs" />
-    <Compile Include="PagesTests\DatabasePagesTests.cs" />
-    <Compile Include="PagesTests\FileSystemPagesRepositoryTests.cs" />
-    <Compile Include="PagesTests\GitHubPagesRepositoryTests.cs" />
-    <Compile Include="PagesTests\PagesControllerTests.cs" />
-    <Compile Include="PagesTests\PagesServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ThemeControllerTests.cs" />
-    <Compile Include="ThemeServiceTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Tests\VirtoCommerce.Platform.Tests\VirtoCommerce.Platform.Tests.csproj">
@@ -279,6 +270,9 @@
     <Content Include="Themes\Apple\Timber\assets\respond.min.js" />
     <Content Include="Themes\Apple\Timber\assets\theme-onboarding.css" />
     <Content Include="Themes\Apple\Timber\config\settings.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="PagesTests\" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
