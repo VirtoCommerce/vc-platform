@@ -1,13 +1,15 @@
 ﻿angular.module('virtoCommerce.pricingModule')
     .controller('virtoCommerce.pricingModule.pricelistDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.pricingModule.pricelists', 'platformWebApp.settings', 'platformWebApp.dialogService', function ($scope, bladeNavigationService, pricelists, settings, dialogService) {
-        $scope.blade.refresh = function (parentRefresh) {
-            if ($scope.blade.isNew) {
+        var blade = $scope.blade;
+
+        blade.refresh = function (parentRefresh) {
+            if (blade.isNew) {
                 initializeBlade({ productPrices: [], assignments: [] });
             } else {
-                pricelists.get({ id: $scope.blade.currentEntityId }, function (data) {
+                pricelists.get({ id: blade.currentEntityId }, function (data) {
                     initializeBlade(data);
                     if (parentRefresh) {
-                        $scope.blade.parentBlade.refresh();
+                        blade.parentBlade.refresh();
                     }
                 },
                 function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
@@ -15,39 +17,39 @@
         };
 
         function initializeBlade(data) {
-            if (!$scope.blade.isNew) {
-                $scope.blade.title = data.name;
+            if (!blade.isNew) {
+                blade.title = data.name;
             }
 
-            $scope.blade.currentEntity = angular.copy(data);
-            $scope.blade.origEntity = data;
-            $scope.blade.isLoading = false;
+            blade.currentEntity = angular.copy(data);
+            blade.origEntity = data;
+            blade.isLoading = false;
         };
 
         function isDirty() {
-            return !angular.equals($scope.blade.currentEntity, $scope.blade.origEntity);
+            return !angular.equals(blade.currentEntity, blade.origEntity);
         };
 
         $scope.cancelChanges = function () {
-            angular.copy($scope.blade.origEntity, $scope.blade.currentEntity);
+            angular.copy(blade.origEntity, blade.currentEntity);
             $scope.bladeClose();
         };
         $scope.saveChanges = function () {
-            $scope.blade.isLoading = true;
+            blade.isLoading = true;
 
-            if ($scope.blade.isNew) {
-                pricelists.save({}, $scope.blade.currentEntity, function (data) {
-                    $scope.blade.isNew = undefined;
-                    $scope.blade.currentEntityId = data.id;
+            if (blade.isNew) {
+                pricelists.save({}, blade.currentEntity, function (data) {
+                    blade.isNew = undefined;
+                    blade.currentEntityId = data.id;
                     initializeBlade(data);
                     initializeToolbar();
-                    $scope.blade.parentBlade.refresh();
+                    blade.parentBlade.refresh();
                 }, function (error) {
                     bladeNavigationService.setError('Error ' + error.status, $scope.blade);
                 });
             } else {
-                pricelists.update({}, $scope.blade.currentEntity, function (data) {
-                    $scope.blade.refresh(true);
+                pricelists.update({}, blade.currentEntity, function (data) {
+                    blade.refresh(true);
                 }, function (error) {
                     bladeNavigationService.setError('Error ' + error.status, $scope.blade);
                 });
@@ -58,7 +60,7 @@
             $scope.formScope = form;
         };
 
-        $scope.blade.onClose = function (closeCallback) {
+        blade.onClose = function (closeCallback) {
             closeChildrenBlades();
             if (isDirty()) {
                 var dialog = {
@@ -79,16 +81,16 @@
         };
 
         function closeChildrenBlades() {
-            angular.forEach($scope.blade.childrenBlades.slice(), function (child) {
+            angular.forEach(blade.childrenBlades.slice(), function (child) {
                 bladeNavigationService.closeBlade(child);
             });
         }
 
-        $scope.blade.headIcon = 'fa-anchor';
+        blade.headIcon = blade.parentBlade.headIcon;
 
         function initializeToolbar() {
-            if (!$scope.blade.isNew) {
-                $scope.blade.toolbarCommands = [
+            if (!blade.isNew) {
+                blade.toolbarCommands = [
                     {
                         name: "platform.commands.save",
                         icon: 'fa fa-save',
@@ -104,7 +106,7 @@
                         name: "platform.commands.reset",
                         icon: 'fa fa-undo',
                         executeMethod: function () {
-                            angular.copy($scope.blade.origEntity, $scope.blade.currentEntity);
+                            angular.copy(blade.origEntity, blade.currentEntity);
                         },
                         canExecuteMethod: function () {
                             return isDirty();
@@ -116,6 +118,6 @@
         }
 
         initializeToolbar();
-        $scope.blade.refresh(false);
+        blade.refresh(false);
         $scope.currencies = settings.getValues({ id: 'VirtoCommerce.Core.General.Currencies' });
     }]);

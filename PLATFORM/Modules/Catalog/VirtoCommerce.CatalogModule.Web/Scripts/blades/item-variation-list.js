@@ -42,6 +42,25 @@
         bladeNavigationService.showBlade(newBlade, blade);
     };
 
+    $scope.deleteList = function (list) {
+        bladeNavigationService.closeChildrenBlades(blade, function () {
+            var dialog = {
+                id: "confirmDeleteItem",
+                title: "catalog.dialogs.variation-delete.title",
+                message: "catalog.dialogs.variation-delete.message",
+                callback: function (remove) {
+                    if (remove) {
+                        var ids = _.pluck(list, 'id');
+                        items.remove({ ids: ids }, blade.refresh, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+                    }
+                }
+            }
+
+            dialogService.showConfirmationDialog(dialog);
+        });
+    };
+
+
     blade.headIcon = 'fa-dropbox';
 
     blade.toolbarCommands = [
@@ -78,21 +97,7 @@
         {
             name: "platform.commands.delete", icon: 'fa fa-trash-o',
             executeMethod: function () {
-                bladeNavigationService.closeChildrenBlades(blade, function () {
-                    var dialog = {
-                        id: "confirmDeleteItem",
-                        title: "catalog.dialogs.variation-delete.title",
-                        message: "catalog.dialogs.variation-delete.message",
-                        callback: function (remove) {
-                            if (remove) {
-                                var ids = _.pluck($scope.gridApi.selection.getSelectedRows(), 'id');
-                                items.remove({ ids: ids }, blade.refresh, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
-                            }
-                        }
-                    }
-
-                    dialogService.showConfirmationDialog(dialog);
-                });
+                $scope.deleteList($scope.gridApi.selection.getSelectedRows());
             },
             canExecuteMethod: function () {
                 return $scope.gridApi && _.any($scope.gridApi.selection.getSelectedRows());

@@ -75,7 +75,7 @@
           "tax-type": "Tax type"
         },
         "validations": {
-          "code": "Code can't contain $+;=%{}[]|\/@ ~#!^*&()?:'<>, characters"
+          "code": "Code can't contain $+;=%{}[]|\/@ ~!^*&()?:'<>, characters"
         },
         "placeholders": {
           "name": "Enter category name",
@@ -233,7 +233,7 @@
           "download-type": "Download type"
         },
         "validations": {
-          "sku": "SKU can't contain $+;=%{}[]|\/@ ~#!^*&()?:'<>, characters"
+          "sku": "SKU can't contain $+;=%{}[]|\/@ ~!^*&()?:'<>, characters"
         },
         "placeholders": {
           "sku": "Enter item sku",
@@ -517,7 +517,7 @@
           "code": "Code"
         },
         "validations": {
-          "code": "Code can't contain $+;=%{}[]|\/@ ~#!^*&()?:'<>, characters"
+          "code": "Code can't contain $+;=%{}[]|\/@ ~!^*&()?:'<>, characters"
         },
         "placeholders": {
           "name": "Enter category name",
@@ -541,7 +541,7 @@
           "seo-information-summary-undefined": "Seo information undefined"
         },
         "validations": {
-          "sku": "SKU can't contain $+;=%{}[]|\/@ ~#!^*&()?:'<>, characters",
+          "sku": "SKU can't contain $+;=%{}[]|\/@ ~!^*&()?:'<>, characters",
           "sku-required": "Required",
           "name-required": "Required"
         },
@@ -562,7 +562,7 @@
           "upload-images-summary": "{{ count }} image(s) uploaded"
         },
         "validations": {
-          "sku": "SKU can't contain $+;=%{}[]|\/@ ~#!^*&()?:'<>, characters",
+          "sku": "SKU can't contain $+;=%{}[]|\/@ ~!^*&()?:'<>, characters",
           "sku-required": "Required",
           "name-required": "Required"
         },

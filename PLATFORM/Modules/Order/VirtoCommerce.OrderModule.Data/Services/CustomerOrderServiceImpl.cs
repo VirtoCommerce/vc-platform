@@ -134,6 +134,17 @@ namespace VirtoCommerce.OrderModule.Data.Services
             var customerOrder = shoppingCart.ToCustomerOrder();
             var retVal = Create(customerOrder);
 
+            // Apply dynamic properties
+            retVal.ApplyDynamicPropertiesValues(shoppingCart);
+            foreach (var lineItem in retVal.Items)
+            {
+                if (lineItem.DynamicProperties != null && lineItem.DynamicProperties.Any())
+                {
+                    var cartLineItem = shoppingCart.Items.FirstOrDefault(x => x.ProductId == lineItem.ProductId);
+                    lineItem.ApplyDynamicPropertiesValues(cartLineItem);
+                }
+            }
+
             return retVal;
         }
 

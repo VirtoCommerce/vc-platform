@@ -33,7 +33,7 @@ function ($scope, pricelists, bladeNavigationService, dialogService, uiGridConst
         return $scope.gridApi && _.any($scope.gridApi.selection.getSelectedRows());
     }
 
-    function deleteChecked() {
+    $scope.deleteList = function (list) {
         var dialog = {
             id: "confirmDeleteItem",
             title: "pricing.dialogs.pricelists-delete.title",
@@ -42,8 +42,7 @@ function ($scope, pricelists, bladeNavigationService, dialogService, uiGridConst
                 if (remove) {
                     closeChildrenBlades();
 
-                    var selection = $scope.gridApi.selection.getSelectedRows();
-                    var itemIds = _.pluck(selection, 'id');
+                    var itemIds = _.pluck(list, 'id');
                     pricelists.remove({ ids: itemIds }, function (data, headers) {
                         blade.refresh();
                     }, function (error) {
@@ -105,7 +104,7 @@ function ($scope, pricelists, bladeNavigationService, dialogService, uiGridConst
         {
             name: "platform.commands.delete", icon: 'fa fa-trash-o',
             executeMethod: function () {
-                deleteChecked();
+                $scope.deleteList($scope.gridApi.selection.getSelectedRows());
             },
             canExecuteMethod: isItemsChecked,
             permission: 'pricing:delete'

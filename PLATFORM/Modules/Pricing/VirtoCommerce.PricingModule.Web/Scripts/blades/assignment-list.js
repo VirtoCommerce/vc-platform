@@ -34,7 +34,7 @@ function ($scope, assignments, bladeNavigationService, dialogService, uiGridCons
         return $scope.gridApi && _.any($scope.gridApi.selection.getSelectedRows());
     }
 
-    function deleteChecked() {
+    $scope.deleteList = function (list) {
         var dialog = {
             id: "confirmDeleteItem",
             title: "pricing.dialogs.assignments-delete.title",
@@ -43,8 +43,7 @@ function ($scope, assignments, bladeNavigationService, dialogService, uiGridCons
                 if (remove) {
                     closeChildrenBlades();
 
-                    var selection = $scope.gridApi.selection.getSelectedRows();
-                    var itemIds = _.pluck(selection, 'id');
+                    var itemIds = _.pluck(list, 'id');
                     assignments.remove({ ids: itemIds }, function () {
                         blade.refresh();
                     }, function (error) {
@@ -62,7 +61,7 @@ function ($scope, assignments, bladeNavigationService, dialogService, uiGridCons
         });
     }
 
-    blade.headIcon = 'fa-usd';
+    blade.headIcon = 'fa-anchor';
 
     blade.toolbarCommands = [
         {
@@ -97,7 +96,7 @@ function ($scope, assignments, bladeNavigationService, dialogService, uiGridCons
         {
             name: "platform.commands.delete", icon: 'fa fa-trash-o',
             executeMethod: function () {
-                deleteChecked();
+                $scope.deleteList($scope.gridApi.selection.getSelectedRows());
             },
             canExecuteMethod: function () {
                 return isItemsChecked();

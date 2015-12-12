@@ -5,7 +5,7 @@
     function initializeBlade() {
         var entities = [
             { name: 'pricing.blades.pricing-main.menu.pricelist-list.title', entityName: 'pricelist', icon: 'fa-usd', subtitle: 'pricing.blades.pricelist-list.subtitle' },
-            { name: 'pricing.blades.pricing-main.menu.pricelist-assignment-list.title', entityName: 'assignment', icon: 'fa-usd', subtitle: 'pricing.blades.pricelist-assignment-list.subtitle' }];
+            { name: 'pricing.blades.pricing-main.menu.pricelist-assignment-list.title', entityName: 'assignment', icon: 'fa-anchor', subtitle: 'pricing.blades.pricelist-assignment-list.subtitle' }];
         $scope.blade.currentEntities = entities;
         $scope.blade.isLoading = false;
 
