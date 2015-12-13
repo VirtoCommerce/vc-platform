@@ -426,15 +426,15 @@ namespace VirtoCommerce.Platform.Web
                 var properties = assetsConnection.ConnectionString.ToDictionary(";", "=");
                 var provider = properties["provider"];
                 var assetsConnectionString = properties.ToString(";", "=", "provider");
-
+ 
                 if (string.Equals(provider, FileSystemBlobProvider.ProviderName, StringComparison.OrdinalIgnoreCase))
                 {
-                    var fileSystemBlobProvider = new FileSystemBlobProvider(assetsConnectionString);
+                    var storagePath = HostingEnvironment.MapPath(properties["rootPath"]);
+                    var publicUrl = properties["publicUrl"];
+                    var fileSystemBlobProvider = new FileSystemBlobProvider(storagePath, publicUrl);
 
                     container.RegisterInstance<IBlobStorageProvider>(fileSystemBlobProvider);
                     container.RegisterInstance<IBlobUrlResolver>(fileSystemBlobProvider);
-
-
                 }
                 else if (string.Equals(provider, AzureBlobProvider.ProviderName, StringComparison.OrdinalIgnoreCase))
                 {

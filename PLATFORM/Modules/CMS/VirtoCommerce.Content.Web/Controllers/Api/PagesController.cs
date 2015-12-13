@@ -30,10 +30,10 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 
         #region Constructors and Destructors
 
-        public PagesController(IContentStorageProvider contentStorageProvider, ISecurityService securityService, IPermissionScopeService permissionScopeService)
+        public PagesController(Func<IContentStorageProvider> contentStorageProviderFactory, ISecurityService securityService, IPermissionScopeService permissionScopeService)
             :base(securityService, permissionScopeService)
         {
-            _contentStorageProvider = contentStorageProvider;
+            _contentStorageProvider = contentStorageProviderFactory();
         }
 
         #endregion

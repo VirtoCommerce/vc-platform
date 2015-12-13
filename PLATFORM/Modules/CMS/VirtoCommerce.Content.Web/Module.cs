@@ -41,15 +41,15 @@ namespace VirtoCommerce.Content.Web
 
         public override void Initialize()
         {
-
             Func<IMenuRepository> menuRepFactory = () =>
                 new ContentRepositoryImpl("VirtoCommerce", new AuditableInterceptor(), new EntityPrimaryKeyGeneratorInterceptor());
 
             _container.RegisterInstance(menuRepFactory);
             _container.RegisterType<IMenuService, MenuServiceImpl>();
-            
-            var contentProvider = new ContentStorageProviderImpl(@"rootPath=~/CMS;publicUrl=http://localhost/admin/CMS");
-            _container.RegisterInstance<IContentStorageProvider>(contentProvider);
+
+            var settingsManager = _container.Resolve<ISettingsManager>();
+            Func<IContentStorageProvider> contentProviderFactory = () =>  new ContentStorageProviderImpl(NormalizePath(settingsManager.GetValue("VirtoCommerce.Content.StoragePath", string.Empty)));
+            _container.RegisterInstance(contentProviderFactory);
         }
 
         public override void PostInitialize()
@@ -109,5 +109,24 @@ namespace VirtoCommerce.Content.Web
 		}
 
 		#endregion
+
+        private string NormalizePath(string path)
+        {
+            var retVal = path;
+            if(path.StartsWith("~"))
+            {
+                retVal = HostingEnvironment.MapPath(path);
+            }
+            else if(Path.IsPathRooted(path))
+            {
+                retVal = path;
+            }
+            else
+            {
+                retVal = HostingEnvironment.MapPath("~/");
+                retVal += path;
+            }
+            return retVal;
+        }
 	}
 }

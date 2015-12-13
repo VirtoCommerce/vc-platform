@@ -29,13 +29,13 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
     [RoutePrefix("api/cms/{storeId}")]
     public class ThemeController : ContentBaseController
     {
-        private readonly IContentStorageProvider _themeProvider;
+        private readonly IContentStorageProvider _contentStorageProvider;
 
         #region Constructors and Destructors
-        public ThemeController(IContentStorageProvider themeProvider, ISecurityService securityService, IPermissionScopeService permissionScopeService)
+        public ThemeController(Func<IContentStorageProvider> contentStorageProviderFactory, ISecurityService securityService, IPermissionScopeService permissionScopeService)
             : base(securityService, permissionScopeService)
         {
-            _themeProvider = themeProvider;
+            _contentStorageProvider = contentStorageProviderFactory();
 
         }
         #endregion
@@ -56,13 +56,13 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
         {
             base.CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Read, new ContentScopeObject { StoreId = storeId });
 
-            var blobItem = _themeProvider.GetBlobInfo("/Themes/" + storeId + "/" + themeId + "/" + assetId);
+            var blobItem = _contentStorageProvider.GetBlobInfo("/Themes/" + storeId + "/" + themeId + "/" + assetId);
 
             if (blobItem != null)
             {
                 var themeAsset = blobItem.ToThemeAssetWebModel();
                 themeAsset.Id = assetId;
-                using (var stream = _themeProvider.OpenRead(blobItem.Url))
+                using (var stream = _contentStorageProvider.OpenRead(blobItem.Url))
                 {
                     var data = stream.ReadFully();
                     if (ContentTypeUtility.IsImageContentType(themeAsset.ContentType))
@@ -93,7 +93,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
         public IHttpActionResult DeleteTheme(string storeId, string themeId)
         {
             base.CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Delete, new ContentScopeObject { StoreId = storeId });
-            _themeProvider.Remove(new string[] { "/Themes/" + storeId + "/" + themeId });
+            _contentStorageProvider.Remove(new string[] { "/Themes/" + storeId + "/" + themeId });
 
             return this.Ok();
         }
@@ -112,7 +112,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
             base.CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Read, new ContentScopeObject { StoreId = storeId });
 
             var retVal = new List<ThemeAssetFolder>();
-            var result = _themeProvider.Search("/Themes/" + storeId + "/" + themeId, null);
+            var result = _contentStorageProvider.Search("/Themes/" + storeId + "/" + themeId, null);
             foreach (var folder in result.Folders)
             {
                 var themeFolder = folder.ToThemeFolderWebModel();
@@ -133,7 +133,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
         public IHttpActionResult GetThemes(string storeId)
         {
             base.CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Read, new ContentScopeObject { StoreId = storeId });
-            var result = _themeProvider.Search("/Themes/" + storeId, null);
+            var result = _contentStorageProvider.Search("/Themes/" + storeId, null);
             return Ok(result.Folders.Select(x => x.ToThemeWebModel()).ToArray());
         }
 
@@ -164,7 +164,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
             {
                 data = Encoding.UTF8.GetBytes(asset.Content);
             }
-            using (var stream = _themeProvider.OpenWrite("/Themes/" + storeId + "/" + themeId + "/" + asset.Id))
+            using (var stream = _contentStorageProvider.OpenWrite("/Themes/" + storeId + "/" + themeId + "/" + asset.Id))
             using (var memStream = new MemoryStream(data))
             {
                 memStream.CopyTo(stream);
@@ -186,7 +186,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
         public IHttpActionResult DeleteAssets(string storeId, string themeId, [FromUri]string[] assetIds)
         {
             base.CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Delete, new ContentScopeObject { StoreId = storeId });
-            _themeProvider.Remove(assetIds.Select(x=> "/Themes/" + storeId + "/" + themeId + "/" + x).ToArray());
+            _contentStorageProvider.Remove(assetIds.Select(x=> "/Themes/" + storeId + "/" + themeId + "/" + x).ToArray());
        
              return this.Ok();
         }
@@ -217,7 +217,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
                         {
                             var fileName = String.Join("/", entry.FullName.Split('/').Skip(1));
                             using (var entryStream = entry.Open())
-                            using (var targetStream = _themeProvider.OpenWrite("/Themes/" + storeId + "/" + fileName))
+                            using (var targetStream = _contentStorageProvider.OpenWrite("/Themes/" + storeId + "/" + fileName))
                             {
                                 entryStream.CopyTo(targetStream);
                             }
@@ -246,15 +246,15 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 
         private void CopyRecursive(string sourcePath, string tragetPath)
         {
-            var result = _themeProvider.Search(sourcePath, null);
+            var result = _contentStorageProvider.Search(sourcePath, null);
             foreach (var blobFolder in result.Folders)
             {
                 CopyRecursive(sourcePath + "/" + blobFolder.Name, tragetPath + "/" + blobFolder.Name);
             }
             foreach (var blobItem in result.Items)
             {
-                using (var sourceStream = _themeProvider.OpenRead(blobItem.Url))
-                using (var targetStream = _themeProvider.OpenWrite(tragetPath + "/" + blobItem.FileName))
+                using (var sourceStream = _contentStorageProvider.OpenRead(blobItem.Url))
+                using (var targetStream = _contentStorageProvider.OpenWrite(tragetPath + "/" + blobItem.FileName))
                 {
                     sourceStream.CopyTo(targetStream);
                 }
@@ -264,7 +264,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
         {
             var retVal = new List<ThemeAsset>();
 
-            var result = _themeProvider.Search(blobFolder.Url, null);
+            var result = _contentStorageProvider.Search(blobFolder.Url, null);
             foreach (var childFolder in result.Folders)
             {
                 retVal.AddRange(LoadFolderAssetRecursive(childFolder, path + "/" + childFolder.Name, level + 1));

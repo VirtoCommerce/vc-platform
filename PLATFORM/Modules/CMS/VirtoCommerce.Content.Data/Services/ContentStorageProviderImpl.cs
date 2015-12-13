@@ -9,8 +9,8 @@ namespace VirtoCommerce.Content.Data.Services
 {
     public class ContentStorageProviderImpl : FileSystemBlobProvider, IContentStorageProvider
     {
-        public ContentStorageProviderImpl(string connectionString)
-            : base(connectionString)
+        public ContentStorageProviderImpl(string storagePath)
+            : base(storagePath)
         {
         }
     }

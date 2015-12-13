@@ -15,22 +15,16 @@ namespace VirtoCommerce.Platform.Data.Asset
         private readonly string _storagePath;
         private readonly string _basePublicUrl;
 
-        public FileSystemBlobProvider(string connectionString)
+        public FileSystemBlobProvider(string storagePath, string publicUrl = "")
         {
-            if (connectionString == null)
+            if (storagePath == null)
             {
-                throw new ArgumentNullException("connectionString");
+                throw new ArgumentNullException("storagePath");
             }
 
-            var properties = connectionString.ToDictionary(";", "=");
+            _storagePath = storagePath.TrimEnd('\\');
 
-            _storagePath = HostingEnvironment.MapPath(properties["rootPath"]);
-            if (_storagePath != null)
-            {
-                _storagePath = _storagePath.TrimEnd('\\');
-            }
-
-            _basePublicUrl = properties["publicUrl"];
+            _basePublicUrl = publicUrl;
             if (_basePublicUrl != null)
             {
                 _basePublicUrl = _basePublicUrl.TrimEnd('/');
@@ -221,7 +215,13 @@ namespace VirtoCommerce.Platform.Data.Asset
             var retVal = _storagePath;
             if (url != null)
             {
-                retVal = _storagePath + "\\" + url.Replace(_basePublicUrl, String.Empty).Replace("/", "\\");
+                retVal = _storagePath + "\\";
+                if (!String.IsNullOrEmpty(_basePublicUrl))
+                {
+                    url = url.Replace(_basePublicUrl, String.Empty);
+                }
+                retVal += url;
+                retVal = retVal.Replace("/", "\\");
             }
             return Uri.UnescapeDataString(retVal);
         }
