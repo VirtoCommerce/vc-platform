@@ -22,20 +22,17 @@ namespace VirtoCommerce.SearchModule.Data.Services
         private readonly ICatalogSearchService _catalogSearchService;
         private readonly IPricingService _pricingService;
         private readonly IItemService _itemService;
-        private readonly IPropertyService _propertyService;
         private readonly IChangeLogService _changeLogService;
         private readonly CatalogOutlineBuilder _catalogOutlineBuilder;
 
         public CatalogItemIndexBuilder(ISearchProvider searchProvider, ICatalogSearchService catalogSearchService,
                                        IItemService itemService, IPricingService pricingService,
-                                       IPropertyService propertyService,
                                        IChangeLogService changeLogService, CatalogOutlineBuilder catalogOutlineBuilder)
         {
             _searchProvider = searchProvider;
             _itemService = itemService;
             _catalogSearchService = catalogSearchService;
             _pricingService = pricingService;
-            _propertyService = propertyService;
             _changeLogService = changeLogService;
             _catalogOutlineBuilder = catalogOutlineBuilder;
         }
@@ -62,7 +59,7 @@ namespace VirtoCommerce.SearchModule.Data.Services
         public IEnumerable<IDocument> CreateDocuments(Partition partition)
         {
             if (partition == null)
-                throw new ArgumentNullException("partition");
+                throw new ArgumentNullException(nameof(partition));
 
             var documents = new ConcurrentBag<IDocument>();
 
@@ -112,50 +109,53 @@ namespace VirtoCommerce.SearchModule.Data.Services
         protected virtual void IndexItem(ref ResultDocument doc, string productId)
         {
             var item = _itemService.GetById(productId, ItemResponseGroup.ItemProperties | ItemResponseGroup.Links);
-            if(item == null)
+            if (item == null)
                 return;
 
             doc.Add(new DocumentField("__key", item.Id.ToLower(), new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
             //doc.Add(new DocumentField("__loc", "en-us", new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
             doc.Add(new DocumentField("__type", item.GetType().Name, new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
             doc.Add(new DocumentField("__sort", item.Name, new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
-            doc.Add(new DocumentField("__hidden", (!item.IsActive.Value || item.MainProductId != null).ToString().ToLower(), new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
+            doc.Add(new DocumentField("__hidden", (item.IsActive != true || item.MainProductId != null).ToString().ToLower(), new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
             doc.Add(new DocumentField("code", item.Code, new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
             doc.Add(new DocumentField("name", item.Name, new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
             doc.Add(new DocumentField("startdate", item.StartDate, new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
             doc.Add(new DocumentField("enddate", item.EndDate.HasValue ? item.EndDate : DateTime.MaxValue, new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
             doc.Add(new DocumentField("createddate", item.CreatedDate, new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
             doc.Add(new DocumentField("lastmodifieddate", item.ModifiedDate ?? DateTime.MaxValue, new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
-            doc.Add(new DocumentField("catalog", item.CatalogId.ToLower(), new[] { IndexStore.Yes, IndexType.NotAnalyzed, IndexDataType.StringCollection }));
-            doc.Add(new DocumentField("__outline", item.CatalogId.ToLower(), new[] { IndexStore.Yes, IndexType.NotAnalyzed, IndexDataType.StringCollection }));
 
-			
-			var outlines = new List<string>();
-			if (item.CategoryId != null)
-			{
-				outlines.AddRange(_catalogOutlineBuilder.GetOutlines(item.CategoryId));
-			}
-            //Index item direct categories links
+            var catalogs = new List<string> { item.CatalogId };
+            var outlines = new List<string> { item.CatalogId };
+
+            if (item.CategoryId != null)
+            {
+                outlines.AddRange(_catalogOutlineBuilder.GetOutlines(item.CategoryId));
+            }
+
+            // Index item direct categories links
             if (item.Links != null)
             {
-                foreach (var link in item.Links)
+                foreach (var link in item.Links.Where(link => link.CategoryId != null))
                 {
-                    if (link.CategoryId != null)
-                    {
-                        outlines.AddRange(_catalogOutlineBuilder.GetOutlines(link.CategoryId));
-                        //doc.Add(new DocumentField(string.Format("sort{0}{1}", link.CatalogId, link.CategoryId), category.Priority, new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
-                    }
+                    outlines.AddRange(_catalogOutlineBuilder.GetOutlines(link.CategoryId));
                 }
-                //Add outlines to search index
-                foreach (var outline in outlines.Distinct())
-                {
-                    doc.Add(new DocumentField("__outline", outline.ToLower(), new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
-                }
-                //Add all linked catalogs to search index
-                foreach (var catalogId in outlines.Select(x => x.Split('/').FirstOrDefault()).Where(x => x != null).Distinct())
-                {
-                    doc.Add(new DocumentField("catalog", catalogId.ToLower(), new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
-                }
+
+                // Add all linked catalogs to search index
+                catalogs.AddRange(outlines.Select(x => x.Split('/').FirstOrDefault()).Where(x => x != null).Distinct());
+            }
+
+            var indexStoreNotAnalyzedStringCollection = new[] { IndexStore.Yes, IndexType.NotAnalyzed, IndexDataType.StringCollection };
+
+            // Add catalogs to search index
+            foreach (var catalogId in catalogs.Distinct(StringComparer.OrdinalIgnoreCase))
+            {
+                doc.Add(new DocumentField("catalog", catalogId.ToLower(), indexStoreNotAnalyzedStringCollection));
+            }
+
+            // Add outlines to search index
+            foreach (var outline in outlines.Distinct(StringComparer.OrdinalIgnoreCase))
+            {
+                doc.Add(new DocumentField("__outline", outline.ToLower(), indexStoreNotAnalyzedStringCollection));
             }
 
             // Index custom properties
@@ -179,7 +179,7 @@ namespace VirtoCommerce.SearchModule.Data.Services
             foreach (var propValue in item.PropertyValues.Where(x => x.Value != null))
             {
                 var property = properties.FirstOrDefault(x => string.Equals(x.Name, propValue.PropertyName, StringComparison.InvariantCultureIgnoreCase) && x.ValueType == propValue.ValueType);
-                var contentField = string.Format("__content{0}", property != null && (property.Multilanguage && !string.IsNullOrWhiteSpace(propValue.LanguageCode)) ? "_" + propValue.LanguageCode.ToLower() : string.Empty);
+                var contentField = string.Concat("__content", property != null && (property.Multilanguage && !string.IsNullOrWhiteSpace(propValue.LanguageCode)) ? "_" + propValue.LanguageCode.ToLower() : string.Empty);
 
                 switch (propValue.ValueType)
                 {
