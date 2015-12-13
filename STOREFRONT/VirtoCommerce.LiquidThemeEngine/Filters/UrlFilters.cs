@@ -324,18 +324,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
             if (terms.Any())
             {
                 // terms=name1:value1,value2,value3;name2:value1,value2,value3
-                qs["terms"] = string.Join(";",
-                    terms
-                        .OrderBy(t => t.Name)
-                        .GroupBy(t => t.Name, t => t, StringComparer.OrdinalIgnoreCase)
-                        .Select(
-                            g =>
-                                string.Join(":", g.Key,
-                                    string.Join(",",
-                                        g.Select(t => t.Value)
-                                            .Distinct(StringComparer.OrdinalIgnoreCase)
-                                            .OrderBy(v => v))))
-                    ).ToLowerInvariant();
+                qs["terms"] = string.Join(";", terms.ToStrings()).ToLowerInvariant();
             }
             else
             {

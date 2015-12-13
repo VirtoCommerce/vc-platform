@@ -338,7 +338,6 @@
     <Compile Include="Converters\ShipmentPackageConverter.cs" />
     <Compile Include="Converters\StoreConverter.cs" />
     <Compile Include="Converters\TaxDetailConverter.cs" />
-    <Compile Include="Converters\TermConverters.cs" />
     <Compile Include="Exceptions\SaasCompileException.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

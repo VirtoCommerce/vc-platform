@@ -57,6 +57,7 @@
     <Compile Include="Catalog\ItemResponseGroup.cs" />
     <Compile Include="Catalog\CatalogSearchCriteria.cs" />
     <Compile Include="Catalog\Term.cs" />
+    <Compile Include="Catalog\TermExtensions.cs" />
     <Compile Include="Catalog\TierPrice.cs" />
     <Compile Include="Common\CollectionExtensions.cs" />
     <Compile Include="Common\IStorefrontPagedList.cs" />
