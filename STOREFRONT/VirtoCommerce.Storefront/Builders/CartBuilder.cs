@@ -217,7 +217,7 @@ namespace VirtoCommerce.Storefront.Builders
             var cart = new ShoppingCart(_currency, _language);
 
             cart.CustomerId = _customer.Id;
-            cart.CustomerName = _customer.Name;
+            cart.CustomerName = _customer.UserName;
             cart.Name = "Default";
             cart.StoreId = _store.Id;
 
