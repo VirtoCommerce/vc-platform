@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using VirtoCommerce.Client.Api;
+using VirtoCommerce.Client.Model;
 using VirtoCommerce.Storefront.Builders;
 using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
@@ -20,9 +21,11 @@ namespace VirtoCommerce.Storefront.Controllers
         private readonly IOrderModuleApi _orderApi;
         private readonly IMarketingModuleApi _marketingApi;
         private readonly ICommerceCoreModuleApi _commerceApi;
+        private readonly ICustomerManagementModuleApi _customerApi;
 
         public CartController(WorkContext workContext, IShoppingCartModuleApi cartApi, IOrderModuleApi orderApi, IStorefrontUrlBuilder urlBuilder,
-                              ICartBuilder cartBuilder, ICatalogSearchService catalogService, IMarketingModuleApi marketingApi, ICommerceCoreModuleApi commerceApi)
+                              ICartBuilder cartBuilder, ICatalogSearchService catalogService, IMarketingModuleApi marketingApi, ICommerceCoreModuleApi commerceApi,
+                              ICustomerManagementModuleApi customerApi)
             : base(workContext, urlBuilder)
         {
             _cartBuilder = cartBuilder;
@@ -31,6 +34,7 @@ namespace VirtoCommerce.Storefront.Controllers
             _orderApi = orderApi;
             _marketingApi = marketingApi;
             _commerceApi = commerceApi;
+            _customerApi = customerApi;
         }
 
         // GET: /cart
@@ -208,26 +212,33 @@ namespace VirtoCommerce.Storefront.Controllers
         // POST: /cart/createorder
         [HttpPost]
         [Route("createorder")]
-        public async Task<ActionResult> CreateOrderJson()
+        public async Task<ActionResult> CreateOrderJson(BankCardInfo bankCardInfo)
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
 
             var order = await _orderApi.OrderModuleCreateOrderFromCartAsync(_cartBuilder.Cart.Id);
             await _cartApi.CartModuleDeleteCartsAsync(new List<string> { _cartBuilder.Cart.Id });
 
-            return Json(order.ToWebModel(), JsonRequestBehavior.AllowGet);
-        }
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                var contact = await _customerApi.CustomerModuleGetContactByIdAsync(WorkContext.CurrentCustomer.Id);
 
-        // POST: /cart/processpayment?orderId=...&paymentId=...&bankCardInfo=...
-        [HttpPost]
-        [Route("processpayment")]
-        public async Task<ActionResult> ProcessPaymentJson(string orderId, string paymentId, BankCardInfo bankCardInfo)
-        {
-            var cardInfo = new BankCardInfo();
+                foreach (var orderAddress in order.Addresses)
+                {
+                    contact.Addresses.Add(orderAddress.ToCustomerModel());
+                }
 
-            var processingResult = await _orderApi.OrderModuleProcessOrderPaymentsAsync(cardInfo.ToServiceModel(), orderId, paymentId);
+                await _customerApi.CustomerModuleUpdateContactAsync(contact);
+            }
 
-            return Json(processingResult, JsonRequestBehavior.AllowGet);
+            VirtoCommerceOrderModuleWebModelProcessPaymentResult processingResult = null;
+            var incomingPayment = order.InPayments != null ? order.InPayments.FirstOrDefault() : null;
+            if (incomingPayment != null)
+            {
+                processingResult = await _orderApi.OrderModuleProcessOrderPaymentsAsync(bankCardInfo.ToServiceModel(), order.Id, incomingPayment.Id);
+            }
+
+            return Json(new { processingResult = processingResult, orderId = order.Id }, JsonRequestBehavior.AllowGet);
         }
 
         // GET: /cart/externalpaymentcallback?orderId=...

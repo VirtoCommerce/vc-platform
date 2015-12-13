@@ -36,24 +36,23 @@
                 id: 'quoteDetails',
                 currentEntityId: node.id,
                 title: node.number,
-            subtitle: 'quotes.blades.quote-detail.subtitle',
+                subtitle: 'quotes.blades.quote-detail.subtitle',
                 controller: 'virtoCommerce.quoteModule.quoteDetailController',
                 template: 'Modules/$(VirtoCommerce.Quote)/Scripts/blades/quote-detail.tpl.html'
             };
 
             bladeNavigationService.showBlade(newBlade, blade);
         };
-        
-        function deleteChecked() {
+
+        $scope.deleteList = function (list) {
             var dialog = {
                 id: "confirmDeleteItem",
-            title: "quotes.dialogs.quote-requests-delete.title",
-            message: "quotes.dialogs.quote-requests-delete.message",
+                title: "quotes.dialogs.quote-requests-delete.title",
+                message: "quotes.dialogs.quote-requests-delete.message",
                 callback: function (remove) {
                     if (remove) {
                         bladeNavigationService.closeChildrenBlades(blade, function () {
-                            var selection = $scope.gridApi.selection.getSelectedRows();
-                            var itemIds = _.pluck(selection, 'id');
+                            var itemIds = _.pluck(list, 'id');
                             quotes.remove({ ids: itemIds },
                                 blade.refresh,
                                 function (error) { bladeNavigationService.setError('Error ' + error.status, blade); }
@@ -69,7 +68,7 @@
 
         blade.toolbarCommands = [
             {
-            name: "platform.commands.refresh", icon: 'fa fa-refresh',
+                name: "platform.commands.refresh", icon: 'fa fa-refresh',
                 executeMethod: function () {
                     blade.refresh();
                 },
@@ -88,9 +87,9 @@
             //    permission: 'quote:create'
             //}
             {
-            name: "platform.commands.delete", icon: 'fa fa-trash-o',
+                name: "platform.commands.delete", icon: 'fa fa-trash-o',
                 executeMethod: function () {
-                    deleteChecked();
+                    $scope.deleteList($scope.gridApi.selection.getSelectedRows());
                 },
                 canExecuteMethod: function () {
                     return $scope.gridApi && _.any($scope.gridApi.selection.getSelectedRows());

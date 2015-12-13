@@ -22,6 +22,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
             Payments = new List<Payment>();
             Shipments = new List<Shipment>();
             TaxDetails = new List<TaxDetail>();
+            DynamicProperties = new List<DynamicObjectProperty>();
         }
 
         /// <summary>
@@ -230,5 +231,18 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// Collection of TaxDetail objects
         /// </value>
         public ICollection<TaxDetail> TaxDetails { get; set; }
+
+        /// <summary>
+        /// Used for dynamic properties management, contains object type string
+        /// </summary>
+        /// <value>Used for dynamic properties management, contains object type string</value>
+
+        public string ObjectType { get; set; }
+
+        /// <summary>
+        /// Dynamic properties collections
+        /// </summary>
+        /// <value>Dynamic properties collections</value>
+        public ICollection<DynamicObjectProperty> DynamicProperties { get; set; }
     }
 }

@@ -78,7 +78,7 @@ namespace VirtoCommerce.CartModule.Data.Services
 				repository.Add(entity);
 				CommitChanges(repository);
 			}
-            _dynamicPropertyService.SaveDynamicPropertyValues(cart);
+            SaveDynamicPropertyValues(cart);
 
             retVal = GetById(entity.Id);
 			return retVal;
@@ -101,11 +101,12 @@ namespace VirtoCommerce.CartModule.Data.Services
 				sourceCartEntity.Patch(targetCartEntity);
 				var changedCart = targetCartEntity.ToCoreModel();
 				changedCarts.Add(changedCart);
-			}
+                SaveDynamicPropertyValues(cart);
+            }
 
 
-			//Need a call business logic for changes and persist changes
-			using (var repository = _repositoryFactory())
+            //Need a call business logic for changes and persist changes
+            using (var repository = _repositoryFactory())
 			using (var changeTracker = base.GetChangeTracker(repository))
 			{
 				foreach (var changedCart in changedCarts)
@@ -162,8 +163,19 @@ namespace VirtoCommerce.CartModule.Data.Services
 			}
 		}
 
-		#endregion
+        #endregion
 
+        private void SaveDynamicPropertyValues(ShoppingCart cart)
+        {
+            _dynamicPropertyService.SaveDynamicPropertyValues(cart);
+            if (cart.Items != null)
+            {
+                foreach (var item in cart.Items)
+                {
+                    _dynamicPropertyService.SaveDynamicPropertyValues(item);
+                }
+            }
+        }
 
-	}
+    }
 }

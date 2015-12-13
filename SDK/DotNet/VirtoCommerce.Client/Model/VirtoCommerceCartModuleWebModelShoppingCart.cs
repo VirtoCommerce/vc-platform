@@ -276,6 +276,22 @@ namespace VirtoCommerce.Client.Model
   
         
         /// <summary>
+        /// Used for dynamic properties management, contains object type string
+        /// </summary>
+        /// <value>Used for dynamic properties management, contains object type string</value>
+        [DataMember(Name="objectType", EmitDefaultValue=false)]
+        public string ObjectType { get; set; }
+  
+        
+        /// <summary>
+        /// Dynamic properties collections
+        /// </summary>
+        /// <value>Dynamic properties collections</value>
+        [DataMember(Name="dynamicProperties", EmitDefaultValue=false)]
+        public List<VirtoCommercePlatformCoreDynamicPropertiesDynamicObjectProperty> DynamicProperties { get; set; }
+  
+        
+        /// <summary>
         /// Gets or Sets CreatedDate
         /// </summary>
         [DataMember(Name="createdDate", EmitDefaultValue=false)]
@@ -351,6 +367,8 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Shipments: ").Append(Shipments).Append("\n");
             sb.Append("  Discounts: ").Append(Discounts).Append("\n");
             sb.Append("  TaxDetails: ").Append(TaxDetails).Append("\n");
+            sb.Append("  ObjectType: ").Append(ObjectType).Append("\n");
+            sb.Append("  DynamicProperties: ").Append(DynamicProperties).Append("\n");
             sb.Append("  CreatedDate: ").Append(CreatedDate).Append("\n");
             sb.Append("  ModifiedDate: ").Append(ModifiedDate).Append("\n");
             sb.Append("  CreatedBy: ").Append(CreatedBy).Append("\n");
@@ -554,6 +572,16 @@ namespace VirtoCommerce.Client.Model
                     this.TaxDetails.SequenceEqual(other.TaxDetails)
                 ) && 
                 (
+                    this.ObjectType == other.ObjectType ||
+                    this.ObjectType != null &&
+                    this.ObjectType.Equals(other.ObjectType)
+                ) && 
+                (
+                    this.DynamicProperties == other.DynamicProperties ||
+                    this.DynamicProperties != null &&
+                    this.DynamicProperties.SequenceEqual(other.DynamicProperties)
+                ) && 
+                (
                     this.CreatedDate == other.CreatedDate ||
                     this.CreatedDate != null &&
                     this.CreatedDate.Equals(other.CreatedDate)
@@ -687,6 +715,12 @@ namespace VirtoCommerce.Client.Model
                 
                 if (this.TaxDetails != null)
                     hash = hash * 57 + this.TaxDetails.GetHashCode();
+                
+                if (this.ObjectType != null)
+                    hash = hash * 57 + this.ObjectType.GetHashCode();
+                
+                if (this.DynamicProperties != null)
+                    hash = hash * 57 + this.DynamicProperties.GetHashCode();
                 
                 if (this.CreatedDate != null)
                     hash = hash * 57 + this.CreatedDate.GetHashCode();

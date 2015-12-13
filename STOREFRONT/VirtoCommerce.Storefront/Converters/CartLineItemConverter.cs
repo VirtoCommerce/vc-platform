@@ -47,6 +47,11 @@ namespace VirtoCommerce.Storefront.Converters
                 webModel.TaxDetails = serviceModel.TaxDetails.Select(td => td.ToWebModel()).ToList();
             }
 
+            if (serviceModel.DynamicProperties != null)
+            {
+                webModel.DynamicProperties = serviceModel.DynamicProperties.Select(dp => dp.ToWebModel()).ToList();
+            }
+
             webModel.DiscountTotal = new Money(serviceModel.DiscountTotal ?? 0, currency.Code);
             webModel.ExtendedPrice = new Money(serviceModel.ExtendedPrice ?? 0, currency.Code);
             webModel.IsGift = (bool)serviceModel.IsGift;
@@ -81,6 +86,7 @@ namespace VirtoCommerce.Storefront.Converters
             serviceModel.Quantity = webModel.Quantity;
             serviceModel.SalePrice = (double)webModel.SalePrice.Amount;
             serviceModel.TaxDetails = webModel.TaxDetails.Select(td => td.ToServiceModel()).ToList();
+            serviceModel.DynamicProperties = webModel.DynamicProperties.Select(dp => dp.ToServiceModel()).ToList();
             serviceModel.TaxTotal = (double)webModel.TaxTotal.Amount;
             serviceModel.VolumetricWeight = (double)(webModel.VolumetricWeight ?? 0);
             serviceModel.Weight = (double)webModel.Weight;

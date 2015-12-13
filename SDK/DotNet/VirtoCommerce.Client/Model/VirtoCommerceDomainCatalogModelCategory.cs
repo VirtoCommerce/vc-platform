@@ -76,6 +76,13 @@ namespace VirtoCommerce.Client.Model
   
         
         /// <summary>
+        /// Gets or Sets Level
+        /// </summary>
+        [DataMember(Name="level", EmitDefaultValue=false)]
+        public int? Level { get; set; }
+  
+        
+        /// <summary>
         /// Gets or Sets Parents
         /// </summary>
         [DataMember(Name="parents", EmitDefaultValue=false)]
@@ -190,6 +197,7 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  Path: ").Append(Path).Append("\n");
             sb.Append("  Virtual: ").Append(Virtual).Append("\n");
+            sb.Append("  Level: ").Append(Level).Append("\n");
             sb.Append("  Parents: ").Append(Parents).Append("\n");
             sb.Append("  Priority: ").Append(Priority).Append("\n");
             sb.Append("  IsActive: ").Append(IsActive).Append("\n");
@@ -280,6 +288,11 @@ namespace VirtoCommerce.Client.Model
                     this.Virtual == other.Virtual ||
                     this.Virtual != null &&
                     this.Virtual.Equals(other.Virtual)
+                ) && 
+                (
+                    this.Level == other.Level ||
+                    this.Level != null &&
+                    this.Level.Equals(other.Level)
                 ) && 
                 (
                     this.Parents == other.Parents ||
@@ -388,6 +401,9 @@ namespace VirtoCommerce.Client.Model
                 
                 if (this.Virtual != null)
                     hash = hash * 57 + this.Virtual.GetHashCode();
+                
+                if (this.Level != null)
+                    hash = hash * 57 + this.Level.GetHashCode();
                 
                 if (this.Parents != null)
                     hash = hash * 57 + this.Parents.GetHashCode();

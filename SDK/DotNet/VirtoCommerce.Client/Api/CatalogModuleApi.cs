@@ -546,58 +546,74 @@ namespace VirtoCommerce.Client.Api
         System.Threading.Tasks.Task<List<VirtoCommerceCatalogModuleWebModelPropertyValue>> CatalogModulePropertiesGetPropertyValuesAsync (string propertyId, string keyword = null);
         
         /// <summary>
-        /// Searches for the items by complex criteria.
+        /// Searches for the items by complex criteria
         /// </summary>
         /// <remarks>
         /// 
         /// </remarks>
+        /// <param name="criteriaStoreId"></param>
         /// <param name="criteriaResponseGroup"></param>
         /// <param name="criteriaKeyword"></param>
         /// <param name="criteriaSearchInChildren"></param>
         /// <param name="criteriaCategoryId"></param>
-        /// <param name="criteriaCategoriesIds"></param>
+        /// <param name="criteriaCategoryIds"></param>
         /// <param name="criteriaCatalogId"></param>
-        /// <param name="criteriaCatalogsIds"></param>
+        /// <param name="criteriaCatalogIds"></param>
         /// <param name="criteriaLanguageCode"></param>
         /// <param name="criteriaCode"></param>
         /// <param name="criteriaSort"></param>
+        /// <param name="criteriaSortOrder"></param>
         /// <param name="criteriaHideDirectLinkedCategories"></param>
         /// <param name="criteriaPropertyValues"></param>
         /// <param name="criteriaCurrency"></param>
         /// <param name="criteriaStartPrice"></param>
         /// <param name="criteriaEndPrice"></param>
-        /// <param name="criteriaStart"></param>
-        /// <param name="criteriaCount"></param>
+        /// <param name="criteriaSkip"></param>
+        /// <param name="criteriaTake"></param>
         /// <param name="criteriaIndexDate"></param>
+        /// <param name="criteriaPricelistId"></param>
+        /// <param name="criteriaPricelistIds"></param>
+        /// <param name="criteriaTerms"></param>
+        /// <param name="criteriaFacets"></param>
+        /// <param name="criteriaOutline"></param>
+        /// <param name="criteriaStartDateFrom"></param>
         /// <returns>VirtoCommerceCatalogModuleWebModelCatalogSearchResult</returns>
-        VirtoCommerceCatalogModuleWebModelCatalogSearchResult CatalogModuleSearchSearch (string criteriaResponseGroup = null, string criteriaKeyword = null, bool? criteriaSearchInChildren = null, string criteriaCategoryId = null, List<string> criteriaCategoriesIds = null, string criteriaCatalogId = null, List<string> criteriaCatalogsIds = null, string criteriaLanguageCode = null, string criteriaCode = null, string criteriaSort = null, bool? criteriaHideDirectLinkedCategories = null, List<string> criteriaPropertyValues = null, string criteriaCurrency = null, double? criteriaStartPrice = null, double? criteriaEndPrice = null, int? criteriaStart = null, int? criteriaCount = null, DateTime? criteriaIndexDate = null);
+        VirtoCommerceCatalogModuleWebModelCatalogSearchResult CatalogModuleSearchSearch (string criteriaStoreId = null, string criteriaResponseGroup = null, string criteriaKeyword = null, bool? criteriaSearchInChildren = null, string criteriaCategoryId = null, List<string> criteriaCategoryIds = null, string criteriaCatalogId = null, List<string> criteriaCatalogIds = null, string criteriaLanguageCode = null, string criteriaCode = null, string criteriaSort = null, string criteriaSortOrder = null, bool? criteriaHideDirectLinkedCategories = null, List<string> criteriaPropertyValues = null, string criteriaCurrency = null, double? criteriaStartPrice = null, double? criteriaEndPrice = null, int? criteriaSkip = null, int? criteriaTake = null, DateTime? criteriaIndexDate = null, string criteriaPricelistId = null, List<string> criteriaPricelistIds = null, List<string> criteriaTerms = null, List<string> criteriaFacets = null, string criteriaOutline = null, DateTime? criteriaStartDateFrom = null);
   
         /// <summary>
-        /// Searches for the items by complex criteria.
+        /// Searches for the items by complex criteria
         /// </summary>
         /// <remarks>
         /// 
         /// </remarks>
+        /// <param name="criteriaStoreId"></param>
         /// <param name="criteriaResponseGroup"></param>
         /// <param name="criteriaKeyword"></param>
         /// <param name="criteriaSearchInChildren"></param>
         /// <param name="criteriaCategoryId"></param>
-        /// <param name="criteriaCategoriesIds"></param>
+        /// <param name="criteriaCategoryIds"></param>
         /// <param name="criteriaCatalogId"></param>
-        /// <param name="criteriaCatalogsIds"></param>
+        /// <param name="criteriaCatalogIds"></param>
         /// <param name="criteriaLanguageCode"></param>
         /// <param name="criteriaCode"></param>
         /// <param name="criteriaSort"></param>
+        /// <param name="criteriaSortOrder"></param>
         /// <param name="criteriaHideDirectLinkedCategories"></param>
         /// <param name="criteriaPropertyValues"></param>
         /// <param name="criteriaCurrency"></param>
         /// <param name="criteriaStartPrice"></param>
         /// <param name="criteriaEndPrice"></param>
-        /// <param name="criteriaStart"></param>
-        /// <param name="criteriaCount"></param>
+        /// <param name="criteriaSkip"></param>
+        /// <param name="criteriaTake"></param>
         /// <param name="criteriaIndexDate"></param>
+        /// <param name="criteriaPricelistId"></param>
+        /// <param name="criteriaPricelistIds"></param>
+        /// <param name="criteriaTerms"></param>
+        /// <param name="criteriaFacets"></param>
+        /// <param name="criteriaOutline"></param>
+        /// <param name="criteriaStartDateFrom"></param>
         /// <returns>VirtoCommerceCatalogModuleWebModelCatalogSearchResult</returns>
-        System.Threading.Tasks.Task<VirtoCommerceCatalogModuleWebModelCatalogSearchResult> CatalogModuleSearchSearchAsync (string criteriaResponseGroup = null, string criteriaKeyword = null, bool? criteriaSearchInChildren = null, string criteriaCategoryId = null, List<string> criteriaCategoriesIds = null, string criteriaCatalogId = null, List<string> criteriaCatalogsIds = null, string criteriaLanguageCode = null, string criteriaCode = null, string criteriaSort = null, bool? criteriaHideDirectLinkedCategories = null, List<string> criteriaPropertyValues = null, string criteriaCurrency = null, double? criteriaStartPrice = null, double? criteriaEndPrice = null, int? criteriaStart = null, int? criteriaCount = null, DateTime? criteriaIndexDate = null);
+        System.Threading.Tasks.Task<VirtoCommerceCatalogModuleWebModelCatalogSearchResult> CatalogModuleSearchSearchAsync (string criteriaStoreId = null, string criteriaResponseGroup = null, string criteriaKeyword = null, bool? criteriaSearchInChildren = null, string criteriaCategoryId = null, List<string> criteriaCategoryIds = null, string criteriaCatalogId = null, List<string> criteriaCatalogIds = null, string criteriaLanguageCode = null, string criteriaCode = null, string criteriaSort = null, string criteriaSortOrder = null, bool? criteriaHideDirectLinkedCategories = null, List<string> criteriaPropertyValues = null, string criteriaCurrency = null, double? criteriaStartPrice = null, double? criteriaEndPrice = null, int? criteriaSkip = null, int? criteriaTake = null, DateTime? criteriaIndexDate = null, string criteriaPricelistId = null, List<string> criteriaPricelistIds = null, List<string> criteriaTerms = null, List<string> criteriaFacets = null, string criteriaOutline = null, DateTime? criteriaStartDateFrom = null);
         
         /// <summary>
         /// Gets the template for a new category.
@@ -3393,28 +3409,36 @@ namespace VirtoCommerce.Client.Api
         }
         
         /// <summary>
-        /// Searches for the items by complex criteria. 
+        /// Searches for the items by complex criteria 
         /// </summary>
+        /// <param name="criteriaStoreId"></param> 
         /// <param name="criteriaResponseGroup"></param> 
         /// <param name="criteriaKeyword"></param> 
         /// <param name="criteriaSearchInChildren"></param> 
         /// <param name="criteriaCategoryId"></param> 
-        /// <param name="criteriaCategoriesIds"></param> 
+        /// <param name="criteriaCategoryIds"></param> 
         /// <param name="criteriaCatalogId"></param> 
-        /// <param name="criteriaCatalogsIds"></param> 
+        /// <param name="criteriaCatalogIds"></param> 
         /// <param name="criteriaLanguageCode"></param> 
         /// <param name="criteriaCode"></param> 
         /// <param name="criteriaSort"></param> 
+        /// <param name="criteriaSortOrder"></param> 
         /// <param name="criteriaHideDirectLinkedCategories"></param> 
         /// <param name="criteriaPropertyValues"></param> 
         /// <param name="criteriaCurrency"></param> 
         /// <param name="criteriaStartPrice"></param> 
         /// <param name="criteriaEndPrice"></param> 
-        /// <param name="criteriaStart"></param> 
-        /// <param name="criteriaCount"></param> 
+        /// <param name="criteriaSkip"></param> 
+        /// <param name="criteriaTake"></param> 
         /// <param name="criteriaIndexDate"></param> 
+        /// <param name="criteriaPricelistId"></param> 
+        /// <param name="criteriaPricelistIds"></param> 
+        /// <param name="criteriaTerms"></param> 
+        /// <param name="criteriaFacets"></param> 
+        /// <param name="criteriaOutline"></param> 
+        /// <param name="criteriaStartDateFrom"></param> 
         /// <returns>VirtoCommerceCatalogModuleWebModelCatalogSearchResult</returns>            
-        public VirtoCommerceCatalogModuleWebModelCatalogSearchResult CatalogModuleSearchSearch (string criteriaResponseGroup = null, string criteriaKeyword = null, bool? criteriaSearchInChildren = null, string criteriaCategoryId = null, List<string> criteriaCategoriesIds = null, string criteriaCatalogId = null, List<string> criteriaCatalogsIds = null, string criteriaLanguageCode = null, string criteriaCode = null, string criteriaSort = null, bool? criteriaHideDirectLinkedCategories = null, List<string> criteriaPropertyValues = null, string criteriaCurrency = null, double? criteriaStartPrice = null, double? criteriaEndPrice = null, int? criteriaStart = null, int? criteriaCount = null, DateTime? criteriaIndexDate = null)
+        public VirtoCommerceCatalogModuleWebModelCatalogSearchResult CatalogModuleSearchSearch (string criteriaStoreId = null, string criteriaResponseGroup = null, string criteriaKeyword = null, bool? criteriaSearchInChildren = null, string criteriaCategoryId = null, List<string> criteriaCategoryIds = null, string criteriaCatalogId = null, List<string> criteriaCatalogIds = null, string criteriaLanguageCode = null, string criteriaCode = null, string criteriaSort = null, string criteriaSortOrder = null, bool? criteriaHideDirectLinkedCategories = null, List<string> criteriaPropertyValues = null, string criteriaCurrency = null, double? criteriaStartPrice = null, double? criteriaEndPrice = null, int? criteriaSkip = null, int? criteriaTake = null, DateTime? criteriaIndexDate = null, string criteriaPricelistId = null, List<string> criteriaPricelistIds = null, List<string> criteriaTerms = null, List<string> criteriaFacets = null, string criteriaOutline = null, DateTime? criteriaStartDateFrom = null)
         {
             
     
@@ -3439,24 +3463,32 @@ namespace VirtoCommerce.Client.Api
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
             
+            if (criteriaStoreId != null) queryParams.Add("criteria.storeId", ApiClient.ParameterToString(criteriaStoreId)); // query parameter
             if (criteriaResponseGroup != null) queryParams.Add("criteria.responseGroup", ApiClient.ParameterToString(criteriaResponseGroup)); // query parameter
             if (criteriaKeyword != null) queryParams.Add("criteria.keyword", ApiClient.ParameterToString(criteriaKeyword)); // query parameter
             if (criteriaSearchInChildren != null) queryParams.Add("criteria.searchInChildren", ApiClient.ParameterToString(criteriaSearchInChildren)); // query parameter
             if (criteriaCategoryId != null) queryParams.Add("criteria.categoryId", ApiClient.ParameterToString(criteriaCategoryId)); // query parameter
-            if (criteriaCategoriesIds != null) queryParams.Add("criteria.categoriesIds", ApiClient.ParameterToString(criteriaCategoriesIds)); // query parameter
+            if (criteriaCategoryIds != null) queryParams.Add("criteria.categoryIds", ApiClient.ParameterToString(criteriaCategoryIds)); // query parameter
             if (criteriaCatalogId != null) queryParams.Add("criteria.catalogId", ApiClient.ParameterToString(criteriaCatalogId)); // query parameter
-            if (criteriaCatalogsIds != null) queryParams.Add("criteria.catalogsIds", ApiClient.ParameterToString(criteriaCatalogsIds)); // query parameter
+            if (criteriaCatalogIds != null) queryParams.Add("criteria.catalogIds", ApiClient.ParameterToString(criteriaCatalogIds)); // query parameter
             if (criteriaLanguageCode != null) queryParams.Add("criteria.languageCode", ApiClient.ParameterToString(criteriaLanguageCode)); // query parameter
             if (criteriaCode != null) queryParams.Add("criteria.code", ApiClient.ParameterToString(criteriaCode)); // query parameter
             if (criteriaSort != null) queryParams.Add("criteria.sort", ApiClient.ParameterToString(criteriaSort)); // query parameter
+            if (criteriaSortOrder != null) queryParams.Add("criteria.sortOrder", ApiClient.ParameterToString(criteriaSortOrder)); // query parameter
             if (criteriaHideDirectLinkedCategories != null) queryParams.Add("criteria.hideDirectLinkedCategories", ApiClient.ParameterToString(criteriaHideDirectLinkedCategories)); // query parameter
             if (criteriaPropertyValues != null) queryParams.Add("criteria.propertyValues", ApiClient.ParameterToString(criteriaPropertyValues)); // query parameter
             if (criteriaCurrency != null) queryParams.Add("criteria.currency", ApiClient.ParameterToString(criteriaCurrency)); // query parameter
             if (criteriaStartPrice != null) queryParams.Add("criteria.startPrice", ApiClient.ParameterToString(criteriaStartPrice)); // query parameter
             if (criteriaEndPrice != null) queryParams.Add("criteria.endPrice", ApiClient.ParameterToString(criteriaEndPrice)); // query parameter
-            if (criteriaStart != null) queryParams.Add("criteria.start", ApiClient.ParameterToString(criteriaStart)); // query parameter
-            if (criteriaCount != null) queryParams.Add("criteria.count", ApiClient.ParameterToString(criteriaCount)); // query parameter
+            if (criteriaSkip != null) queryParams.Add("criteria.skip", ApiClient.ParameterToString(criteriaSkip)); // query parameter
+            if (criteriaTake != null) queryParams.Add("criteria.take", ApiClient.ParameterToString(criteriaTake)); // query parameter
             if (criteriaIndexDate != null) queryParams.Add("criteria.indexDate", ApiClient.ParameterToString(criteriaIndexDate)); // query parameter
+            if (criteriaPricelistId != null) queryParams.Add("criteria.pricelistId", ApiClient.ParameterToString(criteriaPricelistId)); // query parameter
+            if (criteriaPricelistIds != null) queryParams.Add("criteria.pricelistIds", ApiClient.ParameterToString(criteriaPricelistIds)); // query parameter
+            if (criteriaTerms != null) queryParams.Add("criteria.terms", ApiClient.ParameterToString(criteriaTerms)); // query parameter
+            if (criteriaFacets != null) queryParams.Add("criteria.facets", ApiClient.ParameterToString(criteriaFacets)); // query parameter
+            if (criteriaOutline != null) queryParams.Add("criteria.outline", ApiClient.ParameterToString(criteriaOutline)); // query parameter
+            if (criteriaStartDateFrom != null) queryParams.Add("criteria.startDateFrom", ApiClient.ParameterToString(criteriaStartDateFrom)); // query parameter
             
             
             
@@ -3477,28 +3509,36 @@ namespace VirtoCommerce.Client.Api
         }
     
         /// <summary>
-        /// Searches for the items by complex criteria. 
+        /// Searches for the items by complex criteria 
         /// </summary>
+        /// <param name="criteriaStoreId"></param>
         /// <param name="criteriaResponseGroup"></param>
         /// <param name="criteriaKeyword"></param>
         /// <param name="criteriaSearchInChildren"></param>
         /// <param name="criteriaCategoryId"></param>
-        /// <param name="criteriaCategoriesIds"></param>
+        /// <param name="criteriaCategoryIds"></param>
         /// <param name="criteriaCatalogId"></param>
-        /// <param name="criteriaCatalogsIds"></param>
+        /// <param name="criteriaCatalogIds"></param>
         /// <param name="criteriaLanguageCode"></param>
         /// <param name="criteriaCode"></param>
         /// <param name="criteriaSort"></param>
+        /// <param name="criteriaSortOrder"></param>
         /// <param name="criteriaHideDirectLinkedCategories"></param>
         /// <param name="criteriaPropertyValues"></param>
         /// <param name="criteriaCurrency"></param>
         /// <param name="criteriaStartPrice"></param>
         /// <param name="criteriaEndPrice"></param>
-        /// <param name="criteriaStart"></param>
-        /// <param name="criteriaCount"></param>
+        /// <param name="criteriaSkip"></param>
+        /// <param name="criteriaTake"></param>
         /// <param name="criteriaIndexDate"></param>
+        /// <param name="criteriaPricelistId"></param>
+        /// <param name="criteriaPricelistIds"></param>
+        /// <param name="criteriaTerms"></param>
+        /// <param name="criteriaFacets"></param>
+        /// <param name="criteriaOutline"></param>
+        /// <param name="criteriaStartDateFrom"></param>
         /// <returns>VirtoCommerceCatalogModuleWebModelCatalogSearchResult</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceCatalogModuleWebModelCatalogSearchResult> CatalogModuleSearchSearchAsync (string criteriaResponseGroup = null, string criteriaKeyword = null, bool? criteriaSearchInChildren = null, string criteriaCategoryId = null, List<string> criteriaCategoriesIds = null, string criteriaCatalogId = null, List<string> criteriaCatalogsIds = null, string criteriaLanguageCode = null, string criteriaCode = null, string criteriaSort = null, bool? criteriaHideDirectLinkedCategories = null, List<string> criteriaPropertyValues = null, string criteriaCurrency = null, double? criteriaStartPrice = null, double? criteriaEndPrice = null, int? criteriaStart = null, int? criteriaCount = null, DateTime? criteriaIndexDate = null)
+        public async System.Threading.Tasks.Task<VirtoCommerceCatalogModuleWebModelCatalogSearchResult> CatalogModuleSearchSearchAsync (string criteriaStoreId = null, string criteriaResponseGroup = null, string criteriaKeyword = null, bool? criteriaSearchInChildren = null, string criteriaCategoryId = null, List<string> criteriaCategoryIds = null, string criteriaCatalogId = null, List<string> criteriaCatalogIds = null, string criteriaLanguageCode = null, string criteriaCode = null, string criteriaSort = null, string criteriaSortOrder = null, bool? criteriaHideDirectLinkedCategories = null, List<string> criteriaPropertyValues = null, string criteriaCurrency = null, double? criteriaStartPrice = null, double? criteriaEndPrice = null, int? criteriaSkip = null, int? criteriaTake = null, DateTime? criteriaIndexDate = null, string criteriaPricelistId = null, List<string> criteriaPricelistIds = null, List<string> criteriaTerms = null, List<string> criteriaFacets = null, string criteriaOutline = null, DateTime? criteriaStartDateFrom = null)
         {
             
     
@@ -3523,24 +3563,32 @@ namespace VirtoCommerce.Client.Api
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
             
+            if (criteriaStoreId != null) queryParams.Add("criteria.storeId", ApiClient.ParameterToString(criteriaStoreId)); // query parameter
             if (criteriaResponseGroup != null) queryParams.Add("criteria.responseGroup", ApiClient.ParameterToString(criteriaResponseGroup)); // query parameter
             if (criteriaKeyword != null) queryParams.Add("criteria.keyword", ApiClient.ParameterToString(criteriaKeyword)); // query parameter
             if (criteriaSearchInChildren != null) queryParams.Add("criteria.searchInChildren", ApiClient.ParameterToString(criteriaSearchInChildren)); // query parameter
             if (criteriaCategoryId != null) queryParams.Add("criteria.categoryId", ApiClient.ParameterToString(criteriaCategoryId)); // query parameter
-            if (criteriaCategoriesIds != null) queryParams.Add("criteria.categoriesIds", ApiClient.ParameterToString(criteriaCategoriesIds)); // query parameter
+            if (criteriaCategoryIds != null) queryParams.Add("criteria.categoryIds", ApiClient.ParameterToString(criteriaCategoryIds)); // query parameter
             if (criteriaCatalogId != null) queryParams.Add("criteria.catalogId", ApiClient.ParameterToString(criteriaCatalogId)); // query parameter
-            if (criteriaCatalogsIds != null) queryParams.Add("criteria.catalogsIds", ApiClient.ParameterToString(criteriaCatalogsIds)); // query parameter
+            if (criteriaCatalogIds != null) queryParams.Add("criteria.catalogIds", ApiClient.ParameterToString(criteriaCatalogIds)); // query parameter
             if (criteriaLanguageCode != null) queryParams.Add("criteria.languageCode", ApiClient.ParameterToString(criteriaLanguageCode)); // query parameter
             if (criteriaCode != null) queryParams.Add("criteria.code", ApiClient.ParameterToString(criteriaCode)); // query parameter
             if (criteriaSort != null) queryParams.Add("criteria.sort", ApiClient.ParameterToString(criteriaSort)); // query parameter
+            if (criteriaSortOrder != null) queryParams.Add("criteria.sortOrder", ApiClient.ParameterToString(criteriaSortOrder)); // query parameter
             if (criteriaHideDirectLinkedCategories != null) queryParams.Add("criteria.hideDirectLinkedCategories", ApiClient.ParameterToString(criteriaHideDirectLinkedCategories)); // query parameter
             if (criteriaPropertyValues != null) queryParams.Add("criteria.propertyValues", ApiClient.ParameterToString(criteriaPropertyValues)); // query parameter
             if (criteriaCurrency != null) queryParams.Add("criteria.currency", ApiClient.ParameterToString(criteriaCurrency)); // query parameter
             if (criteriaStartPrice != null) queryParams.Add("criteria.startPrice", ApiClient.ParameterToString(criteriaStartPrice)); // query parameter
             if (criteriaEndPrice != null) queryParams.Add("criteria.endPrice", ApiClient.ParameterToString(criteriaEndPrice)); // query parameter
-            if (criteriaStart != null) queryParams.Add("criteria.start", ApiClient.ParameterToString(criteriaStart)); // query parameter
-            if (criteriaCount != null) queryParams.Add("criteria.count", ApiClient.ParameterToString(criteriaCount)); // query parameter
+            if (criteriaSkip != null) queryParams.Add("criteria.skip", ApiClient.ParameterToString(criteriaSkip)); // query parameter
+            if (criteriaTake != null) queryParams.Add("criteria.take", ApiClient.ParameterToString(criteriaTake)); // query parameter
             if (criteriaIndexDate != null) queryParams.Add("criteria.indexDate", ApiClient.ParameterToString(criteriaIndexDate)); // query parameter
+            if (criteriaPricelistId != null) queryParams.Add("criteria.pricelistId", ApiClient.ParameterToString(criteriaPricelistId)); // query parameter
+            if (criteriaPricelistIds != null) queryParams.Add("criteria.pricelistIds", ApiClient.ParameterToString(criteriaPricelistIds)); // query parameter
+            if (criteriaTerms != null) queryParams.Add("criteria.terms", ApiClient.ParameterToString(criteriaTerms)); // query parameter
+            if (criteriaFacets != null) queryParams.Add("criteria.facets", ApiClient.ParameterToString(criteriaFacets)); // query parameter
+            if (criteriaOutline != null) queryParams.Add("criteria.outline", ApiClient.ParameterToString(criteriaOutline)); // query parameter
+            if (criteriaStartDateFrom != null) queryParams.Add("criteria.startDateFrom", ApiClient.ParameterToString(criteriaStartDateFrom)); // query parameter
             
             
             

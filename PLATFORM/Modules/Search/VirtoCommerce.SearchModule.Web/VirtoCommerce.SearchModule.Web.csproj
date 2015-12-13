@@ -133,13 +133,17 @@
     <Compile Include="BackgroundJobs\SearchIndexJobs.cs" />
     <Compile Include="BackgroundJobs\SearchIndexJobsScheduler.cs" />
     <Compile Include="Controllers\Api\SearchModuleController.cs" />
+    <Compile Include="Converters\AggregationConverters.cs" />
     <Compile Include="Model\FilterProperty.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Security\SearchPredefinedPermissions.cs" />
+    <Compile Include="Services\BrowseFilterServiceExtensions.cs" />
+    <Compile Include="Services\FilterService.cs" />
+    <Compile Include="Services\IItemBrowsingService.cs" />
+    <Compile Include="Services\ItemBrowsingService.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Converters\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\..\..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj">
       <Project>{f7c9313b-522e-4619-abc9-8c7d4600d6b5}</Project>
@@ -148,6 +152,10 @@
     <ProjectReference Include="..\..\..\VirtoCommerce.Platform.Data\VirtoCommerce.Platform.Data.csproj">
       <Project>{39afd233-b2f7-4178-817d-0a339c57525d}</Project>
       <Name>VirtoCommerce.Platform.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Catalog\VirtoCommerce.CatalogModule.Web\VirtoCommerce.CatalogModule.Web.csproj">
+      <Project>{988cb3e9-2594-499c-90b4-9399eb481c79}</Project>
+      <Name>VirtoCommerce.CatalogModule.Web</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Core\VirtoCommerce.Domain\VirtoCommerce.Domain.csproj">
       <Project>{67c58a78-ddea-4fa3-a969-1cab582918e4}</Project>

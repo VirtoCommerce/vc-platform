@@ -27,7 +27,7 @@
 </div>
 
 <script type="text/ng-template" id="list.row.html">
-    <div ng-click='grid.appScope.selectNode(row.entity)' ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'" class="ui-grid-cell" ng-class="{'ui-grid-row-header-cell': col.isRowHeader, '__selected': row.entity.productId===grid.appScope.selectedNodeId }" role="{{col.isRowHeader ? 'rowheader' : 'gridcell' }}" ui-grid-cell style='cursor:pointer'></div>
+    <div ng-click='grid.appScope.selectNode(row.entity)' ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'" class="ui-grid-cell" ng-class="{'ui-grid-row-header-cell': col.isRowHeader, '__selected': row.entity.productId===grid.appScope.selectedNodeId }" role="{{col.isRowHeader ? 'rowheader' : 'gridcell' }}" ui-grid-cell></div>
 </script>
 <script type="text/ng-template" id="pricelistItems-list-priceRange.cell.html">
     <div class="ui-grid-cell-contents">{{grid.appScope.getPriceRange(row.entity)}}</div>

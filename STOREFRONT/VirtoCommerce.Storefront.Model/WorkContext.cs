@@ -58,9 +58,14 @@ namespace VirtoCommerce.Storefront.Model
         public Store CurrentStore { get; set; }
 
         /// <summary>
-        /// Current shopping cart
+        /// Gets or sets the current shopping cart
         /// </summary>
         public ShoppingCart CurrentCart { get; set; }
+
+        /// <summary>
+        /// Gets or sets the collection of site navigation menu link lists
+        /// </summary>
+        public ICollection<MenuLinkList> CurrentLinkLists { get; set; }
 
         /// <summary>
         /// List of all supported stores

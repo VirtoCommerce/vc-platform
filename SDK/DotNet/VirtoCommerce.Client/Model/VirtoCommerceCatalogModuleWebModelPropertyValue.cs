@@ -79,7 +79,7 @@ namespace VirtoCommerce.Client.Model
         /// </summary>
         /// <value>Gets or sets the actual value.</value>
         [DataMember(Name="value", EmitDefaultValue=false)]
-        public Object Value { get; set; }
+        public string Value { get; set; }
   
         
         /// <summary>

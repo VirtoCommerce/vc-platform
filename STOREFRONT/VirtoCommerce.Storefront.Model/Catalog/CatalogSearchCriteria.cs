@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VirtoCommerce.Storefront.Model.Common;
+﻿using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Model.Catalog
 {
@@ -15,6 +10,7 @@ namespace VirtoCommerce.Storefront.Model.Catalog
             PageNumber = 1;
             PageSize = 20;
         }
+
         public CatalogSearchResponseGroup ResponseGroup { get; set; }
         public string CatalogId { get; set; }
         public string CategoryId { get; set; }
@@ -23,5 +19,6 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         public string Keyword { get; set; }
         public int PageNumber { get; set; }
         public int PageSize { get; set; }
+        public Term[] Terms { get; set; }
     }
 }

@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections;
+using VirtoCommerce.LiquidThemeEngine.Objects;
 
 namespace VirtoCommerce.LiquidThemeEngine.Operators
 {
@@ -11,18 +7,26 @@ namespace VirtoCommerce.LiquidThemeEngine.Operators
     {
         public static bool ContainsMethod(object left, object right)
         {
-            if (left is string)
+            var liquidContains = left as ILiquidContains;
+            if (liquidContains != null)
             {
-                return right != null && ((string)left).Contains(right as string);
+                return liquidContains.Contains(right);
             }
 
-            if (left is IList)
+            var leftString = left as string;
+            if (leftString != null)
             {
-                return ((IList)left).Contains(right);
+                var rightString = right as string;
+                return rightString != null && leftString.Contains(rightString);
+            }
+
+            var list = left as IList;
+            if (list != null)
+            {
+                return list.Contains(right);
             }
 
             return false;
         }
     }
 }
-

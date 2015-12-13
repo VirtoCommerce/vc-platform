@@ -99,6 +99,7 @@
     <Compile Include="Converters\ImageConverter.cs" />
     <Compile Include="Converters\LanguageConverters.cs" />
     <Compile Include="Converters\LineItemConverter.cs" />
+    <Compile Include="Converters\LinkListConverter.cs" />
     <Compile Include="Converters\OrderConverter.cs" />
     <Compile Include="Converters\ProductConverter.cs" />
     <Compile Include="Converters\ProductPropertyConverter.cs" />
@@ -109,6 +110,7 @@
     <Compile Include="Converters\CountryConverter.cs" />
     <Compile Include="Converters\CustomerConverter.cs" />
     <Compile Include="Converters\Injections\NullableAndEnumInjection.cs" />
+    <Compile Include="Converters\TagConverter.cs" />
     <Compile Include="DotLiquidThemedView.cs" />
     <Compile Include="DotLiquidThemedViewEngine.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
@@ -132,13 +134,19 @@
     <Compile Include="Objects\Form.cs" />
     <Compile Include="Objects\FormErrors.cs" />
     <Compile Include="Objects\Fulfillment.cs" />
+    <Compile Include="Objects\ILiquidContains.cs" />
     <Compile Include="Objects\Language.cs" />
     <Compile Include="Objects\LineItem.cs" />
+    <Compile Include="Objects\Link.cs" />
+    <Compile Include="Objects\Linklist.cs" />
+    <Compile Include="Objects\Linklists.cs" />
     <Compile Include="Objects\Order.cs" />
     <Compile Include="Objects\Paginate.cs" />
     <Compile Include="Objects\Part.cs" />
     <Compile Include="Objects\ProductProperty.cs" />
     <Compile Include="Objects\ShippingMethod.cs" />
+    <Compile Include="Objects\Tag.cs" />
+    <Compile Include="Objects\TagCollection.cs" />
     <Compile Include="Objects\TaxLine.cs" />
     <Compile Include="Tags\FormTag.cs" />
     <Compile Include="Objects\Image.cs" />

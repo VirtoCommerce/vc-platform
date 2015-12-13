@@ -26,6 +26,17 @@ namespace VirtoCommerce.Storefront.Converters
             return result;
         }
 
+        public static VirtoCommerceCustomerModuleWebModelAddress ToCustomerModel(this VirtoCommerceOrderModuleWebModelAddress orderAddress)
+        {
+            var customerAddress = new VirtoCommerceCustomerModuleWebModelAddress();
+
+            customerAddress.InjectFrom(orderAddress);
+
+            customerAddress.Name = string.Format("{0} {1}", orderAddress.FirstName, orderAddress.LastName);
+
+            return customerAddress;
+        }
+
         public static VirtoCommerceCustomerModuleWebModelAddress CopyFrom(this VirtoCommerceCustomerModuleWebModelAddress result, shopifyModel.Address address, Country[] countries)
         {
             result.InjectFrom<NullableAndEnumValueInjection>(address);

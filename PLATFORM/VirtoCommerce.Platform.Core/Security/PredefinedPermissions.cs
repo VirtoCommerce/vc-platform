@@ -188,28 +188,35 @@
                 new Permission
                 {
                     Id = AssetCreate,
+                    Name = "Create assets",
+                    Description = "Permission to create assets.",
                     ModuleId = "VirtoCommerce.Platform",
                     GroupName = "Asset management"
                 },
                 new Permission
                 {
                     Id = AssetDelete,
+                    Name = "Delete assets",
+                    Description = "Permission to delete assets.",
                     ModuleId = "VirtoCommerce.Platform",
                     GroupName = "Asset management"
                 },
                 new Permission
                 {
                     Id = AssetRead,
+                    Name = "View assets",
+                    Description = "Permission to browse and view assets.",
                     ModuleId = "VirtoCommerce.Platform",
                     GroupName = "Asset management"
                 },
                 new Permission
                 {
                     Id = AssetUpdate,
+                    Name = "Update assets",
+                    Description = "Permission to update assets.",
                     ModuleId = "VirtoCommerce.Platform",
                     GroupName = "Asset management"
-                },
-
+                }
             };
         }
     }

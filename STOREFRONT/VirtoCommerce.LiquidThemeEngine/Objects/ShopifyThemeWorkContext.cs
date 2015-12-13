@@ -10,7 +10,6 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
     /// </summary>
     public class ShopifyThemeWorkContext : ILiquidizable
     {
-
         #region Aliases for shopify theme compliance
 
         /// <summary>
@@ -39,6 +38,12 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         /// </summary>
         public Form Form { get; set; }
 
+        /// <summary>
+        /// Contains a collection of all of the links in your shop.
+        /// You can access a linklist by calling its handle on linklists
+        /// </summary>
+        public Linklists Linklists { get; set; }
+
         public Product Product { get; set; }
 
 
@@ -54,10 +59,11 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         /// </summary>
         public Collection Collection { get; set; }
 
-
         public Collections Collections { get; set; }
 
         public int CurrentPage { get; set; }
+
+        public TagCollection CurrentTags { get; set; }
 
         #region Custom properties
         public Language CurrentLanguage { get; set; }

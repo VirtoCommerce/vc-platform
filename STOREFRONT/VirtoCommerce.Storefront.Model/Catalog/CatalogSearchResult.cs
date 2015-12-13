@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using PagedList;
+﻿using System.Collections.Generic;
 using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Model.Catalog
@@ -13,6 +8,6 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         public IStorefrontPagedList<Product> Products { get; set; }
         public Category Category { get; set; }
         public IEnumerable<Category> Categories { get; set; }
-
+        public Aggregation[] Aggregations { get; set; }
     }
 }

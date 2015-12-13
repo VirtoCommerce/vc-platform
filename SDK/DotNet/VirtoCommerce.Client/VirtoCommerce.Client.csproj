@@ -64,6 +64,7 @@
     <Compile Include="Api\OrderModuleApi.cs" />
     <Compile Include="Api\PricingModuleApi.cs" />
     <Compile Include="Api\QuoteModuleApi.cs" />
+    <Compile Include="Api\SearchModuleApi.cs" />
     <Compile Include="Api\ShoppingCartModuleApi.cs" />
     <Compile Include="Api\StoreModuleApi.cs" />
     <Compile Include="Api\VirtoCommercePlatformApi.cs" />
@@ -86,6 +87,8 @@
     <Compile Include="Model\VirtoCommerceCatalogModuleWebExportImportCsvImportInfo.cs" />
     <Compile Include="Model\VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration.cs" />
     <Compile Include="Model\VirtoCommerceCatalogModuleWebExportImportCsvProductPropertyMap.cs" />
+    <Compile Include="Model\VirtoCommerceCatalogModuleWebModelAggregation.cs" />
+    <Compile Include="Model\VirtoCommerceCatalogModuleWebModelAggregationItem.cs" />
     <Compile Include="Model\VirtoCommerceCatalogModuleWebModelAsset.cs" />
     <Compile Include="Model\VirtoCommerceCatalogModuleWebModelCatalog.cs" />
     <Compile Include="Model\VirtoCommerceCatalogModuleWebModelCatalogLanguage.cs" />
@@ -176,20 +179,7 @@
     <Compile Include="Model\VirtoCommerceMarketingModuleWebModelMarketingSearchResult.cs" />
     <Compile Include="Model\VirtoCommerceMarketingModuleWebModelPromotion.cs" />
     <Compile Include="Model\VirtoCommerceMarketingModuleWebModelPromotionReward.cs" />
-    <Compile Include="Model\VirtoCommerceMerchandisingModuleWebModelAsset.cs" />
-    <Compile Include="Model\VirtoCommerceMerchandisingModuleWebModelAssociation.cs" />
-    <Compile Include="Model\VirtoCommerceMerchandisingModuleWebModelCatalogItem.cs" />
-    <Compile Include="Model\VirtoCommerceMerchandisingModuleWebModelEditorialReview.cs" />
-    <Compile Include="Model\VirtoCommerceMerchandisingModuleWebModelFacet.cs" />
-    <Compile Include="Model\VirtoCommerceMerchandisingModuleWebModelFacetValue.cs" />
-    <Compile Include="Model\VirtoCommerceMerchandisingModuleWebModelImage.cs" />
-    <Compile Include="Model\VirtoCommerceMerchandisingModuleWebModelInventory.cs" />
     <Compile Include="Model\VirtoCommerceMerchandisingModuleWebModelNotificaitonsSendDynamicMerchandisingNotificationRequest.cs" />
-    <Compile Include="Model\VirtoCommerceMerchandisingModuleWebModelProduct.cs" />
-    <Compile Include="Model\VirtoCommerceMerchandisingModuleWebModelProductSearchRequest.cs" />
-    <Compile Include="Model\VirtoCommerceMerchandisingModuleWebModelProductSearchResult.cs" />
-    <Compile Include="Model\VirtoCommerceMerchandisingModuleWebModelProductVariation.cs" />
-    <Compile Include="Model\VirtoCommerceMerchandisingModuleWebModelSeoKeyword.cs" />
     <Compile Include="Model\VirtoCommerceOrderModuleWebModelAddress.cs" />
     <Compile Include="Model\VirtoCommerceOrderModuleWebModelCoupon.cs" />
     <Compile Include="Model\VirtoCommerceOrderModuleWebModelCustomerOrder.cs" />
@@ -256,6 +246,7 @@
     <Compile Include="Model\VirtoCommerceQuoteModuleWebModelQuoteRequestTotals.cs" />
     <Compile Include="Model\VirtoCommerceQuoteModuleWebModelShipmentMethod.cs" />
     <Compile Include="Model\VirtoCommerceQuoteModuleWebModelTierPrice.cs" />
+    <Compile Include="Model\VirtoCommerceSearchModuleWebModelFilterProperty.cs" />
     <Compile Include="Model\VirtoCommerceStoreModuleWebModelFulfillmentCenter.cs" />
     <Compile Include="Model\VirtoCommerceStoreModuleWebModelPaymentMethod.cs" />
     <Compile Include="Model\VirtoCommerceStoreModuleWebModelSetting.cs" />

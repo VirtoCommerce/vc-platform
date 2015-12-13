@@ -32,6 +32,7 @@ namespace VirtoCommerce.Storefront.Owin
         private readonly IVirtoCommercePlatformApi _platformApi;
         private readonly ICustomerManagementModuleApi _customerApi;
         private readonly ICartBuilder _cartBuilder;
+        private readonly ICMSContentModuleApi _cmsApi;
         private readonly UnityContainer _container;
 
         public WorkContextOwinMiddleware(OwinMiddleware next, UnityContainer container)
@@ -41,12 +42,14 @@ namespace VirtoCommerce.Storefront.Owin
             _platformApi = container.Resolve<IVirtoCommercePlatformApi>();
             _customerApi = container.Resolve<ICustomerManagementModuleApi>();
             _cartBuilder = container.Resolve<ICartBuilder>();
+            _cmsApi = container.Resolve<ICMSContentModuleApi>();
             _container = container;
         }
 
         public override async Task Invoke(IOwinContext context)
         {
             var workContext = _container.Resolve<WorkContext>();
+            var urlBuilder = _container.Resolve<IStorefrontUrlBuilder>();
 
             // Initialize common properties
             workContext.RequestUrl = context.Request.Uri;
@@ -63,6 +66,9 @@ namespace VirtoCommerce.Storefront.Owin
             await _cartBuilder.GetOrCreateNewTransientCartAsync(workContext.CurrentStore, workContext.CurrentCustomer, workContext.CurrentLanguage, workContext.CurrentCurrency);
             workContext.CurrentCart = _cartBuilder.Cart;
 
+            var linkLists = await _cmsApi.MenuGetListsAsync(workContext.CurrentStore.Id);
+            workContext.CurrentLinkLists = linkLists != null ? linkLists.Select(ll => ll.ToWebModel(urlBuilder)).ToList() : null;
+
             //Initialize catalog search context
             workContext.CurrentCatalogSearchCriteria = GetSearchCriteria(workContext);
 
@@ -78,17 +84,28 @@ namespace VirtoCommerce.Storefront.Owin
 
         protected virtual CatalogSearchCriteria GetSearchCriteria(WorkContext workContext)
         {
-            var retVal = new CatalogSearchCriteria
+            var result = new CatalogSearchCriteria
             {
                 CatalogId = workContext.CurrentStore.Catalog,
                 Currency = workContext.CurrentCurrency,
                 Language = workContext.CurrentLanguage
             };
+
             var qs = HttpUtility.ParseQueryString(workContext.RequestUrl.Query);
-            retVal.PageNumber = Convert.ToInt32(qs.Get("page") ?? "1");
-            retVal.Keyword = qs.Get("keyword");
+
+            result.Keyword = qs.Get("keyword");
+            result.PageNumber = Convert.ToInt32(qs.Get("page") ?? "1");
+
+            // tags=name1:value1,value2,value3;name2:value1,value2,value3
+            result.Terms = (qs.GetValues("terms") ?? new string[0])
+                .SelectMany(s => s.Split(';'))
+                .Select(s => s.Split(':'))
+                .Where(a => a.Length == 2)
+                .SelectMany(a => a[1].Split(',').Select(v => new Term { Name = a[0], Value = v }))
+                .ToArray();
+
             //TODO: get other parameters from query sting
-            return retVal;
+            return result;
         }
         protected virtual async Task<Customer> GetCustomerAsync(IOwinContext context)
         {

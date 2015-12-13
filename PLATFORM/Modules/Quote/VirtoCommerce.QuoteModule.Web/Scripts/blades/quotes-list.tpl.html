@@ -11,19 +11,25 @@
     <div class="blade-inner">
         <div class="inner-block">
             <div class="table-wrapper" ng-init="setGridOptions({
-                    rowTemplate: 'quotes-list.row.html',
-                    columnDefs: [
-                        { name: 'number', displayName: 'quotes.blades.quotes-list.labels.quote-number', cellTooltip: true },
-                        { name: 'status', displayName: 'quotes.blades.quotes-list.labels.status', width:100 },
-                        { name: 'items.length', displayName: 'quotes.blades.quotes-list.labels.items-count', width:95 },
-                        { name: 'customerName', displayName: 'quotes.blades.quotes-list.labels.customer', cellTooltip: true },
-                        {
-                            name: 'createdDate', displayName: 'quotes.blades.quotes-list.labels.created',
-                            sort: { direction: uiGridConstants.DESC },
-                            width: 87, cellTemplate: 'am-time-ago.cell.html'
-                        }
-                    ]})">
-                <div ui-grid="gridOptions" ui-grid-save-state ui-grid-selection ui-grid-resize-columns ui-grid-move-columns ui-grid-height></div>
+                rowTemplate: 'quotes-list.row.html',
+                columnDefs: [
+                    { name: 'actions', displayName: '', enableColumnResizing: false, enableSorting: false, width: 30, cellTemplate: 'list-actions.cell.html', pinnedLeft:true },
+                    { name: 'number', displayName: 'quotes.blades.quotes-list.labels.quote-number', cellTooltip: true },
+                    { name: 'status', displayName: 'quotes.blades.quotes-list.labels.status', width:100 },
+                    { name: 'items.length', displayName: 'quotes.blades.quotes-list.labels.items-count', width:95 },
+                    { name: 'customerName', displayName: 'quotes.blades.quotes-list.labels.customer', cellTooltip: true },
+                    {
+                        name: 'createdDate', displayName: 'quotes.blades.quotes-list.labels.created',
+                        sort: { direction: uiGridConstants.DESC },
+                        width: 87, cellTemplate: 'am-time-ago.cell.html'
+                    }
+                ]})">
+                <div ui-grid="gridOptions" ui-grid-save-state ui-grid-selection ui-grid-resize-columns ui-grid-move-columns ui-grid-pinning ui-grid-height></div>
+                <ul class="menu __context" role="menu" id="quo_menu">
+                    <li class="menu-item" ng-click='deleteList([contextMenuEntity])' va-permission="quote:delete">
+                        <i class="menu-ico fa fa-trash-o"></i> {{'platform.commands.delete' | translate}}
+                    </li>
+                </ul>
             </div>
             <p class="text" ng-if="!blade.currentEntities.length">{{ 'quotes.blades.quotes-list.labels.no-quotes' | translate }}</p>
         </div>
@@ -31,7 +37,12 @@
 </div>
 
 <script type="text/ng-template" id="quotes-list.row.html">
-    <div ng-click='grid.appScope.selectNode(row.entity)' ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'" class="ui-grid-cell" ng-class="{'ui-grid-row-header-cell': col.isRowHeader, '__selected': row.entity.id===grid.appScope.selectedNodeId }" role="{{col.isRowHeader ? 'rowheader' : 'gridcell' }}" ui-grid-cell style='cursor:pointer'></div>
+    <div ng-click='grid.appScope.selectNode(row.entity)' ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'" class="ui-grid-cell" ng-class="{'ui-grid-row-header-cell': col.isRowHeader, '__hovered': grid.appScope.contextMenuEntity === row.entity, '__selected': row.entity.id===grid.appScope.selectedNodeId }" role="{{col.isRowHeader ? 'rowheader' : 'gridcell' }}" ui-grid-cell context-menu="grid.appScope.contextMenuEntity = row.entity" data-target="quo_menu"></div>
+</script>
+<script type="text/ng-template" id="list-actions.cell.html">
+    <div class="ui-grid-actions" left-click-menu="grid.appScope.contextMenuEntity = row.entity" data-target="quo_menu">
+        <i class="fa fa-ellipsis-v"></i>
+    </div>
 </script>
 <script type="text/ng-template" id="am-time-ago.cell.html">
     <span class="table-date" am-time-ago="COL_FIELD"></span>

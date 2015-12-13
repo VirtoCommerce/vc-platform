@@ -257,15 +257,15 @@ namespace VirtoCommerce.SearchModule.Data.Services
             var criteria = new SearchCriteria
             {
                 ResponseGroup = SearchResponseGroup.WithProducts,
-                Count = 0
+                Take = 0
             };
 
             var result = _catalogSearchService.Search(criteria);
 
-            for (var start = 0; start < result.TotalCount; start += _partitionSizeCount)
+            for (var start = 0; start < result.ProductsTotalCount; start += _partitionSizeCount)
             {
-                criteria.Start = start;
-                criteria.Count = _partitionSizeCount;
+                criteria.Skip = start;
+                criteria.Take = _partitionSizeCount;
 
                 // TODO: Need optimize search to return only product ids
                 result = _catalogSearchService.Search(criteria);

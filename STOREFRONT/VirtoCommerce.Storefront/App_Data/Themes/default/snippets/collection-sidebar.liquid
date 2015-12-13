@@ -17,11 +17,11 @@
               Loop through collection tags
             {% endcomment %}
             {% for custom_tag in collection.all_tags %}
-              {% if custom_tag.field == cat_item %}
+              {% if custom_tag.group_name == cat_item %}
                 {% comment %}
                   Strip out tag category prefix and add/remove link for tag filtering
                 {% endcomment %}
-                {% if current_tags contains custom_tag.id %}
+                {% if current_tags contains custom_tag %}
                   <li class="advanced-filter active-filter" data-group="{{ cat_item }}" data-handle="{{ custom_tag.id | handleize }}">{{ custom_tag | link_to_remove_tag: custom_tag }}</li>
                 {% else %}
                   <li class="advanced-filter" data-group="{{ cat_item }}">{{ custom_tag | link_to_add_tag: custom_tag }}</li>
