@@ -17,10 +17,10 @@
                                     <input class="field__input" id="Email" name="Email" size="30" placeholder="{{ 'checkout.customer_information.email' | t }}" required="required" type="email" ng-model="checkout.shippingAddress.Email" ng-disabled="checkout.customerInformationProcessing" />
                                 </div>
                                 <p class="field__message field__message--error" ng-if="formCustomerInformation.Email.$dirty && formCustomerInformation.Email.$error.required">
-                                    Please enter your email address
+                                    {{ 'checkout.email_required_message' | t }}
                                 </p>
                                 <p class="field__message field__message--error" ng-if="formCustomerInformation.Email.$dirty && formCustomerInformation.Email.$error.email">
-                                    Please enter a valid email address
+                                    {{ 'checkout.invalid_email_message' | t }}
                                 </p>
                             </div>
                         </div>
@@ -51,7 +51,7 @@
                                     <input class="field__input" id="FirstName" name="FirstName" placeholder="{{ 'checkout.address.first_name' | t }}" required="required" size="30" type="text" ng-model="checkout.shippingAddress.FirstName" ng-disabled="checkout.customerInformationProcessing" />
                                 </div>
                                 <p class="field__message field__message--error" ng-if="formCustomerInformation.FirstName.$dirty && formCustomerInformation.FirstName.$error.required">
-                                    Please enter your first name
+                                    {{ 'checkout.first_name_required_message' | t }}
                                 </p>
                             </div>
                             <div class="field--half field field--required" ng-class="{ 'field--show-floating-label': checkout.shippingAddress.LastName.length, 'field--error': formCustomerInformation.LastName.$dirty && formCustomerInformation.LastName.$error.required }">
@@ -60,7 +60,7 @@
                                     <input class="field__input" id="LastName" name="LastName" placeholder="{{ 'checkout.address.last_name' | t }}" required="required" size="30" type="text" ng-model="checkout.shippingAddress.LastName" ng-disabled="checkout.customerInformationProcessing" />
                                 </div>
                                 <p class="field__message field__message--error" ng-if="formCustomerInformation.LastName.$dirty && formCustomerInformation.LastName.$error.required">
-                                    Please enter your last name
+                                    {{ 'checkout.last_name_required_message' | t }}
                                 </p>
                             </div>
                             <div class="field field--optional" ng-class="{ 'field--show-floating-label': checkout.shippingAddress.Organization.length }">
@@ -75,7 +75,7 @@
                                     <input class="field__input" id="Line1" name="Line1" placeholder="{{ 'checkout.address.address1' | t }}" required="required" size="30" type="text" ng-model="checkout.shippingAddress.Line1" ng-disabled="checkout.customerInformationProcessing" />
                                 </div>
                                 <p class="field__message field__message--error" ng-if="formCustomerInformation.Line1.$dirty && formCustomerInformation.Line1.$error.required">
-                                    Please enter your address
+                                    {{ 'checkout.address1_required_message' | t }}
                                 </p>
                             </div>
                             <div class="field--third field field--optional" ng-class="{ 'field--show-floating-label': checkout.shippingAddress.Line2.length }">
@@ -90,7 +90,7 @@
                                     <input class="field__input" id="City" name="City" placeholder="{{ 'checkout.address.city' | t }}" required="required" size="30" type="text" ng-model="checkout.shippingAddress.City" ng-disabled="checkout.customerInformationProcessing" />
                                 </div>
                                 <p class="field__message field__message--error" ng-if="formCustomerInformation.City.$dirty && formCustomerInformation.City.$error.required">
-                                    Please enter your city
+                                    {{ 'checkout.city_required_message' | t }}
                                 </p>
                             </div>
                             <div class="field field--required field--show-floating-label" ng-class="{ 'field--three-eights': checkout.shippingAddress.CountryName && checkout.countryRegions, 'field--half': !checkout.countryRegions || !checkout.shippingAddress.CountryName }">
@@ -103,7 +103,7 @@
                                     <input id="CountryCode" name="CountryCode" type="hidden" ng-value="checkout.shippingAddress.CountryCode" ng-model="checkout.shippingAddress.CountryCode" ng-init="checkout.shippingAddress.CountryCode" />
                                 </div>
                                 <p class="field__message field__message--error" ng-if="formCustomerInformation.CountryName.$error.required">
-                                    Please select country
+                                    {{ 'checkout.country_required_message' | t }}
                                 </p>
                             </div>
                             <div class="field field--required field--show-floating-label field--three-eights" ng-if="checkout.countryRegions && checkout.shippingAddress.CountryName">
@@ -116,7 +116,7 @@
                                     <input id="RegionId" name="RegionId" type="hidden" ng-value="checkout.shippingAddress.RegionId" ng-model="checkout.shippingAddress.RegionId" ng-init="checkout.shippingAddress.RegionId" />
                                 </div>
                                 <p class="field__message field__message--error" ng-if="formCustomerInformation.RegionName.$error.required">
-                                    Please select region
+                                    {{ 'checkout.region_required_message' | t }}
                                 </p>
                             </div>
                             <div class="field field--required" ng-class="{ 'field--half': !checkout.countryRegions || !checkout.shippingAddress.CountryName, 'field--quarter': checkout.countryRegions && checkout.shippingAddress.CountryName, 'field--show-floating-label': checkout.shippingAddress.PostalCode.length, 'field--error': formCustomerInformation.PostalCode.$dirty && formCustomerInformation.PostalCode.$error.required }">
@@ -125,7 +125,7 @@
                                     <input class="field__input" id="PostalCode" name="PostalCode" placeholder="{{ 'checkout.address.zip' | t }}" required="required" size="30" type="text" ng-model="checkout.shippingAddress.PostalCode" ng-disabled="checkout.customerInformationProcessing" />
                                 </div>
                                 <p class="field__message field__message--error" ng-if="formCustomerInformation.PostalCode.$dirty && formCustomerInformation.PostalCode.$error.required">
-                                    Please enter your zip / postal code
+                                    {{ 'checkout.postal_code_required_message' | t }}
                                 </p>
                             </div>
                             <div class="field field--optional" ng-class="{ 'field--show-floating-label': checkout.shippingAddress.Phone.length }">
@@ -224,10 +224,10 @@
                                     <input class="field__input" id="Email" name="Email" size="30" placeholder="{{ 'checkout.customer_information.email' | t }}" required="required" type="email" ng-model="checkout.billingAddress.Email" ng-disabled="checkout.paymentMethodProcessing" />
                                 </div>
                                 <p class="field__message field__message--error" ng-if="formPaymentMethod.Email.$dirty && formPaymentMethod.Email.$error.required">
-                                    Please enter your email address
+                                    {{ 'checkout.email_required_message' | t }}
                                 </p>
                                 <p class="field__message field__message--error" ng-if="formPaymentMethod.Email.$dirty && formPaymentMethod.Email.$error.email">
-                                    Please enter a valid email address
+                                    {{ 'checkout.invalid_email_message' | t }}
                                 </p>
                             </div>
                         </div>
@@ -283,10 +283,10 @@
                                             </span>
                                         </div>
                                         <p class="field__message field__message--error" ng-if="formPaymentMethod.CardNumber.$dirty && formPaymentMethod.CardNumber.$error.required">
-                                            Please enter number of your bank card
+                                            {{ 'checkout.bank_card_number_required_message' | t }}
                                         </p>
                                         <p class="field__message field__message--error" ng-if="formPaymentMethod.CardNumber.$dirty && formPaymentMethod.CardNumber.$error.pattern">
-                                            Please enter a valid number of your bank card
+                                            {{ 'checkout.invalid_bank_card_number_message' | t }}
                                         </p>
                                     </div>
                                     <div class="field--half field field--required" ng-class="{ 'field--show-floating-label': checkout.bankCardInfo.CardholderName.length, 'field--error': formPaymentMethod.CardholderName.$dirty && formPaymentMethod.CardholderName.$error.required }">
@@ -295,7 +295,7 @@
                                             <input class="field__input" id="CardholderName" name="CardholderName" placeholder="{{ 'checkout.payment_method.cardholder_name' | t }}" required="required" size="30" type="text" ng-model="checkout.bankCardInfo.CardholderName" ng-change="capitalizeCardholderName()" />
                                         </div>
                                         <p class="field__message field__message--error" ng-if="formPaymentMethod.CardholderName.$dirty && formPaymentMethod.CardholderName.$error.required">
-                                            Please enter cardholder name (same as on your bank card)
+                                            {{ 'checkout.bank_card_cardholder_name_required_message' | t }}
                                         </p>
                                     </div>
                                     <div class="field--quarter field field--required" ng-class="{ 'field--show-floating-label': checkout.bankCardInfo.ExpirationDate.length, 'field--error': formPaymentMethod.ExpirationDate.$dirty && (formPaymentMethod.ExpirationDate.$error.required || formPaymentMethod.ExpirationDate.$error.pattern) }">
@@ -304,7 +304,7 @@
                                             <input class="field__input" id="CardExpirationDate" name="ExpirationDate" placeholder="{{ 'checkout.payment_method.expiry_date' | t }}" required="required" size="30" type="text" ng-model="checkout.bankCardInfo.ExpirationDate" ng-pattern="/(0[1-9]|1[012])[ ]['/'][ ][0-9]{2,2}$/" />
                                         </div>
                                         <p class="field__message field__message--error" ng-if="formPaymentMethod.ExpirationDate.$dirty && (formPaymentMethod.ExpirationDate.$error.required || formPaymentMethod.ExpirationDate.$error.pattern)">
-                                            Please enter valid expiration date of your bank card in MM / YY format
+                                            {{ 'checkout.invalid_bank_card_expiration_date_message' | t }}
                                         </p>
                                     </div>
                                     <div class="field--quarter field field--required" ng-class="{ 'field--show-floating-label': checkout.bankCardInfo.CardCvv.length, 'field--error': formPaymentMethod.CardCvv.$dirty && (formPaymentMethod.CardCvv.$error.required || formPaymentMethod.CardCvv.$error.pattern) }">
@@ -319,10 +319,10 @@
                                             </span>
                                         </div>
                                         <p class="field__message field__message--error" ng-if="formPaymentMethod.CardCvv.$dirty && formPaymentMethod.CardCvv.$error.required">
-                                            Please enter verification code of your bank card
+                                            {{ 'checkout.bank_card_cvv_required_message' | t }}
                                         </p>
                                         <p class="field__message field__message--error" ng-if="formPaymentMethod.CardCvv.$dirty && formPaymentMethod.CardCvv.$error.pattern">
-                                            Please enter correct verification code of your bank card
+                                            {{ 'checkout.invalid_bank_card_cvv_message' | t }}
                                         </p>
                                     </div>
                                 </div>
@@ -373,7 +373,7 @@
                                             <input class="field__input" id="FirstName" name="FirstName" placeholder="{{ 'checkout.address.first_name' | t }}" required="required" size="30" type="text" ng-model="checkout.billingAddress.FirstName" />
                                         </div>
                                         <p class="field__message field__message--error" ng-if="formPaymentMethod.FirstName.$dirty && formPaymentMethod.FirstName.$error.required">
-                                            Please enter your first name
+                                            {{ 'checkout.first_name_required_message' | t }}
                                         </p>
                                     </div>
                                     <div class="field--half field field--required" ng-class="{ 'field--show-floating-label': checkout.billingAddress.LastName.length, 'field--error': formPaymentMethod.LastName.$dirty && formPaymentMethod.LastName.$error.required }">
@@ -382,7 +382,7 @@
                                             <input class="field__input" id="LastName" name="LastName" placeholder="{{ 'checkout.address.last_name' | t }}" required="required" size="30" type="text" ng-model="checkout.billingAddress.LastName" />
                                         </div>
                                         <p class="field__message field__message--error" ng-if="formPaymentMethod.LastName.$dirty && formPaymentMethod.LastName.$error.required">
-                                            Please enter your last name
+                                            {{ 'checkout.last_name_required_message' | t }}
                                         </p>
                                     </div>
                                     <div class="field field--optional" ng-class="{ 'field--show-floating-label': checkout.billingAddress.Organization.length }">
@@ -397,7 +397,7 @@
                                             <input class="field__input" id="Line1" name="Line1" placeholder="{{ 'checkout.address.address1' | t }}" required="required" size="30" type="text" ng-model="checkout.billingAddress.Line1" />
                                         </div>
                                         <p class="field__message field__message--error" ng-if="formPaymentMethod.Line1.$dirty && formPaymentMethod.Line1.$error.required">
-                                            Please enter your address
+                                            {{ 'checkout.address1_required_message' | t }}
                                         </p>
                                     </div>
                                     <div class="field--third field field--optional" ng-class="{ 'field--show-floating-label': checkout.billingAddress.Line2.length }">
@@ -412,7 +412,7 @@
                                             <input class="field__input" id="City" name="City" placeholder="{{ 'checkout.address.city' | t }}" required="required" size="30" type="text" ng-model="checkout.billingAddress.City" />
                                         </div>
                                         <p class="field__message field__message--error" ng-if="formPaymentMethod.City.$dirty && formPaymentMethod.City.$error.required">
-                                            Please enter your city
+                                            {{ 'checkout.city_required_message' | t }}
                                         </p>
                                     </div>
                                     <div class="field field--required field--show-floating-label" ng-class="{ 'field--three-eights': checkout.billingAddress.CountryName && checkout.countryRegions, 'field--half': !checkout.countryRegions || !checkout.billingAddress.CountryName }">
@@ -425,7 +425,7 @@
                                             <input id="CountryCode" name="CountryCode" type="hidden" ng-value="checkout.billingAddress.CountryCode" ng-model="checkout.billingAddress.CountryCode" ng-init="checkout.billingAddress.CountryCode" />
                                         </div>
                                         <p class="field__message field__message--error" ng-if="formPaymentMethod.CountryName.$error.required">
-                                            Please select country
+                                            {{ 'checkout.country_required_message' | t }}
                                         </p>
                                     </div>
                                     <div class="field field--required field--three-eights field--show-floating-label" ng-if="checkout.countryRegions && checkout.billingAddress.CountryName">
@@ -444,7 +444,7 @@
                                             <input class="field__input" id="PostalCode" name="PostalCode" placeholder="{{ 'checkout.address.zip' | t }}" required="required" size="30" type="text" ng-model="checkout.billingAddress.PostalCode" />
                                         </div>
                                         <p class="field__message field__message--error" ng-if="formPaymentMethod.PostalCode.$dirty && formPaymentMethod.PostalCode.$error.required">
-                                            Please enter your zip / postal code
+                                            {{ 'checkout.region_required_message' | t }}
                                         </p>
                                     </div>
                                     <div class="field field--optional" ng-class="{ 'field--show-floating-label': checkout.billingAddress.Phone.length }">
@@ -492,5 +492,5 @@
 </script>
 
 <script id="storefront.checkout.paymentForm.tpl" type="text/ng-template">
-    <span ng-bind-html="checkout.paymentFormHtml" ng-model="checkout.paymentFormHtml"></span>
+    <span ng-bind-html="checkout.paymentFormHtml"></span>
 </script>
