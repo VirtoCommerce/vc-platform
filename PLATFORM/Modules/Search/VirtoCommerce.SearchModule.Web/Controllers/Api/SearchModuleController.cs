@@ -199,8 +199,7 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
             }
 
             var catalog = store.Catalog;
-
-            string categoryId = null;
+            var categoryId = criteria.CategoryId;
 
             var serviceCriteria = new CatalogIndexedSearchCriteria
             {
@@ -213,6 +212,17 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
             {
                 serviceCriteria.Outlines.Add(string.Format(CultureInfo.InvariantCulture, "{0}/{1}*", catalog, criteria.Outline));
                 categoryId = criteria.Outline.Split('/').Last();
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(categoryId))
+                {
+                    serviceCriteria.Outlines.Add(string.Format(CultureInfo.InvariantCulture, "{0}/{1}*", catalog, categoryId));
+                }
+            }
+
+            if (!string.IsNullOrEmpty(categoryId))
+            {
                 context.Add("CategoryId", categoryId);
             }
 
