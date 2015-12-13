@@ -37,13 +37,13 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                     id++;
                 }
 
-                result.Addresses = new StorefrontPagedList<Address>(addresses, 1, 10, addresses.Count, page => workContext.RequestUrl.AddParameter("page", page.ToString()).ToString());
+                result.Addresses = new StorefrontPagedList<Address>(addresses, 1, 10, addresses.Count, page => workContext.RequestUrl.SetQueryParameter("page", page.ToString()).ToString());
             }
 
             if (customer.Orders != null)
             {
                 var orders = customer.Orders.Select(o => o.ToShopifyModel(urlBuilder)).ToList();
-                result.Orders = new StorefrontPagedList<Order>(orders, 1, 10, customer.OrdersCount, page => workContext.RequestUrl.AddParameter("page", page.ToString()).ToString());
+                result.Orders = new StorefrontPagedList<Order>(orders, 1, 10, customer.OrdersCount, page => workContext.RequestUrl.SetQueryParameter("page", page.ToString()).ToString());
             }
 
             return result;

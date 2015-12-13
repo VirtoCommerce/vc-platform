@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Linq;
 using System.Web;
 using DotLiquid;
+using VirtoCommerce.LiquidThemeEngine.Extensions;
 using VirtoCommerce.Storefront.Model.Catalog;
 using shopifyModel = VirtoCommerce.LiquidThemeEngine.Objects;
 using storefrontModel = VirtoCommerce.Storefront.Model;
@@ -249,6 +250,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
             if (tagObject == null)
             {
                 title = "Remove all tags";
+                href = GetCurrentUrlWithTags(TagAction.Replace, null, null);
             }
             else
             {
@@ -293,17 +295,17 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
 
         private static string GetCurrentUrlWithTags(TagAction action, string groupName, string value)
         {
-            var term = new Term { Name = groupName, Value = value };
             var themeEngine = (ShopifyLiquidThemeEngine)Template.FileSystem;
+            var workContext = themeEngine.WorkContext;
 
-            var terms = themeEngine.WorkContext.CurrentCatalogSearchCriteria.Terms
+            var terms = workContext.CurrentCatalogSearchCriteria.Terms
                 .Select(t => new Term { Name = t.Name, Value = t.Value })
                 .ToList();
 
             switch (action)
             {
                 case TagAction.Add:
-                    terms.Add(term);
+                    terms.Add(new Term { Name = groupName, Value = value });
                     break;
                 case TagAction.Remove:
                     terms.RemoveAll(t =>
@@ -312,34 +314,18 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
                     break;
                 case TagAction.Replace:
                     terms.Clear();
-                    terms.Add(term);
+
+                    if (!string.IsNullOrEmpty(groupName))
+                    {
+                        terms.Add(new Term { Name = groupName, Value = value });
+                    }
                     break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(action), action, null);
             }
 
-            var request = HttpContext.Current.Request;
-            var qs = HttpUtility.ParseQueryString(request.Url.Query);
+            var termsString = terms.Any() ? string.Join(";", terms.ToStrings()).ToLowerInvariant() : null;
+            var url = workContext.RequestUrl.SetQueryParameter("terms", termsString);
 
-            if (terms.Any())
-            {
-                // terms=name1:value1,value2,value3;name2:value1,value2,value3
-                qs["terms"] = string.Join(";", terms.ToStrings()).ToLowerInvariant();
-            }
-            else
-            {
-                qs.Remove("terms");
-            }
-
-            var virtualUrl = request.AppRelativeCurrentExecutionFilePath;
-
-            if (qs.HasKeys())
-            {
-                virtualUrl += "?" + qs;
-            }
-
-            var result = BuildAbsoluteUrl(virtualUrl);
-            return result;
+            return url.AbsoluteUri;
         }
 
 

@@ -83,7 +83,7 @@ namespace VirtoCommerce.Storefront.Services
                 if (result.Products != null && result.Products.Any())
                 {
                     var products = result.Products.Select(x => x.ToWebModel(_workContext.CurrentLanguage, _workContext.CurrentCurrency)).ToArray();
-                    retVal.Products = new StorefrontPagedList<Product>(products, criteria.PageNumber, criteria.PageSize, result.ProductsTotalCount.Value, page => _workContext.RequestUrl.AddParameter("page", page.ToString()).ToString());
+                    retVal.Products = new StorefrontPagedList<Product>(products, criteria.PageNumber, criteria.PageSize, result.ProductsTotalCount.Value, page => _workContext.RequestUrl.SetQueryParameter("page", page.ToString()).ToString());
 
                     LoadProductsPrices(retVal.Products.ToArray());
                     LoadProductsInventories(retVal.Products.ToArray());

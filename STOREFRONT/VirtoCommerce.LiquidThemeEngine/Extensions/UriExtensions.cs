@@ -6,20 +6,31 @@ namespace VirtoCommerce.LiquidThemeEngine.Extensions
     public static class UriExtensions
     {
         /// <summary>
-        /// Adds the specified parameter to the Query String.
+        /// Sets the given parameter value in the query string.
         /// </summary>
         /// <param name="url"></param>
-        /// <param name="paramName">Name of the parameter to add.</param>
-        /// <param name="paramValue">Value for the parameter to add.</param>
-        /// <returns>Url with added parameter.</returns>
-        public static Uri AddParameter(this Uri url, string paramName, string paramValue)
+        /// <param name="name">Name of the parameter to set.</param>
+        /// <param name="value">Value for the parameter to set. Pass null to remove the parameter with given name.</param>
+        /// <returns>Url with given parameter value.</returns>
+        public static Uri SetQueryParameter(this Uri url, string name, string value)
         {
-            var uriBuilder = new UriBuilder(url);
-            var query = HttpUtility.ParseQueryString(uriBuilder.Query);
-            query[paramName] = paramValue;
-            uriBuilder.Query = query.ToString();
+            var query = HttpUtility.ParseQueryString(url.Query);
 
-            return new Uri(uriBuilder.ToString());
+            if (value != null)
+            {
+                query[name] = value;
+            }
+            else
+            {
+                query.Remove(name);
+            }
+
+            var uriBuilder = new UriBuilder(url)
+            {
+                Query = query.HasKeys() ? query.ToString() : string.Empty
+            };
+
+            return uriBuilder.Uri;
         }
     }
 }
