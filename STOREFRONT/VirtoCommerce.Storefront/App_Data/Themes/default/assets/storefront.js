@@ -246,8 +246,8 @@ app.controller('checkoutController', ['$scope', '$location', '$sce', '$window', 
     function initialize() {
         $scope.checkout.orderSummaryExpanded = false;
         $scope.checkout.billingAddressEqualsShipping = true;
-        $scope.checkout.shippingAddress = {};
-        $scope.checkout.billingAddress = {};
+        $scope.checkout.shippingAddress = { Type: 'Shipping' };
+        $scope.checkout.billingAddress = { Type: 'Billing' };
         $scope.checkout.bankCardInfo = {};
         $scope.checkout.selectedAddressId = 1;
         getCurrentCustomer();

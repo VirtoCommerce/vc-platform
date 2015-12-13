@@ -217,9 +217,17 @@ namespace VirtoCommerce.Storefront.Builders
             var cart = new ShoppingCart(_currency, _language);
 
             cart.CustomerId = _customer.Id;
-            cart.CustomerName = _customer.UserName;
             cart.Name = "Default";
             cart.StoreId = _store.Id;
+
+            if (_customer.UserName.Equals("Anonymous", StringComparison.OrdinalIgnoreCase))
+            {
+                cart.CustomerName = "Anonymous";
+            }
+            else
+            {
+                cart.CustomerName = string.Format("{0} {1}", _customer.FirstName, _customer.LastName);
+            }
 
             return cart;
         }
