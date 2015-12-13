@@ -14,7 +14,6 @@ using VirtoCommerce.Content.Web.Security;
 using VirtoCommerce.Platform.Core.Asset;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
-using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Web.Utilities;
 
 namespace VirtoCommerce.Content.Web.Controllers.Api
@@ -24,14 +23,14 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
     public class PagesController : ContentBaseController
     {
         #region Fields
-        
+
         private readonly IContentStorageProvider _contentStorageProvider;
         #endregion
 
         #region Constructors and Destructors
 
         public PagesController(Func<IContentStorageProvider> contentStorageProviderFactory, ISecurityService securityService, IPermissionScopeService permissionScopeService)
-            :base(securityService, permissionScopeService)
+            : base(securityService, permissionScopeService)
         {
             _contentStorageProvider = contentStorageProviderFactory();
         }
@@ -43,13 +42,12 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
         /// </summary>
         /// <remarks>Get all pages by store and criteria</remarks>
         /// <param name="storeId">Store Id</param>
-        /// <param name="criteria">Searching pages criteria</param>
         [HttpGet]
         [ResponseType(typeof(IEnumerable<Page>))]
         [Route("")]
         public IHttpActionResult GetPages(string storeId)
         {
-            base.CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Read, new ContentScopeObject { StoreId = storeId });
+            CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Read, new ContentScopeObject { StoreId = storeId });
 
             var result = InnerGetPages(storeId);
             var retVal = result.Pages.Concat(result.Folders.SelectMany(x => x.Pages)).ToArray();
@@ -65,7 +63,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
         [Route("folders")]
         public IHttpActionResult GetFolders(string storeId)
         {
-            base.CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Read, new ContentScopeObject { StoreId = storeId });
+            CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Read, new ContentScopeObject { StoreId = storeId });
             var retVal = InnerGetPages(storeId);
             return Ok(retVal);
         }
@@ -85,7 +83,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
         [Route("{language}/{*pageName}")]
         public IHttpActionResult GetPage(string storeId, string language, string pageName)
         {
-            base.CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Read, new ContentScopeObject { StoreId = storeId });
+            CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Read, new ContentScopeObject { StoreId = storeId });
 
             var blobItem = _contentStorageProvider.GetBlobInfo("/Pages/" + storeId + "/" + pageName);
 
@@ -109,7 +107,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
             }
 
             return NotFound();
-          
+
         }
 
         /// <summary>
@@ -124,7 +122,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
         [Route("checkname")]
         public IHttpActionResult CheckName(string storeId, [FromUri]string pageName, [FromUri]string language)
         {
-            base.CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Read, new ContentScopeObject { StoreId = storeId });
+            CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Read, new ContentScopeObject { StoreId = storeId });
             var response = new CheckNameResult { Result = true };
             return Ok(response);
         }
@@ -139,7 +137,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
         [ResponseType(typeof(void))]
         public IHttpActionResult SaveItem(string storeId, Page page)
         {
-            base.CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Update, new ContentScopeObject { StoreId = storeId });
+            CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Update, new ContentScopeObject { StoreId = storeId });
 
             var data = page.ByteContent;
             if (!string.IsNullOrEmpty(page.FileUrl))
@@ -156,7 +154,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 
             //add language to file name for new page
             var pageFileNameParts = page.Id.Split('.');
-            if(pageFileNameParts.Count() == 2)
+            if (pageFileNameParts.Length == 2)
             {
                 page.Id = pageFileNameParts[0] + "." + page.Language + "." + pageFileNameParts[1];
             }
@@ -180,10 +178,10 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
         [ResponseType(typeof(void))]
         public IHttpActionResult DeleteItem(string storeId, [FromUri]string[] pageNamesAndLanguges)
         {
-            base.CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Delete, new ContentScopeObject { StoreId = storeId });
+            CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Delete, new ContentScopeObject { StoreId = storeId });
 
             var pages = PagesUtility.GetShortPageInfoFromString(pageNamesAndLanguges);
-            _contentStorageProvider.Remove(pages.Select(x=> "/" + storeId + "/" + x.Name).ToArray());
+            _contentStorageProvider.Remove(pages.Select(x => "/" + storeId + "/" + x.Name).ToArray());
 
             return StatusCode(HttpStatusCode.NoContent);
         }
@@ -193,7 +191,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
         [Route("blog/{blogName}")]
         public IHttpActionResult CreateBlog(string storeId, string blogName)
         {
-            base.CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Create, new ContentScopeObject { StoreId = storeId });
+            CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Create, new ContentScopeObject { StoreId = storeId });
 
             var page = GetDefaultBlog(blogName);
             SaveItem(storeId, page);
@@ -216,7 +214,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
         [Route("blog/{blogName}/{oldBlogName}")]
         public IHttpActionResult UpdateBlog(string storeId, string blogName, string oldBlogName)
         {
-           return StatusCode(HttpStatusCode.NoContent);
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
 
@@ -256,7 +254,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
         {
             var retVal = new PageFolder
             {
-                 FolderName = blobFolder.Name
+                FolderName = blobFolder.Name
             };
             var result = _contentStorageProvider.Search(blobFolder.Url, null);
 
