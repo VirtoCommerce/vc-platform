@@ -65,6 +65,7 @@ namespace VirtoCommerce.Storefront.Services
                 criteriaCatalogId: criteria.CatalogId,
                 criteriaCurrency: _workContext.CurrentCurrency.Code,
                 criteriaHideDirectLinkedCategories: true,
+                criteriaTerms: criteria.Terms.ToStrings(),
                 criteriaSkip: criteria.PageSize * (criteria.PageNumber - 1),
                 criteriaTake: criteria.PageSize);
 
@@ -101,6 +102,7 @@ namespace VirtoCommerce.Storefront.Services
 
             return retVal;
         }
+
 
         private void LoadProductsPrices(Product[] products)
         {

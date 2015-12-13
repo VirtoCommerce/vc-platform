@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Omu.ValueInjecter;
 using VirtoCommerce.Domain.Search.Filters;
 using VirtoCommerce.Domain.Search.Model;
@@ -172,7 +173,7 @@ namespace VirtoCommerce.SearchModule.Web.Services
             if (filter != null && keys != null)
             {
                 // get values that we have filters set for
-                var values = from v in filter.GetValues() where keys.Contains(v.Id) select v;
+                var values = from v in filter.GetValues() where keys.Contains(v.Id, StringComparer.OrdinalIgnoreCase) select v;
 
                 var attributeFilter = filter as AttributeFilter;
                 if (attributeFilter != null)
