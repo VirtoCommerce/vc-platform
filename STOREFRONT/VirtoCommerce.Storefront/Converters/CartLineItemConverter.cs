@@ -103,6 +103,7 @@ namespace VirtoCommerce.Storefront.Converters
 
             promoItem.Discount = (double)lineItem.DiscountTotal.Amount;
             promoItem.Price = (double)lineItem.PlacedPrice.Amount;
+            promoItem.Quantity = lineItem.Quantity;
             promoItem.Variations = null; // TODO
 
             return promoItem;
