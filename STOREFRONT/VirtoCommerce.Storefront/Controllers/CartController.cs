@@ -1,8 +1,5 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Configuration;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using VirtoCommerce.Client.Api;
@@ -194,7 +191,7 @@ namespace VirtoCommerce.Storefront.Controllers
             return Json(null, JsonRequestBehavior.AllowGet);
         }
 
-        // POST: /cart/paymentmethod?paymentMethodCode=
+        // POST: /cart/paymentmethod?paymentMethodCode=...
         [HttpPost]
         [Route("paymentmethod")]
         public async Task<ActionResult> SetPaymentMethodsJson(string paymentMethodCode)
@@ -246,30 +243,51 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             var order = await _orderApi.OrderModuleGetByIdAsync(orderId);
 
-            var processingResult = await GetOrderProcessingResultAsync(order, new VirtoCommerceDomainPaymentModelBankCardInfo());
+            var processingResult = await GetOrderProcessingResultAsync(order, null);
 
             WorkContext.PaymentFormHtml = processingResult.HtmlForm;
 
             return View("payment-form", WorkContext);
         }
 
-        // GET: /cart/externalpaymentcallback
-        //[HttpGet]
-        //[Route("externalpaymentcallback")]
-        //public async Task<ActionResult> ExternalPaymentCallback()
-        //{
-        //    var parameters = new List<KeyValuePair<string, string>>();
+        // GET: /cart/checkout/externalpaymentcallback
+        [HttpGet]
+        [Route("checkout/externalpaymentcallback")]
+        public async Task<ActionResult> ExternalPaymentCallback()
+        {
+            var callback = new VirtoCommerceCoreModuleWebModelPaymentCallbackParameters
+            {
+                Parameters = new List<VirtoCommerceCoreModuleWebModelKeyValuePair>()
+            };
 
-        //    foreach (var key in HttpContext.Request.QueryString.AllKeys)
-        //    {
-        //        parameters.Add(new KeyValuePair<string, string>(key, HttpContext.Request.QueryString[key]));
-        //    }
+            foreach (var key in HttpContext.Request.QueryString.AllKeys)
+            {
+                callback.Parameters.Add(new VirtoCommerceCoreModuleWebModelKeyValuePair
+                {
+                    Key = key,
+                    Value = HttpContext.Request.QueryString[key]
+                });
+            }
 
-        //    foreach (var key in HttpContext.Request.Form.AllKeys)
-        //    {
-        //        parameters.Add(new KeyValuePair<string, string>(key, HttpContext.Request.QueryString[key]));
-        //    }
-        //}
+            foreach (var key in HttpContext.Request.Form.AllKeys)
+            {
+                callback.Parameters.Add(new VirtoCommerceCoreModuleWebModelKeyValuePair
+                {
+                    Key = key,
+                    Value = HttpContext.Request.Form[key]
+                });
+            }
+
+            var postProcessingResult = await _commerceApi.CommercePostProcessPaymentAsync(callback);
+            if (postProcessingResult.IsSuccess.HasValue && postProcessingResult.IsSuccess.Value)
+            {
+                return StoreFrontRedirect("~/cart/checkout/thanks/" + postProcessingResult.OrderId);
+            }
+            else
+            {
+                return View("error");
+            }
+        }
 
         // GET: /cart/checkout/thanks/{orderId}
         [HttpGet]
@@ -291,6 +309,11 @@ namespace VirtoCommerce.Storefront.Controllers
         private async Task<VirtoCommerceOrderModuleWebModelProcessPaymentResult> GetOrderProcessingResultAsync(
             VirtoCommerceOrderModuleWebModelCustomerOrder order, VirtoCommerceDomainPaymentModelBankCardInfo bankCardInfo)
         {
+            if (bankCardInfo == null)
+            {
+                bankCardInfo = new VirtoCommerceDomainPaymentModelBankCardInfo();
+            }
+
             VirtoCommerceOrderModuleWebModelProcessPaymentResult processingResult = null;
             var incomingPayment = order.InPayments != null ? order.InPayments.FirstOrDefault() : null;
             if (incomingPayment != null)
