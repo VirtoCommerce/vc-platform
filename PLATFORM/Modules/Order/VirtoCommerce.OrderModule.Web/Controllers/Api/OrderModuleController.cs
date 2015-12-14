@@ -73,7 +73,38 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         }
 
         /// <summary>
-        /// Find customer order by id and it was not founded by number
+        /// Find customer order by number
+        /// </summary>
+        /// <remarks>Return a single customer order with all nested documents or null if order was not found</remarks>
+        /// <param name="number">customer order number</param>
+        [HttpGet]
+        [ResponseType(typeof(webModel.CustomerOrder))]
+        [Route("{number}")]
+        public IHttpActionResult GetByNumber(string number)
+        {
+            var retVal = _customerOrderService.GetByOrderNumber(number, coreModel.CustomerOrderResponseGroup.Full);
+
+            if (retVal == null)
+            {
+                return Ok();
+            }
+            //Scope bound security check
+            var scopes = _permissionScopeService.GetObjectPermissionScopeStrings(retVal).ToArray();
+            if (!_securityService.UserHasAnyPermission(User.Identity.Name, scopes, OrderPredefinedPermissions.Read))
+            {
+                throw new HttpResponseException(HttpStatusCode.Unauthorized);
+            }
+
+            var result = retVal.ToWebModel();
+            //Set scopes for UI scope bounded ACL checking
+            result.Scopes = scopes;
+
+            return Ok(result);
+        }
+
+
+        /// <summary>
+        /// Find customer order by id
         /// </summary>
         /// <remarks>Return a single customer order with all nested documents or null if order was not found</remarks>
         /// <param name="id">customer order id</param>
@@ -83,11 +114,6 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         public IHttpActionResult GetById(string id)
         {
             var retVal = _customerOrderService.GetById(id, coreModel.CustomerOrderResponseGroup.Full);
-
-            if (retVal == null)
-            {
-                _customerOrderService.GetByOrderNumber(id, coreModel.CustomerOrderResponseGroup.Full);
-            }
 
             if (retVal == null)
             {
