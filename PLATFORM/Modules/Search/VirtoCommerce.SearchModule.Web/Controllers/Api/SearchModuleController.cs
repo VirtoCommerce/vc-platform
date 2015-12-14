@@ -383,7 +383,7 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
             #endregion
 
             //Load ALL products 
-            var searchResults = _browseService.SearchItems(serviceCriteria, ItemResponseGroup.ItemInfo);
+            var searchResults = _browseService.SearchItems(serviceCriteria, ItemResponseGroup.ItemInfo | ItemResponseGroup.Seo);
 
             // populate inventory
             //if ((request.ResponseGroup & ItemResponseGroup.ItemProperties) == ItemResponseGroup.ItemProperties)
