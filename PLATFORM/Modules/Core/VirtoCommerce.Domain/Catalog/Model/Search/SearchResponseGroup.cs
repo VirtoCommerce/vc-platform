@@ -5,7 +5,7 @@ namespace VirtoCommerce.Domain.Catalog.Model
     [Flags]
     public enum SearchResponseGroup
     {
-        Undefined = 0,
+        None = 0,
         WithProducts = 1,
         WithCategories = 2,
         WithProperties = 4,
