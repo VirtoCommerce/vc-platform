@@ -18,7 +18,7 @@
 
     <span class="divider" aria-hidden="true">&rsaquo;</span>
     {% if current_tags %}
-      {% capture url %}/collections/{{ collection.handle }}{% endcapture %}
+      {% capture url %}{{ collection.handle | absolute_url }}{% endcapture %}
       {{ collection.title | link_to: url }}
       <span class="divider" aria-hidden="true">&rsaquo;</span>
 
@@ -41,7 +41,7 @@
         {% for cat_item in collection.all_tags %}
           {% unless cat_item == '' %}
 
-            {% if tag contains cat_item.id %}
+            {% if tag == cat_item %}
               {% assign is_advanced_tag = true %}
               {% if additional_tag %}
                 <span>+</span>
