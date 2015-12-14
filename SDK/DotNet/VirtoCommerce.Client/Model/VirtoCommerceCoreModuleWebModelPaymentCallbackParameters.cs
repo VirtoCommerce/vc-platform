@@ -16,15 +16,14 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommerceContentWebModelsGetPagesCriteria : IEquatable<VirtoCommerceContentWebModelsGetPagesCriteria>
+    public class VirtoCommerceCoreModuleWebModelPaymentCallbackParameters : IEquatable<VirtoCommerceCoreModuleWebModelPaymentCallbackParameters>
     {
         
         /// <summary>
-        /// Max value of last updated date, if it's null returns all pages for store
+        /// Gets or Sets Parameters
         /// </summary>
-        /// <value>Max value of last updated date, if it's null returns all pages for store</value>
-        [DataMember(Name="lastUpdateDate", EmitDefaultValue=false)]
-        public DateTime? LastUpdateDate { get; set; }
+        [DataMember(Name="parameters", EmitDefaultValue=false)]
+        public List<VirtoCommerceCoreModuleWebModelKeyValuePair> Parameters { get; set; }
   
         
   
@@ -35,8 +34,8 @@ namespace VirtoCommerce.Client.Model
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class VirtoCommerceContentWebModelsGetPagesCriteria {\n");
-            sb.Append("  LastUpdateDate: ").Append(LastUpdateDate).Append("\n");
+            sb.Append("class VirtoCommerceCoreModuleWebModelPaymentCallbackParameters {\n");
+            sb.Append("  Parameters: ").Append(Parameters).Append("\n");
             
             sb.Append("}\n");
             return sb.ToString();
@@ -59,15 +58,15 @@ namespace VirtoCommerce.Client.Model
         public override bool Equals(object obj)
         {
             // credit: http://stackoverflow.com/a/10454552/677735
-            return this.Equals(obj as VirtoCommerceContentWebModelsGetPagesCriteria);
+            return this.Equals(obj as VirtoCommerceCoreModuleWebModelPaymentCallbackParameters);
         }
 
         /// <summary>
-        /// Returns true if VirtoCommerceContentWebModelsGetPagesCriteria instances are equal
+        /// Returns true if VirtoCommerceCoreModuleWebModelPaymentCallbackParameters instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceContentWebModelsGetPagesCriteria to be compared</param>
+        /// <param name="obj">Instance of VirtoCommerceCoreModuleWebModelPaymentCallbackParameters to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(VirtoCommerceContentWebModelsGetPagesCriteria other)
+        public bool Equals(VirtoCommerceCoreModuleWebModelPaymentCallbackParameters other)
         {
             // credit: http://stackoverflow.com/a/10454552/677735
             if (other == null)
@@ -75,9 +74,9 @@ namespace VirtoCommerce.Client.Model
 
             return 
                 (
-                    this.LastUpdateDate == other.LastUpdateDate ||
-                    this.LastUpdateDate != null &&
-                    this.LastUpdateDate.Equals(other.LastUpdateDate)
+                    this.Parameters == other.Parameters ||
+                    this.Parameters != null &&
+                    this.Parameters.SequenceEqual(other.Parameters)
                 );
         }
 
@@ -93,8 +92,8 @@ namespace VirtoCommerce.Client.Model
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
                 
-                if (this.LastUpdateDate != null)
-                    hash = hash * 57 + this.LastUpdateDate.GetHashCode();
+                if (this.Parameters != null)
+                    hash = hash * 57 + this.Parameters.GetHashCode();
                 
                 return hash;
             }

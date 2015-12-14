@@ -112,6 +112,26 @@ namespace VirtoCommerce.Client.Api
         System.Threading.Tasks.Task OrderModuleDeleteOrdersByIdsAsync (List<string> ids);
         
         /// <summary>
+        /// Find customer order by number
+        /// </summary>
+        /// <remarks>
+        /// Return a single customer order with all nested documents or null if order was not found
+        /// </remarks>
+        /// <param name="number">customer order number</param>
+        /// <returns>VirtoCommerceOrderModuleWebModelCustomerOrder</returns>
+        VirtoCommerceOrderModuleWebModelCustomerOrder OrderModuleGetByNumber (string number);
+  
+        /// <summary>
+        /// Find customer order by number
+        /// </summary>
+        /// <remarks>
+        /// Return a single customer order with all nested documents or null if order was not found
+        /// </remarks>
+        /// <param name="number">customer order number</param>
+        /// <returns>VirtoCommerceOrderModuleWebModelCustomerOrder</returns>
+        System.Threading.Tasks.Task<VirtoCommerceOrderModuleWebModelCustomerOrder> OrderModuleGetByNumberAsync (string number);
+        
+        /// <summary>
         /// Find customer order by id
         /// </summary>
         /// <remarks>
@@ -740,6 +760,108 @@ namespace VirtoCommerce.Client.Api
 
             
             return;
+        }
+        
+        /// <summary>
+        /// Find customer order by number Return a single customer order with all nested documents or null if order was not found
+        /// </summary>
+        /// <param name="number">customer order number</param> 
+        /// <returns>VirtoCommerceOrderModuleWebModelCustomerOrder</returns>            
+        public VirtoCommerceOrderModuleWebModelCustomerOrder OrderModuleGetByNumber (string number)
+        {
+            
+            // verify the required parameter 'number' is set
+            if (number == null) throw new ApiException(400, "Missing required parameter 'number' when calling OrderModuleGetByNumber");
+            
+    
+            var path_ = "/api/order/customerOrders/number/{number}";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                "application/json", "text/json"
+            };
+            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            if (number != null) pathParams.Add("number", ApiClient.ParameterToString(number)); // path parameter
+            
+            
+            
+            
+            
+    
+            // authentication setting, if any
+            String[] authSettings = new String[] {  };
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+    
+            if (((int)response.StatusCode) >= 400)
+                throw new ApiException ((int)response.StatusCode, "Error calling OrderModuleGetByNumber: " + response.Content, response.Content);
+            else if (((int)response.StatusCode) == 0)
+                throw new ApiException ((int)response.StatusCode, "Error calling OrderModuleGetByNumber: " + response.ErrorMessage, response.ErrorMessage);
+    
+            return (VirtoCommerceOrderModuleWebModelCustomerOrder) ApiClient.Deserialize(response, typeof(VirtoCommerceOrderModuleWebModelCustomerOrder));
+        }
+    
+        /// <summary>
+        /// Find customer order by number Return a single customer order with all nested documents or null if order was not found
+        /// </summary>
+        /// <param name="number">customer order number</param>
+        /// <returns>VirtoCommerceOrderModuleWebModelCustomerOrder</returns>
+        public async System.Threading.Tasks.Task<VirtoCommerceOrderModuleWebModelCustomerOrder> OrderModuleGetByNumberAsync (string number)
+        {
+            // verify the required parameter 'number' is set
+            if (number == null) throw new ApiException(400, "Missing required parameter 'number' when calling OrderModuleGetByNumber");
+            
+    
+            var path_ = "/api/order/customerOrders/number/{number}";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                "application/json", "text/json"
+            };
+            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            if (number != null) pathParams.Add("number", ApiClient.ParameterToString(number)); // path parameter
+            
+            
+            
+            
+            
+    
+            // authentication setting, if any
+            String[] authSettings = new String[] {  };
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            if (((int)response.StatusCode) >= 400)
+                throw new ApiException ((int)response.StatusCode, "Error calling OrderModuleGetByNumber: " + response.Content, response.Content);
+
+            return (VirtoCommerceOrderModuleWebModelCustomerOrder) ApiClient.Deserialize(response, typeof(VirtoCommerceOrderModuleWebModelCustomerOrder));
         }
         
         /// <summary>

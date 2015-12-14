@@ -16,32 +16,6 @@ namespace VirtoCommerce.Client.Api
     {
         
         /// <summary>
-        /// Sync assets elements
-        /// </summary>
-        /// <remarks>
-        /// Method allows synchronize asset elements(theme assets and pages). For synchronization used store id, theme id and last theme and pages update date.\r\n            If last update dates = null, returns all pages or theme assets for that store and theme.
-        /// </remarks>
-        /// <param name="storeId">Store id</param>
-        /// <param name="theme">Theme name</param>
-        /// <param name="themeUpdated">Last theme updated date</param>
-        /// <param name="pagesUpdated">Last pages updated date</param>
-        /// <returns></returns>
-        List<VirtoCommerceContentWebModelsSyncAssetGroup> SyncSyncAssets (string storeId, string theme, DateTime? themeUpdated, DateTime? pagesUpdated);
-  
-        /// <summary>
-        /// Sync assets elements
-        /// </summary>
-        /// <remarks>
-        /// Method allows synchronize asset elements(theme assets and pages). For synchronization used store id, theme id and last theme and pages update date.\r\n            If last update dates = null, returns all pages or theme assets for that store and theme.
-        /// </remarks>
-        /// <param name="storeId">Store id</param>
-        /// <param name="theme">Theme name</param>
-        /// <param name="themeUpdated">Last theme updated date</param>
-        /// <param name="pagesUpdated">Last pages updated date</param>
-        /// <returns></returns>
-        System.Threading.Tasks.Task<List<VirtoCommerceContentWebModelsSyncAssetGroup>> SyncSyncAssetsAsync (string storeId, string theme, DateTime? themeUpdated, DateTime? pagesUpdated);
-        
-        /// <summary>
         /// Get menu link lists
         /// </summary>
         /// <remarks>
@@ -160,9 +134,8 @@ namespace VirtoCommerce.Client.Api
         /// Get all pages by store and criteria
         /// </remarks>
         /// <param name="storeId">Store Id</param>
-        /// <param name="criteriaLastUpdateDate">Max value of last updated date, if it&#39;s null returns all pages for store</param>
         /// <returns></returns>
-        List<VirtoCommerceContentWebModelsPage> PagesGetPages (string storeId, DateTime? criteriaLastUpdateDate = null);
+        List<VirtoCommerceContentWebModelsPage> PagesGetPages (string storeId);
   
         /// <summary>
         /// Search pages
@@ -171,9 +144,8 @@ namespace VirtoCommerce.Client.Api
         /// Get all pages by store and criteria
         /// </remarks>
         /// <param name="storeId">Store Id</param>
-        /// <param name="criteriaLastUpdateDate">Max value of last updated date, if it&#39;s null returns all pages for store</param>
         /// <returns></returns>
-        System.Threading.Tasks.Task<List<VirtoCommerceContentWebModelsPage>> PagesGetPagesAsync (string storeId, DateTime? criteriaLastUpdateDate = null);
+        System.Threading.Tasks.Task<List<VirtoCommerceContentWebModelsPage>> PagesGetPagesAsync (string storeId);
         
         /// <summary>
         /// Save page
@@ -442,32 +414,6 @@ namespace VirtoCommerce.Client.Api
         System.Threading.Tasks.Task ThemeDeleteThemeAsync (string storeId, string themeId);
         
         /// <summary>
-        /// Search theme assets
-        /// </summary>
-        /// <remarks>
-        /// Search theme assets by store id, theme id and criteria
-        /// </remarks>
-        /// <param name="storeId">Store id</param>
-        /// <param name="themeId">Theme id</param>
-        /// <param name="criteriaLoadContent">If true - returns array of theme assets including binary or text content, if false - returns array of theme assets without content</param>
-        /// <param name="criteriaLastUpdateDate">Max value of last updated date, if it&#39;s null returns all pages for store</param>
-        /// <returns></returns>
-        List<VirtoCommerceContentWebModelsThemeAsset> ThemeSearchThemeAssets (string storeId, string themeId, bool? criteriaLoadContent = null, DateTime? criteriaLastUpdateDate = null);
-  
-        /// <summary>
-        /// Search theme assets
-        /// </summary>
-        /// <remarks>
-        /// Search theme assets by store id, theme id and criteria
-        /// </remarks>
-        /// <param name="storeId">Store id</param>
-        /// <param name="themeId">Theme id</param>
-        /// <param name="criteriaLoadContent">If true - returns array of theme assets including binary or text content, if false - returns array of theme assets without content</param>
-        /// <param name="criteriaLastUpdateDate">Max value of last updated date, if it&#39;s null returns all pages for store</param>
-        /// <returns></returns>
-        System.Threading.Tasks.Task<List<VirtoCommerceContentWebModelsThemeAsset>> ThemeSearchThemeAssetsAsync (string storeId, string themeId, bool? criteriaLoadContent = null, DateTime? criteriaLastUpdateDate = null);
-        
-        /// <summary>
         /// Save theme asset
         /// </summary>
         /// <remarks>
@@ -606,135 +552,6 @@ namespace VirtoCommerce.Client.Api
         /// <value>An instance of the ApiClient</value>
         public ApiClient ApiClient {get; set;}
     
-        
-        /// <summary>
-        /// Sync assets elements Method allows synchronize asset elements(theme assets and pages). For synchronization used store id, theme id and last theme and pages update date.\r\n            If last update dates = null, returns all pages or theme assets for that store and theme.
-        /// </summary>
-        /// <param name="storeId">Store id</param> 
-        /// <param name="theme">Theme name</param> 
-        /// <param name="themeUpdated">Last theme updated date</param> 
-        /// <param name="pagesUpdated">Last pages updated date</param> 
-        /// <returns></returns>            
-        public List<VirtoCommerceContentWebModelsSyncAssetGroup> SyncSyncAssets (string storeId, string theme, DateTime? themeUpdated, DateTime? pagesUpdated)
-        {
-            
-            // verify the required parameter 'storeId' is set
-            if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling SyncSyncAssets");
-            
-            // verify the required parameter 'theme' is set
-            if (theme == null) throw new ApiException(400, "Missing required parameter 'theme' when calling SyncSyncAssets");
-            
-            // verify the required parameter 'themeUpdated' is set
-            if (themeUpdated == null) throw new ApiException(400, "Missing required parameter 'themeUpdated' when calling SyncSyncAssets");
-            
-            // verify the required parameter 'pagesUpdated' is set
-            if (pagesUpdated == null) throw new ApiException(400, "Missing required parameter 'pagesUpdated' when calling SyncSyncAssets");
-            
-    
-            var path_ = "/api/cms/sync/stores/{storeId}/assets";
-    
-            var pathParams = new Dictionary<String, String>();
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            String postBody = null;
-
-            // to determine the Accept header
-            String[] http_header_accepts = new String[] {
-                "application/json", "text/json"
-            };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
-            if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
-
-            // set "format" to json by default
-            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
-            pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
-            
-            if (theme != null) queryParams.Add("theme", ApiClient.ParameterToString(theme)); // query parameter
-            if (themeUpdated != null) queryParams.Add("themeUpdated", ApiClient.ParameterToString(themeUpdated)); // query parameter
-            if (pagesUpdated != null) queryParams.Add("pagesUpdated", ApiClient.ParameterToString(pagesUpdated)); // query parameter
-            
-            
-            
-            
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
-    
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling SyncSyncAssets: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling SyncSyncAssets: " + response.ErrorMessage, response.ErrorMessage);
-    
-            return (List<VirtoCommerceContentWebModelsSyncAssetGroup>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceContentWebModelsSyncAssetGroup>));
-        }
-    
-        /// <summary>
-        /// Sync assets elements Method allows synchronize asset elements(theme assets and pages). For synchronization used store id, theme id and last theme and pages update date.\r\n            If last update dates = null, returns all pages or theme assets for that store and theme.
-        /// </summary>
-        /// <param name="storeId">Store id</param>
-        /// <param name="theme">Theme name</param>
-        /// <param name="themeUpdated">Last theme updated date</param>
-        /// <param name="pagesUpdated">Last pages updated date</param>
-        /// <returns></returns>
-        public async System.Threading.Tasks.Task<List<VirtoCommerceContentWebModelsSyncAssetGroup>> SyncSyncAssetsAsync (string storeId, string theme, DateTime? themeUpdated, DateTime? pagesUpdated)
-        {
-            // verify the required parameter 'storeId' is set
-            if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling SyncSyncAssets");
-            // verify the required parameter 'theme' is set
-            if (theme == null) throw new ApiException(400, "Missing required parameter 'theme' when calling SyncSyncAssets");
-            // verify the required parameter 'themeUpdated' is set
-            if (themeUpdated == null) throw new ApiException(400, "Missing required parameter 'themeUpdated' when calling SyncSyncAssets");
-            // verify the required parameter 'pagesUpdated' is set
-            if (pagesUpdated == null) throw new ApiException(400, "Missing required parameter 'pagesUpdated' when calling SyncSyncAssets");
-            
-    
-            var path_ = "/api/cms/sync/stores/{storeId}/assets";
-    
-            var pathParams = new Dictionary<String, String>();
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            String postBody = null;
-
-            // to determine the Accept header
-            String[] http_header_accepts = new String[] {
-                "application/json", "text/json"
-            };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
-            if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
-
-            // set "format" to json by default
-            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
-            pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
-            
-            if (theme != null) queryParams.Add("theme", ApiClient.ParameterToString(theme)); // query parameter
-            if (themeUpdated != null) queryParams.Add("themeUpdated", ApiClient.ParameterToString(themeUpdated)); // query parameter
-            if (pagesUpdated != null) queryParams.Add("pagesUpdated", ApiClient.ParameterToString(pagesUpdated)); // query parameter
-            
-            
-            
-            
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling SyncSyncAssets: " + response.Content, response.Content);
-
-            return (List<VirtoCommerceContentWebModelsSyncAssetGroup>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceContentWebModelsSyncAssetGroup>));
-        }
         
         /// <summary>
         /// Get menu link lists 
@@ -1301,9 +1118,8 @@ namespace VirtoCommerce.Client.Api
         /// Search pages Get all pages by store and criteria
         /// </summary>
         /// <param name="storeId">Store Id</param> 
-        /// <param name="criteriaLastUpdateDate">Max value of last updated date, if it&#39;s null returns all pages for store</param> 
         /// <returns></returns>            
-        public List<VirtoCommerceContentWebModelsPage> PagesGetPages (string storeId, DateTime? criteriaLastUpdateDate = null)
+        public List<VirtoCommerceContentWebModelsPage> PagesGetPages (string storeId)
         {
             
             // verify the required parameter 'storeId' is set
@@ -1332,7 +1148,6 @@ namespace VirtoCommerce.Client.Api
             pathParams.Add("format", "json");
             if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
             
-            if (criteriaLastUpdateDate != null) queryParams.Add("criteria.lastUpdateDate", ApiClient.ParameterToString(criteriaLastUpdateDate)); // query parameter
             
             
             
@@ -1356,9 +1171,8 @@ namespace VirtoCommerce.Client.Api
         /// Search pages Get all pages by store and criteria
         /// </summary>
         /// <param name="storeId">Store Id</param>
-        /// <param name="criteriaLastUpdateDate">Max value of last updated date, if it&#39;s null returns all pages for store</param>
         /// <returns></returns>
-        public async System.Threading.Tasks.Task<List<VirtoCommerceContentWebModelsPage>> PagesGetPagesAsync (string storeId, DateTime? criteriaLastUpdateDate = null)
+        public async System.Threading.Tasks.Task<List<VirtoCommerceContentWebModelsPage>> PagesGetPagesAsync (string storeId)
         {
             // verify the required parameter 'storeId' is set
             if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling PagesGetPages");
@@ -1386,7 +1200,6 @@ namespace VirtoCommerce.Client.Api
             pathParams.Add("format", "json");
             if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
             
-            if (criteriaLastUpdateDate != null) queryParams.Add("criteria.lastUpdateDate", ApiClient.ParameterToString(criteriaLastUpdateDate)); // query parameter
             
             
             
@@ -2750,125 +2563,6 @@ namespace VirtoCommerce.Client.Api
 
             
             return;
-        }
-        
-        /// <summary>
-        /// Search theme assets Search theme assets by store id, theme id and criteria
-        /// </summary>
-        /// <param name="storeId">Store id</param> 
-        /// <param name="themeId">Theme id</param> 
-        /// <param name="criteriaLoadContent">If true - returns array of theme assets including binary or text content, if false - returns array of theme assets without content</param> 
-        /// <param name="criteriaLastUpdateDate">Max value of last updated date, if it&#39;s null returns all pages for store</param> 
-        /// <returns></returns>            
-        public List<VirtoCommerceContentWebModelsThemeAsset> ThemeSearchThemeAssets (string storeId, string themeId, bool? criteriaLoadContent = null, DateTime? criteriaLastUpdateDate = null)
-        {
-            
-            // verify the required parameter 'storeId' is set
-            if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling ThemeSearchThemeAssets");
-            
-            // verify the required parameter 'themeId' is set
-            if (themeId == null) throw new ApiException(400, "Missing required parameter 'themeId' when calling ThemeSearchThemeAssets");
-            
-    
-            var path_ = "/api/cms/{storeId}/themes/{themeId}/assets";
-    
-            var pathParams = new Dictionary<String, String>();
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            String postBody = null;
-
-            // to determine the Accept header
-            String[] http_header_accepts = new String[] {
-                "application/json", "text/json"
-            };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
-            if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
-
-            // set "format" to json by default
-            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
-            pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
-            if (themeId != null) pathParams.Add("themeId", ApiClient.ParameterToString(themeId)); // path parameter
-            
-            if (criteriaLoadContent != null) queryParams.Add("criteria.loadContent", ApiClient.ParameterToString(criteriaLoadContent)); // query parameter
-            if (criteriaLastUpdateDate != null) queryParams.Add("criteria.lastUpdateDate", ApiClient.ParameterToString(criteriaLastUpdateDate)); // query parameter
-            
-            
-            
-            
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
-    
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling ThemeSearchThemeAssets: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling ThemeSearchThemeAssets: " + response.ErrorMessage, response.ErrorMessage);
-    
-            return (List<VirtoCommerceContentWebModelsThemeAsset>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceContentWebModelsThemeAsset>));
-        }
-    
-        /// <summary>
-        /// Search theme assets Search theme assets by store id, theme id and criteria
-        /// </summary>
-        /// <param name="storeId">Store id</param>
-        /// <param name="themeId">Theme id</param>
-        /// <param name="criteriaLoadContent">If true - returns array of theme assets including binary or text content, if false - returns array of theme assets without content</param>
-        /// <param name="criteriaLastUpdateDate">Max value of last updated date, if it&#39;s null returns all pages for store</param>
-        /// <returns></returns>
-        public async System.Threading.Tasks.Task<List<VirtoCommerceContentWebModelsThemeAsset>> ThemeSearchThemeAssetsAsync (string storeId, string themeId, bool? criteriaLoadContent = null, DateTime? criteriaLastUpdateDate = null)
-        {
-            // verify the required parameter 'storeId' is set
-            if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling ThemeSearchThemeAssets");
-            // verify the required parameter 'themeId' is set
-            if (themeId == null) throw new ApiException(400, "Missing required parameter 'themeId' when calling ThemeSearchThemeAssets");
-            
-    
-            var path_ = "/api/cms/{storeId}/themes/{themeId}/assets";
-    
-            var pathParams = new Dictionary<String, String>();
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            String postBody = null;
-
-            // to determine the Accept header
-            String[] http_header_accepts = new String[] {
-                "application/json", "text/json"
-            };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
-            if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
-
-            // set "format" to json by default
-            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
-            pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
-            if (themeId != null) pathParams.Add("themeId", ApiClient.ParameterToString(themeId)); // path parameter
-            
-            if (criteriaLoadContent != null) queryParams.Add("criteria.loadContent", ApiClient.ParameterToString(criteriaLoadContent)); // query parameter
-            if (criteriaLastUpdateDate != null) queryParams.Add("criteria.lastUpdateDate", ApiClient.ParameterToString(criteriaLastUpdateDate)); // query parameter
-            
-            
-            
-            
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling ThemeSearchThemeAssets: " + response.Content, response.Content);
-
-            return (List<VirtoCommerceContentWebModelsThemeAsset>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceContentWebModelsThemeAsset>));
         }
         
         /// <summary>

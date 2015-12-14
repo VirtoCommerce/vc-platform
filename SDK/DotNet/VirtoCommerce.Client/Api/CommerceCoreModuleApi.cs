@@ -79,9 +79,9 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// 
         /// </remarks>
-        /// <param name="orderId">customer order id</param>
+        /// <param name="callback">payment callback parameters</param>
         /// <returns>VirtoCommerceDomainPaymentModelPostProcessPaymentResult</returns>
-        VirtoCommerceDomainPaymentModelPostProcessPaymentResult CommercePostProcessPayment (string orderId);
+        VirtoCommerceDomainPaymentModelPostProcessPaymentResult CommercePostProcessPayment (VirtoCommerceCoreModuleWebModelPaymentCallbackParameters callback);
   
         /// <summary>
         /// Payment callback operation used by external payment services to inform post process payment in our system
@@ -89,9 +89,9 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// 
         /// </remarks>
-        /// <param name="orderId">customer order id</param>
+        /// <param name="callback">payment callback parameters</param>
         /// <returns>VirtoCommerceDomainPaymentModelPostProcessPaymentResult</returns>
-        System.Threading.Tasks.Task<VirtoCommerceDomainPaymentModelPostProcessPaymentResult> CommercePostProcessPaymentAsync (string orderId);
+        System.Threading.Tasks.Task<VirtoCommerceDomainPaymentModelPostProcessPaymentResult> CommercePostProcessPaymentAsync (VirtoCommerceCoreModuleWebModelPaymentCallbackParameters callback);
         
         /// <summary>
         /// Find all SEO records for object by slug
@@ -613,13 +613,13 @@ namespace VirtoCommerce.Client.Api
         /// <summary>
         /// Payment callback operation used by external payment services to inform post process payment in our system 
         /// </summary>
-        /// <param name="orderId">customer order id</param> 
+        /// <param name="callback">payment callback parameters</param> 
         /// <returns>VirtoCommerceDomainPaymentModelPostProcessPaymentResult</returns>            
-        public VirtoCommerceDomainPaymentModelPostProcessPaymentResult CommercePostProcessPayment (string orderId)
+        public VirtoCommerceDomainPaymentModelPostProcessPaymentResult CommercePostProcessPayment (VirtoCommerceCoreModuleWebModelPaymentCallbackParameters callback)
         {
             
-            // verify the required parameter 'orderId' is set
-            if (orderId == null) throw new ApiException(400, "Missing required parameter 'orderId' when calling CommercePostProcessPayment");
+            // verify the required parameter 'callback' is set
+            if (callback == null) throw new ApiException(400, "Missing required parameter 'callback' when calling CommercePostProcessPayment");
             
     
             var path_ = "/api/paymentcallback";
@@ -643,10 +643,10 @@ namespace VirtoCommerce.Client.Api
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
             
-            if (orderId != null) queryParams.Add("orderId", ApiClient.ParameterToString(orderId)); // query parameter
             
             
             
+            postBody = ApiClient.Serialize(callback); // http body (model) parameter
             
     
             // authentication setting, if any
@@ -666,12 +666,12 @@ namespace VirtoCommerce.Client.Api
         /// <summary>
         /// Payment callback operation used by external payment services to inform post process payment in our system 
         /// </summary>
-        /// <param name="orderId">customer order id</param>
+        /// <param name="callback">payment callback parameters</param>
         /// <returns>VirtoCommerceDomainPaymentModelPostProcessPaymentResult</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceDomainPaymentModelPostProcessPaymentResult> CommercePostProcessPaymentAsync (string orderId)
+        public async System.Threading.Tasks.Task<VirtoCommerceDomainPaymentModelPostProcessPaymentResult> CommercePostProcessPaymentAsync (VirtoCommerceCoreModuleWebModelPaymentCallbackParameters callback)
         {
-            // verify the required parameter 'orderId' is set
-            if (orderId == null) throw new ApiException(400, "Missing required parameter 'orderId' when calling CommercePostProcessPayment");
+            // verify the required parameter 'callback' is set
+            if (callback == null) throw new ApiException(400, "Missing required parameter 'callback' when calling CommercePostProcessPayment");
             
     
             var path_ = "/api/paymentcallback";
@@ -695,10 +695,10 @@ namespace VirtoCommerce.Client.Api
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
             
-            if (orderId != null) queryParams.Add("orderId", ApiClient.ParameterToString(orderId)); // query parameter
             
             
             
+            postBody = ApiClient.Serialize(callback); // http body (model) parameter
             
     
             // authentication setting, if any

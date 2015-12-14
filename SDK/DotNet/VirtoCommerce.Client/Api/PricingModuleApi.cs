@@ -326,7 +326,7 @@ namespace VirtoCommerce.Client.Api
         System.Threading.Tasks.Task PricingModuleDeletePriceListsAsync (List<string> ids);
         
         /// <summary>
-        /// Evaluate prices lists by given context
+        /// Evaluate pricelists by given context
         /// </summary>
         /// <remarks>
         /// 
@@ -360,10 +360,10 @@ namespace VirtoCommerce.Client.Api
         /// <param name="evalContextCurrentUrl"></param>
         /// <param name="evalContextReferredUrl"></param>
         /// <returns></returns>
-        List<VirtoCommercePricingModuleWebModelPrice> PricingModuleEvaluatePriceLists (string evalContextStoreId = null, string evalContextCatalogId = null, List<string> evalContextProductIds = null, List<string> evalContextPricelistIds = null, double? evalContextQuantity = null, string evalContextCustomerId = null, string evalContextOrganizationId = null, DateTime? evalContextCertainDate = null, string evalContextCurrency = null, List<string> evalContextTags = null, Dictionary<string, string> evalContextContextObject = null, string evalContextGeoCity = null, string evalContextGeoState = null, string evalContextGeoCountry = null, string evalContextGeoContinent = null, string evalContextGeoZipCode = null, string evalContextGeoConnectionType = null, string evalContextGeoTimeZone = null, string evalContextGeoIpRoutingType = null, string evalContextGeoIspSecondLevel = null, string evalContextGeoIspTopLevel = null, int? evalContextShopperAge = null, string evalContextShopperGender = null, string evalContextLanguage = null, string evalContextShopperSearchedPhraseInStore = null, string evalContextShopperSearchedPhraseOnInternet = null, string evalContextCurrentUrl = null, string evalContextReferredUrl = null);
+        List<VirtoCommercePricingModuleWebModelPricelist> PricingModuleEvaluatePriceLists (string evalContextStoreId = null, string evalContextCatalogId = null, List<string> evalContextProductIds = null, List<string> evalContextPricelistIds = null, double? evalContextQuantity = null, string evalContextCustomerId = null, string evalContextOrganizationId = null, DateTime? evalContextCertainDate = null, string evalContextCurrency = null, List<string> evalContextTags = null, Dictionary<string, string> evalContextContextObject = null, string evalContextGeoCity = null, string evalContextGeoState = null, string evalContextGeoCountry = null, string evalContextGeoContinent = null, string evalContextGeoZipCode = null, string evalContextGeoConnectionType = null, string evalContextGeoTimeZone = null, string evalContextGeoIpRoutingType = null, string evalContextGeoIspSecondLevel = null, string evalContextGeoIspTopLevel = null, int? evalContextShopperAge = null, string evalContextShopperGender = null, string evalContextLanguage = null, string evalContextShopperSearchedPhraseInStore = null, string evalContextShopperSearchedPhraseOnInternet = null, string evalContextCurrentUrl = null, string evalContextReferredUrl = null);
   
         /// <summary>
-        /// Evaluate prices lists by given context
+        /// Evaluate pricelists by given context
         /// </summary>
         /// <remarks>
         /// 
@@ -397,7 +397,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="evalContextCurrentUrl"></param>
         /// <param name="evalContextReferredUrl"></param>
         /// <returns></returns>
-        System.Threading.Tasks.Task<List<VirtoCommercePricingModuleWebModelPrice>> PricingModuleEvaluatePriceListsAsync (string evalContextStoreId = null, string evalContextCatalogId = null, List<string> evalContextProductIds = null, List<string> evalContextPricelistIds = null, double? evalContextQuantity = null, string evalContextCustomerId = null, string evalContextOrganizationId = null, DateTime? evalContextCertainDate = null, string evalContextCurrency = null, List<string> evalContextTags = null, Dictionary<string, string> evalContextContextObject = null, string evalContextGeoCity = null, string evalContextGeoState = null, string evalContextGeoCountry = null, string evalContextGeoContinent = null, string evalContextGeoZipCode = null, string evalContextGeoConnectionType = null, string evalContextGeoTimeZone = null, string evalContextGeoIpRoutingType = null, string evalContextGeoIspSecondLevel = null, string evalContextGeoIspTopLevel = null, int? evalContextShopperAge = null, string evalContextShopperGender = null, string evalContextLanguage = null, string evalContextShopperSearchedPhraseInStore = null, string evalContextShopperSearchedPhraseOnInternet = null, string evalContextCurrentUrl = null, string evalContextReferredUrl = null);
+        System.Threading.Tasks.Task<List<VirtoCommercePricingModuleWebModelPricelist>> PricingModuleEvaluatePriceListsAsync (string evalContextStoreId = null, string evalContextCatalogId = null, List<string> evalContextProductIds = null, List<string> evalContextPricelistIds = null, double? evalContextQuantity = null, string evalContextCustomerId = null, string evalContextOrganizationId = null, DateTime? evalContextCertainDate = null, string evalContextCurrency = null, List<string> evalContextTags = null, Dictionary<string, string> evalContextContextObject = null, string evalContextGeoCity = null, string evalContextGeoState = null, string evalContextGeoCountry = null, string evalContextGeoContinent = null, string evalContextGeoZipCode = null, string evalContextGeoConnectionType = null, string evalContextGeoTimeZone = null, string evalContextGeoIpRoutingType = null, string evalContextGeoIspSecondLevel = null, string evalContextGeoIspTopLevel = null, int? evalContextShopperAge = null, string evalContextShopperGender = null, string evalContextLanguage = null, string evalContextShopperSearchedPhraseInStore = null, string evalContextShopperSearchedPhraseOnInternet = null, string evalContextCurrentUrl = null, string evalContextReferredUrl = null);
         
         /// <summary>
         /// Get pricelist
@@ -1902,7 +1902,7 @@ namespace VirtoCommerce.Client.Api
         }
         
         /// <summary>
-        /// Evaluate prices lists by given context 
+        /// Evaluate pricelists by given context 
         /// </summary>
         /// <param name="evalContextStoreId"></param> 
         /// <param name="evalContextCatalogId"></param> 
@@ -1933,7 +1933,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="evalContextCurrentUrl"></param> 
         /// <param name="evalContextReferredUrl"></param> 
         /// <returns></returns>            
-        public List<VirtoCommercePricingModuleWebModelPrice> PricingModuleEvaluatePriceLists (string evalContextStoreId = null, string evalContextCatalogId = null, List<string> evalContextProductIds = null, List<string> evalContextPricelistIds = null, double? evalContextQuantity = null, string evalContextCustomerId = null, string evalContextOrganizationId = null, DateTime? evalContextCertainDate = null, string evalContextCurrency = null, List<string> evalContextTags = null, Dictionary<string, string> evalContextContextObject = null, string evalContextGeoCity = null, string evalContextGeoState = null, string evalContextGeoCountry = null, string evalContextGeoContinent = null, string evalContextGeoZipCode = null, string evalContextGeoConnectionType = null, string evalContextGeoTimeZone = null, string evalContextGeoIpRoutingType = null, string evalContextGeoIspSecondLevel = null, string evalContextGeoIspTopLevel = null, int? evalContextShopperAge = null, string evalContextShopperGender = null, string evalContextLanguage = null, string evalContextShopperSearchedPhraseInStore = null, string evalContextShopperSearchedPhraseOnInternet = null, string evalContextCurrentUrl = null, string evalContextReferredUrl = null)
+        public List<VirtoCommercePricingModuleWebModelPricelist> PricingModuleEvaluatePriceLists (string evalContextStoreId = null, string evalContextCatalogId = null, List<string> evalContextProductIds = null, List<string> evalContextPricelistIds = null, double? evalContextQuantity = null, string evalContextCustomerId = null, string evalContextOrganizationId = null, DateTime? evalContextCertainDate = null, string evalContextCurrency = null, List<string> evalContextTags = null, Dictionary<string, string> evalContextContextObject = null, string evalContextGeoCity = null, string evalContextGeoState = null, string evalContextGeoCountry = null, string evalContextGeoContinent = null, string evalContextGeoZipCode = null, string evalContextGeoConnectionType = null, string evalContextGeoTimeZone = null, string evalContextGeoIpRoutingType = null, string evalContextGeoIspSecondLevel = null, string evalContextGeoIspTopLevel = null, int? evalContextShopperAge = null, string evalContextShopperGender = null, string evalContextLanguage = null, string evalContextShopperSearchedPhraseInStore = null, string evalContextShopperSearchedPhraseOnInternet = null, string evalContextCurrentUrl = null, string evalContextReferredUrl = null)
         {
             
     
@@ -2002,11 +2002,11 @@ namespace VirtoCommerce.Client.Api
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling PricingModuleEvaluatePriceLists: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (List<VirtoCommercePricingModuleWebModelPrice>) ApiClient.Deserialize(response, typeof(List<VirtoCommercePricingModuleWebModelPrice>));
+            return (List<VirtoCommercePricingModuleWebModelPricelist>) ApiClient.Deserialize(response, typeof(List<VirtoCommercePricingModuleWebModelPricelist>));
         }
     
         /// <summary>
-        /// Evaluate prices lists by given context 
+        /// Evaluate pricelists by given context 
         /// </summary>
         /// <param name="evalContextStoreId"></param>
         /// <param name="evalContextCatalogId"></param>
@@ -2037,7 +2037,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="evalContextCurrentUrl"></param>
         /// <param name="evalContextReferredUrl"></param>
         /// <returns></returns>
-        public async System.Threading.Tasks.Task<List<VirtoCommercePricingModuleWebModelPrice>> PricingModuleEvaluatePriceListsAsync (string evalContextStoreId = null, string evalContextCatalogId = null, List<string> evalContextProductIds = null, List<string> evalContextPricelistIds = null, double? evalContextQuantity = null, string evalContextCustomerId = null, string evalContextOrganizationId = null, DateTime? evalContextCertainDate = null, string evalContextCurrency = null, List<string> evalContextTags = null, Dictionary<string, string> evalContextContextObject = null, string evalContextGeoCity = null, string evalContextGeoState = null, string evalContextGeoCountry = null, string evalContextGeoContinent = null, string evalContextGeoZipCode = null, string evalContextGeoConnectionType = null, string evalContextGeoTimeZone = null, string evalContextGeoIpRoutingType = null, string evalContextGeoIspSecondLevel = null, string evalContextGeoIspTopLevel = null, int? evalContextShopperAge = null, string evalContextShopperGender = null, string evalContextLanguage = null, string evalContextShopperSearchedPhraseInStore = null, string evalContextShopperSearchedPhraseOnInternet = null, string evalContextCurrentUrl = null, string evalContextReferredUrl = null)
+        public async System.Threading.Tasks.Task<List<VirtoCommercePricingModuleWebModelPricelist>> PricingModuleEvaluatePriceListsAsync (string evalContextStoreId = null, string evalContextCatalogId = null, List<string> evalContextProductIds = null, List<string> evalContextPricelistIds = null, double? evalContextQuantity = null, string evalContextCustomerId = null, string evalContextOrganizationId = null, DateTime? evalContextCertainDate = null, string evalContextCurrency = null, List<string> evalContextTags = null, Dictionary<string, string> evalContextContextObject = null, string evalContextGeoCity = null, string evalContextGeoState = null, string evalContextGeoCountry = null, string evalContextGeoContinent = null, string evalContextGeoZipCode = null, string evalContextGeoConnectionType = null, string evalContextGeoTimeZone = null, string evalContextGeoIpRoutingType = null, string evalContextGeoIspSecondLevel = null, string evalContextGeoIspTopLevel = null, int? evalContextShopperAge = null, string evalContextShopperGender = null, string evalContextLanguage = null, string evalContextShopperSearchedPhraseInStore = null, string evalContextShopperSearchedPhraseOnInternet = null, string evalContextCurrentUrl = null, string evalContextReferredUrl = null)
         {
             
     
@@ -2103,7 +2103,7 @@ namespace VirtoCommerce.Client.Api
             if (((int)response.StatusCode) >= 400)
                 throw new ApiException ((int)response.StatusCode, "Error calling PricingModuleEvaluatePriceLists: " + response.Content, response.Content);
 
-            return (List<VirtoCommercePricingModuleWebModelPrice>) ApiClient.Deserialize(response, typeof(List<VirtoCommercePricingModuleWebModelPrice>));
+            return (List<VirtoCommercePricingModuleWebModelPricelist>) ApiClient.Deserialize(response, typeof(List<VirtoCommercePricingModuleWebModelPricelist>));
         }
         
         /// <summary>
