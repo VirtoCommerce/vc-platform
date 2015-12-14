@@ -518,12 +518,15 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             foreach (var categoryId in categoryIds)
             {
                 var parents = new List<dataModel.Category>();
-                var outline = outlines.First(x => x.Id == categoryId);
-                foreach (var parentId in outline.Path.Split('|'))
+                var outline = outlines.FirstOrDefault(x => x.Id == categoryId);
+                if (outline != null)
                 {
-                    if (parentId != categoryId)
+                    foreach (var parentId in outline.Path.Split('|'))
                     {
-                        parents.Add(allParentCategories.First(x => x.Id == parentId));
+                        if (parentId != categoryId)
+                        {
+                            parents.Add(allParentCategories.First(x => x.Id == parentId));
+                        }
                     }
                 }
                 retVal[categoryId] = parents.ToArray();

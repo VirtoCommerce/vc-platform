@@ -10,6 +10,7 @@ using System.Web.Http.Description;
 using System.Xml.Serialization;
 using VirtoCommerce.CatalogModule.Web.Converters;
 using VirtoCommerce.CatalogModule.Web.Model;
+using VirtoCommerce.CatalogModule.Web.Security;
 using VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Domain.Commerce.Model;
@@ -49,8 +50,12 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
         private readonly IItemBrowsingService _browseService;
         private readonly IInventoryService _inventoryService;
         private readonly IBlobUrlResolver _blobUrlResolver;
+        private readonly ICatalogSearchService _catalogSearchService;
 
-        public SearchModuleController(ISearchProvider searchProvider, ISearchConnection searchConnection, SearchIndexJobsScheduler scheduler, IStoreService storeService, ISecurityService securityService, IPermissionScopeService permissionScopeService, IPropertyService propertyService, IBrowseFilterService browseFilterService, IItemBrowsingService browseService, IInventoryService inventoryService, IBlobUrlResolver blobUrlResolver)
+        public SearchModuleController(ISearchProvider searchProvider, ISearchConnection searchConnection, SearchIndexJobsScheduler scheduler,
+            IStoreService storeService, ISecurityService securityService, IPermissionScopeService permissionScopeService,
+            IPropertyService propertyService, IBrowseFilterService browseFilterService, IItemBrowsingService browseService,
+            IInventoryService inventoryService, IBlobUrlResolver blobUrlResolver, ICatalogSearchService catalogSearchService)
         {
             _searchProvider = searchProvider;
             _searchConnection = searchConnection;
@@ -63,6 +68,7 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
             _browseService = browseService;
             _inventoryService = inventoryService;
             _blobUrlResolver = blobUrlResolver;
+            _catalogSearchService = catalogSearchService;
         }
 
         [HttpGet]
@@ -186,7 +192,31 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
         {
             criteria = criteria ?? new SearchCriteria();
             criteria.Normalize();
+            criteria.ApplyRestrictionsForUser(User.Identity.Name, _securityService);
 
+            var result = new SearchResult();
+
+            if ((criteria.ResponseGroup & SearchResponseGroup.WithProducts) == SearchResponseGroup.WithProducts)
+            {
+                result = SearchProducts(criteria);
+            }
+
+            var catalogResponseGroup = criteria.ResponseGroup & (SearchResponseGroup.WithCatalogs | SearchResponseGroup.WithCategories);
+
+            if (catalogResponseGroup != SearchResponseGroup.None)
+            {
+                criteria.ResponseGroup = catalogResponseGroup;
+                var catalogResult = _catalogSearchService.Search(criteria);
+                result.Catalogs = catalogResult.Catalogs;
+                result.Categories = catalogResult.Categories;
+            }
+
+            return Ok(result.ToWebModel(_blobUrlResolver));
+        }
+
+
+        private SearchResult SearchProducts(SearchCriteria criteria)
+        {
             var context = new Dictionary<string, object>
             {
                 { "StoreId", criteria.StoreId },
@@ -362,7 +392,7 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
                 PopulateInventory(store.FulfillmentCenter, searchResults.Products);
             }
 
-            return Ok(searchResults.ToWebModel(_blobUrlResolver));
+            return searchResults;
         }
 
 
