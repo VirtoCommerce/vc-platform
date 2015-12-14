@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceInventoryModuleWebModelInventoryInfo : IEquatable<VirtoCommerceInventoryModuleWebModelInventoryInfo>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceInventoryModuleWebModelInventoryInfo" /> class.
+        /// </summary>
+        public VirtoCommerceInventoryModuleWebModelInventoryInfo()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets CreatedDate

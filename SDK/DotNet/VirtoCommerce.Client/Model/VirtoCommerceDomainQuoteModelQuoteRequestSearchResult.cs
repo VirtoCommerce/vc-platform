@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceDomainQuoteModelQuoteRequestSearchResult : IEquatable<VirtoCommerceDomainQuoteModelQuoteRequestSearchResult>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainQuoteModelQuoteRequestSearchResult" /> class.
+        /// </summary>
+        public VirtoCommerceDomainQuoteModelQuoteRequestSearchResult()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets TotalCount

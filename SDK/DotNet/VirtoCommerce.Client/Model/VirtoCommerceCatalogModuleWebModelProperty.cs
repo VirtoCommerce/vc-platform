@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceCatalogModuleWebModelProperty : IEquatable<VirtoCommerceCatalogModuleWebModelProperty>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelProperty" /> class.
+        /// </summary>
+        public VirtoCommerceCatalogModuleWebModelProperty()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or sets a value indicating whether user can change property value.

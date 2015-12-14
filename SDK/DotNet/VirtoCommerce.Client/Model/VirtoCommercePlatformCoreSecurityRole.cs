@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommercePlatformCoreSecurityRole : IEquatable<VirtoCommercePlatformCoreSecurityRole>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecurityRole" /> class.
+        /// </summary>
+        public VirtoCommercePlatformCoreSecurityRole()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets Name

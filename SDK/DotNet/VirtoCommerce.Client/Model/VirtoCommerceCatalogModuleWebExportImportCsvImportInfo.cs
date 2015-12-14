@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceCatalogModuleWebExportImportCsvImportInfo : IEquatable<VirtoCommerceCatalogModuleWebExportImportCsvImportInfo>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebExportImportCsvImportInfo" /> class.
+        /// </summary>
+        public VirtoCommerceCatalogModuleWebExportImportCsvImportInfo()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets CatalogId

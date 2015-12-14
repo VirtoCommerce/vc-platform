@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommercePlatformCoreSecurityApplicationUserLogin : IEquatable<VirtoCommercePlatformCoreSecurityApplicationUserLogin>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecurityApplicationUserLogin" /> class.
+        /// </summary>
+        public VirtoCommercePlatformCoreSecurityApplicationUserLogin()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets LoginProvider

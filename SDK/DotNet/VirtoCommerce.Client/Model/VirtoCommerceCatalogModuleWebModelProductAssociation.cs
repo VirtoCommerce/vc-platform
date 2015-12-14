@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceCatalogModuleWebModelProductAssociation : IEquatable<VirtoCommerceCatalogModuleWebModelProductAssociation>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelProductAssociation" /> class.
+        /// </summary>
+        public VirtoCommerceCatalogModuleWebModelProductAssociation()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or sets the ProductAssociation name.

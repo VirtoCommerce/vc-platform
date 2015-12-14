@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceCartModuleWebModelLineItem : IEquatable<VirtoCommerceCartModuleWebModelLineItem>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceCartModuleWebModelLineItem" /> class.
+        /// </summary>
+        public VirtoCommerceCartModuleWebModelLineItem()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or sets the value of product id

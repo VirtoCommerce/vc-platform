@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommercePlatformCoreChangeLogOperationLog : IEquatable<VirtoCommercePlatformCoreChangeLogOperationLog>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreChangeLogOperationLog" /> class.
+        /// </summary>
+        public VirtoCommercePlatformCoreChangeLogOperationLog()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets ObjectType

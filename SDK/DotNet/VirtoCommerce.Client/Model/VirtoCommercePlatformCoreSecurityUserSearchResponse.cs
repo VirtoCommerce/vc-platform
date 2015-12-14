@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommercePlatformCoreSecurityUserSearchResponse : IEquatable<VirtoCommercePlatformCoreSecurityUserSearchResponse>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecurityUserSearchResponse" /> class.
+        /// </summary>
+        public VirtoCommercePlatformCoreSecurityUserSearchResponse()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets Users

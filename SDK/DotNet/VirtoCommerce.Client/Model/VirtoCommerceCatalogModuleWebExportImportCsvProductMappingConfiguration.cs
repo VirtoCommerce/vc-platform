@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration : IEquatable<VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration" /> class.
+        /// </summary>
+        public VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets ETag

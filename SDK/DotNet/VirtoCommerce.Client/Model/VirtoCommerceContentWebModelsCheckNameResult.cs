@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceContentWebModelsCheckNameResult : IEquatable<VirtoCommerceContentWebModelsCheckNameResult>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceContentWebModelsCheckNameResult" /> class.
+        /// </summary>
+        public VirtoCommerceContentWebModelsCheckNameResult()
+        {
+            
+        }
+
         
         /// <summary>
         /// Result of checking (if true - enable to save object, if false - unable to save object)

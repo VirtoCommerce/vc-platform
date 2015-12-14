@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceDomainPaymentModelBankCardInfo : IEquatable<VirtoCommerceDomainPaymentModelBankCardInfo>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainPaymentModelBankCardInfo" /> class.
+        /// </summary>
+        public VirtoCommerceDomainPaymentModelBankCardInfo()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets BankCardNumber

@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommercePlatformWebModelAssetBlobInfo : IEquatable<VirtoCommercePlatformWebModelAssetBlobInfo>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelAssetBlobInfo" /> class.
+        /// </summary>
+        public VirtoCommercePlatformWebModelAssetBlobInfo()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets RelativeUrl

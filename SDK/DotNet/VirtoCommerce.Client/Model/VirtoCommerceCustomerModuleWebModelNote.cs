@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceCustomerModuleWebModelNote : IEquatable<VirtoCommerceCustomerModuleWebModelNote>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceCustomerModuleWebModelNote" /> class.
+        /// </summary>
+        public VirtoCommerceCustomerModuleWebModelNote()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets Title

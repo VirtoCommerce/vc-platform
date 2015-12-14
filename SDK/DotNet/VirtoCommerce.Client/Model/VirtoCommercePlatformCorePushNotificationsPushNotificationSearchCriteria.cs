@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommercePlatformCorePushNotificationsPushNotificationSearchCriteria : IEquatable<VirtoCommercePlatformCorePushNotificationsPushNotificationSearchCriteria>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCorePushNotificationsPushNotificationSearchCriteria" /> class.
+        /// </summary>
+        public VirtoCommercePlatformCorePushNotificationsPushNotificationSearchCriteria()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets Ids

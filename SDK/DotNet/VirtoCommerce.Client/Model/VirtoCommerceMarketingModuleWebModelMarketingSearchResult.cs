@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceMarketingModuleWebModelMarketingSearchResult : IEquatable<VirtoCommerceMarketingModuleWebModelMarketingSearchResult>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceMarketingModuleWebModelMarketingSearchResult" /> class.
+        /// </summary>
+        public VirtoCommerceMarketingModuleWebModelMarketingSearchResult()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets TotalCount

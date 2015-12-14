@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceDomainQuoteModelQuoteItem : IEquatable<VirtoCommerceDomainQuoteModelQuoteItem>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainQuoteModelQuoteItem" /> class.
+        /// </summary>
+        public VirtoCommerceDomainQuoteModelQuoteItem()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets Currency

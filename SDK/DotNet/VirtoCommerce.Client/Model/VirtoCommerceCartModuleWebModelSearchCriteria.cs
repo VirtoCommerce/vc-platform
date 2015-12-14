@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceCartModuleWebModelSearchCriteria : IEquatable<VirtoCommerceCartModuleWebModelSearchCriteria>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceCartModuleWebModelSearchCriteria" /> class.
+        /// </summary>
+        public VirtoCommerceCartModuleWebModelSearchCriteria()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or sets the value of search criteria keyword

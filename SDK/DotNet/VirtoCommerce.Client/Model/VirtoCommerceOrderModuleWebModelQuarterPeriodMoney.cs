@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceOrderModuleWebModelQuarterPeriodMoney : IEquatable<VirtoCommerceOrderModuleWebModelQuarterPeriodMoney>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelQuarterPeriodMoney" /> class.
+        /// </summary>
+        public VirtoCommerceOrderModuleWebModelQuarterPeriodMoney()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets Year

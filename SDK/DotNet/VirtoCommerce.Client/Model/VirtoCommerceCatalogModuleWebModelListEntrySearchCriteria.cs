@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceCatalogModuleWebModelListEntrySearchCriteria : IEquatable<VirtoCommerceCatalogModuleWebModelListEntrySearchCriteria>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelListEntrySearchCriteria" /> class.
+        /// </summary>
+        public VirtoCommerceCatalogModuleWebModelListEntrySearchCriteria()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or sets the response group to define which types of entries to search for.

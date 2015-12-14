@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Linq;
 using RestSharp;
 using VirtoCommerce.Client.Client;
 using VirtoCommerce.Client.Model;
@@ -21,7 +22,7 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// 
         /// </remarks>
-        /// <returns></returns>
+        /// <returns>List&lt;VirtoCommerceCoreModuleWebModelFulfillmentCenter&gt;</returns>
         List<VirtoCommerceCoreModuleWebModelFulfillmentCenter> CommerceGetFulfillmentCenters ();
   
         /// <summary>
@@ -30,8 +31,26 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// 
         /// </remarks>
-        /// <returns></returns>
+        /// <returns>ApiResponse of List&lt;VirtoCommerceCoreModuleWebModelFulfillmentCenter&gt;</returns>
+        ApiResponse<List<VirtoCommerceCoreModuleWebModelFulfillmentCenter>> CommerceGetFulfillmentCentersWithHttpInfo ();
+
+        /// <summary>
+        /// Return all fulfillment centers registered in the system
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <returns>Task of List&lt;VirtoCommerceCoreModuleWebModelFulfillmentCenter&gt;</returns>
         System.Threading.Tasks.Task<List<VirtoCommerceCoreModuleWebModelFulfillmentCenter>> CommerceGetFulfillmentCentersAsync ();
+
+        /// <summary>
+        /// Return all fulfillment centers registered in the system
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <returns>Task of ApiResponse (List&lt;VirtoCommerceCoreModuleWebModelFulfillmentCenter&gt;)</returns>
+        System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceCoreModuleWebModelFulfillmentCenter>>> CommerceGetFulfillmentCentersAsyncWithHttpInfo ();
         
         /// <summary>
         /// Update a existing fulfillment center
@@ -50,8 +69,28 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="center">fulfillment center</param>
-        /// <returns>VirtoCommerceCoreModuleWebModelFulfillmentCenter</returns>
+        /// <returns>ApiResponse of VirtoCommerceCoreModuleWebModelFulfillmentCenter</returns>
+        ApiResponse<VirtoCommerceCoreModuleWebModelFulfillmentCenter> CommerceUpdateFulfillmentCenterWithHttpInfo (VirtoCommerceCoreModuleWebModelFulfillmentCenter center);
+
+        /// <summary>
+        /// Update a existing fulfillment center
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="center">fulfillment center</param>
+        /// <returns>Task of VirtoCommerceCoreModuleWebModelFulfillmentCenter</returns>
         System.Threading.Tasks.Task<VirtoCommerceCoreModuleWebModelFulfillmentCenter> CommerceUpdateFulfillmentCenterAsync (VirtoCommerceCoreModuleWebModelFulfillmentCenter center);
+
+        /// <summary>
+        /// Update a existing fulfillment center
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="center">fulfillment center</param>
+        /// <returns>Task of ApiResponse (VirtoCommerceCoreModuleWebModelFulfillmentCenter)</returns>
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCoreModuleWebModelFulfillmentCenter>> CommerceUpdateFulfillmentCenterAsyncWithHttpInfo (VirtoCommerceCoreModuleWebModelFulfillmentCenter center);
         
         /// <summary>
         /// Find fulfillment center by id
@@ -70,8 +109,28 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="id">fulfillment center id</param>
-        /// <returns>VirtoCommerceCoreModuleWebModelFulfillmentCenter</returns>
+        /// <returns>ApiResponse of VirtoCommerceCoreModuleWebModelFulfillmentCenter</returns>
+        ApiResponse<VirtoCommerceCoreModuleWebModelFulfillmentCenter> CommerceGetFulfillmentCenterWithHttpInfo (string id);
+
+        /// <summary>
+        /// Find fulfillment center by id
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="id">fulfillment center id</param>
+        /// <returns>Task of VirtoCommerceCoreModuleWebModelFulfillmentCenter</returns>
         System.Threading.Tasks.Task<VirtoCommerceCoreModuleWebModelFulfillmentCenter> CommerceGetFulfillmentCenterAsync (string id);
+
+        /// <summary>
+        /// Find fulfillment center by id
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="id">fulfillment center id</param>
+        /// <returns>Task of ApiResponse (VirtoCommerceCoreModuleWebModelFulfillmentCenter)</returns>
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCoreModuleWebModelFulfillmentCenter>> CommerceGetFulfillmentCenterAsyncWithHttpInfo (string id);
         
         /// <summary>
         /// Payment callback operation used by external payment services to inform post process payment in our system
@@ -90,8 +149,28 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="callback">payment callback parameters</param>
-        /// <returns>VirtoCommerceDomainPaymentModelPostProcessPaymentResult</returns>
+        /// <returns>ApiResponse of VirtoCommerceDomainPaymentModelPostProcessPaymentResult</returns>
+        ApiResponse<VirtoCommerceDomainPaymentModelPostProcessPaymentResult> CommercePostProcessPaymentWithHttpInfo (VirtoCommerceCoreModuleWebModelPaymentCallbackParameters callback);
+
+        /// <summary>
+        /// Payment callback operation used by external payment services to inform post process payment in our system
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="callback">payment callback parameters</param>
+        /// <returns>Task of VirtoCommerceDomainPaymentModelPostProcessPaymentResult</returns>
         System.Threading.Tasks.Task<VirtoCommerceDomainPaymentModelPostProcessPaymentResult> CommercePostProcessPaymentAsync (VirtoCommerceCoreModuleWebModelPaymentCallbackParameters callback);
+
+        /// <summary>
+        /// Payment callback operation used by external payment services to inform post process payment in our system
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="callback">payment callback parameters</param>
+        /// <returns>Task of ApiResponse (VirtoCommerceDomainPaymentModelPostProcessPaymentResult)</returns>
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceDomainPaymentModelPostProcessPaymentResult>> CommercePostProcessPaymentAsyncWithHttpInfo (VirtoCommerceCoreModuleWebModelPaymentCallbackParameters callback);
         
         /// <summary>
         /// Find all SEO records for object by slug
@@ -100,7 +179,7 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="slug">slug</param>
-        /// <returns></returns>
+        /// <returns>List&lt;VirtoCommerceDomainCommerceModelSeoInfo&gt;</returns>
         List<VirtoCommerceDomainCommerceModelSeoInfo> CommerceGetSeoInfoBySlug (string slug);
   
         /// <summary>
@@ -110,8 +189,28 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="slug">slug</param>
-        /// <returns></returns>
+        /// <returns>ApiResponse of List&lt;VirtoCommerceDomainCommerceModelSeoInfo&gt;</returns>
+        ApiResponse<List<VirtoCommerceDomainCommerceModelSeoInfo>> CommerceGetSeoInfoBySlugWithHttpInfo (string slug);
+
+        /// <summary>
+        /// Find all SEO records for object by slug
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="slug">slug</param>
+        /// <returns>Task of List&lt;VirtoCommerceDomainCommerceModelSeoInfo&gt;</returns>
         System.Threading.Tasks.Task<List<VirtoCommerceDomainCommerceModelSeoInfo>> CommerceGetSeoInfoBySlugAsync (string slug);
+
+        /// <summary>
+        /// Find all SEO records for object by slug
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="slug">slug</param>
+        /// <returns>Task of ApiResponse (List&lt;VirtoCommerceDomainCommerceModelSeoInfo&gt;)</returns>
+        System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceDomainCommerceModelSeoInfo>>> CommerceGetSeoInfoBySlugAsyncWithHttpInfo (string slug);
         
         /// <summary>
         /// Create a new user
@@ -130,8 +229,28 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="user"></param>
-        /// <returns>VirtoCommercePlatformCoreSecuritySecurityResult</returns>
+        /// <returns>ApiResponse of VirtoCommercePlatformCoreSecuritySecurityResult</returns>
+        ApiResponse<VirtoCommercePlatformCoreSecuritySecurityResult> StorefrontSecurityCreateWithHttpInfo (VirtoCommercePlatformCoreSecurityApplicationUserExtended user);
+
+        /// <summary>
+        /// Create a new user
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="user"></param>
+        /// <returns>Task of VirtoCommercePlatformCoreSecuritySecurityResult</returns>
         System.Threading.Tasks.Task<VirtoCommercePlatformCoreSecuritySecurityResult> StorefrontSecurityCreateAsync (VirtoCommercePlatformCoreSecurityApplicationUserExtended user);
+
+        /// <summary>
+        /// Create a new user
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="user"></param>
+        /// <returns>Task of ApiResponse (VirtoCommercePlatformCoreSecuritySecurityResult)</returns>
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommercePlatformCoreSecuritySecurityResult>> StorefrontSecurityCreateAsyncWithHttpInfo (VirtoCommercePlatformCoreSecurityApplicationUserExtended user);
         
         /// <summary>
         /// Get user details by external login provider
@@ -152,8 +271,30 @@ namespace VirtoCommerce.Client.Api
         /// </remarks>
         /// <param name="loginProvider"></param>
         /// <param name="providerKey"></param>
-        /// <returns>VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
+        /// <returns>ApiResponse of VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
+        ApiResponse<VirtoCommercePlatformCoreSecurityApplicationUserExtended> StorefrontSecurityGetUserByLoginWithHttpInfo (string loginProvider, string providerKey);
+
+        /// <summary>
+        /// Get user details by external login provider
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="loginProvider"></param>
+        /// <param name="providerKey"></param>
+        /// <returns>Task of VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
         System.Threading.Tasks.Task<VirtoCommercePlatformCoreSecurityApplicationUserExtended> StorefrontSecurityGetUserByLoginAsync (string loginProvider, string providerKey);
+
+        /// <summary>
+        /// Get user details by external login provider
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="loginProvider"></param>
+        /// <param name="providerKey"></param>
+        /// <returns>Task of ApiResponse (VirtoCommercePlatformCoreSecurityApplicationUserExtended)</returns>
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommercePlatformCoreSecurityApplicationUserExtended>> StorefrontSecurityGetUserByLoginAsyncWithHttpInfo (string loginProvider, string providerKey);
         
         /// <summary>
         /// Get user details by user ID
@@ -172,8 +313,28 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="userId"></param>
-        /// <returns>VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
+        /// <returns>ApiResponse of VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
+        ApiResponse<VirtoCommercePlatformCoreSecurityApplicationUserExtended> StorefrontSecurityGetUserByIdWithHttpInfo (string userId);
+
+        /// <summary>
+        /// Get user details by user ID
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="userId"></param>
+        /// <returns>Task of VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
         System.Threading.Tasks.Task<VirtoCommercePlatformCoreSecurityApplicationUserExtended> StorefrontSecurityGetUserByIdAsync (string userId);
+
+        /// <summary>
+        /// Get user details by user ID
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="userId"></param>
+        /// <returns>Task of ApiResponse (VirtoCommercePlatformCoreSecurityApplicationUserExtended)</returns>
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommercePlatformCoreSecurityApplicationUserExtended>> StorefrontSecurityGetUserByIdAsyncWithHttpInfo (string userId);
         
         /// <summary>
         /// Get user details by user name
@@ -192,8 +353,28 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="userName"></param>
-        /// <returns>VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
+        /// <returns>ApiResponse of VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
+        ApiResponse<VirtoCommercePlatformCoreSecurityApplicationUserExtended> StorefrontSecurityGetUserByNameWithHttpInfo (string userName);
+
+        /// <summary>
+        /// Get user details by user name
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="userName"></param>
+        /// <returns>Task of VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
         System.Threading.Tasks.Task<VirtoCommercePlatformCoreSecurityApplicationUserExtended> StorefrontSecurityGetUserByNameAsync (string userName);
+
+        /// <summary>
+        /// Get user details by user name
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="userName"></param>
+        /// <returns>Task of ApiResponse (VirtoCommercePlatformCoreSecurityApplicationUserExtended)</returns>
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommercePlatformCoreSecurityApplicationUserExtended>> StorefrontSecurityGetUserByNameAsyncWithHttpInfo (string userName);
         
         /// <summary>
         /// Reset a password for the user
@@ -216,8 +397,32 @@ namespace VirtoCommerce.Client.Api
         /// <param name="userId"></param>
         /// <param name="token"></param>
         /// <param name="newPassword"></param>
-        /// <returns>VirtoCommercePlatformCoreSecuritySecurityResult</returns>
+        /// <returns>ApiResponse of VirtoCommercePlatformCoreSecuritySecurityResult</returns>
+        ApiResponse<VirtoCommercePlatformCoreSecuritySecurityResult> StorefrontSecurityResetPasswordWithHttpInfo (string userId, string token, string newPassword);
+
+        /// <summary>
+        /// Reset a password for the user
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="userId"></param>
+        /// <param name="token"></param>
+        /// <param name="newPassword"></param>
+        /// <returns>Task of VirtoCommercePlatformCoreSecuritySecurityResult</returns>
         System.Threading.Tasks.Task<VirtoCommercePlatformCoreSecuritySecurityResult> StorefrontSecurityResetPasswordAsync (string userId, string token, string newPassword);
+
+        /// <summary>
+        /// Reset a password for the user
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="userId"></param>
+        /// <param name="token"></param>
+        /// <param name="newPassword"></param>
+        /// <returns>Task of ApiResponse (VirtoCommercePlatformCoreSecuritySecurityResult)</returns>
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommercePlatformCoreSecuritySecurityResult>> StorefrontSecurityResetPasswordAsyncWithHttpInfo (string userId, string token, string newPassword);
         
         /// <summary>
         /// Generate a password reset token
@@ -242,8 +447,34 @@ namespace VirtoCommerce.Client.Api
         /// <param name="storeName"></param>
         /// <param name="language"></param>
         /// <param name="callbackUrl"></param>
-        /// <returns></returns>
+        /// <returns>ApiResponse of Object(void)</returns>
+        ApiResponse<Object> StorefrontSecurityGenerateResetPasswordTokenWithHttpInfo (string userId, string storeName, string language, string callbackUrl);
+
+        /// <summary>
+        /// Generate a password reset token
+        /// </summary>
+        /// <remarks>
+        /// Generates a password reset token and sends a password reset link to the user via email.
+        /// </remarks>
+        /// <param name="userId"></param>
+        /// <param name="storeName"></param>
+        /// <param name="language"></param>
+        /// <param name="callbackUrl"></param>
+        /// <returns>Task of void</returns>
         System.Threading.Tasks.Task StorefrontSecurityGenerateResetPasswordTokenAsync (string userId, string storeName, string language, string callbackUrl);
+
+        /// <summary>
+        /// Generate a password reset token
+        /// </summary>
+        /// <remarks>
+        /// Generates a password reset token and sends a password reset link to the user via email.
+        /// </remarks>
+        /// <param name="userId"></param>
+        /// <param name="storeName"></param>
+        /// <param name="language"></param>
+        /// <param name="callbackUrl"></param>
+        /// <returns>Task of ApiResponse</returns>
+        System.Threading.Tasks.Task<ApiResponse<Object>> StorefrontSecurityGenerateResetPasswordTokenAsyncWithHttpInfo (string userId, string storeName, string language, string callbackUrl);
         
         /// <summary>
         /// Sign in with user name and password
@@ -264,8 +495,30 @@ namespace VirtoCommerce.Client.Api
         /// </remarks>
         /// <param name="userName"></param>
         /// <param name="password"></param>
-        /// <returns>VirtoCommerceCoreModuleWebModelSignInResult</returns>
+        /// <returns>ApiResponse of VirtoCommerceCoreModuleWebModelSignInResult</returns>
+        ApiResponse<VirtoCommerceCoreModuleWebModelSignInResult> StorefrontSecurityPasswordSignInWithHttpInfo (string userName, string password);
+
+        /// <summary>
+        /// Sign in with user name and password
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="userName"></param>
+        /// <param name="password"></param>
+        /// <returns>Task of VirtoCommerceCoreModuleWebModelSignInResult</returns>
         System.Threading.Tasks.Task<VirtoCommerceCoreModuleWebModelSignInResult> StorefrontSecurityPasswordSignInAsync (string userName, string password);
+
+        /// <summary>
+        /// Sign in with user name and password
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="userName"></param>
+        /// <param name="password"></param>
+        /// <returns>Task of ApiResponse (VirtoCommerceCoreModuleWebModelSignInResult)</returns>
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCoreModuleWebModelSignInResult>> StorefrontSecurityPasswordSignInAsyncWithHttpInfo (string userName, string password);
         
     }
   
@@ -275,49 +528,82 @@ namespace VirtoCommerce.Client.Api
     public class CommerceCoreModuleApi : ICommerceCoreModuleApi
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CommerceCoreModuleApi"/> class.
+        /// Initializes a new instance of the <see cref="CommerceCoreModuleApi"/> class
+        /// using Configuration object
         /// </summary>
-        /// <param name="apiClient"> an instance of ApiClient</param>
+        /// <param name="configuration">An instance of Configuration</param>
         /// <returns></returns>
-        public CommerceCoreModuleApi(ApiClient apiClient)
+        public CommerceCoreModuleApi(Configuration configuration)
         {
-            if (apiClient == null) // use the default one in Configuration
-                this.ApiClient = Configuration.DefaultApiClient; 
+            if (configuration == null) // use the default one in Configuration
+                this.Configuration = Configuration.Default; 
             else
-                this.ApiClient = apiClient;
+                this.Configuration = configuration;
         }
-    
-        /// <summary>
-        /// Sets the base path of the API client.
-        /// </summary>
-        /// <param name="basePath">The base path</param>
-        /// <value>The base path</value>
-        public void SetBasePath(String basePath)
-        {
-            this.ApiClient.BasePath = basePath;
-        }
-    
+
         /// <summary>
         /// Gets the base path of the API client.
         /// </summary>
         /// <value>The base path</value>
         public String GetBasePath()
         {
-            return this.ApiClient.BasePath;
+            return this.Configuration.ApiClient.RestClient.BaseUrl.ToString();
+        }
+
+        /// <summary>
+        /// Sets the base path of the API client.
+        /// </summary>
+        /// <value>The base path</value>
+        [Obsolete("SetBasePath is deprecated, please do 'Configuraiton.ApiClient = new ApiClient(\"http://new-path\")' instead.")]
+        public void SetBasePath(String basePath)
+        {
+            // do nothing
         }
     
         /// <summary>
-        /// Gets or sets the API client.
+        /// Gets or sets the configuration object
         /// </summary>
-        /// <value>An instance of the ApiClient</value>
-        public ApiClient ApiClient {get; set;}
-    
+        /// <value>An instance of the Configuration</value>
+        public Configuration Configuration {get; set;}
+
+        /// <summary>
+        /// Gets the default header.
+        /// </summary>
+        /// <returns>Dictionary of HTTP header</returns>
+        [Obsolete("DefaultHeader is deprecated, please use Configuration.DefaultHeader instead.")]
+        public Dictionary<String, String> DefaultHeader()
+        {
+            return this.Configuration.DefaultHeader;
+        }
+
+        /// <summary>
+        /// Add default header.
+        /// </summary>
+        /// <param name="key">Header field name.</param>
+        /// <param name="value">Header field value.</param>
+        /// <returns></returns>
+        [Obsolete("AddDefaultHeader is deprecated, please use Configuration.AddDefaultHeader instead.")]
+        public void AddDefaultHeader(string key, string value)
+        {
+            this.Configuration.AddDefaultHeader(key, value);
+        }
+   
         
         /// <summary>
         /// Return all fulfillment centers registered in the system 
         /// </summary>
-        /// <returns></returns>            
+        /// <returns>List&lt;VirtoCommerceCoreModuleWebModelFulfillmentCenter&gt;</returns>
         public List<VirtoCommerceCoreModuleWebModelFulfillmentCenter> CommerceGetFulfillmentCenters ()
+        {
+             ApiResponse<List<VirtoCommerceCoreModuleWebModelFulfillmentCenter>> response = CommerceGetFulfillmentCentersWithHttpInfo();
+             return response.Data;
+        }
+
+        /// <summary>
+        /// Return all fulfillment centers registered in the system 
+        /// </summary>
+        /// <returns>ApiResponse of List&lt;VirtoCommerceCoreModuleWebModelFulfillmentCenter&gt;</returns>
+        public ApiResponse< List<VirtoCommerceCoreModuleWebModelFulfillmentCenter> > CommerceGetFulfillmentCentersWithHttpInfo ()
         {
             
     
@@ -325,7 +611,7 @@ namespace VirtoCommerce.Client.Api
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
@@ -334,9 +620,9 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
@@ -346,26 +632,41 @@ namespace VirtoCommerce.Client.Api
             
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
+
+            
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
     
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling CommerceGetFulfillmentCenters: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling CommerceGetFulfillmentCenters: " + response.ErrorMessage, response.ErrorMessage);
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling CommerceGetFulfillmentCenters: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling CommerceGetFulfillmentCenters: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (List<VirtoCommerceCoreModuleWebModelFulfillmentCenter>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceCoreModuleWebModelFulfillmentCenter>));
+            return new ApiResponse<List<VirtoCommerceCoreModuleWebModelFulfillmentCenter>>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (List<VirtoCommerceCoreModuleWebModelFulfillmentCenter>) Configuration.ApiClient.Deserialize(response, typeof(List<VirtoCommerceCoreModuleWebModelFulfillmentCenter>)));
+            
         }
     
         /// <summary>
         /// Return all fulfillment centers registered in the system 
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Task of List&lt;VirtoCommerceCoreModuleWebModelFulfillmentCenter&gt;</returns>
         public async System.Threading.Tasks.Task<List<VirtoCommerceCoreModuleWebModelFulfillmentCenter>> CommerceGetFulfillmentCentersAsync ()
+        {
+             ApiResponse<List<VirtoCommerceCoreModuleWebModelFulfillmentCenter>> response = await CommerceGetFulfillmentCentersAsyncWithHttpInfo();
+             return response.Data;
+
+        }
+
+        /// <summary>
+        /// Return all fulfillment centers registered in the system 
+        /// </summary>
+        /// <returns>Task of ApiResponse (List&lt;VirtoCommerceCoreModuleWebModelFulfillmentCenter&gt;)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceCoreModuleWebModelFulfillmentCenter>>> CommerceGetFulfillmentCentersAsyncWithHttpInfo ()
         {
             
     
@@ -382,9 +683,9 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
@@ -394,24 +695,42 @@ namespace VirtoCommerce.Client.Api
             
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling CommerceGetFulfillmentCenters: " + response.Content, response.Content);
 
-            return (List<VirtoCommerceCoreModuleWebModelFulfillmentCenter>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceCoreModuleWebModelFulfillmentCenter>));
+            
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling CommerceGetFulfillmentCenters: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling CommerceGetFulfillmentCenters: " + response.ErrorMessage, response.ErrorMessage);
+
+            return new ApiResponse<List<VirtoCommerceCoreModuleWebModelFulfillmentCenter>>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (List<VirtoCommerceCoreModuleWebModelFulfillmentCenter>) Configuration.ApiClient.Deserialize(response, typeof(List<VirtoCommerceCoreModuleWebModelFulfillmentCenter>)));
+            
         }
         
         /// <summary>
         /// Update a existing fulfillment center 
         /// </summary>
         /// <param name="center">fulfillment center</param> 
-        /// <returns>VirtoCommerceCoreModuleWebModelFulfillmentCenter</returns>            
+        /// <returns>VirtoCommerceCoreModuleWebModelFulfillmentCenter</returns>
         public VirtoCommerceCoreModuleWebModelFulfillmentCenter CommerceUpdateFulfillmentCenter (VirtoCommerceCoreModuleWebModelFulfillmentCenter center)
+        {
+             ApiResponse<VirtoCommerceCoreModuleWebModelFulfillmentCenter> response = CommerceUpdateFulfillmentCenterWithHttpInfo(center);
+             return response.Data;
+        }
+
+        /// <summary>
+        /// Update a existing fulfillment center 
+        /// </summary>
+        /// <param name="center">fulfillment center</param> 
+        /// <returns>ApiResponse of VirtoCommerceCoreModuleWebModelFulfillmentCenter</returns>
+        public ApiResponse< VirtoCommerceCoreModuleWebModelFulfillmentCenter > CommerceUpdateFulfillmentCenterWithHttpInfo (VirtoCommerceCoreModuleWebModelFulfillmentCenter center)
         {
             
             // verify the required parameter 'center' is set
@@ -422,7 +741,7 @@ namespace VirtoCommerce.Client.Api
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
@@ -431,9 +750,9 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
@@ -442,29 +761,45 @@ namespace VirtoCommerce.Client.Api
             
             
             
-            postBody = ApiClient.Serialize(center); // http body (model) parameter
+            postBody = Configuration.ApiClient.Serialize(center); // http body (model) parameter
+            
+
             
     
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
     
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling CommerceUpdateFulfillmentCenter: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling CommerceUpdateFulfillmentCenter: " + response.ErrorMessage, response.ErrorMessage);
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling CommerceUpdateFulfillmentCenter: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling CommerceUpdateFulfillmentCenter: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommerceCoreModuleWebModelFulfillmentCenter) ApiClient.Deserialize(response, typeof(VirtoCommerceCoreModuleWebModelFulfillmentCenter));
+            return new ApiResponse<VirtoCommerceCoreModuleWebModelFulfillmentCenter>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommerceCoreModuleWebModelFulfillmentCenter) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceCoreModuleWebModelFulfillmentCenter)));
+            
         }
     
         /// <summary>
         /// Update a existing fulfillment center 
         /// </summary>
         /// <param name="center">fulfillment center</param>
-        /// <returns>VirtoCommerceCoreModuleWebModelFulfillmentCenter</returns>
+        /// <returns>Task of VirtoCommerceCoreModuleWebModelFulfillmentCenter</returns>
         public async System.Threading.Tasks.Task<VirtoCommerceCoreModuleWebModelFulfillmentCenter> CommerceUpdateFulfillmentCenterAsync (VirtoCommerceCoreModuleWebModelFulfillmentCenter center)
+        {
+             ApiResponse<VirtoCommerceCoreModuleWebModelFulfillmentCenter> response = await CommerceUpdateFulfillmentCenterAsyncWithHttpInfo(center);
+             return response.Data;
+
+        }
+
+        /// <summary>
+        /// Update a existing fulfillment center 
+        /// </summary>
+        /// <param name="center">fulfillment center</param>
+        /// <returns>Task of ApiResponse (VirtoCommerceCoreModuleWebModelFulfillmentCenter)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCoreModuleWebModelFulfillmentCenter>> CommerceUpdateFulfillmentCenterAsyncWithHttpInfo (VirtoCommerceCoreModuleWebModelFulfillmentCenter center)
         {
             // verify the required parameter 'center' is set
             if (center == null) throw new ApiException(400, "Missing required parameter 'center' when calling CommerceUpdateFulfillmentCenter");
@@ -483,9 +818,9 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
@@ -494,26 +829,44 @@ namespace VirtoCommerce.Client.Api
             
             
             
-            postBody = ApiClient.Serialize(center); // http body (model) parameter
+            postBody = Configuration.ApiClient.Serialize(center); // http body (model) parameter
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling CommerceUpdateFulfillmentCenter: " + response.Content, response.Content);
 
-            return (VirtoCommerceCoreModuleWebModelFulfillmentCenter) ApiClient.Deserialize(response, typeof(VirtoCommerceCoreModuleWebModelFulfillmentCenter));
+            
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling CommerceUpdateFulfillmentCenter: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling CommerceUpdateFulfillmentCenter: " + response.ErrorMessage, response.ErrorMessage);
+
+            return new ApiResponse<VirtoCommerceCoreModuleWebModelFulfillmentCenter>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommerceCoreModuleWebModelFulfillmentCenter) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceCoreModuleWebModelFulfillmentCenter)));
+            
         }
         
         /// <summary>
         /// Find fulfillment center by id 
         /// </summary>
         /// <param name="id">fulfillment center id</param> 
-        /// <returns>VirtoCommerceCoreModuleWebModelFulfillmentCenter</returns>            
+        /// <returns>VirtoCommerceCoreModuleWebModelFulfillmentCenter</returns>
         public VirtoCommerceCoreModuleWebModelFulfillmentCenter CommerceGetFulfillmentCenter (string id)
+        {
+             ApiResponse<VirtoCommerceCoreModuleWebModelFulfillmentCenter> response = CommerceGetFulfillmentCenterWithHttpInfo(id);
+             return response.Data;
+        }
+
+        /// <summary>
+        /// Find fulfillment center by id 
+        /// </summary>
+        /// <param name="id">fulfillment center id</param> 
+        /// <returns>ApiResponse of VirtoCommerceCoreModuleWebModelFulfillmentCenter</returns>
+        public ApiResponse< VirtoCommerceCoreModuleWebModelFulfillmentCenter > CommerceGetFulfillmentCenterWithHttpInfo (string id)
         {
             
             // verify the required parameter 'id' is set
@@ -524,7 +877,7 @@ namespace VirtoCommerce.Client.Api
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
@@ -533,40 +886,56 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (id != null) pathParams.Add("id", ApiClient.ParameterToString(id)); // path parameter
+            if (id != null) pathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
             
             
             
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
+
+            
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
     
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling CommerceGetFulfillmentCenter: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling CommerceGetFulfillmentCenter: " + response.ErrorMessage, response.ErrorMessage);
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling CommerceGetFulfillmentCenter: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling CommerceGetFulfillmentCenter: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommerceCoreModuleWebModelFulfillmentCenter) ApiClient.Deserialize(response, typeof(VirtoCommerceCoreModuleWebModelFulfillmentCenter));
+            return new ApiResponse<VirtoCommerceCoreModuleWebModelFulfillmentCenter>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommerceCoreModuleWebModelFulfillmentCenter) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceCoreModuleWebModelFulfillmentCenter)));
+            
         }
     
         /// <summary>
         /// Find fulfillment center by id 
         /// </summary>
         /// <param name="id">fulfillment center id</param>
-        /// <returns>VirtoCommerceCoreModuleWebModelFulfillmentCenter</returns>
+        /// <returns>Task of VirtoCommerceCoreModuleWebModelFulfillmentCenter</returns>
         public async System.Threading.Tasks.Task<VirtoCommerceCoreModuleWebModelFulfillmentCenter> CommerceGetFulfillmentCenterAsync (string id)
+        {
+             ApiResponse<VirtoCommerceCoreModuleWebModelFulfillmentCenter> response = await CommerceGetFulfillmentCenterAsyncWithHttpInfo(id);
+             return response.Data;
+
+        }
+
+        /// <summary>
+        /// Find fulfillment center by id 
+        /// </summary>
+        /// <param name="id">fulfillment center id</param>
+        /// <returns>Task of ApiResponse (VirtoCommerceCoreModuleWebModelFulfillmentCenter)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCoreModuleWebModelFulfillmentCenter>> CommerceGetFulfillmentCenterAsyncWithHttpInfo (string id)
         {
             // verify the required parameter 'id' is set
             if (id == null) throw new ApiException(400, "Missing required parameter 'id' when calling CommerceGetFulfillmentCenter");
@@ -585,37 +954,55 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (id != null) pathParams.Add("id", ApiClient.ParameterToString(id)); // path parameter
+            if (id != null) pathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
             
             
             
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling CommerceGetFulfillmentCenter: " + response.Content, response.Content);
 
-            return (VirtoCommerceCoreModuleWebModelFulfillmentCenter) ApiClient.Deserialize(response, typeof(VirtoCommerceCoreModuleWebModelFulfillmentCenter));
+            
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling CommerceGetFulfillmentCenter: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling CommerceGetFulfillmentCenter: " + response.ErrorMessage, response.ErrorMessage);
+
+            return new ApiResponse<VirtoCommerceCoreModuleWebModelFulfillmentCenter>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommerceCoreModuleWebModelFulfillmentCenter) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceCoreModuleWebModelFulfillmentCenter)));
+            
         }
         
         /// <summary>
         /// Payment callback operation used by external payment services to inform post process payment in our system 
         /// </summary>
         /// <param name="callback">payment callback parameters</param> 
-        /// <returns>VirtoCommerceDomainPaymentModelPostProcessPaymentResult</returns>            
+        /// <returns>VirtoCommerceDomainPaymentModelPostProcessPaymentResult</returns>
         public VirtoCommerceDomainPaymentModelPostProcessPaymentResult CommercePostProcessPayment (VirtoCommerceCoreModuleWebModelPaymentCallbackParameters callback)
+        {
+             ApiResponse<VirtoCommerceDomainPaymentModelPostProcessPaymentResult> response = CommercePostProcessPaymentWithHttpInfo(callback);
+             return response.Data;
+        }
+
+        /// <summary>
+        /// Payment callback operation used by external payment services to inform post process payment in our system 
+        /// </summary>
+        /// <param name="callback">payment callback parameters</param> 
+        /// <returns>ApiResponse of VirtoCommerceDomainPaymentModelPostProcessPaymentResult</returns>
+        public ApiResponse< VirtoCommerceDomainPaymentModelPostProcessPaymentResult > CommercePostProcessPaymentWithHttpInfo (VirtoCommerceCoreModuleWebModelPaymentCallbackParameters callback)
         {
             
             // verify the required parameter 'callback' is set
@@ -626,7 +1013,7 @@ namespace VirtoCommerce.Client.Api
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
@@ -635,9 +1022,9 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
@@ -646,29 +1033,45 @@ namespace VirtoCommerce.Client.Api
             
             
             
-            postBody = ApiClient.Serialize(callback); // http body (model) parameter
+            postBody = Configuration.ApiClient.Serialize(callback); // http body (model) parameter
+            
+
             
     
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
     
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling CommercePostProcessPayment: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling CommercePostProcessPayment: " + response.ErrorMessage, response.ErrorMessage);
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling CommercePostProcessPayment: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling CommercePostProcessPayment: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommerceDomainPaymentModelPostProcessPaymentResult) ApiClient.Deserialize(response, typeof(VirtoCommerceDomainPaymentModelPostProcessPaymentResult));
+            return new ApiResponse<VirtoCommerceDomainPaymentModelPostProcessPaymentResult>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommerceDomainPaymentModelPostProcessPaymentResult) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceDomainPaymentModelPostProcessPaymentResult)));
+            
         }
     
         /// <summary>
         /// Payment callback operation used by external payment services to inform post process payment in our system 
         /// </summary>
         /// <param name="callback">payment callback parameters</param>
-        /// <returns>VirtoCommerceDomainPaymentModelPostProcessPaymentResult</returns>
+        /// <returns>Task of VirtoCommerceDomainPaymentModelPostProcessPaymentResult</returns>
         public async System.Threading.Tasks.Task<VirtoCommerceDomainPaymentModelPostProcessPaymentResult> CommercePostProcessPaymentAsync (VirtoCommerceCoreModuleWebModelPaymentCallbackParameters callback)
+        {
+             ApiResponse<VirtoCommerceDomainPaymentModelPostProcessPaymentResult> response = await CommercePostProcessPaymentAsyncWithHttpInfo(callback);
+             return response.Data;
+
+        }
+
+        /// <summary>
+        /// Payment callback operation used by external payment services to inform post process payment in our system 
+        /// </summary>
+        /// <param name="callback">payment callback parameters</param>
+        /// <returns>Task of ApiResponse (VirtoCommerceDomainPaymentModelPostProcessPaymentResult)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceDomainPaymentModelPostProcessPaymentResult>> CommercePostProcessPaymentAsyncWithHttpInfo (VirtoCommerceCoreModuleWebModelPaymentCallbackParameters callback)
         {
             // verify the required parameter 'callback' is set
             if (callback == null) throw new ApiException(400, "Missing required parameter 'callback' when calling CommercePostProcessPayment");
@@ -687,9 +1090,9 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
@@ -698,26 +1101,44 @@ namespace VirtoCommerce.Client.Api
             
             
             
-            postBody = ApiClient.Serialize(callback); // http body (model) parameter
+            postBody = Configuration.ApiClient.Serialize(callback); // http body (model) parameter
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling CommercePostProcessPayment: " + response.Content, response.Content);
 
-            return (VirtoCommerceDomainPaymentModelPostProcessPaymentResult) ApiClient.Deserialize(response, typeof(VirtoCommerceDomainPaymentModelPostProcessPaymentResult));
+            
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling CommercePostProcessPayment: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling CommercePostProcessPayment: " + response.ErrorMessage, response.ErrorMessage);
+
+            return new ApiResponse<VirtoCommerceDomainPaymentModelPostProcessPaymentResult>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommerceDomainPaymentModelPostProcessPaymentResult) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceDomainPaymentModelPostProcessPaymentResult)));
+            
         }
         
         /// <summary>
         /// Find all SEO records for object by slug 
         /// </summary>
         /// <param name="slug">slug</param> 
-        /// <returns></returns>            
+        /// <returns>List&lt;VirtoCommerceDomainCommerceModelSeoInfo&gt;</returns>
         public List<VirtoCommerceDomainCommerceModelSeoInfo> CommerceGetSeoInfoBySlug (string slug)
+        {
+             ApiResponse<List<VirtoCommerceDomainCommerceModelSeoInfo>> response = CommerceGetSeoInfoBySlugWithHttpInfo(slug);
+             return response.Data;
+        }
+
+        /// <summary>
+        /// Find all SEO records for object by slug 
+        /// </summary>
+        /// <param name="slug">slug</param> 
+        /// <returns>ApiResponse of List&lt;VirtoCommerceDomainCommerceModelSeoInfo&gt;</returns>
+        public ApiResponse< List<VirtoCommerceDomainCommerceModelSeoInfo> > CommerceGetSeoInfoBySlugWithHttpInfo (string slug)
         {
             
             // verify the required parameter 'slug' is set
@@ -728,7 +1149,7 @@ namespace VirtoCommerce.Client.Api
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
@@ -737,40 +1158,56 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (slug != null) pathParams.Add("slug", ApiClient.ParameterToString(slug)); // path parameter
+            if (slug != null) pathParams.Add("slug", Configuration.ApiClient.ParameterToString(slug)); // path parameter
             
             
             
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
+
+            
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
     
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling CommerceGetSeoInfoBySlug: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling CommerceGetSeoInfoBySlug: " + response.ErrorMessage, response.ErrorMessage);
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling CommerceGetSeoInfoBySlug: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling CommerceGetSeoInfoBySlug: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (List<VirtoCommerceDomainCommerceModelSeoInfo>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceDomainCommerceModelSeoInfo>));
+            return new ApiResponse<List<VirtoCommerceDomainCommerceModelSeoInfo>>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (List<VirtoCommerceDomainCommerceModelSeoInfo>) Configuration.ApiClient.Deserialize(response, typeof(List<VirtoCommerceDomainCommerceModelSeoInfo>)));
+            
         }
     
         /// <summary>
         /// Find all SEO records for object by slug 
         /// </summary>
         /// <param name="slug">slug</param>
-        /// <returns></returns>
+        /// <returns>Task of List&lt;VirtoCommerceDomainCommerceModelSeoInfo&gt;</returns>
         public async System.Threading.Tasks.Task<List<VirtoCommerceDomainCommerceModelSeoInfo>> CommerceGetSeoInfoBySlugAsync (string slug)
+        {
+             ApiResponse<List<VirtoCommerceDomainCommerceModelSeoInfo>> response = await CommerceGetSeoInfoBySlugAsyncWithHttpInfo(slug);
+             return response.Data;
+
+        }
+
+        /// <summary>
+        /// Find all SEO records for object by slug 
+        /// </summary>
+        /// <param name="slug">slug</param>
+        /// <returns>Task of ApiResponse (List&lt;VirtoCommerceDomainCommerceModelSeoInfo&gt;)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceDomainCommerceModelSeoInfo>>> CommerceGetSeoInfoBySlugAsyncWithHttpInfo (string slug)
         {
             // verify the required parameter 'slug' is set
             if (slug == null) throw new ApiException(400, "Missing required parameter 'slug' when calling CommerceGetSeoInfoBySlug");
@@ -789,37 +1226,55 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (slug != null) pathParams.Add("slug", ApiClient.ParameterToString(slug)); // path parameter
+            if (slug != null) pathParams.Add("slug", Configuration.ApiClient.ParameterToString(slug)); // path parameter
             
             
             
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling CommerceGetSeoInfoBySlug: " + response.Content, response.Content);
 
-            return (List<VirtoCommerceDomainCommerceModelSeoInfo>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceDomainCommerceModelSeoInfo>));
+            
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling CommerceGetSeoInfoBySlug: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling CommerceGetSeoInfoBySlug: " + response.ErrorMessage, response.ErrorMessage);
+
+            return new ApiResponse<List<VirtoCommerceDomainCommerceModelSeoInfo>>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (List<VirtoCommerceDomainCommerceModelSeoInfo>) Configuration.ApiClient.Deserialize(response, typeof(List<VirtoCommerceDomainCommerceModelSeoInfo>)));
+            
         }
         
         /// <summary>
         /// Create a new user 
         /// </summary>
         /// <param name="user"></param> 
-        /// <returns>VirtoCommercePlatformCoreSecuritySecurityResult</returns>            
+        /// <returns>VirtoCommercePlatformCoreSecuritySecurityResult</returns>
         public VirtoCommercePlatformCoreSecuritySecurityResult StorefrontSecurityCreate (VirtoCommercePlatformCoreSecurityApplicationUserExtended user)
+        {
+             ApiResponse<VirtoCommercePlatformCoreSecuritySecurityResult> response = StorefrontSecurityCreateWithHttpInfo(user);
+             return response.Data;
+        }
+
+        /// <summary>
+        /// Create a new user 
+        /// </summary>
+        /// <param name="user"></param> 
+        /// <returns>ApiResponse of VirtoCommercePlatformCoreSecuritySecurityResult</returns>
+        public ApiResponse< VirtoCommercePlatformCoreSecuritySecurityResult > StorefrontSecurityCreateWithHttpInfo (VirtoCommercePlatformCoreSecurityApplicationUserExtended user)
         {
             
             // verify the required parameter 'user' is set
@@ -830,7 +1285,7 @@ namespace VirtoCommerce.Client.Api
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
@@ -839,9 +1294,9 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
@@ -850,29 +1305,45 @@ namespace VirtoCommerce.Client.Api
             
             
             
-            postBody = ApiClient.Serialize(user); // http body (model) parameter
+            postBody = Configuration.ApiClient.Serialize(user); // http body (model) parameter
+            
+
             
     
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
     
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling StorefrontSecurityCreate: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling StorefrontSecurityCreate: " + response.ErrorMessage, response.ErrorMessage);
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling StorefrontSecurityCreate: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling StorefrontSecurityCreate: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommercePlatformCoreSecuritySecurityResult) ApiClient.Deserialize(response, typeof(VirtoCommercePlatformCoreSecuritySecurityResult));
+            return new ApiResponse<VirtoCommercePlatformCoreSecuritySecurityResult>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommercePlatformCoreSecuritySecurityResult) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommercePlatformCoreSecuritySecurityResult)));
+            
         }
     
         /// <summary>
         /// Create a new user 
         /// </summary>
         /// <param name="user"></param>
-        /// <returns>VirtoCommercePlatformCoreSecuritySecurityResult</returns>
+        /// <returns>Task of VirtoCommercePlatformCoreSecuritySecurityResult</returns>
         public async System.Threading.Tasks.Task<VirtoCommercePlatformCoreSecuritySecurityResult> StorefrontSecurityCreateAsync (VirtoCommercePlatformCoreSecurityApplicationUserExtended user)
+        {
+             ApiResponse<VirtoCommercePlatformCoreSecuritySecurityResult> response = await StorefrontSecurityCreateAsyncWithHttpInfo(user);
+             return response.Data;
+
+        }
+
+        /// <summary>
+        /// Create a new user 
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns>Task of ApiResponse (VirtoCommercePlatformCoreSecuritySecurityResult)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommercePlatformCoreSecuritySecurityResult>> StorefrontSecurityCreateAsyncWithHttpInfo (VirtoCommercePlatformCoreSecurityApplicationUserExtended user)
         {
             // verify the required parameter 'user' is set
             if (user == null) throw new ApiException(400, "Missing required parameter 'user' when calling StorefrontSecurityCreate");
@@ -891,9 +1362,9 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
@@ -902,18 +1373,25 @@ namespace VirtoCommerce.Client.Api
             
             
             
-            postBody = ApiClient.Serialize(user); // http body (model) parameter
+            postBody = Configuration.ApiClient.Serialize(user); // http body (model) parameter
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling StorefrontSecurityCreate: " + response.Content, response.Content);
 
-            return (VirtoCommercePlatformCoreSecuritySecurityResult) ApiClient.Deserialize(response, typeof(VirtoCommercePlatformCoreSecuritySecurityResult));
+            
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling StorefrontSecurityCreate: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling StorefrontSecurityCreate: " + response.ErrorMessage, response.ErrorMessage);
+
+            return new ApiResponse<VirtoCommercePlatformCoreSecuritySecurityResult>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommercePlatformCoreSecuritySecurityResult) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommercePlatformCoreSecuritySecurityResult)));
+            
         }
         
         /// <summary>
@@ -921,8 +1399,20 @@ namespace VirtoCommerce.Client.Api
         /// </summary>
         /// <param name="loginProvider"></param> 
         /// <param name="providerKey"></param> 
-        /// <returns>VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>            
+        /// <returns>VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
         public VirtoCommercePlatformCoreSecurityApplicationUserExtended StorefrontSecurityGetUserByLogin (string loginProvider, string providerKey)
+        {
+             ApiResponse<VirtoCommercePlatformCoreSecurityApplicationUserExtended> response = StorefrontSecurityGetUserByLoginWithHttpInfo(loginProvider, providerKey);
+             return response.Data;
+        }
+
+        /// <summary>
+        /// Get user details by external login provider 
+        /// </summary>
+        /// <param name="loginProvider"></param> 
+        /// <param name="providerKey"></param> 
+        /// <returns>ApiResponse of VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
+        public ApiResponse< VirtoCommercePlatformCoreSecurityApplicationUserExtended > StorefrontSecurityGetUserByLoginWithHttpInfo (string loginProvider, string providerKey)
         {
             
             // verify the required parameter 'loginProvider' is set
@@ -936,7 +1426,7 @@ namespace VirtoCommerce.Client.Api
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
@@ -945,33 +1435,37 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
             
-            if (loginProvider != null) queryParams.Add("loginProvider", ApiClient.ParameterToString(loginProvider)); // query parameter
-            if (providerKey != null) queryParams.Add("providerKey", ApiClient.ParameterToString(providerKey)); // query parameter
+            if (loginProvider != null) queryParams.Add("loginProvider", Configuration.ApiClient.ParameterToString(loginProvider)); // query parameter
+            if (providerKey != null) queryParams.Add("providerKey", Configuration.ApiClient.ParameterToString(providerKey)); // query parameter
             
             
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
+
+            
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
     
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling StorefrontSecurityGetUserByLogin: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling StorefrontSecurityGetUserByLogin: " + response.ErrorMessage, response.ErrorMessage);
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling StorefrontSecurityGetUserByLogin: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling StorefrontSecurityGetUserByLogin: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommercePlatformCoreSecurityApplicationUserExtended) ApiClient.Deserialize(response, typeof(VirtoCommercePlatformCoreSecurityApplicationUserExtended));
+            return new ApiResponse<VirtoCommercePlatformCoreSecurityApplicationUserExtended>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommercePlatformCoreSecurityApplicationUserExtended) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommercePlatformCoreSecurityApplicationUserExtended)));
+            
         }
     
         /// <summary>
@@ -979,8 +1473,21 @@ namespace VirtoCommerce.Client.Api
         /// </summary>
         /// <param name="loginProvider"></param>
         /// <param name="providerKey"></param>
-        /// <returns>VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
+        /// <returns>Task of VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
         public async System.Threading.Tasks.Task<VirtoCommercePlatformCoreSecurityApplicationUserExtended> StorefrontSecurityGetUserByLoginAsync (string loginProvider, string providerKey)
+        {
+             ApiResponse<VirtoCommercePlatformCoreSecurityApplicationUserExtended> response = await StorefrontSecurityGetUserByLoginAsyncWithHttpInfo(loginProvider, providerKey);
+             return response.Data;
+
+        }
+
+        /// <summary>
+        /// Get user details by external login provider 
+        /// </summary>
+        /// <param name="loginProvider"></param>
+        /// <param name="providerKey"></param>
+        /// <returns>Task of ApiResponse (VirtoCommercePlatformCoreSecurityApplicationUserExtended)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommercePlatformCoreSecurityApplicationUserExtended>> StorefrontSecurityGetUserByLoginAsyncWithHttpInfo (string loginProvider, string providerKey)
         {
             // verify the required parameter 'loginProvider' is set
             if (loginProvider == null) throw new ApiException(400, "Missing required parameter 'loginProvider' when calling StorefrontSecurityGetUserByLogin");
@@ -1001,38 +1508,56 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
             
-            if (loginProvider != null) queryParams.Add("loginProvider", ApiClient.ParameterToString(loginProvider)); // query parameter
-            if (providerKey != null) queryParams.Add("providerKey", ApiClient.ParameterToString(providerKey)); // query parameter
+            if (loginProvider != null) queryParams.Add("loginProvider", Configuration.ApiClient.ParameterToString(loginProvider)); // query parameter
+            if (providerKey != null) queryParams.Add("providerKey", Configuration.ApiClient.ParameterToString(providerKey)); // query parameter
             
             
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling StorefrontSecurityGetUserByLogin: " + response.Content, response.Content);
 
-            return (VirtoCommercePlatformCoreSecurityApplicationUserExtended) ApiClient.Deserialize(response, typeof(VirtoCommercePlatformCoreSecurityApplicationUserExtended));
+            
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling StorefrontSecurityGetUserByLogin: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling StorefrontSecurityGetUserByLogin: " + response.ErrorMessage, response.ErrorMessage);
+
+            return new ApiResponse<VirtoCommercePlatformCoreSecurityApplicationUserExtended>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommercePlatformCoreSecurityApplicationUserExtended) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommercePlatformCoreSecurityApplicationUserExtended)));
+            
         }
         
         /// <summary>
         /// Get user details by user ID 
         /// </summary>
         /// <param name="userId"></param> 
-        /// <returns>VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>            
+        /// <returns>VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
         public VirtoCommercePlatformCoreSecurityApplicationUserExtended StorefrontSecurityGetUserById (string userId)
+        {
+             ApiResponse<VirtoCommercePlatformCoreSecurityApplicationUserExtended> response = StorefrontSecurityGetUserByIdWithHttpInfo(userId);
+             return response.Data;
+        }
+
+        /// <summary>
+        /// Get user details by user ID 
+        /// </summary>
+        /// <param name="userId"></param> 
+        /// <returns>ApiResponse of VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
+        public ApiResponse< VirtoCommercePlatformCoreSecurityApplicationUserExtended > StorefrontSecurityGetUserByIdWithHttpInfo (string userId)
         {
             
             // verify the required parameter 'userId' is set
@@ -1043,7 +1568,7 @@ namespace VirtoCommerce.Client.Api
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
@@ -1052,40 +1577,56 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (userId != null) pathParams.Add("userId", ApiClient.ParameterToString(userId)); // path parameter
+            if (userId != null) pathParams.Add("userId", Configuration.ApiClient.ParameterToString(userId)); // path parameter
             
             
             
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
+
+            
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
     
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling StorefrontSecurityGetUserById: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling StorefrontSecurityGetUserById: " + response.ErrorMessage, response.ErrorMessage);
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling StorefrontSecurityGetUserById: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling StorefrontSecurityGetUserById: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommercePlatformCoreSecurityApplicationUserExtended) ApiClient.Deserialize(response, typeof(VirtoCommercePlatformCoreSecurityApplicationUserExtended));
+            return new ApiResponse<VirtoCommercePlatformCoreSecurityApplicationUserExtended>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommercePlatformCoreSecurityApplicationUserExtended) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommercePlatformCoreSecurityApplicationUserExtended)));
+            
         }
     
         /// <summary>
         /// Get user details by user ID 
         /// </summary>
         /// <param name="userId"></param>
-        /// <returns>VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
+        /// <returns>Task of VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
         public async System.Threading.Tasks.Task<VirtoCommercePlatformCoreSecurityApplicationUserExtended> StorefrontSecurityGetUserByIdAsync (string userId)
+        {
+             ApiResponse<VirtoCommercePlatformCoreSecurityApplicationUserExtended> response = await StorefrontSecurityGetUserByIdAsyncWithHttpInfo(userId);
+             return response.Data;
+
+        }
+
+        /// <summary>
+        /// Get user details by user ID 
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns>Task of ApiResponse (VirtoCommercePlatformCoreSecurityApplicationUserExtended)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommercePlatformCoreSecurityApplicationUserExtended>> StorefrontSecurityGetUserByIdAsyncWithHttpInfo (string userId)
         {
             // verify the required parameter 'userId' is set
             if (userId == null) throw new ApiException(400, "Missing required parameter 'userId' when calling StorefrontSecurityGetUserById");
@@ -1104,37 +1645,55 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (userId != null) pathParams.Add("userId", ApiClient.ParameterToString(userId)); // path parameter
+            if (userId != null) pathParams.Add("userId", Configuration.ApiClient.ParameterToString(userId)); // path parameter
             
             
             
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling StorefrontSecurityGetUserById: " + response.Content, response.Content);
 
-            return (VirtoCommercePlatformCoreSecurityApplicationUserExtended) ApiClient.Deserialize(response, typeof(VirtoCommercePlatformCoreSecurityApplicationUserExtended));
+            
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling StorefrontSecurityGetUserById: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling StorefrontSecurityGetUserById: " + response.ErrorMessage, response.ErrorMessage);
+
+            return new ApiResponse<VirtoCommercePlatformCoreSecurityApplicationUserExtended>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommercePlatformCoreSecurityApplicationUserExtended) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommercePlatformCoreSecurityApplicationUserExtended)));
+            
         }
         
         /// <summary>
         /// Get user details by user name 
         /// </summary>
         /// <param name="userName"></param> 
-        /// <returns>VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>            
+        /// <returns>VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
         public VirtoCommercePlatformCoreSecurityApplicationUserExtended StorefrontSecurityGetUserByName (string userName)
+        {
+             ApiResponse<VirtoCommercePlatformCoreSecurityApplicationUserExtended> response = StorefrontSecurityGetUserByNameWithHttpInfo(userName);
+             return response.Data;
+        }
+
+        /// <summary>
+        /// Get user details by user name 
+        /// </summary>
+        /// <param name="userName"></param> 
+        /// <returns>ApiResponse of VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
+        public ApiResponse< VirtoCommercePlatformCoreSecurityApplicationUserExtended > StorefrontSecurityGetUserByNameWithHttpInfo (string userName)
         {
             
             // verify the required parameter 'userName' is set
@@ -1145,7 +1704,7 @@ namespace VirtoCommerce.Client.Api
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
@@ -1154,40 +1713,56 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (userName != null) pathParams.Add("userName", ApiClient.ParameterToString(userName)); // path parameter
+            if (userName != null) pathParams.Add("userName", Configuration.ApiClient.ParameterToString(userName)); // path parameter
             
             
             
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
+
+            
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
     
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling StorefrontSecurityGetUserByName: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling StorefrontSecurityGetUserByName: " + response.ErrorMessage, response.ErrorMessage);
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling StorefrontSecurityGetUserByName: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling StorefrontSecurityGetUserByName: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommercePlatformCoreSecurityApplicationUserExtended) ApiClient.Deserialize(response, typeof(VirtoCommercePlatformCoreSecurityApplicationUserExtended));
+            return new ApiResponse<VirtoCommercePlatformCoreSecurityApplicationUserExtended>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommercePlatformCoreSecurityApplicationUserExtended) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommercePlatformCoreSecurityApplicationUserExtended)));
+            
         }
     
         /// <summary>
         /// Get user details by user name 
         /// </summary>
         /// <param name="userName"></param>
-        /// <returns>VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
+        /// <returns>Task of VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
         public async System.Threading.Tasks.Task<VirtoCommercePlatformCoreSecurityApplicationUserExtended> StorefrontSecurityGetUserByNameAsync (string userName)
+        {
+             ApiResponse<VirtoCommercePlatformCoreSecurityApplicationUserExtended> response = await StorefrontSecurityGetUserByNameAsyncWithHttpInfo(userName);
+             return response.Data;
+
+        }
+
+        /// <summary>
+        /// Get user details by user name 
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <returns>Task of ApiResponse (VirtoCommercePlatformCoreSecurityApplicationUserExtended)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommercePlatformCoreSecurityApplicationUserExtended>> StorefrontSecurityGetUserByNameAsyncWithHttpInfo (string userName)
         {
             // verify the required parameter 'userName' is set
             if (userName == null) throw new ApiException(400, "Missing required parameter 'userName' when calling StorefrontSecurityGetUserByName");
@@ -1206,29 +1781,36 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (userName != null) pathParams.Add("userName", ApiClient.ParameterToString(userName)); // path parameter
+            if (userName != null) pathParams.Add("userName", Configuration.ApiClient.ParameterToString(userName)); // path parameter
             
             
             
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling StorefrontSecurityGetUserByName: " + response.Content, response.Content);
 
-            return (VirtoCommercePlatformCoreSecurityApplicationUserExtended) ApiClient.Deserialize(response, typeof(VirtoCommercePlatformCoreSecurityApplicationUserExtended));
+            
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling StorefrontSecurityGetUserByName: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling StorefrontSecurityGetUserByName: " + response.ErrorMessage, response.ErrorMessage);
+
+            return new ApiResponse<VirtoCommercePlatformCoreSecurityApplicationUserExtended>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommercePlatformCoreSecurityApplicationUserExtended) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommercePlatformCoreSecurityApplicationUserExtended)));
+            
         }
         
         /// <summary>
@@ -1237,8 +1819,21 @@ namespace VirtoCommerce.Client.Api
         /// <param name="userId"></param> 
         /// <param name="token"></param> 
         /// <param name="newPassword"></param> 
-        /// <returns>VirtoCommercePlatformCoreSecuritySecurityResult</returns>            
+        /// <returns>VirtoCommercePlatformCoreSecuritySecurityResult</returns>
         public VirtoCommercePlatformCoreSecuritySecurityResult StorefrontSecurityResetPassword (string userId, string token, string newPassword)
+        {
+             ApiResponse<VirtoCommercePlatformCoreSecuritySecurityResult> response = StorefrontSecurityResetPasswordWithHttpInfo(userId, token, newPassword);
+             return response.Data;
+        }
+
+        /// <summary>
+        /// Reset a password for the user 
+        /// </summary>
+        /// <param name="userId"></param> 
+        /// <param name="token"></param> 
+        /// <param name="newPassword"></param> 
+        /// <returns>ApiResponse of VirtoCommercePlatformCoreSecuritySecurityResult</returns>
+        public ApiResponse< VirtoCommercePlatformCoreSecuritySecurityResult > StorefrontSecurityResetPasswordWithHttpInfo (string userId, string token, string newPassword)
         {
             
             // verify the required parameter 'userId' is set
@@ -1255,7 +1850,7 @@ namespace VirtoCommerce.Client.Api
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
@@ -1264,34 +1859,38 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
             
-            if (userId != null) queryParams.Add("userId", ApiClient.ParameterToString(userId)); // query parameter
-            if (token != null) queryParams.Add("token", ApiClient.ParameterToString(token)); // query parameter
-            if (newPassword != null) queryParams.Add("newPassword", ApiClient.ParameterToString(newPassword)); // query parameter
+            if (userId != null) queryParams.Add("userId", Configuration.ApiClient.ParameterToString(userId)); // query parameter
+            if (token != null) queryParams.Add("token", Configuration.ApiClient.ParameterToString(token)); // query parameter
+            if (newPassword != null) queryParams.Add("newPassword", Configuration.ApiClient.ParameterToString(newPassword)); // query parameter
             
             
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
+
+            
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
     
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling StorefrontSecurityResetPassword: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling StorefrontSecurityResetPassword: " + response.ErrorMessage, response.ErrorMessage);
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling StorefrontSecurityResetPassword: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling StorefrontSecurityResetPassword: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommercePlatformCoreSecuritySecurityResult) ApiClient.Deserialize(response, typeof(VirtoCommercePlatformCoreSecuritySecurityResult));
+            return new ApiResponse<VirtoCommercePlatformCoreSecuritySecurityResult>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommercePlatformCoreSecuritySecurityResult) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommercePlatformCoreSecuritySecurityResult)));
+            
         }
     
         /// <summary>
@@ -1300,8 +1899,22 @@ namespace VirtoCommerce.Client.Api
         /// <param name="userId"></param>
         /// <param name="token"></param>
         /// <param name="newPassword"></param>
-        /// <returns>VirtoCommercePlatformCoreSecuritySecurityResult</returns>
+        /// <returns>Task of VirtoCommercePlatformCoreSecuritySecurityResult</returns>
         public async System.Threading.Tasks.Task<VirtoCommercePlatformCoreSecuritySecurityResult> StorefrontSecurityResetPasswordAsync (string userId, string token, string newPassword)
+        {
+             ApiResponse<VirtoCommercePlatformCoreSecuritySecurityResult> response = await StorefrontSecurityResetPasswordAsyncWithHttpInfo(userId, token, newPassword);
+             return response.Data;
+
+        }
+
+        /// <summary>
+        /// Reset a password for the user 
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="token"></param>
+        /// <param name="newPassword"></param>
+        /// <returns>Task of ApiResponse (VirtoCommercePlatformCoreSecuritySecurityResult)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommercePlatformCoreSecuritySecurityResult>> StorefrontSecurityResetPasswordAsyncWithHttpInfo (string userId, string token, string newPassword)
         {
             // verify the required parameter 'userId' is set
             if (userId == null) throw new ApiException(400, "Missing required parameter 'userId' when calling StorefrontSecurityResetPassword");
@@ -1324,31 +1937,38 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
             
-            if (userId != null) queryParams.Add("userId", ApiClient.ParameterToString(userId)); // query parameter
-            if (token != null) queryParams.Add("token", ApiClient.ParameterToString(token)); // query parameter
-            if (newPassword != null) queryParams.Add("newPassword", ApiClient.ParameterToString(newPassword)); // query parameter
+            if (userId != null) queryParams.Add("userId", Configuration.ApiClient.ParameterToString(userId)); // query parameter
+            if (token != null) queryParams.Add("token", Configuration.ApiClient.ParameterToString(token)); // query parameter
+            if (newPassword != null) queryParams.Add("newPassword", Configuration.ApiClient.ParameterToString(newPassword)); // query parameter
             
             
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling StorefrontSecurityResetPassword: " + response.Content, response.Content);
 
-            return (VirtoCommercePlatformCoreSecuritySecurityResult) ApiClient.Deserialize(response, typeof(VirtoCommercePlatformCoreSecuritySecurityResult));
+            
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling StorefrontSecurityResetPassword: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling StorefrontSecurityResetPassword: " + response.ErrorMessage, response.ErrorMessage);
+
+            return new ApiResponse<VirtoCommercePlatformCoreSecuritySecurityResult>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommercePlatformCoreSecuritySecurityResult) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommercePlatformCoreSecuritySecurityResult)));
+            
         }
         
         /// <summary>
@@ -1358,8 +1978,21 @@ namespace VirtoCommerce.Client.Api
         /// <param name="storeName"></param> 
         /// <param name="language"></param> 
         /// <param name="callbackUrl"></param> 
-        /// <returns></returns>            
+        /// <returns></returns>
         public void StorefrontSecurityGenerateResetPasswordToken (string userId, string storeName, string language, string callbackUrl)
+        {
+             StorefrontSecurityGenerateResetPasswordTokenWithHttpInfo(userId, storeName, language, callbackUrl);
+        }
+
+        /// <summary>
+        /// Generate a password reset token Generates a password reset token and sends a password reset link to the user via email.
+        /// </summary>
+        /// <param name="userId"></param> 
+        /// <param name="storeName"></param> 
+        /// <param name="language"></param> 
+        /// <param name="callbackUrl"></param> 
+        /// <returns>ApiResponse of Object(void)</returns>
+        public ApiResponse<Object> StorefrontSecurityGenerateResetPasswordTokenWithHttpInfo (string userId, string storeName, string language, string callbackUrl)
         {
             
             // verify the required parameter 'userId' is set
@@ -1379,7 +2012,7 @@ namespace VirtoCommerce.Client.Api
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
@@ -1388,35 +2021,39 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
             
-            if (userId != null) queryParams.Add("userId", ApiClient.ParameterToString(userId)); // query parameter
-            if (storeName != null) queryParams.Add("storeName", ApiClient.ParameterToString(storeName)); // query parameter
-            if (language != null) queryParams.Add("language", ApiClient.ParameterToString(language)); // query parameter
-            if (callbackUrl != null) queryParams.Add("callbackUrl", ApiClient.ParameterToString(callbackUrl)); // query parameter
+            if (userId != null) queryParams.Add("userId", Configuration.ApiClient.ParameterToString(userId)); // query parameter
+            if (storeName != null) queryParams.Add("storeName", Configuration.ApiClient.ParameterToString(storeName)); // query parameter
+            if (language != null) queryParams.Add("language", Configuration.ApiClient.ParameterToString(language)); // query parameter
+            if (callbackUrl != null) queryParams.Add("callbackUrl", Configuration.ApiClient.ParameterToString(callbackUrl)); // query parameter
             
             
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
+
+            
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
     
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling StorefrontSecurityGenerateResetPasswordToken: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling StorefrontSecurityGenerateResetPasswordToken: " + response.ErrorMessage, response.ErrorMessage);
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling StorefrontSecurityGenerateResetPasswordToken: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling StorefrontSecurityGenerateResetPasswordToken: " + response.ErrorMessage, response.ErrorMessage);
     
-            return;
+            
+            return new ApiResponse<Object>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                null);
         }
     
         /// <summary>
@@ -1426,8 +2063,22 @@ namespace VirtoCommerce.Client.Api
         /// <param name="storeName"></param>
         /// <param name="language"></param>
         /// <param name="callbackUrl"></param>
-        /// <returns></returns>
+        /// <returns>Task of void</returns>
         public async System.Threading.Tasks.Task StorefrontSecurityGenerateResetPasswordTokenAsync (string userId, string storeName, string language, string callbackUrl)
+        {
+             await StorefrontSecurityGenerateResetPasswordTokenAsyncWithHttpInfo(userId, storeName, language, callbackUrl);
+
+        }
+
+        /// <summary>
+        /// Generate a password reset token Generates a password reset token and sends a password reset link to the user via email.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="storeName"></param>
+        /// <param name="language"></param>
+        /// <param name="callbackUrl"></param>
+        /// <returns>Task of ApiResponse</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<Object>> StorefrontSecurityGenerateResetPasswordTokenAsyncWithHttpInfo (string userId, string storeName, string language, string callbackUrl)
         {
             // verify the required parameter 'userId' is set
             if (userId == null) throw new ApiException(400, "Missing required parameter 'userId' when calling StorefrontSecurityGenerateResetPasswordToken");
@@ -1452,33 +2103,39 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
             
-            if (userId != null) queryParams.Add("userId", ApiClient.ParameterToString(userId)); // query parameter
-            if (storeName != null) queryParams.Add("storeName", ApiClient.ParameterToString(storeName)); // query parameter
-            if (language != null) queryParams.Add("language", ApiClient.ParameterToString(language)); // query parameter
-            if (callbackUrl != null) queryParams.Add("callbackUrl", ApiClient.ParameterToString(callbackUrl)); // query parameter
+            if (userId != null) queryParams.Add("userId", Configuration.ApiClient.ParameterToString(userId)); // query parameter
+            if (storeName != null) queryParams.Add("storeName", Configuration.ApiClient.ParameterToString(storeName)); // query parameter
+            if (language != null) queryParams.Add("language", Configuration.ApiClient.ParameterToString(language)); // query parameter
+            if (callbackUrl != null) queryParams.Add("callbackUrl", Configuration.ApiClient.ParameterToString(callbackUrl)); // query parameter
             
             
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling StorefrontSecurityGenerateResetPasswordToken: " + response.Content, response.Content);
 
             
-            return;
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling StorefrontSecurityGenerateResetPasswordToken: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling StorefrontSecurityGenerateResetPasswordToken: " + response.ErrorMessage, response.ErrorMessage);
+
+            
+            return new ApiResponse<Object>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                null);
         }
         
         /// <summary>
@@ -1486,8 +2143,20 @@ namespace VirtoCommerce.Client.Api
         /// </summary>
         /// <param name="userName"></param> 
         /// <param name="password"></param> 
-        /// <returns>VirtoCommerceCoreModuleWebModelSignInResult</returns>            
+        /// <returns>VirtoCommerceCoreModuleWebModelSignInResult</returns>
         public VirtoCommerceCoreModuleWebModelSignInResult StorefrontSecurityPasswordSignIn (string userName, string password)
+        {
+             ApiResponse<VirtoCommerceCoreModuleWebModelSignInResult> response = StorefrontSecurityPasswordSignInWithHttpInfo(userName, password);
+             return response.Data;
+        }
+
+        /// <summary>
+        /// Sign in with user name and password 
+        /// </summary>
+        /// <param name="userName"></param> 
+        /// <param name="password"></param> 
+        /// <returns>ApiResponse of VirtoCommerceCoreModuleWebModelSignInResult</returns>
+        public ApiResponse< VirtoCommerceCoreModuleWebModelSignInResult > StorefrontSecurityPasswordSignInWithHttpInfo (string userName, string password)
         {
             
             // verify the required parameter 'userName' is set
@@ -1501,7 +2170,7 @@ namespace VirtoCommerce.Client.Api
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
@@ -1510,33 +2179,37 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
             
-            if (userName != null) queryParams.Add("userName", ApiClient.ParameterToString(userName)); // query parameter
-            if (password != null) queryParams.Add("password", ApiClient.ParameterToString(password)); // query parameter
+            if (userName != null) queryParams.Add("userName", Configuration.ApiClient.ParameterToString(userName)); // query parameter
+            if (password != null) queryParams.Add("password", Configuration.ApiClient.ParameterToString(password)); // query parameter
             
             
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
+
+            
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
     
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling StorefrontSecurityPasswordSignIn: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling StorefrontSecurityPasswordSignIn: " + response.ErrorMessage, response.ErrorMessage);
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling StorefrontSecurityPasswordSignIn: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling StorefrontSecurityPasswordSignIn: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommerceCoreModuleWebModelSignInResult) ApiClient.Deserialize(response, typeof(VirtoCommerceCoreModuleWebModelSignInResult));
+            return new ApiResponse<VirtoCommerceCoreModuleWebModelSignInResult>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommerceCoreModuleWebModelSignInResult) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceCoreModuleWebModelSignInResult)));
+            
         }
     
         /// <summary>
@@ -1544,8 +2217,21 @@ namespace VirtoCommerce.Client.Api
         /// </summary>
         /// <param name="userName"></param>
         /// <param name="password"></param>
-        /// <returns>VirtoCommerceCoreModuleWebModelSignInResult</returns>
+        /// <returns>Task of VirtoCommerceCoreModuleWebModelSignInResult</returns>
         public async System.Threading.Tasks.Task<VirtoCommerceCoreModuleWebModelSignInResult> StorefrontSecurityPasswordSignInAsync (string userName, string password)
+        {
+             ApiResponse<VirtoCommerceCoreModuleWebModelSignInResult> response = await StorefrontSecurityPasswordSignInAsyncWithHttpInfo(userName, password);
+             return response.Data;
+
+        }
+
+        /// <summary>
+        /// Sign in with user name and password 
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <param name="password"></param>
+        /// <returns>Task of ApiResponse (VirtoCommerceCoreModuleWebModelSignInResult)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCoreModuleWebModelSignInResult>> StorefrontSecurityPasswordSignInAsyncWithHttpInfo (string userName, string password)
         {
             // verify the required parameter 'userName' is set
             if (userName == null) throw new ApiException(400, "Missing required parameter 'userName' when calling StorefrontSecurityPasswordSignIn");
@@ -1566,30 +2252,37 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
             
-            if (userName != null) queryParams.Add("userName", ApiClient.ParameterToString(userName)); // query parameter
-            if (password != null) queryParams.Add("password", ApiClient.ParameterToString(password)); // query parameter
+            if (userName != null) queryParams.Add("userName", Configuration.ApiClient.ParameterToString(userName)); // query parameter
+            if (password != null) queryParams.Add("password", Configuration.ApiClient.ParameterToString(password)); // query parameter
             
             
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling StorefrontSecurityPasswordSignIn: " + response.Content, response.Content);
 
-            return (VirtoCommerceCoreModuleWebModelSignInResult) ApiClient.Deserialize(response, typeof(VirtoCommerceCoreModuleWebModelSignInResult));
+            
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling StorefrontSecurityPasswordSignIn: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling StorefrontSecurityPasswordSignIn: " + response.ErrorMessage, response.ErrorMessage);
+
+            return new ApiResponse<VirtoCommerceCoreModuleWebModelSignInResult>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommerceCoreModuleWebModelSignInResult) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceCoreModuleWebModelSignInResult)));
+            
         }
         
     }

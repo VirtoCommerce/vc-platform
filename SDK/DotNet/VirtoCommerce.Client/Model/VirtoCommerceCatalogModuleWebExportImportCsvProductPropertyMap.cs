@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceCatalogModuleWebExportImportCsvProductPropertyMap : IEquatable<VirtoCommerceCatalogModuleWebExportImportCsvProductPropertyMap>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebExportImportCsvProductPropertyMap" /> class.
+        /// </summary>
+        public VirtoCommerceCatalogModuleWebExportImportCsvProductPropertyMap()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets EntityColumnName

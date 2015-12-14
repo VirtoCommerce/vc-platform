@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommercePlatformWebModelPackagingModuleDescriptor : IEquatable<VirtoCommercePlatformWebModelPackagingModuleDescriptor>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelPackagingModuleDescriptor" /> class.
+        /// </summary>
+        public VirtoCommercePlatformWebModelPackagingModuleDescriptor()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets Id

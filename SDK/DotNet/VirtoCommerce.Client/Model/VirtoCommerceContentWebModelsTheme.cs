@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceContentWebModelsTheme : IEquatable<VirtoCommerceContentWebModelsTheme>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceContentWebModelsTheme" /> class.
+        /// </summary>
+        public VirtoCommerceContentWebModelsTheme()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets Name

@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceCatalogModuleWebModelAggregation : IEquatable<VirtoCommerceCatalogModuleWebModelAggregation>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelAggregation" /> class.
+        /// </summary>
+        public VirtoCommerceCatalogModuleWebModelAggregation()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or sets the value of the aggregation type

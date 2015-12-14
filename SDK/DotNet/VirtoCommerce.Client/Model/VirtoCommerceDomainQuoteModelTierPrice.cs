@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceDomainQuoteModelTierPrice : IEquatable<VirtoCommerceDomainQuoteModelTierPrice>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainQuoteModelTierPrice" /> class.
+        /// </summary>
+        public VirtoCommerceDomainQuoteModelTierPrice()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets Price

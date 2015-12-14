@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceCartModuleWebModelPayment : IEquatable<VirtoCommerceCartModuleWebModelPayment>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceCartModuleWebModelPayment" /> class.
+        /// </summary>
+        public VirtoCommerceCartModuleWebModelPayment()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or sets the value of payment outer id

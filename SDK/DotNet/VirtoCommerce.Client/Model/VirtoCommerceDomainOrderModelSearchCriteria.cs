@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceDomainOrderModelSearchCriteria : IEquatable<VirtoCommerceDomainOrderModelSearchCriteria>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainOrderModelSearchCriteria" /> class.
+        /// </summary>
+        public VirtoCommerceDomainOrderModelSearchCriteria()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets ResponseGroup

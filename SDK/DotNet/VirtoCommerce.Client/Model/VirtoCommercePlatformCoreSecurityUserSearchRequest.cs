@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommercePlatformCoreSecurityUserSearchRequest : IEquatable<VirtoCommercePlatformCoreSecurityUserSearchRequest>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecurityUserSearchRequest" /> class.
+        /// </summary>
+        public VirtoCommercePlatformCoreSecurityUserSearchRequest()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets AccountTypes

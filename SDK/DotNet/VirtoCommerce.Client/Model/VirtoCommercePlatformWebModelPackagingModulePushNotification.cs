@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommercePlatformWebModelPackagingModulePushNotification : IEquatable<VirtoCommercePlatformWebModelPackagingModulePushNotification>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelPackagingModulePushNotification" /> class.
+        /// </summary>
+        public VirtoCommercePlatformWebModelPackagingModulePushNotification()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets ProgressLog

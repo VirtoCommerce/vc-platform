@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceOrderModuleWebModelSearchResult : IEquatable<VirtoCommerceOrderModuleWebModelSearchResult>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelSearchResult" /> class.
+        /// </summary>
+        public VirtoCommerceOrderModuleWebModelSearchResult()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets TotalCount

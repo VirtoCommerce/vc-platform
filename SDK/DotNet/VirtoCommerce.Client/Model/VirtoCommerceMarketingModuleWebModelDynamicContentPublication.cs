@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceMarketingModuleWebModelDynamicContentPublication : IEquatable<VirtoCommerceMarketingModuleWebModelDynamicContentPublication>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceMarketingModuleWebModelDynamicContentPublication" /> class.
+        /// </summary>
+        public VirtoCommerceMarketingModuleWebModelDynamicContentPublication()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets Name

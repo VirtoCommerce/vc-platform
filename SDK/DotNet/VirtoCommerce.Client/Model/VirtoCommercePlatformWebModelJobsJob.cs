@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommercePlatformWebModelJobsJob : IEquatable<VirtoCommercePlatformWebModelJobsJob>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelJobsJob" /> class.
+        /// </summary>
+        public VirtoCommercePlatformWebModelJobsJob()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets Id

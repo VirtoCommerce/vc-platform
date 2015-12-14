@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceDomainCatalogModelCatalogLanguage : IEquatable<VirtoCommerceDomainCatalogModelCatalogLanguage>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCatalogModelCatalogLanguage" /> class.
+        /// </summary>
+        public VirtoCommerceDomainCatalogModelCatalogLanguage()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets CatalogId

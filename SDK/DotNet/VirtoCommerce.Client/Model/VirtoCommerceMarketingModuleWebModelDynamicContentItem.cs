@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceMarketingModuleWebModelDynamicContentItem : IEquatable<VirtoCommerceMarketingModuleWebModelDynamicContentItem>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceMarketingModuleWebModelDynamicContentItem" /> class.
+        /// </summary>
+        public VirtoCommerceMarketingModuleWebModelDynamicContentItem()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets Name

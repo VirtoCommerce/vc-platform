@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceCartModuleWebModelShoppingCart : IEquatable<VirtoCommerceCartModuleWebModelShoppingCart>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceCartModuleWebModelShoppingCart" /> class.
+        /// </summary>
+        public VirtoCommerceCartModuleWebModelShoppingCart()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or sets the value of shopping cart name

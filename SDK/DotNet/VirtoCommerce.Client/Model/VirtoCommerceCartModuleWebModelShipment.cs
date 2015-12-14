@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceCartModuleWebModelShipment : IEquatable<VirtoCommerceCartModuleWebModelShipment>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceCartModuleWebModelShipment" /> class.
+        /// </summary>
+        public VirtoCommerceCartModuleWebModelShipment()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or sets the value of shipping method code

@@ -70,6 +70,7 @@
     <Compile Include="Api\VirtoCommercePlatformApi.cs" />
     <Compile Include="Client\ApiClient.cs" />
     <Compile Include="Client\ApiException.cs" />
+    <Compile Include="Client\ApiResponse.cs" />
     <Compile Include="Client\Configuration.cs" />
     <Compile Include="HmacApiClient.cs" />
     <Compile Include="HmacUtility.cs" />

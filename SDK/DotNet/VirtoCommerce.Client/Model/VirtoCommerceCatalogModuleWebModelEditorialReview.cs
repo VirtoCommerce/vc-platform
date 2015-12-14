@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceCatalogModuleWebModelEditorialReview : IEquatable<VirtoCommerceCatalogModuleWebModelEditorialReview>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelEditorialReview" /> class.
+        /// </summary>
+        public VirtoCommerceCatalogModuleWebModelEditorialReview()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets Id

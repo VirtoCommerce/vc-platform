@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceCoreModuleWebModelPaymentCallbackParameters : IEquatable<VirtoCommerceCoreModuleWebModelPaymentCallbackParameters>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceCoreModuleWebModelPaymentCallbackParameters" /> class.
+        /// </summary>
+        public VirtoCommerceCoreModuleWebModelPaymentCallbackParameters()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets Parameters

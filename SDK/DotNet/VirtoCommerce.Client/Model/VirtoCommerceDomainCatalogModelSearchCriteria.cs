@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceDomainCatalogModelSearchCriteria : IEquatable<VirtoCommerceDomainCatalogModelSearchCriteria>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCatalogModelSearchCriteria" /> class.
+        /// </summary>
+        public VirtoCommerceDomainCatalogModelSearchCriteria()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets StoreId

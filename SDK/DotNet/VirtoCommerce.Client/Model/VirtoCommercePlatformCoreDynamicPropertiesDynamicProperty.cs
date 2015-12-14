@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommercePlatformCoreDynamicPropertiesDynamicProperty : IEquatable<VirtoCommercePlatformCoreDynamicPropertiesDynamicProperty>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreDynamicPropertiesDynamicProperty" /> class.
+        /// </summary>
+        public VirtoCommercePlatformCoreDynamicPropertiesDynamicProperty()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets Name

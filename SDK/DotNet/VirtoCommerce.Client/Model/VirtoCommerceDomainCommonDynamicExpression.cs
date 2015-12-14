@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceDomainCommonDynamicExpression : IEquatable<VirtoCommerceDomainCommonDynamicExpression>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCommonDynamicExpression" /> class.
+        /// </summary>
+        public VirtoCommerceDomainCommonDynamicExpression()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets Id

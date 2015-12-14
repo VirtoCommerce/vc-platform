@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceMarketingModuleWebModelDynamicContentFolder : IEquatable<VirtoCommerceMarketingModuleWebModelDynamicContentFolder>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceMarketingModuleWebModelDynamicContentFolder" /> class.
+        /// </summary>
+        public VirtoCommerceMarketingModuleWebModelDynamicContentFolder()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets Name

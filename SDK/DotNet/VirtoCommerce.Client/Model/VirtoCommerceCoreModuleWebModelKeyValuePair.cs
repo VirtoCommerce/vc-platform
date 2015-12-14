@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceCoreModuleWebModelKeyValuePair : IEquatable<VirtoCommerceCoreModuleWebModelKeyValuePair>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceCoreModuleWebModelKeyValuePair" /> class.
+        /// </summary>
+        public VirtoCommerceCoreModuleWebModelKeyValuePair()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets Key

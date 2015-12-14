@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceDomainCatalogModelPropertyAttribute : IEquatable<VirtoCommerceDomainCatalogModelPropertyAttribute>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCatalogModelPropertyAttribute" /> class.
+        /// </summary>
+        public VirtoCommerceDomainCatalogModelPropertyAttribute()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets PropertyId

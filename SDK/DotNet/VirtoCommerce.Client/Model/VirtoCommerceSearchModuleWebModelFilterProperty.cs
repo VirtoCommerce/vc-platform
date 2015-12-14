@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceSearchModuleWebModelFilterProperty : IEquatable<VirtoCommerceSearchModuleWebModelFilterProperty>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceSearchModuleWebModelFilterProperty" /> class.
+        /// </summary>
+        public VirtoCommerceSearchModuleWebModelFilterProperty()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets Name

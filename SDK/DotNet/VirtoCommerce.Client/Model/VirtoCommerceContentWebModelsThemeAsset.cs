@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceContentWebModelsThemeAsset : IEquatable<VirtoCommerceContentWebModelsThemeAsset>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceContentWebModelsThemeAsset" /> class.
+        /// </summary>
+        public VirtoCommerceContentWebModelsThemeAsset()
+        {
+            
+        }
+
         
         /// <summary>
         /// Id, contains full path relative to theme root folder

@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceCatalogModuleWebModelCategory : IEquatable<VirtoCommerceCatalogModuleWebModelCategory>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelCategory" /> class.
+        /// </summary>
+        public VirtoCommerceCatalogModuleWebModelCategory()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or sets the parent category id.

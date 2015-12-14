@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceOrderModuleWebModelDashboardStatisticsResult : IEquatable<VirtoCommerceOrderModuleWebModelDashboardStatisticsResult>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelDashboardStatisticsResult" /> class.
+        /// </summary>
+        public VirtoCommerceOrderModuleWebModelDashboardStatisticsResult()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets StartDate

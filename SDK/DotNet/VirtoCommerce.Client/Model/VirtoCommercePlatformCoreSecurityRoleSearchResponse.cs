@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommercePlatformCoreSecurityRoleSearchResponse : IEquatable<VirtoCommercePlatformCoreSecurityRoleSearchResponse>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecurityRoleSearchResponse" /> class.
+        /// </summary>
+        public VirtoCommercePlatformCoreSecurityRoleSearchResponse()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets Roles

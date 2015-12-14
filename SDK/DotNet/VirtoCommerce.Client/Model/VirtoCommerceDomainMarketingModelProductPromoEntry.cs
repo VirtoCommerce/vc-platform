@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceDomainMarketingModelProductPromoEntry : IEquatable<VirtoCommerceDomainMarketingModelProductPromoEntry>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainMarketingModelProductPromoEntry" /> class.
+        /// </summary>
+        public VirtoCommerceDomainMarketingModelProductPromoEntry()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets Code

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Security.Cryptography;
+using RestSharp;
 using VirtoCommerce.Client.Client;
 
 namespace VirtoCommerce.Client
@@ -16,9 +17,10 @@ namespace VirtoCommerce.Client
             _secretKey = secretKey;
         }
 
-        public override void UpdateParamsForAuth(Dictionary<string, string> queryParams, Dictionary<string, string> headerParams, string[] authSettings)
+        protected override RestRequest PrepareRequest(string path, Method method, Dictionary<string, string> queryParams, string postBody, Dictionary<string, string> headerParams,
+            Dictionary<string, string> formParams, Dictionary<string, FileParameter> fileParams, Dictionary<string, string> pathParams)
         {
-            base.UpdateParamsForAuth(queryParams, headerParams, authSettings);
+            var request = base.PrepareRequest(path, method, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
 
             var signature = new ApiRequestSignature { AppId = _appId };
 
@@ -29,7 +31,9 @@ namespace VirtoCommerce.Client
             };
 
             signature.Hash = HmacUtility.GetHashString(key => new HMACSHA256(key), _secretKey, parameters);
-            headerParams["Authorization"] = "HMACSHA256 " + signature;
+            request.AddHeader("Authorization", "HMACSHA256 " + signature);
+
+            return request;
         }
     }
 }

@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommercePlatformCoreSecurityPermission : IEquatable<VirtoCommercePlatformCoreSecurityPermission>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecurityPermission" /> class.
+        /// </summary>
+        public VirtoCommercePlatformCoreSecurityPermission()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets Name

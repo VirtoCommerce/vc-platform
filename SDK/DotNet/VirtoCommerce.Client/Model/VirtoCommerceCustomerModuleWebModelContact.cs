@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceCustomerModuleWebModelContact : IEquatable<VirtoCommerceCustomerModuleWebModelContact>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceCustomerModuleWebModelContact" /> class.
+        /// </summary>
+        public VirtoCommerceCustomerModuleWebModelContact()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets DisplayName

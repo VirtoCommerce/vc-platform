@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceContentWebModelsMenuLinkList : IEquatable<VirtoCommerceContentWebModelsMenuLinkList>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceContentWebModelsMenuLinkList" /> class.
+        /// </summary>
+        public VirtoCommerceContentWebModelsMenuLinkList()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets Id

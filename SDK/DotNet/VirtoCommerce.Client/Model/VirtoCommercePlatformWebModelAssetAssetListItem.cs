@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommercePlatformWebModelAssetAssetListItem : IEquatable<VirtoCommercePlatformWebModelAssetAssetListItem>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelAssetAssetListItem" /> class.
+        /// </summary>
+        public VirtoCommercePlatformWebModelAssetAssetListItem()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets Type

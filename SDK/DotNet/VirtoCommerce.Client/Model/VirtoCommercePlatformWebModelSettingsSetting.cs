@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommercePlatformWebModelSettingsSetting : IEquatable<VirtoCommercePlatformWebModelSettingsSetting>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelSettingsSetting" /> class.
+        /// </summary>
+        public VirtoCommercePlatformWebModelSettingsSetting()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets GroupName

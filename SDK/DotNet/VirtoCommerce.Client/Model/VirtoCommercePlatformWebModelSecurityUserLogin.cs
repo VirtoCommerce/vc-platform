@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommercePlatformWebModelSecurityUserLogin : IEquatable<VirtoCommercePlatformWebModelSecurityUserLogin>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelSecurityUserLogin" /> class.
+        /// </summary>
+        public VirtoCommercePlatformWebModelSecurityUserLogin()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets UserName

@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceOrderModuleWebModelCoupon : IEquatable<VirtoCommerceOrderModuleWebModelCoupon>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelCoupon" /> class.
+        /// </summary>
+        public VirtoCommerceOrderModuleWebModelCoupon()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets Code

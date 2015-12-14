@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceCustomerModuleWebModelOrganization : IEquatable<VirtoCommerceCustomerModuleWebModelOrganization>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceCustomerModuleWebModelOrganization" /> class.
+        /// </summary>
+        public VirtoCommerceCustomerModuleWebModelOrganization()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets DisplayName

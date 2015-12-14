@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria : IEquatable<VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria" /> class.
+        /// </summary>
+        public VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets Keyword

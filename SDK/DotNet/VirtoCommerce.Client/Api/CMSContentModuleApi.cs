@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Linq;
 using RestSharp;
 using VirtoCommerce.Client.Client;
 using VirtoCommerce.Client.Model;
@@ -22,7 +23,7 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="storeId">Store id</param>
-        /// <returns></returns>
+        /// <returns>List&lt;VirtoCommerceContentWebModelsMenuLinkList&gt;</returns>
         List<VirtoCommerceContentWebModelsMenuLinkList> MenuGetLists (string storeId);
   
         /// <summary>
@@ -32,8 +33,28 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="storeId">Store id</param>
-        /// <returns></returns>
+        /// <returns>ApiResponse of List&lt;VirtoCommerceContentWebModelsMenuLinkList&gt;</returns>
+        ApiResponse<List<VirtoCommerceContentWebModelsMenuLinkList>> MenuGetListsWithHttpInfo (string storeId);
+
+        /// <summary>
+        /// Get menu link lists
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="storeId">Store id</param>
+        /// <returns>Task of List&lt;VirtoCommerceContentWebModelsMenuLinkList&gt;</returns>
         System.Threading.Tasks.Task<List<VirtoCommerceContentWebModelsMenuLinkList>> MenuGetListsAsync (string storeId);
+
+        /// <summary>
+        /// Get menu link lists
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="storeId">Store id</param>
+        /// <returns>Task of ApiResponse (List&lt;VirtoCommerceContentWebModelsMenuLinkList&gt;)</returns>
+        System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceContentWebModelsMenuLinkList>>> MenuGetListsAsyncWithHttpInfo (string storeId);
         
         /// <summary>
         /// Update menu link list
@@ -54,8 +75,30 @@ namespace VirtoCommerce.Client.Api
         /// </remarks>
         /// <param name="list">Menu link list</param>
         /// <param name="storeId"></param>
-        /// <returns></returns>
+        /// <returns>ApiResponse of Object(void)</returns>
+        ApiResponse<Object> MenuUpdateWithHttpInfo (VirtoCommerceContentWebModelsMenuLinkList list, string storeId);
+
+        /// <summary>
+        /// Update menu link list
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="list">Menu link list</param>
+        /// <param name="storeId"></param>
+        /// <returns>Task of void</returns>
         System.Threading.Tasks.Task MenuUpdateAsync (VirtoCommerceContentWebModelsMenuLinkList list, string storeId);
+
+        /// <summary>
+        /// Update menu link list
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="list">Menu link list</param>
+        /// <param name="storeId"></param>
+        /// <returns>Task of ApiResponse</returns>
+        System.Threading.Tasks.Task<ApiResponse<Object>> MenuUpdateAsyncWithHttpInfo (VirtoCommerceContentWebModelsMenuLinkList list, string storeId);
         
         /// <summary>
         /// Delete menu link list
@@ -76,8 +119,30 @@ namespace VirtoCommerce.Client.Api
         /// </remarks>
         /// <param name="listId">Menu link list id</param>
         /// <param name="storeId"></param>
-        /// <returns></returns>
+        /// <returns>ApiResponse of Object(void)</returns>
+        ApiResponse<Object> MenuDeleteWithHttpInfo (string listId, string storeId);
+
+        /// <summary>
+        /// Delete menu link list
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="listId">Menu link list id</param>
+        /// <param name="storeId"></param>
+        /// <returns>Task of void</returns>
         System.Threading.Tasks.Task MenuDeleteAsync (string listId, string storeId);
+
+        /// <summary>
+        /// Delete menu link list
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="listId">Menu link list id</param>
+        /// <param name="storeId"></param>
+        /// <returns>Task of ApiResponse</returns>
+        System.Threading.Tasks.Task<ApiResponse<Object>> MenuDeleteAsyncWithHttpInfo (string listId, string storeId);
         
         /// <summary>
         /// Checking name of menu link list
@@ -102,8 +167,34 @@ namespace VirtoCommerce.Client.Api
         /// <param name="name">Name of menu link list</param>
         /// <param name="language">Language of menu link list</param>
         /// <param name="id">Menu link list id</param>
-        /// <returns>VirtoCommerceContentWebModelsCheckNameResult</returns>
+        /// <returns>ApiResponse of VirtoCommerceContentWebModelsCheckNameResult</returns>
+        ApiResponse<VirtoCommerceContentWebModelsCheckNameResult> MenuCheckNameWithHttpInfo (string storeId, string name, string language, string id = null);
+
+        /// <summary>
+        /// Checking name of menu link list
+        /// </summary>
+        /// <remarks>
+        /// Checking pair of name+language of menu link list for unique, if checking result - false saving unavailable
+        /// </remarks>
+        /// <param name="storeId">Store id</param>
+        /// <param name="name">Name of menu link list</param>
+        /// <param name="language">Language of menu link list</param>
+        /// <param name="id">Menu link list id</param>
+        /// <returns>Task of VirtoCommerceContentWebModelsCheckNameResult</returns>
         System.Threading.Tasks.Task<VirtoCommerceContentWebModelsCheckNameResult> MenuCheckNameAsync (string storeId, string name, string language, string id = null);
+
+        /// <summary>
+        /// Checking name of menu link list
+        /// </summary>
+        /// <remarks>
+        /// Checking pair of name+language of menu link list for unique, if checking result - false saving unavailable
+        /// </remarks>
+        /// <param name="storeId">Store id</param>
+        /// <param name="name">Name of menu link list</param>
+        /// <param name="language">Language of menu link list</param>
+        /// <param name="id">Menu link list id</param>
+        /// <returns>Task of ApiResponse (VirtoCommerceContentWebModelsCheckNameResult)</returns>
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceContentWebModelsCheckNameResult>> MenuCheckNameAsyncWithHttpInfo (string storeId, string name, string language, string id = null);
         
         /// <summary>
         /// Get menu link list by id
@@ -124,8 +215,30 @@ namespace VirtoCommerce.Client.Api
         /// </remarks>
         /// <param name="storeId">Store id</param>
         /// <param name="listId">List id</param>
-        /// <returns>VirtoCommerceContentWebModelsMenuLinkList</returns>
+        /// <returns>ApiResponse of VirtoCommerceContentWebModelsMenuLinkList</returns>
+        ApiResponse<VirtoCommerceContentWebModelsMenuLinkList> MenuGetListWithHttpInfo (string storeId, string listId);
+
+        /// <summary>
+        /// Get menu link list by id
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="storeId">Store id</param>
+        /// <param name="listId">List id</param>
+        /// <returns>Task of VirtoCommerceContentWebModelsMenuLinkList</returns>
         System.Threading.Tasks.Task<VirtoCommerceContentWebModelsMenuLinkList> MenuGetListAsync (string storeId, string listId);
+
+        /// <summary>
+        /// Get menu link list by id
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="storeId">Store id</param>
+        /// <param name="listId">List id</param>
+        /// <returns>Task of ApiResponse (VirtoCommerceContentWebModelsMenuLinkList)</returns>
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceContentWebModelsMenuLinkList>> MenuGetListAsyncWithHttpInfo (string storeId, string listId);
         
         /// <summary>
         /// Search pages
@@ -134,7 +247,7 @@ namespace VirtoCommerce.Client.Api
         /// Get all pages by store and criteria
         /// </remarks>
         /// <param name="storeId">Store Id</param>
-        /// <returns></returns>
+        /// <returns>List&lt;VirtoCommerceContentWebModelsPage&gt;</returns>
         List<VirtoCommerceContentWebModelsPage> PagesGetPages (string storeId);
   
         /// <summary>
@@ -144,8 +257,28 @@ namespace VirtoCommerce.Client.Api
         /// Get all pages by store and criteria
         /// </remarks>
         /// <param name="storeId">Store Id</param>
-        /// <returns></returns>
+        /// <returns>ApiResponse of List&lt;VirtoCommerceContentWebModelsPage&gt;</returns>
+        ApiResponse<List<VirtoCommerceContentWebModelsPage>> PagesGetPagesWithHttpInfo (string storeId);
+
+        /// <summary>
+        /// Search pages
+        /// </summary>
+        /// <remarks>
+        /// Get all pages by store and criteria
+        /// </remarks>
+        /// <param name="storeId">Store Id</param>
+        /// <returns>Task of List&lt;VirtoCommerceContentWebModelsPage&gt;</returns>
         System.Threading.Tasks.Task<List<VirtoCommerceContentWebModelsPage>> PagesGetPagesAsync (string storeId);
+
+        /// <summary>
+        /// Search pages
+        /// </summary>
+        /// <remarks>
+        /// Get all pages by store and criteria
+        /// </remarks>
+        /// <param name="storeId">Store Id</param>
+        /// <returns>Task of ApiResponse (List&lt;VirtoCommerceContentWebModelsPage&gt;)</returns>
+        System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceContentWebModelsPage>>> PagesGetPagesAsyncWithHttpInfo (string storeId);
         
         /// <summary>
         /// Save page
@@ -166,8 +299,30 @@ namespace VirtoCommerce.Client.Api
         /// </remarks>
         /// <param name="storeId">Store Id</param>
         /// <param name="page">Page</param>
-        /// <returns></returns>
+        /// <returns>ApiResponse of Object(void)</returns>
+        ApiResponse<Object> PagesSaveItemWithHttpInfo (string storeId, VirtoCommerceContentWebModelsPage page);
+
+        /// <summary>
+        /// Save page
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="storeId">Store Id</param>
+        /// <param name="page">Page</param>
+        /// <returns>Task of void</returns>
         System.Threading.Tasks.Task PagesSaveItemAsync (string storeId, VirtoCommerceContentWebModelsPage page);
+
+        /// <summary>
+        /// Save page
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="storeId">Store Id</param>
+        /// <param name="page">Page</param>
+        /// <returns>Task of ApiResponse</returns>
+        System.Threading.Tasks.Task<ApiResponse<Object>> PagesSaveItemAsyncWithHttpInfo (string storeId, VirtoCommerceContentWebModelsPage page);
         
         /// <summary>
         /// Delete page
@@ -188,8 +343,30 @@ namespace VirtoCommerce.Client.Api
         /// </remarks>
         /// <param name="storeId">Store Id</param>
         /// <param name="pageNamesAndLanguges">Array of pairs name+language</param>
-        /// <returns></returns>
+        /// <returns>ApiResponse of Object(void)</returns>
+        ApiResponse<Object> PagesDeleteItemWithHttpInfo (string storeId, List<string> pageNamesAndLanguges);
+
+        /// <summary>
+        /// Delete page
+        /// </summary>
+        /// <remarks>
+        /// Delete pages with name+language pairs, that defined in pageNamesAndLanguges uri parameter
+        /// </remarks>
+        /// <param name="storeId">Store Id</param>
+        /// <param name="pageNamesAndLanguges">Array of pairs name+language</param>
+        /// <returns>Task of void</returns>
         System.Threading.Tasks.Task PagesDeleteItemAsync (string storeId, List<string> pageNamesAndLanguges);
+
+        /// <summary>
+        /// Delete page
+        /// </summary>
+        /// <remarks>
+        /// Delete pages with name+language pairs, that defined in pageNamesAndLanguges uri parameter
+        /// </remarks>
+        /// <param name="storeId">Store Id</param>
+        /// <param name="pageNamesAndLanguges">Array of pairs name+language</param>
+        /// <returns>Task of ApiResponse</returns>
+        System.Threading.Tasks.Task<ApiResponse<Object>> PagesDeleteItemAsyncWithHttpInfo (string storeId, List<string> pageNamesAndLanguges);
         
         /// <summary>
         /// 
@@ -210,8 +387,30 @@ namespace VirtoCommerce.Client.Api
         /// </remarks>
         /// <param name="storeId"></param>
         /// <param name="blogName"></param>
-        /// <returns></returns>
+        /// <returns>ApiResponse of Object(void)</returns>
+        ApiResponse<Object> PagesCreateBlogWithHttpInfo (string storeId, string blogName);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="storeId"></param>
+        /// <param name="blogName"></param>
+        /// <returns>Task of void</returns>
         System.Threading.Tasks.Task PagesCreateBlogAsync (string storeId, string blogName);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="storeId"></param>
+        /// <param name="blogName"></param>
+        /// <returns>Task of ApiResponse</returns>
+        System.Threading.Tasks.Task<ApiResponse<Object>> PagesCreateBlogAsyncWithHttpInfo (string storeId, string blogName);
         
         /// <summary>
         /// 
@@ -232,8 +431,30 @@ namespace VirtoCommerce.Client.Api
         /// </remarks>
         /// <param name="storeId"></param>
         /// <param name="blogName"></param>
-        /// <returns></returns>
+        /// <returns>ApiResponse of Object(void)</returns>
+        ApiResponse<Object> PagesDeleteBlogWithHttpInfo (string storeId, string blogName);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="storeId"></param>
+        /// <param name="blogName"></param>
+        /// <returns>Task of void</returns>
         System.Threading.Tasks.Task PagesDeleteBlogAsync (string storeId, string blogName);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="storeId"></param>
+        /// <param name="blogName"></param>
+        /// <returns>Task of ApiResponse</returns>
+        System.Threading.Tasks.Task<ApiResponse<Object>> PagesDeleteBlogAsyncWithHttpInfo (string storeId, string blogName);
         
         /// <summary>
         /// 
@@ -256,8 +477,32 @@ namespace VirtoCommerce.Client.Api
         /// <param name="storeId"></param>
         /// <param name="blogName"></param>
         /// <param name="oldBlogName"></param>
-        /// <returns></returns>
+        /// <returns>ApiResponse of Object(void)</returns>
+        ApiResponse<Object> PagesUpdateBlogWithHttpInfo (string storeId, string blogName, string oldBlogName);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="storeId"></param>
+        /// <param name="blogName"></param>
+        /// <param name="oldBlogName"></param>
+        /// <returns>Task of void</returns>
         System.Threading.Tasks.Task PagesUpdateBlogAsync (string storeId, string blogName, string oldBlogName);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="storeId"></param>
+        /// <param name="blogName"></param>
+        /// <param name="oldBlogName"></param>
+        /// <returns>Task of ApiResponse</returns>
+        System.Threading.Tasks.Task<ApiResponse<Object>> PagesUpdateBlogAsyncWithHttpInfo (string storeId, string blogName, string oldBlogName);
         
         /// <summary>
         /// Check page name
@@ -280,8 +525,32 @@ namespace VirtoCommerce.Client.Api
         /// <param name="storeId">Store Id</param>
         /// <param name="pageName">Page name</param>
         /// <param name="language">Page language</param>
-        /// <returns>VirtoCommerceContentWebModelsCheckNameResult</returns>
+        /// <returns>ApiResponse of VirtoCommerceContentWebModelsCheckNameResult</returns>
+        ApiResponse<VirtoCommerceContentWebModelsCheckNameResult> PagesCheckNameWithHttpInfo (string storeId, string pageName, string language);
+
+        /// <summary>
+        /// Check page name
+        /// </summary>
+        /// <remarks>
+        /// Check page pair name+language for store
+        /// </remarks>
+        /// <param name="storeId">Store Id</param>
+        /// <param name="pageName">Page name</param>
+        /// <param name="language">Page language</param>
+        /// <returns>Task of VirtoCommerceContentWebModelsCheckNameResult</returns>
         System.Threading.Tasks.Task<VirtoCommerceContentWebModelsCheckNameResult> PagesCheckNameAsync (string storeId, string pageName, string language);
+
+        /// <summary>
+        /// Check page name
+        /// </summary>
+        /// <remarks>
+        /// Check page pair name+language for store
+        /// </remarks>
+        /// <param name="storeId">Store Id</param>
+        /// <param name="pageName">Page name</param>
+        /// <param name="language">Page language</param>
+        /// <returns>Task of ApiResponse (VirtoCommerceContentWebModelsCheckNameResult)</returns>
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceContentWebModelsCheckNameResult>> PagesCheckNameAsyncWithHttpInfo (string storeId, string pageName, string language);
         
         /// <summary>
         /// Get pages folders by store id
@@ -300,8 +569,28 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="storeId">Store Id</param>
-        /// <returns>VirtoCommerceContentWebModelsGetPagesResult</returns>
+        /// <returns>ApiResponse of VirtoCommerceContentWebModelsGetPagesResult</returns>
+        ApiResponse<VirtoCommerceContentWebModelsGetPagesResult> PagesGetFoldersWithHttpInfo (string storeId);
+
+        /// <summary>
+        /// Get pages folders by store id
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="storeId">Store Id</param>
+        /// <returns>Task of VirtoCommerceContentWebModelsGetPagesResult</returns>
         System.Threading.Tasks.Task<VirtoCommerceContentWebModelsGetPagesResult> PagesGetFoldersAsync (string storeId);
+
+        /// <summary>
+        /// Get pages folders by store id
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="storeId">Store Id</param>
+        /// <returns>Task of ApiResponse (VirtoCommerceContentWebModelsGetPagesResult)</returns>
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceContentWebModelsGetPagesResult>> PagesGetFoldersAsyncWithHttpInfo (string storeId);
         
         /// <summary>
         /// Get page
@@ -324,8 +613,32 @@ namespace VirtoCommerce.Client.Api
         /// <param name="storeId">Store Id</param>
         /// <param name="language">Page language</param>
         /// <param name="pageName">Page name</param>
-        /// <returns>VirtoCommerceContentWebModelsPage</returns>
+        /// <returns>ApiResponse of VirtoCommerceContentWebModelsPage</returns>
+        ApiResponse<VirtoCommerceContentWebModelsPage> PagesGetPageWithHttpInfo (string storeId, string language, string pageName);
+
+        /// <summary>
+        /// Get page
+        /// </summary>
+        /// <remarks>
+        /// Get page by store and name+language pair.
+        /// </remarks>
+        /// <param name="storeId">Store Id</param>
+        /// <param name="language">Page language</param>
+        /// <param name="pageName">Page name</param>
+        /// <returns>Task of VirtoCommerceContentWebModelsPage</returns>
         System.Threading.Tasks.Task<VirtoCommerceContentWebModelsPage> PagesGetPageAsync (string storeId, string language, string pageName);
+
+        /// <summary>
+        /// Get page
+        /// </summary>
+        /// <remarks>
+        /// Get page by store and name+language pair.
+        /// </remarks>
+        /// <param name="storeId">Store Id</param>
+        /// <param name="language">Page language</param>
+        /// <param name="pageName">Page name</param>
+        /// <returns>Task of ApiResponse (VirtoCommerceContentWebModelsPage)</returns>
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceContentWebModelsPage>> PagesGetPageAsyncWithHttpInfo (string storeId, string language, string pageName);
         
         /// <summary>
         /// Get themes by store id
@@ -334,7 +647,7 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="storeId">Store id</param>
-        /// <returns></returns>
+        /// <returns>List&lt;VirtoCommerceContentWebModelsTheme&gt;</returns>
         List<VirtoCommerceContentWebModelsTheme> ThemeGetThemes (string storeId);
   
         /// <summary>
@@ -344,8 +657,28 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="storeId">Store id</param>
-        /// <returns></returns>
+        /// <returns>ApiResponse of List&lt;VirtoCommerceContentWebModelsTheme&gt;</returns>
+        ApiResponse<List<VirtoCommerceContentWebModelsTheme>> ThemeGetThemesWithHttpInfo (string storeId);
+
+        /// <summary>
+        /// Get themes by store id
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="storeId">Store id</param>
+        /// <returns>Task of List&lt;VirtoCommerceContentWebModelsTheme&gt;</returns>
         System.Threading.Tasks.Task<List<VirtoCommerceContentWebModelsTheme>> ThemeGetThemesAsync (string storeId);
+
+        /// <summary>
+        /// Get themes by store id
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="storeId">Store id</param>
+        /// <returns>Task of ApiResponse (List&lt;VirtoCommerceContentWebModelsTheme&gt;)</returns>
+        System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceContentWebModelsTheme>>> ThemeGetThemesAsyncWithHttpInfo (string storeId);
         
         /// <summary>
         /// Create default theme by store id
@@ -364,8 +697,28 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="storeId">Store id</param>
-        /// <returns></returns>
+        /// <returns>ApiResponse of Object(void)</returns>
+        ApiResponse<Object> ThemeCreateDefaultThemeWithHttpInfo (string storeId);
+
+        /// <summary>
+        /// Create default theme by store id
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="storeId">Store id</param>
+        /// <returns>Task of void</returns>
         System.Threading.Tasks.Task ThemeCreateDefaultThemeAsync (string storeId);
+
+        /// <summary>
+        /// Create default theme by store id
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="storeId">Store id</param>
+        /// <returns>Task of ApiResponse</returns>
+        System.Threading.Tasks.Task<ApiResponse<Object>> ThemeCreateDefaultThemeAsyncWithHttpInfo (string storeId);
         
         /// <summary>
         /// Create new theme
@@ -388,8 +741,32 @@ namespace VirtoCommerce.Client.Api
         /// <param name="storeId">Store id</param>
         /// <param name="themeFileUrl">Theme file url</param>
         /// <param name="themeName">Theme name</param>
-        /// <returns></returns>
+        /// <returns>ApiResponse of Object(void)</returns>
+        ApiResponse<Object> ThemeCreateNewThemeWithHttpInfo (string storeId, string themeFileUrl, string themeName);
+
+        /// <summary>
+        /// Create new theme
+        /// </summary>
+        /// <remarks>
+        /// Create new theme considering store id, theme file url and theme name
+        /// </remarks>
+        /// <param name="storeId">Store id</param>
+        /// <param name="themeFileUrl">Theme file url</param>
+        /// <param name="themeName">Theme name</param>
+        /// <returns>Task of void</returns>
         System.Threading.Tasks.Task ThemeCreateNewThemeAsync (string storeId, string themeFileUrl, string themeName);
+
+        /// <summary>
+        /// Create new theme
+        /// </summary>
+        /// <remarks>
+        /// Create new theme considering store id, theme file url and theme name
+        /// </remarks>
+        /// <param name="storeId">Store id</param>
+        /// <param name="themeFileUrl">Theme file url</param>
+        /// <param name="themeName">Theme name</param>
+        /// <returns>Task of ApiResponse</returns>
+        System.Threading.Tasks.Task<ApiResponse<Object>> ThemeCreateNewThemeAsyncWithHttpInfo (string storeId, string themeFileUrl, string themeName);
         
         /// <summary>
         /// Delete theme
@@ -410,8 +787,30 @@ namespace VirtoCommerce.Client.Api
         /// </remarks>
         /// <param name="storeId">Store id</param>
         /// <param name="themeId">Theme id</param>
-        /// <returns></returns>
+        /// <returns>ApiResponse of Object(void)</returns>
+        ApiResponse<Object> ThemeDeleteThemeWithHttpInfo (string storeId, string themeId);
+
+        /// <summary>
+        /// Delete theme
+        /// </summary>
+        /// <remarks>
+        /// Search theme assets by store id and theme id
+        /// </remarks>
+        /// <param name="storeId">Store id</param>
+        /// <param name="themeId">Theme id</param>
+        /// <returns>Task of void</returns>
         System.Threading.Tasks.Task ThemeDeleteThemeAsync (string storeId, string themeId);
+
+        /// <summary>
+        /// Delete theme
+        /// </summary>
+        /// <remarks>
+        /// Search theme assets by store id and theme id
+        /// </remarks>
+        /// <param name="storeId">Store id</param>
+        /// <param name="themeId">Theme id</param>
+        /// <returns>Task of ApiResponse</returns>
+        System.Threading.Tasks.Task<ApiResponse<Object>> ThemeDeleteThemeAsyncWithHttpInfo (string storeId, string themeId);
         
         /// <summary>
         /// Save theme asset
@@ -434,8 +833,32 @@ namespace VirtoCommerce.Client.Api
         /// <param name="asset">Theme asset</param>
         /// <param name="storeId">Store id</param>
         /// <param name="themeId">Theme id</param>
-        /// <returns></returns>
+        /// <returns>ApiResponse of Object(void)</returns>
+        ApiResponse<Object> ThemeSaveItemWithHttpInfo (VirtoCommerceContentWebModelsThemeAsset asset, string storeId, string themeId);
+
+        /// <summary>
+        /// Save theme asset
+        /// </summary>
+        /// <remarks>
+        /// Save theme asset considering store id and theme id
+        /// </remarks>
+        /// <param name="asset">Theme asset</param>
+        /// <param name="storeId">Store id</param>
+        /// <param name="themeId">Theme id</param>
+        /// <returns>Task of void</returns>
         System.Threading.Tasks.Task ThemeSaveItemAsync (VirtoCommerceContentWebModelsThemeAsset asset, string storeId, string themeId);
+
+        /// <summary>
+        /// Save theme asset
+        /// </summary>
+        /// <remarks>
+        /// Save theme asset considering store id and theme id
+        /// </remarks>
+        /// <param name="asset">Theme asset</param>
+        /// <param name="storeId">Store id</param>
+        /// <param name="themeId">Theme id</param>
+        /// <returns>Task of ApiResponse</returns>
+        System.Threading.Tasks.Task<ApiResponse<Object>> ThemeSaveItemAsyncWithHttpInfo (VirtoCommerceContentWebModelsThemeAsset asset, string storeId, string themeId);
         
         /// <summary>
         /// Delete theme assets by assetIds
@@ -458,8 +881,32 @@ namespace VirtoCommerce.Client.Api
         /// <param name="storeId">Store id</param>
         /// <param name="themeId">Theme id</param>
         /// <param name="assetIds">Deleted asset ids</param>
-        /// <returns></returns>
+        /// <returns>ApiResponse of Object(void)</returns>
+        ApiResponse<Object> ThemeDeleteAssetsWithHttpInfo (string storeId, string themeId, List<string> assetIds);
+
+        /// <summary>
+        /// Delete theme assets by assetIds
+        /// </summary>
+        /// <remarks>
+        /// Delete theme assets considering store id, theme id and assetIds
+        /// </remarks>
+        /// <param name="storeId">Store id</param>
+        /// <param name="themeId">Theme id</param>
+        /// <param name="assetIds">Deleted asset ids</param>
+        /// <returns>Task of void</returns>
         System.Threading.Tasks.Task ThemeDeleteAssetsAsync (string storeId, string themeId, List<string> assetIds);
+
+        /// <summary>
+        /// Delete theme assets by assetIds
+        /// </summary>
+        /// <remarks>
+        /// Delete theme assets considering store id, theme id and assetIds
+        /// </remarks>
+        /// <param name="storeId">Store id</param>
+        /// <param name="themeId">Theme id</param>
+        /// <param name="assetIds">Deleted asset ids</param>
+        /// <returns>Task of ApiResponse</returns>
+        System.Threading.Tasks.Task<ApiResponse<Object>> ThemeDeleteAssetsAsyncWithHttpInfo (string storeId, string themeId, List<string> assetIds);
         
         /// <summary>
         /// Get theme asset
@@ -482,8 +929,32 @@ namespace VirtoCommerce.Client.Api
         /// <param name="assetId">Theme asset id</param>
         /// <param name="storeId">Store id</param>
         /// <param name="themeId">Theme id</param>
-        /// <returns>VirtoCommerceContentWebModelsThemeAsset</returns>
+        /// <returns>ApiResponse of VirtoCommerceContentWebModelsThemeAsset</returns>
+        ApiResponse<VirtoCommerceContentWebModelsThemeAsset> ThemeGetThemeAssetWithHttpInfo (string assetId, string storeId, string themeId);
+
+        /// <summary>
+        /// Get theme asset
+        /// </summary>
+        /// <remarks>
+        /// Get theme asset by store id, theme id and asset id. Asset id - asset path relative to root theme path
+        /// </remarks>
+        /// <param name="assetId">Theme asset id</param>
+        /// <param name="storeId">Store id</param>
+        /// <param name="themeId">Theme id</param>
+        /// <returns>Task of VirtoCommerceContentWebModelsThemeAsset</returns>
         System.Threading.Tasks.Task<VirtoCommerceContentWebModelsThemeAsset> ThemeGetThemeAssetAsync (string assetId, string storeId, string themeId);
+
+        /// <summary>
+        /// Get theme asset
+        /// </summary>
+        /// <remarks>
+        /// Get theme asset by store id, theme id and asset id. Asset id - asset path relative to root theme path
+        /// </remarks>
+        /// <param name="assetId">Theme asset id</param>
+        /// <param name="storeId">Store id</param>
+        /// <param name="themeId">Theme id</param>
+        /// <returns>Task of ApiResponse (VirtoCommerceContentWebModelsThemeAsset)</returns>
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceContentWebModelsThemeAsset>> ThemeGetThemeAssetAsyncWithHttpInfo (string assetId, string storeId, string themeId);
         
         /// <summary>
         /// Get theme assets folders
@@ -493,7 +964,7 @@ namespace VirtoCommerce.Client.Api
         /// </remarks>
         /// <param name="storeId">Store id</param>
         /// <param name="themeId">Theme id</param>
-        /// <returns></returns>
+        /// <returns>List&lt;VirtoCommerceContentWebModelsThemeAssetFolder&gt;</returns>
         List<VirtoCommerceContentWebModelsThemeAssetFolder> ThemeGetThemeAssets (string storeId, string themeId);
   
         /// <summary>
@@ -504,8 +975,30 @@ namespace VirtoCommerce.Client.Api
         /// </remarks>
         /// <param name="storeId">Store id</param>
         /// <param name="themeId">Theme id</param>
-        /// <returns></returns>
+        /// <returns>ApiResponse of List&lt;VirtoCommerceContentWebModelsThemeAssetFolder&gt;</returns>
+        ApiResponse<List<VirtoCommerceContentWebModelsThemeAssetFolder>> ThemeGetThemeAssetsWithHttpInfo (string storeId, string themeId);
+
+        /// <summary>
+        /// Get theme assets folders
+        /// </summary>
+        /// <remarks>
+        /// Get theme assets folders by store id and theme id
+        /// </remarks>
+        /// <param name="storeId">Store id</param>
+        /// <param name="themeId">Theme id</param>
+        /// <returns>Task of List&lt;VirtoCommerceContentWebModelsThemeAssetFolder&gt;</returns>
         System.Threading.Tasks.Task<List<VirtoCommerceContentWebModelsThemeAssetFolder>> ThemeGetThemeAssetsAsync (string storeId, string themeId);
+
+        /// <summary>
+        /// Get theme assets folders
+        /// </summary>
+        /// <remarks>
+        /// Get theme assets folders by store id and theme id
+        /// </remarks>
+        /// <param name="storeId">Store id</param>
+        /// <param name="themeId">Theme id</param>
+        /// <returns>Task of ApiResponse (List&lt;VirtoCommerceContentWebModelsThemeAssetFolder&gt;)</returns>
+        System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceContentWebModelsThemeAssetFolder>>> ThemeGetThemeAssetsAsyncWithHttpInfo (string storeId, string themeId);
         
     }
   
@@ -515,50 +1008,84 @@ namespace VirtoCommerce.Client.Api
     public class CMSContentModuleApi : ICMSContentModuleApi
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CMSContentModuleApi"/> class.
+        /// Initializes a new instance of the <see cref="CMSContentModuleApi"/> class
+        /// using Configuration object
         /// </summary>
-        /// <param name="apiClient"> an instance of ApiClient</param>
+        /// <param name="configuration">An instance of Configuration</param>
         /// <returns></returns>
-        public CMSContentModuleApi(ApiClient apiClient)
+        public CMSContentModuleApi(Configuration configuration)
         {
-            if (apiClient == null) // use the default one in Configuration
-                this.ApiClient = Configuration.DefaultApiClient; 
+            if (configuration == null) // use the default one in Configuration
+                this.Configuration = Configuration.Default; 
             else
-                this.ApiClient = apiClient;
+                this.Configuration = configuration;
         }
-    
-        /// <summary>
-        /// Sets the base path of the API client.
-        /// </summary>
-        /// <param name="basePath">The base path</param>
-        /// <value>The base path</value>
-        public void SetBasePath(String basePath)
-        {
-            this.ApiClient.BasePath = basePath;
-        }
-    
+
         /// <summary>
         /// Gets the base path of the API client.
         /// </summary>
         /// <value>The base path</value>
         public String GetBasePath()
         {
-            return this.ApiClient.BasePath;
+            return this.Configuration.ApiClient.RestClient.BaseUrl.ToString();
+        }
+
+        /// <summary>
+        /// Sets the base path of the API client.
+        /// </summary>
+        /// <value>The base path</value>
+        [Obsolete("SetBasePath is deprecated, please do 'Configuraiton.ApiClient = new ApiClient(\"http://new-path\")' instead.")]
+        public void SetBasePath(String basePath)
+        {
+            // do nothing
         }
     
         /// <summary>
-        /// Gets or sets the API client.
+        /// Gets or sets the configuration object
         /// </summary>
-        /// <value>An instance of the ApiClient</value>
-        public ApiClient ApiClient {get; set;}
-    
+        /// <value>An instance of the Configuration</value>
+        public Configuration Configuration {get; set;}
+
+        /// <summary>
+        /// Gets the default header.
+        /// </summary>
+        /// <returns>Dictionary of HTTP header</returns>
+        [Obsolete("DefaultHeader is deprecated, please use Configuration.DefaultHeader instead.")]
+        public Dictionary<String, String> DefaultHeader()
+        {
+            return this.Configuration.DefaultHeader;
+        }
+
+        /// <summary>
+        /// Add default header.
+        /// </summary>
+        /// <param name="key">Header field name.</param>
+        /// <param name="value">Header field value.</param>
+        /// <returns></returns>
+        [Obsolete("AddDefaultHeader is deprecated, please use Configuration.AddDefaultHeader instead.")]
+        public void AddDefaultHeader(string key, string value)
+        {
+            this.Configuration.AddDefaultHeader(key, value);
+        }
+   
         
         /// <summary>
         /// Get menu link lists 
         /// </summary>
         /// <param name="storeId">Store id</param> 
-        /// <returns></returns>            
+        /// <returns>List&lt;VirtoCommerceContentWebModelsMenuLinkList&gt;</returns>
         public List<VirtoCommerceContentWebModelsMenuLinkList> MenuGetLists (string storeId)
+        {
+             ApiResponse<List<VirtoCommerceContentWebModelsMenuLinkList>> response = MenuGetListsWithHttpInfo(storeId);
+             return response.Data;
+        }
+
+        /// <summary>
+        /// Get menu link lists 
+        /// </summary>
+        /// <param name="storeId">Store id</param> 
+        /// <returns>ApiResponse of List&lt;VirtoCommerceContentWebModelsMenuLinkList&gt;</returns>
+        public ApiResponse< List<VirtoCommerceContentWebModelsMenuLinkList> > MenuGetListsWithHttpInfo (string storeId)
         {
             
             // verify the required parameter 'storeId' is set
@@ -569,7 +1096,7 @@ namespace VirtoCommerce.Client.Api
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
@@ -578,40 +1105,56 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
+            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
             
             
             
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
+
+            
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
     
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling MenuGetLists: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling MenuGetLists: " + response.ErrorMessage, response.ErrorMessage);
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling MenuGetLists: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling MenuGetLists: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (List<VirtoCommerceContentWebModelsMenuLinkList>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceContentWebModelsMenuLinkList>));
+            return new ApiResponse<List<VirtoCommerceContentWebModelsMenuLinkList>>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (List<VirtoCommerceContentWebModelsMenuLinkList>) Configuration.ApiClient.Deserialize(response, typeof(List<VirtoCommerceContentWebModelsMenuLinkList>)));
+            
         }
     
         /// <summary>
         /// Get menu link lists 
         /// </summary>
         /// <param name="storeId">Store id</param>
-        /// <returns></returns>
+        /// <returns>Task of List&lt;VirtoCommerceContentWebModelsMenuLinkList&gt;</returns>
         public async System.Threading.Tasks.Task<List<VirtoCommerceContentWebModelsMenuLinkList>> MenuGetListsAsync (string storeId)
+        {
+             ApiResponse<List<VirtoCommerceContentWebModelsMenuLinkList>> response = await MenuGetListsAsyncWithHttpInfo(storeId);
+             return response.Data;
+
+        }
+
+        /// <summary>
+        /// Get menu link lists 
+        /// </summary>
+        /// <param name="storeId">Store id</param>
+        /// <returns>Task of ApiResponse (List&lt;VirtoCommerceContentWebModelsMenuLinkList&gt;)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceContentWebModelsMenuLinkList>>> MenuGetListsAsyncWithHttpInfo (string storeId)
         {
             // verify the required parameter 'storeId' is set
             if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling MenuGetLists");
@@ -630,29 +1173,36 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
+            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
             
             
             
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling MenuGetLists: " + response.Content, response.Content);
 
-            return (List<VirtoCommerceContentWebModelsMenuLinkList>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceContentWebModelsMenuLinkList>));
+            
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling MenuGetLists: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling MenuGetLists: " + response.ErrorMessage, response.ErrorMessage);
+
+            return new ApiResponse<List<VirtoCommerceContentWebModelsMenuLinkList>>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (List<VirtoCommerceContentWebModelsMenuLinkList>) Configuration.ApiClient.Deserialize(response, typeof(List<VirtoCommerceContentWebModelsMenuLinkList>)));
+            
         }
         
         /// <summary>
@@ -660,8 +1210,19 @@ namespace VirtoCommerce.Client.Api
         /// </summary>
         /// <param name="list">Menu link list</param> 
         /// <param name="storeId"></param> 
-        /// <returns></returns>            
+        /// <returns></returns>
         public void MenuUpdate (VirtoCommerceContentWebModelsMenuLinkList list, string storeId)
+        {
+             MenuUpdateWithHttpInfo(list, storeId);
+        }
+
+        /// <summary>
+        /// Update menu link list 
+        /// </summary>
+        /// <param name="list">Menu link list</param> 
+        /// <param name="storeId"></param> 
+        /// <returns>ApiResponse of Object(void)</returns>
+        public ApiResponse<Object> MenuUpdateWithHttpInfo (VirtoCommerceContentWebModelsMenuLinkList list, string storeId)
         {
             
             // verify the required parameter 'list' is set
@@ -675,7 +1236,7 @@ namespace VirtoCommerce.Client.Api
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
@@ -684,33 +1245,37 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
+            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
             
             
             
             
-            postBody = ApiClient.Serialize(list); // http body (model) parameter
+            postBody = Configuration.ApiClient.Serialize(list); // http body (model) parameter
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
+
+            
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
     
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling MenuUpdate: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling MenuUpdate: " + response.ErrorMessage, response.ErrorMessage);
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling MenuUpdate: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling MenuUpdate: " + response.ErrorMessage, response.ErrorMessage);
     
-            return;
+            
+            return new ApiResponse<Object>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                null);
         }
     
         /// <summary>
@@ -718,8 +1283,20 @@ namespace VirtoCommerce.Client.Api
         /// </summary>
         /// <param name="list">Menu link list</param>
         /// <param name="storeId"></param>
-        /// <returns></returns>
+        /// <returns>Task of void</returns>
         public async System.Threading.Tasks.Task MenuUpdateAsync (VirtoCommerceContentWebModelsMenuLinkList list, string storeId)
+        {
+             await MenuUpdateAsyncWithHttpInfo(list, storeId);
+
+        }
+
+        /// <summary>
+        /// Update menu link list 
+        /// </summary>
+        /// <param name="list">Menu link list</param>
+        /// <param name="storeId"></param>
+        /// <returns>Task of ApiResponse</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<Object>> MenuUpdateAsyncWithHttpInfo (VirtoCommerceContentWebModelsMenuLinkList list, string storeId)
         {
             // verify the required parameter 'list' is set
             if (list == null) throw new ApiException(400, "Missing required parameter 'list' when calling MenuUpdate");
@@ -740,31 +1317,37 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
+            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
             
             
             
             
-            postBody = ApiClient.Serialize(list); // http body (model) parameter
+            postBody = Configuration.ApiClient.Serialize(list); // http body (model) parameter
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling MenuUpdate: " + response.Content, response.Content);
 
             
-            return;
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling MenuUpdate: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling MenuUpdate: " + response.ErrorMessage, response.ErrorMessage);
+
+            
+            return new ApiResponse<Object>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                null);
         }
         
         /// <summary>
@@ -772,8 +1355,19 @@ namespace VirtoCommerce.Client.Api
         /// </summary>
         /// <param name="listId">Menu link list id</param> 
         /// <param name="storeId"></param> 
-        /// <returns></returns>            
+        /// <returns></returns>
         public void MenuDelete (string listId, string storeId)
+        {
+             MenuDeleteWithHttpInfo(listId, storeId);
+        }
+
+        /// <summary>
+        /// Delete menu link list 
+        /// </summary>
+        /// <param name="listId">Menu link list id</param> 
+        /// <param name="storeId"></param> 
+        /// <returns>ApiResponse of Object(void)</returns>
+        public ApiResponse<Object> MenuDeleteWithHttpInfo (string listId, string storeId)
         {
             
             // verify the required parameter 'listId' is set
@@ -787,7 +1381,7 @@ namespace VirtoCommerce.Client.Api
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
@@ -796,33 +1390,37 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
+            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
             
-            if (listId != null) queryParams.Add("listId", ApiClient.ParameterToString(listId)); // query parameter
-            
-            
+            if (listId != null) queryParams.Add("listId", Configuration.ApiClient.ParameterToString(listId)); // query parameter
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
+            
+            
+
+            
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
     
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling MenuDelete: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling MenuDelete: " + response.ErrorMessage, response.ErrorMessage);
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling MenuDelete: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling MenuDelete: " + response.ErrorMessage, response.ErrorMessage);
     
-            return;
+            
+            return new ApiResponse<Object>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                null);
         }
     
         /// <summary>
@@ -830,8 +1428,20 @@ namespace VirtoCommerce.Client.Api
         /// </summary>
         /// <param name="listId">Menu link list id</param>
         /// <param name="storeId"></param>
-        /// <returns></returns>
+        /// <returns>Task of void</returns>
         public async System.Threading.Tasks.Task MenuDeleteAsync (string listId, string storeId)
+        {
+             await MenuDeleteAsyncWithHttpInfo(listId, storeId);
+
+        }
+
+        /// <summary>
+        /// Delete menu link list 
+        /// </summary>
+        /// <param name="listId">Menu link list id</param>
+        /// <param name="storeId"></param>
+        /// <returns>Task of ApiResponse</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<Object>> MenuDeleteAsyncWithHttpInfo (string listId, string storeId)
         {
             // verify the required parameter 'listId' is set
             if (listId == null) throw new ApiException(400, "Missing required parameter 'listId' when calling MenuDelete");
@@ -852,31 +1462,37 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
+            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
             
-            if (listId != null) queryParams.Add("listId", ApiClient.ParameterToString(listId)); // query parameter
-            
-            
+            if (listId != null) queryParams.Add("listId", Configuration.ApiClient.ParameterToString(listId)); // query parameter
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling MenuDelete: " + response.Content, response.Content);
+            
+            
 
             
-            return;
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling MenuDelete: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling MenuDelete: " + response.ErrorMessage, response.ErrorMessage);
+
+            
+            return new ApiResponse<Object>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                null);
         }
         
         /// <summary>
@@ -886,8 +1502,22 @@ namespace VirtoCommerce.Client.Api
         /// <param name="name">Name of menu link list</param> 
         /// <param name="language">Language of menu link list</param> 
         /// <param name="id">Menu link list id</param> 
-        /// <returns>VirtoCommerceContentWebModelsCheckNameResult</returns>            
+        /// <returns>VirtoCommerceContentWebModelsCheckNameResult</returns>
         public VirtoCommerceContentWebModelsCheckNameResult MenuCheckName (string storeId, string name, string language, string id = null)
+        {
+             ApiResponse<VirtoCommerceContentWebModelsCheckNameResult> response = MenuCheckNameWithHttpInfo(storeId, name, language, id);
+             return response.Data;
+        }
+
+        /// <summary>
+        /// Checking name of menu link list Checking pair of name+language of menu link list for unique, if checking result - false saving unavailable
+        /// </summary>
+        /// <param name="storeId">Store id</param> 
+        /// <param name="name">Name of menu link list</param> 
+        /// <param name="language">Language of menu link list</param> 
+        /// <param name="id">Menu link list id</param> 
+        /// <returns>ApiResponse of VirtoCommerceContentWebModelsCheckNameResult</returns>
+        public ApiResponse< VirtoCommerceContentWebModelsCheckNameResult > MenuCheckNameWithHttpInfo (string storeId, string name, string language, string id = null)
         {
             
             // verify the required parameter 'storeId' is set
@@ -904,7 +1534,7 @@ namespace VirtoCommerce.Client.Api
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
@@ -913,35 +1543,39 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
+            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
             
-            if (name != null) queryParams.Add("name", ApiClient.ParameterToString(name)); // query parameter
-            if (language != null) queryParams.Add("language", ApiClient.ParameterToString(language)); // query parameter
-            if (id != null) queryParams.Add("id", ApiClient.ParameterToString(id)); // query parameter
-            
-            
+            if (name != null) queryParams.Add("name", Configuration.ApiClient.ParameterToString(name)); // query parameter
+            if (language != null) queryParams.Add("language", Configuration.ApiClient.ParameterToString(language)); // query parameter
+            if (id != null) queryParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // query parameter
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
+            
+            
+
+            
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
     
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling MenuCheckName: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling MenuCheckName: " + response.ErrorMessage, response.ErrorMessage);
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling MenuCheckName: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling MenuCheckName: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommerceContentWebModelsCheckNameResult) ApiClient.Deserialize(response, typeof(VirtoCommerceContentWebModelsCheckNameResult));
+            return new ApiResponse<VirtoCommerceContentWebModelsCheckNameResult>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommerceContentWebModelsCheckNameResult) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceContentWebModelsCheckNameResult)));
+            
         }
     
         /// <summary>
@@ -951,8 +1585,23 @@ namespace VirtoCommerce.Client.Api
         /// <param name="name">Name of menu link list</param>
         /// <param name="language">Language of menu link list</param>
         /// <param name="id">Menu link list id</param>
-        /// <returns>VirtoCommerceContentWebModelsCheckNameResult</returns>
+        /// <returns>Task of VirtoCommerceContentWebModelsCheckNameResult</returns>
         public async System.Threading.Tasks.Task<VirtoCommerceContentWebModelsCheckNameResult> MenuCheckNameAsync (string storeId, string name, string language, string id = null)
+        {
+             ApiResponse<VirtoCommerceContentWebModelsCheckNameResult> response = await MenuCheckNameAsyncWithHttpInfo(storeId, name, language, id);
+             return response.Data;
+
+        }
+
+        /// <summary>
+        /// Checking name of menu link list Checking pair of name+language of menu link list for unique, if checking result - false saving unavailable
+        /// </summary>
+        /// <param name="storeId">Store id</param>
+        /// <param name="name">Name of menu link list</param>
+        /// <param name="language">Language of menu link list</param>
+        /// <param name="id">Menu link list id</param>
+        /// <returns>Task of ApiResponse (VirtoCommerceContentWebModelsCheckNameResult)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceContentWebModelsCheckNameResult>> MenuCheckNameAsyncWithHttpInfo (string storeId, string name, string language, string id = null)
         {
             // verify the required parameter 'storeId' is set
             if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling MenuCheckName");
@@ -975,32 +1624,39 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
+            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
             
-            if (name != null) queryParams.Add("name", ApiClient.ParameterToString(name)); // query parameter
-            if (language != null) queryParams.Add("language", ApiClient.ParameterToString(language)); // query parameter
-            if (id != null) queryParams.Add("id", ApiClient.ParameterToString(id)); // query parameter
-            
-            
+            if (name != null) queryParams.Add("name", Configuration.ApiClient.ParameterToString(name)); // query parameter
+            if (language != null) queryParams.Add("language", Configuration.ApiClient.ParameterToString(language)); // query parameter
+            if (id != null) queryParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // query parameter
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling MenuCheckName: " + response.Content, response.Content);
+            
+            
 
-            return (VirtoCommerceContentWebModelsCheckNameResult) ApiClient.Deserialize(response, typeof(VirtoCommerceContentWebModelsCheckNameResult));
+            
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling MenuCheckName: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling MenuCheckName: " + response.ErrorMessage, response.ErrorMessage);
+
+            return new ApiResponse<VirtoCommerceContentWebModelsCheckNameResult>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommerceContentWebModelsCheckNameResult) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceContentWebModelsCheckNameResult)));
+            
         }
         
         /// <summary>
@@ -1008,8 +1664,20 @@ namespace VirtoCommerce.Client.Api
         /// </summary>
         /// <param name="storeId">Store id</param> 
         /// <param name="listId">List id</param> 
-        /// <returns>VirtoCommerceContentWebModelsMenuLinkList</returns>            
+        /// <returns>VirtoCommerceContentWebModelsMenuLinkList</returns>
         public VirtoCommerceContentWebModelsMenuLinkList MenuGetList (string storeId, string listId)
+        {
+             ApiResponse<VirtoCommerceContentWebModelsMenuLinkList> response = MenuGetListWithHttpInfo(storeId, listId);
+             return response.Data;
+        }
+
+        /// <summary>
+        /// Get menu link list by id 
+        /// </summary>
+        /// <param name="storeId">Store id</param> 
+        /// <param name="listId">List id</param> 
+        /// <returns>ApiResponse of VirtoCommerceContentWebModelsMenuLinkList</returns>
+        public ApiResponse< VirtoCommerceContentWebModelsMenuLinkList > MenuGetListWithHttpInfo (string storeId, string listId)
         {
             
             // verify the required parameter 'storeId' is set
@@ -1023,7 +1691,7 @@ namespace VirtoCommerce.Client.Api
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
@@ -1032,33 +1700,37 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
-            if (listId != null) pathParams.Add("listId", ApiClient.ParameterToString(listId)); // path parameter
+            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
+            if (listId != null) pathParams.Add("listId", Configuration.ApiClient.ParameterToString(listId)); // path parameter
             
             
             
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
+
+            
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
     
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling MenuGetList: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling MenuGetList: " + response.ErrorMessage, response.ErrorMessage);
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling MenuGetList: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling MenuGetList: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommerceContentWebModelsMenuLinkList) ApiClient.Deserialize(response, typeof(VirtoCommerceContentWebModelsMenuLinkList));
+            return new ApiResponse<VirtoCommerceContentWebModelsMenuLinkList>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommerceContentWebModelsMenuLinkList) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceContentWebModelsMenuLinkList)));
+            
         }
     
         /// <summary>
@@ -1066,8 +1738,21 @@ namespace VirtoCommerce.Client.Api
         /// </summary>
         /// <param name="storeId">Store id</param>
         /// <param name="listId">List id</param>
-        /// <returns>VirtoCommerceContentWebModelsMenuLinkList</returns>
+        /// <returns>Task of VirtoCommerceContentWebModelsMenuLinkList</returns>
         public async System.Threading.Tasks.Task<VirtoCommerceContentWebModelsMenuLinkList> MenuGetListAsync (string storeId, string listId)
+        {
+             ApiResponse<VirtoCommerceContentWebModelsMenuLinkList> response = await MenuGetListAsyncWithHttpInfo(storeId, listId);
+             return response.Data;
+
+        }
+
+        /// <summary>
+        /// Get menu link list by id 
+        /// </summary>
+        /// <param name="storeId">Store id</param>
+        /// <param name="listId">List id</param>
+        /// <returns>Task of ApiResponse (VirtoCommerceContentWebModelsMenuLinkList)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceContentWebModelsMenuLinkList>> MenuGetListAsyncWithHttpInfo (string storeId, string listId)
         {
             // verify the required parameter 'storeId' is set
             if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling MenuGetList");
@@ -1088,38 +1773,56 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
-            if (listId != null) pathParams.Add("listId", ApiClient.ParameterToString(listId)); // path parameter
+            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
+            if (listId != null) pathParams.Add("listId", Configuration.ApiClient.ParameterToString(listId)); // path parameter
             
             
             
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling MenuGetList: " + response.Content, response.Content);
 
-            return (VirtoCommerceContentWebModelsMenuLinkList) ApiClient.Deserialize(response, typeof(VirtoCommerceContentWebModelsMenuLinkList));
+            
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling MenuGetList: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling MenuGetList: " + response.ErrorMessage, response.ErrorMessage);
+
+            return new ApiResponse<VirtoCommerceContentWebModelsMenuLinkList>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommerceContentWebModelsMenuLinkList) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceContentWebModelsMenuLinkList)));
+            
         }
         
         /// <summary>
         /// Search pages Get all pages by store and criteria
         /// </summary>
         /// <param name="storeId">Store Id</param> 
-        /// <returns></returns>            
+        /// <returns>List&lt;VirtoCommerceContentWebModelsPage&gt;</returns>
         public List<VirtoCommerceContentWebModelsPage> PagesGetPages (string storeId)
+        {
+             ApiResponse<List<VirtoCommerceContentWebModelsPage>> response = PagesGetPagesWithHttpInfo(storeId);
+             return response.Data;
+        }
+
+        /// <summary>
+        /// Search pages Get all pages by store and criteria
+        /// </summary>
+        /// <param name="storeId">Store Id</param> 
+        /// <returns>ApiResponse of List&lt;VirtoCommerceContentWebModelsPage&gt;</returns>
+        public ApiResponse< List<VirtoCommerceContentWebModelsPage> > PagesGetPagesWithHttpInfo (string storeId)
         {
             
             // verify the required parameter 'storeId' is set
@@ -1130,7 +1833,7 @@ namespace VirtoCommerce.Client.Api
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
@@ -1139,40 +1842,56 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
+            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
             
             
             
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
+
+            
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
     
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling PagesGetPages: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling PagesGetPages: " + response.ErrorMessage, response.ErrorMessage);
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling PagesGetPages: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling PagesGetPages: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (List<VirtoCommerceContentWebModelsPage>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceContentWebModelsPage>));
+            return new ApiResponse<List<VirtoCommerceContentWebModelsPage>>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (List<VirtoCommerceContentWebModelsPage>) Configuration.ApiClient.Deserialize(response, typeof(List<VirtoCommerceContentWebModelsPage>)));
+            
         }
     
         /// <summary>
         /// Search pages Get all pages by store and criteria
         /// </summary>
         /// <param name="storeId">Store Id</param>
-        /// <returns></returns>
+        /// <returns>Task of List&lt;VirtoCommerceContentWebModelsPage&gt;</returns>
         public async System.Threading.Tasks.Task<List<VirtoCommerceContentWebModelsPage>> PagesGetPagesAsync (string storeId)
+        {
+             ApiResponse<List<VirtoCommerceContentWebModelsPage>> response = await PagesGetPagesAsyncWithHttpInfo(storeId);
+             return response.Data;
+
+        }
+
+        /// <summary>
+        /// Search pages Get all pages by store and criteria
+        /// </summary>
+        /// <param name="storeId">Store Id</param>
+        /// <returns>Task of ApiResponse (List&lt;VirtoCommerceContentWebModelsPage&gt;)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceContentWebModelsPage>>> PagesGetPagesAsyncWithHttpInfo (string storeId)
         {
             // verify the required parameter 'storeId' is set
             if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling PagesGetPages");
@@ -1191,29 +1910,36 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
+            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
             
             
             
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling PagesGetPages: " + response.Content, response.Content);
 
-            return (List<VirtoCommerceContentWebModelsPage>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceContentWebModelsPage>));
+            
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling PagesGetPages: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling PagesGetPages: " + response.ErrorMessage, response.ErrorMessage);
+
+            return new ApiResponse<List<VirtoCommerceContentWebModelsPage>>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (List<VirtoCommerceContentWebModelsPage>) Configuration.ApiClient.Deserialize(response, typeof(List<VirtoCommerceContentWebModelsPage>)));
+            
         }
         
         /// <summary>
@@ -1221,8 +1947,19 @@ namespace VirtoCommerce.Client.Api
         /// </summary>
         /// <param name="storeId">Store Id</param> 
         /// <param name="page">Page</param> 
-        /// <returns></returns>            
+        /// <returns></returns>
         public void PagesSaveItem (string storeId, VirtoCommerceContentWebModelsPage page)
+        {
+             PagesSaveItemWithHttpInfo(storeId, page);
+        }
+
+        /// <summary>
+        /// Save page 
+        /// </summary>
+        /// <param name="storeId">Store Id</param> 
+        /// <param name="page">Page</param> 
+        /// <returns>ApiResponse of Object(void)</returns>
+        public ApiResponse<Object> PagesSaveItemWithHttpInfo (string storeId, VirtoCommerceContentWebModelsPage page)
         {
             
             // verify the required parameter 'storeId' is set
@@ -1236,7 +1973,7 @@ namespace VirtoCommerce.Client.Api
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
@@ -1245,33 +1982,37 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
+            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
             
             
             
             
-            postBody = ApiClient.Serialize(page); // http body (model) parameter
+            postBody = Configuration.ApiClient.Serialize(page); // http body (model) parameter
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
+
+            
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
     
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling PagesSaveItem: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling PagesSaveItem: " + response.ErrorMessage, response.ErrorMessage);
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling PagesSaveItem: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling PagesSaveItem: " + response.ErrorMessage, response.ErrorMessage);
     
-            return;
+            
+            return new ApiResponse<Object>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                null);
         }
     
         /// <summary>
@@ -1279,8 +2020,20 @@ namespace VirtoCommerce.Client.Api
         /// </summary>
         /// <param name="storeId">Store Id</param>
         /// <param name="page">Page</param>
-        /// <returns></returns>
+        /// <returns>Task of void</returns>
         public async System.Threading.Tasks.Task PagesSaveItemAsync (string storeId, VirtoCommerceContentWebModelsPage page)
+        {
+             await PagesSaveItemAsyncWithHttpInfo(storeId, page);
+
+        }
+
+        /// <summary>
+        /// Save page 
+        /// </summary>
+        /// <param name="storeId">Store Id</param>
+        /// <param name="page">Page</param>
+        /// <returns>Task of ApiResponse</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<Object>> PagesSaveItemAsyncWithHttpInfo (string storeId, VirtoCommerceContentWebModelsPage page)
         {
             // verify the required parameter 'storeId' is set
             if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling PagesSaveItem");
@@ -1301,31 +2054,37 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
+            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
             
             
             
             
-            postBody = ApiClient.Serialize(page); // http body (model) parameter
+            postBody = Configuration.ApiClient.Serialize(page); // http body (model) parameter
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling PagesSaveItem: " + response.Content, response.Content);
 
             
-            return;
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling PagesSaveItem: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling PagesSaveItem: " + response.ErrorMessage, response.ErrorMessage);
+
+            
+            return new ApiResponse<Object>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                null);
         }
         
         /// <summary>
@@ -1333,8 +2092,19 @@ namespace VirtoCommerce.Client.Api
         /// </summary>
         /// <param name="storeId">Store Id</param> 
         /// <param name="pageNamesAndLanguges">Array of pairs name+language</param> 
-        /// <returns></returns>            
+        /// <returns></returns>
         public void PagesDeleteItem (string storeId, List<string> pageNamesAndLanguges)
+        {
+             PagesDeleteItemWithHttpInfo(storeId, pageNamesAndLanguges);
+        }
+
+        /// <summary>
+        /// Delete page Delete pages with name+language pairs, that defined in pageNamesAndLanguges uri parameter
+        /// </summary>
+        /// <param name="storeId">Store Id</param> 
+        /// <param name="pageNamesAndLanguges">Array of pairs name+language</param> 
+        /// <returns>ApiResponse of Object(void)</returns>
+        public ApiResponse<Object> PagesDeleteItemWithHttpInfo (string storeId, List<string> pageNamesAndLanguges)
         {
             
             // verify the required parameter 'storeId' is set
@@ -1348,7 +2118,7 @@ namespace VirtoCommerce.Client.Api
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
@@ -1357,33 +2127,37 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
+            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
             
-            if (pageNamesAndLanguges != null) queryParams.Add("pageNamesAndLanguges", ApiClient.ParameterToString(pageNamesAndLanguges)); // query parameter
-            
-            
+            if (pageNamesAndLanguges != null) queryParams.Add("pageNamesAndLanguges", Configuration.ApiClient.ParameterToString(pageNamesAndLanguges)); // query parameter
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
+            
+            
+
+            
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
     
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling PagesDeleteItem: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling PagesDeleteItem: " + response.ErrorMessage, response.ErrorMessage);
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling PagesDeleteItem: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling PagesDeleteItem: " + response.ErrorMessage, response.ErrorMessage);
     
-            return;
+            
+            return new ApiResponse<Object>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                null);
         }
     
         /// <summary>
@@ -1391,8 +2165,20 @@ namespace VirtoCommerce.Client.Api
         /// </summary>
         /// <param name="storeId">Store Id</param>
         /// <param name="pageNamesAndLanguges">Array of pairs name+language</param>
-        /// <returns></returns>
+        /// <returns>Task of void</returns>
         public async System.Threading.Tasks.Task PagesDeleteItemAsync (string storeId, List<string> pageNamesAndLanguges)
+        {
+             await PagesDeleteItemAsyncWithHttpInfo(storeId, pageNamesAndLanguges);
+
+        }
+
+        /// <summary>
+        /// Delete page Delete pages with name+language pairs, that defined in pageNamesAndLanguges uri parameter
+        /// </summary>
+        /// <param name="storeId">Store Id</param>
+        /// <param name="pageNamesAndLanguges">Array of pairs name+language</param>
+        /// <returns>Task of ApiResponse</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<Object>> PagesDeleteItemAsyncWithHttpInfo (string storeId, List<string> pageNamesAndLanguges)
         {
             // verify the required parameter 'storeId' is set
             if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling PagesDeleteItem");
@@ -1413,31 +2199,37 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
+            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
             
-            if (pageNamesAndLanguges != null) queryParams.Add("pageNamesAndLanguges", ApiClient.ParameterToString(pageNamesAndLanguges)); // query parameter
-            
-            
+            if (pageNamesAndLanguges != null) queryParams.Add("pageNamesAndLanguges", Configuration.ApiClient.ParameterToString(pageNamesAndLanguges)); // query parameter
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling PagesDeleteItem: " + response.Content, response.Content);
+            
+            
 
             
-            return;
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling PagesDeleteItem: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling PagesDeleteItem: " + response.ErrorMessage, response.ErrorMessage);
+
+            
+            return new ApiResponse<Object>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                null);
         }
         
         /// <summary>
@@ -1445,9 +2237,20 @@ namespace VirtoCommerce.Client.Api
         /// </summary>
         /// <param name="storeId"></param> 
         /// <param name="blogName"></param> 
-        /// <returns></returns>            
+        /// <returns></returns>
         public void PagesCreateBlog (string storeId, string blogName)
         {
+             PagesCreateBlogWithHttpInfo(storeId, blogName);
+        }
+
+        /// <summary>
+        ///  
+        /// </summary>
+        /// <param name="storeId"></param> 
+        /// <param name="blogName"></param> 
+        /// <returns>ApiResponse of Object(void)</returns>
+        public ApiResponse<Object> PagesCreateBlogWithHttpInfo (string storeId, string blogName)
+        {
             
             // verify the required parameter 'storeId' is set
             if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling PagesCreateBlog");
@@ -1460,7 +2263,7 @@ namespace VirtoCommerce.Client.Api
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
@@ -1469,33 +2272,37 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
-            if (blogName != null) pathParams.Add("blogName", ApiClient.ParameterToString(blogName)); // path parameter
+            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
+            if (blogName != null) pathParams.Add("blogName", Configuration.ApiClient.ParameterToString(blogName)); // path parameter
             
             
             
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
+
+            
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
     
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling PagesCreateBlog: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling PagesCreateBlog: " + response.ErrorMessage, response.ErrorMessage);
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling PagesCreateBlog: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling PagesCreateBlog: " + response.ErrorMessage, response.ErrorMessage);
     
-            return;
+            
+            return new ApiResponse<Object>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                null);
         }
     
         /// <summary>
@@ -1503,8 +2310,20 @@ namespace VirtoCommerce.Client.Api
         /// </summary>
         /// <param name="storeId"></param>
         /// <param name="blogName"></param>
-        /// <returns></returns>
+        /// <returns>Task of void</returns>
         public async System.Threading.Tasks.Task PagesCreateBlogAsync (string storeId, string blogName)
+        {
+             await PagesCreateBlogAsyncWithHttpInfo(storeId, blogName);
+
+        }
+
+        /// <summary>
+        ///  
+        /// </summary>
+        /// <param name="storeId"></param>
+        /// <param name="blogName"></param>
+        /// <returns>Task of ApiResponse</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<Object>> PagesCreateBlogAsyncWithHttpInfo (string storeId, string blogName)
         {
             // verify the required parameter 'storeId' is set
             if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling PagesCreateBlog");
@@ -1525,31 +2344,37 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
-            if (blogName != null) pathParams.Add("blogName", ApiClient.ParameterToString(blogName)); // path parameter
+            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
+            if (blogName != null) pathParams.Add("blogName", Configuration.ApiClient.ParameterToString(blogName)); // path parameter
             
             
             
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling PagesCreateBlog: " + response.Content, response.Content);
 
             
-            return;
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling PagesCreateBlog: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling PagesCreateBlog: " + response.ErrorMessage, response.ErrorMessage);
+
+            
+            return new ApiResponse<Object>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                null);
         }
         
         /// <summary>
@@ -1557,8 +2382,19 @@ namespace VirtoCommerce.Client.Api
         /// </summary>
         /// <param name="storeId"></param> 
         /// <param name="blogName"></param> 
-        /// <returns></returns>            
+        /// <returns></returns>
         public void PagesDeleteBlog (string storeId, string blogName)
+        {
+             PagesDeleteBlogWithHttpInfo(storeId, blogName);
+        }
+
+        /// <summary>
+        ///  
+        /// </summary>
+        /// <param name="storeId"></param> 
+        /// <param name="blogName"></param> 
+        /// <returns>ApiResponse of Object(void)</returns>
+        public ApiResponse<Object> PagesDeleteBlogWithHttpInfo (string storeId, string blogName)
         {
             
             // verify the required parameter 'storeId' is set
@@ -1572,7 +2408,7 @@ namespace VirtoCommerce.Client.Api
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
@@ -1581,33 +2417,37 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
-            if (blogName != null) pathParams.Add("blogName", ApiClient.ParameterToString(blogName)); // path parameter
+            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
+            if (blogName != null) pathParams.Add("blogName", Configuration.ApiClient.ParameterToString(blogName)); // path parameter
             
             
             
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
+
+            
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
     
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling PagesDeleteBlog: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling PagesDeleteBlog: " + response.ErrorMessage, response.ErrorMessage);
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling PagesDeleteBlog: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling PagesDeleteBlog: " + response.ErrorMessage, response.ErrorMessage);
     
-            return;
+            
+            return new ApiResponse<Object>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                null);
         }
     
         /// <summary>
@@ -1615,8 +2455,20 @@ namespace VirtoCommerce.Client.Api
         /// </summary>
         /// <param name="storeId"></param>
         /// <param name="blogName"></param>
-        /// <returns></returns>
+        /// <returns>Task of void</returns>
         public async System.Threading.Tasks.Task PagesDeleteBlogAsync (string storeId, string blogName)
+        {
+             await PagesDeleteBlogAsyncWithHttpInfo(storeId, blogName);
+
+        }
+
+        /// <summary>
+        ///  
+        /// </summary>
+        /// <param name="storeId"></param>
+        /// <param name="blogName"></param>
+        /// <returns>Task of ApiResponse</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<Object>> PagesDeleteBlogAsyncWithHttpInfo (string storeId, string blogName)
         {
             // verify the required parameter 'storeId' is set
             if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling PagesDeleteBlog");
@@ -1637,31 +2489,37 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
-            if (blogName != null) pathParams.Add("blogName", ApiClient.ParameterToString(blogName)); // path parameter
+            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
+            if (blogName != null) pathParams.Add("blogName", Configuration.ApiClient.ParameterToString(blogName)); // path parameter
             
             
             
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling PagesDeleteBlog: " + response.Content, response.Content);
 
             
-            return;
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling PagesDeleteBlog: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling PagesDeleteBlog: " + response.ErrorMessage, response.ErrorMessage);
+
+            
+            return new ApiResponse<Object>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                null);
         }
         
         /// <summary>
@@ -1670,8 +2528,20 @@ namespace VirtoCommerce.Client.Api
         /// <param name="storeId"></param> 
         /// <param name="blogName"></param> 
         /// <param name="oldBlogName"></param> 
-        /// <returns></returns>            
+        /// <returns></returns>
         public void PagesUpdateBlog (string storeId, string blogName, string oldBlogName)
+        {
+             PagesUpdateBlogWithHttpInfo(storeId, blogName, oldBlogName);
+        }
+
+        /// <summary>
+        ///  
+        /// </summary>
+        /// <param name="storeId"></param> 
+        /// <param name="blogName"></param> 
+        /// <param name="oldBlogName"></param> 
+        /// <returns>ApiResponse of Object(void)</returns>
+        public ApiResponse<Object> PagesUpdateBlogWithHttpInfo (string storeId, string blogName, string oldBlogName)
         {
             
             // verify the required parameter 'storeId' is set
@@ -1688,7 +2558,7 @@ namespace VirtoCommerce.Client.Api
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
@@ -1697,34 +2567,38 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
-            if (blogName != null) pathParams.Add("blogName", ApiClient.ParameterToString(blogName)); // path parameter
-            if (oldBlogName != null) pathParams.Add("oldBlogName", ApiClient.ParameterToString(oldBlogName)); // path parameter
+            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
+            if (blogName != null) pathParams.Add("blogName", Configuration.ApiClient.ParameterToString(blogName)); // path parameter
+            if (oldBlogName != null) pathParams.Add("oldBlogName", Configuration.ApiClient.ParameterToString(oldBlogName)); // path parameter
             
             
             
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
+
+            
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
     
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling PagesUpdateBlog: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling PagesUpdateBlog: " + response.ErrorMessage, response.ErrorMessage);
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling PagesUpdateBlog: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling PagesUpdateBlog: " + response.ErrorMessage, response.ErrorMessage);
     
-            return;
+            
+            return new ApiResponse<Object>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                null);
         }
     
         /// <summary>
@@ -1733,8 +2607,21 @@ namespace VirtoCommerce.Client.Api
         /// <param name="storeId"></param>
         /// <param name="blogName"></param>
         /// <param name="oldBlogName"></param>
-        /// <returns></returns>
+        /// <returns>Task of void</returns>
         public async System.Threading.Tasks.Task PagesUpdateBlogAsync (string storeId, string blogName, string oldBlogName)
+        {
+             await PagesUpdateBlogAsyncWithHttpInfo(storeId, blogName, oldBlogName);
+
+        }
+
+        /// <summary>
+        ///  
+        /// </summary>
+        /// <param name="storeId"></param>
+        /// <param name="blogName"></param>
+        /// <param name="oldBlogName"></param>
+        /// <returns>Task of ApiResponse</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<Object>> PagesUpdateBlogAsyncWithHttpInfo (string storeId, string blogName, string oldBlogName)
         {
             // verify the required parameter 'storeId' is set
             if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling PagesUpdateBlog");
@@ -1757,32 +2644,38 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
-            if (blogName != null) pathParams.Add("blogName", ApiClient.ParameterToString(blogName)); // path parameter
-            if (oldBlogName != null) pathParams.Add("oldBlogName", ApiClient.ParameterToString(oldBlogName)); // path parameter
+            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
+            if (blogName != null) pathParams.Add("blogName", Configuration.ApiClient.ParameterToString(blogName)); // path parameter
+            if (oldBlogName != null) pathParams.Add("oldBlogName", Configuration.ApiClient.ParameterToString(oldBlogName)); // path parameter
             
             
             
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling PagesUpdateBlog: " + response.Content, response.Content);
 
             
-            return;
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling PagesUpdateBlog: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling PagesUpdateBlog: " + response.ErrorMessage, response.ErrorMessage);
+
+            
+            return new ApiResponse<Object>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                null);
         }
         
         /// <summary>
@@ -1791,9 +2684,22 @@ namespace VirtoCommerce.Client.Api
         /// <param name="storeId">Store Id</param> 
         /// <param name="pageName">Page name</param> 
         /// <param name="language">Page language</param> 
-        /// <returns>VirtoCommerceContentWebModelsCheckNameResult</returns>            
+        /// <returns>VirtoCommerceContentWebModelsCheckNameResult</returns>
         public VirtoCommerceContentWebModelsCheckNameResult PagesCheckName (string storeId, string pageName, string language)
         {
+             ApiResponse<VirtoCommerceContentWebModelsCheckNameResult> response = PagesCheckNameWithHttpInfo(storeId, pageName, language);
+             return response.Data;
+        }
+
+        /// <summary>
+        /// Check page name Check page pair name+language for store
+        /// </summary>
+        /// <param name="storeId">Store Id</param> 
+        /// <param name="pageName">Page name</param> 
+        /// <param name="language">Page language</param> 
+        /// <returns>ApiResponse of VirtoCommerceContentWebModelsCheckNameResult</returns>
+        public ApiResponse< VirtoCommerceContentWebModelsCheckNameResult > PagesCheckNameWithHttpInfo (string storeId, string pageName, string language)
+        {
             
             // verify the required parameter 'storeId' is set
             if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling PagesCheckName");
@@ -1809,7 +2715,7 @@ namespace VirtoCommerce.Client.Api
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
@@ -1818,34 +2724,38 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
+            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
             
-            if (pageName != null) queryParams.Add("pageName", ApiClient.ParameterToString(pageName)); // query parameter
-            if (language != null) queryParams.Add("language", ApiClient.ParameterToString(language)); // query parameter
-            
-            
+            if (pageName != null) queryParams.Add("pageName", Configuration.ApiClient.ParameterToString(pageName)); // query parameter
+            if (language != null) queryParams.Add("language", Configuration.ApiClient.ParameterToString(language)); // query parameter
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
+            
+            
+
+            
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
     
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling PagesCheckName: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling PagesCheckName: " + response.ErrorMessage, response.ErrorMessage);
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling PagesCheckName: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling PagesCheckName: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommerceContentWebModelsCheckNameResult) ApiClient.Deserialize(response, typeof(VirtoCommerceContentWebModelsCheckNameResult));
+            return new ApiResponse<VirtoCommerceContentWebModelsCheckNameResult>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommerceContentWebModelsCheckNameResult) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceContentWebModelsCheckNameResult)));
+            
         }
     
         /// <summary>
@@ -1854,8 +2764,22 @@ namespace VirtoCommerce.Client.Api
         /// <param name="storeId">Store Id</param>
         /// <param name="pageName">Page name</param>
         /// <param name="language">Page language</param>
-        /// <returns>VirtoCommerceContentWebModelsCheckNameResult</returns>
+        /// <returns>Task of VirtoCommerceContentWebModelsCheckNameResult</returns>
         public async System.Threading.Tasks.Task<VirtoCommerceContentWebModelsCheckNameResult> PagesCheckNameAsync (string storeId, string pageName, string language)
+        {
+             ApiResponse<VirtoCommerceContentWebModelsCheckNameResult> response = await PagesCheckNameAsyncWithHttpInfo(storeId, pageName, language);
+             return response.Data;
+
+        }
+
+        /// <summary>
+        /// Check page name Check page pair name+language for store
+        /// </summary>
+        /// <param name="storeId">Store Id</param>
+        /// <param name="pageName">Page name</param>
+        /// <param name="language">Page language</param>
+        /// <returns>Task of ApiResponse (VirtoCommerceContentWebModelsCheckNameResult)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceContentWebModelsCheckNameResult>> PagesCheckNameAsyncWithHttpInfo (string storeId, string pageName, string language)
         {
             // verify the required parameter 'storeId' is set
             if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling PagesCheckName");
@@ -1878,39 +2802,57 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
+            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
             
-            if (pageName != null) queryParams.Add("pageName", ApiClient.ParameterToString(pageName)); // query parameter
-            if (language != null) queryParams.Add("language", ApiClient.ParameterToString(language)); // query parameter
-            
-            
+            if (pageName != null) queryParams.Add("pageName", Configuration.ApiClient.ParameterToString(pageName)); // query parameter
+            if (language != null) queryParams.Add("language", Configuration.ApiClient.ParameterToString(language)); // query parameter
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling PagesCheckName: " + response.Content, response.Content);
+            
+            
 
-            return (VirtoCommerceContentWebModelsCheckNameResult) ApiClient.Deserialize(response, typeof(VirtoCommerceContentWebModelsCheckNameResult));
+            
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling PagesCheckName: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling PagesCheckName: " + response.ErrorMessage, response.ErrorMessage);
+
+            return new ApiResponse<VirtoCommerceContentWebModelsCheckNameResult>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommerceContentWebModelsCheckNameResult) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceContentWebModelsCheckNameResult)));
+            
         }
         
         /// <summary>
         /// Get pages folders by store id 
         /// </summary>
         /// <param name="storeId">Store Id</param> 
-        /// <returns>VirtoCommerceContentWebModelsGetPagesResult</returns>            
+        /// <returns>VirtoCommerceContentWebModelsGetPagesResult</returns>
         public VirtoCommerceContentWebModelsGetPagesResult PagesGetFolders (string storeId)
+        {
+             ApiResponse<VirtoCommerceContentWebModelsGetPagesResult> response = PagesGetFoldersWithHttpInfo(storeId);
+             return response.Data;
+        }
+
+        /// <summary>
+        /// Get pages folders by store id 
+        /// </summary>
+        /// <param name="storeId">Store Id</param> 
+        /// <returns>ApiResponse of VirtoCommerceContentWebModelsGetPagesResult</returns>
+        public ApiResponse< VirtoCommerceContentWebModelsGetPagesResult > PagesGetFoldersWithHttpInfo (string storeId)
         {
             
             // verify the required parameter 'storeId' is set
@@ -1921,7 +2863,7 @@ namespace VirtoCommerce.Client.Api
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
@@ -1930,40 +2872,56 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
+            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
             
             
             
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
+
+            
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
     
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling PagesGetFolders: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling PagesGetFolders: " + response.ErrorMessage, response.ErrorMessage);
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling PagesGetFolders: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling PagesGetFolders: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommerceContentWebModelsGetPagesResult) ApiClient.Deserialize(response, typeof(VirtoCommerceContentWebModelsGetPagesResult));
+            return new ApiResponse<VirtoCommerceContentWebModelsGetPagesResult>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommerceContentWebModelsGetPagesResult) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceContentWebModelsGetPagesResult)));
+            
         }
     
         /// <summary>
         /// Get pages folders by store id 
         /// </summary>
         /// <param name="storeId">Store Id</param>
-        /// <returns>VirtoCommerceContentWebModelsGetPagesResult</returns>
+        /// <returns>Task of VirtoCommerceContentWebModelsGetPagesResult</returns>
         public async System.Threading.Tasks.Task<VirtoCommerceContentWebModelsGetPagesResult> PagesGetFoldersAsync (string storeId)
+        {
+             ApiResponse<VirtoCommerceContentWebModelsGetPagesResult> response = await PagesGetFoldersAsyncWithHttpInfo(storeId);
+             return response.Data;
+
+        }
+
+        /// <summary>
+        /// Get pages folders by store id 
+        /// </summary>
+        /// <param name="storeId">Store Id</param>
+        /// <returns>Task of ApiResponse (VirtoCommerceContentWebModelsGetPagesResult)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceContentWebModelsGetPagesResult>> PagesGetFoldersAsyncWithHttpInfo (string storeId)
         {
             // verify the required parameter 'storeId' is set
             if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling PagesGetFolders");
@@ -1982,29 +2940,36 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
+            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
             
             
             
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling PagesGetFolders: " + response.Content, response.Content);
 
-            return (VirtoCommerceContentWebModelsGetPagesResult) ApiClient.Deserialize(response, typeof(VirtoCommerceContentWebModelsGetPagesResult));
+            
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling PagesGetFolders: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling PagesGetFolders: " + response.ErrorMessage, response.ErrorMessage);
+
+            return new ApiResponse<VirtoCommerceContentWebModelsGetPagesResult>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommerceContentWebModelsGetPagesResult) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceContentWebModelsGetPagesResult)));
+            
         }
         
         /// <summary>
@@ -2013,8 +2978,21 @@ namespace VirtoCommerce.Client.Api
         /// <param name="storeId">Store Id</param> 
         /// <param name="language">Page language</param> 
         /// <param name="pageName">Page name</param> 
-        /// <returns>VirtoCommerceContentWebModelsPage</returns>            
+        /// <returns>VirtoCommerceContentWebModelsPage</returns>
         public VirtoCommerceContentWebModelsPage PagesGetPage (string storeId, string language, string pageName)
+        {
+             ApiResponse<VirtoCommerceContentWebModelsPage> response = PagesGetPageWithHttpInfo(storeId, language, pageName);
+             return response.Data;
+        }
+
+        /// <summary>
+        /// Get page Get page by store and name+language pair.
+        /// </summary>
+        /// <param name="storeId">Store Id</param> 
+        /// <param name="language">Page language</param> 
+        /// <param name="pageName">Page name</param> 
+        /// <returns>ApiResponse of VirtoCommerceContentWebModelsPage</returns>
+        public ApiResponse< VirtoCommerceContentWebModelsPage > PagesGetPageWithHttpInfo (string storeId, string language, string pageName)
         {
             
             // verify the required parameter 'storeId' is set
@@ -2031,7 +3009,7 @@ namespace VirtoCommerce.Client.Api
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
@@ -2040,34 +3018,38 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
-            if (language != null) pathParams.Add("language", ApiClient.ParameterToString(language)); // path parameter
-            if (pageName != null) pathParams.Add("pageName", ApiClient.ParameterToString(pageName)); // path parameter
+            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
+            if (language != null) pathParams.Add("language", Configuration.ApiClient.ParameterToString(language)); // path parameter
+            if (pageName != null) pathParams.Add("pageName", Configuration.ApiClient.ParameterToString(pageName)); // path parameter
             
             
             
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
+
+            
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
     
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling PagesGetPage: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling PagesGetPage: " + response.ErrorMessage, response.ErrorMessage);
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling PagesGetPage: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling PagesGetPage: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommerceContentWebModelsPage) ApiClient.Deserialize(response, typeof(VirtoCommerceContentWebModelsPage));
+            return new ApiResponse<VirtoCommerceContentWebModelsPage>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommerceContentWebModelsPage) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceContentWebModelsPage)));
+            
         }
     
         /// <summary>
@@ -2076,8 +3058,22 @@ namespace VirtoCommerce.Client.Api
         /// <param name="storeId">Store Id</param>
         /// <param name="language">Page language</param>
         /// <param name="pageName">Page name</param>
-        /// <returns>VirtoCommerceContentWebModelsPage</returns>
+        /// <returns>Task of VirtoCommerceContentWebModelsPage</returns>
         public async System.Threading.Tasks.Task<VirtoCommerceContentWebModelsPage> PagesGetPageAsync (string storeId, string language, string pageName)
+        {
+             ApiResponse<VirtoCommerceContentWebModelsPage> response = await PagesGetPageAsyncWithHttpInfo(storeId, language, pageName);
+             return response.Data;
+
+        }
+
+        /// <summary>
+        /// Get page Get page by store and name+language pair.
+        /// </summary>
+        /// <param name="storeId">Store Id</param>
+        /// <param name="language">Page language</param>
+        /// <param name="pageName">Page name</param>
+        /// <returns>Task of ApiResponse (VirtoCommerceContentWebModelsPage)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceContentWebModelsPage>> PagesGetPageAsyncWithHttpInfo (string storeId, string language, string pageName)
         {
             // verify the required parameter 'storeId' is set
             if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling PagesGetPage");
@@ -2100,40 +3096,58 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
-            if (language != null) pathParams.Add("language", ApiClient.ParameterToString(language)); // path parameter
-            if (pageName != null) pathParams.Add("pageName", ApiClient.ParameterToString(pageName)); // path parameter
+            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
+            if (language != null) pathParams.Add("language", Configuration.ApiClient.ParameterToString(language)); // path parameter
+            if (pageName != null) pathParams.Add("pageName", Configuration.ApiClient.ParameterToString(pageName)); // path parameter
             
             
             
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling PagesGetPage: " + response.Content, response.Content);
 
-            return (VirtoCommerceContentWebModelsPage) ApiClient.Deserialize(response, typeof(VirtoCommerceContentWebModelsPage));
+            
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling PagesGetPage: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling PagesGetPage: " + response.ErrorMessage, response.ErrorMessage);
+
+            return new ApiResponse<VirtoCommerceContentWebModelsPage>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommerceContentWebModelsPage) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceContentWebModelsPage)));
+            
         }
         
         /// <summary>
         /// Get themes by store id 
         /// </summary>
         /// <param name="storeId">Store id</param> 
-        /// <returns></returns>            
+        /// <returns>List&lt;VirtoCommerceContentWebModelsTheme&gt;</returns>
         public List<VirtoCommerceContentWebModelsTheme> ThemeGetThemes (string storeId)
         {
+             ApiResponse<List<VirtoCommerceContentWebModelsTheme>> response = ThemeGetThemesWithHttpInfo(storeId);
+             return response.Data;
+        }
+
+        /// <summary>
+        /// Get themes by store id 
+        /// </summary>
+        /// <param name="storeId">Store id</param> 
+        /// <returns>ApiResponse of List&lt;VirtoCommerceContentWebModelsTheme&gt;</returns>
+        public ApiResponse< List<VirtoCommerceContentWebModelsTheme> > ThemeGetThemesWithHttpInfo (string storeId)
+        {
             
             // verify the required parameter 'storeId' is set
             if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling ThemeGetThemes");
@@ -2143,7 +3157,7 @@ namespace VirtoCommerce.Client.Api
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
@@ -2152,40 +3166,56 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
+            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
             
             
             
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
+
+            
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
     
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling ThemeGetThemes: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling ThemeGetThemes: " + response.ErrorMessage, response.ErrorMessage);
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling ThemeGetThemes: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling ThemeGetThemes: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (List<VirtoCommerceContentWebModelsTheme>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceContentWebModelsTheme>));
+            return new ApiResponse<List<VirtoCommerceContentWebModelsTheme>>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (List<VirtoCommerceContentWebModelsTheme>) Configuration.ApiClient.Deserialize(response, typeof(List<VirtoCommerceContentWebModelsTheme>)));
+            
         }
     
         /// <summary>
         /// Get themes by store id 
         /// </summary>
         /// <param name="storeId">Store id</param>
-        /// <returns></returns>
+        /// <returns>Task of List&lt;VirtoCommerceContentWebModelsTheme&gt;</returns>
         public async System.Threading.Tasks.Task<List<VirtoCommerceContentWebModelsTheme>> ThemeGetThemesAsync (string storeId)
+        {
+             ApiResponse<List<VirtoCommerceContentWebModelsTheme>> response = await ThemeGetThemesAsyncWithHttpInfo(storeId);
+             return response.Data;
+
+        }
+
+        /// <summary>
+        /// Get themes by store id 
+        /// </summary>
+        /// <param name="storeId">Store id</param>
+        /// <returns>Task of ApiResponse (List&lt;VirtoCommerceContentWebModelsTheme&gt;)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceContentWebModelsTheme>>> ThemeGetThemesAsyncWithHttpInfo (string storeId)
         {
             // verify the required parameter 'storeId' is set
             if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling ThemeGetThemes");
@@ -2204,37 +3234,54 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
+            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
             
             
             
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling ThemeGetThemes: " + response.Content, response.Content);
 
-            return (List<VirtoCommerceContentWebModelsTheme>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceContentWebModelsTheme>));
+            
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling ThemeGetThemes: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling ThemeGetThemes: " + response.ErrorMessage, response.ErrorMessage);
+
+            return new ApiResponse<List<VirtoCommerceContentWebModelsTheme>>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (List<VirtoCommerceContentWebModelsTheme>) Configuration.ApiClient.Deserialize(response, typeof(List<VirtoCommerceContentWebModelsTheme>)));
+            
         }
         
         /// <summary>
         /// Create default theme by store id 
         /// </summary>
         /// <param name="storeId">Store id</param> 
-        /// <returns></returns>            
+        /// <returns></returns>
         public void ThemeCreateDefaultTheme (string storeId)
+        {
+             ThemeCreateDefaultThemeWithHttpInfo(storeId);
+        }
+
+        /// <summary>
+        /// Create default theme by store id 
+        /// </summary>
+        /// <param name="storeId">Store id</param> 
+        /// <returns>ApiResponse of Object(void)</returns>
+        public ApiResponse<Object> ThemeCreateDefaultThemeWithHttpInfo (string storeId)
         {
             
             // verify the required parameter 'storeId' is set
@@ -2245,7 +3292,7 @@ namespace VirtoCommerce.Client.Api
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
@@ -2254,40 +3301,55 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
+            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
             
             
             
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
+
+            
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
     
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling ThemeCreateDefaultTheme: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling ThemeCreateDefaultTheme: " + response.ErrorMessage, response.ErrorMessage);
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling ThemeCreateDefaultTheme: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling ThemeCreateDefaultTheme: " + response.ErrorMessage, response.ErrorMessage);
     
-            return;
+            
+            return new ApiResponse<Object>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                null);
         }
     
         /// <summary>
         /// Create default theme by store id 
         /// </summary>
         /// <param name="storeId">Store id</param>
-        /// <returns></returns>
+        /// <returns>Task of void</returns>
         public async System.Threading.Tasks.Task ThemeCreateDefaultThemeAsync (string storeId)
+        {
+             await ThemeCreateDefaultThemeAsyncWithHttpInfo(storeId);
+
+        }
+
+        /// <summary>
+        /// Create default theme by store id 
+        /// </summary>
+        /// <param name="storeId">Store id</param>
+        /// <returns>Task of ApiResponse</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<Object>> ThemeCreateDefaultThemeAsyncWithHttpInfo (string storeId)
         {
             // verify the required parameter 'storeId' is set
             if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling ThemeCreateDefaultTheme");
@@ -2306,30 +3368,36 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
+            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
             
             
             
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling ThemeCreateDefaultTheme: " + response.Content, response.Content);
 
             
-            return;
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling ThemeCreateDefaultTheme: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling ThemeCreateDefaultTheme: " + response.ErrorMessage, response.ErrorMessage);
+
+            
+            return new ApiResponse<Object>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                null);
         }
         
         /// <summary>
@@ -2338,8 +3406,20 @@ namespace VirtoCommerce.Client.Api
         /// <param name="storeId">Store id</param> 
         /// <param name="themeFileUrl">Theme file url</param> 
         /// <param name="themeName">Theme name</param> 
-        /// <returns></returns>            
+        /// <returns></returns>
         public void ThemeCreateNewTheme (string storeId, string themeFileUrl, string themeName)
+        {
+             ThemeCreateNewThemeWithHttpInfo(storeId, themeFileUrl, themeName);
+        }
+
+        /// <summary>
+        /// Create new theme Create new theme considering store id, theme file url and theme name
+        /// </summary>
+        /// <param name="storeId">Store id</param> 
+        /// <param name="themeFileUrl">Theme file url</param> 
+        /// <param name="themeName">Theme name</param> 
+        /// <returns>ApiResponse of Object(void)</returns>
+        public ApiResponse<Object> ThemeCreateNewThemeWithHttpInfo (string storeId, string themeFileUrl, string themeName)
         {
             
             // verify the required parameter 'storeId' is set
@@ -2356,7 +3436,7 @@ namespace VirtoCommerce.Client.Api
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
@@ -2365,34 +3445,38 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
+            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
             
-            if (themeFileUrl != null) queryParams.Add("themeFileUrl", ApiClient.ParameterToString(themeFileUrl)); // query parameter
-            if (themeName != null) queryParams.Add("themeName", ApiClient.ParameterToString(themeName)); // query parameter
-            
-            
+            if (themeFileUrl != null) queryParams.Add("themeFileUrl", Configuration.ApiClient.ParameterToString(themeFileUrl)); // query parameter
+            if (themeName != null) queryParams.Add("themeName", Configuration.ApiClient.ParameterToString(themeName)); // query parameter
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
+            
+            
+
+            
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
     
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling ThemeCreateNewTheme: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling ThemeCreateNewTheme: " + response.ErrorMessage, response.ErrorMessage);
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling ThemeCreateNewTheme: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling ThemeCreateNewTheme: " + response.ErrorMessage, response.ErrorMessage);
     
-            return;
+            
+            return new ApiResponse<Object>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                null);
         }
     
         /// <summary>
@@ -2401,8 +3485,21 @@ namespace VirtoCommerce.Client.Api
         /// <param name="storeId">Store id</param>
         /// <param name="themeFileUrl">Theme file url</param>
         /// <param name="themeName">Theme name</param>
-        /// <returns></returns>
+        /// <returns>Task of void</returns>
         public async System.Threading.Tasks.Task ThemeCreateNewThemeAsync (string storeId, string themeFileUrl, string themeName)
+        {
+             await ThemeCreateNewThemeAsyncWithHttpInfo(storeId, themeFileUrl, themeName);
+
+        }
+
+        /// <summary>
+        /// Create new theme Create new theme considering store id, theme file url and theme name
+        /// </summary>
+        /// <param name="storeId">Store id</param>
+        /// <param name="themeFileUrl">Theme file url</param>
+        /// <param name="themeName">Theme name</param>
+        /// <returns>Task of ApiResponse</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<Object>> ThemeCreateNewThemeAsyncWithHttpInfo (string storeId, string themeFileUrl, string themeName)
         {
             // verify the required parameter 'storeId' is set
             if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling ThemeCreateNewTheme");
@@ -2425,32 +3522,38 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
+            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
             
-            if (themeFileUrl != null) queryParams.Add("themeFileUrl", ApiClient.ParameterToString(themeFileUrl)); // query parameter
-            if (themeName != null) queryParams.Add("themeName", ApiClient.ParameterToString(themeName)); // query parameter
-            
-            
+            if (themeFileUrl != null) queryParams.Add("themeFileUrl", Configuration.ApiClient.ParameterToString(themeFileUrl)); // query parameter
+            if (themeName != null) queryParams.Add("themeName", Configuration.ApiClient.ParameterToString(themeName)); // query parameter
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling ThemeCreateNewTheme: " + response.Content, response.Content);
+            
+            
 
             
-            return;
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling ThemeCreateNewTheme: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling ThemeCreateNewTheme: " + response.ErrorMessage, response.ErrorMessage);
+
+            
+            return new ApiResponse<Object>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                null);
         }
         
         /// <summary>
@@ -2458,8 +3561,19 @@ namespace VirtoCommerce.Client.Api
         /// </summary>
         /// <param name="storeId">Store id</param> 
         /// <param name="themeId">Theme id</param> 
-        /// <returns></returns>            
+        /// <returns></returns>
         public void ThemeDeleteTheme (string storeId, string themeId)
+        {
+             ThemeDeleteThemeWithHttpInfo(storeId, themeId);
+        }
+
+        /// <summary>
+        /// Delete theme Search theme assets by store id and theme id
+        /// </summary>
+        /// <param name="storeId">Store id</param> 
+        /// <param name="themeId">Theme id</param> 
+        /// <returns>ApiResponse of Object(void)</returns>
+        public ApiResponse<Object> ThemeDeleteThemeWithHttpInfo (string storeId, string themeId)
         {
             
             // verify the required parameter 'storeId' is set
@@ -2473,7 +3587,7 @@ namespace VirtoCommerce.Client.Api
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
@@ -2482,33 +3596,37 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
-            if (themeId != null) pathParams.Add("themeId", ApiClient.ParameterToString(themeId)); // path parameter
+            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
+            if (themeId != null) pathParams.Add("themeId", Configuration.ApiClient.ParameterToString(themeId)); // path parameter
             
             
             
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
+
+            
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
     
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling ThemeDeleteTheme: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling ThemeDeleteTheme: " + response.ErrorMessage, response.ErrorMessage);
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling ThemeDeleteTheme: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling ThemeDeleteTheme: " + response.ErrorMessage, response.ErrorMessage);
     
-            return;
+            
+            return new ApiResponse<Object>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                null);
         }
     
         /// <summary>
@@ -2516,8 +3634,20 @@ namespace VirtoCommerce.Client.Api
         /// </summary>
         /// <param name="storeId">Store id</param>
         /// <param name="themeId">Theme id</param>
-        /// <returns></returns>
+        /// <returns>Task of void</returns>
         public async System.Threading.Tasks.Task ThemeDeleteThemeAsync (string storeId, string themeId)
+        {
+             await ThemeDeleteThemeAsyncWithHttpInfo(storeId, themeId);
+
+        }
+
+        /// <summary>
+        /// Delete theme Search theme assets by store id and theme id
+        /// </summary>
+        /// <param name="storeId">Store id</param>
+        /// <param name="themeId">Theme id</param>
+        /// <returns>Task of ApiResponse</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<Object>> ThemeDeleteThemeAsyncWithHttpInfo (string storeId, string themeId)
         {
             // verify the required parameter 'storeId' is set
             if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling ThemeDeleteTheme");
@@ -2538,31 +3668,37 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
-            if (themeId != null) pathParams.Add("themeId", ApiClient.ParameterToString(themeId)); // path parameter
+            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
+            if (themeId != null) pathParams.Add("themeId", Configuration.ApiClient.ParameterToString(themeId)); // path parameter
             
             
             
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling ThemeDeleteTheme: " + response.Content, response.Content);
 
             
-            return;
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling ThemeDeleteTheme: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling ThemeDeleteTheme: " + response.ErrorMessage, response.ErrorMessage);
+
+            
+            return new ApiResponse<Object>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                null);
         }
         
         /// <summary>
@@ -2571,8 +3707,20 @@ namespace VirtoCommerce.Client.Api
         /// <param name="asset">Theme asset</param> 
         /// <param name="storeId">Store id</param> 
         /// <param name="themeId">Theme id</param> 
-        /// <returns></returns>            
+        /// <returns></returns>
         public void ThemeSaveItem (VirtoCommerceContentWebModelsThemeAsset asset, string storeId, string themeId)
+        {
+             ThemeSaveItemWithHttpInfo(asset, storeId, themeId);
+        }
+
+        /// <summary>
+        /// Save theme asset Save theme asset considering store id and theme id
+        /// </summary>
+        /// <param name="asset">Theme asset</param> 
+        /// <param name="storeId">Store id</param> 
+        /// <param name="themeId">Theme id</param> 
+        /// <returns>ApiResponse of Object(void)</returns>
+        public ApiResponse<Object> ThemeSaveItemWithHttpInfo (VirtoCommerceContentWebModelsThemeAsset asset, string storeId, string themeId)
         {
             
             // verify the required parameter 'asset' is set
@@ -2589,7 +3737,7 @@ namespace VirtoCommerce.Client.Api
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
@@ -2598,34 +3746,38 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
-            if (themeId != null) pathParams.Add("themeId", ApiClient.ParameterToString(themeId)); // path parameter
+            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
+            if (themeId != null) pathParams.Add("themeId", Configuration.ApiClient.ParameterToString(themeId)); // path parameter
             
             
             
             
-            postBody = ApiClient.Serialize(asset); // http body (model) parameter
+            postBody = Configuration.ApiClient.Serialize(asset); // http body (model) parameter
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
+
+            
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
     
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling ThemeSaveItem: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling ThemeSaveItem: " + response.ErrorMessage, response.ErrorMessage);
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling ThemeSaveItem: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling ThemeSaveItem: " + response.ErrorMessage, response.ErrorMessage);
     
-            return;
+            
+            return new ApiResponse<Object>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                null);
         }
     
         /// <summary>
@@ -2634,8 +3786,21 @@ namespace VirtoCommerce.Client.Api
         /// <param name="asset">Theme asset</param>
         /// <param name="storeId">Store id</param>
         /// <param name="themeId">Theme id</param>
-        /// <returns></returns>
+        /// <returns>Task of void</returns>
         public async System.Threading.Tasks.Task ThemeSaveItemAsync (VirtoCommerceContentWebModelsThemeAsset asset, string storeId, string themeId)
+        {
+             await ThemeSaveItemAsyncWithHttpInfo(asset, storeId, themeId);
+
+        }
+
+        /// <summary>
+        /// Save theme asset Save theme asset considering store id and theme id
+        /// </summary>
+        /// <param name="asset">Theme asset</param>
+        /// <param name="storeId">Store id</param>
+        /// <param name="themeId">Theme id</param>
+        /// <returns>Task of ApiResponse</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<Object>> ThemeSaveItemAsyncWithHttpInfo (VirtoCommerceContentWebModelsThemeAsset asset, string storeId, string themeId)
         {
             // verify the required parameter 'asset' is set
             if (asset == null) throw new ApiException(400, "Missing required parameter 'asset' when calling ThemeSaveItem");
@@ -2658,32 +3823,38 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
-            if (themeId != null) pathParams.Add("themeId", ApiClient.ParameterToString(themeId)); // path parameter
+            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
+            if (themeId != null) pathParams.Add("themeId", Configuration.ApiClient.ParameterToString(themeId)); // path parameter
             
             
             
             
-            postBody = ApiClient.Serialize(asset); // http body (model) parameter
+            postBody = Configuration.ApiClient.Serialize(asset); // http body (model) parameter
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling ThemeSaveItem: " + response.Content, response.Content);
 
             
-            return;
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling ThemeSaveItem: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling ThemeSaveItem: " + response.ErrorMessage, response.ErrorMessage);
+
+            
+            return new ApiResponse<Object>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                null);
         }
         
         /// <summary>
@@ -2692,8 +3863,20 @@ namespace VirtoCommerce.Client.Api
         /// <param name="storeId">Store id</param> 
         /// <param name="themeId">Theme id</param> 
         /// <param name="assetIds">Deleted asset ids</param> 
-        /// <returns></returns>            
+        /// <returns></returns>
         public void ThemeDeleteAssets (string storeId, string themeId, List<string> assetIds)
+        {
+             ThemeDeleteAssetsWithHttpInfo(storeId, themeId, assetIds);
+        }
+
+        /// <summary>
+        /// Delete theme assets by assetIds Delete theme assets considering store id, theme id and assetIds
+        /// </summary>
+        /// <param name="storeId">Store id</param> 
+        /// <param name="themeId">Theme id</param> 
+        /// <param name="assetIds">Deleted asset ids</param> 
+        /// <returns>ApiResponse of Object(void)</returns>
+        public ApiResponse<Object> ThemeDeleteAssetsWithHttpInfo (string storeId, string themeId, List<string> assetIds)
         {
             
             // verify the required parameter 'storeId' is set
@@ -2710,7 +3893,7 @@ namespace VirtoCommerce.Client.Api
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
@@ -2719,34 +3902,38 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
-            if (themeId != null) pathParams.Add("themeId", ApiClient.ParameterToString(themeId)); // path parameter
+            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
+            if (themeId != null) pathParams.Add("themeId", Configuration.ApiClient.ParameterToString(themeId)); // path parameter
             
-            if (assetIds != null) queryParams.Add("assetIds", ApiClient.ParameterToString(assetIds)); // query parameter
-            
-            
+            if (assetIds != null) queryParams.Add("assetIds", Configuration.ApiClient.ParameterToString(assetIds)); // query parameter
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
+            
+            
+
+            
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
     
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling ThemeDeleteAssets: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling ThemeDeleteAssets: " + response.ErrorMessage, response.ErrorMessage);
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling ThemeDeleteAssets: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling ThemeDeleteAssets: " + response.ErrorMessage, response.ErrorMessage);
     
-            return;
+            
+            return new ApiResponse<Object>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                null);
         }
     
         /// <summary>
@@ -2755,8 +3942,21 @@ namespace VirtoCommerce.Client.Api
         /// <param name="storeId">Store id</param>
         /// <param name="themeId">Theme id</param>
         /// <param name="assetIds">Deleted asset ids</param>
-        /// <returns></returns>
+        /// <returns>Task of void</returns>
         public async System.Threading.Tasks.Task ThemeDeleteAssetsAsync (string storeId, string themeId, List<string> assetIds)
+        {
+             await ThemeDeleteAssetsAsyncWithHttpInfo(storeId, themeId, assetIds);
+
+        }
+
+        /// <summary>
+        /// Delete theme assets by assetIds Delete theme assets considering store id, theme id and assetIds
+        /// </summary>
+        /// <param name="storeId">Store id</param>
+        /// <param name="themeId">Theme id</param>
+        /// <param name="assetIds">Deleted asset ids</param>
+        /// <returns>Task of ApiResponse</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<Object>> ThemeDeleteAssetsAsyncWithHttpInfo (string storeId, string themeId, List<string> assetIds)
         {
             // verify the required parameter 'storeId' is set
             if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling ThemeDeleteAssets");
@@ -2779,32 +3979,38 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
-            if (themeId != null) pathParams.Add("themeId", ApiClient.ParameterToString(themeId)); // path parameter
+            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
+            if (themeId != null) pathParams.Add("themeId", Configuration.ApiClient.ParameterToString(themeId)); // path parameter
             
-            if (assetIds != null) queryParams.Add("assetIds", ApiClient.ParameterToString(assetIds)); // query parameter
-            
-            
+            if (assetIds != null) queryParams.Add("assetIds", Configuration.ApiClient.ParameterToString(assetIds)); // query parameter
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling ThemeDeleteAssets: " + response.Content, response.Content);
+            
+            
 
             
-            return;
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling ThemeDeleteAssets: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling ThemeDeleteAssets: " + response.ErrorMessage, response.ErrorMessage);
+
+            
+            return new ApiResponse<Object>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                null);
         }
         
         /// <summary>
@@ -2813,8 +4019,21 @@ namespace VirtoCommerce.Client.Api
         /// <param name="assetId">Theme asset id</param> 
         /// <param name="storeId">Store id</param> 
         /// <param name="themeId">Theme id</param> 
-        /// <returns>VirtoCommerceContentWebModelsThemeAsset</returns>            
+        /// <returns>VirtoCommerceContentWebModelsThemeAsset</returns>
         public VirtoCommerceContentWebModelsThemeAsset ThemeGetThemeAsset (string assetId, string storeId, string themeId)
+        {
+             ApiResponse<VirtoCommerceContentWebModelsThemeAsset> response = ThemeGetThemeAssetWithHttpInfo(assetId, storeId, themeId);
+             return response.Data;
+        }
+
+        /// <summary>
+        /// Get theme asset Get theme asset by store id, theme id and asset id. Asset id - asset path relative to root theme path
+        /// </summary>
+        /// <param name="assetId">Theme asset id</param> 
+        /// <param name="storeId">Store id</param> 
+        /// <param name="themeId">Theme id</param> 
+        /// <returns>ApiResponse of VirtoCommerceContentWebModelsThemeAsset</returns>
+        public ApiResponse< VirtoCommerceContentWebModelsThemeAsset > ThemeGetThemeAssetWithHttpInfo (string assetId, string storeId, string themeId)
         {
             
             // verify the required parameter 'assetId' is set
@@ -2831,7 +4050,7 @@ namespace VirtoCommerce.Client.Api
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
@@ -2840,34 +4059,38 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (assetId != null) pathParams.Add("assetId", ApiClient.ParameterToString(assetId)); // path parameter
-            if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
-            if (themeId != null) pathParams.Add("themeId", ApiClient.ParameterToString(themeId)); // path parameter
+            if (assetId != null) pathParams.Add("assetId", Configuration.ApiClient.ParameterToString(assetId)); // path parameter
+            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
+            if (themeId != null) pathParams.Add("themeId", Configuration.ApiClient.ParameterToString(themeId)); // path parameter
             
             
             
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
+
+            
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
     
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling ThemeGetThemeAsset: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling ThemeGetThemeAsset: " + response.ErrorMessage, response.ErrorMessage);
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling ThemeGetThemeAsset: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling ThemeGetThemeAsset: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (VirtoCommerceContentWebModelsThemeAsset) ApiClient.Deserialize(response, typeof(VirtoCommerceContentWebModelsThemeAsset));
+            return new ApiResponse<VirtoCommerceContentWebModelsThemeAsset>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommerceContentWebModelsThemeAsset) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceContentWebModelsThemeAsset)));
+            
         }
     
         /// <summary>
@@ -2876,8 +4099,22 @@ namespace VirtoCommerce.Client.Api
         /// <param name="assetId">Theme asset id</param>
         /// <param name="storeId">Store id</param>
         /// <param name="themeId">Theme id</param>
-        /// <returns>VirtoCommerceContentWebModelsThemeAsset</returns>
+        /// <returns>Task of VirtoCommerceContentWebModelsThemeAsset</returns>
         public async System.Threading.Tasks.Task<VirtoCommerceContentWebModelsThemeAsset> ThemeGetThemeAssetAsync (string assetId, string storeId, string themeId)
+        {
+             ApiResponse<VirtoCommerceContentWebModelsThemeAsset> response = await ThemeGetThemeAssetAsyncWithHttpInfo(assetId, storeId, themeId);
+             return response.Data;
+
+        }
+
+        /// <summary>
+        /// Get theme asset Get theme asset by store id, theme id and asset id. Asset id - asset path relative to root theme path
+        /// </summary>
+        /// <param name="assetId">Theme asset id</param>
+        /// <param name="storeId">Store id</param>
+        /// <param name="themeId">Theme id</param>
+        /// <returns>Task of ApiResponse (VirtoCommerceContentWebModelsThemeAsset)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceContentWebModelsThemeAsset>> ThemeGetThemeAssetAsyncWithHttpInfo (string assetId, string storeId, string themeId)
         {
             // verify the required parameter 'assetId' is set
             if (assetId == null) throw new ApiException(400, "Missing required parameter 'assetId' when calling ThemeGetThemeAsset");
@@ -2900,31 +4137,38 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (assetId != null) pathParams.Add("assetId", ApiClient.ParameterToString(assetId)); // path parameter
-            if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
-            if (themeId != null) pathParams.Add("themeId", ApiClient.ParameterToString(themeId)); // path parameter
+            if (assetId != null) pathParams.Add("assetId", Configuration.ApiClient.ParameterToString(assetId)); // path parameter
+            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
+            if (themeId != null) pathParams.Add("themeId", Configuration.ApiClient.ParameterToString(themeId)); // path parameter
             
             
             
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling ThemeGetThemeAsset: " + response.Content, response.Content);
 
-            return (VirtoCommerceContentWebModelsThemeAsset) ApiClient.Deserialize(response, typeof(VirtoCommerceContentWebModelsThemeAsset));
+            
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling ThemeGetThemeAsset: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling ThemeGetThemeAsset: " + response.ErrorMessage, response.ErrorMessage);
+
+            return new ApiResponse<VirtoCommerceContentWebModelsThemeAsset>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommerceContentWebModelsThemeAsset) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceContentWebModelsThemeAsset)));
+            
         }
         
         /// <summary>
@@ -2932,8 +4176,20 @@ namespace VirtoCommerce.Client.Api
         /// </summary>
         /// <param name="storeId">Store id</param> 
         /// <param name="themeId">Theme id</param> 
-        /// <returns></returns>            
+        /// <returns>List&lt;VirtoCommerceContentWebModelsThemeAssetFolder&gt;</returns>
         public List<VirtoCommerceContentWebModelsThemeAssetFolder> ThemeGetThemeAssets (string storeId, string themeId)
+        {
+             ApiResponse<List<VirtoCommerceContentWebModelsThemeAssetFolder>> response = ThemeGetThemeAssetsWithHttpInfo(storeId, themeId);
+             return response.Data;
+        }
+
+        /// <summary>
+        /// Get theme assets folders Get theme assets folders by store id and theme id
+        /// </summary>
+        /// <param name="storeId">Store id</param> 
+        /// <param name="themeId">Theme id</param> 
+        /// <returns>ApiResponse of List&lt;VirtoCommerceContentWebModelsThemeAssetFolder&gt;</returns>
+        public ApiResponse< List<VirtoCommerceContentWebModelsThemeAssetFolder> > ThemeGetThemeAssetsWithHttpInfo (string storeId, string themeId)
         {
             
             // verify the required parameter 'storeId' is set
@@ -2947,7 +4203,7 @@ namespace VirtoCommerce.Client.Api
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
@@ -2956,33 +4212,37 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
-            if (themeId != null) pathParams.Add("themeId", ApiClient.ParameterToString(themeId)); // path parameter
+            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
+            if (themeId != null) pathParams.Add("themeId", Configuration.ApiClient.ParameterToString(themeId)); // path parameter
             
             
             
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
+
+            
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
     
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling ThemeGetThemeAssets: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling ThemeGetThemeAssets: " + response.ErrorMessage, response.ErrorMessage);
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling ThemeGetThemeAssets: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling ThemeGetThemeAssets: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (List<VirtoCommerceContentWebModelsThemeAssetFolder>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceContentWebModelsThemeAssetFolder>));
+            return new ApiResponse<List<VirtoCommerceContentWebModelsThemeAssetFolder>>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (List<VirtoCommerceContentWebModelsThemeAssetFolder>) Configuration.ApiClient.Deserialize(response, typeof(List<VirtoCommerceContentWebModelsThemeAssetFolder>)));
+            
         }
     
         /// <summary>
@@ -2990,8 +4250,21 @@ namespace VirtoCommerce.Client.Api
         /// </summary>
         /// <param name="storeId">Store id</param>
         /// <param name="themeId">Theme id</param>
-        /// <returns></returns>
+        /// <returns>Task of List&lt;VirtoCommerceContentWebModelsThemeAssetFolder&gt;</returns>
         public async System.Threading.Tasks.Task<List<VirtoCommerceContentWebModelsThemeAssetFolder>> ThemeGetThemeAssetsAsync (string storeId, string themeId)
+        {
+             ApiResponse<List<VirtoCommerceContentWebModelsThemeAssetFolder>> response = await ThemeGetThemeAssetsAsyncWithHttpInfo(storeId, themeId);
+             return response.Data;
+
+        }
+
+        /// <summary>
+        /// Get theme assets folders Get theme assets folders by store id and theme id
+        /// </summary>
+        /// <param name="storeId">Store id</param>
+        /// <param name="themeId">Theme id</param>
+        /// <returns>Task of ApiResponse (List&lt;VirtoCommerceContentWebModelsThemeAssetFolder&gt;)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceContentWebModelsThemeAssetFolder>>> ThemeGetThemeAssetsAsyncWithHttpInfo (string storeId, string themeId)
         {
             // verify the required parameter 'storeId' is set
             if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling ThemeGetThemeAssets");
@@ -3012,30 +4285,37 @@ namespace VirtoCommerce.Client.Api
             String[] http_header_accepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = ApiClient.SelectHeaderAccept(http_header_accepts);
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
-                headerParams.Add("Accept", ApiClient.SelectHeaderAccept(http_header_accepts));
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", ApiClient.ParameterToString(storeId)); // path parameter
-            if (themeId != null) pathParams.Add("themeId", ApiClient.ParameterToString(themeId)); // path parameter
+            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
+            if (themeId != null) pathParams.Add("themeId", Configuration.ApiClient.ParameterToString(themeId)); // path parameter
             
             
             
             
             
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams, authSettings);
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling ThemeGetThemeAssets: " + response.Content, response.Content);
 
-            return (List<VirtoCommerceContentWebModelsThemeAssetFolder>) ApiClient.Deserialize(response, typeof(List<VirtoCommerceContentWebModelsThemeAssetFolder>));
+            
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling ThemeGetThemeAssets: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling ThemeGetThemeAssets: " + response.ErrorMessage, response.ErrorMessage);
+
+            return new ApiResponse<List<VirtoCommerceContentWebModelsThemeAssetFolder>>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (List<VirtoCommerceContentWebModelsThemeAssetFolder>) Configuration.ApiClient.Deserialize(response, typeof(List<VirtoCommerceContentWebModelsThemeAssetFolder>)));
+            
         }
         
     }
