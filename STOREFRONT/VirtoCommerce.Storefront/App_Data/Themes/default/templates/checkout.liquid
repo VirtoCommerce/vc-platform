@@ -250,11 +250,7 @@
                                 </div>
                                 <label class="radio__label content-box__emphasis" for="{( availablePaymentMethod.GatewayCode )}" ng-bind="availablePaymentMethod.Name"></label>
                                 <div class="radio__accessory">
-                                    <div class="payment-icon" ng-class="{
-                                        'payment-icon--preparedform': availablePaymentMethod.Type == 'PreparedForm',
-                                        'payment-icon--standard': availablePaymentMethod.Type == 'Standard',
-                                        'payment-icon--unknown': availablePaymentMethod.Type == 'Unknown',
-                                        'payment-icon--redirection': availablePaymentMethod.Type == 'Redirection' }">
+                                    <div class="payment-icon" style="background-repeat: no-repeat; background-size: 38px auto;" ng-style="{ 'background-image': 'url(' + availablePaymentMethod.IconUrl + ')' }">
                                         <span class="visually-hidden" ng-bind="availablePaymentMethod.Name"></span>
                                     </div>
                                 </div>
