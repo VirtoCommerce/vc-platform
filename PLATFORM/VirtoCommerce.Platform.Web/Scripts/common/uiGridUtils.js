@@ -10,7 +10,6 @@
                     enableGridMenu: true,
                     //enableVerticalScrollbar: uiGridConstants.scrollbars.NEVER,
                     //enableHorizontalScrollbar: uiGridConstants.scrollbars.NEVER,
-                    //selectionRowHeaderWidth: 35,
                     saveFocus: false,
                     saveFilter: false,
                     savePinning: false,
@@ -72,25 +71,6 @@
 
                     gridApi.grid.registerDataChangeCallback(processMissingColumns, [uiGridConstants.dataChange.ROW]);
 
-                    // update grid menu behavior
-                    //gridApi.grid.registerDataChangeCallback(updateGridStyles, [uiGridConstants.dataChange.ROW]);
-                    //if ($scope.gridOptions.paginationPageSize > 0) {
-                    //    gridApi.pagination.on.paginationChanged($scope, updateGridStyles);
-                    //}
-                    //function updateGridStyles() {
-                    //    $timeout(function () {
-                    //        var headerHeight = $('.ui-grid-header').height();
-                    //        var gridDataHeight = (headerHeight ? headerHeight : 40) + gridApi.core.getVisibleRows(gridApi.grid).length * $scope.gridOptions.rowHeight;
-                    //        $scope.blade.gridScrollNeeded = $('.blade-inner').height() < 1 + gridDataHeight;
-
-                    //        if ($scope.blade.gridScrollNeeded) {
-                    //            $('.ui-grid').addClass('__scrolled');
-                    //        }
-                    //        else {
-                    //            $('.ui-grid').removeClass('__scrolled');
-                    //        }
-                    //    }, 10);
-                    //}
 
                     if (externalRegisterApiCallback) {
                         externalRegisterApiCallback(gridApi);
@@ -124,7 +104,7 @@
 
         return retVal;
     }])
-    // auto height for ui-grid
+    // auto height and additional class for ui-grid
     .directive('uiGridHeight', ['$timeout', '$window', function ($timeout, $window) {
         return {
             restrict: 'A',
