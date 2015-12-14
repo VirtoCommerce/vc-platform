@@ -75,7 +75,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
         /// Payment callback operation used by external payment services to inform post process payment in our system
         /// </summary>
         /// <param name="callback">payment callback parameters</param>
-        [HttpGet]
+        [HttpPost]
         [Route("paymentcallback")]
         [ResponseType(typeof(PostProcessPaymentResult))]
         public IHttpActionResult PostProcessPayment(webModel.PaymentCallbackParameters callback)
