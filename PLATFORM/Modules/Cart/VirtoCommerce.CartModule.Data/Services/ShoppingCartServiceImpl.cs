@@ -78,7 +78,6 @@ namespace VirtoCommerce.CartModule.Data.Services
 				repository.Add(entity);
 				CommitChanges(repository);
 			}
-            SaveDynamicPropertyValues(cart);
 
             retVal = GetById(entity.Id);
 			return retVal;
@@ -101,7 +100,6 @@ namespace VirtoCommerce.CartModule.Data.Services
 				sourceCartEntity.Patch(targetCartEntity);
 				var changedCart = targetCartEntity.ToCoreModel();
 				changedCarts.Add(changedCart);
-                SaveDynamicPropertyValues(cart);
             }
 
 
@@ -141,9 +139,25 @@ namespace VirtoCommerce.CartModule.Data.Services
                 CommitChanges(repository);
 			}
 
-		}
+            //Apply dynamic properties
+            foreach (var cart in carts)
+            {
+                var targetCart = GetById(cart.Id);
+                targetCart.ApplyDynamicPropertiesValues(cart);
+                _dynamicPropertyService.SaveDynamicPropertyValues(cart);
+                if (cart.Items != null)
+                {
+                    foreach (var lineItem in cart.Items)
+                    {
+                        var targetLineItem = targetCart.Items.FirstOrDefault(x => x.ProductId == lineItem.ProductId);
+                        targetLineItem.ApplyDynamicPropertiesValues(lineItem);
+                        _dynamicPropertyService.SaveDynamicPropertyValues(targetLineItem);
+                    }
+                }
+            }
+        }
 
-		public void Delete(string[] cartIds)
+        public void Delete(string[] cartIds)
 		{
 			using (var repository = _repositoryFactory())
 			{
@@ -164,18 +178,6 @@ namespace VirtoCommerce.CartModule.Data.Services
 		}
 
         #endregion
-
-        private void SaveDynamicPropertyValues(ShoppingCart cart)
-        {
-            _dynamicPropertyService.SaveDynamicPropertyValues(cart);
-            if (cart.Items != null)
-            {
-                foreach (var item in cart.Items)
-                {
-                    _dynamicPropertyService.SaveDynamicPropertyValues(item);
-                }
-            }
-        }
 
     }
 }

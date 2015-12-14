@@ -45,12 +45,13 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         {
             var category = _categoryService.GetById(id, Domain.Catalog.Model.CategoryResponseGroup.Full);
 
-            base.CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Read, category);
-
             if (category == null)
             {
                 return NotFound();
             }
+
+            base.CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Read, category);
+
             var retVal = category.ToWebModel(_blobUrlResolver);
 
             retVal.SecurityScopes = base.GetObjectPermissionScopeStrings(category);

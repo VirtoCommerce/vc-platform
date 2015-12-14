@@ -29,7 +29,12 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                 result.Collection = workContext.CurrentProduct.Category.ToShopifyModel(workContext);
             }
 
-            result.CurrentTags = new TagCollection(workContext.CurrentCatalogSearchCriteria.Terms.Select(t => t.ToShopifyModel()).ToList());
+            if (workContext.CurrentCatalogSearchCriteria.Terms.Any())
+            {
+                result.CurrentTags =
+                    new TagCollection(
+                        workContext.CurrentCatalogSearchCriteria.Terms.Select(t => t.ToShopifyModel()).ToList());
+            }
 
             var searchResult = workContext.CurrentCatalogSearchResult;
             if (searchResult != null)
