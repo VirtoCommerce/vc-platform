@@ -73,7 +73,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         }
 
         /// <summary>
-        /// Find customer order by id
+        /// Find customer order by id and it was not founded by number
         /// </summary>
         /// <remarks>Return a single customer order with all nested documents or null if order was not found</remarks>
         /// <param name="id">customer order id</param>
@@ -83,6 +83,12 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         public IHttpActionResult GetById(string id)
         {
             var retVal = _customerOrderService.GetById(id, coreModel.CustomerOrderResponseGroup.Full);
+
+            if (retVal == null)
+            {
+                _customerOrderService.GetByOrderNumber(id, coreModel.CustomerOrderResponseGroup.Full);
+            }
+
             if (retVal == null)
             {
                 return Ok();
