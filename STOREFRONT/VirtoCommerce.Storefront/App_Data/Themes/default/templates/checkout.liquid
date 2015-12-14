@@ -364,7 +364,7 @@
                                 </div>
                                 <label class="radio__label content-box__emphasis" for="BillingAddressNotEqualsShipping">{{ 'checkout.payment_method.billing_address_different' | t }}</label>
                             </div>
-                            <div class="radio-group__row content-box__row content-box__row--secondary" ng-if="!checkout.billingAddressEqualsShipping">
+                            <div class="radio-group__row content-box__row content-box__row--secondary" ng-if="checkout.hasPhysicalProducts && !checkout.billingAddressEqualsShipping || !checkout.hasPhysicalProducts">
                                 <div class="fieldset">
                                     <input id="Type" name="Type" type="hidden" value="Billing" ng-model="checkout.billingAddress.Type" ng-init="checkout.billingAddress.Type = 'Billing'" />
                                     <div class="field--half field field--required" ng-class="{ 'field--show-floating-label': checkout.billingAddress.FirstName.length, 'field--error': formPaymentMethod.FirstName.$dirty && formPaymentMethod.FirstName.$error.required }">
