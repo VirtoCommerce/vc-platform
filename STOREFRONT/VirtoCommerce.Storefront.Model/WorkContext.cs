@@ -63,6 +63,11 @@ namespace VirtoCommerce.Storefront.Model
         public ShoppingCart CurrentCart { get; set; }
 
         /// <summary>
+        /// Gets or sets the HTML code for payment method prepared form
+        /// </summary>
+        public string PaymentFormHtml { get; set; }
+
+        /// <summary>
         /// Gets or sets the collection of site navigation menu link lists
         /// </summary>
         public ICollection<MenuLinkList> CurrentLinkLists { get; set; }

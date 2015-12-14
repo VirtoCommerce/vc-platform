@@ -234,9 +234,7 @@ app.controller('checkoutController', ['$scope', '$location', '$sce', '$window', 
         cartService.setPaymentMethod($scope.checkout.selectedPaymentMethod.GatewayCode).then(function (response) {
             cartService.addAddress($scope.checkout.billingAddress).then(function (response) {
                 cartService.createOrder($scope.checkout.bankCardInfo).then(function (response) {
-                    var processingResult = response.data.processingResult;
-                    var orderId = response.data.orderId;
-                    handlePaymentProcessingResult(processingResult, orderId);
+                    handlePaymentProcessingResult(response.data.orderProcessingResult, response.data.order.id);
                     $scope.checkout.orderProcessing = false;
                 });
             });
@@ -529,29 +527,19 @@ app.controller('checkoutController', ['$scope', '$location', '$sce', '$window', 
             return;
         }
         if (paymentProcessingResult.paymentMethodType == 'PreparedForm' && paymentProcessingResult.htmlForm) {
-            $scope.checkout.paymentFormHtml = $sce.trustAsHtml(paymentProcessingResult.htmlForm);
-            $scope.innerRedirect('payment-form');
+            $scope.outerRedirect($scope.baseUrl + 'cart/checkout/paymentform?orderId=' + orderId);
         }
-        if (paymentProcessingResult.paymentMethodType == 'Standard') {
+        if (paymentProcessingResult.paymentMethodType == 'Standard' || paymentProcessingResult.paymentMethodType == 'Unknown') {
             if ($scope.customer.UserName == 'Anonymous') {
-                $scope.outerRedirect($scope.baseUrl + '/cart/thanks?orderId=' + orderId);
+                $scope.outerRedirect($scope.baseUrl + 'cart/checkout/thanks?orderId=' + orderId);
             } else {
-                $scope.outerRedirect($scope.baseUrl + '/account/order/' + orderId);
-            }
-        }
-        if (paymentProcessingResult.paymentMethodType == 'Unknown') {
-            if ($scope.customer.UserName == 'Anonymous') {
-                $scope.outerRedirect($scope.baseUrl + '/cart/thanks?orderId=' + orderId);
-            } else {
-                $scope.outerRedirect($scope.baseUrl + '/account/order/' + orderId);
+                $scope.outerRedirect($scope.baseUrl + 'account/order/' + orderId);
             }
         }
         if (paymentProcessingResult.paymentMethodType == 'Redirection' && paymentProcessingResult.redirectUrl) {
             $window.location.href = paymentProcessingResult.redirectUrl;
         }
     }
-
-    //======================================================================================================
 }]);
 
 app.controller('productController', ['$scope', '$window', 'productService', function ($scope, $window, productService) {
@@ -652,9 +640,6 @@ app.config(['$interpolateProvider', '$routeProvider', function ($interpolateProv
         })
         .when('/payment-method', {
             templateUrl: 'storefront.checkout.paymentMethod.tpl'
-        })
-        .when('/payment-form', {
-            templateUrl: 'storefront.checkout.paymentForm.tpl'
         });
 
     return $interpolateProvider.startSymbol('{(').endSymbol(')}');

@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using VirtoCommerce.Client.Api;
@@ -212,7 +215,7 @@ namespace VirtoCommerce.Storefront.Controllers
         // POST: /cart/createorder
         [HttpPost]
         [Route("createorder")]
-        public async Task<ActionResult> CreateOrderJson(BankCardInfo bankCardInfo)
+        public async Task<ActionResult> CreateOrderJson(VirtoCommerceDomainPaymentModelBankCardInfo bankCardInfo)
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
 
@@ -231,36 +234,46 @@ namespace VirtoCommerce.Storefront.Controllers
                 await _customerApi.CustomerModuleUpdateContactAsync(contact);
             }
 
-            VirtoCommerceOrderModuleWebModelProcessPaymentResult processingResult = null;
-            var incomingPayment = order.InPayments != null ? order.InPayments.FirstOrDefault() : null;
-            if (incomingPayment != null)
-            {
-                processingResult = await _orderApi.OrderModuleProcessOrderPaymentsAsync(bankCardInfo.ToServiceModel(), order.Id, incomingPayment.Id);
-            }
+            var processingResult = await GetOrderProcessingResultAsync(order, bankCardInfo);
 
-            return Json(new { processingResult = processingResult, orderId = order.Id }, JsonRequestBehavior.AllowGet);
+            return Json(new { order = order, orderProcessingResult = processingResult }, JsonRequestBehavior.AllowGet);
         }
 
-        // GET: /cart/externalpaymentcallback?orderId=...
+        // GET: /cart/checkout/paymentform?orderId=...
         [HttpGet]
-        [Route("externalpaymentcallback")]
-        public async Task<ActionResult> ExternalPaymentCallback(string orderId)
+        [Route("checkout/paymentform")]
+        public async Task<ActionResult> PaymentForm(string orderId)
         {
-            var processingResult = await _commerceApi.CommercePostProcessPaymentAsync(orderId);
-
-            if (!processingResult.IsSuccess.HasValue || !processingResult.IsSuccess.Value)
-            {
-                return View("error");
-            }
-
             var order = await _orderApi.OrderModuleGetByIdAsync(orderId);
 
-            return StoreFrontRedirect("~/cart/checkout/thanks");
+            var processingResult = await GetOrderProcessingResultAsync(order, new VirtoCommerceDomainPaymentModelBankCardInfo());
+
+            WorkContext.PaymentFormHtml = processingResult.HtmlForm;
+
+            return View("payment-form", WorkContext);
         }
 
-        // GET: /cart/thanks?orderId=...
+        // GET: /cart/externalpaymentcallback
+        //[HttpGet]
+        //[Route("externalpaymentcallback")]
+        //public async Task<ActionResult> ExternalPaymentCallback()
+        //{
+        //    var parameters = new List<KeyValuePair<string, string>>();
+
+        //    foreach (var key in HttpContext.Request.QueryString.AllKeys)
+        //    {
+        //        parameters.Add(new KeyValuePair<string, string>(key, HttpContext.Request.QueryString[key]));
+        //    }
+
+        //    foreach (var key in HttpContext.Request.Form.AllKeys)
+        //    {
+        //        parameters.Add(new KeyValuePair<string, string>(key, HttpContext.Request.QueryString[key]));
+        //    }
+        //}
+
+        // GET: /cart/checkout/thanks/{orderId}
         [HttpGet]
-        [Route("thanks")]
+        [Route("checkout/thanks/{orderId}")]
         public async Task<ActionResult> Thanks(string orderId)
         {
             var order = await _orderApi.OrderModuleGetByIdAsync(orderId);
@@ -273,6 +286,19 @@ namespace VirtoCommerce.Storefront.Controllers
             WorkContext.Order = order.ToWebModel();
 
             return View("thanks", WorkContext);
+        }
+
+        private async Task<VirtoCommerceOrderModuleWebModelProcessPaymentResult> GetOrderProcessingResultAsync(
+            VirtoCommerceOrderModuleWebModelCustomerOrder order, VirtoCommerceDomainPaymentModelBankCardInfo bankCardInfo)
+        {
+            VirtoCommerceOrderModuleWebModelProcessPaymentResult processingResult = null;
+            var incomingPayment = order.InPayments != null ? order.InPayments.FirstOrDefault() : null;
+            if (incomingPayment != null)
+            {
+                processingResult = await _orderApi.OrderModuleProcessOrderPaymentsAsync(bankCardInfo, order.Id, incomingPayment.Id);
+            }
+
+            return processingResult;
         }
     }
 }

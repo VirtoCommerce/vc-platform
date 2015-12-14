@@ -453,7 +453,7 @@
     <Content Include="App_Data\Themes\default\templates\page.contact.liquid" />
     <Content Include="App_Data\Themes\default\templates\page.liquid" />
     <Content Include="App_Data\Themes\default\templates\customers\reset_password_confirmation.liquid" />
-    <Content Include="App_Data\Themes\default\templates\payment.liquid" />
+    <Content Include="App_Data\Themes\default\templates\payment-form.liquid" />
     <Content Include="App_Data\Themes\default\templates\product.liquid" />
     <Content Include="App_Data\Themes\default\templates\quote.liquid" />
     <Content Include="App_Data\Themes\default\templates\quotes.liquid" />
