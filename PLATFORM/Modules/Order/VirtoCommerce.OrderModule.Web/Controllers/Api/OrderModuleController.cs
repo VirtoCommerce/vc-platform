@@ -79,7 +79,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         /// <param name="number">customer order number</param>
         [HttpGet]
         [ResponseType(typeof(webModel.CustomerOrder))]
-        [Route("{number}")]
+        [Route("number/{number}")]
         public IHttpActionResult GetByNumber(string number)
         {
             var retVal = _customerOrderService.GetByOrderNumber(number, coreModel.CustomerOrderResponseGroup.Full);
