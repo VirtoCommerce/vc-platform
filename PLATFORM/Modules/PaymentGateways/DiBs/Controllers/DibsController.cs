@@ -13,7 +13,7 @@ using VirtoCommerce.Domain.Store.Services;
 
 namespace Dibs.Controllers
 {
-    [ApiExplorerSettings(IgnoreApi=true)]
+    [ApiExplorerSettings(IgnoreApi = true)]
     [RoutePrefix("api/dibs")]
     public class DibsController : ApiController
     {
@@ -26,39 +26,43 @@ namespace Dibs.Controllers
             _customerOrderService = customerOrderService;
             _storeService = storeService;
         }
-                
+
         [HttpPost]
         [Route("callback")]
         [AllowAnonymous]
         public IHttpActionResult RegisterPayment()
         {
-            var order = _customerOrderService.GetById(HttpContext.Current.Request.Form["orderid"], CustomerOrderResponseGroup.Full);
+            var orderId = HttpContext.Current.Request.Form["orderid"];
+            var order = _customerOrderService.GetByOrderNumber(orderId, CustomerOrderResponseGroup.Full);
+            if (order == null)
+                order = _customerOrderService.GetById(orderId, CustomerOrderResponseGroup.Full);
             if (order == null)
             {
                 throw new NullReferenceException("Order not found");
             }
 
             var store = _storeService.GetById(order.StoreId);
+
             var parameters = new NameValueCollection();
 
-            foreach(var key in HttpContext.Current.Request.QueryString.AllKeys)
+            foreach (var key in HttpContext.Current.Request.QueryString.AllKeys)
             {
                 parameters.Add(key, HttpContext.Current.Request.Form[key]);
             }
 
-            foreach(var key in HttpContext.Current.Request.Form.AllKeys)
+            foreach (var key in HttpContext.Current.Request.Form.AllKeys)
             {
                 parameters.Add(key, HttpContext.Current.Request.Form[key]);
             }
-            
+
             var paymentMethod = store.PaymentMethods.FirstOrDefault(x => x.Code == dibsCode);
             if (paymentMethod != null)
             {
                 var validateResult = paymentMethod.ValidatePostProcessRequest(parameters);
                 var paymentOuterId = validateResult.OuterId;
-                
+
                 var payment = order.InPayments.FirstOrDefault(x => x.GatewayCode == dibsCode && (int)(x.Sum * 100) == Convert.ToInt32(parameters["amount"], CultureInfo.InvariantCulture));
-                
+
                 if (payment == null)
                 {
                     throw new NullReferenceException("appropriate paymentMethod not found");
@@ -74,7 +78,7 @@ namespace Dibs.Controllers
                 };
 
                 var retVal = paymentMethod.PostProcessPayment(context);
-                
+
                 if (retVal != null && retVal.IsSuccess)
                 {
                     _customerOrderService.Update(new CustomerOrder[] { order });
@@ -83,6 +87,6 @@ namespace Dibs.Controllers
             }
 
             return StatusCode(System.Net.HttpStatusCode.NotFound);
-        }        
+        }
     }
 }
