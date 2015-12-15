@@ -83,11 +83,12 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
             if (callback != null && callback.Parameters != null && callback.Parameters.Any(param => param.Key == "orderid"))
             {
                 var orderId = callback.Parameters.First(param => param.Key == "orderid").Value;
-                var order = _customerOrderService.GetById(orderId, CustomerOrderResponseGroup.Full);
+                //some payment method require customer number to be passed and returned. First search customer order by number
+                var order = _customerOrderService.GetByOrderNumber(orderId, CustomerOrderResponseGroup.Full);
+
+                //if order not found by order number search by order id
                 if (order == null)
-                {
-                    throw new NullReferenceException("order");
-                }
+                    order = _customerOrderService.GetById(orderId, CustomerOrderResponseGroup.Full);
 
                 var store = _storeService.GetById(order.StoreId);
                 var parameters = new NameValueCollection();
