@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceCoreModuleWebModelFulfillmentCenter : IEquatable<VirtoCommerceCoreModuleWebModelFulfillmentCenter>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceCoreModuleWebModelFulfillmentCenter" /> class.
+        /// </summary>
+        public VirtoCommerceCoreModuleWebModelFulfillmentCenter()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets Name

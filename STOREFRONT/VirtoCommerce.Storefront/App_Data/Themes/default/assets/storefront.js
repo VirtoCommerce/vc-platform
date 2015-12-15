@@ -16,12 +16,15 @@ app.service('marketingService', ['$http', function ($http) {
     }
 }]);
 
-app.service('productService', ['$http', function ($http) {
-	return {
-		getProduct: function (productId) {
-			return $http.get('product/' + productId + '/json');
-		}
-	}
+app.service('catalogService', ['$http', function ($http) {
+    return {
+        getProductPrices: function (categoryId) {
+            return $http.get('search/' + categoryId + '/actualproductprices/json');
+        },
+        getProduct: function (productId) {
+            return $http.get('product/' + productId + '/json');
+        }
+    }
 }]);
 
 app.service('cartService', ['$http', function ($http) {
@@ -71,6 +74,18 @@ app.service('cartService', ['$http', function ($http) {
     }
 }]);
 
+app.directive('vcContentPlace', ['marketingService', function (marketingService) {
+    return {
+        restrict: 'E',
+        link: function (scope, element, attrs) {
+            marketingService.getDynamicContent(attrs.id).then(function (response) {
+                element.html(response.data);
+            });
+        },
+        replace: true
+    }
+}]);
+
 app.controller('mainController', ['$scope', '$location', '$window', function ($scope, $location, $window) {
     //Base store url populated in layout and can be used for construction url inside controller
     $scope.baseUrl = {};
@@ -87,18 +102,6 @@ app.controller('mainController', ['$scope', '$location', '$window', function ($s
         $location.path(path);
         $scope.currentPath = $location.$$path.replace('/', '');
     };
-}]);
-
-app.directive('vcContentPlace', ['marketingService', function (marketingService) {
-    return {
-        restrict: 'E',
-        link: function (scope, element, attrs) {
-            marketingService.getDynamicContent(attrs.id).then(function (response) {
-                element.html(response.data);
-            });
-        },
-        replace: true
-    }
 }]);
 
 app.controller('cartController', ['$scope', 'cartService', function ($scope, cartService) {
@@ -145,6 +148,19 @@ app.controller('cartController', ['$scope', 'cartService', function ($scope, car
             $scope.cart = response.data;
         });
     }
+}]);
+
+app.controller('categoryController', ['$scope', '$window', 'catalogService', 'marketingService', function ($scope, $window, catalogService, marketingService) {
+    $scope.productPricesLoaded = false;
+    $scope.productPrices = [];
+
+    catalogService.getProductPrices($window.categoryId).then(function (response) {
+        var prices = response.data;
+        for (var i = 0; i < prices.length; i++) {
+            $scope.productPrices[prices[i].ProductId] = prices[i];
+        }
+        $scope.productPricesLoaded = true;
+    });
 }]);
 
 app.controller('checkoutController', ['$scope', '$location', '$sce', '$window', 'customerService', 'cartService', function ($scope, $location, $sce, $window, customerService, cartService) {
@@ -234,9 +250,7 @@ app.controller('checkoutController', ['$scope', '$location', '$sce', '$window', 
         cartService.setPaymentMethod($scope.checkout.selectedPaymentMethod.GatewayCode).then(function (response) {
             cartService.addAddress($scope.checkout.billingAddress).then(function (response) {
                 cartService.createOrder($scope.checkout.bankCardInfo).then(function (response) {
-                    var processingResult = response.data.processingResult;
-                    var orderId = response.data.orderId;
-                    handlePaymentProcessingResult(processingResult, orderId);
+                    handlePaymentProcessingResult(response.data.orderProcessingResult, response.data.order.id);
                     $scope.checkout.orderProcessing = false;
                 });
             });
@@ -529,32 +543,22 @@ app.controller('checkoutController', ['$scope', '$location', '$sce', '$window', 
             return;
         }
         if (paymentProcessingResult.paymentMethodType == 'PreparedForm' && paymentProcessingResult.htmlForm) {
-            $scope.checkout.paymentFormHtml = $sce.trustAsHtml(paymentProcessingResult.htmlForm);
-            $scope.innerRedirect('payment-form');
+            $scope.outerRedirect($scope.baseUrl + 'cart/checkout/paymentform?orderId=' + orderId);
         }
-        if (paymentProcessingResult.paymentMethodType == 'Standard') {
+        if (paymentProcessingResult.paymentMethodType == 'Standard' || paymentProcessingResult.paymentMethodType == 'Unknown') {
             if ($scope.customer.UserName == 'Anonymous') {
-                $scope.outerRedirect($scope.baseUrl + '/cart/thanks?orderId=' + orderId);
+                $scope.outerRedirect($scope.baseUrl + 'cart/checkout/thanks/' + orderId);
             } else {
-                $scope.outerRedirect($scope.baseUrl + '/account/order/' + orderId);
-            }
-        }
-        if (paymentProcessingResult.paymentMethodType == 'Unknown') {
-            if ($scope.customer.UserName == 'Anonymous') {
-                $scope.outerRedirect($scope.baseUrl + '/cart/thanks?orderId=' + orderId);
-            } else {
-                $scope.outerRedirect($scope.baseUrl + '/account/order/' + orderId);
+                $scope.outerRedirect($scope.baseUrl + 'account/order/' + orderId);
             }
         }
         if (paymentProcessingResult.paymentMethodType == 'Redirection' && paymentProcessingResult.redirectUrl) {
             $window.location.href = paymentProcessingResult.redirectUrl;
         }
     }
-
-    //======================================================================================================
 }]);
 
-app.controller('productController', ['$scope', '$window', 'productService', function ($scope, $window, productService) {
+app.controller('productController', ['$scope', '$window', 'catalogService', function ($scope, $window, catalogService) {
 	//TODO: prevent add to cart not selected variation
 	// display validator please select property
 	// display price range
@@ -564,7 +568,7 @@ app.controller('productController', ['$scope', '$window', 'productService', func
 	$scope.allVariationPropsMap = {};
 
 	function Initialize() {
-		productService.getProduct($window.productId).then(function (response) {
+	    catalogService.getProduct($window.productId).then(function (response) {
 			var product = response.data;
 			//Current product its also variation (titular)
 			allVarations = [ product ].concat(product.Variations);
@@ -652,9 +656,6 @@ app.config(['$interpolateProvider', '$routeProvider', function ($interpolateProv
         })
         .when('/payment-method', {
             templateUrl: 'storefront.checkout.paymentMethod.tpl'
-        })
-        .when('/payment-form', {
-            templateUrl: 'storefront.checkout.paymentForm.tpl'
         });
 
     return $interpolateProvider.startSymbol('{(').endSymbol(')}');

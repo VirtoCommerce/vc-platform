@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceCartModuleWebModelAddress : IEquatable<VirtoCommerceCartModuleWebModelAddress>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceCartModuleWebModelAddress" /> class.
+        /// </summary>
+        public VirtoCommerceCartModuleWebModelAddress()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or sets the value of address type

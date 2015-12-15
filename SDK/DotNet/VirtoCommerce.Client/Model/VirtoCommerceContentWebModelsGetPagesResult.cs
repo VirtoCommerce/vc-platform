@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceContentWebModelsGetPagesResult : IEquatable<VirtoCommerceContentWebModelsGetPagesResult>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceContentWebModelsGetPagesResult" /> class.
+        /// </summary>
+        public VirtoCommerceContentWebModelsGetPagesResult()
+        {
+            
+        }
+
         
         /// <summary>
         /// Collection of pages folders (by default - 'pages', 'includes'), that contains page elements

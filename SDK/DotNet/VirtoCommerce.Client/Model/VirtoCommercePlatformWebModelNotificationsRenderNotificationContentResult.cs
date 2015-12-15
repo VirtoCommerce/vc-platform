@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommercePlatformWebModelNotificationsRenderNotificationContentResult : IEquatable<VirtoCommercePlatformWebModelNotificationsRenderNotificationContentResult>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelNotificationsRenderNotificationContentResult" /> class.
+        /// </summary>
+        public VirtoCommercePlatformWebModelNotificationsRenderNotificationContentResult()
+        {
+            
+        }
+
         
         /// <summary>
         /// Subject

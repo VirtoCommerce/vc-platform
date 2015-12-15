@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceDomainCatalogModelCategoryLink : IEquatable<VirtoCommerceDomainCatalogModelCategoryLink>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCatalogModelCategoryLink" /> class.
+        /// </summary>
+        public VirtoCommerceDomainCatalogModelCategoryLink()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets CatalogId

@@ -163,7 +163,7 @@
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="VirtoCommerce.Client, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\VirtoCommerce.Client.2.5.1062.2\lib\net451\VirtoCommerce.Client.dll</HintPath>
+      <HintPath>..\packages\VirtoCommerce.Client.2.5.1069\lib\net451\VirtoCommerce.Client.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
@@ -327,7 +327,6 @@
     <Compile Include="Converters\AddressConverter.cs" />
     <Compile Include="Converters\AggregationConverters.cs" />
     <Compile Include="Converters\AssetConverter.cs" />
-    <Compile Include="Converters\BankCardInfoConverter.cs" />
     <Compile Include="Converters\CartPaymentMethodConverter.cs" />
     <Compile Include="Converters\CartShipmentMethodConverter.cs" />
     <Compile Include="Converters\DiscountConverter.cs" />
@@ -467,7 +466,7 @@
     <Content Include="App_Data\Themes\default\templates\page.contact.liquid" />
     <Content Include="App_Data\Themes\default\templates\page.liquid" />
     <Content Include="App_Data\Themes\default\templates\customers\reset_password_confirmation.liquid" />
-    <Content Include="App_Data\Themes\default\templates\payment.liquid" />
+    <Content Include="App_Data\Themes\default\templates\payment-form.liquid" />
     <Content Include="App_Data\Themes\default\templates\product.liquid" />
     <Content Include="App_Data\Themes\default\templates\quote.liquid" />
     <Content Include="App_Data\Themes\default\templates\quotes.liquid" />

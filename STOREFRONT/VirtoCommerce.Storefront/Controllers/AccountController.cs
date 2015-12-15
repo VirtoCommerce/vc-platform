@@ -55,7 +55,7 @@ namespace VirtoCommerce.Storefront.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetOrderAddressDetails(string id)
+        public async Task<ActionResult> GetOrderDetails(string id)
         {
             var order = await _orderApi.OrderModuleGetByIdAsync(id);
             WorkContext.Order = order.ToWebModel();

@@ -57,6 +57,8 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                 result.Order = workContext.Order.ToShopifyModel(urlBuilder);
             }
 
+            result.PaymentFormHtml = workContext.PaymentFormHtml;
+
             return result;
         }
     }

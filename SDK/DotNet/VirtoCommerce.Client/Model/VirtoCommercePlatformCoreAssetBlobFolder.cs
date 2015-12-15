@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommercePlatformCoreAssetBlobFolder : IEquatable<VirtoCommercePlatformCoreAssetBlobFolder>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreAssetBlobFolder" /> class.
+        /// </summary>
+        public VirtoCommercePlatformCoreAssetBlobFolder()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets Name

@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceDomainCommonConditionExpressionTree : IEquatable<VirtoCommerceDomainCommonConditionExpressionTree>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCommonConditionExpressionTree" /> class.
+        /// </summary>
+        public VirtoCommerceDomainCommonConditionExpressionTree()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets Id

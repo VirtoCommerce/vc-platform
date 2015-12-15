@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceCatalogModuleWebModelListEntryLink : IEquatable<VirtoCommerceCatalogModuleWebModelListEntryLink>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelListEntryLink" /> class.
+        /// </summary>
+        public VirtoCommerceCatalogModuleWebModelListEntryLink()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or sets the list entry identifier.

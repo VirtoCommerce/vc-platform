@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceDomainQuoteModelQuoteAttachment : IEquatable<VirtoCommerceDomainQuoteModelQuoteAttachment>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainQuoteModelQuoteAttachment" /> class.
+        /// </summary>
+        public VirtoCommerceDomainQuoteModelQuoteAttachment()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets Name

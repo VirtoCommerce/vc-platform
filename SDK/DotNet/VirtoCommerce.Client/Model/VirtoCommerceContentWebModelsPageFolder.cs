@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceContentWebModelsPageFolder : IEquatable<VirtoCommerceContentWebModelsPageFolder>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceContentWebModelsPageFolder" /> class.
+        /// </summary>
+        public VirtoCommerceContentWebModelsPageFolder()
+        {
+            
+        }
+
         
         /// <summary>
         /// Page folder name, by-default 'pages' and 'includes'

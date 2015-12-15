@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceStoreModuleWebModelPaymentMethod : IEquatable<VirtoCommerceStoreModuleWebModelPaymentMethod>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceStoreModuleWebModelPaymentMethod" /> class.
+        /// </summary>
+        public VirtoCommerceStoreModuleWebModelPaymentMethod()
+        {
+            
+        }
+
         
         /// <summary>
         /// Inner unique method code

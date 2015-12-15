@@ -145,6 +145,16 @@ namespace VirtoCommerce.Domain.Catalog.Model
             {
                 Keyword = Keyword.EscapeSearchTerm();
             }
+
+            if (PricelistIds != null)
+            {
+                PricelistIds = PricelistIds.Where(id => id != null).ToArray();
+
+                if (!PricelistIds.Any())
+                {
+                    PricelistIds = null;
+                }
+            }
         }
 
         public override string ToString()

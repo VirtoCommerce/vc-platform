@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceCatalogModuleWebModelPushNotificationsImportNotification : IEquatable<VirtoCommerceCatalogModuleWebModelPushNotificationsImportNotification>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelPushNotificationsImportNotification" /> class.
+        /// </summary>
+        public VirtoCommerceCatalogModuleWebModelPushNotificationsImportNotification()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or sets the job finish date and time.

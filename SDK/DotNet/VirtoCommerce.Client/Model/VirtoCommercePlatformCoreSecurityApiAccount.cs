@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommercePlatformCoreSecurityApiAccount : IEquatable<VirtoCommercePlatformCoreSecurityApiAccount>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecurityApiAccount" /> class.
+        /// </summary>
+        public VirtoCommercePlatformCoreSecurityApiAccount()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets Id

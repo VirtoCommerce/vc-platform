@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceMarketingModuleWebModelPromotionReward : IEquatable<VirtoCommerceMarketingModuleWebModelPromotionReward>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceMarketingModuleWebModelPromotionReward" /> class.
+        /// </summary>
+        public VirtoCommerceMarketingModuleWebModelPromotionReward()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or sets the flag of promotion reward is valid. Also used as a flag for applicability (applied or potential)

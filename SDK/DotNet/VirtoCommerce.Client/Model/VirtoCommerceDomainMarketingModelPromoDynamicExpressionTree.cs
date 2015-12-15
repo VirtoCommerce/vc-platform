@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceDomainMarketingModelPromoDynamicExpressionTree : IEquatable<VirtoCommerceDomainMarketingModelPromoDynamicExpressionTree>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainMarketingModelPromoDynamicExpressionTree" /> class.
+        /// </summary>
+        public VirtoCommerceDomainMarketingModelPromoDynamicExpressionTree()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets Id

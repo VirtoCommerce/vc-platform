@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommercePricingModuleWebModelPrice : IEquatable<VirtoCommercePricingModuleWebModelPrice>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommercePricingModuleWebModelPrice" /> class.
+        /// </summary>
+        public VirtoCommercePricingModuleWebModelPrice()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets PricelistId

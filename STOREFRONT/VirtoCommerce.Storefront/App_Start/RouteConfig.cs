@@ -20,7 +20,7 @@ namespace VirtoCommerce.Storefront
             //routes.MapMvcAttributeRoutes();
             //Account
             routes.MapLocalizedStorefrontRoute("Account", "account", defaults: new { controller = "Account", action = "Index" });
-            routes.MapLocalizedStorefrontRoute("Account.GetOrderAddressDetails", "account/order/{id}", defaults: new { controller = "Account", action = "GetOrderAddressDetails" });
+            routes.MapLocalizedStorefrontRoute("Account.GetOrderDetails ", "account/order/{id}", defaults: new { controller = "Account", action = "GetOrderDetails" });
             routes.MapLocalizedStorefrontRoute("Account.UpdateAddress", "account/addresses/{id}", defaults: new { controller = "Account", action = "UpdateAddress", id = UrlParameter.Optional }, constraints: new { httpMethod = new HttpMethodConstraint(new string[] { "POST" }) });
             routes.MapLocalizedStorefrontRoute("Account.GetAddresses", "account/addresses", defaults: new { controller = "Account", action = "GetAddresses" }, constraints: new { httpMethod = new HttpMethodConstraint(new string[] { "GET" }) });
             routes.MapLocalizedStorefrontRoute("Account.Register", "account/register", defaults: new { controller = "Account", action = "Register" });
@@ -49,9 +49,11 @@ namespace VirtoCommerce.Storefront
             routes.MapLocalizedStorefrontRoute("Cart.CreateOrder", "cart/createorder", defaults: new { controller = "Cart", action = "CreateOrderJson" });
             routes.MapLocalizedStorefrontRoute("Cart.ExternalPaymentCallback", "cart/externalpaymentcallback", defaults: new { controller = "Cart", action = "ExternalPaymentCallback" });
             routes.MapLocalizedStorefrontRoute("Cart.Thanks", "cart/thanks", defaults: new { controller = "Cart", action = "Thanks" });
+            routes.MapLocalizedStorefrontRoute("Cart.PaymentForm", "cart/checkout/paymentform", defaults: new { controller = "Cart", action = "PaymentForm" });
 
             //CatalogSearch
             routes.MapLocalizedStorefrontRoute("CatalogSearch.CategoryBrowsing", "search/{categoryId}", defaults: new { controller = "CatalogSearch", action = "CategoryBrowsing" });
+            routes.MapLocalizedStorefrontRoute("CatalogSearch.ActualProductPricesJson", "search/{categoryId}/actualproductprices/json", defaults: new { controller = "CatalogSearch", action = "ActualProductPricesJson" });
             //Common
             routes.MapLocalizedStorefrontRoute("Common.SetCurrency", "common/setcurrency/{currency}", defaults: new { controller = "Common", action = "SetCurrency" });
             routes.MapLocalizedStorefrontRoute("Common.Getcountries", "common/getcountries", defaults: new { controller = "Common", action = "GetCountries" });

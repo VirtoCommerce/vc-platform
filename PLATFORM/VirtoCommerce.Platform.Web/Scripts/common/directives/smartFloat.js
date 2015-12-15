@@ -48,12 +48,6 @@ angular.module('platformWebApp')
                             return undefined;
                         }
                     });
-
-                    ctrl.$formatters.unshift(
-                       function (modelValue) {
-                           return $filter('number')(modelValue);
-                       }
-                    );
                 }
             }
         };

@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommercePlatformWebModelPackagingModuleIdentity : IEquatable<VirtoCommercePlatformWebModelPackagingModuleIdentity>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelPackagingModuleIdentity" /> class.
+        /// </summary>
+        public VirtoCommercePlatformWebModelPackagingModuleIdentity()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets Id

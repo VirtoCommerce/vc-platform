@@ -382,8 +382,20 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
 
             #endregion
 
+            var responseGroup = ItemResponseGroup.ItemInfo | ItemResponseGroup.ItemAssets | ItemResponseGroup.Seo;
+
+            if ((criteria.ResponseGroup & SearchResponseGroup.WithProperties) == SearchResponseGroup.WithProperties)
+            {
+                responseGroup |= ItemResponseGroup.ItemProperties;
+            }
+
+            if ((criteria.ResponseGroup & SearchResponseGroup.WithVariations) == SearchResponseGroup.WithVariations)
+            {
+                responseGroup |= ItemResponseGroup.Variations;
+            }
+
             //Load ALL products 
-            var searchResults = _browseService.SearchItems(serviceCriteria, ItemResponseGroup.ItemInfo | ItemResponseGroup.Seo);
+            var searchResults = _browseService.SearchItems(serviceCriteria, responseGroup);
 
             // populate inventory
             //if ((request.ResponseGroup & ItemResponseGroup.ItemProperties) == ItemResponseGroup.ItemProperties)

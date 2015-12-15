@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommercePlatformCoreNotificationsNotificationParameter : IEquatable<VirtoCommercePlatformCoreNotificationsNotificationParameter>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreNotificationsNotificationParameter" /> class.
+        /// </summary>
+        public VirtoCommercePlatformCoreNotificationsNotificationParameter()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets ParameterName

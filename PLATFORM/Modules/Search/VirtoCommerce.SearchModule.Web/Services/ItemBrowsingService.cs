@@ -28,7 +28,7 @@ namespace VirtoCommerce.SearchModule.Web.Services
             _blobUrlResolver = blobUrlResolver;
         }
 
-        public moduleModel.SearchResult SearchItems(CatalogIndexedSearchCriteria criteria, moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemSmall)
+        public moduleModel.SearchResult SearchItems(CatalogIndexedSearchCriteria criteria, moduleModel.ItemResponseGroup responseGroup)
         {
             CatalogItemSearchResults results;
             var items = Search(criteria, out results, responseGroup);
@@ -46,7 +46,7 @@ namespace VirtoCommerce.SearchModule.Web.Services
 
 
 
-        private IEnumerable<moduleModel.CatalogProduct> Search(CatalogIndexedSearchCriteria criteria, out CatalogItemSearchResults results, moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemSmall)
+        private IEnumerable<moduleModel.CatalogProduct> Search(CatalogIndexedSearchCriteria criteria, out CatalogItemSearchResults results, moduleModel.ItemResponseGroup responseGroup)
         {
             var items = new List<moduleModel.CatalogProduct>();
             var itemsOrderedList = new List<string>();

@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceCatalogModuleWebModelMoveInfo : IEquatable<VirtoCommerceCatalogModuleWebModelMoveInfo>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelMoveInfo" /> class.
+        /// </summary>
+        public VirtoCommerceCatalogModuleWebModelMoveInfo()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets Catalog

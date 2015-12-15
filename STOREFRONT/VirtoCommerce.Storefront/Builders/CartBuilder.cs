@@ -281,7 +281,7 @@ namespace VirtoCommerce.Storefront.Builders
                     var lineItem = _cart.Items.FirstOrDefault(i => i.ProductId == reward.ProductId);
                     if (lineItem != null)
                     {
-                        var discount = CreateDiscount(lineItem.ExtendedPrice.Amount, PromotionRewardType.CatalogItemAmountReward, reward);
+                        var discount = reward.ToDiscountWebModel(lineItem.ExtendedPrice.Amount, _cart.Currency);
                         lineItem.Discounts.Add(discount);
                     }
                 }
@@ -291,7 +291,7 @@ namespace VirtoCommerce.Storefront.Builders
                     var shipment = _cart.Shipments.FirstOrDefault();
                     if (shipment != null)
                     {
-                        var discount = CreateDiscount(shipment.ShippingPrice.Amount, PromotionRewardType.ShipmentReward, reward);
+                        var discount = reward.ToDiscountWebModel(shipment.ShippingPrice.Amount, _cart.Currency);
                         shipment.Discounts.Add(discount);
                     }
                 }
@@ -300,7 +300,7 @@ namespace VirtoCommerce.Storefront.Builders
                 {
                     if (reward.IsValid.HasValue && reward.IsValid.Value)
                     {
-                        var discount = CreateDiscount(_cart.SubTotal.Amount, PromotionRewardType.CartSubtotalReward, reward);
+                        var discount = reward.ToDiscountWebModel(_cart.SubTotal.Amount, _cart.Currency);
                         _cart.Discounts.Add(discount);
                     }
                 }
@@ -353,18 +353,6 @@ namespace VirtoCommerce.Storefront.Builders
             _cart.ShippingTotal = new Money(_cart.Shipments.Sum(s => s.ShippingPrice.Amount), _currency.Code);
             _cart.SubTotal = new Money(_cart.Items.Sum(i => i.ExtendedPrice.Amount), _currency.Code) - lineItemsDiscountTotal;
             _cart.Total = _cart.SubTotal + _cart.ShippingTotal + _cart.TaxTotal - _cart.DiscountTotal;
-        }
-
-        private Discount CreateDiscount(decimal amount, PromotionRewardType type, VirtoCommerceMarketingModuleWebModelPromotionReward reward)
-        {
-            var discount = new Discount();
-
-            discount.Amount = GetAbsoluteDiscountAmount(amount, reward);
-            discount.Description = reward.Promotion.Description;
-            discount.PromotionId = reward.Promotion.Id;
-            discount.Type = type;
-
-            return discount;
         }
 
         private Money GetAbsoluteDiscountAmount(decimal amount, VirtoCommerceMarketingModuleWebModelPromotionReward reward)

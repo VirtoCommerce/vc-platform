@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceDomainCatalogModelAsset : IEquatable<VirtoCommerceDomainCatalogModelAsset>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCatalogModelAsset" /> class.
+        /// </summary>
+        public VirtoCommerceDomainCatalogModelAsset()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets Name

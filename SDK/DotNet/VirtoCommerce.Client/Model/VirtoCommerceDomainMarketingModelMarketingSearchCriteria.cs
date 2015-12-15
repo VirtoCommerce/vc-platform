@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceDomainMarketingModelMarketingSearchCriteria : IEquatable<VirtoCommerceDomainMarketingModelMarketingSearchCriteria>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainMarketingModelMarketingSearchCriteria" /> class.
+        /// </summary>
+        public VirtoCommerceDomainMarketingModelMarketingSearchCriteria()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets FolderId

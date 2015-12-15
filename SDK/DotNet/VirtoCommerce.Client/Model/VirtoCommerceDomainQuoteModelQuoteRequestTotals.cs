@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceDomainQuoteModelQuoteRequestTotals : IEquatable<VirtoCommerceDomainQuoteModelQuoteRequestTotals>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainQuoteModelQuoteRequestTotals" /> class.
+        /// </summary>
+        public VirtoCommerceDomainQuoteModelQuoteRequestTotals()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets OriginalSubTotalExlTax

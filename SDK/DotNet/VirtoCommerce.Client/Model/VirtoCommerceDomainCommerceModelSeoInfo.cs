@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceDomainCommerceModelSeoInfo : IEquatable<VirtoCommerceDomainCommerceModelSeoInfo>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCommerceModelSeoInfo" /> class.
+        /// </summary>
+        public VirtoCommerceDomainCommerceModelSeoInfo()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets SemanticUrl

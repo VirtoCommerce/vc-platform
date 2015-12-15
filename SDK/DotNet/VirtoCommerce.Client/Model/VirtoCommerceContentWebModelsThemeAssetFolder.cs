@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceContentWebModelsThemeAssetFolder : IEquatable<VirtoCommerceContentWebModelsThemeAssetFolder>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceContentWebModelsThemeAssetFolder" /> class.
+        /// </summary>
+        public VirtoCommerceContentWebModelsThemeAssetFolder()
+        {
+            
+        }
+
         
         /// <summary>
         /// Theme asset folder name, one of the predefined values - 'assets', 'templates', 'snippets', 'layout', 'config', 'locales'

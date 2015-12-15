@@ -250,11 +250,7 @@
                                 </div>
                                 <label class="radio__label content-box__emphasis" for="{( availablePaymentMethod.GatewayCode )}" ng-bind="availablePaymentMethod.Name"></label>
                                 <div class="radio__accessory">
-                                    <div class="payment-icon" ng-class="{
-                                        'payment-icon--preparedform': availablePaymentMethod.Type == 'PreparedForm',
-                                        'payment-icon--standard': availablePaymentMethod.Type == 'Standard',
-                                        'payment-icon--unknown': availablePaymentMethod.Type == 'Unknown',
-                                        'payment-icon--redirection': availablePaymentMethod.Type == 'Redirection' }">
+                                    <div class="payment-icon" style="background-repeat: no-repeat; background-size: 38px auto;" ng-style="{ 'background-image': 'url(' + availablePaymentMethod.IconUrl + ')' }">
                                         <span class="visually-hidden" ng-bind="availablePaymentMethod.Name"></span>
                                     </div>
                                 </div>
@@ -364,7 +360,7 @@
                                 </div>
                                 <label class="radio__label content-box__emphasis" for="BillingAddressNotEqualsShipping">{{ 'checkout.payment_method.billing_address_different' | t }}</label>
                             </div>
-                            <div class="radio-group__row content-box__row content-box__row--secondary" ng-if="!checkout.billingAddressEqualsShipping">
+                            <div class="radio-group__row content-box__row content-box__row--secondary" ng-if="checkout.hasPhysicalProducts && !checkout.billingAddressEqualsShipping || !checkout.hasPhysicalProducts">
                                 <div class="fieldset">
                                     <input id="Type" name="Type" type="hidden" value="Billing" ng-model="checkout.billingAddress.Type" ng-init="checkout.billingAddress.Type = 'Billing'" />
                                     <div class="field--half field field--required" ng-class="{ 'field--show-floating-label': checkout.billingAddress.FirstName.length, 'field--error': formPaymentMethod.FirstName.$dirty && formPaymentMethod.FirstName.$error.required }">
@@ -489,8 +485,4 @@
             </div>
         </form>
     </div>
-</script>
-
-<script id="storefront.checkout.paymentForm.tpl" type="text/ng-template">
-    <span ng-bind-html="checkout.paymentFormHtml"></span>
 </script>

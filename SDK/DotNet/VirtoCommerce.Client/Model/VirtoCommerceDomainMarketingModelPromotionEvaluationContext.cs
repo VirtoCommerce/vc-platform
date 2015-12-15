@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceDomainMarketingModelPromotionEvaluationContext : IEquatable<VirtoCommerceDomainMarketingModelPromotionEvaluationContext>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainMarketingModelPromotionEvaluationContext" /> class.
+        /// </summary>
+        public VirtoCommerceDomainMarketingModelPromotionEvaluationContext()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets RefusedGiftIds

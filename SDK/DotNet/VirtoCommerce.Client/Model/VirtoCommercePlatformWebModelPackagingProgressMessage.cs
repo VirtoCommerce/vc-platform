@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommercePlatformWebModelPackagingProgressMessage : IEquatable<VirtoCommercePlatformWebModelPackagingProgressMessage>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelPackagingProgressMessage" /> class.
+        /// </summary>
+        public VirtoCommercePlatformWebModelPackagingProgressMessage()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets Message

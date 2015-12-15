@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceCatalogModuleWebModelPushNotificationsExportNotification : IEquatable<VirtoCommerceCatalogModuleWebModelPushNotificationsExportNotification>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelPushNotificationsExportNotification" /> class.
+        /// </summary>
+        public VirtoCommerceCatalogModuleWebModelPushNotificationsExportNotification()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or sets the URL for downloading exported data.

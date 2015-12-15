@@ -16,18 +16,15 @@ namespace VirtoCommerce.Storefront.Services
         private readonly ICatalogModuleApi _catalogModuleApi;
         private readonly IPricingModuleApi _pricingModuleApi;
         private readonly IInventoryModuleApi _inventoryModuleApi;
-        private readonly IMarketingModuleApi _marketingModuleApi;
         private readonly ISearchModuleApi _searchApi;
         private readonly WorkContext _workContext;
 
-        public CatalogSearchServiceImpl(WorkContext workContext, ICatalogModuleApi catalogModuleApi, IPricingModuleApi pricingModuleApi, IInventoryModuleApi inventoryModuleApi,
-                                  IMarketingModuleApi marketingModuleApi, ISearchModuleApi searchApi)
+        public CatalogSearchServiceImpl(WorkContext workContext, ICatalogModuleApi catalogModuleApi, IPricingModuleApi pricingModuleApi, IInventoryModuleApi inventoryModuleApi, ISearchModuleApi searchApi)
         {
             _workContext = workContext;
             _catalogModuleApi = catalogModuleApi;
             _pricingModuleApi = pricingModuleApi;
             _inventoryModuleApi = inventoryModuleApi;
-            _marketingModuleApi = marketingModuleApi;
             _searchApi = searchApi;
         }
 
@@ -57,6 +54,21 @@ namespace VirtoCommerce.Storefront.Services
         {
             var retVal = new CatalogSearchResult();
 
+            List<string> pricelistIds = null;
+
+            if ((criteria.ResponseGroup & CatalogSearchResponseGroup.WithProducts) ==
+                CatalogSearchResponseGroup.WithProducts)
+            {
+                var pricelists = await _pricingModuleApi.PricingModuleEvaluatePriceListsAsync(
+                    evalContextStoreId: _workContext.CurrentStore.Id,
+                    evalContextCatalogId: criteria.CatalogId,
+                    evalContextCustomerId: _workContext.CurrentCustomer.Id,
+                    evalContextCurrency: _workContext.CurrentCurrency.Code,
+                    evalContextQuantity: 1
+                    );
+                pricelistIds = pricelists.Select(p => p.Id).ToList();
+            }
+
             var result = await _searchApi.SearchModuleSearchAsync(
                 criteriaStoreId: _workContext.CurrentStore.Id,
                 criteriaResponseGroup: criteria.ResponseGroup.ToString(),
@@ -66,6 +78,7 @@ namespace VirtoCommerce.Storefront.Services
                 criteriaCurrency: _workContext.CurrentCurrency.Code,
                 criteriaHideDirectLinkedCategories: true,
                 criteriaTerms: criteria.Terms.ToStrings(),
+                criteriaPricelistIds: pricelistIds,
                 criteriaSkip: criteria.PageSize * (criteria.PageNumber - 1),
                 criteriaTake: criteria.PageSize);
 

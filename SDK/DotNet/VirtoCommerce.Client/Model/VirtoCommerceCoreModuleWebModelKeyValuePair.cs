@@ -16,15 +16,29 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommerceContentWebModelsGetPagesCriteria : IEquatable<VirtoCommerceContentWebModelsGetPagesCriteria>
+    public class VirtoCommerceCoreModuleWebModelKeyValuePair : IEquatable<VirtoCommerceCoreModuleWebModelKeyValuePair>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceCoreModuleWebModelKeyValuePair" /> class.
+        /// </summary>
+        public VirtoCommerceCoreModuleWebModelKeyValuePair()
+        {
+            
+        }
+
         
         /// <summary>
-        /// Max value of last updated date, if it's null returns all pages for store
+        /// Gets or Sets Key
         /// </summary>
-        /// <value>Max value of last updated date, if it's null returns all pages for store</value>
-        [DataMember(Name="lastUpdateDate", EmitDefaultValue=false)]
-        public DateTime? LastUpdateDate { get; set; }
+        [DataMember(Name="key", EmitDefaultValue=false)]
+        public string Key { get; set; }
+  
+        
+        /// <summary>
+        /// Gets or Sets Value
+        /// </summary>
+        [DataMember(Name="value", EmitDefaultValue=false)]
+        public string Value { get; set; }
   
         
   
@@ -35,8 +49,9 @@ namespace VirtoCommerce.Client.Model
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class VirtoCommerceContentWebModelsGetPagesCriteria {\n");
-            sb.Append("  LastUpdateDate: ").Append(LastUpdateDate).Append("\n");
+            sb.Append("class VirtoCommerceCoreModuleWebModelKeyValuePair {\n");
+            sb.Append("  Key: ").Append(Key).Append("\n");
+            sb.Append("  Value: ").Append(Value).Append("\n");
             
             sb.Append("}\n");
             return sb.ToString();
@@ -59,15 +74,15 @@ namespace VirtoCommerce.Client.Model
         public override bool Equals(object obj)
         {
             // credit: http://stackoverflow.com/a/10454552/677735
-            return this.Equals(obj as VirtoCommerceContentWebModelsGetPagesCriteria);
+            return this.Equals(obj as VirtoCommerceCoreModuleWebModelKeyValuePair);
         }
 
         /// <summary>
-        /// Returns true if VirtoCommerceContentWebModelsGetPagesCriteria instances are equal
+        /// Returns true if VirtoCommerceCoreModuleWebModelKeyValuePair instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceContentWebModelsGetPagesCriteria to be compared</param>
+        /// <param name="obj">Instance of VirtoCommerceCoreModuleWebModelKeyValuePair to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(VirtoCommerceContentWebModelsGetPagesCriteria other)
+        public bool Equals(VirtoCommerceCoreModuleWebModelKeyValuePair other)
         {
             // credit: http://stackoverflow.com/a/10454552/677735
             if (other == null)
@@ -75,9 +90,14 @@ namespace VirtoCommerce.Client.Model
 
             return 
                 (
-                    this.LastUpdateDate == other.LastUpdateDate ||
-                    this.LastUpdateDate != null &&
-                    this.LastUpdateDate.Equals(other.LastUpdateDate)
+                    this.Key == other.Key ||
+                    this.Key != null &&
+                    this.Key.Equals(other.Key)
+                ) && 
+                (
+                    this.Value == other.Value ||
+                    this.Value != null &&
+                    this.Value.Equals(other.Value)
                 );
         }
 
@@ -93,8 +113,11 @@ namespace VirtoCommerce.Client.Model
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
                 
-                if (this.LastUpdateDate != null)
-                    hash = hash * 57 + this.LastUpdateDate.GetHashCode();
+                if (this.Key != null)
+                    hash = hash * 57 + this.Key.GetHashCode();
+                
+                if (this.Value != null)
+                    hash = hash * 57 + this.Value.GetHashCode();
                 
                 return hash;
             }

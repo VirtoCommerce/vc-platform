@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommercePlatformCoreDynamicPropertiesDynamicObjectProperty : IEquatable<VirtoCommercePlatformCoreDynamicPropertiesDynamicObjectProperty>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreDynamicPropertiesDynamicObjectProperty" /> class.
+        /// </summary>
+        public VirtoCommercePlatformCoreDynamicPropertiesDynamicObjectProperty()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets ObjectId

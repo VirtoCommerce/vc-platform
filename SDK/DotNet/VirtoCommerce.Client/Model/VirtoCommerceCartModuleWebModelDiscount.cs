@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceCartModuleWebModelDiscount : IEquatable<VirtoCommerceCartModuleWebModelDiscount>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceCartModuleWebModelDiscount" /> class.
+        /// </summary>
+        public VirtoCommerceCartModuleWebModelDiscount()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or sets the value of promotion id

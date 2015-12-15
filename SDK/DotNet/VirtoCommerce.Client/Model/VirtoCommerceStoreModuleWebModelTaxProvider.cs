@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceStoreModuleWebModelTaxProvider : IEquatable<VirtoCommerceStoreModuleWebModelTaxProvider>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceStoreModuleWebModelTaxProvider" /> class.
+        /// </summary>
+        public VirtoCommerceStoreModuleWebModelTaxProvider()
+        {
+            
+        }
+
         
         /// <summary>
         /// Inner unique method code

@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceDomainCatalogModelProductAssociation : IEquatable<VirtoCommerceDomainCatalogModelProductAssociation>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCatalogModelProductAssociation" /> class.
+        /// </summary>
+        public VirtoCommerceDomainCatalogModelProductAssociation()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets Name

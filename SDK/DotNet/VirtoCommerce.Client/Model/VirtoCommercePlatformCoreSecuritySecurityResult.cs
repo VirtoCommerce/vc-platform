@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommercePlatformCoreSecuritySecurityResult : IEquatable<VirtoCommercePlatformCoreSecuritySecurityResult>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecuritySecurityResult" /> class.
+        /// </summary>
+        public VirtoCommercePlatformCoreSecuritySecurityResult()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets Succeeded

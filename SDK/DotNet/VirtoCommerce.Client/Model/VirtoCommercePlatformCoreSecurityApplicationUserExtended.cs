@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommercePlatformCoreSecurityApplicationUserExtended : IEquatable<VirtoCommercePlatformCoreSecurityApplicationUserExtended>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecurityApplicationUserExtended" /> class.
+        /// </summary>
+        public VirtoCommercePlatformCoreSecurityApplicationUserExtended()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets Id

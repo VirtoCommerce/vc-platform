@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceDomainQuoteModelQuoteRequest : IEquatable<VirtoCommerceDomainQuoteModelQuoteRequest>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainQuoteModelQuoteRequest" /> class.
+        /// </summary>
+        public VirtoCommerceDomainQuoteModelQuoteRequest()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets Number

@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceDomainCatalogModelPropertyDisplayName : IEquatable<VirtoCommerceDomainCatalogModelPropertyDisplayName>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCatalogModelPropertyDisplayName" /> class.
+        /// </summary>
+        public VirtoCommerceDomainCatalogModelPropertyDisplayName()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets Name

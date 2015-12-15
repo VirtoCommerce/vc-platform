@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceDomainPaymentModelPostProcessPaymentResult : IEquatable<VirtoCommerceDomainPaymentModelPostProcessPaymentResult>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainPaymentModelPostProcessPaymentResult" /> class.
+        /// </summary>
+        public VirtoCommerceDomainPaymentModelPostProcessPaymentResult()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets NewPaymentStatus

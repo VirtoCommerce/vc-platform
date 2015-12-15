@@ -46,6 +46,10 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
 
         public Product Product { get; set; }
 
+        /// <summary>
+        /// HTML code for payment method prepared form
+        /// </summary>
+        public string PaymentFormHtml { get; set; }
 
         /// <summary>
         /// Returns logged in customer or null.

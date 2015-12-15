@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceCoreModuleWebModelSignInResult : IEquatable<VirtoCommerceCoreModuleWebModelSignInResult>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceCoreModuleWebModelSignInResult" /> class.
+        /// </summary>
+        public VirtoCommerceCoreModuleWebModelSignInResult()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets Status

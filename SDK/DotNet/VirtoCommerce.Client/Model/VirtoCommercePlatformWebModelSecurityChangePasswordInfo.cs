@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommercePlatformWebModelSecurityChangePasswordInfo : IEquatable<VirtoCommercePlatformWebModelSecurityChangePasswordInfo>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelSecurityChangePasswordInfo" /> class.
+        /// </summary>
+        public VirtoCommercePlatformWebModelSecurityChangePasswordInfo()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets OldPassword

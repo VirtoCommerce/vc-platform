@@ -18,6 +18,14 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public class VirtoCommerceDomainCommerceModelTaxDetail : IEquatable<VirtoCommerceDomainCommerceModelTaxDetail>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCommerceModelTaxDetail" /> class.
+        /// </summary>
+        public VirtoCommerceDomainCommerceModelTaxDetail()
+        {
+            
+        }
+
         
         /// <summary>
         /// Gets or Sets Rate

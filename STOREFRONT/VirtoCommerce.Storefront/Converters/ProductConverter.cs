@@ -64,5 +64,24 @@ namespace VirtoCommerce.Storefront.Converters
 
             return retVal;
         }
+
+        public static VirtoCommerceDomainMarketingModelProductPromoEntry ToPromotionItem(this Product product)
+        {
+            var promoItem = new VirtoCommerceDomainMarketingModelProductPromoEntry();
+
+            promoItem.InjectFrom(product);
+
+            if (product.Price != null)
+            {
+                promoItem.Discount = product.Price.ActiveDiscount != null ? (double)product.Price.ActiveDiscount.Amount.Amount : 0;
+                promoItem.Price = (double)product.Price.SalePrice.Amount;
+            }
+
+            promoItem.ProductId = product.Id;
+            promoItem.Quantity = 1;
+            promoItem.Variations = product.Variations.Select(v => v.ToPromotionItem()).ToList();
+
+            return promoItem;
+        }
     }
 }
