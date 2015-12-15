@@ -16,12 +16,15 @@ app.service('marketingService', ['$http', function ($http) {
     }
 }]);
 
-app.service('productService', ['$http', function ($http) {
-	return {
-		getProduct: function (productId) {
-			return $http.get('product/' + productId + '/json');
-		}
-	}
+app.service('catalogService', ['$http', function ($http) {
+    return {
+        getProductPrices: function (categoryId) {
+            return $http.get('search/' + categoryId + '/actualproductprices/json');
+        },
+        getProduct: function (productId) {
+            return $http.get('product/' + productId + '/json');
+        }
+    }
 }]);
 
 app.service('cartService', ['$http', function ($http) {
@@ -71,6 +74,18 @@ app.service('cartService', ['$http', function ($http) {
     }
 }]);
 
+app.directive('vcContentPlace', ['marketingService', function (marketingService) {
+    return {
+        restrict: 'E',
+        link: function (scope, element, attrs) {
+            marketingService.getDynamicContent(attrs.id).then(function (response) {
+                element.html(response.data);
+            });
+        },
+        replace: true
+    }
+}]);
+
 app.controller('mainController', ['$scope', '$location', '$window', function ($scope, $location, $window) {
     //Base store url populated in layout and can be used for construction url inside controller
     $scope.baseUrl = {};
@@ -87,18 +102,6 @@ app.controller('mainController', ['$scope', '$location', '$window', function ($s
         $location.path(path);
         $scope.currentPath = $location.$$path.replace('/', '');
     };
-}]);
-
-app.directive('vcContentPlace', ['marketingService', function (marketingService) {
-    return {
-        restrict: 'E',
-        link: function (scope, element, attrs) {
-            marketingService.getDynamicContent(attrs.id).then(function (response) {
-                element.html(response.data);
-            });
-        },
-        replace: true
-    }
 }]);
 
 app.controller('cartController', ['$scope', 'cartService', function ($scope, cartService) {
@@ -145,6 +148,19 @@ app.controller('cartController', ['$scope', 'cartService', function ($scope, car
             $scope.cart = response.data;
         });
     }
+}]);
+
+app.controller('categoryController', ['$scope', '$window', 'catalogService', 'marketingService', function ($scope, $window, catalogService, marketingService) {
+    $scope.productPricesLoaded = false;
+    $scope.productPrices = [];
+
+    catalogService.getProductPrices($window.categoryId).then(function (response) {
+        var prices = response.data;
+        for (var i = 0; i < prices.length; i++) {
+            $scope.productPrices[prices[i].ProductId] = prices[i];
+        }
+        $scope.productPricesLoaded = true;
+    });
 }]);
 
 app.controller('checkoutController', ['$scope', '$location', '$sce', '$window', 'customerService', 'cartService', function ($scope, $location, $sce, $window, customerService, cartService) {
@@ -542,7 +558,7 @@ app.controller('checkoutController', ['$scope', '$location', '$sce', '$window', 
     }
 }]);
 
-app.controller('productController', ['$scope', '$window', 'productService', function ($scope, $window, productService) {
+app.controller('productController', ['$scope', '$window', 'catalogService', function ($scope, $window, catalogService) {
 	//TODO: prevent add to cart not selected variation
 	// display validator please select property
 	// display price range
@@ -552,7 +568,7 @@ app.controller('productController', ['$scope', '$window', 'productService', func
 	$scope.allVariationPropsMap = {};
 
 	function Initialize() {
-		productService.getProduct($window.productId).then(function (response) {
+	    catalogService.getProduct($window.productId).then(function (response) {
 			var product = response.data;
 			//Current product its also variation (titular)
 			allVarations = [ product ].concat(product.Variations);
