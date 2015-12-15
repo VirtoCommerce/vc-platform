@@ -6,7 +6,7 @@ using VirtoCommerce.Storefront.Model.Services;
 
 namespace VirtoCommerce.Storefront.Controllers
 {
-    [RoutePrefix("search")]
+    [OutputCache(CacheProfile = "CatalogSearchCachingProfile")]
     public class CatalogSearchController : StorefrontControllerBase
     {
         private readonly ICatalogSearchService _searchService;
@@ -18,6 +18,7 @@ namespace VirtoCommerce.Storefront.Controllers
         }
 
         /// <summary>
+        /// GET search/{categoryId}
         /// This method called from SeoRoute when url contains slug for category
         /// </summary>
         /// <param name="categoryId"></param>

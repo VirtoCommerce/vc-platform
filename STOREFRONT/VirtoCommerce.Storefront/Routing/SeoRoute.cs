@@ -30,14 +30,8 @@ namespace VirtoCommerce.Storefront.Routing
                 var path = data.Values["path"] as string;
                 var seoRecords = GetSeoRecords(path);
                 var seoRecord = seoRecords.FirstOrDefault();
-
-                if (seoRecord == null)
-                {
-                    // Slug not found
-                    data.Values["controller"] = "Error";
-                    data.Values["action"] = "Http404";
-                }
-                else
+             
+                if(seoRecord != null)
                 {
                     var workContext = _workContextFactory();
 
@@ -110,7 +104,10 @@ namespace VirtoCommerce.Storefront.Routing
                 var tokens = path.Split('/');
                 // TODO: Store path tokens as breadcrumbs to the work context
                 var slug = tokens.LastOrDefault();
-                seoRecords = _commerceCoreApi.CommerceGetSeoInfoBySlug(slug);
+                if (!String.IsNullOrEmpty(slug))
+                {
+                    seoRecords = _commerceCoreApi.CommerceGetSeoInfoBySlug(slug);
+                }
             }
 
             return seoRecords;

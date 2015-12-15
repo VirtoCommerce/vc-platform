@@ -8,6 +8,49 @@ namespace VirtoCommerce.Storefront.Routing
 {
     public static class SeoRouteExtensions
     {
+        public static void MapLocalizedStorefrontRoute(this RouteCollection routes, string name, string url, object defaults)
+        {
+            routes.MapLocalizedStorefrontRoute(name, url, defaults, null);
+        }
+        public static void MapLocalizedStorefrontRoute(this RouteCollection routes, string name, string url, object defaults, object constraints)
+        {
+            var languageConstrain =  @"[a-z]{2}-[A-Z]{2}";
+      
+            var languageWithStoreRoute = new Route(@"{store}/{language}/" + url, new MvcRouteHandler())
+            {
+                Defaults = new RouteValueDictionary(defaults),
+                Constraints = new RouteValueDictionary(constraints),
+                DataTokens = new RouteValueDictionary()
+            };
+            languageWithStoreRoute.Constraints.Add("language", languageConstrain);
+            routes.Add(name + "StoreWithLang", languageWithStoreRoute);
+
+            var languageRoute = new Route(@"{language}/" + url, new MvcRouteHandler())
+            {
+                Defaults = new RouteValueDictionary(defaults),
+                Constraints = new RouteValueDictionary(constraints),
+                DataTokens = new RouteValueDictionary()
+            };
+            languageRoute.Constraints.Add("language", languageConstrain);
+            routes.Add(name + "Lang", languageRoute);
+
+            var storeRoute = new Route(@"{store}/" + url, new MvcRouteHandler())
+            {
+                Defaults = new RouteValueDictionary(defaults),
+                Constraints = new RouteValueDictionary(constraints),
+                DataTokens = new RouteValueDictionary()
+            };
+            routes.Add(name + "Store", storeRoute);
+
+            var route = new Route(url, new MvcRouteHandler())
+            {
+                Defaults = new RouteValueDictionary(defaults),
+                Constraints = new RouteValueDictionary(constraints),
+                DataTokens = new RouteValueDictionary()
+            };
+            routes.Add(name, route);
+        }
+
         public static Route MapSeoRoute(this RouteCollection routes, Func<WorkContext> workContextFactory, ICommerceCoreModuleApi commerceCoreApi, string name, string url, object defaults)
         {
             return MapSeoRoute(routes, workContextFactory, commerceCoreApi, name, url, defaults, null, null);

@@ -12,7 +12,6 @@ using VirtoCommerce.Storefront.Model.Services;
 
 namespace VirtoCommerce.Storefront.Controllers
 {
-    [RoutePrefix("cart")]
     public class CartController : StorefrontControllerBase
     {
         private readonly ICartBuilder _cartBuilder;
@@ -39,7 +38,6 @@ namespace VirtoCommerce.Storefront.Controllers
 
         // GET: /cart
         [HttpGet]
-        [Route("")]
         public ActionResult Index()
         {
             return View("cart", WorkContext);
@@ -47,7 +45,6 @@ namespace VirtoCommerce.Storefront.Controllers
      
         // GET: /cart/json
         [HttpGet]
-        [Route("json")]
         public async Task<ActionResult> CartJson()
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
@@ -59,7 +56,6 @@ namespace VirtoCommerce.Storefront.Controllers
 
         // POST: /cart/additem?productId=...&quantity=...
         [HttpPost]
-        [Route("additem")]
         public async Task<ActionResult> AddItemJson(string productId, int quantity = 1)
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
@@ -76,7 +72,6 @@ namespace VirtoCommerce.Storefront.Controllers
 
         // POST: /cart/changeitem?lineItemId=...&quantity=...
         [HttpPost]
-        [Route("changeitem")]
         public async Task<ActionResult> ChangeItemJson(string lineItemId, int quantity)
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
@@ -89,7 +84,6 @@ namespace VirtoCommerce.Storefront.Controllers
 
         // POST: /cart/removeitem?lineItemId=...
         [HttpPost]
-        [Route("removeitem")]
         public async Task<ActionResult> RemoveItemJson(string lineItemId)
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
@@ -102,7 +96,6 @@ namespace VirtoCommerce.Storefront.Controllers
 
         // GET: /cart/checkout
         [HttpGet]
-        [Route("checkout")]
         public async Task<ActionResult> Checkout()
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
@@ -112,7 +105,6 @@ namespace VirtoCommerce.Storefront.Controllers
 
         // GET: /cart/shippingmethods/json
         [HttpGet]
-        [Route("shippingmethods/json")]
         public async Task<ActionResult> CartShippingMethodsJson()
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
@@ -124,7 +116,6 @@ namespace VirtoCommerce.Storefront.Controllers
 
         // GET: /cart/paymentmethods/json
         [HttpGet]
-        [Route("paymentmethods/json")]
         public async Task<ActionResult> CartPaymentMethodsJson()
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
@@ -136,7 +127,6 @@ namespace VirtoCommerce.Storefront.Controllers
 
         // POST: /cart/addcoupon/{couponCode}
         [HttpPost]
-        [Route("addcoupon/{couponCode}")]
         public async Task<ActionResult> AddCouponJson(string couponCode)
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
@@ -149,7 +139,6 @@ namespace VirtoCommerce.Storefront.Controllers
 
         // POST: /cart/removecoupon
         [HttpPost]
-        [Route("removecoupon")]
         public async Task<ActionResult> RemoveCouponJson()
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
@@ -162,7 +151,6 @@ namespace VirtoCommerce.Storefront.Controllers
 
         // POST: /cart/addaddress
         [HttpPost]
-        [Route("addaddress")]
         public async Task<ActionResult> AddAddressJson(Address address)
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
@@ -175,7 +163,6 @@ namespace VirtoCommerce.Storefront.Controllers
 
         // POST: /cart/shippingmethod?shippingMethodCode=...
         [HttpPost]
-        [Route("shippingmethod")]
         public async Task<ActionResult> SetShippingMethodsJson(string shippingMethodCode)
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
@@ -193,7 +180,6 @@ namespace VirtoCommerce.Storefront.Controllers
 
         // POST: /cart/paymentmethod?paymentMethodCode=
         [HttpPost]
-        [Route("paymentmethod")]
         public async Task<ActionResult> SetPaymentMethodsJson(string paymentMethodCode)
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
@@ -211,7 +197,6 @@ namespace VirtoCommerce.Storefront.Controllers
 
         // POST: /cart/createorder
         [HttpPost]
-        [Route("createorder")]
         public async Task<ActionResult> CreateOrderJson(BankCardInfo bankCardInfo)
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
@@ -243,7 +228,6 @@ namespace VirtoCommerce.Storefront.Controllers
 
         // GET: /cart/externalpaymentcallback?orderId=...
         [HttpGet]
-        [Route("externalpaymentcallback")]
         public async Task<ActionResult> ExternalPaymentCallback(string orderId)
         {
             var processingResult = await _commerceApi.CommercePostProcessPaymentAsync(orderId);
@@ -260,7 +244,6 @@ namespace VirtoCommerce.Storefront.Controllers
 
         // GET: /cart/thanks?orderId=...
         [HttpGet]
-        [Route("thanks")]
         public async Task<ActionResult> Thanks(string orderId)
         {
             var order = await _orderApi.OrderModuleGetByIdAsync(orderId);

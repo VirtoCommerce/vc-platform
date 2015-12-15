@@ -29,10 +29,10 @@ using VirtoCommerce.Storefront.Owin;
 using VirtoCommerce.Storefront.Model.Services;
 using VirtoCommerce.Storefront.Services;
 using VirtoCommerce.Storefront.Common;
+using CacheManager.Core;
 
 [assembly: OwinStartup(typeof(Startup))]
 [assembly: PreApplicationStartMethod(typeof(Startup), "PreApplicationStart")]
-
 namespace VirtoCommerce.Storefront
 {
     public partial class Startup
@@ -110,6 +110,10 @@ namespace VirtoCommerce.Storefront
 
             // Shopify model binders convert Shopify form fields with bad names to VirtoCommerce model properties.
             container.RegisterType<IModelBinderProvider, ShopifyModelBinderProvider>("shopify");
+
+            //Caching configuration (system runtime memory handle)
+            var cacheManager = CacheFactory.FromConfiguration<object>("storefrontCache");
+            container.RegisterInstance<ICacheManager<object>>(cacheManager);
 
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes, () => container.Resolve<WorkContext>(), container.Resolve<ICommerceCoreModuleApi>());

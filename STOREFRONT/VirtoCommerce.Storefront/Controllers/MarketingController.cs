@@ -8,7 +8,7 @@ using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Controllers
 {
-    [RoutePrefix("marketing")]
+    
     public class MarketingController : StorefrontControllerBase
     {
         private readonly IMarketingModuleApi _marketingApi;
@@ -21,8 +21,7 @@ namespace VirtoCommerce.Storefront.Controllers
 
        // GET: /marketing/dynamiccontent/{placeName}/json
        [HttpGet]
-       [Route("dynamiccontent/{placeName}/json")]
-        public async Task<ActionResult> GetDynamicContentJson(string placeName)
+       public async Task<ActionResult> GetDynamicContentJson(string placeName)
         {
             string htmlContent = null;
             var dynamicContentResult = await _marketingApi.MarketingModuleDynamicContentEvaluateDynamicContentAsync(WorkContext.CurrentStore.Id, placeName);

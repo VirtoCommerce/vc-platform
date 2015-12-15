@@ -8,7 +8,7 @@ using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Controllers
 {
-    [RoutePrefix("common")]
+    [OutputCache(CacheProfile = "CommonCachingProfile")]
     public class CommonController : StorefrontControllerBase
     {
         private readonly Country[] _countriesWithoutRegions;
@@ -22,12 +22,13 @@ namespace VirtoCommerce.Storefront.Controllers
         }
 
         /// <summary>
+        /// GET: common/setcurrency/{currency}
         /// Set current currency for current user session
         /// </summary>
         /// <param name="currency"></param>
         /// <param name="returnUrl"></param>
         /// <returns></returns>
-        [Route("setcurrency/{currency}")]
+        [OutputCache(NoStore = true, Duration = 0, VaryByParam = "None")]
         public ActionResult SetCurrency(string currency, string returnUrl = "")
         {
             var cookie = new HttpCookie(StorefrontConstants.CurrencyCookie)
@@ -49,17 +50,15 @@ namespace VirtoCommerce.Storefront.Controllers
             return StoreFrontRedirect(returnUrl);
         }
 
-        // GET: /getcountries/json
+        // GET: common/getcountries/json
         [HttpGet]
-        [Route("getcountries/json")]
         public ActionResult GetCountries()
         {
             return Json(_countriesWithoutRegions, JsonRequestBehavior.AllowGet);
         }
 
-        // GET: /getregions/{countryCode}/json
+        // GET: common/getregions/{countryCode}/json
         [HttpGet]
-        [Route("getregions/{countryCode}/json")]
         public ActionResult GetRegions(string countryCode)
         {
             var country = WorkContext.AllCountries.FirstOrDefault(c => c.Code3.Equals(countryCode, StringComparison.OrdinalIgnoreCase));

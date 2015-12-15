@@ -10,7 +10,7 @@ using VirtoCommerce.Storefront.Model.Services;
 
 namespace VirtoCommerce.Storefront.Controllers
 {
-    [RoutePrefix("product")]
+    [OutputCache(CacheProfile = "ProductCachingProfile")]
     public class ProductController : StorefrontControllerBase
     {
         private readonly ICatalogSearchService _productService;
@@ -21,30 +21,27 @@ namespace VirtoCommerce.Storefront.Controllers
             _productService = productService;
         }
 
-        //This method created specially for routing from SeoRoute.cs (because ASP.NET routing does not work for  actions with RouteAttributes)
-        //http://stackoverflow.com/questions/19545898/asp-net-web-api-2-attribute-routing-controller-name
-        [HttpGet]
-        public async Task<ActionResult> ProductDetails(string productId)
-        {
-            return await GetProductDetails(productId);
-        }
-
         /// <summary>
+        /// GET: /product/{productId}
         /// This action used by storefront to get product details by product id
         /// </summary>
         /// <param name="productId"></param>
         /// <returns></returns>
         [HttpGet]
-        [Route("{productId}")]
-        public async Task<ActionResult> GetProductDetails(string productId)
+        public async Task<ActionResult> ProductDetails(string productId)
         {
             base.WorkContext.CurrentProduct = await _productService.GetProductAsync(productId, Model.Catalog.ItemResponseGroup.ItemInfo | Model.Catalog.ItemResponseGroup.ItemWithPrices);
             return View("product", base.WorkContext);
         }
 
+        /// <summary>
+        /// GET: /product/{productId}/json
+        /// This action used by js 
+        /// </summary>
+        /// <param name="productId"></param>
+        /// <returns></returns>
         [HttpGet]
-        [Route("{productId}/json")]
-        public async Task<ActionResult> GetProductJsonById(string productId)
+        public async Task<ActionResult> ProductDetailsJson(string productId)
         {
             base.WorkContext.CurrentProduct = await _productService.GetProductAsync(productId, Model.Catalog.ItemResponseGroup.ItemLarge);
             return Json(base.WorkContext.CurrentProduct, JsonRequestBehavior.AllowGet);

@@ -10,6 +10,7 @@ using VirtoCommerce.Storefront.Model.Services;
 
 namespace VirtoCommerce.Storefront.Controllers
 {
+    [OutputCache(CacheProfile = "HomeCachingProfile")]
     public class HomeController : Controller
     {
         private readonly ICatalogSearchService _catalogSearchService;
@@ -20,8 +21,7 @@ namespace VirtoCommerce.Storefront.Controllers
             _workContext = context;
         }
 
-        // GET: Home
-        [Route("")]
+        [HttpGet]
         public async Task<ActionResult> Index()
         {
             //Load categories for main page (may be removed if it not necessary)
@@ -33,5 +33,6 @@ namespace VirtoCommerce.Storefront.Controllers
             _workContext.CurrentCatalogSearchResult = await _catalogSearchService.SearchAsync(catalogSearchCriteria);
             return View("index", _workContext);
         }
+             
     }
 }

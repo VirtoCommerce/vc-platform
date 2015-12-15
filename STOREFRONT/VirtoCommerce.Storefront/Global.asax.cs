@@ -4,12 +4,37 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using NLog;
 using VirtoCommerce.Client.Client;
+using VirtoCommerce.Storefront.Common;
 using VirtoCommerce.Storefront.Controllers;
 
 namespace VirtoCommerce.Storefront
 {
     public class MvcApplication : System.Web.HttpApplication
     {
+        /// <summary>
+        /// We Use this method for generate current user id for caching keys
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="arg"></param>
+        /// <returns></returns>
+        public override string GetVaryByCustomString(HttpContext context, string arg)
+        {
+            if (arg.Equals("User", StringComparison.InvariantCultureIgnoreCase))
+            {
+                string userId = context.User.Identity.Name;
+                if (!context.User.Identity.IsAuthenticated)
+                {
+                    var anonymousCookie = context.Request.Cookies.Get(StorefrontConstants.AnonymousCustomerIdCookie);
+                    if(anonymousCookie != null)
+                    {
+                        userId = anonymousCookie.Value;
+                    }
+                }
+                return string.Format("{0}", userId);
+            }
+            return base.GetVaryByCustomString(context, arg);
+        }
+
         protected void Application_Start()
         {
         }

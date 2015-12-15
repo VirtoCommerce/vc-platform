@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Caching;
 using System.Web.Hosting;
@@ -13,27 +14,26 @@ using VirtoCommerce.Storefront.Exceptions;
 
 namespace VirtoCommerce.Storefront.Controllers
 {
-    [RoutePrefix("")]
-    public class AssetsController : Controller
+    [OutputCache(CacheProfile = "AssetsCachingProfile")]
+    public class AssetController : Controller
     {
         private readonly SassCompilerProxy _compiler = new SassCompilerProxy();
         private readonly ShopifyLiquidThemeEngine _themeAdaptor;
-        public AssetsController(ShopifyLiquidThemeEngine themeAdaptor)
+        public AssetController(ShopifyLiquidThemeEngine themeAdaptor)
         {
             _themeAdaptor = themeAdaptor;
         }
 
         #region Public Methods and Operators
-
+   
         /// <summary>
         /// Need handle all assets requests because it may be liquid and scss files which should be preprocessed
         /// </summary>
         /// <param name="theme"></param>
         /// <param name="asset"></param>
         /// <returns></returns>
-        [OutputCache(CacheProfile = "AssetsCachingProfile")]
-        [Route("themes/assets/{asset}")]
-        public ActionResult Themed(string theme, string asset)
+        [HttpGet]
+        public ActionResult GetAssets(string asset)
         {
             var virtualPath = String.Format("~/App_Data/Themes/{0}/assets/{1}", _themeAdaptor.ThemeName, asset);
             return AssetResult(virtualPath, asset);

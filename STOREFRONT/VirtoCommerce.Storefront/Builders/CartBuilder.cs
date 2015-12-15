@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CacheManager.Core;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Client.Model;
+using VirtoCommerce.Storefront.Common;
 using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Cart;
@@ -16,6 +18,7 @@ namespace VirtoCommerce.Storefront.Builders
     {
         private readonly IShoppingCartModuleApi _cartApi;
         private readonly IMarketingModuleApi _marketingApi;
+        private readonly ICacheManager<object> _cacheManager;
 
         private Store _store;
         private Customer _customer;
@@ -23,33 +26,35 @@ namespace VirtoCommerce.Storefront.Builders
         private Language _language;
         private ShoppingCart _cart;
 
-        public CartBuilder(
-            IShoppingCartModuleApi cartApi,
-            IMarketingModuleApi marketinApi)
+        public CartBuilder(IShoppingCartModuleApi cartApi, IMarketingModuleApi marketinApi, ICacheManager<object> cacheManager)
         {
             _cartApi = cartApi;
             _marketingApi = marketinApi;
+            _cacheManager = cacheManager;
         }
 
         public async Task<CartBuilder> GetOrCreateNewTransientCartAsync(Store store, Customer customer, Language language, Currency currency)
         {
-            VirtoCommerceCartModuleWebModelShoppingCart cartSearchResult = null;
-
             _store = store;
             _customer = customer;
             _currency = currency;
             _language = language;
 
-            cartSearchResult = await _cartApi.CartModuleGetCurrentCartAsync(_store.Id, _customer.Id);
-            if (cartSearchResult == null)
+            _cart = await _cacheManager.GetAsync(GetCartCacheKey(store.Id, customer.Id), "CartRegion", async () =>
             {
-                _cart = CreateNewTransientCart();
-            }
-            else
-            {
-                var detalizedCart = await _cartApi.CartModuleGetCartByIdAsync(cartSearchResult.Id);
-                _cart = detalizedCart.ToWebModel(_currency, _language);
-            }
+                ShoppingCart retVal = null;
+                var cartSearchResult = await _cartApi.CartModuleGetCurrentCartAsync(_store.Id, _customer.Id);
+                if (cartSearchResult == null)
+                {
+                    retVal = CreateNewTransientCart();
+                }
+                else
+                {
+                    var detalizedCart = await _cartApi.CartModuleGetCartByIdAsync(cartSearchResult.Id);
+                    retVal = detalizedCart.ToWebModel(_currency, _language);
+                }
+                return retVal;
+            });
 
             await EvaluatePromotionsAsync();
 
@@ -180,6 +185,9 @@ namespace VirtoCommerce.Storefront.Builders
         {
             var cart = _cart.ToServiceModel();
 
+            //Invalidate cart in cache
+            _cacheManager.Remove(GetCartCacheKey(cart.StoreId, cart.CustomerId), "CartRegion");
+
             if (_cart.IsTransient())
             {
                 await _cartApi.CartModuleCreateAsync(cart);
@@ -188,6 +196,7 @@ namespace VirtoCommerce.Storefront.Builders
             {
                 await _cartApi.CartModuleUpdateAsync(cart);
             }
+
         }
 
         public ShoppingCart Cart
@@ -230,6 +239,11 @@ namespace VirtoCommerce.Storefront.Builders
             }
 
             return cart;
+        }
+
+        private string GetCartCacheKey(string storeId, string customerId)
+        {
+            return String.Format("Cart-{0}-{1}", storeId, customerId);
         }
 
         private async Task EvaluatePromotionsAsync()

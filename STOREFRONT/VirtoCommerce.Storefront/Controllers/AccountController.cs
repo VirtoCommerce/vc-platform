@@ -19,7 +19,6 @@ using VirtoCommerce.Storefront.Model.Cart;
 
 namespace VirtoCommerce.Storefront.Controllers
 {
-    [RoutePrefix("account")]
     [Authorize]
     public class AccountController : StorefrontControllerBase
     {
@@ -44,7 +43,6 @@ namespace VirtoCommerce.Storefront.Controllers
         }
 
         [HttpGet]
-        [Route("")]
         public async Task<ActionResult> Index(int page = 1)
         {
             if (page < 1)
@@ -57,8 +55,7 @@ namespace VirtoCommerce.Storefront.Controllers
         }
 
         [HttpGet]
-        [Route("order/{id}")]
-        public async Task<ActionResult> GetAddressDetails(string id)
+        public async Task<ActionResult> GetOrderAddressDetails(string id)
         {
             var order = await _orderApi.OrderModuleGetByIdAsync(id);
             WorkContext.Order = order.ToWebModel();
@@ -66,14 +63,12 @@ namespace VirtoCommerce.Storefront.Controllers
         }
 
         [HttpGet]
-        [Route("addresses")]
         public ActionResult GetAddresses()
         {
             return View("customers/addresses", WorkContext);
         }
 
         [HttpPost]
-        [Route("addresses/{id?}")]
         public async Task<ActionResult> UpdateAddress(string id, shopifyModel.Address formModel)
         {
             var contact = await _customerApi.CustomerModuleGetContactByIdAsync(WorkContext.CurrentCustomer.Id);
@@ -120,7 +115,6 @@ namespace VirtoCommerce.Storefront.Controllers
         }
 
         [HttpGet]
-        [Route("register")]
         [AllowAnonymous]
         public ActionResult Register()
         {
@@ -128,7 +122,6 @@ namespace VirtoCommerce.Storefront.Controllers
         }
 
         [HttpPost]
-        [Route("register")]
         [AllowAnonymous]
         public async Task<ActionResult> Register(Register formModel)
         {
@@ -179,7 +172,6 @@ namespace VirtoCommerce.Storefront.Controllers
         }
 
         [HttpGet]
-        [Route("login")]
         [AllowAnonymous]
         public ActionResult Login()
         {
@@ -194,7 +186,6 @@ namespace VirtoCommerce.Storefront.Controllers
         }
 
         [HttpPost]
-        [Route("login")]
         [AllowAnonymous]
         public async Task<ActionResult> Login(Login formModel, string returnUrl)
         {
@@ -221,7 +212,6 @@ namespace VirtoCommerce.Storefront.Controllers
         }
 
         [HttpGet]
-        [Route("logout")]
         public ActionResult Logout()
         {
             _authenticationManager.SignOut();
@@ -229,7 +219,6 @@ namespace VirtoCommerce.Storefront.Controllers
         }
 
         [HttpPost]
-        [Route("forgotpassword")]
         [AllowAnonymous]
         public async Task<ActionResult> ForgotPassword(ForgotPassword formModel)
         {
@@ -251,7 +240,6 @@ namespace VirtoCommerce.Storefront.Controllers
         }
 
         [HttpGet]
-        [Route("resetpassword")]
         [AllowAnonymous]
         public async Task<ActionResult> ResetPassword(string code, string userId)
         {
@@ -281,7 +269,6 @@ namespace VirtoCommerce.Storefront.Controllers
         }
 
         [HttpPost]
-        [Route("resetpassword")]
         [AllowAnonymous]
         public async Task<ActionResult> ResetPassword(ResetPassword formModel)
         {
@@ -315,7 +302,6 @@ namespace VirtoCommerce.Storefront.Controllers
         }
 
         [HttpPost]
-        [Route("profile")]
         public async Task<ActionResult> UpdateProfile(Profile formModel)
         {
             var contact = new VirtoCommerceCustomerModuleWebModelContact
@@ -346,7 +332,6 @@ namespace VirtoCommerce.Storefront.Controllers
         }
 
         [HttpPost]
-        [Route("password")]
         public async Task<ActionResult> ChangePassword(ChangePassword formModel)
         {
             var changePassword = new VirtoCommercePlatformWebModelSecurityChangePasswordInfo
@@ -370,7 +355,6 @@ namespace VirtoCommerce.Storefront.Controllers
 
         // GET: /account/json
         [HttpGet]
-        [Route("json")]
         [AllowAnonymous]
         public ActionResult GetCurrentCustomer()
         {
