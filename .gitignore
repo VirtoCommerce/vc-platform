@@ -163,6 +163,7 @@ $RECYCLE.BIN/
 /STOREFRONT/Website/App_Data/Pages
 /STOREFRONT/Website/App_Data/Themes/*
 !/STOREFRONT/Website/App_Data/Themes/_**
+!/STOREFRONT/Website/App_Data/Themes/default/**
 .vs/
 /PLATFORM/VirtoCommerce.Platform.Web/client_packages
 /PLATFORM/VirtoCommerce.Platform.Web/node_modules

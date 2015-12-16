@@ -35,7 +35,7 @@ namespace VirtoCommerce.Storefront.Controllers
         [HttpGet]
         public ActionResult GetAssets(string asset)
         {
-            var virtualPath = String.Format("~/App_Data/Themes/{0}/assets/{1}", _themeAdaptor.ThemeName, asset);
+            var virtualPath = String.Format("~/App_Data/Themes/{0}/assets/{1}", _themeAdaptor.CurrentThemeName, asset);
             return AssetResult(virtualPath, asset);
         }
 
