@@ -29,20 +29,21 @@ namespace VirtoCommerce.LiquidThemeEngine
     /// </summary>
     public class ShopifyLiquidThemeEngine : IFileSystem
     {
+        private const string _defaultThemeName = "default";
         private const string _defaultMasterView = "theme";
         private const string _liquidTemplateFormat = "{0}.liquid";
         private static readonly string[] _templatesDiscoveryFolders = { "templates", "snippets", "layout", "assets" };
         private static readonly Regex _templateRegex = new Regex(@"[a-zA-Z0-9]+$", RegexOptions.Compiled);
-        private readonly string _themesRelativeUrl;
+        private readonly string _themesLocalPath;
         private readonly string _themesAssetsRelativeUrl;
         private readonly Func<WorkContext> _workContextFactory;
         private readonly Func<IStorefrontUrlBuilder> _storeFrontUrlBuilderFactory;
 
-        public ShopifyLiquidThemeEngine(Func<WorkContext> workContextFactory, Func<IStorefrontUrlBuilder> storeFrontUrlBuilderFactory, string themesRealtiveUrl, string themesAssetsRelativeUrl)
+        public ShopifyLiquidThemeEngine(Func<WorkContext> workContextFactory, Func<IStorefrontUrlBuilder> storeFrontUrlBuilderFactory, string themesLocalPath, string themesAssetsRelativeUrl)
         {
             _workContextFactory = workContextFactory;
             _storeFrontUrlBuilderFactory = storeFrontUrlBuilderFactory;
-            _themesRelativeUrl = themesRealtiveUrl;
+            _themesLocalPath = themesLocalPath;
             _themesAssetsRelativeUrl = themesAssetsRelativeUrl;
 
             Liquid.UseRubyDateFormat = true;
@@ -96,44 +97,33 @@ namespace VirtoCommerce.LiquidThemeEngine
         /// <summary>
         /// Current theme name
         /// </summary>
-        public string ThemeName
+        public string CurrentThemeName
         {
             get
             {
-                return WorkContext.CurrentStore.ThemeName ?? "default";
+                return WorkContext.CurrentStore.ThemeName ?? _defaultThemeName;
             }
         }
 
-        /// <summary>
-        /// Current theme relative url
-        /// </summary>
-        public string ThemeRelativeUrl
-        {
-            get
-            {
-                return _themesRelativeUrl + "/" + ThemeName;
-            }
-
-        }
-
+      
         /// <summary>
         /// Current theme local path
         /// </summary>
-        public string ThemeLocalPath
+        private string CurrentThemeLocalPath
         {
             get
             {
-                return UrlBuilder.ToLocalPath(ThemeRelativeUrl);
+                return Path.Combine(_themesLocalPath, WorkContext.CurrentStore.Name, CurrentThemeName);
             }
         }
         /// <summary>
-        /// Theme asset url
+        /// Default theme local path
         /// </summary>
-        public string ThemeAssetsRelativeUrl
+        private string DefaultThemeLocalPath
         {
             get
             {
-                return UrlBuilder.ToAppRelative(_themesAssetsRelativeUrl, WorkContext.CurrentStore, WorkContext.CurrentLanguage);
+                return Path.Combine(_themesLocalPath, _defaultThemeName);
             }
         }
 
@@ -154,16 +144,22 @@ namespace VirtoCommerce.LiquidThemeEngine
             if (templateName == null || !_templateRegex.IsMatch(templateName))
                 throw new FileSystemException("Error - Illegal template name '{0}'", templateName);
 
-
-            foreach (var templateDiscoveryFolder in _templatesDiscoveryFolders)
+            var curentThemediscoveryPaths = _templatesDiscoveryFolders.Select(x => Path.Combine(CurrentThemeLocalPath, x, String.Format(_liquidTemplateFormat, templateName)));
+            //First try to find template in current theme folder
+            var existTemplatePath = curentThemediscoveryPaths.FirstOrDefault(x => File.Exists(x));
+            if(existTemplatePath == null && DefaultThemeLocalPath != CurrentThemeLocalPath)
             {
-                var templatePath = Path.Combine(ThemeLocalPath, templateDiscoveryFolder, String.Format(_liquidTemplateFormat, templateName));
-                if (File.Exists(templatePath))
-                {
-                    return File.ReadAllText(templatePath);
-                }
+                //Then try to find in default theme
+                var defaultThemeDiscoveyPaths = _templatesDiscoveryFolders.Select(x => Path.Combine(DefaultThemeLocalPath, x, String.Format(_liquidTemplateFormat, templateName)));
+                existTemplatePath = defaultThemeDiscoveyPaths.FirstOrDefault(x => File.Exists(x));
             }
-            throw new FileSystemException("Error - No such template {0} . Looked in the following locations:<br />{1}", templateName, ThemeName);
+
+            if(existTemplatePath != null)
+            {
+                return File.ReadAllText(existTemplatePath);
+            }
+          
+            throw new FileSystemException("Error - No such template {0} . Looked in the following locations:<br />{1}", templateName, CurrentThemeName);
         }
 
         /// <summary>
@@ -215,21 +211,36 @@ namespace VirtoCommerce.LiquidThemeEngine
         public DefaultableDictionary GetSettings(string defaultValue = null)
         {
             DefaultableDictionary retVal = new DefaultableDictionary(defaultValue);
-            var settingsFilePath = Path.Combine(ThemeLocalPath, "config\\settings_data.json");
+
+            var resultSettings = InnerGetSettings(DefaultThemeLocalPath);
+            if(DefaultThemeLocalPath != CurrentThemeLocalPath)
+            {
+                var currentThemeSettings = InnerGetSettings(CurrentThemeLocalPath);
+                resultSettings.Merge(currentThemeSettings, new JsonMergeSettings { MergeArrayHandling = MergeArrayHandling.Merge });
+            }
+
+            if (resultSettings != null)
+            {
+                var dict = resultSettings.ToObject<Dictionary<string, object>>().ToDictionary(x => x.Key, x => x.Value);
+                retVal = new DefaultableDictionary(dict, defaultValue);
+            }
+
+            return retVal;
+        }
+
+        private JObject InnerGetSettings(string themePath)
+        {
+            JObject retVal = null;
+            var settingsFilePath = Path.Combine(themePath, "config\\settings_data.json");
             if (File.Exists(settingsFilePath))
             {
                 var settings = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(settingsFilePath));
                 // now get settings for current theme and add it as a settings parameter
-                var currentSettings = settings["current"];
-                if (!(currentSettings is JObject))
+                retVal = settings["current"] as JObject;
+                if (retVal == null)
                 {
-                    currentSettings = settings["presets"][currentSettings.ToString()] as JObject;
-                }
-
-                if (currentSettings != null)
-                {
-                    var dict = currentSettings.ToObject<Dictionary<string, object>>().ToDictionary(x => x.Key, x => x.Value);
-                    retVal = new DefaultableDictionary(dict, defaultValue);
+                    //is setting preset name need return it as active
+                    retVal = settings["presets"][settings["current"].ToString()] as JObject;
                 }
             }
             return retVal;
@@ -241,8 +252,21 @@ namespace VirtoCommerce.LiquidThemeEngine
         /// <returns></returns>
         public JObject ReadLocalization()
         {
-            var localeDirectory = new DirectoryInfo(Path.Combine(ThemeLocalPath, "locales"));
-            var localeFilePath = Path.Combine(localeDirectory.FullName, string.Concat(WorkContext.CurrentLanguage.TwoLetterLanguageName, ".json"));
+            //Load first localization from default theme
+            var retVal = InnerReadLocalization(DefaultThemeLocalPath, WorkContext.CurrentLanguage);
+            if(DefaultThemeLocalPath != CurrentThemeLocalPath)
+            {
+                //Next need merge current theme localization with default
+                var currentThemeLocalization = InnerReadLocalization(CurrentThemeLocalPath, WorkContext.CurrentLanguage);
+                retVal.Merge(currentThemeLocalization, new JsonMergeSettings { MergeArrayHandling = MergeArrayHandling.Merge });
+            }
+            return retVal;
+        }
+
+        private JObject InnerReadLocalization(string themePath, Language language)
+        {
+            var localeDirectory = new DirectoryInfo(Path.Combine(themePath, "locales"));
+            var localeFilePath = Path.Combine(localeDirectory.FullName, string.Concat(language.TwoLetterLanguageName, ".json"));
             var localeDefaultPath = localeDirectory.GetFiles("*.default.json").Select(x => x.FullName).FirstOrDefault();
 
             JObject localeJson = null;
