@@ -12,15 +12,15 @@ app.service('marketingService', ['$http', function ($http) {
     return {
         getDynamicContent: function (placeName) {
             return $http.get('marketing/dynamiccontent/' + placeName + '/json?t=' + new Date().getTime());
+        },
+        getActualProductPrices: function (categoryId, productIds) {
+            return $http.post('marketing/actualprices', { categoryId: categoryId, productIds: productIds });
         }
     }
 }]);
 
 app.service('catalogService', ['$http', function ($http) {
     return {
-        getProductPrices: function (categoryId) {
-            return $http.get('search/' + categoryId + '/actualproductprices/json');
-        },
         getProduct: function (productId) {
             return $http.get('product/' + productId + '/json');
         }
@@ -150,11 +150,11 @@ app.controller('cartController', ['$scope', 'cartService', function ($scope, car
     }
 }]);
 
-app.controller('categoryController', ['$scope', '$window', 'catalogService', 'marketingService', function ($scope, $window, catalogService, marketingService) {
+app.controller('categoryController', ['$scope', '$window', 'marketingService', function ($scope, $window, marketingService) {
     $scope.productPricesLoaded = false;
     $scope.productPrices = [];
 
-    catalogService.getProductPrices($window.categoryId).then(function (response) {
+    marketingService.getActualProductPrices($window.categoryId, $window.productIds).then(function (response) {
         var prices = response.data;
         for (var i = 0; i < prices.length; i++) {
             $scope.productPrices[prices[i].ProductId] = prices[i];

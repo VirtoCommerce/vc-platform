@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Omu.ValueInjecter, Version=3.1.1.0, Culture=neutral, PublicKeyToken=c7694541b0ac80e4, processorArchitecture=MSIL">
+      <HintPath>..\packages\valueinjecter.3.1.1.2\lib\net40\Omu.ValueInjecter.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
       <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
       <Private>True</Private>
@@ -61,14 +65,19 @@
     <Compile Include="Catalog\TierPrice.cs" />
     <Compile Include="Common\CollectionExtensions.cs" />
     <Compile Include="Common\IStorefrontPagedList.cs" />
+    <Compile Include="Common\NullableAndEnumValueInjecter.cs" />
     <Compile Include="Common\StoreFrontPagedList.cs" />
     <Compile Include="Country.cs" />
     <Compile Include="CountryRegion.cs" />
-    <Compile Include="Coupon.cs" />
+    <Compile Include="DynamicContentItem.cs" />
+    <Compile Include="Marketing\Coupon.cs" />
     <Compile Include="MenuLink.cs" />
     <Compile Include="MenuLinkList.cs" />
-    <Compile Include="PromotionRewardType.cs" />
-    <Compile Include="DynamicObjectProperty.cs" />
+    <Compile Include="Marketing\Promotion.cs" />
+    <Compile Include="Marketing\PromotionProductEntry.cs" />
+    <Compile Include="Marketing\PromotionEvaluationContext.cs" />
+    <Compile Include="Marketing\PromotionReward.cs" />
+    <Compile Include="Marketing\PromotionRewardType.cs" />
     <Compile Include="DynamicPropertyName.cs" />
     <Compile Include="DynamicPropertyObjectValue.cs" />
     <Compile Include="Image.cs" />
@@ -114,8 +123,9 @@
     <Compile Include="Catalog\ProductProperty.cs" />
     <Compile Include="SeoInfo.cs" />
     <Compile Include="Services\ICatalogSearchService.cs" />
+    <Compile Include="Services\IMarketingService.cs" />
     <Compile Include="ShippingMethod.cs" />
-    <Compile Include="Discount.cs" />
+    <Compile Include="Marketing\Discount.cs" />
     <Compile Include="Cart\LineItem.cs" />
     <Compile Include="Cart\Payment.cs" />
     <Compile Include="Cart\Shipment.cs" />

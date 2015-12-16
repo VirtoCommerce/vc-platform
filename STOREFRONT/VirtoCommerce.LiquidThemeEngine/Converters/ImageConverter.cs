@@ -1,5 +1,4 @@
 ﻿using Omu.ValueInjecter;
-using VirtoCommerce.LiquidThemeEngine.Converters.Injections;
 using VirtoCommerce.LiquidThemeEngine.Objects;
 using StorefrontModel = VirtoCommerce.Storefront.Model;
 
@@ -11,7 +10,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
         {
             var shopifyModel = new Image();
 
-            shopifyModel.InjectFrom<NullableAndEnumValueInjection>(image);
+            shopifyModel.InjectFrom<StorefrontModel.Common.NullableAndEnumValueInjecter>(image);
 
             shopifyModel.Name = image.Title;
             shopifyModel.Src = image.Url;

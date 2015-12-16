@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using VirtoCommerce.Storefront.Model.Common;
+using VirtoCommerce.Storefront.Model.Marketing;
 
 namespace VirtoCommerce.Storefront.Model.Order
 {
@@ -12,7 +13,7 @@ namespace VirtoCommerce.Storefront.Model.Order
         public LineItem()
         {
             TaxDetails = new List<TaxDetail>();
-            DynamicProperties = new List<DynamicObjectProperty>();
+            DynamicProperties = new List<DynamicProperty>();
         }
 
         /// <summary>
@@ -172,7 +173,7 @@ namespace VirtoCommerce.Storefront.Model.Order
         /// Dynamic properties collections
         /// </summary>
         /// <value>Dynamic properties collections</value>
-        public ICollection<DynamicObjectProperty> DynamicProperties { get; set; }
+        public ICollection<DynamicProperty> DynamicProperties { get; set; }
 
         /// <summary>
         /// Gets or Sets CreatedDate

@@ -7,6 +7,7 @@ using VirtoCommerce.Client.Model;
 using Omu.ValueInjecter;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
+using VirtoCommerce.Storefront.Model.Marketing;
 
 namespace VirtoCommerce.Storefront.Converters
 {
@@ -65,9 +66,9 @@ namespace VirtoCommerce.Storefront.Converters
             return retVal;
         }
 
-        public static VirtoCommerceDomainMarketingModelProductPromoEntry ToPromotionItem(this Product product)
+        public static PromotionProductEntry ToPromotionItem(this Product product)
         {
-            var promoItem = new VirtoCommerceDomainMarketingModelProductPromoEntry();
+            var promoItem = new PromotionProductEntry();
 
             promoItem.InjectFrom(product);
 

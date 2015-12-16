@@ -1,11 +1,11 @@
-﻿using System;
-using System.Reflection;
-using Omu.ValueInjecter.Injections;
+﻿using Omu.ValueInjecter.Injections;
 using Omu.ValueInjecter.Utils;
+using System;
+using System.Reflection;
 
-namespace VirtoCommerce.LiquidThemeEngine.Converters.Injections
+namespace VirtoCommerce.Storefront.Model.Common
 {
-    public class NullableAndEnumValueInjection : ValueInjection
+    public class NullableAndEnumValueInjecter : ValueInjection
     {
         protected override void Inject(object source, object target)
         {
@@ -23,13 +23,17 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters.Injections
                         var value = Enum.Parse(targetProperty.PropertyType, sourceProperty.GetValue(source).ToString(), true);
                         targetProperty.SetValue(target, value);
                     }
-                    if(targetProperty.PropertyType == typeof(string) && sourceProperty.PropertyType.IsEnum)
+
+                    if (targetProperty.PropertyType == typeof(string) && sourceProperty.PropertyType.IsEnum)
                     {
                         targetProperty.SetValue(target, sourceProperty.GetValue(source).ToString());
                     }
                     else
                     {
-                        targetProperty.SetValue(target, sourceProperty.GetValue(source, null), null);
+                        if (!targetProperty.PropertyType.IsEnum)
+                        {
+                            targetProperty.SetValue(target, sourceProperty.GetValue(source, null), null);
+                        }
                     }
                 }
             }
@@ -37,35 +41,35 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters.Injections
 
         private static bool PropertyMatch(PropertyInfo source, PropertyInfo target)
         {
-            var retVal = source.CanRead && source.GetGetMethod() != null;
+            var result = source.CanRead && source.GetGetMethod() != null;
 
-            if (retVal)
+            if (result)
             {
-                retVal = target.CanWrite && target.GetSetMethod() != null;
+                result = target.CanWrite && target.GetSetMethod() != null;
             }
 
-            if (retVal)
+            if (result)
             {
-                retVal = !source.PropertyType.IsArray && !target.PropertyType.IsArray;
+                result = !source.PropertyType.IsArray && !target.PropertyType.IsArray;
             }
 
-            if (retVal)
+            if (result)
             {
-                retVal = !target.PropertyType.IsArray && !target.PropertyType.IsArray;
+                result = !target.PropertyType.IsArray && !target.PropertyType.IsArray;
             }
 
-            if (retVal)
+            if (result)
             {
-                retVal = source.PropertyType == target.PropertyType || source.PropertyType == Nullable.GetUnderlyingType(target.PropertyType)
+                result = source.PropertyType == target.PropertyType || source.PropertyType == Nullable.GetUnderlyingType(target.PropertyType)
                         || Nullable.GetUnderlyingType(source.PropertyType) == target.PropertyType;
 
-                if (!retVal)
+                if (!result)
                 {
-                    retVal = source.PropertyType.IsEnum || target.PropertyType.IsEnum;
+                    result = source.PropertyType.IsEnum || target.PropertyType.IsEnum;
                 }
             }
 
-            return retVal;
+            return result;
         }
     }
 }

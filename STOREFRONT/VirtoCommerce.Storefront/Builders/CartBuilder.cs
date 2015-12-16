@@ -11,13 +11,15 @@ using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Cart;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
+using VirtoCommerce.Storefront.Model.Marketing;
+using VirtoCommerce.Storefront.Model.Services;
 
 namespace VirtoCommerce.Storefront.Builders
 {
     public class CartBuilder : ICartBuilder
     {
         private readonly IShoppingCartModuleApi _cartApi;
-        private readonly IMarketingModuleApi _marketingApi;
+        private readonly IMarketingService _marketingService;
         private readonly ICacheManager<object> _cacheManager;
 
         private Store _store;
@@ -26,10 +28,10 @@ namespace VirtoCommerce.Storefront.Builders
         private Language _language;
         private ShoppingCart _cart;
 
-        public CartBuilder(IShoppingCartModuleApi cartApi, IMarketingModuleApi marketinApi, ICacheManager<object> cacheManager)
+        public CartBuilder(IShoppingCartModuleApi cartApi, IMarketingService marketingService, ICacheManager<object> cacheManager)
         {
             _cartApi = cartApi;
-            _marketingApi = marketinApi;
+            _marketingService = marketingService;
             _cacheManager = cacheManager;
         }
 
@@ -262,21 +264,22 @@ namespace VirtoCommerce.Storefront.Builders
 
             CalculateTotals();
 
-            var promotionContext = new VirtoCommerceDomainMarketingModelPromotionEvaluationContext
+            var promotionContext = new PromotionEvaluationContext
             {
                 CartTotal = (double)_cart.Total.Amount,
                 Coupon = _cart.Coupon != null ? _cart.Coupon.Code : null,
+                Currency = _cart.Currency,
                 CustomerId = _customer.Id,
-                StoreId = _store.Id,
+                StoreId = _store.Id
             };
 
             promotionContext.CartPromoEntries = _cart.Items.Select(i => i.ToPromotionItem()).ToList();
             promotionContext.PromoEntries = promotionContext.CartPromoEntries;
 
-            var rewards = await _marketingApi.MarketingModulePromotionEvaluatePromotionsAsync(promotionContext);
+            var rewards = await _marketingService.EvaluatePromotionRewardsAsync(promotionContext);
             foreach (var reward in rewards)
             {
-                if (reward.RewardType.Equals("CatalogItemAmountReward", StringComparison.OrdinalIgnoreCase) && reward.IsValid.HasValue && reward.IsValid.Value)
+                if (reward.RewardType == PromotionRewardType.CatalogItemAmountReward && reward.IsValid)
                 {
                     var lineItem = _cart.Items.FirstOrDefault(i => i.ProductId == reward.ProductId);
                     if (lineItem != null)
@@ -286,7 +289,7 @@ namespace VirtoCommerce.Storefront.Builders
                     }
                 }
 
-                if (reward.RewardType.Equals("ShipmentReward", StringComparison.OrdinalIgnoreCase) && reward.IsValid.HasValue && reward.IsValid.Value)
+                if (reward.RewardType == PromotionRewardType.ShipmentReward && reward.IsValid)
                 {
                     var shipment = _cart.Shipments.FirstOrDefault();
                     if (shipment != null)
@@ -296,26 +299,22 @@ namespace VirtoCommerce.Storefront.Builders
                     }
                 }
 
-                if (reward.RewardType.Equals("CartSubtotalReward", StringComparison.OrdinalIgnoreCase))
+                if (reward.RewardType == PromotionRewardType.CartSubtotalReward && reward.IsValid)
                 {
-                    if (reward.IsValid.HasValue && reward.IsValid.Value)
-                    {
-                        var discount = reward.ToDiscountWebModel(_cart.SubTotal.Amount, _cart.Currency);
-                        _cart.Discounts.Add(discount);
-                    }
+                    var discount = reward.ToDiscountWebModel(_cart.SubTotal.Amount, _cart.Currency);
+                    _cart.Discounts.Add(discount);
                 }
 
-                if (reward.Promotion.Coupons.Any() && !string.IsNullOrEmpty(promotionContext.Coupon))
+                if (reward.Promotion.Coupons != null && reward.Promotion.Coupons.Any() && !string.IsNullOrEmpty(promotionContext.Coupon))
                 {
-                    bool isValid = reward.IsValid.HasValue && reward.IsValid.Value;
-
+                    var discount = reward.ToDiscountWebModel(_cart.SubTotal.Amount, _cart.Currency);
                     _cart.Coupon = new Coupon
                     {
-                        Amount = GetAbsoluteDiscountAmount(_cart.SubTotal.Amount, reward),
-                        AppliedSuccessfully = isValid,
+                        Amount = discount.Amount,
+                        AppliedSuccessfully = reward.IsValid,
                         Code = promotionContext.Coupon,
                         Description = reward.Promotion.Description,
-                        ErrorCode = isValid ? null : "InvalidCouponCode"
+                        ErrorCode = reward.IsValid ? null : "InvalidCouponCode"
                     };
                 }
             }
@@ -353,22 +352,6 @@ namespace VirtoCommerce.Storefront.Builders
             _cart.ShippingTotal = new Money(_cart.Shipments.Sum(s => s.ShippingPrice.Amount), _currency.Code);
             _cart.SubTotal = new Money(_cart.Items.Sum(i => i.ExtendedPrice.Amount), _currency.Code) - lineItemsDiscountTotal;
             _cart.Total = _cart.SubTotal + _cart.ShippingTotal + _cart.TaxTotal - _cart.DiscountTotal;
-        }
-
-        private Money GetAbsoluteDiscountAmount(decimal amount, VirtoCommerceMarketingModuleWebModelPromotionReward reward)
-        {
-            decimal absoluteDiscountAmount = 0;
-
-            if (reward.AmountType.Equals("Absolute", StringComparison.OrdinalIgnoreCase))
-            {
-                absoluteDiscountAmount = (decimal)(reward.Amount ?? 0);
-            }
-            if (reward.AmountType.Equals("Relative", StringComparison.OrdinalIgnoreCase))
-            {
-                absoluteDiscountAmount = amount * (decimal)(reward.Amount ?? 0) / 100;
-            }
-
-            return new Money(absoluteDiscountAmount, _currency.Code);
         }
     }
 }

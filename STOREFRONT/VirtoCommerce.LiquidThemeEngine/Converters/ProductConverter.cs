@@ -1,18 +1,17 @@
 ﻿using Omu.ValueInjecter;
 using System.Linq;
-using VirtoCommerce.LiquidThemeEngine.Converters.Injections;
 using VirtoCommerce.LiquidThemeEngine.Objects;
-using storefrontModel = VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Platform.Core.Common;
+using StorefrontModel = VirtoCommerce.Storefront.Model;
 
 namespace VirtoCommerce.LiquidThemeEngine.Converters
 {
     public static class ProductConverter
     {
-        public static Product ToShopifyModel(this storefrontModel.Catalog.Product product, storefrontModel.WorkContext workContext)
+        public static Product ToShopifyModel(this StorefrontModel.Catalog.Product product, StorefrontModel.WorkContext workContext)
         {
             var result = new Product();
-            result.InjectFrom<NullableAndEnumValueInjection>(product);
+            result.InjectFrom<StorefrontModel.Common.NullableAndEnumValueInjecter>(product);
             result.Variants.Add(product.ToVariant(workContext));
 
             if (product.Variations != null)
@@ -73,7 +72,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             return result;
         }
 
-        public static Variant ToVariant(this storefrontModel.Catalog.Product product, storefrontModel.WorkContext workContext)
+        public static Variant ToVariant(this StorefrontModel.Catalog.Product product, StorefrontModel.WorkContext workContext)
         {
             var result = new Variant();
             result.Available = true; //product.IsActive && product.IsBuyable;

@@ -5,6 +5,7 @@ using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Cart;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
+using VirtoCommerce.Storefront.Model.Marketing;
 
 namespace VirtoCommerce.Storefront.Converters
 {
@@ -95,9 +96,9 @@ namespace VirtoCommerce.Storefront.Converters
             return serviceModel;
         }
 
-        public static VirtoCommerceDomainMarketingModelProductPromoEntry ToPromotionItem(this LineItem lineItem)
+        public static PromotionProductEntry ToPromotionItem(this LineItem lineItem)
         {
-            var promoItem = new VirtoCommerceDomainMarketingModelProductPromoEntry();
+            var promoItem = new PromotionProductEntry();
 
             promoItem.InjectFrom(lineItem);
 

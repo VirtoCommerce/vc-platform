@@ -7,15 +7,15 @@ namespace VirtoCommerce.Storefront.Converters
 {
     public static class DynamicPropertyConverter
     {
-        public static DynamicObjectProperty ToWebModel(this VirtoCommercePlatformCoreDynamicPropertiesDynamicObjectProperty dynamicObjectProperty)
+        public static DynamicProperty ToWebModel(this VirtoCommercePlatformCoreDynamicPropertiesDynamicObjectProperty dynamicObjectProperty)
         {
-            var webModel = new DynamicObjectProperty();
+            var webModel = new DynamicProperty();
 
             webModel.InjectFrom(dynamicObjectProperty);
 
             if (dynamicObjectProperty.Values != null)
             {
-                webModel.Values = dynamicObjectProperty.Values.Select(ToWebModel).ToList();
+                webModel.Values = dynamicObjectProperty.Values.Select(v => v.Value.ToString()).ToList();
             }
 
             return webModel;
@@ -30,25 +30,25 @@ namespace VirtoCommerce.Storefront.Converters
             return webModel;
         }
 
-        public static VirtoCommercePlatformCoreDynamicPropertiesDynamicObjectProperty ToServiceModel(this DynamicObjectProperty dynamicObjectProperty)
+        public static VirtoCommercePlatformCoreDynamicPropertiesDynamicObjectProperty ToServiceModel(this DynamicProperty dynamicProperty)
         {
             var serviceModel = new VirtoCommercePlatformCoreDynamicPropertiesDynamicObjectProperty();
 
-            serviceModel.InjectFrom(dynamicObjectProperty);
+            serviceModel.InjectFrom(dynamicProperty);
 
-            if (dynamicObjectProperty.Values != null)
+            if (dynamicProperty.Values != null)
             {
-                serviceModel.Values = dynamicObjectProperty.Values.Select(ToServiceModel).ToList();
+                serviceModel.Values = dynamicProperty.Values.Select(v => v.ToServiceModel()).ToList();
             }
 
             return serviceModel;
         }
 
-        public static VirtoCommercePlatformCoreDynamicPropertiesDynamicPropertyObjectValue ToServiceModel(this DynamicPropertyObjectValue dynamicPropertyObjectValue)
+        public static VirtoCommercePlatformCoreDynamicPropertiesDynamicPropertyObjectValue ToServiceModel(this string dynamicPropertyObjectValue)
         {
             var serviceModel = new VirtoCommercePlatformCoreDynamicPropertiesDynamicPropertyObjectValue();
 
-            serviceModel.InjectFrom(dynamicPropertyObjectValue);
+            serviceModel.Value = dynamicPropertyObjectValue;
 
             return serviceModel;
         }

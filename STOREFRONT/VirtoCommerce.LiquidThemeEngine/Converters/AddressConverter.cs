@@ -1,20 +1,19 @@
 ﻿using Omu.ValueInjecter;
-using VirtoCommerce.LiquidThemeEngine.Converters.Injections;
 using VirtoCommerce.LiquidThemeEngine.Objects;
-using storefrontModel = VirtoCommerce.Storefront.Model;
+using StorefrontModel = VirtoCommerce.Storefront.Model;
 
 namespace VirtoCommerce.LiquidThemeEngine.Converters
 {
     public static class AddressConverter
     {
-        public static Address ToShopifyModel(this storefrontModel.Address address)
+        public static Address ToShopifyModel(this StorefrontModel.Address address)
         {
             Address result = null;
 
             if (address != null)
             {
                 result = new Address();
-                result.InjectFrom<NullableAndEnumValueInjection>(address);
+                result.InjectFrom<StorefrontModel.Common.NullableAndEnumValueInjecter>(address);
 
                 result.Address1 = address.Line1;
                 result.Address2 = address.Line2;
