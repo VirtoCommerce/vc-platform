@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Newtonsoft.Json.Linq;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Core.DynamicProperties
 {
@@ -37,36 +39,28 @@ namespace VirtoCommerce.Platform.Core.DynamicProperties
             return result;
         }
 
-        public static void SetObjectId(this IHasDynamicProperties owner, string id)
+        public static void DeepCopyPropertyValues(this IHasDynamicProperties sourceOwner, IHasDynamicProperties targetOwner)
         {
-            if (owner != null && owner.DynamicProperties != null)
+            if(sourceOwner == null)
             {
-                owner.Id = id;
-
-                foreach (var dynamicObjectProperty in owner.DynamicProperties)
-                {
-                    dynamicObjectProperty.ObjectId = id;
-                }
+                throw new ArgumentNullException("sourceOwner");
             }
-        }
-
-        /// <summary>
-        /// Apply property values for those who have the same name and ValueType
-        /// </summary>
-        public static void ApplyDynamicPropertiesValues(this IHasDynamicProperties owner, IHasDynamicProperties source)
-        {
-            if (source.DynamicProperties != null && owner.DynamicProperties != null)
+            if (targetOwner == null)
             {
-                foreach (var sourceProperty in source.DynamicProperties)
-                {
-                    var ownerProperty = owner.DynamicProperties
-                        .FirstOrDefault(x => x.Name.Equals(sourceProperty.Name) && x.ValueType == sourceProperty.ValueType);
-                    if (ownerProperty != null && sourceProperty.Values != null)
-                    {
-                        ownerProperty.Values = sourceProperty.Values.Select(x => x.Clone()).ToArray();
-                    }
-                }
+                throw new ArgumentNullException("targetOwner");
             }
+
+            var comparer = AnonymousComparer.Create((DynamicProperty x) => x.Name.ToLowerInvariant() + ":" + x.ValueType.ToString());
+            var allExpandedSourceProps = sourceOwner.GetFlatObjectsListWithInterface<IHasDynamicProperties>().SelectMany(x => x.DynamicProperties).ToList();
+            var allExpandedTargetProps = targetOwner.GetFlatObjectsListWithInterface<IHasDynamicProperties>().SelectMany(x => x.DynamicProperties).ToList();
+            //Copy  property values for same proeprties  from one object to other 
+            allExpandedSourceProps.CompareTo(allExpandedTargetProps, comparer, (state, sourceProp, targetProp) =>
+            {
+                if (state == EntryState.Modified)
+                {
+                    targetProp.Values = sourceProp.Values;
+                }
+            });
         }
     }
 }

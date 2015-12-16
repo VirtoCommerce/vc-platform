@@ -1,19 +1,26 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace VirtoCommerce.Platform.Core.DynamicProperties
 {
-    public class DynamicPropertyObjectValue
+    public class DynamicPropertyObjectValue : ICloneable
     {
         public string Locale { get; set; }
         public object Value { get; set; }
 
-        public DynamicPropertyObjectValue Clone()
+        public object Clone()
         {
-            return new DynamicPropertyObjectValue
+            var retVal = new DynamicPropertyObjectValue
             {
                 Locale = Locale,
                 Value = Value
             };
+            var cloneableValue = Value as ICloneable;
+            if(cloneableValue != null )
+            {
+                retVal.Value = cloneableValue.Clone();
+            }
+            return retVal;
         }
     }
 }

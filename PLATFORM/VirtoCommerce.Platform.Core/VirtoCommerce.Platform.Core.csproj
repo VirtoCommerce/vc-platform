@@ -94,6 +94,7 @@
     <Compile Include="Common\ConfigManagerExtensions.cs" />
     <Compile Include="Common\ObservableChangeTracker.cs" />
     <Compile Include="Common\PlatformVersion.cs" />
+    <Compile Include="Common\PrimaryKeyResolvingMap.cs" />
     <Compile Include="Common\SemanticVersion.cs" />
     <Compile Include="Common\SerializationExtension.cs" />
     <Compile Include="Common\StreamExtensions.cs" />

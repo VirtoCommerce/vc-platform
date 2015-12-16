@@ -50,12 +50,13 @@ namespace VirtoCommerce.OrderModule.Data.Converters
             return retVal;
         }
 
-        public static PaymentInEntity ToDataModel(this PaymentIn paymentIn, CustomerOrderEntity orderEntity)
+        public static PaymentInEntity ToDataModel(this PaymentIn paymentIn, CustomerOrderEntity orderEntity, PrimaryKeyResolvingMap pkMap)
         {
             if (paymentIn == null)
                 throw new ArgumentNullException("paymentIn");
 
             var retVal = new PaymentInEntity();
+            pkMap.AddPair(paymentIn, retVal);
             retVal.InjectFrom(paymentIn);
 
             retVal.Currency = paymentIn.Currency.ToString();

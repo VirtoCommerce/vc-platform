@@ -57,13 +57,15 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			return retVal;
 		}
 
-		public static LineItemEntity ToDataModel(this LineItem lineItem)
+		public static LineItemEntity ToDataModel(this LineItem lineItem, PrimaryKeyResolvingMap pkMap)
 		{
 			if (lineItem == null)
 				throw new ArgumentNullException("lineItem");
 
 			var retVal = new LineItemEntity();
-			retVal.InjectFrom(lineItem);
+            pkMap.AddPair(lineItem, retVal);
+
+            retVal.InjectFrom(lineItem);
 			retVal.Currency = lineItem.Currency.ToString();
 			if(lineItem.Discount != null)
 			{

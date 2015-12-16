@@ -27,13 +27,15 @@ namespace VirtoCommerce.CartModule.Data.Converters
             return retVal;
 		}
 
-		public static LineItemEntity ToDataModel(this LineItem lineItem)
+		public static LineItemEntity ToDataModel(this LineItem lineItem, PrimaryKeyResolvingMap pkMap)
 		{
 			if (lineItem == null)
 				throw new ArgumentNullException("lineItem");
 
 			var retVal = new LineItemEntity();
-			retVal.InjectFrom(lineItem);
+            pkMap.AddPair(lineItem, retVal);
+
+            retVal.InjectFrom(lineItem);
 			retVal.Currency = lineItem.Currency.ToString();
 			if (lineItem.TaxDetails != null)
 			{
@@ -44,7 +46,7 @@ namespace VirtoCommerce.CartModule.Data.Converters
             if (lineItem.Discounts != null)
             {
                 retVal.Discounts = new ObservableCollection<DiscountEntity>();
-                retVal.Discounts.AddRange(lineItem.Discounts.Select(x => x.ToDataModel()));
+                retVal.Discounts.AddRange(lineItem.Discounts.Select(x => x.ToDataModel(pkMap)));
             }
             return retVal;
 		}

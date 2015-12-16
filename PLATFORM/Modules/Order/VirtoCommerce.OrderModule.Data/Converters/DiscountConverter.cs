@@ -56,7 +56,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 				throw new ArgumentNullException("discount");
 
 			var retVal = new DiscountEntity();
-			retVal.InjectFrom(discount);
+            retVal.InjectFrom(discount);
 
 			if (discount.Currency != null)
 			{

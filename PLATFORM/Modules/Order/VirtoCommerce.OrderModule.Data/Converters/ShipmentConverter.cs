@@ -72,15 +72,16 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			return retVal;
 		}
 
-		public static ShipmentEntity ToDataModel(this Shipment shipment, CustomerOrderEntity orderEntity)
+		public static ShipmentEntity ToDataModel(this Shipment shipment, CustomerOrderEntity orderEntity, PrimaryKeyResolvingMap pkMap)
 		{
 			if (shipment == null)
 				throw new ArgumentNullException("shipment");
 
 			var retVal = new ShipmentEntity();
 			retVal.InjectFrom(shipment);
+            pkMap.AddPair(shipment, retVal);
 
-			retVal.Currency = shipment.Currency.ToString();
+            retVal.Currency = shipment.Currency.ToString();
 
 		
 			//Allow to empty address
@@ -91,11 +92,11 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			}
 			if(shipment.Items != null)
 			{
-				retVal.Items = new ObservableCollection<ShipmentItemEntity>(shipment.Items.Select(x=>x.ToDataModel(orderEntity)));
+				retVal.Items = new ObservableCollection<ShipmentItemEntity>(shipment.Items.Select(x=>x.ToDataModel(orderEntity, pkMap)));
 			}
 			if (shipment.Packages != null)
 			{
-				retVal.Packages = new ObservableCollection<ShipmentPackageEntity>(shipment.Packages.Select(x => x.ToDataModel(orderEntity)));
+				retVal.Packages = new ObservableCollection<ShipmentPackageEntity>(shipment.Packages.Select(x => x.ToDataModel(orderEntity, pkMap)));
 			}
 			if (shipment.TaxDetails != null)
 			{

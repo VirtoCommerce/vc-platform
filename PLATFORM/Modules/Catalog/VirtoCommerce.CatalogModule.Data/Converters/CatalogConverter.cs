@@ -74,7 +74,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         /// </summary>
         /// <param name="catalog"></param>
         /// <returns></returns>
-        public static dataModel.Catalog ToDataModel(this coreModel.Catalog catalog)
+        public static dataModel.Catalog ToDataModel(this coreModel.Catalog catalog, PrimaryKeyResolvingMap pkMap)
         {
             if (catalog == null)
                 throw new ArgumentNullException("catalog");
@@ -83,11 +83,12 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 				throw new NullReferenceException("DefaultLanguage");
 
             var retVal = new dataModel.Catalog();
+            pkMap.AddPair(catalog, retVal);
 
             if (catalog.PropertyValues != null)
             {
                 retVal.CatalogPropertyValues = new ObservableCollection<dataModel.PropertyValue>();
-                retVal.CatalogPropertyValues.AddRange(catalog.PropertyValues.Select(x => x.ToDataModel()));
+                retVal.CatalogPropertyValues.AddRange(catalog.PropertyValues.Select(x => x.ToDataModel(pkMap)));
             }
 
             retVal.InjectFrom(catalog);

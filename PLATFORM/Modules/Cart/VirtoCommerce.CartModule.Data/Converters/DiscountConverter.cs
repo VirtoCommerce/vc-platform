@@ -30,13 +30,15 @@ namespace VirtoCommerce.CartModule.Data.Converters
 		}
 
 
-		public static DiscountEntity ToDataModel(this coreModel.Discount discount)
+		public static DiscountEntity ToDataModel(this coreModel.Discount discount, PrimaryKeyResolvingMap pkMap)
 		{
 			if (discount == null)
 				throw new ArgumentNullException("discount");
 
 			var retVal = new DiscountEntity();
-			retVal.InjectFrom(discount);
+            pkMap.AddPair(discount, retVal);
+
+            retVal.InjectFrom(discount);
 
 			retVal.Currency = discount.Currency.ToString();
 

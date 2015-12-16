@@ -54,14 +54,15 @@ namespace VirtoCommerce.CatalogModule.Data.Services
             if (category == null)
                 throw new ArgumentNullException("category");
 
-            var dbCategory = category.ToDataModel();
+            var pkMap = new PrimaryKeyResolvingMap();
+            var dbCategory = category.ToDataModel(pkMap);
             
             using (var repository = _catalogRepositoryFactory())
             {	
                 repository.Add(dbCategory);
                 CommitChanges(repository);
+                pkMap.ResolvePrimaryKeys();
             }
-            category.Id = dbCategory.Id;
             //Need add seo separately
             _commerceService.UpsertSeoForObjects(new[] { category });
             return GetById(dbCategory.Id, Domain.Catalog.Model.CategoryResponseGroup.Info);
@@ -69,6 +70,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 
         public void Update(coreModel.Category[] categories)
         {
+            var pkMap = new PrimaryKeyResolvingMap();
             using (var repository = _catalogRepositoryFactory())
 			using (var changeTracker = base.GetChangeTracker(repository))
             {
@@ -81,13 +83,14 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 						throw new NullReferenceException("dbCategory");
 					}
 		
-					var dbCategoryChanged = category.ToDataModel();
+					var dbCategoryChanged = category.ToDataModel(pkMap);
 					changeTracker.Attach(dbCategory);
 
-					category.Patch(dbCategory);
+					category.Patch(dbCategory, pkMap);
 				}
 				CommitChanges(repository);
-			}
+                pkMap.ResolvePrimaryKeys();
+            }
             //Update seo
             _commerceService.UpsertSeoForObjects(categories);
         }

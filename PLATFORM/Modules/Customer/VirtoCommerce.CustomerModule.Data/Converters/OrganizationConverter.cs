@@ -42,12 +42,13 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
         }
 
 
-        public static dataModel.Organization ToDataModel(this coreModel.Organization organization)
+        public static dataModel.Organization ToDataModel(this coreModel.Organization organization, PrimaryKeyResolvingMap pkMap)
         {
             if (organization == null)
                 throw new ArgumentNullException("organization");
 
             var retVal = new dataModel.Organization();
+            pkMap.AddPair(organization, retVal);
 
             retVal.InjectFrom(organization);
 

@@ -169,11 +169,11 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// </summary>
 		/// <param name="catalog"></param>
 		/// <returns></returns>
-		public static dataModel.Item ToDataModel(this coreModel.CatalogProduct product)
+		public static dataModel.Item ToDataModel(this coreModel.CatalogProduct product, PrimaryKeyResolvingMap pkMap)
 		{
 			var retVal = new dataModel.Item();
-			var id = retVal.Id;
-			retVal.InjectFrom(product);
+            pkMap.AddPair(product, retVal);
+            retVal.InjectFrom(product);
 	        
 			if(product.StartDate == default(DateTime))
 			{
@@ -200,21 +200,21 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			if (product.PropertyValues != null)
 			{
 				retVal.ItemPropertyValues = new ObservableCollection<dataModel.PropertyValue>();
-                retVal.ItemPropertyValues.AddRange(product.PropertyValues.Where(x => !x.IsInherited).Select(x => x.ToDataModel()));
+                retVal.ItemPropertyValues.AddRange(product.PropertyValues.Where(x => !x.IsInherited).Select(x => x.ToDataModel(pkMap)));
             }
 			#endregion
 
 			#region Assets
 			if (product.Assets != null)
 			{
-                retVal.Assets = new ObservableCollection<dataModel.Asset>(product.Assets.Where(x => !x.IsInherited).Select(x => x.ToDataModel()));
+                retVal.Assets = new ObservableCollection<dataModel.Asset>(product.Assets.Where(x => !x.IsInherited).Select(x => x.ToDataModel(pkMap)));
             }
 			#endregion
 
 			#region Images
 			if (product.Images != null)
 			{
-                retVal.Images = new ObservableCollection<dataModel.Image>(product.Images.Where(x => !x.IsInherited).Select(x => x.ToDataModel()));
+                retVal.Images = new ObservableCollection<dataModel.Image>(product.Images.Where(x => !x.IsInherited).Select(x => x.ToDataModel(pkMap)));
             }
 			#endregion
 
@@ -230,7 +230,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			if (product.Reviews != null)
 			{
 				retVal.EditorialReviews = new ObservableCollection<dataModel.EditorialReview>();
-                retVal.EditorialReviews.AddRange(product.Reviews.Where(x => !x.IsInherited).Select(x => x.ToDataModel(retVal)));
+                retVal.EditorialReviews.AddRange(product.Reviews.Where(x => !x.IsInherited).Select(x => x.ToDataModel(retVal, pkMap)));
             }
 			#endregion
 
@@ -268,7 +268,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         /// </summary>
         /// <param name="source"></param>
         /// <param name="target"></param>
-        public static void Patch(this coreModel.CatalogProduct source, dataModel.Item target)
+        public static void Patch(this coreModel.CatalogProduct source, dataModel.Item target, PrimaryKeyResolvingMap pkMap)
         {
             if (target == null)
                 throw new ArgumentNullException("target");
@@ -294,7 +294,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
                                                                           x => x.WeightUnit, x => x.Weight, x => x.MeasureUnit, x => x.Height, x => x.Length, x => x.Width, x => x.EnableReview, x => x.MaxNumberOfDownload,
                                                                           x => x.DownloadExpiration, x => x.DownloadType, x => x.HasUserAgreement, x => x.ShippingType, x => x.TaxType, x => x.Vendor, x => x.CatalogId, x => x.CategoryId);
 
-            var dbSource = source.ToDataModel();
+            var dbSource = source.ToDataModel(pkMap);
             target.InjectFrom(patchInjectionPolicy, dbSource);
 
             #region Assets
