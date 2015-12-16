@@ -44,8 +44,7 @@
             {% endif %}
 
             <ul class="inline-list product-meta">
-
-                <li ng-if="!selectedVariation.Id">
+                <li ng-if="!selectedVariation.Id && !productPriceLoaded">
                     {% if product.compare_at_price > product.price %}
                         <span class="old">
                             {% include 'price' with variant.compare_at_price %}
@@ -61,7 +60,7 @@
                     </span>
                 </li>
                  <!--For sku-selector variations switches-->
-                <li ng-if="selectedVariation.Id">
+                <li ng-if="selectedVariation.Id && !productPriceLoaded">
                     <span ng-if="selectedVariation.Price.AbsoluteBenefit.Amount > 0" class="old">
                         <small ng-bind="selectedVariation.Price.ListPrice.FormatedAmount"></small>
                     </span>
@@ -69,6 +68,19 @@
                     </span>
                     <span id="productPrice" class="h1">
                         <small ng-bind="selectedVariation.Price.SalePrice.FormatedAmount"></small>
+                    </span>
+                </li>
+
+                <li ng-if="productPriceLoaded">
+                    <span class="old" ng-if="productPrice.ListPrice.Amount > productPrice.SalePrice.Amount || productPrice.ActiveDiscount.Amount.Amount > 0">
+                        <small ng-if="productPrice.ListPrice.Amount > productPrice.SalePrice.Amount" ng-bind="productPrice.ListPrice.FormatedAmount"></small>
+                        <small ng-if="productPrice.ActiveDiscount.Amount.Amount > 0" ng-bind="productPrice.SalePrice.FormatedAmount"></small>
+                    </span>
+                    <span class="sale-tag large" id="comparePrice" ng-if="productPrice.ListPrice.Amount > productPrice.SalePrice.Amount" ng-bind="'save ' + productPrice.AbsoluteBenefit.FormatedAmount"></span>
+                    <span class="sale-tag large" id="comparePrice" ng-if="productPrice.ActiveDiscount.Amount.Amount > 0" ng-bind="'save ' + productPrice.ActiveDiscount.Amount.FormatedAmount"></span>
+                    <span class="h1" id="productPrice">
+                        <small ng-if="productPrice.ListPrice.Amount > productPrice.SalePrice.Amount" ng-bind="productPrice.SalePrice.FormatedAmount"></small>
+                        <small ng-if="productPrice.ActiveDiscount.Amount.Amount > 0" ng-bind="(productPrice.SalePrice.Amount - productPrice.ActiveDiscount.Amount.Amount) | currency: productPrice.SalePrice.CurrencySymbol"></small>
                     </span>
                 </li>
 
@@ -147,7 +159,8 @@
 </div>
 
 <script>
-    window.productId = "{{ product.id }}";
+    window.categoryId = '{{ collection.id }}';
+    window.productId = '{{ product.id }}';
 </script>
 
 <!--Template for variation images-->

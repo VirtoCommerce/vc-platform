@@ -558,7 +558,7 @@ app.controller('checkoutController', ['$scope', '$location', '$sce', '$window', 
     }
 }]);
 
-app.controller('productController', ['$scope', '$window', 'catalogService', function ($scope, $window, catalogService) {
+app.controller('productController', ['$scope', '$window', 'catalogService', 'marketingService', function ($scope, $window, catalogService, marketingService) {
 	//TODO: prevent add to cart not selected variation
 	// display validator please select property
 	// display price range
@@ -566,6 +566,7 @@ app.controller('productController', ['$scope', '$window', 'catalogService', func
 	var allVarations = [];
 	$scope.selectedVariation = {};
 	$scope.allVariationPropsMap = {};
+	$scope.productPriceLoaded = false;
 
 	function Initialize() {
 	    catalogService.getProduct($window.productId).then(function (response) {
@@ -580,6 +581,7 @@ app.controller('productController', ['$scope', '$window', 'catalogService', func
 				$scope.checkProperty(propertyMap[x][0])
 			});
 			$scope.selectedVariation = product;
+			getActualProductPrice($window.categoryId, $scope.selectedVariation.Id);
 		});
 	};
 
@@ -630,6 +632,13 @@ app.controller('productController', ['$scope', '$window', 'catalogService', func
 		});
 		return retVal;
 	};
+
+	function getActualProductPrice(categoryId, productId) {
+	    marketingService.getActualProductPrices(categoryId, [productId]).then(function (response) {
+	        $scope.productPrice = response.data ? response.data[0] : null;
+	        $scope.productPriceLoaded = $scope.productPrice != null;
+	    });
+	}
 
 	//Method called from View when user click to one of properties value
 	$scope.checkProperty = function (property) {
