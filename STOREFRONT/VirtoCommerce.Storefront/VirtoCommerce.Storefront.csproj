@@ -128,7 +128,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Omu.ValueInjecter, Version=3.1.1.0, Culture=neutral, PublicKeyToken=c7694541b0ac80e4, processorArchitecture=MSIL">
-      <HintPath>..\packages\valueinjecter.3.1.1\lib\net40\Omu.ValueInjecter.dll</HintPath>
+      <HintPath>..\packages\valueinjecter.3.1.1.2\lib\net40\Omu.ValueInjecter.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
@@ -330,6 +330,7 @@
     <Compile Include="Converters\CartPaymentMethodConverter.cs" />
     <Compile Include="Converters\CartShipmentMethodConverter.cs" />
     <Compile Include="Converters\DiscountConverter.cs" />
+    <Compile Include="Converters\DynamicContentConverter.cs" />
     <Compile Include="Converters\DynamicPropertyConverter.cs" />
     <Compile Include="Converters\CartConverter.cs" />
     <Compile Include="Converters\CartLineItemConverter.cs" />
@@ -344,6 +345,10 @@
     <Compile Include="Converters\PaymentConverter.cs" />
     <Compile Include="Converters\PriceConverter.cs" />
     <Compile Include="Converters\ProductConverter.cs" />
+    <Compile Include="Converters\PromotionConverter.cs" />
+    <Compile Include="Converters\PromotionEvaluationContextConverter.cs" />
+    <Compile Include="Converters\PromotionProductEntryConverter.cs" />
+    <Compile Include="Converters\PromotionRewardConverter.cs" />
     <Compile Include="Converters\PropertyConverter.cs" />
     <Compile Include="Converters\SeoInfoConverter.cs" />
     <Compile Include="Converters\ShipmentConverter.cs" />
@@ -360,6 +365,7 @@
     <Compile Include="Routing\SeoRoute.cs" />
     <Compile Include="Routing\SeoRouteExtensions.cs" />
     <Compile Include="Services\CatalogSearchServiceImpl.cs" />
+    <Compile Include="Services\MarketingService.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>

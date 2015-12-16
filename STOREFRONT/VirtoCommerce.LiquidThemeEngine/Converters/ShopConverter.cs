@@ -1,17 +1,16 @@
 ﻿using Omu.ValueInjecter;
 using System.Linq;
-using VirtoCommerce.LiquidThemeEngine.Converters.Injections;
 using VirtoCommerce.LiquidThemeEngine.Objects;
-using storefrontModel = VirtoCommerce.Storefront.Model;
+using StorefrontModel = VirtoCommerce.Storefront.Model;
 
 namespace VirtoCommerce.LiquidThemeEngine.Converters
 {
     public static class ShopConverter
     {
-        public static Shop ToShopifyModel(this storefrontModel.Store store, storefrontModel.WorkContext workContext)
+        public static Shop ToShopifyModel(this StorefrontModel.Store store, StorefrontModel.WorkContext workContext)
         {
             Shop result = new Shop();
-            result.InjectFrom<NullableAndEnumValueInjection>(store);
+            result.InjectFrom<StorefrontModel.Common.NullableAndEnumValueInjecter>(store);
             result.CustomerAccountsEnabled = true;
             result.CustomerAccountsOptional = true;
             result.Currency = workContext.CurrentCurrency.Code;

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Omu.ValueInjecter;
-using VirtoCommerce.LiquidThemeEngine.Converters.Injections;
 using VirtoCommerce.LiquidThemeEngine.Objects;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Common;
@@ -16,7 +15,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
         public static Order ToShopifyModel(this CustomerOrder order, IStorefrontUrlBuilder urlBuilder)
         {
             var result = new Order();
-            result.InjectFrom<NullableAndEnumValueInjection>(order);
+            result.InjectFrom<NullableAndEnumValueInjecter>(order);
 
             result.Cancelled = order.IsCancelled == true;
             result.CancelledAt = order.CancelledDate;

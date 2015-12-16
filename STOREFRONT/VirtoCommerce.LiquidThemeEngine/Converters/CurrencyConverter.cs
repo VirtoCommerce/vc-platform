@@ -1,22 +1,18 @@
 ﻿using Omu.ValueInjecter;
-using System.Linq;
-using VirtoCommerce.LiquidThemeEngine.Converters.Injections;
 using VirtoCommerce.LiquidThemeEngine.Objects;
-using storefrontModel = VirtoCommerce.Storefront.Model;
-using VirtoCommerce.Platform.Core.Common;
+using StorefrontModel = VirtoCommerce.Storefront.Model;
 
 namespace VirtoCommerce.LiquidThemeEngine.Converters
 {
     public static class CurrencyConverter
     {
-        public static Currency ToShopifyModel(this storefrontModel.Common.Currency currency)
+        public static Currency ToShopifyModel(this StorefrontModel.Common.Currency currency)
         {
             var result = new Currency();
-            result.InjectFrom<NullableAndEnumValueInjection>(currency);
+
+            result.InjectFrom<StorefrontModel.Common.NullableAndEnumValueInjecter>(currency);
 
             return result;
         }
-
     }
 }
-

@@ -1,20 +1,18 @@
 ﻿using System.Globalization;
 using System.Linq;
 using Omu.ValueInjecter;
-using VirtoCommerce.LiquidThemeEngine.Converters.Injections;
 using VirtoCommerce.LiquidThemeEngine.Extensions;
 using VirtoCommerce.LiquidThemeEngine.Objects;
-using VirtoCommerce.Storefront.Model.Common;
-using storefrontModel = VirtoCommerce.Storefront.Model;
+using StorefrontModel = VirtoCommerce.Storefront.Model;
 
 namespace VirtoCommerce.LiquidThemeEngine.Converters
 {
     public static class CustomerConverter
     {
-        public static Customer ToShopifyModel(this storefrontModel.Customer customer, storefrontModel.WorkContext workContext, IStorefrontUrlBuilder urlBuilder)
+        public static Customer ToShopifyModel(this StorefrontModel.Customer customer, StorefrontModel.WorkContext workContext, StorefrontModel.Common.IStorefrontUrlBuilder urlBuilder)
         {
             var result = new Customer();
-            result.InjectFrom<NullableAndEnumValueInjection>(customer);
+            result.InjectFrom<StorefrontModel.Common.NullableAndEnumValueInjecter>(customer);
 
             result.DefaultAddress = customer.DefaultAddress.ToShopifyModel();
             result.DefaultBillingAddress = customer.DefaultBillingAddress.ToShopifyModel();
@@ -37,13 +35,13 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                     id++;
                 }
 
-                result.Addresses = new StorefrontPagedList<Address>(addresses, 1, 10, addresses.Count, page => workContext.RequestUrl.SetQueryParameter("page", page.ToString()).ToString());
+                result.Addresses = new StorefrontModel.Common.StorefrontPagedList<Address>(addresses, 1, 10, addresses.Count, page => workContext.RequestUrl.SetQueryParameter("page", page.ToString()).ToString());
             }
 
             if (customer.Orders != null)
             {
                 var orders = customer.Orders.Select(o => o.ToShopifyModel(urlBuilder)).ToList();
-                result.Orders = new StorefrontPagedList<Order>(orders, 1, 10, customer.OrdersCount, page => workContext.RequestUrl.SetQueryParameter("page", page.ToString()).ToString());
+                result.Orders = new StorefrontModel.Common.StorefrontPagedList<Order>(orders, 1, 10, customer.OrdersCount, page => workContext.RequestUrl.SetQueryParameter("page", page.ToString()).ToString());
             }
 
             return result;

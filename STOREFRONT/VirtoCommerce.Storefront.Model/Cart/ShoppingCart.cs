@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using VirtoCommerce.Storefront.Model.Common;
+using VirtoCommerce.Storefront.Model.Marketing;
 
 namespace VirtoCommerce.Storefront.Model.Cart
 {

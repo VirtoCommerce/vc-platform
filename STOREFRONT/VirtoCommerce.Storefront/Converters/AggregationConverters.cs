@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using Omu.ValueInjecter;
 using VirtoCommerce.Client.Model;
-using VirtoCommerce.LiquidThemeEngine.Converters.Injections;
 using VirtoCommerce.Storefront.Model.Catalog;
+using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Converters
 {
@@ -11,7 +11,7 @@ namespace VirtoCommerce.Storefront.Converters
         public static Aggregation ToWebModel(this VirtoCommerceCatalogModuleWebModelAggregation aggregation)
         {
             var result = new Aggregation();
-            result.InjectFrom<NullableAndEnumValueInjection>(aggregation);
+            result.InjectFrom<NullableAndEnumValueInjecter>(aggregation);
 
             if (aggregation.Items != null)
             {
@@ -24,7 +24,7 @@ namespace VirtoCommerce.Storefront.Converters
         public static AggregationItem ToWebModel(this VirtoCommerceCatalogModuleWebModelAggregationItem item)
         {
             var result = new AggregationItem();
-            result.InjectFrom<NullableAndEnumValueInjection>(item);
+            result.InjectFrom<NullableAndEnumValueInjecter>(item);
             return result;
         }
     }

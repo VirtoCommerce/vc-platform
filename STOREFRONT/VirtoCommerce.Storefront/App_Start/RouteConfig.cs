@@ -53,13 +53,13 @@ namespace VirtoCommerce.Storefront
 
             //CatalogSearch
             routes.MapLocalizedStorefrontRoute("CatalogSearch.CategoryBrowsing", "search/{categoryId}", defaults: new { controller = "CatalogSearch", action = "CategoryBrowsing" });
-            routes.MapLocalizedStorefrontRoute("CatalogSearch.ActualProductPricesJson", "search/{categoryId}/actualproductprices/json", defaults: new { controller = "CatalogSearch", action = "ActualProductPricesJson" });
             //Common
             routes.MapLocalizedStorefrontRoute("Common.SetCurrency", "common/setcurrency/{currency}", defaults: new { controller = "Common", action = "SetCurrency" });
             routes.MapLocalizedStorefrontRoute("Common.Getcountries", "common/getcountries", defaults: new { controller = "Common", action = "GetCountries" });
             routes.MapLocalizedStorefrontRoute("Common.Getregions", "common/getregions/{countryCode}/json", defaults: new { controller = "Common", action = "GetRegions" });
             //Marketing 
             routes.MapLocalizedStorefrontRoute("Marketing.DynamicContent", "marketing/dynamiccontent/{placeName}/json", defaults: new { controller = "Marketing", action = "GetDynamicContentJson" });
+            routes.MapLocalizedStorefrontRoute("Marketing.ActualPrices", "marketing/actualprices", defaults: new { controller = "Marketing", action = "GetActualProductPricesJson" });
             //Product routes
             routes.MapLocalizedStorefrontRoute("Product.GetProduct", "product/{productId}", defaults: new { controller = "Product", action = "ProductDetails" });
             routes.MapLocalizedStorefrontRoute("Product.GetProductJson", "product/{productId}/json", defaults: new { controller = "Product", action = "ProductDetailsJson" });

@@ -1,6 +1,6 @@
 ﻿using VirtoCommerce.Storefront.Model.Common;
 
-namespace VirtoCommerce.Storefront.Model
+namespace VirtoCommerce.Storefront.Model.Marketing
 {
     /// <summary>
     /// Represents coupon object

@@ -83,4 +83,8 @@
 {% endpaginate %}
 <script>
     window.categoryId = '{{ collection.id }}';
+    window.productIds = [];
+    {% for product in collection.products %}
+        window.productIds.push('{{ product.id }}');
+    {% endfor %}
 </script>

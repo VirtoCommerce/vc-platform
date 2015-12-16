@@ -1,13 +1,13 @@
-﻿using VirtoCommerce.Storefront.Model;
-using shopifyModel = VirtoCommerce.LiquidThemeEngine.Objects;
+﻿using VirtoCommerce.Storefront.Model.Marketing;
+using ShopifyModel = VirtoCommerce.LiquidThemeEngine.Objects;
 
 namespace VirtoCommerce.LiquidThemeEngine.Converters
 {
     public static class DiscountConverter
     {
-        public static shopifyModel.Discount ToShopifyModel(this Discount discount)
+        public static ShopifyModel.Discount ToShopifyModel(this Discount discount)
         {
-            var ret = new shopifyModel.Discount
+            var result = new ShopifyModel.Discount
             {
                 Amount = discount.Amount.Amount,
                 Code = discount.PromotionId,
@@ -15,7 +15,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                 Savings = -discount.Amount.Amount
             };
 
-            return ret;
+            return result;
         }
     }
 }

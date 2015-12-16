@@ -2,9 +2,9 @@
 using System.Linq;
 using Omu.ValueInjecter;
 using VirtoCommerce.Client.Model;
-using VirtoCommerce.LiquidThemeEngine.Converters.Injections;
 using VirtoCommerce.Storefront.Model;
-using shopifyModel = VirtoCommerce.LiquidThemeEngine.Objects;
+using ShopifyModel = VirtoCommerce.LiquidThemeEngine.Objects;
+using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Converters
 {
@@ -19,7 +19,7 @@ namespace VirtoCommerce.Storefront.Converters
             return customerAddress;
         }
 
-        public static VirtoCommerceCustomerModuleWebModelAddress ToServiceModel(this shopifyModel.Address address, Country[] countries)
+        public static VirtoCommerceCustomerModuleWebModelAddress ToServiceModel(this ShopifyModel.Address address, Country[] countries)
         {
             var result = new VirtoCommerceCustomerModuleWebModelAddress();
             result.CopyFrom(address, countries);
@@ -37,9 +37,9 @@ namespace VirtoCommerce.Storefront.Converters
             return customerAddress;
         }
 
-        public static VirtoCommerceCustomerModuleWebModelAddress CopyFrom(this VirtoCommerceCustomerModuleWebModelAddress result, shopifyModel.Address address, Country[] countries)
+        public static VirtoCommerceCustomerModuleWebModelAddress CopyFrom(this VirtoCommerceCustomerModuleWebModelAddress result, ShopifyModel.Address address, Country[] countries)
         {
-            result.InjectFrom<NullableAndEnumValueInjection>(address);
+            result.InjectFrom<NullableAndEnumValueInjecter>(address);
 
             result.Organization = address.Company;
             result.CountryName = address.Country;

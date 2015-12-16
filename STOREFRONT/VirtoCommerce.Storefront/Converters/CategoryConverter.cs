@@ -1,8 +1,9 @@
 ﻿using System.Linq;
 using Omu.ValueInjecter;
 using VirtoCommerce.Client.Model;
-using VirtoCommerce.LiquidThemeEngine.Converters.Injections;
 using VirtoCommerce.Storefront.Model.Catalog;
+using VirtoCommerce.Storefront.Model.Common;
+
 namespace VirtoCommerce.Storefront.Converters
 {
     public static class CategoryConverter
@@ -10,7 +11,7 @@ namespace VirtoCommerce.Storefront.Converters
         public static Category ToWebModel(this VirtoCommerceCatalogModuleWebModelCategory category, VirtoCommerceCatalogModuleWebModelProduct[] products = null)
         {
             var retVal = new Category();
-            retVal.InjectFrom<NullableAndEnumValueInjection>(category);
+            retVal.InjectFrom<NullableAndEnumValueInjecter>(category);
 
             if (category.SeoInfos != null)
                 retVal.SeoInfo = category.SeoInfos.Select(s => s.ToWebModel()).FirstOrDefault();
