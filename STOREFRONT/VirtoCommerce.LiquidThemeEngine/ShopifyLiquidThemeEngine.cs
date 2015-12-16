@@ -105,7 +105,7 @@ namespace VirtoCommerce.LiquidThemeEngine
             }
         }
 
-      
+
         /// <summary>
         /// Current theme local path
         /// </summary>
@@ -147,18 +147,18 @@ namespace VirtoCommerce.LiquidThemeEngine
             var curentThemediscoveryPaths = _templatesDiscoveryFolders.Select(x => Path.Combine(CurrentThemeLocalPath, x, String.Format(_liquidTemplateFormat, templateName)));
             //First try to find template in current theme folder
             var existTemplatePath = curentThemediscoveryPaths.FirstOrDefault(x => File.Exists(x));
-            if(existTemplatePath == null && DefaultThemeLocalPath != CurrentThemeLocalPath)
+            if (existTemplatePath == null && DefaultThemeLocalPath != CurrentThemeLocalPath)
             {
                 //Then try to find in default theme
                 var defaultThemeDiscoveyPaths = _templatesDiscoveryFolders.Select(x => Path.Combine(DefaultThemeLocalPath, x, String.Format(_liquidTemplateFormat, templateName)));
                 existTemplatePath = defaultThemeDiscoveyPaths.FirstOrDefault(x => File.Exists(x));
             }
 
-            if(existTemplatePath != null)
+            if (existTemplatePath != null)
             {
                 return File.ReadAllText(existTemplatePath);
             }
-          
+
             throw new FileSystemException("Error - No such template {0} . Looked in the following locations:<br />{1}", templateName, CurrentThemeName);
         }
 
@@ -213,10 +213,13 @@ namespace VirtoCommerce.LiquidThemeEngine
             DefaultableDictionary retVal = new DefaultableDictionary(defaultValue);
 
             var resultSettings = InnerGetSettings(DefaultThemeLocalPath);
-            if(DefaultThemeLocalPath != CurrentThemeLocalPath)
+            if (DefaultThemeLocalPath != CurrentThemeLocalPath)
             {
                 var currentThemeSettings = InnerGetSettings(CurrentThemeLocalPath);
-                resultSettings.Merge(currentThemeSettings, new JsonMergeSettings { MergeArrayHandling = MergeArrayHandling.Merge });
+                if (currentThemeSettings != null)
+                {
+                    resultSettings.Merge(currentThemeSettings, new JsonMergeSettings { MergeArrayHandling = MergeArrayHandling.Merge });
+                }
             }
 
             if (resultSettings != null)
@@ -254,41 +257,47 @@ namespace VirtoCommerce.LiquidThemeEngine
         {
             //Load first localization from default theme
             var retVal = InnerReadLocalization(DefaultThemeLocalPath, WorkContext.CurrentLanguage);
-            if(DefaultThemeLocalPath != CurrentThemeLocalPath)
+            if (DefaultThemeLocalPath != CurrentThemeLocalPath)
             {
                 //Next need merge current theme localization with default
                 var currentThemeLocalization = InnerReadLocalization(CurrentThemeLocalPath, WorkContext.CurrentLanguage);
-                retVal.Merge(currentThemeLocalization, new JsonMergeSettings { MergeArrayHandling = MergeArrayHandling.Merge });
+                if (currentThemeLocalization != null)
+                {
+                    retVal.Merge(currentThemeLocalization, new JsonMergeSettings { MergeArrayHandling = MergeArrayHandling.Merge });
+                }
             }
             return retVal;
         }
 
         private JObject InnerReadLocalization(string themePath, Language language)
         {
+            JObject retVal = null;
             var localeDirectory = new DirectoryInfo(Path.Combine(themePath, "locales"));
-            var localeFilePath = Path.Combine(localeDirectory.FullName, string.Concat(language.TwoLetterLanguageName, ".json"));
-            var localeDefaultPath = localeDirectory.GetFiles("*.default.json").Select(x => x.FullName).FirstOrDefault();
-
-            JObject localeJson = null;
-            JObject defaultJson = null;
-
-            if (File.Exists(localeFilePath))
+            if (localeDirectory.Exists)
             {
-                localeJson = JsonConvert.DeserializeObject<dynamic>(File.ReadAllText(localeFilePath));
-            }
+                var localeFilePath = Path.Combine(localeDirectory.FullName, string.Concat(language.TwoLetterLanguageName, ".json"));
+                var localeDefaultPath = localeDirectory.GetFiles("*.default.json").Select(x => x.FullName).FirstOrDefault();
 
-            if (localeDefaultPath != null && File.Exists(localeDefaultPath))
-            {
-                defaultJson = JsonConvert.DeserializeObject<dynamic>(File.ReadAllText(localeDefaultPath));
-            }
+                JObject localeJson = null;
+                JObject defaultJson = null;
 
-            //Need merge default and requested localization json to resulting object
-            var retVal = defaultJson ?? localeJson;
-            if (defaultJson != null && localeJson != null)
-            {
-                retVal.Merge(localeJson, new JsonMergeSettings { MergeArrayHandling = MergeArrayHandling.Merge });
-            }
+                if (File.Exists(localeFilePath))
+                {
+                    localeJson = JsonConvert.DeserializeObject<dynamic>(File.ReadAllText(localeFilePath));
+                }
 
+                if (localeDefaultPath != null && File.Exists(localeDefaultPath))
+                {
+                    defaultJson = JsonConvert.DeserializeObject<dynamic>(File.ReadAllText(localeDefaultPath));
+                }
+
+                //Need merge default and requested localization json to resulting object
+                retVal = defaultJson ?? localeJson;
+                if (defaultJson != null && localeJson != null)
+                {
+                    retVal.Merge(localeJson, new JsonMergeSettings { MergeArrayHandling = MergeArrayHandling.Merge });
+                }
+            }
             return retVal;
         }
 
