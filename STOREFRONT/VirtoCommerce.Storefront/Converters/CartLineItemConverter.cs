@@ -15,17 +15,17 @@ namespace VirtoCommerce.Storefront.Converters
         {
             var lineItemWebModel = new LineItem(product.Price.Currency, language);
 
-            lineItemWebModel.InjectFrom(product);
+            lineItemWebModel.InjectFrom<NullableAndEnumValueInjecter>(product);
 
             var currency = product.Price.Currency;
 
-            lineItemWebModel.ExtendedPrice = product.Price.SalePrice * quantity;
             lineItemWebModel.ImageUrl = product.PrimaryImage.Url;
             lineItemWebModel.ListPrice = product.Price.ListPrice;
+            lineItemWebModel.SalePrice = product.Price.SalePrice;
             lineItemWebModel.PlacedPrice = product.Price.SalePrice;
+            lineItemWebModel.ExtendedPrice = lineItemWebModel.PlacedPrice * quantity;
             lineItemWebModel.ProductId = product.Id;
             lineItemWebModel.Quantity = quantity;
-            lineItemWebModel.SalePrice = product.Price.SalePrice;
             lineItemWebModel.TaxTotal = new Money(0, currency.Code);
             lineItemWebModel.ThumbnailImageUrl = product.PrimaryImage.Url;
 
@@ -36,7 +36,7 @@ namespace VirtoCommerce.Storefront.Converters
         {
             var webModel = new LineItem(currency, language);
 
-            webModel.InjectFrom(serviceModel);
+            webModel.InjectFrom<NullableAndEnumValueInjecter>(serviceModel);
 
             if (serviceModel.Discounts != null)
             {
@@ -60,7 +60,6 @@ namespace VirtoCommerce.Storefront.Converters
             webModel.Length = (decimal)(serviceModel.Length ?? 0);
             webModel.ListPrice = new Money(serviceModel.ListPrice ?? 0, currency.Code);
             webModel.PlacedPrice = new Money(serviceModel.PlacedPrice ?? 0, currency.Code);
-            webModel.Quantity = serviceModel.Quantity ?? 0;
             webModel.RequiredShipping = (bool)serviceModel.RequiredShipping;
             webModel.SalePrice = new Money(serviceModel.SalePrice ?? 0, currency.Code);
             webModel.TaxIncluded = (bool)serviceModel.TaxIncluded;
@@ -74,7 +73,7 @@ namespace VirtoCommerce.Storefront.Converters
         {
             var serviceModel = new VirtoCommerceCartModuleWebModelLineItem();
 
-            serviceModel.InjectFrom(webModel);
+            serviceModel.InjectFrom<NullableAndEnumValueInjecter>(webModel);
 
             serviceModel.Currency = webModel.Currency.Code;
             serviceModel.Discounts = webModel.Discounts.Select(d => d.ToServiceModel()).ToList();
@@ -84,7 +83,6 @@ namespace VirtoCommerce.Storefront.Converters
             serviceModel.Length = (double)webModel.Length;
             serviceModel.ListPrice = (double)webModel.ListPrice.Amount;
             serviceModel.PlacedPrice = (double)webModel.PlacedPrice.Amount;
-            serviceModel.Quantity = webModel.Quantity;
             serviceModel.SalePrice = (double)webModel.SalePrice.Amount;
             serviceModel.TaxDetails = webModel.TaxDetails.Select(td => td.ToServiceModel()).ToList();
             serviceModel.DynamicProperties = webModel.DynamicProperties.Select(dp => dp.ToServiceModel()).ToList();

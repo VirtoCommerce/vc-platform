@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -59,10 +60,10 @@ namespace VirtoCommerce.Storefront.Controllers
             {
                 Currency = WorkContext.CurrentCurrency,
                 CustomerId = WorkContext.CurrentCustomer.Id,
-                IsEveryone = true,
+                IsRegisteredUser = WorkContext.CurrentCustomer.HasAccount,
                 Language = WorkContext.CurrentLanguage,
                 PromoEntries = GetPromoEntries(WorkContext.CurrentStore.Catalog, categoryId, productIds, prices),
-                StoreId = WorkContext.CurrentStore.Id,
+                StoreId = WorkContext.CurrentStore.Id
             };
 
             var rewards = await _marketingService.EvaluatePromotionRewardsAsync(promotionContext);
@@ -72,7 +73,7 @@ namespace VirtoCommerce.Storefront.Controllers
                 var validReward = validRewards.FirstOrDefault(r => r.ProductId == price.ProductId);
                 if (validReward != null)
                 {
-                    price.ActiveDiscount = validReward.ToDiscountWebModel(price.SalePrice.Amount, price.Currency);
+                    price.ActiveDiscount = validReward.ToDiscountWebModel(price.SalePrice.Amount, 1, price.Currency);
                 }
             }
 

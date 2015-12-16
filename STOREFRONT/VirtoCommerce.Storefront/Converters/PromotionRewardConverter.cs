@@ -24,18 +24,18 @@ namespace VirtoCommerce.Storefront.Converters
             return webModel;
         }
 
-        public static Discount ToDiscountWebModel(this PromotionReward reward, decimal amount, Currency currency)
+        public static Discount ToDiscountWebModel(this PromotionReward reward, decimal amount, int quantity, Currency currency)
         {
             var discount = new Discount();
 
             decimal absoluteDiscountAmount = 0;
             if (reward.AmountType == AmountType.Absolute)
             {
-                absoluteDiscountAmount = reward.Amount.Amount;
+                absoluteDiscountAmount = reward.Amount.Amount * quantity;
             }
             if (reward.AmountType == AmountType.Relative)
             {
-                absoluteDiscountAmount = amount * reward.Amount.Amount / 100;
+                absoluteDiscountAmount = (amount * quantity * reward.Amount.Amount) / 100;
             }
 
             discount.Amount = new Money(absoluteDiscountAmount, currency.Code);

@@ -41,12 +41,12 @@
                                 <span class="order-summary__small-text strikethrough" ng-bind="lineItem.ListPrice.FormatedAmount"></span>
                             </span>
                             <span ng-if="lineItem.ListPrice.Amount == lineItem.SalePrice.Amount && lineItem.DiscountTotal.Amount > 0">
-                                <span class="order-summary__emphasis" ng-bind="(lineItem.ListPrice.Amount - lineItem.DiscountTotal.Amount / lineItem.Quantity) | currency: lineItem.ListPrice.CurrencySymbol"></span>
+                                <span class="order-summary__emphasis" ng-bind="lineItem.PlacedPrice.FormatedAmount"></span>
                                 <br />
                                 <span class="order-summary__small-text strikethrough" ng-bind="lineItem.ListPrice.FormatedAmount"></span>
                             </span>
                             <span ng-if="lineItem.ListPrice.Amount > lineItem.SalePrice.Amount && lineItem.DiscountTotal.Amount > 0">
-                                <span class="order-summary__emphasis" ng-bind="(lineItem.SalePrice.Amount - lineItem.DiscountTotal.Amount / lineItem.Quantity) | currency: lineItem.SalePrice.CurrencySymbol"></span>
+                                <span class="order-summary__emphasis" ng-bind="lineItem.PlacedPrice.FormatedAmount"></span>
                                 <br />
                                 <span class="order-summary__small-text strikethrough" ng-bind="lineItem.SalePrice.FormatedAmount"></span>
                             </span>

@@ -52,11 +52,11 @@ namespace VirtoCommerce.Storefront.Model.Marketing
 
         public string GeoZipCode { get; set; }
 
-        public bool IsEveryone { get; set; }
+        public bool? IsEveryone { get; set; }
 
-        public bool IsFirstTimeBuyer { get; set; }
+        public bool? IsFirstTimeBuyer { get; set; }
 
-        public bool? IsRegisteredUser { get; set; }
+        public bool IsRegisteredUser { get; set; }
 
         public Language Language { get; set; }
 
