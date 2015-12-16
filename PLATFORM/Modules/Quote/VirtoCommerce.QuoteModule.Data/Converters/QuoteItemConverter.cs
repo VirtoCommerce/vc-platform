@@ -41,13 +41,14 @@ namespace VirtoCommerce.QuoteModule.Data.Converters
             return retVal;
         }
 
-        public static dataModel.QuoteItemEntity ToDataModel(this coreModel.QuoteItem quoteItem)
+        public static dataModel.QuoteItemEntity ToDataModel(this coreModel.QuoteItem quoteItem, PrimaryKeyResolvingMap pkMap)
 		{
 			if (quoteItem == null)
 				throw new ArgumentNullException("quoteItem");
 
 			var retVal = new dataModel.QuoteItemEntity();
-			retVal.InjectFrom(quoteItem);
+            pkMap.AddPair(quoteItem, retVal);
+            retVal.InjectFrom(quoteItem);
             retVal.Currency = quoteItem.Currency.ToString();
             if (quoteItem.ProposalPrices != null)
 			{

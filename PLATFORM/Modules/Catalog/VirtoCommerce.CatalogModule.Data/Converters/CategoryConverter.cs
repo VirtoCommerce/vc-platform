@@ -95,11 +95,11 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         /// </summary>
         /// <param name="category">The category.</param>
         /// <returns></returns>
-        public static dataModel.Category ToDataModel(this coreModel.Category category)
+        public static dataModel.Category ToDataModel(this coreModel.Category category, PrimaryKeyResolvingMap pkMap)
         {
 			var retVal = new dataModel.Category();
-
-			retVal.InjectFrom(category);
+            pkMap.AddPair(category, retVal);
+            retVal.InjectFrom(category);
 	
 			retVal.ParentCategoryId = category.ParentId;
 			retVal.EndDate = DateTime.UtcNow.AddYears(100);
@@ -109,7 +109,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
             if (category.PropertyValues != null)
             {
                 retVal.CategoryPropertyValues = new ObservableCollection<dataModel.PropertyValue>();
-                retVal.CategoryPropertyValues.AddRange(category.PropertyValues.Select(x => x.ToDataModel()));
+                retVal.CategoryPropertyValues.AddRange(category.PropertyValues.Select(x => x.ToDataModel(pkMap)));
             }
 
             if (category.Links != null)
@@ -121,7 +121,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			#region Images
 			if (category.Images != null)
 			{
-				retVal.Images = new ObservableCollection<dataModel.Image>(category.Images.Select(x=>x.ToDataModel()));
+				retVal.Images = new ObservableCollection<dataModel.Image>(category.Images.Select(x=>x.ToDataModel(pkMap)));
 			}
 			#endregion
 
@@ -133,7 +133,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         /// </summary>
         /// <param name="source"></param>
         /// <param name="target"></param>
-		public static void Patch(this coreModel.Category source, dataModel.Category target)
+		public static void Patch(this coreModel.Category source, dataModel.Category target, PrimaryKeyResolvingMap pkMap)
         {
             if (target == null)
                 throw new ArgumentNullException("target");
@@ -148,7 +148,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
                 target.ParentCategoryId = null;
 
 
-            var dbSource = source.ToDataModel() as dataModel.Category;
+            var dbSource = source.ToDataModel(pkMap) as dataModel.Category;
 			var dbTarget = target as dataModel.Category;
 
             if (dbSource != null && dbTarget != null)

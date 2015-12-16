@@ -44,21 +44,24 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 		}
 
 		public coreModel.Catalog Create(coreModel.Catalog catalog)
-		{
-			var dbCatalog = catalog.ToDataModel();
+        {
+            var pkMap = new PrimaryKeyResolvingMap();
+            var dbCatalog = catalog.ToDataModel(pkMap);
 			coreModel.Catalog retVal = null;
 			using (var repository = _catalogRepositoryFactory())
 			{
 				repository.Add(dbCatalog);
 				CommitChanges(repository);
-			}
+                pkMap.ResolvePrimaryKeys();
+            }
 			retVal = GetById(dbCatalog.Id);
 			return retVal;
 		}
 
 		public void Update(coreModel.Catalog[] catalogs)
 		{
-			using (var repository = _catalogRepositoryFactory())
+            var pkMap = new PrimaryKeyResolvingMap();
+            using (var repository = _catalogRepositoryFactory())
 			using (var changeTracker = base.GetChangeTracker(repository))
 			{
 				foreach (var catalog in catalogs)
@@ -68,7 +71,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 					{
 						throw new NullReferenceException("dbCatalog");
 					}
-					var dbCatalogChanged = catalog.ToDataModel();
+					var dbCatalogChanged = catalog.ToDataModel(pkMap);
 
 					changeTracker.Attach(dbCatalog);
 					dbCatalogChanged.Patch(dbCatalog);
@@ -76,6 +79,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 				}
 
 				CommitChanges(repository);
+                pkMap.ResolvePrimaryKeys();
 			}
 		}
 

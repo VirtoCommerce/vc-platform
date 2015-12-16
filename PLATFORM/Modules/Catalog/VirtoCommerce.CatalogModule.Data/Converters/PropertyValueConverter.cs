@@ -43,13 +43,13 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         /// <param name="propValue">The property value.</param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentNullException">propValue</exception>
-        public static dataModel.PropertyValue ToDataModel(this coreModel.PropertyValue propValue) 
+        public static dataModel.PropertyValue ToDataModel(this coreModel.PropertyValue propValue, PrimaryKeyResolvingMap pkMap) 
         {
             if (propValue == null)
                 throw new ArgumentNullException("propValue");
 
             var retVal = new dataModel.PropertyValue();
-   
+            pkMap.AddPair(propValue, retVal);
             retVal.InjectFrom(propValue);
    
             retVal.Name = propValue.PropertyName;

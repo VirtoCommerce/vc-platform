@@ -34,12 +34,14 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
         }
 
 
-        public static dataModel.Contact ToDataModel(this coreModel.Contact contact)
+        public static dataModel.Contact ToDataModel(this coreModel.Contact contact, PrimaryKeyResolvingMap pkMap)
         {
             if (contact == null)
                 throw new ArgumentNullException("contact");
 
             var retVal = new dataModel.Contact();
+
+            pkMap.AddPair(contact, retVal);
 
             retVal.InjectFrom(contact);
 

@@ -60,33 +60,28 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 
         public void Create(coreModel.CatalogProduct[] items)
         {
-            var newItemList = new List<KeyValuePair<coreModel.CatalogProduct, dataModel.Item>>();
+            var pkMap = new PrimaryKeyResolvingMap();
             using (var repository = _catalogRepositoryFactory())
             {
                 foreach (var item in items)
                 {
-                    var dbItem = item.ToDataModel();
+                    var dbItem = item.ToDataModel(pkMap);
                     repository.Add(dbItem);
-                    newItemList.Add(new KeyValuePair<coreModel.CatalogProduct, dataModel.Item>(item, dbItem));
                     if (item.Variations != null)
                     {
                         foreach (var variation in item.Variations)
                         {
                             variation.MainProductId = dbItem.Id;
                             variation.CatalogId = dbItem.CatalogId;
-                            var dbVariation = variation.ToDataModel();
+                            var dbVariation = variation.ToDataModel(pkMap);
                             repository.Add(dbVariation);
-                            newItemList.Add(new KeyValuePair<coreModel.CatalogProduct, dataModel.Item>(variation, dbVariation));
                         }
                     }
                 }
                 CommitChanges(repository);
+                pkMap.ResolvePrimaryKeys();
             }
-            //Set id for new products generated in repository
-            foreach (var pair in newItemList)
-            {
-                pair.Key.Id = pair.Value.Id;
-            }
+       
             //Update SEO 
             var itemsWithVariations = items.Concat(items.Where(x => x.Variations != null).SelectMany(x => x.Variations)).ToArray();
             _commerceService.UpsertSeoForObjects(itemsWithVariations);
@@ -102,6 +97,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 
         public void Update(coreModel.CatalogProduct[] items)
         {
+            var pkMap = new PrimaryKeyResolvingMap();
             var now = DateTime.UtcNow;
             using (var repository = _catalogRepositoryFactory())
             using (var changeTracker = base.GetChangeTracker(repository))
@@ -114,10 +110,11 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                     {
                         changeTracker.Attach(dbItem);
 
-                        item.Patch(dbItem);
+                        item.Patch(dbItem, pkMap);
                     }
                 }
                 CommitChanges(repository);
+                pkMap.ResolvePrimaryKeys();
             }
 
             //Update seo for products

@@ -8,6 +8,7 @@ using coreModel = VirtoCommerce.Domain.Catalog.Model;
 using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Data.Common;
 using VirtoCommerce.Platform.Data.Common.ConventionInjections;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.CatalogModule.Data.Converters
 {
@@ -50,13 +51,14 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// <summary>
 		/// Converting to foundation type
 		/// </summary>
-		public static dataModel.Image ToDataModel(this coreModel.Image image)
+		public static dataModel.Image ToDataModel(this coreModel.Image image, PrimaryKeyResolvingMap pkMap)
 		{
 			if (image == null)
 				throw new ArgumentNullException("image");
 
 			var retVal = new dataModel.Image();
-			retVal.InjectFrom(image);
+            pkMap.AddPair(image, retVal);
+            retVal.InjectFrom(image);
 	
 			return retVal;
 		}
@@ -64,13 +66,14 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// <summary>
 		/// Converting to foundation type
 		/// </summary>
-		public static dataModel.Asset ToDataModel(this coreModel.Asset asset)
+		public static dataModel.Asset ToDataModel(this coreModel.Asset asset, PrimaryKeyResolvingMap pkMap)
 		{
 			if (asset == null)
 				throw new ArgumentNullException("asset");
 
 			var retVal = new dataModel.Asset();
-			retVal.InjectFrom(asset);
+            pkMap.AddPair(asset, retVal);
+            retVal.InjectFrom(asset);
 			return retVal;
 		}
 

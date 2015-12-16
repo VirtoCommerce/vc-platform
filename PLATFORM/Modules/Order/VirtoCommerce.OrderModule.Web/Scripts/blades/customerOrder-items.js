@@ -45,6 +45,7 @@
 					    categoryId: data.categoryId,
 					    name: data.name,
 					    imageUrl: data.imgSrc,
+						sku: data.sku,
 					    quantity: 1,
 					    price: price ? price.sale : 0,
 					    tax: 0,

@@ -40,13 +40,14 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 		}
 
 
-		public static dataModel.DynamicContentItem ToDataModel(this coreModel.DynamicContentItem contentItem)
+		public static dataModel.DynamicContentItem ToDataModel(this coreModel.DynamicContentItem contentItem, PrimaryKeyResolvingMap pkMap)
 		{
 			if (contentItem == null)
 				throw new ArgumentNullException("contentItem");
 
 			var retVal = new dataModel.DynamicContentItem();
-			retVal.InjectFrom(contentItem);
+            pkMap.AddPair(contentItem, retVal);
+            retVal.InjectFrom(contentItem);
 			retVal.ContentTypeId = contentItem.ContentType;
 		
 		
