@@ -7,7 +7,7 @@ namespace VirtoCommerce.Storefront.Model
     {
         public DynamicContentItem()
         {
-            DynamicProperties = new List<DynamicObjectProperty>();
+            DynamicProperties = new List<DynamicProperty>();
         }
 
         public string ContentType { get; set; }
@@ -18,7 +18,7 @@ namespace VirtoCommerce.Storefront.Model
 
         public string Description { get; set; }
 
-        public ICollection<DynamicObjectProperty> DynamicProperties { get; set; }
+        public ICollection<DynamicProperty> DynamicProperties { get; set; }
 
         public string FolderId { get; set; }
 

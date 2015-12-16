@@ -78,7 +78,6 @@
     <Compile Include="Marketing\PromotionEvaluationContext.cs" />
     <Compile Include="Marketing\PromotionReward.cs" />
     <Compile Include="Marketing\PromotionRewardType.cs" />
-    <Compile Include="DynamicObjectProperty.cs" />
     <Compile Include="DynamicPropertyName.cs" />
     <Compile Include="DynamicPropertyObjectValue.cs" />
     <Compile Include="Image.cs" />

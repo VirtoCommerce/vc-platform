@@ -12,7 +12,7 @@ namespace VirtoCommerce.Storefront.Model.Order
         public PaymentIn()
         {
             ChildrenOperations = new List<Operation>();
-            DynamicProperties = new List<DynamicObjectProperty>();
+            DynamicProperties = new List<DynamicProperty>();
         }
 
         /// <summary>
@@ -151,7 +151,7 @@ namespace VirtoCommerce.Storefront.Model.Order
         /// Dynamic properties collections
         /// </summary>
         /// <value>Dynamic properties collections</value>
-        public ICollection<DynamicObjectProperty> DynamicProperties { get; set; }
+        public ICollection<DynamicProperty> DynamicProperties { get; set; }
 
         /// <summary>
         /// Gets or Sets CreatedDate

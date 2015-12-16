@@ -18,7 +18,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
 
             Discounts = new List<Discount>();
             TaxDetails = new List<TaxDetail>();
-            DynamicProperties = new List<DynamicObjectProperty>();
+            DynamicProperties = new List<DynamicProperty>();
         }
 
         /// <summary>
@@ -223,6 +223,6 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// Dynamic properties collections
         /// </summary>
         /// <value>Dynamic properties collections</value>
-        public ICollection<DynamicObjectProperty> DynamicProperties { get; set; }
+        public ICollection<DynamicProperty> DynamicProperties { get; set; }
     }
 }
