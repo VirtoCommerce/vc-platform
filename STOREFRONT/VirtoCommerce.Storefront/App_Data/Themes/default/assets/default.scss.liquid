@@ -764,12 +764,23 @@ body {
   font-weight: bold;
   height: 30px;
   left: 50%;
+  opacity: 0;
   padding: 0 10px;
   position: absolute;
   top: 0;
 
+  filter: alpha(opacity=0);
+
   @include transform(translateX(-50%));
   @include box-sizing();
+  @inclue transition(opacity .3s ease);
+}
+
+.ajax-informer.fade
+{
+  opacity: 1;
+  
+  filter: alpha(opacity=100);
 }
 
 .ajax-informer.error
