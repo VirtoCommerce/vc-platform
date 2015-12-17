@@ -247,6 +247,10 @@ $socialIconFontStack: 'icons';
   }
 }
 
+@mixin transform($transform) {
+  @include prefix('transform', #{$transform});
+}
+
 /*============================================================================
   Dependency-free breakpoint mixin
 // http://blog.grayghostvisuals.com/sass/sass-media-query-mixin/
@@ -746,6 +750,34 @@ body {
   display: block;
   padding-top: $gutter;
   padding-bottom: $gutter*2;
+  position: relative;
+}
+
+.ajax-informer
+{
+  align-items: center;
+  background: #fffabf;
+  border: 1px solid #fff57c;
+  color: #666;
+  display: flex;
+  font-size: 11px;
+  font-weight: bold;
+  height: 30px;
+  left: 50%;
+  padding: 0 10px;
+  position: absolute;
+  top: 0;
+
+  @include transform(translateX(-50%));
+  @include box-sizing();
+}
+
+.ajax-informer .loader
+{
+  background: url(informer-loader.gif);
+  height: 16px;
+  margin: 0 5px 0 0;
+  width: 16px;
 }
 
 .grid-border {
