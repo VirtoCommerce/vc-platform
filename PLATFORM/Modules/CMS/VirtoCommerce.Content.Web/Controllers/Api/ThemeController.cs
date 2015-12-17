@@ -217,7 +217,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
                         {
                             var fileName = String.Join("/", entry.FullName.Split('/').Skip(1));
                             using (var entryStream = entry.Open())
-                            using (var targetStream = _contentStorageProvider.OpenWrite("/Themes/" + storeId + "/" + fileName))
+                            using (var targetStream = _contentStorageProvider.OpenWrite("/Themes/" + storeId + "/" + themeName + "/" + fileName))
                             {
                                 entryStream.CopyTo(targetStream);
                             }

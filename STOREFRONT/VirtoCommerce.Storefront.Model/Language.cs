@@ -13,6 +13,11 @@ namespace VirtoCommerce.Storefront.Model
     /// </summary>
     public class Language : ValueObject<Language>
     {
+        private Language()
+            :this(CultureInfo.InvariantCulture.Name)
+        {
+        }
+
         public Language(string cultureName)
         {
             CultureInfo culture = CultureInfo.InvariantCulture;
@@ -30,6 +35,22 @@ namespace VirtoCommerce.Storefront.Model
                 var regionInfo = new RegionInfo(culture.LCID);
                 TwoLetterRegionName = regionInfo.TwoLetterISORegionName;
                 ThreeLetterRegionName = regionInfo.ThreeLetterISORegionName;
+            }
+        }
+
+        public static Language InvariantLanguage
+        {
+            get
+            {
+                return new Language();
+            }
+        }
+
+        public bool IsInvariant
+        {
+            get
+            {
+                return CultureName == CultureInfo.InvariantCulture.Name;
             }
         }
         /// <summary>
