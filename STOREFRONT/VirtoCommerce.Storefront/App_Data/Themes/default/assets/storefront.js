@@ -94,7 +94,7 @@ app.controller('mainController', ['$scope', '$location', '$window', function ($s
 
     //For outside app redirect (To reload the page after changing the URL, use the lower-level API)
     $scope.outerRedirect = function (absUrl) {
-        window.location.href = absUrl;
+        $window.location.href = absUrl;
     };
 
     //change in the current URL or change the current URL in the browser (for app route)
@@ -104,7 +104,8 @@ app.controller('mainController', ['$scope', '$location', '$window', function ($s
     };
 }]);
 
-app.controller('cartController', ['$scope', 'cartService', function ($scope, cartService) {
+app.controller('cartController', ['$scope', '$timeout', 'cartService', function ($scope, $timeout, cartService) {
+    var timer;
     $scope.cart = {};
 
     initialize();
@@ -125,28 +126,71 @@ app.controller('cartController', ['$scope', 'cartService', function ($scope, car
     }
 
     $scope.changeLineItem = function (lineItemId, quantity) {
-        if (quantity >= 1) {
-            cartService.changeLineItem(lineItemId, quantity).then(function (response) {
-                refreshCart();
-            });
+        if (quantity < 1) {
+            return;
         }
+        var lineItem = _.find($scope.cart.Items, function (i) { return i.Id == lineItemId });
+        if (!lineItem) {
+            return;
+        }
+        var initialQuantity = angular.copy(lineItem.Quantity);
+        lineItem.Quantity = quantity;
+        $timeout.cancel(timer);
+        timer = $timeout(function () {
+            $scope.isUpdating = true;
+            cartService.changeLineItem(lineItemId, quantity).then(
+                function (response) {
+                    refreshCart();
+                },
+                function (response) {
+                    lineItem.Quantity = initialQuantity;
+                    showErrorMessage(2000);
+                });
+        }, 200);
     }
 
     $scope.removeLineItem = function (lineItemId) {
-        cartService.removeLineItem(lineItemId).then(function (response) {
-            refreshCart();
-        });
+        var lineItem = _.find($scope.cart.Items, function (i) { return i.Id == lineItemId });
+        if (!lineItem) {
+            return;
+        }
+        var initialItems = angular.copy($scope.cart.Items);
+        $scope.cart.Items = _.without($scope.cart.Items, lineItem);
+        $timeout.cancel(timer);
+        timer = $timeout(function () {
+            $scope.isUpdating = true;
+            cartService.removeLineItem(lineItemId).then(
+                function (response) {
+                    refreshCart();
+                },
+                function (response) {
+                    $scope.cart.Items = initialItems;
+                    showErrorMessage(2000);
+                });
+        }, 200);
     }
 
     function initialize() {
         $scope.isCartModalVisible = false;
+        $scope.isUpdating = false;
+        $scope.errorOccured = false;
         refreshCart();
     }
 
     function refreshCart() {
         cartService.getCart().then(function (response) {
             $scope.cart = response.data;
+            $scope.isUpdating = false;
+            $scope.errorOccured = false;
         });
+    }
+
+    function showErrorMessage(timeout) {
+        $scope.errorOccured = true;
+        $scope.isUpdating = false;
+        $timeout(function () {
+            $scope.errorOccured = false;
+        }, timeout);
     }
 }]);
 
