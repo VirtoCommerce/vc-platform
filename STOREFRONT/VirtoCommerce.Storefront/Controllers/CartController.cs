@@ -279,7 +279,7 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             var order = await _orderApi.OrderModuleGetByNumberAsync(orderNumber);
 
-            if (order == null)
+            if (order == null || order != null && order.CustomerId != WorkContext.CurrentCustomer.Id)
             {
                 return HttpNotFound();
             }

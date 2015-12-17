@@ -58,6 +58,12 @@ namespace VirtoCommerce.Storefront.Controllers
         public async Task<ActionResult> GetOrderDetails(string number)
         {
             var order = await _orderApi.OrderModuleGetByNumberAsync(number);
+
+            if (order == null || order != null && order.CustomerId != WorkContext.CurrentCustomer.Id)
+            {
+                return HttpNotFound();
+            }
+
             WorkContext.Order = order.ToWebModel();
             return View("customers/order", WorkContext);
         }
