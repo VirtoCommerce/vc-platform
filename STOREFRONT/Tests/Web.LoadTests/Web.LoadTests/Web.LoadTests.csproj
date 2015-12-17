@@ -70,9 +70,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\ApiClient\VirtoCommerce.ApiClient.csproj">
-      <Project>{84b945b7-85e4-4057-b0df-1f8a03b8d53c}</Project>
-      <Name>VirtoCommerce.ApiClient</Name>
+    <ProjectReference Include="..\..\..\..\SDK\DotNet\VirtoCommerce.Client\VirtoCommerce.Client.csproj">
+      <Project>{45610268-8e12-4390-a216-19a78cdd2fbb}</Project>
+      <Name>VirtoCommerce.Client</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>
