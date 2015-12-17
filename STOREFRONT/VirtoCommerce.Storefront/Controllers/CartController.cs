@@ -202,7 +202,8 @@ namespace VirtoCommerce.Storefront.Controllers
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
 
             var order = await _orderApi.OrderModuleCreateOrderFromCartAsync(_cartBuilder.Cart.Id);
-            await _cartApi.CartModuleDeleteCartsAsync(new List<string> { _cartBuilder.Cart.Id });
+
+            await _cartBuilder.RemoveCartAsync();
 
             if (HttpContext.User.Identity.IsAuthenticated)
             {
@@ -221,11 +222,11 @@ namespace VirtoCommerce.Storefront.Controllers
             return Json(new { order = order, orderProcessingResult = processingResult }, JsonRequestBehavior.AllowGet);
         }
 
-        // GET: /cart/checkout/paymentform?orderId=...
+        // GET: /cart/checkout/paymentform?orderNumber=...
         [HttpGet]
-        public async Task<ActionResult> PaymentForm(string orderId)
+        public async Task<ActionResult> PaymentForm(string orderNumber)
         {
-            var order = await _orderApi.OrderModuleGetByIdAsync(orderId);
+            var order = await _orderApi.OrderModuleGetByNumberAsync(orderNumber);
 
             var processingResult = await GetOrderProcessingResultAsync(order, null);
 
@@ -272,11 +273,11 @@ namespace VirtoCommerce.Storefront.Controllers
             }
         }
 
-        // GET: /cart/checkout/thanks/{orderId}
+        // GET: /cart/checkout/thanks/{orderNumber}
         [HttpGet]
-        public async Task<ActionResult> Thanks(string orderId)
+        public async Task<ActionResult> Thanks(string orderNumber)
         {
-            var order = await _orderApi.OrderModuleGetByIdAsync(orderId);
+            var order = await _orderApi.OrderModuleGetByNumberAsync(orderNumber);
 
             if (order == null)
             {

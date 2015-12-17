@@ -43,12 +43,12 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             var prices = new List<ProductPrice>();
 
-            var pricesResponse = (await _pricingApi.PricingModuleEvaluatePricesAsync(
+            var pricesResponse = await _pricingApi.PricingModuleEvaluatePricesAsync(
                 evalContextProductIds: productIds.ToList(),
                 evalContextCurrency: WorkContext.CurrentCurrency.Code,
                 evalContextCustomerId: WorkContext.CurrentCustomer.Id,
                 evalContextLanguage: WorkContext.CurrentLanguage.CultureName,
-                evalContextStoreId: WorkContext.CurrentStore.Id));
+                evalContextStoreId: WorkContext.CurrentStore.Id);
 
             if (pricesResponse == null)
             {

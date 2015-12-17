@@ -250,7 +250,7 @@ app.controller('checkoutController', ['$scope', '$location', '$sce', '$window', 
         cartService.setPaymentMethod($scope.checkout.selectedPaymentMethod.GatewayCode).then(function (response) {
             cartService.addAddress($scope.checkout.billingAddress).then(function (response) {
                 cartService.createOrder($scope.checkout.bankCardInfo).then(function (response) {
-                    handlePaymentProcessingResult(response.data.orderProcessingResult, response.data.order.id);
+                    handlePaymentProcessingResult(response.data.orderProcessingResult, response.data.order.number);
                     $scope.checkout.orderProcessing = false;
                 });
             });
@@ -538,18 +538,18 @@ app.controller('checkoutController', ['$scope', '$location', '$sce', '$window', 
     //    }
     //}
 
-    function handlePaymentProcessingResult(paymentProcessingResult, orderId) {
+    function handlePaymentProcessingResult(paymentProcessingResult, orderNumber) {
         if (!paymentProcessingResult.isSuccess) {
             return;
         }
         if (paymentProcessingResult.paymentMethodType == 'PreparedForm' && paymentProcessingResult.htmlForm) {
-            $scope.outerRedirect($scope.baseUrl + 'cart/checkout/paymentform?orderId=' + orderId);
+            $scope.outerRedirect($scope.baseUrl + 'cart/checkout/paymentform?orderId=' + orderNumber);
         }
         if (paymentProcessingResult.paymentMethodType == 'Standard' || paymentProcessingResult.paymentMethodType == 'Unknown') {
             if ($scope.customer.UserName == 'Anonymous') {
-                $scope.outerRedirect($scope.baseUrl + 'cart/thanks/' + orderId);
+                $scope.outerRedirect($scope.baseUrl + 'cart/thanks/' + orderNumber);
             } else {
-                $scope.outerRedirect($scope.baseUrl + 'account/order/' + orderId);
+                $scope.outerRedirect($scope.baseUrl + 'account/order/' + orderNumber);
             }
         }
         if (paymentProcessingResult.paymentMethodType == 'Redirection' && paymentProcessingResult.redirectUrl) {
