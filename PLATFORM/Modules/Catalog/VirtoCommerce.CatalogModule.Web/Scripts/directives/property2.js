@@ -32,7 +32,7 @@
 
             scope.$watch('context.currentPropValues', function (newValues) {
                 //reflect only real changes
-                if (isValuesDifferent(newValues, scope.currentEntity.values)) {                    
+                if (isValuesDifferent(newValues, scope.currentEntity.values)) {
                     if (scope.currentEntity.dictionary && scope.currentEntity.multilanguage) {
                         if (scope.currentEntity.multivalue) {
                             var realAliases = _.pluck(_.where(newValues, { languageCode: scope.currentEntity.catalog.defaultLanguage.languageCode }), 'alias');
@@ -74,10 +74,9 @@
                         return !(y.value === x.value && y.languageCode == x.languageCode);
                     });
                 });
-                //Prevent reflecting the change when use null value for empty initial values
-                var notOnlyEmptyValues = _.any(currentValues) || newValues[0].value;
 
-                return (elementCountIsDifferent || elementsNotEqual) && notOnlyEmptyValues;
+                return (elementCountIsDifferent || elementsNotEqual) &&
+                        (_.any(currentValues) || (newValues[0] && newValues[0].value)); //Prevent reflecting the change when null value was added to empty initial values
             };
 
             function needAddEmptyValue(property, values) {
