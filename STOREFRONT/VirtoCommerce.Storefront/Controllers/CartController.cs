@@ -273,7 +273,7 @@ namespace VirtoCommerce.Storefront.Controllers
             }
         }
 
-        // GET: /cart/checkout/thanks/{orderNumber}
+        // GET: /cart/thanks/{orderNumber}
         [HttpGet]
         public async Task<ActionResult> Thanks(string orderNumber)
         {
