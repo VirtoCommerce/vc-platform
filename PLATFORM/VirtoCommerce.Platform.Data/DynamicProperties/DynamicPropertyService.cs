@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Data.DynamicProperties.Converters;
@@ -214,12 +215,30 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
                         {
                             var objectType = GetObjectTypeName(objectWithDynamicProperties);
 
-                            var target = new { Properties = new ObservableCollection<DynamicPropertyEntity>(repository.GetObjectDynamicProperties(objectType, objectWithDynamicProperties.Id)) };
-                            var source = new { Properties = new ObservableCollection<DynamicPropertyEntity>(objectWithDynamicProperties.DynamicProperties.Select(x => x.ToEntity(owner.Id))) };
+                            var sourceCollection = objectWithDynamicProperties.DynamicProperties.Select(x => x.ToEntity(objectWithDynamicProperties.Id, objectType));
+                            var targetCollection = repository.GetObjectDynamicProperties(objectType, objectWithDynamicProperties.Id);
 
+                            var target = new { Properties = new ObservableCollection<DynamicPropertyEntity>(targetCollection) };
+                            var source = new { Properties = new ObservableCollection<DynamicPropertyEntity>(sourceCollection) };
+
+                            //When creating DynamicProperty manually, many properties remain unfilled (except Name, ValueType and ObjectValues).
+                            //We have to set them with data from the repository.
+                            var transistentProperties = sourceCollection.Where(x => x.IsTransient());
+                            if (transistentProperties.Any())
+                            {
+                                var allTypeProperties = repository.GetDynamicPropertiesForType(objectType);
+                                foreach (var transistentPropery in transistentProperties)
+                                {
+                                    var property = allTypeProperties.FirstOrDefault(x => String.Equals(x.Name, transistentPropery.Name, StringComparison.InvariantCultureIgnoreCase) && x.ValueType == transistentPropery.ValueType);
+                                    if (property != null)
+                                    {
+                                        transistentPropery.InjectFrom(property);
+                                    }
+                                }
+                            }
                             changeTracker.Attach(target);
 
-                            source.Properties.Patch(target.Properties, (sourcePopValue, targetPropValue) => sourcePopValue.Patch(targetPropValue));
+                            source.Properties.Patch(target.Properties, (sourcePop, targetProp) => sourcePop.Patch(targetProp));
                         }
                     }
 
@@ -255,10 +274,11 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
 
         #endregion
 
-
         private string GetObjectTypeName(object obj)
         {
             return GetObjectTypeName(obj.GetType());
         }
+
+    
     }
 }

@@ -15,14 +15,22 @@ namespace VirtoCommerce.Storefront.Model
     {
         public Language(string cultureName)
         {
-            var culture = CultureInfo.GetCultureInfo(cultureName);
-            var regionInfo = new RegionInfo(culture.LCID);
+            CultureInfo culture = CultureInfo.InvariantCulture;
+            if (!string.IsNullOrEmpty(cultureName))
+            {
+                culture = CultureInfo.GetCultureInfo(cultureName);
+            }
+          
             CultureName = culture.Name;
             ThreeLeterLanguageName = culture.ThreeLetterISOLanguageName;
             TwoLetterLanguageName = culture.TwoLetterISOLanguageName;
             NativeName = culture.NativeName;
-            TwoLetterRegionName = regionInfo.TwoLetterISORegionName;
-            ThreeLetterRegionName = regionInfo.ThreeLetterISORegionName;
+            if (culture != CultureInfo.InvariantCulture)
+            {
+                var regionInfo = new RegionInfo(culture.LCID);
+                TwoLetterRegionName = regionInfo.TwoLetterISORegionName;
+                ThreeLetterRegionName = regionInfo.ThreeLetterISORegionName;
+            }
         }
         /// <summary>
         /// culture name format (e.g. en-US)

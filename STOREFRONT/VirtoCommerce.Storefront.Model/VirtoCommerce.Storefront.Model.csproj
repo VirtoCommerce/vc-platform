@@ -65,7 +65,7 @@
     <Compile Include="Catalog\TierPrice.cs" />
     <Compile Include="Common\CollectionExtensions.cs" />
     <Compile Include="Common\IStorefrontPagedList.cs" />
-    <Compile Include="Common\NullableAndEnumValueInjecter.cs" />
+    <Compile Include="Common\ValueInjecter\NullableAndEnumValueInjecter.cs" />
     <Compile Include="Common\StoreFrontPagedList.cs" />
     <Compile Include="Country.cs" />
     <Compile Include="CountryRegion.cs" />
@@ -79,7 +79,6 @@
     <Compile Include="Marketing\PromotionReward.cs" />
     <Compile Include="Marketing\PromotionRewardType.cs" />
     <Compile Include="DynamicPropertyName.cs" />
-    <Compile Include="DynamicPropertyObjectValue.cs" />
     <Compile Include="Image.cs" />
     <Compile Include="Catalog\Inventory.cs" />
     <Compile Include="Catalog\ProductPrice.cs" />
