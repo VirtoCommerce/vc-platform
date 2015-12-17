@@ -547,7 +547,7 @@ app.controller('checkoutController', ['$scope', '$location', '$sce', '$window', 
         }
         if (paymentProcessingResult.paymentMethodType == 'Standard' || paymentProcessingResult.paymentMethodType == 'Unknown') {
             if ($scope.customer.UserName == 'Anonymous') {
-                $scope.outerRedirect($scope.baseUrl + 'cart/checkout/thanks/' + orderId);
+                $scope.outerRedirect($scope.baseUrl + 'cart/thanks/' + orderId);
             } else {
                 $scope.outerRedirect($scope.baseUrl + 'account/order/' + orderId);
             }
