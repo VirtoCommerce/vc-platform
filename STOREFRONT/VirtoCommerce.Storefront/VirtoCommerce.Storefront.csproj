@@ -247,6 +247,7 @@
     <Content Include="App_Data\Themes\default\assets\icons.svg" />
     <Content Include="App_Data\Themes\default\assets\icon_facebook_32.png" />
     <Content Include="App_Data\Themes\default\assets\icon_google_32.png" />
+    <Content Include="App_Data\Themes\default\assets\informer-loader.gif" />
     <Content Include="App_Data\Themes\default\assets\jcb.svg" />
     <Content Include="App_Data\Themes\default\assets\jquery.zoom.min.js" />
     <Content Include="App_Data\Themes\default\assets\js-image-slider.css" />
