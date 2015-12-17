@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
+using VirtoCommerce.Storefront.Model.Cart;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Marketing;
@@ -58,6 +59,7 @@ namespace VirtoCommerce.Storefront.Controllers
             prices = pricesResponse.Select(p => p.ToWebModel()).ToList();
             var promotionContext = new PromotionEvaluationContext
             {
+                CartPromoEntries = GetCartPromoEntries(WorkContext.CurrentCart),
                 Currency = WorkContext.CurrentCurrency,
                 CustomerId = WorkContext.CurrentCustomer.Id,
                 IsRegisteredUser = WorkContext.CurrentCustomer.HasAccount,
@@ -78,6 +80,25 @@ namespace VirtoCommerce.Storefront.Controllers
             }
 
             return Json(prices, JsonRequestBehavior.AllowGet);
+        }
+
+        private ICollection<PromotionProductEntry> GetCartPromoEntries(ShoppingCart cart)
+        {
+            var cartPromoEntries = new List<PromotionProductEntry>();
+
+            foreach (var lineItem in cart.Items)
+            {
+                cartPromoEntries.Add(new PromotionProductEntry
+                {
+                    CatalogId = lineItem.CatalogId,
+                    CategoryId = lineItem.CategoryId,
+                    Price = lineItem.SalePrice,
+                    ProductId = lineItem.ProductId,
+                    Quantity = lineItem.Quantity
+                });
+            }
+
+            return cartPromoEntries;
         }
 
         private ICollection<PromotionProductEntry> GetPromoEntries(string catalogId, string categoryId, ICollection<string> productIds, IEnumerable<ProductPrice> prices)
