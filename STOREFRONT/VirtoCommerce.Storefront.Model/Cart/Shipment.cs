@@ -91,69 +91,29 @@ namespace VirtoCommerce.Storefront.Model.Cart
         public Money ShippingPrice { get; set; }
 
         /// <summary>
-        /// Gets the value of total shipping price
+        /// Gets or sets the value of total shipping price
         /// </summary>
-        public Money Total
-        {
-            get
-            {
-                decimal total = Subtotal.Amount + TaxTotal.Amount - DiscountTotal.Amount;
-
-                return new Money(total, Currency.Code);
-            }
-        }
+        public Money Total { get; set; }
 
         /// <summary>
-        /// Gets the value of total shipping discount amount
+        /// Gets or sets the value of total shipping discount amount
         /// </summary>
-        public Money DiscountTotal
-        {
-            get
-            {
-                decimal discountTotal = Discounts.Sum(d => d.Amount.Amount);
-
-                return new Money(discountTotal, Currency.Code);
-            }
-        }
+        public Money DiscountTotal { get; set; }
 
         /// <summary>
-        /// Gets the value of total shipping tax amount
+        /// Gets or sets the value of total shipping tax amount
         /// </summary>
-        public Money TaxTotal
-        {
-            get
-            {
-                decimal taxTotal = TaxDetails.Sum(td => td.Amount.Amount);
-
-                return new Money(taxTotal, Currency.Code);
-            }
-        }
+        public Money TaxTotal { get; set; }
 
         /// <summary>
-        /// Gets the value of shipping items subtotal
+        /// Gets or sets the value of shipping items subtotal
         /// </summary>
-        public Money ItemSubtotal
-        {
-            get
-            {
-                decimal itemSubtotal = Items.Sum(i => i.ExtendedPrice.Amount);
-
-                return new Money(itemSubtotal, Currency.Code);
-            }
-        }
+        public Money ItemSubtotal { get; set; }
 
         /// <summary>
-        /// Gets the value of shipping subtotal
+        /// Gets or sets the value of shipping subtotal
         /// </summary>
-        public Money Subtotal
-        {
-            get
-            {
-                decimal subtotal = ShippingPrice.Amount;
-
-                return new Money(subtotal, Currency.Code);
-            }
-        }
+        public Money Subtotal { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of shipping discounts

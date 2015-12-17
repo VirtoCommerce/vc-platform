@@ -7,6 +7,12 @@ namespace VirtoCommerce.Storefront.Model
     /// </summary>
     public class MenuLinkList
     {
+        public MenuLinkList()
+        {
+            MenuLinks = new List<MenuLink>();
+            SecurityScopes = new List<string>();
+        }
+
         /// <summary>
         /// Gets or sets the ID of site navigation menu link list
         /// </summary>

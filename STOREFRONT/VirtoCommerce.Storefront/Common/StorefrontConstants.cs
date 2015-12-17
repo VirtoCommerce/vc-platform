@@ -9,5 +9,7 @@
         public const string PasswordResetTokenCookie = "vcf.password-reset-token";
         public const string CustomerIdCookie = "vcf.customer-id";
         public const string AuthenticationCookie = "vcf.authentication";
+
+        public const string AnonymousUsername = "Anonymous";
     }
 }

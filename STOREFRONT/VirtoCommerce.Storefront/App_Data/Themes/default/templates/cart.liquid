@@ -39,13 +39,13 @@
                         </span>
                         <span ng-if="lineItem.ListPrice.Amount == lineItem.SalePrice.Amount && lineItem.DiscountTotal.Amount > 0">
                             <span class="h2">
-                                <small ng-bind="(lineItem.ListPrice.Amount - lineItem.DiscountTotal.Amount / lineItem.Quantity) | currency: lineItem.ListPrice.CurrencySymbol"></small>
+                                <small ng-bind="lineItem.PlacedPrice.FormatedAmount"></small>
                             </span>
                             <span style="text-decoration: line-through;" ng-bind="lineItem.ListPrice.FormatedAmount"></span>
                         </span>
                         <span ng-if="lineItem.ListPrice.Amount > lineItem.SalePrice.Amount && lineItem.DiscountTotal.Amount > 0">
                             <span class="h2">
-                                <small ng-bind="(lineItem.SalePrice.Amount - lineItem.DiscountTotal.Amount / lineItem.Quantity) | currency: lineItem.SalePrice.CurrencySymbol"></small>
+                                <small ng-bind="lineItem.PlacedPrice.FormatedAmount"></small>
                             </span>
                             <span style="text-decoration: line-through;" ng-bind="lineItem.SalePrice.FormatedAmount"></span>
                         </span>

@@ -14,8 +14,14 @@ namespace VirtoCommerce.Storefront.Converters
 
             webModel.InjectFrom(serviceModel);
 
-            webModel.MenuLinks = serviceModel.MenuLinks.Select(ml => ml.ToWebModel(urlBuilder)).ToList();
-            webModel.SecurityScopes = serviceModel.SecurityScopes != null ? serviceModel.SecurityScopes.Select(ss => ss).ToList() : null;
+            if (serviceModel.MenuLinks != null)
+            {
+                webModel.MenuLinks = serviceModel.MenuLinks.Select(ml => ml.ToWebModel(urlBuilder)).ToList();
+            }
+            if (serviceModel.SecurityScopes != null)
+            {
+                webModel.SecurityScopes = serviceModel.SecurityScopes.Select(ss => ss).ToList();
+            }
 
             return webModel;
         }
@@ -26,7 +32,11 @@ namespace VirtoCommerce.Storefront.Converters
 
             webModel.InjectFrom(serviceModel);
 
-            webModel.SecurityScopes = serviceModel.SecurityScopes != null ? serviceModel.SecurityScopes.Select(ss => ss).ToList() : null;
+            if (serviceModel.SecurityScopes != null)
+            {
+                webModel.SecurityScopes = serviceModel.SecurityScopes.Select(ss => ss).ToList();
+            }
+
             webModel.Url = urlBuilder.ToAppAbsolute("/" + serviceModel.Url);
 
             return webModel;

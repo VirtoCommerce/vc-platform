@@ -157,8 +157,8 @@ namespace VirtoCommerce.Storefront.Owin
             if (!customer.HasAccount)
             {
                 customer.Id = context.Request.Cookies[StorefrontConstants.AnonymousCustomerIdCookie];
-                customer.UserName = "Anonymous";
-                customer.Name = "Anonymous";
+                customer.UserName = StorefrontConstants.AnonymousUsername;
+                customer.Name = StorefrontConstants.AnonymousUsername;
             }
 
             return customer;

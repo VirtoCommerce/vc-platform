@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
+using VirtoCommerce.Storefront.Model.Cart;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Marketing;
@@ -42,12 +44,12 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             var prices = new List<ProductPrice>();
 
-            var pricesResponse = (await _pricingApi.PricingModuleEvaluatePricesAsync(
+            var pricesResponse = await _pricingApi.PricingModuleEvaluatePricesAsync(
                 evalContextProductIds: productIds.ToList(),
                 evalContextCurrency: WorkContext.CurrentCurrency.Code,
                 evalContextCustomerId: WorkContext.CurrentCustomer.Id,
                 evalContextLanguage: WorkContext.CurrentLanguage.CultureName,
-                evalContextStoreId: WorkContext.CurrentStore.Id));
+                evalContextStoreId: WorkContext.CurrentStore.Id);
 
             if (pricesResponse == null)
             {
@@ -57,12 +59,13 @@ namespace VirtoCommerce.Storefront.Controllers
             prices = pricesResponse.Select(p => p.ToWebModel()).ToList();
             var promotionContext = new PromotionEvaluationContext
             {
+                CartPromoEntries = GetCartPromoEntries(WorkContext.CurrentCart),
                 Currency = WorkContext.CurrentCurrency,
                 CustomerId = WorkContext.CurrentCustomer.Id,
-                IsEveryone = true,
+                IsRegisteredUser = WorkContext.CurrentCustomer.HasAccount,
                 Language = WorkContext.CurrentLanguage,
                 PromoEntries = GetPromoEntries(WorkContext.CurrentStore.Catalog, categoryId, productIds, prices),
-                StoreId = WorkContext.CurrentStore.Id,
+                StoreId = WorkContext.CurrentStore.Id
             };
 
             var rewards = await _marketingService.EvaluatePromotionRewardsAsync(promotionContext);
@@ -72,11 +75,30 @@ namespace VirtoCommerce.Storefront.Controllers
                 var validReward = validRewards.FirstOrDefault(r => r.ProductId == price.ProductId);
                 if (validReward != null)
                 {
-                    price.ActiveDiscount = validReward.ToDiscountWebModel(price.SalePrice.Amount, price.Currency);
+                    price.ActiveDiscount = validReward.ToDiscountWebModel(price.SalePrice.Amount, 1, price.Currency);
                 }
             }
 
             return Json(prices, JsonRequestBehavior.AllowGet);
+        }
+
+        private ICollection<PromotionProductEntry> GetCartPromoEntries(ShoppingCart cart)
+        {
+            var cartPromoEntries = new List<PromotionProductEntry>();
+
+            foreach (var lineItem in cart.Items)
+            {
+                cartPromoEntries.Add(new PromotionProductEntry
+                {
+                    CatalogId = lineItem.CatalogId,
+                    CategoryId = lineItem.CategoryId,
+                    Price = lineItem.SalePrice,
+                    ProductId = lineItem.ProductId,
+                    Quantity = lineItem.Quantity
+                });
+            }
+
+            return cartPromoEntries;
         }
 
         private ICollection<PromotionProductEntry> GetPromoEntries(string catalogId, string categoryId, ICollection<string> productIds, IEnumerable<ProductPrice> prices)

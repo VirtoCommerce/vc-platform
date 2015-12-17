@@ -250,7 +250,7 @@ app.controller('checkoutController', ['$scope', '$location', '$sce', '$window', 
         cartService.setPaymentMethod($scope.checkout.selectedPaymentMethod.GatewayCode).then(function (response) {
             cartService.addAddress($scope.checkout.billingAddress).then(function (response) {
                 cartService.createOrder($scope.checkout.bankCardInfo).then(function (response) {
-                    handlePaymentProcessingResult(response.data.orderProcessingResult, response.data.order.id);
+                    handlePaymentProcessingResult(response.data.orderProcessingResult, response.data.order.number);
                     $scope.checkout.orderProcessing = false;
                 });
             });
@@ -538,18 +538,18 @@ app.controller('checkoutController', ['$scope', '$location', '$sce', '$window', 
     //    }
     //}
 
-    function handlePaymentProcessingResult(paymentProcessingResult, orderId) {
+    function handlePaymentProcessingResult(paymentProcessingResult, orderNumber) {
         if (!paymentProcessingResult.isSuccess) {
             return;
         }
         if (paymentProcessingResult.paymentMethodType == 'PreparedForm' && paymentProcessingResult.htmlForm) {
-            $scope.outerRedirect($scope.baseUrl + 'cart/checkout/paymentform?orderId=' + orderId);
+            $scope.outerRedirect($scope.baseUrl + 'cart/checkout/paymentform?orderId=' + orderNumber);
         }
         if (paymentProcessingResult.paymentMethodType == 'Standard' || paymentProcessingResult.paymentMethodType == 'Unknown') {
             if ($scope.customer.UserName == 'Anonymous') {
-                $scope.outerRedirect($scope.baseUrl + 'cart/checkout/thanks/' + orderId);
+                $scope.outerRedirect($scope.baseUrl + 'cart/thanks/' + orderNumber);
             } else {
-                $scope.outerRedirect($scope.baseUrl + 'account/order/' + orderId);
+                $scope.outerRedirect($scope.baseUrl + 'account/order/' + orderNumber);
             }
         }
         if (paymentProcessingResult.paymentMethodType == 'Redirection' && paymentProcessingResult.redirectUrl) {
@@ -558,7 +558,7 @@ app.controller('checkoutController', ['$scope', '$location', '$sce', '$window', 
     }
 }]);
 
-app.controller('productController', ['$scope', '$window', 'catalogService', function ($scope, $window, catalogService) {
+app.controller('productController', ['$scope', '$window', 'catalogService', 'marketingService', function ($scope, $window, catalogService, marketingService) {
 	//TODO: prevent add to cart not selected variation
 	// display validator please select property
 	// display price range
@@ -566,6 +566,7 @@ app.controller('productController', ['$scope', '$window', 'catalogService', func
 	var allVarations = [];
 	$scope.selectedVariation = {};
 	$scope.allVariationPropsMap = {};
+	$scope.productPriceLoaded = false;
 
 	function Initialize() {
 	    catalogService.getProduct($window.productId).then(function (response) {
@@ -580,6 +581,7 @@ app.controller('productController', ['$scope', '$window', 'catalogService', func
 				$scope.checkProperty(propertyMap[x][0])
 			});
 			$scope.selectedVariation = product;
+			getActualProductPrice($window.categoryId, $scope.selectedVariation.Id);
 		});
 	};
 
@@ -630,6 +632,13 @@ app.controller('productController', ['$scope', '$window', 'catalogService', func
 		});
 		return retVal;
 	};
+
+	function getActualProductPrice(categoryId, productId) {
+	    marketingService.getActualProductPrices(categoryId, [productId]).then(function (response) {
+	        $scope.productPrice = response.data ? response.data[0] : null;
+	        $scope.productPriceLoaded = $scope.productPrice != null;
+	    });
+	}
 
 	//Method called from View when user click to one of properties value
 	$scope.checkProperty = function (property) {

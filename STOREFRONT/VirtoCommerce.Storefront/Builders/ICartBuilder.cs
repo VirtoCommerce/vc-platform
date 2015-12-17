@@ -28,6 +28,8 @@ namespace VirtoCommerce.Storefront.Builders
 
         Task<CartBuilder> MergeWithCartAsync(ShoppingCart cart);
 
+        Task<CartBuilder> RemoveCartAsync();
+
         Task SaveAsync();
 
         ShoppingCart Cart { get; }

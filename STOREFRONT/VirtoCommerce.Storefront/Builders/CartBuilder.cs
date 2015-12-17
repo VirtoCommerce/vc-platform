@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using CacheManager.Core;
 using VirtoCommerce.Client.Api;
-using VirtoCommerce.Client.Model;
 using VirtoCommerce.Storefront.Common;
 using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
@@ -27,6 +26,8 @@ namespace VirtoCommerce.Storefront.Builders
         private Currency _currency;
         private Language _language;
         private ShoppingCart _cart;
+        private string _cartCacheKey;
+        private const string _cartCacheRegion = "CartRegion";
 
         public CartBuilder(IShoppingCartModuleApi cartApi, IMarketingService marketingService, ICacheManager<object> cacheManager)
         {
@@ -41,8 +42,9 @@ namespace VirtoCommerce.Storefront.Builders
             _customer = customer;
             _currency = currency;
             _language = language;
+            _cartCacheKey = GetCartCacheKey(store.Id, customer.Id);
 
-            _cart = await _cacheManager.GetAsync(GetCartCacheKey(store.Id, customer.Id), "CartRegion", async () =>
+            _cart = await _cacheManager.GetAsync(_cartCacheKey, _cartCacheRegion, async () =>
             {
                 ShoppingCart retVal = null;
                 var cartSearchResult = await _cartApi.CartModuleGetCurrentCartAsync(_store.Id, _customer.Id);
@@ -179,6 +181,15 @@ namespace VirtoCommerce.Storefront.Builders
             await EvaluatePromotionsAsync();
 
             await _cartApi.CartModuleDeleteCartsAsync(new List<string> { cart.Id });
+            _cacheManager.Remove(_cartCacheKey, _cartCacheRegion);
+
+            return this;
+        }
+
+        public async Task<CartBuilder> RemoveCartAsync()
+        {
+            await _cartApi.CartModuleDeleteCartsAsync(new List<string> { _cart.Id });
+            _cacheManager.Remove(_cartCacheKey, _cartCacheRegion);
 
             return this;
         }
@@ -188,7 +199,7 @@ namespace VirtoCommerce.Storefront.Builders
             var cart = _cart.ToServiceModel();
 
             //Invalidate cart in cache
-            _cacheManager.Remove(GetCartCacheKey(cart.StoreId, cart.CustomerId), "CartRegion");
+            _cacheManager.Remove(_cartCacheKey, _cartCacheRegion);
 
             if (_cart.IsTransient())
             {
@@ -231,13 +242,13 @@ namespace VirtoCommerce.Storefront.Builders
             cart.Name = "Default";
             cart.StoreId = _store.Id;
 
-            if (_customer.UserName.Equals("Anonymous", StringComparison.OrdinalIgnoreCase))
+            if (_customer.UserName.Equals(StorefrontConstants.AnonymousUsername, StringComparison.OrdinalIgnoreCase))
             {
-                cart.CustomerName = "Anonymous";
+                cart.CustomerName = StorefrontConstants.AnonymousUsername;
             }
             else
             {
-                cart.CustomerName = string.Format("{0} {1}", _customer.FirstName, _customer.LastName);
+                cart.CustomerName = $"{_customer.FirstName} {_customer.LastName}";
             }
 
             return cart;
@@ -245,77 +256,71 @@ namespace VirtoCommerce.Storefront.Builders
 
         private string GetCartCacheKey(string storeId, string customerId)
         {
-            return String.Format("Cart-{0}-{1}", storeId, customerId);
+            return $"Cart-{storeId}-{customerId}";
         }
 
         private async Task EvaluatePromotionsAsync()
         {
             _cart.Discounts.Clear();
-
             foreach (var lineItem in _cart.Items)
             {
                 lineItem.Discounts.Clear();
             }
-
             foreach (var shipment in _cart.Shipments)
             {
                 shipment.Discounts.Clear();
             }
 
-            CalculateTotals();
-
+            var promotionItems = _cart.Items.Select(i => i.ToPromotionItem()).ToList();
             var promotionContext = new PromotionEvaluationContext
             {
-                CartTotal = (double)_cart.Total.Amount,
+                CartPromoEntries = promotionItems,
+                CartTotal = _cart.Total,
                 Coupon = _cart.Coupon != null ? _cart.Coupon.Code : null,
                 Currency = _cart.Currency,
                 CustomerId = _customer.Id,
-                StoreId = _store.Id
+                IsRegisteredUser = _customer.HasAccount,
+                PromoEntries = promotionItems,
+                StoreId = _store.Id,
             };
 
-            promotionContext.CartPromoEntries = _cart.Items.Select(i => i.ToPromotionItem()).ToList();
-            promotionContext.PromoEntries = promotionContext.CartPromoEntries;
-
             var rewards = await _marketingService.EvaluatePromotionRewardsAsync(promotionContext);
-            foreach (var reward in rewards)
+
+            var cartSubtotalRewards = rewards.Where(r => r.RewardType == PromotionRewardType.CartSubtotalReward);
+            foreach (var cartSubtotalReward in cartSubtotalRewards)
             {
-                if (reward.RewardType == PromotionRewardType.CatalogItemAmountReward && reward.IsValid)
+                if (cartSubtotalReward.IsValid)
                 {
-                    var lineItem = _cart.Items.FirstOrDefault(i => i.ProductId == reward.ProductId);
+                    _cart.Discounts.Add(cartSubtotalReward.ToDiscountWebModel(_cart.SubTotal.Amount, 1, _cart.Currency));
+                }
+            }
+
+            var catalogItemRewards = rewards.Where(r => r.RewardType == PromotionRewardType.CatalogItemAmountReward);
+            foreach (var catalogItemReward in catalogItemRewards)
+            {
+                if (catalogItemReward.IsValid)
+                {
+                    var lineItem = _cart.Items.FirstOrDefault(i => i.ProductId == catalogItemReward.ProductId);
                     if (lineItem != null)
                     {
-                        var discount = reward.ToDiscountWebModel(lineItem.ExtendedPrice.Amount, _cart.Currency);
+                        var discount = catalogItemReward.ToDiscountWebModel(lineItem.SalePrice.Amount, lineItem.Quantity, lineItem.Currency);
                         lineItem.Discounts.Add(discount);
+                        lineItem.PlacedPrice = lineItem.SalePrice - discount.Amount / lineItem.Quantity;
+                        lineItem.ExtendedPrice = lineItem.PlacedPrice * lineItem.Quantity;
                     }
                 }
+            }
 
-                if (reward.RewardType == PromotionRewardType.ShipmentReward && reward.IsValid)
+            var shippingRewards = rewards.Where(r => r.RewardType == PromotionRewardType.ShipmentReward);
+            foreach (var shippingReward in shippingRewards)
+            {
+                if (shippingReward.IsValid)
                 {
                     var shipment = _cart.Shipments.FirstOrDefault();
                     if (shipment != null)
                     {
-                        var discount = reward.ToDiscountWebModel(shipment.ShippingPrice.Amount, _cart.Currency);
-                        shipment.Discounts.Add(discount);
+                        shipment.Discounts.Add(shippingReward.ToDiscountWebModel(shipment.ShippingPrice.Amount, 1, shipment.Currency));
                     }
-                }
-
-                if (reward.RewardType == PromotionRewardType.CartSubtotalReward && reward.IsValid)
-                {
-                    var discount = reward.ToDiscountWebModel(_cart.SubTotal.Amount, _cart.Currency);
-                    _cart.Discounts.Add(discount);
-                }
-
-                if (reward.Promotion.Coupons != null && reward.Promotion.Coupons.Any() && !string.IsNullOrEmpty(promotionContext.Coupon))
-                {
-                    var discount = reward.ToDiscountWebModel(_cart.SubTotal.Amount, _cart.Currency);
-                    _cart.Coupon = new Coupon
-                    {
-                        Amount = discount.Amount,
-                        AppliedSuccessfully = reward.IsValid,
-                        Code = promotionContext.Coupon,
-                        Description = reward.Promotion.Description,
-                        ErrorCode = reward.IsValid ? null : "InvalidCouponCode"
-                    };
                 }
             }
 
@@ -324,33 +329,42 @@ namespace VirtoCommerce.Storefront.Builders
 
         private void CalculateTotals()
         {
-            var cartDiscountTotal = new Money(_currency.Code);
-            foreach (var discount in _cart.Discounts.ToList())
+            foreach (var lineItem in _cart.Items)
             {
-                cartDiscountTotal += discount.Amount;
+                decimal lineItemDiscountTotal = lineItem.Discounts.Sum(d => d.Amount.Amount);
+                lineItem.DiscountTotal = new Money(lineItemDiscountTotal, _cart.Currency.Code);
+
+                decimal lineItemTaxTotal = lineItem.TaxDetails.Sum(td => td.Amount.Amount);
+                lineItem.TaxTotal = new Money(lineItemTaxTotal, _cart.Currency.Code);
             }
 
-            var lineItemsDiscountTotal = new Money(_currency.Code);
-            foreach (var lineItem in _cart.Items.ToList())
+            foreach (var shipment in _cart.Shipments)
             {
-                foreach (var discount in lineItem.Discounts.ToList())
-                {
-                    lineItemsDiscountTotal += discount.Amount;
-                }
+                decimal shipmentDiscountTotal = shipment.Discounts.Sum(d => d.Amount.Amount);
+                shipment.DiscountTotal = new Money(shipmentDiscountTotal, _cart.Currency.Code);
+
+                decimal shipmentTaxTotal = shipment.TaxDetails.Sum(td => td.Amount.Amount);
+                shipment.TaxTotal = new Money(shipmentTaxTotal, _cart.Currency.Code);
+
+                decimal shipmentItemsSubtotal = shipment.Items.Sum(i => i.ExtendedPrice.Amount);
+                shipment.ItemSubtotal = new Money(shipmentItemsSubtotal, _cart.Currency.Code);
+
+                shipment.Subtotal = shipment.ShippingPrice - shipmentDiscountTotal;
+                shipment.Total = shipment.Subtotal + shipment.TaxTotal;
             }
 
-            var shipmentsDiscountTotal = new Money(_currency.Code);
-            foreach (var shipment in _cart.Shipments.ToList())
-            {
-                foreach (var discount in shipment.Discounts.ToList())
-                {
-                    shipmentsDiscountTotal += discount.Amount;
-                }
-            }
+            decimal cartDiscountsTotal = _cart.Discounts.Sum(d => d.Amount.Amount);
+            _cart.DiscountTotal = new Money(cartDiscountsTotal, _cart.Currency.Code);
 
-            _cart.DiscountTotal = cartDiscountTotal + lineItemsDiscountTotal + shipmentsDiscountTotal;
-            _cart.ShippingTotal = new Money(_cart.Shipments.Sum(s => s.ShippingPrice.Amount), _currency.Code);
-            _cart.SubTotal = new Money(_cart.Items.Sum(i => i.ExtendedPrice.Amount), _currency.Code) - lineItemsDiscountTotal;
+            decimal cartSubtotal = _cart.Items.Sum(i => i.ExtendedPrice.Amount);
+            _cart.SubTotal = new Money(cartSubtotal, _cart.Currency.Code);
+
+            decimal cartShipmentsTotal = _cart.Shipments.Sum(s => s.Total.Amount);
+            _cart.ShippingTotal = new Money(cartShipmentsTotal, _cart.Currency.Code);
+
+            //decimal cartTaxTotal = _cart.TaxDetails.Sum(td => td.Amount.Amount);
+            //_cart.TaxTotal = new Money(cartTaxTotal, _cart.Currency.Code);
+
             _cart.Total = _cart.SubTotal + _cart.ShippingTotal + _cart.TaxTotal - _cart.DiscountTotal;
         }
     }
