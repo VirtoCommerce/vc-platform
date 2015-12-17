@@ -51,14 +51,14 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
             return result;
         }
 
-        public static DynamicPropertyEntity ToEntity(this DynamicObjectProperty model, string objectId)
+        public static DynamicPropertyEntity ToEntity(this DynamicObjectProperty model, string objectId, string objectType)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
 
             var result = model.ToEntity();
             result.DisplayNames = new NullCollection<DynamicPropertyNameEntity>();
-            result.ObjectValues = new ObservableCollection<DynamicPropertyObjectValueEntity>(model.Values.Select(x => x.ToEntity(model, objectId)));
+            result.ObjectValues = new ObservableCollection<DynamicPropertyObjectValueEntity>(model.Values.Select(x => x.ToEntity(model, objectId, objectType)));
 
             return result;
         }
