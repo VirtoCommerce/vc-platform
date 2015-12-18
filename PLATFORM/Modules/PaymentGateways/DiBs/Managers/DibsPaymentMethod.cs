@@ -113,8 +113,8 @@ namespace DiBs.Managers
             context.Payment.IsApproved = true;
             retVal.OuterId = context.Payment.OuterId = transactionId;
             context.Payment.AuthorizedDate = DateTime.UtcNow;
-            retVal.IsSuccess = true;
             retVal.OrderId = context.Order.Number;
+            retVal.IsSuccess = ValidatePostProcessRequest(context.Parameters).IsSuccess;
             return retVal;
         }
 
