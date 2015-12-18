@@ -291,6 +291,8 @@
     <Content Include="App_Data\Themes\default\assets\vc-big.png" />
     <Content Include="App_Data\Themes\default\assets\visa.svg" />
     <Content Include="App_Data\Themes\default\assets\warning.svg" />
+    <Content Include="App_Data\Themes\default\assets\slide_1.jpg" />
+    <Content Include="App_Data\Themes\default\assets\slide_2.jpg" />
     <Content Include="App_Data\Themes\default\social\shopify-social.svg" />
     <Content Include="App_Data\Themes\default\social\social-icons.css" />
     <Content Include="App_Data\x64\LibSass.x64.dll" />
