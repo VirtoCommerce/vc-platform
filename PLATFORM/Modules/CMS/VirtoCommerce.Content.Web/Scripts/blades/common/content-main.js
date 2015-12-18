@@ -1,8 +1,6 @@
 ﻿angular.module('virtoCommerce.contentModule')
 .controller('virtoCommerce.contentModule.contentMainController', ['$scope', '$state', '$stateParams', 'virtoCommerce.contentModule.menus', 'virtoCommerce.contentModule.pages', 'virtoCommerce.contentModule.themes', 'virtoCommerce.contentModule.stores', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.authService',
 	function ($scope, $state, $stateParams, menus, pages, themes, stores, bladeNavigationService, dialogService, authService) {
-	    $scope.selectedNodeId = null;
-
 	    var blade = $scope.blade;
 
 	    blade.initialize = function () {
@@ -122,7 +120,7 @@
 	                                    });
 	                                }
 
-	                                themesStores.update({ storeId: storeId }, data, function (data) {
+	                                stores.update({ storeId: storeId }, data, function (data) {
 	                                    entity.defaultThemeName = undefined;
 	                                },
 									function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });

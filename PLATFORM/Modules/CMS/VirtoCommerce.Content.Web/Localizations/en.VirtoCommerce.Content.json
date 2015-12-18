@@ -71,7 +71,7 @@
         "labels": {
           "name": "Name",
           "language": "Language",
-          "no-data": "No Link Lists Yet"
+          "no-data": "No Link Lists yet"
         }
       },
       "add-theme": {
@@ -196,8 +196,8 @@
         "message": "The menu link list has been modified. Do you want to save changes?"
       },
       "set-store-url": {
-        "title": "Url is not set for store",
-        "message": "Please, set store url, before preview theme!"
+        "title": "Url is not set for the store",
+        "message": "Please, set store url before previewing!"
       },
       "name-must-unique": {
         "title": "Name not unique",
