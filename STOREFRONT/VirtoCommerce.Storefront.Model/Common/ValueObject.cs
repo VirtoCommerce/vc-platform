@@ -31,7 +31,7 @@ namespace VirtoCommerce.Storefront.Model.Common
                 return true;
 
             //compare all public properties
-            PropertyInfo[] publicProperties = this.GetType().GetProperties();
+            PropertyInfo[] publicProperties = this.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
             if ((object)publicProperties != null
                 &&
@@ -93,7 +93,7 @@ namespace VirtoCommerce.Storefront.Model.Common
             int index = 1;
 
             //compare all public properties
-            PropertyInfo[] publicProperties = this.GetType().GetProperties();
+            PropertyInfo[] publicProperties = this.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
 
             if ((object)publicProperties != null

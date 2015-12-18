@@ -62,6 +62,10 @@ namespace VirtoCommerce.Storefront
             UnityWebActivator.Start();
             var container = UnityConfig.GetConfiguredContainer();
 
+            //Caching configuration (system runtime memory handle)
+            var cacheManager = CacheFactory.FromConfiguration<object>("storefrontCache");
+            container.RegisterInstance<ICacheManager<object>>(cacheManager);
+
             // Workaround for old storefront base URL: remove /api/ suffix since it is already included in every resource address in VirtoCommerce.Client library.
             var baseUrl = ConfigurationManager.ConnectionStrings["VirtoCommerceBaseUrl"].ConnectionString;
             if (baseUrl != null && baseUrl.EndsWith("/api/", StringComparison.OrdinalIgnoreCase))
@@ -105,17 +109,14 @@ namespace VirtoCommerce.Storefront
             // Create new work context for each request
             container.RegisterType<WorkContext, WorkContext>(new PerRequestLifetimeManager());
 
-            container.RegisterInstance(new ShopifyLiquidThemeEngine(() => container.Resolve<WorkContext>(), () => container.Resolve<IStorefrontUrlBuilder>(), HostingEnvironment.MapPath("~/App_data/themes"), "~/themes/assets"));
+            container.RegisterInstance(new ShopifyLiquidThemeEngine(cacheManager, () => container.Resolve<WorkContext>(), () => container.Resolve<IStorefrontUrlBuilder>(), HostingEnvironment.MapPath("~/App_data/themes"), "~/themes/assets"));
             //Register liquid engine
             ViewEngines.Engines.Add(new DotLiquidThemedViewEngine(container.Resolve<ShopifyLiquidThemeEngine>()));
 
             // Shopify model binders convert Shopify form fields with bad names to VirtoCommerce model properties.
             container.RegisterType<IModelBinderProvider, ShopifyModelBinderProvider>("shopify");
 
-            //Caching configuration (system runtime memory handle)
-            var cacheManager = CacheFactory.FromConfiguration<object>("storefrontCache");
-            container.RegisterInstance<ICacheManager<object>>(cacheManager);
-
+         
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes, () => container.Resolve<WorkContext>(), container.Resolve<ICommerceCoreModuleApi>());
             AuthConfig.ConfigureAuth(app);

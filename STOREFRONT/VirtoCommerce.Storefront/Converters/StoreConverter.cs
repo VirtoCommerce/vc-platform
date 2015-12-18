@@ -25,6 +25,12 @@ namespace VirtoCommerce.Storefront.Converters
             {
                 retVal.Currencies = storeDto.Currencies.Select(x => Currency.Get(EnumUtility.SafeParse(x, CurrencyCodes.USD))).ToList();
             }
+            if(storeDto.DynamicProperties != null)
+            {
+                retVal.DynamicProperties = storeDto.DynamicProperties.Select(x => x.ToWebModel()).ToList();
+                retVal.ThemeName = retVal.DynamicProperties.GetDynamicPropertyValue("DefaultThemeName");
+            }
+            
         
             return retVal;
         }

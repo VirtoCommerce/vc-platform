@@ -8,6 +8,11 @@ namespace VirtoCommerce.Storefront.Model
 {
     public class LocalizedString
     {
+        public LocalizedString()
+        {
+            Language = Language.InvariantLanguage;
+            Value = null;
+        }
         public LocalizedString(Language language, string value)
         {
             Language = language;

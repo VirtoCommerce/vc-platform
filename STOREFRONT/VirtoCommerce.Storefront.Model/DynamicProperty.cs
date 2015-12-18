@@ -10,11 +10,15 @@ namespace VirtoCommerce.Storefront.Model
     {
         public DynamicProperty()
         {
-            Values = new List<string>();
+            Values = new List<LocalizedString>();
             DictionaryItems = new List<DynamicPropertyDictionaryItem>();
+            DisplayNames = new List<LocalizedString>();
         }
 
         public string Name { get; set; }
+
+        public LocalizedString DisplayName { get; set; }
+        public ICollection<LocalizedString> DisplayNames { get; set; }
         /// <summary>
         /// Defines whether a property supports multiple values.
         /// </summary>
@@ -28,7 +32,11 @@ namespace VirtoCommerce.Storefront.Model
 
         public string ValueType { get; set; }
 
-        public ICollection<string> Values { get; set; }
+        //Selected scalar values
+        public ICollection<LocalizedString> Values { get; set; }
+        //Selected dictionary values
+        public ICollection<DynamicPropertyDictionaryItem> DictionaryValues { get; set; }
+        //All possible dictionary values
         public ICollection<DynamicPropertyDictionaryItem> DictionaryItems { get; set; }
     }
 
