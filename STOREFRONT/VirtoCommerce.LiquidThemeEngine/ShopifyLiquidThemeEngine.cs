@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using CacheManager.Core;
 using DotLiquid;
 using DotLiquid.Exceptions;
 using DotLiquid.FileSystems;
@@ -38,13 +40,16 @@ namespace VirtoCommerce.LiquidThemeEngine
         private readonly string _themesAssetsRelativeUrl;
         private readonly Func<WorkContext> _workContextFactory;
         private readonly Func<IStorefrontUrlBuilder> _storeFrontUrlBuilderFactory;
+        private readonly ICacheManager<object> _cacheManager;
+        private readonly FileSystemWatcher _fileSystemWatcher;
 
-        public ShopifyLiquidThemeEngine(Func<WorkContext> workContextFactory, Func<IStorefrontUrlBuilder> storeFrontUrlBuilderFactory, string themesLocalPath, string themesAssetsRelativeUrl)
+        public ShopifyLiquidThemeEngine(ICacheManager<object> cacheManager, Func<WorkContext> workContextFactory, Func<IStorefrontUrlBuilder> storeFrontUrlBuilderFactory, string themesLocalPath, string themesAssetsRelativeUrl)
         {
             _workContextFactory = workContextFactory;
             _storeFrontUrlBuilderFactory = storeFrontUrlBuilderFactory;
             _themesLocalPath = themesLocalPath;
             _themesAssetsRelativeUrl = themesAssetsRelativeUrl;
+            _cacheManager = cacheManager;
 
             Liquid.UseRubyDateFormat = true;
             // Register custom tags (Only need to do this once)
@@ -62,6 +67,8 @@ namespace VirtoCommerce.LiquidThemeEngine
             Template.RegisterTag<LayoutTag>("layout");
             Template.RegisterTag<FormTag>("form");
             Template.RegisterTag<PaginateTag>("paginate");
+            //Observe themes file system changes to invalidate cache if changes occur
+            _fileSystemWatcher = MonitorThemeFileSystemChanges();
         }
 
         /// <summary>
@@ -141,6 +148,13 @@ namespace VirtoCommerce.LiquidThemeEngine
         /// <returns></returns>
         public string ReadTemplateByName(string templateName)
         {
+            var cacheKey = String.Join(":", "ReadTemplateByName", CurrentThemeLocalPath.GetHashCode(), DefaultThemeLocalPath.GetHashCode(), templateName);
+            var retVal =  _cacheManager.Get(cacheKey, "LiquidThemeRegion", () => { return InnerReadTemplateByName(templateName); });
+            return retVal;
+        }
+
+        private string InnerReadTemplateByName(string templateName)
+        {
             if (templateName == null || !_templateRegex.IsMatch(templateName))
                 throw new FileSystemException("Error - Illegal template name '{0}'", templateName);
 
@@ -180,6 +194,12 @@ namespace VirtoCommerce.LiquidThemeEngine
             return retVal;
         }
 
+        /// <summary>
+        /// Render template by content and parameters
+        /// </summary>
+        /// <param name="templateContent"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
         public string RenderTemplate(string templateContent, Dictionary<string, object> parameters)
         {
             if (String.IsNullOrEmpty(templateContent))
@@ -197,8 +217,7 @@ namespace VirtoCommerce.LiquidThemeEngine
             {
                 LocalVariables = Hash.FromDictionary(parameters)
             };
-
-            var parsedTemplate = Template.Parse(templateContent);
+            var parsedTemplate = _cacheManager.Get("ParseTemplate-" + templateContent.GetHashCode(), "LiquidTheme", () => { return Template.Parse(templateContent); });
             var retVal = parsedTemplate.RenderWithTracing(renderParams);
             return retVal;
         }
@@ -210,25 +229,29 @@ namespace VirtoCommerce.LiquidThemeEngine
         /// <returns></returns>
         public DefaultableDictionary GetSettings(string defaultValue = null)
         {
-            DefaultableDictionary retVal = new DefaultableDictionary(defaultValue);
+            var cacheKey = String.Join(":", "GetSettings", CurrentThemeLocalPath.GetHashCode(), DefaultThemeLocalPath.GetHashCode(), defaultValue);
+            return _cacheManager.Get(cacheKey, "LiquidThemeRegion", () =>
+             {
+                 DefaultableDictionary retVal = new DefaultableDictionary(defaultValue);
 
-            var resultSettings = InnerGetSettings(DefaultThemeLocalPath);
-            if (DefaultThemeLocalPath != CurrentThemeLocalPath)
-            {
-                var currentThemeSettings = InnerGetSettings(CurrentThemeLocalPath);
-                if (currentThemeSettings != null)
-                {
-                    resultSettings.Merge(currentThemeSettings, new JsonMergeSettings { MergeArrayHandling = MergeArrayHandling.Merge });
-                }
-            }
+                 var resultSettings = InnerGetSettings(DefaultThemeLocalPath);
+                 if (DefaultThemeLocalPath != CurrentThemeLocalPath)
+                 {
+                     var currentThemeSettings = InnerGetSettings(CurrentThemeLocalPath);
+                     if (currentThemeSettings != null)
+                     {
+                         resultSettings.Merge(currentThemeSettings, new JsonMergeSettings { MergeArrayHandling = MergeArrayHandling.Merge });
+                     }
+                 }
 
-            if (resultSettings != null)
-            {
-                var dict = resultSettings.ToObject<Dictionary<string, object>>().ToDictionary(x => x.Key, x => x.Value);
-                retVal = new DefaultableDictionary(dict, defaultValue);
-            }
+                 if (resultSettings != null)
+                 {
+                     var dict = resultSettings.ToObject<Dictionary<string, object>>().ToDictionary(x => x.Key, x => x.Value);
+                     retVal = new DefaultableDictionary(dict, defaultValue);
+                 }
 
-            return retVal;
+                 return retVal;
+             });
         }
 
         private JObject InnerGetSettings(string themePath)
@@ -255,18 +278,22 @@ namespace VirtoCommerce.LiquidThemeEngine
         /// <returns></returns>
         public JObject ReadLocalization()
         {
-            //Load first localization from default theme
-            var retVal = InnerReadLocalization(DefaultThemeLocalPath, WorkContext.CurrentLanguage);
-            if (DefaultThemeLocalPath != CurrentThemeLocalPath)
+            var cacheKey = String.Join(":", "ReadLocalization", CurrentThemeLocalPath.GetHashCode(), DefaultThemeLocalPath.GetHashCode());
+            return _cacheManager.Get(cacheKey, "LiquidThemeRegion", () =>
             {
-                //Next need merge current theme localization with default
-                var currentThemeLocalization = InnerReadLocalization(CurrentThemeLocalPath, WorkContext.CurrentLanguage);
-                if (currentThemeLocalization != null)
+                //Load first localization from default theme
+                var retVal = InnerReadLocalization(DefaultThemeLocalPath, WorkContext.CurrentLanguage);
+                if (DefaultThemeLocalPath != CurrentThemeLocalPath)
                 {
-                    retVal.Merge(currentThemeLocalization, new JsonMergeSettings { MergeArrayHandling = MergeArrayHandling.Merge });
+                    //Next need merge current theme localization with default
+                    var currentThemeLocalization = InnerReadLocalization(CurrentThemeLocalPath, WorkContext.CurrentLanguage);
+                    if (currentThemeLocalization != null)
+                    {
+                        retVal.Merge(currentThemeLocalization, new JsonMergeSettings { MergeArrayHandling = MergeArrayHandling.Merge });
+                    }
                 }
-            }
-            return retVal;
+                return retVal;
+            });
         }
 
         private JObject InnerReadLocalization(string themePath, Language language)
@@ -309,6 +336,48 @@ namespace VirtoCommerce.LiquidThemeEngine
         public string GetAssetAbsoluteUrl(string assetName)
         {
             return UrlBuilder.ToAppAbsolute(_themesAssetsRelativeUrl.TrimEnd('/') + "/" + assetName.TrimStart('/'), WorkContext.CurrentStore, WorkContext.CurrentLanguage);
+        }
+
+
+        private FileSystemWatcher MonitorThemeFileSystemChanges()
+        {
+            var fileSystemWatcher = new FileSystemWatcher();
+
+            fileSystemWatcher.Path = _themesLocalPath;
+            fileSystemWatcher.IncludeSubdirectories = true;
+
+            FileSystemEventHandler handler = (sender, args) =>
+            {
+                _cacheManager.Clear();
+            };
+            RenamedEventHandler renamedHandler = (sender, args) =>
+            {
+                _cacheManager.Clear();
+            };
+            var throttledHandler = CreateThrottledEventHandler(handler, TimeSpan.FromSeconds(5));
+            // Add event handlers.
+            fileSystemWatcher.Changed += throttledHandler;
+            fileSystemWatcher.Created += throttledHandler;
+            fileSystemWatcher.Deleted += throttledHandler;
+            fileSystemWatcher.Renamed += renamedHandler;
+
+            // Begin watching.
+            fileSystemWatcher.EnableRaisingEvents = true;
+
+            return fileSystemWatcher;
+        }
+
+        private static FileSystemEventHandler CreateThrottledEventHandler(FileSystemEventHandler handler,   TimeSpan throttle)
+        {
+            var throttling = false;
+            return (s, e) =>
+            {
+                if (throttling)
+                    return;
+                handler(s, e);
+                throttling = true;
+                Task.Delay(throttle).ContinueWith(x => throttling = false);
+            };
         }
 
     }

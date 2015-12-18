@@ -28,7 +28,9 @@ namespace VirtoCommerce.Storefront.Converters
             if(storeDto.DynamicProperties != null)
             {
                 retVal.DynamicProperties = storeDto.DynamicProperties.Select(x => x.ToWebModel()).ToList();
+                retVal.ThemeName = retVal.DynamicProperties.GetDynamicPropertyValue("DefaultThemeName");
             }
+            
         
             return retVal;
         }

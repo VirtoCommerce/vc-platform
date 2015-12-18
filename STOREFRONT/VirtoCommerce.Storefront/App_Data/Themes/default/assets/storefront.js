@@ -595,7 +595,7 @@ app.controller('checkoutController', ['$scope', '$location', '$window', 'custome
             return;
         }
         if (paymentProcessingResult.paymentMethodType == 'PreparedForm' && paymentProcessingResult.htmlForm) {
-            $scope.outerRedirect($scope.baseUrl + 'cart/checkout/paymentform?orderId=' + orderNumber);
+            $scope.outerRedirect($scope.baseUrl + 'cart/checkout/paymentform?orderNumber=' + orderNumber);
         }
         if (paymentProcessingResult.paymentMethodType == 'Standard' || paymentProcessingResult.paymentMethodType == 'Unknown') {
             if ($scope.customer.UserName == 'Anonymous') {

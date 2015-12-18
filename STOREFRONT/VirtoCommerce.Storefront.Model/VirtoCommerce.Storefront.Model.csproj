@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CacheManager.Core, Version=0.6.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CacheManager.Core.0.6.1\lib\net45\CacheManager.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Omu.ValueInjecter, Version=3.1.1.0, Culture=neutral, PublicKeyToken=c7694541b0ac80e4, processorArchitecture=MSIL">
       <HintPath>..\packages\valueinjecter.3.1.1.2\lib\net40\Omu.ValueInjecter.dll</HintPath>
       <Private>True</Private>
@@ -40,6 +44,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -63,10 +68,13 @@
     <Compile Include="Catalog\Term.cs" />
     <Compile Include="Catalog\TermExtensions.cs" />
     <Compile Include="Catalog\TierPrice.cs" />
+    <Compile Include="Common\CacheManagerExtension.cs" />
     <Compile Include="Common\CollectionExtensions.cs" />
+    <Compile Include="Common\DynamicPropertyExtension.cs" />
     <Compile Include="Common\IStorefrontPagedList.cs" />
     <Compile Include="Common\ValueInjecter\NullableAndEnumValueInjecter.cs" />
     <Compile Include="Common\StoreFrontPagedList.cs" />
+    <Compile Include="ContactForm.cs" />
     <Compile Include="Country.cs" />
     <Compile Include="CountryRegion.cs" />
     <Compile Include="DynamicContentItem.cs" />

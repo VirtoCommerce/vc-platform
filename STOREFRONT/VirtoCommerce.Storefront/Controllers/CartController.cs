@@ -235,7 +235,7 @@ namespace VirtoCommerce.Storefront.Controllers
             return View("payment-form", WorkContext);
         }
 
-        // GET: /cart/checkout/externalpaymentcallback
+        // GET: /cart/externalpaymentcallback
         [HttpGet]
         public async Task<ActionResult> ExternalPaymentCallback()
         {
@@ -265,7 +265,7 @@ namespace VirtoCommerce.Storefront.Controllers
             var postProcessingResult = await _commerceApi.CommercePostProcessPaymentAsync(callback);
             if (postProcessingResult.IsSuccess.HasValue && postProcessingResult.IsSuccess.Value)
             {
-                return StoreFrontRedirect("~/cart/checkout/thanks/" + postProcessingResult.OrderId);
+                return StoreFrontRedirect("~/cart/thanks/" + postProcessingResult.OrderId);
             }
             else
             {
