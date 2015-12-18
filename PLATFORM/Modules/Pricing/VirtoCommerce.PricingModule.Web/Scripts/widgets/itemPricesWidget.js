@@ -3,7 +3,7 @@
     var blade = $scope.blade;
 
     function refresh() {
-        $scope.priceRange = '';
+        $scope.priceRange = '...';
 
         return prices.query({ id: blade.itemId }, function (data) {
             // find the most popular currency and min/max prices in it.
@@ -23,12 +23,12 @@
                 $scope.priceRange = 'N/A';
             }
         }, function (error) {
-            //bladeNavigationService.setError('Error ' + error.status, blade);
+            $scope.priceRange = 'N/A';
         });
     }
 
     $scope.openBlade = function () {
-        if ($scope.priceRange !== '') {
+        if ($scope.priceRange !== '...') {
             var newBlade = {
                 id: "itemPricelists",
                 itemId: blade.itemId,

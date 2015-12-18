@@ -61,6 +61,7 @@ function ($scope, pricelists, bladeNavigationService, dialogService, uiGridConst
     }
 
     blade.headIcon = 'fa-usd';
+    blade.subtitle = 'pricing.blades.pricelist-list.subtitle';
 
     blade.toolbarCommands = [
         {

@@ -1,23 +1,25 @@
 ﻿angular.module('virtoCommerce.pricingModule')
 .controller('virtoCommerce.pricingModule.itemPricelistsListController', ['$scope', 'virtoCommerce.pricingModule.prices', 'platformWebApp.bladeNavigationService', function ($scope, prices, bladeNavigationService) {
-    $scope.selectedItem = null;
+    var blade = $scope.blade;
 
-    $scope.blade.refresh = function () {
-        $scope.blade.isLoading = true;
-        return $scope.blade.parentWidgetRefresh().$promise.then(function (results) {
-            $scope.blade.isLoading = false;
-            $scope.blade.currentEntities = results;
+    blade.refresh = function () {
+        blade.isLoading = true;
+        return blade.parentWidgetRefresh().$promise.then(function (results) {
+            blade.isLoading = false;
+            blade.currentEntities = results;
             return results;
+        }, function (reason) {
+            blade.isLoading = false;
         });
     }
 
     $scope.openBlade = function (data) {
-        $scope.selectedItem = data;
+        $scope.selectedNodeId = data.id;
 
         var newBlade = {
             id: "itemPrices",
             isApiSave: true,
-            itemId: $scope.blade.itemId,
+            itemId: blade.itemId,
             data: data,
             currency: data.currency,
             title: data.name,
@@ -25,32 +27,46 @@
             controller: 'virtoCommerce.pricingModule.pricesListController',
             template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/blades/prices-list.tpl.html'
         };
-        bladeNavigationService.showBlade(newBlade, $scope.blade);
+        bladeNavigationService.showBlade(newBlade, blade);
     }
 
-    $scope.blade.onClose = function (closeCallback) {
+    blade.onClose = function (closeCallback) {
         closeChildrenBlades();
         closeCallback();
     };
 
     function closeChildrenBlades() {
-        angular.forEach($scope.blade.childrenBlades.slice(), function (child) {
+        angular.forEach(blade.childrenBlades.slice(), function (child) {
             bladeNavigationService.closeBlade(child);
         });
     }
 
-    $scope.blade.headIcon = 'fa-usd';
+    blade.headIcon = 'fa-usd';
 
-    $scope.blade.toolbarCommands = [
+    blade.toolbarCommands = [
         {
             name: "platform.commands.refresh", icon: 'fa fa-refresh',
             executeMethod: function () {
-                $scope.blade.refresh();
+                blade.refresh();
             },
             canExecuteMethod: function () {
                 return true;
             }
-        }
+        },
+		{
+		    name: "pricing.blades.pricelist-list.subtitle", icon: 'fa fa-usd',
+		    executeMethod: function () {
+		        var newBlade = {
+		            id: 'pricingList',
+		            title: 'pricing.blades.pricing-main.menu.pricelist-list.title',
+		            controller: 'virtoCommerce.pricingModule.pricelistListController',
+		            template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/blades/pricelist-list.tpl.html'
+		        };
+		        bladeNavigationService.showBlade(newBlade, blade.parentBlade);
+		    },
+		    canExecuteMethod: function () { return true; },
+		    permission: 'pricing:access'
+		}
     ];
 
 
@@ -59,5 +75,5 @@
         return pricelistPrices.length;
     }
 
-    $scope.blade.refresh();
+    blade.refresh();
 }]);
