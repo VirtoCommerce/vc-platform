@@ -86,7 +86,9 @@ app.directive('vcContentPlace', ['marketingService', function (marketingService)
     }
 }]);
 
-app.controller('mainController', ['$scope', '$location', '$window', function ($scope, $location, $window) {
+app.controller('mainController', ['$scope', '$location', '$window', 'customerService', function ($scope, $location, $window, customerService) {
+    getCustomer();
+
     //Base store url populated in layout and can be used for construction url inside controller
     $scope.baseUrl = {};
 
@@ -102,6 +104,12 @@ app.controller('mainController', ['$scope', '$location', '$window', function ($s
         $location.path(path);
         $scope.currentPath = $location.$$path.replace('/', '');
     };
+
+    function getCustomer() {
+        customerService.getCurrentCustomer().then(function (response) {
+            $scope.customer = response.data;
+        });
+    }
 }]);
 
 app.controller('cartController', ['$scope', '$timeout', 'cartService', function ($scope, $timeout, cartService) {
@@ -207,7 +215,7 @@ app.controller('categoryController', ['$scope', '$window', 'marketingService', f
     });
 }]);
 
-app.controller('checkoutController', ['$scope', '$location', '$sce', '$window', 'customerService', 'cartService', function ($scope, $location, $sce, $window, customerService, cartService) {
+app.controller('checkoutController', ['$scope', '$location', '$window', 'customerService', 'cartService', function ($scope, $location, $window, customerService, cartService) {
     $scope.checkout = {};
 
     initialize();
