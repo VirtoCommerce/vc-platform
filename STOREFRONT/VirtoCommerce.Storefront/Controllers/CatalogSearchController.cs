@@ -21,6 +21,17 @@ namespace VirtoCommerce.Storefront.Controllers
             _marketingApi = marketingApi;
         }
 
+        /// GET search
+        /// This method used for search products by given criteria 
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ActionResult> SearchProducts()
+        {
+            WorkContext.CurrentCatalogSearchResult = await _searchService.SearchAsync(WorkContext.CurrentCatalogSearchCriteria);
+
+            return View("collection", WorkContext);
+        }
+
         /// <summary>
         /// GET search/{categoryId}
         /// This method called from SeoRoute when url contains slug for category

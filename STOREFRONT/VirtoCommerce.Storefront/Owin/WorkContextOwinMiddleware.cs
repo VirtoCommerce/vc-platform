@@ -34,6 +34,7 @@ namespace VirtoCommerce.Storefront.Owin
         private readonly IStoreModuleApi _storeApi;
         private readonly IVirtoCommercePlatformApi _platformApi;
         private readonly ICustomerManagementModuleApi _customerApi;
+        private readonly IPricingModuleApi _pricingModuleApi;
         private readonly ICartBuilder _cartBuilder;
         private readonly ICMSContentModuleApi _cmsApi;
         private readonly ICacheManager<object> _cacheManager;
@@ -48,6 +49,7 @@ namespace VirtoCommerce.Storefront.Owin
             _customerApi = container.Resolve<ICustomerManagementModuleApi>();
             _cartBuilder = container.Resolve<ICartBuilder>();
             _cmsApi = container.Resolve<ICMSContentModuleApi>();
+            _pricingModuleApi = container.Resolve<IPricingModuleApi>();
             _cacheManager = container.Resolve<ICacheManager<object>>();
             _container = container;
         }
@@ -71,7 +73,7 @@ namespace VirtoCommerce.Storefront.Owin
             workContext.CurrentLanguage = GetLanguage(context, workContext.AllStores, workContext.CurrentStore);
             workContext.CurrentCurrency = GetCurrency(context, workContext.CurrentStore);
 
-            //Do not load shopping cart for resource requests
+            //Do not load shopping cart and other for resource requests
             if (!IsAssetRequest(context.Request.Uri))
             {
                 //Shopping cart
@@ -83,6 +85,19 @@ namespace VirtoCommerce.Storefront.Owin
 
                 //Initialize catalog search context
                 workContext.CurrentCatalogSearchCriteria = GetSearchCriteria(workContext);
+
+                //Pricelists
+                var priceListCachey = String.Join("-", "EvaluatePriceLists", workContext.CurrentStore.Id, workContext.CurrentCustomer.Id);
+                workContext.CurrentPriceListIds = await _cacheManager.GetAsync(priceListCachey, "PricingRegion", async () =>
+                {
+                    var pricingResult = await _pricingModuleApi.PricingModuleEvaluatePriceListsAsync(
+                                                     evalContextStoreId: workContext.CurrentStore.Id,
+                                                     evalContextCatalogId: workContext.CurrentStore.Catalog,
+                                                     evalContextCustomerId: workContext.CurrentCustomer.Id,
+                                                     evalContextCurrency: workContext.CurrentCurrency.Code,
+                                                     evalContextQuantity: 1);
+                    return pricingResult.Select(p => p.Id).ToList();
+                });
             }
 
             await Next.Invoke(context);
@@ -106,7 +121,7 @@ namespace VirtoCommerce.Storefront.Owin
 
             var qs = HttpUtility.ParseQueryString(workContext.RequestUrl.Query);
 
-            result.Keyword = qs.Get("keyword");
+            result.Keyword = qs.Get("q");
             result.PageNumber = Convert.ToInt32(qs.Get("page") ?? "1");
             //TODO move this code to Parse or Converter method
             // tags=name1:value1,value2,value3;name2:value1,value2,value3

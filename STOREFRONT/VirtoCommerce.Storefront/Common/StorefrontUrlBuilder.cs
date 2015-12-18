@@ -38,7 +38,7 @@ namespace VirtoCommerce.Storefront.Common
         public string ToAppRelative(string virtualPath, Store store, Language language)
         {
             var result = new StringBuilder("~");
-
+            //Do not add storeId to Url if it single or have strict  defined Url
             if (store != null && !store.IsStoreUri(_workContext.RequestUrl))
             {
                 //Do not use store in url if it single
