@@ -19,6 +19,11 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
             Properties = new List<ProductProperty>();
  
         }
+
+        public string CategoryId { get; set; }
+
+        public string CatalogId { get; set; }
+
         /// <summary>
         /// Returns true if a product is available for purchase. Returns false if all of the products variants' inventory_quantity values are zero or less, 
         /// and their inventory_policy is not set to "Allow users to purchase this item, even if it is no longer in stock."
