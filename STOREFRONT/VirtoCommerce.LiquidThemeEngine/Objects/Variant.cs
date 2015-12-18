@@ -19,6 +19,10 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
           
         }
 
+        public string CategoryId { get; set; }
+
+        public string CatalogId { get; set; }
+
         /// <summary>
         /// Returns true if the variant is available to be purchased, or false if it not. 
         /// In order for a variant to be available, its variant.inventory_quantity must be greater than zero or variant.inventory_policy must be set to continue. 

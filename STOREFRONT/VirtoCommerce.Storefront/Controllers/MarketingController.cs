@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -40,12 +39,18 @@ namespace VirtoCommerce.Storefront.Controllers
 
         // POST: /marketing/actualprices
         [HttpPost]
-        public async Task<ActionResult> GetActualProductPricesJson(string categoryId, ICollection<string> productIds)
+        public async Task<ActionResult> GetActualProductPricesJson(Product[] products)
         {
             var prices = new List<ProductPrice>();
 
+            if (products == null)
+            {
+                return Json(prices, JsonRequestBehavior.AllowGet);
+            }
+
             var pricesResponse = await _pricingApi.PricingModuleEvaluatePricesAsync(
-                evalContextProductIds: productIds.ToList(),
+                evalContextProductIds: products.Select(p => p.Id).ToList(),
+                evalContextCatalogId: WorkContext.CurrentStore.Catalog,
                 evalContextCurrency: WorkContext.CurrentCurrency.Code,
                 evalContextCustomerId: WorkContext.CurrentCustomer.Id,
                 evalContextLanguage: WorkContext.CurrentLanguage.CultureName,
@@ -64,7 +69,7 @@ namespace VirtoCommerce.Storefront.Controllers
                 CustomerId = WorkContext.CurrentCustomer.Id,
                 IsRegisteredUser = WorkContext.CurrentCustomer.HasAccount,
                 Language = WorkContext.CurrentLanguage,
-                PromoEntries = GetPromoEntries(WorkContext.CurrentStore.Catalog, categoryId, productIds, prices),
+                PromoEntries = GetPromoEntries(products, prices),
                 StoreId = WorkContext.CurrentStore.Id
             };
 
@@ -101,19 +106,19 @@ namespace VirtoCommerce.Storefront.Controllers
             return cartPromoEntries;
         }
 
-        private ICollection<PromotionProductEntry> GetPromoEntries(string catalogId, string categoryId, ICollection<string> productIds, IEnumerable<ProductPrice> prices)
+        private ICollection<PromotionProductEntry> GetPromoEntries(IEnumerable<Product> products, IEnumerable<ProductPrice> prices)
         {
             var promoEntries = new List<PromotionProductEntry>();
 
-            foreach (var productId in productIds)
+            foreach (var product in products)
             {
-                var price = prices.FirstOrDefault(p => p.ProductId == productId);
+                var price = prices.FirstOrDefault(p => p.ProductId == product.Id);
                 promoEntries.Add(new PromotionProductEntry
                 {
-                    CatalogId = catalogId,
-                    CategoryId = categoryId,
+                    CatalogId = product.CatalogId,
+                    CategoryId = product.CategoryId,
                     Price = price != null ? price.SalePrice : null,
-                    ProductId = productId,
+                    ProductId = product.Id,
                     Quantity = 1
                 });
             }
