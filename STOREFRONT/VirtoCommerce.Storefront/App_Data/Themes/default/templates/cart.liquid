@@ -1,4 +1,4 @@
-﻿<div class="ajax-informer" ng-class="{ 'error': errorOccured, 'fade': isUpdating || errorOccured }" ng-if="isUpdating || errorOccured">
+﻿<div class="ajax-informer" ng-class="{ 'error': errorOccured, 'fade': isUpdating || errorOccured }">
     <div class="loader" ng-if="!errorOccured"></div>
     <span ng-if="!errorOccured">{{ 'cart.general.updating_cart_message' | t }}</span>
     <span ng-if="errorOccured">{{ 'cart.general.updating_cart_error_message' | t }}</span>
