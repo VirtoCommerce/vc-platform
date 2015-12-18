@@ -181,9 +181,41 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
         {
             return AssetUrl(input);
         }
+        
+        /// <summary>
+        /// Method for switching between multiple stores
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="storeId"></param>
+        /// <param name="languageCode"></param>
+        /// <returns></returns>
+        public static string StoreAbsoluteUrl(string input, string storeId = null, string languageCode = null)
+        {
+            var themeAdaptor = (ShopifyLiquidThemeEngine)Template.FileSystem;
+            storefrontModel.Store store = null;
+            if (!string.IsNullOrEmpty(storeId))
+            {
+                store = themeAdaptor.WorkContext.AllStores.FirstOrDefault(x => string.Equals(x.Id, storeId, StringComparison.InvariantCultureIgnoreCase));
+            }
+            store = store ?? themeAdaptor.WorkContext.CurrentStore;
+
+            var retVal = AbsoluteUrl(input, storeId, languageCode); 
+
+            var isHttps = themeAdaptor.WorkContext.RequestUrl.Scheme == Uri.UriSchemeHttps;
+            //If store has defined url need redirect to it
+            if (isHttps)
+            {
+                retVal = String.IsNullOrEmpty(store.SecureUrl) ? retVal : store.SecureUrl;
+            }
+            else 
+            {
+                retVal = String.IsNullOrEmpty(store.Url) ? retVal : store.Url;
+            }
+            return retVal;
+        }
 
         /// <summary>
-        /// Get absolute storefront url with specified store and language
+        /// Get app absolute storefront url with specified store and language
         /// </summary>
         /// <param name="input"></param>
         /// <param name="storeId"></param>
@@ -205,10 +237,12 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
                 language = store.Languages.FirstOrDefault(x => string.Equals(x.CultureName, languageCode, StringComparison.InvariantCultureIgnoreCase));
             }
             language = language ?? themeAdaptor.WorkContext.CurrentLanguage;
-
+ 
             var retVal = themeAdaptor.UrlBuilder.ToAppAbsolute(input, store, language);
             return retVal;
         }
+
+     
 
 
         private static string BuildOnClickLink(string title, string onclickFormat, params object[] onclickArgs)

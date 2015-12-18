@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using CacheManager.Core;
 using DotLiquid;
 using DotLiquid.Exceptions;
 using DotLiquid.FileSystems;
+using DotLiquid.ViewEngine.Exceptions;
+using LibSassNetProxy;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using VirtoCommerce.LiquidThemeEngine.Extensions;
@@ -42,6 +45,7 @@ namespace VirtoCommerce.LiquidThemeEngine
         private readonly Func<IStorefrontUrlBuilder> _storeFrontUrlBuilderFactory;
         private readonly ICacheManager<object> _cacheManager;
         private readonly FileSystemWatcher _fileSystemWatcher;
+        private readonly SassCompilerProxy _compiler = new SassCompilerProxy();
 
         public ShopifyLiquidThemeEngine(ICacheManager<object> cacheManager, Func<WorkContext> workContextFactory, Func<IStorefrontUrlBuilder> storeFrontUrlBuilderFactory, string themesLocalPath, string themesAssetsRelativeUrl)
         {
@@ -140,6 +144,61 @@ namespace VirtoCommerce.LiquidThemeEngine
             return ReadTemplateByName(templateName);
         }
         #endregion
+
+        /// <summary>
+        /// Return stream for requested  asset file  (used for search current and base themes assets)
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        public Stream GetAssetStream(string fileName)
+        {
+            Stream retVal = null;
+            var fileExtensions = System.IO.Path.GetExtension(fileName);
+            var assetPath = CurrentThemeLocalPath + "\\assets";
+            string[] files = null;
+            if (Directory.Exists(assetPath))
+            {
+                files = Directory.GetFiles(assetPath, fileName, SearchOption.AllDirectories);
+            }
+            if(files == null || !files.Any())
+            {
+                //Try to find asset in default theme
+                assetPath = DefaultThemeLocalPath + "\\assets";
+                if (Directory.Exists(assetPath))
+                {
+                    files = Directory.GetFiles(assetPath, fileName, SearchOption.AllDirectories);
+                }
+            }
+            //We find requested asset need return resulting stream
+            if (files != null && files.Any())
+            {
+                retVal = File.OpenRead(files.FirstOrDefault());
+            }
+            else
+            {
+                //Otherwise it may be liquid template 
+                fileName = fileName.Replace(".scss.css", ".scss");
+                var settings = GetSettings("''");
+                //Try to parse liquid asset resource
+                var content = RenderTemplateByName(fileName, new Dictionary<string, object>() { { "settings", settings } });
+
+                if (fileName.EndsWith(".scss"))
+                {
+                    try
+                    {
+                        //handle scss resources
+                        content = _compiler.Compile(content);
+                        retVal = new MemoryStream(Encoding.UTF8.GetBytes(content));
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new SaasCompileException(fileName, content, ex);
+                    }
+                }
+            }
+
+            return retVal;
+        }
 
         /// <summary>
         /// Read template by name

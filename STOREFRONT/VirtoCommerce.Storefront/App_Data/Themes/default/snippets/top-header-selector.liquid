@@ -34,7 +34,7 @@
 							<ul>
                 {% for store_temp in all_stores %}
                 <li {% if currentStore.id == store_temp.id %} class="selected" {% endif %}>
-									<a href="{{'/' | absolute_url : store_temp.id, current_language.culture_name}}">{{store_temp.name}}</a>
+									<a href="{{'/' | store_absolute_url : store_temp.id, current_language.culture_name}}">{{store_temp.name}}</a>
 								</li>
                 {% endfor %}
               </ul>

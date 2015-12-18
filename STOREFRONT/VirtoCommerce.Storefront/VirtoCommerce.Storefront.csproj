@@ -59,7 +59,8 @@
       <HintPath>..\packages\DotLiquid.VirtoCommerce.1.8.3\lib\NET45\DotLiquid.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="LibSassNetProxy">
+    <Reference Include="LibSassNetProxy, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Shared\LibSassNetProxy.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -313,8 +314,6 @@
     <Compile Include="Builders\CartBuilder.cs" />
     <Compile Include="Builders\ICartBuilder.cs" />
     <Compile Include="Common\StorefrontConstants.cs" />
-    <Compile Include="Common\DownloadResult.cs" />
-    <Compile Include="Common\FileExtensionMapper.cs" />
     <Compile Include="Common\StorefrontUrlBuilder.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AssetController.cs" />
@@ -359,7 +358,6 @@
     <Compile Include="Converters\ShipmentPackageConverter.cs" />
     <Compile Include="Converters\StoreConverter.cs" />
     <Compile Include="Converters\TaxDetailConverter.cs" />
-    <Compile Include="Exceptions\SaasCompileException.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

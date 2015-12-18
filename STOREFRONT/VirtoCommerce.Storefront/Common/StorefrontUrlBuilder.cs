@@ -39,7 +39,7 @@ namespace VirtoCommerce.Storefront.Common
         {
             var result = new StringBuilder("~");
 
-            if (store != null)
+            if (store != null && !store.IsStoreUri(_workContext.RequestUrl))
             {
                 //Do not use store in url if it single
                 if (_workContext.AllStores.Length > 1)

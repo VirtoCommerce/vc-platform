@@ -215,15 +215,19 @@ namespace VirtoCommerce.Storefront.Owin
 
         protected virtual string GetStoreIdFromUrl(IOwinContext context, ICollection<Store> stores)
         {
-            string retVal = null;
-            foreach (var store in stores)
+            //Try first find by store url (if it defined)
+            var retVal = stores.Where(x=>x.IsStoreUri(context.Request.Uri)).Select(x=>x.Id).FirstOrDefault();
+            if (retVal == null)
             {
-                var pathString = new PathString("/" + store.Id);
-                PathString remainingPath;
-                if (context.Request.Path.StartsWithSegments(pathString, out remainingPath))
+                foreach (var store in stores)
                 {
-                    retVal = store.Id;
-                    break;
+                    var pathString = new PathString("/" + store.Id);
+                    PathString remainingPath;
+                    if (context.Request.Path.StartsWithSegments(pathString, out remainingPath))
+                    {
+                        retVal = store.Id;
+                        break;
+                    }
                 }
             }
             return retVal;
