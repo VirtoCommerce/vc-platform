@@ -187,16 +187,16 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                     }
                 }
 
-                //Import dynamic properties
-                _dynamicPropertyService.SaveProperties(platformEntries.DynamicProperties.ToArray());
-                foreach (var propDicGroup in platformEntries.DynamicPropertyDictionaryItems.GroupBy(x => x.PropertyId))
-                {
-                    _dynamicPropertyService.SaveDictionaryItems(propDicGroup.Key, propDicGroup.ToArray());
-                }
-
                 //Import modules settings
                 if (manifest.HandleSettings)
                 {
+                    //Import dynamic properties
+                    _dynamicPropertyService.SaveProperties(platformEntries.DynamicProperties.ToArray());
+                    foreach (var propDicGroup in platformEntries.DynamicPropertyDictionaryItems.GroupBy(x => x.PropertyId))
+                    {
+                        _dynamicPropertyService.SaveDictionaryItems(propDicGroup.Key, propDicGroup.ToArray());
+                    }
+
                     foreach (var module in manifest.Modules)
                     {
                         _settingsManager.SaveSettings(platformEntries.Settings.Where(x => x.ModuleId == module.Id).ToArray());

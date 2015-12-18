@@ -232,7 +232,11 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
                                     var property = allTypeProperties.FirstOrDefault(x => String.Equals(x.Name, transistentPropery.Name, StringComparison.InvariantCultureIgnoreCase) && x.ValueType == transistentPropery.ValueType);
                                     if (property != null)
                                     {
-                                        transistentPropery.InjectFrom(property);
+                                        transistentPropery.Id = property.Id;
+                                        transistentPropery.ObjectType = property.ObjectType;
+                                        transistentPropery.IsArray = property.IsArray;
+                                        transistentPropery.IsRequired = property.IsRequired;
+
                                     }
                                 }
                             }
