@@ -30,6 +30,7 @@ using VirtoCommerce.Storefront.Model.Services;
 using VirtoCommerce.Storefront.Services;
 using VirtoCommerce.Storefront.Common;
 using CacheManager.Core;
+using CacheManager.Web;
 
 [assembly: OwinStartup(typeof(Startup))]
 [assembly: PreApplicationStartMethod(typeof(Startup), "PreApplicationStart")]
@@ -65,6 +66,16 @@ namespace VirtoCommerce.Storefront
             //Caching configuration (system runtime memory handle)
             var cacheManager = CacheFactory.FromConfiguration<object>("storefrontCache");
             container.RegisterInstance<ICacheManager<object>>(cacheManager);
+            //Because CacheManagerOutputCacheProvider used diff cache manager instance need translate clear region by this way
+            //https://github.com/MichaCo/CacheManager/issues/32
+            cacheManager.OnClearRegion += (sender, region) =>
+            {
+                CacheManagerOutputCacheProvider.Cache.ClearRegion(region.Region);
+            };
+            cacheManager.OnClear += (sender, args) =>
+            {
+                CacheManagerOutputCacheProvider.Cache.Clear();
+            };
 
             // Workaround for old storefront base URL: remove /api/ suffix since it is already included in every resource address in VirtoCommerce.Client library.
             var baseUrl = ConfigurationManager.ConnectionStrings["VirtoCommerceBaseUrl"].ConnectionString;
@@ -125,7 +136,7 @@ namespace VirtoCommerce.Storefront
             app.UseStageMarker(PipelineStage.ResolveCache);
         }
 
-
+    
         private static void CallChildConfigure(IAppBuilder app, Assembly assembly, string typeName, string methodName, string virtualRoot, string routPrefix)
         {
             var type = assembly.GetType(typeName);

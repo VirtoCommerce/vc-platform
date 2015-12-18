@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using CacheManager.Core;
 using DotLiquid;
 using DotLiquid.Exceptions;
@@ -344,7 +345,7 @@ namespace VirtoCommerce.LiquidThemeEngine
 
             fileSystemWatcher.Path = _themesLocalPath;
             fileSystemWatcher.IncludeSubdirectories = true;
-            //TODO: Need add throttle chache clear execution to prevent flood execution
+
             FileSystemEventHandler handler = (sender, args) =>
             {
                 _cacheManager.Clear();
@@ -353,16 +354,30 @@ namespace VirtoCommerce.LiquidThemeEngine
             {
                 _cacheManager.Clear();
             };
+            var throttledHandler = CreateThrottledEventHandler(handler, TimeSpan.FromSeconds(5));
             // Add event handlers.
-            fileSystemWatcher.Changed += handler;
-            fileSystemWatcher.Created += handler;
-            fileSystemWatcher.Deleted += handler;
+            fileSystemWatcher.Changed += throttledHandler;
+            fileSystemWatcher.Created += throttledHandler;
+            fileSystemWatcher.Deleted += throttledHandler;
             fileSystemWatcher.Renamed += renamedHandler;
 
             // Begin watching.
             fileSystemWatcher.EnableRaisingEvents = true;
 
             return fileSystemWatcher;
+        }
+
+        private static FileSystemEventHandler CreateThrottledEventHandler(FileSystemEventHandler handler,   TimeSpan throttle)
+        {
+            var throttling = false;
+            return (s, e) =>
+            {
+                if (throttling)
+                    return;
+                handler(s, e);
+                throttling = true;
+                Task.Delay(throttle).ContinueWith(x => throttling = false);
+            };
         }
 
     }
