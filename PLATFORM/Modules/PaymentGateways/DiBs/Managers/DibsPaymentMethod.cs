@@ -114,7 +114,7 @@ namespace DiBs.Managers
             retVal.OuterId = context.Payment.OuterId = transactionId;
             context.Payment.AuthorizedDate = DateTime.UtcNow;
             retVal.IsSuccess = true;
-            
+            retVal.OrderId = context.Order.Number;
             return retVal;
         }
 
