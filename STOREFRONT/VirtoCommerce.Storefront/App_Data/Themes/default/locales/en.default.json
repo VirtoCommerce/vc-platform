@@ -150,6 +150,8 @@
             "note": "Special instructions for seller",
             "subtotal": "Subtotal",
             "update": "Update cart",
+            "updating_cart_message": "Updating cart...",
+            "updating_cart_error_message": "An error occured while updating cart",
             "checkout": "Checkout",
             "empty": "Your cart is currently empty.",
             "continue_browsing_html": "Continue browsing <a href=\"collections/all\">here</a>.",
@@ -377,6 +379,7 @@
         "customer": {
             "view_account": "View Account",
             "logged_in_as_html": "Logged in as {{ first_name }}",
+            "logged_in_as_label": "Logged in as",
             "log_out": "Log out",
             "sign_in": "Sign in",
             "create_account": "Create an Account",

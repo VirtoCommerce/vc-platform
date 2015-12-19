@@ -1,4 +1,9 @@
-﻿<form action="" method="post" ng-if="cart.Items.length">
+﻿<div class="ajax-informer" ng-class="{ 'error': errorOccured, 'fade': isUpdating || errorOccured }">
+    <div class="loader" ng-if="!errorOccured"></div>
+    <span ng-if="!errorOccured">{{ 'cart.general.updating_cart_message' | t }}</span>
+    <span ng-if="errorOccured">{{ 'cart.general.updating_cart_error_message' | t }}</span>
+</div>
+<form action="" method="post" ng-if="cart.Items.length">
     <h1 class="h2">{{ 'cart.general.title' | t }}</h1>
     <div class="cart-row" ng-repeat="lineItem in cart.Items">
         <div class="grid">
@@ -73,7 +78,7 @@
                         <small ng-bind="cart.SubTotal.FormatedAmount"></small>
                     </span>
                 </div>
-                <button class="btn" type="button" ng-click="outerRedirect('{{ '/cart/checkout/#/customer-information' | absolute_url }}')">
+                <button type="button" ng-class="{ 'btn': !isUpdating, 'btn-secondary': isUpdating }" ng-disabled="isUpdating" ng-click="outerRedirect('{{ '/cart/checkout/#/customer-information' | absolute_url }}')">
                     <span class="icon icon-cart"></span>
                     {{ 'cart.general.checkout' | t }}
                 </button>

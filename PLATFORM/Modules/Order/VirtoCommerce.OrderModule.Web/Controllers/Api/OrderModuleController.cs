@@ -159,7 +159,13 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         [Route("{orderId}/processPayment/{paymentId}")]
         public IHttpActionResult ProcessOrderPayments([FromBody]BankCardInfo bankCardInfo, string orderId, string paymentId)
         {
-            var order = _customerOrderService.GetById(orderId, coreModel.CustomerOrderResponseGroup.Full);
+            //search first by order number
+            var order = _customerOrderService.GetByOrderNumber(orderId, coreModel.CustomerOrderResponseGroup.Full);
+
+            //if not found by order number search by order id
+            if (order == null)
+                order = _customerOrderService.GetById(orderId, coreModel.CustomerOrderResponseGroup.Full);
+            
             if (order == null)
             {
                 throw new NullReferenceException("order");

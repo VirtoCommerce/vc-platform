@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
+using VirtoCommerce.Storefront.Model.Cart;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Marketing;
@@ -39,16 +39,22 @@ namespace VirtoCommerce.Storefront.Controllers
 
         // POST: /marketing/actualprices
         [HttpPost]
-        public async Task<ActionResult> GetActualProductPricesJson(string categoryId, ICollection<string> productIds)
+        public async Task<ActionResult> GetActualProductPricesJson(Product[] products)
         {
             var prices = new List<ProductPrice>();
 
-            var pricesResponse = (await _pricingApi.PricingModuleEvaluatePricesAsync(
-                evalContextProductIds: productIds.ToList(),
+            if (products == null)
+            {
+                return Json(prices, JsonRequestBehavior.AllowGet);
+            }
+
+            var pricesResponse = await _pricingApi.PricingModuleEvaluatePricesAsync(
+                evalContextProductIds: products.Select(p => p.Id).ToList(),
+                evalContextCatalogId: WorkContext.CurrentStore.Catalog,
                 evalContextCurrency: WorkContext.CurrentCurrency.Code,
                 evalContextCustomerId: WorkContext.CurrentCustomer.Id,
                 evalContextLanguage: WorkContext.CurrentLanguage.CultureName,
-                evalContextStoreId: WorkContext.CurrentStore.Id));
+                evalContextStoreId: WorkContext.CurrentStore.Id);
 
             if (pricesResponse == null)
             {
@@ -58,11 +64,12 @@ namespace VirtoCommerce.Storefront.Controllers
             prices = pricesResponse.Select(p => p.ToWebModel()).ToList();
             var promotionContext = new PromotionEvaluationContext
             {
+                CartPromoEntries = GetCartPromoEntries(WorkContext.CurrentCart),
                 Currency = WorkContext.CurrentCurrency,
                 CustomerId = WorkContext.CurrentCustomer.Id,
                 IsRegisteredUser = WorkContext.CurrentCustomer.HasAccount,
                 Language = WorkContext.CurrentLanguage,
-                PromoEntries = GetPromoEntries(WorkContext.CurrentStore.Catalog, categoryId, productIds, prices),
+                PromoEntries = GetPromoEntries(products, prices),
                 StoreId = WorkContext.CurrentStore.Id
             };
 
@@ -80,19 +87,38 @@ namespace VirtoCommerce.Storefront.Controllers
             return Json(prices, JsonRequestBehavior.AllowGet);
         }
 
-        private ICollection<PromotionProductEntry> GetPromoEntries(string catalogId, string categoryId, ICollection<string> productIds, IEnumerable<ProductPrice> prices)
+        private ICollection<PromotionProductEntry> GetCartPromoEntries(ShoppingCart cart)
+        {
+            var cartPromoEntries = new List<PromotionProductEntry>();
+
+            foreach (var lineItem in cart.Items)
+            {
+                cartPromoEntries.Add(new PromotionProductEntry
+                {
+                    CatalogId = lineItem.CatalogId,
+                    CategoryId = lineItem.CategoryId,
+                    Price = lineItem.SalePrice,
+                    ProductId = lineItem.ProductId,
+                    Quantity = lineItem.Quantity
+                });
+            }
+
+            return cartPromoEntries;
+        }
+
+        private ICollection<PromotionProductEntry> GetPromoEntries(IEnumerable<Product> products, IEnumerable<ProductPrice> prices)
         {
             var promoEntries = new List<PromotionProductEntry>();
 
-            foreach (var productId in productIds)
+            foreach (var product in products)
             {
-                var price = prices.FirstOrDefault(p => p.ProductId == productId);
+                var price = prices.FirstOrDefault(p => p.ProductId == product.Id);
                 promoEntries.Add(new PromotionProductEntry
                 {
-                    CatalogId = catalogId,
-                    CategoryId = categoryId,
+                    CatalogId = product.CatalogId,
+                    CategoryId = product.CategoryId,
                     Price = price != null ? price.SalePrice : null,
-                    ProductId = productId,
+                    ProductId = product.Id,
                     Quantity = 1
                 });
             }

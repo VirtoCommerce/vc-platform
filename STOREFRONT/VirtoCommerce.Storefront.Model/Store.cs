@@ -87,5 +87,24 @@ namespace VirtoCommerce.Storefront.Model
         public ICollection<DynamicProperty> DynamicProperties { get; set; }
 
         public ICollection<SeoInfo> SeoInfos { get; set; }
+
+        /// <summary>
+        /// Check that specified request uri matched to this store
+        /// </summary>
+        /// <param name="requestUri"></param>
+        /// <returns></returns>
+        public bool IsStoreUri(Uri requestUri)
+        {
+            var retVal = false;
+            if (requestUri.Scheme == Uri.UriSchemeHttps)
+            {
+                retVal = !String.IsNullOrEmpty(SecureUrl) && requestUri.ToString().StartsWith(SecureUrl);
+            }
+            else
+            {
+                retVal = !String.IsNullOrEmpty(Url) && requestUri.ToString().StartsWith(Url);
+            }
+            return retVal;
+        }
     }
 }

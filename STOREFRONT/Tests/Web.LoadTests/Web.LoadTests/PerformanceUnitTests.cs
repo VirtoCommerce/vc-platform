@@ -4,8 +4,6 @@ using System.IO;
 using System.Net;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using VirtoCommerce.ApiClient;
-using VirtoCommerce.ApiClient.Extensions;
 
 namespace Web.LoadTests
 {
@@ -15,12 +13,11 @@ namespace Web.LoadTests
         [TestMethod]
         public void LoadAllStores()
         {
-            for (int index = 0; index < 500; index++)
-            {
-                var client = ClientContext.Clients.CreateStoreClient();
-                var stores = client.GetStoresAsync().Result;
-            }
-            //var stores2 = client.GetStoresAsync().Result;
+            //for (int index = 0; index < 500; index++)
+            //{
+            //    var client = ClientContext.Clients.CreateStoreClient();
+            //    var stores = client.GetStoresAsync().Result;
+            //}
         }
 
         [TestMethod]

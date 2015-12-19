@@ -1,6 +1,11 @@
 <div class="ajaxify-modal" id="ajaxifyModal" style="margin-left: -380px; opacity: 1;" ng-class="{ 'is-visible': isCartModalVisible }">
     <button class="ajaxifyCart--close" title="Close Cart" ng-click="hideCartModal()">{{ 'cart.general.close_cart' | t }}</button>
     <div class="ajaxifyCart--content" id="ajaxifyCart">
+        <div class="ajax-informer" ng-class="{ 'error': errorOccured, 'fade': isUpdating || errorOccured }">
+            <div class="loader" ng-if="!errorOccured"></div>
+            <span ng-if="!errorOccured">{{ 'cart.general.updating_cart_message' | t }}</span>
+            <span ng-if="errorOccured">{{ 'cart.general.updating_cart_error_message' | t }}</span>
+        </div>
         <span ng-if="!cart.Items.length">
             <h2>{{ 'cart.general.empty' | t }}</h2>
             <span>{{ 'cart.general.continue_browsing_html' | t }}</span>
@@ -25,7 +30,7 @@
                         <div class="grid">
                             <div class="grid-item one-half medium-down--one-third text-right">
                                 <div class="ajaxifyCart--qty">
-                                    <input class="ajaxifyCart--num" disabled="disabled" type="text" ng-model="lineItem.Quantity" ng-change="manualChangeLineItem(lineItem.Id)" />
+                                    <input class="ajaxifyCart--num" disabled="disabled" type="text" ng-model="lineItem.Quantity" />
                                     <span class="ajaxifyCart--qty-adjuster ajaxifyCart--add" ng-click="changeLineItem(lineItem.Id, lineItem.Quantity + 1)">+</span>
                                     <span class="ajaxifyCart--qty-adjuster ajaxifyCart--minus" ng-click="changeLineItem(lineItem.Id, lineItem.Quantity - 1)">-</span>
                                 </div>
@@ -48,7 +53,7 @@
                                 </span>
                             </div>
                             <div class="grid-item one-sixth medium-down--one-third text-right">
-                                <a class="icon-fallback-text btn-secondary remove ajaxifyCart--remove" href="" ng-click="removeLineItem(lineItem.Id)">
+                                <a class="icon-fallback-text btn-secondary remove ajaxifyCart--remove" href="" ng-mouseup="removeLineItem(lineItem.Id)">
                                     <span class="icon icon-x" aria-hidden="true"></span>
                                     <span class="fallback-text">{{ 'cart.general.remove' | t }}</span>
                                 </a>
@@ -67,7 +72,7 @@
                             </span>
                         </div>
                         <input class="btn-secondary update-cart" type="button" value="Update cart" />
-                        <button name="checkout" class="btn" type="button" ng-click="outerRedirect('{{ '/cart/checkout/#/customer-information' | absolute_url }}')">
+                        <button name="checkout" type="button" ng-class="{ 'btn': !isUpdating, 'btn-secondary': isUpdating }" ng-disabled="isUpdating" ng-click="outerRedirect('{{ '/cart/checkout/#/customer-information' | absolute_url }}')">
                             <span class="icon icon-cart"></span>
                             {{ 'cart.general.checkout' | t }}
                         </button>

@@ -26,6 +26,8 @@ namespace VirtoCommerce.Storefront.Builders
         private Currency _currency;
         private Language _language;
         private ShoppingCart _cart;
+        private string _cartCacheKey;
+        private const string _cartCacheRegion = "CartRegion";
 
         public CartBuilder(IShoppingCartModuleApi cartApi, IMarketingService marketingService, ICacheManager<object> cacheManager)
         {
@@ -40,8 +42,9 @@ namespace VirtoCommerce.Storefront.Builders
             _customer = customer;
             _currency = currency;
             _language = language;
+            _cartCacheKey = GetCartCacheKey(store.Id, customer.Id);
 
-            _cart = await _cacheManager.GetAsync(GetCartCacheKey(store.Id, customer.Id), "CartRegion", async () =>
+            _cart = await _cacheManager.GetAsync(_cartCacheKey, _cartCacheRegion, async () =>
             {
                 ShoppingCart retVal = null;
                 var cartSearchResult = await _cartApi.CartModuleGetCurrentCartAsync(_store.Id, _customer.Id);
@@ -178,6 +181,15 @@ namespace VirtoCommerce.Storefront.Builders
             await EvaluatePromotionsAsync();
 
             await _cartApi.CartModuleDeleteCartsAsync(new List<string> { cart.Id });
+            _cacheManager.Remove(_cartCacheKey, _cartCacheRegion);
+
+            return this;
+        }
+
+        public async Task<CartBuilder> RemoveCartAsync()
+        {
+            await _cartApi.CartModuleDeleteCartsAsync(new List<string> { _cart.Id });
+            _cacheManager.Remove(_cartCacheKey, _cartCacheRegion);
 
             return this;
         }
@@ -187,7 +199,7 @@ namespace VirtoCommerce.Storefront.Builders
             var cart = _cart.ToServiceModel();
 
             //Invalidate cart in cache
-            _cacheManager.Remove(GetCartCacheKey(cart.StoreId, cart.CustomerId), "CartRegion");
+            _cacheManager.Remove(_cartCacheKey, _cartCacheRegion);
 
             if (_cart.IsTransient())
             {
@@ -230,13 +242,13 @@ namespace VirtoCommerce.Storefront.Builders
             cart.Name = "Default";
             cart.StoreId = _store.Id;
 
-            if (_customer.UserName.Equals("Anonymous", StringComparison.OrdinalIgnoreCase))
+            if (_customer.UserName.Equals(StorefrontConstants.AnonymousUsername, StringComparison.OrdinalIgnoreCase))
             {
-                cart.CustomerName = "Anonymous";
+                cart.CustomerName = StorefrontConstants.AnonymousUsername;
             }
             else
             {
-                cart.CustomerName = string.Format("{0} {1}", _customer.FirstName, _customer.LastName);
+                cart.CustomerName = $"{_customer.FirstName} {_customer.LastName}";
             }
 
             return cart;
@@ -244,7 +256,7 @@ namespace VirtoCommerce.Storefront.Builders
 
         private string GetCartCacheKey(string storeId, string customerId)
         {
-            return String.Format("Cart-{0}-{1}", storeId, customerId);
+            return $"Cart-{storeId}-{customerId}";
         }
 
         private async Task EvaluatePromotionsAsync()

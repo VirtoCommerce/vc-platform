@@ -36,7 +36,7 @@
 			<setting>
 				<name>VirtoCommerce.Content.StoragePath</name>
 				<valueType>string</valueType>
-				<defaultValue>~/App_Data"</defaultValue>
+				<defaultValue>..\..\STOREFRONT\VirtoCommerce.Storefront\App_Data\</defaultValue>
 				<title>CMS folder relative, app relative or absolute  path in file system</title>
 			</setting>
 			<setting>

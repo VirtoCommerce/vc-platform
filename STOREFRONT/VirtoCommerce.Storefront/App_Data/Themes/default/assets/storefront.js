@@ -13,8 +13,8 @@ app.service('marketingService', ['$http', function ($http) {
         getDynamicContent: function (placeName) {
             return $http.get('marketing/dynamiccontent/' + placeName + '/json?t=' + new Date().getTime());
         },
-        getActualProductPrices: function (categoryId, productIds) {
-            return $http.post('marketing/actualprices', { categoryId: categoryId, productIds: productIds });
+        getActualProductPrices: function (products) {
+            return $http.post('marketing/actualprices', { products: products });
         }
     }
 }]);
@@ -86,7 +86,9 @@ app.directive('vcContentPlace', ['marketingService', function (marketingService)
     }
 }]);
 
-app.controller('mainController', ['$scope', '$location', '$window', function ($scope, $location, $window) {
+app.controller('mainController', ['$scope', '$location', '$window', 'customerService', function ($scope, $location, $window, customerService) {
+    getCustomer();
+
     //Base store url populated in layout and can be used for construction url inside controller
     $scope.baseUrl = {};
 
@@ -94,7 +96,7 @@ app.controller('mainController', ['$scope', '$location', '$window', function ($s
 
     //For outside app redirect (To reload the page after changing the URL, use the lower-level API)
     $scope.outerRedirect = function (absUrl) {
-        window.location.href = absUrl;
+        $window.location.href = absUrl;
     };
 
     //change in the current URL or change the current URL in the browser (for app route)
@@ -102,9 +104,16 @@ app.controller('mainController', ['$scope', '$location', '$window', function ($s
         $location.path(path);
         $scope.currentPath = $location.$$path.replace('/', '');
     };
+
+    function getCustomer() {
+        customerService.getCurrentCustomer().then(function (response) {
+            $scope.customer = response.data;
+        });
+    }
 }]);
 
-app.controller('cartController', ['$scope', 'cartService', function ($scope, cartService) {
+app.controller('cartController', ['$scope', '$timeout', 'cartService', function ($scope, $timeout, cartService) {
+    var timer;
     $scope.cart = {};
 
     initialize();
@@ -125,28 +134,71 @@ app.controller('cartController', ['$scope', 'cartService', function ($scope, car
     }
 
     $scope.changeLineItem = function (lineItemId, quantity) {
-        if (quantity >= 1) {
-            cartService.changeLineItem(lineItemId, quantity).then(function (response) {
-                refreshCart();
-            });
+        if (quantity < 1) {
+            return;
         }
+        var lineItem = _.find($scope.cart.Items, function (i) { return i.Id == lineItemId });
+        if (!lineItem) {
+            return;
+        }
+        var initialQuantity = angular.copy(lineItem.Quantity);
+        lineItem.Quantity = quantity;
+        $timeout.cancel(timer);
+        timer = $timeout(function () {
+            $scope.isUpdating = true;
+            cartService.changeLineItem(lineItemId, quantity).then(
+                function (response) {
+                    refreshCart();
+                },
+                function (response) {
+                    lineItem.Quantity = initialQuantity;
+                    showErrorMessage(2000);
+                });
+        }, 200);
     }
 
     $scope.removeLineItem = function (lineItemId) {
-        cartService.removeLineItem(lineItemId).then(function (response) {
-            refreshCart();
-        });
+        var lineItem = _.find($scope.cart.Items, function (i) { return i.Id == lineItemId });
+        if (!lineItem) {
+            return;
+        }
+        var initialItems = angular.copy($scope.cart.Items);
+        $scope.cart.Items = _.without($scope.cart.Items, lineItem);
+        $timeout.cancel(timer);
+        timer = $timeout(function () {
+            $scope.isUpdating = true;
+            cartService.removeLineItem(lineItemId).then(
+                function (response) {
+                    refreshCart();
+                },
+                function (response) {
+                    $scope.cart.Items = initialItems;
+                    showErrorMessage(2000);
+                });
+        }, 200);
     }
 
     function initialize() {
         $scope.isCartModalVisible = false;
+        $scope.isUpdating = false;
+        $scope.errorOccured = false;
         refreshCart();
     }
 
     function refreshCart() {
         cartService.getCart().then(function (response) {
             $scope.cart = response.data;
+            $scope.isUpdating = false;
+            $scope.errorOccured = false;
         });
+    }
+
+    function showErrorMessage(timeout) {
+        $scope.errorOccured = true;
+        $scope.isUpdating = false;
+        $timeout(function () {
+            $scope.errorOccured = false;
+        }, timeout);
     }
 }]);
 
@@ -154,16 +206,19 @@ app.controller('categoryController', ['$scope', '$window', 'marketingService', f
     $scope.productPricesLoaded = false;
     $scope.productPrices = [];
 
-    marketingService.getActualProductPrices($window.categoryId, $window.productIds).then(function (response) {
+    marketingService.getActualProductPrices($window.products).then(function (response) {
         var prices = response.data;
-        for (var i = 0; i < prices.length; i++) {
-            $scope.productPrices[prices[i].ProductId] = prices[i];
+        if (prices.length) {
+            for (var i = 0; i < prices.length; i++) {
+                $scope.productPrices[prices[i].ProductId] = prices[i];
+            }
         }
-        $scope.productPricesLoaded = true;
+        var productPricesSize = getObjectSize($scope.productPrices);
+        $scope.productPricesLoaded = productPricesSize > 0;
     });
 }]);
 
-app.controller('checkoutController', ['$scope', '$location', '$sce', '$window', 'customerService', 'cartService', function ($scope, $location, $sce, $window, customerService, cartService) {
+app.controller('checkoutController', ['$scope', '$location', '$window', 'customerService', 'cartService', function ($scope, $location, $window, customerService, cartService) {
     $scope.checkout = {};
 
     initialize();
@@ -250,7 +305,7 @@ app.controller('checkoutController', ['$scope', '$location', '$sce', '$window', 
         cartService.setPaymentMethod($scope.checkout.selectedPaymentMethod.GatewayCode).then(function (response) {
             cartService.addAddress($scope.checkout.billingAddress).then(function (response) {
                 cartService.createOrder($scope.checkout.bankCardInfo).then(function (response) {
-                    handlePaymentProcessingResult(response.data.orderProcessingResult, response.data.order.id);
+                    handlePaymentProcessingResult(response.data.orderProcessingResult, response.data.order.number);
                     $scope.checkout.orderProcessing = false;
                 });
             });
@@ -538,18 +593,18 @@ app.controller('checkoutController', ['$scope', '$location', '$sce', '$window', 
     //    }
     //}
 
-    function handlePaymentProcessingResult(paymentProcessingResult, orderId) {
+    function handlePaymentProcessingResult(paymentProcessingResult, orderNumber) {
         if (!paymentProcessingResult.isSuccess) {
             return;
         }
         if (paymentProcessingResult.paymentMethodType == 'PreparedForm' && paymentProcessingResult.htmlForm) {
-            $scope.outerRedirect($scope.baseUrl + 'cart/checkout/paymentform?orderId=' + orderId);
+            $scope.outerRedirect($scope.baseUrl + 'cart/checkout/paymentform?orderNumber=' + orderNumber);
         }
         if (paymentProcessingResult.paymentMethodType == 'Standard' || paymentProcessingResult.paymentMethodType == 'Unknown') {
             if ($scope.customer.UserName == 'Anonymous') {
-                $scope.outerRedirect($scope.baseUrl + 'cart/thanks/' + orderId);
+                $scope.outerRedirect($scope.baseUrl + 'cart/thanks/' + orderNumber);
             } else {
-                $scope.outerRedirect($scope.baseUrl + 'account/order/' + orderId);
+                $scope.outerRedirect($scope.baseUrl + 'account/order/' + orderNumber);
             }
         }
         if (paymentProcessingResult.paymentMethodType == 'Redirection' && paymentProcessingResult.redirectUrl) {
@@ -566,10 +621,12 @@ app.controller('productController', ['$scope', '$window', 'catalogService', 'mar
 	var allVarations = [];
 	$scope.selectedVariation = {};
 	$scope.allVariationPropsMap = {};
+	$scope.productPrice = null;
 	$scope.productPriceLoaded = false;
 
 	function Initialize() {
-	    catalogService.getProduct($window.productId).then(function (response) {
+	    var productId = $window.products[0].id;
+	    catalogService.getProduct(productId).then(function (response) {
 			var product = response.data;
 			//Current product its also variation (titular)
 			allVarations = [ product ].concat(product.Variations);
@@ -581,7 +638,7 @@ app.controller('productController', ['$scope', '$window', 'catalogService', 'mar
 				$scope.checkProperty(propertyMap[x][0])
 			});
 			$scope.selectedVariation = product;
-			getActualProductPrice($window.categoryId, $scope.selectedVariation.Id);
+			getActualProductPrice($window.products[0]);
 		});
 	};
 
@@ -633,10 +690,14 @@ app.controller('productController', ['$scope', '$window', 'catalogService', 'mar
 		return retVal;
 	};
 
-	function getActualProductPrice(categoryId, productId) {
-	    marketingService.getActualProductPrices(categoryId, [productId]).then(function (response) {
-	        $scope.productPrice = response.data ? response.data[0] : null;
-	        $scope.productPriceLoaded = $scope.productPrice != null;
+	function getActualProductPrice(product) {
+	    marketingService.getActualProductPrices([product]).then(function (response) {
+	        var price = response.data ? response.data[0] : null;
+	        if (!price) {
+	            return;
+	        }
+	        $scope.productPrice = price;
+	        $scope.productPriceLoaded = true;
 	    });
 	}
 
@@ -669,3 +730,13 @@ app.config(['$interpolateProvider', '$routeProvider', function ($interpolateProv
 
     return $interpolateProvider.startSymbol('{(').endSymbol(')}');
 }]);
+
+function getObjectSize(obj) {
+    var size = 0, key;
+    for (key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            size++;
+        }
+    }
+    return size;
+}

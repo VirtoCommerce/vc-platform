@@ -13,6 +13,11 @@ namespace VirtoCommerce.Storefront.Model
     /// </summary>
     public class WorkContext : IDisposable
     {
+        public WorkContext()
+        {
+            CurrentPriceListIds = new List<string>();
+            CurrentLinkLists = new List<MenuLinkList>();
+        }
         /// <summary>
         /// Current request url example: http:/host/app/store/en-us/search?page=2
         /// </summary>
@@ -77,7 +82,10 @@ namespace VirtoCommerce.Storefront.Model
         /// </summary>
         public Store[] AllStores { get; set; }
         public string ErrorMessage { get; set; }
-
+        /// <summary>
+        /// List of active pricelists
+        /// </summary>
+        public ICollection<string> CurrentPriceListIds { get; set; }
         #region Catalog Properties
         /// <summary>
         /// Represent current product

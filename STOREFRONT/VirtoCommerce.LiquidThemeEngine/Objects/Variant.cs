@@ -17,6 +17,18 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         }
 
         /// <summary>
+        /// Returns the value of variant category ID
+        /// </summary>
+        [DataMember]
+        public string CategoryId { get; set; }
+
+        /// <summary>
+        /// Returns the calue of variant catalog ID
+        /// </summary>
+        [DataMember]
+        public string CatalogId { get; set; }
+
+        /// <summary>
         /// Returns true if the variant is available to be purchased, or false if it not. 
         /// In order for a variant to be available, its variant.inventory_quantity must be
         /// greater than zero or variant.inventory_policy must be set to continue. 

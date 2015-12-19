@@ -202,7 +202,8 @@ namespace VirtoCommerce.Storefront.Controllers
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
 
             var order = await _orderApi.OrderModuleCreateOrderFromCartAsync(_cartBuilder.Cart.Id);
-            await _cartApi.CartModuleDeleteCartsAsync(new List<string> { _cartBuilder.Cart.Id });
+
+            await _cartBuilder.RemoveCartAsync();
 
             if (HttpContext.User.Identity.IsAuthenticated)
             {
@@ -221,11 +222,11 @@ namespace VirtoCommerce.Storefront.Controllers
             return Json(new { order = order, orderProcessingResult = processingResult }, JsonRequestBehavior.AllowGet);
         }
 
-        // GET: /cart/checkout/paymentform?orderId=...
+        // GET: /cart/checkout/paymentform?orderNumber=...
         [HttpGet]
-        public async Task<ActionResult> PaymentForm(string orderId)
+        public async Task<ActionResult> PaymentForm(string orderNumber)
         {
-            var order = await _orderApi.OrderModuleGetByIdAsync(orderId);
+            var order = await _orderApi.OrderModuleGetByNumberAsync(orderNumber);
 
             var processingResult = await GetOrderProcessingResultAsync(order, null);
 
@@ -234,7 +235,7 @@ namespace VirtoCommerce.Storefront.Controllers
             return View("payment-form", WorkContext);
         }
 
-        // GET: /cart/checkout/externalpaymentcallback
+        // GET: /cart/externalpaymentcallback
         [HttpGet]
         public async Task<ActionResult> ExternalPaymentCallback()
         {
@@ -264,7 +265,7 @@ namespace VirtoCommerce.Storefront.Controllers
             var postProcessingResult = await _commerceApi.CommercePostProcessPaymentAsync(callback);
             if (postProcessingResult.IsSuccess.HasValue && postProcessingResult.IsSuccess.Value)
             {
-                return StoreFrontRedirect("~/cart/checkout/thanks/" + postProcessingResult.OrderId);
+                return StoreFrontRedirect("~/cart/thanks/" + postProcessingResult.OrderId);
             }
             else
             {
@@ -272,13 +273,13 @@ namespace VirtoCommerce.Storefront.Controllers
             }
         }
 
-        // GET: /cart/checkout/thanks/{orderId}
+        // GET: /cart/thanks/{orderNumber}
         [HttpGet]
-        public async Task<ActionResult> Thanks(string orderId)
+        public async Task<ActionResult> Thanks(string orderNumber)
         {
-            var order = await _orderApi.OrderModuleGetByIdAsync(orderId);
+            var order = await _orderApi.OrderModuleGetByNumberAsync(orderNumber);
 
-            if (order == null)
+            if (order == null || order != null && order.CustomerId != WorkContext.CurrentCustomer.Id)
             {
                 return HttpNotFound();
             }

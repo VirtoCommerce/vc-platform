@@ -13,16 +13,45 @@ namespace VirtoCommerce.Storefront.Model
     /// </summary>
     public class Language : ValueObject<Language>
     {
+        private Language()
+            :this(CultureInfo.InvariantCulture.Name)
+        {
+        }
+
         public Language(string cultureName)
         {
-            var culture = CultureInfo.GetCultureInfo(cultureName);
-            var regionInfo = new RegionInfo(culture.LCID);
+            CultureInfo culture = CultureInfo.InvariantCulture;
+            if (!string.IsNullOrEmpty(cultureName))
+            {
+                culture = CultureInfo.GetCultureInfo(cultureName);
+            }
+          
             CultureName = culture.Name;
             ThreeLeterLanguageName = culture.ThreeLetterISOLanguageName;
             TwoLetterLanguageName = culture.TwoLetterISOLanguageName;
             NativeName = culture.NativeName;
-            TwoLetterRegionName = regionInfo.TwoLetterISORegionName;
-            ThreeLetterRegionName = regionInfo.ThreeLetterISORegionName;
+            if (culture != CultureInfo.InvariantCulture)
+            {
+                var regionInfo = new RegionInfo(culture.LCID);
+                TwoLetterRegionName = regionInfo.TwoLetterISORegionName;
+                ThreeLetterRegionName = regionInfo.ThreeLetterISORegionName;
+            }
+        }
+
+        public static Language InvariantLanguage
+        {
+            get
+            {
+                return new Language();
+            }
+        }
+
+        public bool IsInvariant
+        {
+            get
+            {
+                return CultureName == CultureInfo.InvariantCulture.Name;
+            }
         }
         /// <summary>
         /// culture name format (e.g. en-US)

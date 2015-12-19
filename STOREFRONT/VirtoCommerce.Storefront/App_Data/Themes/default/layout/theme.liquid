@@ -79,6 +79,7 @@
                                 {% if settings.header_message != blank %}
                                     {{ settings.header_message }}
                                 {% endif %}
+                                {% comment %}
                                 {% if shop.customer_accounts_enabled %}
                                     <span class="site-header--meta-links medium-down--hide">
                                         {% if customer %}
@@ -95,6 +96,19 @@
                                         {% endif %}
                                     </span>
                                 {% endif %}
+                                {% endcomment %}
+
+                                <span class="site-header--meta-links medium-down--hide">
+                                    <span ng-if="customer && customer.UserName != 'Anonymous'">
+                                        {{ 'layout.customer.logged_in_as_label' | t }} <a href="{{ 'account' | absolute_url }}" ng-bind="customer.FirstName"></a> &middot; {{ 'layout.customer.log_out' | t | customer_logout_link }}
+                                    </span>
+                                    <span ng-if="customer && customer.UserName == 'Anonymous'">
+                                        {{ 'layout.customer.sign_in' | t | customer_login_link }}
+                                        <span class="site-header--spacer">{{ 'layout.customer.or' | t }}</span>
+                                        {{ 'layout.customer.create_account' | t | customer_register_link }}
+                                    </span>
+                                </span>
+
                             </div>
                             <br class="medium-down--hide" />
                         {% endif %}

@@ -21,7 +21,10 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             }
 
             result.Available = true;// product.IsActive && product.IsBuyable;
-         
+
+            result.CatalogId = product.CatalogId;
+            result.CategoryId = product.CategoryId;
+
             result.CompareAtPriceMax = result.Variants.Select(x=>x.CompareAtPrice).Max();
             result.CompareAtPriceMin = result.Variants.Select(x => x.CompareAtPrice).Min();
             result.CompareAtPriceVaries = result.CompareAtPriceMax != result.CompareAtPriceMin;
@@ -77,7 +80,10 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             var result = new Variant();
             result.Available = true; //product.IsActive && product.IsBuyable;
             result.Barcode = product.Gtin;
-      
+
+            result.CatalogId = product.CatalogId;
+            result.CategoryId = product.CategoryId;
+
             result.FeaturedImage = product.PrimaryImage != null ? product.PrimaryImage.ToShopifyModel() : null;
             if (result.FeaturedImage != null)
             {

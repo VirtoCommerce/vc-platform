@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Web;
 
-namespace VirtoCommerce.Storefront.Exceptions
+namespace DotLiquid.ViewEngine.Exceptions
 {
 
     public class SaasCompileException : Exception

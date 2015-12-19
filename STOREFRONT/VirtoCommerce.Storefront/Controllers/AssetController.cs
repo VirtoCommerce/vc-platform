@@ -10,14 +10,12 @@ using DotLiquid;
 using LibSassNetProxy;
 using VirtoCommerce.LiquidThemeEngine;
 using VirtoCommerce.Storefront.Common;
-using VirtoCommerce.Storefront.Exceptions;
 
 namespace VirtoCommerce.Storefront.Controllers
 {
     [OutputCache(CacheProfile = "AssetsCachingProfile")]
     public class AssetController : Controller
     {
-        private readonly SassCompilerProxy _compiler = new SassCompilerProxy();
         private readonly ShopifyLiquidThemeEngine _themeAdaptor;
         public AssetController(ShopifyLiquidThemeEngine themeAdaptor)
         {
@@ -25,8 +23,9 @@ namespace VirtoCommerce.Storefront.Controllers
         }
 
         #region Public Methods and Operators
-   
+
         /// <summary>
+        /// GET: /themes/assets/{asset}
         /// Need handle all assets requests because it may be liquid and scss files which should be preprocessed
         /// </summary>
         /// <param name="theme"></param>
@@ -35,52 +34,15 @@ namespace VirtoCommerce.Storefront.Controllers
         [HttpGet]
         public ActionResult GetAssets(string asset)
         {
-            var virtualPath = String.Format("~/App_Data/Themes/{0}/assets/{1}", _themeAdaptor.CurrentThemeName, asset);
-            return AssetResult(virtualPath, asset);
+            var stream = _themeAdaptor.GetAssetStream(asset);
+            if(stream != null)
+            {
+                return base.File(stream, MimeMapping.GetMimeMapping(asset));
+            }
+            return HttpNotFound(asset);
         }
 
         #endregion
 
-        #region Methods
-
-        private ActionResult AssetResult(string virtualPath, string assetId)
-        {
-            if (HostingEnvironment.VirtualPathProvider.FileExists(virtualPath))
-            {
-                return new DownloadResult(virtualPath);
-            }
-            else
-            {
-                var fileExtensions = System.IO.Path.GetExtension(assetId);
-                var contentType = "application/octet-stream";
-                if (!string.IsNullOrEmpty(fileExtensions) && FileExtensionMapper.Contains(fileExtensions))
-                {
-                    contentType = FileExtensionMapper.GetContentType(fileExtensions);
-                }
-
-                assetId = assetId.Replace(".scss.css", ".scss");
-                var settings = _themeAdaptor.GetSettings("''");
-                //Try to parse liquid asset resource
-                var content = _themeAdaptor.RenderTemplateByName(assetId, new Dictionary<string, object>() { { "settings", settings } });
-
-                if (assetId.EndsWith(".scss"))
-                {
-                    try
-                    {
-                        //handle scss resources
-                        content = _compiler.Compile(content);
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new SaasCompileException(assetId, content, ex);
-                    }
-                }
-
-                return Content(content, contentType);
-            }
-
-        }
-
-        #endregion
     }
 }
