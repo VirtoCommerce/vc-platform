@@ -188,12 +188,15 @@ namespace VirtoCommerce.LiquidThemeEngine
                     {
                         //handle scss resources
                         content = _compiler.Compile(content);
-                        retVal = new MemoryStream(Encoding.UTF8.GetBytes(content));
                     }
                     catch (Exception ex)
                     {
                         throw new SaasCompileException(fileName, content, ex);
                     }
+                }
+                if (content != null)
+                {
+                    retVal = new MemoryStream(Encoding.UTF8.GetBytes(content));
                 }
             }
 
