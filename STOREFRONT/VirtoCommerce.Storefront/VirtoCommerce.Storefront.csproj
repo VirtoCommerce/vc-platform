@@ -201,6 +201,7 @@
     <Content Include="App_Data\Themes\default\assets\amazon-payments.svg" />
     <Content Include="App_Data\Themes\default\assets\amazon.svg" />
     <Content Include="App_Data\Themes\default\assets\american-express.svg" />
+    <Content Include="App_Data\Themes\default\assets\api.jquery.js" />
     <Content Include="App_Data\Themes\default\assets\arrow-left.svg" />
     <Content Include="App_Data\Themes\default\assets\arrow-right.svg" />
     <Content Include="App_Data\Themes\default\assets\arrow.svg" />
