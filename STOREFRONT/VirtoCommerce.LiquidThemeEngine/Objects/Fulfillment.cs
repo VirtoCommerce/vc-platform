@@ -3,8 +3,11 @@
 namespace VirtoCommerce.LiquidThemeEngine.Objects
 {
     /// <summary>
-    /// https://docs.shopify.com/themes/liquid-documentation/objects/fulfillment
+    /// Represents fulfillment object
     /// </summary>
+    /// <remarks>
+    /// https://docs.shopify.com/themes/liquid-documentation/objects/fulfillment
+    /// </remarks>
     public class Fulfillment : Drop
     {
         /// <summary>

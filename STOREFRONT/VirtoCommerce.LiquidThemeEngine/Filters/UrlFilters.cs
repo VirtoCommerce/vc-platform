@@ -242,8 +242,15 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
             return retVal;
         }
 
-     
+        public static string ProductImgUrl(object input, string type)
+        {
+            return ImgUrl(input, type);
+        }
 
+        public static string Within(string input, object collection)
+        {
+            return BuildAbsoluteUrl(input);
+        }
 
         private static string BuildOnClickLink(string title, string onclickFormat, params object[] onclickArgs)
         {
