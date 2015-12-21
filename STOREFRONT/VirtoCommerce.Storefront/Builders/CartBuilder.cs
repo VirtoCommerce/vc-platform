@@ -298,9 +298,17 @@ namespace VirtoCommerce.Storefront.Builders
             var cartSubtotalRewards = rewards.Where(r => r.RewardType == PromotionRewardType.CartSubtotalReward);
             foreach (var cartSubtotalReward in cartSubtotalRewards)
             {
+                var discount = cartSubtotalReward.ToDiscountWebModel(_cart.SubTotal.Amount, 1, _cart.Currency);
                 if (cartSubtotalReward.IsValid)
                 {
-                    _cart.Discounts.Add(cartSubtotalReward.ToDiscountWebModel(_cart.SubTotal.Amount, 1, _cart.Currency));
+                    _cart.Discounts.Add(discount);
+                }
+                if (_cart.Coupon != null && !string.IsNullOrEmpty(_cart.Coupon.Code))
+                {
+                    _cart.Coupon.Amount = discount.Amount;
+                    _cart.Coupon.AppliedSuccessfully = cartSubtotalReward.IsValid;
+                    _cart.Coupon.Description = cartSubtotalReward.Promotion.Description;
+                    _cart.Coupon.ErrorCode = !cartSubtotalReward.IsValid ? "InvalidCouponCode" : null;
                 }
             }
 
