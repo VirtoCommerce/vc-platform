@@ -54,7 +54,7 @@ function ($scope, order_res_customerOrders, bladeNavigationService, dialogServic
         selectedNode = node;
         $scope.selectedNodeId = selectedNode.id;
         var newBlade = {
-            id: 'operationDetail',
+            id: 'orderDetail',
             title: 'orders.blades.customerOrder-detail.title',
             titleValues: { customer: selectedNode.customerName },
             subtitle: 'orders.blades.customerOrder-detail.subtitle',

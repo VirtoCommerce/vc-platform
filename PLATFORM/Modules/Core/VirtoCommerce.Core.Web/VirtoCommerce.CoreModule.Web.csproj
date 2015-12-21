@@ -161,7 +161,6 @@
     <Content Include="Scripts\virtoCommerce-core.js" />
     <Content Include="Scripts\common\resources\countries.js" />
     <Content Include="Scripts\Fulfillment\resources\fulfillments.js" />
-    <Content Include="Scripts\common\resources\paymentgateways.js" />
     <Content Include="Scripts\Fulfillment\blades\fulfillment-center-list.js" />
     <Content Include="Scripts\Fulfillment\blades\fulfillment-center-list.tpl.html" />
     <Content Include="Scripts\Fulfillment\blades\fulfillment-center-detail.js" />

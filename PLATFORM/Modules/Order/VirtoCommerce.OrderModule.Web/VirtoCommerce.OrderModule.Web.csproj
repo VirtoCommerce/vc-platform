@@ -195,7 +195,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\resources\customerOrders.js" />
-    <Content Include="Scripts\resources\paymentGateways.js" />
     <Content Include="Scripts\resources\stores.js" />
     <Content Include="Scripts\resources\fulfillmentCenters.js" />
     <Content Include="Scripts\services\calculateTotals.js" />

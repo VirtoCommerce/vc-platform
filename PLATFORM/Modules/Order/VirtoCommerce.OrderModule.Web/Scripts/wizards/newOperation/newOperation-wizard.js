@@ -54,6 +54,7 @@
 					subtitle: 'orders.blades.payment-detail.subtitle',
 					customerOrder: $scope.blade.customerOrder,
 					currentEntity: result,
+					stores: $scope.blade.stores,
 					isNew: true,
 					controller: 'virtoCommerce.orderModule.operationDetailController',
 					template: 'Modules/$(VirtoCommerce.Orders)/Scripts/blades/payment-detail.tpl.html'
