@@ -43,7 +43,13 @@
 	                    pages.get({ storeId: entity.store.id }, function (data) {
 	                        entity.pagesCount = _.reject(data, function (x) { return x.id.startsWith("blogs/"); }).length;
 	                        pages.getFolders({ storeId: entity.store.id }, function (data) {
-	                            entity.blogsCount = _.find(data.folders, function (x) { return x.folderName === "blogs" }).folders.length;
+	                            var blogs = _.find(data.folders, function (x) { return x.folderName === "blogs" });
+	                            if (blogs && blogs.folders) {
+	                                entity.blogsCount = blogs.folders.length;
+	                            }
+	                            else {
+	                                entity.blogsCount = 0;
+	                            }
 	                        });
 	                    });
 
@@ -200,6 +206,7 @@
 	        var newBlade = {
 	            id: "blogsListBlade",
 	            storeId: data.store.id,
+	            isBlogsBlade: true,
 	            title: 'content.blades.pages-list.title-blogs',
 	            titleValues: { name: data.store.name },
 	            subtitle: 'content.blades.pages-list.subtitle-blogs',
