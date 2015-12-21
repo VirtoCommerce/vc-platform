@@ -140,7 +140,7 @@ namespace VirtoCommerce.StoreModule.Web.Controllers.Api
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPost]
-        [Route("/send/dynamicnotification")]
+        [Route("send/dynamicnotification")]
         [ResponseType(typeof(void))]
         public IHttpActionResult SendDynamicNotificationAnStoreEmail(webModel.SendDynamicNotificationRequest request)
         {
