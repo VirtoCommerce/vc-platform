@@ -9,11 +9,11 @@ using VirtoCommerce.Storefront.Model.Services;
 
 namespace VirtoCommerce.Storefront.Services
 {
-    public class MarketingService : IMarketingService
+    public class MarketingServiceImpl : IMarketingService
     {
         private readonly IMarketingModuleApi _marketingApi;
 
-        public MarketingService(IMarketingModuleApi marketingApi)
+        public MarketingServiceImpl(IMarketingModuleApi marketingApi)
         {
             _marketingApi = marketingApi;
         }

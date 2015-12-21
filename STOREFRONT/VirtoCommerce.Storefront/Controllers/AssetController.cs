@@ -39,7 +39,7 @@ namespace VirtoCommerce.Storefront.Controllers
             {
                 return base.File(stream, MimeMapping.GetMimeMapping(asset));
             }
-            return HttpNotFound(asset);
+            throw new HttpException(404, asset);
         }
 
         #endregion

@@ -5,6 +5,7 @@ using VirtoCommerce.Storefront.Model.Cart;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Order;
+using VirtoCommerce.Storefront.Model.StaticContent;
 
 namespace VirtoCommerce.Storefront.Model
 {
@@ -86,6 +87,7 @@ namespace VirtoCommerce.Storefront.Model
         /// List of active pricelists
         /// </summary>
         public ICollection<string> CurrentPriceListIds { get; set; }
+
         #region Catalog Properties
         /// <summary>
         /// Represent current product
@@ -100,6 +102,16 @@ namespace VirtoCommerce.Storefront.Model
         public CatalogSearchCriteria CurrentCatalogSearchCriteria { get; set; }
 
         public CatalogSearchResult CurrentCatalogSearchResult { get; set; }
+
+        #endregion
+
+        #region Static Content Properties
+        public ContentPage CurrentPage { get; set; }
+        
+        public BlogSearchCriteria CurrentBlogSearchCritera { get; set; }
+        public Blog CurrentBlog { get; set; }
+
+        public BlogArticle CurrentBlogArticle { get; set; }
         #endregion
 
         private DateTime? _utcNow;

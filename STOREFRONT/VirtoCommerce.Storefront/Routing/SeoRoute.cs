@@ -7,6 +7,8 @@ using VirtoCommerce.Client.Api;
 using VirtoCommerce.Client.Model;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Catalog;
+using VirtoCommerce.Storefront.Model.Services;
+using VirtoCommerce.Storefront.Model.StaticContent;
 
 namespace VirtoCommerce.Storefront.Routing
 {
@@ -14,13 +16,16 @@ namespace VirtoCommerce.Storefront.Routing
     {
         private readonly Func<WorkContext> _workContextFactory;
         private readonly ICommerceCoreModuleApi _commerceCoreApi;
+        private readonly IStaticContentService _contentService;
 
-        public SeoRoute(string url, IRouteHandler routeHandler, Func<WorkContext> workContextFactory, ICommerceCoreModuleApi commerceCoreApi)
+        public SeoRoute(string url, IRouteHandler routeHandler, Func<WorkContext> workContextFactory, ICommerceCoreModuleApi commerceCoreApi, IStaticContentService staticContentService)
             : base(url, routeHandler)
         {
             _workContextFactory = workContextFactory;
             _commerceCoreApi = commerceCoreApi;
+            _contentService = staticContentService;
         }
+
         public override RouteData GetRouteData(HttpContextBase httpContext)
         {
             var data = base.GetRouteData(httpContext);
@@ -89,11 +94,28 @@ namespace VirtoCommerce.Storefront.Routing
                         }
                     }
                 }
+                else if(!String.IsNullOrEmpty(path))
+                {
+                    var workContext = _workContextFactory();
+                    var contentPage = TryToFindContentPageWithUrl(path, workContext.CurrentStore, workContext.CurrentLanguage);
+                    if(contentPage != null)
+                    {
+                        data.Values["controller"] = "Page";
+                        data.Values["action"] = "GetContentPage";
+                        data.Values["page"] = contentPage;
+                    }
+                }
             }
 
             return data;
         }
 
+
+        private ContentPage TryToFindContentPageWithUrl(string url, Store store, Language language)
+        {
+            var allPages = _contentService.LoadContentItemsByUrl("/", store, language, x => new ContentPage(x, language), 1, int.MaxValue);
+            return allPages.FirstOrDefault(x => url.EndsWith(x.Url)) as ContentPage;
+        }
 
         private List<VirtoCommerceDomainCommerceModelSeoInfo> GetSeoRecords(string path)
         {

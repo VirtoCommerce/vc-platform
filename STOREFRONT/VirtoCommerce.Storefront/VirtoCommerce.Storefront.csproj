@@ -63,6 +63,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Shared\LibSassNetProxy.dll</HintPath>
     </Reference>
+    <Reference Include="MarkdownDeep, Version=1.5.4615.26275, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MarkdownDeep.NET.1.5\lib\.NetFramework 3.5\MarkdownDeep.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
       <Private>True</Private>
@@ -169,6 +173,10 @@
     </Reference>
     <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
       <HintPath>..\packages\WebActivatorEx.2.0\lib\net40\WebActivatorEx.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="YamlDotNet, Version=3.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\YamlDotNet.3.7.0\lib\net35\YamlDotNet.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
@@ -324,6 +332,8 @@
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MarketingController.cs" />
+    <Compile Include="Controllers\BlogController.cs" />
+    <Compile Include="Controllers\PageController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\StorefrontControllerBase.cs" />
     <Compile Include="Converters\AddressConverter.cs" />
@@ -366,7 +376,8 @@
     <Compile Include="Routing\SeoRoute.cs" />
     <Compile Include="Routing\SeoRouteExtensions.cs" />
     <Compile Include="Services\CatalogSearchServiceImpl.cs" />
-    <Compile Include="Services\MarketingService.cs" />
+    <Compile Include="Services\MarketingServiceImpl.cs" />
+    <Compile Include="Services\StaticContentServiceImpl.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -497,10 +508,12 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="App_Data\Pages\" />
     <Folder Include="Models\" />
     <Folder Include="Views\Account\" />
     <Folder Include="Views\Common\" />
     <Folder Include="Views\Error\" />
+    <Folder Include="Views\Page\" />
     <Folder Include="Views\Storefront\" />
   </ItemGroup>
   <ItemGroup>

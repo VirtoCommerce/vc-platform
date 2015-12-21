@@ -59,6 +59,20 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
 
             result.PaymentFormHtml = workContext.PaymentFormHtml;
 
+            if(workContext.CurrentPage != null)
+            {
+                result.Page = workContext.CurrentPage.ToShopifyModel();
+            }
+
+            if(workContext.CurrentBlog != null)
+            {
+                result.Blog = workContext.CurrentBlog.ToShopifyModel();
+            }
+
+            if(workContext.CurrentBlogArticle != null)
+            {
+                result.Article = workContext.CurrentBlogArticle.ToShopifyModel();
+            }
             return result;
         }
     }

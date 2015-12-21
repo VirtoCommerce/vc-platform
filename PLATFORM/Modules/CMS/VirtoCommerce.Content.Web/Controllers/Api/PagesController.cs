@@ -90,7 +90,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
             if (blobItem != null)
             {
                 var page = blobItem.ToPageWebModel();
-                page.Id = "/" + storeId + "/" + pageName;
+                page.Id = "/" +  pageName;
                 using (var stream = _contentStorageProvider.OpenRead(blobItem.Url))
                 {
                     var data = stream.ReadFully();

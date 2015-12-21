@@ -3,6 +3,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Storefront.Model;
+using VirtoCommerce.Storefront.Model.Services;
 
 namespace VirtoCommerce.Storefront.Routing
 {
@@ -51,12 +52,12 @@ namespace VirtoCommerce.Storefront.Routing
             routes.Add(name, route);
         }
 
-        public static Route MapSeoRoute(this RouteCollection routes, Func<WorkContext> workContextFactory, ICommerceCoreModuleApi commerceCoreApi, string name, string url, object defaults)
+        public static Route MapSeoRoute(this RouteCollection routes, Func<WorkContext> workContextFactory, ICommerceCoreModuleApi commerceCoreApi, IStaticContentService staticContentService, string name, string url, object defaults)
         {
-            return MapSeoRoute(routes, workContextFactory, commerceCoreApi, name, url, defaults, null, null);
+            return MapSeoRoute(routes, workContextFactory, commerceCoreApi, staticContentService, name, url, defaults, null, null);
         }
 
-        public static Route MapSeoRoute(this RouteCollection routes, Func<WorkContext> workContextFactory, ICommerceCoreModuleApi commerceCoreApi, string name, string url, object defaults, object constraints, string[] namespaces)
+        public static Route MapSeoRoute(this RouteCollection routes, Func<WorkContext> workContextFactory, ICommerceCoreModuleApi commerceCoreApi, IStaticContentService staticContentService,   string name, string url, object defaults, object constraints, string[] namespaces)
         {
             if (routes == null)
             {
@@ -67,7 +68,7 @@ namespace VirtoCommerce.Storefront.Routing
                 throw new ArgumentNullException("url");
             }
 
-            var route = new SeoRoute(url, new MvcRouteHandler(), workContextFactory, commerceCoreApi)
+            var route = new SeoRoute(url, new MvcRouteHandler(), workContextFactory, commerceCoreApi, staticContentService)
             {
                 Defaults = new RouteValueDictionary(defaults),
                 Constraints = new RouteValueDictionary(constraints),

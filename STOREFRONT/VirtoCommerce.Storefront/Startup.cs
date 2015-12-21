@@ -31,6 +31,7 @@ using VirtoCommerce.Storefront.Services;
 using VirtoCommerce.Storefront.Common;
 using CacheManager.Core;
 using CacheManager.Web;
+using MarkdownDeep;
 
 [assembly: OwinStartup(typeof(Startup))]
 [assembly: PreApplicationStartMethod(typeof(Startup), "PreApplicationStart")]
@@ -104,7 +105,7 @@ namespace VirtoCommerce.Storefront
             container.RegisterType<IMarketingModuleApi, MarketingModuleApi>();
             container.RegisterType<ICMSContentModuleApi, CMSContentModuleApi>();
             container.RegisterType<ISearchModuleApi, SearchModuleApi>();
-            container.RegisterType<IMarketingService, MarketingService>();
+            container.RegisterType<IMarketingService, MarketingServiceImpl>();
 
             container.RegisterType<ICartBuilder, CartBuilder>();
             container.RegisterType<ICatalogSearchService, CatalogSearchServiceImpl>();
@@ -120,16 +121,20 @@ namespace VirtoCommerce.Storefront
             // Create new work context for each request
             container.RegisterType<WorkContext, WorkContext>(new PerRequestLifetimeManager());
 
-            container.RegisterInstance(new ShopifyLiquidThemeEngine(cacheManager, () => container.Resolve<WorkContext>(), () => container.Resolve<IStorefrontUrlBuilder>(), HostingEnvironment.MapPath("~/App_data/themes"), "~/themes/assets"));
+            var shopifyLiquidEngine = new ShopifyLiquidThemeEngine(cacheManager, () => container.Resolve<WorkContext>(), () => container.Resolve<IStorefrontUrlBuilder>(), HostingEnvironment.MapPath("~/App_data/themes"), "~/themes/assets");
+            container.RegisterInstance(shopifyLiquidEngine);
             //Register liquid engine
             ViewEngines.Engines.Add(new DotLiquidThemedViewEngine(container.Resolve<ShopifyLiquidThemeEngine>()));
 
             // Shopify model binders convert Shopify form fields with bad names to VirtoCommerce model properties.
             container.RegisterType<IModelBinderProvider, ShopifyModelBinderProvider>("shopify");
 
-         
+            //Static content service
+            var staticContentService = new StaticContentServiceImpl(HostingEnvironment.MapPath("~/App_data/Pages"), new Markdown(), shopifyLiquidEngine);
+            container.RegisterInstance<IStaticContentService>(staticContentService);
+
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
-            RouteConfig.RegisterRoutes(RouteTable.Routes, () => container.Resolve<WorkContext>(), container.Resolve<ICommerceCoreModuleApi>());
+            RouteConfig.RegisterRoutes(RouteTable.Routes, () => container.Resolve<WorkContext>(), container.Resolve<ICommerceCoreModuleApi>(), container.Resolve<IStaticContentService>());
             AuthConfig.ConfigureAuth(app);
 
             app.Use<WorkContextOwinMiddleware>(container);

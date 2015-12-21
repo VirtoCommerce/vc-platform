@@ -109,6 +109,8 @@
     <Compile Include="Binders\RegisterModelBinder.cs" />
     <Compile Include="Binders\ResetPasswordModelBinder.cs" />
     <Compile Include="Binders\ShopifyModelBinderProvider.cs" />
+    <Compile Include="Converters\ArticleConverter.cs" />
+    <Compile Include="Converters\BlogConverter.cs" />
     <Compile Include="Converters\CartConverter.cs" />
     <Compile Include="Converters\CollectionConverter.cs" />
     <Compile Include="Converters\CurrencyConverter.cs" />
@@ -118,6 +120,7 @@
     <Compile Include="Converters\LineItemConverter.cs" />
     <Compile Include="Converters\LinkListConverter.cs" />
     <Compile Include="Converters\OrderConverter.cs" />
+    <Compile Include="Converters\PageConverter.cs" />
     <Compile Include="Converters\ProductConverter.cs" />
     <Compile Include="Converters\ProductPropertyConverter.cs" />
     <Compile Include="Converters\ShippingMethodConverter.cs" />
@@ -142,9 +145,13 @@
     <Compile Include="Filters\CommerceFilters.cs" />
     <Compile Include="Filters\CommonFilters.cs" />
     <Compile Include="Objects\Address.cs" />
+    <Compile Include="Objects\Article.cs" />
+    <Compile Include="Objects\ArticleUser.cs" />
+    <Compile Include="Objects\Blog.cs" />
     <Compile Include="Objects\Cart.cs" />
     <Compile Include="Objects\Collection.cs" />
     <Compile Include="Objects\Collections.cs" />
+    <Compile Include="Objects\Comment.cs" />
     <Compile Include="Objects\Currency.cs" />
     <Compile Include="Objects\Customer.cs" />
     <Compile Include="Objects\Discount.cs" />
@@ -158,6 +165,7 @@
     <Compile Include="Objects\Linklist.cs" />
     <Compile Include="Objects\Linklists.cs" />
     <Compile Include="Objects\Order.cs" />
+    <Compile Include="Objects\Page.cs" />
     <Compile Include="Objects\Paginate.cs" />
     <Compile Include="Objects\Part.cs" />
     <Compile Include="Objects\ProductProperty.cs" />

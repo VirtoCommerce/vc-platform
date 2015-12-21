@@ -38,7 +38,7 @@ namespace VirtoCommerce.Storefront
         protected void Application_Start()
         {
         }
-
+     
         protected void Application_Error(Object sender, EventArgs e)
         {
             Exception exception = Server.GetLastError();

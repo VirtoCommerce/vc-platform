@@ -3,13 +3,14 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Storefront.Model;
+using VirtoCommerce.Storefront.Model.Services;
 using VirtoCommerce.Storefront.Routing;
 
 namespace VirtoCommerce.Storefront
 {
     public class RouteConfig
     {
-        public static void RegisterRoutes(RouteCollection routes, Func<WorkContext> workContextFactory, ICommerceCoreModuleApi commerceCoreApi)
+        public static void RegisterRoutes(RouteCollection routes, Func<WorkContext> workContextFactory, ICommerceCoreModuleApi commerceCoreApi, IStaticContentService staticContentService)
         {
             routes.IgnoreRoute("favicon.ico");
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
@@ -66,8 +67,14 @@ namespace VirtoCommerce.Storefront
             routes.MapLocalizedStorefrontRoute("Product.GetProductJson", "product/{productId}/json", defaults: new { controller = "Product", action = "ProductDetailsJson" });
             //Assets
             routes.MapLocalizedStorefrontRoute("Assets", "themes/assets/{asset}", defaults: new { controller = "Asset", action = "GetAssets" });
-          
-            routes.MapSeoRoute(workContextFactory, commerceCoreApi, "SeoRoute", "{*path}", new { controller = "Home", action = "Index" });
+
+            //Static content (no cms)
+            routes.MapLocalizedStorefrontRoute("Pages.GetPage", "pages/{page}", defaults: new { controller = "Page", action = "GetContentPageByName" });
+            routes.MapLocalizedStorefrontRoute("Blogs.GetBlog", "blogs/{blog}", defaults: new { controller = "Blog", action = "GetBlog" });
+            routes.MapLocalizedStorefrontRoute("Blogs.GetBlogArticle", "blogs/{blog}/{article}", defaults: new { controller = "Blog", action = "GetBlogArticle" });
+
+
+            routes.MapSeoRoute(workContextFactory, commerceCoreApi, staticContentService, "SeoRoute", "{*path}", new { controller = "Home", action = "Index" });
            
         }
     }

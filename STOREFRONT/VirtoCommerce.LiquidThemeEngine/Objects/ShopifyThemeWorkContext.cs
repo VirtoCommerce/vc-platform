@@ -46,6 +46,13 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
 
         public Product Product { get; set; }
 
+        public Page Page { get; set; }
+
+        public Blog Blog { get; set; }
+        /// <summary>
+        /// Current blog article
+        /// </summary>
+        public Article Article { get; set; }
         /// <summary>
         /// HTML code for payment method prepared form
         /// </summary>

@@ -129,8 +129,15 @@
     <Compile Include="ResetPassword.cs" />
     <Compile Include="Catalog\ProductProperty.cs" />
     <Compile Include="SeoInfo.cs" />
-    <Compile Include="Services\ICatalogSearchService.cs" />
-    <Compile Include="Services\IMarketingService.cs" />
+    <Compile Include="Catalog\Services\ICatalogSearchService.cs" />
+    <Compile Include="Marketing\Services\IMarketingService.cs" />
+    <Compile Include="StaticContent\Blog.cs" />
+    <Compile Include="StaticContent\BlogArticle.cs" />
+    <Compile Include="StaticContent\BlogSearchCriteria.cs" />
+    <Compile Include="StaticContent\ContentItem.cs" />
+    <Compile Include="StaticContent\ContentPage.cs" />
+    <Compile Include="StaticContent\ContentPublicationStatus.cs" />
+    <Compile Include="StaticContent\Services\IStaticContentService.cs" />
     <Compile Include="ShippingMethod.cs" />
     <Compile Include="Marketing\Discount.cs" />
     <Compile Include="Cart\LineItem.cs" />

@@ -83,9 +83,12 @@ namespace VirtoCommerce.Storefront.Owin
                 var linkLists = await _cacheManager.GetAsync("GetLinkLists-" + workContext.CurrentStore.Id, "StoreRegion", async () => { return await _cmsApi.MenuGetListsAsync(workContext.CurrentStore.Id); });
                 workContext.CurrentLinkLists = linkLists != null ? linkLists.Select(ll => ll.ToWebModel(urlBuilder)).ToList() : null;
 
-                //Initialize catalog search context
+                //Initialize catalog search criteria
                 workContext.CurrentCatalogSearchCriteria = GetSearchCriteria(workContext);
 
+                //Initialize blogs search criteria 
+                //TODO: read from query string
+                workContext.CurrentBlogSearchCritera = new Model.StaticContent.BlogSearchCriteria();
                 //Pricelists
                 var priceListCachey = String.Join("-", "EvaluatePriceLists", workContext.CurrentStore.Id, workContext.CurrentCustomer.Id);
                 workContext.CurrentPriceListIds = await _cacheManager.GetAsync(priceListCachey, "PricingRegion", async () =>
@@ -112,28 +115,12 @@ namespace VirtoCommerce.Storefront.Owin
 
         protected virtual CatalogSearchCriteria GetSearchCriteria(WorkContext workContext)
         {
-            var result = new CatalogSearchCriteria
-            {
-                CatalogId = workContext.CurrentStore.Catalog,
-                Currency = workContext.CurrentCurrency,
-                Language = workContext.CurrentLanguage
-            };
-
             var qs = HttpUtility.ParseQueryString(workContext.RequestUrl.Query);
-
-            result.Keyword = qs.Get("q");
-            result.PageNumber = Convert.ToInt32(qs.Get("page") ?? "1");
-            //TODO move this code to Parse or Converter method
-            // tags=name1:value1,value2,value3;name2:value1,value2,value3
-            result.Terms = (qs.GetValues("terms") ?? new string[0])
-                .SelectMany(s => s.Split(';'))
-                .Select(s => s.Split(':'))
-                .Where(a => a.Length == 2)
-                .SelectMany(a => a[1].Split(',').Select(v => new Term { Name = a[0], Value = v }))
-                .ToArray();
-
-            //TODO: get other parameters from query sting
-            return result;
+            var retVal = CatalogSearchCriteria.Parse(qs);
+            retVal.CatalogId = workContext.CurrentStore.Catalog;
+            retVal.Currency = workContext.CurrentCurrency;
+            retVal.Language = workContext.CurrentLanguage;
+            return retVal;
         }
 
         private bool IsAssetRequest(Uri uri)
@@ -231,7 +218,7 @@ namespace VirtoCommerce.Storefront.Owin
         protected virtual string GetStoreIdFromUrl(IOwinContext context, ICollection<Store> stores)
         {
             //Try first find by store url (if it defined)
-            var retVal = stores.Where(x=>x.IsStoreUri(context.Request.Uri)).Select(x=>x.Id).FirstOrDefault();
+            var retVal = stores.Where(x => x.IsStoreUri(context.Request.Uri)).Select(x => x.Id).FirstOrDefault();
             if (retVal == null)
             {
                 foreach (var store in stores)
@@ -276,19 +263,8 @@ namespace VirtoCommerce.Storefront.Owin
 
         protected virtual string GetLanguageFromUrl(IOwinContext context, string[] languages)
         {
-            string retVal = null;
-
-            foreach (var language in languages)
-            {
-                var pathString = new PathString("/" + language);
-                PathString remainingPath;
-                if (context.Request.Path.StartsWithSegments(pathString, out remainingPath))
-                {
-                    retVal = language;
-                    break;
-                }
-            }
-
+            var requestPath = context.Request.Path.ToString();
+            var retVal = languages.FirstOrDefault(x=> requestPath.Contains(String.Format("/{0}/", x)));
             return retVal;
         }
 
