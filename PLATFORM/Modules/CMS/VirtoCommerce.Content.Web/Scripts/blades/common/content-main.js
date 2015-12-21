@@ -85,7 +85,7 @@
 	                break;
 
 	            case 'themes':
-	                themes.get({ storeId: storeId }, function (data) {
+	                themes.get({ storeId: storeId, cacheKill: new Date().getTime() }, function (data) {
 	                    entity.themesCount = data.length;
 	                    entity.themes = data;
 	                }, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
@@ -99,7 +99,7 @@
 
 	            case 'defaultTheme':
 	                stores.get({ id: storeId }, function (data) {
-	                    themes.get({ storeId: storeId }, function (themesList) {
+	                    themes.get({ storeId: storeId, cacheKill: new Date().getTime() }, function (themesList) {
 	                        entity.themesCount = themesList.length;
 	                        entity.themes = themesList;
 

@@ -6,7 +6,7 @@
 	blade.initialize = function () {
 		blade.isLoading = true;
 	    blade.choosenTheme = undefined;
-		themes.get({ storeId: blade.storeId }, function (data) {
+	    themes.get({ storeId: blade.storeId, cacheKill: new Date().getTime() }, function (data) {
 		    blade.currentEntities = data;
 		    if (data.length > 0) {
 		        blade.choosenTheme = blade.currentEntities[0];
