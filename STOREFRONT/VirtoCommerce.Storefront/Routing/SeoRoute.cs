@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Routing;
+using CacheManager.Core;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Client.Model;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Catalog;
+using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Services;
 using VirtoCommerce.Storefront.Model.StaticContent;
 
@@ -17,13 +19,15 @@ namespace VirtoCommerce.Storefront.Routing
         private readonly Func<WorkContext> _workContextFactory;
         private readonly ICommerceCoreModuleApi _commerceCoreApi;
         private readonly IStaticContentService _contentService;
+        private readonly ICacheManager<object> _cacheManager;
 
-        public SeoRoute(string url, IRouteHandler routeHandler, Func<WorkContext> workContextFactory, ICommerceCoreModuleApi commerceCoreApi, IStaticContentService staticContentService)
+        public SeoRoute(string url, IRouteHandler routeHandler, Func<WorkContext> workContextFactory, ICommerceCoreModuleApi commerceCoreApi, IStaticContentService staticContentService, ICacheManager<object> cacheManager)
             : base(url, routeHandler)
         {
             _workContextFactory = workContextFactory;
             _commerceCoreApi = commerceCoreApi;
             _contentService = staticContentService;
+            _cacheManager = cacheManager;
         }
 
         public override RouteData GetRouteData(HttpContextBase httpContext)
@@ -110,11 +114,15 @@ namespace VirtoCommerce.Storefront.Routing
             return data;
         }
 
-
         private ContentPage TryToFindContentPageWithUrl(string url, Store store, Language language)
         {
-            var allPages = _contentService.LoadContentItemsByUrl("/", store, language, x => new ContentPage(x, language), 1, int.MaxValue);
-            return allPages.FirstOrDefault(x => url.EndsWith(x.Url)) as ContentPage;
+            var cacheKey = String.Join(":", "TryToFindContentPageWithUrl", url, store.Id, language.CultureName);
+            var retVal = _cacheManager.Get(cacheKey, "ContentRegion", () =>
+            {
+                var allPages = _contentService.LoadContentItemsByUrl("/", store, language, x => new ContentPage(x, language), 1, int.MaxValue);
+                return allPages.FirstOrDefault(x => url.EndsWith(x.Url)) as ContentPage;
+            });
+            return retVal;
         }
 
         private List<VirtoCommerceDomainCommerceModelSeoInfo> GetSeoRecords(string path)
@@ -128,7 +136,7 @@ namespace VirtoCommerce.Storefront.Routing
                 var slug = tokens.LastOrDefault();
                 if (!String.IsNullOrEmpty(slug))
                 {
-                    seoRecords = _commerceCoreApi.CommerceGetSeoInfoBySlug(slug);
+                    seoRecords = _cacheManager.Get("CommerceGetSeoInfoBySlug-" + slug, "ApiRegion", () => { return _commerceCoreApi.CommerceGetSeoInfoBySlug(slug); });
                 }
             }
 

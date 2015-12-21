@@ -11,6 +11,7 @@ using VirtoCommerce.Storefront.Model.StaticContent;
 
 namespace VirtoCommerce.Storefront.Controllers
 {
+    [OutputCache(CacheProfile = "StaticContentCachingProfile")]
     public class BlogController : StorefrontControllerBase
     {
         private readonly IStaticContentService _contentService;

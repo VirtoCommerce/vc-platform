@@ -71,6 +71,7 @@
     <Compile Include="Common\CacheManagerExtension.cs" />
     <Compile Include="Common\CollectionExtensions.cs" />
     <Compile Include="Common\DynamicPropertyExtension.cs" />
+    <Compile Include="Common\EventThrottlingExtensions.cs" />
     <Compile Include="Common\IStorefrontPagedList.cs" />
     <Compile Include="Common\ValueInjecter\NullableAndEnumValueInjecter.cs" />
     <Compile Include="Common\StoreFrontPagedList.cs" />

@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Web;
+using CacheManager.Core;
 using MarkdownDeep;
 using PagedList;
 using VirtoCommerce.LiquidThemeEngine;
@@ -24,11 +26,16 @@ namespace VirtoCommerce.Storefront.Services
         private readonly Markdown _markdownRender;
         private readonly ShopifyLiquidThemeEngine _liquidEngine;
         private readonly string _baseLocalPath;
-        public StaticContentServiceImpl(string baseLocalPath, Markdown markdownRender, ShopifyLiquidThemeEngine liquidEngine)
+        private FileSystemWatcher _fileSystemWatcher;
+        private readonly ICacheManager<object> _cacheManager;
+
+        public StaticContentServiceImpl(string baseLocalPath, Markdown markdownRender, ShopifyLiquidThemeEngine liquidEngine, ICacheManager<object> cacheManager)
         {
             _baseLocalPath = baseLocalPath;
             _markdownRender = markdownRender;
             _liquidEngine = liquidEngine;
+            _fileSystemWatcher = MonitorContentFileSystemChanges();
+            _cacheManager = cacheManager;
         }
 
         #region IStaticContentService Members
@@ -168,5 +175,34 @@ namespace VirtoCommerce.Storefront.Services
             return retVal;
         }
 
+        private FileSystemWatcher MonitorContentFileSystemChanges()
+        {
+            var fileSystemWatcher = new FileSystemWatcher();
+
+            fileSystemWatcher.Path = _baseLocalPath;
+            fileSystemWatcher.IncludeSubdirectories = true;
+
+            FileSystemEventHandler handler = (sender, args) =>
+            {
+                _cacheManager.Clear();
+            };
+            RenamedEventHandler renamedHandler = (sender, args) =>
+            {
+                _cacheManager.Clear();
+            };
+            var throttledHandler = handler.Throttle(TimeSpan.FromSeconds(5));
+            // Add event handlers.
+            fileSystemWatcher.Changed += throttledHandler;
+            fileSystemWatcher.Created += throttledHandler;
+            fileSystemWatcher.Deleted += throttledHandler;
+            fileSystemWatcher.Renamed += renamedHandler;
+
+            // Begin watching.
+            fileSystemWatcher.EnableRaisingEvents = true;
+
+            return fileSystemWatcher;
+        }
+
+     
     }
 }

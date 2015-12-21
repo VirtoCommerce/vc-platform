@@ -416,7 +416,7 @@ namespace VirtoCommerce.LiquidThemeEngine
             {
                 _cacheManager.Clear();
             };
-            var throttledHandler = CreateThrottledEventHandler(handler, TimeSpan.FromSeconds(5));
+            var throttledHandler = handler.Throttle(TimeSpan.FromSeconds(5));
             // Add event handlers.
             fileSystemWatcher.Changed += throttledHandler;
             fileSystemWatcher.Created += throttledHandler;
@@ -429,18 +429,6 @@ namespace VirtoCommerce.LiquidThemeEngine
             return fileSystemWatcher;
         }
 
-        private static FileSystemEventHandler CreateThrottledEventHandler(FileSystemEventHandler handler,   TimeSpan throttle)
-        {
-            var throttling = false;
-            return (s, e) =>
-            {
-                if (throttling)
-                    return;
-                handler(s, e);
-                throttling = true;
-                Task.Delay(throttle).ContinueWith(x => throttling = false);
-            };
-        }
 
     }
 }

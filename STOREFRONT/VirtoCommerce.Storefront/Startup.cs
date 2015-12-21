@@ -130,11 +130,11 @@ namespace VirtoCommerce.Storefront
             container.RegisterType<IModelBinderProvider, ShopifyModelBinderProvider>("shopify");
 
             //Static content service
-            var staticContentService = new StaticContentServiceImpl(HostingEnvironment.MapPath("~/App_data/Pages"), new Markdown(), shopifyLiquidEngine);
+            var staticContentService = new StaticContentServiceImpl(HostingEnvironment.MapPath("~/App_data/Pages"), new Markdown(), shopifyLiquidEngine, cacheManager);
             container.RegisterInstance<IStaticContentService>(staticContentService);
 
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
-            RouteConfig.RegisterRoutes(RouteTable.Routes, () => container.Resolve<WorkContext>(), container.Resolve<ICommerceCoreModuleApi>(), container.Resolve<IStaticContentService>());
+            RouteConfig.RegisterRoutes(RouteTable.Routes, () => container.Resolve<WorkContext>(), container.Resolve<ICommerceCoreModuleApi>(), container.Resolve<IStaticContentService>(), cacheManager);
             AuthConfig.ConfigureAuth(app);
 
             app.Use<WorkContextOwinMiddleware>(container);

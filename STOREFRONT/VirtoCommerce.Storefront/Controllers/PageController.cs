@@ -10,6 +10,7 @@ using VirtoCommerce.Storefront.Model.StaticContent;
 
 namespace VirtoCommerce.Storefront.Controllers
 {
+    [OutputCache(CacheProfile = "StaticContentCachingProfile")]
     public class PageController : StorefrontControllerBase
     {
         private readonly IStaticContentService _contentService;

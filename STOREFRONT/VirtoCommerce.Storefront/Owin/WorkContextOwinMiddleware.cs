@@ -65,7 +65,7 @@ namespace VirtoCommerce.Storefront.Owin
             
             workContext.AllStores = await _cacheManager.GetAsync("GetAllStores", "StoreRegion", async () => { return await GetAllStoresAsync(); });
             var currentCustomerId = GetCurrentCustomerId(context);
-            workContext.CurrentCustomer = await _cacheManager.GetAsync("GetCustomer-" + currentCustomerId, "CustomerRegion", async () => { return await GetCustomerAsync(context); });  
+            workContext.CurrentCustomer = await _cacheManager.GetAsync("GetCustomer-" + currentCustomerId, "ApiRegion", async () => { return await GetCustomerAsync(context); });  
             MaintainAnonymousCustomerCookie(context, workContext);
 
             // Initialize request specific properties
@@ -80,7 +80,7 @@ namespace VirtoCommerce.Storefront.Owin
                 await _cartBuilder.GetOrCreateNewTransientCartAsync(workContext.CurrentStore, workContext.CurrentCustomer, workContext.CurrentLanguage, workContext.CurrentCurrency);
                 workContext.CurrentCart = _cartBuilder.Cart;
 
-                var linkLists = await _cacheManager.GetAsync("GetLinkLists-" + workContext.CurrentStore.Id, "StoreRegion", async () => { return await _cmsApi.MenuGetListsAsync(workContext.CurrentStore.Id); });
+                var linkLists = await _cacheManager.GetAsync("GetLinkLists-" + workContext.CurrentStore.Id, "ApiRegion", async () => { return await _cmsApi.MenuGetListsAsync(workContext.CurrentStore.Id); });
                 workContext.CurrentLinkLists = linkLists != null ? linkLists.Select(ll => ll.ToWebModel(urlBuilder)).ToList() : null;
 
                 //Initialize catalog search criteria
@@ -91,7 +91,7 @@ namespace VirtoCommerce.Storefront.Owin
                 workContext.CurrentBlogSearchCritera = new Model.StaticContent.BlogSearchCriteria();
                 //Pricelists
                 var priceListCachey = String.Join("-", "EvaluatePriceLists", workContext.CurrentStore.Id, workContext.CurrentCustomer.Id);
-                workContext.CurrentPriceListIds = await _cacheManager.GetAsync(priceListCachey, "PricingRegion", async () =>
+                workContext.CurrentPriceListIds = await _cacheManager.GetAsync(priceListCachey, "ApiRegion", async () =>
                 {
                     var pricingResult = await _pricingModuleApi.PricingModuleEvaluatePriceListsAsync(
                                                      evalContextStoreId: workContext.CurrentStore.Id,

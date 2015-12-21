@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Web.Mvc;
 using System.Web.Routing;
+using CacheManager.Core;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Services;
@@ -10,7 +11,7 @@ namespace VirtoCommerce.Storefront
 {
     public class RouteConfig
     {
-        public static void RegisterRoutes(RouteCollection routes, Func<WorkContext> workContextFactory, ICommerceCoreModuleApi commerceCoreApi, IStaticContentService staticContentService)
+        public static void RegisterRoutes(RouteCollection routes, Func<WorkContext> workContextFactory, ICommerceCoreModuleApi commerceCoreApi, IStaticContentService staticContentService, ICacheManager<object> cacheManager)
         {
             routes.IgnoreRoute("favicon.ico");
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
@@ -75,7 +76,7 @@ namespace VirtoCommerce.Storefront
             routes.MapLocalizedStorefrontRoute("Blogs.GetBlogArticle", "blogs/{blog}/{article}", defaults: new { controller = "Blog", action = "GetBlogArticle" });
 
 
-            routes.MapSeoRoute(workContextFactory, commerceCoreApi, staticContentService, "SeoRoute", "{*path}", new { controller = "Home", action = "Index" });
+            routes.MapSeoRoute(workContextFactory, commerceCoreApi, staticContentService, cacheManager, "SeoRoute", "{*path}", new { controller = "Home", action = "Index" });
            
         }
     }
