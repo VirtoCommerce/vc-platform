@@ -1039,7 +1039,7 @@ namespace VirtoCommerce.Client.Api
             
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
 
             int statusCode = (int) response.StatusCode;
     
@@ -1107,7 +1107,7 @@ namespace VirtoCommerce.Client.Api
             
 
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
 
             int statusCode = (int) response.StatusCode;
  

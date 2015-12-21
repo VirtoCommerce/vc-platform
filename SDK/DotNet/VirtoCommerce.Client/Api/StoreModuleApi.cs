@@ -173,6 +173,46 @@ namespace VirtoCommerce.Client.Api
         System.Threading.Tasks.Task<ApiResponse<Object>> StoreModuleDeleteAsyncWithHttpInfo (List<string> ids);
         
         /// <summary>
+        /// Send dynamic notification (contains custom list of properties) an store or adminsitrator email
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        void StoreModuleSendDynamicNotificationAnStoreEmail (VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest request);
+  
+        /// <summary>
+        /// Send dynamic notification (contains custom list of properties) an store or adminsitrator email
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="request"></param>
+        /// <returns>ApiResponse of Object(void)</returns>
+        ApiResponse<Object> StoreModuleSendDynamicNotificationAnStoreEmailWithHttpInfo (VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest request);
+
+        /// <summary>
+        /// Send dynamic notification (contains custom list of properties) an store or adminsitrator email
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="request"></param>
+        /// <returns>Task of void</returns>
+        System.Threading.Tasks.Task StoreModuleSendDynamicNotificationAnStoreEmailAsync (VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest request);
+
+        /// <summary>
+        /// Send dynamic notification (contains custom list of properties) an store or adminsitrator email
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="request"></param>
+        /// <returns>Task of ApiResponse</returns>
+        System.Threading.Tasks.Task<ApiResponse<Object>> StoreModuleSendDynamicNotificationAnStoreEmailAsyncWithHttpInfo (VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest request);
+        
+        /// <summary>
         /// Get store by id
         /// </summary>
         /// <remarks>
@@ -803,6 +843,140 @@ namespace VirtoCommerce.Client.Api
                 throw new ApiException (statusCode, "Error calling StoreModuleDelete: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling StoreModuleDelete: " + response.ErrorMessage, response.ErrorMessage);
+
+            
+            return new ApiResponse<Object>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                null);
+        }
+        
+        /// <summary>
+        /// Send dynamic notification (contains custom list of properties) an store or adminsitrator email 
+        /// </summary>
+        /// <param name="request"></param> 
+        /// <returns></returns>
+        public void StoreModuleSendDynamicNotificationAnStoreEmail (VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest request)
+        {
+             StoreModuleSendDynamicNotificationAnStoreEmailWithHttpInfo(request);
+        }
+
+        /// <summary>
+        /// Send dynamic notification (contains custom list of properties) an store or adminsitrator email 
+        /// </summary>
+        /// <param name="request"></param> 
+        /// <returns>ApiResponse of Object(void)</returns>
+        public ApiResponse<Object> StoreModuleSendDynamicNotificationAnStoreEmailWithHttpInfo (VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest request)
+        {
+            
+            // verify the required parameter 'request' is set
+            if (request == null) throw new ApiException(400, "Missing required parameter 'request' when calling StoreModuleSendDynamicNotificationAnStoreEmail");
+            
+    
+            var path_ = "/api/stores/send/dynamicnotification";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                
+            };
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            
+            
+            
+            postBody = Configuration.ApiClient.Serialize(request); // http body (model) parameter
+            
+
+            
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+    
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling StoreModuleSendDynamicNotificationAnStoreEmail: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling StoreModuleSendDynamicNotificationAnStoreEmail: " + response.ErrorMessage, response.ErrorMessage);
+    
+            
+            return new ApiResponse<Object>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                null);
+        }
+    
+        /// <summary>
+        /// Send dynamic notification (contains custom list of properties) an store or adminsitrator email 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>Task of void</returns>
+        public async System.Threading.Tasks.Task StoreModuleSendDynamicNotificationAnStoreEmailAsync (VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest request)
+        {
+             await StoreModuleSendDynamicNotificationAnStoreEmailAsyncWithHttpInfo(request);
+
+        }
+
+        /// <summary>
+        /// Send dynamic notification (contains custom list of properties) an store or adminsitrator email 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>Task of ApiResponse</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<Object>> StoreModuleSendDynamicNotificationAnStoreEmailAsyncWithHttpInfo (VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest request)
+        {
+            // verify the required parameter 'request' is set
+            if (request == null) throw new ApiException(400, "Missing required parameter 'request' when calling StoreModuleSendDynamicNotificationAnStoreEmail");
+            
+    
+            var path_ = "/api/stores/send/dynamicnotification";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                
+            };
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            
+            
+            
+            postBody = Configuration.ApiClient.Serialize(request); // http body (model) parameter
+            
+
+            
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling StoreModuleSendDynamicNotificationAnStoreEmail: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling StoreModuleSendDynamicNotificationAnStoreEmail: " + response.ErrorMessage, response.ErrorMessage);
 
             
             return new ApiResponse<Object>(statusCode,
