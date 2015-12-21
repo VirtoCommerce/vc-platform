@@ -13,8 +13,8 @@ app.service('marketingService', ['$http', function ($http) {
         getDynamicContent: function (placeName) {
             return $http.get('marketing/dynamiccontent/' + placeName + '/json?t=' + new Date().getTime());
         },
-        getActualProductPrices: function (products) {
-            return $http.post('marketing/actualprices', { products: products });
+        getActualProductPrices: function (categoryId, productIds) {
+            return $http.post('marketing/actualprices', { categoryId: categoryId, productIds: productIds });
         }
     }
 }]);
@@ -40,9 +40,6 @@ app.service('cartService', ['$http', function ($http) {
         },
         removeLineItem: function (lineItemId) {
             return $http.post('cart/removeitem', { lineItemId: lineItemId });
-        },
-        clearCart: function () {
-            return $http.post('cart/clear');
         },
         getCountries: function () {
             return $http.get('common/getcountries/json?t=' + new Date().getTime());
@@ -181,22 +178,6 @@ app.controller('cartController', ['$scope', '$timeout', 'cartService', function 
         }, 200);
     }
 
-    $scope.clearCart = function () {
-        var initialItems = angular.copy($scope.cart.Items);
-        $timeout.cancel(timer);
-        timer = $timeout(function () {
-            $scope.isUpdating = true;
-            cartService.clearCart().then(
-                function (response) {
-                    refreshCart();
-                },
-                function (response) {
-                    $scope.cart.Items = initialItems;
-                    showErrorMessage(2000);
-                });
-        }, 200);
-    }
-
     function initialize() {
         $scope.isCartModalVisible = false;
         $scope.isUpdating = false;
@@ -225,15 +206,12 @@ app.controller('categoryController', ['$scope', '$window', 'marketingService', f
     $scope.productPricesLoaded = false;
     $scope.productPrices = [];
 
-    marketingService.getActualProductPrices($window.products).then(function (response) {
+    marketingService.getActualProductPrices($window.categoryId, $window.productIds).then(function (response) {
         var prices = response.data;
-        if (prices.length) {
-            for (var i = 0; i < prices.length; i++) {
-                $scope.productPrices[prices[i].ProductId] = prices[i];
-            }
+        for (var i = 0; i < prices.length; i++) {
+            $scope.productPrices[prices[i].ProductId] = prices[i];
         }
-        var productPricesSize = getObjectSize($scope.productPrices);
-        $scope.productPricesLoaded = productPricesSize > 0;
+        $scope.productPricesLoaded = true;
     });
 }]);
 
@@ -640,12 +618,10 @@ app.controller('productController', ['$scope', '$window', 'catalogService', 'mar
 	var allVarations = [];
 	$scope.selectedVariation = {};
 	$scope.allVariationPropsMap = {};
-	$scope.productPrice = null;
 	$scope.productPriceLoaded = false;
 
 	function Initialize() {
-	    var productId = $window.products[0].id;
-	    catalogService.getProduct(productId).then(function (response) {
+	    catalogService.getProduct($window.productId).then(function (response) {
 			var product = response.data;
 			//Current product its also variation (titular)
 			allVarations = [ product ].concat(product.Variations);
@@ -657,7 +633,7 @@ app.controller('productController', ['$scope', '$window', 'catalogService', 'mar
 				$scope.checkProperty(propertyMap[x][0])
 			});
 			$scope.selectedVariation = product;
-			getActualProductPrice($window.products[0]);
+			getActualProductPrice($window.categoryId, $scope.selectedVariation.Id);
 		});
 	};
 
@@ -709,14 +685,10 @@ app.controller('productController', ['$scope', '$window', 'catalogService', 'mar
 		return retVal;
 	};
 
-	function getActualProductPrice(product) {
-	    marketingService.getActualProductPrices([product]).then(function (response) {
-	        var price = response.data ? response.data[0] : null;
-	        if (!price) {
-	            return;
-	        }
-	        $scope.productPrice = price;
-	        $scope.productPriceLoaded = true;
+	function getActualProductPrice(categoryId, productId) {
+	    marketingService.getActualProductPrices(categoryId, [productId]).then(function (response) {
+	        $scope.productPrice = response.data ? response.data[0] : null;
+	        $scope.productPriceLoaded = $scope.productPrice != null;
 	    });
 	}
 
@@ -749,13 +721,3 @@ app.config(['$interpolateProvider', '$routeProvider', function ($interpolateProv
 
     return $interpolateProvider.startSymbol('{(').endSymbol(')}');
 }]);
-
-function getObjectSize(obj) {
-    var size = 0, key;
-    for (key in obj) {
-        if (obj.hasOwnProperty(key)) {
-            size++;
-        }
-    }
-    return size;
-}
