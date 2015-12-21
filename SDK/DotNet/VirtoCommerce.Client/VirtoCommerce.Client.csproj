@@ -60,7 +60,6 @@
     <Compile Include="Api\CustomerManagementModuleApi.cs" />
     <Compile Include="Api\InventoryModuleApi.cs" />
     <Compile Include="Api\MarketingModuleApi.cs" />
-    <Compile Include="Api\MerchandisingModuleApi.cs" />
     <Compile Include="Api\OrderModuleApi.cs" />
     <Compile Include="Api\PricingModuleApi.cs" />
     <Compile Include="Api\QuoteModuleApi.cs" />
@@ -178,7 +177,6 @@
     <Compile Include="Model\VirtoCommerceMarketingModuleWebModelMarketingSearchResult.cs" />
     <Compile Include="Model\VirtoCommerceMarketingModuleWebModelPromotion.cs" />
     <Compile Include="Model\VirtoCommerceMarketingModuleWebModelPromotionReward.cs" />
-    <Compile Include="Model\VirtoCommerceMerchandisingModuleWebModelNotificaitonsSendDynamicMerchandisingNotificationRequest.cs" />
     <Compile Include="Model\VirtoCommerceOrderModuleWebModelAddress.cs" />
     <Compile Include="Model\VirtoCommerceOrderModuleWebModelCoupon.cs" />
     <Compile Include="Model\VirtoCommerceOrderModuleWebModelCustomerOrder.cs" />
@@ -248,6 +246,7 @@
     <Compile Include="Model\VirtoCommerceSearchModuleWebModelFilterProperty.cs" />
     <Compile Include="Model\VirtoCommerceStoreModuleWebModelFulfillmentCenter.cs" />
     <Compile Include="Model\VirtoCommerceStoreModuleWebModelPaymentMethod.cs" />
+    <Compile Include="Model\VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest.cs" />
     <Compile Include="Model\VirtoCommerceStoreModuleWebModelSetting.cs" />
     <Compile Include="Model\VirtoCommerceStoreModuleWebModelShippingMethod.cs" />
     <Compile Include="Model\VirtoCommerceStoreModuleWebModelStore.cs" />
