@@ -181,7 +181,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
             CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Delete, new ContentScopeObject { StoreId = storeId });
 
             var pages = PagesUtility.GetShortPageInfoFromString(pageNamesAndLanguges);
-            _contentStorageProvider.Remove(pages.Select(x => "/" + storeId + "/" + x.Name).ToArray());
+            _contentStorageProvider.Remove(pages.Select(x => "/Pages/" + storeId + "/" + x.Name).ToArray());
 
             return StatusCode(HttpStatusCode.NoContent);
         }
