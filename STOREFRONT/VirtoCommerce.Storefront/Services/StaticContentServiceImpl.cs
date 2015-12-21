@@ -106,7 +106,7 @@ namespace VirtoCommerce.Storefront.Services
             {
                 retVal += fileName;
             }
-            return Uri.EscapeUriString(retVal);
+            return Uri.EscapeUriString(retVal.TrimStart('/'));
         }
 
         private static string ExcludeYamlHeader(string text)
