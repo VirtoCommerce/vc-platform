@@ -51,16 +51,17 @@ namespace VirtoCommerce.Storefront.Controllers
         public ActionResult GetBlogArticle(string blog, string article)
         {
             var context = base.WorkContext;
-            var url = String.Join("/", "/blogs", blog, article);
-            var blogArticle = _contentService.LoadContentItemsByUrl(url, context.CurrentStore, context.CurrentLanguage, x => new BlogArticle(x, context.CurrentLanguage)).FirstOrDefault();
+            var articleUrl = String.Join("/", "/blogs", blog, article);
+            var contentBlog = _contentService.LoadContentItemsByUrl("/blogs/" + blog + "/default", context.CurrentStore, context.CurrentLanguage, x => new Blog("/blogs/" + blog, context.CurrentLanguage)).FirstOrDefault();
+            var blogArticle = _contentService.LoadContentItemsByUrl(articleUrl, context.CurrentStore, context.CurrentLanguage, x => new BlogArticle(x, context.CurrentLanguage)).FirstOrDefault();
             if (blogArticle != null)
             {
-
+                base.WorkContext.CurrentBlog = contentBlog as Blog;
                 base.WorkContext.CurrentBlogArticle = blogArticle as BlogArticle;
                 return View("article", base.WorkContext);
 
             }
-            throw new HttpException(404, url);
+            throw new HttpException(404, articleUrl);
         }
     }
 }

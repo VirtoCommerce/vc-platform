@@ -27,7 +27,7 @@ namespace VirtoCommerce.Storefront.Model.StaticContent
             if(parts.Count() > 1)
             {
                 Excerpt = parts[0];
-                content = parts[1];
+                content.Replace(_excerpToken, String.Empty);
             }
             base.LoadContent(content, metaInfoMap);
             //TODO: load image from meta info

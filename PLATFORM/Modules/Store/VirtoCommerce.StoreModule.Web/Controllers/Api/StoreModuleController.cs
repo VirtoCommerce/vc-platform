@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
@@ -6,7 +7,9 @@ using VirtoCommerce.Domain.Payment.Services;
 using VirtoCommerce.Domain.Shipping.Services;
 using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.Domain.Tax.Services;
+using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.StoreModule.Data.Notifications;
 using VirtoCommerce.StoreModule.Web.Converters;
 using VirtoCommerce.StoreModule.Web.Security;
 using coreModel = VirtoCommerce.Domain.Store.Model;
@@ -23,8 +26,10 @@ namespace VirtoCommerce.StoreModule.Web.Controllers.Api
         private readonly ITaxService _taxService;
         private readonly ISecurityService _securityService;
         private readonly IPermissionScopeService _permissionScopeService;
+        private readonly INotificationManager _notificationManager;
+
         public StoreModuleController(IStoreService storeService, IShippingService shippingService, IPaymentMethodsService paymentService, ITaxService taxService,
-                                     ISecurityService securityService, IPermissionScopeService permissionScopeService)
+                                     ISecurityService securityService, IPermissionScopeService permissionScopeService, INotificationManager notificationManager)
         {
             _storeService = storeService;
             _shippingService = shippingService;
@@ -32,6 +37,7 @@ namespace VirtoCommerce.StoreModule.Web.Controllers.Api
             _taxService = taxService;
             _securityService = securityService;
             _permissionScopeService = permissionScopeService;
+            _notificationManager = notificationManager;
         }
 
         /// <summary>
@@ -126,6 +132,36 @@ namespace VirtoCommerce.StoreModule.Web.Controllers.Api
             CheckCurrentUserHasPermissionForObjects(StorePredefinedPermissions.Delete, stores);
             _storeService.Delete(ids);
             return StatusCode(HttpStatusCode.NoContent);
+        }
+
+        /// <summary>
+        /// Send dynamic notification (contains custom list of properties) an store or adminsitrator email 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("/send/dynamicnotification")]
+        [ResponseType(typeof(void))]
+        public IHttpActionResult SendDynamicNotificationAnStoreEmail(webModel.SendDynamicNotificationRequest request)
+        {
+            var store = _storeService.GetById(request.StoreId);
+
+            if (store == null)
+                throw new NullReferenceException(string.Format("no store with this id = {0}", request.StoreId));
+
+            if (string.IsNullOrEmpty(store.Email) && string.IsNullOrEmpty(store.AdminEmail))
+                throw new NullReferenceException(string.Format("set email or admin email for store with id = {0}", request.StoreId));
+
+            var notification = _notificationManager.GetNewNotification<StoreDynamicEmailNotification>(request.StoreId, "Store", request.Language);
+
+            notification.Recipient = !string.IsNullOrEmpty(store.Email) ? store.Email : store.AdminEmail;
+            notification.IsActive = true;
+            notification.FormType = request.Type;
+            notification.Fields = request.Fields;
+
+            _notificationManager.ScheduleSendNotification(notification);
+
+            return StatusCode(System.Net.HttpStatusCode.NoContent);
         }
 
         protected void CheckCurrentUserHasPermissionForObjects(string permission, params coreModel.Store[] objects)
