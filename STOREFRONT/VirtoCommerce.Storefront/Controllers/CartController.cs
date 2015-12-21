@@ -94,6 +94,18 @@ namespace VirtoCommerce.Storefront.Controllers
             return Json(null, JsonRequestBehavior.AllowGet);
         }
 
+        // POST: /cart/clear
+        [HttpPost]
+        public async Task<ActionResult> ClearJson()
+        {
+            await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
+
+            await _cartBuilder.ClearAsync();
+            await _cartBuilder.SaveAsync();
+
+            return Json(null, JsonRequestBehavior.AllowGet);
+        }
+
         // GET: /cart/checkout
         [HttpGet]
         public async Task<ActionResult> Checkout()

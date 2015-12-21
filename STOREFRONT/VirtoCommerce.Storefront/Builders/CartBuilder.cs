@@ -103,6 +103,15 @@ namespace VirtoCommerce.Storefront.Builders
             return this;
         }
 
+        public async Task<CartBuilder> ClearAsync()
+        {
+            _cart.Items.Clear();
+
+            await EvaluatePromotionsAsync();
+
+            return this;
+        }
+
         public async Task<CartBuilder> AddCouponAsync(string couponCode)
         {
             _cart.Coupon = new Coupon

@@ -20,6 +20,8 @@ namespace VirtoCommerce.Storefront.Builders
 
         Task<CartBuilder> RemoveCouponAsync();
 
+        Task<CartBuilder> ClearAsync();
+
         Task<CartBuilder> AddAddressAsync(Address address);
 
         Task<CartBuilder> AddShipmentAsync(ShippingMethod shippingMethod);

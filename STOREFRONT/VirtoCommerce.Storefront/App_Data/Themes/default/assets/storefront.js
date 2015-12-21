@@ -41,6 +41,9 @@ app.service('cartService', ['$http', function ($http) {
         removeLineItem: function (lineItemId) {
             return $http.post('cart/removeitem', { lineItemId: lineItemId });
         },
+        clearCart: function () {
+            return $http.post('cart/clear');
+        },
         getCountries: function () {
             return $http.get('common/getcountries/json?t=' + new Date().getTime());
         },
@@ -168,6 +171,22 @@ app.controller('cartController', ['$scope', '$timeout', 'cartService', function 
         timer = $timeout(function () {
             $scope.isUpdating = true;
             cartService.removeLineItem(lineItemId).then(
+                function (response) {
+                    refreshCart();
+                },
+                function (response) {
+                    $scope.cart.Items = initialItems;
+                    showErrorMessage(2000);
+                });
+        }, 200);
+    }
+
+    $scope.clearCart = function () {
+        var initialItems = angular.copy($scope.cart.Items);
+        $timeout.cancel(timer);
+        timer = $timeout(function () {
+            $scope.isUpdating = true;
+            cartService.clearCart().then(
                 function (response) {
                     refreshCart();
                 },

@@ -38,6 +38,7 @@ namespace VirtoCommerce.Storefront
             routes.MapLocalizedStorefrontRoute("Cart.AddItem", "cart/additem", defaults: new { controller = "Cart", action = "AddItemJson" });
             routes.MapLocalizedStorefrontRoute("Cart.ChangeItem", "cart/changeitem", defaults: new { controller = "Cart", action = "ChangeItemJson" });
             routes.MapLocalizedStorefrontRoute("Cart.RemoveItem", "cart/removeitem", defaults: new { controller = "Cart", action = "RemoveItemJson" });
+            routes.MapLocalizedStorefrontRoute("Cart.Clear", "cart/clear", defaults: new { controller = "Cart", action = "ClearJson" });
             routes.MapLocalizedStorefrontRoute("Cart.Checkout", "cart/checkout", defaults: new { controller = "Cart", action = "Checkout" });
             routes.MapLocalizedStorefrontRoute("Cart.ShippingMethods", "cart/shippingmethods/json", defaults: new { controller = "Cart", action = "CartShippingMethodsJson" });
             routes.MapLocalizedStorefrontRoute("Cart.PaymentMethods", "cart/paymentmethods/json", defaults: new { controller = "Cart", action = "CartPaymentMethodsJson" });
