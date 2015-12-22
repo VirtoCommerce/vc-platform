@@ -445,17 +445,17 @@ form[action^="/cart/add"] {
 ==============================================================================*/
 .ajaxify-modal {
   position: absolute;
-  top: 170px;
-  left: -200%;
-  margin-left: -500px; // overridden with JS
+  top: 50%;
+  left: 50%;
   width: 100%;
   max-width: 760px;
   height: auto;
-  z-index: 99999999;
+  z-index: 9000;
   visibility: hidden;
   overflow: auto;
   -webkit-overflow-scrolling: touch;
   @include transition('left 0s linear 700ms, box-shadow 600ms cubic-bezier(0.47, 0.5, 0, 0.95) 400ms, margin-top 200ms ease-in-out');
+  @include transform(translate(-50%, -50%));
 
   // Short screens
   @media only screen and (max-height:645px) {
@@ -497,6 +497,7 @@ form[action^="/cart/add"] {
   &.is-visible {
     visibility: visible;
     left: 50%;
+    z-index: 99999;
     @include transition('left 0s linear, box-shadow 600ms cubic-bezier(0.47, 0.5, 0, 0.95) 400ms, margin-top 200ms ease-in-out');
 
     // Large screens
@@ -506,7 +507,7 @@ form[action^="/cart/add"] {
 
     // Small screens
     @include at-query ($max, $small) {
-      left: 0;
+      // left: 0;
     }
   }
 
@@ -543,7 +544,7 @@ form[action^="/cart/add"] {
   visibility: hidden;
   top: 0;
   left: 0;
-  z-index: 99999998;
+  z-index: 99998;
   opacity: 0;
   cursor: pointer;
   @include transition(all 450ms cubic-bezier(0.57,.06,.05,.95));
