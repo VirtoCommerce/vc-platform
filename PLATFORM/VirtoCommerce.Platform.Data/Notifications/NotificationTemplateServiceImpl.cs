@@ -32,7 +32,12 @@ namespace VirtoCommerce.Platform.Data.Notifications
 			using (var repository = _repositoryFactory())
 			{
 				var entity = repository.NotificationTemplates.FirstOrDefault(nt => nt.ObjectId.Equals(objectId) && nt.NotificationTypeId.Equals(notificationTypeId) && nt.Language.Equals(language) && nt.ObjectTypeId.Equals(objectTypeId));
-				if (entity != null)
+                if (entity == null)
+                {
+                    entity = repository.NotificationTemplates.FirstOrDefault(nt => nt.NotificationTypeId.Equals(notificationTypeId) && nt.Language.Equals(language));
+                }
+
+                if (entity != null)
 				{
 					retVal = entity.ToCoreModel();
 				}

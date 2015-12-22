@@ -6,32 +6,14 @@ using System.Threading.Tasks;
 
 namespace VirtoCommerce.Storefront.Model
 {
-    public class ContactForm
+    public class ContactUsForm
     {
-        public IDictionary<string, string> Contact { get; set; }
-        public string form_type { get; set; }
-
-        public ContactForm()
+        public ContactUsForm()
         {
-            this.Contact = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            Contact = new Dictionary<string, object>();
         }
 
-
-        public string GetValue(string key)
-        {
-            return Contact.ContainsKey(key) ? Contact[key] : null;
-        }
-
-        public void SetValue(string key, string value)
-        {
-            if (Contact.ContainsKey(key))
-            {
-                Contact[key] = value;
-            }
-            else
-            {
-                Contact.Add(key, value);
-            }
-        }
+        public IDictionary<string, object> Contact { get; set; }
+        public string FormType { get; set; }
     }
 }

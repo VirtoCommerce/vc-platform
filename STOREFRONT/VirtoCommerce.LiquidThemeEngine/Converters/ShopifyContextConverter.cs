@@ -73,6 +73,11 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             {
                 result.Article = workContext.CurrentBlogArticle.ToShopifyModel();
             }
+
+            if (workContext.ContactUsForm != null)
+            {
+                result.Form = workContext.ContactUsForm.ToShopifyModel();
+            }
             return result;
         }
     }

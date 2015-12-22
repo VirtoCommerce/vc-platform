@@ -1,4 +1,6 @@
-﻿using DotLiquid;
+﻿using System.Collections.Generic;
+using System.Linq;
+using DotLiquid;
 
 namespace VirtoCommerce.LiquidThemeEngine.Objects
 {
@@ -13,6 +15,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         public Form()
         {
             PostedSuccessfully = true;
+            Properties = new Dictionary<string, object>();
         }
 
         /// <summary>
@@ -45,5 +48,14 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         /// The address form is always submitted successfully.
         /// </summary>
         public bool? PostedSuccessfully { get; set; }
+
+
+        public IDictionary<string, object> Properties { get; set; }
+
+        public override object BeforeMethod(string method)
+        {
+            var val = this.Properties.Where(x => x.Key == method).Select(x => x.Value).SingleOrDefault();
+            return val;
+        }
     }
 }

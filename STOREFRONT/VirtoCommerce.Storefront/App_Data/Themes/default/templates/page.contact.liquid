@@ -13,7 +13,7 @@
     <div>
       {% form 'contact' %}
 
-        {% if form.posted_successfully? %}
+        {% if form.posted_successfully %}
           <p class="note form-success">
             {{ 'contact.form.post_success' | t }}
           </p>

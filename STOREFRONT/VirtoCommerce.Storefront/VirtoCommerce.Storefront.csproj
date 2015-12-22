@@ -336,7 +336,6 @@
     <Compile Include="Controllers\CartController.cs" />
     <Compile Include="Controllers\CatalogSearchController.cs" />
     <Compile Include="Controllers\CommonController.cs" />
-    <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MarketingController.cs" />
@@ -349,6 +348,7 @@
     <Compile Include="Converters\AssetConverter.cs" />
     <Compile Include="Converters\CartPaymentMethodConverter.cs" />
     <Compile Include="Converters\CartShipmentMethodConverter.cs" />
+    <Compile Include="Converters\ContactUsFormConverter.cs" />
     <Compile Include="Converters\DiscountConverter.cs" />
     <Compile Include="Converters\DynamicContentConverter.cs" />
     <Compile Include="Converters\DynamicPropertyConverter.cs" />

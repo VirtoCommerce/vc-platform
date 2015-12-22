@@ -39,10 +39,6 @@
       <HintPath>..\packages\CacheManager.SystemRuntimeCaching.0.6.1\lib\net45\CacheManager.SystemRuntimeCaching.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CacheManager.Web, Version=0.6.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CacheManager.Web.0.6.1\lib\net45\CacheManager.Web.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="DotLiquid, Version=1.0.0.0, Culture=neutral, PublicKeyToken=82e46016ecf9f07c, processorArchitecture=MSIL">
       <HintPath>..\packages\DotLiquid.VirtoCommerce.1.8.3\lib\NET45\DotLiquid.dll</HintPath>
       <Private>True</Private>
@@ -114,6 +110,7 @@
     <Compile Include="Converters\BlogConverter.cs" />
     <Compile Include="Converters\CartConverter.cs" />
     <Compile Include="Converters\CollectionConverter.cs" />
+    <Compile Include="Converters\ContactUsFormConverter.cs" />
     <Compile Include="Converters\CurrencyConverter.cs" />
     <Compile Include="Converters\DiscountConverter.cs" />
     <Compile Include="Converters\ImageConverter.cs" />
