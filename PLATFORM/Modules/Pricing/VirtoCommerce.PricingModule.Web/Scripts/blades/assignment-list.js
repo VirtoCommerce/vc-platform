@@ -62,6 +62,7 @@ function ($scope, assignments, bladeNavigationService, dialogService, uiGridCons
     }
 
     blade.headIcon = 'fa-anchor';
+    blade.subtitle = 'pricing.blades.pricelist-assignment-list.subtitle';    
 
     blade.toolbarCommands = [
         {

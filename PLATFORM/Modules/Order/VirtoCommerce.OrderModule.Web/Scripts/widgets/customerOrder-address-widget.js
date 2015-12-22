@@ -1,6 +1,5 @@
 ﻿angular.module('virtoCommerce.orderModule')
 .controller('virtoCommerce.orderModule.customerOrderAddressWidgetController', ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
-	$scope.currentBlade = $scope.widget.blade;
 	$scope.operation = {};
 	$scope.openAddressesBlade = function () {
 		var newBlade = {

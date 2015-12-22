@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Globalization;
-using System.IO;
-using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using VirtoCommerce.Domain.Payment.Model;
-using VirtoCommerce.Platform.Core.Common;
 
 namespace DiBs.Managers
 {
@@ -25,6 +20,7 @@ namespace DiBs.Managers
         private const string md5Key1 = "DiBs.MD5Key1";
         private const string md5Key2 = "DiBs.MD5Key2";
         private const string merchantId = "DiBs.MerchantId";
+        private const string formDesign = "DiBs.FormDesign";
 
         private const string md5KeyFormDataName = "md5key";
         private const string acceptUrlFormDataName = "accepturl";
@@ -80,6 +76,11 @@ namespace DiBs.Managers
             get { return GetSetting(merchantId); }
         }
 
+        public string FormDecoarator
+        {
+            get { return GetSetting(formDesign); }
+        }
+
         #endregion
 
         public override PaymentMethodGroupType PaymentMethodGroupType
@@ -113,8 +114,9 @@ namespace DiBs.Managers
             context.Payment.IsApproved = true;
             retVal.OuterId = context.Payment.OuterId = transactionId;
             context.Payment.AuthorizedDate = DateTime.UtcNow;
-            retVal.OrderId = context.Order.Number;
+            retVal.OrderId = context.Order.Id;
             retVal.IsSuccess = ValidatePostProcessRequest(context.Parameters).IsSuccess;
+
             return retVal;
         }
 
@@ -137,21 +139,23 @@ namespace DiBs.Managers
                     baseStoreUrl = context.Store.Url;
                 }
 
+                var orderId = context.Order.Number;
+
                 //get md5 hash passing the order number, currency ISO code and order total
-                var md5Hash = CalculateMD5Hash(context.Order.Id, (int) context.Order.Currency, (int)(context.Order.Sum * 100));
+                var md5Hash = CalculateMD5Hash(orderId, (int)context.Order.Currency, (int)(context.Order.Sum * 100));
 
                 var reqparm = new NameValueCollection();
                 reqparm.Add(acceptUrlFormDataName, AcceptUrl);
                 reqparm.Add(callbackUrlFormDataName, CallbackUrl);
                 reqparm.Add(cancelUrlFormDataName, AcceptUrl);
                 reqparm.Add(merchantIdFormDataName, MerchantId);
-                reqparm.Add(orderIdFormDataName, context.Order.Id);
-                reqparm.Add(orderInternalIdFormDataName, context.Order.Number);
+                reqparm.Add(orderIdFormDataName, orderId);
+                reqparm.Add(orderInternalIdFormDataName, context.Order.Id);
                 reqparm.Add(amountFormDataName, ((int)(context.Order.Sum * 100)).ToString());
                 reqparm.Add(currencyFormDataName, ((int)context.Order.Currency).ToString());
                 reqparm.Add(languageFormDataName, context.Store.DefaultLanguage.Substring(0, 2));
                 reqparm.Add(md5KeyFormDataName, md5Hash);
-                reqparm.Add(decoratorFormDataName, "responsive");
+                reqparm.Add(decoratorFormDataName, FormDecoarator);
 
                 if (Mode == "test")
                 {
@@ -162,12 +166,12 @@ namespace DiBs.Managers
                 var checkoutform = string.Empty;
                                 
                 checkoutform += string.Format("<form name='dibs' action='{0}' method='POST' charset='UTF-8'>", RedirectUrl);
-                checkoutform += "<p>You'll be redirected to DIBS payment in a moment...</p>";
+                checkoutform += "<p>You'll be redirected to DIBS payment in a moment. If not, click the 'Procced' button...</p>";
 
                 const string paramTemplateString = "<INPUT TYPE='hidden' name='{0}' value='{1}'>";
                 foreach (string key in reqparm)
                     checkoutform += string.Format(paramTemplateString, key, reqparm[key]);
-                
+                checkoutform += "<button type='submit'>Proceed</button>";
                 checkoutform += "</form>";
 
                 checkoutform += "<script language='javascript'>document.dibs.submit();</script>";

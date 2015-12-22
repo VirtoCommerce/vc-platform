@@ -1,76 +1,74 @@
 ﻿angular.module('virtoCommerce.orderModule')
-.controller('virtoCommerce.orderModule.operationDetailController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'virtoCommerce.orderModule.order_res_customerOrders', 'virtoCommerce.orderModule.order_res_fulfilmentCenters', 'virtoCommerce.orderModule.order_res_stores', 'virtoCommerce.orderModule.order_res_paymentGateways', 'platformWebApp.objCompareService', 'platformWebApp.settings', 'platformWebApp.authService',
-			function ($scope, dialogService, bladeNavigationService, order_res_customerOrders, order_res_fulfilmentCenters, order_res_stores, order_res_paymentGateways, objCompareService, settings, authService) {
+.controller('virtoCommerce.orderModule.operationDetailController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'virtoCommerce.orderModule.order_res_customerOrders', 'virtoCommerce.orderModule.order_res_fulfilmentCenters', 'virtoCommerce.orderModule.order_res_stores', 'platformWebApp.objCompareService', 'platformWebApp.settings', 'platformWebApp.authService',
+			function ($scope, dialogService, bladeNavigationService, order_res_customerOrders, order_res_fulfilmentCenters, order_res_stores, objCompareService, settings, authService) {
+			    var blade = $scope.blade;
 
-			    $scope.blade.refresh = function (noRefresh) {
-			        $scope.blade.isLoading = true;
+			    blade.refresh = function (noRefresh) {
+			        blade.isLoading = true;
 			        $scope.fulfillmentCenters = [];
-			        $scope.stores = [];
-			        $scope.paymentGateways = [];
 			        $scope.statuses = [];
 
 			        if (!noRefresh) {
-			            order_res_customerOrders.get({ id: $scope.blade.customerOrder.id }, function (result) {
-			            	initialize(result);
-			            	//necessary for scope bounded ACL checks 
-			            	$scope.blade.securityScopes = result.scopes;
+			            order_res_customerOrders.get({ id: blade.customerOrder.id }, function (result) {
+			                initialize(result);
+			                //necessary for scope bounded ACL checks 
+			                blade.securityScopes = result.scopes;
 			            },
 						function (error) {
-						    bladeNavigationService.setError('Error ' + error.status, $scope.blade);
+						    bladeNavigationService.setError('Error ' + error.status, blade);
 						});
 			        }
 			        else {
-			            initialize($scope.blade.customerOrder);
+			            initialize(blade.customerOrder);
 			        }
 			    }
 
 			    function initialize(customerOrder) {
 
-			        var operation = angular.isDefined($scope.blade.currentEntity) ? $scope.blade.currentEntity : customerOrder;
+			        var operation = angular.isDefined(blade.currentEntity) ? blade.currentEntity : customerOrder;
 			        var copy = angular.copy(customerOrder);
 
-			        $scope.blade.customerOrder = copy;
+			        blade.customerOrder = copy;
 
 			        if (operation.operationType.toLowerCase() == 'customerorder') {
-			            $scope.blade.currentEntity = copy;
-			            $scope.blade.origEntity = customerOrder;
-			            $scope.stores = order_res_stores.query();
+			            blade.currentEntity = copy;
+			            blade.origEntity = customerOrder;
+			            blade.stores = order_res_stores.query();
 			            $scope.statuses = settings.getValues({ id: 'Order.Status' });
-						
+
 			        }
 			        else if (operation.operationType.toLowerCase() == 'shipment') {
-			            $scope.blade.currentEntity = _.find(copy.shipments, function (x) { return x.id == operation.id; });
-			            $scope.blade.origEntity = _.find(customerOrder.shipments, function (x) { return x.id == operation.id; });
+			            blade.currentEntity = _.find(copy.shipments, function (x) { return x.id == operation.id; });
+			            blade.origEntity = _.find(customerOrder.shipments, function (x) { return x.id == operation.id; });
 			            $scope.fulfillmentCenters = order_res_fulfilmentCenters.query();
 			            $scope.statuses = settings.getValues({ id: 'Shipment.Status' });
 			        }
 			        else if (operation.operationType.toLowerCase() == 'paymentin') {
-			            $scope.paymentGateways = order_res_paymentGateways.query();
-			            $scope.blade.currentEntity = _.find(copy.inPayments, function (x) { return x.id == operation.id; });
-			            $scope.blade.origEntity = _.find(customerOrder.inPayments, function (x) { return x.id == operation.id; });
+			            $scope.currentStore = _.findWhere(blade.stores, { id: customerOrder.storeId });
+			            blade.currentEntity = _.find(copy.inPayments, function (x) { return x.id == operation.id; });
+			            blade.origEntity = _.find(customerOrder.inPayments, function (x) { return x.id == operation.id; });
 			            $scope.statuses = settings.getValues({ id: 'PaymentIn.Status' });
 			        }
-			        $scope.blade.isLoading = false;
+			        blade.isLoading = false;
 			    };
 
 			    function isDirty() {
 			        var retVal = false;
-			        if ($scope.blade.origEntity) {
-			            retVal = !objCompareService.equal($scope.blade.origEntity, $scope.blade.currentEntity) || $scope.blade.isNew;
+			        if (blade.origEntity) {
+			            retVal = !objCompareService.equal(blade.origEntity, blade.currentEntity) || blade.isNew;
 			        }
-			        if (retVal)
-			        {
-			        	retVal = authService.checkPermission('order:update', $scope.blade.securityScopes);
+			        if (retVal) {
+			            retVal = authService.checkPermission('order:update', blade.securityScopes);
 			        }
 			        return retVal;
 			    };
 
 			    function saveChanges() {
-			        $scope.blade.isLoading = true;
-			        order_res_customerOrders.update({}, $scope.blade.customerOrder, function (data, headers) {
-			            $scope.blade.refresh();
+			        blade.isLoading = true;
+			        order_res_customerOrders.update({}, blade.customerOrder, function (data, headers) {
+			            blade.refresh();
 			        },
-                    function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+                    function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
 			    };
 
 			    $scope.openFulfillmentCentersList = function () {
@@ -79,7 +77,7 @@
 			            controller: 'virtoCommerce.coreModule.fulfillment.fulfillmentListController',
 			            template: 'Modules/$(VirtoCommerce.Core)/Scripts/fulfillment/blades/fulfillment-center-list.tpl.html'
 			        };
-			        bladeNavigationService.showBlade(newBlade, $scope.blade);
+			        bladeNavigationService.showBlade(newBlade, blade);
 			    }
 
 			    $scope.openStatusSettingManagement = function () {
@@ -92,30 +90,31 @@
 			            controller: 'platformWebApp.settingsDetailController',
 			            template: '$(Platform)/Scripts/app/settings/blades/settings-detail.tpl.html'
 			        };
-			        bladeNavigationService.showBlade(newBlade, $scope.blade);
+			        bladeNavigationService.showBlade(newBlade, blade);
 			    };
 
-			    $scope.blade.headIcon = 'fa-file-text';
+			    blade.headIcon = 'fa-file-text';
 
-			    $scope.blade.toolbarCommands = [
+			    blade.toolbarCommands = [
 					{
 					    name: "orders.commands.new-document", icon: 'fa fa-plus',
 					    executeMethod: function () {
 
 					        var newBlade = {
 					            id: "newOperationWizard",
-					            customerOrder: $scope.blade.customerOrder,
-					            currentEntity: $scope.blade.currentEntity,
+					            customerOrder: blade.customerOrder,
+					            currentEntity: blade.currentEntity,
+					            stores: blade.stores,
 					            title: "orders.blades.newOperation-wizard.title",
 					            subtitle: 'orders.blades.newOperation-wizard.subtitle',
 					            controller: 'virtoCommerce.orderModule.newOperationWizardController',
 					            template: 'Modules/$(VirtoCommerce.Orders)/Scripts/wizards/newOperation/newOperation-wizard.tpl.html'
 					        };
-					        bladeNavigationService.showBlade(newBlade, $scope.blade);
+					        bladeNavigationService.showBlade(newBlade, blade);
 
 					    },
 					    canExecuteMethod: function () {
-					        return true;
+					        return blade.currentEntity && blade.currentEntity.operationType.toLowerCase() === 'customerorder';
 					    },
 					    permission: 'order:update'
 					},
@@ -132,7 +131,7 @@
 					{
 					    name: "platform.commands.reset", icon: 'fa fa-undo',
 					    executeMethod: function () {
-					        angular.copy($scope.blade.origEntity, $scope.blade.currentEntity);
+					        angular.copy(blade.origEntity, blade.currentEntity);
 					    },
 					    canExecuteMethod: function () {
 					        return isDirty();
@@ -149,24 +148,24 @@
 					            callback: function (remove) {
 					                if (remove) {
 
-					                    if ($scope.blade.currentEntity.operationType.toLowerCase() != 'customerorder') {
-					                        order_res_customerOrders.deleteOperation({ id: $scope.blade.customerOrder.id, operationId: $scope.blade.currentEntity.id },
+					                    if (blade.currentEntity.operationType.toLowerCase() != 'customerorder') {
+					                        order_res_customerOrders.deleteOperation({ id: blade.customerOrder.id, operationId: blade.currentEntity.id },
                                             function () {
-                                                $scope.blade.title = 'orders.blades.customerOrder-detail.title';
-                                                $scope.blade.titleValues = { customer: $scope.blade.customerOrder.customer };
-                                                $scope.blade.subtitle = 'orders.blades.customerOrder-detail.subtitle';
-                                                $scope.blade.template = 'Modules/$(VirtoCommerce.Orders)/Scripts/blades/customerOrder-detail.tpl.html';
-                                                $scope.blade.currentEntity = $scope.blade.customerOrder;
-                                                $scope.blade.refresh();
+                                                blade.title = 'orders.blades.customerOrder-detail.title';
+                                                blade.titleValues = { customer: blade.customerOrder.customer };
+                                                blade.subtitle = 'orders.blades.customerOrder-detail.subtitle';
+                                                blade.template = 'Modules/$(VirtoCommerce.Orders)/Scripts/blades/customerOrder-detail.tpl.html';
+                                                blade.currentEntity = blade.customerOrder;
+                                                blade.refresh();
                                             },
-                                            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+                                            function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
 					                    }
 					                    else {
-					                        order_res_customerOrders.delete({ id: $scope.blade.customerOrder.id },
+					                        order_res_customerOrders.delete({ id: blade.customerOrder.id },
                                             function () {
-                                                bladeNavigationService.closeBlade($scope.blade);
+                                                bladeNavigationService.closeBlade(blade);
                                             },
-                                            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+                                            function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
 					                    }
 					                }
 					            }
@@ -185,9 +184,9 @@
 					            id: "confirmCancelOperation",
 					            callback: function (reason) {
 					                if (reason) {
-					                    $scope.blade.currentEntity.cancelReason = reason;
-					                    $scope.blade.currentEntity.isCancelled = true;
-					                    $scope.blade.currentEntity.status = 'Cancelled';
+					                    blade.currentEntity.cancelReason = reason;
+					                    blade.currentEntity.isCancelled = true;
+					                    blade.currentEntity.status = 'Cancelled';
 					                    saveChanges();
 					                }
 					            }
@@ -195,13 +194,13 @@
 					        dialogService.showDialog(dialog, 'Modules/$(VirtoCommerce.Orders)/Scripts/dialogs/cancelOperation-dialog.tpl.html', 'virtoCommerce.orderModule.confirmCancelDialogController');
 					    },
 					    canExecuteMethod: function () {
-					        return $scope.blade.currentEntity && !$scope.blade.currentEntity.isCancelled;
+					        return blade.currentEntity && !blade.currentEntity.isCancelled;
 					    },
 					    permission: 'order:update'
 					}
 			    ];
 
-			    $scope.blade.onClose = function (closeCallback) {
+			    blade.onClose = function (closeCallback) {
 			        if (isDirty()) {
 			            var dialog = {
 			                id: "confirmItemChange",
@@ -224,7 +223,7 @@
 			    };
 
 			    function closeChildrenBlades() {
-			        angular.forEach($scope.blade.childrenBlades.slice(), function (child) {
+			        angular.forEach(blade.childrenBlades.slice(), function (child) {
 			            bladeNavigationService.closeBlade(child);
 			        });
 			    }
@@ -236,7 +235,7 @@
 
 
 			    // actions on load
-			    $scope.blade.refresh($scope.blade.isNew);
+			    blade.refresh(blade.isNew);
 
 			}])
 .controller('virtoCommerce.orderModule.confirmCancelDialogController', ['$scope', '$modalInstance', function ($scope, $modalInstance, dialog) {
