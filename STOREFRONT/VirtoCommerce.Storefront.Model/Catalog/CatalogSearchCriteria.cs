@@ -23,6 +23,7 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         public int PageNumber { get; set; }
         public int PageSize { get; set; }
         public Term[] Terms { get; set; }
+        public string SortBy { get; set; }
 
         public static CatalogSearchCriteria Parse(NameValueCollection queryString)
         {
@@ -31,6 +32,7 @@ namespace VirtoCommerce.Storefront.Model.Catalog
             retVal.PageNumber = Convert.ToInt32(queryString.Get("page") ?? "1");
             //TODO move this code to Parse or Converter method
             // tags=name1:value1,value2,value3;name2:value1,value2,value3
+            retVal.SortBy = queryString.Get("sort_by");
             retVal.Terms = (queryString.GetValues("terms") ?? new string[0])
                 .SelectMany(s => s.Split(';'))
                 .Select(s => s.Split(':'))

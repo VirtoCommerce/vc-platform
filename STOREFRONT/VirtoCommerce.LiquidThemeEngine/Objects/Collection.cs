@@ -53,10 +53,16 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         public string CurrentVendor { get; set; }
 
         /// <summary>
-        /// Returns the sort order of the collection, which is set in the collection pages of the Admin.
+        /// Returns the default sort order of the collection.
         /// </summary>
         [DataMember]
         public string DefaultSortBy { get; set; }
+
+        /// <summary>
+        /// Returns the actual sort order of the collection.
+        /// </summary>
+        [DataMember]
+        public string SortBy { get; set; }
 
         /// <summary>
         /// Returns the description of the collection.

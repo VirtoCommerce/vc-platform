@@ -157,36 +157,37 @@
     <Compile Include="Objects\FormErrors.cs" />
     <Compile Include="Objects\Fulfillment.cs" />
     <Compile Include="Objects\ILiquidContains.cs" />
+    <Compile Include="Objects\Image.cs" />
+    <Compile Include="Objects\ItemCollections.cs" />
     <Compile Include="Objects\Language.cs" />
     <Compile Include="Objects\LineItem.cs" />
     <Compile Include="Objects\Link.cs" />
     <Compile Include="Objects\Linklist.cs" />
     <Compile Include="Objects\Linklists.cs" />
+    <Compile Include="Objects\MetafieldsCollections.cs" />
     <Compile Include="Objects\Order.cs" />
     <Compile Include="Objects\Page.cs" />
     <Compile Include="Objects\Paginate.cs" />
     <Compile Include="Objects\Part.cs" />
+    <Compile Include="Objects\Product.cs" />
     <Compile Include="Objects\ProductProperty.cs" />
     <Compile Include="Objects\ShippingMethod.cs" />
+    <Compile Include="Objects\Shop.cs" />
+    <Compile Include="Objects\ShopifyThemeWorkContext.cs" />
     <Compile Include="Objects\Tag.cs" />
     <Compile Include="Objects\TagCollection.cs" />
     <Compile Include="Objects\TaxLine.cs" />
-    <Compile Include="Tags\FormTag.cs" />
-    <Compile Include="Objects\Image.cs" />
-    <Compile Include="Objects\ItemCollections.cs" />
-    <Compile Include="Objects\MetafieldsCollections.cs" />
-    <Compile Include="Objects\Product.cs" />
-    <Compile Include="Objects\Shop.cs" />
     <Compile Include="Objects\Variant.cs" />
+    <Compile Include="Tags\FormTag.cs" />
     <Compile Include="Operators\CommonOperators.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShopifyLiquidThemeEngine.cs" />
-    <Compile Include="Objects\ShopifyThemeWorkContext.cs" />
     <Compile Include="Tags\LayoutTag.cs" />
     <Compile Include="Tags\PaginateTag.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Blocks\" />
+    <Folder Include="Operators\Objects\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">

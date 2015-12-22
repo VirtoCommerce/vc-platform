@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Storefront.Model;
+using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Services;
 
@@ -33,14 +34,16 @@ namespace VirtoCommerce.Storefront.Controllers
         }
 
         /// <summary>
-        /// GET search/{categoryId}
+        /// GET search/{categoryId}?sort_by=...
         /// This method called from SeoRoute when url contains slug for category
         /// </summary>
         /// <param name="categoryId"></param>
         /// <returns></returns>
-        public async Task<ActionResult> CategoryBrowsing(string categoryId)
+        public async Task<ActionResult> CategoryBrowsing(string categoryId, string sort_by)
         {
             WorkContext.CurrentCatalogSearchCriteria.CategoryId = categoryId;
+            WorkContext.CurrentCatalogSearchCriteria.SortBy = string.IsNullOrEmpty(sort_by) ? "manual" : sort_by;
+
             WorkContext.CurrentCatalogSearchResult = await _searchService.SearchAsync(WorkContext.CurrentCatalogSearchCriteria);
 
             return View("collection", WorkContext);

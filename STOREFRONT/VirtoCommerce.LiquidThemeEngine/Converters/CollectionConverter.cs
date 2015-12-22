@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using VirtoCommerce.LiquidThemeEngine.Objects;
 using VirtoCommerce.Storefront.Model.Common;
 using storefrontModel = VirtoCommerce.Storefront.Model;
@@ -32,6 +33,9 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
 
                 result.Tags = new TagCollection(tags);
             }
+
+            result.DefaultSortBy = "manual";
+            result.SortBy = workContext.CurrentCatalogSearchCriteria.SortBy;
 
             return result;
         }
