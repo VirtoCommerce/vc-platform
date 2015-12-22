@@ -58,11 +58,14 @@ namespace VirtoCommerce.Storefront.Services
             string sort = "manual";
             string sortOrder = "asc";
 
-            var splittedSortBy = criteria.SortBy.Split('-');
-            if (splittedSortBy.Length > 1)
+            if (!string.IsNullOrEmpty(criteria.SortBy))
             {
-                sort = splittedSortBy[0].Equals("title", StringComparison.OrdinalIgnoreCase) ? "name" : splittedSortBy[0];
-                sortOrder = splittedSortBy[1].IndexOf("descending", StringComparison.OrdinalIgnoreCase) >= 0 ? "desc" : "asc";
+                var splittedSortBy = criteria.SortBy.Split('-');
+                if (splittedSortBy.Length > 1)
+                {
+                    sort = splittedSortBy[0].Equals("title", StringComparison.OrdinalIgnoreCase) ? "name" : splittedSortBy[0];
+                    sortOrder = splittedSortBy[1].IndexOf("descending", StringComparison.OrdinalIgnoreCase) >= 0 ? "desc" : "asc";
+                }
             }
 
             var result = await _searchApi.SearchModuleSearchAsync(
