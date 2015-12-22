@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using coreModels = VirtoCommerce.Content.Data.Models;
 using webModels = VirtoCommerce.Content.Web.Models;
 using VirtoCommerce.Content.Data.Services;
 using VirtoCommerce.Platform.Core.ExportImport;
@@ -41,6 +40,7 @@ namespace VirtoCommerce.Content.Web.ExportImport
 
 	public sealed class ContentExportImport
 	{
+        private static string[] _exportedFolders = {  "Pages", "Themes" };
 		private readonly IMenuService _menuService;
 		private readonly IContentStorageProvider _contentStorageProvider;  
 
@@ -100,7 +100,7 @@ namespace VirtoCommerce.Content.Web.ExportImport
             if (handleBynaryData)
             {
                 var result = _contentStorageProvider.Search("/", null);
-                foreach (var blobFolder in result.Folders)
+                foreach (var blobFolder in result.Folders.Where(x => _exportedFolders.Contains(x.Name)))
                 {
                     var contentFolder = new ContentFolder
                     {
