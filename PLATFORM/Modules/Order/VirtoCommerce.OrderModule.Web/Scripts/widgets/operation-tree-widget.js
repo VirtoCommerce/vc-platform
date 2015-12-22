@@ -1,16 +1,15 @@
 ﻿angular.module('virtoCommerce.orderModule')
 .controller('virtoCommerce.orderModule.operationTreeWidgetController', ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
     // $scope.blade = $scope.widget.blade;
-    $scope.currentOperation = {};
     $scope.operation = {};
     $scope.$watch('widget.blade.customerOrder', function (operation) {
-        $scope.operation = $scope.blade.customerOrder;
-        $scope.currentOperation = $scope.blade.currentEntity;
+        $scope.operation = operation;
+        $scope.currentOperationId = operation.id;
     });
 
     $scope.selectOperation = function (operation) {
-        if ($scope.currentOperation.id != operation.id) {
-            //$scope.currentOperation = operation;
+        if ($scope.currentOperationId != operation.id) {
+            //$scope.currentOperationId = operation.id;
             var newBlade = undefined;
             if (operation.operationType.toLowerCase() == 'shipment') {
                 newBlade = {

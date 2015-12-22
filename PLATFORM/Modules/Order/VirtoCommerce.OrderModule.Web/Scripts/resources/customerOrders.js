@@ -6,7 +6,6 @@
         getNewPayment: { url: 'api/order/customerOrders/:id/payments/new' },
         update: { method: 'PUT', url: 'api/order/customerOrders' },
         deleteOperation: { method: 'DELETE', url: 'api/order/customerOrders/:id/operations/:operationId' },
-        delete: { method: 'DELETE', url: 'api/order/customerOrders' },
         getDashboardStatistics: { url: 'api/order/dashboardStatistics' }
     });
 }]);
