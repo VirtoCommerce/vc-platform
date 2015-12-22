@@ -16,16 +16,23 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommerceMerchandisingModuleWebModelNotificaitonsSendDynamicMerchandisingNotificationRequest : IEquatable<VirtoCommerceMerchandisingModuleWebModelNotificaitonsSendDynamicMerchandisingNotificationRequest>
+    public class VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest : IEquatable<VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceMerchandisingModuleWebModelNotificaitonsSendDynamicMerchandisingNotificationRequest" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest" /> class.
         /// </summary>
-        public VirtoCommerceMerchandisingModuleWebModelNotificaitonsSendDynamicMerchandisingNotificationRequest()
+        public VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest()
         {
             
         }
 
+        
+        /// <summary>
+        /// Gets or Sets StoreId
+        /// </summary>
+        [DataMember(Name="storeId", EmitDefaultValue=false)]
+        public string StoreId { get; set; }
+  
         
         /// <summary>
         /// Gets or Sets Type
@@ -39,13 +46,6 @@ namespace VirtoCommerce.Client.Model
         /// </summary>
         [DataMember(Name="fields", EmitDefaultValue=false)]
         public Dictionary<string, Object> Fields { get; set; }
-  
-        
-        /// <summary>
-        /// Gets or Sets StoreId
-        /// </summary>
-        [DataMember(Name="storeId", EmitDefaultValue=false)]
-        public string StoreId { get; set; }
   
         
         /// <summary>
@@ -63,10 +63,10 @@ namespace VirtoCommerce.Client.Model
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class VirtoCommerceMerchandisingModuleWebModelNotificaitonsSendDynamicMerchandisingNotificationRequest {\n");
+            sb.Append("class VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest {\n");
+            sb.Append("  StoreId: ").Append(StoreId).Append("\n");
             sb.Append("  Type: ").Append(Type).Append("\n");
             sb.Append("  Fields: ").Append(Fields).Append("\n");
-            sb.Append("  StoreId: ").Append(StoreId).Append("\n");
             sb.Append("  Language: ").Append(Language).Append("\n");
             
             sb.Append("}\n");
@@ -90,21 +90,26 @@ namespace VirtoCommerce.Client.Model
         public override bool Equals(object obj)
         {
             // credit: http://stackoverflow.com/a/10454552/677735
-            return this.Equals(obj as VirtoCommerceMerchandisingModuleWebModelNotificaitonsSendDynamicMerchandisingNotificationRequest);
+            return this.Equals(obj as VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest);
         }
 
         /// <summary>
-        /// Returns true if VirtoCommerceMerchandisingModuleWebModelNotificaitonsSendDynamicMerchandisingNotificationRequest instances are equal
+        /// Returns true if VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceMerchandisingModuleWebModelNotificaitonsSendDynamicMerchandisingNotificationRequest to be compared</param>
+        /// <param name="obj">Instance of VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(VirtoCommerceMerchandisingModuleWebModelNotificaitonsSendDynamicMerchandisingNotificationRequest other)
+        public bool Equals(VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest other)
         {
             // credit: http://stackoverflow.com/a/10454552/677735
             if (other == null)
                 return false;
 
             return 
+                (
+                    this.StoreId == other.StoreId ||
+                    this.StoreId != null &&
+                    this.StoreId.Equals(other.StoreId)
+                ) && 
                 (
                     this.Type == other.Type ||
                     this.Type != null &&
@@ -114,11 +119,6 @@ namespace VirtoCommerce.Client.Model
                     this.Fields == other.Fields ||
                     this.Fields != null &&
                     this.Fields.SequenceEqual(other.Fields)
-                ) && 
-                (
-                    this.StoreId == other.StoreId ||
-                    this.StoreId != null &&
-                    this.StoreId.Equals(other.StoreId)
                 ) && 
                 (
                     this.Language == other.Language ||
@@ -139,14 +139,14 @@ namespace VirtoCommerce.Client.Model
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
                 
+                if (this.StoreId != null)
+                    hash = hash * 57 + this.StoreId.GetHashCode();
+                
                 if (this.Type != null)
                     hash = hash * 57 + this.Type.GetHashCode();
                 
                 if (this.Fields != null)
                     hash = hash * 57 + this.Fields.GetHashCode();
-                
-                if (this.StoreId != null)
-                    hash = hash * 57 + this.StoreId.GetHashCode();
                 
                 if (this.Language != null)
                     hash = hash * 57 + this.Language.GetHashCode();
