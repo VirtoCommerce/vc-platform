@@ -1,4 +1,5 @@
-{% include 'slider' %}
+<vc-content-place id="BenefitsBanner"></vc-content-place>
+<vc-content-place id="HomePageSlider"></vc-content-place>
 
 {% unless settings.home_content == blank or pages[settings.home_content].empty? or pages[settings.home_content].content == blank %}
   {% assign page = pages[settings.home_content] %}
