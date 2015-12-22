@@ -86,13 +86,14 @@ namespace VirtoCommerce.QuoteModule.Data.Converters
             return retVal;
         }
 
-        public static dataModel.QuoteRequestEntity ToDataModel(this coreModel.QuoteRequest quoteRequest)
+        public static dataModel.QuoteRequestEntity ToDataModel(this coreModel.QuoteRequest quoteRequest, PrimaryKeyResolvingMap pkMap)
 		{
 			if (quoteRequest == null)
 				throw new ArgumentNullException("quoteRequest");
 
 			var retVal = new dataModel.QuoteRequestEntity();
-			retVal.InjectFrom(quoteRequest);
+            pkMap.AddPair(quoteRequest, retVal);
+            retVal.InjectFrom(quoteRequest);
 
 			if (quoteRequest.ShipmentMethod != null)
 			{
@@ -110,7 +111,7 @@ namespace VirtoCommerce.QuoteModule.Data.Converters
 			}
 			if (quoteRequest.Items != null)
 			{
-				retVal.Items = new ObservableCollection<dataModel.QuoteItemEntity>(quoteRequest.Items.Select(x => x.ToDataModel()));
+				retVal.Items = new ObservableCollection<dataModel.QuoteItemEntity>(quoteRequest.Items.Select(x => x.ToDataModel(pkMap)));
 			}
 			return retVal;
 		}

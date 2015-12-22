@@ -31,17 +31,18 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 		}
 
 
-		public static ShipmentPackageEntity ToDataModel(this ShipmentPackage package, CustomerOrderEntity orderEntity)
+		public static ShipmentPackageEntity ToDataModel(this ShipmentPackage package, CustomerOrderEntity orderEntity, PrimaryKeyResolvingMap pkMap)
 		{
 			if (package == null)
 				throw new ArgumentNullException("package");
 
 			var retVal = new ShipmentPackageEntity();
-			retVal.InjectFrom(package);
+            pkMap.AddPair(package, retVal);
+            retVal.InjectFrom(package);
 
 			if(package.Items != null)
 			{
-				retVal.Items = new ObservableCollection<ShipmentItemEntity>(package.Items.Select(x => x.ToDataModel(orderEntity)));
+				retVal.Items = new ObservableCollection<ShipmentItemEntity>(package.Items.Select(x => x.ToDataModel(orderEntity, pkMap)));
 			}
 
 			return retVal;

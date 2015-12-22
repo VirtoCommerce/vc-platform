@@ -1,0 +1,165 @@
+using System;
+using System.Linq;
+using System.IO;
+using System.Text;
+using System.Collections;
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
+
+
+
+namespace VirtoCommerce.Client.Model
+{
+
+    /// <summary>
+    /// 
+    /// </summary>
+    [DataContract]
+    public class VirtoCommerceCartModuleWebModelDiscount : IEquatable<VirtoCommerceCartModuleWebModelDiscount>
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VirtoCommerceCartModuleWebModelDiscount" /> class.
+        /// </summary>
+        public VirtoCommerceCartModuleWebModelDiscount()
+        {
+            
+        }
+
+        
+        /// <summary>
+        /// Gets or sets the value of promotion id
+        /// </summary>
+        /// <value>Gets or sets the value of promotion id</value>
+        [DataMember(Name="promotionId", EmitDefaultValue=false)]
+        public string PromotionId { get; set; }
+  
+        
+        /// <summary>
+        /// Gets or sets the value of currency
+        /// </summary>
+        /// <value>Gets or sets the value of currency</value>
+        [DataMember(Name="currency", EmitDefaultValue=false)]
+        public string Currency { get; set; }
+  
+        
+        /// <summary>
+        /// Gets or sets the value of discount amount
+        /// </summary>
+        /// <value>Gets or sets the value of discount amount</value>
+        [DataMember(Name="discountAmount", EmitDefaultValue=false)]
+        public double? DiscountAmount { get; set; }
+  
+        
+        /// <summary>
+        /// Gets or sets the value of discount description
+        /// </summary>
+        /// <value>Gets or sets the value of discount description</value>
+        [DataMember(Name="description", EmitDefaultValue=false)]
+        public string Description { get; set; }
+  
+        
+  
+        /// <summary>
+        /// Returns the string presentation of the object
+        /// </summary>
+        /// <returns>String presentation of the object</returns>
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.Append("class VirtoCommerceCartModuleWebModelDiscount {\n");
+            sb.Append("  PromotionId: ").Append(PromotionId).Append("\n");
+            sb.Append("  Currency: ").Append(Currency).Append("\n");
+            sb.Append("  DiscountAmount: ").Append(DiscountAmount).Append("\n");
+            sb.Append("  Description: ").Append(Description).Append("\n");
+            
+            sb.Append("}\n");
+            return sb.ToString();
+        }
+  
+        /// <summary>
+        /// Returns the JSON string presentation of the object
+        /// </summary>
+        /// <returns>JSON string presentation of the object</returns>
+        public string ToJson()
+        {
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
+        }
+
+        /// <summary>
+        /// Returns true if objects are equal
+        /// </summary>
+        /// <param name="obj">Object to be compared</param>
+        /// <returns>Boolean</returns>
+        public override bool Equals(object obj)
+        {
+            // credit: http://stackoverflow.com/a/10454552/677735
+            return this.Equals(obj as VirtoCommerceCartModuleWebModelDiscount);
+        }
+
+        /// <summary>
+        /// Returns true if VirtoCommerceCartModuleWebModelDiscount instances are equal
+        /// </summary>
+        /// <param name="obj">Instance of VirtoCommerceCartModuleWebModelDiscount to be compared</param>
+        /// <returns>Boolean</returns>
+        public bool Equals(VirtoCommerceCartModuleWebModelDiscount other)
+        {
+            // credit: http://stackoverflow.com/a/10454552/677735
+            if (other == null)
+                return false;
+
+            return 
+                (
+                    this.PromotionId == other.PromotionId ||
+                    this.PromotionId != null &&
+                    this.PromotionId.Equals(other.PromotionId)
+                ) && 
+                (
+                    this.Currency == other.Currency ||
+                    this.Currency != null &&
+                    this.Currency.Equals(other.Currency)
+                ) && 
+                (
+                    this.DiscountAmount == other.DiscountAmount ||
+                    this.DiscountAmount != null &&
+                    this.DiscountAmount.Equals(other.DiscountAmount)
+                ) && 
+                (
+                    this.Description == other.Description ||
+                    this.Description != null &&
+                    this.Description.Equals(other.Description)
+                );
+        }
+
+        /// <summary>
+        /// Gets the hash code
+        /// </summary>
+        /// <returns>Hash code</returns>
+        public override int GetHashCode()
+        {
+            // credit: http://stackoverflow.com/a/263416/677735
+            unchecked // Overflow is fine, just wrap
+            {
+                int hash = 41;
+                // Suitable nullity checks etc, of course :)
+                
+                if (this.PromotionId != null)
+                    hash = hash * 57 + this.PromotionId.GetHashCode();
+                
+                if (this.Currency != null)
+                    hash = hash * 57 + this.Currency.GetHashCode();
+                
+                if (this.DiscountAmount != null)
+                    hash = hash * 57 + this.DiscountAmount.GetHashCode();
+                
+                if (this.Description != null)
+                    hash = hash * 57 + this.Description.GetHashCode();
+                
+                return hash;
+            }
+        }
+
+    }
+
+
+}

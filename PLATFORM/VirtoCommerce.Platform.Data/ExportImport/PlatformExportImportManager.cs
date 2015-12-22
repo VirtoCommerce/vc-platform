@@ -12,6 +12,7 @@ using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Security.Identity;
 using VirtoCommerce.Platform.Data.Common;
 using VirtoCommerce.Platform.Core.Caching;
+using System.Threading.Tasks;
 
 namespace VirtoCommerce.Platform.Data.ExportImport
 {
@@ -186,16 +187,16 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                     }
                 }
 
-                //Import dynamic properties
-                _dynamicPropertyService.SaveProperties(platformEntries.DynamicProperties.ToArray());
-                foreach (var propDicGroup in platformEntries.DynamicPropertyDictionaryItems.GroupBy(x => x.PropertyId))
-                {
-                    _dynamicPropertyService.SaveDictionaryItems(propDicGroup.Key, propDicGroup.ToArray());
-                }
-
                 //Import modules settings
                 if (manifest.HandleSettings)
                 {
+                    //Import dynamic properties
+                    _dynamicPropertyService.SaveProperties(platformEntries.DynamicProperties.ToArray());
+                    foreach (var propDicGroup in platformEntries.DynamicPropertyDictionaryItems.GroupBy(x => x.PropertyId))
+                    {
+                        _dynamicPropertyService.SaveDictionaryItems(propDicGroup.Key, propDicGroup.ToArray());
+                    }
+
                     foreach (var module in manifest.Modules)
                     {
                         _settingsManager.SaveSettings(platformEntries.Settings.Where(x => x.ModuleId == module.Id).ToArray());
@@ -214,13 +215,13 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                 //Roles
                 platformExportObj.Roles = _roleManagementService.SearchRoles(new RoleSearchRequest { SkipCount = 0, TakeCount = int.MaxValue }).Roles;
                 //users 
-                var usersResult = _securityService.SearchUsersAsync(new UserSearchRequest { TakeCount = int.MaxValue }).Result;
+                var usersResult = Task.Run(()=> _securityService.SearchUsersAsync(new UserSearchRequest { TakeCount = int.MaxValue })).Result;
                 progressInfo.Description = String.Format("Security: {0} users exporting...", usersResult.Users.Count());
                 progressCallback(progressInfo);
 
                 foreach (var user in usersResult.Users)
                 {
-                    var userExt = _securityService.FindByIdAsync(user.Id, UserDetails.Export).Result;
+                    var userExt = Task.Run(() => _securityService.FindByIdAsync(user.Id, UserDetails.Export)).Result;
                     if (userExt != null)
                     {
                         platformExportObj.Users.Add(userExt);

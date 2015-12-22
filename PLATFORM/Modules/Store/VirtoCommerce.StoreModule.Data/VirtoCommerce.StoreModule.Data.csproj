@@ -97,6 +97,7 @@
     <Compile Include="Model\StorePaymentMethod.cs" />
     <Compile Include="Model\StoreShippingMethod.cs" />
     <Compile Include="Model\StoreTaxProvider.cs" />
+    <Compile Include="Notifications\StoreDynamicEmailNotification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\StoreRepositoryImpl.cs" />
     <Compile Include="Repositories\IStoreRepository.cs" />

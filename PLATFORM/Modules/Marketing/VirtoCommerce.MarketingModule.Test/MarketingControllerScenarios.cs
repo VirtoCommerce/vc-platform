@@ -189,7 +189,7 @@ namespace VirtoCommerce.MarketingModule.Test
 
 		private MarketingModulePromotionController GetMarketingController(IMarketingExtensionManager extensionManager)
 		{
-			var retVal = new MarketingModulePromotionController(GetMarketingService(), extensionManager);
+			var retVal = new MarketingModulePromotionController(GetMarketingService(), extensionManager, null);
 			return retVal;
 		}
 

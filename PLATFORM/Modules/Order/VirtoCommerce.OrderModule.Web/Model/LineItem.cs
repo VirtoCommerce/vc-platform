@@ -30,7 +30,7 @@ namespace VirtoCommerce.OrderModule.Web.Model
 		/// </summary>
 		public decimal Tax { get; set; }
 
-		[JsonConverter(typeof(StringEnumConverter))]
+        [JsonConverter(typeof(StringEnumConverter))]
 		public CurrencyCodes Currency { get; set; }
 		/// <summary>
 		/// Reserve quantity
@@ -41,8 +41,10 @@ namespace VirtoCommerce.OrderModule.Web.Model
 		public string ProductId { get; set; }
 		public string CatalogId { get; set; }
 		public string CategoryId { get; set; }
+        public string Sku { get; set; }
+        public string ProductType { get; set; }
 
-		public string Name { get; set; }
+        public string Name { get; set; }
 
 		public string ImageUrl { get; set; }
 

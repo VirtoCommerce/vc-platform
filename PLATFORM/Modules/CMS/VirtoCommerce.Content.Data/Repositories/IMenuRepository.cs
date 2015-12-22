@@ -9,7 +9,8 @@ namespace VirtoCommerce.Content.Data.Repositories
 {
     public interface IMenuRepository : IDisposable
 	{
-		IEnumerable<MenuLinkList> GetListsByStoreId(string storeId);
+        IEnumerable<MenuLinkList> GetAllLinkLists();
+        IEnumerable<MenuLinkList> GetListsByStoreId(string storeId);
 		MenuLinkList GetListById(string listId);
 		void UpdateList(MenuLinkList list);
 		void DeleteList(string listId);

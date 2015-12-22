@@ -1,0 +1,488 @@
+﻿<div ng-view=""></div>
+
+<script id="storefront.checkout.customerInformation.tpl" type="text/ng-template">
+    <div class="step">
+        <form accept-charset="UTF-8" action="" class="edit_checkout animate-floating-labels" name="formCustomerInformation" novalidate="novalidate" method="post">
+            <input id="Type" name="Type" type="hidden" value="Shipping" ng-model="checkout.shippingAddress.Type" ng-init="checkout.shippingAddress.Type = 'Shipping'" />
+            <div class="step__sections">
+                <div class="section section--contact-information">
+                    <div class="section__header">
+                        <h2 class="section__title">{{ 'checkout.customer_information.title' | t }}</h2>
+                    </div>
+                    <div class="section__content">
+                        <div class="fieldset">
+                            <div class="field field--required" ng-class="{ 'field--show-floating-label': !formCustomerInformation.Email.$error.required, 'field--error': formCustomerInformation.Email.$dirty && (formCustomerInformation.Email.$error.required || formCustomerInformation.Email.$error.email) }">
+                                <div class="field__input-wrapper">
+                                    <label class="field__label" for="Email">{{ 'checkout.customer_information.email' | t }}</label>
+                                    <input class="field__input" id="Email" name="Email" size="30" placeholder="{{ 'checkout.customer_information.email' | t }}" required="required" type="email" ng-model="checkout.shippingAddress.Email" ng-disabled="checkout.customerInformationProcessing" />
+                                </div>
+                                <p class="field__message field__message--error" ng-if="formCustomerInformation.Email.$dirty && formCustomerInformation.Email.$error.required">
+                                    {{ 'checkout.email_required_message' | t }}
+                                </p>
+                                <p class="field__message field__message--error" ng-if="formCustomerInformation.Email.$dirty && formCustomerInformation.Email.$error.email">
+                                    {{ 'checkout.invalid_email_message' | t }}
+                                </p>
+                            </div>
+                        </div>
+                        <p class="section__content__text" ng-if="customer.UserName == 'Anonymous'">
+                            {{ 'checkout.customer_information.has_account_text' | t }}
+                            <a href="{{ 'account/login?returnUrl=cart/checkout/#/customer-information' | absolute_url }}" target="_self">{{ 'checkout.customer_information.log_in' | t }}</a>
+                        </p>
+                    </div>
+                </div>
+                <div class="section section--shipping-address">
+                    <div class="section__header">
+                        <h2 class="section__title">{{ 'checkout.shipping_address' | t }}</h2>
+                    </div>
+                    <div class="section__content">
+                        <div class="fieldset">
+                            <div class="field field--optional field--show-floating-label" ng-if="customer.Addresses.length">
+                                <div class="field__input-wrapper field__input-wrapper--select">
+                                    <label class="field__label" for="Addresses">Customer addresses</label>
+                                    <select class="field__input field__input--select text-truncate" id="Addresses" name="Addresses" size="1" ng-model="checkout.selectedAddressId" ng-disabled="checkout.customerInformationProcessing" ng-change="selectAddress('Shipping')">
+                                        <option ng-repeat="address in customer.Addresses" ng-value="address.Id" ng-bind="address.StringifiedAddress" ng-selected="address.Id == 1"></option>
+                                    </select>
+                                    <input id="CountryCode" name="CountryCode" type="hidden" ng-value="checkout.shippingAddress.CountryCode" ng-model="checkout.shippingAddress.CountryCode" ng-init="checkout.shippingAddress.CountryCode" />
+                                </div>
+                            </div>
+                            <div class="field--half field field--required" ng-class="{ 'field--show-floating-label': checkout.shippingAddress.FirstName.length, 'field--error': formCustomerInformation.FirstName.$dirty && formCustomerInformation.FirstName.$error.required }">
+                                <div class="field__input-wrapper">
+                                    <label class="field__label" for="FirstName">{{ 'checkout.address.first_name' | t }}</label>
+                                    <input class="field__input" id="FirstName" name="FirstName" placeholder="{{ 'checkout.address.first_name' | t }}" required="required" size="30" type="text" ng-model="checkout.shippingAddress.FirstName" ng-disabled="checkout.customerInformationProcessing" />
+                                </div>
+                                <p class="field__message field__message--error" ng-if="formCustomerInformation.FirstName.$dirty && formCustomerInformation.FirstName.$error.required">
+                                    {{ 'checkout.first_name_required_message' | t }}
+                                </p>
+                            </div>
+                            <div class="field--half field field--required" ng-class="{ 'field--show-floating-label': checkout.shippingAddress.LastName.length, 'field--error': formCustomerInformation.LastName.$dirty && formCustomerInformation.LastName.$error.required }">
+                                <div class="field__input-wrapper">
+                                    <label class="field__label" for="LastName">{{ 'checkout.address.last_name' | t }}</label>
+                                    <input class="field__input" id="LastName" name="LastName" placeholder="{{ 'checkout.address.last_name' | t }}" required="required" size="30" type="text" ng-model="checkout.shippingAddress.LastName" ng-disabled="checkout.customerInformationProcessing" />
+                                </div>
+                                <p class="field__message field__message--error" ng-if="formCustomerInformation.LastName.$dirty && formCustomerInformation.LastName.$error.required">
+                                    {{ 'checkout.last_name_required_message' | t }}
+                                </p>
+                            </div>
+                            <div class="field field--optional" ng-class="{ 'field--show-floating-label': checkout.shippingAddress.Organization.length }">
+                                <div class="field__input-wrapper">
+                                    <label class="field__label" for="Organization">{{ 'checkout.address.company' | t }} {{ 'checkout.optional_field_sign' | t }}</label>
+                                    <input class="field__input" id="Organization" name="Organization" placeholder="{{ 'checkout.address.company' | t }} {{ 'checkout.optional_field_sign' | t }}" size="30" type="text" ng-model="checkout.shippingAddress.Organization" ng-disabled="checkout.customerInformationProcessing" />
+                                </div>
+                            </div>
+                            <div class="field--two-thirds field field--required" ng-class="{ 'field--show-floating-label': checkout.shippingAddress.Line1.length, 'field--error': formCustomerInformation.Line1.$dirty && formCustomerInformation.Line1.$error.required }">
+                                <div class="field__input-wrapper">
+                                    <label class="field__label" for="Line1">{{ 'checkout.address.address1' | t }}</label>
+                                    <input class="field__input" id="Line1" name="Line1" placeholder="{{ 'checkout.address.address1' | t }}" required="required" size="30" type="text" ng-model="checkout.shippingAddress.Line1" ng-disabled="checkout.customerInformationProcessing" />
+                                </div>
+                                <p class="field__message field__message--error" ng-if="formCustomerInformation.Line1.$dirty && formCustomerInformation.Line1.$error.required">
+                                    {{ 'checkout.address1_required_message' | t }}
+                                </p>
+                            </div>
+                            <div class="field--third field field--optional" ng-class="{ 'field--show-floating-label': checkout.shippingAddress.Line2.length }">
+                                <div class="field__input-wrapper">
+                                    <label class="field__label" for="Line2">{{ 'checkout.address.address2' | t }} {{ 'checkout.optional_field_sign' | t }}</label>
+                                    <input class="field__input" id="Line2" name="Line2" placeholder="{{ 'checkout.address.address2' | t }} {{ 'checkout.optional_field_sign' | t }}" size="30" type="text" ng-model="checkout.shippingAddress.Line2" ng-disabled="checkout.customerInformationProcessing" />
+                                </div>
+                            </div>
+                            <div class="field field--required" ng-class="{ 'field--show-floating-label': checkout.shippingAddress.City.length, 'field--error': formCustomerInformation.City.$dirty && formCustomerInformation.City.$error.required }">
+                                <div class="field__input-wrapper">
+                                    <label class="field__label" for="City">{{ 'checkout.address.city' | t }}</label>
+                                    <input class="field__input" id="City" name="City" placeholder="{{ 'checkout.address.city' | t }}" required="required" size="30" type="text" ng-model="checkout.shippingAddress.City" ng-disabled="checkout.customerInformationProcessing" />
+                                </div>
+                                <p class="field__message field__message--error" ng-if="formCustomerInformation.City.$dirty && formCustomerInformation.City.$error.required">
+                                    {{ 'checkout.city_required_message' | t }}
+                                </p>
+                            </div>
+                            <div class="field field--required field--show-floating-label" ng-class="{ 'field--three-eights': checkout.shippingAddress.CountryName && checkout.countryRegions, 'field--half': !checkout.countryRegions || !checkout.shippingAddress.CountryName }">
+                                <div class="field__input-wrapper field__input-wrapper--select">
+                                    <label class="field__label" for="CountryName">{{ 'checkout.address.country' | t }}</label>
+                                    <select class="field__input field__input--select" id="CountryName" name="CountryName" required="required" size="1" ng-model="checkout.shippingAddress.CountryName" ng-change="setCountry('Shipping', checkout.shippingAddress.CountryName)" ng-disabled="checkout.customerInformationProcessing">
+                                        <option disabled="disabled" value="">Select country</option>
+                                        <option ng-repeat="country in checkout.countries" ng-value="country.Name" ng-bind="country.Name" ng-selected="country.Name == checkout.shippingAddress.CountryName"></option>
+                                    </select>
+                                    <input id="CountryCode" name="CountryCode" type="hidden" ng-value="checkout.shippingAddress.CountryCode" ng-model="checkout.shippingAddress.CountryCode" ng-init="checkout.shippingAddress.CountryCode" />
+                                </div>
+                                <p class="field__message field__message--error" ng-if="formCustomerInformation.CountryName.$error.required">
+                                    {{ 'checkout.country_required_message' | t }}
+                                </p>
+                            </div>
+                            <div class="field field--required field--show-floating-label field--three-eights" ng-if="checkout.countryRegions && checkout.shippingAddress.CountryName">
+                                <div class="field__input-wrapper field__input-wrapper--select">
+                                    <label class="field__label" for="RegionName">{{ 'checkout.address.province' | t }}</label>
+                                    <select class="field__input field__input--select" id="RegionName" name="RegionName" placeholder="{{ 'checkout.address.province' | t }}" required="required" ng-model="checkout.shippingAddress.RegionName" ng-change="setCountryRegion('Shipping', checkout.shippingAddress.RegionName)" ng-disabled="checkout.customerInformationProcessing">
+                                        <option disabled="disabled" value="">Selecet region</option>
+                                        <option ng-repeat="region in checkout.countryRegions" ng-value="region.Name" ng-bind="region.Name" ng-selected="region.Name == checkout.shippingAddress.RegionName"></option>
+                                    </select>
+                                    <input id="RegionId" name="RegionId" type="hidden" ng-value="checkout.shippingAddress.RegionId" ng-model="checkout.shippingAddress.RegionId" ng-init="checkout.shippingAddress.RegionId" />
+                                </div>
+                                <p class="field__message field__message--error" ng-if="formCustomerInformation.RegionName.$error.required">
+                                    {{ 'checkout.region_required_message' | t }}
+                                </p>
+                            </div>
+                            <div class="field field--required" ng-class="{ 'field--half': !checkout.countryRegions || !checkout.shippingAddress.CountryName, 'field--quarter': checkout.countryRegions && checkout.shippingAddress.CountryName, 'field--show-floating-label': checkout.shippingAddress.PostalCode.length, 'field--error': formCustomerInformation.PostalCode.$dirty && formCustomerInformation.PostalCode.$error.required }">
+                                <div class="field__input-wrapper">
+                                    <label class="field__label" for="PostalCode">{{ 'checkout.address.zip' | t }}</label>
+                                    <input class="field__input" id="PostalCode" name="PostalCode" placeholder="{{ 'checkout.address.zip' | t }}" required="required" size="30" type="text" ng-model="checkout.shippingAddress.PostalCode" ng-disabled="checkout.customerInformationProcessing" />
+                                </div>
+                                <p class="field__message field__message--error" ng-if="formCustomerInformation.PostalCode.$dirty && formCustomerInformation.PostalCode.$error.required">
+                                    {{ 'checkout.postal_code_required_message' | t }}
+                                </p>
+                            </div>
+                            <div class="field field--optional" ng-class="{ 'field--show-floating-label': checkout.shippingAddress.Phone.length }">
+                                <div class="field__input-wrapper">
+                                    <label class="field__label" for="Phone">{{ 'checkout.address.phone' | t }} {{ 'checkout.optional_field_sign' | t }}</label>
+                                    <input class="field__input" id="Phone" name="Phone" placeholder="{{ 'checkout.address.phone' | t }} {{ 'checkout.optional_field_sign' | t }}" size="30" type="text" ng-model="checkout.shippingAddress.Phone" ng-disabled="checkout.customerInformationProcessing" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="step__footer">
+                <button class="step__footer__continue-btn btn btn" type="button" ng-class="{ 'btn--disabled': formCustomerInformation.$invalid, 'btn--loading': checkout.customerInformationProcessing }" ng-click="setCustomerInformation()" ng-disabled="formCustomerInformation.$invalid || checkout.customerInformationProcessing">
+                    <span class="btn__content">{{ 'checkout.customer_information.continue_text' | t }}</span>
+                    <i class="btn__spinner icon icon--button-spinner"></i>
+                </button>
+                <a class="step__footer__previous-link" href="{{ 'cart' | absolute_url }}" target="_self">
+                    <svg class="previous-link__icon icon--chevron icon" height="11.3" width="6.7" viewBox="0 0 6.7 11.3" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M 6.7 1.1 l -1 -1.1 l -4.6 4.6 l -1.1 1.1 l 1.1 1 l 4.6 4.6 l 1 -1 l -4.6 -4.6 Z"></path>
+                    </svg>
+                    {{ 'checkout.customer_information.return_text' | t }}
+                </a>
+            </div>
+        </form>
+    </div>
+</script>
+
+<script id="storefront.checkout.shippingMethod.tpl" type="text/ng-template">
+    <div class="step">
+        <form accept-charset="UTF-8" action="" class="edit_checkout animate-floating-labels" method="post" name="formShippingMethod">
+            <div class="step__sections">
+                <div class="section section--shipping-address-recap">
+                    <div class="section__header">
+                        <h2 class="section__title">{{ 'checkout.shipping_address' | t }}</h2>
+                    </div>
+                    <div class="section__content">
+                        <p>
+                            <span ng-bind="checkout.shippingAddress.FirstName"></span> <span ng-bind="checkout.shippingAddress.LastName"></span><br />
+                            <span ng-bind="checkout.shippingAddress.Line1"></span><span ng-if="checkout.shippingAddress.Line2" ng-bind="', ' + checkout.shippingAddress.Line2"></span><br />
+                            <span ng-bind="checkout.shippingAddress.City"></span><span ng-if="checkout.shippingAddress.RegionName" ng-bind="', ' + checkout.shippingAddress.RegionName"></span>, <span ng-bind="checkout.shippingAddress.PostalCode"></span><br />
+                            <span ng-bind="checkout.shippingAddress.CountryName"></span><br ng-if="checkout.shippingAddress.Phone" />
+                            <span ng-if="checkout.shippingAddress.Phone" ng-bind="checkout.shippingAddress.Phone"></span>
+                            <a class="edit-link edit-link--small" href="{{ 'cart/checkout/#/customer-information' | absolute_url }}">{{ 'checkout.edit_shipping_address' | t }}</a>
+                        </p>
+                    </div>
+                </div>
+                <div class="section section--shipping-method">
+                    <div class="section__header">
+                        <h2 class="section__title">{{ 'checkout.shipping_method.title' | t }}</h2>
+                    </div>
+                    <div class="section__content">
+                        <div class="content-box" ng-repeat="availableShippingMethod in checkout.availableShippingMethods">
+                            <div class="content-box__row">
+                                <div class="radio-wrapper">
+                                    <div class="radio__input">
+                                        <input class="input-radio" id="{( availableShippingMethod.ShipmentMethodCode )}" name="ShipmentMethodCode" ng-required="!checkout.selectedShippingMethod.ShipmentMethodCode" type="radio" ng-model="checkout.selectedShippingMethod.ShipmentMethodCode" ng-value="availableShippingMethod.ShipmentMethodCode" ng-change="setShippingMethod()" ng-disabled="checkout.shippingMethodProcessing" />
+                                    </div>
+                                    <label class="radio__label" for="{( availableShippingMethod.ShipmentMethodCode )}" ng-bind="availableShippingMethod.Name"></label>
+                                    <span class="radio__accessory content-box__emphasis" ng-bind="availableShippingMethod.Price.FormatedAmount"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="step__footer">
+                <button class="step__footer__continue-btn btn" name="button" type="button" ng-class="{ 'btn--disabled': formShippingMethod.$invalid, 'btn--loading': checkout.shippingMethodProcessing }" ng-click="innerRedirect('payment-method')" ng-disabled="formShippingMethod.$invalid || checkout.shippingMethodProcessing">
+                    <span class="btn__content">{{ 'checkout.shipping_method.continue_text' | t }}</span>
+                    <i class="btn__spinner icon icon--button-spinner"></i>
+                </button>
+                <a class="step__footer__previous-link" href="" ng-click="innerRedirect('customer-information')">
+                    <svg class="previous-link__icon icon--chevron icon" height="11.3" width="6.7" viewBox="0 0 6.7 11.3" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M 6.7 1.1 l -1 -1.1 l -4.6 4.6 l -1.1 1.1 l 1.1 1 l 4.6 4.6 l 1 -1 l -4.6 -4.6 Z"></path>
+                    </svg>
+                    {{ 'checkout.shipping_method.return_text' | t }}
+                </a>
+            </div>
+        </form>
+    </div>
+</script>
+
+<script id="storefront.checkout.paymentMethod.tpl" type="text/ng-template">
+    <div class="step">
+        <form accept-charset="UTF-8" action="" class="edit_checkout animate-floating-labels" method="post" name="formPaymentMethod">
+            <div class="step__sections">
+                <div class="section section--contact-information">
+                    <div class="section__header">
+                        <h2 class="section__title">{{ 'checkout.customer_information.title' | t }}</h2>
+                    </div>
+                    <div class="section__content">
+                        <div class="fieldset">
+                            <div class="field field--required" ng-class="{ 'field--show-floating-label': !formPaymentMethod.Email.$error.required, 'field--error': formPaymentMethod.Email.$dirty && (formPaymentMethod.Email.$error.required || formPaymentMethod.Email.$error.email) }">
+                                <div class="field__input-wrapper">
+                                    <label class="field__label" for="Email">{{ 'checkout.customer_information.email' | t }}</label>
+                                    <input class="field__input" id="Email" name="Email" size="30" placeholder="{{ 'checkout.customer_information.email' | t }}" required="required" type="email" ng-model="checkout.billingAddress.Email" ng-disabled="checkout.paymentMethodProcessing" />
+                                </div>
+                                <p class="field__message field__message--error" ng-if="formPaymentMethod.Email.$dirty && formPaymentMethod.Email.$error.required">
+                                    {{ 'checkout.email_required_message' | t }}
+                                </p>
+                                <p class="field__message field__message--error" ng-if="formPaymentMethod.Email.$dirty && formPaymentMethod.Email.$error.email">
+                                    {{ 'checkout.invalid_email_message' | t }}
+                                </p>
+                            </div>
+                        </div>
+                        <p class="section__content__text">
+                            {{ 'checkout.customer_information.has_account_text' | t }}
+                            <a href="{{ 'account/login' | absolute_url }}" target="_self">{{ 'checkout.customer_information.log_in' | t }}</a>
+                        </p>
+                    </div>
+                </div>
+                <div class="section section--payment-method">
+                    <div class="section__header">
+                        <h2 class="section__title">{{ 'checkout.payment_method.title' | t }}</h2>
+                        <p class="section__text">{{ 'checkout.payment_method.subtitle' | t }}</p>
+                    </div>
+                    <div class="section__content">
+                        <div class="content-box" ng-repeat="availablePaymentMethod in checkout.availablePaymentMethods">
+                            <div class="radio-wrapper content-box__row">
+                                <div class="radio__input">
+                                    <input class="input-radio" id="{( availablePaymentMethod.GatewayCode )}" name="PaymentMethodCode" ng-required="!checkout.selectedPaymentMethod.GatewayCode" type="radio" ng-model="checkout.selectedPaymentMethod.GatewayCode" ng-value="availablePaymentMethod.GatewayCode" />
+                                </div>
+                                <label class="radio__label content-box__emphasis" for="{( availablePaymentMethod.GatewayCode )}" ng-bind="availablePaymentMethod.Name"></label>
+                                <div class="radio__accessory">
+                                    <div class="payment-icon" style="background-repeat: no-repeat; background-size: 38px auto;" ng-style="{ 'background-image': 'url(' + availablePaymentMethod.IconUrl + ')' }">
+                                        <span class="visually-hidden" ng-bind="availablePaymentMethod.Name"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="radio-wrapper content-box__row content-box__row--secondary" ng-if="availablePaymentMethod.Type == 'Standard' && availablePaymentMethod.GatewayCode == checkout.selectedPaymentMethod.GatewayCode">
+                                <div class="fieldset " dir="ltr">
+                                    <div class="field field--required" ng-class="{ 'field--show-floating-label': !formPaymentMethod.CardNumber.$error.required, 'field--error': formPaymentMethod.CardNumber.$dirty && (formPaymentMethod.CardNumber.$error.required || formPaymentMethod.CardNumber.$error.pattern) }">
+                                        <div class="field__input-wrapper">
+                                            <label class="field__label" for="CardNumber">{{ 'checkout.payment_method.card_number' | t }}</label>
+                                            <input class="field__input" id="CardNumber" name="CardNumber" placeholder="{{ 'checkout.payment_method.card_number' | t }}" required="required" size="30" type="text" ng-model="checkout.bankCardInfo.BankCardNumber" ng-pattern="checkout.bankCardInfo.CardNumberPattern" ng-change="validateBankCardNumber()" />
+                                            <span class="field__icon icon icon--lock">
+                                                <span class="visually-hidden">{{ 'checkout.secure_field' | t }}</span>
+                                            </span>
+                                            <span class="field__icon icon payment-icon" style="right: 40px; top: 23%;" ng-class="{
+                                                'payment-icon--american-express': availablePaymentMethod.Type == 'Standard' && checkout.bankCardInfo.Type == 'AmericanExpress',
+                                                'payment-icon--dankort': availablePaymentMethod.Type == 'Standard' && checkout.bankCardInfo.Type == 'Dankort',
+                                                'payment-icon--diners-club': availablePaymentMethod.Type == 'Standard' && checkout.bankCardInfo.Type == 'Diners',
+                                                'payment-icon--discover': availablePaymentMethod.Type == 'Standard' && checkout.bankCardInfo.Type == 'Discover',
+                                                'payment-icon--jcb': availablePaymentMethod.Type == 'Standard' && checkout.bankCardInfo.Type == 'Jcb',
+                                                'payment-icon--laser': availablePaymentMethod.Type == 'Standard' && checkout.bankCardInfo.Type == 'Laser',
+                                                'payment-icon--maestro': availablePaymentMethod.Type == 'Standard' && checkout.bankCardInfo.Type == 'Maestro',
+                                                'payment-icon--master': availablePaymentMethod.Type == 'Standard' && checkout.bankCardInfo.Type == 'MasterCard',
+                                                'payment-icon--unionpay': availablePaymentMethod.Type == 'Standard' && checkout.bankCardInfo.Type == 'UnionPay',
+                                                'payment-icon--visa': availablePaymentMethod.Type == 'Standard' && checkout.bankCardInfo.Type == 'Visa' }">
+                                                <span class="visually-hidden" ng-bind="checkout.bankCardInfo.Type"></span>
+                                            </span>
+                                        </div>
+                                        <p class="field__message field__message--error" ng-if="formPaymentMethod.CardNumber.$dirty && formPaymentMethod.CardNumber.$error.required">
+                                            {{ 'checkout.bank_card_number_required_message' | t }}
+                                        </p>
+                                        <p class="field__message field__message--error" ng-if="formPaymentMethod.CardNumber.$dirty && formPaymentMethod.CardNumber.$error.pattern">
+                                            {{ 'checkout.invalid_bank_card_number_message' | t }}
+                                        </p>
+                                    </div>
+                                    <div class="field--half field field--required" ng-class="{ 'field--show-floating-label': checkout.bankCardInfo.CardholderName.length, 'field--error': formPaymentMethod.CardholderName.$dirty && formPaymentMethod.CardholderName.$error.required }">
+                                        <div class="field__input-wrapper">
+                                            <label class="field__label" for="CardholderName">{{ 'checkout.payment_method.cardholder_name' | t }}</label>
+                                            <input class="field__input" id="CardholderName" name="CardholderName" placeholder="{{ 'checkout.payment_method.cardholder_name' | t }}" required="required" size="30" type="text" ng-model="checkout.bankCardInfo.CardholderName" ng-change="capitalizeCardholderName()" />
+                                        </div>
+                                        <p class="field__message field__message--error" ng-if="formPaymentMethod.CardholderName.$dirty && formPaymentMethod.CardholderName.$error.required">
+                                            {{ 'checkout.bank_card_cardholder_name_required_message' | t }}
+                                        </p>
+                                    </div>
+                                    <div class="field--quarter field field--required" ng-class="{ 'field--show-floating-label': checkout.bankCardInfo.ExpirationDate.length, 'field--error': formPaymentMethod.ExpirationDate.$dirty && (formPaymentMethod.ExpirationDate.$error.required || formPaymentMethod.ExpirationDate.$error.pattern) }">
+                                        <div class="field__input-wrapper">
+                                            <label class="field__label" for="CardExpirationDate">{{ 'checkout.payment_method.expiry_date' | t }}</label>
+                                            <input class="field__input" id="CardExpirationDate" name="ExpirationDate" placeholder="{{ 'checkout.payment_method.expiry_date' | t }}" required="required" size="30" type="text" ng-model="checkout.bankCardInfo.ExpirationDate" ng-pattern="/(0[1-9]|1[012])[ ]['/'][ ][0-9]{2,2}$/" />
+                                        </div>
+                                        <p class="field__message field__message--error" ng-if="formPaymentMethod.ExpirationDate.$dirty && (formPaymentMethod.ExpirationDate.$error.required || formPaymentMethod.ExpirationDate.$error.pattern)">
+                                            {{ 'checkout.invalid_bank_card_expiration_date_message' | t }}
+                                        </p>
+                                    </div>
+                                    <div class="field--quarter field field--required" ng-class="{ 'field--show-floating-label': checkout.bankCardInfo.CardCvv.length, 'field--error': formPaymentMethod.CardCvv.$dirty && (formPaymentMethod.CardCvv.$error.required || formPaymentMethod.CardCvv.$error.pattern) }">
+                                        <div class="field__input-wrapper">
+                                            <label class="field__label" for="CardCvv">{{ 'checkout.payment_method.cvv' | t }}</label>
+                                            <input class="field__input" id="CardCvv" name="CardCvv" placeholder="{{ 'checkout.payment_method.cvv' | t }}" required="required" size="30" type="text" ng-model="checkout.bankCardInfo.BankCardCVV2" ng-pattern="checkout.bankCardInfo.CvvPattern" />
+                                            <span class="field__icon icon icon--question has-tooltip" role="tooltip" tabindex="0">
+                                                <span class="tooltip">
+                                                    <span ng-class="{ 'hidden': checkout.bankCardInfo.Type == 'AmericanExpress' }" data-cvv-tooltip="unknown">{{ 'checkout.payment_method.cvv_unknown_tooltip_text' | t }}</span>
+                                                    <span ng-class="{ 'hidden': checkout.bankCardInfo.Type != 'AmericanExpress' }" data-cvv-tooltip="amex" ng-if="checkout.bankCardInfo.Type == 'AmericanExpress'">{{ 'checkout.payment_method.cvv_amex_tooltip_text' | t }}</span>
+                                                </span>
+                                            </span>
+                                        </div>
+                                        <p class="field__message field__message--error" ng-if="formPaymentMethod.CardCvv.$dirty && formPaymentMethod.CardCvv.$error.required">
+                                            {{ 'checkout.bank_card_cvv_required_message' | t }}
+                                        </p>
+                                        <p class="field__message field__message--error" ng-if="formPaymentMethod.CardCvv.$dirty && formPaymentMethod.CardCvv.$error.pattern">
+                                            {{ 'checkout.invalid_bank_card_cvv_message' | t }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hidden">
+                            <div class="content-box blank-slate">
+                                <div class="content-box__row">
+                                    <i class="blank-slate__icon icon icon--free-tag"></i>
+                                    <p>{{ 'checkout.payment_method.order_payed_by_gift_card' | t }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hidden">
+                            <div class="content-box blank-slate">
+                                <div class="content-box__row">
+                                    <i class="blank-slate__icon icon icon--free-tag"></i>
+                                    <p>{{ 'checkout.payment_method.order_free' | t }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="section section--billing-address">
+                    <div class="section__header">
+                        <h2 class="section__title">{{ 'checkout.payment_method.billing_address' | t }}</h2>
+                    </div>
+                    <div class="section__content">
+                        <div class="content-box">
+                            <div class="radio-wrapper content-box__row" ng-if="checkout.hasPhysicalProducts">
+                                <div class="radio__input">
+                                    <input class="input-radio" id="BillingAddressEqualsShipping" name="BillingAddressEqualsShipping" type="radio" ng-model="checkout.billingAddressEqualsShipping" ng-value="true" ng-change="setBillingAddressEqualsShipping()" />
+                                </div>
+                                <label class="radio__label content-box__emphasis" for="BillingAddressEqualsShipping">{{ 'checkout.payment_method.billing_address_equals_shipping' | t }}</label>
+                            </div>
+                            <div class="radio-wrapper content-box__row" ng-if="checkout.hasPhysicalProducts">
+                                <div class="radio__input">
+                                    <input class="input-radio" id="BillingAddressNotEqualsShipping" name="BillingAddressEqualsShipping" type="radio" ng-model="checkout.billingAddressEqualsShipping" ng-value="false" />
+                                </div>
+                                <label class="radio__label content-box__emphasis" for="BillingAddressNotEqualsShipping">{{ 'checkout.payment_method.billing_address_different' | t }}</label>
+                            </div>
+                            <div class="radio-group__row content-box__row content-box__row--secondary" ng-if="checkout.hasPhysicalProducts && !checkout.billingAddressEqualsShipping || !checkout.hasPhysicalProducts">
+                                <div class="fieldset">
+                                    <input id="Type" name="Type" type="hidden" value="Billing" ng-model="checkout.billingAddress.Type" ng-init="checkout.billingAddress.Type = 'Billing'" />
+                                    <div class="field--half field field--required" ng-class="{ 'field--show-floating-label': checkout.billingAddress.FirstName.length, 'field--error': formPaymentMethod.FirstName.$dirty && formPaymentMethod.FirstName.$error.required }">
+                                        <div class="field__input-wrapper">
+                                            <label class="field__label" for="FirstName">{{ 'checkout.address.first_name' | t }}</label>
+                                            <input class="field__input" id="FirstName" name="FirstName" placeholder="{{ 'checkout.address.first_name' | t }}" required="required" size="30" type="text" ng-model="checkout.billingAddress.FirstName" />
+                                        </div>
+                                        <p class="field__message field__message--error" ng-if="formPaymentMethod.FirstName.$dirty && formPaymentMethod.FirstName.$error.required">
+                                            {{ 'checkout.first_name_required_message' | t }}
+                                        </p>
+                                    </div>
+                                    <div class="field--half field field--required" ng-class="{ 'field--show-floating-label': checkout.billingAddress.LastName.length, 'field--error': formPaymentMethod.LastName.$dirty && formPaymentMethod.LastName.$error.required }">
+                                        <div class="field__input-wrapper">
+                                            <label class="field__label" for="LastName">{{ 'checkout.address.last_name' | t }}</label>
+                                            <input class="field__input" id="LastName" name="LastName" placeholder="{{ 'checkout.address.last_name' | t }}" required="required" size="30" type="text" ng-model="checkout.billingAddress.LastName" />
+                                        </div>
+                                        <p class="field__message field__message--error" ng-if="formPaymentMethod.LastName.$dirty && formPaymentMethod.LastName.$error.required">
+                                            {{ 'checkout.last_name_required_message' | t }}
+                                        </p>
+                                    </div>
+                                    <div class="field field--optional" ng-class="{ 'field--show-floating-label': checkout.billingAddress.Organization.length }">
+                                        <div class="field__input-wrapper">
+                                            <label class="field__label" for="Organization">{{ 'checkout.address.company' | t }} {{ 'checkout.optional_field_sign' | t }}</label>
+                                            <input class="field__input" id="Organization" name="Organization" placeholder="{{ 'checkout.address.company' | t }} {{ 'checkout.optional_field_sign' | t }}" size="30" type="text" ng-model="checkout.billingAddress.Organization" />
+                                        </div>
+                                    </div>
+                                    <div class="field--two-thirds field field--required" ng-class="{ 'field--show-floating-label': checkout.billingAddress.Line1.length, 'field--error': formPaymentMethod.Line1.$dirty && formPaymentMethod.Line1.$error.required }">
+                                        <div class="field__input-wrapper">
+                                            <label class="field__label" for="Line1">{{ 'checkout.address.address1' | t }}</label>
+                                            <input class="field__input" id="Line1" name="Line1" placeholder="{{ 'checkout.address.address1' | t }}" required="required" size="30" type="text" ng-model="checkout.billingAddress.Line1" />
+                                        </div>
+                                        <p class="field__message field__message--error" ng-if="formPaymentMethod.Line1.$dirty && formPaymentMethod.Line1.$error.required">
+                                            {{ 'checkout.address1_required_message' | t }}
+                                        </p>
+                                    </div>
+                                    <div class="field--third field field--optional" ng-class="{ 'field--show-floating-label': checkout.billingAddress.Line2.length }">
+                                        <div class="field__input-wrapper">
+                                            <label class="field__label" for="Line2">{{ 'checkout.address.address2' | t }} {{ 'checkout.optional_field_sign' | t }}</label>
+                                            <input class="field__input" name="Line2" id="Line2" placeholder="{{ 'checkout.address.address2' | t }} {{ 'checkout.optional_field_sign' | t }}" size="30" type="text" ng-model="checkout.billingAddress.Line2" />
+                                        </div>
+                                    </div>
+                                    <div class="field field--required" ng-class="{ 'field--show-floating-label': checkout.billingAddress.City.length, 'field--error': formPaymentMethod.City.$dirty && formPaymentMethod.City.$error.required }">
+                                        <div class="field__input-wrapper">
+                                            <label class="field__label" for="City">{{ 'checkout.address.city' | t }}</label>
+                                            <input class="field__input" id="City" name="City" placeholder="{{ 'checkout.address.city' | t }}" required="required" size="30" type="text" ng-model="checkout.billingAddress.City" />
+                                        </div>
+                                        <p class="field__message field__message--error" ng-if="formPaymentMethod.City.$dirty && formPaymentMethod.City.$error.required">
+                                            {{ 'checkout.city_required_message' | t }}
+                                        </p>
+                                    </div>
+                                    <div class="field field--required field--show-floating-label" ng-class="{ 'field--three-eights': checkout.billingAddress.CountryName && checkout.countryRegions, 'field--half': !checkout.countryRegions || !checkout.billingAddress.CountryName }">
+                                        <div class="field__input-wrapper field__input-wrapper--select">
+                                            <label class="field__label" for="CountryName">{{ 'checkout.address.country' | t }}</label>
+                                            <select class="field__input field__input--select" id="CountryName" name="CountryName" placeholder="{{ 'checkout.address.country' | t }}" required="required" size="1" ng-model="checkout.billingAddress.CountryName", ng-change="setCountry('Billing', checkout.billingAddress.CountryName)">
+                                                <option disabled="disabled" value="">Select country</option>
+                                                <option ng-repeat="country in checkout.countries" ng-value="country.Name" ng-bind="country.Name" ng-selected="country.Name == checkout.billingAddress.CountryName"></option>
+                                            </select>
+                                            <input id="CountryCode" name="CountryCode" type="hidden" ng-value="checkout.billingAddress.CountryCode" ng-model="checkout.billingAddress.CountryCode" ng-init="checkout.billingAddress.CountryCode" />
+                                        </div>
+                                        <p class="field__message field__message--error" ng-if="formPaymentMethod.CountryName.$error.required">
+                                            {{ 'checkout.country_required_message' | t }}
+                                        </p>
+                                    </div>
+                                    <div class="field field--required field--three-eights field--show-floating-label" ng-if="checkout.countryRegions && checkout.billingAddress.CountryName">
+                                        <div class="field__input-wrapper field__input-wrapper--select">
+                                            <label class="field__label" for="RegionName">{{ 'checkout.address.province' | t }}</label>
+                                            <select class="field__input field__input--select" id="RegionName" name="RegionName" placeholder="{{ 'checkout.address.province' | t }}" required="required" ng-model="checkout.billingAddress.RegionName" ng-change="setCountryRegion('Billing', checkout.billingAddress.RegionName)">
+                                                <option disabled="disabled" value="">Select region</option>
+                                                <option ng-repeat="region in checkout.countryRegions" ng-value="region.Name" ng-bind="region.Name" ng-selected="region.Name == checkout.billingAddress.RegionName"></option>
+                                            </select>
+                                            <input id="RegionId" name="RegionId" type="hidden" ng-value="checkout.billingAddress.RegionId" ng-model="checkout.billingAddress.RegionId" ng-init="checkout.billingAddress.RegionId" />
+                                        </div>
+                                    </div>
+                                    <div class="field field--required" ng-class="{ 'field--half': !checkout.countryRegions || !checkout.billingAddress.CountryName, 'field--quarter': checkout.countryRegions && checkout.billingAddress.CountryName, 'field--show-floating-label': checkout.billingAddress.PostalCode.length, 'field--error': formPaymentMethod.PostalCode.$dirty && formPaymentMethod.PostalCode.$error.required }">
+                                        <div class="field__input-wrapper">
+                                            <label class="field__label" for="PostalCode">{{ 'checkout.address.zip' | t }}</label>
+                                            <input class="field__input" id="PostalCode" name="PostalCode" placeholder="{{ 'checkout.address.zip' | t }}" required="required" size="30" type="text" ng-model="checkout.billingAddress.PostalCode" />
+                                        </div>
+                                        <p class="field__message field__message--error" ng-if="formPaymentMethod.PostalCode.$dirty && formPaymentMethod.PostalCode.$error.required">
+                                            {{ 'checkout.region_required_message' | t }}
+                                        </p>
+                                    </div>
+                                    <div class="field field--optional" ng-class="{ 'field--show-floating-label': checkout.billingAddress.Phone.length }">
+                                        <div class="field__input-wrapper">
+                                            <label class="field__label" for="Phone">{{ 'checkout.address.phone' | t }} {{ 'checkout.optional_field_sign' | t }}</label>
+                                            <input class="field__input" id="Phone" name="Phone" placeholder="{{ 'checkout.address.phone' | t }} {{ 'checkout.optional_field_sign' | t }}" size="30" type="text" ng-model="checkout.billingAddress.Phone" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--<div class="section section--optional">
+                    <div class="section__content">
+                        <div class="checkbox-wrapper">
+                            <div class="checkbox__input">
+                                <input checked="checked" class="input-checkbox" id="" name="" type="checkbox" />
+                            </div>
+                            <label class="checkbox__label" for="">{{ 'checkout.customer_subscribes_marketing' | t }}</label>
+                        </div>
+                    </div>
+                </div>-->
+            </div>
+            <div class="step__footer">
+                <button class="step__footer__continue-btn btn" name="button" type="button" ng-class="{ 'btn--disabled': formPaymentMethod.$invalid, 'btn--loading': checkout.orderProcessing }" ng-click="completeOrder()" ng-disabled="formPaymentMethod.$invalid">
+                    <span class="btn__content">{{ 'checkout.payment_method.continue_text' | t }}</span>
+                    <i class="btn__spinner icon icon--button-spinner"></i>
+                </button>
+                <a class="step__footer__previous-link" href="" ng-click="innerRedirect('shipping-method')" ng-if="checkout.hasPhysicalProducts">
+                    <svg class="previous-link__icon icon--chevron icon" height="11.3" width="6.7" viewBox="0 0 6.7 11.3" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M 6.7 1.1 l -1 -1.1 l -4.6 4.6 l -1.1 1.1 l 1.1 1 l 4.6 4.6 l 1 -1 l -4.6 -4.6 Z"></path>
+                    </svg>
+                    {{ 'checkout.payment_method.return_text' | t }}
+                </a>
+                <a class="step__footer__previous-link" href="{{ 'cart' | absolute_url }}" ng-if="!checkout.hasPhysicalProducts">
+                    <svg class="previous-link__icon icon--chevron icon" height="11.3" width="6.7" viewBox="0 0 6.7 11.3" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M 6.7 1.1 l -1 -1.1 l -4.6 4.6 l -1.1 1.1 l 1.1 1 l 4.6 4.6 l 1 -1 l -4.6 -4.6 Z"></path>
+                    </svg>
+                    {{ 'checkout.customer_information.return_text' | t }}
+                </a>
+            </div>
+        </form>
+    </div>
+</script>

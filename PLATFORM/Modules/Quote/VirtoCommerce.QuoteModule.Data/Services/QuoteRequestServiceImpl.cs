@@ -61,12 +61,11 @@ namespace VirtoCommerce.QuoteModule.Data.Services
 			{
 				throw new ArgumentNullException("quoteRequests");
 			}
-			//Need for primary key resolving
-			var domainEntityMap = new List<KeyValuePair<QuoteRequest, QuoteRequestEntity>>();
+		
 			//Generate Number
 			EnsureThatQuoteHasNumber(quoteRequests);
-
-			using (var repository = _repositoryFactory())
+            var pkMap = new PrimaryKeyResolvingMap();
+            using (var repository = _repositoryFactory())
 			{
 				var ids = quoteRequests.Where(x => x.Id != null).Select(x => x.Id).Distinct().ToArray();
 
@@ -79,9 +78,8 @@ namespace VirtoCommerce.QuoteModule.Data.Services
 						var changedQuote = quoteRequests.First(x => x.Id == origDbQuote.Id);
 						// Do business logic on  quote request
 						_eventPublisher.Publish(new QuoteRequestChangeEvent(EntryState.Modified, GetByIds(new[] { origDbQuote.Id }).First(), changedQuote));
-                        domainEntityMap.Add(new KeyValuePair<QuoteRequest, QuoteRequestEntity>(changedQuote, origDbQuote));
-
-                        var changedDbQuote = changedQuote.ToDataModel();
+                     
+                        var changedDbQuote = changedQuote.ToDataModel(pkMap);
                         changeTracker.Attach(origDbQuote);
 						changedDbQuote.Patch(origDbQuote);
 					}
@@ -92,21 +90,21 @@ namespace VirtoCommerce.QuoteModule.Data.Services
 					{
                         // Do business logic on  quote request
                         _eventPublisher.Publish(new QuoteRequestChangeEvent(EntryState.Added, newQuote, newQuote));
-						var newDbQuote = newQuote.ToDataModel();
+						var newDbQuote = newQuote.ToDataModel(pkMap);
 						repository.Add(newDbQuote);
-                        domainEntityMap.Add(new KeyValuePair<QuoteRequest, QuoteRequestEntity>(newQuote, newDbQuote));
+                    
                     }
                     repository.UnitOfWork.Commit();
+                    //Copy generated id from dbEntities to model
+                    pkMap.ResolvePrimaryKeys();
 				}
 
 				//Save dynamic properties
-				foreach (var pair in domainEntityMap)
+				foreach (var quoteRequest in quoteRequests)
 				{
-                    //Set key for all objects
-                    pair.Key.SetObjectId(pair.Value.Id);
-                    _dynamicPropertyService.SaveDynamicPropertyValues(pair.Key);
+                    _dynamicPropertyService.SaveDynamicPropertyValues(quoteRequest);
                 }
-                return domainEntityMap.Select(x => x.Key);
+                return quoteRequests;
 			}
 		}
 

@@ -117,16 +117,7 @@ namespace VirtoCommerce.Platform.Web
                 FileSystem = new Microsoft.Owin.FileSystems.PhysicalFileSystem(scriptsRelativePath)
             });
 
-            //var localizationPhysicalPath = HostingEnvironment.MapPath(VirtualRoot + "/Test/Localization").EnsureEndSeparator();
-            //var localizatioinRelativePath = MakeRelativePath(applicationBase, localizationPhysicalPath);
-
-            //var localizationUrlRewriterOptions = new UrlRewriterOptions();
-            //localizationUrlRewriterOptions.Items.Add(PathString.FromUriComponent("/Localization"), "/Test/Localization");
-            //app.Use<UrlRewriterOwinMiddleware>(localizationUrlRewriterOptions);
-            //app.UseStaticFiles(new StaticFileOptions
-            //{
-            //    FileSystem = new Microsoft.Owin.FileSystems.PhysicalFileSystem(localizatioinRelativePath)
-            //});
+        
             // Register URL rewriter before modules initialization
             if (Directory.Exists(modulesPhysicalPath))
             {
@@ -196,6 +187,18 @@ namespace VirtoCommerce.Platform.Web
                 {
                     Body = PlatformNotificationResource.RegistrationNotificationBody,
                     Subject = PlatformNotificationResource.RegistrationNotificationSubject,
+                    Language = "en-US"
+                }
+            });
+
+            notificationManager.RegisterNotificationType(() => new ResetPasswordEmailNotification(container.Resolve<IEmailNotificationSendingGateway>())
+            {
+                DisplayName = "Reset password notification",
+                Description = "This notification sends by email to client when he want to reset his password",
+                NotificationTemplate = new NotificationTemplate
+                {
+                    Body = PlatformNotificationResource.ResetPasswordNotificationBody,
+                    Subject = PlatformNotificationResource.ResetPasswordNotificationSubject,
                     Language = "en-US"
                 }
             });
@@ -320,6 +323,43 @@ namespace VirtoCommerce.Platform.Web
                                 }
                             }
                         },
+
+                        new ModuleSettingsGroup
+                        {
+                            Name = "Platform|Notifications|SmtpClient",
+                            Settings = new []
+                            {
+                                new ModuleSetting
+                                {
+                                    Name = "VirtoCommerce.Platform.Notifications.SmptClient.Host",
+                                    ValueType = ModuleSetting.TypeString,
+                                    Title = "Smtp server host",
+                                    Description = "Smtp server host"
+                                },
+                                new ModuleSetting
+                                {
+                                    Name = "VirtoCommerce.Platform.Notifications.SmptClient.Port",
+                                    ValueType = ModuleSetting.TypeInteger,
+                                    Title = "Smtp server port",
+                                    Description = "Smtp server port"
+                                },
+                                new ModuleSetting
+                                {
+                                    Name = "VirtoCommerce.Platform.Notifications.SmptClient.Login",
+                                    ValueType = ModuleSetting.TypeString,
+                                    Title = "Smtp server login",
+                                    Description = "Smtp server login"
+                                },
+                                new ModuleSetting
+                                {
+                                    Name = "VirtoCommerce.Platform.Notifications.SmptClient.Password",
+                                    ValueType = ModuleSetting.TypeString,
+                                    Title = "Smtp server password",
+                                    Description = "Smtp server password"
+                                }
+                            }
+                        },
+
                          new ModuleSettingsGroup
                         {
                             Name = "Platform|Security",
@@ -337,31 +377,7 @@ namespace VirtoCommerce.Platform.Web
                                 }
                             }
                         }
-                        // new ModuleSettingsGroup
-                        //{
-                        //    Name = "Platform|General",
-                        //    Settings = new []
-                        //    {
-                        //        new ModuleSetting
-                        //        {
-                        //            Name = "VirtoCommerce.Platform.General.ManagerDefaultLanguage",
-                        //            ValueType = ModuleSetting.TypeString,
-                        //            Title = "Commerce Manager's default language",
-                        //            Description = "The default language that Commerce Manager is displayed in",
-                        //            DefaultValue = "en"
-                        //        },
-                        //        new ModuleSetting
-                        //        {
-                        //            Name = "VirtoCommerce.Platform.General.ManagerLanguages",
-                        //            ValueType = ModuleSetting.TypeString,
-                        //            Title = "Commerce Manager languages",
-                        //            Description = "Languages that the Commerce Manager is translated to",
-                        //            IsArray = true,
-                        //            ArrayValues = new [] { "en"},
-                        //            DefaultValue = "en"
-                        //        }
-                        //    }
-                        //}
+                      
                     }
                 }
             };
@@ -387,7 +403,8 @@ namespace VirtoCommerce.Platform.Web
             var notificationTemplateService = new NotificationTemplateServiceImpl(platformRepositoryFactory);
             var notificationManager = new NotificationManager(resolver, platformRepositoryFactory, notificationTemplateService);
 
-            var emailNotificationSendingGateway = new DefaultEmailNotificationSendingGateway(settingsManager);
+            //var emailNotificationSendingGateway = new DefaultEmailNotificationSendingGateway(settingsManager);
+            var emailNotificationSendingGateway = new DefaultSmtpEmailNotificationSendingGateway(settingsManager);
 
             var defaultSmsNotificationSendingGateway = new DefaultSmsNotificationSendingGateway();
 
@@ -409,15 +426,15 @@ namespace VirtoCommerce.Platform.Web
                 var properties = assetsConnection.ConnectionString.ToDictionary(";", "=");
                 var provider = properties["provider"];
                 var assetsConnectionString = properties.ToString(";", "=", "provider");
-
+ 
                 if (string.Equals(provider, FileSystemBlobProvider.ProviderName, StringComparison.OrdinalIgnoreCase))
                 {
-                    var fileSystemBlobProvider = new FileSystemBlobProvider(assetsConnectionString);
+                    var storagePath = HostingEnvironment.MapPath(properties["rootPath"]);
+                    var publicUrl = properties["publicUrl"];
+                    var fileSystemBlobProvider = new FileSystemBlobProvider(storagePath, publicUrl);
 
                     container.RegisterInstance<IBlobStorageProvider>(fileSystemBlobProvider);
                     container.RegisterInstance<IBlobUrlResolver>(fileSystemBlobProvider);
-
-
                 }
                 else if (string.Equals(provider, AzureBlobProvider.ProviderName, StringComparison.OrdinalIgnoreCase))
                 {

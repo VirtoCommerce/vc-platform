@@ -5,6 +5,7 @@ using coreModel = VirtoCommerce.Domain.Catalog.Model;
 using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Data.Common;
 using VirtoCommerce.Platform.Data.Common.ConventionInjections;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.CatalogModule.Data.Converters
 {
@@ -34,14 +35,14 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// <param name="itemAsset">The item asset.</param>
 		/// <returns></returns>
 		/// <exception cref="System.ArgumentNullException">itemAsset</exception>
-		public static dataModel.EditorialReview ToDataModel(this coreModel.EditorialReview review, dataModel.Item product)
+		public static dataModel.EditorialReview ToDataModel(this coreModel.EditorialReview review, dataModel.Item product, PrimaryKeyResolvingMap pkMap)
 		{
 			if (review == null)
 				throw new ArgumentNullException("review");
 
 			var retVal = new dataModel.EditorialReview();
-	
-			retVal.InjectFrom(review);
+            pkMap.AddPair(review, retVal);
+            retVal.InjectFrom(review);
 
 			retVal.ItemId = product.Id;
 			retVal.Source = review.ReviewType;

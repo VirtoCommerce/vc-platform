@@ -2,6 +2,7 @@
 using VirtoCommerce.CustomerModule.Data.Converters;
 using VirtoCommerce.CustomerModule.Data.Repositories;
 using VirtoCommerce.Domain.Customer.Services;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using coreModel = VirtoCommerce.Domain.Customer.Model;
@@ -42,15 +43,18 @@ namespace VirtoCommerce.CustomerModule.Data.Services
 
         public coreModel.Contact Create(coreModel.Contact contact)
         {
-            var entity = contact.ToDataModel();
+            var pkMap = new PrimaryKeyResolvingMap();
+            var entity = contact.ToDataModel(pkMap);
 
             using (var repository = _repositoryFactory())
             {
                 repository.Add(entity);
+
                 CommitChanges(repository);
+
+                pkMap.ResolvePrimaryKeys();
             }
 
-            contact.SetObjectId(entity.Id);
             _dynamicPropertyService.SaveDynamicPropertyValues(contact);
 
             var retVal = GetById(entity.Id);
@@ -59,26 +63,27 @@ namespace VirtoCommerce.CustomerModule.Data.Services
 
         public void Update(coreModel.Contact[] contacts)
         {
+            var pkMap = new PrimaryKeyResolvingMap();
+
             using (var repository = _repositoryFactory())
             using (var changeTracker = GetChangeTracker(repository))
             {
                 foreach (var contact in contacts)
                 {
-                    var sourceEntity = contact.ToDataModel();
                     var targetEntity = repository.GetContactById(contact.Id);
-
-                    if (targetEntity == null)
+                    if (targetEntity != null)
                     {
-                        throw new NullReferenceException("targetEntity");
+                        changeTracker.Attach(targetEntity);
+
+                        var sourceEntity = contact.ToDataModel(pkMap);
+                        sourceEntity.Patch(targetEntity);
+
+                        _dynamicPropertyService.SaveDynamicPropertyValues(contact);
                     }
-
-                    changeTracker.Attach(targetEntity);
-                    sourceEntity.Patch(targetEntity);
-
-                    _dynamicPropertyService.SaveDynamicPropertyValues(contact);
                 }
 
                 CommitChanges(repository);
+                pkMap.ResolvePrimaryKeys();
             }
         }
 

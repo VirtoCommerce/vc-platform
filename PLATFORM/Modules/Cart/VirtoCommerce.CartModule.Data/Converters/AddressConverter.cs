@@ -69,7 +69,7 @@ namespace VirtoCommerce.CartModule.Data.Converters
 
 		public int GetHashCode(AddressEntity obj)
 		{
-			var result = String.Join(":", obj.Organization, obj.City, obj.CountryCode, obj.CountryName, obj.RegionId, obj.RegionName,
+			var result = String.Join(":", obj.AddressType, obj.Organization, obj.City, obj.CountryCode, obj.CountryName, obj.RegionId, obj.RegionName,
 										  obj.Email, obj.FirstName, obj.LastName, obj.Line1, obj.Line2, obj.Phone, obj.PostalCode);
 			return result.GetHashCode();
 		}

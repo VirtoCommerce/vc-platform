@@ -15,7 +15,11 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 		{
 			var retVal = new webModel.PropertyValue();
 			retVal.InjectFrom(propValue);
-		    retVal.Value = propValue.Value;
+            if(propValue.Property != null)
+            {
+                retVal.PropertyId = propValue.Property.Id;
+            }
+		    retVal.Value = (propValue.Value ?? String.Empty).ToString();
 			retVal.ValueType = propValue.ValueType;
 		
 			return retVal;

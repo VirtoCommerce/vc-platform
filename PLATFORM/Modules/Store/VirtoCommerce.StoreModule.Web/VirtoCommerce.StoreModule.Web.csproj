@@ -163,7 +163,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\Api\StoreModuleController.cs" />
-    <Compile Include="Security\StorePredefinedPermissions.cs" />
     <Compile Include="Converters\FulfillmentConverter.cs" />
     <Compile Include="Converters\PaymentMethodConverter.cs" />
     <Compile Include="Converters\TaxProviderConverter.cs" />
@@ -173,12 +172,14 @@
     <Compile Include="ExportImport\StoreExportImport.cs" />
     <Compile Include="Model\FulfillmentCenter.cs" />
     <Compile Include="Model\PaymentMethod.cs" />
+    <Compile Include="Model\SendDynamicNotificationRequest.cs" />
     <Compile Include="Model\ShippingMethod.cs" />
     <Compile Include="Model\Store.cs" />
     <Compile Include="Model\Setting.cs" />
     <Compile Include="Model\TaxProvider.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Security\StorePredefinedPermissions.cs" />
     <Compile Include="Security\StoreSelectedScope.cs" />
   </ItemGroup>
   <ItemGroup>

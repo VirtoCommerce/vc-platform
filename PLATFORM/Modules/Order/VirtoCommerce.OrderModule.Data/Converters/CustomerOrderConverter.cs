@@ -101,13 +101,14 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			return retVal;
 		}
 
-		public static CustomerOrderEntity ToDataModel(this CustomerOrder order)
+		public static CustomerOrderEntity ToDataModel(this CustomerOrder order, PrimaryKeyResolvingMap pkMap)
 		{
 			if (order == null)
 				throw new ArgumentNullException("order");
 
 			var retVal = new CustomerOrderEntity();
-			retVal.InjectFrom(order);
+            pkMap.AddPair(order, retVal);
+            retVal.InjectFrom(order);
 
 			retVal.Currency = order.Currency.ToString();
 
@@ -118,15 +119,15 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			}
 			if(order.Items != null)
 			{
-				retVal.Items = new ObservableCollection<LineItemEntity>(order.Items.Select(x=>x.ToDataModel()));
+				retVal.Items = new ObservableCollection<LineItemEntity>(order.Items.Select(x=>x.ToDataModel(pkMap)));
 			}
 			if(order.Shipments != null)
 			{
-				retVal.Shipments = new ObservableCollection<ShipmentEntity>(order.Shipments.Select(x => x.ToDataModel(retVal)));
+				retVal.Shipments = new ObservableCollection<ShipmentEntity>(order.Shipments.Select(x => x.ToDataModel(retVal, pkMap)));
 			}
 			if(order.InPayments != null)
 			{
-				retVal.InPayments = new ObservableCollection<PaymentInEntity>(order.InPayments.Select(x => x.ToDataModel(retVal)));
+				retVal.InPayments = new ObservableCollection<PaymentInEntity>(order.InPayments.Select(x => x.ToDataModel(retVal, pkMap)));
 			}
 			if(order.Discount != null)
 			{

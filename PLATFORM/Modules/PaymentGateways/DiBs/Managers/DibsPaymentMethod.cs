@@ -114,7 +114,7 @@ namespace DiBs.Managers
             context.Payment.IsApproved = true;
             retVal.OuterId = context.Payment.OuterId = transactionId;
             context.Payment.AuthorizedDate = DateTime.UtcNow;
-            retVal.OrderId = context.Order.Id;
+            retVal.OrderId = context.Order.Number;
             retVal.IsSuccess = ValidatePostProcessRequest(context.Parameters).IsSuccess;
 
             return retVal;
@@ -164,7 +164,7 @@ namespace DiBs.Managers
 
                 //build form to post to FlexWin
                 var checkoutform = string.Empty;
-
+                                
                 checkoutform += string.Format("<form name='dibs' action='{0}' method='POST' charset='UTF-8'>", RedirectUrl);
                 checkoutform += "<p>You'll be redirected to DIBS payment in a moment. If not, click the 'Procced' button...</p>";
 
@@ -175,7 +175,7 @@ namespace DiBs.Managers
                 checkoutform += "</form>";
 
                 checkoutform += "<script language='javascript'>document.dibs.submit();</script>";
-
+                                
                 retVal.HtmlForm = checkoutform;
                 retVal.IsSuccess = true;
                 retVal.NewPaymentStatus = PaymentStatus.Pending;

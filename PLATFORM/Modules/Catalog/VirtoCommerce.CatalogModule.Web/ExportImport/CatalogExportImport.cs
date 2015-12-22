@@ -12,256 +12,296 @@ using VirtoCommerce.Platform.Core.ExportImport;
 
 namespace VirtoCommerce.CatalogModule.Web.ExportImport
 {
-	public sealed class BackupObject
-	{
-		public BackupObject()
-		{
-			Catalogs = new List<Catalog>();
-			Categories = new List<Category>();
-			Products = new List<CatalogProduct>();
-			Properties = new List<Property>();
-		}
-		public ICollection<Catalog> Catalogs { get; set; }
-		public ICollection<Category> Categories { get; set; }
-		public ICollection<CatalogProduct> Products { get; set; }
-		public ICollection<Property> Properties { get; set; }
-	}
-
-	
-	public sealed class CatalogExportImport
-	{
-		private readonly ICatalogService _catalogService;
-		private readonly ICatalogSearchService _catalogSearchService;
-		private readonly ICategoryService _categoryService;
-		private readonly IItemService _itemService;
-		private readonly IPropertyService _propertyService;
-		private readonly IBlobStorageProvider _blobStorageProvider;
-
-		public CatalogExportImport(ICatalogSearchService catalogSearchService,
-			ICatalogService catalogService, ICategoryService categoryService, IItemService itemService, 
-			IPropertyService propertyService, IBlobStorageProvider blobStorageProvider)
-		{
-			_blobStorageProvider = blobStorageProvider;
-			_catalogSearchService = catalogSearchService;
-			_catalogService = catalogService;
-			_categoryService = categoryService;
-			_itemService = itemService;
-			_propertyService = propertyService;
-		}
+    public sealed class BackupObject
+    {
+        public BackupObject()
+        {
+            Catalogs = new List<Catalog>();
+            Categories = new List<Category>();
+            Products = new List<CatalogProduct>();
+            Properties = new List<Property>();
+        }
+        public ICollection<Catalog> Catalogs { get; set; }
+        public ICollection<Category> Categories { get; set; }
+        public ICollection<CatalogProduct> Products { get; set; }
+        public ICollection<Property> Properties { get; set; }
+    }
 
 
-		public void DoExport(Stream backupStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
-		{
-			var backupObject = GetBackupObject(progressCallback, manifest.HandleBinaryData);
+    public sealed class CatalogExportImport
+    {
+        private readonly ICatalogService _catalogService;
+        private readonly ICatalogSearchService _catalogSearchService;
+        private readonly ICategoryService _categoryService;
+        private readonly IItemService _itemService;
+        private readonly IPropertyService _propertyService;
+        private readonly IBlobStorageProvider _blobStorageProvider;
 
-			backupObject.SerializeJson(backupStream);
-		}
+        public CatalogExportImport(ICatalogSearchService catalogSearchService,
+            ICatalogService catalogService, ICategoryService categoryService, IItemService itemService,
+            IPropertyService propertyService, IBlobStorageProvider blobStorageProvider)
+        {
+            _blobStorageProvider = blobStorageProvider;
+            _catalogSearchService = catalogSearchService;
+            _catalogService = catalogService;
+            _categoryService = categoryService;
+            _itemService = itemService;
+            _propertyService = propertyService;
+        }
 
-		public void DoImport(Stream backupStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
-		{
-			var progressInfo = new ExportImportProgressInfo();
 
-			var backupObject = backupStream.DeserializeJson<BackupObject>();
-			var originalObject = GetBackupObject(progressCallback, false);
+        public void DoExport(Stream backupStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
+        {
+            var backupObject = GetBackupObject(progressCallback, manifest.HandleBinaryData);
 
-			progressInfo.Description = String.Format("{0} catalogs importing...", backupObject.Catalogs.Count());
-			progressCallback(progressInfo);
+            backupObject.SerializeJson(backupStream);
+        }
 
-			UpdateCatalogs(originalObject.Catalogs, backupObject.Catalogs);
+        public void DoImport(Stream backupStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
+        {
+            var progressInfo = new ExportImportProgressInfo();
 
-			progressInfo.Description = String.Format("{0} categories importing...", backupObject.Categories.Count());
-			progressCallback(progressInfo);
-			//Categories should be sorted right way 
+            var backupObject = backupStream.DeserializeJson<BackupObject>();
+            foreach(var category in backupObject.Categories)
+            {
+                category.Catalog = backupObject.Catalogs.FirstOrDefault(x => x.Id == category.CatalogId);
+                if(category.Parents != null)
+                {
+                    category.Level = category.Parents.Count();
+                }
+            }
+            var originalObject = GetBackupObject(progressCallback, false);
+
+            progressInfo.Description = String.Format("{0} catalogs importing...", backupObject.Catalogs.Count());
+            progressCallback(progressInfo);
+
+            UpdateCatalogs(originalObject.Catalogs, backupObject.Catalogs);
+
+            progressInfo.Description = String.Format("{0} categories importing...", backupObject.Categories.Count());
+            progressCallback(progressInfo);
+            //Categories should be sorted right way 
             //first need to create virtual categories
-			var orderedCategories = backupObject.Categories.Where(x=>x.Catalog.Virtual)
-                                                             .OrderBy(x => x.Parents != null ? x.Parents.Count() : 0)
-															 .ToList();
+            var orderedCategories = backupObject.Categories.Where(x => x.Catalog.Virtual)
+                                                             .OrderBy(x => x.Level)
+                                                             .ToList();
             //second need to create physical categories
             orderedCategories.AddRange(backupObject.Categories.Where(x => !x.Catalog.Virtual)
-                                                             .OrderBy(x => x.Parents != null ? x.Parents.Count() : 0));
+                                                             .OrderBy(x => x.Level));
 
             backupObject.Products = backupObject.Products.OrderBy(x => x.MainProductId).ToList();
-			UpdateCategories(originalObject.Categories, orderedCategories);
-			UpdateProperties(originalObject.Properties, backupObject.Properties);
+            UpdateCategories(originalObject.Categories, orderedCategories);
+            UpdateProperties(originalObject.Properties, backupObject.Properties);
 
-			//Binary data
-			if (manifest.HandleBinaryData)
-			{
-				var allBackupImages = backupObject.Products.SelectMany(x => x.Images);
-				allBackupImages = allBackupImages.Concat(backupObject.Categories.SelectMany(x => x.Images));
-				allBackupImages = allBackupImages.Concat(backupObject.Products.SelectMany(x => x.Variations).SelectMany(x => x.Images));
+            //Binary data
+            if (manifest.HandleBinaryData)
+            {
+                var allBackupImages = backupObject.Products.SelectMany(x => x.Images);
+                allBackupImages = allBackupImages.Concat(backupObject.Categories.SelectMany(x => x.Images));
+                allBackupImages = allBackupImages.Concat(backupObject.Products.SelectMany(x => x.Variations).SelectMany(x => x.Images));
 
-				var allOrigImages = originalObject.Products.SelectMany(x => x.Images);
-				allOrigImages = allOrigImages.Concat(originalObject.Categories.SelectMany(x => x.Images));
-				allOrigImages = allOrigImages.Concat(originalObject.Products.SelectMany(x => x.Variations).SelectMany(x => x.Images));
+                var allOrigImages = originalObject.Products.SelectMany(x => x.Images);
+                allOrigImages = allOrigImages.Concat(originalObject.Categories.SelectMany(x => x.Images));
+                allOrigImages = allOrigImages.Concat(originalObject.Products.SelectMany(x => x.Variations).SelectMany(x => x.Images));
 
-				var allNewImages = allBackupImages.Where(x => !allOrigImages.Contains(x)).Where(x=>x.BinaryData != null);
-				var index = 0;
-				var progressTemplate = "{0} of " + allNewImages.Count() + " images uploading";
-				foreach (var image in allNewImages)
-				{
-					progressInfo.Description = String.Format(progressTemplate, index);
-					progressCallback(progressInfo);
-					using (var stream = new MemoryStream(image.BinaryData))
-					{
-						image.Url = _blobStorageProvider.Upload(new UploadStreamInfo { FileByteStream = stream, FileName = image.Name, FolderName = "catalog" });
-					}
+                var allNewImages = allBackupImages.Where(x => !allOrigImages.Contains(x)).Where(x => x.BinaryData != null);
+                var index = 0;
+                var progressTemplate = "{0} of " + allNewImages.Count() + " images uploading";
+                foreach (var image in allNewImages)
+                {
+                    progressInfo.Description = String.Format(progressTemplate, index);
+                    progressCallback(progressInfo);
+                    image.Url = "catalog/" + image.Name;
+                    using (var sourceStream = new MemoryStream(image.BinaryData))
+                    using (var targetStream = _blobStorageProvider.OpenWrite(image.Url))
+                    {
+                        sourceStream.CopyTo(targetStream);
+                    }
 
-					index++;
-				}
-			}
+                    index++;
+                }
+            }
 
-			progressInfo.Description = String.Format("{0} products importing...", backupObject.Products.Count());
-			progressCallback(progressInfo);
-			UpdateCatalogProducts(originalObject.Products, backupObject.Products);
-		}
+            progressInfo.Description = String.Format("{0} products importing...", backupObject.Products.Count());
+            progressCallback(progressInfo);
+            UpdateCatalogProducts(originalObject.Products, backupObject.Products);
+        }
 
-		private void UpdateCatalogs(ICollection<Catalog> original, ICollection<Catalog> backup)
-		{
-			var toUpdate = new List<Catalog>();
+        private void UpdateCatalogs(ICollection<Catalog> original, ICollection<Catalog> backup)
+        {
+            var toUpdate = new List<Catalog>();
 
-			backup.CompareTo(original, EqualityComparer<Catalog>.Default, (state, x, y) =>
-			{
-				switch (state)
-				{
-					case EntryState.Modified:
-						toUpdate.Add(x);
-						break;
-					case EntryState.Added:
-						_catalogService.Create(x);
-						break;
-				}
-			});
-			_catalogService.Update(toUpdate.ToArray());
-		}
+            backup.CompareTo(original, EqualityComparer<Catalog>.Default, (state, x, y) =>
+            {
+                switch (state)
+                {
+                    case EntryState.Modified:
+                        toUpdate.Add(x);
+                        break;
+                    case EntryState.Added:
+                        _catalogService.Create(x);
+                        break;
+                }
+            });
+            _catalogService.Update(toUpdate.ToArray());
+        }
 
-		private void UpdateCategories(ICollection<Category> original, ICollection<Category> backup)
-		{
-			var toUpdate = new List<Category>();
+        private void UpdateCategories(ICollection<Category> original, ICollection<Category> backup)
+        {
+            var toUpdate = new List<Category>();
 
-			backup.CompareTo(original, EqualityComparer<Category>.Default, (state, x, y) =>
-			{
-				switch (state)
-				{
-					case EntryState.Modified:
-						toUpdate.Add(x);
-						break;
-					case EntryState.Added:
-						_categoryService.Create(x);
-						break;
-				}
-			});
-			_categoryService.Update(toUpdate.ToArray());
-		}
+            backup.CompareTo(original, EqualityComparer<Category>.Default, (state, x, y) =>
+            {
+                switch (state)
+                {
+                    case EntryState.Modified:
+                        toUpdate.Add(x);
+                        break;
+                    case EntryState.Added:
+                        _categoryService.Create(x);
+                        break;
+                }
+            });
+            _categoryService.Update(toUpdate.ToArray());
+        }
 
-		private void UpdateProperties(ICollection<Property> original, ICollection<Property> backup)
-		{
-			var toUpdate = new List<Property>();
+        private void UpdateProperties(ICollection<Property> original, ICollection<Property> backup)
+        {
+            var toUpdate = new List<Property>();
 
-			backup.CompareTo(original, EqualityComparer<Property>.Default, (state, x, y) =>
-			{
-				switch (state)
-				{
-					case EntryState.Modified:
-						toUpdate.Add(x);
-						break;
-					case EntryState.Added:
-						_propertyService.Create(x);
-						break;
-				}
-			});
-			_propertyService.Update(toUpdate.ToArray());
-		}
+            backup.CompareTo(original, EqualityComparer<Property>.Default, (state, x, y) =>
+            {
+                switch (state)
+                {
+                    case EntryState.Modified:
+                        toUpdate.Add(x);
+                        break;
+                    case EntryState.Added:
+                        _propertyService.Create(x);
+                        break;
+                }
+            });
+            _propertyService.Update(toUpdate.ToArray());
+        }
 
-		private void UpdateCatalogProducts(ICollection<CatalogProduct> original, ICollection<CatalogProduct> backup)
-		{
-			var toUpdate = new List<CatalogProduct>();
+        private void UpdateCatalogProducts(ICollection<CatalogProduct> original, ICollection<CatalogProduct> backup)
+        {
+            var toUpdate = new List<CatalogProduct>();
+            var toCreate = new List<CatalogProduct>();
+            backup.CompareTo(original, EqualityComparer<CatalogProduct>.Default, (state, x, y) =>
+            {
+                switch (state)
+                {
+                    case EntryState.Modified:
+                        toUpdate.Add(x);
+                        break;
+                    case EntryState.Added:
+                        toCreate.Add(x);
+                        break;
+                }
+            });
+            _itemService.Update(toUpdate.ToArray());
+            _itemService.Create(toCreate.ToArray());
+        }
 
-			backup.CompareTo(original, EqualityComparer<CatalogProduct>.Default, (state, x, y) =>
-			{
-				switch (state)
-				{
-					case EntryState.Modified:
-						toUpdate.Add(x);
-						break;
-					case EntryState.Added:
-						_itemService.Create(x);
-						break;
-				}
-			});
-			_itemService.Update(toUpdate.ToArray());
-		}
-
-		private BackupObject GetBackupObject(Action<ExportImportProgressInfo> progressCallback, bool loadBinaryData)
-		{
-			var progressInfo = new ExportImportProgressInfo { Description = "loading data..." };
-			progressCallback(progressInfo);
+        private BackupObject GetBackupObject(Action<ExportImportProgressInfo> progressCallback, bool loadBinaryData)
+        {
+            var progressInfo = new ExportImportProgressInfo { Description = "loading data..." };
+            progressCallback(progressInfo);
 
 
-			const ResponseGroup responseGroup = ResponseGroup.WithCatalogs | ResponseGroup.WithCategories | ResponseGroup.WithProducts;
-			var searchResponse = _catalogSearchService.Search(new SearchCriteria { Count = int.MaxValue, GetAllCategories = true, Start = 0, ResponseGroup = responseGroup });
-			
-			var retVal = new BackupObject();
+            const SearchResponseGroup responseGroup = SearchResponseGroup.WithCatalogs | SearchResponseGroup.WithCategories | SearchResponseGroup.WithProducts;
+            var searchResponse = _catalogSearchService.Search(new SearchCriteria { Take = int.MaxValue, Skip = 0, ResponseGroup = responseGroup });
 
-			progressInfo.Description = String.Format("{0} catalogs loading", searchResponse.Catalogs.Count());
-			progressCallback(progressInfo);
+            var retVal = new BackupObject();
 
-			//Catalogs
-			retVal.Catalogs = searchResponse.Catalogs.Select(x => _catalogService.GetById(x.Id)).ToList();
-		
-			progressInfo.Description = String.Format("{0} categories loading", searchResponse.Categories.Count());
-			progressCallback(progressInfo);
+            progressInfo.Description = String.Format("{0} catalogs loading", searchResponse.Catalogs.Count());
+            progressCallback(progressInfo);
 
-			//Categories
-			retVal.Categories = searchResponse.Categories.Select(x => _categoryService.GetById(x.Id)).ToList();
-			//Products
-			for (int i = 0; i < searchResponse.Products.Count(); i += 50)
-			{
-				var products = _itemService.GetByIds(searchResponse.Products.Skip(i).Take(50).Select(x => x.Id).ToArray(), ItemResponseGroup.ItemMedium | ItemResponseGroup.Variations | ItemResponseGroup.Seo);
-				retVal.Products.AddRange(products);
-			
-				progressInfo.Description = String.Format("{0} of {1} products loaded", Math.Min(searchResponse.TotalCount, i), searchResponse.TotalCount);
-				progressCallback(progressInfo);
-			}
-			//Binary data
-			if (loadBinaryData)
-			{
-				var allImages = retVal.Products.SelectMany(x => x.Images);
-				allImages = allImages.Concat(retVal.Categories.SelectMany(x => x.Images));
-				allImages = allImages.Concat(retVal.Products.SelectMany(x => x.Variations).SelectMany(x => x.Images));
+            //Catalogs
+            retVal.Catalogs = searchResponse.Catalogs.Select(x => _catalogService.GetById(x.Id)).ToList();
 
-				var index = 0;
-				var progressTemplate = "{0} of " + allImages.Count() + " images downloading";
-				foreach (var image in allImages)
-				{
-					progressInfo.Description = String.Format(progressTemplate, index);
-					progressCallback(progressInfo);
-					try
-					{
-						image.BinaryData = _blobStorageProvider.OpenReadOnly(image.Url).ReadFully();
-					}
-					catch(Exception ex)
-					{
-						progressInfo.Errors.Add(ex.ToString());
-						progressCallback(progressInfo);
-					}
-					index++;
-				}
-			}
+            progressInfo.Description = String.Format("{0} categories loading", searchResponse.Categories.Count());
+            progressCallback(progressInfo);
+          
+            //Categories
+            retVal.Categories = _categoryService.GetByIds(searchResponse.Categories.Select(x=>x.Id).ToArray(), CategoryResponseGroup.Full);
+         
+            //Products
+            for (int i = 0; i < searchResponse.Products.Count(); i += 50)
+            {
+                var products = _itemService.GetByIds(searchResponse.Products.Skip(i).Take(50).Select(x => x.Id).ToArray(), ItemResponseGroup.ItemLarge);
+                retVal.Products.AddRange(products);
 
-			//Properties
-			var catalogsPropertiesIds = retVal.Catalogs.SelectMany(x => _propertyService.GetCatalogProperties(x.Id)).Select(x => x.Id).ToArray();
-			var categoriesPropertiesIds = retVal.Categories.SelectMany(x => _propertyService.GetCategoryProperties(x.Id)).Select(x => x.Id).ToArray();
-			var propertiesIds = catalogsPropertiesIds.Concat(categoriesPropertiesIds).Distinct().ToArray();
+                progressInfo.Description = String.Format("{0} of {1} products loaded", Math.Min(searchResponse.ProductsTotalCount, i), searchResponse.ProductsTotalCount);
+                progressCallback(progressInfo);
+            }
+            //Binary data
+            if (loadBinaryData)
+            {
+                var allImages = retVal.Products.SelectMany(x => x.Images);
+                allImages = allImages.Concat(retVal.Categories.SelectMany(x => x.Images));
+                allImages = allImages.Concat(retVal.Products.SelectMany(x => x.Variations).SelectMany(x => x.Images));
 
-			progressInfo.Description = String.Format("{0} properties loading", propertiesIds.Count());
-			progressCallback(progressInfo);
+                var index = 0;
+                var progressTemplate = "{0} of " + allImages.Count() + " images downloading";
+                foreach (var image in allImages)
+                {
+                    progressInfo.Description = String.Format(progressTemplate, index);
+                    progressCallback(progressInfo);
+                    try
+                    {
+                        using (var stream = _blobStorageProvider.OpenRead(image.Url))
+                        {
+                            image.BinaryData = stream.ReadFully();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        progressInfo.Errors.Add(ex.ToString());
+                        progressCallback(progressInfo);
+                    }
+                    index++;
+                }
+            }
 
-			retVal.Properties = propertiesIds.Select(x => _propertyService.GetById(x)).ToList();
-			return retVal;
+            //Properties
+            progressInfo.Description = String.Format("Properties loading");
+            progressCallback(progressInfo);
 
-		}
+            retVal.Properties = _propertyService.GetAllProperties();
 
-	}
+            //Reset some props to descrease resulting json size
+            foreach (var catalog in retVal.Catalogs)
+            {
+                catalog.Properties = null;
+            }
+
+            foreach (var category in retVal.Categories)
+            {
+                category.Catalog = null;
+                category.Properties = null;
+                category.Children = null;
+                category.Parents = null;
+                foreach (var propvalue in category.PropertyValues)
+                {
+                    propvalue.Property = null;
+                }
+            }
+            foreach (var product in retVal.Products.Concat(retVal.Products.SelectMany(x=>x.Variations)))
+            {
+                product.Catalog = null;
+                product.Category = null;
+                product.Properties = null;
+                product.MainProduct = null;
+                foreach (var propvalue in product.PropertyValues)
+                {
+                    propvalue.Property = null;
+                }
+            }
+            return retVal;
+
+        }
+
+    }
 
 }

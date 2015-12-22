@@ -43,13 +43,14 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 		}
 
 
-		public static ShipmentItemEntity ToDataModel(this ShipmentItem shipmentItem, CustomerOrderEntity orderEntity)
+		public static ShipmentItemEntity ToDataModel(this ShipmentItem shipmentItem, CustomerOrderEntity orderEntity, PrimaryKeyResolvingMap pkMap)
 		{
 			if (shipmentItem == null)
 				throw new ArgumentNullException("shipmentItem");
 
 			var retVal = new ShipmentItemEntity();
-			retVal.InjectFrom(shipmentItem);
+            pkMap.AddPair(shipmentItem, retVal);
+            retVal.InjectFrom(shipmentItem);
 			
 			if(shipmentItem.LineItem != null)
 			{

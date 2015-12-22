@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Core.Asset;
+using VirtoCommerce.Platform.Core.Common;
 using moduleModel = VirtoCommerce.Domain.Catalog.Model;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
 
@@ -10,7 +11,7 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 {
     public static class ProductConverter
     {
-        public static webModel.Product ToWebModel(this moduleModel.CatalogProduct product, IBlobUrlResolver blobUrlResolver, moduleModel.Property[] properties = null)
+        public static webModel.Product ToWebModel(this moduleModel.CatalogProduct product, IBlobUrlResolver blobUrlResolver)
         {
             var retVal = new webModel.Product();
             retVal.InjectFrom(product);
@@ -20,11 +21,16 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
             if (product.Catalog != null)
             {
                 retVal.Catalog = product.Catalog.ToWebModel();
+                //Reset catalog properties and languages for response size economy
+                retVal.Catalog.Properties = null;
             }
 
             if (product.Category != null)
             {
 				retVal.Category = product.Category.ToWebModel(blobUrlResolver);
+                //Reset  category catalog, properties  for response size economy
+                retVal.Category.Catalog = null;
+                retVal.Category.Properties = null;
             }
 
             if (product.Images != null)
@@ -60,11 +66,13 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 
             retVal.Properties = new List<webModel.Property>();
             //Need add property for each meta info
-            if (properties != null)
+            if (product.Properties != null)
             {
-                foreach (var property in properties)
+                foreach (var property in product.Properties)
                 {
                     var webModelProperty = property.ToWebModel();
+                    //Reset dict values to decrease response size
+                    webModelProperty.DictionaryValues = null;
                     webModelProperty.Category = null;
                     webModelProperty.Values = new List<webModel.PropertyValue>();
                     webModelProperty.IsManageable = true;
@@ -78,14 +86,14 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
             {
                 foreach (var propValue in product.PropertyValues.Select(x=>x.ToWebModel()))
                 {
-					var property = retVal.Properties.FirstOrDefault(x => x.IsSuitableForValue(propValue));
+					var property = retVal.Properties.FirstOrDefault(x => x.Id == propValue.PropertyId);
                     if (property == null)
 					{  
 						//Need add dummy property for each value without property
 						property = new webModel.Property(propValue, product.CatalogId, product.CategoryId, moduleModel.PropertyType.Product);
                         retVal.Properties.Add(property);
                     }
-					property.Values.Add(propValue);
+                    property.Values.Add(propValue);
                 }
             }
 
@@ -118,12 +126,15 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
                 retVal.PropertyValues = new List<moduleModel.PropertyValue>();
                 foreach (var property in product.Properties)
                 {
-                    foreach (var propValue in property.Values)
+                    if (property.Values != null)
                     {
-                        //Need populate required fields
-                        propValue.PropertyName = property.Name;
-                        propValue.ValueType = property.ValueType;
-                        retVal.PropertyValues.Add(propValue.ToModuleModel());
+                        foreach (var propValue in property.Values)
+                        {
+                            //Need populate required fields
+                            propValue.PropertyName = property.Name;
+                            propValue.ValueType = property.ValueType;
+                            retVal.PropertyValues.Add(propValue.ToModuleModel());
+                        }
                     }
                 }
             }

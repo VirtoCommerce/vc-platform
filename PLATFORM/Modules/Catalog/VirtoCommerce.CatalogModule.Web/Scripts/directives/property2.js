@@ -32,7 +32,7 @@
 
             scope.$watch('context.currentPropValues', function (newValues) {
                 //reflect only real changes
-                if (isValuesDifferent(newValues, scope.currentEntity.values)) {
+                if (isValuesDifferent(newValues, scope.currentEntity.values)) {                    
                     if (scope.currentEntity.dictionary && scope.currentEntity.multilanguage) {
                         if (scope.currentEntity.multivalue) {
                             var realAliases = _.pluck(_.where(newValues, { languageCode: scope.currentEntity.catalog.defaultLanguage.languageCode }), 'alias');
@@ -45,6 +45,9 @@
                     } else {
                         scope.currentEntity.values = newValues;
                     }
+                    	//reset inherited status to force property value override
+                        _.each(scope.currentEntity.values, function (x) { x.isInherited = false; });
+
                     ngModelController.$setViewValue(scope.currentEntity);
                 }
             }, true);

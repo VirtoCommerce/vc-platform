@@ -11,7 +11,7 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 {
 	public static class CatalogConverter
 	{
-		public static webModel.Catalog ToWebModel(this moduleModel.Catalog catalog, moduleModel.Property[] properties = null)
+		public static webModel.Catalog ToWebModel(this moduleModel.Catalog catalog, bool convertProps = true)
 		{
 			var retVal = new webModel.Catalog();
 			retVal.InjectFrom(catalog);
@@ -20,36 +20,40 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 			{
 				retVal.Languages = catalog.Languages.Select(x=>x.ToWebModel()).ToList();
 			}
-		
-			//Need add property for each meta info
-			if (properties != null)
-			{
-				foreach (var property in properties)
-				{
-					var webModelProperty = property.ToWebModel();
-					webModelProperty.Values = new List<webModel.PropertyValue>();
-					webModelProperty.IsManageable = true;
-					webModelProperty.IsReadOnly = property.Type != moduleModel.PropertyType.Catalog;
-					retVal.Properties.Add(webModelProperty);
-				}
-			}
 
-			//Populate property values
-			if (catalog.PropertyValues != null)
-			{
-				foreach (var propValue in catalog.PropertyValues.Select(x => x.ToWebModel()))
-				{
-					var property = retVal.Properties.FirstOrDefault(x => x.IsSuitableForValue(propValue));
-					if (property == null)
-					{
-						//Need add dummy property for each value without property
-						property = new webModel.Property(propValue, catalog.Id, null, moduleModel.PropertyType.Catalog);
-						retVal.Properties.Add(property);
-					}
-					property.Values.Add(propValue);
-				}
-			}
+            if (convertProps)
+            {
+                //Need add property for each meta info
+                if (catalog.Properties != null)
+                {
+                    foreach (var property in catalog.Properties)
+                    {
+                        var webModelProperty = property.ToWebModel();
+                        //Reset dict values to decrease response size
+                        webModelProperty.DictionaryValues = null;
+                        webModelProperty.Values = new List<webModel.PropertyValue>();
+                        webModelProperty.IsManageable = true;
+                        webModelProperty.IsReadOnly = property.Type != moduleModel.PropertyType.Catalog;
+                        retVal.Properties.Add(webModelProperty);
+                    }
+                }
 
+                //Populate property for property values
+                if (catalog.PropertyValues != null)
+                {
+                    foreach (var propValue in catalog.PropertyValues.Select(x => x.ToWebModel()))
+                    {
+                        var property = retVal.Properties.FirstOrDefault(x => x.Id == propValue.PropertyId);
+                        if (property == null)
+                        {
+                            //Need add dummy property for each value without property
+                            property = new webModel.Property(propValue, catalog.Id, null, moduleModel.PropertyType.Catalog);
+                            retVal.Properties.Add(property);
+                        }
+                       property.Values.Add(propValue);
+                    }
+                }
+            }
 			return retVal;
 		}
 

@@ -133,7 +133,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 			{
 				foreach (var categoryId in exportedCategories)
 				{
-					var result = _searchService.Search(new SearchCriteria { CatalogId = catalogId, CategoryId = categoryId, Start = 0, Count = int.MaxValue, ResponseGroup = ResponseGroup.WithProducts | ResponseGroup.WithCategories });
+					var result = _searchService.Search(new SearchCriteria { CatalogId = catalogId, CategoryId = categoryId, Skip = 0, Take = int.MaxValue, ResponseGroup = SearchResponseGroup.WithProducts | SearchResponseGroup.WithCategories });
 					productIds.AddRange(result.Products.Select(x => x.Id));
 					if (result.Categories != null && result.Categories.Any())
 					{
@@ -144,7 +144,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 
 			if ((exportedCategories == null || !exportedCategories.Any()) && (exportedProducts == null || !exportedProducts.Any()))
 			{
-				var result = _searchService.Search(new SearchCriteria { CatalogId = catalogId, GetAllCategories = true, Start = 0, Count = int.MaxValue, ResponseGroup = ResponseGroup.WithProducts });
+				var result = _searchService.Search(new SearchCriteria { CatalogId = catalogId, SearchInChildren = true, Skip = 0, Take = int.MaxValue, ResponseGroup = SearchResponseGroup.WithProducts });
 				productIds = result.Products.Select(x => x.Id).ToList();
 			}
 

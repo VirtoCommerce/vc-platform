@@ -72,7 +72,7 @@ IF NOT DEFINED MSBUILD_PATH SET MSBUILD_PATH=%WINDIR%\Microsoft.NET\Framework\v4
 SET ADMIN_SOLUTION_DIR=%DEPLOYMENT_SOURCE%\PLATFORM
 SET ADMIN_SOLUTION_FILE=%ADMIN_SOLUTION_DIR%\VirtoCommerce.Manager.sln
 SET STORE_SOLUTION_DIR=%DEPLOYMENT_SOURCE%\STOREFRONT
-SET STORE_SOLUTION_FILE=%STORE_SOLUTION_DIR%\VirtoCommerce.Website.sln
+SET STORE_SOLUTION_FILE=%STORE_SOLUTION_DIR%\VirtoCommerce.Storefront.sln
 SET PUBLISHED_WEBSITES=%DEPLOYMENT_TEMP%\_PublishedWebsites
 SET PUBLISHED_MODULES=%PUBLISHED_WEBSITES%\Modules
 
@@ -92,7 +92,7 @@ IF /I "%APPSETTING_VirtoCommerce_DeployApplications%" NEQ "Web Admin Only" (
     call :ExecuteCmd "%MSBUILD_PATH%" "%STORE_SOLUTION_FILE%" /nologo /verbosity:m /t:Build /p:Configuration=Release;DebugType=none;AllowedReferenceRelatedFileExtensions=":";SolutionDir="%STORE_SOLUTION_DIR%\.\\";OutputPath="%DEPLOYMENT_TEMP%" %SCM_BUILD_ARGS%
     IF !ERRORLEVEL! NEQ 0 goto error
 
-    call :ExecuteCmd rename "%PUBLISHED_WEBSITES%\VirtoCommerce.Website" store
+    call :ExecuteCmd rename "%PUBLISHED_WEBSITES%\VirtoCommerce.Storefront" store
     IF !ERRORLEVEL! NEQ 0 goto error
 )
 

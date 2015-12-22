@@ -20,12 +20,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     {
         private readonly IBlobStorageProvider _blobProvider;
         private readonly IBlobUrlResolver _urlResolver;
-        private readonly string _tempPath;
         public AssetsController(IBlobStorageProvider blobProvider, IBlobUrlResolver urlResolver)
         {
             _blobProvider = blobProvider;
             _urlResolver = urlResolver;
-            _tempPath = HostingEnvironment.MapPath("~/App_Data/Uploads/");
         }
 
 
@@ -51,29 +49,26 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             if (url != null)
             {
+                var fileName = HttpUtility.UrlDecode(System.IO.Path.GetFileName(url));
+                var fileUrl = folderUrl + "/" + fileName;
                 using (var client = new WebClient())
+                using (var blobStream = _blobProvider.OpenWrite(fileUrl))
+                using (var remoteStream = client.OpenRead(url))
                 {
-                    var uploadInfo = new UploadStreamInfo
-                    {
-                        FileByteStream = client.OpenRead(url),
-                        FolderName = folderUrl,
-                        FileName = HttpUtility.UrlDecode(System.IO.Path.GetFileName(url))
-                    };
+                    remoteStream.CopyTo(blobStream);
 
-                    var key = _blobProvider.Upload(uploadInfo);
                     var retVal = new webModel.BlobInfo
                     {
-
-                        Name = uploadInfo.FileName,
-                        RelativeUrl = key,
-                        Url = _urlResolver.GetAbsoluteUrl(key)
+                        Name = fileName,
+                        RelativeUrl = fileUrl,
+                        Url = _urlResolver.GetAbsoluteUrl(fileUrl)
                     };
                     return Ok(retVal);
                 }
             }
             else
             {
-                var blobMultipartProvider = new BlobStorageMultipartProvider(_blobProvider, _tempPath, folderUrl);
+                var blobMultipartProvider = new BlobStorageMultipartProvider(_blobProvider, _urlResolver, folderUrl);
                 await Request.Content.ReadAsMultipartAsync(blobMultipartProvider);
 
                 var retVal = new List<webModel.BlobInfo>();

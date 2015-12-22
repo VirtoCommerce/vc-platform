@@ -4,30 +4,20 @@ using System.Linq;
 using System.Web;
 using webModels = VirtoCommerce.Content.Web.Models;
 using domainModels = VirtoCommerce.Content.Data.Models;
+using VirtoCommerce.Platform.Core.Asset;
 
 namespace VirtoCommerce.Content.Web.Converters
 {
 	public static class ThemeConverter
 	{
-		public static domainModels.Theme ToDomainModel(this webModels.Theme item)
-		{
-			var retVal = new domainModels.Theme();
+	
+        public static webModels.Theme ToThemeWebModel(this BlobFolder folder)
+        {
+            var retVal = new webModels.Theme();
 
-			retVal.Name = item.Name;
-			retVal.ThemePath = item.Path;
-
-			return retVal;
-		}
-
-		public static webModels.Theme ToWebModel(this domainModels.Theme item)
-		{
-			var retVal = new webModels.Theme();
-
-			retVal.Name = item.Name;
-			retVal.Path = item.ThemePath;
-			retVal.Modified = item.ModifiedDate ?? item.CreatedDate;
-
-			return retVal;
-		}
-	}
+            retVal.Name = folder.Name;
+            retVal.Path = folder.Url;
+            return retVal;
+        }
+    }
 }

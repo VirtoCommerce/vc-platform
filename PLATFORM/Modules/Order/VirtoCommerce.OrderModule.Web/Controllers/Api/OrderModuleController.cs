@@ -63,7 +63,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         [HttpGet]
         [ResponseType(typeof(webModel.SearchResult))]
         [Route("")]
-        public IHttpActionResult Search([ModelBinder(typeof(SearchCriteriaBinder))] coreModel.SearchCriteria criteria)
+        public IHttpActionResult Search([FromUri]coreModel.SearchCriteria criteria)
         {
             //Scope bound ACL filtration
             criteria = FilterOrderSearchCriteria(HttpContext.Current.User.Identity.Name, criteria);
@@ -73,9 +73,40 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         }
 
         /// <summary>
+        /// Find customer order by number
+        /// </summary>
+        /// <remarks>Return a single customer order with all nested documents or null if order was not found</remarks>
+        /// <param name="number">customer order number</param>
+        [HttpGet]
+        [ResponseType(typeof(webModel.CustomerOrder))]
+        [Route("number/{number}")]
+        public IHttpActionResult GetByNumber(string number)
+        {
+            var retVal = _customerOrderService.GetByOrderNumber(number, coreModel.CustomerOrderResponseGroup.Full);
+
+            if (retVal == null)
+            {
+                return Ok();
+            }
+            //Scope bound security check
+            var scopes = _permissionScopeService.GetObjectPermissionScopeStrings(retVal).ToArray();
+            if (!_securityService.UserHasAnyPermission(User.Identity.Name, scopes, OrderPredefinedPermissions.Read))
+            {
+                throw new HttpResponseException(HttpStatusCode.Unauthorized);
+            }
+
+            var result = retVal.ToWebModel();
+            //Set scopes for UI scope bounded ACL checking
+            result.Scopes = scopes;
+
+            return Ok(result);
+        }
+
+
+        /// <summary>
         /// Find customer order by id
         /// </summary>
-        /// <remarks>Return a single customer order with all nested documents</remarks>
+        /// <remarks>Return a single customer order with all nested documents or null if order was not found</remarks>
         /// <param name="id">customer order id</param>
         [HttpGet]
         [ResponseType(typeof(webModel.CustomerOrder))]
@@ -83,9 +114,10 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         public IHttpActionResult GetById(string id)
         {
             var retVal = _customerOrderService.GetById(id, coreModel.CustomerOrderResponseGroup.Full);
+
             if (retVal == null)
             {
-                return NotFound();
+                return Ok();
             }
             //Scope bound security check
             var scopes = _permissionScopeService.GetObjectPermissionScopeStrings(retVal).ToArray();
@@ -123,11 +155,17 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         /// <param name="orderId">customer order id</param>
         /// <param name="paymentId">payment id</param>
         [HttpPost]
-        [ResponseType(typeof(webModel.CustomerOrder))]
+        [ResponseType(typeof(webModel.ProcessPaymentResult))]
         [Route("{orderId}/processPayment/{paymentId}")]
         public IHttpActionResult ProcessOrderPayments([FromBody]BankCardInfo bankCardInfo, string orderId, string paymentId)
         {
-            var order = _customerOrderService.GetById(orderId, coreModel.CustomerOrderResponseGroup.Full);
+            //search first by order number
+            var order = _customerOrderService.GetByOrderNumber(orderId, coreModel.CustomerOrderResponseGroup.Full);
+
+            //if not found by order number search by order id
+            if (order == null)
+                order = _customerOrderService.GetById(orderId, coreModel.CustomerOrderResponseGroup.Full);
+            
             if (order == null)
             {
                 throw new NullReferenceException("order");

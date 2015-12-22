@@ -1,0 +1,160 @@
+﻿<div class="sidebar__header">
+    <a class="logo logo--left" href="{{ '/' | absolute_url }}">
+        <h1 class="logo__text">{{ shop.name }}</h1>
+    </a>
+</div>
+<div class="sidebar__content">
+    <div class="order-summary" ng-class="{ 'order-summary--is-expanded': checkout.orderSummaryExpanded, 'order-summary--is-collapsed': !checkout.orderSummaryExpanded }">
+        <div class="order-summary__section order-summary__section--product-list">
+            <table class="product-table">
+                <thead>
+                    <tr>
+                        <th scope="col">
+                            <span class="visually-hidden">{{ 'checkout.description' | t }}</span>
+                        </th>
+                        <th scope="col">
+                            <span class="visually-hidden">{{ 'checkout.price' | t }}</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="product" ng-repeat="lineItem in checkout.lineItems">
+                        <td class="product__image">
+                            <div class="product__image__inner">
+                                <span class="product__quantity" ng-bind="lineItem.Quantity"></span>
+                                <img alt="{( lineItem.Name )}" ng-src="{( lineItem.ImageUrl )}" />
+                            </div>
+                        </td>
+                        <td class="product__description">
+                            <span class="product__description__name order-summary__emphasis" ng-bind="lineItem.Name"></span>
+                            <span class="product__description__variant order-summary__small-text">
+                                <!-- TODO: Add properties -->
+                            </span>
+                        </td>
+                        <td class="product__price">
+                            <span ng-if="lineItem.ListPrice.Amount == lineItem.SalePrice.Amount && lineItem.DiscountTotal.Amount == 0">
+                                <span class="order-summary__emphasis" ng-bind="lineItem.ListPrice.FormatedAmount"></span>
+                            </span>
+                            <span ng-if="lineItem.ListPrice.Amount > lineItem.SalePrice.Amount && lineItem.DiscountTotal.Amount == 0">
+                                <span class="order-summary__emphasis" ng-bind="lineItem.SalePrice.FormatedAmount"></span>
+                                <br />
+                                <span class="order-summary__small-text strikethrough" ng-bind="lineItem.ListPrice.FormatedAmount"></span>
+                            </span>
+                            <span ng-if="lineItem.ListPrice.Amount == lineItem.SalePrice.Amount && lineItem.DiscountTotal.Amount > 0">
+                                <span class="order-summary__emphasis" ng-bind="lineItem.PlacedPrice.FormatedAmount"></span>
+                                <br />
+                                <span class="order-summary__small-text strikethrough" ng-bind="lineItem.ListPrice.FormatedAmount"></span>
+                            </span>
+                            <span ng-if="lineItem.ListPrice.Amount > lineItem.SalePrice.Amount && lineItem.DiscountTotal.Amount > 0">
+                                <span class="order-summary__emphasis" ng-bind="lineItem.PlacedPrice.FormatedAmount"></span>
+                                <br />
+                                <span class="order-summary__small-text strikethrough" ng-bind="lineItem.SalePrice.FormatedAmount"></span>
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="order-summary__section order-summary__section--discount">
+            <form accept-charset="UTF-8" action="" class="edit_checkout animate-floating-labels" method="post" name="formCoupon" novalidate="novalidate" ng-submit="addCoupon($event)">
+                <div class="fieldset">
+                    <div class="field" ng-class="{ 'field--show-floating-label': checkout.coupon.Code.length, 'field--error': checkout.coupon.ErrorCode == 'InvalidCouponCode' }" ng-if="!checkout.coupon.AppliedSuccessfully">
+                        <div class="field__input-btn-wrapper">
+                            <div class="field__input-wrapper">
+                                <label class="field__label" for="CouponCode">{{ 'checkout.coupon_code' | t }}</label>
+                                <input class="field__input" id="CouponCode" name="CouponCode" placeholder="{{ 'checkout.coupon_code' | t }}" required="required" size="30" type="text" ng-model="checkout.coupon.Code" ng-change="checkout.coupon.ErrorCode = null" ng-disabled="checkout.couponProcessing" />
+                            </div>
+                            <button class="field__input-btn btn btn--default" type="submit" ng-class="{ 'btn--loading': checkout.couponProcessing, 'btn--disabled': formCoupon.$invalid }" ng-disabled="formCoupon.$invalid || checkout.couponProcessing">
+                                <span class="btn__content visually-hidden-on-mobile">{{ 'checkout.apply' | t }}</span>
+                                <i class="btn__content shown-on-mobile icon icon--arrow"></i>
+                                <i class="btn__spinner icon icon--button-spinner"></i>
+                            </button>
+                        </div>
+                        <p class="field__message field__message--error" ng-if="checkout.coupon.ErrorCode == 'InvalidCouponCode'">
+                            {{ 'checkout.invalid_coupon_code' | t }}
+                        </p>
+                    </div>
+                    <div class="field" ng-if="checkout.coupon.Code && checkout.coupon.AppliedSuccessfully">
+                        <div class="field__input-btn-wrapper">
+                            <div class="field__input-wrapper">
+                                <span style="font-size: 1.71em; font-weight: 500; line-height: 40px;" ng-bind="checkout.coupon.Code"></span>
+                                <span tabindex="0" class="field__icon icon icon--question has-tooltip" role="tooltip" ng-if="checkout.coupon.Description">
+                                    <span class="tooltip">
+                                        <span ng-bind="checkout.coupon.Description"></span>
+                                    </span>
+                                </span>
+                            </div>
+                            <button class="field__input-btn btn btn--default" type="button" ng-click="removeCoupon()" ng-class="{ 'btn--loading': checkout.couponProcessing }">
+                                <span class="btn__content visually-hidden-on-mobile">{{ 'checkout.remove' | t }}</span>
+                                <i class="btn__content shown-on-mobile icon icon--arrow"></i>
+                                <i class="btn__spinner icon icon--button-spinner"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="order-summary__section order-summary__section--total-lines">
+            <table class="total-line-table">
+                <thead>
+                    <tr>
+                        <th scope="col">
+                            <span class="visually-hidden">{{ 'checkout.description' | t }}</span>
+                        </th>
+                        <th scope="col">
+                            <span class="visually-hidden">{{ 'checkout.price' | t }}</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="total-line total-line--subtotal">
+                        <td class="total-line__name">{{ 'checkout.subtotal' | t }}</td>
+                        <td class="total-line__price">
+                            <span class="order-summary__emphasis" ng-bind="checkout.subtotal.FormatedAmount"></span>
+                        </td>
+                    </tr>
+                    <tr class="total-line total-line--subtotal">
+                        <td class="total-line__name">{{ 'checkout.discount' | t }}</td>
+                        <td class="total-line__price">
+                            <span class="order-summary__emphasis" ng-bind="checkout.discountTotal.FormatedAmount"></span>
+                        </td>
+                    </tr>
+                    <tr class="total-line total-line--shipping">
+                        <td class="total-line__name">{{ 'checkout.shipping' | t }}</td>
+                        <td class="total-line__price">
+                            <span class="order-summary__emphasis" ng-bind="checkout.shippingTotal.FormatedAmount"></span>
+                        </td>
+                    </tr>
+                    <tr class="total-line total-line--taxes">
+                        <td class="total-line__name">{{ 'checkout.taxes' | t }}</td>
+                        <td class="total-line__price">
+                            <span class="order-summary__emphasis" ng-bind="checkout.taxTotal.FormatedAmount"></span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="order-summary__section order-summary__section--total">
+            <table class="total-line-table">
+                <thead>
+                    <tr>
+                        <th scope="col">
+                            <span class="visually-hidden">{{ 'checkout.description' | t }}</span>
+                        </th>
+                        <th scope="col">
+                            <span class="visually-hidden">{{ 'checkout.price' | t }}</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="total-line">
+                        <td class="total-line__name payment-due-label">{{ 'checkout.total' | t }}</td>
+                        <td class="total-line__price payment-due">
+                            <span class="payment-due__price" ng-bind="checkout.total.FormatedAmount"></span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

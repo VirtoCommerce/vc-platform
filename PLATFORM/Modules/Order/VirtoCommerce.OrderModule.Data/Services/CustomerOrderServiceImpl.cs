@@ -67,7 +67,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
 
             _dynamicPropertyService.LoadDynamicPropertyValues(retVal);
 
-            _eventPublisher.Publish(new OrderChangeEvent(EntryState.Unchanged, null, retVal));
+            _eventPublisher.Publish(new OrderChangeEvent(EntryState.Unchanged, retVal, retVal));
             return retVal;
         }
 
@@ -76,29 +76,12 @@ namespace VirtoCommerce.OrderModule.Data.Services
             CustomerOrder retVal = null;
             using (var repository = _repositoryFactory())
             {
-                var orderEntity = repository.GetCustomerOrderByNumber(orderNumber, respGroup);
+                var orderEntity = repository.GetCustomerOrderByNumber(orderNumber, CustomerOrderResponseGroup.WithAddresses);
                 if (orderEntity != null)
                 {
-                    retVal = orderEntity.ToCoreModel();
-
-                    if (retVal != null && (respGroup & CustomerOrderResponseGroup.WithProducts) == CustomerOrderResponseGroup.WithProducts)
-                    {
-                        var productIds = retVal.Items.Select(x => x.ProductId).ToArray();
-                        var products = _productService.GetByIds(productIds, Domain.Catalog.Model.ItemResponseGroup.ItemInfo);
-                        foreach (var lineItem in retVal.Items)
-                        {
-                            var product = products.FirstOrDefault(x => x.Id == lineItem.ProductId);
-                            if (product != null)
-                            {
-                                lineItem.Product = product;
-                            }
-                        }
-                    }
-                    _dynamicPropertyService.LoadDynamicPropertyValues(retVal);
+                    retVal = GetById(orderEntity.Id, respGroup);
                 }
             }
-            _eventPublisher.Publish(new OrderChangeEvent(EntryState.Unchanged, null, retVal));
-
             return retVal;
         }
 
@@ -107,16 +90,16 @@ namespace VirtoCommerce.OrderModule.Data.Services
             EnsureThatAllOperationsHaveNumber(order);
 
             _eventPublisher.Publish(new OrderChangeEvent(EntryState.Added, null, order));
-
-            var entity = order.ToDataModel();
+            var pkMap = new PrimaryKeyResolvingMap(); 
+            var entity = order.ToDataModel(pkMap);
 
             using (var repository = _repositoryFactory())
             {
                 repository.Add(entity);
                 CommitChanges(repository);
+                pkMap.ResolvePrimaryKeys();
             }
 
-            order.SetObjectId(entity.Id);
             _dynamicPropertyService.SaveDynamicPropertyValues(order);
 
             var retVal = GetById(entity.Id, CustomerOrderResponseGroup.Full);
@@ -132,24 +115,17 @@ namespace VirtoCommerce.OrderModule.Data.Services
                 throw new OperationCanceledException("cart not found");
             }
             var customerOrder = shoppingCart.ToCustomerOrder();
+            _dynamicPropertyService.LoadDynamicPropertyValues(customerOrder);
+            //Copy same name properties values  from cart to order
+            shoppingCart.DeepCopyPropertyValues(customerOrder);
             var retVal = Create(customerOrder);
-
-            // Apply dynamic properties
-            retVal.ApplyDynamicPropertiesValues(shoppingCart);
-            foreach (var lineItem in retVal.Items)
-            {
-                if (lineItem.DynamicProperties != null && lineItem.DynamicProperties.Any())
-                {
-                    var cartLineItem = shoppingCart.Items.FirstOrDefault(x => x.ProductId == lineItem.ProductId);
-                    lineItem.ApplyDynamicPropertiesValues(cartLineItem);
-                }
-            }
-
+   
             return retVal;
         }
 
         public void Update(CustomerOrder[] orders)
         {
+            var pkMap = new PrimaryKeyResolvingMap();
             using (var repository = _repositoryFactory())
             {
                 foreach (var order in orders)
@@ -160,7 +136,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
                     // Do business logic on temporary order object
                     _eventPublisher.Publish(new OrderChangeEvent(EntryState.Modified, origOrder, order));
 
-                    var sourceOrderEntity = order.ToDataModel();
+                    var sourceOrderEntity = order.ToDataModel(pkMap);
                     var targetOrderEntity = repository.GetCustomerOrderById(order.Id, CustomerOrderResponseGroup.Full);
 
                     if (targetOrderEntity == null)
@@ -173,13 +149,16 @@ namespace VirtoCommerce.OrderModule.Data.Services
                         changeTracker.Attach(targetOrderEntity);
                         sourceOrderEntity.Patch(targetOrderEntity);
                     }
-
-                    _dynamicPropertyService.SaveDynamicPropertyValues(order);
                 }
-
                 CommitChanges(repository);
+                pkMap.ResolvePrimaryKeys();
             }
 
+            //Save dynamic properties
+            foreach (var order in orders)
+            {
+                _dynamicPropertyService.SaveDynamicPropertyValues(order);
+            }
         }
 
         public void Delete(string[] orderIds)
@@ -189,10 +168,15 @@ namespace VirtoCommerce.OrderModule.Data.Services
 
                 foreach (var orderId in orderIds)
                 {
-                    var order = repository.GetCustomerOrderById(orderId, CustomerOrderResponseGroup.Full);
-                    if (order != null)
+                    var dbOrder = repository.GetCustomerOrderById(orderId, CustomerOrderResponseGroup.Full);
+                    if (dbOrder != null)
                     {
-                        repository.Remove(order);
+                        var order = GetById(orderId, CustomerOrderResponseGroup.Full);
+
+                        _eventPublisher.Publish(new OrderChangeEvent(Platform.Core.Common.EntryState.Deleted, order, order));
+
+                        _dynamicPropertyService.DeleteDynamicPropertyValues(order);
+                        repository.Remove(dbOrder);
                     }
                 }
                 repository.UnitOfWork.Commit();

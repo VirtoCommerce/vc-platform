@@ -300,7 +300,6 @@
     <Compile Include="Controllers\Api\AssetsController.cs" />
     <Compile Include="Controllers\Api\DynamicPropertiesController.cs" />
     <Compile Include="Controllers\Api\PlatformExportImportController.cs" />
-    <Compile Include="Controllers\Api\FrontEndSecurityController.cs" />
     <Compile Include="Controllers\Api\JobsController.cs" />
     <Compile Include="Controllers\Api\ModulesController.cs" />
     <Compile Include="Controllers\Api\PushNotificationController.cs" />

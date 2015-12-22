@@ -17,6 +17,13 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         /// </value>
 		public string PropertyName { get; set; }
         /// <summary>
+        /// Gets or sets the id of the property that this value belongs to.
+        /// </summary>
+        /// <value>
+        /// The  property id.
+        /// </value>
+        public string PropertyId { get; set; }
+        /// <summary>
         /// Gets or sets the language of this property value.
         /// </summary>
         /// <value>
@@ -51,6 +58,11 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         /// <value>
         /// The value.
         /// </value>
-        public object Value { get; set; }
+        public string Value { get; set; }
+
+        /// <summary>
+        /// System flag used to mark that object was inherited from other
+        /// </summary>
+        public bool IsInherited { get; set; }
     }
 }

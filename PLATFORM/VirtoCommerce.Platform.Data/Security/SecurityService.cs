@@ -320,8 +320,17 @@ namespace VirtoCommerce.Platform.Data.Security
             {
                 return true;
             }
-           
+        
             var retVal = user.UserState == Core.Security.AccountState.Approved;
+
+            //For managers always allow to call api
+            if (retVal && permissionIds != null && permissionIds.Count() == 1 && permissionIds.Contains(PredefinedPermissions.SecurityCallApi)
+               && ( String.Equals(user.UserType, AccountType.Manager.ToString(), StringComparison.InvariantCultureIgnoreCase) ||
+                    String.Equals(user.UserType, AccountType.Administrator.ToString(), StringComparison.InvariantCultureIgnoreCase)))
+            {
+                return true;
+            }
+
             if (retVal)
             {
                 var fqUserPermissions = user.Roles.SelectMany(x => x.Permissions).SelectMany(x => x.GetPermissionWithScopeCombinationNames()).Distinct();

@@ -1,0 +1,62 @@
+﻿<div class="head-top">
+		<div class="wrapper">
+			<div class="head-switch">
+				<span>
+          {{'Store' | t}}:
+          <span class="current">
+						<img title="{{current_language.culture_name}}" alt="{{current_language.culture_name}}" class="flag flag-{{current_language.two_letter_region_name | downcase}}" src="{{ 'blank.gif' | asset_url }}"/>
+			  {{shop.name}}, {{current_currency.code}}
+		  </span>
+				</span>
+				<ul>
+					<li>
+						<div class="language">
+							<span>
+								{{'Language' | t}}:
+								<span class="current">{{current_language.culture_name}}</span>
+							</span>
+              <ul>
+                {% for store_language in shop.languages %}
+                <li {% if store_language == current_language %} class="selected" {% endif %}>
+                    <img alt="{{store_language.native_name}}" class="flag flag-{{store_language.two_letter_region_name | downcase}}" src="{{ 'blank.gif' | asset_url }}"/>
+                    <a title="{{store_language.native_name}}" href="{{'/' | absolute_url : '', store_language.culture_name}}">{{store_language.native_name}}</a>
+                  </li>
+                {% endfor %}
+              </ul>
+						</div>
+					</li>
+
+					<li>
+						<div class="store">
+							<span>
+                {{'Store' | t}}: <span class="current">{{shop.name}}</span>
+							</span>
+							<ul>
+                {% for store_temp in all_stores %}
+                <li {% if currentStore.id == store_temp.id %} class="selected" {% endif %}>
+									<a href="{{'/' | store_absolute_url : store_temp.id, current_language.culture_name}}">{{store_temp.name}}</a>
+								</li>
+                {% endfor %}
+              </ul>
+						</div>
+					</li>
+
+					<li>
+						<div class="currency">
+							<span>
+                {{'Currency' | t}}: <span class="current">{{shop.currency}}</span>
+							</span>
+							<ul>
+								{% for currency_temp in shop.currencies %}
+								<li {% if shop.currency == currency_temp %} class="selected" {% endif %}>
+									<a href="{{ '/common/setcurrency/' | append : currency_temp | absolute_url }}">{{currency_temp}}</a>
+								</li>
+                {% endfor %}
+              </ul>
+						</div>
+					</li>
+
+				</ul>
+			</div>
+		</div>
+	</div>

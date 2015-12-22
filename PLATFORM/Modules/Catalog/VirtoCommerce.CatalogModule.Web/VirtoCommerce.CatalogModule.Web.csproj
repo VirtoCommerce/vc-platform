@@ -121,7 +121,12 @@
     <Compile Include="Controllers\Api\CatalogModuleExportImportController.cs" />
     <Compile Include="Controllers\Api\CatalogModuleProductsController.cs" />
     <Compile Include="Controllers\Api\CatalogModuleListEntryController.cs" />
+    <Compile Include="Controllers\Api\CatalogModuleSearchController.cs" />
     <Compile Include="Controllers\Api\CatalogModulePropertiesController.cs" />
+    <Compile Include="Converters\AggregationConverters.cs" />
+    <Compile Include="Model\Aggregation.cs" />
+    <Compile Include="Model\AggregationItem.cs" />
+    <Compile Include="Model\CatalogSearchResult.cs" />
     <Compile Include="Security\CatalogPredefinedPermissions.cs" />
     <Compile Include="Converters\AssetConverter.cs" />
     <Compile Include="Converters\AssociationConverter.cs" />
@@ -154,9 +159,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Model\EditorialReview.cs" />
-    <Compile Include="Model\EventNotifications\ExportNotification.cs" />
-    <Compile Include="Model\EventNotifications\ImportNotification.cs" />
-    <Compile Include="Model\EventNotifications\JobNotificationBase.cs" />
+    <Compile Include="Model\PushNotifications\ExportNotification.cs" />
+    <Compile Include="Model\PushNotifications\ImportNotification.cs" />
+    <Compile Include="Model\PushNotifications\JobNotificationBase.cs" />
     <Compile Include="Model\ListEntryLink.cs" />
     <Compile Include="ExportImport\CsvProductPropertyMap.cs" />
     <Compile Include="Model\PasteInfo.cs" />
@@ -182,6 +187,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\CatalogSelectedScope.cs" />
     <Compile Include="Security\CatalogSelectedCategoryScope.cs" />
+    <Compile Include="Security\SearchCriteriaExtensions.cs" />
     <Content Include="Content\css\catalog.css" />
     <Content Include="Scripts\blades\import\catalog-CSV-import.js" />
     <Content Include="Scripts\blades\import\catalog-CSV-import.tpl.html" />

@@ -45,7 +45,7 @@ namespace VirtoCommerce.Platform.Data.Notifications
 			var transportWeb = new Web(credentials);
 			try
 			{
-				transportWeb.DeliverAsync(mail).Wait();
+                Task.Run(async () => await transportWeb.DeliverAsync(mail)).Wait();
 				retVal.IsSuccess = true;
 			}
 			catch (Exception ex)

@@ -44,7 +44,7 @@ namespace Amazon.MerchantModule.Web.Providers
         public IEnumerable<Product> GetCatalogProductsBatchRequest(string catalogId, string categoryId = "")
         {
             var retVal = new List<Product>();
-            var result = _catalogSearchService.Search(new SearchCriteria { CatalogId = catalogId, CategoryId = categoryId, ResponseGroup = ResponseGroup.WithProducts | ResponseGroup.WithVariations });
+            var result = _catalogSearchService.Search(new SearchCriteria { CatalogId = catalogId, CategoryId = categoryId, ResponseGroup = SearchResponseGroup.WithProducts | SearchResponseGroup.WithVariations });
             
             foreach (var product in result.Products.Select((value, index) => new { Value = value, Index = index }))
             {

@@ -1,13 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <module>
     <id>VirtoCommerce.Search</id>
-    <version>2.5.0</version>
-    <platformVersion>2.5.0</platformVersion>
+    <version>2.6.0</version>
+    <platformVersion>2.6.0</platformVersion>
     <dependencies>
-        <dependency id="VirtoCommerce.Core" version="2.5.0" />
+        <dependency id="VirtoCommerce.Core" version="2.6.0" />
+        <dependency id="VirtoCommerce.Catalog" version="2.6.0" />
     </dependencies>
 
-    <title>Indexed search module</title>
+    <title>Search module</title>
     <description>Indexed search functionality with Lucene and ElasticSearch engines</description>
     <authors>
         <author>Virto Commerce</author>
@@ -16,7 +17,7 @@
         <owner>Virto Commerce</owner>
     </owners>
     <projectUrl>http://virtocommerce.com/</projectUrl>
-  <iconUrl>Modules/$(VirtoCommerce.Core)/Content/logoVC.png</iconUrl>
+    <iconUrl>Modules/$(VirtoCommerce.Core)/Content/logoVC.png</iconUrl>
     <releaseNotes>First version.</releaseNotes>
     <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
     <tags>order system</tags>

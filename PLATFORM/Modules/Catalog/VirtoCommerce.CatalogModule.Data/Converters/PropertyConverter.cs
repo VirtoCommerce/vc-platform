@@ -19,7 +19,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// </summary>
 		/// <param name="catalogBase"></param>
 		/// <returns></returns>
-		public static coreModel.Property ToCoreModel(this dataModel.Property dbProperty, coreModel.Catalog catalog, coreModel.Category category)
+		public static coreModel.Property ToCoreModel(this dataModel.Property dbProperty)
 		{
 			if (dbProperty == null)
 				throw new ArgumentNullException("dbProperty");
@@ -31,10 +31,8 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			retVal.Multilanguage = dbProperty.IsLocaleDependant;
 			retVal.Dictionary = dbProperty.IsEnum;
 			retVal.ValueType = (coreModel.PropertyValueType)dbProperty.PropertyValueType;
-			retVal.CatalogId = catalog.Id;
-			retVal.Catalog = catalog;
-			retVal.CategoryId = category == null ? null : category.Id;
-			retVal.Category = category;
+			retVal.Catalog = dbProperty.Catalog.ToCoreModel(convertProps: false);
+			retVal.Category = dbProperty.Category != null ? dbProperty.Category.ToCoreModel(convertProps: false) : null;
 
 			coreModel.PropertyType propertyType;
 			if (!string.IsNullOrEmpty(dbProperty.TargetType) && Enum.TryParse(dbProperty.TargetType, out propertyType))
@@ -42,7 +40,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 				retVal.Type = propertyType;
 			}
 
-			retVal.DisplayNames = catalog.Languages.Select(x => new PropertyDisplayName { LanguageCode = x.LanguageCode }).ToList();
+			retVal.DisplayNames = retVal.Catalog.Languages.Select(x => new PropertyDisplayName { LanguageCode = x.LanguageCode }).ToList();
 			if (dbProperty.PropertyAttributes != null)
 			{
 				retVal.Attributes = new List<coreModel.PropertyAttribute>();

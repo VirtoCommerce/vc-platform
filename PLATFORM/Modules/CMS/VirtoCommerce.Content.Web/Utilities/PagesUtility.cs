@@ -4,19 +4,20 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using VirtoCommerce.Content.Data.Models;
+using webModels = VirtoCommerce.Content.Web.Models;
 
 namespace VirtoCommerce.Web.Utilities
 {
 	public static class PagesUtility
 	{
-		public static IEnumerable<Page> GetShortPageInfoFromString(string[] pageNameAndLanguages)
+		public static IEnumerable<webModels.Page> GetShortPageInfoFromString(string[] pageNameAndLanguages)
 		{
-			var retVal = new List<Page>();
+			var retVal = new List<webModels.Page>();
 
 			foreach (var pageNameAndLanguage in pageNameAndLanguages)
 			{
-				var addedItem = new Page();
-				addedItem.PageName = pageNameAndLanguage.Split('^')[1];
+				var addedItem = new webModels.Page();
+				addedItem.Name = pageNameAndLanguage.Split('^')[1];
 				addedItem.Language = pageNameAndLanguage.Split('^')[0];
 				retVal.Add(addedItem);
 			}

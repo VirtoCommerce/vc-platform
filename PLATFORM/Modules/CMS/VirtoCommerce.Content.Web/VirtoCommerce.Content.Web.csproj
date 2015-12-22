@@ -66,10 +66,6 @@
       <HintPath>..\..\..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Octokit, Version=0.16.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Octokit.0.16.0\lib\net45\Octokit.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Omu.ValueInjecter, Version=2.3.3.0, Culture=neutral, PublicKeyToken=c7694541b0ac80e4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\valueinjecter.2.3.3\lib\net35\Omu.ValueInjecter.dll</HintPath>
@@ -95,117 +91,22 @@
       <HintPath>..\..\..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
-    <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\allStyles.css" />
-    <Content Include="Default_Theme\Default\assets\arrow-left.svg" />
-    <Content Include="Default_Theme\Default\assets\arrow-right.svg" />
-    <Content Include="Default_Theme\Default\assets\arrow.svg" />
-    <Content Include="Default_Theme\Default\assets\arrow_switch.png" />
-    <Content Include="Default_Theme\Default\assets\cart.svg" />
-    <Content Include="Default_Theme\Default\assets\collection-view-grid.svg" />
-    <Content Include="Default_Theme\Default\assets\collection-view-list.svg" />
-    <Content Include="Default_Theme\Default\assets\favicon.png" />
-    <Content Include="Default_Theme\Default\assets\flags.png" />
-    <Content Include="Default_Theme\Default\assets\hamburger.svg" />
-    <Content Include="Default_Theme\Default\assets\handlebars.min.js" />
-    <Content Include="Default_Theme\Default\assets\icons.svg" />
-    <Content Include="Default_Theme\Default\assets\jquery.flexslider.min.js" />
-    <Content Include="Default_Theme\Default\assets\jquery.zoom.min.js" />
-    <Content Include="Default_Theme\Default\assets\logo.png" />
-    <Content Include="Default_Theme\Default\assets\modernizr.min.js" />
-    <Content Include="Default_Theme\Default\assets\remove.svg" />
-    <Content Include="Default_Theme\Default\assets\respond-proxy.html" />
-    <Content Include="Default_Theme\Default\assets\respond.min.js" />
-    <Content Include="Default_Theme\Default\assets\slide_1.jpg" />
-    <Content Include="Default_Theme\Default\assets\slide_2.jpg" />
-    <Content Include="gulpfile.js" />
+    <None Include="gulpfile.js" />
     <Content Include="module.manifest" />
     <Content Include="Localizations\en.VirtoCommerce.Content.json" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
-    <Content Include="Default_Theme\Default\assets\ajaxify.js.liquid" />
-    <Content Include="Default_Theme\Default\assets\ajaxify.scss.liquid" />
-    <Content Include="Default_Theme\Default\assets\checkout.css.liquid" />
-    <Content Include="Default_Theme\Default\assets\default.scss.liquid" />
-    <Content Include="Default_Theme\Default\assets\icons.eot" />
-    <Content Include="Default_Theme\Default\assets\icons.ttf" />
-    <Content Include="Default_Theme\Default\assets\icons.woff" />
-    <Content Include="Default_Theme\Default\assets\shop.js.liquid" />
-    <Content Include="Default_Theme\Default\config\settings_data.json" />
-    <Content Include="Default_Theme\Default\layout\theme.liquid" />
-    <Content Include="Default_Theme\Default\locales\de.json" />
-    <Content Include="Default_Theme\Default\locales\en.default.json" />
-    <Content Include="Default_Theme\Default\locales\es.json" />
-    <Content Include="Default_Theme\Default\locales\fr.json" />
-    <Content Include="Default_Theme\Default\locales\pt-BR.json" />
-    <Content Include="Default_Theme\Default\locales\pt-PT.json" />
-    <Content Include="Default_Theme\Default\snippets\ajax-cart-template.liquid" />
-    <Content Include="Default_Theme\Default\snippets\blog-sidebar.liquid" />
-    <Content Include="Default_Theme\Default\snippets\breadcrumb.liquid" />
-    <Content Include="Default_Theme\Default\snippets\collection-grid-item.liquid" />
-    <Content Include="Default_Theme\Default\snippets\collection-list-item.liquid" />
-    <Content Include="Default_Theme\Default\snippets\collection-sidebar.liquid" />
-    <Content Include="Default_Theme\Default\snippets\collection-sorting.liquid" />
-    <Content Include="Default_Theme\Default\snippets\collection-views.liquid" />
-    <Content Include="Default_Theme\Default\snippets\comment.liquid" />
-    <Content Include="Default_Theme\Default\snippets\featured-collection.liquid" />
-    <Content Include="Default_Theme\Default\snippets\featured-row.liquid" />
-    <Content Include="Default_Theme\Default\snippets\footer.liquid" />
-    <Content Include="Default_Theme\Default\snippets\form-errors-custom.liquid" />
-    <Content Include="Default_Theme\Default\snippets\google-fonts.liquid" />
-    <Content Include="Default_Theme\Default\snippets\newsletter-form.liquid" />
-    <Content Include="Default_Theme\Default\snippets\oldIE-js.liquid" />
-    <Content Include="Default_Theme\Default\snippets\open-graph-tags.liquid" />
-    <Content Include="Default_Theme\Default\snippets\pagination-custom.liquid" />
-    <Content Include="Default_Theme\Default\snippets\price-sale.liquid" />
-    <Content Include="Default_Theme\Default\snippets\price.liquid" />
-    <Content Include="Default_Theme\Default\snippets\product-grid-item.liquid" />
-    <Content Include="Default_Theme\Default\snippets\product-list-item.liquid" />
-    <Content Include="Default_Theme\Default\snippets\related-products.liquid" />
-    <Content Include="Default_Theme\Default\snippets\respond.liquid" />
-    <Content Include="Default_Theme\Default\snippets\search-bar.liquid" />
-    <Content Include="Default_Theme\Default\snippets\search-result-grid.liquid" />
-    <Content Include="Default_Theme\Default\snippets\search-result.liquid" />
-    <Content Include="Default_Theme\Default\snippets\site-nav.liquid" />
-    <Content Include="Default_Theme\Default\snippets\slider.liquid" />
-    <Content Include="Default_Theme\Default\snippets\social-sharing.liquid" />
-    <Content Include="Default_Theme\Default\snippets\tags-article.liquid" />
-    <Content Include="Default_Theme\Default\snippets\toggle-filters.liquid" />
-    <Content Include="Default_Theme\Default\snippets\top-header-selector.liquid" />
-    <Content Include="Default_Theme\Default\snippets\twitter-card.liquid" />
-    <Content Include="Default_Theme\Default\templates\404.liquid" />
-    <Content Include="Default_Theme\Default\templates\article.liquid" />
-    <Content Include="Default_Theme\Default\templates\blog.liquid" />
-    <Content Include="Default_Theme\Default\templates\cart.liquid" />
-    <Content Include="Default_Theme\Default\templates\collection.liquid" />
-    <Content Include="Default_Theme\Default\templates\collection.list.liquid" />
-    <Content Include="Default_Theme\Default\templates\gift_card.liquid" />
-    <Content Include="Default_Theme\Default\templates\index.liquid" />
-    <Content Include="Default_Theme\Default\templates\list-collections.liquid" />
-    <Content Include="Default_Theme\Default\templates\page.contact.liquid" />
-    <Content Include="Default_Theme\Default\templates\page.liquid" />
-    <Content Include="Default_Theme\Default\templates\product.liquid" />
-    <Content Include="Default_Theme\Default\templates\search.liquid" />
-    <Content Include="Default_Theme\Default\templates\customers\account.liquid" />
-    <Content Include="Default_Theme\Default\templates\customers\activate_account.liquid" />
-    <Content Include="Default_Theme\Default\templates\customers\addresses.liquid" />
-    <Content Include="Default_Theme\Default\templates\customers\login.liquid" />
-    <Content Include="Default_Theme\Default\templates\customers\order.liquid" />
-    <Content Include="Default_Theme\Default\templates\customers\register.liquid" />
-    <Content Include="Default_Theme\Default\templates\customers\reset_password.liquid" />
-    <Content Include="Default_Theme\Default\assets\flexslider.css.liquid" />
-    <Content Include="Default_Theme\Default\templates\quote.liquid" />
-    <Content Include=".bowerrc" />
-    <Content Include="bower.json" />
-    <Content Include="package.json" />
+    <None Include=".bowerrc" />
+    <None Include="bower.json" />
+    <None Include="package.json" />
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
@@ -257,15 +158,11 @@
     <Compile Include="Controllers\Api\ContentBaseController.cs" />
     <Compile Include="Controllers\Api\MenuController.cs" />
     <Compile Include="Controllers\Api\PagesController.cs" />
-    <Compile Include="Controllers\Api\SyncController.cs" />
     <Compile Include="Controllers\Api\ThemeController.cs" />
     <Compile Include="Security\ContentPredefinedPermissions.cs" />
-    <Compile Include="Converters\GetPagesCriteriaConverter.cs" />
-    <Compile Include="Converters\GetThemeAssetsCriteriaConverter.cs" />
     <Compile Include="Converters\MenuLinkConverter.cs" />
     <Compile Include="Converters\MenuLinkListConverter.cs" />
     <Compile Include="Converters\PageConverter.cs" />
-    <Compile Include="Converters\SyncAssetConverter.cs" />
     <Compile Include="Converters\ThemeAssetConverter.cs" />
     <Compile Include="Converters\ThemeConverter.cs" />
     <Compile Include="ExportImport\ContentExportImport.cs" />

@@ -41,6 +41,9 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 		[StringLength(64)]
 		public string TaxType { get; set; }
 
+        [NotMapped]
+        public Category[] AllParents { get; set; }
+
 		#region Navigation Properties
 		[StringLength(128)]
 		[ForeignKey("Catalog")]

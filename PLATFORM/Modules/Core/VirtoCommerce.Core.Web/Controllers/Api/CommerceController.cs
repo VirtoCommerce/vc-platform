@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
@@ -73,58 +74,65 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
         /// <summary>
         /// Payment callback operation used by external payment services to inform post process payment in our system
         /// </summary>
-        /// <param name="orderId">customer order id</param>
-        [HttpGet]
+        /// <param name="callback">payment callback parameters</param>
+        [HttpPost]
         [Route("paymentcallback")]
         [ResponseType(typeof(PostProcessPaymentResult))]
-        [ApiExplorerSettings(IgnoreApi = true)]
-        public IHttpActionResult PostProcessPayment(string orderId)
+        public IHttpActionResult PostProcessPayment(webModel.PaymentCallbackParameters callback)
         {
-            var order = _customerOrderService.GetById(orderId, CustomerOrderResponseGroup.Full);
-            if (order == null)
+            if (callback != null && callback.Parameters != null && callback.Parameters.Any(param => param.Key == "orderid"))
             {
-                throw new NullReferenceException("order");
-            }
+                var orderId = callback.Parameters.First(param => param.Key == "orderid").Value;
+                //some payment method require customer number to be passed and returned. First search customer order by number
+                var order = _customerOrderService.GetByOrderNumber(orderId, CustomerOrderResponseGroup.Full);
 
-            var store = _storeService.GetById(order.StoreId);
-            var parameters = HttpContext.Current.Request.QueryString;
-            var paymentMethod = store.PaymentMethods.Where(x => x.IsActive).FirstOrDefault(x => x.ValidatePostProcessRequest(parameters).IsSuccess);
-            if (paymentMethod != null)
-            {
-                var paymentOuterId = paymentMethod.ValidatePostProcessRequest(HttpContext.Current.Request.QueryString).OuterId;
+                //if order not found by order number search by order id
+                if (order == null)
+                    order = _customerOrderService.GetById(orderId, CustomerOrderResponseGroup.Full);
 
-                var payment = order.InPayments.FirstOrDefault(x => string.IsNullOrEmpty(x.OuterId) || x.OuterId == paymentOuterId);                
-                if (payment == null)
+                var store = _storeService.GetById(order.StoreId);
+                var parameters = new NameValueCollection();
+                foreach (var param in callback.Parameters)
                 {
-                    throw new NullReferenceException("appropriate paymentMethod not found");
+                    parameters.Add(param.Key, param.Value);
                 }
-
-                var context = new PostProcessPaymentEvaluationContext
+                var paymentMethod = store.PaymentMethods.Where(x => x.IsActive).FirstOrDefault(x => x.ValidatePostProcessRequest(parameters).IsSuccess);
+                if (paymentMethod != null)
                 {
-                    Order = order,
-                    Payment = payment,
-                    Store = store,
-                    OuterId = paymentOuterId,
-                    Parameters = parameters
-                };
+                    var paymentOuterId = paymentMethod.ValidatePostProcessRequest(parameters).OuterId;
 
-                var retVal = paymentMethod.PostProcessPayment(context);
+                    var payment = order.InPayments.FirstOrDefault(x => string.IsNullOrEmpty(x.OuterId) || x.OuterId == paymentOuterId);
+                    if (payment == null)
+                    {
+                        throw new NullReferenceException("appropriate paymentMethod not found");
+                    }
 
-                if (retVal != null)
-                {
-                    _customerOrderService.Update(new CustomerOrder[] { order });
-                }
+                    var context = new PostProcessPaymentEvaluationContext
+                    {
+                        Order = order,
+                        Payment = payment,
+                        Store = store,
+                        OuterId = paymentOuterId,
+                        Parameters = parameters
+                    };
 
-                return Ok(retVal);
+                    var retVal = paymentMethod.PostProcessPayment(context);
+
+                    if (retVal != null)
+                    {
+                        _customerOrderService.Update(new CustomerOrder[] { order });
+                    }
+
+                    return Ok(retVal);
+                }                
             }
-
             return Ok(new PostProcessPaymentResult { ErrorMessage = "cancel payment" });
         }
 
         /// <summary>
-        /// Find seo informations by slug keyword
+        /// Find all SEO records for object by slug
         /// </summary>
-        /// <param name="slug">fulfillment center id</param>
+        /// <param name="slug">slug</param>
         [HttpGet]
         [ResponseType(typeof(coreModel.SeoInfo[]))]
         [Route("seoinfos/{slug}")]
@@ -132,6 +140,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
         public IHttpActionResult GetSeoInfoBySlug(string slug)
         {
             var retVal = _commerceService.GetSeoByKeyword(slug).ToArray();
+
             return Ok(retVal);
         }
     }
