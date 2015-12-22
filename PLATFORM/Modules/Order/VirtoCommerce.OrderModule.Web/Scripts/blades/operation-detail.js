@@ -67,6 +67,7 @@
 			        blade.isLoading = true;
 			        order_res_customerOrders.update({}, blade.customerOrder, function (data, headers) {
 			            blade.refresh();
+			            blade.parentBlade.refresh();
 			        },
                     function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
 			    };
@@ -151,18 +152,15 @@
 					                    if (blade.currentEntity.operationType.toLowerCase() != 'customerorder') {
 					                        order_res_customerOrders.deleteOperation({ id: blade.customerOrder.id, operationId: blade.currentEntity.id },
                                             function () {
-                                                blade.title = 'orders.blades.customerOrder-detail.title';
-                                                blade.titleValues = { customer: blade.customerOrder.customer };
-                                                blade.subtitle = 'orders.blades.customerOrder-detail.subtitle';
-                                                blade.template = 'Modules/$(VirtoCommerce.Orders)/Scripts/blades/customerOrder-detail.tpl.html';
-                                                blade.currentEntity = blade.customerOrder;
-                                                blade.refresh();
+                                                blade.parentBlade.refresh();
+                                                bladeNavigationService.closeBlade(blade);
                                             },
                                             function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
 					                    }
 					                    else {
-					                        order_res_customerOrders.delete({ id: blade.customerOrder.id },
+					                        order_res_customerOrders.delete({ ids: blade.customerOrder.id },
                                             function () {
+                                                blade.parentBlade.refresh();
                                                 bladeNavigationService.closeBlade(blade);
                                             },
                                             function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });

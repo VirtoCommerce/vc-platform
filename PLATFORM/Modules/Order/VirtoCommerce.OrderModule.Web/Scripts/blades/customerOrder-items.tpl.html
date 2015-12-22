@@ -80,7 +80,7 @@
                         </tr>
                     </tbody>
                 </table>
-                <ng-include src="'pagerTemplate.html'"></ng-include>
+                <div ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems" ng-include="'pagerTemplate.html'"></div>
             </div>
             <div class="table-wrapper">
                 <table class="table __collapsed __order-info">
