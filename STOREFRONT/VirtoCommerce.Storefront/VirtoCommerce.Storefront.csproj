@@ -317,6 +317,7 @@
     <Content Include="App_Data\x86\LibSass.x86.dll" />
     <Content Include="App_Data\x86\libsassnet.dll" />
     <Content Include="Global.asax" />
+    <Content Include="robots.txt" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

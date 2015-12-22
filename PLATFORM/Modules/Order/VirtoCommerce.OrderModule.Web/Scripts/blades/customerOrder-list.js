@@ -1,6 +1,7 @@
 ﻿angular.module('virtoCommerce.orderModule')
 .controller('virtoCommerce.orderModule.customerOrderListController', ['$scope', 'virtoCommerce.orderModule.order_res_customerOrders', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.authService', 'uiGridConstants', 'platformWebApp.uiGridHelper', 'dateFilter',
 function ($scope, order_res_customerOrders, bladeNavigationService, dialogService, authService, uiGridConstants, uiGridHelper, dateFilter) {
+    var blade = $scope.blade;
     $scope.uiGridConstants = uiGridConstants;
 
     //pagination settings
@@ -10,60 +11,46 @@ function ($scope, order_res_customerOrders, bladeNavigationService, dialogServic
     $scope.pageSettings.numPages = 5;
     $scope.pageSettings.itemsPerPageCount = 20;
 
-    $scope.filter = { searchKeyword: undefined };
+    $scope.filter = {
+        searchKeyword: undefined
+    };
 
-    var selectedNode = null;
-
-    $scope.blade.refresh = function () {
-        $scope.blade.isLoading = true;
+    blade.refresh = function () {
+        blade.isLoading = true;
 
         var criteria = {
             keyword: $scope.filter.searchKeyword,
             start: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
             count: $scope.pageSettings.itemsPerPageCount
         };
-        searchOrders(criteria);
-    };
-
-    function searchOrders(criteria) {
         order_res_customerOrders.search(criteria, function (data) {
-            $scope.blade.isLoading = false;
+            blade.isLoading = false;
 
             $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
             $scope.objects = data.customerOrders;
-
-            if (selectedNode != null) {
-                //select the node in the new list
-                angular.forEach(data.customerOrders, function (node) {
-                    if (selectedNode.id === node.id) {
-                        selectedNode = node;
-                    }
-                });
-            }
         },
 	   function (error) {
-	       bladeNavigationService.setError('Error ' + error.status, $scope.blade);
+	       bladeNavigationService.setError('Error ' + error.status, blade);
 	   });
     };
 
     $scope.$watch('pageSettings.currentPage', function (newPage) {
-        $scope.blade.refresh();
+        blade.refresh();
     });
 
     $scope.selectNode = function (node) {
-        selectedNode = node;
-        $scope.selectedNodeId = selectedNode.id;
+        $scope.selectedNodeId = node.id;
         var newBlade = {
             id: 'orderDetail',
             title: 'orders.blades.customerOrder-detail.title',
-            titleValues: { customer: selectedNode.customerName },
+            titleValues: { customer: node.customerName },
             subtitle: 'orders.blades.customerOrder-detail.subtitle',
-            customerOrder: selectedNode,
+            customerOrder: node,
             controller: 'virtoCommerce.orderModule.operationDetailController',
             template: 'Modules/$(VirtoCommerce.Orders)/Scripts/blades/customerOrder-detail.tpl.html'
         };
 
-        bladeNavigationService.showBlade(newBlade, $scope.blade);
+        bladeNavigationService.showBlade(newBlade, blade);
     };
 
     $scope.deleteList = function (list) {
@@ -77,9 +64,11 @@ function ($scope, order_res_customerOrders, bladeNavigationService, dialogServic
 
                     var itemIds = _.pluck(list, 'id');
                     order_res_customerOrders.remove({ ids: itemIds }, function (data, headers) {
-                        $scope.blade.refresh();
+                        blade.refresh();
                     },
-                    function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+                    function (error) {
+                        bladeNavigationService.setError('Error ' + error.status, blade);
+                    });
                 }
             }
         }
@@ -87,33 +76,33 @@ function ($scope, order_res_customerOrders, bladeNavigationService, dialogServic
     }
 
     function closeChildrenBlades() {
-        angular.forEach($scope.blade.childrenBlades.slice(), function (child) {
+        angular.forEach(blade.childrenBlades.slice(), function (child) {
             bladeNavigationService.closeBlade(child);
         });
     }
 
-    $scope.blade.headIcon = 'fa-file-text';
+    blade.headIcon = 'fa-file-text';
 
-    $scope.blade.toolbarCommands = [
-          {
-              name: "platform.commands.refresh", icon: 'fa fa-refresh',
-              executeMethod: function () {
-                  $scope.blade.refresh();
-              },
-              canExecuteMethod: function () {
-                  return true;
-              }
-          },
-          {
-              name: "platform.commands.delete", icon: 'fa fa-trash-o',
-              executeMethod: function () {
-                  $scope.deleteList($scope.gridApi.selection.getSelectedRows());
-              },
-              canExecuteMethod: function () {
-                  return $scope.gridApi && _.any($scope.gridApi.selection.getSelectedRows());
-              },
-              permission: 'order:delete'
-          }
+    blade.toolbarCommands = [
+    {
+        name: "platform.commands.refresh", icon: 'fa fa-refresh',
+        executeMethod: function () {
+            blade.refresh();
+        },
+        canExecuteMethod: function () {
+            return true;
+        }
+    },
+                  {
+                      name: "platform.commands.delete", icon: 'fa fa-trash-o',
+                      executeMethod: function () {
+                          $scope.deleteList($scope.gridApi.selection.getSelectedRows());
+                      },
+                      canExecuteMethod: function () {
+                          return $scope.gridApi && _.any($scope.gridApi.selection.getSelectedRows());
+                      },
+                      permission: 'order:delete'
+                  }
     ];
 
     // ui-grid
@@ -128,5 +117,5 @@ function ($scope, order_res_customerOrders, bladeNavigationService, dialogServic
 
     // actions on load
     //No need to call this because page 'pageSettings.currentPage' is watched!!! It would trigger subsequent duplicated req...
-    //$scope.blade.refresh();
+    //blade.refresh();
 }]);

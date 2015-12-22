@@ -52,7 +52,7 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             var context = base.WorkContext;
             var articleUrl = String.Join("/", "/blogs", blog, article);
-            var contentBlog = _contentService.LoadContentItemsByUrl("/blogs/" + blog + "/default", context.CurrentStore, context.CurrentLanguage, x => new Blog("/blogs/" + blog, context.CurrentLanguage)).FirstOrDefault();
+            var contentBlog = _contentService.LoadContentItemsByUrl("/blogs/" + blog + "/default", context.CurrentStore, context.CurrentLanguage, x => new Blog("blogs/" + blog, context.CurrentLanguage)).FirstOrDefault();
             var blogArticle = _contentService.LoadContentItemsByUrl(articleUrl, context.CurrentStore, context.CurrentLanguage, x => new BlogArticle(x, context.CurrentLanguage)).FirstOrDefault();
             if (blogArticle != null)
             {

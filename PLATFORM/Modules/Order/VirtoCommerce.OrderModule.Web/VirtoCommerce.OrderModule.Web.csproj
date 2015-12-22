@@ -154,7 +154,9 @@
     <Content Include="Scripts\widgets\customerOrder-address-widget.tpl.html" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="module.manifest" />
+    <Content Include="module.manifest">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Scripts\blades\customerOrder-list.js" />
     <Content Include="Scripts\blades\customerOrder-list.tpl.html" />
     <Content Include="Scripts\blades\operation-detail.js" />

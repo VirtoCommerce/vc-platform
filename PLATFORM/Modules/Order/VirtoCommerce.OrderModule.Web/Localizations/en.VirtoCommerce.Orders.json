@@ -3,7 +3,7 @@
     "main-menu-title": "Orders",
     "blades": {
       "customerOrder-detail": {
-        "title": "{{customer}}'s Customer Order",
+        "title": "{{customer}}'s order",
         "subtitle": "Edit order details and related documents",
         "labels": {
           "approved": "Approved",

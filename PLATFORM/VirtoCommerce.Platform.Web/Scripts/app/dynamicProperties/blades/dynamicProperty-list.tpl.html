@@ -1,7 +1,7 @@
 ﻿<div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
-            <div class="text" ng-if="blade.currentEntities.length == 0">{{ 'platform.blades.dynamicProperty-list.labels.no-properties' | translate }}</div>
+            <div class="note" ng-if="blade.currentEntities.length == 0">{{ 'platform.blades.dynamicProperty-list.labels.no-properties' | translate }}</div>
             <ul class="list __items" ng-if="blade.currentEntities.length > 0">
                 <li class="list-item" ng-repeat="data in blade.currentEntities | filter:searchText | orderBy: 'name' track by data.id" ng-class="{'__selected': data.id === selectedNodeId}" ng-click='selectNode(data)'>
                     <span class="list-t">{{data.name}}</span>
