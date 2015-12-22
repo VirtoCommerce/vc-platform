@@ -41,7 +41,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             var result = new Collection
             {
                 Id = category.Id,
-                Description = category.Name,
+                Description = null,
                 Handle = category.SeoInfo != null ? category.SeoInfo.Slug : category.Id,
                 Image = category.PrimaryImage?.ToShopifyModel(),
                 Title = category.Name,
