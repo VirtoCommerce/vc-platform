@@ -17,6 +17,8 @@ using VirtoCommerce.Domain.Store.Model;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Content.Web.Security;
 using VirtoCommerce.Domain.Store.Services;
+using System.Configuration;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Content.Web
 {
@@ -48,7 +50,9 @@ namespace VirtoCommerce.Content.Web
             _container.RegisterType<IMenuService, MenuServiceImpl>();
 
             var settingsManager = _container.Resolve<ISettingsManager>();
-            Func<IContentStorageProvider> contentProviderFactory = () =>  new ContentStorageProviderImpl(NormalizePath(settingsManager.GetValue("VirtoCommerce.Content.StoragePath", string.Empty)));
+            var contentStoragePath = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Storefront.AppData.Path", settingsManager.GetValue("VirtoCommerce.Content.StoragePath", string.Empty));
+
+            Func<IContentStorageProvider> contentProviderFactory = () =>  new ContentStorageProviderImpl(NormalizePath(contentStoragePath));
             _container.RegisterInstance(contentProviderFactory);
         }
 
