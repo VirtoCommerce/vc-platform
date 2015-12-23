@@ -179,27 +179,29 @@ namespace VirtoCommerce.Storefront.Services
         {
             var fileSystemWatcher = new FileSystemWatcher();
 
-            fileSystemWatcher.Path = _baseLocalPath;
-            fileSystemWatcher.IncludeSubdirectories = true;
-
-            FileSystemEventHandler handler = (sender, args) =>
+            if (Directory.Exists(_baseLocalPath))
             {
-                _cacheManager.Clear();
-            };
-            RenamedEventHandler renamedHandler = (sender, args) =>
-            {
-                _cacheManager.Clear();
-            };
-            var throttledHandler = handler.Throttle(TimeSpan.FromSeconds(5));
-            // Add event handlers.
-            fileSystemWatcher.Changed += throttledHandler;
-            fileSystemWatcher.Created += throttledHandler;
-            fileSystemWatcher.Deleted += throttledHandler;
-            fileSystemWatcher.Renamed += renamedHandler;
+                fileSystemWatcher.Path = _baseLocalPath;
+                fileSystemWatcher.IncludeSubdirectories = true;
 
-            // Begin watching.
-            fileSystemWatcher.EnableRaisingEvents = true;
+                FileSystemEventHandler handler = (sender, args) =>
+                {
+                    _cacheManager.Clear();
+                };
+                RenamedEventHandler renamedHandler = (sender, args) =>
+                {
+                    _cacheManager.Clear();
+                };
+                var throttledHandler = handler.Throttle(TimeSpan.FromSeconds(5));
+                // Add event handlers.
+                fileSystemWatcher.Changed += throttledHandler;
+                fileSystemWatcher.Created += throttledHandler;
+                fileSystemWatcher.Deleted += throttledHandler;
+                fileSystemWatcher.Renamed += renamedHandler;
 
+                // Begin watching.
+                fileSystemWatcher.EnableRaisingEvents = true;
+            }
             return fileSystemWatcher;
         }
 
