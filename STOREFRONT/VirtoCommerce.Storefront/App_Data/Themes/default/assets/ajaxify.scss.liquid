@@ -459,7 +459,7 @@ form[action^="/cart/add"] {
 
   // Short screens
   @media only screen and (max-height:645px) {
-    top: 70px;
+    
   }
 
   // Medium-down screens
@@ -469,12 +469,15 @@ form[action^="/cart/add"] {
 
   // Small screens
   @include at-query ($max, $small) {
-    position: fixed;
+    left: 0;
+	position: fixed;
     top: 0;
     bottom: 0;
     margin: 0!important;
     max-height: none;
     max-width: none;
+
+	@include transform(none);
   }
 
   .ajaxifyCart--content {
@@ -496,7 +499,6 @@ form[action^="/cart/add"] {
 
   &.is-visible {
     visibility: visible;
-    left: 50%;
     z-index: 99999;
     @include transition('left 0s linear, box-shadow 600ms cubic-bezier(0.47, 0.5, 0, 0.95) 400ms, margin-top 200ms ease-in-out');
 
