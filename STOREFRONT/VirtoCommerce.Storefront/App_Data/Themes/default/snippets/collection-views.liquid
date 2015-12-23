@@ -24,6 +24,9 @@
 
   $(function() {
     $('.change-view').on('click', function() {
+      if ($(this).hasClass('collection-view--active')) {
+        return;
+      }
       var view = $(this).data('view'),
           url = document.URL,
           hasParams = url.indexOf('?') > -1;
