@@ -81,8 +81,6 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 					{
 						throw new NullReferenceException("dbCategory");
 					}
-		
-					var dbCategoryChanged = category.ToDataModel(pkMap);
 					changeTracker.Attach(dbCategory);
 
 					category.Patch(dbCategory, pkMap);

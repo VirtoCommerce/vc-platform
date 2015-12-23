@@ -173,7 +173,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
             if (input != null)
             {
                 var themeAdaptor = (ShopifyLiquidThemeEngine)Template.FileSystem;
-                retVal = themeAdaptor.GetAssetAbsoluteUrl(input);
+                retVal = themeAdaptor.GetGlobalAssetAbsoluteUrl(input);
             }
             return retVal;
         }
