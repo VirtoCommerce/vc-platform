@@ -2363,7 +2363,7 @@ $shareBorderColor: #ececec;
   .nav-bar {
     position: fixed;
 
-    z-index: 2000;
+    z-index: 99999;
     @include transition(all 600ms cubic-bezier(0.47, 0.5, 0, 0.95));
 
     .show-nav & {
@@ -2461,7 +2461,7 @@ $shareBorderColor: #ececec;
     opacity: 0;
     overflow: hidden;
     visibility: hidden;
-    z-index: 20;
+    z-index: 99999;
     @include transition(all 150ms);
 
     .no-touch .site-nav--has-dropdown:hover &,
