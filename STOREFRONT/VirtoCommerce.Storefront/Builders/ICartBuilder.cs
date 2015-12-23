@@ -14,6 +14,10 @@ namespace VirtoCommerce.Storefront.Builders
 
         Task<CartBuilder> ChangeItemQuantityAsync(string lineItemId, int quantity);
 
+        Task<CartBuilder> ChangeItemQuantityAsync(int lineItemIndex, int quantity);
+
+        Task<CartBuilder> ChangeItemsQuantitiesAsync(int[] quantities);
+
         Task<CartBuilder> RemoveItemAsync(string lineItemId);
 
         Task<CartBuilder> AddCouponAsync(string couponCode);
