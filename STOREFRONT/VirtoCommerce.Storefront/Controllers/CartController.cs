@@ -43,24 +43,53 @@ namespace VirtoCommerce.Storefront.Controllers
             return View("cart", WorkContext);
         }
 
+        // GET: /cart/change?line=...&quantity=...
+        [HttpGet]
+        public async Task<ActionResult> Change(int line, int quantity)
+        {
+            await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
+
+            await _cartBuilder.ChangeItemQuantityAsync(line - 1, quantity);
+            await _cartBuilder.SaveAsync();
+
+            return StoreFrontRedirect("~/cart");
+        }
+
+        // POST: /cart?updates=...&update=...
+        [HttpPost]
+        public async Task<ActionResult> Cart(int[] updates, string checkout)
+        {
+            await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
+
+            await _cartBuilder.ChangeItemsQuantitiesAsync(updates);
+            await _cartBuilder.SaveAsync();
+
+            if (Request.Form.Get("checkout") != null)
+            {
+                return StoreFrontRedirect("~/cart/checkout");
+            }
+            else
+            {
+                return StoreFrontRedirect("~/cart");
+            }
+        }
+
         // GET: /cart/json
         [HttpGet]
         public async Task<ActionResult> CartJson()
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
 
-            _cartBuilder.Cart.Items.OrderBy(i => i.CreatedDate);
-
             return Json(_cartBuilder.Cart, JsonRequestBehavior.AllowGet);
         }
 
-        // POST: /cart/additem?productId=...&quantity=...
+        // POST: /cart/additem?id=...&quantity=...
         [HttpPost]
-        public async Task<ActionResult> AddItemJson(string productId, int quantity = 1)
+        public async Task<ActionResult> AddItemJson(string id, int quantity = 1)
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
 
-            var product = await _catalogService.GetProductAsync(productId, Model.Catalog.ItemResponseGroup.ItemLarge);
+            var product = await _catalogService.GetProductAsync(id, Model.Catalog.ItemResponseGroup.ItemLarge);
             if (product != null)
             {
                 await _cartBuilder.AddItemAsync(product, quantity);

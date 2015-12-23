@@ -60,6 +60,8 @@ namespace VirtoCommerce.Storefront.Builders
                 return retVal;
             });
 
+            _cart.Items.OrderBy(i => i.CreatedDate);
+
             await EvaluatePromotionsAsync();
 
             return this;
@@ -82,10 +84,50 @@ namespace VirtoCommerce.Storefront.Builders
                 if (quantity > 0)
                 {
                     lineItem.Quantity = quantity;
+                }
+                else
+                {
+                    _cart.Items.Remove(lineItem);
+                }
 
-                    await EvaluatePromotionsAsync();
+                await EvaluatePromotionsAsync();
+            }
+
+            return this;
+        }
+
+        public async Task<CartBuilder> ChangeItemQuantityAsync(int lineItemIndex, int quantity)
+        {
+            var lineItem = _cart.Items.ElementAt(lineItemIndex);
+            if (lineItem != null)
+            {
+                if (quantity > 0)
+                {
+                    lineItem.Quantity = quantity;
+                }
+                else
+                {
+                    _cart.Items.Remove(lineItem);
                 }
             }
+
+            await EvaluatePromotionsAsync();
+
+            return this;
+        }
+
+        public async Task<CartBuilder> ChangeItemsQuantitiesAsync(int[] quantities)
+        {
+            for (var i = 0; i < quantities.Length; i++)
+            {
+                var lineItem = _cart.Items.ElementAt(i);
+                if (lineItem != null && quantities[i] > 0)
+                {
+                    lineItem.Quantity = quantities[i];
+                }
+            }
+
+            await EvaluatePromotionsAsync();
 
             return this;
         }

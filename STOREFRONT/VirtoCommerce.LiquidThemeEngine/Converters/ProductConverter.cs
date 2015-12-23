@@ -91,6 +91,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                 result.FeaturedImage.AttachedToVariant = true;
                 result.FeaturedImage.Variants = new[] { result };
             }
+            result.Id = product.Id;
             result.InventoryPolicy = "continue";
             result.InventoryQuantity = product.Inventory != null ? product.Inventory.InStockQuantity ?? 0 : 0;
             result.Options = product.Properties.Where(x => string.Equals(x.Type, "variation", System.StringComparison.InvariantCultureIgnoreCase) && x.Value != null)
