@@ -42,6 +42,19 @@ namespace VirtoCommerce.Storefront.Controllers
             throw new HttpException(404, asset);
         }
 
+        /// <summary>
+        /// GET: /themes/global/assets/{asset}
+        /// </summary>
+        [HttpGet]
+        public ActionResult GetGlobalAssets(string asset)
+        {
+            var stream = _themeAdaptor.GetAssetStream(asset, searchInGlobalThemeOnly: true);
+            if (stream != null)
+            {
+                return base.File(stream, MimeMapping.GetMimeMapping(asset));
+            }
+            throw new HttpException(404, asset);
+        }
         #endregion
 
     }

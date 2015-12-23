@@ -157,7 +157,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
         /// <returns></returns>
         public static string ShopifyAssetUrl(string input)
         {
-            return AssetUrl(input);
+            return GlobalAssetUrl(input);
         }
 
 
@@ -169,7 +169,13 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
         /// <returns></returns>
         public static string GlobalAssetUrl(string input)
         {
-            return AssetUrl(input);
+            string retVal = null;
+            if (input != null)
+            {
+                var themeAdaptor = (ShopifyLiquidThemeEngine)Template.FileSystem;
+                retVal = themeAdaptor.GetAssetAbsoluteUrl(input);
+            }
+            return retVal;
         }
 
         /// <summary>

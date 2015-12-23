@@ -137,9 +137,9 @@
                 <a class="menu-toggle mobileNavBar-link">{{ 'layout.navigation.mobile_menu' | t }}</a>
             </div>
             <div class="display-table-cell">
-                <a class="cart-toggle mobileNavBar-link" href="" ng-click="toggleCartModal(cartModalToggled)">
+                <a class="cart-toggle mobileNavBar-link" href="" ng-click="showCartModal()">
                     <span class="icon icon-cart"></span>
-                    {{ 'layout.cart.cart' | t }}
+                    {{ 'layout.cart.cart' | t }} <span class="cartCount" ng-bind="cart.ItemsCount" ng-if="cart.ItemsCount > 0"></span>
                 </a>
             </div>
         </div>
